@@ -27,157 +27,276 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
 #include "ModelFixture.hpp"
+
 #include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
-#include "../ThermalZone.hpp"
-#include "../ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
-#include "../ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
-#include "../AirLoopHVAC.hpp"
-#include "../PlantLoop.hpp"
-#include "../Node.hpp"
-#include "../Node_Impl.hpp"
-#include "../Curve.hpp"
-#include "../Curve_Impl.hpp"
-#include "../AirLoopHVACZoneSplitter.hpp"
+
+// TODO: Check the following class names against object getters and setters.
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+
+#include "../ModelObjectLists.hpp"
+#include "../ModelObjectLists_Impl.hpp"
+
+#include "../UnivariateFunctions.hpp"
+#include "../UnivariateFunctions_Impl.hpp"
+
+#include "../UnivariateFunctions.hpp"
+#include "../UnivariateFunctions_Impl.hpp"
+
+#include "../BivariateFunctions.hpp"
+#include "../BivariateFunctions_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      Model m;
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf(m);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
-
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_GettersSetters) {
   Model m;
-  AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf(m);
+  // TODO: Check regular Ctor arguments
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControl airConditionerVariableRefrigerantFlowFluidTemperatureControl(m);
+  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
+  // AirConditionerVariableRefrigerantFlowFluidTemperatureControl airConditionerVariableRefrigerantFlowFluidTemperatureControl = m.getUniqueModelObject<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
 
-  for (int i = 0; i != 5; i++) {
-    ThermalZone zone(m);
+  airConditionerVariableRefrigerantFlowFluidTemperatureControl.setName("My AirConditionerVariableRefrigerantFlowFluidTemperatureControl");
 
-    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(m);
+  // Availability Schedule: Optional Object
+  boost::optional<Schedule> obj(m);
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setAvailabilitySchedule(obj));
+  ASSERT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.availabilitySchedule());
+  EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControl.availabilitySchedule().get());
 
-    ASSERT_TRUE(vrfTerminal.addToThermalZone(zone));
+  // Zone Terminal Unit List: Required Object
+  ModelObjectLists obj(m);
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setZoneTerminalUnitList(obj));
+EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControl.zoneTerminalUnitList());
 
-    vrf.addTerminal(vrfTerminal);
-  }
+  // Refrigerant Type: Required String
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setRefrigerantType("R11"));
+  EXPECT_EQ("R11", airConditionerVariableRefrigerantFlowFluidTemperatureControl.refrigerantType());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setRefrigerantType("BADENUM"));
+  EXPECT_EQ("R11", airConditionerVariableRefrigerantFlowFluidTemperatureControl.refrigerantType());
 
-  ASSERT_EQ(5u, vrf.terminals().size());
+  // Rated Evaporative Capacity: Required Double
+  // Autosize
+  airConditionerVariableRefrigerantFlowFluidTemperatureControl.autosizeRatedEvaporativeCapacity();
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.isRatedEvaporativeCapacityAutosized());
+  // Set
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setRatedEvaporativeCapacity(0.6));
+  ASSERT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.ratedEvaporativeCapacity());
+  EXPECT_EQ(0.6, airConditionerVariableRefrigerantFlowFluidTemperatureControl.ratedEvaporativeCapacity().get());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setRatedEvaporativeCapacity(-10.0));
+  ASSERT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.ratedEvaporativeCapacity());
+  EXPECT_EQ(0.6, airConditionerVariableRefrigerantFlowFluidTemperatureControl.ratedEvaporativeCapacity().get());
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.isRatedEvaporativeCapacityAutosized());
 
-  Model m2;
+  // Rated Compressor Power Per Unit of Rated Evaporative Capacity: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(0.7));
+  EXPECT_EQ(0.7, airConditionerVariableRefrigerantFlowFluidTemperatureControl.ratedCompressorPowerPerUnitofRatedEvaporativeCapacity());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(-10.0));
+  EXPECT_EQ(0.7, airConditionerVariableRefrigerantFlowFluidTemperatureControl.ratedCompressorPowerPerUnitofRatedEvaporativeCapacity());
 
-  boost::optional<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> vrfClone =
-    vrf.clone(m2).optionalCast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
-  ASSERT_TRUE(vrfClone);
+  // Minimum Outdoor Air Temperature in Cooling Mode: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMinimumOutdoorAirTemperatureinCoolingMode(0.8));
+  EXPECT_EQ(0.8, airConditionerVariableRefrigerantFlowFluidTemperatureControl.minimumOutdoorAirTemperatureinCoolingMode());
 
-  ASSERT_TRUE(vrfClone->coolingCapacityRatioModifierFunctionofLowTemperatureCurve());
-  ASSERT_TRUE(vrfClone->coolingCapacityRatioBoundaryCurve());
-  ASSERT_TRUE(vrfClone->coolingCapacityRatioModifierFunctionofHighTemperatureCurve());
-  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve());
-  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioBoundaryCurve());
-  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve());
-  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve());
-  ASSERT_TRUE(vrfClone->coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve());
-  ASSERT_TRUE(vrfClone->coolingCombinationRatioCorrectionFactorCurve());
-  ASSERT_TRUE(vrfClone->coolingPartLoadFractionCorrelationCurve());
-  ASSERT_TRUE(vrfClone->heatingCapacityRatioModifierFunctionofLowTemperatureCurve());
-  ASSERT_TRUE(vrfClone->heatingCapacityRatioBoundaryCurve());
-  ASSERT_TRUE(vrfClone->heatingCapacityRatioModifierFunctionofHighTemperatureCurve());
-  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve());
-  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioBoundaryCurve());
-  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve());
-  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve());
-  ASSERT_TRUE(vrfClone->heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve());
-  ASSERT_TRUE(vrfClone->heatingCombinationRatioCorrectionFactorCurve());
-  ASSERT_TRUE(vrfClone->heatingPartLoadFractionCorrelationCurve());
-  ASSERT_TRUE(vrfClone->pipingCorrectionFactorforLengthinCoolingModeCurve());
+  // Maximum Outdoor Air Temperature in Cooling Mode: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMaximumOutdoorAirTemperatureinCoolingMode(0.9));
+  EXPECT_EQ(0.9, airConditionerVariableRefrigerantFlowFluidTemperatureControl.maximumOutdoorAirTemperatureinCoolingMode());
 
-  ASSERT_TRUE(vrfClone->terminals().empty());
+  // Minimum Outdoor Air Temperature in Heating Mode: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMinimumOutdoorAirTemperatureinHeatingMode(1.0));
+  EXPECT_EQ(1.0, airConditionerVariableRefrigerantFlowFluidTemperatureControl.minimumOutdoorAirTemperatureinHeatingMode());
 
-  ASSERT_TRUE(!vrfClone->remove().empty());
-}
+  // Maximum Outdoor Air Temperature in Heating Mode: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMaximumOutdoorAirTemperatureinHeatingMode(1.1));
+  EXPECT_EQ(1.1, airConditionerVariableRefrigerantFlowFluidTemperatureControl.maximumOutdoorAirTemperatureinHeatingMode());
 
-TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_addToNode) {
-  Model m;
-  AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf(m);
+  // Reference Outdoor Unit Superheating: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setReferenceOutdoorUnitSuperheating(1.2));
+  EXPECT_EQ(1.2, airConditionerVariableRefrigerantFlowFluidTemperatureControl.referenceOutdoorUnitSuperheating());
 
-  // By default
-  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("AirCooled", vrf.condenserType());
+  // Reference Outdoor Unit Subcooling: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setReferenceOutdoorUnitSubcooling(1.3));
+  EXPECT_EQ(1.3, airConditionerVariableRefrigerantFlowFluidTemperatureControl.referenceOutdoorUnitSubcooling());
 
-  // Not connected to a PlantLoop, we still allow everything.
-  EXPECT_TRUE(vrf.setCondenserType("EvaporativelyCooled"));
-  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("EvaporativelyCooled", vrf.condenserType());
+  // Refrigerant Temperature Control Algorithm for Indoor Unit: Required String
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setRefrigerantTemperatureControlAlgorithmforIndoorUnit("ConstantTemp"));
+  EXPECT_EQ("ConstantTemp", airConditionerVariableRefrigerantFlowFluidTemperatureControl.refrigerantTemperatureControlAlgorithmforIndoorUnit());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setRefrigerantTemperatureControlAlgorithmforIndoorUnit("BADENUM"));
+  EXPECT_EQ("ConstantTemp", airConditionerVariableRefrigerantFlowFluidTemperatureControl.refrigerantTemperatureControlAlgorithmforIndoorUnit());
 
-  vrf.resetCondenserType();
-  EXPECT_TRUE(vrf.setCondenserType("AirCooled"));
-  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("AirCooled", vrf.condenserType());
+  // Reference Evaporating Temperature for Indoor Unit: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setReferenceEvaporatingTemperatureforIndoorUnit(1.5));
+  EXPECT_EQ(1.5, airConditionerVariableRefrigerantFlowFluidTemperatureControl.referenceEvaporatingTemperatureforIndoorUnit());
 
-  vrf.resetCondenserType();
-  EXPECT_TRUE(vrf.setCondenserType("WaterCooled"));
-  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("WaterCooled", vrf.condenserType());
+  // Reference Condensing Temperature for Indoor Unit: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setReferenceCondensingTemperatureforIndoorUnit(1.6));
+  EXPECT_EQ(1.6, airConditionerVariableRefrigerantFlowFluidTemperatureControl.referenceCondensingTemperatureforIndoorUnit());
 
-  // Disallow connection to an AirLoopHVAC
-  vrf.resetCondenserType();
-  AirLoopHVAC airLoop(m);
-  Node supplyOutletNode = airLoop.supplyOutletNode();
-  EXPECT_FALSE(vrf.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
-  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("AirCooled", vrf.condenserType());
+  // Variable Evaporating Temperature Minimum for Indoor Unit: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setVariableEvaporatingTemperatureMinimumforIndoorUnit(1.7));
+  EXPECT_EQ(1.7, airConditionerVariableRefrigerantFlowFluidTemperatureControl.variableEvaporatingTemperatureMinimumforIndoorUnit());
 
-  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
-  EXPECT_FALSE(vrf.addToNode(inletNode));
-  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
-  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("AirCooled", vrf.condenserType());
+  // Variable Evaporating Temperature Maximum for Indoor Unit: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setVariableEvaporatingTemperatureMaximumforIndoorUnit(1.8));
+  EXPECT_EQ(1.8, airConditionerVariableRefrigerantFlowFluidTemperatureControl.variableEvaporatingTemperatureMaximumforIndoorUnit());
 
-  // Allow Connection to a PlantLoop, but only on Demand Side
-  vrf.resetCondenserType();
-  PlantLoop plantLoop(m);
-  supplyOutletNode = plantLoop.supplyOutletNode();
-  EXPECT_FALSE(vrf.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
-  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("AirCooled", vrf.condenserType());
+  // Variable Condensing Temperature Minimum for Indoor Unit: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setVariableCondensingTemperatureMinimumforIndoorUnit(1.9));
+  EXPECT_EQ(1.9, airConditionerVariableRefrigerantFlowFluidTemperatureControl.variableCondensingTemperatureMinimumforIndoorUnit());
 
-  // Demand side should be allowed
-  EXPECT_TRUE(plantLoop.addDemandBranchForComponent(vrf));
-  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
-  // This should have switched the **default** Condenser Type to 'WaterCooled'
-  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("WaterCooled", vrf.condenserType());
+  // Variable Condensing Temperature Maximum for Indoor Unit: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setVariableCondensingTemperatureMaximumforIndoorUnit(2.0));
+  EXPECT_EQ(2.0, airConditionerVariableRefrigerantFlowFluidTemperatureControl.variableCondensingTemperatureMaximumforIndoorUnit());
 
-  // Should still allow Evap or AirCooled (even though it's not correct...handled in FT)
-  EXPECT_TRUE(vrf.setCondenserType("AirCooled"));
-  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("AirCooled", vrf.condenserType());
+  // Outdoor Unit Fan Power Per Unit of Rated Evaporative Capacity: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(2.1));
+  EXPECT_EQ(2.1, airConditionerVariableRefrigerantFlowFluidTemperatureControl.outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(-10.0));
+  EXPECT_EQ(2.1, airConditionerVariableRefrigerantFlowFluidTemperatureControl.outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity());
 
-  EXPECT_TRUE(vrf.setCondenserType("EvaporativelyCooled"));
-  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("EvaporativelyCooled", vrf.condenserType());
+  // Outdoor Unit Fan Flow Rate Per Unit of Rated Evaporative Capacity: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(2.2));
+  EXPECT_EQ(2.2, airConditionerVariableRefrigerantFlowFluidTemperatureControl.outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(-10.0));
+  EXPECT_EQ(2.2, airConditionerVariableRefrigerantFlowFluidTemperatureControl.outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity());
 
-  // Disconnect it, shouldn't affect anything
-  // Note: do not use removeDemandBranchWithComponent here, it would delete the VRF itself
-  vrf.disconnect();
-  EXPECT_FALSE(vrf.plantLoop());
-  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
-  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("EvaporativelyCooled", vrf.condenserType());
+  // Outdoor Unit Evaporating Temperature Function of Superheating Curve Name: Required Object
+  UnivariateFunctions obj(m);
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(obj));
+EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControl.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve());
 
-  // Resetting should re-default to AirCooled
-  vrf.resetCondenserType();
-  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
-  EXPECT_EQ("AirCooled", vrf.condenserType());
+  // Outdoor Unit Condensing Temperature Function of Subcooling Curve Name: Required Object
+  UnivariateFunctions obj(m);
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(obj));
+EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControl.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve());
+
+  // Diameter of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setDiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(2.5));
+  EXPECT_EQ(2.5, airConditionerVariableRefrigerantFlowFluidTemperatureControl.diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setDiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(-10.0));
+  EXPECT_EQ(2.5, airConditionerVariableRefrigerantFlowFluidTemperatureControl.diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+
+  // Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(2.6));
+  EXPECT_EQ(2.6, airConditionerVariableRefrigerantFlowFluidTemperatureControl.lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(-10.0));
+  EXPECT_EQ(2.6, airConditionerVariableRefrigerantFlowFluidTemperatureControl.lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+
+  // Equivalent Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(2.7));
+  EXPECT_EQ(2.7, airConditionerVariableRefrigerantFlowFluidTemperatureControl.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(-10.0));
+  EXPECT_EQ(2.7, airConditionerVariableRefrigerantFlowFluidTemperatureControl.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+
+  // Height Difference Between Outdoor Unit and Indoor Units: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(2.8));
+  EXPECT_EQ(2.8, airConditionerVariableRefrigerantFlowFluidTemperatureControl.heightDifferenceBetweenOutdoorUnitandIndoorUnits());
+
+  // Main Pipe Insulation Thickness: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMainPipeInsulationThickness(2.9));
+  EXPECT_EQ(2.9, airConditionerVariableRefrigerantFlowFluidTemperatureControl.mainPipeInsulationThickness());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMainPipeInsulationThickness(-10.0));
+  EXPECT_EQ(2.9, airConditionerVariableRefrigerantFlowFluidTemperatureControl.mainPipeInsulationThickness());
+
+  // Main Pipe Insulation Thermal Conductivity: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMainPipeInsulationThermalConductivity(3.0));
+  EXPECT_EQ(3.0, airConditionerVariableRefrigerantFlowFluidTemperatureControl.mainPipeInsulationThermalConductivity());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMainPipeInsulationThermalConductivity(-10.0));
+  EXPECT_EQ(3.0, airConditionerVariableRefrigerantFlowFluidTemperatureControl.mainPipeInsulationThermalConductivity());
+
+  // Crankcase Heater Power per Compressor: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setCrankcaseHeaterPowerperCompressor(3.1));
+  EXPECT_EQ(3.1, airConditionerVariableRefrigerantFlowFluidTemperatureControl.crankcaseHeaterPowerperCompressor());
+
+  // Number of Compressors: Optional Integer
+  // Default value from IDD
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.isNumberofCompressorsDefaulted());
+  // Set
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setNumberofCompressors(32));
+  EXPECT_EQ(32, airConditionerVariableRefrigerantFlowFluidTemperatureControl.numberofCompressors());
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.isNumberofCompressorsDefaulted());
+  // Reset
+  airConditionerVariableRefrigerantFlowFluidTemperatureControl.resetNumberofCompressors();
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.isNumberofCompressorsDefaulted());
+
+  // Ratio of Compressor Size to Total Compressor Capacity: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setRatioofCompressorSizetoTotalCompressorCapacity(3.3));
+  EXPECT_EQ(3.3, airConditionerVariableRefrigerantFlowFluidTemperatureControl.ratioofCompressorSizetoTotalCompressorCapacity());
+
+  // Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(3.4));
+  EXPECT_EQ(3.4, airConditionerVariableRefrigerantFlowFluidTemperatureControl.maximumOutdoorDryBulbTemperatureforCrankcaseHeater());
+
+  // Defrost Strategy: Required String
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setDefrostStrategy("ReverseCycle"));
+  EXPECT_EQ("ReverseCycle", airConditionerVariableRefrigerantFlowFluidTemperatureControl.defrostStrategy());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setDefrostStrategy("BADENUM"));
+  EXPECT_EQ("ReverseCycle", airConditionerVariableRefrigerantFlowFluidTemperatureControl.defrostStrategy());
+
+  // Defrost Control: Required String
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setDefrostControl("Timed"));
+  EXPECT_EQ("Timed", airConditionerVariableRefrigerantFlowFluidTemperatureControl.defrostControl());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setDefrostControl("BADENUM"));
+  EXPECT_EQ("Timed", airConditionerVariableRefrigerantFlowFluidTemperatureControl.defrostControl());
+
+  // Defrost Energy Input Ratio Modifier Function of Temperature Curve Name: Optional Object
+  boost::optional<BivariateFunctions> obj(m);
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(obj));
+  ASSERT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.defrostEnergyInputRatioModifierFunctionofTemperatureCurve());
+  EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControl.defrostEnergyInputRatioModifierFunctionofTemperatureCurve().get());
+
+  // Defrost Time Period Fraction: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setDefrostTimePeriodFraction(3.8));
+  EXPECT_EQ(3.8, airConditionerVariableRefrigerantFlowFluidTemperatureControl.defrostTimePeriodFraction());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setDefrostTimePeriodFraction(-10.0));
+  EXPECT_EQ(3.8, airConditionerVariableRefrigerantFlowFluidTemperatureControl.defrostTimePeriodFraction());
+
+  // Resistive Defrost Heater Capacity: Required Double
+  // Autosize
+  airConditionerVariableRefrigerantFlowFluidTemperatureControl.autosizeResistiveDefrostHeaterCapacity();
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.isResistiveDefrostHeaterCapacityAutosized());
+  // Set
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setResistiveDefrostHeaterCapacity(3.9));
+  ASSERT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.resistiveDefrostHeaterCapacity());
+  EXPECT_EQ(3.9, airConditionerVariableRefrigerantFlowFluidTemperatureControl.resistiveDefrostHeaterCapacity().get());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setResistiveDefrostHeaterCapacity(-10.0));
+  ASSERT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.resistiveDefrostHeaterCapacity());
+  EXPECT_EQ(3.9, airConditionerVariableRefrigerantFlowFluidTemperatureControl.resistiveDefrostHeaterCapacity().get());
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.isResistiveDefrostHeaterCapacityAutosized());
+
+  // Maximum Outdoor Dry-bulb Temperature for Defrost Operation: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setMaximumOutdoorDrybulbTemperatureforDefrostOperation(4.0));
+  EXPECT_EQ(4.0, airConditionerVariableRefrigerantFlowFluidTemperatureControl.maximumOutdoorDrybulbTemperatureforDefrostOperation());
+
+  // Compressor maximum delta Pressure: Required Double
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setCompressormaximumdeltaPressure(48809523.81));
+  EXPECT_EQ(48809523.81, airConditionerVariableRefrigerantFlowFluidTemperatureControl.compressormaximumdeltaPressure());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setCompressormaximumdeltaPressure(-10.0));
+  EXPECT_EQ(48809523.81, airConditionerVariableRefrigerantFlowFluidTemperatureControl.compressormaximumdeltaPressure());
+
+  // Number of Compressor Loading Index Entries: Required Integer
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setNumberofCompressorLoadingIndexEntries(8));
+  EXPECT_EQ(8, airConditionerVariableRefrigerantFlowFluidTemperatureControl.numberofCompressorLoadingIndexEntries());
+  // Bad Value
+  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControl.setNumberofCompressorLoadingIndexEntries(-8));
+  EXPECT_EQ(8, airConditionerVariableRefrigerantFlowFluidTemperatureControl.numberofCompressorLoadingIndexEntries());
+
 }

@@ -30,493 +30,280 @@
 #ifndef MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_IMPL_HPP
 #define MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_IMPL_HPP
 
-#include "ModelAPI.hpp"
+#include <model/ModelAPI.hpp>
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
-
 namespace model {
 
-  class Schedule;
-  class Curve;
-  class ThermalZone;
-  class ModelObjectList;
-  class ZoneHVACTerminalUnitVariableRefrigerantFlow;
+// TODO: Check the following class names against object getters and setters.
+class Schedule;
+class ModelObjectLists;
+class UnivariateFunctions;
+class UnivariateFunctions;
+class BivariateFunctions;
 
-  namespace detail {
+namespace detail {
 
-    /** AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl is a StraightComponent_Impl that is the implementation class for AirConditionerVariableRefrigerantFlowFluidTemperatureControl.*/
-    class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl : public StraightComponent_Impl
-    {
+  /** AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl is a StraightComponent_Impl that is the implementation class for AirConditionerVariableRefrigerantFlowFluidTemperatureControl.*/
+  class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl : public StraightComponent_Impl {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-     public:
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const IdfObject& idfObject,
+                                                                      Model_Impl* model,
+                                                                      bool keepHandle);
 
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                                        bool keepHandle);
+    AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                      Model_Impl* model,
+                                                                      bool keepHandle);
 
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(
-        const AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl& other, Model_Impl* model, bool keepHandle);
+    AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl& other,
+                                                                      Model_Impl* model,
+                                                                      bool keepHandle);
 
-      /** @name Virtual Methods */
-      //@{
+    virtual ~AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl() {}
 
-      virtual ~AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl() {}
+    //@}
+    /** @name Virtual Methods */
+    //@{
 
-      virtual const std::vector<std::string>& outputVariableNames() const override;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-      virtual IddObjectType iddObjectType() const override;
+    virtual IddObjectType iddObjectType() const override;
 
-      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-      virtual unsigned inletPort() const override;
+    //@}
+    /** @name Getters */
+    //@{
 
-      virtual unsigned outletPort() const override;
+    // TODO: Check return type. From object lists, some candidates are: Schedule.
+    boost::optional<Schedule> availabilitySchedule() const;
 
-      virtual ModelObject clone(Model model) const override;
+    // TODO: Check return type. From object lists, some candidates are: ModelObjectLists.
+    ModelObjectLists zoneTerminalUnitList() const;
 
-      virtual std::vector<openstudio::IdfObject> remove() override;
+    std::string refrigerantType() const;
 
-      virtual bool addToNode(Node& node) override;
+    boost::optional<double> ratedEvaporativeCapacity() const;
 
-      virtual bool removeFromLoop() override;
+    bool isRatedEvaporativeCapacityAutosized() const;
 
-      virtual std::vector<ModelObject> children() const override;
+    boost::optional <double> autosizedRatedEvaporativeCapacity();
 
-      virtual void autosize() override;
+    double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity() const;
 
-      virtual void applySizingValues() override;
+    double minimumOutdoorAirTemperatureinCoolingMode() const;
 
-      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+    double maximumOutdoorAirTemperatureinCoolingMode() const;
 
-      virtual std::vector<std::string> emsInternalVariableNames() const override;
+    double minimumOutdoorAirTemperatureinHeatingMode() const;
 
-      //@}
+    double maximumOutdoorAirTemperatureinHeatingMode() const;
 
-      Schedule availabilitySchedule() const;
+    double referenceOutdoorUnitSuperheating() const;
 
-      boost::optional<double> grossRatedTotalCoolingCapacity() const;
+    double referenceOutdoorUnitSubcooling() const;
 
-      bool isGrossRatedTotalCoolingCapacityAutosized() const;
+    std::string refrigerantTemperatureControlAlgorithmforIndoorUnit() const;
 
-      double grossRatedCoolingCOP() const;
+    double referenceEvaporatingTemperatureforIndoorUnit() const;
 
-      double minimumOutdoorTemperatureinCoolingMode() const;
+    double referenceCondensingTemperatureforIndoorUnit() const;
 
-      double maximumOutdoorTemperatureinCoolingMode() const;
+    double variableEvaporatingTemperatureMinimumforIndoorUnit() const;
 
-      boost::optional<Curve> coolingCapacityRatioModifierFunctionofLowTemperatureCurve() const;
+    double variableEvaporatingTemperatureMaximumforIndoorUnit() const;
 
-      boost::optional<Curve> coolingCapacityRatioBoundaryCurve() const;
+    double variableCondensingTemperatureMinimumforIndoorUnit() const;
 
-      boost::optional<Curve> coolingCapacityRatioModifierFunctionofHighTemperatureCurve() const;
+    double variableCondensingTemperatureMaximumforIndoorUnit() const;
 
-      boost::optional<Curve> coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve() const;
+    double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity() const;
 
-      boost::optional<Curve> coolingEnergyInputRatioBoundaryCurve() const;
+    double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity() const;
 
-      boost::optional<Curve> coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve() const;
+    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
+    UnivariateFunctions outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
 
-      boost::optional<Curve> coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() const;
+    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
+    UnivariateFunctions outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
 
-      boost::optional<Curve> coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const;
+    double diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const;
 
-      boost::optional<Curve> coolingCombinationRatioCorrectionFactorCurve() const;
+    double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const;
 
-      boost::optional<Curve> coolingPartLoadFractionCorrelationCurve() const;
+    double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const;
 
-      boost::optional<double> grossRatedHeatingCapacity() const;
+    double heightDifferenceBetweenOutdoorUnitandIndoorUnits() const;
 
-      bool isGrossRatedHeatingCapacityAutosized() const;
+    double mainPipeInsulationThickness() const;
 
-      double ratedHeatingCapacitySizingRatio() const;
+    double mainPipeInsulationThermalConductivity() const;
 
-      double ratedHeatingCOP() const;
+    double crankcaseHeaterPowerperCompressor() const;
 
-      double minimumOutdoorTemperatureinHeatingMode() const;
+    int numberofCompressors() const;
 
-      double maximumOutdoorTemperatureinHeatingMode() const;
+    bool isNumberofCompressorsDefaulted() const;
 
-      boost::optional<Curve> heatingCapacityRatioModifierFunctionofLowTemperatureCurve() const;
+    double ratioofCompressorSizetoTotalCompressorCapacity() const;
 
-      boost::optional<Curve> heatingCapacityRatioBoundaryCurve() const;
+    double maximumOutdoorDryBulbTemperatureforCrankcaseHeater() const;
 
-      boost::optional<Curve> heatingCapacityRatioModifierFunctionofHighTemperatureCurve() const;
+    std::string defrostStrategy() const;
 
-      boost::optional<Curve> heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve() const;
+    std::string defrostControl() const;
 
-      boost::optional<Curve> heatingEnergyInputRatioBoundaryCurve() const;
+    // TODO: Check return type. From object lists, some candidates are: BivariateFunctions.
+    boost::optional<BivariateFunctions> defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const;
 
-      boost::optional<Curve> heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve() const;
+    double defrostTimePeriodFraction() const;
 
-      std::string heatingPerformanceCurveOutdoorTemperatureType() const;
+    boost::optional<double> resistiveDefrostHeaterCapacity() const;
 
-      boost::optional<Curve> heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() const;
+    bool isResistiveDefrostHeaterCapacityAutosized() const;
 
-      boost::optional<Curve> heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const;
+    boost::optional <double> autosizedResistiveDefrostHeaterCapacity();
 
-      boost::optional<Curve> heatingCombinationRatioCorrectionFactorCurve() const;
+    double maximumOutdoorDrybulbTemperatureforDefrostOperation() const;
 
-      boost::optional<Curve> heatingPartLoadFractionCorrelationCurve() const;
+    double compressormaximumdeltaPressure() const;
 
-      double minimumHeatPumpPartLoadRatio() const;
+    int numberofCompressorLoadingIndexEntries() const;
 
-      boost::optional<ThermalZone> zoneforMasterThermostatLocation() const;
+    // TODO: Handle this object's extensible fields.
 
-      std::string masterThermostatPriorityControlType() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-      boost::optional<Schedule> thermostatPrioritySchedule() const;
+    // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  // Note Schedules are passed by reference, not const reference.
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-      bool heatPumpWasteHeatRecovery() const;
+    void resetAvailabilitySchedule();
 
-      double equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode() const;
+    // TODO: Check argument type. From object lists, some candidates are: ModelObjectLists.
+    bool setZoneTerminalUnitList(const ModelObjectLists& modelObjectLists);
 
-      double verticalHeightusedforPipingCorrectionFactor() const;
+    bool setRefrigerantType(const std::string& refrigerantType);
 
-      boost::optional<Curve> pipingCorrectionFactorforLengthinCoolingModeCurve() const;
+    bool setRatedEvaporativeCapacity(double ratedEvaporativeCapacity);
 
-      double pipingCorrectionFactorforHeightinCoolingModeCoefficient() const;
+    void autosizeRatedEvaporativeCapacity();
 
-      double equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode() const;
+    bool setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity);
 
-      boost::optional<Curve> pipingCorrectionFactorforLengthinHeatingModeCurve() const;
+    bool setMinimumOutdoorAirTemperatureinCoolingMode(double minimumOutdoorAirTemperatureinCoolingMode);
 
-      double pipingCorrectionFactorforHeightinHeatingModeCoefficient() const;
+    bool setMaximumOutdoorAirTemperatureinCoolingMode(double maximumOutdoorAirTemperatureinCoolingMode);
 
-      double crankcaseHeaterPowerperCompressor() const;
+    bool setMinimumOutdoorAirTemperatureinHeatingMode(double minimumOutdoorAirTemperatureinHeatingMode);
 
-      int numberofCompressors() const;
+    bool setMaximumOutdoorAirTemperatureinHeatingMode(double maximumOutdoorAirTemperatureinHeatingMode);
 
-      double ratioofCompressorSizetoTotalCompressorCapacity() const;
+    bool setReferenceOutdoorUnitSuperheating(double referenceOutdoorUnitSuperheating);
 
-      double maximumOutdoorDrybulbTemperatureforCrankcaseHeater() const;
+    bool setReferenceOutdoorUnitSubcooling(double referenceOutdoorUnitSubcooling);
 
-      std::string defrostStrategy() const;
+    bool setRefrigerantTemperatureControlAlgorithmforIndoorUnit(const std::string& refrigerantTemperatureControlAlgorithmforIndoorUnit);
 
-      std::string defrostControl() const;
+    bool setReferenceEvaporatingTemperatureforIndoorUnit(double referenceEvaporatingTemperatureforIndoorUnit);
 
-      boost::optional<Curve> defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const;
+    bool setReferenceCondensingTemperatureforIndoorUnit(double referenceCondensingTemperatureforIndoorUnit);
 
-      double defrostTimePeriodFraction() const;
+    bool setVariableEvaporatingTemperatureMinimumforIndoorUnit(double variableEvaporatingTemperatureMinimumforIndoorUnit);
 
-      boost::optional<double> resistiveDefrostHeaterCapacity() const;
+    bool setVariableEvaporatingTemperatureMaximumforIndoorUnit(double variableEvaporatingTemperatureMaximumforIndoorUnit);
 
-      bool isResistiveDefrostHeaterCapacityAutosized() const;
+    bool setVariableCondensingTemperatureMinimumforIndoorUnit(double variableCondensingTemperatureMinimumforIndoorUnit);
 
-      double maximumOutdoorDrybulbTemperatureforDefrostOperation() const;
+    bool setVariableCondensingTemperatureMaximumforIndoorUnit(double variableCondensingTemperatureMaximumforIndoorUnit);
 
-      std::string condenserType() const;
-      bool setCondenserType(const std::string& condenserType);
-      bool isCondenserTypeDefaulted() const;
-      void resetCondenserType();
+    bool setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity);
 
-      boost::optional<double> waterCondenserVolumeFlowRate() const;
+    bool setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
 
-      bool isWaterCondenserVolumeFlowRateAutosized() const;
+    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
+    bool setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions);
 
-      double evaporativeCondenserEffectiveness() const;
+    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
+    bool setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const UnivariateFunctions& univariateFunctions);
 
-      boost::optional<double> evaporativeCondenserAirFlowRate() const;
+    bool setDiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
 
-      bool isEvaporativeCondenserAirFlowRateAutosized() const;
+    bool setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
 
-      boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption() const;
+    bool setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
 
-      bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
+    bool setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(double heightDifferenceBetweenOutdoorUnitandIndoorUnits);
 
-      double basinHeaterCapacity() const;
+    bool setMainPipeInsulationThickness(double mainPipeInsulationThickness);
 
-      double basinHeaterSetpointTemperature() const;
+    bool setMainPipeInsulationThermalConductivity(double mainPipeInsulationThermalConductivity);
 
-      boost::optional<Schedule> basinHeaterOperatingSchedule() const;
+    bool setCrankcaseHeaterPowerperCompressor(double crankcaseHeaterPowerperCompressor);
 
-      std::string fuelType() const;
+    bool setNumberofCompressors(int numberofCompressors);
 
-      double minimumOutdoorTemperatureinHeatRecoveryMode() const;
+    void resetNumberofCompressors();
 
-      double maximumOutdoorTemperatureinHeatRecoveryMode() const;
+    bool setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity);
 
-      boost::optional<Curve> heatRecoveryCoolingCapacityModifierCurve() const;
+    bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(double maximumOutdoorDryBulbTemperatureforCrankcaseHeater);
 
-      double initialHeatRecoveryCoolingCapacityFraction() const;
+    bool setDefrostStrategy(const std::string& defrostStrategy);
 
-      double heatRecoveryCoolingCapacityTimeConstant() const;
+    bool setDefrostControl(const std::string& defrostControl);
 
-      boost::optional<Curve> heatRecoveryCoolingEnergyModifierCurve() const;
+    // TODO: Check argument type. From object lists, some candidates are: BivariateFunctions.
+    bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions);
 
-      double initialHeatRecoveryCoolingEnergyFraction() const;
+    void resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
 
-      double heatRecoveryCoolingEnergyTimeConstant() const;
+    bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
 
-      boost::optional<Curve> heatRecoveryHeatingCapacityModifierCurve() const;
+    bool setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity);
 
-      double initialHeatRecoveryHeatingCapacityFraction() const;
+    void autosizeResistiveDefrostHeaterCapacity();
 
-      double heatRecoveryHeatingCapacityTimeConstant() const;
+    bool setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation);
 
-      boost::optional<Curve> heatRecoveryHeatingEnergyModifierCurve() const;
+    bool setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure);
 
-      double initialHeatRecoveryHeatingEnergyFraction() const;
+    bool setNumberofCompressorLoadingIndexEntries(int numberofCompressorLoadingIndexEntries);
 
-      double heatRecoveryHeatingEnergyTimeConstant() const;
+    virtual void autosize() override;
 
-      bool setAvailabilitySchedule(Schedule& schedule);
+    virtual void applySizingValues() override;
 
-      bool setGrossRatedTotalCoolingCapacity(boost::optional<double> grossRatedTotalCoolingCapacity);
+    // TODO: Handle this object's extensible fields.
 
-      void autosizeGrossRatedTotalCoolingCapacity();
+    //@}
+    /** @name Other */
+    //@{
 
-      bool setGrossRatedCoolingCOP(double grossRatedCoolingCOP);
+    //@}
+   protected:
+   private:
+    REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlowFluidTemperatureControl");
 
-      bool setMinimumOutdoorTemperatureinCoolingMode(double minimumOutdoorTemperatureinCoolingMode);
+    // TODO: Check the return types of these methods.
+    // Optional getters for use by methods like children() so can remove() if the constructor fails.
+    // There are other ways for the public versions of these getters to fail--perhaps all required
+    // objects should be returned as boost::optionals
+    boost::optional<ModelObjectLists> optionalZoneTerminalUnitList() const;
+    boost::optional<UnivariateFunctions> optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
+    boost::optional<UnivariateFunctions> optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
+  };
 
-      bool setMaximumOutdoorTemperatureinCoolingMode(double maximumOutdoorTemperatureinCoolingMode);
+} // detail
 
-      bool setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve(const boost::optional<Curve>& curve);
+} // model
+} // openstudio
 
-      void resetCoolingCapacityRatioModifierFunctionofLowTemperatureCurve();
+#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_IMPL_HPP
 
-      bool setCoolingCapacityRatioBoundaryCurve(const boost::optional<Curve>& curve);
-
-      void resetCoolingCapacityRatioBoundaryCurve();
-
-      bool setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve(const boost::optional<Curve>& curve);
-
-      void resetCoolingCapacityRatioModifierFunctionofHighTemperatureCurve();
-
-      bool setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve(const boost::optional<Curve>& curve);
-
-      void resetCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-
-      bool setCoolingEnergyInputRatioBoundaryCurve(const boost::optional<Curve>& curve);
-
-      void resetCoolingEnergyInputRatioBoundaryCurve();
-
-      bool setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(const boost::optional<Curve>& curve);
-
-      void resetCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-
-      bool setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(const boost::optional<Curve>& curve);
-
-      void resetCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-
-      bool setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(const boost::optional<Curve>& curve);
-
-      void resetCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-
-      bool setCoolingCombinationRatioCorrectionFactorCurve(const boost::optional<Curve>& curve);
-
-      void resetCoolingCombinationRatioCorrectionFactorCurve();
-
-      bool setCoolingPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve);
-
-      void resetCoolingPartLoadFractionCorrelationCurve();
-
-      bool setGrossRatedHeatingCapacity(boost::optional<double> grossRatedHeatingCapacity);
-
-      void autosizeGrossRatedHeatingCapacity();
-
-      bool setRatedHeatingCapacitySizingRatio(double ratedHeatingCapacitySizingRatio);
-
-      bool setRatedHeatingCOP(double ratedHeatingCOP);
-
-      bool setMinimumOutdoorTemperatureinHeatingMode(double minimumOutdoorTemperatureinHeatingMode);
-
-      bool setMaximumOutdoorTemperatureinHeatingMode(double maximumOutdoorTemperatureinHeatingMode);
-
-      bool setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingCapacityRatioModifierFunctionofLowTemperatureCurve();
-
-      bool setHeatingCapacityRatioBoundaryCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingCapacityRatioBoundaryCurve();
-
-      bool setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingCapacityRatioModifierFunctionofHighTemperatureCurve();
-
-      bool setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-
-      bool setHeatingEnergyInputRatioBoundaryCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingEnergyInputRatioBoundaryCurve();
-
-      bool setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-
-      bool setHeatingPerformanceCurveOutdoorTemperatureType(std::string heatingPerformanceCurveOutdoorTemperatureType);
-
-      bool setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-
-      bool setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-
-      bool setHeatingCombinationRatioCorrectionFactorCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingCombinationRatioCorrectionFactorCurve();
-
-      bool setHeatingPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatingPartLoadFractionCorrelationCurve();
-
-      bool setMinimumHeatPumpPartLoadRatio(double minimumHeatPumpPartLoadRatio);
-
-      bool setZoneforMasterThermostatLocation(const boost::optional<ThermalZone>& zone);
-
-      void resetZoneforMasterThermostatLocation();
-
-      bool setMasterThermostatPriorityControlType(std::string masterThermostatPriorityControlType);
-
-      bool setThermostatPrioritySchedule(Schedule& schedule);
-
-      void resetThermostatPrioritySchedule();
-
-      bool setHeatPumpWasteHeatRecovery(bool heatPumpWasteHeatRecovery);
-
-      bool
-        setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(double equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode);
-
-      bool setVerticalHeightusedforPipingCorrectionFactor(double verticalHeightusedforPipingCorrectionFactor);
-
-      bool setPipingCorrectionFactorforLengthinCoolingModeCurve(const boost::optional<Curve>& curve);
-
-      void resetPipingCorrectionFactorforLengthinCoolingModeCurve();
-
-      bool setPipingCorrectionFactorforHeightinCoolingModeCoefficient(double pipingCorrectionFactorforHeightinCoolingModeCoefficient);
-
-      bool
-        setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(double equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode);
-
-      bool setPipingCorrectionFactorforLengthinHeatingModeCurve(const boost::optional<Curve>& curve);
-
-      void resetPipingCorrectionFactorforLengthinHeatingModeCurve();
-
-      bool setPipingCorrectionFactorforHeightinHeatingModeCoefficient(double pipingCorrectionFactorforHeightinHeatingModeCoefficient);
-
-      bool setCrankcaseHeaterPowerperCompressor(double crankcaseHeaterPowerperCompressor);
-
-      bool setNumberofCompressors(int numberofCompressors);
-
-      bool setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity);
-
-      bool setMaximumOutdoorDrybulbTemperatureforCrankcaseHeater(double maximumOutdoorDrybulbTemperatureforCrankcaseHeater);
-
-      bool setDefrostStrategy(std::string defrostStrategy);
-
-      bool setDefrostControl(std::string defrostControl);
-
-      bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const boost::optional<Curve>& curve);
-
-      void resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
-
-      bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
-
-      bool setResistiveDefrostHeaterCapacity(boost::optional<double> resistiveDefrostHeaterCapacity);
-
-      void autosizeResistiveDefrostHeaterCapacity();
-
-      bool setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation);
-
-      bool setWaterCondenserVolumeFlowRate(boost::optional<double> waterCondenserVolumeFlowRate);
-
-      void autosizeWaterCondenserVolumeFlowRate();
-
-      bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
-
-      bool setEvaporativeCondenserAirFlowRate(boost::optional<double> evaporativeCondenserAirFlowRate);
-
-      void autosizeEvaporativeCondenserAirFlowRate();
-
-      bool setEvaporativeCondenserPumpRatedPowerConsumption(boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption);
-
-      void autosizeEvaporativeCondenserPumpRatedPowerConsumption();
-
-      bool setBasinHeaterCapacity(double basinHeaterCapacity);
-
-      bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
-
-      bool setBasinHeaterOperatingSchedule(Schedule& schedule);
-
-      void resetBasinHeaterOperatingSchedule();
-
-      bool setFuelType(std::string fuelType);
-
-      bool setMinimumOutdoorTemperatureinHeatRecoveryMode(double minimumOutdoorTemperatureinHeatRecoveryMode);
-
-      bool setMaximumOutdoorTemperatureinHeatRecoveryMode(double maximumOutdoorTemperatureinHeatRecoveryMode);
-
-      bool setHeatRecoveryCoolingCapacityModifierCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatRecoveryCoolingCapacityModifierCurve();
-
-      bool setInitialHeatRecoveryCoolingCapacityFraction(double initialHeatRecoveryCoolingCapacityFraction);
-
-      bool setHeatRecoveryCoolingCapacityTimeConstant(double heatRecoveryCoolingCapacityTimeConstant);
-
-      bool setHeatRecoveryCoolingEnergyModifierCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatRecoveryCoolingEnergyModifierCurve();
-
-      bool setInitialHeatRecoveryCoolingEnergyFraction(double initialHeatRecoveryCoolingEnergyFraction);
-
-      bool setHeatRecoveryCoolingEnergyTimeConstant(double heatRecoveryCoolingEnergyTimeConstant);
-
-      bool setHeatRecoveryHeatingCapacityModifierCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatRecoveryHeatingCapacityModifierCurve();
-
-      bool setInitialHeatRecoveryHeatingCapacityFraction(double initialHeatRecoveryHeatingCapacityFraction);
-
-      bool setHeatRecoveryHeatingCapacityTimeConstant(double heatRecoveryHeatingCapacityTimeConstant);
-
-      bool setHeatRecoveryHeatingEnergyModifierCurve(const boost::optional<Curve>& curve);
-
-      void resetHeatRecoveryHeatingEnergyModifierCurve();
-
-      bool setInitialHeatRecoveryHeatingEnergyFraction(double initialHeatRecoveryHeatingEnergyFraction);
-
-      bool setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant);
-
-      ModelObjectList vrfModelObjectList() const;
-
-      bool setVRFModelObjectList(const ModelObjectList& modelObjectList);
-
-      void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
-
-      void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
-
-      void removeAllTerminals();
-
-      std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
-
-      boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const;
-
-      boost::optional<double> autosizedGrossRatedHeatingCapacity() const;
-
-      boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const;
-
-      boost::optional<double> autosizedWaterCondenserVolumeFlowRate() const;
-
-      boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const;
-
-      boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const;
-
-     private:
-      REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlowFluidTemperatureControl");
-
-      boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    };
-
-  }  // namespace detail
-
-}  // namespace model
-}  // namespace openstudio
-
-#endif  // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_IMPL_HPP

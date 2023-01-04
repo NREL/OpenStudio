@@ -29,3619 +29,1428 @@
 
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
-#include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
-#include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
+
+// TODO: Check the following class names against object getters and setters.
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "Curve.hpp"
-#include "Curve_Impl.hpp"
-#include "CurveBiquadratic.hpp"
-#include "CurveBiquadratic_Impl.hpp"
-#include "CurveCubic.hpp"
-#include "CurveCubic_Impl.hpp"
-#include "ThermalZone.hpp"
-#include "ThermalZone_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Model.hpp"
-#include "Model_Impl.hpp"
-#include "ModelObjectList.hpp"
-#include "ModelObjectList_Impl.hpp"
-#include "Node.hpp"
-#include "Node_Impl.hpp"
-#include "PlantLoop.hpp"
-#include "PlantLoop_Impl.hpp"
+#include "ModelObjectLists.hpp"
+#include "ModelObjectLists_Impl.hpp"
+#include "UnivariateFunctions.hpp"
+#include "UnivariateFunctions_Impl.hpp"
+#include "UnivariateFunctions.hpp"
+#include "UnivariateFunctions_Impl.hpp"
+#include "BivariateFunctions.hpp"
+#include "BivariateFunctions_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
-#include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/idd/OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR_FieldEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR_FieldEnums.hxx>
+
 #include "../utilities/units/Unit.hpp"
+
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
-
 namespace model {
 
-  namespace detail {
-
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(
-      const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(idfObject, model, keepHandle) {
-      OS_ASSERT(idfObject.iddObject().type() == AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType());
-    }
-
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle) {
-      OS_ASSERT(other.iddObject().type() == AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType());
-    }
-
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(
-      const AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl& other, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle) {}
-
-    const std::vector<std::string>& AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{
-        "VRF Heat Pump Total Cooling Rate", "VRF Heat Pump Total Heating Rate", "VRF Heat Pump Cooling COP", "VRF Heat Pump Heating COP",
-        "VRF Heat Pump COP", "VRF Heat Pump Part Load Ratio", "VRF Heat Pump Runtime Fraction", "VRF Heat Pump Cycling Ratio",
-        "VRF Heat Pump Operating Mode", "VRF Heat Pump Condenser Inlet Temperature", "VRF Heat Pump Maximum Capacity Cooling Rate",
-        "VRF Heat Pump Maximum Capacity Heating Rate", "VRF Heat Pump Crankcase Heater Electricity Rate",
-        "VRF Heat Pump Crankcase Heater Electricity Energy", "VRF Heat Pump Terminal Unit Heating Load Rate",
-        "VRF Heat Pump Terminal Unit Cooling Load Rate",
-
-        // TODO: add proper tests once the ModelObject return type is changed.
-        // For now include all
-        // Heat Recovery:
-        "VRF Heat Pump Heat Recovery Status Change Multiplier", "VRF Heat Pump Simultaneous Cooling and Heating Efficiency",
-        // Evap-cooled:
-        "VRF Heat Pump Evaporative Condenser Water Use Volume", "VRF Heat Pump Evaporative Condenser Pump Electricity Rate",
-        "VRF Heat Pump Evaporative Condenser Pump Electricity Energy", "VRF Heat Pump Basin Heater Electricity Rate",
-        "VRF Heat Pump Basin Heater Electricity Energy", "VRF Heat Pump Heat Recovery Status Change Multiplier",
-        // Water-cooled:
-        "VRF Heat Pump Condenser Outlet Temperature", "VRF Heat Pump Condenser Mass Flow Rate", "VRF Heat Pump Condenser Heat Transfer Energy",
-        "VRF Heat Pump Condenser Heat Transfer Rate",
-        // Electric Fuel type (default):
-        "VRF Heat Pump Cooling Electricity Rate", "VRF Heat Pump Cooling Electricity Energy", "VRF Heat Pump Heating Electricity Rate",
-        "VRF Heat Pump Heating Electricity Energy",
-        // Electric defrost always used for Defrost Strategy = Resistive regardless of fuel type
-        "VRF Heat Pump Defrost Electricity Rate", "VRF Heat Pump Defrost Electricity Energy"
-        // Alternate Fuel types (e.g., FuelType = NaturalGas):
-        //"VRF Heat Pump Cooling <FuelType> Rate",
-        //"VRF Heat Pump Cooling <FuelType> Energy",
-        //"VRF Heat Pump Heating <FuelType> Rate",
-        //"VRF Heat Pump Heating <FuelType> Energy",
-        //"VRF Heat Pump Defrost <FuelType> Rate",
-        //"VRF Heat Pump Defrost <FuelType> Energy",
-
-      };
-      return result;
-    }
-
-    IddObjectType AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::iddObjectType() const {
-      return AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType();
-    }
-
-    std::vector<ScheduleTypeKey>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      std::vector<ScheduleTypeKey> result;
-      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-      if (std::find(b, e, OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilitySchedule) != e) {
-        result.push_back(ScheduleTypeKey("AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR", "Availability Schedule"));
-      }
-      if (std::find(b, e, OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ThermostatPrioritySchedule) != e) {
-        result.push_back(ScheduleTypeKey("AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR", "Thermostat Priority Schedule"));
-      }
-      if (std::find(b, e, OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::BasinHeaterOperatingSchedule) != e) {
-        result.push_back(ScheduleTypeKey("AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR", "Basin Heater Operating Schedule"));
-      }
-      return result;
-    }
-
-    Schedule AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::availabilitySchedule() const {
-      boost::optional<Schedule> value = optionalAvailabilitySchedule();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
-      }
-      return value.get();
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::grossRatedTotalCoolingCapacity() const {
-      return getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedTotalCoolingCapacity, true);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::isGrossRatedTotalCoolingCapacityAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedTotalCoolingCapacity, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "autosize");
-      }
-      return result;
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::grossRatedCoolingCOP() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedCoolingCOP, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::minimumOutdoorTemperatureinCoolingMode() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorTemperatureinCoolingMode, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorTemperatureinCoolingMode() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorTemperatureinCoolingMode, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingCapacityRatioModifierFunctionofLowTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCapacityRatioModifierFunctionofLowTemperatureCurveName);
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingCapacityRatioBoundaryCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCapacityRatioBoundaryCurveName);
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingCapacityRatioModifierFunctionofHighTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCapacityRatioModifierFunctionofHighTemperatureCurveName);
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingEnergyInputRatioModifierFunctionofLowTemperatureCurveName);
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingEnergyInputRatioBoundaryCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingEnergyInputRatioBoundaryCurveName);
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                                                    CoolingEnergyInputRatioModifierFunctionofHighTemperatureCurveName);
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                                                    CoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurveName);
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                                                    CoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName);
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingCombinationRatioCorrectionFactorCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCombinationRatioCorrectionFactorCurveName);
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingPartLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingPartLoadFractionCorrelationCurveName);
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::grossRatedHeatingCapacity() const {
-      return getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedHeatingCapacity, true);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::isGrossRatedHeatingCapacityAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedHeatingCapacity, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "autosize");
-      }
-      return result;
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::ratedHeatingCapacitySizingRatio() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedHeatingCapacitySizingRatio, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::ratedHeatingCOP() const {
-      boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedHeatingCOP, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::minimumOutdoorTemperatureinHeatingMode() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorTemperatureinHeatingMode, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorTemperatureinHeatingMode() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorTemperatureinHeatingMode, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingCapacityRatioModifierFunctionofLowTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCapacityRatioModifierFunctionofLowTemperatureCurveName);
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingCapacityRatioBoundaryCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCapacityRatioBoundaryCurveName);
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingCapacityRatioModifierFunctionofHighTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCapacityRatioModifierFunctionofHighTemperatureCurveName);
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingEnergyInputRatioModifierFunctionofLowTemperatureCurveName);
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingEnergyInputRatioBoundaryCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingEnergyInputRatioBoundaryCurveName);
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                                                    HeatingEnergyInputRatioModifierFunctionofHighTemperatureCurveName);
-    }
-
-    std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingPerformanceCurveOutdoorTemperatureType() const {
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingPerformanceCurveOutdoorTemperatureType, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                                                    HeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurveName);
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                                                    HeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName);
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingCombinationRatioCorrectionFactorCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCombinationRatioCorrectionFactorCurveName);
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingPartLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingPartLoadFractionCorrelationCurveName);
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::minimumHeatPumpPartLoadRatio() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumHeatPumpPartLoadRatio, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<ThermalZone> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::zoneforMasterThermostatLocation() const {
-      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneNameforMasterThermostatLocation);
-    }
-
-    std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::masterThermostatPriorityControlType() const {
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MasterThermostatPriorityControlType, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::thermostatPrioritySchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ThermostatPrioritySchedule);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatPumpWasteHeatRecovery() const {
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatPumpWasteHeatRecovery, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
-    }
-
-    double
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode() const {
-      boost::optional<double> value = getDouble(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode,
-        true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::verticalHeightusedforPipingCorrectionFactor() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VerticalHeightusedforPipingCorrectionFactor, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::pipingCorrectionFactorforLengthinCoolingModeCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforLengthinCoolingModeCurveName);
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::pipingCorrectionFactorforHeightinCoolingModeCoefficient() const {
-      boost::optional<double> value = getDouble(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforHeightinCoolingModeCoefficient, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode() const {
-      boost::optional<double> value = getDouble(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode,
-        true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::pipingCorrectionFactorforLengthinHeatingModeCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforLengthinHeatingModeCurveName);
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::pipingCorrectionFactorforHeightinHeatingModeCoefficient() const {
-      boost::optional<double> value = getDouble(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforHeightinHeatingModeCoefficient, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::crankcaseHeaterPowerperCompressor() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CrankcaseHeaterPowerperCompressor, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    int AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::numberofCompressors() const {
-      boost::optional<int> value = getInt(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressors, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::ratioofCompressorSizetoTotalCompressorCapacity() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatioofCompressorSizetoTotalCompressorCapacity, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorDrybulbTemperatureforCrankcaseHeater() const {
-      boost::optional<double> value = getDouble(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorDrybulbTemperatureforCrankcaseHeater, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::defrostStrategy() const {
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostStrategy, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::defrostControl() const {
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostControl, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName);
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::defrostTimePeriodFraction() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostTimePeriodFraction, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resistiveDefrostHeaterCapacity() const {
-      return getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ResistiveDefrostHeaterCapacity, true);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::isResistiveDefrostHeaterCapacityAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ResistiveDefrostHeaterCapacity, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "autosize");
-      }
-      return result;
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorDrybulbTemperatureforDefrostOperation() const {
-      boost::optional<double> value = getDouble(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::waterCondenserVolumeFlowRate() const {
-      return getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::WaterCondenserVolumeFlowRate, true);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::isWaterCondenserVolumeFlowRateAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::WaterCondenserVolumeFlowRate, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "autosize");
-      }
-      return result;
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::evaporativeCondenserEffectiveness() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserEffectiveness, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::evaporativeCondenserAirFlowRate() const {
-      return getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserAirFlowRate, true);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::isEvaporativeCondenserAirFlowRateAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserAirFlowRate, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "autosize");
-      }
-      return result;
-    }
-
-    boost::optional<double>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::evaporativeCondenserPumpRatedPowerConsumption() const {
-      return getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserPumpRatedPowerConsumption,
-                       true);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value =
-        getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserPumpRatedPowerConsumption, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "autosize");
-      }
-      return result;
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::basinHeaterCapacity() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::BasinHeaterCapacity, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::basinHeaterSetpointTemperature() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::BasinHeaterSetpointTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::basinHeaterOperatingSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::BasinHeaterOperatingSchedule);
-    }
-
-    std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::fuelType() const {
-      boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::FuelType, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::minimumOutdoorTemperatureinHeatRecoveryMode() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorTemperatureinHeatRecoveryMode, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorTemperatureinHeatRecoveryMode() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorTemperatureinHeatRecoveryMode, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryCoolingCapacityModifierCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingCapacityModifierCurveName);
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::initialHeatRecoveryCoolingCapacityFraction() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryCoolingCapacityFraction, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryCoolingCapacityTimeConstant() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingCapacityTimeConstant, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryCoolingEnergyModifierCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingEnergyModifierCurveName);
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::initialHeatRecoveryCoolingEnergyFraction() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryCoolingEnergyFraction, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryCoolingEnergyTimeConstant() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingEnergyTimeConstant, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryHeatingCapacityModifierCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingCapacityModifierCurveName);
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::initialHeatRecoveryHeatingCapacityFraction() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryHeatingCapacityFraction, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryHeatingCapacityTimeConstant() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingCapacityTimeConstant, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryHeatingEnergyModifierCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingEnergyModifierCurveName);
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::initialHeatRecoveryHeatingEnergyFraction() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryHeatingEnergyFraction, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryHeatingEnergyTimeConstant() const {
-      boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingEnergyTimeConstant, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setAvailabilitySchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilitySchedule,
-                                "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR", "Availability Schedule", schedule);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setGrossRatedTotalCoolingCapacity(
-      boost::optional<double> grossRatedTotalCoolingCapacity) {
-      bool result(false);
-      if (grossRatedTotalCoolingCapacity) {
-        result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedTotalCoolingCapacity,
-                           grossRatedTotalCoolingCapacity.get());
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizeGrossRatedTotalCoolingCapacity() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedTotalCoolingCapacity, "autosize");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setGrossRatedCoolingCOP(double grossRatedCoolingCOP) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedCoolingCOP, grossRatedCoolingCOP);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMinimumOutdoorTemperatureinCoolingMode(
-      double minimumOutdoorTemperatureinCoolingMode) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorTemperatureinCoolingMode,
-                              minimumOutdoorTemperatureinCoolingMode);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorTemperatureinCoolingMode(
-      double maximumOutdoorTemperatureinCoolingMode) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorTemperatureinCoolingMode,
-                              maximumOutdoorTemperatureinCoolingMode);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(
-          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCapacityRatioModifierFunctionofLowTemperatureCurveName,
-          curve.get().handle());
-      } else {
-        resetCoolingCapacityRatioModifierFunctionofLowTemperatureCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingCapacityRatioModifierFunctionofLowTemperatureCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCapacityRatioModifierFunctionofLowTemperatureCurveName,
-        "");
-      OS_ASSERT(result);
-    }
-
-    bool
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingCapacityRatioBoundaryCurve(const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCapacityRatioBoundaryCurveName,
-                            curve.get().handle());
-      } else {
-        resetCoolingCapacityRatioBoundaryCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingCapacityRatioBoundaryCurve() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCapacityRatioBoundaryCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(
-          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCapacityRatioModifierFunctionofHighTemperatureCurveName,
-          curve.get().handle());
-      } else {
-        resetCoolingCapacityRatioModifierFunctionofHighTemperatureCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingCapacityRatioModifierFunctionofHighTemperatureCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCapacityRatioModifierFunctionofHighTemperatureCurveName,
-        "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                              CoolingEnergyInputRatioModifierFunctionofLowTemperatureCurveName,
-                            curve.get().handle());
-      } else {
-        resetCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingEnergyInputRatioModifierFunctionofLowTemperatureCurveName,
-        "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingEnergyInputRatioBoundaryCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingEnergyInputRatioBoundaryCurveName,
-                            curve.get().handle());
-      } else {
-        resetCoolingEnergyInputRatioBoundaryCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingEnergyInputRatioBoundaryCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingEnergyInputRatioBoundaryCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                              CoolingEnergyInputRatioModifierFunctionofHighTemperatureCurveName,
-                            curve.get().handle());
-      } else {
-        resetCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingEnergyInputRatioModifierFunctionofHighTemperatureCurveName,
-        "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                              CoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurveName,
-                            curve.get().handle());
-      } else {
-        resetCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                CoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurveName,
-                              "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                              CoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName,
-                            curve.get().handle());
-      } else {
-        resetCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                CoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName,
-                              "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingCombinationRatioCorrectionFactorCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result =
-          setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCombinationRatioCorrectionFactorCurveName,
-                     curve.get().handle());
-      } else {
-        resetCoolingCombinationRatioCorrectionFactorCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingCombinationRatioCorrectionFactorCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingCombinationRatioCorrectionFactorCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCoolingPartLoadFractionCorrelationCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingPartLoadFractionCorrelationCurveName,
-                            curve.get().handle());
-      } else {
-        resetCoolingPartLoadFractionCorrelationCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCoolingPartLoadFractionCorrelationCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CoolingPartLoadFractionCorrelationCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setGrossRatedHeatingCapacity(
-      boost::optional<double> grossRatedHeatingCapacity) {
-      bool result(false);
-      if (grossRatedHeatingCapacity) {
-        result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedHeatingCapacity,
-                           grossRatedHeatingCapacity.get());
-      }
-      OS_ASSERT(result);
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizeGrossRatedHeatingCapacity() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::GrossRatedHeatingCapacity, "autosize");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setRatedHeatingCapacitySizingRatio(
-      double ratedHeatingCapacitySizingRatio) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedHeatingCapacitySizingRatio,
-                              ratedHeatingCapacitySizingRatio);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setRatedHeatingCOP(double ratedHeatingCOP) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedHeatingCOP, ratedHeatingCOP);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMinimumOutdoorTemperatureinHeatingMode(
-      double minimumOutdoorTemperatureinHeatingMode) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorTemperatureinHeatingMode,
-                              minimumOutdoorTemperatureinHeatingMode);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorTemperatureinHeatingMode(
-      double maximumOutdoorTemperatureinHeatingMode) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorTemperatureinHeatingMode,
-                              maximumOutdoorTemperatureinHeatingMode);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(
-          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCapacityRatioModifierFunctionofLowTemperatureCurveName,
-          curve.get().handle());
-      } else {
-        resetHeatingCapacityRatioModifierFunctionofLowTemperatureCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingCapacityRatioModifierFunctionofLowTemperatureCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCapacityRatioModifierFunctionofLowTemperatureCurveName,
-        "");
-      OS_ASSERT(result);
-    }
-
-    bool
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingCapacityRatioBoundaryCurve(const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCapacityRatioBoundaryCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatingCapacityRatioBoundaryCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingCapacityRatioBoundaryCurve() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCapacityRatioBoundaryCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(
-          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCapacityRatioModifierFunctionofHighTemperatureCurveName,
-          curve.get().handle());
-      } else {
-        resetHeatingCapacityRatioModifierFunctionofHighTemperatureCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingCapacityRatioModifierFunctionofHighTemperatureCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCapacityRatioModifierFunctionofHighTemperatureCurveName,
-        "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                              HeatingEnergyInputRatioModifierFunctionofLowTemperatureCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingEnergyInputRatioModifierFunctionofLowTemperatureCurveName,
-        "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingEnergyInputRatioBoundaryCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingEnergyInputRatioBoundaryCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatingEnergyInputRatioBoundaryCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingEnergyInputRatioBoundaryCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingEnergyInputRatioBoundaryCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                              HeatingEnergyInputRatioModifierFunctionofHighTemperatureCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingEnergyInputRatioModifierFunctionofHighTemperatureCurveName,
-        "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingPerformanceCurveOutdoorTemperatureType(
-      std::string heatingPerformanceCurveOutdoorTemperatureType) {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingPerformanceCurveOutdoorTemperatureType,
-                  heatingPerformanceCurveOutdoorTemperatureType);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                              HeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                HeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurveName,
-                              "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                              HeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
-                                HeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName,
-                              "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingCombinationRatioCorrectionFactorCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result =
-          setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCombinationRatioCorrectionFactorCurveName,
-                     curve.get().handle());
-      } else {
-        resetHeatingCombinationRatioCorrectionFactorCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingCombinationRatioCorrectionFactorCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingCombinationRatioCorrectionFactorCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatingPartLoadFractionCorrelationCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingPartLoadFractionCorrelationCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatingPartLoadFractionCorrelationCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatingPartLoadFractionCorrelationCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingPartLoadFractionCorrelationCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMinimumHeatPumpPartLoadRatio(double minimumHeatPumpPartLoadRatio) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumHeatPumpPartLoadRatio,
-                              minimumHeatPumpPartLoadRatio);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setZoneforMasterThermostatLocation(
-      const boost::optional<ThermalZone>& zone) {
-      bool result(false);
-      if (zone) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneNameforMasterThermostatLocation,
-                            zone.get().handle());
-      } else {
-        resetZoneforMasterThermostatLocation();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetZoneforMasterThermostatLocation() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneNameforMasterThermostatLocation, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMasterThermostatPriorityControlType(
-      std::string masterThermostatPriorityControlType) {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MasterThermostatPriorityControlType,
-                              masterThermostatPriorityControlType);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setThermostatPrioritySchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ThermostatPrioritySchedule,
-                                "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR", "Thermostat Priority Schedule", schedule);
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetThermostatPrioritySchedule() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ThermostatPrioritySchedule, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatPumpWasteHeatRecovery(bool heatPumpWasteHeatRecovery) {
-      return setBooleanFieldValue(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatPumpWasteHeatRecovery,
-                                  heatPumpWasteHeatRecovery);
-      ;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(
-      double equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode) {
-      bool result = setDouble(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode,
-        equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setVerticalHeightusedforPipingCorrectionFactor(
-      double verticalHeightusedforPipingCorrectionFactor) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VerticalHeightusedforPipingCorrectionFactor,
-                              verticalHeightusedforPipingCorrectionFactor);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setPipingCorrectionFactorforLengthinCoolingModeCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(
-          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforLengthinCoolingModeCurveName,
-          curve.get().handle());
-      } else {
-        resetPipingCorrectionFactorforLengthinCoolingModeCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetPipingCorrectionFactorforLengthinCoolingModeCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforLengthinCoolingModeCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setPipingCorrectionFactorforHeightinCoolingModeCoefficient(
-      double pipingCorrectionFactorforHeightinCoolingModeCoefficient) {
-      bool result =
-        setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforHeightinCoolingModeCoefficient,
-                  pipingCorrectionFactorforHeightinCoolingModeCoefficient);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(
-      double equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode) {
-      bool result = setDouble(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode,
-        equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setPipingCorrectionFactorforLengthinHeatingModeCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(
-          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforLengthinHeatingModeCurveName,
-          curve.get().handle());
-      } else {
-        resetPipingCorrectionFactorforLengthinHeatingModeCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetPipingCorrectionFactorforLengthinHeatingModeCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforLengthinHeatingModeCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setPipingCorrectionFactorforHeightinHeatingModeCoefficient(
-      double pipingCorrectionFactorforHeightinHeatingModeCoefficient) {
-      bool result =
-        setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::PipingCorrectionFactorforHeightinHeatingModeCoefficient,
-                  pipingCorrectionFactorforHeightinHeatingModeCoefficient);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCrankcaseHeaterPowerperCompressor(
-      double crankcaseHeaterPowerperCompressor) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CrankcaseHeaterPowerperCompressor,
-                              crankcaseHeaterPowerperCompressor);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setNumberofCompressors(int numberofCompressors) {
-      bool result = setInt(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressors, numberofCompressors);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setRatioofCompressorSizetoTotalCompressorCapacity(
-      double ratioofCompressorSizetoTotalCompressorCapacity) {
-      bool result =
-        setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatioofCompressorSizetoTotalCompressorCapacity,
-                  ratioofCompressorSizetoTotalCompressorCapacity);
-      OS_ASSERT(result);
-      return result;
-    }
+namespace detail {
 
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorDrybulbTemperatureforCrankcaseHeater(
-      double maximumOutdoorDrybulbTemperatureforCrankcaseHeater) {
-      bool result =
-        setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorDrybulbTemperatureforCrankcaseHeater,
-                  maximumOutdoorDrybulbTemperatureforCrankcaseHeater);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDefrostStrategy(std::string defrostStrategy) {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostStrategy, defrostStrategy);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDefrostControl(std::string defrostControl) {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostControl, defrostControl);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(
-          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName,
-          curve.get().handle());
-      } else {
-        resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName,
-        "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDefrostTimePeriodFraction(double defrostTimePeriodFraction) {
-      bool result =
-        setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostTimePeriodFraction, defrostTimePeriodFraction);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setResistiveDefrostHeaterCapacity(
-      boost::optional<double> resistiveDefrostHeaterCapacity) {
-      bool result(false);
-      if (resistiveDefrostHeaterCapacity) {
-        result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ResistiveDefrostHeaterCapacity,
-                           resistiveDefrostHeaterCapacity.get());
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizeResistiveDefrostHeaterCapacity() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ResistiveDefrostHeaterCapacity, "autosize");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorDrybulbTemperatureforDefrostOperation(
-      double maximumOutdoorDrybulbTemperatureforDefrostOperation) {
-      bool result =
-        setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation,
-                  maximumOutdoorDrybulbTemperatureforDefrostOperation);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setWaterCondenserVolumeFlowRate(
-      boost::optional<double> waterCondenserVolumeFlowRate) {
-      bool result(false);
-      if (waterCondenserVolumeFlowRate) {
-        result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::WaterCondenserVolumeFlowRate,
-                           waterCondenserVolumeFlowRate.get());
-      }
-      OS_ASSERT(result);
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizeWaterCondenserVolumeFlowRate() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::WaterCondenserVolumeFlowRate, "autosize");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setEvaporativeCondenserEffectiveness(
-      double evaporativeCondenserEffectiveness) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserEffectiveness,
-                              evaporativeCondenserEffectiveness);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setEvaporativeCondenserAirFlowRate(
-      boost::optional<double> evaporativeCondenserAirFlowRate) {
-      bool result(false);
-      if (evaporativeCondenserAirFlowRate) {
-        result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserAirFlowRate,
-                           evaporativeCondenserAirFlowRate.get());
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizeEvaporativeCondenserAirFlowRate() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserAirFlowRate, "autosize");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setEvaporativeCondenserPumpRatedPowerConsumption(
-      boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption) {
-      bool result(false);
-      if (evaporativeCondenserPumpRatedPowerConsumption) {
-        result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserPumpRatedPowerConsumption,
-                           evaporativeCondenserPumpRatedPowerConsumption.get());
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizeEvaporativeCondenserPumpRatedPowerConsumption() {
-      bool result = setString(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EvaporativeCondenserPumpRatedPowerConsumption, "autosize");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setBasinHeaterCapacity(double basinHeaterCapacity) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::BasinHeaterCapacity, basinHeaterCapacity);
-      return result;
-    }
-
-    bool
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::BasinHeaterSetpointTemperature,
-                              basinHeaterSetpointTemperature);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setBasinHeaterOperatingSchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::BasinHeaterOperatingSchedule,
-                                "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR", "Basin Heater Operating Schedule", schedule);
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetBasinHeaterOperatingSchedule() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::BasinHeaterOperatingSchedule, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setFuelType(std::string fuelType) {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::FuelType, fuelType);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMinimumOutdoorTemperatureinHeatRecoveryMode(
-      double minimumOutdoorTemperatureinHeatRecoveryMode) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorTemperatureinHeatRecoveryMode,
-                              minimumOutdoorTemperatureinHeatRecoveryMode);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorTemperatureinHeatRecoveryMode(
-      double maximumOutdoorTemperatureinHeatRecoveryMode) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorTemperatureinHeatRecoveryMode,
-                              maximumOutdoorTemperatureinHeatRecoveryMode);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryCoolingCapacityModifierCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingCapacityModifierCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatRecoveryCoolingCapacityModifierCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatRecoveryCoolingCapacityModifierCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingCapacityModifierCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setInitialHeatRecoveryCoolingCapacityFraction(
-      double initialHeatRecoveryCoolingCapacityFraction) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryCoolingCapacityFraction,
-                              initialHeatRecoveryCoolingCapacityFraction);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryCoolingCapacityTimeConstant(
-      double heatRecoveryCoolingCapacityTimeConstant) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingCapacityTimeConstant,
-                              heatRecoveryCoolingCapacityTimeConstant);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryCoolingEnergyModifierCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingEnergyModifierCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatRecoveryCoolingEnergyModifierCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatRecoveryCoolingEnergyModifierCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingEnergyModifierCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setInitialHeatRecoveryCoolingEnergyFraction(
-      double initialHeatRecoveryCoolingEnergyFraction) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryCoolingEnergyFraction,
-                              initialHeatRecoveryCoolingEnergyFraction);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryCoolingEnergyTimeConstant(
-      double heatRecoveryCoolingEnergyTimeConstant) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingEnergyTimeConstant,
-                              heatRecoveryCoolingEnergyTimeConstant);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryHeatingCapacityModifierCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingCapacityModifierCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatRecoveryHeatingCapacityModifierCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatRecoveryHeatingCapacityModifierCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingCapacityModifierCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setInitialHeatRecoveryHeatingCapacityFraction(
-      double initialHeatRecoveryHeatingCapacityFraction) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryHeatingCapacityFraction,
-                              initialHeatRecoveryHeatingCapacityFraction);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryHeatingCapacityTimeConstant(
-      double heatRecoveryHeatingCapacityTimeConstant) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingCapacityTimeConstant,
-                              heatRecoveryHeatingCapacityTimeConstant);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryHeatingEnergyModifierCurve(
-      const boost::optional<Curve>& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingEnergyModifierCurveName,
-                            curve.get().handle());
-      } else {
-        resetHeatRecoveryHeatingEnergyModifierCurve();
-        result = true;
-      }
-      return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetHeatRecoveryHeatingEnergyModifierCurve() {
-      bool result =
-        setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingEnergyModifierCurveName, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setInitialHeatRecoveryHeatingEnergyFraction(
-      double initialHeatRecoveryHeatingEnergyFraction) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryHeatingEnergyFraction,
-                              initialHeatRecoveryHeatingEnergyFraction);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryHeatingEnergyTimeConstant(
-      double heatRecoveryHeatingEnergyTimeConstant) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingEnergyTimeConstant,
-                              heatRecoveryHeatingEnergyTimeConstant);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::optionalAvailabilitySchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilitySchedule);
-    }
-
-    unsigned AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::inletPort() const {
-      return OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CondenserInletNode;
-    }
-
-    unsigned AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outletPort() const {
-      return OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CondenserOutletNode;
-    }
-
-    ModelObjectList AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::vrfModelObjectList() const {
-      boost::optional<ModelObjectList> mo = getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneTerminalUnitList);
-
-      OS_ASSERT(mo);
-
-      return mo.get();
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setVRFModelObjectList(const ModelObjectList& modelObjectList) {
-      return setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneTerminalUnitList, modelObjectList.handle());
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
-      vrfModelObjectList().addModelObject(vrf);
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
-      vrfModelObjectList().removeModelObject(vrf);
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::removeAllTerminals() {
-      vrfModelObjectList().removeAllModelObjects();
-    }
-
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::terminals() const {
-      return subsetCastVector<ZoneHVACTerminalUnitVariableRefrigerantFlow>(vrfModelObjectList().modelObjects());
-    }
-
-    std::vector<ModelObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      boost::optional<ModelObject> curve;
-
-      curve = coolingCapacityRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = coolingCapacityRatioBoundaryCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = coolingCapacityRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = coolingEnergyInputRatioBoundaryCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = coolingCombinationRatioCorrectionFactorCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = coolingPartLoadFractionCorrelationCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingCapacityRatioBoundaryCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingCapacityRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingEnergyInputRatioBoundaryCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingCombinationRatioCorrectionFactorCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatingPartLoadFractionCorrelationCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = pipingCorrectionFactorforLengthinHeatingModeCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatRecoveryCoolingCapacityModifierCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatRecoveryCoolingEnergyModifierCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatRecoveryHeatingCapacityModifierCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = heatRecoveryHeatingEnergyModifierCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      return result;
-    }
-
-    ModelObject AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::clone(Model model) const {
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR airConditionerClone =
-        StraightComponent_Impl::clone(model).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
-
-      ModelObjectList modelObjectList(model);
-      airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVRFModelObjectList(
-        modelObjectList);
-
-      if (auto curve = coolingCapacityRatioModifierFunctionofLowTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve(clone);
-      }
-
-      if (auto curve = coolingCapacityRatioBoundaryCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingCapacityRatioBoundaryCurve(clone);
-      }
-
-      if (auto curve = coolingCapacityRatioModifierFunctionofHighTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioBoundaryCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioBoundaryCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(clone);
-      }
-
-      if (auto curve = coolingCombinationRatioCorrectionFactorCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingCombinationRatioCorrectionFactorCurve(clone);
-      }
-
-      if (auto curve = coolingPartLoadFractionCorrelationCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingPartLoadFractionCorrelationCurve(clone);
-      }
-
-      if (auto curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve(clone);
-      }
-
-      if (auto curve = heatingCapacityRatioBoundaryCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingCapacityRatioBoundaryCurve(clone);
-      }
-
-      if (auto curve = heatingCapacityRatioModifierFunctionofHighTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioBoundaryCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioBoundaryCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(clone);
-      }
-
-      if (auto curve = heatingCombinationRatioCorrectionFactorCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingCombinationRatioCorrectionFactorCurve(clone);
-      }
-
-      if (auto curve = heatingPartLoadFractionCorrelationCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingPartLoadFractionCorrelationCurve(clone);
-      }
-
-      if (auto curve = pipingCorrectionFactorforLengthinCoolingModeCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setPipingCorrectionFactorforLengthinCoolingModeCurve(clone);
-      }
-
-      if (auto curve = pipingCorrectionFactorforLengthinHeatingModeCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setPipingCorrectionFactorforLengthinHeatingModeCurve(clone);
-      }
-
-      if (auto curve = heatRecoveryCoolingCapacityModifierCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatRecoveryCoolingCapacityModifierCurve(clone);
-      }
-
-      if (auto curve = heatRecoveryCoolingEnergyModifierCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatRecoveryCoolingEnergyModifierCurve(clone);
-      }
-
-      if (auto curve = heatRecoveryHeatingCapacityModifierCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatRecoveryHeatingCapacityModifierCurve(clone);
-      }
-
-      if (auto curve = heatRecoveryHeatingEnergyModifierCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatRecoveryHeatingEnergyModifierCurve(clone);
-      }
-
-      return airConditionerClone;
-    }
-
-    std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::remove() {
-      vrfModelObjectList().remove();
-
-      boost::optional<Curve> curve;
-
-      curve = coolingCapacityRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingCapacityRatioBoundaryCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingCapacityRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioBoundaryCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingCombinationRatioCorrectionFactorCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingPartLoadFractionCorrelationCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingCapacityRatioBoundaryCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingCapacityRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioBoundaryCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingCombinationRatioCorrectionFactorCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingPartLoadFractionCorrelationCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatRecoveryCoolingCapacityModifierCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatRecoveryCoolingEnergyModifierCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatRecoveryHeatingCapacityModifierCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatRecoveryHeatingEnergyModifierCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      return StraightComponent_Impl::remove();
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedGrossRatedTotalCoolingCapacity() const {
-      return getAutosizedValue("Design Size Rated Total Cooling Capacity (gross)", "W");
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedGrossRatedHeatingCapacity() const {
-      return getAutosizedValue("Design Size Rated Total Heating Capacity", "W");
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedResistiveDefrostHeaterCapacity() const {
-      return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "");
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedWaterCondenserVolumeFlowRate() const {
-      return getAutosizedValue("Design Size Water Condenser Volume Flow Rate", "m3/s");
-    }
-
-    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
-      return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "m3/s");
-    }
-
-    boost::optional<double>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
-      return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosize() {
-      autosizeGrossRatedTotalCoolingCapacity();
-      autosizeGrossRatedHeatingCapacity();
-      autosizeResistiveDefrostHeaterCapacity();
-      autosizeWaterCondenserVolumeFlowRate();
-      autosizeEvaporativeCondenserAirFlowRate();
-      autosizeEvaporativeCondenserPumpRatedPowerConsumption();
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::applySizingValues() {
-      boost::optional<double> val;
-      val = autosizedGrossRatedTotalCoolingCapacity();
-      if (val) {
-        setGrossRatedTotalCoolingCapacity(val.get());
-      }
-
-      val = autosizedGrossRatedHeatingCapacity();
-      if (val) {
-        setGrossRatedHeatingCapacity(val.get());
-      }
-
-      val = autosizedResistiveDefrostHeaterCapacity();
-      if (val) {
-        setResistiveDefrostHeaterCapacity(val.get());
-      }
-
-      val = autosizedWaterCondenserVolumeFlowRate();
-      if (val) {
-        setWaterCondenserVolumeFlowRate(val.get());
-      }
-
-      val = autosizedEvaporativeCondenserAirFlowRate();
-      if (val) {
-        setEvaporativeCondenserAirFlowRate(val.get());
-      }
-
-      val = autosizedEvaporativeCondenserPumpRatedPowerConsumption();
-      if (val) {
-        setEvaporativeCondenserPumpRatedPowerConsumption(val.get());
-      }
-    }
-
-    std::vector<EMSActuatorNames> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::emsActuatorNames() const {
-      std::vector<EMSActuatorNames> actuators{{"Variable Refrigerant Flow Heat Pump", "Operating Mode"}};
-      return actuators;
-    }
-
-    std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::emsInternalVariableNames() const {
-      std::vector<std::string> types;
-      return types;
-    }
-
-    std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::condenserType() const {
-      // Note JM 2019-09-02: This looks weird / unusual, but it's because it was decided to not put any logic here and move it to FT
-      // In order to preserve backward compat, the return type was left to std::string, so we basically do this:
-      // * If hardset, return that value
-      // * If empty (defaulted), return the default: VRF connected to a PlantLoop => WaterCooled, else AirCooled.
-      std::string condenserType;
-
-      if (isCondenserTypeDefaulted()) {
-        // Default like FT
-        if (this->plantLoop()) {
-          condenserType = "WaterCooled";
-        } else {
-          condenserType = "AirCooled";
-        }
-      } else {
-        boost::optional<std::string> value =
-          getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CondenserType, false);
-        condenserType = value.get();
-      }
-      return condenserType;
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCondenserType(const std::string& condenserType) {
-
-      // If this doesn't agree with the current conditions, we warn...
-      if ((openstudio::istringEqual("AirCooled", condenserType) || openstudio::istringEqual("EvaporativelyCooled", condenserType))
-          && (this->plantLoop())) {
-        LOG(Warn, "Setting the Condenser Type to '" << condenserType << "', you should disconnect from its PlantLoop. "
-                                                    << "Occurred for " << briefDescription());
-      } else if (istringEqual("WaterCooled", condenserType) && !(this->plantLoop())) {
-        LOG(Warn, "Setting the Condenser Type to 'WaterCooled', you should connect it to a PlantLoop. "
-                    << "Occurred for " << briefDescription());
-      }
-
-      // ... but we still do it...
-      return setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CondenserType, condenserType);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::isCondenserTypeDefaulted() const {
-      return isEmpty(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CondenserType);
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetCondenserType() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CondenserType, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::addToNode(Node& node) {
-      // Only accept the demand side of a PlantLoop
-      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
-        if (plant->demandComponent(node.handle())) {
-          // bool success = StraightComponent_Impl::addToNode(node);
-          // if (success) {
-          // // If everything went well, then switch the condenser type
-          //   setCondenserType("WaterCooled");
-          //   return success;
-          // }
-          return StraightComponent_Impl::addToNode(node);
-        }
-      }
-
-      return false;
-    }
-
-    // This override is rendered moot now.
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::removeFromLoop() {
-      // Disconnect the component
-      bool ok = StraightComponent_Impl::removeFromLoop();
-
-      // Don't Switch the condenser type to "AirCooled"
-      // this->setCondenserType("AirCooled");
-      return ok;
-    }
-
-  }  // namespace detail
-
-  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(const Model& model)
-    : StraightComponent(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType(), model) {
-    OS_ASSERT(getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>());
-
-    Schedule schedule = model.alwaysOnDiscreteSchedule();
-
-    setAvailabilitySchedule(schedule);
-
-    autosizeGrossRatedTotalCoolingCapacity();
-
-    setGrossRatedCoolingCOP(3.3);
-
-    setMinimumOutdoorTemperatureinCoolingMode(-5.0);
-
-    setMaximumOutdoorTemperatureinCoolingMode(43.0);
-
-    autosizeGrossRatedHeatingCapacity();
-
-    setRatedHeatingCapacitySizingRatio(1.0);
-
-    setRatedHeatingCOP(3.5);
-
-    setMinimumOutdoorTemperatureinHeatingMode(-20.0);
-
-    setMaximumOutdoorTemperatureinHeatingMode(30.0);
-
-    setHeatingPerformanceCurveOutdoorTemperatureType("WetBulbTemperature");
-
-    setMinimumHeatPumpPartLoadRatio(0.25);
-
-    setMasterThermostatPriorityControlType("LoadPriority");
-
-    setHeatPumpWasteHeatRecovery(false);
-
-    setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(30.0);
-
-    setVerticalHeightusedforPipingCorrectionFactor(10.0);
-
-    setPipingCorrectionFactorforHeightinCoolingModeCoefficient(-0.000386);
-
-    setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(30.0);
-
-    setPipingCorrectionFactorforHeightinHeatingModeCoefficient(0.0);
-
-    setCrankcaseHeaterPowerperCompressor(15.0);
-
-    setNumberofCompressors(3);
-
-    setRatioofCompressorSizetoTotalCompressorCapacity(0.33);
-
-    setMaximumOutdoorDrybulbTemperatureforCrankcaseHeater(7.0);
-
-    setDefrostStrategy("Resistive");
-
-    setDefrostControl("Timed");
-
-    setDefrostTimePeriodFraction(0.058333);
-
-    setResistiveDefrostHeaterCapacity(0.0000001);
-
-    setMaximumOutdoorDrybulbTemperatureforDefrostOperation(7.0);
-
-    autosizeWaterCondenserVolumeFlowRate();
-
-    setEvaporativeCondenserEffectiveness(0.9);
-
-    autosizeEvaporativeCondenserAirFlowRate();
-
-    autosizeEvaporativeCondenserPumpRatedPowerConsumption();
-
-    setBasinHeaterCapacity(0.0);
-
-    setBasinHeaterSetpointTemperature(2.0);
-
-    setFuelType("Electricity");
-
-    setMinimumOutdoorTemperatureinHeatRecoveryMode(0.0);
-
-    setMaximumOutdoorTemperatureinHeatRecoveryMode(20.0);
-
-    setInitialHeatRecoveryCoolingCapacityFraction(0.5);
-
-    setHeatRecoveryCoolingCapacityTimeConstant(0.083);
-
-    setInitialHeatRecoveryCoolingEnergyFraction(1.0);
-
-    setHeatRecoveryCoolingEnergyTimeConstant(0.0);
-
-    setInitialHeatRecoveryHeatingCapacityFraction(0.5);
-
-    setHeatRecoveryHeatingCapacityTimeConstant(0.083);
-
-    setInitialHeatRecoveryHeatingEnergyFraction(0.5);
-
-    setHeatRecoveryHeatingEnergyTimeConstant(0.0);
-
-    CurveBiquadratic vrfCoolCapFT(model);
-    vrfCoolCapFT.setName(name().get() + " VRFCoolCapFT");
-    vrfCoolCapFT.setCoefficient1Constant(0.576882692);
-    vrfCoolCapFT.setCoefficient2x(0.017447952);
-    vrfCoolCapFT.setCoefficient3xPOW2(0.000583269);
-    vrfCoolCapFT.setCoefficient4y(-1.76324E-06);
-    vrfCoolCapFT.setCoefficient5yPOW2(-7.474E-09);
-    vrfCoolCapFT.setCoefficient6xTIMESY(-1.30413E-07);
-    vrfCoolCapFT.setMinimumValueofx(15.0);
-    vrfCoolCapFT.setMaximumValueofx(24.0);
-    vrfCoolCapFT.setMinimumValueofy(-5.0);
-    vrfCoolCapFT.setMaximumValueofy(23);
-    setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve(vrfCoolCapFT);
-
-    CurveCubic vrfCoolCapFTBoundary(model);
-    vrfCoolCapFTBoundary.setName(name().get() + " VRFCoolCapFTBoundary");
-    vrfCoolCapFTBoundary.setCoefficient1Constant(25.73);
-    vrfCoolCapFTBoundary.setCoefficient2x(-0.03150043);
-    vrfCoolCapFTBoundary.setCoefficient3xPOW2(-0.01416595);
-    vrfCoolCapFTBoundary.setCoefficient4xPOW3(0);
-    vrfCoolCapFTBoundary.setMinimumValueofx(11);
-    vrfCoolCapFTBoundary.setMaximumValueofx(30);
-    setCoolingCapacityRatioBoundaryCurve(vrfCoolCapFTBoundary);
-
-    CurveBiquadratic vrfCoolCapFTHi(model);
-    vrfCoolCapFTHi.setName(name().get() + " VRFCoolCapFTHi");
-    vrfCoolCapFTHi.setCoefficient1Constant(0.6867358);
-    vrfCoolCapFTHi.setCoefficient2x(0.0207631);
-    vrfCoolCapFTHi.setCoefficient3xPOW2(0.0005447);
-    vrfCoolCapFTHi.setCoefficient4y(-0.0016218);
-    vrfCoolCapFTHi.setCoefficient5yPOW2(-4.259E-07);
-    vrfCoolCapFTHi.setCoefficient6xTIMESY(-0.0003392);
-    vrfCoolCapFTHi.setMinimumValueofx(15);
-    vrfCoolCapFTHi.setMaximumValueofx(24);
-    vrfCoolCapFTHi.setMinimumValueofy(16);
-    vrfCoolCapFTHi.setMaximumValueofy(43);
-    setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve(vrfCoolCapFTHi);
-
-    CurveBiquadratic vrfCoolEIRFT(model);
-    vrfCoolEIRFT.setName(name().get() + " VRFCoolEIRFT");
-    vrfCoolEIRFT.setCoefficient1Constant(0.989010541);
-    vrfCoolEIRFT.setCoefficient2x(-0.02347967);
-    vrfCoolEIRFT.setCoefficient3xPOW2(0.000199711);
-    vrfCoolEIRFT.setCoefficient4y(0.005968336);
-    vrfCoolEIRFT.setCoefficient5yPOW2(-1.0289E-07);
-    vrfCoolEIRFT.setCoefficient6xTIMESY(-0.00015686);
-    vrfCoolEIRFT.setMinimumValueofx(15);
-    vrfCoolEIRFT.setMaximumValueofx(24);
-    vrfCoolEIRFT.setMinimumValueofy(-5);
-    vrfCoolEIRFT.setMaximumValueofy(23);
-    setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve(vrfCoolEIRFT);
-
-    CurveCubic vrfCoolEIRFTBoundary(model);
-    vrfCoolEIRFTBoundary.setName(name().get() + " VRFCoolEIRFTBoundary");
-    vrfCoolEIRFTBoundary.setCoefficient1Constant(25.73473775);
-    vrfCoolEIRFTBoundary.setCoefficient2x(-0.03150043);
-    vrfCoolEIRFTBoundary.setCoefficient3xPOW2(-0.01416595);
-    vrfCoolEIRFTBoundary.setCoefficient4xPOW3(0);
-    vrfCoolEIRFTBoundary.setMinimumValueofx(15);
-    vrfCoolEIRFTBoundary.setMaximumValueofx(24);
-    setCoolingEnergyInputRatioBoundaryCurve(vrfCoolEIRFTBoundary);
-
-    CurveBiquadratic vrfCoolEIRFTHi(model);
-    vrfCoolEIRFTHi.setName(name().get() + " VRFCoolEIRFTHi");
-    vrfCoolEIRFTHi.setCoefficient1Constant(-1.4395110176);
-    vrfCoolEIRFTHi.setCoefficient2x(0.1619850459);
-    vrfCoolEIRFTHi.setCoefficient3xPOW2(-0.0034911781);
-    vrfCoolEIRFTHi.setCoefficient4y(0.0269442645);
-    vrfCoolEIRFTHi.setCoefficient5yPOW2(0.0001346163);
-    vrfCoolEIRFTHi.setCoefficient6xTIMESY(-0.0006714941);
-    vrfCoolEIRFTHi.setMinimumValueofx(15);
-    vrfCoolEIRFTHi.setMaximumValueofx(23.9);
-    vrfCoolEIRFTHi.setMinimumValueofy(16.8);
-    vrfCoolEIRFTHi.setMaximumValueofy(43.3);
-    setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(vrfCoolEIRFTHi);
-
-    CurveCubic coolingEIRLowPLR(model);
-    coolingEIRLowPLR.setName(name().get() + " CoolingEIRLowPLR");
-    coolingEIRLowPLR.setCoefficient1Constant(0.4541226192);
-    coolingEIRLowPLR.setCoefficient2x(-0.1729687081);
-    coolingEIRLowPLR.setCoefficient3xPOW2(1.0828661347);
-    coolingEIRLowPLR.setCoefficient4xPOW3(-0.3618480897);
-    coolingEIRLowPLR.setMinimumValueofx(0.5);
-    coolingEIRLowPLR.setMaximumValueofx(1.0);
-    setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(coolingEIRLowPLR);
-
-    CurveCubic coolingEIRHiPLR(model);
-    coolingEIRHiPLR.setName(name().get() + " CoolingEIRHiPLR");
-    coolingEIRHiPLR.setCoefficient1Constant(1.0);
-    coolingEIRHiPLR.setCoefficient2x(0.0);
-    coolingEIRHiPLR.setCoefficient3xPOW2(0.0);
-    coolingEIRHiPLR.setCoefficient4xPOW3(0.0);
-    coolingEIRHiPLR.setMinimumValueofx(1.0);
-    coolingEIRHiPLR.setMaximumValueofx(1.5);
-    setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(coolingEIRHiPLR);
-
-    CurveCubic coolingCombRatio(model);
-    coolingCombRatio.setName(name().get() + " CoolingCombRatio");
-    coolingCombRatio.setCoefficient1Constant(0.576593263);
-    coolingCombRatio.setCoefficient2x(0.6349408697);
-    coolingCombRatio.setCoefficient3xPOW2(-0.3076093963);
-    coolingCombRatio.setCoefficient4xPOW3(0.0960752636);
-    coolingCombRatio.setMinimumValueofx(1);
-    coolingCombRatio.setMaximumValueofx(1.5);
-    setCoolingCombinationRatioCorrectionFactorCurve(coolingCombRatio);
-
-    CurveCubic vrfCPLFFPLR(model);
-    vrfCPLFFPLR.setName(name().get() + " VRFCPLFFPLR");
-    vrfCPLFFPLR.setCoefficient1Constant(0.85);
-    vrfCPLFFPLR.setCoefficient2x(0.15);
-    vrfCPLFFPLR.setCoefficient3xPOW2(0.0);
-    vrfCPLFFPLR.setCoefficient4xPOW3(0.0);
-    vrfCPLFFPLR.setMinimumValueofx(0.0);
-    vrfCPLFFPLR.setMinimumValueofx(1.0);
-    setCoolingPartLoadFractionCorrelationCurve(vrfCPLFFPLR);
-
-    CurveBiquadratic vrfHeatCapFT(model);
-    vrfHeatCapFT.setName(name().get() + " VRFHeatCapFT");
-    vrfHeatCapFT.setCoefficient1Constant(1.012090154);
-    vrfHeatCapFT.setCoefficient2x(-0.0012467553);
-    vrfHeatCapFT.setCoefficient3xPOW2(-0.0001271847);
-    vrfHeatCapFT.setCoefficient4y(0.0267564328);
-    vrfHeatCapFT.setCoefficient5yPOW2(-0.0000004986);
-    vrfHeatCapFT.setCoefficient6xTIMESY(-0.0002635239);
-    vrfHeatCapFT.setMinimumValueofx(21.1);
-    vrfHeatCapFT.setMaximumValueofx(27.2);
-    vrfHeatCapFT.setMinimumValueofy(-20);
-    vrfHeatCapFT.setMaximumValueofy(3.33);
-    setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve(vrfHeatCapFT);
-
-    CurveCubic vrfHeatCapFTBoundary(model);
-    vrfHeatCapFTBoundary.setName(name().get() + " VRFHeatCapFTBoundary");
-    vrfHeatCapFTBoundary.setCoefficient1Constant(58.5770);
-    vrfHeatCapFTBoundary.setCoefficient2x(-3.0255);
-    vrfHeatCapFTBoundary.setCoefficient3xPOW2(0.0193);
-    vrfHeatCapFTBoundary.setCoefficient4xPOW3(0.0);
-    vrfHeatCapFTBoundary.setMinimumValueofx(15);
-    vrfHeatCapFTBoundary.setMaximumValueofx(23.9);
-    setHeatingCapacityRatioBoundaryCurve(vrfHeatCapFTBoundary);
-
-    CurveBiquadratic vrfHeatCapFTHi(model);
-    vrfHeatCapFTHi.setName(name().get() + " VRFHeatCapFTHi");
-    vrfHeatCapFTHi.setCoefficient1Constant(2.5859872368);
-    vrfHeatCapFTHi.setCoefficient2x(-0.0953227101);
-    vrfHeatCapFTHi.setCoefficient3xPOW2(0.0009553288);
-    vrfHeatCapFTHi.setCoefficient4y(0);
-    vrfHeatCapFTHi.setCoefficient5yPOW2(0);
-    vrfHeatCapFTHi.setCoefficient6xTIMESY(0);
-    vrfHeatCapFTHi.setMinimumValueofx(21.1);
-    vrfHeatCapFTHi.setMaximumValueofx(27.2);
-    vrfHeatCapFTHi.setMinimumValueofy(-9.44);
-    vrfHeatCapFTHi.setMaximumValueofy(15);
-    setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve(vrfHeatCapFTHi);
-
-    CurveBiquadratic vrfHeatEIRFT(model);
-    vrfHeatEIRFT.setName(name().get() + " VRFHeatEIRFT");
-    vrfHeatEIRFT.setCoefficient1Constant(0.7224292683);
-    vrfHeatEIRFT.setCoefficient2x(0.0034566628);
-    vrfHeatEIRFT.setCoefficient3xPOW2(0.0006507028);
-    vrfHeatEIRFT.setCoefficient4y(-0.0026435362);
-    vrfHeatEIRFT.setCoefficient5yPOW2(0.0012464766);
-    vrfHeatEIRFT.setCoefficient6xTIMESY(-0.0001009161);
-    vrfHeatEIRFT.setMinimumValueofx(21.1);
-    vrfHeatEIRFT.setMaximumValueofx(27.2);
-    vrfHeatEIRFT.setMinimumValueofy(-20);
-    vrfHeatEIRFT.setMaximumValueofy(3.33);
-    setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve(vrfHeatEIRFT);
-
-    CurveCubic vrfHeatEIRFTBoundary(model);
-    vrfHeatEIRFTBoundary.setName(name().get() + " VRFHeatEIRFTBoundary");
-    vrfHeatEIRFTBoundary.setCoefficient1Constant(58.5770);
-    vrfHeatEIRFTBoundary.setCoefficient2x(-3.0255);
-    vrfHeatEIRFTBoundary.setCoefficient3xPOW2(0.0193);
-    vrfHeatEIRFTBoundary.setCoefficient4xPOW3(0.0);
-    vrfHeatEIRFTBoundary.setMinimumValueofx(15);
-    vrfHeatEIRFTBoundary.setMaximumValueofx(23.9);
-    setHeatingEnergyInputRatioBoundaryCurve(vrfHeatEIRFTBoundary);
-
-    CurveBiquadratic vrfHeatEIRFTHi(model);
-    vrfHeatEIRFTHi.setName(name().get() + " VRFHeatEIRFTHi");
-    vrfHeatEIRFTHi.setCoefficient1Constant(1.3885703646);
-    vrfHeatEIRFTHi.setCoefficient2x(-0.0229771462);
-    vrfHeatEIRFTHi.setCoefficient3xPOW2(0.000537274);
-    vrfHeatEIRFTHi.setCoefficient4y(-0.0273936962);
-    vrfHeatEIRFTHi.setCoefficient5yPOW2(0.0004030426);
-    vrfHeatEIRFTHi.setCoefficient6xTIMESY(-0.000059786);
-    vrfHeatEIRFTHi.setMinimumValueofx(21.1);
-    vrfHeatEIRFTHi.setMaximumValueofx(27.2);
-    setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve(vrfHeatEIRFTHi);
-
-    CurveCubic heatingEIRLowPLR(model);
-    heatingEIRLowPLR.setName(name().get() + " HeatingEIRLowPLR");
-    heatingEIRLowPLR.setCoefficient1Constant(0.3924742025);
-    heatingEIRLowPLR.setCoefficient2x(0.076016374);
-    heatingEIRLowPLR.setCoefficient3xPOW2(0.6983235783);
-    heatingEIRLowPLR.setCoefficient4xPOW3(-0.1688407813);
-    heatingEIRLowPLR.setMinimumValueofx(0.5);
-    heatingEIRLowPLR.setMaximumValueofx(1);
-    setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(heatingEIRLowPLR);
-
-    CurveCubic heatingEIRHiPLR(model);
-    heatingEIRHiPLR.setName(name().get() + " HeatingEIRHiPLR");
-    heatingEIRHiPLR.setCoefficient1Constant(1.0);
-    heatingEIRHiPLR.setCoefficient2x(0.0);
-    heatingEIRHiPLR.setCoefficient3xPOW2(0.0);
-    heatingEIRHiPLR.setCoefficient4xPOW3(0.0);
-    heatingEIRHiPLR.setMinimumValueofx(1.0);
-    heatingEIRHiPLR.setMaximumValueofx(1.5);
-    setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(heatingEIRHiPLR);
-
-    CurveCubic heatingCombRatio(model);
-    heatingCombRatio.setName(name().get() + " HeatingCombRatio");
-    heatingCombRatio.setCoefficient1Constant(0.7667196604);
-    heatingCombRatio.setCoefficient2x(0.2617302019);
-    heatingCombRatio.setCoefficient3xPOW2(-0.0159110245);
-    heatingCombRatio.setCoefficient4xPOW3(-0.0125388376);
-    heatingCombRatio.setMinimumValueofx(1);
-    heatingCombRatio.setMaximumValueofx(1.5);
-    setHeatingCombinationRatioCorrectionFactorCurve(heatingCombRatio);
-
-    setHeatingPartLoadFractionCorrelationCurve(vrfCPLFFPLR);
-
-    CurveBiquadratic coolingLengthCorrectionFactor(model);
-    coolingLengthCorrectionFactor.setName(name().get() + " CoolingLengthCorrectionFactor");
-    coolingLengthCorrectionFactor.setCoefficient1Constant(2.0388158625);
-    coolingLengthCorrectionFactor.setCoefficient2x(-0.0024260645);
-    coolingLengthCorrectionFactor.setCoefficient3xPOW2(0.0000035512);
-    coolingLengthCorrectionFactor.setCoefficient4y(-1.6858129772);
-    coolingLengthCorrectionFactor.setCoefficient5yPOW2(0.668703358);
-    coolingLengthCorrectionFactor.setCoefficient6xTIMESY(-0.000045706);
-    coolingLengthCorrectionFactor.setMinimumValueofx(7.62);
-    coolingLengthCorrectionFactor.setMaximumValueofx(182.88);
-    coolingLengthCorrectionFactor.setMinimumValueofy(0.8);
-    coolingLengthCorrectionFactor.setMaximumValueofy(1.5);
-    setPipingCorrectionFactorforLengthinCoolingModeCurve(coolingLengthCorrectionFactor);
-
-    ModelObjectList vrfModelObjectList(model);
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVRFModelObjectList(vrfModelObjectList);
-  }
-
-  IddObjectType AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirConditioner_VariableRefrigerantFlow);
-  }
-
-  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingPerformanceCurveOutdoorTemperatureTypeValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatingPerformanceCurveOutdoorTemperatureType);
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(const IdfObject& idfObject,
+                                                                                                                                           Model_Impl* model,
+                                                                                                                                           bool keepHandle)
+    : StraightComponent_Impl(idfObject,model,keepHandle)
+  {
+    OS_ASSERT(idfObject.iddObject().type() == AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType());
   }
 
-  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::masterThermostatPriorityControlTypeValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MasterThermostatPriorityControlType);
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                                                                           Model_Impl* model,
+                                                                                                                                           bool keepHandle)
+    : StraightComponent_Impl(other,model,keepHandle)
+  {
+    OS_ASSERT(other.iddObject().type() == AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType());
   }
 
-  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostStrategyValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostStrategy);
-  }
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(const AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl& other,
+                                                                                                                                           Model_Impl* model,
+                                                                                                                                           bool keepHandle)
+    : StraightComponent_Impl(other,model,keepHandle)
+  {}
 
-  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostControlValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostControl);
+  const std::vector<std::string>& AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty()){
+    }
+    return result;
   }
 
-  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::fuelTypeValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::FuelType);
+  IddObjectType AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::iddObjectType() const {
+    return AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType();
   }
 
-  Schedule AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::availabilitySchedule() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->availabilitySchedule();
+  std::vector<ScheduleTypeKey> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+  {
+    // TODO: Check schedule display names.
+    std::vector<ScheduleTypeKey> result;
+    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    if (std::find(b,e,OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilitySchedule) != e)
+    {
+      result.push_back(ScheduleTypeKey("AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR","Availability Schedule"));
+    }
+    return result;
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::minimumOutdoorTemperatureinCoolingMode() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->minimumOutdoorTemperatureinCoolingMode();
+  boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::availabilitySchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilitySchedule);
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorTemperatureinCoolingMode() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->maximumOutdoorTemperatureinCoolingMode();
+  ModelObjectLists AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::zoneTerminalUnitList() const {
+    boost::optional<ModelObjectLists> value = optionalZoneTerminalUnitList();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have an Zone Terminal Unit List attached.");
+    }
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingCapacityRatioModifierFunctionofLowTemperatureCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->coolingCapacityRatioModifierFunctionofLowTemperatureCurve();
+  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::refrigerantType() const {
+    boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RefrigerantType,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingCapacityRatioBoundaryCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->coolingCapacityRatioBoundaryCurve();
+  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::ratedEvaporativeCapacity() const {
+    return getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedEvaporativeCapacity,true);
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingCapacityRatioModifierFunctionofHighTemperatureCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->coolingCapacityRatioModifierFunctionofHighTemperatureCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::isRatedEvaporativeCapacityAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedEvaporativeCapacity, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
+  boost::optional <double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedRatedEvaporativeCapacity() {
+    return getAutosizedValue("TODO_CHECK_SQL Rated Evaporative Capacity", "W");
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingEnergyInputRatioBoundaryCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->coolingEnergyInputRatioBoundaryCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::ratedCompressorPowerPerUnitofRatedEvaporativeCapacity() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedCompressorPowerPerUnitofRatedEvaporativeCapacity,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::minimumOutdoorAirTemperatureinCoolingOnlyMode() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorAirTemperatureinCoolingOnlyMode,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorAirTemperatureinCoolingOnlyMode() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorAirTemperatureinCoolingOnlyMode,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::minimumOutdoorAirTemperatureinHeatingOnlyMode() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorAirTemperatureinHeatingOnlyMode,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingCombinationRatioCorrectionFactorCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->coolingCombinationRatioCorrectionFactorCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorAirTemperatureinHeatingOnlyMode() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorAirTemperatureinHeatingOnlyMode,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::coolingPartLoadFractionCorrelationCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->coolingPartLoadFractionCorrelationCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::minimumOutdoorTemperatureinHeatRecoveryMode() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorTemperatureinHeatRecoveryMode,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratedHeatingCOP() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->ratedHeatingCOP();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorTemperatureinHeatRecoveryMode() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorTemperatureinHeatRecoveryMode,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::minimumOutdoorTemperatureinHeatingMode() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->minimumOutdoorTemperatureinHeatingMode();
+  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::refrigerantTemperatureControlAlgorithmforIndoorUnit() const {
+    boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RefrigerantTemperatureControlAlgorithmforIndoorUnit,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorTemperatureinHeatingMode() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->maximumOutdoorTemperatureinHeatingMode();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::referenceEvaporatingTemperatureforIndoorUnit() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ReferenceEvaporatingTemperatureforIndoorUnit,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingCapacityRatioModifierFunctionofLowTemperatureCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->heatingCapacityRatioModifierFunctionofLowTemperatureCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::referenceCondensingTemperatureforIndoorUnit() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ReferenceCondensingTemperatureforIndoorUnit,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingCapacityRatioBoundaryCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatingCapacityRatioBoundaryCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::variableEvaporatingTemperatureMinimumforIndoorUnit() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VariableEvaporatingTemperatureMinimumforIndoorUnit,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingCapacityRatioModifierFunctionofHighTemperatureCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->heatingCapacityRatioModifierFunctionofHighTemperatureCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::variableEvaporatingTemperatureMaximumforIndoorUnit() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VariableEvaporatingTemperatureMaximumforIndoorUnit,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::variableCondensingTemperatureMinimumforIndoorUnit() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VariableCondensingTemperatureMinimumforIndoorUnit,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingEnergyInputRatioBoundaryCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatingEnergyInputRatioBoundaryCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::variableCondensingTemperatureMaximumforIndoorUnit() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VariableCondensingTemperatureMaximumforIndoorUnit,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitEvaporatorReferenceSuperheating() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatorReferenceSuperheating,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingPerformanceCurveOutdoorTemperatureType() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatingPerformanceCurveOutdoorTemperatureType();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitCondenserReferenceSubcooling() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondenserReferenceSubcooling,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitEvaporatorRatedBypassFactor() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatorRatedBypassFactor,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitCondenserRatedBypassFactor() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondenserRatedBypassFactor,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingCombinationRatioCorrectionFactorCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatingCombinationRatioCorrectionFactorCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatingPartLoadFractionCorrelationCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatingPartLoadFractionCorrelationCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitHeatExchangerCapacityRatio() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitHeatExchangerCapacityRatio,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::minimumHeatPumpPartLoadRatio() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->minimumHeatPumpPartLoadRatio();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<ThermalZone> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::zoneforMasterThermostatLocation() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->zoneforMasterThermostatLocation();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::masterThermostatPriorityControlType() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->masterThermostatPriorityControlType();
+  UnivariateFunctions AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const {
+    boost::optional<UnivariateFunctions> value = optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have an Outdoor Unit Evaporating Temperature Functionof Superheating Curve attached.");
+    }
+    return value.get();
   }
 
-  boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::thermostatPrioritySchedule() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->thermostatPrioritySchedule();
+  UnivariateFunctions AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
+    boost::optional<UnivariateFunctions> value = optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have an Outdoor Unit Condensing Temperature Functionof Subcooling Curve attached.");
+    }
+    return value.get();
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatPumpWasteHeatRecovery() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatPumpWasteHeatRecovery();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::diameterofMainPipeforSuctionGas() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DiameterofMainPipeforSuctionGas,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::diameterofMainPipeforDischargeGas() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DiameterofMainPipeforDischargeGas,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::verticalHeightusedforPipingCorrectionFactor() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->verticalHeightusedforPipingCorrectionFactor();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::LengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::pipingCorrectionFactorforLengthinCoolingModeCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->pipingCorrectionFactorforLengthinCoolingModeCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::pipingCorrectionFactorforHeightinCoolingModeCoefficient() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->pipingCorrectionFactorforHeightinCoolingModeCoefficient();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heightDifferenceBetweenOutdoorUnitandIndoorUnits() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeightDifferenceBetweenOutdoorUnitandIndoorUnits,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::mainPipeInsulationThickness() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MainPipeInsulationThickness,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::pipingCorrectionFactorforLengthinHeatingModeCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->pipingCorrectionFactorforLengthinHeatingModeCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::mainPipeInsulationThermalConductivity() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MainPipeInsulationThermalConductivity,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::pipingCorrectionFactorforHeightinHeatingModeCoefficient() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->pipingCorrectionFactorforHeightinHeatingModeCoefficient();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::crankcaseHeaterPowerperCompressor() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CrankcaseHeaterPowerperCompressor,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::crankcaseHeaterPowerperCompressor() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->crankcaseHeaterPowerperCompressor();
+  int AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::numberofCompressors() const {
+    boost::optional<int> value = getInt(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressors,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  int AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::numberofCompressors() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->numberofCompressors();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::ratioofCompressorSizetoTotalCompressorCapacity() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatioofCompressorSizetoTotalCompressorCapacity,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratioofCompressorSizetoTotalCompressorCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->ratioofCompressorSizetoTotalCompressorCapacity();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorDryBulbTemperatureforCrankcaseHeater() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeater,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorDrybulbTemperatureforCrankcaseHeater() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->maximumOutdoorDrybulbTemperatureforCrankcaseHeater();
+  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::defrostStrategy() const {
+    boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostStrategy,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostStrategy() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->defrostStrategy();
+  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::defrostControl() const {
+    boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostControl,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostControl() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->defrostControl();
+  boost::optional<BivariateFunctions> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName);
   }
 
-  boost::optional<Curve>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->defrostEnergyInputRatioModifierFunctionofTemperatureCurve();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::defrostTimePeriodFraction() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostTimePeriodFraction,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostTimePeriodFraction() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->defrostTimePeriodFraction();
+  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resistiveDefrostHeaterCapacity() const {
+    return getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ResistiveDefrostHeaterCapacity,true);
   }
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resistiveDefrostHeaterCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resistiveDefrostHeaterCapacity();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::isResistiveDefrostHeaterCapacityAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ResistiveDefrostHeaterCapacity, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isResistiveDefrostHeaterCapacityAutosized() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isResistiveDefrostHeaterCapacityAutosized();
+  boost::optional <double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedResistiveDefrostHeaterCapacity() {
+    return getAutosizedValue("TODO_CHECK_SQL Resistive Defrost Heater Capacity", "W");
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorDrybulbTemperatureforDefrostOperation() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->maximumOutdoorDrybulbTemperatureforDefrostOperation();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorDrybulbTemperatureforDefrostOperation() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::waterCondenserVolumeFlowRate() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->waterCondenserVolumeFlowRate();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::initialHeatRecoveryCoolingCapacityFraction() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryCoolingCapacityFraction,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isWaterCondenserVolumeFlowRateAutosized() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isWaterCondenserVolumeFlowRateAutosized();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryCoolingCapacityTimeConstant() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingCapacityTimeConstant,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::evaporativeCondenserEffectiveness() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->evaporativeCondenserEffectiveness();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::initialHeatRecoveryCoolingEnergyFraction() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryCoolingEnergyFraction,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::evaporativeCondenserAirFlowRate() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->evaporativeCondenserAirFlowRate();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryCoolingEnergyTimeConstant() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingEnergyTimeConstant,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isEvaporativeCondenserAirFlowRateAutosized() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isEvaporativeCondenserAirFlowRateAutosized();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::initialHeatRecoveryHeatingCapacityFraction() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryHeatingCapacityFraction,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::evaporativeCondenserPumpRatedPowerConsumption() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->evaporativeCondenserPumpRatedPowerConsumption();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryHeatingCapacityTimeConstant() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingCapacityTimeConstant,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->isEvaporativeCondenserPumpRatedPowerConsumptionAutosized();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::initialHeatRecoveryHeatingEnergyFraction() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryHeatingEnergyFraction,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::basinHeaterCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->basinHeaterCapacity();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatRecoveryHeatingEnergyTimeConstant() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingEnergyTimeConstant,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::basinHeaterSetpointTemperature() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->basinHeaterSetpointTemperature();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::compressormaximumdeltaPressure() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressormaximumdeltaPressure,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::basinHeaterOperatingSchedule() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->basinHeaterOperatingSchedule();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::compressorInverterEfficiency() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressorInverterEfficiency,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::fuelType() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->fuelType();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::compressorEvaporativeCapacityCorrectionFactor() const {
+    boost::optional<double> value = getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressorEvaporativeCapacityCorrectionFactor,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::minimumOutdoorTemperatureinHeatRecoveryMode() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->minimumOutdoorTemperatureinHeatRecoveryMode();
+  int AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::numberofCompressorLoadingIndexEntries() const {
+    boost::optional<int> value = getInt(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressorLoadingIndexEntries,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorTemperatureinHeatRecoveryMode() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->maximumOutdoorTemperatureinHeatRecoveryMode();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setAvailabilitySchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilitySchedule,
+                              "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR",
+                              "Availability Schedule",
+                              schedule);
+    return result;
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryCoolingCapacityModifierCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryCoolingCapacityModifierCurve();
+  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetAvailabilitySchedule() {
+    bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilitySchedule, "");
+    OS_ASSERT(result);
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::initialHeatRecoveryCoolingCapacityFraction() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->initialHeatRecoveryCoolingCapacityFraction();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setZoneTerminalUnitList(const ModelObjectLists& modelObjectLists) {
+    bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneTerminalUnitList, modelObjectLists.handle());
+    return result;
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryCoolingCapacityTimeConstant() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryCoolingCapacityTimeConstant();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setRefrigerantType(const std::string& refrigerantType) {
+    bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RefrigerantType, refrigerantType);
+    return result;
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryCoolingEnergyModifierCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryCoolingEnergyModifierCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setRatedEvaporativeCapacity(double ratedEvaporativeCapacity) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedEvaporativeCapacity, ratedEvaporativeCapacity);
+    return result;
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::initialHeatRecoveryCoolingEnergyFraction() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->initialHeatRecoveryCoolingEnergyFraction();
+  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizeRatedEvaporativeCapacity() {
+    bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedEvaporativeCapacity, "autosize");
+    OS_ASSERT(result);
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryCoolingEnergyTimeConstant() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryCoolingEnergyTimeConstant();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatedCompressorPowerPerUnitofRatedEvaporativeCapacity, ratedCompressorPowerPerUnitofRatedEvaporativeCapacity);
+    return result;
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryHeatingCapacityModifierCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryHeatingCapacityModifierCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMinimumOutdoorAirTemperatureinCoolingOnlyMode(double minimumOutdoorAirTemperatureinCoolingOnlyMode) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorAirTemperatureinCoolingOnlyMode, minimumOutdoorAirTemperatureinCoolingOnlyMode);
+    OS_ASSERT(result);
+    return result;
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::initialHeatRecoveryHeatingCapacityFraction() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->initialHeatRecoveryHeatingCapacityFraction();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorAirTemperatureinCoolingOnlyMode(double maximumOutdoorAirTemperatureinCoolingOnlyMode) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorAirTemperatureinCoolingOnlyMode, maximumOutdoorAirTemperatureinCoolingOnlyMode);
+    OS_ASSERT(result);
+    return result;
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryHeatingCapacityTimeConstant() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryHeatingCapacityTimeConstant();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMinimumOutdoorAirTemperatureinHeatingOnlyMode(double minimumOutdoorAirTemperatureinHeatingOnlyMode) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorAirTemperatureinHeatingOnlyMode, minimumOutdoorAirTemperatureinHeatingOnlyMode);
+    OS_ASSERT(result);
+    return result;
   }
 
-  boost::optional<Curve> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryHeatingEnergyModifierCurve() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryHeatingEnergyModifierCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorAirTemperatureinHeatingOnlyMode(double maximumOutdoorAirTemperatureinHeatingOnlyMode) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorAirTemperatureinHeatingOnlyMode, maximumOutdoorAirTemperatureinHeatingOnlyMode);
+    OS_ASSERT(result);
+    return result;
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::initialHeatRecoveryHeatingEnergyFraction() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->initialHeatRecoveryHeatingEnergyFraction();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMinimumOutdoorTemperatureinHeatRecoveryMode(double minimumOutdoorTemperatureinHeatRecoveryMode) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MinimumOutdoorTemperatureinHeatRecoveryMode, minimumOutdoorTemperatureinHeatRecoveryMode);
+    OS_ASSERT(result);
+    return result;
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryHeatingEnergyTimeConstant() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryHeatingEnergyTimeConstant();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorTemperatureinHeatRecoveryMode(double maximumOutdoorTemperatureinHeatRecoveryMode) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorTemperatureinHeatRecoveryMode, maximumOutdoorTemperatureinHeatRecoveryMode);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setAvailabilitySchedule(Schedule& schedule) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setAvailabilitySchedule(schedule);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setRefrigerantTemperatureControlAlgorithmforIndoorUnit(const std::string& refrigerantTemperatureControlAlgorithmforIndoorUnit) {
+    bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RefrigerantTemperatureControlAlgorithmforIndoorUnit, refrigerantTemperatureControlAlgorithmforIndoorUnit);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMinimumOutdoorTemperatureinCoolingMode(
-    double minimumOutdoorTemperatureinCoolingMode) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMinimumOutdoorTemperatureinCoolingMode(
-      minimumOutdoorTemperatureinCoolingMode);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setReferenceEvaporatingTemperatureforIndoorUnit(double referenceEvaporatingTemperatureforIndoorUnit) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ReferenceEvaporatingTemperatureforIndoorUnit, referenceEvaporatingTemperatureforIndoorUnit);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorTemperatureinCoolingMode(
-    double maximumOutdoorTemperatureinCoolingMode) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMaximumOutdoorTemperatureinCoolingMode(
-      maximumOutdoorTemperatureinCoolingMode);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setReferenceCondensingTemperatureforIndoorUnit(double referenceCondensingTemperatureforIndoorUnit) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ReferenceCondensingTemperatureforIndoorUnit, referenceCondensingTemperatureforIndoorUnit);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setVariableEvaporatingTemperatureMinimumforIndoorUnit(double variableEvaporatingTemperatureMinimumforIndoorUnit) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VariableEvaporatingTemperatureMinimumforIndoorUnit, variableEvaporatingTemperatureMinimumforIndoorUnit);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingCapacityRatioModifierFunctionofLowTemperatureCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetCoolingCapacityRatioModifierFunctionofLowTemperatureCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setVariableEvaporatingTemperatureMaximumforIndoorUnit(double variableEvaporatingTemperatureMaximumforIndoorUnit) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VariableEvaporatingTemperatureMaximumforIndoorUnit, variableEvaporatingTemperatureMaximumforIndoorUnit);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingCapacityRatioBoundaryCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCoolingCapacityRatioBoundaryCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setVariableCondensingTemperatureMinimumforIndoorUnit(double variableCondensingTemperatureMinimumforIndoorUnit) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VariableCondensingTemperatureMinimumforIndoorUnit, variableCondensingTemperatureMinimumforIndoorUnit);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingCapacityRatioBoundaryCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetCoolingCapacityRatioBoundaryCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setVariableCondensingTemperatureMaximumforIndoorUnit(double variableCondensingTemperatureMaximumforIndoorUnit) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::VariableCondensingTemperatureMaximumforIndoorUnit, variableCondensingTemperatureMaximumforIndoorUnit);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitEvaporatorReferenceSuperheating(double outdoorUnitEvaporatorReferenceSuperheating) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatorReferenceSuperheating, outdoorUnitEvaporatorReferenceSuperheating);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingCapacityRatioModifierFunctionofHighTemperatureCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetCoolingCapacityRatioModifierFunctionofHighTemperatureCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitCondenserReferenceSubcooling(double outdoorUnitCondenserReferenceSubcooling) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondenserReferenceSubcooling, outdoorUnitCondenserReferenceSubcooling);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitEvaporatorRatedBypassFactor(double outdoorUnitEvaporatorRatedBypassFactor) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatorRatedBypassFactor, outdoorUnitEvaporatorRatedBypassFactor);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitCondenserRatedBypassFactor(double outdoorUnitCondenserRatedBypassFactor) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondenserRatedBypassFactor, outdoorUnitCondenserRatedBypassFactor);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingEnergyInputRatioBoundaryCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCoolingEnergyInputRatioBoundaryCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode(double differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode, differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingEnergyInputRatioBoundaryCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetCoolingEnergyInputRatioBoundaryCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitHeatExchangerCapacityRatio(double outdoorUnitHeatExchangerCapacityRatio) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitHeatExchangerCapacityRatio, outdoorUnitHeatExchangerCapacityRatio);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity, outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity, outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions) {
+    bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName, univariateFunctions.handle());
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const UnivariateFunctions& univariateFunctions) {
+    bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName, univariateFunctions.handle());
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDiameterofMainPipeforSuctionGas(double diameterofMainPipeforSuctionGas) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DiameterofMainPipeforSuctionGas, diameterofMainPipeforSuctionGas);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDiameterofMainPipeforDischargeGas(double diameterofMainPipeforDischargeGas) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DiameterofMainPipeforDischargeGas, diameterofMainPipeforDischargeGas);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingCombinationRatioCorrectionFactorCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCoolingCombinationRatioCorrectionFactorCurve(
-      curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::LengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint, lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingCombinationRatioCorrectionFactorCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetCoolingCombinationRatioCorrectionFactorCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::EquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint, equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCoolingPartLoadFractionCorrelationCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCoolingPartLoadFractionCorrelationCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(double heightDifferenceBetweenOutdoorUnitandIndoorUnits) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeightDifferenceBetweenOutdoorUnitandIndoorUnits, heightDifferenceBetweenOutdoorUnitandIndoorUnits);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCoolingPartLoadFractionCorrelationCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetCoolingPartLoadFractionCorrelationCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMainPipeInsulationThickness(double mainPipeInsulationThickness) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MainPipeInsulationThickness, mainPipeInsulationThickness);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatedHeatingCOP(double ratedHeatingCOP) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setRatedHeatingCOP(ratedHeatingCOP);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMainPipeInsulationThermalConductivity(double mainPipeInsulationThermalConductivity) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MainPipeInsulationThermalConductivity, mainPipeInsulationThermalConductivity);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMinimumOutdoorTemperatureinHeatingMode(
-    double minimumOutdoorTemperatureinHeatingMode) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMinimumOutdoorTemperatureinHeatingMode(
-      minimumOutdoorTemperatureinHeatingMode);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCrankcaseHeaterPowerperCompressor(double crankcaseHeaterPowerperCompressor) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CrankcaseHeaterPowerperCompressor, crankcaseHeaterPowerperCompressor);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorTemperatureinHeatingMode(
-    double maximumOutdoorTemperatureinHeatingMode) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMaximumOutdoorTemperatureinHeatingMode(
-      maximumOutdoorTemperatureinHeatingMode);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setNumberofCompressors(int numberofCompressors) {
+    bool result = setInt(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressors, numberofCompressors);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RatioofCompressorSizetoTotalCompressorCapacity, ratioofCompressorSizetoTotalCompressorCapacity);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingCapacityRatioModifierFunctionofLowTemperatureCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetHeatingCapacityRatioModifierFunctionofLowTemperatureCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(double maximumOutdoorDryBulbTemperatureforCrankcaseHeater) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeater, maximumOutdoorDryBulbTemperatureforCrankcaseHeater);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingCapacityRatioBoundaryCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatingCapacityRatioBoundaryCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDefrostStrategy(const std::string& defrostStrategy) {
+    bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostStrategy, defrostStrategy);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingCapacityRatioBoundaryCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetHeatingCapacityRatioBoundaryCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDefrostControl(const std::string& defrostControl) {
+    bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostControl, defrostControl);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions) {
+    bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName, bivariateFunctions.handle());
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingCapacityRatioModifierFunctionofHighTemperatureCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetHeatingCapacityRatioModifierFunctionofHighTemperatureCurve();
+  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve() {
+    bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName, "");
+    OS_ASSERT(result);
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDefrostTimePeriodFraction(double defrostTimePeriodFraction) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostTimePeriodFraction, defrostTimePeriodFraction);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ResistiveDefrostHeaterCapacity, resistiveDefrostHeaterCapacity);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingEnergyInputRatioBoundaryCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatingEnergyInputRatioBoundaryCurve(curve);
+  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizeResistiveDefrostHeaterCapacity() {
+    bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ResistiveDefrostHeaterCapacity, "autosize");
+    OS_ASSERT(result);
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingEnergyInputRatioBoundaryCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetHeatingEnergyInputRatioBoundaryCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation, maximumOutdoorDrybulbTemperatureforDefrostOperation);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setInitialHeatRecoveryCoolingCapacityFraction(double initialHeatRecoveryCoolingCapacityFraction) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryCoolingCapacityFraction, initialHeatRecoveryCoolingCapacityFraction);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryCoolingCapacityTimeConstant(double heatRecoveryCoolingCapacityTimeConstant) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingCapacityTimeConstant, heatRecoveryCoolingCapacityTimeConstant);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingPerformanceCurveOutdoorTemperatureType(
-    std::string heatingPerformanceCurveOutdoorTemperatureType) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatingPerformanceCurveOutdoorTemperatureType(
-      heatingPerformanceCurveOutdoorTemperatureType);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setInitialHeatRecoveryCoolingEnergyFraction(double initialHeatRecoveryCoolingEnergyFraction) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryCoolingEnergyFraction, initialHeatRecoveryCoolingEnergyFraction);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryCoolingEnergyTimeConstant(double heatRecoveryCoolingEnergyTimeConstant) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryCoolingEnergyTimeConstant, heatRecoveryCoolingEnergyTimeConstant);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setInitialHeatRecoveryHeatingCapacityFraction(double initialHeatRecoveryHeatingCapacityFraction) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryHeatingCapacityFraction, initialHeatRecoveryHeatingCapacityFraction);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(
-    const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryHeatingCapacityTimeConstant(double heatRecoveryHeatingCapacityTimeConstant) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingCapacityTimeConstant, heatRecoveryHeatingCapacityTimeConstant);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setInitialHeatRecoveryHeatingEnergyFraction(double initialHeatRecoveryHeatingEnergyFraction) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::InitialHeatRecoveryHeatingEnergyFraction, initialHeatRecoveryHeatingEnergyFraction);
+    OS_ASSERT(result);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingCombinationRatioCorrectionFactorCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatingCombinationRatioCorrectionFactorCurve(
-      curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingEnergyTimeConstant, heatRecoveryHeatingEnergyTimeConstant);
+    OS_ASSERT(result);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingCombinationRatioCorrectionFactorCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetHeatingCombinationRatioCorrectionFactorCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressormaximumdeltaPressure, compressormaximumdeltaPressure);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatingPartLoadFractionCorrelationCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatingPartLoadFractionCorrelationCurve(curve);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCompressorInverterEfficiency(double compressorInverterEfficiency) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressorInverterEfficiency, compressorInverterEfficiency);
+    return result;
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatingPartLoadFractionCorrelationCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetHeatingPartLoadFractionCorrelationCurve();
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCompressorEvaporativeCapacityCorrectionFactor(double compressorEvaporativeCapacityCorrectionFactor) {
+    bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressorEvaporativeCapacityCorrectionFactor, compressorEvaporativeCapacityCorrectionFactor);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMinimumHeatPumpPartLoadRatio(double minimumHeatPumpPartLoadRatio) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMinimumHeatPumpPartLoadRatio(
-      minimumHeatPumpPartLoadRatio);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setNumberofCompressorLoadingIndexEntries(int numberofCompressorLoadingIndexEntries) {
+    bool result = setInt(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressorLoadingIndexEntries, numberofCompressorLoadingIndexEntries);
+    return result;
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setZoneforMasterThermostatLocation(const ThermalZone& zone) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setZoneforMasterThermostatLocation(zone);
+  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosize() {
+    autosizeRatedEvaporativeCapacity();
+    autosizeResistiveDefrostHeaterCapacity();
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetZoneforMasterThermostatLocation() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetZoneforMasterThermostatLocation();
-  }
+  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedEvaporativeCapacity();
+    if (val) {
+      setRatedEvaporativeCapacity(val.get());
+    }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMasterThermostatPriorityControlType(
-    std::string masterThermostatPriorityControlType) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMasterThermostatPriorityControlType(
-      masterThermostatPriorityControlType);
-  }
+    val = autosizedResistiveDefrostHeaterCapacity();
+    if (val) {
+      setResistiveDefrostHeaterCapacity(val.get());
+    }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setThermostatPrioritySchedule(Schedule& schedule) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setThermostatPrioritySchedule(schedule);
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetThermostatPrioritySchedule() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetThermostatPrioritySchedule();
+  boost::optional<ModelObjectLists> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::optionalZoneTerminalUnitList() const {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObjectLists>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneTerminalUnitList);
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatPumpWasteHeatRecovery(bool heatPumpWasteHeatRecovery) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatPumpWasteHeatRecovery(
-      heatPumpWasteHeatRecovery);
+  boost::optional<UnivariateFunctions> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName);
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(
-    double equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode);
+  boost::optional<UnivariateFunctions> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName);
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setVerticalHeightusedforPipingCorrectionFactor(
-    double verticalHeightusedforPipingCorrectionFactor) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVerticalHeightusedforPipingCorrectionFactor(
-      verticalHeightusedforPipingCorrectionFactor);
-  }
+} // detail
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setPipingCorrectionFactorforLengthinCoolingModeCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setPipingCorrectionFactorforLengthinCoolingModeCurve(curve);
-  }
+AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(const Model& model)
+  : StraightComponent(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>());
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetPipingCorrectionFactorforLengthinCoolingModeCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetPipingCorrectionFactorforLengthinCoolingModeCurve();
-  }
+  // TODO: Appropriately handle the following required object-list fields.
+  //     OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneTerminalUnitList
+  //     OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName
+  //     OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName
+  bool ok = true;
+  // ok = setZoneTerminalUnitList();
+  OS_ASSERT(ok);
+  // ok = setRefrigerantType();
+  OS_ASSERT(ok);
+  // ok = setRatedEvaporativeCapacity();
+  OS_ASSERT(ok);
+  // ok = setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity();
+  OS_ASSERT(ok);
+  // setMinimumOutdoorAirTemperatureinCoolingOnlyMode();
+  // setMaximumOutdoorAirTemperatureinCoolingOnlyMode();
+  // setMinimumOutdoorAirTemperatureinHeatingOnlyMode();
+  // setMaximumOutdoorAirTemperatureinHeatingOnlyMode();
+  // setMinimumOutdoorTemperatureinHeatRecoveryMode();
+  // setMaximumOutdoorTemperatureinHeatRecoveryMode();
+  // ok = setRefrigerantTemperatureControlAlgorithmforIndoorUnit();
+  OS_ASSERT(ok);
+  // setReferenceEvaporatingTemperatureforIndoorUnit();
+  // setReferenceCondensingTemperatureforIndoorUnit();
+  // setVariableEvaporatingTemperatureMinimumforIndoorUnit();
+  // setVariableEvaporatingTemperatureMaximumforIndoorUnit();
+  // setVariableCondensingTemperatureMinimumforIndoorUnit();
+  // setVariableCondensingTemperatureMaximumforIndoorUnit();
+  // setOutdoorUnitEvaporatorReferenceSuperheating();
+  // setOutdoorUnitCondenserReferenceSubcooling();
+  // ok = setOutdoorUnitEvaporatorRatedBypassFactor();
+  OS_ASSERT(ok);
+  // ok = setOutdoorUnitCondenserRatedBypassFactor();
+  OS_ASSERT(ok);
+  // setDifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode();
+  // ok = setOutdoorUnitHeatExchangerCapacityRatio();
+  OS_ASSERT(ok);
+  // ok = setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity();
+  OS_ASSERT(ok);
+  // ok = setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity();
+  OS_ASSERT(ok);
+  // ok = setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
+  OS_ASSERT(ok);
+  // ok = setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+  OS_ASSERT(ok);
+  // ok = setDiameterofMainPipeforSuctionGas();
+  OS_ASSERT(ok);
+  // ok = setDiameterofMainPipeforDischargeGas();
+  OS_ASSERT(ok);
+  // ok = setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+  OS_ASSERT(ok);
+  // ok = setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+  OS_ASSERT(ok);
+  // setHeightDifferenceBetweenOutdoorUnitandIndoorUnits();
+  // ok = setMainPipeInsulationThickness();
+  OS_ASSERT(ok);
+  // ok = setMainPipeInsulationThermalConductivity();
+  OS_ASSERT(ok);
+  // setCrankcaseHeaterPowerperCompressor();
+  // setNumberofCompressors();
+  // setRatioofCompressorSizetoTotalCompressorCapacity();
+  // setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater();
+  // ok = setDefrostStrategy();
+  OS_ASSERT(ok);
+  // ok = setDefrostControl();
+  OS_ASSERT(ok);
+  // ok = setDefrostTimePeriodFraction();
+  OS_ASSERT(ok);
+  // ok = setResistiveDefrostHeaterCapacity();
+  OS_ASSERT(ok);
+  // setMaximumOutdoorDrybulbTemperatureforDefrostOperation();
+  // setInitialHeatRecoveryCoolingCapacityFraction();
+  // setHeatRecoveryCoolingCapacityTimeConstant();
+  // setInitialHeatRecoveryCoolingEnergyFraction();
+  // setHeatRecoveryCoolingEnergyTimeConstant();
+  // setInitialHeatRecoveryHeatingCapacityFraction();
+  // setHeatRecoveryHeatingCapacityTimeConstant();
+  // setInitialHeatRecoveryHeatingEnergyFraction();
+  // setHeatRecoveryHeatingEnergyTimeConstant();
+  // ok = setCompressormaximumdeltaPressure();
+  OS_ASSERT(ok);
+  // ok = setCompressorInverterEfficiency();
+  OS_ASSERT(ok);
+  // ok = setCompressorEvaporativeCapacityCorrectionFactor();
+  OS_ASSERT(ok);
+  // ok = setNumberofCompressorLoadingIndexEntries();
+  OS_ASSERT(ok);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setPipingCorrectionFactorforHeightinCoolingModeCoefficient(
-    double pipingCorrectionFactorforHeightinCoolingModeCoefficient) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setPipingCorrectionFactorforHeightinCoolingModeCoefficient(pipingCorrectionFactorforHeightinCoolingModeCoefficient);
-  }
+IddObjectType AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType() {
+  return IddObjectType(IddObjectType::OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(
-    double equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode);
-  }
+std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::refrigerantTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RefrigerantType);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setPipingCorrectionFactorforLengthinHeatingModeCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setPipingCorrectionFactorforLengthinHeatingModeCurve(curve);
-  }
+std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::refrigerantTemperatureControlAlgorithmforIndoorUnitValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RefrigerantTemperatureControlAlgorithmforIndoorUnit);
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetPipingCorrectionFactorforLengthinHeatingModeCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetPipingCorrectionFactorforLengthinHeatingModeCurve();
-  }
+std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostStrategyValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostStrategy);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setPipingCorrectionFactorforHeightinHeatingModeCoefficient(
-    double pipingCorrectionFactorforHeightinHeatingModeCoefficient) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setPipingCorrectionFactorforHeightinHeatingModeCoefficient(pipingCorrectionFactorforHeightinHeatingModeCoefficient);
-  }
+std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostControlValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostControl);
+}
 
-  bool
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCrankcaseHeaterPowerperCompressor(double crankcaseHeaterPowerperCompressor) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCrankcaseHeaterPowerperCompressor(
-      crankcaseHeaterPowerperCompressor);
-  }
+boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::availabilitySchedule() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->availabilitySchedule();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setNumberofCompressors(int numberofCompressors) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setNumberofCompressors(numberofCompressors);
-  }
+ModelObjectLists AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::zoneTerminalUnitList() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->zoneTerminalUnitList();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatioofCompressorSizetoTotalCompressorCapacity(
-    double ratioofCompressorSizetoTotalCompressorCapacity) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setRatioofCompressorSizetoTotalCompressorCapacity(
-      ratioofCompressorSizetoTotalCompressorCapacity);
-  }
+std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::refrigerantType() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->refrigerantType();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorDrybulbTemperatureforCrankcaseHeater(
-    double maximumOutdoorDrybulbTemperatureforCrankcaseHeater) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setMaximumOutdoorDrybulbTemperatureforCrankcaseHeater(maximumOutdoorDrybulbTemperatureforCrankcaseHeater);
-  }
+boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratedEvaporativeCapacity() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->ratedEvaporativeCapacity();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostStrategy(std::string defrostStrategy) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDefrostStrategy(defrostStrategy);
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isRatedEvaporativeCapacityAutosized() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isRatedEvaporativeCapacityAutosized();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostControl(std::string defrostControl) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDefrostControl(defrostControl);
+  boost::optional <double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedRatedEvaporativeCapacity() {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedRatedEvaporativeCapacity();
   }
 
-  bool
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(curve);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratedCompressorPowerPerUnitofRatedEvaporativeCapacity() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->ratedCompressorPowerPerUnitofRatedEvaporativeCapacity();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::minimumOutdoorAirTemperatureinCoolingOnlyMode() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->minimumOutdoorAirTemperatureinCoolingOnlyMode();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostTimePeriodFraction(double defrostTimePeriodFraction) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDefrostTimePeriodFraction(
-      defrostTimePeriodFraction);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorAirTemperatureinCoolingOnlyMode() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->maximumOutdoorAirTemperatureinCoolingOnlyMode();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setResistiveDefrostHeaterCapacity(
-      resistiveDefrostHeaterCapacity);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::minimumOutdoorAirTemperatureinHeatingOnlyMode() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->minimumOutdoorAirTemperatureinHeatingOnlyMode();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeResistiveDefrostHeaterCapacity() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeResistiveDefrostHeaterCapacity();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorAirTemperatureinHeatingOnlyMode() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->maximumOutdoorAirTemperatureinHeatingOnlyMode();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorDrybulbTemperatureforDefrostOperation(
-    double maximumOutdoorDrybulbTemperatureforDefrostOperation) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setMaximumOutdoorDrybulbTemperatureforDefrostOperation(maximumOutdoorDrybulbTemperatureforDefrostOperation);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::minimumOutdoorTemperatureinHeatRecoveryMode() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->minimumOutdoorTemperatureinHeatRecoveryMode();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setWaterCondenserVolumeFlowRate(double waterCondenserVolumeFlowRate) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setWaterCondenserVolumeFlowRate(
-      waterCondenserVolumeFlowRate);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorTemperatureinHeatRecoveryMode() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->maximumOutdoorTemperatureinHeatRecoveryMode();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeWaterCondenserVolumeFlowRate() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeWaterCondenserVolumeFlowRate();
-  }
+std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::refrigerantTemperatureControlAlgorithmforIndoorUnit() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->refrigerantTemperatureControlAlgorithmforIndoorUnit();
+}
 
-  bool
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setEvaporativeCondenserEffectiveness(
-      evaporativeCondenserEffectiveness);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::referenceEvaporatingTemperatureforIndoorUnit() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->referenceEvaporatingTemperatureforIndoorUnit();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setEvaporativeCondenserAirFlowRate(double evaporativeCondenserAirFlowRate) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setEvaporativeCondenserAirFlowRate(
-      evaporativeCondenserAirFlowRate);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::referenceCondensingTemperatureforIndoorUnit() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->referenceCondensingTemperatureforIndoorUnit();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeEvaporativeCondenserAirFlowRate() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeEvaporativeCondenserAirFlowRate();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::variableEvaporatingTemperatureMinimumforIndoorUnit() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->variableEvaporatingTemperatureMinimumforIndoorUnit();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setEvaporativeCondenserPumpRatedPowerConsumption(
-    double evaporativeCondenserPumpRatedPowerConsumption) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setEvaporativeCondenserPumpRatedPowerConsumption(
-      evaporativeCondenserPumpRatedPowerConsumption);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::variableEvaporatingTemperatureMaximumforIndoorUnit() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->variableEvaporatingTemperatureMaximumforIndoorUnit();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeEvaporativeCondenserPumpRatedPowerConsumption() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeEvaporativeCondenserPumpRatedPowerConsumption();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::variableCondensingTemperatureMinimumforIndoorUnit() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->variableCondensingTemperatureMinimumforIndoorUnit();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setBasinHeaterCapacity(double basinHeaterCapacity) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setBasinHeaterCapacity(basinHeaterCapacity);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::variableCondensingTemperatureMaximumforIndoorUnit() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->variableCondensingTemperatureMaximumforIndoorUnit();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setBasinHeaterSetpointTemperature(
-      basinHeaterSetpointTemperature);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitEvaporatorReferenceSuperheating() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->outdoorUnitEvaporatorReferenceSuperheating();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setBasinHeaterOperatingSchedule(Schedule& schedule) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setBasinHeaterOperatingSchedule(schedule);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitCondenserReferenceSubcooling() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->outdoorUnitCondenserReferenceSubcooling();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetBasinHeaterOperatingSchedule() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetBasinHeaterOperatingSchedule();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitEvaporatorRatedBypassFactor() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->outdoorUnitEvaporatorRatedBypassFactor();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setFuelType(std::string fuelType) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setFuelType(fuelType);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitCondenserRatedBypassFactor() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->outdoorUnitCondenserRatedBypassFactor();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMinimumOutdoorTemperatureinHeatRecoveryMode(
-    double minimumOutdoorTemperatureinHeatRecoveryMode) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMinimumOutdoorTemperatureinHeatRecoveryMode(
-      minimumOutdoorTemperatureinHeatRecoveryMode);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorTemperatureinHeatRecoveryMode(
-    double maximumOutdoorTemperatureinHeatRecoveryMode) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMaximumOutdoorTemperatureinHeatRecoveryMode(
-      maximumOutdoorTemperatureinHeatRecoveryMode);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitHeatExchangerCapacityRatio() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->outdoorUnitHeatExchangerCapacityRatio();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryCoolingCapacityModifierCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryCoolingCapacityModifierCurve(curve);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatRecoveryCoolingCapacityModifierCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetHeatRecoveryCoolingCapacityModifierCurve();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setInitialHeatRecoveryCoolingCapacityFraction(
-    double initialHeatRecoveryCoolingCapacityFraction) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setInitialHeatRecoveryCoolingCapacityFraction(
-      initialHeatRecoveryCoolingCapacityFraction);
-  }
+UnivariateFunctions AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryCoolingCapacityTimeConstant(
-    double heatRecoveryCoolingCapacityTimeConstant) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryCoolingCapacityTimeConstant(
-      heatRecoveryCoolingCapacityTimeConstant);
-  }
+UnivariateFunctions AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryCoolingEnergyModifierCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryCoolingEnergyModifierCurve(curve);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::diameterofMainPipeforSuctionGas() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->diameterofMainPipeforSuctionGas();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatRecoveryCoolingEnergyModifierCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetHeatRecoveryCoolingEnergyModifierCurve();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::diameterofMainPipeforDischargeGas() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->diameterofMainPipeforDischargeGas();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setInitialHeatRecoveryCoolingEnergyFraction(
-    double initialHeatRecoveryCoolingEnergyFraction) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setInitialHeatRecoveryCoolingEnergyFraction(
-      initialHeatRecoveryCoolingEnergyFraction);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryCoolingEnergyTimeConstant(
-    double heatRecoveryCoolingEnergyTimeConstant) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryCoolingEnergyTimeConstant(
-      heatRecoveryCoolingEnergyTimeConstant);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryHeatingCapacityModifierCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryHeatingCapacityModifierCurve(curve);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heightDifferenceBetweenOutdoorUnitandIndoorUnits() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heightDifferenceBetweenOutdoorUnitandIndoorUnits();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatRecoveryHeatingCapacityModifierCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetHeatRecoveryHeatingCapacityModifierCurve();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::mainPipeInsulationThickness() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->mainPipeInsulationThickness();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setInitialHeatRecoveryHeatingCapacityFraction(
-    double initialHeatRecoveryHeatingCapacityFraction) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setInitialHeatRecoveryHeatingCapacityFraction(
-      initialHeatRecoveryHeatingCapacityFraction);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::mainPipeInsulationThermalConductivity() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->mainPipeInsulationThermalConductivity();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryHeatingCapacityTimeConstant(
-    double heatRecoveryHeatingCapacityTimeConstant) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryHeatingCapacityTimeConstant(
-      heatRecoveryHeatingCapacityTimeConstant);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::crankcaseHeaterPowerperCompressor() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->crankcaseHeaterPowerperCompressor();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryHeatingEnergyModifierCurve(const Curve& curve) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryHeatingEnergyModifierCurve(curve);
-  }
+int AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::numberofCompressors() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->numberofCompressors();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetHeatRecoveryHeatingEnergyModifierCurve() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetHeatRecoveryHeatingEnergyModifierCurve();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratioofCompressorSizetoTotalCompressorCapacity() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->ratioofCompressorSizetoTotalCompressorCapacity();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setInitialHeatRecoveryHeatingEnergyFraction(
-    double initialHeatRecoveryHeatingEnergyFraction) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setInitialHeatRecoveryHeatingEnergyFraction(
-      initialHeatRecoveryHeatingEnergyFraction);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorDryBulbTemperatureforCrankcaseHeater() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->maximumOutdoorDryBulbTemperatureforCrankcaseHeater();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryHeatingEnergyTimeConstant(
-    double heatRecoveryHeatingEnergyTimeConstant) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryHeatingEnergyTimeConstant(
-      heatRecoveryHeatingEnergyTimeConstant);
-  }
+std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostStrategy() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->defrostStrategy();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->addTerminal(vrf);
-  }
+std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostControl() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->defrostControl();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->removeTerminal(vrf);
-  }
+boost::optional<BivariateFunctions> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->defrostEnergyInputRatioModifierFunctionofTemperatureCurve();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::removeAllTerminals() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->removeAllTerminals();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostTimePeriodFraction() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->defrostTimePeriodFraction();
+}
 
-  std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::terminals() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->terminals();
-  }
+boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resistiveDefrostHeaterCapacity() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resistiveDefrostHeaterCapacity();
+}
 
-  /// @cond
-  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(
-    std::shared_ptr<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl> impl)
-    : StraightComponent(std::move(impl)) {}
-  /// @endcond
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isResistiveDefrostHeaterCapacityAutosized() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isResistiveDefrostHeaterCapacityAutosized();
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedResistiveDefrostHeaterCapacity() const {
+  boost::optional <double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedResistiveDefrostHeaterCapacity() {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedResistiveDefrostHeaterCapacity();
   }
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedWaterCondenserVolumeFlowRate() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedWaterCondenserVolumeFlowRate();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::maximumOutdoorDrybulbTemperatureforDefrostOperation() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->maximumOutdoorDrybulbTemperatureforDefrostOperation();
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedEvaporativeCondenserAirFlowRate() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedEvaporativeCondenserAirFlowRate();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::initialHeatRecoveryCoolingCapacityFraction() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->initialHeatRecoveryCoolingCapacityFraction();
+}
 
-  boost::optional<double>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->autosizedEvaporativeCondenserPumpRatedPowerConsumption();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryCoolingCapacityTimeConstant() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryCoolingCapacityTimeConstant();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setGrossRatedTotalCoolingCapacity(double grossRatedTotalCoolingCapacity) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setGrossRatedTotalCoolingCapacity(
-      grossRatedTotalCoolingCapacity);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::initialHeatRecoveryCoolingEnergyFraction() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->initialHeatRecoveryCoolingEnergyFraction();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeGrossRatedTotalCoolingCapacity() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeGrossRatedTotalCoolingCapacity();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryCoolingEnergyTimeConstant() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryCoolingEnergyTimeConstant();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setGrossRatedCoolingCOP(double grossRatedCoolingCOP) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setGrossRatedCoolingCOP(grossRatedCoolingCOP);
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::initialHeatRecoveryHeatingCapacityFraction() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->initialHeatRecoveryHeatingCapacityFraction();
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::grossRatedTotalCoolingCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->grossRatedTotalCoolingCapacity();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryHeatingCapacityTimeConstant() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryHeatingCapacityTimeConstant();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isGrossRatedTotalCoolingCapacityAutosized() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isGrossRatedTotalCoolingCapacityAutosized();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::initialHeatRecoveryHeatingEnergyFraction() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->initialHeatRecoveryHeatingEnergyFraction();
+}
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::grossRatedCoolingCOP() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->grossRatedCoolingCOP();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::heatRecoveryHeatingEnergyTimeConstant() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryHeatingEnergyTimeConstant();
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::grossRatedHeatingCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->grossRatedHeatingCapacity();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::compressormaximumdeltaPressure() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->compressormaximumdeltaPressure();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isGrossRatedHeatingCapacityAutosized() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isGrossRatedHeatingCapacityAutosized();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::compressorInverterEfficiency() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->compressorInverterEfficiency();
+}
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratedHeatingCapacitySizingRatio() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->ratedHeatingCapacitySizingRatio();
-  }
+double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::compressorEvaporativeCapacityCorrectionFactor() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->compressorEvaporativeCapacityCorrectionFactor();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setGrossRatedHeatingCapacity(double grossRatedHeatingCapacity) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setGrossRatedHeatingCapacity(
-      grossRatedHeatingCapacity);
-  }
+int AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::numberofCompressorLoadingIndexEntries() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->numberofCompressorLoadingIndexEntries();
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeGrossRatedHeatingCapacity() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeGrossRatedHeatingCapacity();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setAvailabilitySchedule(Schedule& schedule) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setAvailabilitySchedule(schedule);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatedHeatingCapacitySizingRatio(double ratedHeatingCapacitySizingRatio) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setRatedHeatingCapacitySizingRatio(
-      ratedHeatingCapacitySizingRatio);
-  }
+void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetAvailabilitySchedule() {
+  getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetAvailabilitySchedule();
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedGrossRatedTotalCoolingCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedGrossRatedTotalCoolingCapacity();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setZoneTerminalUnitList(const ModelObjectLists& modelObjectLists) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setZoneTerminalUnitList(modelObjectLists);
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedGrossRatedHeatingCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedGrossRatedHeatingCapacity();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRefrigerantType(const std::string& refrigerantType) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setRefrigerantType(refrigerantType);
+}
 
-  std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::condenserType() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->condenserType();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatedEvaporativeCapacity(double ratedEvaporativeCapacity) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setRatedEvaporativeCapacity(ratedEvaporativeCapacity);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCondenserType(const std::string& condenserType) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCondenserType(condenserType);
-  }
+void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeRatedEvaporativeCapacity() {
+  getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeRatedEvaporativeCapacity();
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isCondenserTypeDefaulted() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isCondenserTypeDefaulted();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(ratedCompressorPowerPerUnitofRatedEvaporativeCapacity);
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetCondenserType() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetCondenserType();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMinimumOutdoorAirTemperatureinCoolingOnlyMode(double minimumOutdoorAirTemperatureinCoolingOnlyMode) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMinimumOutdoorAirTemperatureinCoolingOnlyMode(minimumOutdoorAirTemperatureinCoolingOnlyMode);
+}
 
-  // DEPRECATED
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatedTotalCoolingCapacity(double grossRatedTotalCoolingCapacity) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setGrossRatedTotalCoolingCapacity(
-      grossRatedTotalCoolingCapacity);
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorAirTemperatureinCoolingOnlyMode(double maximumOutdoorAirTemperatureinCoolingOnlyMode) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMaximumOutdoorAirTemperatureinCoolingOnlyMode(maximumOutdoorAirTemperatureinCoolingOnlyMode);
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeRatedTotalCoolingCapacity() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeGrossRatedTotalCoolingCapacity();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMinimumOutdoorAirTemperatureinHeatingOnlyMode(double minimumOutdoorAirTemperatureinHeatingOnlyMode) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMinimumOutdoorAirTemperatureinHeatingOnlyMode(minimumOutdoorAirTemperatureinHeatingOnlyMode);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatedCoolingCOP(double grossRatedCoolingCOP) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setGrossRatedCoolingCOP(grossRatedCoolingCOP);
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorAirTemperatureinHeatingOnlyMode(double maximumOutdoorAirTemperatureinHeatingOnlyMode) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMaximumOutdoorAirTemperatureinHeatingOnlyMode(maximumOutdoorAirTemperatureinHeatingOnlyMode);
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratedTotalCoolingCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->grossRatedTotalCoolingCapacity();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMinimumOutdoorTemperatureinHeatRecoveryMode(double minimumOutdoorTemperatureinHeatRecoveryMode) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMinimumOutdoorTemperatureinHeatRecoveryMode(minimumOutdoorTemperatureinHeatRecoveryMode);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isRatedTotalCoolingCapacityAutosized() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isGrossRatedTotalCoolingCapacityAutosized();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorTemperatureinHeatRecoveryMode(double maximumOutdoorTemperatureinHeatRecoveryMode) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMaximumOutdoorTemperatureinHeatRecoveryMode(maximumOutdoorTemperatureinHeatRecoveryMode);
+}
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratedCoolingCOP() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->grossRatedCoolingCOP();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRefrigerantTemperatureControlAlgorithmforIndoorUnit(const std::string& refrigerantTemperatureControlAlgorithmforIndoorUnit) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setRefrigerantTemperatureControlAlgorithmforIndoorUnit(refrigerantTemperatureControlAlgorithmforIndoorUnit);
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratedTotalHeatingCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->grossRatedHeatingCapacity();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setReferenceEvaporatingTemperatureforIndoorUnit(double referenceEvaporatingTemperatureforIndoorUnit) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setReferenceEvaporatingTemperatureforIndoorUnit(referenceEvaporatingTemperatureforIndoorUnit);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::isRatedTotalHeatingCapacityAutosized() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->isGrossRatedHeatingCapacityAutosized();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setReferenceCondensingTemperatureforIndoorUnit(double referenceCondensingTemperatureforIndoorUnit) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setReferenceCondensingTemperatureforIndoorUnit(referenceCondensingTemperatureforIndoorUnit);
+}
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::ratedTotalHeatingCapacitySizingRatio() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->ratedHeatingCapacitySizingRatio();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setVariableEvaporatingTemperatureMinimumforIndoorUnit(double variableEvaporatingTemperatureMinimumforIndoorUnit) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVariableEvaporatingTemperatureMinimumforIndoorUnit(variableEvaporatingTemperatureMinimumforIndoorUnit);
+}
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatedTotalHeatingCapacity(double grossRatedHeatingCapacity) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setGrossRatedHeatingCapacity(
-      grossRatedHeatingCapacity);
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setVariableEvaporatingTemperatureMaximumforIndoorUnit(double variableEvaporatingTemperatureMaximumforIndoorUnit) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVariableEvaporatingTemperatureMaximumforIndoorUnit(variableEvaporatingTemperatureMaximumforIndoorUnit);
+}
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeRatedTotalHeatingCapacity() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeGrossRatedHeatingCapacity();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setVariableCondensingTemperatureMinimumforIndoorUnit(double variableCondensingTemperatureMinimumforIndoorUnit) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVariableCondensingTemperatureMinimumforIndoorUnit(variableCondensingTemperatureMinimumforIndoorUnit);
+}
 
-  bool
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatedTotalHeatingCapacitySizingRatio(double ratedHeatingCapacitySizingRatio) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setRatedHeatingCapacitySizingRatio(
-      ratedHeatingCapacitySizingRatio);
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setVariableCondensingTemperatureMaximumforIndoorUnit(double variableCondensingTemperatureMaximumforIndoorUnit) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVariableCondensingTemperatureMaximumforIndoorUnit(variableCondensingTemperatureMaximumforIndoorUnit);
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedRatedTotalCoolingCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedGrossRatedTotalCoolingCapacity();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitEvaporatorReferenceSuperheating(double outdoorUnitEvaporatorReferenceSuperheating) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setOutdoorUnitEvaporatorReferenceSuperheating(outdoorUnitEvaporatorReferenceSuperheating);
+}
 
-  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedRatedTotalHeatingCapacity() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedGrossRatedHeatingCapacity();
-  }
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitCondenserReferenceSubcooling(double outdoorUnitCondenserReferenceSubcooling) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setOutdoorUnitCondenserReferenceSubcooling(outdoorUnitCondenserReferenceSubcooling);
+}
 
-}  // namespace model
-}  // namespace openstudio
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitEvaporatorRatedBypassFactor(double outdoorUnitEvaporatorRatedBypassFactor) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setOutdoorUnitEvaporatorRatedBypassFactor(outdoorUnitEvaporatorRatedBypassFactor);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitCondenserRatedBypassFactor(double outdoorUnitCondenserRatedBypassFactor) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setOutdoorUnitCondenserRatedBypassFactor(outdoorUnitCondenserRatedBypassFactor);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode(double differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode(differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitHeatExchangerCapacityRatio(double outdoorUnitHeatExchangerCapacityRatio) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setOutdoorUnitHeatExchangerCapacityRatio(outdoorUnitHeatExchangerCapacityRatio);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(univariateFunctions);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const UnivariateFunctions& univariateFunctions) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(univariateFunctions);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDiameterofMainPipeforSuctionGas(double diameterofMainPipeforSuctionGas) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDiameterofMainPipeforSuctionGas(diameterofMainPipeforSuctionGas);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDiameterofMainPipeforDischargeGas(double diameterofMainPipeforDischargeGas) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDiameterofMainPipeforDischargeGas(diameterofMainPipeforDischargeGas);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(double heightDifferenceBetweenOutdoorUnitandIndoorUnits) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(heightDifferenceBetweenOutdoorUnitandIndoorUnits);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMainPipeInsulationThickness(double mainPipeInsulationThickness) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMainPipeInsulationThickness(mainPipeInsulationThickness);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMainPipeInsulationThermalConductivity(double mainPipeInsulationThermalConductivity) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMainPipeInsulationThermalConductivity(mainPipeInsulationThermalConductivity);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCrankcaseHeaterPowerperCompressor(double crankcaseHeaterPowerperCompressor) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCrankcaseHeaterPowerperCompressor(crankcaseHeaterPowerperCompressor);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setNumberofCompressors(int numberofCompressors) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setNumberofCompressors(numberofCompressors);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setRatioofCompressorSizetoTotalCompressorCapacity(ratioofCompressorSizetoTotalCompressorCapacity);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(double maximumOutdoorDryBulbTemperatureforCrankcaseHeater) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(maximumOutdoorDryBulbTemperatureforCrankcaseHeater);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostStrategy(const std::string& defrostStrategy) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDefrostStrategy(defrostStrategy);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostControl(const std::string& defrostControl) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDefrostControl(defrostControl);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(bivariateFunctions);
+}
+
+void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve() {
+  getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostTimePeriodFraction(double defrostTimePeriodFraction) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDefrostTimePeriodFraction(defrostTimePeriodFraction);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setResistiveDefrostHeaterCapacity(resistiveDefrostHeaterCapacity);
+}
+
+void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizeResistiveDefrostHeaterCapacity() {
+  getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizeResistiveDefrostHeaterCapacity();
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setMaximumOutdoorDrybulbTemperatureforDefrostOperation(maximumOutdoorDrybulbTemperatureforDefrostOperation);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setInitialHeatRecoveryCoolingCapacityFraction(double initialHeatRecoveryCoolingCapacityFraction) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setInitialHeatRecoveryCoolingCapacityFraction(initialHeatRecoveryCoolingCapacityFraction);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryCoolingCapacityTimeConstant(double heatRecoveryCoolingCapacityTimeConstant) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryCoolingCapacityTimeConstant(heatRecoveryCoolingCapacityTimeConstant);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setInitialHeatRecoveryCoolingEnergyFraction(double initialHeatRecoveryCoolingEnergyFraction) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setInitialHeatRecoveryCoolingEnergyFraction(initialHeatRecoveryCoolingEnergyFraction);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryCoolingEnergyTimeConstant(double heatRecoveryCoolingEnergyTimeConstant) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryCoolingEnergyTimeConstant(heatRecoveryCoolingEnergyTimeConstant);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setInitialHeatRecoveryHeatingCapacityFraction(double initialHeatRecoveryHeatingCapacityFraction) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setInitialHeatRecoveryHeatingCapacityFraction(initialHeatRecoveryHeatingCapacityFraction);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryHeatingCapacityTimeConstant(double heatRecoveryHeatingCapacityTimeConstant) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryHeatingCapacityTimeConstant(heatRecoveryHeatingCapacityTimeConstant);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setInitialHeatRecoveryHeatingEnergyFraction(double initialHeatRecoveryHeatingEnergyFraction) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setInitialHeatRecoveryHeatingEnergyFraction(initialHeatRecoveryHeatingEnergyFraction);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setHeatRecoveryHeatingEnergyTimeConstant(heatRecoveryHeatingEnergyTimeConstant);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCompressormaximumdeltaPressure(compressormaximumdeltaPressure);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCompressorInverterEfficiency(double compressorInverterEfficiency) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCompressorInverterEfficiency(compressorInverterEfficiency);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCompressorEvaporativeCapacityCorrectionFactor(double compressorEvaporativeCapacityCorrectionFactor) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCompressorEvaporativeCapacityCorrectionFactor(compressorEvaporativeCapacityCorrectionFactor);
+}
+
+bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setNumberofCompressorLoadingIndexEntries(int numberofCompressorLoadingIndexEntries) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setNumberofCompressorLoadingIndexEntries(numberofCompressorLoadingIndexEntries);
+}
+
+/// @cond
+AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(std::shared_ptr<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl> impl)
+  : StraightComponent(std::move(impl))
+{}
+/// @endcond
+
+} // model
+} // openstudio
+
