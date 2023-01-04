@@ -92,7 +92,8 @@ def compute_appropriate_version(current_v: version.Version,
                 new_v += f"{pre_iden}{pre_v}"
             post_v = max_v.post
             if not post_v:
-                new_v += 'post0'
+                if not current:
+                    new_v += 'post0'
             elif current:
                 new_v += f"post{post_v}"
             else:

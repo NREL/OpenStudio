@@ -332,7 +332,11 @@ jobs:
           python -m pip install --upgrade pip
           # Note: if we choose to do ALL or nothing, remove  setuptools wheel twine (not needed unless trying to upload within this step)
           pip install requests packaging setuptools wheel twine
-          bindings_v=$(python ./python/module/find_pypi_tag.py --current)
+          if [[ "$GITHUB_REF" == *"refs/tags"* ]]; then
+            bindings_v=$(python ./python/module/find_pypi_tag.py --pypi)
+          else
+            bindings_v=$(python ./python/module/find_pypi_tag.py --current)
+          fi;
           pip install -i https://test.pypi.org/simple/ openstudio==$bindings_v
           mkdir wheel
 
@@ -343,7 +347,7 @@ jobs:
           m = openstudio.model.exampleModel()
           print(m)
 
-  # if python_bindings succeeds but test_python_bindings fails and this is a release, 
+  # if python_bindings succeeds but test_python_bindings fails and this is a release,
   # remove that version from testpypi
   upload_python_bindings_to_pypi:
     if: contains(github.ref, 'refs/tags')
