@@ -575,10 +575,6 @@ pugi::xml_document BCLXML::toXML() const {
 
   pugi::xml_document doc;
 
-  if (m_path.empty()) {
-    return doc;
-  }
-
   //doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
 
   pugi::xml_node docElement;
@@ -587,7 +583,7 @@ pugi::xml_document BCLXML::toXML() const {
   } else if (m_bclXMLType == BCLXMLType::MeasureXML) {
     docElement = doc.append_child("measure");
   } else {
-    return doc;
+    LOG_AND_THROW("Unknown BCLXMLType '" << m_bclXMLType.valueName() << "'.");
   }
 
   auto element = docElement.append_child("schema_version");
@@ -740,6 +736,11 @@ pugi::xml_document BCLXML::toXML() const {
 }
 
 bool BCLXML::save() const {
+
+  if (m_path.empty()) {
+    LOG(Warn, "Cannot save, since it has no known path. Use BCLXML::save(const openstudio::path& xmlPath) instead.");
+    return false;
+  }
 
   const pugi::xml_document doc = toXML();
   if (!doc) {
