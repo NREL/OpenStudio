@@ -52,7 +52,7 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlowFluidTemperatureControl_harcodedCondenserType) {
 
   // Lambda to dry up code
-/*   auto translateAndCheckOneVRFAndCondenserType = [](const Model& m, const std::string& expectedCondenserType, unsigned expectedNumberOfErrors) {
+  /*   auto translateAndCheckOneVRFAndCondenserType = [](const Model& m, const std::string& expectedCondenserType, unsigned expectedNumberOfErrors) {
     ForwardTranslator ft;
 
     // Translate
@@ -117,7 +117,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlowFluidTemperatureControl_defaultedCondenserType) {
 
-/*   ForwardTranslator ft;
+  /*   ForwardTranslator ft;
 
   // No Plant Loop => AirCooled
   {

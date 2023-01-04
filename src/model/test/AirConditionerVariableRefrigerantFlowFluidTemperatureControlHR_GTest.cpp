@@ -69,7 +69,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   // Zone Terminal Unit List: Required Object
   ModelObjectLists obj(m);
   EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setZoneTerminalUnitList(obj));
-EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.zoneTerminalUnitList());
+  EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.zoneTerminalUnitList());
 
   // Refrigerant Type: Required String
   EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setRefrigerantType("R11"));
@@ -177,8 +177,10 @@ EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.zo
   EXPECT_EQ(2.4, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.outdoorUnitCondenserRatedBypassFactor());
 
   // Difference between Outdoor Unit Evaporating Temperature and Outdoor Air Temperature in Heat Recovery Mode: Required Double
-  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setDifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode(2.5));
-  EXPECT_EQ(2.5, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode());
+  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR
+                .setDifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode(2.5));
+  EXPECT_EQ(2.5, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR
+                   .differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode());
 
   // Outdoor Unit Heat Exchanger Capacity Ratio: Required Double
   EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setOutdoorUnitHeatExchangerCapacityRatio(2.6));
@@ -204,12 +206,12 @@ EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.zo
   // Outdoor Unit Evaporating Temperature Function of Superheating Curve Name: Required Object
   UnivariateFunctions obj(m);
   EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(obj));
-EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve());
+  EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve());
 
   // Outdoor Unit Condensing Temperature Function of Subcooling Curve Name: Required Object
   UnivariateFunctions obj(m);
   EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(obj));
-EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve());
+  EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve());
 
   // Diameter of Main Pipe for Suction Gas: Required Double
   EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setDiameterofMainPipeforSuctionGas(3.1));
@@ -233,11 +235,15 @@ EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.ou
   EXPECT_EQ(3.3, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
 
   // Equivalent Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Required Double
-  EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(3.4));
-  EXPECT_EQ(3.4, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+  EXPECT_TRUE(
+    airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(3.4));
+  EXPECT_EQ(3.4,
+            airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
   // Bad Value
-  EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(-10.0));
-  EXPECT_EQ(3.4, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+  EXPECT_FALSE(
+    airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(-10.0));
+  EXPECT_EQ(3.4,
+            airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
 
   // Height Difference Between Outdoor Unit and Indoor Units: Required Double
   EXPECT_TRUE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(3.5));
@@ -377,5 +383,4 @@ EXPECT_EQ(obj, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.ou
   // Bad Value
   EXPECT_FALSE(airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.setNumberofCompressorLoadingIndexEntries(-8));
   EXPECT_EQ(61, airConditionerVariableRefrigerantFlowFluidTemperatureControlHR.numberofCompressorLoadingIndexEntries());
-
 }

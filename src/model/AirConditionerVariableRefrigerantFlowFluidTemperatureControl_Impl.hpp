@@ -36,274 +36,271 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Schedule;
-class ModelObjectLists;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class BivariateFunctions;
+  // TODO: Check the following class names against object getters and setters.
+  class Schedule;
+  class ModelObjectLists;
+  class UnivariateFunctions;
+  class UnivariateFunctions;
+  class BivariateFunctions;
 
-namespace detail {
+  namespace detail {
 
-  /** AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl is a StraightComponent_Impl that is the implementation class for AirConditionerVariableRefrigerantFlowFluidTemperatureControl.*/
-  class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl is a StraightComponent_Impl that is the implementation class for AirConditionerVariableRefrigerantFlowFluidTemperatureControl.*/
+    class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const IdfObject& idfObject,
-                                                                      Model_Impl* model,
-                                                                      bool keepHandle);
+      AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                      Model_Impl* model,
-                                                                      bool keepHandle);
+      AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                        bool keepHandle);
 
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(const AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl& other,
-                                                                      Model_Impl* model,
-                                                                      bool keepHandle);
+      AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl(
+        const AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl() {}
+      virtual ~AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> availabilitySchedule() const;
+      // TODO: Check return type. From object lists, some candidates are: Schedule.
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectLists.
-    ModelObjectLists zoneTerminalUnitList() const;
+      // TODO: Check return type. From object lists, some candidates are: ModelObjectLists.
+      ModelObjectLists zoneTerminalUnitList() const;
 
-    std::string refrigerantType() const;
+      std::string refrigerantType() const;
 
-    boost::optional<double> ratedEvaporativeCapacity() const;
+      boost::optional<double> ratedEvaporativeCapacity() const;
 
-    bool isRatedEvaporativeCapacityAutosized() const;
+      bool isRatedEvaporativeCapacityAutosized() const;
 
-    boost::optional <double> autosizedRatedEvaporativeCapacity();
+      boost::optional<double> autosizedRatedEvaporativeCapacity();
 
-    double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity() const;
+      double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity() const;
 
-    double minimumOutdoorAirTemperatureinCoolingMode() const;
+      double minimumOutdoorAirTemperatureinCoolingMode() const;
 
-    double maximumOutdoorAirTemperatureinCoolingMode() const;
+      double maximumOutdoorAirTemperatureinCoolingMode() const;
 
-    double minimumOutdoorAirTemperatureinHeatingMode() const;
+      double minimumOutdoorAirTemperatureinHeatingMode() const;
 
-    double maximumOutdoorAirTemperatureinHeatingMode() const;
+      double maximumOutdoorAirTemperatureinHeatingMode() const;
 
-    double referenceOutdoorUnitSuperheating() const;
+      double referenceOutdoorUnitSuperheating() const;
 
-    double referenceOutdoorUnitSubcooling() const;
+      double referenceOutdoorUnitSubcooling() const;
 
-    std::string refrigerantTemperatureControlAlgorithmforIndoorUnit() const;
+      std::string refrigerantTemperatureControlAlgorithmforIndoorUnit() const;
 
-    double referenceEvaporatingTemperatureforIndoorUnit() const;
+      double referenceEvaporatingTemperatureforIndoorUnit() const;
 
-    double referenceCondensingTemperatureforIndoorUnit() const;
+      double referenceCondensingTemperatureforIndoorUnit() const;
 
-    double variableEvaporatingTemperatureMinimumforIndoorUnit() const;
+      double variableEvaporatingTemperatureMinimumforIndoorUnit() const;
 
-    double variableEvaporatingTemperatureMaximumforIndoorUnit() const;
+      double variableEvaporatingTemperatureMaximumforIndoorUnit() const;
 
-    double variableCondensingTemperatureMinimumforIndoorUnit() const;
+      double variableCondensingTemperatureMinimumforIndoorUnit() const;
 
-    double variableCondensingTemperatureMaximumforIndoorUnit() const;
+      double variableCondensingTemperatureMaximumforIndoorUnit() const;
 
-    double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity() const;
+      double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity() const;
 
-    double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity() const;
+      double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
+      // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
+      UnivariateFunctions outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
+      // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
+      UnivariateFunctions outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
 
-    double diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const;
+      double diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const;
 
-    double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const;
+      double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const;
 
-    double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const;
+      double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint() const;
 
-    double heightDifferenceBetweenOutdoorUnitandIndoorUnits() const;
+      double heightDifferenceBetweenOutdoorUnitandIndoorUnits() const;
 
-    double mainPipeInsulationThickness() const;
+      double mainPipeInsulationThickness() const;
 
-    double mainPipeInsulationThermalConductivity() const;
+      double mainPipeInsulationThermalConductivity() const;
 
-    double crankcaseHeaterPowerperCompressor() const;
+      double crankcaseHeaterPowerperCompressor() const;
 
-    int numberofCompressors() const;
+      int numberofCompressors() const;
 
-    bool isNumberofCompressorsDefaulted() const;
+      bool isNumberofCompressorsDefaulted() const;
 
-    double ratioofCompressorSizetoTotalCompressorCapacity() const;
+      double ratioofCompressorSizetoTotalCompressorCapacity() const;
 
-    double maximumOutdoorDryBulbTemperatureforCrankcaseHeater() const;
+      double maximumOutdoorDryBulbTemperatureforCrankcaseHeater() const;
 
-    std::string defrostStrategy() const;
+      std::string defrostStrategy() const;
 
-    std::string defrostControl() const;
+      std::string defrostControl() const;
 
-    // TODO: Check return type. From object lists, some candidates are: BivariateFunctions.
-    boost::optional<BivariateFunctions> defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const;
+      // TODO: Check return type. From object lists, some candidates are: BivariateFunctions.
+      boost::optional<BivariateFunctions> defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const;
 
-    double defrostTimePeriodFraction() const;
+      double defrostTimePeriodFraction() const;
 
-    boost::optional<double> resistiveDefrostHeaterCapacity() const;
+      boost::optional<double> resistiveDefrostHeaterCapacity() const;
 
-    bool isResistiveDefrostHeaterCapacityAutosized() const;
+      bool isResistiveDefrostHeaterCapacityAutosized() const;
 
-    boost::optional <double> autosizedResistiveDefrostHeaterCapacity();
+      boost::optional<double> autosizedResistiveDefrostHeaterCapacity();
 
-    double maximumOutdoorDrybulbTemperatureforDefrostOperation() const;
+      double maximumOutdoorDrybulbTemperatureforDefrostOperation() const;
 
-    double compressormaximumdeltaPressure() const;
+      double compressormaximumdeltaPressure() const;
 
-    int numberofCompressorLoadingIndexEntries() const;
+      int numberofCompressorLoadingIndexEntries() const;
 
-    // TODO: Handle this object's extensible fields.
+      // TODO: Handle this object's extensible fields.
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
-    bool setAvailabilitySchedule(Schedule& schedule);
+      // TODO: Check argument type. From object lists, some candidates are: Schedule.
+      // Note Schedules are passed by reference, not const reference.
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectLists.
-    bool setZoneTerminalUnitList(const ModelObjectLists& modelObjectLists);
+      // TODO: Check argument type. From object lists, some candidates are: ModelObjectLists.
+      bool setZoneTerminalUnitList(const ModelObjectLists& modelObjectLists);
 
-    bool setRefrigerantType(const std::string& refrigerantType);
+      bool setRefrigerantType(const std::string& refrigerantType);
 
-    bool setRatedEvaporativeCapacity(double ratedEvaporativeCapacity);
+      bool setRatedEvaporativeCapacity(double ratedEvaporativeCapacity);
 
-    void autosizeRatedEvaporativeCapacity();
+      void autosizeRatedEvaporativeCapacity();
 
-    bool setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity);
+      bool setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity);
 
-    bool setMinimumOutdoorAirTemperatureinCoolingMode(double minimumOutdoorAirTemperatureinCoolingMode);
+      bool setMinimumOutdoorAirTemperatureinCoolingMode(double minimumOutdoorAirTemperatureinCoolingMode);
 
-    bool setMaximumOutdoorAirTemperatureinCoolingMode(double maximumOutdoorAirTemperatureinCoolingMode);
+      bool setMaximumOutdoorAirTemperatureinCoolingMode(double maximumOutdoorAirTemperatureinCoolingMode);
 
-    bool setMinimumOutdoorAirTemperatureinHeatingMode(double minimumOutdoorAirTemperatureinHeatingMode);
+      bool setMinimumOutdoorAirTemperatureinHeatingMode(double minimumOutdoorAirTemperatureinHeatingMode);
 
-    bool setMaximumOutdoorAirTemperatureinHeatingMode(double maximumOutdoorAirTemperatureinHeatingMode);
+      bool setMaximumOutdoorAirTemperatureinHeatingMode(double maximumOutdoorAirTemperatureinHeatingMode);
 
-    bool setReferenceOutdoorUnitSuperheating(double referenceOutdoorUnitSuperheating);
+      bool setReferenceOutdoorUnitSuperheating(double referenceOutdoorUnitSuperheating);
 
-    bool setReferenceOutdoorUnitSubcooling(double referenceOutdoorUnitSubcooling);
+      bool setReferenceOutdoorUnitSubcooling(double referenceOutdoorUnitSubcooling);
 
-    bool setRefrigerantTemperatureControlAlgorithmforIndoorUnit(const std::string& refrigerantTemperatureControlAlgorithmforIndoorUnit);
+      bool setRefrigerantTemperatureControlAlgorithmforIndoorUnit(const std::string& refrigerantTemperatureControlAlgorithmforIndoorUnit);
 
-    bool setReferenceEvaporatingTemperatureforIndoorUnit(double referenceEvaporatingTemperatureforIndoorUnit);
+      bool setReferenceEvaporatingTemperatureforIndoorUnit(double referenceEvaporatingTemperatureforIndoorUnit);
 
-    bool setReferenceCondensingTemperatureforIndoorUnit(double referenceCondensingTemperatureforIndoorUnit);
+      bool setReferenceCondensingTemperatureforIndoorUnit(double referenceCondensingTemperatureforIndoorUnit);
 
-    bool setVariableEvaporatingTemperatureMinimumforIndoorUnit(double variableEvaporatingTemperatureMinimumforIndoorUnit);
+      bool setVariableEvaporatingTemperatureMinimumforIndoorUnit(double variableEvaporatingTemperatureMinimumforIndoorUnit);
 
-    bool setVariableEvaporatingTemperatureMaximumforIndoorUnit(double variableEvaporatingTemperatureMaximumforIndoorUnit);
+      bool setVariableEvaporatingTemperatureMaximumforIndoorUnit(double variableEvaporatingTemperatureMaximumforIndoorUnit);
 
-    bool setVariableCondensingTemperatureMinimumforIndoorUnit(double variableCondensingTemperatureMinimumforIndoorUnit);
+      bool setVariableCondensingTemperatureMinimumforIndoorUnit(double variableCondensingTemperatureMinimumforIndoorUnit);
 
-    bool setVariableCondensingTemperatureMaximumforIndoorUnit(double variableCondensingTemperatureMaximumforIndoorUnit);
+      bool setVariableCondensingTemperatureMaximumforIndoorUnit(double variableCondensingTemperatureMaximumforIndoorUnit);
 
-    bool setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity);
+      bool setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity);
 
-    bool setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
+      bool setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions);
+      // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
+      bool setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const UnivariateFunctions& univariateFunctions);
+      // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
+      bool setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const UnivariateFunctions& univariateFunctions);
 
-    bool setDiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+      bool setDiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
 
-    bool setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+      bool setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
 
-    bool setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+      bool setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(
+        double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
 
-    bool setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(double heightDifferenceBetweenOutdoorUnitandIndoorUnits);
+      bool setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(double heightDifferenceBetweenOutdoorUnitandIndoorUnits);
 
-    bool setMainPipeInsulationThickness(double mainPipeInsulationThickness);
+      bool setMainPipeInsulationThickness(double mainPipeInsulationThickness);
 
-    bool setMainPipeInsulationThermalConductivity(double mainPipeInsulationThermalConductivity);
+      bool setMainPipeInsulationThermalConductivity(double mainPipeInsulationThermalConductivity);
 
-    bool setCrankcaseHeaterPowerperCompressor(double crankcaseHeaterPowerperCompressor);
+      bool setCrankcaseHeaterPowerperCompressor(double crankcaseHeaterPowerperCompressor);
 
-    bool setNumberofCompressors(int numberofCompressors);
+      bool setNumberofCompressors(int numberofCompressors);
 
-    void resetNumberofCompressors();
+      void resetNumberofCompressors();
 
-    bool setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity);
+      bool setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity);
 
-    bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(double maximumOutdoorDryBulbTemperatureforCrankcaseHeater);
+      bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(double maximumOutdoorDryBulbTemperatureforCrankcaseHeater);
 
-    bool setDefrostStrategy(const std::string& defrostStrategy);
+      bool setDefrostStrategy(const std::string& defrostStrategy);
 
-    bool setDefrostControl(const std::string& defrostControl);
+      bool setDefrostControl(const std::string& defrostControl);
 
-    // TODO: Check argument type. From object lists, some candidates are: BivariateFunctions.
-    bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions);
+      // TODO: Check argument type. From object lists, some candidates are: BivariateFunctions.
+      bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions);
 
-    void resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
+      void resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
 
-    bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
+      bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
 
-    bool setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity);
+      bool setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity);
 
-    void autosizeResistiveDefrostHeaterCapacity();
+      void autosizeResistiveDefrostHeaterCapacity();
 
-    bool setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation);
+      bool setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation);
 
-    bool setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure);
+      bool setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure);
 
-    bool setNumberofCompressorLoadingIndexEntries(int numberofCompressorLoadingIndexEntries);
+      bool setNumberofCompressorLoadingIndexEntries(int numberofCompressorLoadingIndexEntries);
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    // TODO: Handle this object's extensible fields.
+      // TODO: Handle this object's extensible fields.
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlowFluidTemperatureControl");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlowFluidTemperatureControl");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<ModelObjectLists> optionalZoneTerminalUnitList() const;
-    boost::optional<UnivariateFunctions> optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
-    boost::optional<UnivariateFunctions> optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
-  };
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<ModelObjectLists> optionalZoneTerminalUnitList() const;
+      boost::optional<UnivariateFunctions> optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
+      boost::optional<UnivariateFunctions> optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_IMPL_HPP
-
+#endif  // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_IMPL_HPP

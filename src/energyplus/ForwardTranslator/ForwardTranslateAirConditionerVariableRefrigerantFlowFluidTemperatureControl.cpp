@@ -58,245 +58,256 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl( model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl& modelObject )
-{
-  boost::optional<IdfObject> result;
-  boost::optional<WorkspaceObject> _wo;
-  boost::optional<ModelObject> _mo;
+  boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(
+    model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl& modelObject) {
+    boost::optional<IdfObject> result;
+    boost::optional<WorkspaceObject> _wo;
+    boost::optional<ModelObject> _mo;
 
-  // Instantiate an IdfObject of the class to store the values
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl, modelObject);
-  // If it doesn't have a name, or if you aren't sure you are going to want to return it
-  // IdfObject idfObject( openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl );
-  // m_idfObjects.push_back(idfObject);
+    // Instantiate an IdfObject of the class to store the values
+    IdfObject idfObject =
+      createRegisterAndNameIdfObject(openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl, modelObject);
+    // If it doesn't have a name, or if you aren't sure you are going to want to return it
+    // IdfObject idfObject( openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl );
+    // m_idfObjects.push_back(idfObject);
 
-  // TODO: Note JM 2018-10-17
-  // You are responsible for implementing any additional logic based on choice fields, etc.
-  // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    // TODO: Note JM 2018-10-17
+    // You are responsible for implementing any additional logic based on choice fields, etc.
+    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
-  // Heat Pump Name: Required String
-  std::string heatPumpName = modelObject.heatPumpName();
-  idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::HeatPumpName, heatPumpName);
+    // Heat Pump Name: Required String
+    std::string heatPumpName = modelObject.heatPumpName();
+    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::HeatPumpName, heatPumpName);
 
-
-  // Availability Schedule Name: Optional Object
-  if (boost::optional<Schedule> _availabilitySchedule = modelObject.availabilitySchedule()) {
-    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_availabilitySchedule.get()) )  {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilityScheduleName, _owo->nameString());
+    // Availability Schedule Name: Optional Object
+    if (boost::optional<Schedule> _availabilitySchedule = modelObject.availabilitySchedule()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_availabilitySchedule.get())) {
+        idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilityScheduleName, _owo->nameString());
+      }
     }
-  }
 
-  // Zone Terminal Unit List Name: Required Object
-  ZoneTerminalUnitList zoneTerminalUnitList = modelObject.zoneTerminalUnitList();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(zoneTerminalUnitList) )  {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ZoneTerminalUnitListName, _owo->nameString());
-  }
-
-  // Refrigerant Type: Optional Object
-  Fluid refrigerantType = modelObject.refrigerantType();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(refrigerantType) )  {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantType, _owo->nameString());
-  }
-
-  if (modelObject.isRatedEvaporativeCapacityAutosized()) {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedEvaporativeCapacity, "Autosize");
-  } else {
-    // Rated Evaporative Capacity: boost::optional<double>
-    if (boost::optional<double> _ratedEvaporativeCapacity = modelObject.ratedEvaporativeCapacity()) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedEvaporativeCapacity, _ratedEvaporativeCapacity.get());
+    // Zone Terminal Unit List Name: Required Object
+    ZoneTerminalUnitList zoneTerminalUnitList = modelObject.zoneTerminalUnitList();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(zoneTerminalUnitList)) {
+      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ZoneTerminalUnitListName, _owo->nameString());
     }
-  }
 
-  // Rated Compressor Power Per Unit of Rated Evaporative Capacity: Optional Double
-  double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity = modelObject.ratedCompressorPowerPerUnitofRatedEvaporativeCapacity();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedCompressorPowerPerUnitofRatedEvaporativeCapacity, ratedCompressorPowerPerUnitofRatedEvaporativeCapacity);
-
-
-  // Minimum Outdoor Air Temperature in Cooling Mode: Optional Double
-  double minimumOutdoorAirTemperatureinCoolingMode = modelObject.minimumOutdoorAirTemperatureinCoolingMode();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MinimumOutdoorAirTemperatureinCoolingMode, minimumOutdoorAirTemperatureinCoolingMode);
-
-
-  // Maximum Outdoor Air Temperature in Cooling Mode: Optional Double
-  double maximumOutdoorAirTemperatureinCoolingMode = modelObject.maximumOutdoorAirTemperatureinCoolingMode();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MaximumOutdoorAirTemperatureinCoolingMode, maximumOutdoorAirTemperatureinCoolingMode);
-
-
-  // Minimum Outdoor Air Temperature in Heating Mode: Optional Double
-  double minimumOutdoorAirTemperatureinHeatingMode = modelObject.minimumOutdoorAirTemperatureinHeatingMode();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MinimumOutdoorAirTemperatureinHeatingMode, minimumOutdoorAirTemperatureinHeatingMode);
-
-
-  // Maximum Outdoor Air Temperature in Heating Mode: Optional Double
-  double maximumOutdoorAirTemperatureinHeatingMode = modelObject.maximumOutdoorAirTemperatureinHeatingMode();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MaximumOutdoorAirTemperatureinHeatingMode, maximumOutdoorAirTemperatureinHeatingMode);
-
-
-  // Reference Outdoor Unit Superheating: Optional Double
-  double referenceOutdoorUnitSuperheating = modelObject.referenceOutdoorUnitSuperheating();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ReferenceOutdoorUnitSuperheating, referenceOutdoorUnitSuperheating);
-
-
-  // Reference Outdoor Unit Subcooling: Optional Double
-  double referenceOutdoorUnitSubcooling = modelObject.referenceOutdoorUnitSubcooling();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ReferenceOutdoorUnitSubcooling, referenceOutdoorUnitSubcooling);
-
-
-  // Refrigerant Temperature Control Algorithm for Indoor Unit: Optional String
-  std::string refrigerantTemperatureControlAlgorithmforIndoorUnit = modelObject.refrigerantTemperatureControlAlgorithmforIndoorUnit();
-  idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantTemperatureControlAlgorithmforIndoorUnit, refrigerantTemperatureControlAlgorithmforIndoorUnit);
-
-
-  // Reference Evaporating Temperature for Indoor Unit: Optional Double
-  double referenceEvaporatingTemperatureforIndoorUnit = modelObject.referenceEvaporatingTemperatureforIndoorUnit();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ReferenceEvaporatingTemperatureforIndoorUnit, referenceEvaporatingTemperatureforIndoorUnit);
-
-
-  // Reference Condensing Temperature for Indoor Unit: Optional Double
-  double referenceCondensingTemperatureforIndoorUnit = modelObject.referenceCondensingTemperatureforIndoorUnit();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ReferenceCondensingTemperatureforIndoorUnit, referenceCondensingTemperatureforIndoorUnit);
-
-
-  // Variable Evaporating Temperature Minimum for Indoor Unit: Optional Double
-  double variableEvaporatingTemperatureMinimumforIndoorUnit = modelObject.variableEvaporatingTemperatureMinimumforIndoorUnit();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::VariableEvaporatingTemperatureMinimumforIndoorUnit, variableEvaporatingTemperatureMinimumforIndoorUnit);
-
-
-  // Variable Evaporating Temperature Maximum for Indoor Unit: Optional Double
-  double variableEvaporatingTemperatureMaximumforIndoorUnit = modelObject.variableEvaporatingTemperatureMaximumforIndoorUnit();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::VariableEvaporatingTemperatureMaximumforIndoorUnit, variableEvaporatingTemperatureMaximumforIndoorUnit);
-
-
-  // Variable Condensing Temperature Minimum for Indoor Unit: Optional Double
-  double variableCondensingTemperatureMinimumforIndoorUnit = modelObject.variableCondensingTemperatureMinimumforIndoorUnit();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::VariableCondensingTemperatureMinimumforIndoorUnit, variableCondensingTemperatureMinimumforIndoorUnit);
-
-
-  // Variable Condensing Temperature Maximum for Indoor Unit: Optional Double
-  double variableCondensingTemperatureMaximumforIndoorUnit = modelObject.variableCondensingTemperatureMaximumforIndoorUnit();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::VariableCondensingTemperatureMaximumforIndoorUnit, variableCondensingTemperatureMaximumforIndoorUnit);
-
-
-  // Outdoor Unit Fan Power Per Unit of Rated Evaporative Capacity: Optional Double
-  double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity = modelObject.outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity, outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity);
-
-
-  // Outdoor Unit Fan Flow Rate Per Unit of Rated Evaporative Capacity: Optional Double
-  double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity = modelObject.outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity, outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
-
-
-  // Outdoor Unit Evaporating Temperature Function of Superheating Curve Name: Required Object
-  UnivariateFunctions outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve = modelObject.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve) )  {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName, _owo->nameString());
-  }
-
-  // Outdoor Unit Condensing Temperature Function of Subcooling Curve Name: Required Object
-  UnivariateFunctions outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve = modelObject.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve) )  {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName, _owo->nameString());
-  }
-
-  // Diameter of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Optional Double
-  double diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint = modelObject.diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint, diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
-
-
-  // Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Optional Double
-  double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint = modelObject.lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::LengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint, lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
-
-
-  // Equivalent Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Optional Double
-  double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint = modelObject.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::EquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint, equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
-
-
-  // Height Difference Between Outdoor Unit and Indoor Units: Optional Double
-  double heightDifferenceBetweenOutdoorUnitandIndoorUnits = modelObject.heightDifferenceBetweenOutdoorUnitandIndoorUnits();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::HeightDifferenceBetweenOutdoorUnitandIndoorUnits, heightDifferenceBetweenOutdoorUnitandIndoorUnits);
-
-
-  // Main Pipe Insulation Thickness: Optional Double
-  double mainPipeInsulationThickness = modelObject.mainPipeInsulationThickness();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MainPipeInsulationThickness, mainPipeInsulationThickness);
-
-
-  // Main Pipe Insulation Thermal Conductivity: Optional Double
-  double mainPipeInsulationThermalConductivity = modelObject.mainPipeInsulationThermalConductivity();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MainPipeInsulationThermalConductivity, mainPipeInsulationThermalConductivity);
-
-
-  // Crankcase Heater Power per Compressor: Optional Double
-  double crankcaseHeaterPowerperCompressor = modelObject.crankcaseHeaterPowerperCompressor();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::CrankcaseHeaterPowerperCompressor, crankcaseHeaterPowerperCompressor);
-
-
-  // Number of Compressors: Optional Integer
-  int numberofCompressors = modelObject.numberofCompressors();
-  idfObject.setInt(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::NumberofCompressors, numberofCompressors);
-
-
-  // Ratio of Compressor Size to Total Compressor Capacity: Optional Double
-  double ratioofCompressorSizetoTotalCompressorCapacity = modelObject.ratioofCompressorSizetoTotalCompressorCapacity();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatioofCompressorSizetoTotalCompressorCapacity, ratioofCompressorSizetoTotalCompressorCapacity);
-
-
-  // Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater: Optional Double
-  double maximumOutdoorDryBulbTemperatureforCrankcaseHeater = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeater();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeater, maximumOutdoorDryBulbTemperatureforCrankcaseHeater);
-
-
-  // Defrost Strategy: Optional String
-  std::string defrostStrategy = modelObject.defrostStrategy();
-  idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostStrategy, defrostStrategy);
-
-
-  // Defrost Control: Optional String
-  std::string defrostControl = modelObject.defrostControl();
-  idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostControl, defrostControl);
-
-
-  // Defrost Energy Input Ratio Modifier Function of Temperature Curve Name: Optional Object
-  if (boost::optional<BivariateFunctions> _defrostEnergyInputRatioModifierFunctionofTemperatureCurve = modelObject.defrostEnergyInputRatioModifierFunctionofTemperatureCurve()) {
-    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_defrostEnergyInputRatioModifierFunctionofTemperatureCurve.get()) )  {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName, _owo->nameString());
+    // Refrigerant Type: Optional Object
+    Fluid refrigerantType = modelObject.refrigerantType();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(refrigerantType)) {
+      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantType, _owo->nameString());
     }
-  }
 
-  // Defrost Time Period Fraction: Optional Double
-  double defrostTimePeriodFraction = modelObject.defrostTimePeriodFraction();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostTimePeriodFraction, defrostTimePeriodFraction);
-
-
-  if (modelObject.isResistiveDefrostHeaterCapacityAutosized()) {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ResistiveDefrostHeaterCapacity, "Autosize");
-  } else {
-    // Resistive Defrost Heater Capacity: boost::optional<double>
-    if (boost::optional<double> _resistiveDefrostHeaterCapacity = modelObject.resistiveDefrostHeaterCapacity()) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ResistiveDefrostHeaterCapacity, _resistiveDefrostHeaterCapacity.get());
+    if (modelObject.isRatedEvaporativeCapacityAutosized()) {
+      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedEvaporativeCapacity, "Autosize");
+    } else {
+      // Rated Evaporative Capacity: boost::optional<double>
+      if (boost::optional<double> _ratedEvaporativeCapacity = modelObject.ratedEvaporativeCapacity()) {
+        idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedEvaporativeCapacity,
+                            _ratedEvaporativeCapacity.get());
+      }
     }
-  }
 
-  // Maximum Outdoor Dry-bulb Temperature for Defrost Operation: Optional Double
-  double maximumOutdoorDrybulbTemperatureforDefrostOperation = modelObject.maximumOutdoorDrybulbTemperatureforDefrostOperation();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation, maximumOutdoorDrybulbTemperatureforDefrostOperation);
+    // Rated Compressor Power Per Unit of Rated Evaporative Capacity: Optional Double
+    double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity = modelObject.ratedCompressorPowerPerUnitofRatedEvaporativeCapacity();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedCompressorPowerPerUnitofRatedEvaporativeCapacity,
+                        ratedCompressorPowerPerUnitofRatedEvaporativeCapacity);
 
+    // Minimum Outdoor Air Temperature in Cooling Mode: Optional Double
+    double minimumOutdoorAirTemperatureinCoolingMode = modelObject.minimumOutdoorAirTemperatureinCoolingMode();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MinimumOutdoorAirTemperatureinCoolingMode,
+                        minimumOutdoorAirTemperatureinCoolingMode);
 
-  // Compressor maximum delta Pressure: Optional Double
-  double compressormaximumdeltaPressure = modelObject.compressormaximumdeltaPressure();
-  idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::CompressormaximumdeltaPressure, compressormaximumdeltaPressure);
+    // Maximum Outdoor Air Temperature in Cooling Mode: Optional Double
+    double maximumOutdoorAirTemperatureinCoolingMode = modelObject.maximumOutdoorAirTemperatureinCoolingMode();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MaximumOutdoorAirTemperatureinCoolingMode,
+                        maximumOutdoorAirTemperatureinCoolingMode);
 
+    // Minimum Outdoor Air Temperature in Heating Mode: Optional Double
+    double minimumOutdoorAirTemperatureinHeatingMode = modelObject.minimumOutdoorAirTemperatureinHeatingMode();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MinimumOutdoorAirTemperatureinHeatingMode,
+                        minimumOutdoorAirTemperatureinHeatingMode);
 
-  // Number of Compressor Loading Index Entries: Optional Integer
-  int numberofCompressorLoadingIndexEntries = modelObject.numberofCompressorLoadingIndexEntries();
-  idfObject.setInt(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::NumberofCompressorLoadingIndexEntries, numberofCompressorLoadingIndexEntries);
+    // Maximum Outdoor Air Temperature in Heating Mode: Optional Double
+    double maximumOutdoorAirTemperatureinHeatingMode = modelObject.maximumOutdoorAirTemperatureinHeatingMode();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MaximumOutdoorAirTemperatureinHeatingMode,
+                        maximumOutdoorAirTemperatureinHeatingMode);
 
+    // Reference Outdoor Unit Superheating: Optional Double
+    double referenceOutdoorUnitSuperheating = modelObject.referenceOutdoorUnitSuperheating();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ReferenceOutdoorUnitSuperheating,
+                        referenceOutdoorUnitSuperheating);
 
-  return idfObject;
-} // End of translate function
+    // Reference Outdoor Unit Subcooling: Optional Double
+    double referenceOutdoorUnitSubcooling = modelObject.referenceOutdoorUnitSubcooling();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ReferenceOutdoorUnitSubcooling,
+                        referenceOutdoorUnitSubcooling);
 
-} // end namespace energyplus
-} // end namespace openstudio
+    // Refrigerant Temperature Control Algorithm for Indoor Unit: Optional String
+    std::string refrigerantTemperatureControlAlgorithmforIndoorUnit = modelObject.refrigerantTemperatureControlAlgorithmforIndoorUnit();
+    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantTemperatureControlAlgorithmforIndoorUnit,
+                        refrigerantTemperatureControlAlgorithmforIndoorUnit);
+
+    // Reference Evaporating Temperature for Indoor Unit: Optional Double
+    double referenceEvaporatingTemperatureforIndoorUnit = modelObject.referenceEvaporatingTemperatureforIndoorUnit();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ReferenceEvaporatingTemperatureforIndoorUnit,
+                        referenceEvaporatingTemperatureforIndoorUnit);
+
+    // Reference Condensing Temperature for Indoor Unit: Optional Double
+    double referenceCondensingTemperatureforIndoorUnit = modelObject.referenceCondensingTemperatureforIndoorUnit();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ReferenceCondensingTemperatureforIndoorUnit,
+                        referenceCondensingTemperatureforIndoorUnit);
+
+    // Variable Evaporating Temperature Minimum for Indoor Unit: Optional Double
+    double variableEvaporatingTemperatureMinimumforIndoorUnit = modelObject.variableEvaporatingTemperatureMinimumforIndoorUnit();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::VariableEvaporatingTemperatureMinimumforIndoorUnit,
+                        variableEvaporatingTemperatureMinimumforIndoorUnit);
+
+    // Variable Evaporating Temperature Maximum for Indoor Unit: Optional Double
+    double variableEvaporatingTemperatureMaximumforIndoorUnit = modelObject.variableEvaporatingTemperatureMaximumforIndoorUnit();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::VariableEvaporatingTemperatureMaximumforIndoorUnit,
+                        variableEvaporatingTemperatureMaximumforIndoorUnit);
+
+    // Variable Condensing Temperature Minimum for Indoor Unit: Optional Double
+    double variableCondensingTemperatureMinimumforIndoorUnit = modelObject.variableCondensingTemperatureMinimumforIndoorUnit();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::VariableCondensingTemperatureMinimumforIndoorUnit,
+                        variableCondensingTemperatureMinimumforIndoorUnit);
+
+    // Variable Condensing Temperature Maximum for Indoor Unit: Optional Double
+    double variableCondensingTemperatureMaximumforIndoorUnit = modelObject.variableCondensingTemperatureMaximumforIndoorUnit();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::VariableCondensingTemperatureMaximumforIndoorUnit,
+                        variableCondensingTemperatureMaximumforIndoorUnit);
+
+    // Outdoor Unit Fan Power Per Unit of Rated Evaporative Capacity: Optional Double
+    double outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity = modelObject.outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity,
+                        outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity);
+
+    // Outdoor Unit Fan Flow Rate Per Unit of Rated Evaporative Capacity: Optional Double
+    double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity = modelObject.outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity,
+                        outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
+
+    // Outdoor Unit Evaporating Temperature Function of Superheating Curve Name: Required Object
+    UnivariateFunctions outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve =
+      modelObject.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve)) {
+      idfObject.setString(
+        AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName,
+        _owo->nameString());
+    }
+
+    // Outdoor Unit Condensing Temperature Function of Subcooling Curve Name: Required Object
+    UnivariateFunctions outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve =
+      modelObject.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve)) {
+      idfObject.setString(
+        AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName,
+        _owo->nameString());
+    }
+
+    // Diameter of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Optional Double
+    double diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint = modelObject.diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+    idfObject.setDouble(
+      AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint,
+      diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+
+    // Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Optional Double
+    double lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint = modelObject.lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+    idfObject.setDouble(
+      AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::LengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint,
+      lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+
+    // Equivalent Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint: Optional Double
+    double equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint =
+      modelObject.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+    idfObject.setDouble(
+      AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::EquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint,
+      equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
+
+    // Height Difference Between Outdoor Unit and Indoor Units: Optional Double
+    double heightDifferenceBetweenOutdoorUnitandIndoorUnits = modelObject.heightDifferenceBetweenOutdoorUnitandIndoorUnits();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::HeightDifferenceBetweenOutdoorUnitandIndoorUnits,
+                        heightDifferenceBetweenOutdoorUnitandIndoorUnits);
+
+    // Main Pipe Insulation Thickness: Optional Double
+    double mainPipeInsulationThickness = modelObject.mainPipeInsulationThickness();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MainPipeInsulationThickness,
+                        mainPipeInsulationThickness);
+
+    // Main Pipe Insulation Thermal Conductivity: Optional Double
+    double mainPipeInsulationThermalConductivity = modelObject.mainPipeInsulationThermalConductivity();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MainPipeInsulationThermalConductivity,
+                        mainPipeInsulationThermalConductivity);
+
+    // Crankcase Heater Power per Compressor: Optional Double
+    double crankcaseHeaterPowerperCompressor = modelObject.crankcaseHeaterPowerperCompressor();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::CrankcaseHeaterPowerperCompressor,
+                        crankcaseHeaterPowerperCompressor);
+
+    // Number of Compressors: Optional Integer
+    int numberofCompressors = modelObject.numberofCompressors();
+    idfObject.setInt(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::NumberofCompressors, numberofCompressors);
+
+    // Ratio of Compressor Size to Total Compressor Capacity: Optional Double
+    double ratioofCompressorSizetoTotalCompressorCapacity = modelObject.ratioofCompressorSizetoTotalCompressorCapacity();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatioofCompressorSizetoTotalCompressorCapacity,
+                        ratioofCompressorSizetoTotalCompressorCapacity);
+
+    // Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater: Optional Double
+    double maximumOutdoorDryBulbTemperatureforCrankcaseHeater = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeater();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeater,
+                        maximumOutdoorDryBulbTemperatureforCrankcaseHeater);
+
+    // Defrost Strategy: Optional String
+    std::string defrostStrategy = modelObject.defrostStrategy();
+    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostStrategy, defrostStrategy);
+
+    // Defrost Control: Optional String
+    std::string defrostControl = modelObject.defrostControl();
+    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostControl, defrostControl);
+
+    // Defrost Energy Input Ratio Modifier Function of Temperature Curve Name: Optional Object
+    if (boost::optional<BivariateFunctions> _defrostEnergyInputRatioModifierFunctionofTemperatureCurve =
+          modelObject.defrostEnergyInputRatioModifierFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_defrostEnergyInputRatioModifierFunctionofTemperatureCurve.get())) {
+        idfObject.setString(
+          AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName,
+          _owo->nameString());
+      }
+    }
+
+    // Defrost Time Period Fraction: Optional Double
+    double defrostTimePeriodFraction = modelObject.defrostTimePeriodFraction();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostTimePeriodFraction, defrostTimePeriodFraction);
+
+    if (modelObject.isResistiveDefrostHeaterCapacityAutosized()) {
+      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ResistiveDefrostHeaterCapacity, "Autosize");
+    } else {
+      // Resistive Defrost Heater Capacity: boost::optional<double>
+      if (boost::optional<double> _resistiveDefrostHeaterCapacity = modelObject.resistiveDefrostHeaterCapacity()) {
+        idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ResistiveDefrostHeaterCapacity,
+                            _resistiveDefrostHeaterCapacity.get());
+      }
+    }
+
+    // Maximum Outdoor Dry-bulb Temperature for Defrost Operation: Optional Double
+    double maximumOutdoorDrybulbTemperatureforDefrostOperation = modelObject.maximumOutdoorDrybulbTemperatureforDefrostOperation();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation,
+                        maximumOutdoorDrybulbTemperatureforDefrostOperation);
+
+    // Compressor maximum delta Pressure: Optional Double
+    double compressormaximumdeltaPressure = modelObject.compressormaximumdeltaPressure();
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::CompressormaximumdeltaPressure,
+                        compressormaximumdeltaPressure);
+
+    // Number of Compressor Loading Index Entries: Optional Integer
+    int numberofCompressorLoadingIndexEntries = modelObject.numberofCompressorLoadingIndexEntries();
+    idfObject.setInt(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::NumberofCompressorLoadingIndexEntries,
+                     numberofCompressorLoadingIndexEntries);
+
+    return idfObject;
+  }  // End of translate function
+
+}  // end namespace energyplus
+}  // end namespace openstudio
