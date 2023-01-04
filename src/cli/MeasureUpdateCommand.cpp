@@ -42,7 +42,7 @@
 namespace openstudio {
 namespace cli {
 
-  void MeasureUpdateOptions::setupMeasureUpdateOptions(CLI::App* parentApp, ScriptEngineInstance& rubyEngine) {
+  void MeasureUpdateOptions::setupMeasureUpdateOptions(CLI::App* parentApp, ScriptEngineInstance& rubyEngine, ScriptEngineInstance& pythonEngine) {
     /// Set up a subcommand and capture a shared_ptr to a struct that holds all its options.
     /// The variables of the struct are bound to the CLI options.
     /// We use a shared ptr so that the addresses of the variables remain for binding,
@@ -78,10 +78,11 @@ namespace cli {
                                               ->option_text("PORT")
                                               ->excludes(directoryPathOpt);
 
-    measureCommand->callback([opt, &rubyEngine] { MeasureUpdateOptions::execute(*opt, rubyEngine); });
+    measureCommand->callback([opt, &rubyEngine, &pythonEngine] { MeasureUpdateOptions::execute(*opt, rubyEngine, pythonEngine); });
   }
 
-  boost::optional<BCLMeasure> getAndUpdateMeasure(const openstudio::path& directoryPath) {
+  boost::optional<BCLMeasure> getAndUpdateMeasure(const openstudio::path& directoryPath, ScriptEngineInstance& rubyEngine,
+                                                  ScriptEngineInstance& pythonEngine) {
 
     const auto& directoryPathStr = directoryPath.string();
 
@@ -135,7 +136,7 @@ namespace cli {
     return measure_;
   }
 
-  void MeasureUpdateOptions::execute(MeasureUpdateOptions const& opt, ScriptEngineInstance& rubyEngine) {
+  void MeasureUpdateOptions::execute(MeasureUpdateOptions const& opt, ScriptEngineInstance& rubyEngine, ScriptEngineInstance& pythonEngine) {
     opt.debug_print();
 
     if (opt.server_port > 0) {
@@ -158,7 +159,7 @@ server.start)ruby",
       rubyEngine->exec(measureManagerCmd);
 
     } else if (opt.update) {
-      getAndUpdateMeasure(opt.directoryPath);
+      getAndUpdateMeasure(opt.directoryPath, rubyEngine, pythonEngine);
 
     } else if (opt.update_all) {
       std::vector<openstudio::path> subDirPaths;
@@ -171,14 +172,14 @@ server.start)ruby",
       }
       fmt::print("Found {} measure directories to update\n", subDirPaths.size());
       for (const auto& subDirPath : subDirPaths) {
-        getAndUpdateMeasure(subDirPath);
+        getAndUpdateMeasure(subDirPath, rubyEngine, pythonEngine);
       }
 
     } else if (!opt.compute_arguments_model.empty()) {
       // TODO: Same comment as above: we need to call the measure methods same as what we do in OSWorkflow::run
       throw std::runtime_error("compute_arguments_model not implemented yet");
     } else if (opt.run_tests) {
-      auto measure_ = getAndUpdateMeasure(opt.directoryPath);
+      auto measure_ = getAndUpdateMeasure(opt.directoryPath, rubyEngine, pythonEngine);
       if (measure_->measureLanguage() == MeasureLanguage::Ruby) {
         // TODO: need to capture arguments and pass as ARGV
 

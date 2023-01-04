@@ -189,21 +189,6 @@ void OSWorkflow::run() {
     file.close();
   }
 
-#if USE_RUBY_ENGINE
-  // rubyEngine->exec("puts 'Hello from Ruby'");
-  rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
-  rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
-  rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
-  // -1: gotta init the rest of OpenStudio in ruby, so that Ruleset and co are defined
-  rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
-#endif
-#if USE_PYTHON_ENGINE
-  // pythonEngine->exec("print('Hello from Python')");
-  pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
-  pythonEngine->registerType<openstudio::measure::PythonEnergyPlusMeasure*>("openstudio::measure::PythonEnergyPlusMeasure *");
-  pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
-#endif
-
   // bool no_simulation = false;
   // bool post_process = false;
   // bool ep_json = false;
