@@ -128,11 +128,9 @@ namespace model {
 
     double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
+    Curve outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
+    Curve outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
 
     double diameterofMainPipeforSuctionGas() const;
 
@@ -160,8 +158,7 @@ namespace model {
 
     std::string defrostControl() const;
 
-    // TODO: Check return type. From object lists, some candidates are: BivariateFunctions.
-    boost::optional<BivariateFunctions> defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const;
+    boost::optional<Curve> defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const;
 
     double defrostTimePeriodFraction() const;
 
@@ -260,11 +257,9 @@ namespace model {
 
     bool setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions);
+    bool setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const Curve& curve);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const UnivariateFunctions& univariateFunctions);
+    bool setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const Curve& curve);
 
     bool setDiameterofMainPipeforSuctionGas(double diameterofMainPipeforSuctionGas);
 
@@ -293,8 +288,7 @@ namespace model {
 
     bool setDefrostControl(const std::string& defrostControl);
 
-    // TODO: Check argument type. From object lists, some candidates are: BivariateFunctions.
-    bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions);
+    bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve);
 
     void resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
 

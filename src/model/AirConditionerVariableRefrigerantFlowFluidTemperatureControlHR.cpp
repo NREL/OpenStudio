@@ -296,18 +296,16 @@ namespace model {
       return value.get();
     }
 
-    UnivariateFunctions
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const {
-      boost::optional<UnivariateFunctions> value = optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
+    Curve AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const {
+      boost::optional<Curve> value = optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have an Outdoor Unit Evaporating Temperature Functionof Superheating Curve attached.");
       }
       return value.get();
     }
 
-    UnivariateFunctions
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
-      boost::optional<UnivariateFunctions> value = optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    Curve AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
+      boost::optional<Curve> value = optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have an Outdoor Unit Condensing Temperature Functionof Subcooling Curve attached.");
       }
@@ -406,9 +404,9 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<BivariateFunctions>
+    boost::optional<Curve>
       AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName);
     }
 
@@ -740,18 +738,28 @@ namespace model {
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      bool result = setPointer(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName,
-        univariateFunctions.handle());
+      const boost::optional<Curve>& curve) {
+      bool result(false);
+      if (curve) {
+        result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::
+                              OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName,
+                            curve.get().handle());
+      } else {
+        result = true;
+      }
       return result;
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      bool result = setPointer(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName,
-        univariateFunctions.handle());
+      const boost::optional<Curve>& curve) {
+      bool result(false);
+      if (curve) {
+        result = setPointer(
+          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName,
+          curve.get().handle());
+      } else {
+        result = true;
+      }
       return result;
     }
 
@@ -850,10 +858,16 @@ namespace model {
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      bool result = setPointer(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName,
-        bivariateFunctions.handle());
+      const boost::optional<Curve>& curve) {
+      bool result(false);
+      if (curve) {
+        result = setPointer(
+          OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName,
+          curve.get().handle());
+      } else {
+        resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
+        result = true;
+      }
       return result;
     }
 
@@ -1001,16 +1015,16 @@ namespace model {
       }
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve()
         const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName);
     }
 
@@ -1283,14 +1297,12 @@ namespace model {
       ->outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity();
   }
 
-  UnivariateFunctions
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const {
+  Curve AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
       ->outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
   }
 
-  UnivariateFunctions
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
+  Curve AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
       ->outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
   }
@@ -1351,7 +1363,7 @@ namespace model {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->defrostControl();
   }
 
-  boost::optional<BivariateFunctions>
+  boost::optional<Curve>
     AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
       ->defrostEnergyInputRatioModifierFunctionofTemperatureCurve();
@@ -1582,15 +1594,15 @@ namespace model {
   }
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(
-    const UnivariateFunctions& univariateFunctions) {
+    const Curve& curve) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(univariateFunctions);
+      ->setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(curve);
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool
+    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const Curve& curve) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(univariateFunctions);
+      ->setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(curve);
   }
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDiameterofMainPipeforSuctionGas(double diameterofMainPipeforSuctionGas) {
@@ -1663,10 +1675,10 @@ namespace model {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setDefrostControl(defrostControl);
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
+  bool
+    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()
-      ->setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(bivariateFunctions);
+      ->setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(curve);
   }
 
   void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve() {
