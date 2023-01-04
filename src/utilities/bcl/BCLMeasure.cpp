@@ -429,7 +429,7 @@ BCLMeasure::BCLMeasure(const openstudio::path& dir) : m_directory(openstudio::fi
     }
   } else if (hasPython) {
     if (measureLanguage_ && measureLanguage_.get() != MeasureLanguage::Python) {
-      LOG_AND_THROW("'" << toString(dir) << "' has a measure.rb; but \"Measure Language\" is not 'Python', it's '" << measureLanguage_->valueName()
+      LOG_AND_THROW("'" << toString(dir) << "' has a measure.py; but \"Measure Language\" is not 'Python', it's '" << measureLanguage_->valueName()
                         << "'.");
     }
   } else {
