@@ -30,17 +30,28 @@
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "ModelObjectLists.hpp"
-#include "ModelObjectLists_Impl.hpp"
-#include "UnivariateFunctions.hpp"
-#include "UnivariateFunctions_Impl.hpp"
-#include "UnivariateFunctions.hpp"
-#include "UnivariateFunctions_Impl.hpp"
-#include "BivariateFunctions.hpp"
-#include "BivariateFunctions_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
@@ -96,15 +107,10 @@ namespace model {
       return result;
     }
 
-    boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::availabilitySchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule);
-    }
-
-    ModelObjectLists AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::zoneTerminalUnitList() const {
-      boost::optional<ModelObjectLists> value = optionalZoneTerminalUnitList();
+    Schedule AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> value = optionalAvailabilitySchedule();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Zone Terminal Unit List attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
       }
       return value.get();
     }
@@ -320,10 +326,6 @@ namespace model {
       return value.get();
     }
 
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::isNumberofCompressorsDefaulted() const {
-      return isEmpty(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::NumberofCompressors);
-    }
-
     double AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::ratioofCompressorSizetoTotalCompressorCapacity() const {
       boost::optional<double> value =
         getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatioofCompressorSizetoTotalCompressorCapacity, true);
@@ -411,12 +413,6 @@ namespace model {
     void AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::resetAvailabilitySchedule() {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule, "");
       OS_ASSERT(result);
-    }
-
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setZoneTerminalUnitList(const ModelObjectLists& modelObjectLists) {
-      bool result =
-        setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ZoneTerminalUnitList, modelObjectLists.handle());
-      return result;
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setRefrigerantType(const std::string& refrigerantType) {
@@ -642,11 +638,6 @@ namespace model {
       return result;
     }
 
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::resetNumberofCompressors() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::NumberofCompressors, "");
-      OS_ASSERT(result);
-    }
-
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setRatioofCompressorSizetoTotalCompressorCapacity(
       double ratioofCompressorSizetoTotalCompressorCapacity) {
       bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatioofCompressorSizetoTotalCompressorCapacity,
@@ -745,11 +736,6 @@ namespace model {
       }
     }
 
-    boost::optional<ModelObjectLists> AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::optionalZoneTerminalUnitList() const {
-      return getObject<ModelObject>().getModelObjectTarget<ModelObjectLists>(
-        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ZoneTerminalUnitList);
-    }
-
     boost::optional<UnivariateFunctions>
       AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve()
         const {
@@ -763,73 +749,94 @@ namespace model {
         OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName);
     }
 
+    boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::optionalAvailabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule);
+    }
+
   }  // namespace detail
 
   AirConditionerVariableRefrigerantFlowFluidTemperatureControl::AirConditionerVariableRefrigerantFlowFluidTemperatureControl(const Model& model)
     : StraightComponent(AirConditionerVariableRefrigerantFlowFluidTemperatureControl::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
-    //     OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::ZoneTerminalUnitList
-    //     OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName
-    //     OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName
     bool ok = true;
-    // ok = setZoneTerminalUnitList();
+    Schedule schedule = model.alwaysOnDiscreteSchedule();
+    ok = setAvailabilitySchedule(schedule);
     OS_ASSERT(ok);
-    // ok = setRefrigerantType();
+    ok = setRefrigerantType("R401A");
     OS_ASSERT(ok);
-    // ok = setRatedEvaporativeCapacity();
+    ok = setRatedEvaporativeCapacity(40000);
     OS_ASSERT(ok);
-    // ok = setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity();
+    ok = setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(0.35);
     OS_ASSERT(ok);
-    // setMinimumOutdoorAirTemperatureinCoolingMode();
-    // setMaximumOutdoorAirTemperatureinCoolingMode();
-    // setMinimumOutdoorAirTemperatureinHeatingMode();
-    // setMaximumOutdoorAirTemperatureinHeatingMode();
-    // setReferenceOutdoorUnitSuperheating();
-    // setReferenceOutdoorUnitSubcooling();
-    // ok = setRefrigerantTemperatureControlAlgorithmforIndoorUnit();
+    ok = setMinimumOutdoorAirTemperatureinCoolingMode(-6.0);
     OS_ASSERT(ok);
-    // setReferenceEvaporatingTemperatureforIndoorUnit();
-    // setReferenceCondensingTemperatureforIndoorUnit();
-    // setVariableEvaporatingTemperatureMinimumforIndoorUnit();
-    // setVariableEvaporatingTemperatureMaximumforIndoorUnit();
-    // setVariableCondensingTemperatureMinimumforIndoorUnit();
-    // setVariableCondensingTemperatureMaximumforIndoorUnit();
-    // ok = setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity();
+    ok = setMaximumOutdoorAirTemperatureinCoolingMode(43.0);
     OS_ASSERT(ok);
-    // ok = setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity();
+    ok = setMinimumOutdoorAirTemperatureinHeatingMode(-20.0);
     OS_ASSERT(ok);
-    // ok = setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
+    ok = setMaximumOutdoorAirTemperatureinHeatingMode(16.0);
     OS_ASSERT(ok);
-    // ok = setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    ok = setReferenceOutdoorUnitSuperheating(3);
     OS_ASSERT(ok);
-    // ok = setDiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+    ok = setReferenceOutdoorUnitSubcooling(5);
     OS_ASSERT(ok);
-    // ok = setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+    ok = setRefrigerantTemperatureControlAlgorithmforIndoorUnit("VariableTemp");
     OS_ASSERT(ok);
-    // ok = setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint();
+    ok = setReferenceEvaporatingTemperatureforIndoorUnit(6.0);
     OS_ASSERT(ok);
-    // setHeightDifferenceBetweenOutdoorUnitandIndoorUnits();
-    // ok = setMainPipeInsulationThickness();
+    ok = setReferenceCondensingTemperatureforIndoorUnit(44.0);
     OS_ASSERT(ok);
-    // ok = setMainPipeInsulationThermalConductivity();
+    ok = setVariableEvaporatingTemperatureMinimumforIndoorUnit(4.0);
     OS_ASSERT(ok);
-    // setCrankcaseHeaterPowerperCompressor();
-    // setRatioofCompressorSizetoTotalCompressorCapacity();
-    // setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater();
-    // ok = setDefrostStrategy();
+    ok = setVariableEvaporatingTemperatureMaximumforIndoorUnit(13.0);
     OS_ASSERT(ok);
-    // ok = setDefrostControl();
+    ok = setVariableCondensingTemperatureMinimumforIndoorUnit(42.0);
     OS_ASSERT(ok);
-    // ok = setDefrostTimePeriodFraction();
+    ok = setVariableCondensingTemperatureMaximumforIndoorUnit(46.0);
     OS_ASSERT(ok);
-    // ok = setResistiveDefrostHeaterCapacity();
+    ok = setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(4.25E-3);
     OS_ASSERT(ok);
-    // setMaximumOutdoorDrybulbTemperatureforDefrostOperation();
-    // ok = setCompressormaximumdeltaPressure();
+    ok = setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(7.50E-5);
     OS_ASSERT(ok);
-    // ok = setNumberofCompressorLoadingIndexEntries();
+    //ok = setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
+    OS_ASSERT(ok);
+    //ok = setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    OS_ASSERT(ok);
+    ok = setDiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(0.0762);
+    OS_ASSERT(ok);
+    ok = setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(30.0);
+    OS_ASSERT(ok);
+    ok = setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(36.0);
+    OS_ASSERT(ok);
+    ok = setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(5.0);
+    OS_ASSERT(ok);
+    ok = setMainPipeInsulationThickness(0.02);
+    OS_ASSERT(ok);
+    ok = setMainPipeInsulationThermalConductivity(0.032);
+    OS_ASSERT(ok);
+    ok = setCrankcaseHeaterPowerperCompressor(33.0);
+    OS_ASSERT(ok);
+    ok = setNumberofCompressors(2);
+    OS_ASSERT(ok);
+    ok = setRatioofCompressorSizetoTotalCompressorCapacity(0.5);
+    OS_ASSERT(ok);
+    ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(5.0);
+    OS_ASSERT(ok);
+    ok = setDefrostStrategy("Resistive");
+    OS_ASSERT(ok);
+    ok = setDefrostControl("Timed");
+    OS_ASSERT(ok);
+    ok = setDefrostTimePeriodFraction(0.058333);
+    OS_ASSERT(ok);
+    ok = setResistiveDefrostHeaterCapacity(0.0);
+    OS_ASSERT(ok);
+    ok = setMaximumOutdoorDrybulbTemperatureforDefrostOperation(5.0);
+    OS_ASSERT(ok);
+    ok = setCompressormaximumdeltaPressure(4500000.0);
+    OS_ASSERT(ok);
+    ok = setNumberofCompressorLoadingIndexEntries(2);
     OS_ASSERT(ok);
   }
 
@@ -858,12 +865,8 @@ namespace model {
                           OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostControl);
   }
 
-  boost::optional<Schedule> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::availabilitySchedule() const {
+  Schedule AirConditionerVariableRefrigerantFlowFluidTemperatureControl::availabilitySchedule() const {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->availabilitySchedule();
-  }
-
-  ModelObjectLists AirConditionerVariableRefrigerantFlowFluidTemperatureControl::zoneTerminalUnitList() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->zoneTerminalUnitList();
   }
 
   std::string AirConditionerVariableRefrigerantFlowFluidTemperatureControl::refrigerantType() const {
@@ -997,10 +1000,6 @@ namespace model {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->numberofCompressors();
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::isNumberofCompressorsDefaulted() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->isNumberofCompressorsDefaulted();
-  }
-
   double AirConditionerVariableRefrigerantFlowFluidTemperatureControl::ratioofCompressorSizetoTotalCompressorCapacity() const {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->ratioofCompressorSizetoTotalCompressorCapacity();
   }
@@ -1058,10 +1057,6 @@ namespace model {
 
   void AirConditionerVariableRefrigerantFlowFluidTemperatureControl::resetAvailabilitySchedule() {
     getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->resetAvailabilitySchedule();
-  }
-
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::setZoneTerminalUnitList(const ModelObjectLists& modelObjectLists) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setZoneTerminalUnitList(modelObjectLists);
   }
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::setRefrigerantType(const std::string& refrigerantType) {
@@ -1225,10 +1220,6 @@ namespace model {
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::setNumberofCompressors(int numberofCompressors) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setNumberofCompressors(numberofCompressors);
-  }
-
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControl::resetNumberofCompressors() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->resetNumberofCompressors();
   }
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::setRatioofCompressorSizetoTotalCompressorCapacity(

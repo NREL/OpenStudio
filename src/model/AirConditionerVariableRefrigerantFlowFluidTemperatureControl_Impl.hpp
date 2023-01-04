@@ -36,12 +36,11 @@
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class Schedule;
-  class ModelObjectLists;
-  class UnivariateFunctions;
-  class UnivariateFunctions;
-  class BivariateFunctions;
+  class Curve;
+  class ThermalZone;
+  class ModelObjectList;
+  class ZoneHVACTerminalUnitVariableRefrigerantFlow;
 
   namespace detail {
 
@@ -72,15 +71,33 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual unsigned inletPort() const override;
+
+      virtual unsigned outletPort() const override;
+
+      virtual ModelObject clone(Model model) const override;
+
+      virtual std::vector<openstudio::IdfObject> remove() override;
+
+      virtual bool addToNode(Node& node) override;
+
+      virtual bool removeFromLoop() override;
+
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
+
       //@}
       /** @name Getters */
       //@{
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
-      boost::optional<Schedule> availabilitySchedule() const;
-
-      // TODO: Check return type. From object lists, some candidates are: ModelObjectLists.
-      ModelObjectLists zoneTerminalUnitList() const;
+      Schedule availabilitySchedule() const;
 
       std::string refrigerantType() const;
 
@@ -144,8 +161,6 @@ namespace model {
 
       int numberofCompressors() const;
 
-      bool isNumberofCompressorsDefaulted() const;
-
       double ratioofCompressorSizetoTotalCompressorCapacity() const;
 
       double maximumOutdoorDryBulbTemperatureforCrankcaseHeater() const;
@@ -182,9 +197,6 @@ namespace model {
       bool setAvailabilitySchedule(Schedule& schedule);
 
       void resetAvailabilitySchedule();
-
-      // TODO: Check argument type. From object lists, some candidates are: ModelObjectLists.
-      bool setZoneTerminalUnitList(const ModelObjectLists& modelObjectLists);
 
       bool setRefrigerantType(const std::string& refrigerantType);
 
@@ -247,8 +259,6 @@ namespace model {
 
       bool setNumberofCompressors(int numberofCompressors);
 
-      void resetNumberofCompressors();
-
       bool setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity);
 
       bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(double maximumOutdoorDryBulbTemperatureforCrankcaseHeater);
@@ -289,13 +299,7 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlowFluidTemperatureControl");
 
-      // TODO: Check the return types of these methods.
-      // Optional getters for use by methods like children() so can remove() if the constructor fails.
-      // There are other ways for the public versions of these getters to fail--perhaps all required
-      // objects should be returned as boost::optionals
-      boost::optional<ModelObjectLists> optionalZoneTerminalUnitList() const;
-      boost::optional<UnivariateFunctions> optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
-      boost::optional<UnivariateFunctions> optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
     };
 
   }  // namespace detail

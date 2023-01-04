@@ -32,25 +32,25 @@
 
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
-
-#include "../../model/ZoneTerminalUnitList.hpp"
-#include "../../model/ZoneTerminalUnitList_Impl.hpp"
-
-#include "../../model/Fluid.hpp"
-#include "../../model/Fluid_Impl.hpp"
-
-#include "../../model/UnivariateFunctions.hpp"
-#include "../../model/UnivariateFunctions_Impl.hpp"
-
-#include "../../model/BivariateFunctions.hpp"
-#include "../../model/BivariateFunctions_Impl.hpp"
-
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/PlantLoop_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/ZoneTerminalUnitList_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 using namespace openstudio::model;
 
@@ -60,26 +60,17 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(
     model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR& modelObject) {
-    boost::optional<IdfObject> result;
-    boost::optional<WorkspaceObject> _wo;
-    boost::optional<ModelObject> _mo;
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-    // Instantiate an IdfObject of the class to store the values
-    IdfObject idfObject =
-      createRegisterAndNameIdfObject(openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR );
-    // m_idfObjects.push_back(idfObject);
+    IdfObject idfObject(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR);
 
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    m_idfObjects.push_back(idfObject);
 
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
     // Name
-    if (boost::optional<std::string> moName = modelObject.name()) {
-      idfObject.setName(*moName);
+    s = modelObject.name();
+    if (s) {
+      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::Name, *s);
     }
 
     // Availability Schedule Name: Optional Object
@@ -87,12 +78,6 @@ namespace energyplus {
       if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_availabilitySchedule.get())) {
         idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilityScheduleName, _owo->nameString());
       }
-    }
-
-    // Zone Terminal Unit List Name: Required Object
-    ZoneTerminalUnitList zoneTerminalUnitList = modelObject.zoneTerminalUnitList();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(zoneTerminalUnitList)) {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneTerminalUnitListName, _owo->nameString());
     }
 
     // Refrigerant Type: Optional Object
@@ -397,6 +382,30 @@ namespace energyplus {
     int numberofCompressorLoadingIndexEntries = modelObject.numberofCompressorLoadingIndexEntries();
     idfObject.setInt(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressorLoadingIndexEntries,
                      numberofCompressorLoadingIndexEntries);
+
+    // Terminal Unit List
+
+    IdfObject _zoneTerminalUnitList(IddObjectType::ZoneTerminalUnitList);
+
+    std::string terminalUnitListName = modelObject.name().get() + " Terminal List";
+
+    _zoneTerminalUnitList.setString(ZoneTerminalUnitListFields::ZoneTerminalUnitListName, terminalUnitListName);
+
+    idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneTerminalUnitListName, terminalUnitListName);
+
+    m_idfObjects.push_back(_zoneTerminalUnitList);
+
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControlHR> terminals = modelObject.terminals();
+
+    for (auto& terminal : terminals) {
+      boost::optional<IdfObject> _terminal = translateAndMapModelObject(terminal);
+
+      OS_ASSERT(_terminal);
+
+      IdfExtensibleGroup eg = _zoneTerminalUnitList.pushExtensibleGroup();
+
+      eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName, _terminal->name().get());
+    }
 
     return idfObject;
   }  // End of translate function

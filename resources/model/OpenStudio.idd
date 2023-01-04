@@ -10429,7 +10429,7 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
   N24, \field Number of Compressors
        \type integer
        \units dimensionless
-       \default 2
+       \required-field
        \note Enter the total number of compressor. This input is used only for crankcase
        \note heater calculations.
   N25, \field Ratio of Compressor Size to Total Compressor Capacity

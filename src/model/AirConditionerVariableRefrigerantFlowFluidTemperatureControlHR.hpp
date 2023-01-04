@@ -37,12 +37,10 @@ namespace openstudio {
 
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class Schedule;
-  class ModelObjectLists;
-  class UnivariateFunctions;
-  class UnivariateFunctions;
-  class BivariateFunctions;
+  class Curve;
+  class ThermalZone;
+  class ZoneHVACTerminalUnitVariableRefrigerantFlow;
 
   namespace detail {
 
@@ -76,11 +74,7 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> availabilitySchedule() const;
-
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectLists.
-    ModelObjectLists zoneTerminalUnitList() const;
+    Schedule availabilitySchedule() const;
 
     std::string refrigerantType() const;
 
@@ -214,9 +208,6 @@ namespace model {
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
-
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectLists.
-    bool setZoneTerminalUnitList(const ModelObjectLists& modelObjectLists);
 
     bool setRefrigerantType(const std::string& refrigerantType);
 
