@@ -374,7 +374,7 @@ boost::optional<BoostRing> nonIntersectingBoostRingFromVertices(const std::vecto
 }
 
 // convert a boost polygon to vertices
-std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::vector<Point3d>& allPoints, double tol) {
+std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::vector<Point3d>& allPoints, double tol, bool removeCollinear = true) {
   std::vector<Point3d> result;
 
   BoostRing outer = polygon.outer();
@@ -401,7 +401,8 @@ std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::
              "Converting polygon with " << polygon.inners().size() << " inner loops to OpenStudio vertices, inner loops ignored");
   }
 
-  result = removeCollinearLegacy(result);
+  if (removeCollinear)
+    result = removeCollinearLegacy(result);
 
   // don't keep repeated vertices
   if (result.front() == result.back()) {
@@ -1100,10 +1101,12 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
 
   // this uses the Douglas-Peucker algorithm with a max difference of 0 so no non-collinear points will be removed
   // if we want to allow this algorithm to be called with a non-zero value I suggest naming it "approximate" or something
-  //boost::geometry::simplify(*bp, out, 0.0);
-  boost::geometry::simplify(*bp, out, tol);  // points within tol would already be merged
+  if (!removeCollinear)
+    boost::geometry::simplify(*bp, out, 0.0);
+  else
+    boost::geometry::simplify(*bp, out, tol);  // points within tol would already be merged
 
-  std::vector<Point3d> tmp = verticesFromBoostPolygon(out, allPoints, tol);
+  std::vector<Point3d> tmp = verticesFromBoostPolygon(out, allPoints, tol, removeCollinear);
 
   if (reversed) {
     tmp = reorderULC(reverse(tmp));

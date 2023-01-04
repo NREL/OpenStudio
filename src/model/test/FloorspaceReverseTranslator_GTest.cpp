@@ -1462,3 +1462,109 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4766) {
 
   CompareTwoModels(*model1, *model);
 }
+
+TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4312) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/issue_4312.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+  model->save(resourcesPath() / toPath("utilities/Geometry/issue_4312-threejs.osm"), true);
+
+  FloorspaceReverseTranslator frt;
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
+  ASSERT_TRUE(model1);
+
+  model1->save(resourcesPath() / toPath("utilities/Geometry/issue_4312-direct.osm"), true);
+
+  CompareTwoModels(*model1, *model);
+}
+
+TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4237) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/issue_4237.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+  model->save(resourcesPath() / toPath("utilities/Geometry/issue_4237-threejs.osm"), true);
+
+  FloorspaceReverseTranslator frt;
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
+  ASSERT_TRUE(model1);
+
+  model1->save(resourcesPath() / toPath("utilities/Geometry/issue_4237-direct.osm"), true);
+
+  CompareTwoModels(*model1, *model);
+}
+
+TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4776) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/issue_4203.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+  ShiftVertices(*model);
+  model->save(resourcesPath() / toPath("utilities/Geometry/issue_4203-threejs.osm"), true);
+
+  FloorspaceReverseTranslator frt;
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
+  ASSERT_TRUE(model1);
+  ShiftVertices(*model1);
+  model1->save(resourcesPath() / toPath("utilities/Geometry/issue_4203-direct.osm"), true);
+
+  CompareTwoModels(*model1, *model);
+}
+
+TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4323) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/issue-4323.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+  ShiftVertices(*model);
+  model->save(resourcesPath() / toPath("utilities/Geometry/issue-4323-threejs.osm"), true);
+
+  FloorspaceReverseTranslator frt;
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
+  ASSERT_TRUE(model1);
+  ShiftVertices(*model1);
+  model1->save(resourcesPath() / toPath("utilities/Geometry/issue-4323-direct.osm"), true);
+
+  CompareTwoModels(*model1, *model);
+}
