@@ -10242,6 +10242,7 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
   A3 , \field Availability Schedule
        \type object-list
        \object-list ScheduleNames
+       \required-field
        \note Enter the name of a schedule that defines the availability of the unit
        \note Schedule values of 0 denote the unit is off. All other values denote the unit is available
        \note If this field is left blank, the unit is available the entire simulation
@@ -10492,14 +10493,7 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
        \required-field
        \minimum 0.0
        \maximum 50000000.0
-  N31, \field Number of Compressor Loading Index Entries
-       \type integer
-       \required-field
-       \minimum 2
-       \maximum 9
-       \note First index represents minimal capacity operation
-       \note Last index represents full capacity operation
-  N32, \field Compressor Speed at Loading Index 1
+  N31, \field Compressor Speed at Loading Index 1
        \required-field
        \type real
        \begin-extensible
@@ -10530,6 +10524,7 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR,
   A3 , \field Availability Schedule
        \type object-list
        \object-list ScheduleNames
+       \required-field
        \note Enter the name of a schedule that defines the availability of the unit
        \note Schedule values of 0 denote the unit is off. All other values denote the unit is available
        \note If this field is left blank, the unit is available the entire simulation
@@ -10900,15 +10895,7 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR,
        \required-field
        \note Describe the evaporative capacity difference because of system configuration
        \note difference between test bed and real system.
-  N48, \field Number of Compressor Loading Index Entries
-       \type integer
-       \required-field
-       \minimum 2
-       \note Load index describe the compressor operational state,
-       \note either a single compressor or multiple compressors, at different load levels.
-       \note First index represents minimal capacity operation
-       \note Last index represents full capacity operation
-  N49, \field Compressor Speed at Loading Index 1
+  N48, \field Compressor Speed at Loading Index 1
        \required-field
        \type real
        \note Minimum compressor speed
