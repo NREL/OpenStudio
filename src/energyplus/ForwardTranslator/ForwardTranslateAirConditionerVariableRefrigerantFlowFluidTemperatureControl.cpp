@@ -31,6 +31,7 @@
 #include "../../model/Model.hpp"
 
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"

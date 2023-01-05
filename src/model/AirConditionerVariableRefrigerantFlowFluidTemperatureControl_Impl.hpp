@@ -101,7 +101,7 @@ namespace model {
       bool addLoadingIndex(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
                            const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
 
-      void removeLoadingIndex(int groupIndex);
+      bool removeLoadingIndex(unsigned groupIndex);
 
       void removeAllLoadingIndexes();
 

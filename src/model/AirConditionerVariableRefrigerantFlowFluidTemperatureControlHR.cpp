@@ -1287,20 +1287,20 @@ namespace model {
     OS_ASSERT(ok);
 
     CurveQuadratic outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(model);
-    curve.setCoefficient1Constant(0);
-    curve.setCoefficient2x(6.05E-1);
-    curve.setCoefficient3xPOW2(2.50E-2);
-    curve.setMinimumValueofx(0);
-    curve.setMaximumValueofx(15);
+    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient1Constant(0);
+    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient2x(6.05E-1);
+    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient3xPOW2(2.50E-2);
+    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMinimumValueofx(0);
+    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMaximumValueofx(15);
     ok = setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve);
     OS_ASSERT(ok);
 
     CurveQuadratic outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(model);
-    curve.setCoefficient1Constant(0);
-    curve.setCoefficient2x(-2.91);
-    curve.setCoefficient3xPOW2(1.180);
-    curve.setMinimumValueofx(0);
-    curve.setMaximumValueofx(5);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient1Constant(0);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient2x(-2.91);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient3xPOW2(1.180);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMinimumValueofx(0);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMaximumValueofx(5);
     ok = setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve);
     OS_ASSERT(ok);
 
@@ -1308,7 +1308,7 @@ namespace model {
     //OS_ASSERT(ok);
 
     ModelObjectList vrfModelObjectList(model);
-    getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setVRFModelObjectList(vrfModelObjectList);
+    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVRFModelObjectList(vrfModelObjectList);
   }
 
   IddObjectType AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType() {

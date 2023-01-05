@@ -30,8 +30,12 @@
 #ifndef MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_HPP
 #define MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_HPP
 
+#include <vector>
 #include <model/ModelAPI.hpp>
 #include "StraightComponent.hpp"
+
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 
 namespace openstudio {
 
@@ -48,30 +52,26 @@ namespace model {
 
   }  // namespace detail
 
+  /** This class implements a loading index */
   class MODEL_API LoadingIndex
   {
    public:
-    LoadingIndexData(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
-                     const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
+    LoadingIndex(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
+                 const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
 
     double compressorSpeed() const;
     Curve evaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
     Curve compressorPowerMultiplierFunctionofTemperatureCurve() const;
-
-    bool setCompressorSpeed(double compressorSpeed);
-    bool setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve);
-    bool setCompressorPowerMultiplierFunctionofTemperatureCurve(const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
 
    private:
     double m_compressorSpeed;
     Curve m_evaporativeCapacityMultiplierFunctionofTemperatureCurve;
     Curve m_compressorPowerMultiplierFunctionofTemperatureCurve;
     REGISTER_LOGGER("openstudio.model.LoadingIndex");
-  }
+  };
 
   // Overload operator<<
-  MODEL_API std::ostream&
-    operator<<(std::ostream& out, const openstudio::model::LoadingIndex& loadingIndex);
+  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::LoadingIndex& loadingIndex);
 
   /** AirConditionerVariableRefrigerantFlowFluidTemperatureControl is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl'. */
   class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControl : public StraightComponent

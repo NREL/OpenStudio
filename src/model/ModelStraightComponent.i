@@ -92,11 +92,21 @@ namespace openstudio {
   }
 };
 
+%extend openstudio::model::LoadingIndex {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 %ignore std::vector<openstudio::model::GFunction>::vector(size_type);
 %ignore std::vector<openstudio::model::GFunction>::resize(size_type);
 %template(GFunctionVector) std::vector<openstudio::model::GFunction>;
 
 MODELOBJECT_TEMPLATES(AirConditionerVariableRefrigerantFlow);
+MODELOBJECT_TEMPLATES(LoadingIndex); // Helper class defined in AirConditionerVariableRefrigerantFlowFluidTemperatureControl
 MODELOBJECT_TEMPLATES(AirConditionerVariableRefrigerantFlowFluidTemperatureControl);
 MODELOBJECT_TEMPLATES(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR);
 MODELOBJECT_TEMPLATES(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
