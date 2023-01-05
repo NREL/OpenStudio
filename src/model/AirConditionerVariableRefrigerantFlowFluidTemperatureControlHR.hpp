@@ -30,6 +30,7 @@
 #ifndef MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROLHR_HPP
 #define MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROLHR_HPP
 
+#include <vector>
 #include <model/ModelAPI.hpp>
 #include "StraightComponent.hpp"
 
@@ -41,6 +42,7 @@ namespace model {
   class Curve;
   class ThermalZone;
   class ZoneHVACTerminalUnitVariableRefrigerantFlow;
+  class LoadingIndex;
 
   namespace detail {
 
@@ -70,6 +72,21 @@ namespace model {
     static std::vector<std::string> defrostStrategyValues();
 
     static std::vector<std::string> defrostControlValues();
+
+    //extensible fields
+
+    bool addLoadingIndex(const LoadingIndex& loadingIndex);
+
+    bool addLoadingIndex(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
+                         const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
+
+    void removeLoadingIndex(int groupIndex);
+
+    void removeAllLoadingIndexes();
+
+    std::vector<LoadingIndex> loadingIndexes() const;
+
+    bool addLoadingIndexes(const std::vector<LoadingIndex>& loadingIndexes);
 
     /** @name Getters */
     //@{
@@ -194,14 +211,10 @@ namespace model {
 
     unsigned int numberofCompressorLoadingIndexEntries() const;
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
@@ -329,8 +342,6 @@ namespace model {
     void removeAllTerminals();
 
     std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Other */

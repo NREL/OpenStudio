@@ -41,6 +41,7 @@ namespace model {
   class ThermalZone;
   class ModelObjectList;
   class ZoneHVACTerminalUnitVariableRefrigerantFlow;
+  class LoadingIndex;
 
   namespace detail {
 
@@ -92,6 +93,21 @@ namespace model {
       virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
       virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+      //extensible fields
+
+      bool addLoadingIndex(const LoadingIndex& loadingIndex);
+
+      bool addLoadingIndex(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
+                           const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
+
+      bool removeLoadingIndex(unsigned groupIndex);
+
+      void removeAllLoadingIndexes();
+
+      std::vector<LoadingIndex> loadingIndexes() const;
+
+      bool addLoadingIndexes(const std::vector<LoadingIndex>& loadingIndexes);
 
       //@}
       /** @name Getters */
@@ -217,14 +233,10 @@ namespace model {
 
       unsigned int numberofCompressorLoadingIndexEntries() const;
 
-      // TODO: Handle this object's extensible fields.
-
       //@}
       /** @name Setters */
       //@{
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setAvailabilitySchedule(Schedule& schedule);
 
       void resetAvailabilitySchedule();
@@ -356,8 +368,6 @@ namespace model {
       void removeAllTerminals();
 
       std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
-
-      // TODO: Handle this object's extensible fields.
 
       //@}
       /** @name Other */
