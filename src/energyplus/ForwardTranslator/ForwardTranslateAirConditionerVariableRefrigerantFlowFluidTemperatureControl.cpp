@@ -51,6 +51,7 @@
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
 
 using namespace openstudio::model;
 
@@ -81,9 +82,15 @@ namespace energyplus {
     }
 
     // Refrigerant Type: Optional Object
-    Fluid refrigerantType = modelObject.refrigerantType();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(refrigerantType)) {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantType, _owo->nameString());
+    s = modelObject.refrigerantType();
+    if (s) {
+      boost::optional<IdfObject> fluidProperties = createFluidProperties(s.get());
+      if (fluidProperties) {
+        boost::optional<std::string> value = fluidProperties.get().getString(FluidProperties_NameFields::FluidName, true);
+        if (value) {
+          idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantType, value.get());
+        }
+      }
     }
 
     if (modelObject.isRatedEvaporativeCapacityAutosized()) {
@@ -177,8 +184,7 @@ namespace energyplus {
                         outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
 
     // Outdoor Unit Evaporating Temperature Function of Superheating Curve Name: Required Object
-    UnivariateFunctions outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve =
-      modelObject.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
+    Curve outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve = modelObject.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
     if (boost::optional<IdfObject> _owo = translateAndMapModelObject(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve)) {
       idfObject.setString(
         AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName,
@@ -186,8 +192,7 @@ namespace energyplus {
     }
 
     // Outdoor Unit Condensing Temperature Function of Subcooling Curve Name: Required Object
-    UnivariateFunctions outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve =
-      modelObject.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    Curve outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve = modelObject.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
     if (boost::optional<IdfObject> _owo = translateAndMapModelObject(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve)) {
       idfObject.setString(
         AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName,
@@ -256,7 +261,7 @@ namespace energyplus {
     idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostControl, defrostControl);
 
     // Defrost Energy Input Ratio Modifier Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> _defrostEnergyInputRatioModifierFunctionofTemperatureCurve =
+    if (boost::optional<Curve> _defrostEnergyInputRatioModifierFunctionofTemperatureCurve =
           modelObject.defrostEnergyInputRatioModifierFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_defrostEnergyInputRatioModifierFunctionofTemperatureCurve.get())) {
         idfObject.setString(
@@ -306,7 +311,7 @@ namespace energyplus {
 
     m_idfObjects.push_back(_zoneTerminalUnitList);
 
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControl> terminals = modelObject.terminals();
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
 
     for (auto& terminal : terminals) {
       boost::optional<IdfObject> _terminal = translateAndMapModelObject(terminal);

@@ -215,7 +215,7 @@ namespace model {
 
       double compressorEvaporativeCapacityCorrectionFactor() const;
 
-      int numberofCompressorLoadingIndexEntries() const;
+      unsigned int numberofCompressorLoadingIndexEntries() const;
 
       // TODO: Handle this object's extensible fields.
 
@@ -345,11 +345,17 @@ namespace model {
 
       bool setCompressorEvaporativeCapacityCorrectionFactor(double compressorEvaporativeCapacityCorrectionFactor);
 
-      bool setNumberofCompressorLoadingIndexEntries(int numberofCompressorLoadingIndexEntries);
+      ModelObjectList vrfModelObjectList() const;
 
-      virtual void autosize() override;
+      bool setVRFModelObjectList(const ModelObjectList& modelObjectList);
 
-      virtual void applySizingValues() override;
+      void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
+
+      void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
+
+      void removeAllTerminals();
+
+      std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
       // TODO: Handle this object's extensible fields.
 
@@ -358,11 +364,12 @@ namespace model {
       //@{
 
       //@}
-     protected:
      private:
       REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR");
 
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<Curve> optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
+      boost::optional<Curve> optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
     };
 
   }  // namespace detail

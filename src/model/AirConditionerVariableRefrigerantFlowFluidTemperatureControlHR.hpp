@@ -192,7 +192,7 @@ namespace model {
 
     double compressorEvaporativeCapacityCorrectionFactor() const;
 
-    int numberofCompressorLoadingIndexEntries() const;
+    unsigned int numberofCompressorLoadingIndexEntries() const;
 
     // TODO: Handle this object's extensible fields.
 
@@ -322,7 +322,13 @@ namespace model {
 
     bool setCompressorEvaporativeCapacityCorrectionFactor(double compressorEvaporativeCapacityCorrectionFactor);
 
-    bool setNumberofCompressorLoadingIndexEntries(int numberofCompressorLoadingIndexEntries);
+    void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
+
+    void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
+
+    void removeAllTerminals();
+
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
     // TODO: Handle this object's extensible fields.
 

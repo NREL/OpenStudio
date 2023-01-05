@@ -48,6 +48,31 @@ namespace model {
 
   }  // namespace detail
 
+  class MODEL_API LoadingIndex
+  {
+   public:
+    LoadingIndexData(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
+                     const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
+
+    double compressorSpeed() const;
+    Curve evaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
+    Curve compressorPowerMultiplierFunctionofTemperatureCurve() const;
+
+    bool setCompressorSpeed(double compressorSpeed);
+    bool setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve);
+    bool setCompressorPowerMultiplierFunctionofTemperatureCurve(const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
+
+   private:
+    double m_compressorSpeed;
+    Curve m_evaporativeCapacityMultiplierFunctionofTemperatureCurve;
+    Curve m_compressorPowerMultiplierFunctionofTemperatureCurve;
+    REGISTER_LOGGER("openstudio.model.LoadingIndex");
+  }
+
+  // Overload operator<<
+  MODEL_API std::ostream&
+    operator<<(std::ostream& out, const openstudio::model::LoadingIndex& loadingIndex);
+
   /** AirConditionerVariableRefrigerantFlowFluidTemperatureControl is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl'. */
   class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControl : public StraightComponent
   {
@@ -70,6 +95,21 @@ namespace model {
     static std::vector<std::string> defrostStrategyValues();
 
     static std::vector<std::string> defrostControlValues();
+
+    //extensible fields
+
+    bool addLoadingIndex(const LoadingIndex& loadingIndex);
+
+    bool addLoadingIndex(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
+                         const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
+
+    void removeLoadingIndex(int groupIndex);
+
+    void removeAllLoadingIndexes();
+
+    std::vector<LoadingIndex> loadingIndexes() const;
+
+    bool addLoadingIndexes(const std::vector<LoadingIndex>& loadingIndexes);
 
     /** @name Getters */
     //@{
@@ -158,16 +198,12 @@ namespace model {
 
     double compressormaximumdeltaPressure() const;
 
-    int numberofCompressorLoadingIndexEntries() const;
-
-    // TODO: Handle this object's extensible fields.
+    unsigned int numberofCompressorLoadingIndexEntries() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
@@ -253,9 +289,13 @@ namespace model {
 
     bool setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure);
 
-    bool setNumberofCompressorLoadingIndexEntries(int numberofCompressorLoadingIndexEntries);
+    void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
 
-    // TODO: Handle this object's extensible fields.
+    void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
+
+    void removeAllTerminals();
+
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
     //@}
     /** @name Other */
