@@ -84,17 +84,18 @@ using namespace openstudio::model;
 
 void CompareSurfaceGroups(Model& model, Model& baseline) {
 
-  auto shadingGroup1 = model.getModelObjects<ShadingSurfaceGroup>();
-  auto shadingGroup2 = baseline.getModelObjects<ShadingSurfaceGroup>();
-  EXPECT_EQ(shadingGroup1.size(), shadingGroup2.size());
-  for (auto& shadingGroup : shadingGroup1) {
+  auto shadingGroups1 = model.getModelObjects<ShadingSurfaceGroup>();
+  auto shadingGroups2 = baseline.getModelObjects<ShadingSurfaceGroup>();
+  EXPECT_EQ(shadingGroups1.size(), shadingGroups2.size());
+  for (auto& shadingGroup : shadingGroups1) {
     // Shading Surface Group names only match for building shading
     if (shadingGroup.shadingSurfaceType() == "Building") {
-      auto match = baseline.getModelObjectByName<ShadingSurfaceGroup>(*shadingGroup.name());
-      EXPECT_TRUE(match.has_value());
+      auto shadingGroupName = shadingGroup.nameString();
+      auto match = baseline.getModelObjectByName<ShadingSurfaceGroup>(shadingGroupName);
+      EXPECT_TRUE(match.has_value()) << "Could not locate shading group '" << shadingGroupName << "'";
       std::string surfaceType = shadingGroup.shadingSurfaceType();
-      EXPECT_EQ(shadingGroup.shadingSurfaceType(), match->shadingSurfaceType());
-      EXPECT_EQ(shadingGroup.shadingSurfaces().size(), match->shadingSurfaces().size());
+      EXPECT_EQ(shadingGroup.shadingSurfaceType(), match->shadingSurfaceType()) << "For shading group '" << shadingGroupName << "'";
+      EXPECT_EQ(shadingGroup.shadingSurfaces().size(), match->shadingSurfaces().size()) << "For shading group '" << shadingGroupName << "'";
 
       // Match surfaces by vertices
       for (auto& shadingSurface : shadingGroup.shadingSurfaces()) {
@@ -105,7 +106,8 @@ void CompareSurfaceGroups(Model& model, Model& baseline) {
             break;
           }
         }
-        EXPECT_TRUE(matched);
+        EXPECT_TRUE(matched) << "For shading group '" << shadingGroupName << "' vertices did not match for Shading Surface '"
+                             << shadingSurface.nameString() << "'";
       }
     }
   }
