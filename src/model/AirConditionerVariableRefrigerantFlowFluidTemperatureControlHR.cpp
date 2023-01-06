@@ -760,11 +760,6 @@ namespace model {
       return result;
     }
 
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::resetAvailabilitySchedule() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilitySchedule, "");
-      OS_ASSERT(result);
-    }
-
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setRefrigerantType(const std::string& refrigerantType) {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RefrigerantType, refrigerantType);
       return result;
@@ -1705,10 +1700,6 @@ namespace model {
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setAvailabilitySchedule(schedule);
-  }
-
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::resetAvailabilitySchedule() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->resetAvailabilitySchedule();
   }
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setRefrigerantType(const std::string& refrigerantType) {

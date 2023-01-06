@@ -144,11 +144,11 @@ namespace model {
     }
 
     unsigned AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::inletPort() const {
-      return 0;
+      return 0;  // FIXME
     }
 
     unsigned AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::outletPort() const {
-      return 0;
+      return 0;  // FIXME
     }
 
     ModelObject AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::clone(Model model) const {
@@ -182,7 +182,7 @@ namespace model {
 
       boost::optional<Curve> curve;
 
-      curve = outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
+      curve = optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
       if (curve) {
         curve->remove();
       }
@@ -425,7 +425,7 @@ namespace model {
     Curve AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const {
       boost::optional<Curve> value = optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Outdoor Unit Evaporating Temperature Functionof Superheating Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Outdoor Unit Evaporating Temperature Function of Superheating Curve attached.");
       }
       return value.get();
     }
@@ -433,7 +433,7 @@ namespace model {
     Curve AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
       boost::optional<Curve> value = optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Outdoor Unit Condensing Temperature Functionof Subcooling Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Outdoor Unit Condensing Temperature Function of Subcooling Curve attached.");
       }
       return value.get();
     }
@@ -663,11 +663,6 @@ namespace model {
       bool result = setSchedule(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule,
                                 "AirConditionerVariableRefrigerantFlowFluidTemperatureControl", "Availability Schedule", schedule);
       return result;
-    }
-
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::resetAvailabilitySchedule() {
-      bool result = setString(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule, "");
-      OS_ASSERT(result);
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setRefrigerantType(const std::string& refrigerantType) {
@@ -1359,10 +1354,6 @@ namespace model {
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setAvailabilitySchedule(schedule);
-  }
-
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControl::resetAvailabilitySchedule() {
-    getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->resetAvailabilitySchedule();
   }
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::setRefrigerantType(const std::string& refrigerantType) {

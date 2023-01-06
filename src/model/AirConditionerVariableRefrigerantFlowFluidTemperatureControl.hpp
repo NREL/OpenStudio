@@ -206,8 +206,6 @@ namespace model {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
-
     bool setRefrigerantType(const std::string& refrigerantType);
 
     bool setRatedEvaporativeCapacity(double ratedEvaporativeCapacity);
