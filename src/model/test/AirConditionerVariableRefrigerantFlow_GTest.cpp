@@ -41,6 +41,12 @@
 #include "../Curve.hpp"
 #include "../Curve_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveBiquadratic_Impl.hpp"
+#include "../CurveCubic.hpp"
+#include "../CurveCubic_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -179,4 +185,23 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow_addToNode) {
   vrf.resetCondenserType();
   EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
   EXPECT_EQ("AirCooled", vrf.condenserType());
+}
+
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow_Remove) {
+  Model model;
+  auto size = model.modelObjects().size();
+  AirConditionerVariableRefrigerantFlow vrf(model);
+  EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
+  EXPECT_EQ(9u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
+  EXPECT_EQ(11u, model.getObjectsByType(CurveCubic::iddObjectType()).size());
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term(model);
+  EXPECT_EQ(1u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  vrf.addTerminal(term);
+  EXPECT_EQ(1u, vrf.terminals().size());
+  EXPECT_FALSE(vrf.remove().empty());
+  EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(CurveCubic::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  EXPECT_EQ(size + 2, model.modelObjects().size());  // Always On Discrete, OnOff
 }
