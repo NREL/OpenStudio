@@ -48,3 +48,20 @@
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlowFluidTemperatureControl) {
+  Model m;
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf(m);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
+
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl).size());
+
+  IdfObject idf_vrf = workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl)[0];
+
+  EXPECT_EQ("Always On Discrete",
+            idf_vrf.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilityScheduleName, false).get());
+
+  EXPECT_EQ(3u, idf_vrf.numExtensibleGroups());
+}

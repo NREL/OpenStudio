@@ -44,3 +44,15 @@
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_AirConditionerVariableRefrigerantFlowFluidTemperatureControl) {}
+
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_SetGetFields) {}
+
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Clone) {}
+
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Remove) {}
+
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_LoadingIndexes) {}
+
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_addToNode) {}
