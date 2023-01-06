@@ -324,6 +324,22 @@ namespace energyplus {
       eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName, _terminal->name().get());
     }
 
+    // Loading Indexes
+    std::vector<LoadingIndex> loadingIndexes = modelObject.loadingIndexes();
+    if (!loadingIndexes.empty()) {
+      for (const LoadingIndex& loadingIndex : loadingIndexes) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::CompressorSpeedatLoadingIndex,
+                     loadingIndex.compressorSpeed());
+        eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::
+                       LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName,
+                     loadingIndex.evaporativeCapacityMultiplierFunctionofTemperatureCurve().name().get());
+        eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::
+                       LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName,
+                     loadingIndex.compressorPowerMultiplierFunctionofTemperatureCurve().name().get());
+      }
+    }
+
     return idfObject;
   }  // End of translate function
 
