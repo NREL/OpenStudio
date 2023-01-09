@@ -60,6 +60,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Set up Python ${{ matrix.python-version }}
+      id: setup-python
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
@@ -182,7 +183,10 @@ jobs:
         echo "Using vcvarsall to initialize the development environment"
         call vcvarsall.bat x64
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_PIP_REPOSITORY=${{ env.PYTHON_PIP_REPOSITORY }} -DPYTHON_VERSION=${{ matrix.python-version }} -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} ../
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ^
+              -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} ^
+              -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} ^
+              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }} ../
         ninja
         ninja python_package
 
@@ -193,9 +197,10 @@ jobs:
       run: |
         set -x
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake ${{ matrix.extra_cmake_args}} -DCMAKE_BUILD_TYPE=Release \
-              -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_PIP_REPOSITORY=${{ env.PYTHON_PIP_REPOSITORY }} -DPYTHON_VERSION=${{ matrix.python-version }} \
-              -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
+        cmake ${{ matrix.extra_cmake_args}} -DCMAKE_BUILD_TYPE:STRING=Release \
+              -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} \
+              -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
+              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }} \
               ../
 
     - name: Build (Unix)
@@ -327,7 +332,11 @@ jobs:
           python -m pip install --upgrade pip
           # Note: if we choose to do ALL or nothing, remove  setuptools wheel twine (not needed unless trying to upload within this step)
           pip install requests packaging setuptools wheel twine
-          bindings_v=$(python ./python/find_pypi_tag.py --current)
+          if [[ "$GITHUB_REF" == *"refs/tags"* ]]; then
+            bindings_v=$(python ./python/module/find_pypi_tag.py --pypi)
+          else
+            bindings_v=$(python ./python/module/find_pypi_tag.py --current)
+          fi;
           pip install -i https://test.pypi.org/simple/ openstudio==$bindings_v
           mkdir wheel
 
@@ -338,7 +347,7 @@ jobs:
           m = openstudio.model.exampleModel()
           print(m)
 
-  # if python_bindings succeeds but test_python_bindings fails and this is a release, 
+  # if python_bindings succeeds but test_python_bindings fails and this is a release,
   # remove that version from testpypi
   upload_python_bindings_to_pypi:
     if: contains(github.ref, 'refs/tags')

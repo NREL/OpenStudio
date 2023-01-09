@@ -150,7 +150,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
     m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::update_3_4_0_to_3_5_0;
     m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
-    // m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.5.2")] = &VersionTranslator::update_3_5_1_to_3_5_2;
+    // m_updateMethods[VersionString("3.5.2")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for release).
@@ -647,8 +648,52 @@ namespace osversion {
         return;
       }
       IdfFile idfFile = *oIdfFile;
+      if (m_isComponent) {
+        updateComponentData(idfFile);
+      }
       m_map[oIdfFile->version()] = idfFile;
       LOG(Debug, "Translation to " << lastVersion.str() << " model has " << oIdfFile->numObjects() << " objects.");
+    }
+  }
+
+  void VersionTranslator::updateComponentData(IdfFile& idfFile) {
+    if (OptionalIddObject oIddObject = idfFile.iddFile().getObject("OS:ComponentData")) {
+      auto compDatas = idfFile.getObjectsByType(*oIddObject);
+      if (compDatas.empty()) {
+        return;
+      }
+
+      std::set<std::string> newHandles;
+      std::transform(m_new.cbegin(), m_new.cend(), std::inserter(newHandles, newHandles.begin()), [](const auto& n) { return n.getString(0).get(); });
+
+      std::set<std::string> deletedHandles;
+      std::transform(m_untranslated.cbegin(), m_untranslated.cend(), std::inserter(deletedHandles, deletedHandles.begin()),
+                     [](const auto& n) { return n.getString(0).get(); });
+      std::transform(m_deprecated.cbegin(), m_deprecated.cend(), std::inserter(deletedHandles, deletedHandles.begin()),
+                     [](const auto& n) { return n.getString(0).get(); });
+
+      std::erase_if(newHandles, [&deletedHandles](auto& s) { return deletedHandles.contains(s); });
+
+      // There should really be only one ComponentData object anyways, it'll throw in the Component ctor later if not...
+      for (auto& compData : compDatas) {
+        // We want to preserve the original order, so primary Object stays the same... so we don't use a set
+        std::vector<std::string> currentHandles;
+        auto egs = compData.extensibleGroups();
+        std::transform(egs.cbegin(), egs.cend(), std::back_inserter(currentHandles), [](const auto& eg) { return eg.getString(0).get(); });
+
+        std::erase_if(currentHandles, [&deletedHandles](auto& s) { return deletedHandles.contains(s); });
+
+        currentHandles.reserve(currentHandles.size() + newHandles.size());
+        // m_new isn 't cleared between distinct version updates, so we can't bindly copy everything.
+        std::copy_if(
+          std::make_move_iterator(newHandles.begin()), std::make_move_iterator(newHandles.end()), std::back_inserter(currentHandles),
+          [&currentHandles](const auto& elem) { return std::find(currentHandles.begin(), currentHandles.end(), elem) == currentHandles.end(); });
+
+        compData.clearExtensibleGroups();
+        for (auto& handle : currentHandles) {
+          compData.pushExtensibleGroup({handle});
+        }
+      }
     }
   }
 
@@ -7623,13 +7668,57 @@ namespace osversion {
     for (const IdfObject& object : idf_3_5_0.objects()) {
       auto iddname = object.iddObject().name();
 
+      if (iddname == "OS:UnitarySystemPerformance:Multispeed") {
+
+        // 1 Field has been added from 3.5.0 to 3.5.1:
+        // ----------------------------------------------
+        // * No Load Supply Air Flow Rate Ratio * 3
+        auto iddObject = idd_3_5_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 3) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setDouble(3, 1.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_5_0_to_3_5_1
+
+  std::string VersionTranslator::update_3_5_1_to_3_5_2(const IdfFile& idf_3_5_1, const IddFileAndFactoryWrapper& idd_3_5_2) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_5_1.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_5_2.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_5_1.objects()) {
+      auto iddname = object.iddObject().name();
+
       if (iddname == "OS:GroundHeatExchanger:HorizontalTrench") {
 
         // Kusuda fields get moved over to OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach
 
-        auto iddObject = idd_3_5_1.getObject(iddname);
+        auto iddObject = idd_3_5_2.getObject(iddname);
         IdfObject ghxObject(iddObject.get());
-        IdfObject kusudaObject(idd_3_5_1.getObject("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach").get());
+        IdfObject kusudaObject(idd_3_5_2.getObject("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach").get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
           if (i < 19) {
@@ -7666,7 +7755,7 @@ namespace osversion {
 
     return ss.str();
 
-  }  // end update_3_5_0_to_3_5_1
+  }  // end update_3_5_1_to_3_5_2
 
 }  // namespace osversion
 }  // namespace openstudio

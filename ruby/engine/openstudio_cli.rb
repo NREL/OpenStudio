@@ -272,6 +272,15 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   raise "Error: Invalid CLI option, #{opts.help.chomp}"
 end
 
+# Method to clean the args. Windows cmd.exe treats single quotes as regular chars so we strip them if found.
+def clean_argv(argv)
+  argv.each_index do |i|
+    argv[i] = argv[i].gsub(/^'/, "")
+    argv[i] = argv[i].gsub(/'$/, "")
+  end
+  return argv
+end
+
 # This method will split the argv given into three parts: the flags to this command, the command, and the flags to
 # the command. For example:
 #     -v status -h -v
@@ -735,6 +744,7 @@ class CLI
   # @return [Object] An instance of the CLI class with initialized globals
   #
   def initialize(argv)
+    argv = clean_argv(argv)
     $main_args, $sub_command, $sub_args = split_main_and_subcommand(argv, command_list)
 
     if $main_args.include? '--verbose'
