@@ -2480,40 +2480,39 @@ TEST_F(OSVersionFixture, update_3_5_1_to_3_5_2_GroundHeatExchangerHorizontalTren
   ASSERT_EQ(1u, ghxs.size());
   WorkspaceObject ghx = ghxs[0];
 
-  EXPECT_EQ("Ground Heat Exchanger Horizontal Trench 1", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::Name).get());
-  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::InletNodeName).get());
-  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::OutletNodeName).get());
-  EXPECT_EQ(0.004, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::DesignFlowRate).get());
-  EXPECT_EQ(75, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::TrenchLengthinPipeAxialDirection).get());
-  EXPECT_EQ(2, ghx.getInt(OS_GroundHeatExchanger_HorizontalTrenchFields::NumberofTrenches).get());
-  EXPECT_EQ(2, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::HorizontalSpacingBetweenPipes).get());
-  EXPECT_EQ(0.016, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeInnerDiameter).get());
-  EXPECT_EQ(0.02667, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeOuterDiameter).get());
-  EXPECT_EQ(1.25, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::BurialDepth).get());
-  EXPECT_EQ(1.08, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilThermalConductivity).get());
-  EXPECT_EQ(962, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilDensity).get());
-  EXPECT_EQ(2576, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilSpecificHeat).get());
-  EXPECT_EQ(0.3895, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeThermalConductivity).get());
-  EXPECT_EQ(641, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeDensity).get());
-  EXPECT_EQ(2405, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeSpecificHeat).get());
-  EXPECT_EQ(30, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercent).get());
-  EXPECT_EQ(50, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercentatSaturation).get());
-  EXPECT_NE("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel).get());
-  EXPECT_EQ(0.408, ghx.getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter).get());
+  EXPECT_EQ("Ground Heat Exchanger Horizontal Trench 1", ghx.getString(1).get());  // Name
+  EXPECT_EQ("", ghx.getString(2).get());                                           // Inlet Node Name
+  EXPECT_EQ("", ghx.getString(3).get());                                           // Outlet Node Name
+  EXPECT_EQ(0.004, ghx.getDouble(4).get());                                        // Design Flow Rate
+  EXPECT_EQ(75, ghx.getDouble(5).get());                                           // Trench Length in Pipe Axial Direction
+  EXPECT_EQ(2, ghx.getInt(6).get());                                               // Number of Trenches
+  EXPECT_EQ(2, ghx.getDouble(7).get());                                            // Horizontal Spacing Between Pipes
+  EXPECT_EQ(0.016, ghx.getDouble(8).get());                                        // Pipe Inner Diameter
+  EXPECT_EQ(0.02667, ghx.getDouble(9).get());                                      // Pipe Outer Diameter
+  EXPECT_EQ(1.25, ghx.getDouble(10).get());                                        // Burial Depth
+  EXPECT_EQ(1.08, ghx.getDouble(11).get());                                        // Soil Thermal Conductivity
+  EXPECT_EQ(962, ghx.getDouble(12).get());                                         // Soil Density
+  EXPECT_EQ(2576, ghx.getDouble(13).get());                                        // Soil Specific Heat
+  EXPECT_EQ(0.3895, ghx.getDouble(14).get());                                      // Pipe Thermal Conductivity
+  EXPECT_EQ(641, ghx.getDouble(15).get());                                         // Pipe Density
+  EXPECT_EQ(2405, ghx.getDouble(16).get());                                        // Pipe Specific Heat
+  EXPECT_EQ(30, ghx.getDouble(17).get());                                          // Soil Moisture Content Percent
+  EXPECT_EQ(50, ghx.getDouble(18).get());                                          // Soil Moisture Content Percent at Saturation
+  EXPECT_NE("", ghx.getString(19).get());                                          // Undisturbed Ground Temperature Model
+  EXPECT_EQ(0.408, ghx.getDouble(20).get());                                       // Evapotranspiration Ground Cover Parameter
 
   std::vector<WorkspaceObject> ukas = model->getObjectsByType("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach");
   ASSERT_EQ(1u, ukas.size());
 
-  ASSERT_TRUE(ghx.getTarget(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel));
-  WorkspaceObject uka = ghx.getTarget(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel).get();
-  EXPECT_EQ(uka.nameString(), ghx.getTarget(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel)->nameString());
+  ASSERT_TRUE(ghx.getTarget(19));
+  WorkspaceObject uka = ghx.getTarget(19).get();
+  EXPECT_EQ(uka.nameString(), ghx.getTarget(19)->nameString());
   EXPECT_EQ(IddObjectType(IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach), uka.iddObject().type());
-  EXPECT_EQ("Site Ground Temperature Undisturbed Kusuda Achenbach 1",
-            uka.getString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::Name).get());
-  EXPECT_EQ(1.08, uka.getDouble(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity).get());
-  EXPECT_EQ(962, uka.getDouble(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity).get());
-  EXPECT_EQ(2576, uka.getDouble(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat).get());
-  EXPECT_EQ(15.5, uka.getDouble(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature).get());
-  EXPECT_EQ(12.8, uka.getDouble(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature).get());
-  EXPECT_EQ(17.3, uka.getDouble(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature).get());
+  EXPECT_EQ("Site Ground Temperature Undisturbed Kusuda Achenbach 1", uka.getString(1).get());  // Name
+  EXPECT_EQ(1.08, uka.getDouble(2).get());                                                      // Soil Thermal Conductivity
+  EXPECT_EQ(962, uka.getDouble(3).get());                                                       // Soil Density
+  EXPECT_EQ(2576, uka.getDouble(4).get());                                                      // Soil Specific Heat
+  EXPECT_EQ(15.5, uka.getDouble(5).get());                                                      // Average Soil Surface Temperature
+  EXPECT_EQ(12.8, uka.getDouble(6).get());                                                      // Average Amplitude of Surface Temperature
+  EXPECT_EQ(17.3, uka.getDouble(7).get());                                                      // Phase Shift of Minimum Surface Temperature
 }
