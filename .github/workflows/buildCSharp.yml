@@ -2,7 +2,7 @@ name: buildCSharpSDK
 
 on: 
   push:
-    branches: [ develop ]
+    branches: [ develop, build_charp_bindings ]
 
 jobs:
   build-csharp:
