@@ -33,7 +33,6 @@
 #include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
-#include "../utilities/time/Date.hpp"
 
 namespace openstudio {
 namespace model {
@@ -55,7 +54,7 @@ namespace model {
       SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl(const SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl& other, Model_Impl* model,
                                                            bool keepHandle);
 
-      virtual ~SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl() {}
+      virtual ~SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl() = default;
 
       //@}
 

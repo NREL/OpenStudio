@@ -53,7 +53,7 @@ namespace model {
 
     explicit SiteGroundTemperatureUndisturbedXing(const Model& model);
 
-    virtual ~SiteGroundTemperatureUndisturbedXing() {}
+    virtual ~SiteGroundTemperatureUndisturbedXing() = default;
 
     //@}
     /** @name Static Methods */
@@ -104,7 +104,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SiteGroundTemperatureUndisturbedXing_Impl ImplType;
+    using ImplType = detail::SiteGroundTemperatureUndisturbedXing_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -118,10 +118,10 @@ namespace model {
   };
 
   /** \relates SiteGroundTemperatureUndisturbedXing*/
-  typedef boost::optional<SiteGroundTemperatureUndisturbedXing> OptionalSiteGroundTemperatureUndisturbedXing;
+  using OptionalSiteGroundTemperatureUndisturbedXing = boost::optional<SiteGroundTemperatureUndisturbedXing>;
 
   /** \relates SiteGroundTemperatureUndisturbedXing*/
-  typedef std::vector<SiteGroundTemperatureUndisturbedXing> SiteGroundTemperatureUndisturbedXingVector;
+  using SiteGroundTemperatureUndisturbedXingVector = std::vector<SiteGroundTemperatureUndisturbedXing>;
 
 }  // namespace model
 }  // namespace openstudio

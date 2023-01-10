@@ -33,7 +33,6 @@
 #include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
-#include "../utilities/time/Date.hpp"
 
 namespace openstudio {
 namespace model {
@@ -53,7 +52,7 @@ namespace model {
 
     explicit SiteGroundTemperatureUndisturbedKusudaAchenbach(const Model& model);
 
-    virtual ~SiteGroundTemperatureUndisturbedKusudaAchenbach() {}
+    virtual ~SiteGroundTemperatureUndisturbedKusudaAchenbach() = default;
 
     //@}
     /** @name Static Methods */
@@ -102,7 +101,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl ImplType;
+    using ImplType = detail::SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -116,10 +115,10 @@ namespace model {
   };
 
   /** \relates SiteGroundTemperatureUndisturbedKusudaAchenbach*/
-  typedef boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> OptionalSiteGroundTemperatureUndisturbedKusudaAchenbach;
+  using OptionalSiteGroundTemperatureUndisturbedKusudaAchenbach = boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach>;
 
   /** \relates SiteGroundTemperatureUndisturbedKusudaAchenbach*/
-  typedef std::vector<SiteGroundTemperatureUndisturbedKusudaAchenbach> SiteGroundTemperatureUndisturbedKusudaAchenbachVector;
+  using SiteGroundTemperatureUndisturbedKusudaAchenbachVector = std::vector<SiteGroundTemperatureUndisturbedKusudaAchenbach>;
 
 }  // namespace model
 }  // namespace openstudio

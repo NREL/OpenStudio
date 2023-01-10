@@ -311,6 +311,12 @@ namespace model {
     : StraightComponent(GroundHeatExchangerHorizontalTrench::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>());
 
+    bool ok = setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Undisturbed Ground Temperature Model to "
+                                     << undisturbedGroundTemperatureModel.briefDescription() << ".");
+    }
     setDesignFlowRate(0.004);
     setTrenchLengthinPipeAxialDirection(75);
     setNumberofTrenches(2);
@@ -326,7 +332,6 @@ namespace model {
     setPipeSpecificHeat(2405);
     setSoilMoistureContentPercent(30);
     setSoilMoistureContentPercentatSaturation(50);
-    setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
     setEvapotranspirationGroundCoverParameter(0.408);
   }
 

@@ -51,7 +51,7 @@ namespace model {
 
       GroundHeatExchangerHorizontalTrench_Impl(const GroundHeatExchangerHorizontalTrench_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GroundHeatExchangerHorizontalTrench_Impl() {}
+      virtual ~GroundHeatExchangerHorizontalTrench_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

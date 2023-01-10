@@ -179,8 +179,7 @@ namespace model {
     : ModelObject(SiteGroundTemperatureUndisturbedXing::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>());
 
-    bool ok;
-    ok = setSoilThermalConductivity(1.08);  // E+ docs
+    bool ok = setSoilThermalConductivity(1.08);  // E+ docs
     OS_ASSERT(ok);
     ok = setSoilDensity(962);  // E+ docs
     OS_ASSERT(ok);

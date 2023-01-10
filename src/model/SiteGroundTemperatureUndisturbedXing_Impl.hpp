@@ -54,7 +54,7 @@ namespace model {
 
       SiteGroundTemperatureUndisturbedXing_Impl(const SiteGroundTemperatureUndisturbedXing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SiteGroundTemperatureUndisturbedXing_Impl() {}
+      virtual ~SiteGroundTemperatureUndisturbedXing_Impl() = default;
 
       //@}
 
