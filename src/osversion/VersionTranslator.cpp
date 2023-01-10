@@ -309,7 +309,8 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.3.0"));
     m_startVersions.push_back(VersionString("3.4.0"));
     m_startVersions.push_back(VersionString("3.5.0"));
-    // m_startVersions.push_back(VersionString("3.5.1"));
+    m_startVersions.push_back(VersionString("3.5.1"));
+    // m_startVersions.push_back(VersionString("3.5.2"));
     // Note: do **not** include the **current** version in m_startVersions, stop at the previous release
   }
 
