@@ -1308,7 +1308,7 @@ namespace model {
     OS_ASSERT(ok);
     ok = setOutdoorUnitEvaporatorRatedBypassFactor(0.4);
     OS_ASSERT(ok);
-    ok = ok = setOutdoorUnitCondenserRatedBypassFactor(0.2);
+    ok = setOutdoorUnitCondenserRatedBypassFactor(0.2);
     OS_ASSERT(ok);
     ok = setDifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode(5);
     OS_ASSERT(ok);
