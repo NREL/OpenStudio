@@ -29,6 +29,8 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
+#include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 #include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
 #include "../ThermalZone.hpp"
@@ -41,6 +43,16 @@
 #include "../Curve.hpp"
 #include "../Curve_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveBiquadratic_Impl.hpp"
+#include "../CurveCubic.hpp"
+#include "../CurveCubic_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -72,12 +84,12 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_FALSE(vrf.isRatedEvaporativeCapacityAutosized());
   EXPECT_FALSE(vrf.autosizedRatedEvaporativeCapacity());
   EXPECT_EQ(0.35, vrf.ratedCompressorPowerPerUnitofRatedEvaporativeCapacity());
-  EXPECT_EQ(-6.0, vrf.minimumOutdoorAirTemperatureinCoolingMode());
-  EXPECT_EQ(43.0, vrf.maximumOutdoorAirTemperatureinCoolingMode());
-  EXPECT_EQ(-20.0, vrf.minimumOutdoorAirTemperatureinHeatingMode());
-  EXPECT_EQ(16.0, vrf.maximumOutdoorAirTemperatureinHeatingMode());
-  EXPECT_EQ(3, vrf.referenceOutdoorUnitSuperheating());
-  EXPECT_EQ(5, vrf.referenceOutdoorUnitSubcooling());
+  EXPECT_EQ(-6.0, vrf.minimumOutdoorAirTemperatureinCoolingOnlyMode());
+  EXPECT_EQ(43.0, vrf.maximumOutdoorAirTemperatureinCoolingOnlyMode());
+  EXPECT_EQ(-20.0, vrf.minimumOutdoorAirTemperatureinHeatingOnlyMode());
+  EXPECT_EQ(16.0, vrf.maximumOutdoorAirTemperatureinHeatingOnlyMode());
+  EXPECT_EQ(-20.0, vrf.minimumOutdoorTemperatureinHeatRecoveryMode());
+  EXPECT_EQ(43.0, vrf.maximumOutdoorTemperatureinHeatRecoveryMode());
   EXPECT_EQ("VariableTemp", vrf.refrigerantTemperatureControlAlgorithmforIndoorUnit());
   EXPECT_EQ(6.0, vrf.referenceEvaporatingTemperatureforIndoorUnit());
   EXPECT_EQ(44.0, vrf.referenceCondensingTemperatureforIndoorUnit());
@@ -85,6 +97,12 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(13.0, vrf.variableEvaporatingTemperatureMaximumforIndoorUnit());
   EXPECT_EQ(42.0, vrf.variableCondensingTemperatureMinimumforIndoorUnit());
   EXPECT_EQ(46.0, vrf.variableCondensingTemperatureMaximumforIndoorUnit());
+  EXPECT_EQ(3, vrf.outdoorUnitEvaporatorReferenceSuperheating());
+  EXPECT_EQ(5, vrf.outdoorUnitCondenserReferenceSubcooling());
+  EXPECT_EQ(0.4, vrf.outdoorUnitEvaporatorRatedBypassFactor());
+  EXPECT_EQ(0.2, vrf.outdoorUnitCondenserRatedBypassFactor());
+  EXPECT_EQ(5, vrf.differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode());
+  EXPECT_EQ(0.3, vrf.outdoorUnitHeatExchangerCapacityRatio());
   EXPECT_EQ(0.00425, vrf.outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity());
   EXPECT_EQ(0.000075, vrf.outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity());
   Curve curve1 = vrf.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
@@ -93,7 +111,8 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   Curve curve2 = vrf.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
   boost::optional<CurveQuadratic> outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve = curve2.optionalCast<CurveQuadratic>();
   EXPECT_TRUE(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve);
-  EXPECT_EQ(0.0762, vrf.diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+  EXPECT_EQ(0.0762, vrf.diameterofMainPipeforSuctionGas());
+  EXPECT_EQ(0.0762, vrf.diameterofMainPipeforDischargeGas());
   EXPECT_EQ(30.0, vrf.lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
   EXPECT_EQ(36.0, vrf.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
   EXPECT_EQ(5.0, vrf.heightDifferenceBetweenOutdoorUnitandIndoorUnits());
@@ -136,12 +155,12 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_TRUE(vrf.setRefrigerantType("R11"));
   EXPECT_TRUE(vrf.setRatedEvaporativeCapacity(1));
   EXPECT_TRUE(vrf.setRatedCompressorPowerPerUnitofRatedEvaporativeCapacity(2));
-  EXPECT_TRUE(vrf.setMinimumOutdoorAirTemperatureinCoolingMode(3));
-  EXPECT_TRUE(vrf.setMaximumOutdoorAirTemperatureinCoolingMode(4));
-  EXPECT_TRUE(vrf.setMinimumOutdoorAirTemperatureinHeatingMode(5));
-  EXPECT_TRUE(vrf.setMaximumOutdoorAirTemperatureinHeatingMode(6));
-  EXPECT_TRUE(vrf.setReferenceOutdoorUnitSuperheating(7));
-  EXPECT_TRUE(vrf.setReferenceOutdoorUnitSubcooling(8));
+  EXPECT_TRUE(vrf.setMinimumOutdoorAirTemperatureinCoolingOnlyMode(3));
+  EXPECT_TRUE(vrf.setMaximumOutdoorAirTemperatureinCoolingOnlyMode(4));
+  EXPECT_TRUE(vrf.setMinimumOutdoorAirTemperatureinHeatingOnlyMode(5));
+  EXPECT_TRUE(vrf.setMaximumOutdoorAirTemperatureinHeatingOnlyMode(6));
+  EXPECT_TRUE(vrf.setMinimumOutdoorTemperatureinHeatRecoveryMode(7));
+  EXPECT_TRUE(vrf.setMaximumOutdoorTemperatureinHeatRecoveryMode(8));
   EXPECT_TRUE(vrf.setRefrigerantTemperatureControlAlgorithmforIndoorUnit("ConstantTemp"));
   EXPECT_TRUE(vrf.setReferenceEvaporatingTemperatureforIndoorUnit(9));
   EXPECT_TRUE(vrf.setReferenceCondensingTemperatureforIndoorUnit(10));
@@ -149,40 +168,47 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_TRUE(vrf.setVariableEvaporatingTemperatureMaximumforIndoorUnit(12));
   EXPECT_TRUE(vrf.setVariableCondensingTemperatureMinimumforIndoorUnit(13));
   EXPECT_TRUE(vrf.setVariableCondensingTemperatureMaximumforIndoorUnit(14));
-  EXPECT_TRUE(vrf.setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(15));
-  EXPECT_TRUE(vrf.setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(16));
+  EXPECT_TRUE(vrf.setOutdoorUnitEvaporatorReferenceSuperheating(15));
+  EXPECT_TRUE(vrf.setOutdoorUnitCondenserReferenceSubcooling(16));
+  EXPECT_TRUE(vrf.setOutdoorUnitEvaporatorRatedBypassFactor(17));
+  EXPECT_TRUE(vrf.setOutdoorUnitCondenserRatedBypassFactor(18));
+  EXPECT_TRUE(vrf.setDifferencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode(19));
+  EXPECT_TRUE(vrf.setOutdoorUnitHeatExchangerCapacityRatio(20));
+  EXPECT_TRUE(vrf.setOutdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity(21));
+  EXPECT_TRUE(vrf.setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(22));
   CurveCubic curve1(model);
   EXPECT_TRUE(vrf.setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(curve1));
   CurveCubic curve2(model);
   EXPECT_TRUE(vrf.setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(curve2));
-  EXPECT_TRUE(vrf.setDiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(17));
-  EXPECT_TRUE(vrf.setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(18));
-  EXPECT_TRUE(vrf.setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(19));
-  EXPECT_TRUE(vrf.setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(20));
-  EXPECT_TRUE(vrf.setMainPipeInsulationThickness(21));
-  EXPECT_TRUE(vrf.setMainPipeInsulationThermalConductivity(22));
-  EXPECT_TRUE(vrf.setCrankcaseHeaterPowerperCompressor(23));
-  EXPECT_TRUE(vrf.setNumberofCompressors(24));
-  EXPECT_TRUE(vrf.setRatioofCompressorSizetoTotalCompressorCapacity(25));
-  EXPECT_TRUE(vrf.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(26));
+  EXPECT_TRUE(vrf.setDiameterofMainPipeforSuctionGas(23));
+  EXPECT_TRUE(vrf.setDiameterofMainPipeforDischargeGas(34));
+  EXPECT_TRUE(vrf.setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(25));
+  EXPECT_TRUE(vrf.setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(26));
+  EXPECT_TRUE(vrf.setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(27));
+  EXPECT_TRUE(vrf.setMainPipeInsulationThickness(28));
+  EXPECT_TRUE(vrf.setMainPipeInsulationThermalConductivity(29));
+  EXPECT_TRUE(vrf.setCrankcaseHeaterPowerperCompressor(30));
+  EXPECT_TRUE(vrf.setNumberofCompressors(31));
+  EXPECT_TRUE(vrf.setRatioofCompressorSizetoTotalCompressorCapacity(32));
+  EXPECT_TRUE(vrf.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(33));
   EXPECT_TRUE(vrf.setDefrostStrategy("ReverseCycle"));
   EXPECT_TRUE(vrf.setDefrostControl("OnDemand"));
   CurveBiquadratic curve3(model);
   EXPECT_TRUE(vrf.setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(curve3));
-  EXPECT_TRUE(vrf.setDefrostTimePeriodFraction(27));
-  EXPECT_TRUE(vrf.setResistiveDefrostHeaterCapacity(28));
-  EXPECT_TRUE(vrf.setMaximumOutdoorDrybulbTemperatureforDefrostOperation(29));
-  EXPECT_TRUE(vrf.setInitialHeatRecoveryCoolingCapacityFraction(30));
-  EXPECT_TRUE(vrf.setHeatRecoveryCoolingCapacityTimeConstant(31));
-  EXPECT_TRUE(vrf.setInitialHeatRecoveryCoolingEnergyFraction(32));
-  EXPECT_TRUE(vrf.setHeatRecoveryCoolingEnergyTimeConstant(33));
-  EXPECT_TRUE(vrf.setInitialHeatRecoveryHeatingCapacityFraction(34));
-  EXPECT_TRUE(vrf.setHeatRecoveryHeatingCapacityTimeConstant(35));
-  EXPECT_TRUE(vrf.setInitialHeatRecoveryHeatingEnergyFraction(36));
-  EXPECT_TRUE(vrf.setHeatRecoveryHeatingEnergyTimeConstant(37));
-  EXPECT_TRUE(vrf.setCompressormaximumdeltaPressure(38));
-  EXPECT_TRUE(vrf.setCompressorInverterEfficiency(39));
-  EXPECT_TRUE(vrf.setCompressorEvaporativeCapacityCorrectionFactor(40));
+  EXPECT_TRUE(vrf.setDefrostTimePeriodFraction(34));
+  EXPECT_TRUE(vrf.setResistiveDefrostHeaterCapacity(35));
+  EXPECT_TRUE(vrf.setMaximumOutdoorDrybulbTemperatureforDefrostOperation(36));
+  EXPECT_TRUE(vrf.setInitialHeatRecoveryCoolingCapacityFraction(37));
+  EXPECT_TRUE(vrf.setHeatRecoveryCoolingCapacityTimeConstant(38));
+  EXPECT_TRUE(vrf.setInitialHeatRecoveryCoolingEnergyFraction(39));
+  EXPECT_TRUE(vrf.setHeatRecoveryCoolingEnergyTimeConstant(40));
+  EXPECT_TRUE(vrf.setInitialHeatRecoveryHeatingCapacityFraction(41));
+  EXPECT_TRUE(vrf.setHeatRecoveryHeatingCapacityTimeConstant(42));
+  EXPECT_TRUE(vrf.setInitialHeatRecoveryHeatingEnergyFraction(43));
+  EXPECT_TRUE(vrf.setHeatRecoveryHeatingEnergyTimeConstant(44));
+  EXPECT_TRUE(vrf.setCompressormaximumdeltaPressure(45));
+  EXPECT_TRUE(vrf.setCompressorInverterEfficiency(46));
+  EXPECT_TRUE(vrf.setCompressorEvaporativeCapacityCorrectionFactor(47));
 
   Schedule schedule = vrf.availabilitySchedule();
   boost::optional<ScheduleConstant> _scheduleConstant = schedule.optionalCast<ScheduleConstant>();
@@ -195,12 +221,12 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_FALSE(vrf.isRatedEvaporativeCapacityAutosized());
   EXPECT_FALSE(vrf.autosizedRatedEvaporativeCapacity());
   EXPECT_EQ(2, vrf.ratedCompressorPowerPerUnitofRatedEvaporativeCapacity());
-  EXPECT_EQ(3, vrf.minimumOutdoorAirTemperatureinCoolingMode());
-  EXPECT_EQ(4, vrf.maximumOutdoorAirTemperatureinCoolingMode());
-  EXPECT_EQ(5, vrf.minimumOutdoorAirTemperatureinHeatingMode());
-  EXPECT_EQ(6, vrf.maximumOutdoorAirTemperatureinHeatingMode());
-  EXPECT_EQ(7, vrf.referenceOutdoorUnitSuperheating());
-  EXPECT_EQ(8, vrf.referenceOutdoorUnitSubcooling());
+  EXPECT_EQ(3, vrf.minimumOutdoorAirTemperatureinCoolingOnlyMode());
+  EXPECT_EQ(4, vrf.maximumOutdoorAirTemperatureinCoolingOnlyMode());
+  EXPECT_EQ(5, vrf.minimumOutdoorAirTemperatureinHeatingOnlyMode());
+  EXPECT_EQ(6, vrf.maximumOutdoorAirTemperatureinHeatingOnlyMode());
+  EXPECT_EQ(7, vrf.minimumOutdoorTemperatureinHeatRecoveryMode());
+  EXPECT_EQ(8, vrf.maximumOutdoorTemperatureinHeatRecoveryMode());
   EXPECT_EQ("ConstantTemp", vrf.refrigerantTemperatureControlAlgorithmforIndoorUnit());
   EXPECT_EQ(9, vrf.referenceEvaporatingTemperatureforIndoorUnit());
   EXPECT_EQ(10, vrf.referenceCondensingTemperatureforIndoorUnit());
@@ -208,47 +234,54 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(12, vrf.variableEvaporatingTemperatureMaximumforIndoorUnit());
   EXPECT_EQ(13, vrf.variableCondensingTemperatureMinimumforIndoorUnit());
   EXPECT_EQ(14, vrf.variableCondensingTemperatureMaximumforIndoorUnit());
-  EXPECT_EQ(15, vrf.outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity());
-  EXPECT_EQ(16, vrf.outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity());
+  EXPECT_EQ(15, vrf.outdoorUnitEvaporatorReferenceSuperheating());
+  EXPECT_EQ(16, vrf.outdoorUnitCondenserReferenceSubcooling());
+  EXPECT_EQ(17, vrf.outdoorUnitEvaporatorRatedBypassFactor());
+  EXPECT_EQ(18, vrf.outdoorUnitCondenserRatedBypassFactor());
+  EXPECT_EQ(19, vrf.differencebetweenOutdoorUnitEvaporatingTemperatureandOutdoorAirTemperatureinHeatRecoveryMode());
+  EXPECT_EQ(20, vrf.outdoorUnitHeatExchangerCapacityRatio());
+  EXPECT_EQ(21, vrf.outdoorUnitFanPowerPerUnitofRatedEvaporativeCapacity());
+  EXPECT_EQ(22, vrf.outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity());
   Curve _curve1 = vrf.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
   boost::optional<CurveCubic> outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve = _curve1.optionalCast<CurveCubic>();
   EXPECT_TRUE(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve);
   Curve _curve2 = vrf.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
   boost::optional<CurveCubic> outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve = _curve2.optionalCast<CurveCubic>();
   EXPECT_TRUE(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve);
-  EXPECT_EQ(17, vrf.diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
-  EXPECT_EQ(18, vrf.lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
-  EXPECT_EQ(19, vrf.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
-  EXPECT_EQ(20, vrf.heightDifferenceBetweenOutdoorUnitandIndoorUnits());
-  EXPECT_EQ(21, vrf.mainPipeInsulationThickness());
-  EXPECT_EQ(22, vrf.mainPipeInsulationThermalConductivity());
-  EXPECT_EQ(23, vrf.crankcaseHeaterPowerperCompressor());
-  EXPECT_EQ(24, vrf.numberofCompressors());
-  EXPECT_EQ(25, vrf.ratioofCompressorSizetoTotalCompressorCapacity());
-  EXPECT_EQ(26, vrf.maximumOutdoorDryBulbTemperatureforCrankcaseHeater());
+  EXPECT_EQ(23, vrf.diameterofMainPipeforSuctionGas());
+  EXPECT_EQ(24, vrf.diameterofMainPipeforDischargeGas());
+  EXPECT_EQ(25, vrf.lengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+  EXPECT_EQ(26, vrf.equivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint());
+  EXPECT_EQ(27, vrf.heightDifferenceBetweenOutdoorUnitandIndoorUnits());
+  EXPECT_EQ(28, vrf.mainPipeInsulationThickness());
+  EXPECT_EQ(29, vrf.mainPipeInsulationThermalConductivity());
+  EXPECT_EQ(30, vrf.crankcaseHeaterPowerperCompressor());
+  EXPECT_EQ(31, vrf.numberofCompressors());
+  EXPECT_EQ(32, vrf.ratioofCompressorSizetoTotalCompressorCapacity());
+  EXPECT_EQ(33, vrf.maximumOutdoorDryBulbTemperatureforCrankcaseHeater());
   EXPECT_EQ("ReverseCycle", vrf.defrostStrategy());
   EXPECT_EQ("OnDemand", vrf.defrostControl());
   boost::optional<Curve> _curve3 = vrf.defrostEnergyInputRatioModifierFunctionofTemperatureCurve();
   ASSERT_TRUE(_curve3);
   boost::optional<CurveBiquadratic> defrostEnergyInputRatioModifierFunctionofTemperatureCurve = _curve3->optionalCast<CurveBiquadratic>();
   EXPECT_TRUE(defrostEnergyInputRatioModifierFunctionofTemperatureCurve);
-  EXPECT_EQ(27, vrf.defrostTimePeriodFraction());
+  EXPECT_EQ(34, vrf.defrostTimePeriodFraction());
   ASSERT_TRUE(vrf.resistiveDefrostHeaterCapacity());
-  EXPECT_EQ(28, vrf.resistiveDefrostHeaterCapacity().get());
+  EXPECT_EQ(35, vrf.resistiveDefrostHeaterCapacity().get());
   EXPECT_FALSE(vrf.isResistiveDefrostHeaterCapacityAutosized());
   EXPECT_FALSE(vrf.autosizedResistiveDefrostHeaterCapacity());
-  EXPECT_EQ(29, vrf.maximumOutdoorDrybulbTemperatureforDefrostOperation());
-  EXPECT_EQ(30, vrf.initialHeatRecoveryCoolingCapacityFraction());
-  EXPECT_EQ(31, vrf.heatRecoveryCoolingCapacityTimeConstant());
-  EXPECT_EQ(32, vrf.initialHeatRecoveryCoolingEnergyFraction());
-  EXPECT_EQ(33, vrf.heatRecoveryCoolingEnergyTimeConstant());
-  EXPECT_EQ(34, vrf.initialHeatRecoveryHeatingCapacityFraction());
-  EXPECT_EQ(35, vrf.heatRecoveryHeatingCapacityTimeConstant());
-  EXPECT_EQ(36, vrf.initialHeatRecoveryHeatingEnergyFraction());
-  EXPECT_EQ(37, vrf.heatRecoveryHeatingEnergyTimeConstant());
-  EXPECT_EQ(38, vrf.compressormaximumdeltaPressure());
-  EXPECT_EQ(39, vrf.compressorInverterEfficiency());
-  EXPECT_EQ(40, vrf.compressorEvaporativeCapacityCorrectionFactor());
+  EXPECT_EQ(36, vrf.maximumOutdoorDrybulbTemperatureforDefrostOperation());
+  EXPECT_EQ(37, vrf.initialHeatRecoveryCoolingCapacityFraction());
+  EXPECT_EQ(38, vrf.heatRecoveryCoolingCapacityTimeConstant());
+  EXPECT_EQ(39, vrf.initialHeatRecoveryCoolingEnergyFraction());
+  EXPECT_EQ(40, vrf.heatRecoveryCoolingEnergyTimeConstant());
+  EXPECT_EQ(41, vrf.initialHeatRecoveryHeatingCapacityFraction());
+  EXPECT_EQ(42, vrf.heatRecoveryHeatingCapacityTimeConstant());
+  EXPECT_EQ(43, vrf.initialHeatRecoveryHeatingEnergyFraction());
+  EXPECT_EQ(44, vrf.heatRecoveryHeatingEnergyTimeConstant());
+  EXPECT_EQ(45, vrf.compressormaximumdeltaPressure());
+  EXPECT_EQ(46, vrf.compressorInverterEfficiency());
+  EXPECT_EQ(47, vrf.compressorEvaporativeCapacityCorrectionFactor());
 
   vrf.autosizeRatedEvaporativeCapacity();
   vrf.resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();

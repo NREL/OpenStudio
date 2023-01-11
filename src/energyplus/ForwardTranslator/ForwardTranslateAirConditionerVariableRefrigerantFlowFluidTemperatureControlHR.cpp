@@ -30,6 +30,8 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
 
+#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
 
