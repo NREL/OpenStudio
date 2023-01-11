@@ -31,6 +31,7 @@
 #include "../../model/Model.hpp"
 
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
+#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
@@ -410,6 +411,22 @@ namespace energyplus {
       IdfExtensibleGroup eg = _zoneTerminalUnitList.pushExtensibleGroup();
 
       eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName, _terminal->name().get());
+    }
+
+    // Loading Indexes
+    std::vector<LoadingIndex> loadingIndexes = modelObject.loadingIndexes();
+    if (!loadingIndexes.empty()) {
+      for (const LoadingIndex& loadingIndex : loadingIndexes) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::CompressorSpeedatLoadingIndex,
+                     loadingIndex.compressorSpeed());
+        eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::
+                       LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName,
+                     loadingIndex.evaporativeCapacityMultiplierFunctionofTemperatureCurve().name().get());
+        eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::
+                       LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName,
+                     loadingIndex.compressorPowerMultiplierFunctionofTemperatureCurve().name().get());
+      }
     }
 
     return idfObject;
