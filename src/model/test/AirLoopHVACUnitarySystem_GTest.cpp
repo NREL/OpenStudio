@@ -68,6 +68,8 @@
 #include "../CurveBiquadratic.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVAC_Impl.hpp"
+#include "../CoilHeatingDXVariableSpeed.hpp"
+#include "../CoilHeatingDXMultiSpeed.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -549,6 +551,28 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_containingHVACComponent) {
   EXPECT_TRUE(testObject.setSupplementalHeatingCoil(coilHeatingWaterSupp));
 
   component = coilHeatingGas.containingHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(*component, testObject);
+
+  CoilHeatingDXVariableSpeed coilHeatingDXVariableSpeed(m);
+
+  EXPECT_TRUE(testObject.setSupplyFan(fanOnOff));
+  EXPECT_TRUE(testObject.setCoolingCoil(coilCoolingWater));
+  EXPECT_TRUE(testObject.setHeatingCoil(coilHeatingDXVariableSpeed));
+  EXPECT_TRUE(testObject.setSupplementalHeatingCoil(coilHeatingWaterSupp));
+
+  component = coilHeatingDXVariableSpeed.containingHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(*component, testObject);
+
+  CoilHeatingDXMultiSpeed coilHeatingDXMultiSpeed(m);
+
+  EXPECT_TRUE(testObject.setSupplyFan(fanOnOff));
+  EXPECT_TRUE(testObject.setCoolingCoil(coilCoolingWater));
+  EXPECT_TRUE(testObject.setHeatingCoil(coilHeatingDXMultiSpeed));
+  EXPECT_TRUE(testObject.setSupplementalHeatingCoil(coilHeatingWaterSupp));
+
+  component = coilHeatingDXMultiSpeed.containingHVACComponent();
   ASSERT_TRUE(component);
   EXPECT_EQ(*component, testObject);
 }
