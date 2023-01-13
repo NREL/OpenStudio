@@ -124,7 +124,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_TRUE(vrf.setHeatRecoveryHeatingCapacityTimeConstant(42));
   EXPECT_TRUE(vrf.setInitialHeatRecoveryHeatingEnergyFraction(43));
   EXPECT_TRUE(vrf.setHeatRecoveryHeatingEnergyTimeConstant(44));
-  EXPECT_TRUE(vrf.setCompressormaximumdeltaPressure(45));
+  EXPECT_TRUE(vrf.setCompressorMaximumDeltaPressure(45));
   EXPECT_TRUE(vrf.setCompressorInverterEfficiency(46));
   EXPECT_TRUE(vrf.setCompressorEvaporativeCapacityCorrectionFactor(47));
 

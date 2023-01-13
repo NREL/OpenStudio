@@ -290,10 +290,10 @@ namespace energyplus {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation,
                         maximumOutdoorDrybulbTemperatureforDefrostOperation);
 
-    // Compressor maximum delta Pressure: Optional Double
-    double compressormaximumdeltaPressure = modelObject.compressormaximumdeltaPressure();
+    // Compressor Maximum Delta Pressure: Optional Double
+    double compressorMaximumDeltaPressure = modelObject.compressorMaximumDeltaPressure();
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::CompressormaximumdeltaPressure,
-                        compressormaximumdeltaPressure);
+                        compressorMaximumDeltaPressure);
 
     // Number of Compressor Loading Index Entries: Optional Integer
     int numberofCompressorLoadingIndexEntries = modelObject.numberofCompressorLoadingIndexEntries();

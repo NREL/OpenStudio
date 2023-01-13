@@ -371,10 +371,10 @@ namespace energyplus {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingEnergyTimeConstant,
                         heatRecoveryHeatingEnergyTimeConstant);
 
-    // Compressor maximum delta Pressure: Optional Double
-    double compressormaximumdeltaPressure = modelObject.compressormaximumdeltaPressure();
+    // Compressor Maximum Delta Pressure: Optional Double
+    double compressorMaximumDeltaPressure = modelObject.compressorMaximumDeltaPressure();
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressormaximumdeltaPressure,
-                        compressormaximumdeltaPressure);
+                        compressorMaximumDeltaPressure);
 
     // Compressor Inverter Efficiency: Optional Double
     double compressorInverterEfficiency = modelObject.compressorInverterEfficiency();

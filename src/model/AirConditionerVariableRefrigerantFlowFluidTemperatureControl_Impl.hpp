@@ -195,7 +195,7 @@ namespace model {
 
       double maximumOutdoorDrybulbTemperatureforDefrostOperation() const;
 
-      double compressormaximumdeltaPressure() const;
+      double compressorMaximumDeltaPressure() const;
 
       unsigned int numberofCompressorLoadingIndexEntries() const;
 
@@ -284,7 +284,7 @@ namespace model {
 
       bool setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation);
 
-      bool setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure);
+      bool setCompressorMaximumDeltaPressure(double compressorMaximumDeltaPressure);
 
       ModelObjectList vrfModelObjectList() const;
 

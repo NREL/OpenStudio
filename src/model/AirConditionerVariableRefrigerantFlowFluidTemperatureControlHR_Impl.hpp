@@ -225,7 +225,7 @@ namespace model {
 
       double heatRecoveryHeatingEnergyTimeConstant() const;
 
-      double compressormaximumdeltaPressure() const;
+      double compressorMaximumDeltaPressure() const;
 
       double compressorInverterEfficiency() const;
 
@@ -349,7 +349,7 @@ namespace model {
 
       bool setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant);
 
-      bool setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure);
+      bool setCompressorMaximumDeltaPressure(double compressorMaximumDeltaPressure);
 
       bool setCompressorInverterEfficiency(double compressorInverterEfficiency);
 

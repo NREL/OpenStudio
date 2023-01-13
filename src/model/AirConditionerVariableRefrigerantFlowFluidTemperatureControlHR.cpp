@@ -623,9 +623,9 @@ namespace model {
       return value.get();
     }
 
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::compressormaximumdeltaPressure() const {
+    double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::compressorMaximumDeltaPressure() const {
       boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressormaximumdeltaPressure, true);
+        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressorMaximumDeltaPressure, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -1176,9 +1176,9 @@ namespace model {
     }
 
     bool
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressormaximumdeltaPressure,
-                              compressormaximumdeltaPressure);
+      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::setCompressorMaximumDeltaPressure(double compressorMaximumDeltaPressure) {
+      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressorMaximumDeltaPressure,
+                              compressorMaximumDeltaPressure);
       return result;
     }
 
@@ -1349,7 +1349,7 @@ namespace model {
     OS_ASSERT(ok);
     ok = setHeatRecoveryHeatingEnergyTimeConstant(0);
     OS_ASSERT(ok);
-    ok = setCompressormaximumdeltaPressure(4500000.0);
+    ok = setCompressorMaximumDeltaPressure(4500000.0);
     OS_ASSERT(ok);
     ok = setCompressorInverterEfficiency(0.95);
     OS_ASSERT(ok);
@@ -1665,8 +1665,8 @@ namespace model {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->heatRecoveryHeatingEnergyTimeConstant();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::compressormaximumdeltaPressure() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->compressormaximumdeltaPressure();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::compressorMaximumDeltaPressure() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->compressorMaximumDeltaPressure();
   }
 
   double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::compressorInverterEfficiency() const {
@@ -1993,9 +1993,9 @@ namespace model {
       heatRecoveryHeatingEnergyTimeConstant);
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCompressormaximumdeltaPressure(
-      compressormaximumdeltaPressure);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCompressorMaximumDeltaPressure(double compressorMaximumDeltaPressure) {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setCompressorMaximumDeltaPressure(
+      compressorMaximumDeltaPressure);
   }
 
   bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::setCompressorInverterEfficiency(double compressorInverterEfficiency) {

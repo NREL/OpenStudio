@@ -108,7 +108,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_TRUE(vrf.setDefrostTimePeriodFraction(27));
   EXPECT_TRUE(vrf.setResistiveDefrostHeaterCapacity(28));
   EXPECT_TRUE(vrf.setMaximumOutdoorDrybulbTemperatureforDefrostOperation(29));
-  EXPECT_TRUE(vrf.setCompressormaximumdeltaPressure(30));
+  EXPECT_TRUE(vrf.setCompressorMaximumDeltaPressure(30));
 
   CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve1(model);
   CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve1(model);

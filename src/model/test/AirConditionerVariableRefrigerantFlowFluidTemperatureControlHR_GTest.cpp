@@ -139,7 +139,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(0, vrf.heatRecoveryHeatingCapacityTimeConstant());
   EXPECT_EQ(1, vrf.initialHeatRecoveryHeatingEnergyFraction());
   EXPECT_EQ(0, vrf.heatRecoveryHeatingEnergyTimeConstant());
-  EXPECT_EQ(4500000.0, vrf.compressormaximumdeltaPressure());
+  EXPECT_EQ(4500000.0, vrf.compressorMaximumDeltaPressure());
   EXPECT_EQ(0.95, vrf.compressorInverterEfficiency());
   EXPECT_EQ(1.0, vrf.compressorEvaporativeCapacityCorrectionFactor());
 }
@@ -206,7 +206,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_TRUE(vrf.setHeatRecoveryHeatingCapacityTimeConstant(42));
   EXPECT_TRUE(vrf.setInitialHeatRecoveryHeatingEnergyFraction(43));
   EXPECT_TRUE(vrf.setHeatRecoveryHeatingEnergyTimeConstant(44));
-  EXPECT_TRUE(vrf.setCompressormaximumdeltaPressure(45));
+  EXPECT_TRUE(vrf.setCompressorMaximumDeltaPressure(45));
   EXPECT_TRUE(vrf.setCompressorInverterEfficiency(46));
   EXPECT_TRUE(vrf.setCompressorEvaporativeCapacityCorrectionFactor(47));
 
@@ -279,7 +279,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(42, vrf.heatRecoveryHeatingCapacityTimeConstant());
   EXPECT_EQ(43, vrf.initialHeatRecoveryHeatingEnergyFraction());
   EXPECT_EQ(44, vrf.heatRecoveryHeatingEnergyTimeConstant());
-  EXPECT_EQ(45, vrf.compressormaximumdeltaPressure());
+  EXPECT_EQ(45, vrf.compressorMaximumDeltaPressure());
   EXPECT_EQ(46, vrf.compressorInverterEfficiency());
   EXPECT_EQ(47, vrf.compressorEvaporativeCapacityCorrectionFactor());
 

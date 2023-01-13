@@ -542,9 +542,9 @@ namespace model {
       return value.get();
     }
 
-    double AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::compressormaximumdeltaPressure() const {
+    double AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::compressorMaximumDeltaPressure() const {
       boost::optional<double> value =
-        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::CompressormaximumdeltaPressure, true);
+        getDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::CompressorMaximumDeltaPressure, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -954,9 +954,9 @@ namespace model {
       return result;
     }
 
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure) {
-      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::CompressormaximumdeltaPressure,
-                              compressormaximumdeltaPressure);
+    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setCompressorMaximumDeltaPressure(double compressorMaximumDeltaPressure) {
+      bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::CompressorMaximumDeltaPressure,
+                              compressorMaximumDeltaPressure);
       return result;
     }
 
@@ -1083,7 +1083,7 @@ namespace model {
     OS_ASSERT(ok);
     ok = setMaximumOutdoorDrybulbTemperatureforDefrostOperation(5.0);
     OS_ASSERT(ok);
-    ok = setCompressormaximumdeltaPressure(4500000.0);
+    ok = setCompressorMaximumDeltaPressure(4500000.0);
     OS_ASSERT(ok);
 
     CurveQuadratic outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(model);
@@ -1327,8 +1327,8 @@ namespace model {
       ->maximumOutdoorDrybulbTemperatureforDefrostOperation();
   }
 
-  double AirConditionerVariableRefrigerantFlowFluidTemperatureControl::compressormaximumdeltaPressure() const {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->compressormaximumdeltaPressure();
+  double AirConditionerVariableRefrigerantFlowFluidTemperatureControl::compressorMaximumDeltaPressure() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->compressorMaximumDeltaPressure();
   }
 
   unsigned int AirConditionerVariableRefrigerantFlowFluidTemperatureControl::numberofCompressorLoadingIndexEntries() const {
@@ -1553,9 +1553,9 @@ namespace model {
       ->setMaximumOutdoorDrybulbTemperatureforDefrostOperation(maximumOutdoorDrybulbTemperatureforDefrostOperation);
   }
 
-  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::setCompressormaximumdeltaPressure(double compressormaximumdeltaPressure) {
-    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setCompressormaximumdeltaPressure(
-      compressormaximumdeltaPressure);
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::setCompressorMaximumDeltaPressure(double compressorMaximumDeltaPressure) {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setCompressorMaximumDeltaPressure(
+      compressorMaximumDeltaPressure);
   }
 
   void AirConditionerVariableRefrigerantFlowFluidTemperatureControl::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {

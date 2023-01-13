@@ -122,7 +122,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_FALSE(vrf.isResistiveDefrostHeaterCapacityAutosized());
   EXPECT_FALSE(vrf.autosizedResistiveDefrostHeaterCapacity());
   EXPECT_EQ(5.0, vrf.maximumOutdoorDrybulbTemperatureforDefrostOperation());
-  EXPECT_EQ(4500000.0, vrf.compressormaximumdeltaPressure());
+  EXPECT_EQ(4500000.0, vrf.compressorMaximumDeltaPressure());
 }
 
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_SetGetFields) {
@@ -172,7 +172,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_TRUE(vrf.setDefrostTimePeriodFraction(27));
   EXPECT_TRUE(vrf.setResistiveDefrostHeaterCapacity(28));
   EXPECT_TRUE(vrf.setMaximumOutdoorDrybulbTemperatureforDefrostOperation(29));
-  EXPECT_TRUE(vrf.setCompressormaximumdeltaPressure(30));
+  EXPECT_TRUE(vrf.setCompressorMaximumDeltaPressure(30));
 
   Schedule schedule = vrf.availabilitySchedule();
   boost::optional<ScheduleConstant> _scheduleConstant = schedule.optionalCast<ScheduleConstant>();
@@ -228,7 +228,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_FALSE(vrf.isResistiveDefrostHeaterCapacityAutosized());
   EXPECT_FALSE(vrf.autosizedResistiveDefrostHeaterCapacity());
   EXPECT_EQ(29, vrf.maximumOutdoorDrybulbTemperatureforDefrostOperation());
-  EXPECT_EQ(30, vrf.compressormaximumdeltaPressure());
+  EXPECT_EQ(30, vrf.compressorMaximumDeltaPressure());
 
   vrf.autosizeRatedEvaporativeCapacity();
   vrf.resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();

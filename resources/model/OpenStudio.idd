@@ -10487,7 +10487,7 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
        \units C
        \required-field
        \note Enter the maximum outdoor temperature above which the defrost operation is disabled
-  N30, \field Compressor maximum delta Pressure
+  N30, \field Compressor Maximum Delta Pressure
        \type real
        \units Pa
        \required-field
@@ -10875,7 +10875,7 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR,
        \note This is used to describe the transition from Heating Only mode to Heat Recovery mode
        \note Enter the time constant used to model the transition
        \note from cooling only mode to heat recovery mode
-  N45, \field Compressor maximum delta Pressure
+  N45, \field Compressor Maximum Delta Pressure
        \type real
        \units Pa
        \required-field
