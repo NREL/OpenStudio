@@ -100,17 +100,71 @@ inline bool has_self_intersections(Geometry const& geometry, bool throw_on_self_
   return boost::geometry::detail::overlay::has_self_intersections(geometry, strategy, robust_policy, throw_on_self_intersection);
 }
 
+// Some operators for Boost data types that are useful for extra logging
+std::ostream& operator<<(std::ostream& os, const BoostRing& boostRing) {
+  os << "[";
+  for (int i = 0; i < boostRing.size(); i++) {
+    os << "{";
+    os << "\"X\":" << boostRing[i].x() << ",";
+    os << "\"Y\":" << boostRing[i].y() << ",";
+    os << "\"Z\":0.0},";
+  }
+  os << "],";
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const std::vector<BoostRing>& boostRings) {
+  os << "[";
+  for (const auto& ring : boostRings) {
+    os << ring;
+  }
+  os << "]";
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const BoostPolygon& boostPolygon) {
+  os << "{";
+  os << "\"Color\":\"Black\",";
+  os << "\"OuterPath\":";
+  os << boostPolygon.outer();
+  os << "\"InnerPaths\":";
+  os << boostPolygon.inners();
+  os << "},";
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const std::vector<BoostPolygon>& boostPolygons) {
+  os << "[";
+  for (const auto& poly : boostPolygons) {
+    os << poly;
+  }
+  os << "]";
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const BoostMultiPolygon& boostPolygons) {
+  os << "[";
+  for (const auto& poly : boostPolygons) {
+    os << poly;
+  }
+  os << "]";
+  return os;
+}
+
 // Cleans a polygon by shrinking and expanding. Can return multiple polygons
 std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
 
   //const double buffer_distance = 1.0;
   //const int points_per_circle = 36;
-  const double offsetBy = 0.005;
+  bool extraLogging = false;
+  // The amount to shrink and expand the polygons by
+  const double offsetBy = 0.01;
   const double tol = offsetBy;
-
+  // Sets the limit to how far miters are extended for sharp corners
+  const double mitreLimit = 15;
   boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(offsetBy);
   boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-offsetBy);
-  boost::geometry::strategy::buffer::join_miter join_strategy;
+  boost::geometry::strategy::buffer::join_miter join_strategy(mitreLimit);
   boost::geometry::strategy::buffer::end_flat end_strategy;
   boost::geometry::strategy::buffer::side_straight side_strategy;
   boost::geometry::strategy::buffer::point_circle point_strategy;
@@ -121,15 +175,36 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   BoostMultiPolygon resultShrink;
   // cppcheck-suppress constStatement
   BoostMultiPolygon result;
+  // Used for extra logging
+  BoostMultiPolygon shrinkExpand;
+  if (extraLogging) {
+    shrinkExpand.push_back(polygon);
+  }
+
+  // Shrink the polygon
   boost::geometry::buffer(polygon, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
+  if (extraLogging) {
+    shrinkExpand.push_back(resultShrink[0]);
+  }
+
+  // Inflate the polygon
   boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
-  boost::geometry::simplify(resultExpand, result, offsetBy);
+  if (extraLogging) {
+    shrinkExpand.push_back(resultExpand[0]);
+  }
+  
+  // Very small tolerance to remove artifacts from the inflate
+  double tol1 = 0.001;
+  boost::geometry::simplify(resultExpand, result, tol1);
+  if (extraLogging) {
+    shrinkExpand.push_back(result[0]);
+    LOG_FREE(Debug, "Shrink/Expand", shrinkExpand);
+  }
 
   // cppcheck-suppress constStatement
   std::vector<BoostPolygon> solution;
   if (result.size() == 0) {
-    // There's no result so return the original polygon
-    solution.push_back(polygon);
+    // There's no result because the polygon was completely removed so return nothing
     return solution;
   } else if (result.size() == 1 && result[0].outer().size() == polygon.outer().size()) {
     // Number of vertices didn't change so no spikes were removed
@@ -374,9 +449,9 @@ boost::optional<BoostRing> nonIntersectingBoostRingFromVertices(const std::vecto
 }
 
 // convert a boost polygon to vertices
-std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::vector<Point3d>& allPoints, double tol, bool removeCollinear = true) {
+std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::vector<Point3d>& allPoints, double tol, bool removeCollinear = false) {
   std::vector<Point3d> result;
-
+  tol = 0.001;
   BoostRing outer = polygon.outer();
   if (outer.empty()) {
     return result;
@@ -747,6 +822,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   std::vector<std::vector<Point3d>> newPolygons1;
   std::vector<std::vector<Point3d>> newPolygons2;
 
+  bool extraLogging = false;
   //std::cout << "Initial polygon1 area " << getArea(polygon1).get() << '\n';
   //std::cout << "Initial polygon2 area " << getArea(polygon2).get() << '\n';
 
@@ -763,6 +839,12 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
     return boost::none;
   }
 
+  BoostMultiPolygon polys;
+  boost::optional<BoostPolygon> poly = boostPolygonFromVertices(polygon2, allPoints, tol);
+  if (extraLogging) {
+    polys.push_back(*poly);
+  }
+
   // intersect the points in face coordinates,
   std::vector<BoostPolygon> intersectionResult;
   try {
@@ -772,6 +854,10 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
     return boost::none;
   }
 
+  if (extraLogging) {
+    polys.push_back(intersectionResult[0]);
+  }
+
   // check if intersection is empty
   if (intersectionResult.empty()) {
     //LOG_FREE(Info, "utilities.geometry.intersect", "Intersection is empty");
@@ -779,6 +865,13 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   }
 
   intersectionResult = removeSpikes(intersectionResult);
+  if (intersectionResult.size() == 0) {
+    return boost::none;
+  }
+  if (extraLogging) {
+    polys.push_back(intersectionResult[0]);
+    LOG_FREE(Debug, "intersection result", polys);
+  }
   intersectionResult = removeHoles(intersectionResult);
 
   // check for multiple intersections
@@ -788,7 +881,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   }
 
   // check that largest intersection is ok
-  std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[0], allPoints, tol);
+  std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[0], allPoints, tol, false);
   boost::optional<double> testArea = boost::geometry::area(intersectionResult[0]);
   if (!testArea || intersectionVertices.empty()) {
     LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of largest intersection");
@@ -815,7 +908,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   // create new polygon for each remaining intersection
   for (unsigned i = 1; i < intersectionResult.size(); ++i) {
 
-    std::vector<Point3d> newPolygon = verticesFromBoostPolygon(intersectionResult[i], allPoints, tol);
+    std::vector<Point3d> newPolygon = verticesFromBoostPolygon(intersectionResult[i], allPoints, tol, false);
 
     testArea = boost::geometry::area(intersectionResult[i]);
     if (!testArea || newPolygon.empty()) {
@@ -850,7 +943,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   // create new polygon for each difference
   for (unsigned i = 0; i < differenceResult1.size(); ++i) {
 
-    std::vector<Point3d> newPolygon1 = verticesFromBoostPolygon(differenceResult1[i], allPoints, tol);
+    std::vector<Point3d> newPolygon1 = verticesFromBoostPolygon(differenceResult1[i], allPoints, tol, false);
 
     testArea = boost::geometry::area(differenceResult1[i]);
     if (!testArea || newPolygon1.empty()) {
@@ -858,7 +951,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       continue;
     } else if (*testArea < tol * tol) {
       LOG_FREE(Info, "utilities.geometry.intersect",
-               "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon1);
+              "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon1);
       continue;
     }
     try {
@@ -880,7 +973,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   // create new polygon for each difference
   for (unsigned i = 0; i < differenceResult2.size(); ++i) {
 
-    std::vector<Point3d> newPolygon2 = verticesFromBoostPolygon(differenceResult2[i], allPoints, tol);
+    std::vector<Point3d> newPolygon2 = verticesFromBoostPolygon(differenceResult2[i], allPoints, tol, false);
 
     testArea = boost::geometry::area(differenceResult2[i]);
     if (!testArea || newPolygon2.empty()) {
@@ -938,15 +1031,19 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
       // cppcheck-suppress constStatement
       std::vector<BoostPolygon> diffResult;
       boost::geometry::difference(boostPolygon, *boostHole, diffResult);
-      diffResult = removeSpikes(diffResult);
-      diffResult = removeHoles(diffResult);
       newBoostPolygons.insert(newBoostPolygons.end(), diffResult.begin(), diffResult.end());
     }
     boostPolygons.swap(newBoostPolygons);
+    newBoostPolygons.clear();
   }
 
+  // Remove the holes and spikes and convert back to our data types
   for (const BoostPolygon& boostPolygon : boostPolygons) {
-    result.push_back(verticesFromBoostPolygon(boostPolygon, allPoints, tol));
+    BoostPolygon removedSpikes = removeSpikes(boostPolygon);
+    std::vector<BoostPolygon> removedHoles = removeHoles(removedSpikes);
+    for (const BoostPolygon& removedHole : removedHoles) {
+      result.push_back(verticesFromBoostPolygon(removedHole, allPoints, tol));
+    }
   }
 
   return result;
@@ -1416,10 +1513,11 @@ boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon
     return boost::none;
   }
 
+  const double miterLimit = 15;
   //const double buffer_distance = 1.0;
   //const int points_per_circle = 36;
   boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
-  boost::geometry::strategy::buffer::join_miter join_strategy;
+  boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit);
   boost::geometry::strategy::buffer::end_flat end_strategy;
   boost::geometry::strategy::buffer::side_straight side_strategy;
   boost::geometry::strategy::buffer::point_circle point_strategy;
@@ -1427,9 +1525,11 @@ boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon
   BoostMultiPolygon polygons;
   polygons.push_back(*boostPolygon1);
 
+  BoostMultiPolygon buffered;
   BoostMultiPolygon result;
 
-  boost::geometry::buffer(polygons, result, distance_strategy, side_strategy, join_strategy, end_strategy, point_strategy);
+  boost::geometry::buffer(polygons, buffered, distance_strategy, side_strategy, join_strategy, end_strategy, point_strategy);
+  boost::geometry::simplify(buffered, result, 0.0005);
 
   std::vector<Point3d> vertices = verticesFromBoostPolygon(result[0], allPoints, tol);
   return vertices;
@@ -1448,14 +1548,17 @@ boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std:
     boostPolygons.push_back(boostPolygon.get());
   }
 
+  const double miterLimit = 15;
   boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
-  boost::geometry::strategy::buffer::join_miter join_strategy;
+  boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit);
   boost::geometry::strategy::buffer::end_flat end_strategy;
   boost::geometry::strategy::buffer::side_straight side_strategy;
   boost::geometry::strategy::buffer::point_circle point_strategy;
 
+  BoostMultiPolygon offset;
   BoostMultiPolygon result;
-  boost::geometry::buffer(boostPolygons, result, distance_strategy, side_strategy, join_strategy, end_strategy, point_strategy);
+  boost::geometry::buffer(boostPolygons, offset, distance_strategy, side_strategy, join_strategy, end_strategy, point_strategy);
+  boost::geometry::simplify(offset, result, 0.0005);
 
   std::vector<Point3dVector> results;
   for (const auto& boostPolygon : result) {
