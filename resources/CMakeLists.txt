@@ -71,7 +71,7 @@ set(utilities_resources_src
   utilities/Geometry/issue-4222.json
   utilities/Geometry/issue-4312.json
   utilities/Geometry/issue-4203.json
-  utilities/geometry/issue-4488.json
+  utilities/Geometry/issue-4488.json
   utilities/Geometry/issue-4670.json
   utilities/Geometry/issue-4313.json
   utilities/Geometry/floorplan_mcve.json
