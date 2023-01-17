@@ -125,7 +125,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_TRUE(vrf.setInitialHeatRecoveryHeatingEnergyFraction(43));
   EXPECT_TRUE(vrf.setHeatRecoveryHeatingEnergyTimeConstant(44));
   EXPECT_TRUE(vrf.setCompressorMaximumDeltaPressure(45));
-  EXPECT_TRUE(vrf.setCompressorInverterEfficiency(46));
+  EXPECT_TRUE(vrf.setCompressorInverterEfficiency(0.5));
   EXPECT_TRUE(vrf.setCompressorEvaporativeCapacityCorrectionFactor(47));
 
   CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve1(model);
@@ -153,12 +153,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR).size());
   EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).size());
   EXPECT_EQ(19u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
   EXPECT_EQ(5u, workspace.getObjectsByType(IddObjectType::Curve_Cubic).size());
 
-  IdfObject idf_vrf = workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl)[0];
+  IdfObject idf_vrf = workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR)[0];
 
   EXPECT_EQ(scheduleConstant.nameString(),
             idf_vrf.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilityScheduleName, false).get());
@@ -344,7 +344,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
     idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatRecoveryHeatingEnergyTimeConstant, false).get());
   EXPECT_EQ(45,
             idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressormaximumdeltaPressure, false).get());
-  EXPECT_EQ(46,
+  EXPECT_EQ(0.5,
             idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::CompressorInverterEfficiency, false).get());
   EXPECT_EQ(
     47,

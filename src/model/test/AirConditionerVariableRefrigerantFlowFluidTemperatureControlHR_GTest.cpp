@@ -181,7 +181,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   CurveCubic curve2(model);
   EXPECT_TRUE(vrf.setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(curve2));
   EXPECT_TRUE(vrf.setDiameterofMainPipeforSuctionGas(23));
-  EXPECT_TRUE(vrf.setDiameterofMainPipeforDischargeGas(34));
+  EXPECT_TRUE(vrf.setDiameterofMainPipeforDischargeGas(24));
   EXPECT_TRUE(vrf.setLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(25));
   EXPECT_TRUE(vrf.setEquivalentLengthofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(26));
   EXPECT_TRUE(vrf.setHeightDifferenceBetweenOutdoorUnitandIndoorUnits(27));
@@ -207,7 +207,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_TRUE(vrf.setInitialHeatRecoveryHeatingEnergyFraction(43));
   EXPECT_TRUE(vrf.setHeatRecoveryHeatingEnergyTimeConstant(44));
   EXPECT_TRUE(vrf.setCompressorMaximumDeltaPressure(45));
-  EXPECT_TRUE(vrf.setCompressorInverterEfficiency(46));
+  EXPECT_TRUE(vrf.setCompressorInverterEfficiency(0.5));
   EXPECT_TRUE(vrf.setCompressorEvaporativeCapacityCorrectionFactor(47));
 
   Schedule schedule = vrf.availabilitySchedule();
@@ -280,7 +280,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(43, vrf.initialHeatRecoveryHeatingEnergyFraction());
   EXPECT_EQ(44, vrf.heatRecoveryHeatingEnergyTimeConstant());
   EXPECT_EQ(45, vrf.compressorMaximumDeltaPressure());
-  EXPECT_EQ(46, vrf.compressorInverterEfficiency());
+  EXPECT_EQ(0.5, vrf.compressorInverterEfficiency());
   EXPECT_EQ(47, vrf.compressorEvaporativeCapacityCorrectionFactor());
 
   vrf.autosizeRatedEvaporativeCapacity();
