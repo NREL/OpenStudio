@@ -2418,10 +2418,9 @@ namespace model {
 
             if (hasSubSurfaceMap[otherSurfaceHandle] || hasAdjacentSurfaceMap[otherSurfaceHandle]) {
 
-                auto subSurfaces = otherSurface.subSurfaces();
-                for (auto subSurface : subSurfaces)
-                {
-                  std::string subSurfaceName = subSurface.nameString();
+              auto subSurfaces = otherSurface.subSurfaces();
+              for (auto subSurface : subSurfaces) {
+                std::string subSurfaceName = subSurface.nameString();
               }
               continue;
             }

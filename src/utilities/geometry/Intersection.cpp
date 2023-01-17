@@ -192,7 +192,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   if (extraLogging) {
     shrinkExpand.push_back(resultExpand[0]);
   }
-  
+
   // Very small tolerance to remove artifacts from the inflate
   double tol1 = 0.001;
   boost::geometry::simplify(resultExpand, result, tol1);
@@ -449,7 +449,8 @@ boost::optional<BoostRing> nonIntersectingBoostRingFromVertices(const std::vecto
 }
 
 // convert a boost polygon to vertices
-std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::vector<Point3d>& allPoints, double tol, bool removeCollinear = false) {
+std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::vector<Point3d>& allPoints, double tol,
+                                              bool removeCollinear = false) {
   std::vector<Point3d> result;
   tol = 0.001;
   BoostRing outer = polygon.outer();
@@ -476,8 +477,7 @@ std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::
              "Converting polygon with " << polygon.inners().size() << " inner loops to OpenStudio vertices, inner loops ignored");
   }
 
-  if (removeCollinear)
-    result = removeCollinearLegacy(result);
+  if (removeCollinear) result = removeCollinearLegacy(result);
 
   // don't keep repeated vertices
   if (result.front() == result.back()) {
@@ -951,7 +951,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       continue;
     } else if (*testArea < tol * tol) {
       LOG_FREE(Info, "utilities.geometry.intersect",
-              "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon1);
+               "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon1);
       continue;
     }
     try {

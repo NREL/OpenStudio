@@ -1466,14 +1466,14 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4766) {
   ShiftVertices(*model1);
   model1->save(resourcesPath() / toPath("utilities/Geometry/floorplan_mcve_direct.osm"), true);
 
-  // The issue was the internal wall boundary between space 1-6 and space 1-12 so by getting the 
+  // The issue was the internal wall boundary between space 1-6 and space 1-12 so by getting the
   // total number of wall internal and external boundaries for each space and checking each internal
   // wall boundary is paired we can verify this issue is fixed
   auto space6 = model1->getConcreteModelObjectByName<Space>("Space 1-6");
   ASSERT_TRUE(space6);
   auto space12 = model1->getConcreteModelObjectByName<Space>("Space 1-12");
   ASSERT_TRUE(space12);
-  
+
   // Check the wall surfaces for space 6
   auto space6Surfaces = space6->surfaces();
   auto space6Walls = std::count_if(space6Surfaces.begin(), space6Surfaces.end(), [](const auto& s) { return s.surfaceType() == "Wall"; });
@@ -1481,8 +1481,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4766) {
   auto space6InternalWalls1 = std::count_if(space6Surfaces.begin(), space6Surfaces.end(),
                                             [](const auto& s) { return s.surfaceType() == "Wall" && s.outsideBoundaryCondition() == "Surface"; });
   EXPECT_EQ(space6InternalWalls1, 3);
-  auto space6InternalWalls2 = std::count_if(space6Surfaces.begin(), space6Surfaces.end(),
-                                            [](const auto& s) { return s.surfaceType() == "Wall" && s.adjacentSurface(); });
+  auto space6InternalWalls2 =
+    std::count_if(space6Surfaces.begin(), space6Surfaces.end(), [](const auto& s) { return s.surfaceType() == "Wall" && s.adjacentSurface(); });
   EXPECT_EQ(space6InternalWalls2, 3);
 
   // Check the wall surfaces for space 12
@@ -1490,10 +1490,10 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4766) {
   auto space12Walls = std::count_if(space12Surfaces.begin(), space12Surfaces.end(), [](const auto& s) { return s.surfaceType() == "Wall"; });
   EXPECT_EQ(space12Walls, 5);
   auto space12InternalWalls1 = std::count_if(space12Surfaces.begin(), space12Surfaces.end(),
-                                            [](const auto& s) { return s.surfaceType() == "Wall" && s.outsideBoundaryCondition() == "Surface"; });
+                                             [](const auto& s) { return s.surfaceType() == "Wall" && s.outsideBoundaryCondition() == "Surface"; });
   EXPECT_EQ(space12InternalWalls1, 2);
-  auto space12InternalWalls2 = std::count_if(space12Surfaces.begin(), space12Surfaces.end(), 
-                                            [](const auto& s) { return s.surfaceType() == "Wall" && s.adjacentSurface(); });
+  auto space12InternalWalls2 =
+    std::count_if(space12Surfaces.begin(), space12Surfaces.end(), [](const auto& s) { return s.surfaceType() == "Wall" && s.adjacentSurface(); });
   EXPECT_EQ(space12InternalWalls2, 2);
 
   CompareTwoModels(*model1, *model);
@@ -1620,7 +1620,7 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4222) {
   const auto& surfaces1 = space1->surfaces();
   nRoofs = std::count_if(surfaces1.begin(), surfaces1.end(), [](const auto& s) { return s.surfaceType() == "RoofCeiling"; });
   EXPECT_EQ(nRoofs, 3);
-  
+
   CompareTwoModels(*model1, *model);
 }
 
@@ -1784,9 +1784,9 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4776) {
 void ValidateIssue4323(Model& model) {
 
   // All floor surfaces on story 1 are "Ground", all roof/ceiling surfaces are "Surface"
-  boost::optional<BuildingStory>story1 = model.getConcreteModelObjectByName<BuildingStory>("Story 1");
+  boost::optional<BuildingStory> story1 = model.getConcreteModelObjectByName<BuildingStory>("Story 1");
   ASSERT_TRUE(story1.has_value());
-  for (const Space& space :story1->spaces()) {
+  for (const Space& space : story1->spaces()) {
     for (const Surface& surface : space.surfaces()) {
       if (surface.surfaceType() == "Floor") {
         EXPECT_EQ(surface.outsideBoundaryCondition(), "Ground") << surface.nameString();
@@ -1798,7 +1798,7 @@ void ValidateIssue4323(Model& model) {
     }
   }
 
-    // All floor surfaces on story 3 are "Surface", all roof/ceiling surfaces are "Outdoors"
+  // All floor surfaces on story 3 are "Surface", all roof/ceiling surfaces are "Outdoors"
   boost::optional<BuildingStory> story3 = model.getConcreteModelObjectByName<BuildingStory>("Story 3");
   ASSERT_TRUE(story3.has_value());
   for (const Space& space : story3->spaces()) {

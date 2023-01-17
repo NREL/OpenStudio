@@ -1105,7 +1105,8 @@ namespace model {
       if (extraLogging) {
         Point3dVectorVector tmp;
         tmp.push_back(intersection->polygon2());
-        for (auto& polygon:intersection->newPolygons2())tmp.push_back(polygon);
+        for (auto& polygon : intersection->newPolygons2())
+          tmp.push_back(polygon);
         LOG(Debug, tmp);
       }
 
@@ -1971,8 +1972,7 @@ namespace model {
                 subSurface.setConstruction(*construction);
               }
               result.push_back(subSurface);
-            }
-            catch (const std::exception&) {
+            } catch (const std::exception&) {
               LOG(Error, "Could not create sub-surface.");
             }
           }
