@@ -2349,33 +2349,39 @@ TEST_F(GeometryFixture, Offset) {
   poly1.push_back(Point3d(8, 10, 0));
   poly1.push_back(Point3d(11, 10, 0));
   poly1.push_back(Point3d(11, 7, 0));
+  Point3dVector poly2;
+  poly2.push_back(Point3d(7.5, 10.5, 0));
+  poly2.push_back(Point3d(11.5, 10.5, 0));
+  poly2.push_back(Point3d(11.5, 6.5, 0));
+  poly2.push_back(Point3d(7.5, 6.5, 0));
 
   boost::optional<std::vector<Point3d>> result1 = openstudio::buffer(poly1, 0.5, 0.01);
   ASSERT_TRUE(result1);
+  Point3dVectorVector tmp;
+  tmp.push_back(poly1);
+  tmp.push_back(*result1);
+  LOG(Debug, tmp);
+
   ASSERT_EQ(4, result1.get().size());
-  ASSERT_EQ(7.5, result1.get()[0].x());
-  ASSERT_EQ(10.5, result1.get()[0].y());
-  ASSERT_EQ(11.5, result1.get()[1].x());
-  ASSERT_EQ(10.5, result1.get()[1].y());
-  ASSERT_EQ(11.5, result1.get()[2].x());
-  ASSERT_EQ(6.5, result1.get()[2].y());
-  ASSERT_EQ(7.5, result1.get()[3].x());
-  ASSERT_EQ(6.5, result1.get()[3].y());
+  EXPECT_TRUE(circularEqual(poly2, *result1));
 
   // Two shapes, a triangle and a rectangle. when offset will combine into 1 shape
   // with 8 vertices
-  Point3dVector poly2;
-  poly2.push_back(Point3d(5, 5, 0));
-  poly2.push_back(Point3d(7, 8, 0));
-  poly2.push_back(Point3d(9, 5, 0));
+  Point3dVector poly3;
+  poly3.push_back(Point3d(5, 5, 0));
+  poly3.push_back(Point3d(7, 8, 0));
+  poly3.push_back(Point3d(9, 5, 0));
 
   std::vector<Point3dVector> polygons;
   polygons.push_back(poly1);
-  polygons.push_back(poly2);
+  polygons.push_back(poly3);
 
   boost::optional<std::vector<Point3dVector>> result3 = openstudio::buffer(polygons, 0.5, 0.01);
   ASSERT_TRUE(result3);
   ASSERT_EQ(1, result3->size());
+  polygons.push_back(result3->begin()[0]);
+  LOG(Debug, polygons);
+
   Point3dVector resultPoly = result3.get().front();
   ASSERT_EQ(8, resultPoly.size());
   boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result3, -0.5, 0.01);

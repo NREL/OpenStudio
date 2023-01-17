@@ -853,8 +853,8 @@ TEST_F(ModelFixture, SkylightPattern_PerimCore) {
   vertices.clear();
   vertices.push_back(Point3d(30, 0, 0));
   vertices.push_back(Point3d(30, 20, 0));
-  vertices.push_back(Point3d(5, 15, 0));
-  vertices.push_back(Point3d(5, 5, 0));
+  vertices.push_back(Point3d(15, 15, 0));
+  vertices.push_back(Point3d(15, 5, 0));
   Surface roofEast(vertices, model);
   roofEast.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofEast.surfaceType());
