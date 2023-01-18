@@ -1017,7 +1017,7 @@ namespace model {
     Schedule schedule = model.alwaysOnDiscreteSchedule();
     ok = setAvailabilitySchedule(schedule);
     OS_ASSERT(ok);
-    ok = setRefrigerantType("R410A");
+    ok = setRefrigerantType("R410a");
     OS_ASSERT(ok);
     ok = setRatedEvaporativeCapacity(40000);
     OS_ASSERT(ok);

@@ -78,7 +78,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
   EXPECT_EQ(alwaysOn, vrf.availabilitySchedule());
   EXPECT_EQ(0u, vrf.terminals().size());
-  EXPECT_EQ("R410A", vrf.refrigerantType());
+  EXPECT_EQ("R410a", vrf.refrigerantType());
   ASSERT_TRUE(vrf.ratedEvaporativeCapacity());
   EXPECT_EQ(40000, vrf.ratedEvaporativeCapacity().get());
   EXPECT_FALSE(vrf.isRatedEvaporativeCapacityAutosized());
