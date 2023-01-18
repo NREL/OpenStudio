@@ -103,7 +103,7 @@ inline bool has_self_intersections(Geometry const& geometry, bool throw_on_self_
 // Some operators for Boost data types that are useful for extra logging
 std::ostream& operator<<(std::ostream& os, const BoostRing& boostRing) {
   os << "[";
-  for (int i = 0; i < boostRing.size(); i++) {
+  for (unsigned int i = 0; i < boostRing.size(); i++) {
     os << "{";
     os << "\"X\":" << boostRing[i].x() << ",";
     os << "\"Y\":" << boostRing[i].y() << ",";
@@ -176,19 +176,23 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   // cppcheck-suppress constStatement
   BoostMultiPolygon result;
   // Used for extra logging
+  // cppcheck-suppress constStatement
   BoostMultiPolygon shrinkExpand;
+  // cppcheck-suppress knownConditionTrueFalse
   if (extraLogging) {
     shrinkExpand.push_back(polygon);
   }
 
   // Shrink the polygon
   boost::geometry::buffer(polygon, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
+  // cppcheck-suppress knownConditionTrueFalse
   if (extraLogging) {
     shrinkExpand.push_back(resultShrink[0]);
   }
 
   // Inflate the polygon
   boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
+  // cppcheck-suppress knownConditionTrueFalse
   if (extraLogging) {
     shrinkExpand.push_back(resultExpand[0]);
   }
@@ -196,6 +200,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   // Very small tolerance to remove artifacts from the inflate
   double tol1 = 0.001;
   boost::geometry::simplify(resultExpand, result, tol1);
+  // cppcheck-suppress knownConditionTrueFalse
   if (extraLogging) {
     shrinkExpand.push_back(result[0]);
     LOG_FREE(Debug, "Shrink/Expand", shrinkExpand);
@@ -1039,6 +1044,7 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
 
   // Remove the holes and spikes and convert back to our data types
   for (const BoostPolygon& boostPolygon : boostPolygons) {
+    // cppcheck-suppress constStatement
     BoostPolygon removedSpikes = removeSpikes(boostPolygon);
     std::vector<BoostPolygon> removedHoles = removeHoles(removedSpikes);
     for (const BoostPolygon& removedHole : removedHoles) {

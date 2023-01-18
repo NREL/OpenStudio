@@ -533,16 +533,11 @@ namespace model {
           return;
         }
 
-        // We need the face to be oriented anti-clockwise to guarantee that wall
-        // surfaces are generated correctly. If the orientation is reversed then
-        // we will reverse the sense of the edge when extracting vertices
-        bool reversed = outwardNormal->z() < 0;
-
         // Construct the vertices for the lower face
         createFloorSurface(osSpace, faceVertices, minZ, openToBelow);
         createRoofSurface(osSpace, faceVertices, maxZ);
 
-        for (int i = 0; i < faceVertices.size(); i++) {
+        for (unsigned int i = 0; i < faceVertices.size(); i++) {
           const Point3d& p1 = faceVertices[i];
           const Point3d& p2 = faceVertices[(i + 1) % faceVertices.size()];
           createWallSurface(osSpace, fsSpace, p1, p2, minZ, maxZ, typeOfSpace == SpaceTypeEnum::ABOVEFLOOR);
