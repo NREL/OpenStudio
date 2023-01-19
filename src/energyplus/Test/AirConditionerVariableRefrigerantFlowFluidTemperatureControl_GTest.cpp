@@ -45,10 +45,10 @@
 #include "../../model/CurveCubic_Impl.hpp"
 #include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
-#include "../../model/CoilCoolingDXVariableRefrigerantFlow.hpp"
-#include "../../model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
-#include "../../model/CoilHeatingDXVariableRefrigerantFlow.hpp"
-#include "../../model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../../model/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "../../model/FanVariableVolume.hpp"
 #include "../../model/FanVariableVolume_Impl.hpp"
 
@@ -131,8 +131,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_TRUE(vrf.addLoadingIndex(2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2, compressorPowerMultiplierFunctionofTemperatureCurve2));
   EXPECT_TRUE(vrf.addLoadingIndex(3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3, compressorPowerMultiplierFunctionofTemperatureCurve3));
 
-  CoilCoolingDXVariableRefrigerantFlow coolingCoil(model);
-  CoilHeatingDXVariableRefrigerantFlow heatingCoil(model);
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil(model);
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl heatingCoil(model);
   FanVariableVolume fan(model);
   ZoneHVACTerminalUnitVariableRefrigerantFlow term1(model, coolingCoil, heatingCoil, fan);
 
@@ -145,8 +145,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).size());
   EXPECT_EQ(19u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
   EXPECT_EQ(5u, workspace.getObjectsByType(IddObjectType::Curve_Cubic).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Fan_VariableVolume).size());
 
   IdfObject idf_vrf = workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl)[0];

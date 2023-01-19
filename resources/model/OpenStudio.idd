@@ -18240,6 +18240,57 @@ OS:Coil:Cooling:DX:VariableRefrigerantFlow,
        \type object-list
        \object-list ConnectionNames
 
+OS:Coil:Cooling:DX:VariableRefrigerantFlow:FluidTemperatureControl,
+       \memo This is a key object in the new physics based VRF model applicable for Fluid
+       \memo Temperature Control. It describes the the indoor unit coil of the system at cooling mode.
+       \memo Used with ZoneHVAC:TerminalUnit:VariableRefrigerantFlow.
+       \memo Outdoor unit is modeled separately, see AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl
+       \memo or AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference CoolingCoilsDXVarRefrigFlowFluidTemperatureControl
+  A3,  \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+       \note Enter the name of a schedule that defines the availability of the coil
+       \note Schedule values of 0 denote the unit is off. All other values denote the unit is available
+       \note If this field is left blank, the unit is available the entire simulation
+  A4,  \field Coil Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note the inlet node to the coil
+  A5,  \field Coil Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note the outlet node to the coil
+  N1,  \field Rated Total Cooling Capacity
+       \required-field
+       \autosizable
+       \type real
+       \units W
+       \minimum> 0.0
+       \note Supply air fan heat is not included
+  N2,  \field Rated Sensible Heat Ratio
+       \required-field
+       \autosizable
+       \type real
+       \minimum> 0.0
+       \note Supply air fan heat is not included
+  N3,  \field Indoor Unit Reference Superheating
+       \type real
+       \units deltaC
+       \minimum 0.0
+       \required-field
+  A6;  \field Indoor Unit Evaporating Temperature Function of Superheating Curve
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
+
 OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
         \min-fields 10
    A1 , \field Handle
@@ -18771,6 +18822,52 @@ OS:Coil:Heating:DX:VariableRefrigerantFlow,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
+
+OS:Coil:Heating:DX:VariableRefrigerantFlow:FluidTemperatureControl,
+       \memo This is a key object in the new physics based VRF model applicable for Fluid
+       \memo Temperature Control. It describes the the indoor unit coil of the system at heating mode.
+       \memo Used with ZoneHVAC:TerminalUnit:VariableRefrigerantFlow.
+       \memo Outdoor unit is modeled separately, see AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl
+       \memo or AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference HeatingCoilsDXVarRefrigFlowFluidTemperatureControl
+  A3,  \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+       \note Enter the name of a schedule that defines the availability of the coil
+       \note Schedule values of 0 denote the unit is off. All other values denote the unit is available
+       \note If this field is left blank, the unit is available the entire simulation
+  A4,  \field Coil Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note the inlet node to the coil
+  A5,  \field Coil Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note the outlet node to the coil
+  N1,  \field Rated Total Heating Capacity
+       \required-field
+       \autosizable
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \note Supply air fan heat is not included
+  N2,  \field Indoor Unit Reference Subcooling
+       \type real
+       \units deltaC
+       \minimum 0.0
+       \required-field
+  A6;  \field Indoor Unit Condensing Temperature Function of Subcooling Curve
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
 
 OS:Coil:Heating:Electric,
        \min-fields 1
