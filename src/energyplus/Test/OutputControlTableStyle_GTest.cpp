@@ -82,7 +82,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlTableStyle) {
     EXPECT_EQ("InchPound", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion, false).get());
   }
 
-  // Not there, m_excludeHTMLOutputReport = True
+  // Not there, m_forwardTranslatorOptions.excludeHTMLOutputReport() = True
   {
     Model m;
     ForwardTranslator ft;

@@ -57,7 +57,7 @@ namespace energyplus {
     boost::optional<ModelObject> sourceZoneOrSpace = modelObject.sourceZoneOrSpace();
 
     auto getParentObjectName = [this](const ModelObject& mo) {
-      if (!m_excludeSpaceTranslation) {
+      if (!m_forwardTranslatorOptions.excludeSpaceTranslation()) {
         return mo.nameString();
       }
 
@@ -73,7 +73,7 @@ namespace energyplus {
     };
 
     if (!sourceZoneOrSpace) {
-      if (m_excludeSpaceTranslation && modelObject.space()) {
+      if (m_forwardTranslatorOptions.excludeSpaceTranslation() && modelObject.space()) {
         LOG(Warn, modelObject.briefDescription()
                     << " doesn't have a Source Zone or Space, it will not be translated. As you were using Space-Level ZoneMixing, and you are not "
                        "translating to Spaces, it's possible it was pointing to two spaces inside the same zone");
@@ -87,10 +87,10 @@ namespace energyplus {
       // This isn't going to happen, because zm.setSourceSpace(newSpace) in ThermalZone::combineSpaces will be rejected
       // Let's play it safe though
       LOG(Warn, modelObject.briefDescription() << " has the same Receiving and Source Zone or Space, it will not be translated.");
-      if (!m_excludeSpaceTranslation) {
-        // We don't allow this at model time, the only reason we expect this to happen is when m_excludeSpaceTranslation is true, we call
-        // combineSpaces, and if the user has a ZoneMixing pointing to two spaces from the same ThermalZone, you end up with matching Receiving and
-        // Source Spaces
+      if (!m_forwardTranslatorOptions.excludeSpaceTranslation()) {
+        // We don't allow this at model time, the only reason we expect this to happen is when m_forwardTranslatorOptions.excludeSpaceTranslation()
+        // is true, we call combineSpaces, and if the user has a ZoneMixing pointing to two spaces from the same ThermalZone,
+        // you end up with matching Receiving and Source Spaces
         OS_ASSERT(false);
       }
       return boost::none;
