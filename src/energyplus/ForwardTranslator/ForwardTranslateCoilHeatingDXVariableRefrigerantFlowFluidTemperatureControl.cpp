@@ -88,8 +88,7 @@ namespace energyplus {
                         indoorUnitReferenceSubcooling);
 
     // Indoor Unit Condensing Temperature Function of Subcooling Curve Name: Required Object
-    UnivariateFunctions indoorUnitCondensingTemperatureFunctionofSubcoolingCurve =
-      modelObject.indoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    Curve indoorUnitCondensingTemperatureFunctionofSubcoolingCurve = modelObject.indoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
     if (boost::optional<IdfObject> _owo = translateAndMapModelObject(indoorUnitCondensingTemperatureFunctionofSubcoolingCurve)) {
       idfObject.setString(
         Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitCondensingTemperatureFunctionofSubcoolingCurveName,
