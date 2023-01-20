@@ -39,8 +39,6 @@ namespace model {
 
   class HVACComponent;
   class Schedule;
-  class CoilHeatingDXVariableRefrigerantFlow;
-  class CoilCoolingDXVariableRefrigerantFlow;
   class ThermalZone;
 
   namespace detail {
@@ -128,9 +126,9 @@ namespace model {
 
       boost::optional<HVACComponent> supplyAirFan() const;
 
-      boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
+      boost::optional<HVACComponent> coolingCoil() const;
 
-      boost::optional<CoilHeatingDXVariableRefrigerantFlow> heatingCoil() const;
+      boost::optional<HVACComponent> heatingCoil() const;
 
       double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
 
@@ -227,9 +225,9 @@ namespace model {
       bool setSupplyAirFan(const HVACComponent& component);
       void resetSupplyAirFan();
 
-      bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow& component);
+      bool setCoolingCoil(const HVACComponent& component);
 
-      bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow& component);
+      bool setHeatingCoil(const HVACComponent& component);
 
       //@}
      protected:

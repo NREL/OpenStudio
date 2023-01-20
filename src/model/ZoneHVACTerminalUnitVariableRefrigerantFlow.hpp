@@ -41,6 +41,8 @@ namespace model {
   class Schedule;
   class CoilHeatingDXVariableRefrigerantFlow;
   class CoilCoolingDXVariableRefrigerantFlow;
+/*   class CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl;
+  class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl; */
   class ThermalZone;
 
   namespace detail {
@@ -58,6 +60,9 @@ namespace model {
 
     explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, const CoilCoolingDXVariableRefrigerantFlow& coolingCoil,
                                                          const CoilHeatingDXVariableRefrigerantFlow& heatingCoil, const HVACComponent& fan);
+
+/*     explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& coolingCoil,
+                                                         const CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& heatingCoil, const HVACComponent& fan); */
 
     virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() {}
 
@@ -143,13 +148,13 @@ namespace model {
     // bool setSupplyAirFan(const HVACComponent& fan);
     // void resetSupplyAirFan();
 
-    boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
+    boost::optional<HVACComponent> coolingCoil() const;
 
-    bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow& coil);
+    bool setCoolingCoil(const HVACComponent& coil);
 
-    boost::optional<CoilHeatingDXVariableRefrigerantFlow> heatingCoil() const;
+    boost::optional<HVACComponent> heatingCoil() const;
 
-    bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow& coil);
+    bool setHeatingCoil(const HVACComponent& coil);
 
     double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
 
