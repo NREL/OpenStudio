@@ -254,11 +254,11 @@ namespace model {
     ok = setIndoorUnitReferenceSuperheating(5.0);
     OS_ASSERT(ok);
     CurveQuadratic indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(model);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient1Constant(0);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient2x(0.843);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient3xPOW2(0);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMinimumValueofx(0);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMaximumValueofx(15);
+    indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient1Constant(0);
+    indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient2x(0.843);
+    indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient3xPOW2(0);
+    indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMinimumValueofx(0);
+    indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMaximumValueofx(15);
     ok = setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve);
     OS_ASSERT(ok);
   }
@@ -269,14 +269,6 @@ namespace model {
 
   Schedule CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::availabilitySchedule() const {
     return getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->availabilitySchedule();
-  }
-
-  boost::optional<Connection> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::coilAirInletNode() const {
-    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->coilAirInletNode();
-  }
-
-  boost::optional<Connection> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::coilAirOutletNode() const {
-    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->coilAirOutletNode();
   }
 
   boost::optional<double> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::ratedTotalCoolingCapacity() const {
@@ -314,22 +306,6 @@ namespace model {
 
   bool CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setAvailabilitySchedule(schedule);
-  }
-
-  bool CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::setCoilAirInletNode(const Connection& connection) {
-    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setCoilAirInletNode(connection);
-  }
-
-  void CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::resetCoilAirInletNode() {
-    getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->resetCoilAirInletNode();
-  }
-
-  bool CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::setCoilAirOutletNode(const Connection& connection) {
-    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setCoilAirOutletNode(connection);
-  }
-
-  void CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::resetCoilAirOutletNode() {
-    getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->resetCoilAirOutletNode();
   }
 
   bool CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity) {
