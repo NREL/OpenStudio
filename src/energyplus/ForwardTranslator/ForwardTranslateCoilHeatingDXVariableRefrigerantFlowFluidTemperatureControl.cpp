@@ -52,70 +52,75 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl( model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject )
-{
-  boost::optional<IdfObject> result;
-  boost::optional<WorkspaceObject> _wo;
-  boost::optional<ModelObject> _mo;
+  boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(
+    model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject) {
+    boost::optional<IdfObject> result;
+    boost::optional<WorkspaceObject> _wo;
+    boost::optional<ModelObject> _mo;
 
-  // Instantiate an IdfObject of the class to store the values
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl, modelObject);
-  // If it doesn't have a name, or if you aren't sure you are going to want to return it
-  // IdfObject idfObject( openstudio::IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl );
-  // m_idfObjects.push_back(idfObject);
+    // Instantiate an IdfObject of the class to store the values
+    IdfObject idfObject =
+      createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl, modelObject);
+    // If it doesn't have a name, or if you aren't sure you are going to want to return it
+    // IdfObject idfObject( openstudio::IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl );
+    // m_idfObjects.push_back(idfObject);
 
-  // TODO: Note JM 2018-10-17
-  // You are responsible for implementing any additional logic based on choice fields, etc.
-  // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    // TODO: Note JM 2018-10-17
+    // You are responsible for implementing any additional logic based on choice fields, etc.
+    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
-  // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-  // But in some cases, you'll want to handle failure without pushing to the map
-  // Name
-  if (boost::optional<std::string> moName = modelObject.name()) {
-    idfObject.setName(*moName);
-  }
-
-  // Availability Schedule: Optional Object
-  if (boost::optional<Schedule> _availabilitySchedule = modelObject.availabilitySchedule()) {
-    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_availabilitySchedule.get()) )  {
-      idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule, _owo->nameString());
+    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
+    // But in some cases, you'll want to handle failure without pushing to the map
+    // Name
+    if (boost::optional<std::string> moName = modelObject.name()) {
+      idfObject.setName(*moName);
     }
-  }
 
-  // Coil Air Inlet Node: Required Node
-  Node coilAirInletNode = modelObject.coilAirInletNode();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(coilAirInletNode) )  {
-    idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode, _owo->nameString());
-  }
-
-  // Coil Air Outlet Node: Required Node
-  Node coilAirOutletNode = modelObject.coilAirOutletNode();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(coilAirOutletNode) )  {
-    idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode, _owo->nameString());
-  }
-
-  if (modelObject.isRatedTotalHeatingCapacityAutosized()) {
-    idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedTotalHeatingCapacity, "Autosize");
-  } else {
-    // Rated Total Heating Capacity: boost::optional<double>
-    if (boost::optional<double> _ratedTotalHeatingCapacity = modelObject.ratedTotalHeatingCapacity()) {
-      idfObject.setDouble(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedTotalHeatingCapacity, _ratedTotalHeatingCapacity.get());
+    // Availability Schedule: Optional Object
+    if (boost::optional<Schedule> _availabilitySchedule = modelObject.availabilitySchedule()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_availabilitySchedule.get())) {
+        idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule, _owo->nameString());
+      }
     }
-  }
 
-  // Indoor Unit Reference Subcooling: Optional Double
-  double indoorUnitReferenceSubcooling = modelObject.indoorUnitReferenceSubcooling();
-  idfObject.setDouble(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitReferenceSubcooling, indoorUnitReferenceSubcooling);
+    // Coil Air Inlet Node: Required Node
+    Node coilAirInletNode = modelObject.coilAirInletNode();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(coilAirInletNode)) {
+      idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode, _owo->nameString());
+    }
 
+    // Coil Air Outlet Node: Required Node
+    Node coilAirOutletNode = modelObject.coilAirOutletNode();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(coilAirOutletNode)) {
+      idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode, _owo->nameString());
+    }
 
-  // Indoor Unit Condensing Temperature Function of Subcooling Curve Name: Required Object
-  UnivariateFunctions indoorUnitCondensingTemperatureFunctionofSubcoolingCurve = modelObject.indoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(indoorUnitCondensingTemperatureFunctionofSubcoolingCurve) )  {
-    idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitCondensingTemperatureFunctionofSubcoolingCurveName, _owo->nameString());
-  }
+    if (modelObject.isRatedTotalHeatingCapacityAutosized()) {
+      idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedTotalHeatingCapacity, "Autosize");
+    } else {
+      // Rated Total Heating Capacity: boost::optional<double>
+      if (boost::optional<double> _ratedTotalHeatingCapacity = modelObject.ratedTotalHeatingCapacity()) {
+        idfObject.setDouble(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedTotalHeatingCapacity,
+                            _ratedTotalHeatingCapacity.get());
+      }
+    }
 
-  return idfObject;
-} // End of translate function
+    // Indoor Unit Reference Subcooling: Optional Double
+    double indoorUnitReferenceSubcooling = modelObject.indoorUnitReferenceSubcooling();
+    idfObject.setDouble(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitReferenceSubcooling,
+                        indoorUnitReferenceSubcooling);
 
-} // end namespace energyplus
-} // end namespace openstudio
+    // Indoor Unit Condensing Temperature Function of Subcooling Curve Name: Required Object
+    UnivariateFunctions indoorUnitCondensingTemperatureFunctionofSubcoolingCurve =
+      modelObject.indoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(indoorUnitCondensingTemperatureFunctionofSubcoolingCurve)) {
+      idfObject.setString(
+        Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitCondensingTemperatureFunctionofSubcoolingCurveName,
+        _owo->nameString());
+    }
+
+    return idfObject;
+  }  // End of translate function
+
+}  // end namespace energyplus
+}  // end namespace openstudio

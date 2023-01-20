@@ -131,7 +131,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_TRUE(vrf.addLoadingIndex(2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2, compressorPowerMultiplierFunctionofTemperatureCurve2));
   EXPECT_TRUE(vrf.addLoadingIndex(3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3, compressorPowerMultiplierFunctionofTemperatureCurve3));
 
-/*   CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil(model);
+  /*   CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil(model);
   CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl heatingCoil(model);
   FanVariableVolume fan(model);
   ZoneHVACTerminalUnitVariableRefrigerantFlow term(model, coolingCoil, heatingCoil, fan); */
@@ -146,7 +146,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).size());
   EXPECT_EQ(19u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
   EXPECT_EQ(5u, workspace.getObjectsByType(IddObjectType::Curve_Cubic).size());
-/*   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
+  /*   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl).size()); */
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Fan_VariableVolume).size());
 
@@ -296,7 +296,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
 
   IdfObject idf_term = workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow)[0];
 
-/*   EXPECT_EQ("DrawThrough", idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement, false).get());
+  /*   EXPECT_EQ("DrawThrough", idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement, false).get());
   EXPECT_EQ("Fan:VariableVolume", idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectType, false).get());
   EXPECT_EQ(fan.nameString(), idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName, false).get()); */
 }

@@ -37,120 +37,122 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Schedule;
-class Connection;
-class Connection;
-class UnivariateFunctions;
+  // TODO: Check the following class names against object getters and setters.
+  class Schedule;
+  class Connection;
+  class Connection;
+  class UnivariateFunctions;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl;
+    class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl is a HVACComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:VariableRefrigerantFlow:FluidTemperatureControl'. */
-class MODEL_API CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl : public HVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl is a HVACComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:VariableRefrigerantFlow:FluidTemperatureControl'. */
+  class MODEL_API CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl : public HVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(const Model& model);
+    explicit CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(const Model& model);
 
-  virtual ~CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl() = default;
+    virtual ~CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl() = default;
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
-  Schedule availabilitySchedule() const;
+    // TODO: Check return type. From object lists, some candidates are: Schedule.
+    Schedule availabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> coilAirInletNode() const;
+    // TODO: Check return type. From object lists, some candidates are: Connection.
+    boost::optional<Connection> coilAirInletNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> coilAirOutletNode() const;
+    // TODO: Check return type. From object lists, some candidates are: Connection.
+    boost::optional<Connection> coilAirOutletNode() const;
 
-  boost::optional<double> ratedTotalCoolingCapacity() const;
+    boost::optional<double> ratedTotalCoolingCapacity() const;
 
-  bool isRatedTotalCoolingCapacityAutosized() const;
+    bool isRatedTotalCoolingCapacityAutosized() const;
 
-  boost::optional <double> autosizedRatedTotalCoolingCapacity();
+    boost::optional<double> autosizedRatedTotalCoolingCapacity();
 
-  boost::optional<double> ratedSensibleHeatRatio() const;
+    boost::optional<double> ratedSensibleHeatRatio() const;
 
-  bool isRatedSensibleHeatRatioAutosized() const;
+    bool isRatedSensibleHeatRatioAutosized() const;
 
-  boost::optional <double> autosizedRatedSensibleHeatRatio();
+    boost::optional<double> autosizedRatedSensibleHeatRatio();
 
-  double indoorUnitReferenceSuperheating() const;
+    double indoorUnitReferenceSuperheating() const;
 
-  // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-  UnivariateFunctions indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
+    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
+    UnivariateFunctions indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
-  bool setAvailabilitySchedule(Schedule& schedule);
+    // TODO: Check argument type. From object lists, some candidates are: Schedule.
+    // Note Schedules are passed by reference, not const reference.
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setCoilAirInletNode(const Connection& connection);
+    // TODO: Check argument type. From object lists, some candidates are: Connection.
+    bool setCoilAirInletNode(const Connection& connection);
 
-  void resetCoilAirInletNode();
+    void resetCoilAirInletNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setCoilAirOutletNode(const Connection& connection);
+    // TODO: Check argument type. From object lists, some candidates are: Connection.
+    bool setCoilAirOutletNode(const Connection& connection);
 
-  void resetCoilAirOutletNode();
+    void resetCoilAirOutletNode();
 
-  bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
+    bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
 
-  void autosizeRatedTotalCoolingCapacity();
+    void autosizeRatedTotalCoolingCapacity();
 
-  bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
+    bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
 
-  void autosizeRatedSensibleHeatRatio();
+    void autosizeRatedSensibleHeatRatio();
 
-  bool setIndoorUnitReferenceSuperheating(double indoorUnitReferenceSuperheating);
+    bool setIndoorUnitReferenceSuperheating(double indoorUnitReferenceSuperheating);
 
-  // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-  bool setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions);
+    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
+    bool setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  using ImplType = detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl;
+    //@}
+   protected:
+    /// @cond
+    using ImplType = detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl;
 
-  explicit CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl> impl);
+    explicit CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(
+      std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl> impl);
 
-  friend class detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl");
-};
+    friend class detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl");
+  };
 
-/** \relates CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl*/
-using OptionalCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl = boost::optional<CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl>;
+  /** \relates CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl*/
+  using OptionalCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl =
+    boost::optional<CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl>;
 
-/** \relates CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl*/
-using CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControlVector = std::vector<CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl>;
+  /** \relates CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl*/
+  using CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControlVector = std::vector<CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl>;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_HPP
-
+#endif  // MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_HPP

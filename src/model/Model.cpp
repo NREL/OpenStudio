@@ -3965,6 +3965,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoStageWithHumidityControlMode);
     REGISTER_CONSTRUCTOR(CoilCoolingDXVariableRefrigerantFlow);
+    REGISTER_CONSTRUCTOR(CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl);
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantConstFlow);
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(CoilCoolingDXVariableSpeed);
@@ -3980,6 +3981,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilHeatingDXMultiSpeedStageData);
     REGISTER_CONSTRUCTOR(CoilHeatingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlow);
+    REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
     REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStage);
     REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStageStageData);
@@ -4526,6 +4528,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoStageWithHumidityControlMode);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableRefrigerantFlow);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantConstFlow);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableSpeed);
@@ -4541,6 +4544,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXMultiSpeedStageData);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlow);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStage);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStageStageData);

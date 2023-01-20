@@ -857,7 +857,7 @@ namespace model {
     }
   }
 
-/*   ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model,
+  /*   ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model,
                                                                                            const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& coolingCoil,
                                                                                            const CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& heatingCoil,
                                                                                            const HVACComponent& fan)

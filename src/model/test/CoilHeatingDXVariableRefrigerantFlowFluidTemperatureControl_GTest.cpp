@@ -60,7 +60,7 @@ TEST_F(ModelFixture, CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl
   // Availability Schedule: Required Object
   Schedule obj(m);
   EXPECT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setAvailabilitySchedule(obj));
-EXPECT_EQ(obj, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.availabilitySchedule());
+  EXPECT_EQ(obj, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.availabilitySchedule());
 
   // Coil Air Inlet Node: Optional Object
   boost::optional<Connection> obj(m);
@@ -98,6 +98,5 @@ EXPECT_EQ(obj, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.avail
   // Indoor Unit Condensing Temperature Function of Subcooling Curve: Required Object
   UnivariateFunctions obj(m);
   EXPECT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(obj));
-EXPECT_EQ(obj, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitCondensingTemperatureFunctionofSubcoolingCurve());
-
+  EXPECT_EQ(obj, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitCondensingTemperatureFunctionofSubcoolingCurve());
 }

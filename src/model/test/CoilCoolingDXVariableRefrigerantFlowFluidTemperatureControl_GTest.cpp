@@ -60,7 +60,7 @@ TEST_F(ModelFixture, CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl
   // Availability Schedule: Required Object
   Schedule obj(m);
   EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setAvailabilitySchedule(obj));
-EXPECT_EQ(obj, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.availabilitySchedule());
+  EXPECT_EQ(obj, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.availabilitySchedule());
 
   // Coil Air Inlet Node: Optional Object
   boost::optional<Connection> obj(m);
@@ -112,6 +112,5 @@ EXPECT_EQ(obj, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.avail
   // Indoor Unit Evaporating Temperature Function of Superheating Curve: Required Object
   UnivariateFunctions obj(m);
   EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(obj));
-EXPECT_EQ(obj, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve());
-
+  EXPECT_EQ(obj, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve());
 }

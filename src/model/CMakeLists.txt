@@ -335,6 +335,9 @@ set(${target_name}_src
   CoilCoolingDXVariableRefrigerantFlow.hpp
   CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
   CoilCoolingDXVariableRefrigerantFlow.cpp
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   CoilCoolingDXVariableSpeed.hpp
   CoilCoolingDXVariableSpeed_Impl.hpp
   CoilCoolingDXVariableSpeed.cpp
@@ -380,6 +383,9 @@ set(${target_name}_src
   CoilHeatingDXVariableRefrigerantFlow.hpp
   CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
   CoilHeatingDXVariableRefrigerantFlow.cpp
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   CoilHeatingElectric.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingElectric.cpp
@@ -1930,6 +1936,7 @@ set(${target_name}_test_src
   test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   test/CoilCoolingDXVariableSpeed_GTest.cpp
   test/CoilCoolingDXVariableSpeedSpeedData_GTest.cpp
+  test/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_GTest.cpp
   test/CoilCoolingFourPipeBeam_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
@@ -1944,6 +1951,7 @@ set(${target_name}_test_src
   test/CoilHeatingDXSingleSpeed_GTest.cpp
   test/CoilHeatingDXVariableSpeed_GTest.cpp
   test/CoilHeatingDXVariableSpeedSpeedData_GTest.cpp
+  test/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingElectricMultiStage_GTest.cpp
   test/CoilHeatingElectricMultiStageStageData_GTest.cpp

@@ -136,6 +136,7 @@ namespace model {
   class CoilCoolingDXTwoSpeed;
   class CoilCoolingDXTwoStageWithHumidityControlMode;
   class CoilCoolingDXVariableRefrigerantFlow;
+  class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl;
   class CoilCoolingDXVariableSpeed;
   class CoilCoolingWater;
   class CoilCoolingWaterToAirHeatPumpEquationFit;
@@ -144,6 +145,7 @@ namespace model {
   class CoilHeatingDXMultiSpeed;
   class CoilHeatingDXSingleSpeed;
   class CoilHeatingDXVariableRefrigerantFlow;
+  class CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl;
   class CoilHeatingDXVariableSpeed;
   class CoilHeatingElectric;
   class CoilHeatingElectricMultiStage;
@@ -795,6 +797,9 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlow(model::CoilCoolingDXVariableRefrigerantFlow& modelObject);
 
+    boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(
+      model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject);
+
     boost::optional<IdfObject> translateCoilCoolingDXVariableSpeed(model::CoilCoolingDXVariableSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXVariableSpeedWithoutUnitary(model::CoilCoolingDXVariableSpeed& modelObject);
@@ -815,6 +820,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilHeatingDXSingleSpeedWithoutUnitary(model::CoilHeatingDXSingleSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlow(model::CoilHeatingDXVariableRefrigerantFlow& modelObject);
+
+    boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(
+      model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingDXVariableSpeed(model::CoilHeatingDXVariableSpeed& modelObject);
 

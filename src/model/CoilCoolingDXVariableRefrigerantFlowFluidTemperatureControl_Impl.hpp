@@ -36,130 +36,126 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Schedule;
-class Connection;
-class Connection;
-class UnivariateFunctions;
+  // TODO: Check the following class names against object getters and setters.
+  class Schedule;
+  class Connection;
+  class Connection;
+  class UnivariateFunctions;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl is a HVACComponent_Impl that is the implementation class for CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.*/
-  class MODEL_API CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl : public HVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl is a HVACComponent_Impl that is the implementation class for CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.*/
+    class MODEL_API CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl : public HVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl(const IdfObject& idfObject,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle);
+      CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle);
+      CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle);
 
-    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl(const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle);
+      CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl(const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl& other,
+                                                                       Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl() {}
+      virtual ~CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    Schedule availabilitySchedule() const;
+      // TODO: Check return type. From object lists, some candidates are: Schedule.
+      Schedule availabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> coilAirInletNode() const;
+      // TODO: Check return type. From object lists, some candidates are: Connection.
+      boost::optional<Connection> coilAirInletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> coilAirOutletNode() const;
+      // TODO: Check return type. From object lists, some candidates are: Connection.
+      boost::optional<Connection> coilAirOutletNode() const;
 
-    boost::optional<double> ratedTotalCoolingCapacity() const;
+      boost::optional<double> ratedTotalCoolingCapacity() const;
 
-    bool isRatedTotalCoolingCapacityAutosized() const;
+      bool isRatedTotalCoolingCapacityAutosized() const;
 
-    boost::optional <double> autosizedRatedTotalCoolingCapacity();
+      boost::optional<double> autosizedRatedTotalCoolingCapacity();
 
-    boost::optional<double> ratedSensibleHeatRatio() const;
+      boost::optional<double> ratedSensibleHeatRatio() const;
 
-    bool isRatedSensibleHeatRatioAutosized() const;
+      bool isRatedSensibleHeatRatioAutosized() const;
 
-    boost::optional <double> autosizedRatedSensibleHeatRatio();
+      boost::optional<double> autosizedRatedSensibleHeatRatio();
 
-    double indoorUnitReferenceSuperheating() const;
+      double indoorUnitReferenceSuperheating() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
+      // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
+      UnivariateFunctions indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
-    bool setAvailabilitySchedule(Schedule& schedule);
+      // TODO: Check argument type. From object lists, some candidates are: Schedule.
+      // Note Schedules are passed by reference, not const reference.
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setCoilAirInletNode(const Connection& connection);
+      // TODO: Check argument type. From object lists, some candidates are: Connection.
+      bool setCoilAirInletNode(const Connection& connection);
 
-    void resetCoilAirInletNode();
+      void resetCoilAirInletNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setCoilAirOutletNode(const Connection& connection);
+      // TODO: Check argument type. From object lists, some candidates are: Connection.
+      bool setCoilAirOutletNode(const Connection& connection);
 
-    void resetCoilAirOutletNode();
+      void resetCoilAirOutletNode();
 
-    bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
+      bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
 
-    void autosizeRatedTotalCoolingCapacity();
+      void autosizeRatedTotalCoolingCapacity();
 
-    bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
+      bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
 
-    void autosizeRatedSensibleHeatRatio();
+      void autosizeRatedSensibleHeatRatio();
 
-    bool setIndoorUnitReferenceSuperheating(double indoorUnitReferenceSuperheating);
+      bool setIndoorUnitReferenceSuperheating(double indoorUnitReferenceSuperheating);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions);
+      // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
+      bool setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const UnivariateFunctions& univariateFunctions);
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<UnivariateFunctions> optionalIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
-  };
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<UnivariateFunctions> optionalIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_IMPL_HPP
-
+#endif  // MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROL_IMPL_HPP

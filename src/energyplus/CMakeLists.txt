@@ -77,6 +77,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoStageWithHumidityControlMode.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlow.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWater.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWaterToAirHeatPumpEquationFit.cpp
@@ -85,6 +86,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXVariableRefrigerantFlow.cpp
+  ForwardTranslator/ForwardTranslateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingElectric.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingElectricMultiStage.cpp
