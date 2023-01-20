@@ -38,55 +38,26 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_GettersSetters) {
-  Model m;
-  // TODO: Check regular Ctor arguments
-  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl = m.getUniqueModelObject<CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl>();
+TEST_F(ModelFixture, CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setName("My CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl");
+  ASSERT_EXIT(
+    {
+      Model model;
 
-  // Availability Schedule: Required Object
-  Schedule obj(m);
-  EXPECT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setAvailabilitySchedule(obj));
-  EXPECT_EQ(obj, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.availabilitySchedule());
+      CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl coil(model);
 
-  // Coil Air Inlet Node: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setCoilAirInletNode(obj));
-  ASSERT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.coilAirInletNode());
-  EXPECT_EQ(obj, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.coilAirInletNode().get());
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
-  // Coil Air Outlet Node: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setCoilAirOutletNode(obj));
-  ASSERT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.coilAirOutletNode());
-  EXPECT_EQ(obj, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.coilAirOutletNode().get());
+  Model model;
 
-  // Rated Total Heating Capacity: Required Double
-  // Autosize
-  coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.autosizeRatedTotalHeatingCapacity();
-  EXPECT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.isRatedTotalHeatingCapacityAutosized());
-  // Set
-  EXPECT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setRatedTotalHeatingCapacity(0.6));
-  ASSERT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.ratedTotalHeatingCapacity());
-  EXPECT_EQ(0.6, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.ratedTotalHeatingCapacity().get());
-  // Bad Value
-  EXPECT_FALSE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setRatedTotalHeatingCapacity(-10.0));
-  ASSERT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.ratedTotalHeatingCapacity());
-  EXPECT_EQ(0.6, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.ratedTotalHeatingCapacity().get());
-  EXPECT_FALSE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.isRatedTotalHeatingCapacityAutosized());
-
-  // Indoor Unit Reference Subcooling: Required Double
-  EXPECT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setIndoorUnitReferenceSubcooling(0.7));
-  EXPECT_EQ(0.7, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitReferenceSubcooling());
-  // Bad Value
-  EXPECT_FALSE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setIndoorUnitReferenceSubcooling(-10.0));
-  EXPECT_EQ(0.7, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitReferenceSubcooling());
-
-  // Indoor Unit Condensing Temperature Function of Subcooling Curve: Required Object
-  UnivariateFunctions obj(m);
-  EXPECT_TRUE(coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(obj));
-  EXPECT_EQ(obj, coilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitCondensingTemperatureFunctionofSubcoolingCurve());
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl coil(model);
 }
+
+TEST_F(ModelFixture, CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_SetGetFields) {}
+
+TEST_F(ModelFixture, CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Clone) {}
+
+TEST_F(ModelFixture, CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Remove) {}

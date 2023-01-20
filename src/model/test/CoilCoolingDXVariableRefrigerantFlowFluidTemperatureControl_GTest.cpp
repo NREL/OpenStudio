@@ -38,69 +38,26 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_GettersSetters) {
-  Model m;
-  // TODO: Check regular Ctor arguments
-  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl = m.getUniqueModelObject<CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl>();
+TEST_F(ModelFixture, CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setName("My CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl");
+  ASSERT_EXIT(
+    {
+      Model model;
 
-  // Availability Schedule: Required Object
-  Schedule obj(m);
-  EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setAvailabilitySchedule(obj));
-  EXPECT_EQ(obj, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.availabilitySchedule());
+      CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coil(model);
 
-  // Coil Air Inlet Node: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setCoilAirInletNode(obj));
-  ASSERT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.coilAirInletNode());
-  EXPECT_EQ(obj, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.coilAirInletNode().get());
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
-  // Coil Air Outlet Node: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setCoilAirOutletNode(obj));
-  ASSERT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.coilAirOutletNode());
-  EXPECT_EQ(obj, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.coilAirOutletNode().get());
+  Model model;
 
-  // Rated Total Cooling Capacity: Required Double
-  // Autosize
-  coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.autosizeRatedTotalCoolingCapacity();
-  EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.isRatedTotalCoolingCapacityAutosized());
-  // Set
-  EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setRatedTotalCoolingCapacity(0.6));
-  ASSERT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.ratedTotalCoolingCapacity());
-  EXPECT_EQ(0.6, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.ratedTotalCoolingCapacity().get());
-  // Bad Value
-  EXPECT_FALSE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setRatedTotalCoolingCapacity(-10.0));
-  ASSERT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.ratedTotalCoolingCapacity());
-  EXPECT_EQ(0.6, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.ratedTotalCoolingCapacity().get());
-  EXPECT_FALSE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.isRatedTotalCoolingCapacityAutosized());
-
-  // Rated Sensible Heat Ratio: Required Double
-  // Autosize
-  coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.autosizeRatedSensibleHeatRatio();
-  EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.isRatedSensibleHeatRatioAutosized());
-  // Set
-  EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setRatedSensibleHeatRatio(0.7));
-  ASSERT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.ratedSensibleHeatRatio());
-  EXPECT_EQ(0.7, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.ratedSensibleHeatRatio().get());
-  // Bad Value
-  EXPECT_FALSE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setRatedSensibleHeatRatio(-10.0));
-  ASSERT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.ratedSensibleHeatRatio());
-  EXPECT_EQ(0.7, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.ratedSensibleHeatRatio().get());
-  EXPECT_FALSE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.isRatedSensibleHeatRatioAutosized());
-
-  // Indoor Unit Reference Superheating: Required Double
-  EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setIndoorUnitReferenceSuperheating(0.8));
-  EXPECT_EQ(0.8, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitReferenceSuperheating());
-  // Bad Value
-  EXPECT_FALSE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setIndoorUnitReferenceSuperheating(-10.0));
-  EXPECT_EQ(0.8, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitReferenceSuperheating());
-
-  // Indoor Unit Evaporating Temperature Function of Superheating Curve: Required Object
-  UnivariateFunctions obj(m);
-  EXPECT_TRUE(coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(obj));
-  EXPECT_EQ(obj, coilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve());
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coil(model);
 }
+
+TEST_F(ModelFixture, CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_SetGetFields) {}
+
+TEST_F(ModelFixture, CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Clone) {}
+
+TEST_F(ModelFixture, CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Remove) {}

@@ -51,6 +51,12 @@
 #include "../CurveCubic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
+#include "../FanVariableVolume.hpp"
+#include "../FanVariableVolume_Impl.hpp"
+#include "../CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
+#include "../CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -310,9 +316,20 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
   AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf(model);
 
-  ZoneHVACTerminalUnitVariableRefrigerantFlow term1(model);
-  ZoneHVACTerminalUnitVariableRefrigerantFlow term2(model);
-  ZoneHVACTerminalUnitVariableRefrigerantFlow term3(model);
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil1(model);
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl heatingCoil1(model);
+  FanVariableVolume fan1(model);
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term1(model, coolingCoil1, heatingCoil1, fan1);
+
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil2(model);
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl heatingCoil2(model);
+  FanVariableVolume fan2(model);
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term2(model, coolingCoil2, heatingCoil2, fan2);
+
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil3(model);
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl heatingCoil3(model);
+  FanVariableVolume fan3(model);
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term3(model, coolingCoil3, heatingCoil3, fan3);
 
   EXPECT_EQ(0u, vrf.terminals().size());
 
