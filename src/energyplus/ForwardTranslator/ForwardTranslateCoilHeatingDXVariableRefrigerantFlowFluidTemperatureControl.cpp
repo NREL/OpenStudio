@@ -31,16 +31,14 @@
 #include "../../model/Model.hpp"
 
 #include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
-
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
-
-#include "../../model/UnivariateFunctions.hpp"
-#include "../../model/UnivariateFunctions_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
 
 #include <utilities/idd/Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl_FieldEnums.hxx>
 // #include "../../utilities/idd/IddEnums.hpp"
@@ -54,26 +52,17 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(
     model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject) {
-    boost::optional<IdfObject> result;
-    boost::optional<WorkspaceObject> _wo;
-    boost::optional<ModelObject> _mo;
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-    // Instantiate an IdfObject of the class to store the values
-    IdfObject idfObject =
-      createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl );
-    // m_idfObjects.push_back(idfObject);
+    IdfObject idfObject(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl);
 
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    m_idfObjects.push_back(idfObject);
 
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
     // Name
-    if (boost::optional<std::string> moName = modelObject.name()) {
-      idfObject.setName(*moName);
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
 
     // Availability Schedule: Optional Object
@@ -81,18 +70,6 @@ namespace energyplus {
       if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_availabilitySchedule.get())) {
         idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule, _owo->nameString());
       }
-    }
-
-    // Coil Air Inlet Node: Required Node
-    Node coilAirInletNode = modelObject.coilAirInletNode();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(coilAirInletNode)) {
-      idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode, _owo->nameString());
-    }
-
-    // Coil Air Outlet Node: Required Node
-    Node coilAirOutletNode = modelObject.coilAirOutletNode();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(coilAirOutletNode)) {
-      idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode, _owo->nameString());
     }
 
     if (modelObject.isRatedTotalHeatingCapacityAutosized()) {
