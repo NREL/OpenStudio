@@ -30,15 +30,16 @@
 #include "CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "UnivariateFunctions.hpp"
-#include "UnivariateFunctions_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
@@ -83,7 +84,6 @@ namespace model {
 
     std::vector<ScheduleTypeKey>
       CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -99,16 +99,6 @@ namespace model {
         LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
       }
       return value.get();
-    }
-
-    boost::optional<Connection> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::coilAirInletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(
-        OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode);
-    }
-
-    boost::optional<Connection> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::coilAirOutletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(
-        OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode);
     }
 
     boost::optional<double> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::ratedTotalHeatingCapacity() const {
@@ -136,11 +126,10 @@ namespace model {
       return value.get();
     }
 
-    UnivariateFunctions
-      CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::indoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
-      boost::optional<UnivariateFunctions> value = optionalIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    Curve CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::indoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
+      boost::optional<Curve> value = optionalIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Indoor Unit Condensing Temperature Functionof Subcooling Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Indoor Unit Condensing Temperature Function of Subcooling Curve attached.");
       }
       return value.get();
     }
@@ -149,26 +138,6 @@ namespace model {
       bool result = setSchedule(OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule,
                                 "CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl", "Availability Schedule", schedule);
       return result;
-    }
-
-    bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::setCoilAirInletNode(const Connection& connection) {
-      bool result = setPointer(OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode, connection.handle());
-      return result;
-    }
-
-    void CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::resetCoilAirInletNode() {
-      bool result = setString(OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode, "");
-      OS_ASSERT(result);
-    }
-
-    bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::setCoilAirOutletNode(const Connection& connection) {
-      bool result = setPointer(OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode, connection.handle());
-      return result;
-    }
-
-    void CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::resetCoilAirOutletNode() {
-      bool result = setString(OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode, "");
-      OS_ASSERT(result);
     }
 
     bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity) {
@@ -189,10 +158,10 @@ namespace model {
     }
 
     bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(
-      const UnivariateFunctions& univariateFunctions) {
+      const Curve& curve) {
       bool result =
         setPointer(OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitCondensingTemperatureFunctionofSubcoolingCurve,
-                   univariateFunctions.handle());
+                   curve.handle());
       return result;
     }
 
@@ -213,10 +182,25 @@ namespace model {
         OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::optionalIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitCondensingTemperatureFunctionofSubcoolingCurve);
+    }
+
+    ModelObject CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::clone(Model model) const {
+      CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl objectClone =
+        HVACComponent_Impl::clone(model).cast<CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl>();
+
+      return objectClone;
+    }
+
+    std::vector<ModelObject> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      result.push_back(indoorUnitCondensingTemperatureFunctionofSubcoolingCurve());
+
+      return result;
     }
 
   }  // namespace detail
@@ -225,17 +209,19 @@ namespace model {
     : HVACComponent(CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
-    //     OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule
-    //     OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitCondensingTemperatureFunctionofSubcoolingCurve
     bool ok = true;
-    // ok = setAvailabilitySchedule();
+    Schedule schedule = model.alwaysOnDiscreteSchedule();
+    ok = setAvailabilitySchedule(schedule);
     OS_ASSERT(ok);
-    // ok = setRatedTotalHeatingCapacity();
+    autosizeRatedTotalHeatingCapacity ok = setIndoorUnitReferenceSubcooling(5.0);
     OS_ASSERT(ok);
-    // ok = setIndoorUnitReferenceSubcooling();
-    OS_ASSERT(ok);
-    // ok = setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
+    CurveQuadratic indoorUnitCondensingTemperatureFunctionofSubcoolingCurve(model);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient1Constant(-1.85);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient2x(0.411);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient3xPOW2(0.0196);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMinimumValueofx(0);
+    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMaximumValueofx(20);
+    ok = setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(indoorUnitCondensingTemperatureFunctionofSubcoolingCurve);
     OS_ASSERT(ok);
   }
 
@@ -245,14 +231,6 @@ namespace model {
 
   Schedule CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::availabilitySchedule() const {
     return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->availabilitySchedule();
-  }
-
-  boost::optional<Connection> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::coilAirInletNode() const {
-    return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->coilAirInletNode();
-  }
-
-  boost::optional<Connection> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::coilAirOutletNode() const {
-    return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->coilAirOutletNode();
   }
 
   boost::optional<double> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::ratedTotalHeatingCapacity() const {
@@ -271,29 +249,13 @@ namespace model {
     return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->indoorUnitReferenceSubcooling();
   }
 
-  UnivariateFunctions CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::indoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
+  Curve CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::indoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const {
     return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()
       ->indoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
   }
 
   bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setAvailabilitySchedule(schedule);
-  }
-
-  bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::setCoilAirInletNode(const Connection& connection) {
-    return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setCoilAirInletNode(connection);
-  }
-
-  void CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::resetCoilAirInletNode() {
-    getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->resetCoilAirInletNode();
-  }
-
-  bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::setCoilAirOutletNode(const Connection& connection) {
-    return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setCoilAirOutletNode(connection);
-  }
-
-  void CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::resetCoilAirOutletNode() {
-    getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->resetCoilAirOutletNode();
   }
 
   bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity) {
@@ -310,10 +272,9 @@ namespace model {
       indoorUnitReferenceSubcooling);
   }
 
-  bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const Curve& curve) {
     return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()
-      ->setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(univariateFunctions);
+      ->setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(curve);
   }
 
   /// @cond

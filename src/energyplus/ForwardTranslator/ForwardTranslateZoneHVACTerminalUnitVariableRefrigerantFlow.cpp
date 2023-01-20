@@ -64,6 +64,8 @@
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_VariableRefrigerantFlow_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
@@ -321,12 +323,17 @@ namespace energyplus {
       if (boost::optional<IdfObject> _coolingCoil = translateAndMapModelObject(coolingCoil.get())) {
 
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectType, _coolingCoil->iddObject().name());
-
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectName, _coolingCoil->name().get());
 
-        compsInOrder.emplace_back(Component(_coolingCoil.get(), modelObject.name().get() + " Cooling Coil Outlet Node",
-                                            Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirInletNode,
-                                            Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode));
+        if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow) {
+          compsInOrder.emplace_back(Component(_coolingCoil.get(), modelObject.name().get() + " Cooling Coil Outlet Node",
+                                              Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirInletNode,
+                                              Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode));
+        } else if (_coolingCoil->iddObject.type() == IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
+          compsInOrder.emplace_back(Component(_coolingCoil.get(), modelObject.name().get() + " Cooling Coil Outlet Node",
+                                              Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode,
+                                              Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode));
+        }
       }
     }
 
@@ -334,12 +341,17 @@ namespace energyplus {
       if (boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil.get())) {
 
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectType, _heatingCoil->iddObject().name());
-
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectName, _heatingCoil->name().get());
 
-        compsInOrder.emplace_back(Component(_heatingCoil.get(), modelObject.name().get() + " Heating Coil Outlet Node",
-                                            Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode,
-                                            Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode));
+        if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow) {
+          compsInOrder.emplace_back(Component(_heatingCoil.get(), modelObject.name().get() + " Heating Coil Outlet Node",
+                                              Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode,
+                                              Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode));
+        } else if (_heatingCoil->iddObject.type() == IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
+          compsInOrder.emplace_back(Component(_heatingCoil.get(), modelObject.name().get() + " Heating Coil Outlet Node",
+                                              Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode,
+                                              Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode));
+        }
       }
     }
 

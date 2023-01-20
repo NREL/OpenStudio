@@ -41,10 +41,10 @@
 #include "CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
 #include "CoilCoolingDXVariableRefrigerantFlow.hpp"
 #include "CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
-/* #include "CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
-#include "CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp" */
+#include "CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include "ThermalZone.hpp"
@@ -857,10 +857,9 @@ namespace model {
     }
   }
 
-  /*   ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model,
-                                                                                           const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& coolingCoil,
-                                                                                           const CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& heatingCoil,
-                                                                                           const HVACComponent& fan)
+  ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(
+    const Model& model, const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& coolingCoil,
+    const CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& heatingCoil, const HVACComponent& fan)
     : ZoneHVACComponent(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>());
 
@@ -911,7 +910,7 @@ namespace model {
       remove();
       LOG_AND_THROW("Unable to set " << briefDescription() << "'s Supply Air Fan to " << fan.briefDescription() << ".");
     }
-  } */
+  }
 
   IddObjectType ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType() {
     return IddObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);

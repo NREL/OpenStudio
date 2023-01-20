@@ -36,11 +36,8 @@
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class Schedule;
-  class Connection;
-  class Connection;
-  class UnivariateFunctions;
+  class Curve;
 
   namespace detail {
 
@@ -75,14 +72,7 @@ namespace model {
       /** @name Getters */
       //@{
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       Schedule availabilitySchedule() const;
-
-      // TODO: Check return type. From object lists, some candidates are: Connection.
-      boost::optional<Connection> coilAirInletNode() const;
-
-      // TODO: Check return type. From object lists, some candidates are: Connection.
-      boost::optional<Connection> coilAirOutletNode() const;
 
       boost::optional<double> ratedTotalHeatingCapacity() const;
 
@@ -92,26 +82,13 @@ namespace model {
 
       double indoorUnitReferenceSubcooling() const;
 
-      // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-      UnivariateFunctions indoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
+      Curve indoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setAvailabilitySchedule(Schedule& schedule);
-
-      // TODO: Check argument type. From object lists, some candidates are: Connection.
-      bool setCoilAirInletNode(const Connection& connection);
-
-      void resetCoilAirInletNode();
-
-      // TODO: Check argument type. From object lists, some candidates are: Connection.
-      bool setCoilAirOutletNode(const Connection& connection);
-
-      void resetCoilAirOutletNode();
 
       bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
 
@@ -119,8 +96,7 @@ namespace model {
 
       bool setIndoorUnitReferenceSubcooling(double indoorUnitReferenceSubcooling);
 
-      // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-      bool setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const UnivariateFunctions& univariateFunctions);
+      bool setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const Curve& curve);
 
       virtual void autosize() override;
 
@@ -130,17 +106,17 @@ namespace model {
       /** @name Other */
       //@{
 
+      ModelObject clone(Model model) const override;
+
+      std::vector<ModelObject> children() const override;
+
       //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl");
 
-      // TODO: Check the return types of these methods.
-      // Optional getters for use by methods like children() so can remove() if the constructor fails.
-      // There are other ways for the public versions of these getters to fail--perhaps all required
-      // objects should be returned as boost::optionals
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
-      boost::optional<UnivariateFunctions> optionalIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
+      boost::optional<Curve> optionalIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;
     };
 
   }  // namespace detail

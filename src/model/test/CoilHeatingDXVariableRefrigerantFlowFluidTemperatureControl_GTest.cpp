@@ -32,18 +32,8 @@
 #include "../CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "../CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../Schedule.hpp"
 #include "../Schedule_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
