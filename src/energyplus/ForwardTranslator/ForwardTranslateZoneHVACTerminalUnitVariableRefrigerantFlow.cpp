@@ -329,7 +329,7 @@ namespace energyplus {
           compsInOrder.emplace_back(Component(_coolingCoil.get(), modelObject.name().get() + " Cooling Coil Outlet Node",
                                               Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirInletNode,
                                               Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode));
-        } else if (_coolingCoil->iddObject.type() == IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
+        } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
           compsInOrder.emplace_back(Component(_coolingCoil.get(), modelObject.name().get() + " Cooling Coil Outlet Node",
                                               Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode,
                                               Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode));
@@ -347,7 +347,7 @@ namespace energyplus {
           compsInOrder.emplace_back(Component(_heatingCoil.get(), modelObject.name().get() + " Heating Coil Outlet Node",
                                               Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode,
                                               Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode));
-        } else if (_heatingCoil->iddObject.type() == IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
+        } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
           compsInOrder.emplace_back(Component(_heatingCoil.get(), modelObject.name().get() + " Heating Coil Outlet Node",
                                               Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode,
                                               Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode));
