@@ -213,14 +213,15 @@ namespace model {
     Schedule schedule = model.alwaysOnDiscreteSchedule();
     ok = setAvailabilitySchedule(schedule);
     OS_ASSERT(ok);
-    autosizeRatedTotalHeatingCapacity ok = setIndoorUnitReferenceSubcooling(5.0);
+    autosizeRatedTotalHeatingCapacity();
+    ok = setIndoorUnitReferenceSubcooling(5.0);
     OS_ASSERT(ok);
     CurveQuadratic indoorUnitCondensingTemperatureFunctionofSubcoolingCurve(model);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient1Constant(-1.85);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient2x(0.411);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient3xPOW2(0.0196);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMinimumValueofx(0);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMaximumValueofx(20);
+    indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient1Constant(-1.85);
+    indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient2x(0.411);
+    indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient3xPOW2(0.0196);
+    indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMinimumValueofx(0);
+    indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMaximumValueofx(20);
     ok = setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(indoorUnitCondensingTemperatureFunctionofSubcoolingCurve);
     OS_ASSERT(ok);
   }
