@@ -46,6 +46,12 @@
 #include "../../model/CurveCubic_Impl.hpp"
 #include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../../model/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
+#include "../../model/FanVariableVolume.hpp"
+#include "../../model/FanVariableVolume_Impl.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -54,6 +60,9 @@
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -142,21 +151,36 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_TRUE(vrf.addLoadingIndex(2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2, compressorPowerMultiplierFunctionofTemperatureCurve2));
   EXPECT_TRUE(vrf.addLoadingIndex(3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3, compressorPowerMultiplierFunctionofTemperatureCurve3));
 
-  ZoneHVACTerminalUnitVariableRefrigerantFlow term1(model);
-  ZoneHVACTerminalUnitVariableRefrigerantFlow term2(model);
-  ZoneHVACTerminalUnitVariableRefrigerantFlow term3(model);
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil(model);
+  EXPECT_TRUE(coolingCoil.setAvailabilitySchedule(scheduleConstant));
+  EXPECT_TRUE(coolingCoil.setRatedTotalCoolingCapacity(10));
+  EXPECT_TRUE(coolingCoil.setRatedSensibleHeatRatio(20));
+  EXPECT_TRUE(coolingCoil.setIndoorUnitReferenceSuperheating(30));
+  CurveCubic curve4(model);
+  EXPECT_TRUE(coolingCoil.setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(curve4));
 
-  vrf.addTerminal(term1);
-  vrf.addTerminal(term2);
-  vrf.addTerminal(term3);
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl heatingCoil(model);
+  EXPECT_TRUE(heatingCoil.setAvailabilitySchedule(scheduleConstant));
+  EXPECT_TRUE(heatingCoil.setRatedTotalHeatingCapacity(40));
+  EXPECT_TRUE(heatingCoil.setIndoorUnitReferenceSubcooling(50));
+  CurveCubic curve5(model);
+  EXPECT_TRUE(heatingCoil.setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(curve5));
+
+  FanVariableVolume fan(model);
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term(model, coolingCoil, heatingCoil, fan);
+
+  vrf.addTerminal(term);
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR).size());
-  EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).size());
-  EXPECT_EQ(19u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
-  EXPECT_EQ(5u, workspace.getObjectsByType(IddObjectType::Curve_Cubic).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).size());
+  EXPECT_EQ(13u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
+  EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Curve_Cubic).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Fan_VariableVolume).size());
 
   IdfObject idf_vrf = workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR)[0];
 
@@ -369,4 +393,51 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
                                  LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName)
                     .get());
   }
+
+  IdfObject idf_term = workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow)[0];
+
+  EXPECT_EQ("DrawThrough", idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement, false).get());
+  EXPECT_EQ("Fan:VariableVolume", idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectType, false).get());
+  EXPECT_EQ(fan.nameString(), idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName, false).get());
+  EXPECT_EQ("Coil:Cooling:DX:VariableRefrigerantFlow:FluidTemperatureControl",
+            idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectType, false).get());
+  EXPECT_EQ(coolingCoil.nameString(), idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectName, false).get());
+  EXPECT_EQ("Coil:Heating:DX:VariableRefrigerantFlow:FluidTemperatureControl",
+            idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectType, false).get());
+  EXPECT_EQ(heatingCoil.nameString(), idf_term.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectName, false).get());
+
+  IdfObject idf_cool = workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl)[0];
+  EXPECT_EQ(scheduleConstant.nameString(),
+            idf_cool.getString(Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilityScheduleName, false).get());
+  EXPECT_EQ("Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Mixer Outlet Node",
+            idf_cool.getString(Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode, false).get());
+  EXPECT_EQ("Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Cooling Coil Outlet Node",
+            idf_cool.getString(Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode, false).get());
+  EXPECT_EQ(10, idf_cool.getDouble(Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedTotalCoolingCapacity, false).get());
+  EXPECT_EQ(20, idf_cool.getDouble(Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedSensibleHeatRatio, false).get());
+  EXPECT_EQ(30,
+            idf_cool.getDouble(Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitReferenceSuperheating, false).get());
+  EXPECT_EQ(
+    curve4.nameString(),
+    idf_cool
+      .getString(
+        Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName, false)
+      .get());
+
+  IdfObject idf_heat = workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl)[0];
+  EXPECT_EQ(scheduleConstant.nameString(),
+            idf_heat.getString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule, false).get());
+  EXPECT_EQ("Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Cooling Coil Outlet Node",
+            idf_heat.getString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirInletNode, false).get());
+  EXPECT_EQ("Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Heating Coil Outlet Node",
+            idf_heat.getString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::CoilAirOutletNode, false).get());
+  EXPECT_EQ(40, idf_heat.getDouble(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedTotalHeatingCapacity, false).get());
+  EXPECT_EQ(50,
+            idf_heat.getDouble(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitReferenceSubcooling, false).get());
+  EXPECT_EQ(
+    curve5.nameString(),
+    idf_heat
+      .getString(Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControlFields::IndoorUnitCondensingTemperatureFunctionofSubcoolingCurveName,
+                 false)
+      .get());
 }
