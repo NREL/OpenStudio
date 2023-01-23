@@ -151,7 +151,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     message(STATUS "Conan: Using cmake generator")
     set(CONAN_CMAKE_MULTI OFF)
     set(CONAN_GENERATOR "cmake")
-    set(CONAN_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE})
+    if (NOT CONAN_CONFIGURATION_TYPES)
+      set(CONAN_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE})
+    endif()
   endif()
 
 
