@@ -48,7 +48,7 @@ namespace energyplus {
     boost::optional<Node> setpointNode;
     if (boost::optional<std::string> setpointNodeName =
           workspaceObject.getString(SetpointManager_SystemNodeReset_TemperatureFields::SetpointNodeorNodeListName)) {
-      setpointNode = m_model.getModelObjectByName<Node>(setpointNodeName.get());
+      setpointNode = m_model.getConcreteModelObjectByName<Node>(setpointNodeName.get());
     }
 
     if (!setpointNode) {
@@ -60,7 +60,7 @@ namespace energyplus {
     boost::optional<Node> referenceNode;
     if (boost::optional<std::string> referenceNodeName =
           workspaceObject.getString(SetpointManager_SystemNodeReset_TemperatureFields::ReferenceNodeName)) {
-      referenceNode = m_model.getModelObjectByName<Node>(referenceNodeName.get());
+      referenceNode = m_model.getConcreteModelObjectByName<Node>(referenceNodeName.get());
     }
 
     if (!referenceNode) {

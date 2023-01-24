@@ -227,8 +227,8 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Remove) {
 
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
-  auto schedules = m.getModelObjects<model::ScheduleConstant>();
-  auto limits = m.getModelObjects<model::ScheduleTypeLimits>();
+  auto schedules = m.getConcreteModelObjects<model::ScheduleConstant>();
+  auto limits = m.getConcreteModelObjects<model::ScheduleTypeLimits>();
   EXPECT_EQ(schedules.size() + limits.size(), m.modelObjects().size());
 }
 

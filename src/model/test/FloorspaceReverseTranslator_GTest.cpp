@@ -89,12 +89,12 @@ void CompareTwoModels(Model& model, Model& baseline) {
   //   Match by name,compare properties
   //   Compare shading count
   double tol = 0.001;  // Same tolerance as defaults for circularEqual
-  auto thermalZones1 = model.getModelObjects<ThermalZone>();
-  auto thermalZones2 = baseline.getModelObjects<ThermalZone>();
+  auto thermalZones1 = model.getConcreteModelObjects<ThermalZone>();
+  auto thermalZones2 = baseline.getConcreteModelObjects<ThermalZone>();
   EXPECT_EQ(thermalZones1.size(), thermalZones2.size());
 
   for (auto& thermalZone : thermalZones1) {
-    auto match = baseline.getModelObjectByName<ThermalZone>(*thermalZone.name());
+    auto match = baseline.getConcreteModelObjectByName<ThermalZone>(*thermalZone.name());
     EXPECT_TRUE(match.has_value());
     // Multiplier
     EXPECT_EQ(thermalZone.multiplier(), match->multiplier());
@@ -130,43 +130,43 @@ void CompareTwoModels(Model& model, Model& baseline) {
   }
 
   // Compare building units
-  auto buildingUnits1 = model.getModelObjects<BuildingUnit>();
-  auto buildingUnits2 = baseline.getModelObjects<BuildingUnit>();
+  auto buildingUnits1 = model.getConcreteModelObjects<BuildingUnit>();
+  auto buildingUnits2 = baseline.getConcreteModelObjects<BuildingUnit>();
   EXPECT_EQ(buildingUnits1.size(), buildingUnits2.size());
   for (auto& buildingUnit : buildingUnits1) {
-    auto match = baseline.getModelObjectByName<BuildingUnit>(*buildingUnit.name());
+    auto match = baseline.getConcreteModelObjectByName<BuildingUnit>(*buildingUnit.name());
     EXPECT_TRUE(match.has_value());
     EXPECT_EQ(buildingUnit.renderingColor().has_value(), match->renderingColor().has_value());
   }
 
   // Compare constructions
-  auto constructions1 = model.getModelObjects<DefaultConstructionSet>();
-  auto constructions2 = baseline.getModelObjects<DefaultConstructionSet>();
+  auto constructions1 = model.getConcreteModelObjects<DefaultConstructionSet>();
+  auto constructions2 = baseline.getConcreteModelObjects<DefaultConstructionSet>();
   EXPECT_EQ(constructions1.size(), constructions2.size());
   for (auto& construction : constructions1) {
-    auto match = baseline.getModelObjectByName<DefaultConstructionSet>(*construction.name());
+    auto match = baseline.getConcreteModelObjectByName<DefaultConstructionSet>(*construction.name());
     EXPECT_TRUE(match.has_value());
   }
 
   // Compare daylighting
-  auto daylightings1 = model.getModelObjects<DaylightingControl>();
-  auto daylightings2 = baseline.getModelObjects<DaylightingControl>();
+  auto daylightings1 = model.getConcreteModelObjects<DaylightingControl>();
+  auto daylightings2 = baseline.getConcreteModelObjects<DaylightingControl>();
   EXPECT_EQ(daylightings1.size(), daylightings2.size());
   for (auto& daylighting : daylightings1) {
-    auto match = baseline.getModelObjectByName<DaylightingControl>(*daylighting.name());
+    auto match = baseline.getConcreteModelObjectByName<DaylightingControl>(*daylighting.name());
     // Daylighting control names don't match:
     // Daylighting Control 1 - 1 (as in the floorspace model) vs Face nn
     //ASSERT_TRUE(match.has_value());
   }
 
   // Compare ShadingSurfaceGroup
-  auto shadingGroup1 = model.getModelObjects<ShadingSurfaceGroup>();
-  auto shadingGroup2 = baseline.getModelObjects<ShadingSurfaceGroup>();
+  auto shadingGroup1 = model.getConcreteModelObjects<ShadingSurfaceGroup>();
+  auto shadingGroup2 = baseline.getConcreteModelObjects<ShadingSurfaceGroup>();
   EXPECT_EQ(shadingGroup1.size(), shadingGroup2.size());
   for (auto& shadingGroup : shadingGroup1) {
     // Shading Surface Group names only match for building shading
     if (shadingGroup.shadingSurfaceType() == "Building") {
-      auto match = baseline.getModelObjectByName<ShadingSurfaceGroup>(*shadingGroup.name());
+      auto match = baseline.getConcreteModelObjectByName<ShadingSurfaceGroup>(*shadingGroup.name());
       EXPECT_TRUE(match.has_value());
       std::string surfaceType = shadingGroup.shadingSurfaceType();
       EXPECT_EQ(shadingGroup.shadingSurfaceType(), match->shadingSurfaceType());
@@ -380,11 +380,11 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_SurfaceMatch) {
   ss << *model;
   std::string s = ss.str();
 
-  EXPECT_EQ(4u, model->getModelObjects<Space>().size());
-  EXPECT_EQ(24u, model->getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model->getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(24u, model->getConcreteModelObjects<Surface>().size());
 
   unsigned numMatched = 0;
-  for (const auto& surface : model->getModelObjects<Surface>()) {
+  for (const auto& surface : model->getConcreteModelObjects<Surface>()) {
     if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;
@@ -397,11 +397,11 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_SurfaceMatch) {
   model::ModelMerger mm;
   mm.mergeModels(newModel, *model, rt.handleMapping());
 
-  EXPECT_EQ(4u, newModel.getModelObjects<Space>().size());
-  EXPECT_EQ(24u, newModel.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, newModel.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(24u, newModel.getConcreteModelObjects<Surface>().size());
 
   numMatched = 0;
-  for (const auto& surface : newModel.getModelObjects<Surface>()) {
+  for (const auto& surface : newModel.getConcreteModelObjects<Surface>()) {
     if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;

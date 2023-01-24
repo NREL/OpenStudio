@@ -41,11 +41,13 @@ namespace detail {
   // Define a helper test whether every predicate in a pack is true
   template <typename... Conds>
   struct and_ : std::true_type
-  {};
+  {
+  };
 
   template <typename Cond, typename... Conds>
   struct and_<Cond, Conds...> : std::conditional<Cond::value, and_<Conds...>, std::false_type>::type
-  {};
+  {
+  };
 
   // Check that 1) it's a container, and 2) it contains elements that are convertible to ElementType
   template <typename ElementType, typename Container, typename T = std::decay_t<decltype(*begin(std::declval<Container>()))>>

@@ -493,9 +493,9 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
     ASSERT_TRUE(ocd->primaryComponentObject().optionalCast<SiteWaterMainsTemperature>());
 
     // check model
-    EXPECT_EQ(1u, model.getModelObjects<SiteWaterMainsTemperature>().size());
-    ASSERT_EQ(1u, model.getModelObjects<ComponentData>().size());
-    EXPECT_EQ(ocd->handle(), model.getModelObjects<ComponentData>()[0].handle());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<SiteWaterMainsTemperature>().size());
+    ASSERT_EQ(1u, model.getConcreteModelObjects<ComponentData>().size());
+    EXPECT_EQ(ocd->handle(), model.getConcreteModelObjects<ComponentData>()[0].handle());
     EXPECT_EQ(2u, model.numObjects());
     EXPECT_NE(siteWaterMainsTemperature2.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // cloned
   }
@@ -526,9 +526,9 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
     ASSERT_TRUE(ocd->primaryComponentObject().optionalCast<SiteWaterMainsTemperature>());
 
     // check model
-    EXPECT_EQ(1u, model.getModelObjects<SiteWaterMainsTemperature>().size());
-    ASSERT_EQ(1u, model.getModelObjects<ComponentData>().size());
-    EXPECT_EQ(ocd->handle(), model.getModelObjects<ComponentData>()[0].handle());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<SiteWaterMainsTemperature>().size());
+    ASSERT_EQ(1u, model.getConcreteModelObjects<ComponentData>().size());
+    EXPECT_EQ(ocd->handle(), model.getConcreteModelObjects<ComponentData>()[0].handle());
     EXPECT_EQ(2u, model.numObjects());
     EXPECT_NE(siteWaterMainsTemperature1.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // removed
     EXPECT_NE(siteWaterMainsTemperature2.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // cloned
@@ -561,9 +561,9 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
     ASSERT_TRUE(ocd->primaryComponentObject().optionalCast<Building>());
 
     // check model
-    EXPECT_EQ(1u, model.getModelObjects<Building>().size());
-    ASSERT_EQ(1u, model.getModelObjects<ComponentData>().size());
-    EXPECT_EQ(ocd->handle(), model.getModelObjects<ComponentData>()[0].handle());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<Building>().size());
+    ASSERT_EQ(1u, model.getConcreteModelObjects<ComponentData>().size());
+    EXPECT_EQ(ocd->handle(), model.getConcreteModelObjects<ComponentData>()[0].handle());
     EXPECT_EQ(2u, model.numObjects());
     EXPECT_NE(building1.handle(), model.getUniqueModelObject<Building>().handle());  // removed
     EXPECT_NE(building2.handle(), model.getUniqueModelObject<Building>().handle());  // cloned

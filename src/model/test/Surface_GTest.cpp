@@ -3856,7 +3856,7 @@ TEST_F(ModelFixture, 4678_SurfaceGlassUFactorSqlError) {
   model.setSqlFile(sqlFile);
   ASSERT_TRUE(model.sqlFile());
 
-  OptionalSurface surface = model.getModelObjectByName<Surface>("Story 1 Core Space Exterior Wall");
+  OptionalSurface surface = model.getConcreteModelObjectByName<Surface>("Story 1 Core Space Exterior Wall");
   ASSERT_TRUE(surface);
 
   OptionalConstructionBase oConstruction = surface->construction();

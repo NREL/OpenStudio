@@ -1592,7 +1592,7 @@ TEST_F(ModelFixture, 4403_FenestrationAssembly) {
   model.setSqlFile(sqlFile);
   ASSERT_TRUE(model.sqlFile());
 
-  OptionalSubSurface subSurface = model.getModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
+  OptionalSubSurface subSurface = model.getConcreteModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
   ASSERT_TRUE(subSurface);
 
   ASSERT_TRUE(subSurface->assemblyUFactor());
@@ -1623,7 +1623,7 @@ TEST_F(ModelFixture, 4678_SubSurfaceGlassUFactorSqlError) {
   model.setSqlFile(sqlFile);
   ASSERT_TRUE(model.sqlFile());
 
-  OptionalSubSurface subSurface = model.getModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
+  OptionalSubSurface subSurface = model.getConcreteModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
   ASSERT_TRUE(subSurface);
 
   OptionalConstructionBase oConstruction = subSurface->construction();
