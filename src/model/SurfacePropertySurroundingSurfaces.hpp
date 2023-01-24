@@ -76,7 +76,7 @@ namespace model {
 
     explicit SurfacePropertySurroundingSurfaces(const Model& model);
 
-    virtual ~SurfacePropertySurroundingSurfaces() {}
+    virtual ~SurfacePropertySurroundingSurfaces() = default;
 
     //@}
 

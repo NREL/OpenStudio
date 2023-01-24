@@ -246,7 +246,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   }
   int index = -1;
   for (unsigned i = 0; i < 2; i++) {
-    for (openstudio::Point3d pt : searchResults[i].vertices()) {
+    for (const openstudio::Point3d& pt : searchResults[i].vertices()) {
       if (pt.x() < 8.1) {
         index = i;
         break;
@@ -358,7 +358,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   searchResults = library->findSurfaces(90.0, 90.0, 90.0, 90.0);
   index = -1;
   for (unsigned i = 0; i < 2; i++) {
-    for (openstudio::Point3d pt : searchResults[i].vertices()) {
+    for (const openstudio::Point3d& pt : searchResults[i].vertices()) {
       if (pt.y() < 0.1) {
         index = i;
         break;

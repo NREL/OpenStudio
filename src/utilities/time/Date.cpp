@@ -265,12 +265,7 @@ Date::Date(const Date& other) : m_baseYear(other.baseYear()), m_assumedBaseYear(
   initFromYearMonthDay(other.year(), other.monthOfYear(), other.dayOfMonth());
 }
 
-Date& Date::operator=(const Date& other) {
-  m_baseYear = other.m_baseYear;
-  m_assumedBaseYear = other.m_assumedBaseYear;
-  m_impl = other.m_impl;
-  return *this;
-}
+Date& Date::operator=(const Date& other) = default;
 
 /// assignment by addition operator
 Date Date::operator+(const Time& time) const {

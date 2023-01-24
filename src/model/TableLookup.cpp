@@ -220,7 +220,7 @@ namespace model {
     }
 
     bool TableLookup_Impl::addOutputValue(double outputValue) {
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool result = eg.setDouble(OS_Table_LookupExtensibleFields::OutputValue, outputValue);
       if (!result) {
         getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());

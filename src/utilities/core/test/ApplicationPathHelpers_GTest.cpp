@@ -117,7 +117,7 @@ TEST(ApplicationPathHelpers, findInSystemPath) {
   EXPECT_FALSE(exists(absolute_path_to_dummy));
 
   // Append the containing dir to the PATH
-  auto current_path = std::getenv("PATH");
+  auto* current_path = std::getenv("PATH");
   std::string new_path = toString(dummy_dir) + openstudio::pathDelimiter() + current_path;
   setenv("PATH", new_path.c_str(), 1);
   setenv("PathWhenSymlinkInPath_Setup", "true", 1);

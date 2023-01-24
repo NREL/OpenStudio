@@ -181,7 +181,7 @@ namespace energyplus {
         lowerNodes.erase(lowerNodes.end() - 1);
       }
 
-      auto isTemperatureControl = [](SetpointManager& spm) -> bool { return istringEqual("Temperature", spm.controlVariable()); };
+      auto isTemperatureControl = [](const SetpointManager& spm) -> bool { return istringEqual("Temperature", spm.controlVariable()); };
 
       for (auto& upperNode : upperNodes) {
         std::vector<SetpointManager> _setpointManagers = upperNode.setpointManagers();
@@ -195,7 +195,7 @@ namespace energyplus {
       for (auto& lowerNode : lowerNodes) {
         std::vector<SetpointManager> _setpointManagers = lowerNode.setpointManagers();
         if (std::find_if(_setpointManagers.begin(), _setpointManagers.end(), isTemperatureControl) == _setpointManagers.end()) {
-          for (auto _setpointManager : _supplyOutletSetpointManagers) {
+          for (const auto& _setpointManager : _supplyOutletSetpointManagers) {
             if (isTemperatureControl(_setpointManager)) {
               auto spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
               spmClone.addToNode(lowerNode);

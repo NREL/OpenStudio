@@ -56,7 +56,7 @@ namespace detail {
   // CONSTRUCTORS
 
   /// default constructor for serialization
-  IddField_Impl::IddField_Impl() {}
+  IddField_Impl::IddField_Impl() = default;
 
   IddField_Impl::IddField_Impl(const std::string& name, const std::string& objectName) : m_name(name), m_objectName(objectName) {}
 

@@ -124,7 +124,7 @@ namespace energyplus {
     }
 
     boost::optional<ModelObject> result;
-    for (ThermalZone thermalZone : thermalZones) {
+    for (const ThermalZone& thermalZone : thermalZones) {
 
       openstudio::model::ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
 

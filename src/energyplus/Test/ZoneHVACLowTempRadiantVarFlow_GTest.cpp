@@ -130,10 +130,10 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
   Workspace workspace = trans.translateModel(model);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
+  for (const ThermalZone& thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
 
     //get the radiant zone equipment
-    for (ModelObject equipment : thermalZone.equipment()) {
+    for (const ModelObject& equipment : thermalZone.equipment()) {
       if (equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>()) {
         ZoneHVACLowTempRadiantVarFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>().get();
         EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
@@ -144,7 +144,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
         EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
         EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
         EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
-        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
+        for (const IdfExtensibleGroup& extGrp : testRad.extensibleGroups()) {
           EXPECT_EQ(0.25, extGrp.getDouble(1, false).get());
         }
       }

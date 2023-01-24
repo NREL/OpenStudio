@@ -35,7 +35,7 @@
 namespace openstudio {
 namespace detail {
 
-  IdfObjectDiff_Impl::IdfObjectDiff_Impl() {}
+  IdfObjectDiff_Impl::IdfObjectDiff_Impl() = default;
 
   IdfObjectDiff_Impl::IdfObjectDiff_Impl(boost::optional<unsigned> index, boost::optional<std::string> oldValue,
                                          boost::optional<std::string> newValue)

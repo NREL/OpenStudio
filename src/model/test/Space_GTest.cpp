@@ -170,7 +170,7 @@ TEST_F(ModelFixture, Space_Clone) {
 
   ASSERT_TRUE(clone.optionalCast<Space>());
 
-  Space spaceClone = clone.cast<Space>();
+  auto spaceClone = clone.cast<Space>();
   ASSERT_TRUE(spaceClone.name());
   EXPECT_EQ("Space 2", spaceClone.name().get());
 

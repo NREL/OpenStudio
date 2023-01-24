@@ -48,7 +48,7 @@ namespace openstudio {
 namespace radiance {
 
   /// default constructor
-  AnnualIlluminanceMap::AnnualIlluminanceMap() {}
+  AnnualIlluminanceMap::AnnualIlluminanceMap() = default;
 
   /// constructor with path
   AnnualIlluminanceMap::AnnualIlluminanceMap(const openstudio::path& path) {

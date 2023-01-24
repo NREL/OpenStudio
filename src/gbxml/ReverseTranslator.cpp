@@ -345,7 +345,7 @@ namespace gbxml {
     double tol = 0.001;
 
     const auto& spaces = model.getConcreteModelObjects<openstudio::model::Space>();
-    for (auto& space : spaces) {
+    for (const auto& space : spaces) {
       std::string spaceName = space.name().value();
 
       const auto& bounds = space.boundingBox();

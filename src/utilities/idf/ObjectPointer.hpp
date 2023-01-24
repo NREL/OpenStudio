@@ -46,7 +46,7 @@ struct ObjectPointer
   unsigned fieldIndex;
   U target;
 
-  ObjectPointer() {}
+  ObjectPointer() = default;
   ObjectPointer(const T& s, unsigned fi, const U& t) : source(s), fieldIndex(fi), target(t) {}
 };
 

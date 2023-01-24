@@ -140,17 +140,17 @@ TEST_F(IddFixture, OSIddFile) {
   ASSERT_TRUE(loadedIddFile);
   inFile.close();
 
-  for (auto iddObject : loadedIddFile->objects()) {
-    for (auto iddField : iddObject.nonextensibleFields()) {
+  for (const auto& iddObject : loadedIddFile->objects()) {
+    for (const auto& iddField : iddObject.nonextensibleFields()) {
       iddField.properties();
     }
-    for (auto iddField : iddObject.extensibleGroup()) {
+    for (const auto& iddField : iddObject.extensibleGroup()) {
       iddField.properties();
     }
   }
 
   EXPECT_EQ(0, ss.logMessages().size());
-  for (auto logMessage : ss.logMessages()) {
+  for (const auto& logMessage : ss.logMessages()) {
     EXPECT_EQ("", logMessage.logMessage());
   }
 

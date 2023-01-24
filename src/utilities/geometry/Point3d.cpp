@@ -43,7 +43,7 @@ Point3d::Point3d(double x, double y, double z) : m_storage(3) {
 }
 
 /// copy constructor
-Point3d::Point3d(const Point3d& other) : m_storage(other.m_storage) {}
+Point3d::Point3d(const Point3d& other) = default;
 
 /// get x
 double Point3d::x() const {

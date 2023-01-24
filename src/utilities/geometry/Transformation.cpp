@@ -51,7 +51,7 @@ namespace openstudio {
 Transformation::Transformation() : m_storage(identity_matrix<double>(4)) {}
 
 /// copy constructor
-Transformation::Transformation(const Transformation& other) : m_storage(other.m_storage) {}
+Transformation::Transformation(const Transformation& other) = default;
 
 /// constructor from storage, asserts matrix is 4x4
 Transformation::Transformation(const Matrix& matrix) : m_storage(matrix) {

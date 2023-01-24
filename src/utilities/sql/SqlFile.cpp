@@ -35,7 +35,7 @@
 
 namespace openstudio {
 
-SqlFile::SqlFile() {}
+SqlFile::SqlFile() = default;
 
 SqlFile::SqlFile(const openstudio::path& path, const bool createIndexes) {
   try {

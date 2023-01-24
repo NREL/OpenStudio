@@ -687,7 +687,7 @@ namespace sdd {
     }
 
     {
-      auto value = vrfSysElement.child("DefHtSrc").text().as_string();
+      const auto* value = vrfSysElement.child("DefHtSrc").text().as_string();
       if (istringEqual("HotGas", value)) {
         vrf.setDefrostStrategy("ReverseCycle");
       } else if (istringEqual("Electric", value)) {
@@ -696,7 +696,7 @@ namespace sdd {
     }
 
     {
-      auto value = vrfSysElement.child("DefCtrl").text().as_string();
+      const auto* value = vrfSysElement.child("DefCtrl").text().as_string();
       if (istringEqual("OnDemand", value)) {
         vrf.setDefrostControl("OnDemand");
       } else if (istringEqual("TimedCycle", value)) {
@@ -776,7 +776,7 @@ namespace sdd {
     }
 
     {
-      auto value = vrfSysElement.child("HtgCrvOutdoorTempType").text().as_string();
+      const auto* value = vrfSysElement.child("HtgCrvOutdoorTempType").text().as_string();
       if (istringEqual(value, "WetBulb")) {
         vrf.setHeatingPerformanceCurveOutdoorTemperatureType("WetBulbTemperature");
       } else if (istringEqual(value, "DryBulb")) {
@@ -958,7 +958,7 @@ namespace sdd {
       airLoopHVAC.setAvailabilitySchedule(availabilitySchedule.get());
     }
 
-    auto controlZone = airSystemElement.child("CtrlZnRef").text().as_string();
+    const auto* controlZone = airSystemElement.child("CtrlZnRef").text().as_string();
 
     // Optimum Start
     auto optStartElement = airSystemElement.child("OptStart");
@@ -1372,11 +1372,11 @@ namespace sdd {
         }
 
         // CtrlType
-        auto ctrlType = airSystemOACtrlElement.child("CtrlType").text().as_string();
+        const auto* ctrlType = airSystemOACtrlElement.child("CtrlType").text().as_string();
         oaController.setEconomizerControlActionType(ctrlType);
 
         // MinLimitType
-        auto minLimitType = airSystemOACtrlElement.child("MinLimitType").text().as_string();
+        const auto* minLimitType = airSystemOACtrlElement.child("MinLimitType").text().as_string();
         if (istringEqual(minLimitType, "Fixed")) {
           oaController.setMinimumLimitType("FixedMinimum");
         } else if (istringEqual(minLimitType, "Proportional")) {
@@ -1384,11 +1384,11 @@ namespace sdd {
         }
 
         // HtRcvryBypassCtrlType
-        auto htRcvryBypassCtrlType = airSystemOACtrlElement.child("HtRcvryBypassCtrlType").text().as_string();
+        const auto* htRcvryBypassCtrlType = airSystemOACtrlElement.child("HtRcvryBypassCtrlType").text().as_string();
         oaController.setHeatRecoveryBypassControlType(htRcvryBypassCtrlType);
 
         // EconoAvailSchRef
-        auto econoAvailSchRef = airSystemOACtrlElement.child("EconoAvailSchRef").text().as_string();
+        const auto* econoAvailSchRef = airSystemOACtrlElement.child("EconoAvailSchRef").text().as_string();
         if (auto schedule = model.getModelObjectByName<model::Schedule>(econoAvailSchRef)) {
           oaController.setTimeofDayEconomizerControlSchedule(schedule.get());
         }
@@ -1544,7 +1544,7 @@ namespace sdd {
           hx.addToNode(outboardOANode);
 
           // TempCtrl
-          auto tempCtrl = htRcvryElement.child("TempCtrl").text().as_string();
+          const auto* tempCtrl = htRcvryElement.child("TempCtrl").text().as_string();
           if (istringEqual(tempCtrl, "None")) {
             hx.setSupplyAirOutletTemperatureControl(false);
           } else if (istringEqual(tempCtrl, "Fixed")) {
@@ -1566,7 +1566,7 @@ namespace sdd {
             }
           } else if (istringEqual(tempCtrl, "Scheduled")) {
             hx.setSupplyAirOutletTemperatureControl(true);
-            auto schRef = htRcvryElement.child("TempSetptSchRef").text().as_string();
+            const auto* schRef = htRcvryElement.child("TempSetptSchRef").text().as_string();
             auto sch = model.getModelObjectByName<model::Schedule>(schRef);
             if (sch) {
               model::SetpointManagerScheduled spm(model, sch.get());
@@ -2793,14 +2793,14 @@ namespace sdd {
       hx.setNominalElectricPower(_auxPwr.get());
     }
 
-    auto type = element.child("Type").text().as_string();
+    const auto* type = element.child("Type").text().as_string();
     if (istringEqual(type, "Plate")) {
       hx.setHeatExchangerType("Plate");
     } else if (istringEqual(type, "Wheel")) {
       hx.setHeatExchangerType("Rotary");
     }
 
-    auto defrostCtrl = element.child("DefrostCtrl").text().as_string();
+    const auto* defrostCtrl = element.child("DefrostCtrl").text().as_string();
     hx.setFrostControlType(defrostCtrl);
 
     auto defrostCtrlTempElement = element.child("DefrostCtrlTemp");
@@ -2825,7 +2825,7 @@ namespace sdd {
     }
 
     // EconoLockout
-    auto econoLockout = element.child("EconoLockout").text().as_string();
+    const auto* econoLockout = element.child("EconoLockout").text().as_string();
     if (istringEqual(econoLockout, "No")) {
       hx.setEconomizerLockout(false);
     } else {
@@ -3839,7 +3839,7 @@ namespace sdd {
 
       BoundingBox pointBox;
       pointBox.addPoint(Point3d(x, y, z));
-      for (model::Space space : spaces) {
+      for (const model::Space& space : spaces) {
         BoundingBox boundingBox = space.boundingBox();
         if (boundingBox.intersects(pointBox)) {
           daylightingControl1->setSpace(space);
@@ -3916,7 +3916,7 @@ namespace sdd {
 
         BoundingBox pointBox;
         pointBox.addPoint(Point3d(x, y, z));
-        for (model::Space space : spaces) {
+        for (const model::Space& space : spaces) {
           BoundingBox boundingBox = space.boundingBox();
           if (boundingBox.intersects(pointBox)) {
             daylightingControl2->setSpace(space);
@@ -4401,7 +4401,7 @@ namespace sdd {
 
     // Name
     pugi::xml_node nameElement = trmlUnitElement.child("Name");
-    auto name = nameElement.text().as_string();
+    const auto* name = nameElement.text().as_string();
 
     // AvailSchRef
     pugi::xml_node availSchRefElement = trmlUnitElement.child("AvailSchRef");
@@ -4846,21 +4846,21 @@ namespace sdd {
       thermalStorage->setSetpointTemperatureSchedule(tesSchedule.get());
 
       {
-        auto schRef = thrmlEngyStorElement.child("ChlrOnlySchRef").text().as_string();
+        const auto* schRef = thrmlEngyStorElement.child("ChlrOnlySchRef").text().as_string();
         if (auto sch = model.getModelObjectByName<model::Schedule>(schRef)) {
           plantLoop.setPlantEquipmentOperationCoolingLoadSchedule(sch.get());
         }
       }
 
       {
-        auto schRef = thrmlEngyStorElement.child("DischrgSchRef").text().as_string();
+        const auto* schRef = thrmlEngyStorElement.child("DischrgSchRef").text().as_string();
         if (auto sch = model.getModelObjectByName<model::Schedule>(schRef)) {
           plantLoop.setPrimaryPlantEquipmentOperationSchemeSchedule(sch.get());
         }
       }
 
       {
-        auto schRef = thrmlEngyStorElement.child("ChrgSchRef").text().as_string();
+        const auto* schRef = thrmlEngyStorElement.child("ChrgSchRef").text().as_string();
         if (auto sch = model.getModelObjectByName<model::Schedule>(schRef)) {
           plantLoop.setComponentSetpointOperationSchemeSchedule(sch.get());
         }
@@ -4915,7 +4915,7 @@ namespace sdd {
 
       if (auto mo = translateHX(hxElement, model)) {
         auto hx = mo->cast<model::HeatExchangerFluidToFluid>();
-        auto economizerIntegration = hxElement.child("EconoIntegration").text().as_string();
+        const auto* economizerIntegration = hxElement.child("EconoIntegration").text().as_string();
         if (istringEqual("Nonintegrated", economizerIntegration)) {
           plantLoop.addSupplyBranchForComponent(hx);
         } else {
@@ -5536,7 +5536,7 @@ namespace sdd {
     boost::optional<double> flowCap;
     boost::optional<double> pwr;
 
-    auto pumpName = pumpElement.child("Name").text().as_string();
+    const auto* pumpName = pumpElement.child("Name").text().as_string();
 
     pugi::xml_node mtrEffElement = pumpElement.child("MtrEff");
     boost::optional<double> _mtrEff = lexicalCastToDouble(mtrEffElement);
@@ -6574,7 +6574,7 @@ namespace sdd {
       waterHeater.setHeaterFuelType(fuelSrc);
 
       {
-        auto curveRef = element.child("HIR_fPLRCrvRef").text().as_string();
+        const auto* curveRef = element.child("HIR_fPLRCrvRef").text().as_string();
         auto newcurve = model.getModelObjectByName<model::Curve>(curveRef);
         if (newcurve) {
           auto oldcurve = waterHeater.partLoadFactorCurve();
@@ -6664,7 +6664,7 @@ namespace sdd {
       auto setCurve = [&](const std::string& elementName,
                           const std::function<bool(model::CoilWaterHeatingAirToWaterHeatPump&, const model::Curve&)>& osSetter,
                           const std::function<model::Curve(model::CoilWaterHeatingAirToWaterHeatPump&)>& osGetter) {
-        auto value = element.child(elementName.c_str()).text().as_string();
+        const auto* value = element.child(elementName.c_str()).text().as_string();
         auto newcurve = model.getModelObjectByName<model::Curve>(value);
         if (newcurve) {
           auto oldcurve = osGetter(coil);
@@ -7506,7 +7506,7 @@ namespace sdd {
         result = vrfTerminal;
 
         {
-          auto value = element.child("VRFSysRef").text().as_string();
+          const auto* value = element.child("VRFSysRef").text().as_string();
           auto vrfSys = model.getConcreteModelObjectByName<model::AirConditionerVariableRefrigerantFlow>(value);
           if (vrfSys) {
             vrfSys->addTerminal(vrfTerminal);
@@ -7639,7 +7639,7 @@ namespace sdd {
     model::CoilHeatingDXVariableRefrigerantFlow coil(model);
 
     {
-      auto value = element.child("Name").text().as_string();
+      const auto* value = element.child("Name").text().as_string();
       coil.setName(value);
     }
 
@@ -7654,7 +7654,7 @@ namespace sdd {
     auto setCurve = [&](const std::string& elementName,
                         const std::function<bool(model::CoilHeatingDXVariableRefrigerantFlow&, const model::Curve&)>& osSetter,
                         const std::function<model::Curve(model::CoilHeatingDXVariableRefrigerantFlow&)>& osGetter) {
-      auto value = element.child(elementName.c_str()).text().as_string();
+      const auto* value = element.child(elementName.c_str()).text().as_string();
       auto newcurve = model.getModelObjectByName<model::Curve>(value);
       if (newcurve) {
         auto oldcurve = osGetter(coil);
@@ -7693,7 +7693,7 @@ namespace sdd {
     model::CoilCoolingDXVariableRefrigerantFlow coil(model);
 
     {
-      auto value = element.child("Name").text().as_string();
+      const auto* value = element.child("Name").text().as_string();
       coil.setName(value);
     }
 
@@ -7708,7 +7708,7 @@ namespace sdd {
     auto setCurve = [&](const std::string& elementName,
                         const std::function<bool(model::CoilCoolingDXVariableRefrigerantFlow&, const model::Curve&)>& osSetter,
                         const std::function<model::Curve(model::CoilCoolingDXVariableRefrigerantFlow&)>& osGetter) {
-      auto value = element.child(elementName.c_str()).text().as_string();
+      const auto* value = element.child(elementName.c_str()).text().as_string();
       auto newcurve = model.getModelObjectByName<model::Curve>(value);
       if (newcurve) {
         auto oldcurve = osGetter(coil);
@@ -8259,7 +8259,7 @@ namespace sdd {
       var1.setMaximumValue(_maxVar1.get());
     }
 
-    auto text = element.child("InterpMthd").text().as_string();
+    const auto* text = element.child("InterpMthd").text().as_string();
     std::string newInterpMethod = "Cubic";
     std::string newExtrapMethod = "Constant";
     if (openstudio::istringEqual(text, "LagrangeInterpolationLinearExtrapolation")) {

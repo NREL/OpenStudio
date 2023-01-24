@@ -419,7 +419,7 @@ namespace detail {
     virtual bool fieldIsNonnullIfRequired(unsigned index) const;
 
    private:
-    IdfObject_Impl() {}
+    IdfObject_Impl() = default;
 
     // CONSTRUCTION HELPERS
 

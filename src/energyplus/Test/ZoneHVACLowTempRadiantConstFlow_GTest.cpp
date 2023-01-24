@@ -141,10 +141,10 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions) {
   // TODO: this is wrong... it checks the model instead of the workspace (so it doesn't test the FT at all...)
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
+  for (const ThermalZone& thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
 
     //get the radiant zone equipment
-    for (ModelObject equipment : thermalZone.equipment()) {
+    for (const ModelObject& equipment : thermalZone.equipment()) {
       if (equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>()) {
         ZoneHVACLowTempRadiantConstFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>().get();
         EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
@@ -155,7 +155,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions) {
         EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
         EXPECT_TRUE(testRad.isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted());
         EXPECT_TRUE(testRad.isFractionofMotorInefficienciestoFluidStreamDefaulted());
-        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
+        for (const IdfExtensibleGroup& extGrp : testRad.extensibleGroups()) {
           EXPECT_EQ(0.25, extGrp.getDouble(1, false).get());
         }
       }

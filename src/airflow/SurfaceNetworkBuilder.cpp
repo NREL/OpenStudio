@@ -107,7 +107,7 @@ namespace airflow {
 
     initProgress(surfaces.size(), "Processing surfaces for network creation");
 
-    for (model::Surface surface : surfaces) {
+    for (const model::Surface& surface : surfaces) {
       if (!first) {
         progress();
       }
@@ -129,7 +129,7 @@ namespace airflow {
         }
         // If we made it to here, then the exterior surface is good.
         linkExteriorSurface(thermalZone.get(), space.get(), surface);
-        for (model::SubSurface subSurface : surface.subSurfaces()) {
+        for (const model::SubSurface& subSurface : surface.subSurfaces()) {
           linkExteriorSubSurface(thermalZone.get(), space.get(), surface, subSurface);
         }
       } else if ((std::find(used.begin(), used.end(), surface.handle()) == used.end()) && (bc == "Surface")) {
@@ -165,7 +165,7 @@ namespace airflow {
           continue;
         }
         // We could punt the checking of subsurfaces until later, but it is best to get this out of the way now
-        for (model::SubSurface subSurface : surface.subSurfaces()) {
+        for (const model::SubSurface& subSurface : surface.subSurfaces()) {
           boost::optional<model::SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
           if (!adjacentSubSurface) {
             LOG(Warn, "Unable to find adjacent subsurface for subsurface of '" << openstudio::toString(surface.handle()) << "'");
@@ -187,7 +187,7 @@ namespace airflow {
         // Now have a surface that is fully connected and separates two zones so it can be linked
         linkInteriorSurface(thermalZone.get(), space.get(), surface, adjacentSurface.get(), adjacentSpace.get(), adjacentZone.get());
         // Link subsurfaces
-        for (model::SubSurface subSurface : surface.subSurfaces()) {
+        for (const model::SubSurface& subSurface : surface.subSurfaces()) {
           // Now we need to check the connections as we did with the surface
           boost::optional<model::SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
           if (!adjacentSubSurface) {
@@ -216,7 +216,7 @@ namespace airflow {
   std::vector<LogMessage> SurfaceNetworkBuilder::warnings() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() == Warn) {
         result.push_back(logMessage);
       }
@@ -228,7 +228,7 @@ namespace airflow {
   std::vector<LogMessage> SurfaceNetworkBuilder::errors() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() > Warn) {
         result.push_back(logMessage);
       }

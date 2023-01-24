@@ -85,14 +85,14 @@ namespace energyplus {
 
     boost::optional<ConstructionBase> construction = modelObject.construction();
     if (construction) {
-      idfObject.setString(BuildingSurface_DetailedFields::ConstructionName, construction->name().get());
+      idfObject.setString(BuildingSurface_DetailedFields::ConstructionName, construction->nameString());
     }
 
     boost::optional<Space> space = modelObject.space();
     if (space) {
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (thermalZone) {
-        idfObject.setString(BuildingSurface_DetailedFields::ZoneName, thermalZone->name().get());
+        idfObject.setString(BuildingSurface_DetailedFields::ZoneName, thermalZone->nameString());
       }
       // TODO: do we want that?
       if (!m_forwardTranslatorOptions.excludeSpaceTranslation()) {
@@ -108,7 +108,7 @@ namespace energyplus {
     std::string outsideBoundaryCondition = modelObject.outsideBoundaryCondition();
     if (istringEqual("Surface", outsideBoundaryCondition)) {
       if (!adjacentSurface) {
-        LOG(Warn, "Surface '" << modelObject.name().get()
+        LOG(Warn, "Surface '" << modelObject.nameString()
                               << "' has blank Outside Boundary Condition Object.  "
                                  "Changing Outside Boundary Condition from 'Surface' to 'Adiabatic'");
 
@@ -116,7 +116,7 @@ namespace energyplus {
       }
     } else if (istringEqual("OtherSideCoefficients", outsideBoundaryCondition)) {
       if (!surfacePropertyOtherSideCoefficients) {
-        LOG(Warn, "Surface '" << modelObject.name().get()
+        LOG(Warn, "Surface '" << modelObject.nameString()
                               << "' has blank Outside Boundary Condition Object.  "
                                  "Changing Outside Boundary Condition from 'Surface' to 'Adiabatic'");
 
@@ -124,7 +124,7 @@ namespace energyplus {
       }
     } else if (istringEqual("OtherSideConditionsModel", outsideBoundaryCondition)) {
       if (!surfacePropertyOtherSideConditionsModel) {
-        LOG(Warn, "Surface '" << modelObject.name().get()
+        LOG(Warn, "Surface '" << modelObject.nameString()
                               << "' has blank Outside Boundary Condition Object.  "
                                  "Changing Outside Boundary Condition from 'OtherSideConditionsModel' to 'Adiabatic'");
 
@@ -135,8 +135,8 @@ namespace energyplus {
     if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
       std::vector<SubSurface> subSurfaces = modelObject.subSurfaces();
       if (!subSurfaces.empty()) {
-        LOG(Warn, "Surface '" << modelObject.name().get() << "' is adiabatic, removing all sub surfaces");
-        for (auto subSurface : subSurfaces) {
+        LOG(Warn, "Surface '" << modelObject.nameString() << "' is adiabatic, removing all sub surfaces");
+        for (auto& subSurface : subSurfaces) {
           subSurface.remove();
         }
       }
@@ -146,29 +146,29 @@ namespace energyplus {
 
     if (adjacentSurface) {
       // do not translate and map here, wait for adjacent surface to be translated on its own
-      idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSurface->name().get());
+      idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSurface->nameString());
     }
 
     if (adjacentFoundation) {
       // do not translate and map here, wait for adjacent foundation to be translated on its own
-      idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentFoundation->name().get());
+      idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentFoundation->nameString());
     }
 
     if (surfacePropertyOtherSideCoefficients) {
       boost::optional<IdfObject> osc = translateAndMapModelObject(*surfacePropertyOtherSideCoefficients);
       if (osc && osc->name()) {
-        idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, osc->name().get());
+        idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, osc->nameString());
       } else {
-        LOG(Error, "Surface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
+        LOG(Error, "Surface '" << modelObject.nameString() << "', could not translate OutsideBoundaryConditionObject");
       }
     }
 
     if (surfacePropertyOtherSideConditionsModel) {
       boost::optional<IdfObject> oscm = translateAndMapModelObject(*surfacePropertyOtherSideConditionsModel);
       if (oscm && oscm->name()) {
-        idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, oscm->name().get());
+        idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, oscm->nameString());
       } else {
-        LOG(Error, "Surface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
+        LOG(Error, "Surface '" << modelObject.nameString() << "', could not translate OutsideBoundaryConditionObject");
       }
     }
 

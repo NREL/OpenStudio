@@ -50,7 +50,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputControlTableStyle() {}
+    virtual ~OutputControlTableStyle() = default;
 
     //@}
 
@@ -82,7 +82,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputControlTableStyle_Impl ImplType;
+    using ImplType = detail::OutputControlTableStyle_Impl;
 
     explicit OutputControlTableStyle(std::shared_ptr<detail::OutputControlTableStyle_Impl> impl);
 
@@ -98,10 +98,10 @@ namespace model {
   };
 
   /** \relates OutputControlTableStyle*/
-  typedef boost::optional<OutputControlTableStyle> OptionalOutputControlTableStyle;
+  using OptionalOutputControlTableStyle = boost::optional<OutputControlTableStyle>;
 
   /** \relates OutputControlTableStyle*/
-  typedef std::vector<OutputControlTableStyle> OutputControlTableStyleVector;
+  using OutputControlTableStyleVector = std::vector<OutputControlTableStyle>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -32,6 +32,7 @@
 #include "Intersection.hpp"
 #include "../data/Matrix.hpp"
 #include "../core/Assert.hpp"
+#include "../core/ContainersMove.hpp"
 #include "../core/Logger.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
@@ -136,7 +137,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
     solution.push_back(polygon);
     return solution;
   } else {
-    for (auto boostPolygon : result) {
+    for (auto& boostPolygon : result) {
 
       // The returned points are adjusted to the input polygon (which defines the canonical set)
       for (unsigned i = 0; i < boostPolygon.outer().size(); ++i) {
@@ -168,9 +169,7 @@ BoostPolygon removeSpikes(const BoostPolygon& polygon) {
 std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons) {
   std::vector<BoostPolygon> result;
   for (const BoostPolygon& polygon : polygons) {
-    for (auto p : removeSpikesEx(polygon)) {
-      result.push_back(p);
-    }
+    openstudio::detail::concat_helper(result, removeSpikesEx(polygon));
   }
   return result;
 }

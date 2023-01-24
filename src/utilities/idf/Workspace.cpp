@@ -2435,7 +2435,7 @@ Workspace::Workspace(const IdfFile& idfFile, StrictnessLevel level) : m_impl(new
   m_impl->resolvePotentialNameConflicts(copyOfThis);
 }
 
-Workspace::Workspace(const Workspace& other) : m_impl(other.m_impl) {}
+Workspace::Workspace(const Workspace& other) = default;
 
 Workspace Workspace::clone(bool keepHandles) const {
   Workspace result = m_impl->clone(keepHandles);

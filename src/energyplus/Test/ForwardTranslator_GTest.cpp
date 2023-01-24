@@ -786,7 +786,7 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
     model2.addObjects(idf->objects());
 
     ASSERT_EQ(2u, model2.getConcreteModelObjects<OutputVariable>().size());
-    for (auto outputVariable : model2.getConcreteModelObjects<OutputVariable>()) {
+    for (const auto& outputVariable : model2.getConcreteModelObjects<OutputVariable>()) {
       std::string s = outputVariable.variableName();
       EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
     }
@@ -796,7 +796,7 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
   Workspace workspace = trans.translateModel(model);
 
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Output_Variable).size());
-  for (auto object : workspace.getObjectsByType(IddObjectType::Output_Variable)) {
+  for (const auto& object : workspace.getObjectsByType(IddObjectType::Output_Variable)) {
     ASSERT_TRUE(object.getString(Output_VariableFields::VariableName)) << object;
     std::string s = object.getString(Output_VariableFields::VariableName).get();
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
@@ -810,7 +810,7 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
 
   Workspace workspace2(idf2.get());
   ASSERT_EQ(2u, workspace2.getObjectsByType(IddObjectType::Output_Variable).size());
-  for (auto object : workspace2.getObjectsByType(IddObjectType::Output_Variable)) {
+  for (const auto& object : workspace2.getObjectsByType(IddObjectType::Output_Variable)) {
     ASSERT_TRUE(object.getString(Output_VariableFields::VariableName)) << object;
     std::string s = object.getString(Output_VariableFields::VariableName).get();
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
@@ -820,7 +820,7 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
   boost::optional<Model> model2 = rt.translateWorkspace(workspace2);
   ASSERT_TRUE(model2);
   ASSERT_EQ(2u, model2->getConcreteModelObjects<OutputVariable>().size());
-  for (auto outputVariable : model2->getConcreteModelObjects<OutputVariable>()) {
+  for (const auto& outputVariable : model2->getConcreteModelObjects<OutputVariable>()) {
     std::string s = outputVariable.variableName();
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
   }

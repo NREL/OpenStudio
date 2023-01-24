@@ -318,7 +318,7 @@ namespace contam {
       template <class T>
       std::vector<T> getAirflowElements() {
         std::vector<T> afe;
-        for (std::shared_ptr<AirflowElement> el : m_airflowElements) {
+        for (const std::shared_ptr<AirflowElement>& el : m_airflowElements) {
           if (el.get()) {
             T* derived = dynamic_cast<T*>(el.get());
             if (derived) {
@@ -362,7 +362,7 @@ namespace contam {
       template <class T>
       std::vector<T> getControlNodes() {
         std::vector<T> nodes;
-        for (std::shared_ptr<ControlNode> el : m_controlNodes) {
+        for (const std::shared_ptr<ControlNode>& el : m_controlNodes) {
           if (el.get()) {
             T* derived = dynamic_cast<T*>(el.get());
             if (derived) {

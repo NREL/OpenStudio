@@ -393,7 +393,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
 
     const auto& bounds = space.boundingBox();
     const auto& surfaces = space.surfaces();
-    for (auto& surface : surfaces) {
+    for (const auto& surface : surfaces) {
       std::string surfType = surface.surfaceType();
       std::string surfName = surface.name().value();
 

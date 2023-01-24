@@ -54,7 +54,7 @@ struct Object
     OS_ASSERT(weakImpl.lock());
   }
 
-  ~Object() {}
+  ~Object() = default;
 
   void increment() {
     m_impl->increment();

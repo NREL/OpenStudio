@@ -409,7 +409,7 @@ TEST_F(ModelFixture, OutputControlTableStyle_UniqueModelObject_Clone) {
   outputControlTableStyle.setComment("Custom Object");
 
   // clone it into the same model
-  OutputControlTableStyle outputControlTableStyleClone = outputControlTableStyle.clone(model).cast<OutputControlTableStyle>();
+  auto outputControlTableStyleClone = outputControlTableStyle.clone(model).cast<OutputControlTableStyle>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputControlTableStyle, outputControlTableStyleClone);
   EXPECT_EQ("! Custom Object", outputControlTableStyleClone.comment());
@@ -417,7 +417,7 @@ TEST_F(ModelFixture, OutputControlTableStyle_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlTableStyle>());
-  OutputControlTableStyle outputControlTableStyleClone2 = outputControlTableStyle.clone(model2).cast<OutputControlTableStyle>();
+  auto outputControlTableStyleClone2 = outputControlTableStyle.clone(model2).cast<OutputControlTableStyle>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlTableStyle>());
   EXPECT_EQ("! Custom Object", outputControlTableStyleClone2.comment());
 }
@@ -534,7 +534,7 @@ TEST_F(ModelFixture, OutputSQLite_UniqueModelObject_Clone) {
   outputSQLite.setComment("Custom Object");
 
   // clone it into the same model
-  OutputSQLite outputSQLiteClone = outputSQLite.clone(model).cast<OutputSQLite>();
+  auto outputSQLiteClone = outputSQLite.clone(model).cast<OutputSQLite>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputSQLite, outputSQLiteClone);
   EXPECT_EQ("! Custom Object", outputSQLiteClone.comment());
@@ -542,7 +542,7 @@ TEST_F(ModelFixture, OutputSQLite_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputSQLite>());
-  OutputSQLite outputSQLiteClone2 = outputSQLite.clone(model2).cast<OutputSQLite>();
+  auto outputSQLiteClone2 = outputSQLite.clone(model2).cast<OutputSQLite>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputSQLite>());
   EXPECT_EQ("! Custom Object", outputSQLiteClone2.comment());
 }
@@ -559,7 +559,7 @@ TEST_F(ModelFixture, OutputSchedules_UniqueModelObject_Clone) {
   outputSchedules.setComment("Custom Object");
 
   // clone it into the same model
-  OutputSchedules outputSchedulesClone = outputSchedules.clone(model).cast<OutputSchedules>();
+  auto outputSchedulesClone = outputSchedules.clone(model).cast<OutputSchedules>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputSchedules, outputSchedulesClone);
   EXPECT_EQ("! Custom Object", outputSchedulesClone.comment());
@@ -567,7 +567,7 @@ TEST_F(ModelFixture, OutputSchedules_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputSchedules>());
-  OutputSchedules outputSchedulesClone2 = outputSchedules.clone(model2).cast<OutputSchedules>();
+  auto outputSchedulesClone2 = outputSchedules.clone(model2).cast<OutputSchedules>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputSchedules>());
   EXPECT_EQ("! Custom Object", outputSchedulesClone2.comment());
 }
@@ -584,7 +584,7 @@ TEST_F(ModelFixture, OutputConstructions_UniqueModelObject_Clone) {
   outputConstructions.setComment("Custom Object");
 
   // clone it into the same model
-  OutputConstructions outputConstructionsClone = outputConstructions.clone(model).cast<OutputConstructions>();
+  auto outputConstructionsClone = outputConstructions.clone(model).cast<OutputConstructions>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputConstructions, outputConstructionsClone);
   EXPECT_EQ("! Custom Object", outputConstructionsClone.comment());
@@ -592,7 +592,7 @@ TEST_F(ModelFixture, OutputConstructions_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputConstructions>());
-  OutputConstructions outputConstructionsClone2 = outputConstructions.clone(model2).cast<OutputConstructions>();
+  auto outputConstructionsClone2 = outputConstructions.clone(model2).cast<OutputConstructions>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputConstructions>());
   EXPECT_EQ("! Custom Object", outputConstructionsClone2.comment());
 }

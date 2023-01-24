@@ -36,7 +36,7 @@
 namespace openstudio {
 namespace detail {
 
-  StandardsJSON_Impl::StandardsJSON_Impl() {}
+  StandardsJSON_Impl::StandardsJSON_Impl() = default;
 
   StandardsJSON_Impl::StandardsJSON_Impl(const std::string& s) {
     std::istringstream ss(s);
@@ -84,7 +84,7 @@ namespace detail {
       return false;
     }
     // There shouldn't be any nested levels below that
-    for (auto& v : firstArrEntry) {
+    for (const auto& v : firstArrEntry) {
       if (v.isArray() || v.isObject()) {
         LOG(Warn, "There shouldn't be any nested objects");
         return false;

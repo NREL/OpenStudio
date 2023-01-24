@@ -121,7 +121,7 @@ namespace energyplus {
     //meters
     std::vector<std::string> meters = modelObject.meters();
     if (!meters.empty()) {
-      for (auto meter : meters) {
+      for (const auto& meter : meters) {
         auto eg = idfObject.pushExtensibleGroup();
         eg.setString(ElectricLoadCenter_TransformerExtensibleFields::MeterName, meter);
       }

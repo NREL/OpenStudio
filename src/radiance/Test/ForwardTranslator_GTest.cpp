@@ -62,7 +62,7 @@ using namespace openstudio::radiance;
 
 std::string printPaths(const std::vector<path>& paths) {
   std::stringstream result;
-  for (auto path : paths) {
+  for (const auto& path : paths) {
     result << toString(path) << '\n';
   }
   return result.str();
@@ -70,7 +70,7 @@ std::string printPaths(const std::vector<path>& paths) {
 
 std::string printLogMessages(const std::vector<LogMessage>& messages) {
   std::stringstream result;
-  for (auto message : messages) {
+  for (const auto& message : messages) {
     result << message.logMessage() << '\n';
   }
   return result.str();

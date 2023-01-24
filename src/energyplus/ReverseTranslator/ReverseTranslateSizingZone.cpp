@@ -100,7 +100,7 @@ namespace energyplus {
     }
 
     boost::optional<ModelObject> result;
-    for (ThermalZone thermalZone : thermalZones) {
+    for (const ThermalZone& thermalZone : thermalZones) {
 
       // sizing zone is constructed in thermal zone ctor
       openstudio::model::SizingZone sizingZone = thermalZone.sizingZone();

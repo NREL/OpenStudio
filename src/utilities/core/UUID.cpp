@@ -49,7 +49,7 @@ namespace detail {
   };
   struct MakeSureBoostGeneratorsInitializerIsInitialized
   {
-    MakeSureBoostGeneratorsInitializerIsInitialized() {}
+    MakeSureBoostGeneratorsInitializerIsInitialized() = default;
 
     BoostGeneratorsInitializer m_i;
   };

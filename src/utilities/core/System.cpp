@@ -202,7 +202,7 @@ void System::testExceptions4() {
   class MyException2 : public MyException
   {
    public:
-    MyException2() {}
+    MyException2() = default;
     MyException2(const MyException2&) = default;
     MyException2& operator=(const MyException2&) = default;
     MyException2(MyException2&&) = default;

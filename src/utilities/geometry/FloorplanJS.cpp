@@ -664,7 +664,7 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
   for (const auto& finalFaceVertices : allFinalFaceVertices) {
     Point3dVector finalfloorVertices;
     Point3dVector finalRoofCeilingVertices;
-    for (auto& v : finalFaceVertices) {
+    for (const auto& v : finalFaceVertices) {
       Point3d floorVert(v.x(), v.y(), minZ);
       Point3d ceilVert(v.x(), v.y(), maxZ);
       finalfloorVertices.push_back(floorVert);

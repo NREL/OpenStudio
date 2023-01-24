@@ -682,7 +682,7 @@ namespace detail {
 
 IddObject::IddObject() : m_impl(std::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl())) {}
 
-IddObject::IddObject(const IddObject& other) : m_impl(other.m_impl) {}
+IddObject::IddObject(const IddObject& other) = default;
 
 // GETTERS
 

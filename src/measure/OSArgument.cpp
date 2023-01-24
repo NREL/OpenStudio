@@ -976,15 +976,15 @@ namespace measure {
 
     // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
     // So we don't use it here. Same with std::get, so we use get_if instead
-    if (auto* p = std::get_if<bool>(&toPrint)) {
+    if (const auto* p = std::get_if<bool>(&toPrint)) {
       ss << std::boolalpha << *p;
-    } else if (auto* p = std::get_if<double>(&toPrint)) {
+    } else if (const auto* p = std::get_if<double>(&toPrint)) {
       ss << *p;
-    } else if (auto* p = std::get_if<int>(&toPrint)) {
+    } else if (const auto* p = std::get_if<int>(&toPrint)) {
       ss << *p;
-    } else if (auto* p = std::get_if<std::string>(&toPrint)) {
+    } else if (const auto* p = std::get_if<std::string>(&toPrint)) {
       ss << *p;
-    } else if (auto* p = std::get_if<openstudio::path>(&toPrint)) {
+    } else if (const auto* p = std::get_if<openstudio::path>(&toPrint)) {
       ss << *p;
     }
 

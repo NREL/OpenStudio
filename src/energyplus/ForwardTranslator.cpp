@@ -961,7 +961,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX: {
-        model::CoilCoolingDX coil = modelObject.cast<CoilCoolingDX>();
+        auto coil = modelObject.cast<CoilCoolingDX>();
         if (this->isHVACComponentWithinUnitary(coil)) {
           retVal = translateCoilCoolingDXWithoutUnitary(coil);
         } else {
@@ -1105,7 +1105,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_Electric_MultiStage: {
-        model::CoilHeatingElectricMultiStage coil = modelObject.cast<CoilHeatingElectricMultiStage>();
+        auto coil = modelObject.cast<CoilHeatingElectricMultiStage>();
         retVal = translateCoilHeatingElectricMultiStage(coil);
         break;
       }
@@ -2106,12 +2106,12 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_MaterialProperty_PhaseChange: {
-        model::MaterialPropertyPhaseChange phaseChange = modelObject.cast<MaterialPropertyPhaseChange>();
+        auto phaseChange = modelObject.cast<MaterialPropertyPhaseChange>();
         retVal = translateMaterialPropertyPhaseChange(phaseChange);
         break;
       }
       case openstudio::IddObjectType::OS_MaterialProperty_PhaseChangeHysteresis: {
-        model::MaterialPropertyPhaseChangeHysteresis phaseChangeHysteresis = modelObject.cast<MaterialPropertyPhaseChangeHysteresis>();
+        auto phaseChangeHysteresis = modelObject.cast<MaterialPropertyPhaseChangeHysteresis>();
         retVal = translateMaterialPropertyPhaseChangeHysteresis(phaseChangeHysteresis);
         break;
       }
@@ -2244,7 +2244,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_OutputControl_Table_Style: {
-        model::OutputControlTableStyle outputControlTableStyle = modelObject.cast<OutputControlTableStyle>();
+        auto outputControlTableStyle = modelObject.cast<OutputControlTableStyle>();
         retVal = translateOutputControlTableStyle(outputControlTableStyle);
         break;
       }
@@ -2352,7 +2352,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_PythonPlugin_Instance: {
-        model::PythonPluginInstance obj = modelObject.cast<PythonPluginInstance>();
+        auto obj = modelObject.cast<PythonPluginInstance>();
         retVal = translatePythonPluginInstance(obj);
         break;
       }
@@ -2830,7 +2830,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_SurfaceProperty_LocalEnvironment: {
-        model::SurfacePropertyLocalEnvironment obj = modelObject.cast<SurfacePropertyLocalEnvironment>();
+        auto obj = modelObject.cast<SurfacePropertyLocalEnvironment>();
         retVal = translateSurfacePropertyLocalEnvironment(obj);
         break;
       }
@@ -2850,17 +2850,17 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_SurfaceProperty_SurroundingSurfaces: {
-        model::SurfacePropertySurroundingSurfaces obj = modelObject.cast<SurfacePropertySurroundingSurfaces>();
+        auto obj = modelObject.cast<SurfacePropertySurroundingSurfaces>();
         retVal = translateSurfacePropertySurroundingSurfaces(obj);
         break;
       }
       case openstudio::IddObjectType::OS_SurfaceProperty_GroundSurfaces: {
-        model::SurfacePropertyGroundSurfaces obj = modelObject.cast<SurfacePropertyGroundSurfaces>();
+        auto obj = modelObject.cast<SurfacePropertyGroundSurfaces>();
         retVal = translateSurfacePropertyGroundSurfaces(obj);
         break;
       }
       case openstudio::IddObjectType::OS_SurfaceProperty_IncidentSolarMultiplier: {
-        model::SurfacePropertyIncidentSolarMultiplier obj = modelObject.cast<SurfacePropertyIncidentSolarMultiplier>();
+        auto obj = modelObject.cast<SurfacePropertyIncidentSolarMultiplier>();
         retVal = translateSurfacePropertyIncidentSolarMultiplier(obj);
         break;
       }

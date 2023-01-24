@@ -65,7 +65,7 @@ namespace detail {
 
     pointer_set pointers;
 
-    SourceData() {}
+    SourceData() = default;
   };
   using OptionalSourceData = boost::optional<SourceData>;
 

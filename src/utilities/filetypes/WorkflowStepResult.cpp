@@ -781,7 +781,7 @@ WorkflowStepResult::WorkflowStepResult() : m_impl(std::shared_ptr<detail::Workfl
   OS_ASSERT(getImpl<detail::WorkflowStepResult_Impl>());
 }
 
-WorkflowStepResult::WorkflowStepResult(const WorkflowStepResult& other) : m_impl(other.m_impl) {}
+WorkflowStepResult::WorkflowStepResult(const WorkflowStepResult& other) = default;
 
 WorkflowStepResult::WorkflowStepResult(std::shared_ptr<detail::WorkflowStepResult_Impl> impl) : m_impl(std::move(impl)) {}
 

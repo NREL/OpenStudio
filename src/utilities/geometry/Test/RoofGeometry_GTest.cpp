@@ -38,7 +38,7 @@ using namespace openstudio;
 
 void polygonMatches(std::vector<std::vector<Point3d>> expectedPolygons, std::vector<Point3d> polygon) {
   int numMatches = 0;
-  for (std::vector<Point3d> expectedPolygon : expectedPolygons) {
+  for (const std::vector<Point3d>& expectedPolygon : expectedPolygons) {
     if (circularEqual(expectedPolygon, polygon, 0.01)) {
       numMatches += 1;
     }

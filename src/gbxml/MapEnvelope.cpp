@@ -116,7 +116,7 @@ namespace gbxml {
       bool test = false;
 
       if (materials[i].optionalCast<openstudio::model::OpaqueMaterial>()) {
-        openstudio::model::OpaqueMaterial opaqueMaterial = materials[i].cast<openstudio::model::OpaqueMaterial>();
+        auto opaqueMaterial = materials[i].cast<openstudio::model::OpaqueMaterial>();
 
         // assumes first material is the outside layer
         if (i == 0) {

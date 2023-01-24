@@ -35,7 +35,7 @@
 namespace openstudio {
 namespace detail {
 
-  WorkflowStep_Impl::WorkflowStep_Impl() {}
+  WorkflowStep_Impl::WorkflowStep_Impl() = default;
 
   boost::optional<WorkflowStepResult> WorkflowStep_Impl::result() const {
     return m_result;

@@ -159,7 +159,7 @@ namespace model {
       //add programs to end of vector of programs
       std::vector<bool> ok(programs.size(), false);
       bool result = false;
-      for (auto& program : programs) {
+      for (const auto& program : programs) {
         auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
         result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
         ok.at(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName) = result;

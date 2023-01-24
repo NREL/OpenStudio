@@ -39,7 +39,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateNode(Node& modelObject) {
     std::vector<SetpointManager> _setpointManagers = modelObject.setpointManagers();
-    for (auto _setpointManager : _setpointManagers) {
+    for (auto& _setpointManager : _setpointManagers) {
       translateAndMapModelObject(_setpointManager);
     }
 

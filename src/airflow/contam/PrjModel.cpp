@@ -50,12 +50,9 @@ namespace contam {
     m_impl->read(input);
   }
 
-  IndexModel::IndexModel(const IndexModel& other) : m_impl(other.m_impl) {}
+  IndexModel::IndexModel(const IndexModel& other) = default;
 
-  IndexModel& IndexModel::operator=(const IndexModel& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  IndexModel& IndexModel::operator=(const IndexModel& other) = default;
 
   bool IndexModel::operator==(const IndexModel& other) const {
     return m_impl == other.m_impl;

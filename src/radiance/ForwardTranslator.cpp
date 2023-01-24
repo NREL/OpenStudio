@@ -451,7 +451,7 @@ namespace radiance {
   std::vector<LogMessage> ForwardTranslator::warnings() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() == Warn) {
         result.push_back(logMessage);
       }
@@ -463,7 +463,7 @@ namespace radiance {
   std::vector<LogMessage> ForwardTranslator::errors() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() > Warn) {
         result.push_back(logMessage);
       }
@@ -2196,7 +2196,7 @@ namespace radiance {
           try {
 
             bool hasXML = false;
-            for (BCLFile file : result.files()) {
+            for (const BCLFile& file : result.files()) {
               if (file.filetype() == "xml") {
                 hasXML = true;
               }
