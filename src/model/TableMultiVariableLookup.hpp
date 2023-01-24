@@ -34,6 +34,7 @@
 #include "Curve.hpp"
 
 #include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -71,7 +72,7 @@ namespace model {
   MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point);
 
   /** TableMultiVariableLookup is a Curve that wraps the OpenStudio IDD object 'OS:Table:MultiVariableLookup'. */
-  class MODEL_API TableMultiVariableLookup : public Curve
+  class OS_DEPRECATED MODEL_API TableMultiVariableLookup : public Curve
   {
    public:
     /** @name Constructors and Destructors */
@@ -344,6 +345,14 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.TableMultiVariableLookup");
   };
 
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
   /** \relates TableMultiVariableLookup*/
   using OptionalTableMultiVariableLookup = boost::optional<TableMultiVariableLookup>;
 
@@ -352,6 +361,11 @@ namespace model {
 
   /** \relates TableMultiVariableLookupPoint*/
   using TableMultiVariableLookupPointVector = std::vector<TableMultiVariableLookupPoint>;
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
 
 }  // namespace model
 }  // namespace openstudio

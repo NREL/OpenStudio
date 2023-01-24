@@ -1,0 +1,12 @@
+
+OS:Version,
+  {a442ec10-8a7c-41e0-9be2-301215acb95c}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Coil:Heating:Gas:MultiStage,
+  {076072a6-4433-4f42-8abd-ce4cb2b01811}, !- Handle
+  Coil Heating Gas Multi Stage 1,         !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Air Inlet Node
+  ;                                       !- Air Outlet Node
+

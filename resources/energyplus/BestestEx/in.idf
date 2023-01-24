@@ -5,7 +5,7 @@
 !BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
 !Use EnergyPlus IDFEditor to view inputs in IP units
 
-  Version,22.1;
+  Version,22.2;
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
@@ -1252,12 +1252,12 @@
 
   ZoneInfiltration:DesignFlowRate,
     ZONE TWO INFILTRATION,   !- Name
-    ZONE TWO ATTIC,          !- Zone or ZoneList Name
+    ZONE TWO ATTIC,          !- Zone or ZoneList or Space or SpaceList Name
     ALWAYS 1,                !- Schedule Name
     AirChanges/Hour,         !- Design Flow Rate Calculation Method
     ,                        !- Design Flow Rate {m3/s}
-    ,                        !- Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Flow per Exterior Surface Area {m3/s-m2}
+    ,                        !- Flow Rate per Floor Area {m3/s-m2}
+    ,                        !- Flow Rate per Exterior Surface Area {m3/s-m2}
     2.4,                     !- Air Changes per Hour {1/hr}
     1,                       !- Constant Term Coefficient
     0,                       !- Temperature Term Coefficient
@@ -1266,12 +1266,12 @@
 
   ZoneInfiltration:DesignFlowRate,
     ZONE ONE INFILTRATION,   !- Name
-    ZONE ONE,                !- Zone or ZoneList Name
+    ZONE ONE,                !- Zone or ZoneList or Space or SpaceList Name
     ALWAYS 1,                !- Schedule Name
     AirChanges/Hour,         !- Design Flow Rate Calculation Method
     ,                        !- Design Flow Rate {m3/s}
-    ,                        !- Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Flow per Exterior Surface Area {m3/s-m2}
+    ,                        !- Flow Rate per Floor Area {m3/s-m2}
+    ,                        !- Flow Rate per Exterior Surface Area {m3/s-m2}
     0,                       !- Air Changes per Hour {1/hr}
     1,                       !- Constant Term Coefficient
     0,                       !- Temperature Term Coefficient
@@ -1280,7 +1280,7 @@
 
   ZoneInfiltration:EffectiveLeakageArea,
     ShermanGrimsrud,         !- Name
-    ZONE ONE,                !- Zone Name
+    ZONE ONE,                !- Zone or Space Name
     ALWAYS 1,                !- Schedule Name
     1266.4,                  !- Effective Air Leakage Area {cm2}
     0.000145,                !- Stack Coefficient

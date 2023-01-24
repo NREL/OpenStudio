@@ -55,6 +55,8 @@
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "../ScheduleCompact.hpp"
+#include "../FanOnOff.hpp"
+#include "../FanSystemModel.hpp"
 
 using namespace openstudio;
 
@@ -263,4 +265,24 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalAirConditioner_CoilSystemCoolingDXH
   auto s = m.alwaysOnDiscreteSchedule();
 
   model::ZoneHVACPackagedTerminalAirConditioner ptac(m, s, fan, heatingCoil, coolingCoil);
+}
+
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalAirConditioner_SupplyAirFanOpSch) {
+  model::Model m;
+  model::CoilHeatingWater heatingCoil(m);
+  model::CoilSystemCoolingDXHeatExchangerAssisted coolingCoil(m);
+  model::FanConstantVolume fanCV(m);
+  model::FanSystemModel fanSystemModel(m);
+  model::FanOnOff fanOnOff(m);
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+  auto alwaysOff = m.alwaysOffDiscreteSchedule();
+
+  model::ZoneHVACPackagedTerminalAirConditioner ptacCV(m, alwaysOn, fanCV, heatingCoil, coolingCoil);
+  EXPECT_EQ(alwaysOn, ptacCV.supplyAirFanOperatingModeSchedule());
+
+  model::ZoneHVACPackagedTerminalAirConditioner ptacSystemModel(m, alwaysOn, fanSystemModel, heatingCoil, coolingCoil);
+  EXPECT_EQ(alwaysOff, ptacSystemModel.supplyAirFanOperatingModeSchedule());
+
+  model::ZoneHVACPackagedTerminalAirConditioner ptacOnOff(m, alwaysOn, fanOnOff, heatingCoil, coolingCoil);
+  EXPECT_EQ(alwaysOff, ptacOnOff.supplyAirFanOperatingModeSchedule());
 }

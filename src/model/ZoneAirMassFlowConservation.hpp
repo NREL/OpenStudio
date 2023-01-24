@@ -62,9 +62,6 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty vector.**/
-    static std::vector<std::string> sourceZoneInfiltrationTreatmentValues();
-
     static std::vector<std::string> adjustZoneMixingandReturnForAirMassFlowBalanceValues();
 
     static std::vector<std::string> infiltrationBalancingMethodValues();
@@ -80,12 +77,6 @@ namespace model {
 
     bool isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted() const;
     OS_DEPRECATED bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
-
-    /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty string.**/
-    std::string sourceZoneInfiltrationTreatment() const;
-
-    /** This method is deprecated as of OpenStudio 1.9.3. It will return false.**/
-    bool isSourceZoneInfiltrationTreatmentDefaulted() const;
 
     std::string infiltrationBalancingMethod() const;
 
@@ -105,12 +96,6 @@ namespace model {
 
     void resetAdjustZoneMixingandReturnForAirMassFlowBalance();
     OS_DEPRECATED void resetAdjustZoneMixingForZoneAirMassFlowBalance();
-
-    /** This method is deprecated as of OpenStudio 1.9.3.  It will return false.**/
-    bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
-
-    /** This method is deprecated as of OpenStudio 1.9.3**/
-    void resetSourceZoneInfiltrationTreatment();
 
     bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
 

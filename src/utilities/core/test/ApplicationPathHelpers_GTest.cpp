@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <thread>
 #include <future>
+#include <OpenStudio.hxx>
 
 // TODO: GTEST 1.9 should have a GTEST_SKIP macro we could use
 #define SKIP(TEST_NAME)                                                                                                                              \
@@ -205,7 +206,9 @@ TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
   EXPECT_TRUE(exists(openstudioModulePath));
   // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
 #if defined(_WIN32)
-#  if _DEBUG
+#  if defined(NINJA)
+  openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudiolib.dll");
+#  elif _DEBUG
   openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudiolib.dll");
 #  else
   openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudiolib.dll");

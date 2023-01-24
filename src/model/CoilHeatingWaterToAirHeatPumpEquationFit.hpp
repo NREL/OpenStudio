@@ -96,6 +96,12 @@ namespace model {
 
     bool isRatedHeatingCoefficientofPerformanceDefaulted() const;
 
+    double ratedEnteringWaterTemperature() const;
+
+    double ratedEnteringAirDryBulbTemperature() const;
+
+    double ratioofRatedHeatingCapacitytoRatedCoolingCapacity() const;
+
     CurveQuadLinear heatingCapacityCurve() const;
 
     OS_DEPRECATED double heatingCapacityCoefficient1() const;
@@ -143,6 +149,12 @@ namespace model {
     bool setRatedHeatingCoefficientofPerformance(double ratedHeatingCoefficientofPerformance);
 
     void resetRatedHeatingCoefficientofPerformance();
+
+    bool setRatedEnteringWaterTemperature(double ratedEnteringWaterTemperature);
+
+    bool setRatedEnteringAirDryBulbTemperature(double ratedEnteringAirDryBulbTemperature);
+
+    bool setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(double ratioofRatedHeatingCapacitytoRatedCoolingCapacity);
 
     bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
 

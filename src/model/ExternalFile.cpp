@@ -33,6 +33,9 @@
 #include "Model.hpp"
 #include "ScheduleFile.hpp"
 #include "PythonPluginInstance.hpp"
+#include "PythonPluginInstance_Impl.hpp"
+#include "ChillerElectricASHRAE205.hpp"
+#include "ChillerElectricASHRAE205_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -45,7 +48,6 @@
 
 #include <unordered_map>
 #include "ScheduleFile_Impl.hpp"
-#include "PythonPluginInstance_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -109,6 +111,13 @@ namespace model {
       std::vector<PythonPluginInstance> ppis = pythonPluginInstances();
       for (auto& pythonPluginInstance : ppis) {
         std::vector<openstudio::IdfObject> tmp2 = pythonPluginInstance.remove();
+        tmp.insert(tmp.end(), tmp2.begin(), tmp2.end());
+      }
+
+      // ChillerElectricASHRAE205
+      std::vector<ChillerElectricASHRAE205> chs = chillerElectricASHRAE205s();
+      for (auto& ch : chs) {
+        std::vector<openstudio::IdfObject> tmp2 = ch.remove();
         tmp.insert(tmp.end(), tmp2.begin(), tmp2.end());
       }
 
@@ -190,6 +199,11 @@ namespace model {
       return result;
     }
 
+    std::vector<ChillerElectricASHRAE205> ExternalFile_Impl::chillerElectricASHRAE205s() const {
+      std::vector<ChillerElectricASHRAE205> result = getObject<ExternalFile>().getModelObjectSources<ChillerElectricASHRAE205>();
+      return result;
+    }
+
   }  // namespace detail
 
   boost::optional<ExternalFile> ExternalFile::getExternalFile(const Model& model, const std::string& filename) {
@@ -250,6 +264,11 @@ namespace model {
 
       try {
         makeParentFolder(dest, path(), true);
+      } catch (std::exception&) {
+        this->remove();
+        LOG_AND_THROW("Failed to created parent folder at \"" << dest << "\"");
+      }
+      try {
         boost::filesystem::copy(p, dest);
       } catch (std::exception&) {
         this->remove();
@@ -311,8 +330,12 @@ namespace model {
     return getImpl<detail::ExternalFile_Impl>()->pythonPluginInstances();
   }
 
+  std::vector<ChillerElectricASHRAE205> ExternalFile::chillerElectricASHRAE205s() const {
+    return getImpl<detail::ExternalFile_Impl>()->chillerElectricASHRAE205s();
+  }
+
   /// @cond
-  ExternalFile::ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl) : ResourceObject(impl) {}
+  ExternalFile::ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl) : ResourceObject(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

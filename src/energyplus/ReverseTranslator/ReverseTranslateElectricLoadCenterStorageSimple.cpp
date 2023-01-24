@@ -36,6 +36,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
 #include <utilities/idd/ElectricLoadCenter_Storage_Simple_FieldEnums.hxx>
 
@@ -50,8 +52,6 @@ namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple(const WorkspaceObject& workspaceObject) {
 
-    OptionalModelObject result;
-    OptionalModelObject temp;
     OptionalDouble d;
     boost::optional<WorkspaceObject> owo;
     OptionalString optS;
@@ -75,9 +75,14 @@ namespace energyplus {
 
     // ZoneName
     if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_SimpleFields::ZoneName))) {
-      if (boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get())) {
-        if (boost::optional<ThermalZone> thermalZone = mo->optionalCast<ThermalZone>()) {
-          elcStorSimple.setThermalZone(thermalZone.get());
+      if (boost::optional<ModelObject> mo_ = translateAndMapWorkspaceObject(owo.get())) {
+        // Zone is translated, and a Space is returned instead
+        if (boost::optional<Space> space_ = mo_->optionalCast<Space>()) {
+          if (auto z_ = space_->thermalZone()) {
+            elcStorSimple.setThermalZone(z_.get());
+          }
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Zone Name'");
         }
       }
     }
@@ -130,8 +135,7 @@ namespace energyplus {
       elcStorSimple.setInitialStateofCharge(*d);
     }
 
-    result = elcStorSimple;
-    return result;
+    return elcStorSimple;
   }
 
 }  // namespace energyplus

@@ -126,7 +126,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
     WorkspaceObjectVector idf_zeqs(w.getObjectsByType(IddObjectType::ZoneHVAC_EquipmentList));
     EXPECT_EQ(0u, idf_zeqs.size());
 
-    EXPECT_EQ(idf_zone.nameString(), idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::ZoneName).get());
+    EXPECT_EQ(idf_zone.nameString(), idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::ZoneorSpaceName).get());
     EXPECT_EQ(openingAreaSch.nameString(), idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName).get());
     EXPECT_EQ(zv.openingArea(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningArea).get());
     EXPECT_EQ(zv.openingEffectiveness().get(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness).get());
@@ -193,7 +193,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneVentilationWindandStackOpenArea)
 
   IdfObject idf_zv(IddObjectType::ZoneVentilation_WindandStackOpenArea);
   idf_zv.setName("My ZoneVentilationWindAndStackOpenArea");
-  EXPECT_TRUE(idf_zv.setString(ZoneVentilation_WindandStackOpenAreaFields::ZoneName, idf_zone.nameString()));
+  EXPECT_TRUE(idf_zv.setString(ZoneVentilation_WindandStackOpenAreaFields::ZoneorSpaceName, idf_zone.nameString()));
   EXPECT_TRUE(idf_zv.setDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningArea, 10.5));
   // Opening Area Fraction Schedule: leave blank
 

@@ -60,7 +60,12 @@ namespace energyplus {
 
     s = workspaceObject.getString(openstudio::ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, true);
     if (s) {
-      result.setSourceZoneInfiltrationTreatment(*s);
+      result.setInfiltrationBalancingMethod(*s);
+    }
+
+    s = workspaceObject.getString(openstudio::ZoneAirMassFlowConservationFields::InfiltrationBalancingZones, true);
+    if (s) {
+      result.setInfiltrationBalancingZones(*s);
     }
 
     return result;

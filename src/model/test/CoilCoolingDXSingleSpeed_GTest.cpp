@@ -58,6 +58,12 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_GettersS
                                 energyInputRatioFunctionofTemperatureCurve, energyInputRatioFunctionofFlowFractionCurve,
                                 partLoadFractionCorrelationCurve);
 
+  EXPECT_TRUE(coil.isRatedTotalCoolingCapacityAutosized());
+  EXPECT_TRUE(coil.isRatedSensibleHeatRatioAutosized());
+  EXPECT_TRUE(coil.isRatedAirFlowRateAutosized());
+  EXPECT_TRUE(coil.isEvaporativeCondenserAirFlowRateAutosized());
+  EXPECT_TRUE(coil.isEvaporativeCondenserPumpRatedPowerConsumptionAutosized());
+
   coil.setRatedTotalCoolingCapacity(1.0);
   coil.setRatedSensibleHeatRatio(0.6);
   coil.setRatedCOP(3.6);
@@ -76,19 +82,19 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_GettersS
 
   EXPECT_EQ(coil.ratedTotalCoolingCapacity().get(), 1.0);
   EXPECT_EQ(coil.ratedSensibleHeatRatio().get(), 0.6);
-  EXPECT_EQ(coil.ratedCOP().get(), 3.6);
+  EXPECT_EQ(coil.ratedCOP(), 3.6);
   EXPECT_EQ(coil.ratedAirFlowRate().get(), 1.1);
-  EXPECT_EQ(coil.ratedEvaporatorFanPowerPerVolumeFlowRate().get(), 600.0);
-  EXPECT_EQ(coil.nominalTimeForCondensateRemovalToBegin().get(), 50.0);
-  EXPECT_EQ(coil.ratioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity().get(), 3.0);
-  EXPECT_EQ(coil.maximumCyclingRate().get(), 3.2);
-  EXPECT_EQ(coil.latentCapacityTimeConstant().get(), 499.8);
-  EXPECT_EQ(coil.evaporativeCondenserEffectiveness().get(), 0.8);
+  EXPECT_EQ(coil.ratedEvaporatorFanPowerPerVolumeFlowRate(), 600.0);
+  EXPECT_EQ(coil.nominalTimeForCondensateRemovalToBegin(), 50.0);
+  EXPECT_EQ(coil.ratioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity(), 3.0);
+  EXPECT_EQ(coil.maximumCyclingRate(), 3.2);
+  EXPECT_EQ(coil.latentCapacityTimeConstant(), 499.8);
+  EXPECT_EQ(coil.evaporativeCondenserEffectiveness(), 0.8);
   EXPECT_EQ(coil.evaporativeCondenserAirFlowRate().get(), 1.2);
   EXPECT_EQ(coil.evaporativeCondenserPumpRatedPowerConsumption().get(), 1.3);
-  EXPECT_EQ(coil.maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation().get(), 1.4);
-  EXPECT_EQ(coil.basinHeaterCapacity().get(), 1.5);
-  EXPECT_EQ(coil.basinHeaterSetpointTemperature().get(), 2.5);
+  EXPECT_EQ(coil.maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(), 1.4);
+  EXPECT_EQ(coil.basinHeaterCapacity(), 1.5);
+  EXPECT_EQ(coil.basinHeaterSetpointTemperature(), 2.5);
 
   // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
   // IDD Default
@@ -191,4 +197,19 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeed_addToNode) {
   EXPECT_EQ((unsigned)3, airLoop2.supplyComponents().size());
   EXPECT_TRUE(testObjectClone2.addToNode(supplyOutletNode));
   EXPECT_EQ((unsigned)7, airLoop.supplyComponents().size());
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeed_2017and2023) {
+  Model model;
+
+  CoilCoolingDXSingleSpeed speed(model);
+
+  EXPECT_EQ(773.3, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2017());
+  EXPECT_EQ(934.4, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2023());
+
+  EXPECT_TRUE(speed.setRatedEvaporatorFanPowerPerVolumeFlowRate2017(8.0));
+  EXPECT_TRUE(speed.setRatedEvaporatorFanPowerPerVolumeFlowRate2023(9.0));
+
+  EXPECT_EQ(8.0, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2017());
+  EXPECT_EQ(9.0, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2023());
 }

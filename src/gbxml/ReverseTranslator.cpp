@@ -58,8 +58,6 @@
 #include "../model/Construction_Impl.hpp"
 #include "../model/ConstructionAirBoundary.hpp"
 #include "../model/ConstructionAirBoundary_Impl.hpp"
-#include "../model/AirWallMaterial.hpp"
-#include "../model/AirWallMaterial_Impl.hpp"
 #include "../model/AdditionalProperties.hpp"
 
 #include "../utilities/core/Assert.hpp"

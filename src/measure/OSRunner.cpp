@@ -528,36 +528,40 @@ namespace measure {
               stepValues.emplace_back(user_argument.name(), user_argument.defaultValueAsBool());
             }
           } else if (typeValue == OSArgumentType::Double) {
-            auto value = user_argument.hasValue() ? user_argument.valueAsDouble() : user_argument.defaultValueAsDouble();
-            if (script_argument.hasDomain()) {
-              // Validate it's in the domain
-              auto domain = script_argument.domainAsDouble();
-              auto& low = domain.front();
-              auto& high = domain.back();
-              if (value < low || value > high) {
-                registerError(fmt::format("{} User argument '{}' has a value '{}' that is not in the domain [{}, {}].",
-                                          user_argument.type().valueName(), script_argument.name(), value, low, high));
-                result = false;
+            if (user_argument.hasValue() || user_argument.hasDefaultValue()) {
+              auto value = user_argument.hasValue() ? user_argument.valueAsDouble() : user_argument.defaultValueAsDouble();
+              if (script_argument.hasDomain()) {
+                // Validate it's in the domain
+                auto domain = script_argument.domainAsDouble();
+                auto& low = domain.front();
+                auto& high = domain.back();
+                if (value < low || value > high) {
+                  registerError(fmt::format("{} User argument '{}' has a value '{}' that is not in the domain [{}, {}].",
+                                            user_argument.type().valueName(), script_argument.name(), value, low, high));
+                  result = false;
+                }
               }
-            }
-            if (result) {
-              stepValues.emplace_back(user_argument.name(), value);
+              if (result) {
+                stepValues.emplace_back(user_argument.name(), value);
+              }
             }
           } else if (typeValue == OSArgumentType::Integer) {
-            auto value = user_argument.hasValue() ? user_argument.valueAsInteger() : user_argument.defaultValueAsInteger();
-            if (script_argument.hasDomain()) {
-              // Validate it's in the domain
-              auto domain = script_argument.domainAsInteger();
-              auto& low = domain.front();
-              auto& high = domain.back();
-              if (value < low || value > high) {
-                registerError(fmt::format("{} User argument '{}' has a value '{}' that is not in the domain [{}, {}].",
-                                          user_argument.type().valueName(), script_argument.name(), value, low, high));
-                result = false;
+            if (user_argument.hasValue() || user_argument.hasDefaultValue()) {
+              auto value = user_argument.hasValue() ? user_argument.valueAsInteger() : user_argument.defaultValueAsInteger();
+              if (script_argument.hasDomain()) {
+                // Validate it's in the domain
+                auto domain = script_argument.domainAsInteger();
+                auto& low = domain.front();
+                auto& high = domain.back();
+                if (value < low || value > high) {
+                  registerError(fmt::format("{} User argument '{}' has a value '{}' that is not in the domain [{}, {}].",
+                                            user_argument.type().valueName(), script_argument.name(), value, low, high));
+                  result = false;
+                }
               }
-            }
-            if (result) {
-              stepValues.emplace_back(user_argument.name(), value);
+              if (result) {
+                stepValues.emplace_back(user_argument.name(), value);
+              }
             }
           } else if ((typeValue == OSArgumentType::String) || (typeValue == OSArgumentType::Choice) || (typeValue == OSArgumentType::Path)) {
             if (user_argument.hasValue()) {

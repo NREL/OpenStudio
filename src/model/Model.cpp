@@ -397,6 +397,40 @@ namespace model {
       return m_cachedOutputTableSummaryReports;
     }
 
+    boost::optional<OutputSchedules> Model_Impl::outputSchedules() const {
+      if (m_cachedOutputSchedules) {
+        return m_cachedOutputSchedules;
+      }
+
+      boost::optional<OutputSchedules> result = this->model().getOptionalUniqueModelObject<OutputSchedules>();
+      if (result) {
+        m_cachedOutputSchedules = result;
+        result->getImpl<OutputSchedules_Impl>()
+          .get()
+          ->OutputSchedules_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputSchedules>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputSchedules;
+    }
+
+    boost::optional<OutputConstructions> Model_Impl::outputConstructions() const {
+      if (m_cachedOutputConstructions) {
+        return m_cachedOutputConstructions;
+      }
+
+      boost::optional<OutputConstructions> result = this->model().getOptionalUniqueModelObject<OutputConstructions>();
+      if (result) {
+        m_cachedOutputConstructions = result;
+        result->getImpl<OutputConstructions_Impl>()
+          .get()
+          ->OutputConstructions_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputConstructions>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputConstructions;
+    }
+
     boost::optional<PerformancePrecisionTradeoffs> Model_Impl::performancePrecisionTradeoffs() const {
       if (m_cachedPerformancePrecisionTradeoffs) {
         return m_cachedPerformancePrecisionTradeoffs;
@@ -1480,6 +1514,8 @@ namespace model {
       clearCachedOutputSQLite(dummy);
       clearCachedOutputEnergyManagementSystem(dummy);
       clearCachedOutputTableSummaryReports(dummy);
+      clearCachedOutputSchedules(dummy);
+      clearCachedOutputConstructions(dummy);
       clearCachedPerformancePrecisionTradeoffs(dummy);
       clearCachedLifeCycleCostParameters(dummy);
       clearCachedSizingParameters(dummy);
@@ -1556,6 +1592,14 @@ namespace model {
 
     void Model_Impl::clearCachedOutputTableSummaryReports(const Handle&) {
       m_cachedOutputTableSummaryReports.reset();
+    }
+
+    void Model_Impl::clearCachedOutputSchedules(const Handle&) {
+      m_cachedOutputSchedules.reset();
+    }
+
+    void Model_Impl::clearCachedOutputConstructions(const Handle&) {
+      m_cachedOutputConstructions.reset();
     }
 
     void Model_Impl::clearCachedPerformancePrecisionTradeoffs(const Handle&) {
@@ -1712,6 +1756,8 @@ namespace model {
           modelObj->autosize();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
           modelObj->autosize();
+        } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingElectricMultiStageStageData>()) {  // CoilHeatingElectricMultiStageStageData
+          modelObj->autosize();
         } else if (auto modelObj =
                      optModelObj.optionalCast<
                        HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
@@ -1745,6 +1791,8 @@ namespace model {
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) {  // CoilHeatingDXMultiSpeedStageData
           modelObj->applySizingValues();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
+          modelObj->applySizingValues();
+        } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingElectricMultiStageStageData>()) {  // CoilHeatingElectricMultiStageStageData
           modelObj->applySizingValues();
         } else if (auto modelObj =
                      optModelObj.optionalCast<
@@ -1875,6 +1923,14 @@ namespace model {
 
   boost::optional<OutputTableSummaryReports> Model::outputTableSummaryReports() const {
     return getImpl<detail::Model_Impl>()->outputTableSummaryReports();
+  }
+
+  boost::optional<OutputSchedules> Model::outputSchedules() const {
+    return getImpl<detail::Model_Impl>()->outputSchedules();
+  }
+
+  boost::optional<OutputConstructions> Model::outputConstructions() const {
+    return getImpl<detail::Model_Impl>()->outputConstructions();
   }
 
   boost::optional<PerformancePrecisionTradeoffs> Model::performancePrecisionTradeoffs() const {
@@ -3435,6 +3491,24 @@ namespace model {
   }
 
   template <>
+  OutputSchedules Model::getUniqueModelObject<OutputSchedules>() {
+    if (boost::optional<OutputSchedules> _b = outputSchedules()) {
+      return _b.get();
+    } else {
+      return OutputSchedules(*this);
+    }
+  }
+
+  template <>
+  OutputConstructions Model::getUniqueModelObject<OutputConstructions>() {
+    if (boost::optional<OutputConstructions> _b = outputConstructions()) {
+      return _b.get();
+    } else {
+      return OutputConstructions(*this);
+    }
+  }
+
+  template <>
   PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>() {
     if (boost::optional<PerformancePrecisionTradeoffs> _p = performancePrecisionTradeoffs()) {
       return _p.get();
@@ -3802,7 +3876,6 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVNoReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolReheat);
-    REGISTER_CONSTRUCTOR(AirWallMaterial);
     REGISTER_CONSTRUCTOR(AvailabilityManagerAssignmentList);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightCycle);
     REGISTER_CONSTRUCTOR(AvailabilityManagerOptimumStart);
@@ -3827,6 +3900,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerAbsorption);
     REGISTER_CONSTRUCTOR(ChillerAbsorptionIndirect);
+    REGISTER_CONSTRUCTOR(ChillerElectricASHRAE205);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
     REGISTER_CONSTRUCTOR(ChillerElectricReformulatedEIR);
     REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
@@ -3858,6 +3932,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilHeatingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
+    REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStage);
+    REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStageStageData);
     REGISTER_CONSTRUCTOR(CoilHeatingFourPipeBeam);
     REGISTER_CONSTRUCTOR(CoilHeatingGas);
     REGISTER_CONSTRUCTOR(CoilHeatingGasMultiStage);
@@ -4068,6 +4144,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(OutputJSON);
     REGISTER_CONSTRUCTOR(OutputSQLite);
     REGISTER_CONSTRUCTOR(OutputEnvironmentalImpactFactors);
+    REGISTER_CONSTRUCTOR(OutputSchedules);
+    REGISTER_CONSTRUCTOR(OutputConstructions);
     REGISTER_CONSTRUCTOR(EnvironmentalImpactFactors);
     REGISTER_CONSTRUCTOR(FuelFactors);
     REGISTER_CONSTRUCTOR(OutputMeter);
@@ -4211,8 +4289,24 @@ namespace model {
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(SurfacePropertySurroundingSurfaces);
+    REGISTER_CONSTRUCTOR(SurfacePropertyGroundSurfaces);
+    REGISTER_CONSTRUCTOR(SurfacePropertyIncidentSolarMultiplier);
     REGISTER_CONSTRUCTOR(SwimmingPoolIndoor);
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
+    REGISTER_CONSTRUCTOR(TableLookup);
+    REGISTER_CONSTRUCTOR(TableIndependentVariable);
     REGISTER_CONSTRUCTOR(TemperingValve);
     REGISTER_CONSTRUCTOR(ThermochromicGlazing);
     REGISTER_CONSTRUCTOR(ThermostatSetpointDualSetpoint);
@@ -4341,7 +4435,6 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVNoReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolReheat);
-    REGISTER_COPYCONSTRUCTORS(AirWallMaterial);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerAssignmentList);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightCycle);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerOptimumStart);
@@ -4367,6 +4460,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorption);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorptionIndirect);
+    REGISTER_COPYCONSTRUCTORS(ChillerElectricASHRAE205);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricReformulatedEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
@@ -4397,6 +4491,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStage);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStageStageData);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingFourPipeBeam);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGas);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGasMultiStage);
@@ -4607,6 +4703,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(OutputJSON);
     REGISTER_COPYCONSTRUCTORS(OutputSQLite);
     REGISTER_COPYCONSTRUCTORS(OutputEnvironmentalImpactFactors);
+    REGISTER_COPYCONSTRUCTORS(OutputSchedules);
+    REGISTER_COPYCONSTRUCTORS(OutputConstructions);
     REGISTER_COPYCONSTRUCTORS(EnvironmentalImpactFactors);
     REGISTER_COPYCONSTRUCTORS(FuelFactors);
     REGISTER_COPYCONSTRUCTORS(OutputMeter);
@@ -4750,8 +4848,24 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertySurroundingSurfaces);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyGroundSurfaces);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyIncidentSolarMultiplier);
     REGISTER_COPYCONSTRUCTORS(SwimmingPoolIndoor);
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
+    REGISTER_COPYCONSTRUCTORS(TableLookup);
+    REGISTER_COPYCONSTRUCTORS(TableIndependentVariable);
     REGISTER_COPYCONSTRUCTORS(TemperingValve);
     REGISTER_COPYCONSTRUCTORS(ThermochromicGlazing);
     REGISTER_COPYCONSTRUCTORS(ThermostatSetpointDualSetpoint);

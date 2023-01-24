@@ -31,8 +31,6 @@
 
 #include "ModelFixture.hpp"
 
-#include "../AirWallMaterial.hpp"
-#include "../AirWallMaterial_Impl.hpp"
 #include "../InfraredTransparentMaterial.hpp"
 #include "../InfraredTransparentMaterial_Impl.hpp"
 #include "../Model_Impl.hpp"
@@ -59,25 +57,6 @@ TEST_F(ModelFixture, ModelPartitionMaterial_Daylighting_School_1)
   EXPECT_TRUE(modelPartitionMaterials.empty());
 }
 */
-TEST_F(ModelFixture, ModelPartitionMaterial_AirWallMaterial_Constructors) {
-  // construct from scratch
-  Model model;
-  AirWallMaterial airWallMaterial(model);
-  EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  AirWallMaterialVector airWallMaterials = model.getConcreteModelObjects<AirWallMaterial>();
-  ASSERT_EQ(static_cast<unsigned>(1), airWallMaterials.size());
-  EXPECT_TRUE(airWallMaterial == airWallMaterials[0]);
-  EXPECT_TRUE(airWallMaterial.iddObject().type() == IddObjectType::OS_Material_AirWall);
-
-  // construct by clone
-  auto modelClone = model.clone().cast<Model>();
-  EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  airWallMaterials = modelClone.getConcreteModelObjects<AirWallMaterial>();
-  ASSERT_EQ(static_cast<unsigned>(1), airWallMaterials.size());
-  airWallMaterial = airWallMaterials[0];
-  EXPECT_FALSE(airWallMaterial.model() == model);
-  EXPECT_TRUE(airWallMaterial.iddObject().type() == IddObjectType::OS_Material_AirWall);
-}
 
 TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Constructors) {
   // construct from scratch

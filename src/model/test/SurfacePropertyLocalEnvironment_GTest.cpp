@@ -36,6 +36,7 @@
 #include "../Schedule.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../SurfacePropertySurroundingSurfaces.hpp"
+#include "../SurfacePropertyGroundSurfaces.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
 
@@ -88,19 +89,38 @@ TEST_F(ModelFixture, SurfacePropertyLocalEnvironment_GettersSetters) {
   EXPECT_FALSE(surfacePropertyLocalEnvironment.externalShadingFractionSchedule());
 
   // Surrounding Surfaces Object Name: Optional Object
-  EXPECT_FALSE(surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces());
-  SurfacePropertySurroundingSurfaces sp(m);
-  EXPECT_FALSE(sp.surfacePropertyLocalEnvironment());
+  {
+    EXPECT_FALSE(surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces());
+    SurfacePropertySurroundingSurfaces sp(m);
+    EXPECT_FALSE(sp.surfacePropertyLocalEnvironment());
 
-  EXPECT_TRUE(surfacePropertyLocalEnvironment.setSurfacePropertySurroundingSurfaces(sp));
-  ASSERT_TRUE(surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces());
-  EXPECT_EQ(sp, surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces().get());
+    EXPECT_TRUE(surfacePropertyLocalEnvironment.setSurfacePropertySurroundingSurfaces(sp));
+    ASSERT_TRUE(surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces());
+    EXPECT_EQ(sp, surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces().get());
 
-  ASSERT_TRUE(sp.surfacePropertyLocalEnvironment());
-  EXPECT_EQ(surfacePropertyLocalEnvironment, sp.surfacePropertyLocalEnvironment().get());
+    ASSERT_TRUE(sp.surfacePropertyLocalEnvironment());
+    EXPECT_EQ(surfacePropertyLocalEnvironment, sp.surfacePropertyLocalEnvironment().get());
 
-  surfacePropertyLocalEnvironment.resetSurfacePropertySurroundingSurfaces();
-  EXPECT_FALSE(surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces());
+    surfacePropertyLocalEnvironment.resetSurfacePropertySurroundingSurfaces();
+    EXPECT_FALSE(surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces());
+  }
+
+  // Ground Surfaces Object Name: Optional Object
+  {
+    EXPECT_FALSE(surfacePropertyLocalEnvironment.surfacePropertyGroundSurfaces());
+    SurfacePropertyGroundSurfaces sp(m);
+    EXPECT_FALSE(sp.surfacePropertyLocalEnvironment());
+
+    EXPECT_TRUE(surfacePropertyLocalEnvironment.setSurfacePropertyGroundSurfaces(sp));
+    ASSERT_TRUE(surfacePropertyLocalEnvironment.surfacePropertyGroundSurfaces());
+    EXPECT_EQ(sp, surfacePropertyLocalEnvironment.surfacePropertyGroundSurfaces().get());
+
+    ASSERT_TRUE(sp.surfacePropertyLocalEnvironment());
+    EXPECT_EQ(surfacePropertyLocalEnvironment, sp.surfacePropertyLocalEnvironment().get());
+
+    surfacePropertyLocalEnvironment.resetSurfacePropertyGroundSurfaces();
+    EXPECT_FALSE(surfacePropertyLocalEnvironment.surfacePropertyGroundSurfaces());
+  }
 
   // It should also accept a SubSurface
   SubSurface subSurface(points2, m);

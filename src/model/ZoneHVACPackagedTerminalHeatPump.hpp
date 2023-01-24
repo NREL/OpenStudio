@@ -150,7 +150,7 @@ namespace model {
 
     bool isFanPlacementDefaulted() const;
 
-    boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+    Schedule supplyAirFanOperatingModeSchedule() const;
 
     //@}
     /** @name Setters */
@@ -227,8 +227,6 @@ namespace model {
    *  cycles on and off with the active (heating or cooling) coil. Other values operate the
    *  fan continuously. */
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
-
-    void resetSupplyAirFanOperatingModeSchedule();
 
     //@}
     /** @name Other */

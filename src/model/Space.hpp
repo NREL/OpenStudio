@@ -72,6 +72,7 @@ namespace model {
   class SpaceInfiltrationEffectiveLeakageArea;
   class SpaceInfiltrationFlowCoefficient;
   class DesignSpecificationOutdoorAir;
+  class ZoneMixing;
 
   namespace detail {
 
@@ -119,11 +120,23 @@ namespace model {
 
     void resetPartofTotalFloorArea();
 
+    bool setCeilingHeight(double ceilingHeight);
+
+    void autocalculateCeilingHeight();
+
+    void resetCeilingHeight();
+
     bool setVolume(double volume);
 
     void autocalculateVolume();
 
     void resetVolume();
+
+    bool setFloorArea(double floorArea);
+
+    void autocalculateFloorArea();
+
+    void resetFloorArea();
 
     //@}
     /** @name Other */
@@ -275,12 +288,6 @@ namespace model {
     /// Returns the multiplier for this space, comes from thermal zone, defaults to 1.
     int multiplier() const;
 
-    /// Returns the floor area (m^2).
-    /// Does not include area of floor surfaces which are air walls.
-    /// Does not consider if space is included in building floor area.
-    /// Does not include space multiplier in calculation.
-    double floorArea() const;
-
     /// Returns the exterior area (gross area of surfaces with outdoor boundary condition) (m^2).
     /// Does not include space multiplier in calculation.
     double exteriorArea() const;
@@ -289,6 +296,14 @@ namespace model {
     /// Does not include space multiplier in calculation.
     double exteriorWallArea() const;
 
+    /// Returns the ceiling height (m).
+    /// Does not include space multiplier in calculation.
+    double ceilingHeight() const;
+
+    bool isCeilingHeightDefaulted() const;
+
+    bool isCeilingHeightAutocalculated() const;
+
     /// Returns the volume (m^3).
     /// Does not include space multiplier in calculation.
     double volume() const;
@@ -296,6 +311,16 @@ namespace model {
     bool isVolumeDefaulted() const;
 
     bool isVolumeAutocalculated() const;
+
+    /// Returns the floor area (m^2).
+    /// Does not include area of floor surfaces which are air walls.
+    /// Does not consider if space is included in building floor area.
+    /// Does not include space multiplier in calculation.
+    double floorArea() const;
+
+    bool isFloorAreaDefaulted() const;
+
+    bool isFloorAreaAutocalculated() const;
 
     /** Returns the number of people in the space (people). */
     /// Does not include space multiplier in calculation.
@@ -605,6 +630,15 @@ namespace model {
 
     Polyhedron polyhedron() const;
     bool isEnclosedVolume() const;
+
+    /** Returns all ZoneMixing objects associated with this space, includes supply and exhaust mixing objects */
+    std::vector<ZoneMixing> zoneMixing() const;
+
+    /** Returns all ZoneMixing objects which supply air to this space */
+    std::vector<ZoneMixing> supplyZoneMixing() const;
+
+    /** Returns all ZoneMixing objects which exhaust air from this space */
+    std::vector<ZoneMixing> exhaustZoneMixing() const;
 
     //@}
    protected:

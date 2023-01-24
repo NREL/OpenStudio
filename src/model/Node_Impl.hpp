@@ -78,42 +78,6 @@ namespace model {
 
       void removeSetpointManagers();
 
-      void addSetpointManager(SetpointManagerSingleZoneReheat& singleZoneReheat);
-
-      void removeSetpointManagerSingleZoneReheat();
-
-      boost::optional<SetpointManagerSingleZoneReheat> getSetpointManagerSingleZoneReheat() const;
-
-      void addSetpointManager(SetpointManagerMixedAir& mixedAir);
-
-      void removeSetpointManagerMixedAir();
-
-      boost::optional<SetpointManagerMixedAir> getSetpointManagerMixedAir() const;
-
-      boost::optional<SetpointManagerScheduled> setpointManagerScheduled() const;
-
-      void addSetpointManager(SetpointManagerScheduled& setPointManager);
-
-      void removeSetpointManagerScheduled();
-
-      boost::optional<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperature() const;
-
-      void addSetpointManager(SetpointManagerFollowOutdoorAirTemperature& setPointManager);
-
-      void removeSetpointManagerFollowOutdoorAirTemperature();
-
-      void addSetpointManager(SetpointManagerOutdoorAirReset& setPointManager);
-
-      void removeSetpointManagerOutdoorAirReset();
-
-      boost::optional<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirReset() const;
-
-      void addSetpointManagerWarmest(SetpointManagerWarmest& setPointManager);
-
-      void removeSetpointManagerWarmest();
-
-      boost::optional<SetpointManagerWarmest> setpointManagerWarmest() const;
-
       std::vector<ModelObject> children() const override;
 
       bool isRemovable() const override;

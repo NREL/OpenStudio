@@ -43,6 +43,8 @@
 #include "../../model/CentralHeatPumpSystemModule.hpp"
 #include "../../model/ChillerHeaterPerformanceElectricEIR.hpp"
 
+#include "../../model/ChillerElectricASHRAE205.hpp"
+#include "../../model/ChillerElectricASHRAE205_Impl.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
 #include "../../model/ChillerElectricReformulatedEIR.hpp"
@@ -204,8 +206,14 @@ namespace energyplus {
         // Probably check if all modules have a ChillerHeaterPerformanceComponent
         // that has a flow rate hardsized, and multiple by the number of performance comp
         // Better to add a method to centralheatpumpsystem, for eg "totalDesignFlowRate"
-        // Problem is that you need to know which loop is requesting this since there are three
-        // "Design XXX Water Flow Rate" (XXX= Chilled Water, Condenser Water, or Hot Water)
+        // Problem is that you need to know which loop is requesting this since there are two supply loops with
+        // "Design XXX Water Flow Rate" (XXX= Chilled Water, or Hot Water)
+        break;
+      }
+
+      case openstudio::IddObjectType::OS_Chiller_Electric_ASHRAE205: {
+        auto chiller = component.cast<ChillerElectricASHRAE205>();
+        result = chiller.chilledWaterMaximumRequestedFlowRate();
         break;
       }
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
@@ -482,6 +490,9 @@ namespace energyplus {
 
         // As a result, this is handled in coolingComponents() and heatingComponents() directly
         return ComponentType::NONE;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ASHRAE205: {
+        return ComponentType::COOLING;
       }
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         return ComponentType::COOLING;

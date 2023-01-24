@@ -70,7 +70,7 @@ namespace openstudio {
 namespace energyplus {
 
   std::string ForwardTranslator::zoneListNameForSpaceType(const SpaceType& modelObject) const {
-    if (m_excludeSpaceTranslation) {
+    if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
       return modelObject.nameString();
     } else {
       return modelObject.nameString() + " ZoneList";
@@ -82,7 +82,7 @@ namespace energyplus {
 
     // check if this is a dummy space type meant to prevent inheriting building space type
     // TODO: why is that needed in the first place? Also, children() doesn't include DesignSpecificationOutdoorAir!
-    if (m_excludeSpaceTranslation) {
+    if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
       std::vector<ModelObject> children = modelObject.children();
       if (children.empty()) {
         LOG(Info, "SpaceType " << modelObject.name().get() << " has no children, it will not be translated");
@@ -117,7 +117,7 @@ namespace energyplus {
       return idfObject.get();
     };
 
-    if (m_excludeSpaceTranslation) {
+    if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
 
       idfObject = makeZoneList(true);
 
@@ -129,14 +129,6 @@ namespace energyplus {
       idfObject->clearExtensibleGroups();
       for (const auto& s : spaces) {
         idfObject->pushExtensibleGroup(std::vector<std::string>(1, s.nameString()));
-      }
-
-      // Infiltration objects are Space-level in OS, but they are Zone-Level in E+, so we'll **ALSO** need a ZoneList for it...
-      bool hasAnyInfiltration = (!modelObject.spaceInfiltrationDesignFlowRates().empty() || !modelObject.spaceInfiltrationFlowCoefficients().empty()
-                                 || !modelObject.spaceInfiltrationEffectiveLeakageAreas().empty());
-
-      if (hasAnyInfiltration) {
-        makeZoneList(false);
       }
     }
 

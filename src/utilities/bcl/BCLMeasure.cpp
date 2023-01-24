@@ -64,9 +64,10 @@ namespace openstudio {
 *  R U L E S  *
 ***************/
 
-static constexpr std::array<std::pair<std::string_view, std::string_view>, 4> rootToUsageTypeMap{{
+static constexpr std::array<std::pair<std::string_view, std::string_view>, 5> rootToUsageTypeMap{{
   // fileName, usageType
   {"measure.rb", "script"},
+  {"measure.py", "script"},
   {"LICENSE.md", "license"},
   {"README.md", "readme"},
   {"README.md.erb", "readmeerb"}
@@ -172,7 +173,8 @@ void BCLMeasure::createDirectory(const openstudio::path& dir) {
 }
 
 BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir, const std::string& taxonomyTag,
-                       MeasureType measureType, const std::string& description, const std::string& modelerDescription)
+                       MeasureType measureType, const std::string& description, const std::string& modelerDescription,
+                       MeasureLanguage measureLanguage)
   : m_directory(openstudio::filesystem::system_complete(dir)), m_bclXML(BCLXMLType::MeasureXML) {
 
   // Avoid potential problems, since toPath("/path/to/dir/") != toPath("/path/to/dir")
@@ -189,9 +191,11 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   // read in template files
   std::string measureTemplate;
   std::string licenseTemplate = ":/templates/common/LICENSE.md";
-  std::string readmeTemplate = ":/templates/common/README.md.erb";
+  std::string readmeTemplate;
+  if (measureLanguage == MeasureLanguage::Ruby) {
+    readmeTemplate = ":/templates/common/README.md.erb";
+  }
   std::string docTemplate = ":/templates/common/docs/.gitkeep";
-  ;
   std::string testTemplate;
 
   std::string templateClassName;
@@ -208,8 +212,13 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   openstudio::path testEPWRelativePath;
   openstudio::path resourceFileRelativePath;
   if (measureType == MeasureType::ModelMeasure) {
-    measureTemplate = ":/templates/ModelMeasure/measure.rb";
-    testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
+    if (measureLanguage == MeasureLanguage::Ruby) {
+      measureTemplate = ":/templates/ModelMeasure/measure.rb";
+      testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
+    } else if (measureLanguage == MeasureLanguage::Python) {
+      measureTemplate = ":/templates/ModelMeasure/measure.py";
+      testTemplate = ":/templates/ModelMeasure/tests/test_model_measure.py";
+    }
     testOSM = ":/templates/ModelMeasure/tests/example_model.osm";
     templateClassName = "ModelMeasureName";
 
@@ -224,8 +233,13 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     arguments.push_back(arg);
 
   } else if (measureType == MeasureType::EnergyPlusMeasure) {
-    measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
-    testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
+    if (measureLanguage == MeasureLanguage::Ruby) {
+      measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
+      testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
+    } else if (measureLanguage == MeasureLanguage::Python) {
+      measureTemplate = ":/templates/EnergyPlusMeasure/measure.py";
+      testTemplate = ":/templates/EnergyPlusMeasure/tests/test_energyplus_measure.py";
+    }
     templateClassName = "EnergyPlusMeasureName";
 
     std::string argName("zone_name");
@@ -242,11 +256,16 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     templateClassName = "UtilityMeasureName";
 
   } else if (measureType == MeasureType::ReportingMeasure) {
-    measureTemplate = ":/templates/ReportingMeasure/measure.rb";
-    testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
+    if (measureLanguage == MeasureLanguage::Ruby) {
+      measureTemplate = ":/templates/ReportingMeasure/measure.rb";
+      testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
+      resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
+    } else if (measureLanguage == MeasureLanguage::Python) {
+      measureTemplate = ":/templates/ReportingMeasure/measure.py";
+      testTemplate = ":/templates/ReportingMeasure/tests/test_reporting_measure.py";
+    }
     testOSM = ":/templates/ReportingMeasure/tests/example_model.osm";
     testEPW = ":/templates/ReportingMeasure/tests/USA_CO_Golden-NREL.724666_TMY3.epw";
-    resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
     templateClassName = "ReportingMeasureName";
 
     testOSMRelativePath = toPath("tests/example_model.osm");
@@ -322,11 +341,17 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     m_bclXML.addFile(fileRef);
   };
 
-  writeFile(toPath("measure.rb"), "script", measureString, true);
+  if (measureLanguage == MeasureLanguage::Ruby) {
+    writeFile(toPath("measure.rb"), "script", measureString, true);
+    writeFile(measureTestRelativeDir / toPath(lowerClassName + "_test.rb"), "test", testString);
+    writeFile(toPath("README.md.erb"), "readmeerb", readmeString);
+  } else if (measureLanguage == MeasureLanguage::Python) {
+    writeFile(toPath("measure.py"), "script", measureString, true);
+    writeFile(measureTestRelativeDir / toPath("test_" + lowerClassName + ".py"), "test", testString);
+  }
   writeFile(toPath("LICENSE.md"), "license", licenseString);
-  writeFile(toPath("README.md.erb"), "readmeerb", readmeString);
   writeFile(measureDocRelativeDir / toPath(".gitkeep"), "doc", docString);
-  writeFile(measureTestRelativeDir / toPath(lowerClassName + "_test.rb"), "test", testString);
+
   if (!testOSMString.empty()) {
     writeFile(testOSMRelativePath, "test", testOSMString);
   }
@@ -348,6 +373,7 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   m_bclXML.setOutputs(outputs);
   m_bclXML.addTag(taxonomyTag);
   this->setMeasureType(measureType);
+  this->setMeasureLanguage(measureLanguage);
 
   // reset the checksum to trigger update even if nothing has changed
   m_bclXML.resetXMLChecksum();
@@ -376,7 +402,16 @@ BCLMeasure::BCLMeasure(const openstudio::path& dir) : m_directory(openstudio::fi
   } else if (measureTypes.size() > 1) {
     LOG_AND_THROW("'" << toString(dir) << "' has multiple copies of required attribute \"Measure Type\"");
   } else if (measureTypes[0].valueType() != AttributeValueType::String) {
-    LOG_AND_THROW("'" << toString(dir) << "' has multiple copies of required attribute \"Measure Type\"");
+    LOG_AND_THROW("'" << toString(dir) << "' has wrong type for required attribute \"Measure Type\"");
+  }
+
+  std::vector<Attribute> measureLanguages = m_bclXML.getAttributes("Measure Language");
+  if (measureLanguages.empty()) {
+    // No-op
+  } else if (measureLanguages.size() > 1) {
+    LOG_AND_THROW("'" << toString(dir) << "' has multiple copies of required attribute \"Measure Language\"");
+  } else if (measureLanguages[0].valueType() != AttributeValueType::String) {
+    LOG_AND_THROW("'" << toString(dir) << "' has wrong type for required attribute \"Measure Language\"");
   }
 
   if (m_bclXML.xmlChecksum().empty()) {
@@ -681,6 +716,23 @@ void BCLMeasure::setMeasureType(const MeasureType& measureType) {
   m_bclXML.addAttribute(attribute);
 }
 
+MeasureLanguage BCLMeasure::measureLanguage() const {
+  std::vector<Attribute> measureLanguages = m_bclXML.getAttributes("Measure Language");
+  if (measureLanguages.empty()) {
+    // This was added at 3.5.0, when Python measures came in, so fall back to Ruby if not there
+    return MeasureLanguage::Ruby;
+  }
+  OS_ASSERT(measureLanguages.size() == 1);
+  return MeasureLanguage(measureLanguages[0].valueAsString());
+}
+
+void BCLMeasure::setMeasureLanguage(const MeasureLanguage& measureLanguage) {
+  const std::string attributeName("Measure Language");
+  Attribute attribute(attributeName, measureLanguage.valueName());
+  m_bclXML.removeAttributes(attributeName);
+  m_bclXML.addAttribute(attribute);
+}
+
 std::vector<std::string> BCLMeasure::intendedSoftwareTools() const {
   std::vector<std::string> result;
   std::vector<Attribute> attributes = m_bclXML.getAttributes("Intended Software Tool");
@@ -706,6 +758,18 @@ boost::optional<openstudio::path> BCLMeasure::primaryRubyScriptPath() const {
     return result;
   }
   return boost::none;
+}
+
+boost::optional<openstudio::path> BCLMeasure::primaryPythonScriptPath() const {
+  openstudio::path result = m_directory / toPath("measure.py");
+  if (exists(result) && is_regular_file(result)) {
+    return result;
+  }
+  return boost::none;
+}
+
+boost::optional<openstudio::path> BCLMeasure::primaryScriptPath() const {
+  return (measureLanguage() == MeasureLanguage::Ruby) ? primaryRubyScriptPath() : primaryPythonScriptPath();
 }
 
 FileReferenceType BCLMeasure::inputFileType() const {
@@ -748,9 +812,14 @@ void BCLMeasure::incrementVersionId() {
   m_bclXML.incrementVersionId();
 }
 
-bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, const std::string& oldClassName,
-                                     const std::string& newClassName, const std::string& name, const std::string& description,
-                                     const std::string& modelerDescription) {
+bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, const MeasureLanguage& oldMeasureLanguage,
+                                     const MeasureLanguage& newMeasureLanguage, const std::string& oldClassName, const std::string& newClassName,
+                                     const std::string& name, const std::string& description, const std::string& modelerDescription) {
+  if (oldMeasureLanguage != newMeasureLanguage) {
+    LOG_AND_THROW("Cannot update a measure after a Language Change from " << oldMeasureLanguage.valueName() << " to "
+                                                                          << newMeasureLanguage.valueName());
+  }
+  // TODO: deal with Python
   boost::optional<openstudio::path> path = primaryRubyScriptPath();
   if (path && exists(*path)) {
 
@@ -959,7 +1028,7 @@ bool BCLMeasure::checkForUpdatesFiles() {
     openstudio::path absoluteFilePath = m_directory / relativeFilePath;
     if (openstudio::filesystem::exists(absoluteFilePath)) {
       bool thisResult = addWithUsageTypeIfNotExisting(relativeFilePath, std::string(usageType));
-      if (thisResult && (fileName == "measure.rb")) {
+      if (thisResult && ((fileName == "measure.rb") || (fileName == "measure.py"))) {
         // we don't know what the actual version this was created for, we also don't know minimum version
         filesToAdd.back().setSoftwareProgramVersion(openStudioVersion());
       }

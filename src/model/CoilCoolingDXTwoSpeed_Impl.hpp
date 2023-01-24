@@ -95,7 +95,7 @@ namespace model {
 
       boost::optional<double> ratedHighSpeedSensibleHeatRatio() const;
 
-      boost::optional<double> ratedHighSpeedCOP() const;
+      double ratedHighSpeedCOP() const;
 
       boost::optional<double> ratedHighSpeedAirFlowRate() const;
 
@@ -113,7 +113,7 @@ namespace model {
 
       boost::optional<double> ratedLowSpeedSensibleHeatRatio() const;
 
-      boost::optional<double> ratedLowSpeedCOP() const;
+      double ratedLowSpeedCOP() const;
 
       boost::optional<double> ratedLowSpeedAirFlowRate() const;
 
@@ -125,21 +125,21 @@ namespace model {
 
       std::string condenserType() const;
 
-      boost::optional<double> highSpeedEvaporativeCondenserEffectiveness() const;
+      double highSpeedEvaporativeCondenserEffectiveness() const;
 
       boost::optional<double> highSpeedEvaporativeCondenserAirFlowRate() const;
 
       boost::optional<double> highSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-      boost::optional<double> lowSpeedEvaporativeCondenserEffectiveness() const;
+      double lowSpeedEvaporativeCondenserEffectiveness() const;
 
       boost::optional<double> lowSpeedEvaporativeCondenserAirFlowRate() const;
 
       boost::optional<double> lowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-      boost::optional<double> basinHeaterCapacity() const;
+      double basinHeaterCapacity() const;
 
-      boost::optional<double> basinHeaterSetpointTemperature() const;
+      double basinHeaterSetpointTemperature() const;
 
       boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 

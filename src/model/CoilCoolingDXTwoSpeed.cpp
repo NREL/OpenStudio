@@ -220,8 +220,10 @@ namespace model {
     }
 
     // N3 , \field Rated High Speed COP
-    OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedHighSpeedCOP() const {
-      return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedCOP);
+    double CoilCoolingDXTwoSpeed_Impl::ratedHighSpeedCOP() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedCOP);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedCOP(double value) {
@@ -232,6 +234,7 @@ namespace model {
     OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedHighSpeedAirFlowRate() const {
       return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate);
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedAirFlowRate(OptionalDouble value) {
       if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate, *value);
@@ -239,6 +242,7 @@ namespace model {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate, "Autosize");
       }
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedAirFlowRate(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate, value);
     }
@@ -250,6 +254,7 @@ namespace model {
       OS_ASSERT(result);
       return result.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
       return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     }
@@ -272,6 +277,7 @@ namespace model {
       OS_ASSERT(result);
       return result.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve) {
       return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
     }
@@ -283,6 +289,7 @@ namespace model {
       OS_ASSERT(result);
       return result.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve) {
       return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle());
     }
@@ -294,6 +301,7 @@ namespace model {
       OS_ASSERT(result);
       return result.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
       return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle());
     }
@@ -302,6 +310,7 @@ namespace model {
     OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedTotalCoolingCapacity() const {
       return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity);
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedTotalCoolingCapacity(OptionalDouble value) {
       if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity, *value);
@@ -309,6 +318,7 @@ namespace model {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity, "Autosize");
       }
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedTotalCoolingCapacity(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity, value);
     }
@@ -317,6 +327,7 @@ namespace model {
     OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedSensibleHeatRatio() const {
       return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio);
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedSensibleHeatRatio(OptionalDouble value) {
       if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio, *value);
@@ -324,14 +335,18 @@ namespace model {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio, "Autosize");
       }
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedSensibleHeatRatio(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio, value);
     }
 
     // N7 , \field Rated Low Speed COP
-    OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedCOP() const {
-      return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedCOP);
+    double CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedCOP() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedCOP);
+      OS_ASSERT(value);
+      return value.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedCOP(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedCOP, value);
     }
@@ -340,6 +355,7 @@ namespace model {
     OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedAirFlowRate() const {
       return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate);
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedAirFlowRate(OptionalDouble value) {
       if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate, *value);
@@ -347,6 +363,7 @@ namespace model {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate, "Autosize");
       }
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedAirFlowRate(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate, value);
     }
@@ -358,6 +375,7 @@ namespace model {
       OS_ASSERT(result);
       return result.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
       return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedTotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     }
@@ -369,6 +387,7 @@ namespace model {
       OS_ASSERT(result);
       return result.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve) {
       return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
     }
@@ -377,6 +396,7 @@ namespace model {
     OptionalString CoilCoolingDXTwoSpeed_Impl::condenserAirInletNodeName() const {
       return getString(OS_Coil_Cooling_DX_TwoSpeedFields::CondenserAirInletNodeName);
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setCondenserAirInletNodeName(const std::string& value) {
       return setString(OS_Coil_Cooling_DX_TwoSpeedFields::CondenserAirInletNodeName, value);
     }
@@ -385,14 +405,18 @@ namespace model {
     std::string CoilCoolingDXTwoSpeed_Impl::condenserType() const {
       return getString(OS_Coil_Cooling_DX_TwoSpeedFields::CondenserType).get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setCondenserType(const std::string& value) {
       return setString(OS_Coil_Cooling_DX_TwoSpeedFields::CondenserType, value);
     }
 
     // N9, \field High Speed Evaporative Condenser Effectiveness
-    OptionalDouble CoilCoolingDXTwoSpeed_Impl::highSpeedEvaporativeCondenserEffectiveness() const {
-      return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserEffectiveness);
+    double CoilCoolingDXTwoSpeed_Impl::highSpeedEvaporativeCondenserEffectiveness() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserEffectiveness);
+      OS_ASSERT(value);
+      return value.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserEffectiveness(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserEffectiveness, value);
     }
@@ -401,6 +425,7 @@ namespace model {
     OptionalDouble CoilCoolingDXTwoSpeed_Impl::highSpeedEvaporativeCondenserAirFlowRate() const {
       return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate);
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserAirFlowRate(OptionalDouble value) {
       if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate, *value);
@@ -408,6 +433,7 @@ namespace model {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate, "Autosize");
       }
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserAirFlowRate(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate, value);
     }
@@ -423,14 +449,18 @@ namespace model {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
       }
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption, value);
     }
 
     // N12, \field Low Speed Evaporative Condenser Effectiveness
-    OptionalDouble CoilCoolingDXTwoSpeed_Impl::lowSpeedEvaporativeCondenserEffectiveness() const {
-      return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserEffectiveness);
+    double CoilCoolingDXTwoSpeed_Impl::lowSpeedEvaporativeCondenserEffectiveness() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserEffectiveness);
+      OS_ASSERT(value);
+      return value.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserEffectiveness(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserEffectiveness, value);
     }
@@ -439,6 +469,7 @@ namespace model {
     OptionalDouble CoilCoolingDXTwoSpeed_Impl::lowSpeedEvaporativeCondenserAirFlowRate() const {
       return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate);
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserAirFlowRate(OptionalDouble value) {
       if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate, *value);
@@ -446,6 +477,7 @@ namespace model {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate, "Autosize");
       }
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserAirFlowRate(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate, value);
     }
@@ -454,6 +486,7 @@ namespace model {
     OptionalDouble CoilCoolingDXTwoSpeed_Impl::lowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
       return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption);
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(OptionalDouble value) {
       if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption, *value);
@@ -461,6 +494,7 @@ namespace model {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
       }
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption, value);
     }
@@ -476,17 +510,23 @@ namespace model {
     // setCondensateCollectionWaterStorageTankName
 
     // N15, \field Basin Heater Capacity
-    OptionalDouble CoilCoolingDXTwoSpeed_Impl::basinHeaterCapacity() const {
-      return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterCapacity);
+    double CoilCoolingDXTwoSpeed_Impl::basinHeaterCapacity() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterCapacity);
+      OS_ASSERT(value);
+      return value.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setBasinHeaterCapacity(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterCapacity, value);
     }
 
     // N16, \field Basin Heater Setpoint Temperature
-    OptionalDouble CoilCoolingDXTwoSpeed_Impl::basinHeaterSetpointTemperature() const {
-      return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterSetpointTemperature);
+    double CoilCoolingDXTwoSpeed_Impl::basinHeaterSetpointTemperature() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterSetpointTemperature);
+      OS_ASSERT(value);
+      return value.get();
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setBasinHeaterSetpointTemperature(double value) {
       return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterSetpointTemperature, value);
     }
@@ -495,6 +535,7 @@ namespace model {
     boost::optional<Schedule> CoilCoolingDXTwoSpeed_Impl::basinHeaterOperatingSchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName);
     }
+
     bool CoilCoolingDXTwoSpeed_Impl::setBasinHeaterOperatingSchedule(Schedule& schedule) {
       bool result =
         setSchedule(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName, "CoilCoolingDXTwoSpeed", "Basin Heater Operation", schedule);
@@ -519,27 +560,34 @@ namespace model {
     boost::optional<Schedule> CoilCoolingDXTwoSpeed_Impl::optionalAvailabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DX_TwoSpeedFields::AvailabilityScheduleName);
     }
+
     boost::optional<Curve> CoilCoolingDXTwoSpeed_Impl::optionalTotalCoolingCapacityFunctionOfTemperatureCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName);
     }
+
     boost::optional<Curve> CoilCoolingDXTwoSpeed_Impl::optionalTotalCoolingCapacityFunctionOfFlowFractionCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName);
     }
+
     boost::optional<Curve> CoilCoolingDXTwoSpeed_Impl::optionalEnergyInputRatioFunctionOfTemperatureCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName);
     }
+
     boost::optional<Curve> CoilCoolingDXTwoSpeed_Impl::optionalEnergyInputRatioFunctionOfFlowFractionCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName);
     }
+
     boost::optional<Curve> CoilCoolingDXTwoSpeed_Impl::optionalPartLoadFractionCorrelationCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_TwoSpeedFields::PartLoadFractionCorrelationCurveName);
     }
+
     boost::optional<Curve> CoilCoolingDXTwoSpeed_Impl::optionalLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedTotalCoolingCapacityFunctionofTemperatureCurveName);
     }
+
     boost::optional<Curve> CoilCoolingDXTwoSpeed_Impl::optionalLowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEnergyInputRatioFunctionofTemperatureCurveName);
@@ -820,13 +868,13 @@ namespace model {
     //  A13, \field Condenser Type
     setCondenserType("AirCooled");
     //   N9, \field High Speed Evaporative Condenser Effectiveness
-    setHighSpeedEvaporativeCondenserEffectiveness(0.0);
+    setHighSpeedEvaporativeCondenserEffectiveness(0.9);
     //  N10, \field High Speed Evaporative Condenser Air Flow Rate
     setHighSpeedEvaporativeCondenserAirFlowRate(boost::none);  //autosize
     //  N11, \field High Speed Evaporative Condenser Pump Rated Power Consumption
     setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::none);  //autosize
     //  N12, \field Low Speed Evaporative Condenser Effectiveness
-    setLowSpeedEvaporativeCondenserEffectiveness(0.0);
+    setLowSpeedEvaporativeCondenserEffectiveness(0.9);
     //  N13, \field Low Speed Evaporative Condenser Air Flow Rate
     setLowSpeedEvaporativeCondenserAirFlowRate(boost::none);  //autosize
     //  N14, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
@@ -838,7 +886,7 @@ namespace model {
     //  N15, \field Basin Heater Capacity
     setBasinHeaterCapacity(0.0);
     //  N16, \field Basin Heater Setpoint Temperature
-    setBasinHeaterSetpointTemperature(10.0);
+    setBasinHeaterSetpointTemperature(2.0);
     //  A16; \field Basin Heater Operating Schedule Name
     setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName, "");
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
@@ -936,13 +984,13 @@ namespace model {
     setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(coolingLowSpdCurveFofTemp);
     setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(energyLowSpdInputRatioFofTemp);
     setCondenserType("AirCooled");
-    setHighSpeedEvaporativeCondenserEffectiveness(0.0);
+    setHighSpeedEvaporativeCondenserEffectiveness(0.9);
     setHighSpeedEvaporativeCondenserAirFlowRate(boost::none);                //autosize
     setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::none);  //autosize
-    setLowSpeedEvaporativeCondenserEffectiveness(0.0);
+    setLowSpeedEvaporativeCondenserEffectiveness(0.9);
     setLowSpeedEvaporativeCondenserAirFlowRate(boost::none);                //autosize
     setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::none);  //autosize
-    setBasinHeaterCapacity(10.0);
+    setBasinHeaterCapacity(0.0);
     setBasinHeaterSetpointTemperature(2.0);
     setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName, "");
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
@@ -955,9 +1003,7 @@ namespace model {
   Schedule CoilCoolingDXTwoSpeed::availabilitySchedule() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->availabilitySchedule();
   }
-  Schedule CoilCoolingDXTwoSpeed::getAvailabilitySchedule() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->availabilitySchedule();
-  }
+
   bool CoilCoolingDXTwoSpeed::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setAvailabilitySchedule(schedule);
   }
@@ -966,12 +1012,11 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::ratedHighSpeedTotalCoolingCapacity() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedTotalCoolingCapacity();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getRatedHighSpeedTotalCoolingCapacity() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedTotalCoolingCapacity();
-  }
+
   bool CoilCoolingDXTwoSpeed::setRatedHighSpeedTotalCoolingCapacity(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedTotalCoolingCapacity(value);
   }
+
   bool CoilCoolingDXTwoSpeed::setRatedHighSpeedTotalCoolingCapacity(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedTotalCoolingCapacity(value);
   }
@@ -980,23 +1025,20 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::ratedHighSpeedSensibleHeatRatio() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedSensibleHeatRatio();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getRatedHighSpeedSensibleHeatRatio() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedSensibleHeatRatio();
-  }
+
   bool CoilCoolingDXTwoSpeed::setRatedHighSpeedSensibleHeatRatio(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedSensibleHeatRatio(value);
   }
+
   bool CoilCoolingDXTwoSpeed::setRatedHighSpeedSensibleHeatRatio(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedSensibleHeatRatio(value);
   }
 
   //  N3 , \field Rated High Speed COP
-  OptionalDouble CoilCoolingDXTwoSpeed::ratedHighSpeedCOP() const {
+  double CoilCoolingDXTwoSpeed::ratedHighSpeedCOP() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedCOP();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getRatedHighSpeedCOP() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedCOP();
-  }
+
   bool CoilCoolingDXTwoSpeed::setRatedHighSpeedCOP(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedCOP(value);
   }
@@ -1005,9 +1047,7 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::ratedHighSpeedAirFlowRate() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedAirFlowRate();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getRatedHighSpeedAirFlowRate() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedAirFlowRate();
-  }
+
   bool CoilCoolingDXTwoSpeed::setRatedHighSpeedAirFlowRate(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedAirFlowRate(value);
   }
@@ -1019,9 +1059,7 @@ namespace model {
   Curve CoilCoolingDXTwoSpeed::totalCoolingCapacityFunctionOfTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->totalCoolingCapacityFunctionOfTemperatureCurve();
   }
-  Curve CoilCoolingDXTwoSpeed::getTotalCoolingCapacityFunctionOfTemperatureCurve() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->totalCoolingCapacityFunctionOfTemperatureCurve();
-  }
+
   bool CoilCoolingDXTwoSpeed::setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setTotalCoolingCapacityFunctionOfTemperatureCurve(curve);
   }
@@ -1030,9 +1068,7 @@ namespace model {
   Curve CoilCoolingDXTwoSpeed::totalCoolingCapacityFunctionOfFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->totalCoolingCapacityFunctionOfFlowFractionCurve();
   }
-  Curve CoilCoolingDXTwoSpeed::getTotalCoolingCapacityFunctionOfFlowFractionCurve() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->totalCoolingCapacityFunctionOfFlowFractionCurve();
-  }
+
   bool CoilCoolingDXTwoSpeed::setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setTotalCoolingCapacityFunctionOfFlowFractionCurve(curve);
   }
@@ -1041,9 +1077,7 @@ namespace model {
   Curve CoilCoolingDXTwoSpeed::energyInputRatioFunctionOfTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->energyInputRatioFunctionOfTemperatureCurve();
   }
-  Curve CoilCoolingDXTwoSpeed::getEnergyInputRatioFunctionOfTemperatureCurve() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->energyInputRatioFunctionOfTemperatureCurve();
-  }
+
   bool CoilCoolingDXTwoSpeed::setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setEnergyInputRatioFunctionOfTemperatureCurve(curve);
   }
@@ -1052,9 +1086,7 @@ namespace model {
   Curve CoilCoolingDXTwoSpeed::energyInputRatioFunctionOfFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->energyInputRatioFunctionOfFlowFractionCurve();
   }
-  Curve CoilCoolingDXTwoSpeed::getEnergyInputRatioFunctionOfFlowFractionCurve() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->energyInputRatioFunctionOfFlowFractionCurve();
-  }
+
   bool CoilCoolingDXTwoSpeed::setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setEnergyInputRatioFunctionOfFlowFractionCurve(curve);
   }
@@ -1063,9 +1095,7 @@ namespace model {
   Curve CoilCoolingDXTwoSpeed::partLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->partLoadFractionCorrelationCurve();
   }
-  Curve CoilCoolingDXTwoSpeed::getPartLoadFractionCorrelationCurve() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->partLoadFractionCorrelationCurve();
-  }
+
   bool CoilCoolingDXTwoSpeed::setPartLoadFractionCorrelationCurve(const Curve& curve) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setPartLoadFractionCorrelationCurve(curve);
   }
@@ -1074,12 +1104,11 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::ratedLowSpeedTotalCoolingCapacity() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedTotalCoolingCapacity();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getRatedLowSpeedTotalCoolingCapacity() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedTotalCoolingCapacity();
-  }
+
   bool CoilCoolingDXTwoSpeed::setRatedLowSpeedTotalCoolingCapacity(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedTotalCoolingCapacity(value);
   }
+
   bool CoilCoolingDXTwoSpeed::setRatedLowSpeedTotalCoolingCapacity(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedTotalCoolingCapacity(value);
   }
@@ -1088,23 +1117,20 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::ratedLowSpeedSensibleHeatRatio() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedSensibleHeatRatio();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getRatedLowSpeedSensibleHeatRatio() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedSensibleHeatRatio();
-  }
+
   bool CoilCoolingDXTwoSpeed::setRatedLowSpeedSensibleHeatRatio(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedSensibleHeatRatio(value);
   }
+
   bool CoilCoolingDXTwoSpeed::setRatedLowSpeedSensibleHeatRatio(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedSensibleHeatRatio(value);
   }
 
   //  N7 , \field Rated Low Speed COP
-  OptionalDouble CoilCoolingDXTwoSpeed::ratedLowSpeedCOP() const {
+  double CoilCoolingDXTwoSpeed::ratedLowSpeedCOP() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedCOP();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getRatedLowSpeedCOP() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedCOP();
-  }
+
   bool CoilCoolingDXTwoSpeed::setRatedLowSpeedCOP(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedCOP(value);
   }
@@ -1113,9 +1139,7 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::ratedLowSpeedAirFlowRate() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedAirFlowRate();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getRatedLowSpeedAirFlowRate() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedAirFlowRate();
-  }
+
   bool CoilCoolingDXTwoSpeed::setRatedLowSpeedAirFlowRate(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedAirFlowRate(value);
   }
@@ -1127,9 +1151,7 @@ namespace model {
   Curve CoilCoolingDXTwoSpeed::lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve();
   }
-  Curve CoilCoolingDXTwoSpeed::getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve();
-  }
+
   bool CoilCoolingDXTwoSpeed::setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(curve);
   }
@@ -1138,9 +1160,7 @@ namespace model {
   Curve CoilCoolingDXTwoSpeed::lowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedEnergyInputRatioFunctionOfTemperatureCurve();
   }
-  Curve CoilCoolingDXTwoSpeed::getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedEnergyInputRatioFunctionOfTemperatureCurve();
-  }
+
   bool CoilCoolingDXTwoSpeed::setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(curve);
   }
@@ -1149,9 +1169,7 @@ namespace model {
   OptionalString CoilCoolingDXTwoSpeed::condenserAirInletNodeName() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->condenserAirInletNodeName();
   }
-  OptionalString CoilCoolingDXTwoSpeed::getCondenserAirInletNodeName() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->condenserAirInletNodeName();
-  }
+
   bool CoilCoolingDXTwoSpeed::setCondenserAirInletNodeName(const std::string& value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setCondenserAirInletNodeName(value);
   }
@@ -1160,20 +1178,16 @@ namespace model {
   std::string CoilCoolingDXTwoSpeed::condenserType() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->condenserType();
   }
-  std::string CoilCoolingDXTwoSpeed::getCondenserType() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->condenserType();
-  }
+
   bool CoilCoolingDXTwoSpeed::setCondenserType(const std::string& value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setCondenserType(value);
   }
 
   //   N9, \field High Speed Evaporative Condenser Effectiveness
-  OptionalDouble CoilCoolingDXTwoSpeed::highSpeedEvaporativeCondenserEffectiveness() const {
+  double CoilCoolingDXTwoSpeed::highSpeedEvaporativeCondenserEffectiveness() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->highSpeedEvaporativeCondenserEffectiveness();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getHighSpeedEvaporativeCondenserEffectiveness() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->highSpeedEvaporativeCondenserEffectiveness();
-  }
+
   bool CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserEffectiveness(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserEffectiveness(value);
   }
@@ -1182,12 +1196,11 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::highSpeedEvaporativeCondenserAirFlowRate() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->highSpeedEvaporativeCondenserAirFlowRate();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getHighSpeedEvaporativeCondenserAirFlowRate() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->highSpeedEvaporativeCondenserAirFlowRate();
-  }
+
   bool CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserAirFlowRate(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserAirFlowRate(value);
   }
+
   bool CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserAirFlowRate(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserAirFlowRate(value);
   }
@@ -1196,23 +1209,20 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::highSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->highSpeedEvaporativeCondenserPumpRatedPowerConsumption();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->highSpeedEvaporativeCondenserPumpRatedPowerConsumption();
-  }
+
   bool CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(value);
   }
+
   bool CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(value);
   }
 
   //  N12, \field Low Speed Evaporative Condenser Effectiveness
-  OptionalDouble CoilCoolingDXTwoSpeed::lowSpeedEvaporativeCondenserEffectiveness() const {
+  double CoilCoolingDXTwoSpeed::lowSpeedEvaporativeCondenserEffectiveness() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedEvaporativeCondenserEffectiveness();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getLowSpeedEvaporativeCondenserEffectiveness() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedEvaporativeCondenserEffectiveness();
-  }
+
   bool CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserEffectiveness(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserEffectiveness(value);
   }
@@ -1221,12 +1231,11 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::lowSpeedEvaporativeCondenserAirFlowRate() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedEvaporativeCondenserAirFlowRate();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getLowSpeedEvaporativeCondenserAirFlowRate() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedEvaporativeCondenserAirFlowRate();
-  }
+
   bool CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserAirFlowRate(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserAirFlowRate(value);
   }
+
   bool CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserAirFlowRate(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserAirFlowRate(value);
   }
@@ -1235,12 +1244,11 @@ namespace model {
   OptionalDouble CoilCoolingDXTwoSpeed::lowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->lowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
-  }
+
   bool CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(value);
   }
+
   bool CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(value);
   }
@@ -1254,23 +1262,19 @@ namespace model {
   //setCondensateCollectionWaterStorageTankName
 
   //  N15, \field Basin Heater Capacity
-  OptionalDouble CoilCoolingDXTwoSpeed::basinHeaterCapacity() const {
+  double CoilCoolingDXTwoSpeed::basinHeaterCapacity() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->basinHeaterCapacity();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getBasinHeaterCapacity() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->basinHeaterCapacity();
-  }
+
   bool CoilCoolingDXTwoSpeed::setBasinHeaterCapacity(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setBasinHeaterCapacity(value);
   }
 
   //  N16, \field Basin Heater Setpoint Temperature
-  OptionalDouble CoilCoolingDXTwoSpeed::basinHeaterSetpointTemperature() const {
+  double CoilCoolingDXTwoSpeed::basinHeaterSetpointTemperature() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->basinHeaterSetpointTemperature();
   }
-  OptionalDouble CoilCoolingDXTwoSpeed::getBasinHeaterSetpointTemperature() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->basinHeaterSetpointTemperature();
-  }
+
   bool CoilCoolingDXTwoSpeed::setBasinHeaterSetpointTemperature(double value) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setBasinHeaterSetpointTemperature(value);
   }
@@ -1279,9 +1283,7 @@ namespace model {
   OptionalSchedule CoilCoolingDXTwoSpeed::basinHeaterOperatingSchedule() const {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->basinHeaterOperatingSchedule();
   }
-  OptionalSchedule CoilCoolingDXTwoSpeed::getBasinHeaterOperatingSchedule() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->basinHeaterOperatingSchedule();
-  }
+
   bool CoilCoolingDXTwoSpeed::setBasinHeaterOperatingSchedule(Schedule& schedule) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setBasinHeaterOperatingSchedule(schedule);
   }

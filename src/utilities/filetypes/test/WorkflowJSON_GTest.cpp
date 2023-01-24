@@ -34,6 +34,8 @@
 #include "../WorkflowStep.hpp"
 #include "../WorkflowStep_Impl.hpp"
 #include "../WorkflowStepResult.hpp"
+#include "../RunOptions.hpp"
+#include "../ForwardTranslatorOptions.hpp"
 
 #include "../../time/DateTime.hpp"
 
@@ -1098,7 +1100,7 @@ TEST(Filetypes, RunOptions) {
   EXPECT_EQ("MyOutputAdapter", workflow2->runOptions()->customOutputAdapter()->className());
 }
 
-TEST(Filetypes, RunOptions_ForwardTranslate) {
+TEST(Filetypes, RunOptions_ForwardTranslate_BackwardCompatibility) {
   WorkflowJSON workflow;
 
   EXPECT_FALSE(workflow.runOptions());
@@ -1110,20 +1112,41 @@ TEST(Filetypes, RunOptions_ForwardTranslate) {
   options.setEpjson(true);
   options.setCustomOutputAdapter(adapter);
 
-  // return string is formated with wbuilder["indentation"] = "   ";
-  std::string ft_options = "{\n   \"no_space_translation\" : false\n}";
+  {
+    ForwardTranslatorOptions ftOptions = options.forwardTranslatorOptions();
+    EXPECT_TRUE(ftOptions.keepRunControlSpecialDays());
+    EXPECT_FALSE(ftOptions.iPTabularOutput());
+    EXPECT_FALSE(ftOptions.excludeLCCObjects());
+    EXPECT_FALSE(ftOptions.excludeSQliteOutputReport());
+    EXPECT_FALSE(ftOptions.excludeHTMLOutputReport());
+    EXPECT_FALSE(ftOptions.excludeVariableDictionary());
+    EXPECT_FALSE(ftOptions.excludeSpaceTranslation());
+  }
 
-  //std::string ft_options = "{\n"
-  //                         "   \"runcontrolspecialdays\" : true,\n"
-  //                         "   \"ip_tabular_output\" : true,\n"
-  //                         "   \"no_lifecyclecosts\" : true,\n"
-  //                         "   \"no_sqlite_output\" : true,\n"
-  //                         "   \"no_html_output\" : true,\n"
-  //                         "   \"no_variable_dictionary\" : true,\n"
-  //                         "   \"no_space_translation\" : true\n"
-  //                         "}";
+  // This makes no sense, but we picked 3 spaces for some reason... return string is formated with wbuilder["indentation"] = "   ";
+  std::string ft_options = R"json({
+   "ip_tabular_output" : true,
+   "no_html_output" : true,
+   "no_lifecyclecosts" : true,
+   "no_space_translation" : true,
+   "no_sqlite_output" : true,
+   "no_variable_dictionary" : true,
+   "runcontrolspecialdays" : false
+})json";
 
+  // This settter internally creates a new ForwardTranslatorOptions, so we can't reuse the one above
   options.setForwardTranslateOptions(ft_options);
+
+  {
+    ForwardTranslatorOptions ftOptions = options.forwardTranslatorOptions();
+    EXPECT_FALSE(ftOptions.keepRunControlSpecialDays());
+    EXPECT_TRUE(ftOptions.iPTabularOutput());
+    EXPECT_TRUE(ftOptions.excludeLCCObjects());
+    EXPECT_TRUE(ftOptions.excludeSQliteOutputReport());
+    EXPECT_TRUE(ftOptions.excludeHTMLOutputReport());
+    EXPECT_TRUE(ftOptions.excludeVariableDictionary());
+    EXPECT_TRUE(ftOptions.excludeSpaceTranslation());
+  }
 
   workflow.setRunOptions(options);
 

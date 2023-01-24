@@ -104,14 +104,14 @@ namespace energyplus {
     // (1) assign to zone; (2) connect the supply air node (3) apply contraints
     // ITE object that is assigned to space type in OS has been switched to separate spaces in ForwardTranslator
 
-    // TODO: There might be work to be done in the case we translate to E+ Spaces (m_excludeSpaceTranslation = false)
+    // TODO: There might be work to be done in the case we translate to E+ Spaces (m_forwardTranslatorOptions.excludeSpaceTranslation() = false)
     // Per IDD for this ITE object: ZoneList and SpaceList names are not allowed.
     // But Spaces are allowed. Currently in the ForwardTranslator::translateModelPrivate we have rules to "hard-apply" ITE equipment assigned at
     // spacetype-level to each spaces (clone for each space, then remove the SpaceType one)
     // cf https://github.com/NREL/OpenStudio/blob/bf4ffc49d5947f74b139efa5fb1dffec9b1fb013/src/energyplus/ForwardTranslator.cpp#L323-L341
 
     // Assign object to Zone/Space
-    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject, false);  // We do not allow spaceType!
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject, false);  // We do not allow spaceType!
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName, parentIdfObject.nameString());
 
     // attach the supply air node to zone if there is an available supply air node
@@ -141,7 +141,7 @@ namespace energyplus {
       return openstudio::ascii_to_lower_copy(ite.electricEquipmentITEAirCooledDefinition().airFlowCalculationMethod());
     };
 
-    if (m_excludeSpaceTranslation) {
+    if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
       // One Zone = One Space at this point
       auto ites = space.electricEquipmentITEAirCooled();
       std::transform(ites.begin(), ites.end(), std::inserter(methods, methods.begin()), caseInsensitiveMethodForITE);

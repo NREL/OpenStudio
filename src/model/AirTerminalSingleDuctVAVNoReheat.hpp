@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
-#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {

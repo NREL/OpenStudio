@@ -109,7 +109,8 @@ namespace model {
     /** Returns true if the surface has outsideBoundaryCondition of Ground, GroundFCfactorMethod
    *  GroundSlabPreprocessorAverage, GroundSlabPreprocessorCore, GroundSlabPreprocessorPerimeter,
    *  GroundBasementPreprocessorAverageWall, GroundBasementPreprocessorAverageFloor,
-   *  GroundBasementPreprocessorUpperWall, or GroundBasementPreprocessorLowerWall */
+   *  GroundBasementPreprocessorUpperWall, GroundBasementPreprocessorLowerWall, or
+   *  Foundation */
     bool isGroundSurface() const;
 
     std::string sunExposure() const;

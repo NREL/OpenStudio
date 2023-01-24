@@ -338,6 +338,10 @@ namespace energyplus {
         modelObject = translateBuilding(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Chiller_Electric_ASHRAE205: {
+        modelObject = translateChillerElectricASHRAE205(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Coil_Heating_Fuel: {
         //modelObject = translateCoilHeatingGas(workspaceObject );
         break;
@@ -740,6 +744,14 @@ namespace energyplus {
         modelObject = translateOutputControlTableStyle(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Output_Schedules: {
+        modelObject = translateOutputSchedules(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Output_Constructions: {
+        modelObject = translateOutputConstructions(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::People: {
         modelObject = translatePeople(workspaceObject);
         break;
@@ -904,11 +916,31 @@ namespace energyplus {
         modelObject = translateSurfacePropertySurroundingSurfaces(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::SurfaceProperty_GroundSurfaces: {
+        modelObject = translateSurfacePropertyGroundSurfaces(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_IncidentSolarMultiplier: {
+        modelObject = translateSurfacePropertyIncidentSolarMultiplier(workspaceObject);
+        break;
+      }
         //case openstudio::IddObjectType::SwimmingPool_Indoor :
         //{
         //modelObject = translateSwimmingPoolIndoor(workspaceObject);
         //break;
         //}
+
+      case openstudio::IddObjectType::Table_Lookup: {
+        modelObject = translateTableLookup(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Table_IndependentVariableList: {
+        break;  // Done via translateTableLookup
+      }
+      case openstudio::IddObjectType::Table_IndependentVariable: {
+        break;  // Done via translateTableLookup
+      }
+
       case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint: {
         modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);
         break;

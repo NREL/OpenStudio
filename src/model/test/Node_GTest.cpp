@@ -167,7 +167,7 @@ TEST_F(ModelFixture, Node_SetpointManagerSingleZoneReheat) {
   SetpointManagerSingleZoneReheat spm(m);
   spm.setControlVariable("Temperature");
 
-  _node.addSetpointManager(spm);
+  spm.addToNode(_node);
 
   ASSERT_TRUE(spm.setpointNode());
   ASSERT_TRUE(spm.controlZone());
@@ -179,11 +179,11 @@ TEST_F(ModelFixture, Node_SetpointManagerSingleZoneReheat) {
   setpointManagerSingleZoneReheats = m.getConcreteModelObjects<SetpointManagerSingleZoneReheat>();
   EXPECT_EQ(1, setpointManagerSingleZoneReheats.size());
 
-  OptionalSetpointManagerSingleZoneReheat nodeSPM = _node.getSetpointManagerSingleZoneReheat();
+  OptionalSetpointManagerSingleZoneReheat nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerSingleZoneReheat>();
   ASSERT_TRUE(nodeSPM);
   EXPECT_EQ(spm, *nodeSPM);
 
-  _node.removeSetpointManagerSingleZoneReheat();
+  spm.remove();
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
@@ -211,7 +211,7 @@ TEST_F(ModelFixture, Node_SetpointManagerMixedAir) {
   SetpointManagerMixedAir spm(m);
   spm.setControlVariable("Temperature");
 
-  node.addSetpointManager(spm);
+  spm.addToNode(node);
 
   ASSERT_TRUE(spm.setpointNode());
   ASSERT_TRUE(spm.fanInletNode());
@@ -227,11 +227,11 @@ TEST_F(ModelFixture, Node_SetpointManagerMixedAir) {
   setpointManagerMixedAirs = m.getConcreteModelObjects<SetpointManagerMixedAir>();
   EXPECT_EQ(1, setpointManagerMixedAirs.size());
 
-  OptionalSetpointManagerMixedAir nodeSPM = node.getSetpointManagerMixedAir();
+  OptionalSetpointManagerMixedAir nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerMixedAir>();
   ASSERT_TRUE(nodeSPM);
   EXPECT_EQ(spm, *nodeSPM);
 
-  node.removeSetpointManagerMixedAir();
+  spm.remove();
 
   _setpointManagers = node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
@@ -254,18 +254,18 @@ TEST_F(ModelFixture, Node_SetpointManagerScheduled) {
   SetpointManagerScheduled spm(m, tempSch);
   spm.setControlVariable("Temperature");
 
-  _node.addSetpointManager(spm);
+  spm.addToNode(_node);
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   setpointManagerScheduleds = m.getConcreteModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(1, setpointManagerScheduleds.size());
 
-  boost::optional<SetpointManagerScheduled> nodeSPM = _node.setpointManagerScheduled();
+  boost::optional<SetpointManagerScheduled> nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerScheduled>();
   ASSERT_TRUE(nodeSPM);
   EXPECT_EQ(spm, *nodeSPM);
 
-  _node.removeSetpointManagerScheduled();
+  spm.remove();
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
@@ -287,18 +287,19 @@ TEST_F(ModelFixture, Node_SetpointManagerFollowOutdoorAirTemperature) {
   SetpointManagerFollowOutdoorAirTemperature spm(m);
   spm.setControlVariable("Temperature");
 
-  _node.addSetpointManager(spm);
+  spm.addToNode(_node);
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   setpointManagerFollowOutdoorAirTemperatures = m.getConcreteModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_EQ(1, setpointManagerFollowOutdoorAirTemperatures.size());
 
-  boost::optional<SetpointManagerFollowOutdoorAirTemperature> nodeSPM = _node.setpointManagerFollowOutdoorAirTemperature();
+  boost::optional<SetpointManagerFollowOutdoorAirTemperature> nodeSPM =
+    _setpointManagers[0].optionalCast<SetpointManagerFollowOutdoorAirTemperature>();
   ASSERT_TRUE(nodeSPM);
   EXPECT_EQ(spm, *nodeSPM);
 
-  _node.removeSetpointManagerFollowOutdoorAirTemperature();
+  spm.remove();
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
@@ -319,18 +320,18 @@ TEST_F(ModelFixture, Node_SetpointManagerOutdoorAirReset) {
   SetpointManagerOutdoorAirReset spm(m);
   spm.setControlVariable("Temperature");
 
-  _node.addSetpointManager(spm);
+  spm.addToNode(_node);
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   setpointManagerOutdoorAirResets = m.getConcreteModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(1, setpointManagerOutdoorAirResets.size());
 
-  OptionalSetpointManagerOutdoorAirReset nodeSPM = _node.setpointManagerOutdoorAirReset();
+  OptionalSetpointManagerOutdoorAirReset nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerOutdoorAirReset>();
   ASSERT_TRUE(nodeSPM);
   EXPECT_EQ(spm, *nodeSPM);
 
-  _node.removeSetpointManagerOutdoorAirReset();
+  spm.remove();
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
@@ -351,18 +352,18 @@ TEST_F(ModelFixture, Node_SetpointManagerWarmest) {
   SetpointManagerWarmest spm(m);
   spm.setControlVariable("Temperature");
 
-  _node.addSetpointManagerWarmest(spm);
+  spm.addToNode(_node);
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   setpointManagerWarmests = m.getConcreteModelObjects<SetpointManagerWarmest>();
   EXPECT_EQ(1, setpointManagerWarmests.size());
 
-  OptionalSetpointManagerWarmest nodeSPM = _node.setpointManagerWarmest();
+  OptionalSetpointManagerWarmest nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerWarmest>();
   ASSERT_TRUE(nodeSPM);
   EXPECT_EQ(spm, *nodeSPM);
 
-  _node.removeSetpointManagerWarmest();
+  spm.remove();
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());

@@ -672,10 +672,6 @@ namespace model {
     return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setSchedule(schedule);
   }
 
-  bool ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod(const std::string& designFlowRateCalculationMethod) {
-    return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setDesignFlowRateCalculationMethod(designFlowRateCalculationMethod);
-  }
-
   bool ZoneVentilationDesignFlowRate::setDesignFlowRate(double designFlowRate) {
     return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setDesignFlowRate(designFlowRate);
   }

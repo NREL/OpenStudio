@@ -104,7 +104,6 @@
 #include "../../model/Material.hpp"
 #include "../../model/Material_Impl.hpp"
 #include "../../model/AirGap.hpp"
-#include "../../model/AirWallMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../../model/StandardGlazing.hpp"
@@ -1918,7 +1917,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   //use spacetype with multiple spaces
   //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
-  //the zonelist (or spaceList if m_excludeSpaceTranslation = false) is created from the spaceType name,
+  //the zonelist (or spaceList if m_forwardTranslatorOptions.excludeSpaceTranslation() = false) is created from the spaceType name,
   //and the zones in the list are the space.thermalzone names
 
   Model model = exampleModel();

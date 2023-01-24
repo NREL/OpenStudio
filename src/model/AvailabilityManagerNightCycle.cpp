@@ -596,36 +596,6 @@ namespace model {
     getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetCyclingRunTime();
   }
 
-  // Deprecated
-  boost::optional<ThermalZone> AvailabilityManagerNightCycle::controlThermalZone() const {
-    LOG(Warn, "AvailabilityManagerNightCycle::controlThermalZone has been deprecated and will be removed in a future release, "
-              "please use AvailabilityManagerNightCycle::controlThermalZones instead");
-
-    boost::optional<ThermalZone> result;
-
-    std::vector<ThermalZone> zones = getImpl<detail::AvailabilityManagerNightCycle_Impl>()->controlThermalZones();
-    if (zones.size() > 1) {
-      LOG(Warn, "Multiple thermalZones are assigned, returning the first found");
-      result = zones[0];
-    } else if (zones.size() == 1) {
-      result = zones[0];
-    }
-
-    return result;
-  }
-  // Deprecated
-  bool AvailabilityManagerNightCycle::setControlThermalZone(const ThermalZone& thermalZone) {
-    LOG(Warn, "AvailabilityManagerNightCycle::setControlThermalZone has been deprecated and will be removed in a future release, "
-              "please use AvailabilityManagerNightCycle::setControlThermalZones instead");
-    return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setControlThermalZones(std::vector<ThermalZone>{thermalZone});
-  }
-  // Deprecated
-  void AvailabilityManagerNightCycle::resetControlThermalZone() {
-    LOG(Warn, "AvailabilityManagerNightCycle::resetControlThermalZone has been deprecated and will be removed in a future release, "
-              "please use AvailabilityManagerNightCycle::resetControlThermalZones instead");
-    getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetControlThermalZones();
-  }
-
   std::vector<ThermalZone> AvailabilityManagerNightCycle::controlThermalZones() const {
     return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->controlThermalZones();
   }

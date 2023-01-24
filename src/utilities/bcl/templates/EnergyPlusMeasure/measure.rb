@@ -36,7 +36,7 @@ class EnergyPlusMeasureName < OpenStudio::Measure::EnergyPlusMeasure
 
   # define what happens when the measure is run
   def run(workspace, runner, user_arguments)
-    super(workspace, runner, user_arguments)
+    super(workspace, runner, user_arguments)  # Do **NOT** remove this line
 
     # use the built-in error checking
     if !runner.validateUserArguments(arguments(workspace), user_arguments)

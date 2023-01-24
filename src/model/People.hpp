@@ -96,6 +96,15 @@ namespace model {
     /** Returns the air velocity schedule. */
     boost::optional<Schedule> airVelocitySchedule() const;
 
+    /** Returns the ankle-level air velocity schedule. */
+    boost::optional<Schedule> ankleLevelAirVelocitySchedule() const;
+
+    double coldStressTemperatureThreshold() const;
+    bool isColdStressTemperatureThresholdDefaulted() const;
+
+    double heatStressTemperatureThreshold() const;
+    bool isHeatStressTemperatureThresholdDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -146,6 +155,15 @@ namespace model {
     bool setMultiplier(double multiplier);
 
     void resetMultiplier();
+
+    bool setAnkleLevelAirVelocitySchedule(Schedule& schedule);
+    void resetAnkleLevelAirVelocitySchedule();
+
+    bool setColdStressTemperatureThreshold(double coldStressTemperatureThreshold);
+    void resetColdStressTemperatureThreshold();
+
+    bool setHeatStressTemperatureThreshold(double heatStressTemperatureThreshold);
+    void resetHeatStressTemperatureThreshold();
 
     //@}
     /** @name Other */

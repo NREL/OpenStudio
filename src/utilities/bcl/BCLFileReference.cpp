@@ -52,7 +52,7 @@ BCLFileReference::BCLFileReference(const openstudio::path& measureRootDir, const
     } else if (fileType == "idf") {
       m_softwareProgram = "EnergyPlus";
       //m_softwareProgramVersion = "";
-    } else if (fileType == "rb") {
+    } else if ((fileType == "rb") || (fileType == "py")) {
       m_softwareProgram = "OpenStudio";
       //m_softwareProgramVersion = "";
     }

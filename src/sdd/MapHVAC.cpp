@@ -80,8 +80,8 @@
 #include "../model/CurveQuadratic_Impl.hpp"
 #include "../model/Curve.hpp"
 #include "../model/Curve_Impl.hpp"
-#include "../model/TableMultiVariableLookup.hpp"
-#include "../model/TableMultiVariableLookup_Impl.hpp"
+#include "../model/TableLookup.hpp"
+#include "../model/TableIndependentVariable.hpp"
 #include "../model/Duct.hpp"
 #include "../model/Duct_Impl.hpp"
 #include "../model/ScheduleRuleset.hpp"
@@ -233,6 +233,7 @@
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
+#include "model/TableIndependentVariable.hpp"
 
 #include <cmath>
 #include <functional>
@@ -8081,7 +8082,7 @@ namespace sdd {
       return boost::none;
     }
 
-    model::TableMultiVariableLookup table(model, 2);
+    model::TableLookup table(model);
 
     auto nameElement = element.child("Name");
     table.setName(nameElement.text().as_string());
@@ -8108,6 +8109,11 @@ namespace sdd {
       return table;
     }
 
+    model::TableIndependentVariable var1(model);
+    model::TableIndependentVariable var2(model);
+    table.addIndependentVariable(var1);
+    table.addIndependentVariable(var2);
+
     for (std::vector<pugi::xml_node>::size_type i = 0; i < arrayVar1Elements.size(); i++) {
 
       boost::optional<double> _arrayVar1 = lexicalCastToDouble(arrayVar1Elements[i]);
@@ -8115,7 +8121,9 @@ namespace sdd {
       boost::optional<double> _arrayOut = lexicalCastToDouble(arrayOutElements[i]);
 
       if (_arrayVar1 && _arrayVar2 && _arrayOut) {
-        table.addPoint(_arrayVar1.get(), _arrayVar2.get(), _arrayOut.get());
+        var1.addValue(_arrayVar1.get());
+        var2.addValue(_arrayVar2.get());
+        table.addOutputValue(_arrayOut.get());
       }
     }
 
@@ -8123,53 +8131,68 @@ namespace sdd {
 
     boost::optional<double> _minOut = lexicalCastToDouble(element.child("MinOut"));
     if (_minOut) {
-      table.setMinimumTableOutput(_minOut.get());
+      table.setMinimumOutput(_minOut.get());
     }
 
     boost::optional<double> _maxOut = lexicalCastToDouble(element.child("MaxOut"));
     if (_maxOut) {
-      table.setMaximumTableOutput(_maxOut.get());
+      table.setMaximumOutput(_maxOut.get());
     }
 
     text = element.child("UnitTypeVar1").text().as_string();
-    table.setInputUnitTypeforX1(text);
+    var1.setUnitType(text);
 
     text = element.child("UnitTypeVar2").text().as_string();
-    table.setInputUnitTypeforX2(text);
+    var2.setUnitType(text);
 
     text = element.child("UnitTypeOut").text().as_string();
     table.setOutputUnitType(text);
 
     boost::optional<double> _minVar1 = lexicalCastToDouble(element.child("MinVar1"));
     if (_minVar1) {
-      table.setMinimumValueofX1(_minVar1.get());
+      var1.setMinimumValue(_minVar1.get());
     }
 
     boost::optional<double> _maxVar1 = lexicalCastToDouble(element.child("MaxVar1"));
     if (_maxVar1) {
-      table.setMaximumValueofX1(_maxVar1.get());
+      var1.setMaximumValue(_maxVar1.get());
     }
 
     boost::optional<double> _minVar2 = lexicalCastToDouble(element.child("MinVar2"));
     if (_minVar2) {
-      table.setMinimumValueofX2(_minVar2.get());
+      var2.setMinimumValue(_minVar2.get());
     }
 
     boost::optional<double> _maxVar2 = lexicalCastToDouble(element.child("MaxVar2"));
     if (_maxVar2) {
-      table.setMaximumValueofX2(_maxVar2.get());
+      var2.setMaximumValue(_maxVar2.get());
     }
 
     text = element.child("InterpMthd").text().as_string();
-    table.setInterpolationMethod(text);
+    std::string newInterpMethod = "Cubic";
+    std::string newExtrapMethod = "Constant";
+    if (openstudio::istringEqual(text, "LagrangeInterpolationLinearExtrapolation")) {
+      newInterpMethod = "Cubic";
+      newExtrapMethod = "Linear";
+    } else if (istringEqual(text, "LinearInterpolationOfTable")) {
+      newInterpMethod = "Linear";
+      newExtrapMethod = "Constant";
+    }
+
+    var1.setInterpolationMethod(newInterpMethod);
+    var1.setExtrapolationMethod(newExtrapMethod);
+    var2.setInterpolationMethod(newInterpMethod);
+    var2.setExtrapolationMethod(newExtrapMethod);
 
     boost::optional<double> _normalizationPt = lexicalCastToDouble(element.child("NormalizationPt"));
     if (_normalizationPt) {
-      table.setNormalizationReference(_normalizationPt.get());
+      table.setNormalizationMethod("DivisorOnly");
+      table.setNormalizationDivisor(_normalizationPt.get());
     }
 
-    text = element.child("Type").text().as_string();
-    table.setCurveType(text);
+    // Now ignored
+    //text = element.child("Type").text().as_string();
+    // table.setCurveType(text);
 
     return table;
   }
@@ -8180,7 +8203,9 @@ namespace sdd {
       return boost::none;
     }
 
-    model::TableMultiVariableLookup table(model, 1);
+    model::TableLookup table(model);
+    model::TableIndependentVariable var1(model);
+    table.addIndependentVariable(var1);
 
     auto nameElement = element.child("Name");
     table.setName(nameElement.text().as_string());
@@ -8205,42 +8230,58 @@ namespace sdd {
       boost::optional<double> _arrayOut = lexicalCastToDouble(arrayOutElements[i]);
 
       if (_arrayVar1 && _arrayOut) {
-        table.addPoint(_arrayVar1.get(), _arrayOut.get());
+        var1.addValue(_arrayVar1.get());
+        table.addOutputValue(_arrayOut.get());
       }
     }
 
     boost::optional<double> _minOut = lexicalCastToDouble(element.child("MinOut"));
     if (_minOut) {
-      table.setMinimumTableOutput(_minOut.get());
+      table.setMinimumOutput(_minOut.get());
     }
 
     boost::optional<double> _maxOut = lexicalCastToDouble(element.child("MaxOut"));
     if (_maxOut) {
-      table.setMaximumTableOutput(_maxOut.get());
+      table.setMaximumOutput(_maxOut.get());
     }
 
-    table.setInputUnitTypeforX1(element.child("UnitTypeVar1").text().as_string());
+    var1.setUnitType(element.child("UnitTypeVar1").text().as_string());
 
     table.setOutputUnitType(element.child("UnitTypeOut").text().as_string());
 
     boost::optional<double> _minVar1 = lexicalCastToDouble(element.child("MinVar1"));
     if (_minVar1) {
-      table.setMinimumValueofX1(_minVar1.get());
+      var1.setMinimumValue(_minVar1.get());
     }
 
     boost::optional<double> _maxVar1 = lexicalCastToDouble(element.child("MaxVar1"));
     if (_maxVar1) {
-      table.setMaximumValueofX1(_maxVar1.get());
+      var1.setMaximumValue(_maxVar1.get());
     }
 
-    table.setInterpolationMethod(element.child("InterpMthd").text().as_string());
+    auto text = element.child("InterpMthd").text().as_string();
+    std::string newInterpMethod = "Cubic";
+    std::string newExtrapMethod = "Constant";
+    if (openstudio::istringEqual(text, "LagrangeInterpolationLinearExtrapolation")) {
+      newInterpMethod = "Cubic";
+      newExtrapMethod = "Linear";
+    } else if (istringEqual(text, "LinearInterpolationOfTable")) {
+      newInterpMethod = "Linear";
+      newExtrapMethod = "Constant";
+    }
+
+    var1.setInterpolationMethod(newInterpMethod);
+    var1.setExtrapolationMethod(newExtrapMethod);
 
     boost::optional<double> _normalizationPt = lexicalCastToDouble(element.child("NormalizationPt"));
     if (_normalizationPt) {
-      table.setNormalizationReference(_normalizationPt.get());
+      table.setNormalizationMethod("DivisorOnly");
+      table.setNormalizationDivisor(_normalizationPt.get());
     }
 
-    table.setCurveType(element.child("Type").text().as_string());
+    // Now ignored
+    //text = element.child("Type").text().as_string();
+    // table.setCurveType(text);
 
     return table;
   }
@@ -8643,7 +8684,7 @@ namespace sdd {
     // DXEER
     if (auto cop = coil.ratedCOP()) {
       auto r = 0.12;
-      auto eer = (cop.get() * (1 - r) - r) * 3.413;
+      auto eer = (cop * (1 - r) - r) * 3.413;
 
       auto dxEERElement = result.append_child("DXEER");
       dxEERElement.text() = openstudio::string_conversions::number(eer).c_str();

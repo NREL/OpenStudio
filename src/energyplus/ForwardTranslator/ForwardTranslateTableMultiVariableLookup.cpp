@@ -40,11 +40,21 @@
 #include <utilities/idd/Table_IndependentVariable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include "../../utilities/core/Deprecated.hpp"
+
 using namespace openstudio::model;
 
 namespace openstudio {
 
 namespace energyplus {
+
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 
   boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(TableMultiVariableLookup& modelObject) {
     OptionalString s;
@@ -155,6 +165,9 @@ namespace energyplus {
     if ((d = modelObject.normalizationReference())) {
       tableLookup.setString(Table_LookupFields::NormalizationMethod, "DivisorOnly");
       tableLookup.setDouble(Table_LookupFields::NormalizationDivisor, d.get());
+    } else {
+      tableLookup.setString(Table_LookupFields::NormalizationMethod, "None");
+      tableLookup.setDouble(Table_LookupFields::NormalizationDivisor, 1.0);
     }
 
     // MinimumTableOutput
@@ -183,6 +196,12 @@ namespace energyplus {
 
     return tableLookup;
   }
+
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
 
 }  // namespace energyplus
 

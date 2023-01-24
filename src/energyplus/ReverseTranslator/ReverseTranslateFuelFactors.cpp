@@ -58,18 +58,6 @@ namespace energyplus {
     openstudio::model::FuelFactors modelObject(m_model);
     modelObject.setExistingFuelResourceName(resourceName);
 
-    // These two are unused in E+ source code, so not present in openstudio
-
-    // Units of Measure: Optional String
-    //if (boost::optional<std::string> _unitsofMeasure = workspaceObject.getString(FuelFactorsFields::UnitsofMeasure)) {
-    //modelObject.setUnitsofMeasure(_unitsofMeasure.get());
-    //}
-
-    // Energy per Unit Factor: Optional Double
-    //if (boost::optional<double> _energyperUnitFactor = workspaceObject.getDouble(FuelFactorsFields::EnergyperUnitFactor)) {
-    //modelObject.setEnergyperUnitFactor(_energyperUnitFactor.get());
-    //}
-
     // Source Energy Factor: Optional Double
     if (boost::optional<double> _sourceEnergyFactor = workspaceObject.getDouble(FuelFactorsFields::SourceEnergyFactor)) {
       modelObject.setSourceEnergyFactor(_sourceEnergyFactor.get());

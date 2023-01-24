@@ -137,16 +137,17 @@ namespace model {
       }
     }
 
-    for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src}) {
-      const auto& path = dirEnt.path();
-      auto relativePathStr = path.string();
-      boost::replace_first(relativePathStr, src.string(), "");
+    // Not using PathHelper's copyDirectory because we want clear log messages
+    for (const auto& dirEnt : openstudio::filesystem::directory_iterator{src}) {
+      const auto& srcFolderPath = dirEnt.path();
+      const auto& relativeFolderPath = openstudio::filesystem::relative(srcFolderPath, src);
 
       try {
-        openstudio::filesystem::copy(path, dest / relativePathStr);
+        // No need to pass the copy_options::overwrite_existing here, we wiped the directory before
+        openstudio::filesystem::copy(srcFolderPath, dest / relativeFolderPath, openstudio::filesystem::copy_options::recursive);
       } catch (const std::exception& e) {
         LOG_FREE(Error, "replaceDir",
-                 "Error copying from: " << toString(path) << " to: " << toString(dest / relativePathStr) << " Description: " << e.what());
+                 "Error copying from: " << toString(srcFolderPath) << " to: " << toString(dest / relativeFolderPath) << " Description: " << e.what());
         result = false;
       }
     }
@@ -339,7 +340,7 @@ namespace model {
     openstudio::path srcPath = modelTempDir / osmPath.filename();
 
     try {
-      openstudio::filesystem::copy_file(srcPath, osmPath, openstudio::filesystem::copy_option::overwrite_if_exists);
+      openstudio::filesystem::copy_file(srcPath, osmPath, openstudio::filesystem::copy_options::overwrite_existing);
       test = true;
     } catch (const std::exception& e) {
       LOG_FREE(Error, "saveModelTempDir", "Could not copy osm from '" << toString(srcPath) << "' to '" << toString(osmPath) << "' error" << e.what());

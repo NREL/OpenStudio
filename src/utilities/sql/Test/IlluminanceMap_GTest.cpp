@@ -56,7 +56,7 @@ class IlluminanceMapFixture : public ::testing::Test
     std::string currentTestName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
     currentSqlPath = resourcesPath() / toPath("utilities/SqlFile") / toPath(currentTestName + ".sql");
     // Copy the original SqlFile to a unique one
-    openstudio::filesystem::copy_file(oriSqlPath, currentSqlPath, openstudio::filesystem::copy_option::overwrite_if_exists);
+    openstudio::filesystem::copy_file(oriSqlPath, currentSqlPath, openstudio::filesystem::copy_options::overwrite_existing);
 
     sqlFile = SqlFile(currentSqlPath);
     ASSERT_TRUE(sqlFile.connectionOpen());

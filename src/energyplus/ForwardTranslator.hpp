@@ -37,7 +37,10 @@
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
+#include "../utilities/filetypes/ForwardTranslatorOptions.hpp"
 #include "../utilities/time/Time.hpp"
+
+#include "../utilities/core/Deprecated.hpp"
 
 #include <iostream>
 
@@ -98,7 +101,6 @@ namespace model {
   class AirLoopHVACZoneMixer;
   class AirLoopHVACOutdoorAirSystem;
   class AirLoopHVACDedicatedOutdoorAirSystem;
-  class AirWallMaterial;
   class AvailabilityManagerAssignmentList;
   class AvailabilityManagerHybridVentilation;
   class AvailabilityManagerOptimumStart;
@@ -120,6 +122,7 @@ namespace model {
   class CFactorUndergroundWallConstruction;
   class ChillerAbsorption;
   class ChillerAbsorptionIndirect;
+  class ChillerElectricASHRAE205;
   class ChillerElectricEIR;
   class ChillerElectricReformulatedEIR;
   class ChillerHeaterPerformanceElectricEIR;
@@ -142,6 +145,7 @@ namespace model {
   class CoilHeatingDXVariableRefrigerantFlow;
   class CoilHeatingDXVariableSpeed;
   class CoilHeatingElectric;
+  class CoilHeatingElectricMultiStage;
   class CoilHeatingGas;
   class CoilHeatingGasMultiStage;
   class CoilHeatingWater;
@@ -311,6 +315,8 @@ namespace model {
   class OutputDiagnostics;
   class OutputJSON;
   class OutputSQLite;
+  class OutputSchedules;
+  class OutputConstructions;
   class OutputEnvironmentalImpactFactors;
   class EnvironmentalImpactFactors;
   class FuelFactors;
@@ -405,7 +411,7 @@ namespace model {
   class SizingPlant;
   class SizingSystem;
   class SizingZone;
-  class SpaceLoadInstance;
+  class SpaceLoad;
   class StandardGlazing;
   class StandardOpaqueMaterial;
   class SimpleGlazing;
@@ -447,8 +453,12 @@ namespace model {
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertySurroundingSurfaces;
+  class SurfacePropertyGroundSurfaces;
+  class SurfacePropertyIncidentSolarMultiplier;
   class SwimmingPoolIndoor;
   class TableMultiVariableLookup;
+  class TableLookup;
+  class TableIndependentVariable;
   class TemperingValve;
   class ThermalZone;
   class ThermalStorageIceDetailed;
@@ -505,15 +515,7 @@ namespace energyplus {
     struct ForwardTranslatorInitializer;
   };
 
-  struct ForwardTranslatorOptionKeyMethod
-  {
-    std::string json_name;
-    std::string ft_method_name;
-  };
-
-  ENERGYPLUS_API std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt);
-
-#define ENERGYPLUS_VERSION "22.1"
+#define ENERGYPLUS_VERSION "22.2"
 
   class ENERGYPLUS_API ForwardTranslator
   {
@@ -536,6 +538,13 @@ namespace energyplus {
    */
     std::vector<LogMessage> errors() const;
 
+    ForwardTranslatorOptions forwardTranslatorOptions() const;
+
+    void setForwardTranslatorOptions(ForwardTranslatorOptions forwardTranslatorOptions);
+
+    /** @Convenience methods for ForwardTranslatorOptions (and for backward compatibility) */
+    //@{
+    //
     /** keepRunControlSpecialDays is enabled by default. You can use this method to NOT translate the holidays in the model.
    */
     void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
@@ -568,7 +577,7 @@ namespace energyplus {
    *  Use this at your own risks */
     void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
 
-    static std::vector<ForwardTranslatorOptionKeyMethod> forwardTranslatorOptionKeyMethods();
+    //@}
 
    private:
     REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
@@ -590,9 +599,8 @@ namespace energyplus {
    */
     Workspace translateModelPrivate(model::Model& model, bool fullModelTranslation);
 
-    // TODO: restrict to SpaceLoadInstance or SpaceLoad?
-    // Pick up the Zone, ZoneList, Space or SpaceList (if allowSpaceType is true) object for a given SpaceLoadInstance
-    IdfObject getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType = true);
+    // Pick up the Zone, ZoneList, Space or SpaceList (if allowSpaceType is true) object for a given SpaceLoad (or SpaceLoadInstance)
+    IdfObject getSpaceLoadParent(const model::SpaceLoad& sp, bool allowSpaceType = true);
 
     // NOLINTBEGIN(readability-function-size, bugprone-branch-clone)
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
@@ -703,8 +711,6 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateAirTerminalSingleDuctVAVHeatAndCoolReheat(model::AirTerminalSingleDuctVAVHeatAndCoolReheat& modelObject);
 
-    boost::optional<IdfObject> translateAirWallMaterial(model::AirWallMaterial& modelObject);
-
     boost::optional<IdfObject> translateAvailabilityManagerAssignmentList(model::AvailabilityManagerAssignmentList& modelObject);
 
     boost::optional<IdfObject> translateAvailabilityManagerHybridVentilation(model::AvailabilityManagerHybridVentilation& modelObject);
@@ -747,6 +753,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateChillerAbsorptionIndirect(model::ChillerAbsorptionIndirect& modelObject);
 
+    boost::optional<IdfObject> translateChillerElectricASHRAE205(model::ChillerElectricASHRAE205& modelObject);
+
     boost::optional<IdfObject> translateChillerElectricEIR(model::ChillerElectricEIR& modelObject);
 
     boost::optional<IdfObject> translateChillerElectricReformulatedEIR(model::ChillerElectricReformulatedEIR& modelObject);
@@ -755,7 +763,11 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed(model::CoilCoolingDXSingleSpeed& modelObject);
 
+    boost::optional<IdfObject> translateCoilCoolingDXSingleSpeedWithoutUnitary(model::CoilCoolingDXSingleSpeed& modelObject);
+
     boost::optional<IdfObject> translateCoilCoolingDX(model::CoilCoolingDX& modelObject);
+
+    boost::optional<IdfObject> translateCoilCoolingDXWithoutUnitary(model::CoilCoolingDX& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXCurveFitPerformance(model::CoilCoolingDXCurveFitPerformance& modelObject);
 
@@ -764,8 +776,6 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilCoolingDXCurveFitSpeed(model::CoilCoolingDXCurveFitSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXMultiSpeed(model::CoilCoolingDXMultiSpeed& modelObject);
-
-    boost::optional<IdfObject> translateCoilCoolingDXSingleSpeedWithoutUnitary(model::CoilCoolingDXSingleSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXTwoSpeed(model::CoilCoolingDXTwoSpeed& modelObject);
 
@@ -805,6 +815,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilHeatingDXVariableSpeedWithoutUnitary(model::CoilHeatingDXVariableSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingElectric(model::CoilHeatingElectric& modelObject);
+
+    boost::optional<IdfObject> translateCoilHeatingElectricMultiStage(model::CoilHeatingElectricMultiStage& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingGas(model::CoilHeatingGas& modelObject);
 
@@ -1150,6 +1162,10 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateOutputSQLite(model::OutputSQLite& modelObject);
 
+    boost::optional<IdfObject> translateOutputSchedules(model::OutputSchedules& modelObject);
+
+    boost::optional<IdfObject> translateOutputConstructions(model::OutputConstructions& modelObject);
+
     boost::optional<IdfObject> translateOutputEnvironmentalImpactFactors(model::OutputEnvironmentalImpactFactors& modelObject);
 
     boost::optional<IdfObject> translateEnvironmentalImpactFactors(model::EnvironmentalImpactFactors& modelObject);
@@ -1430,9 +1446,17 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateSurfacePropertySurroundingSurfaces(model::SurfacePropertySurroundingSurfaces& modelObject);
 
+    boost::optional<IdfObject> translateSurfacePropertyGroundSurfaces(model::SurfacePropertyGroundSurfaces& modelObject);
+
+    boost::optional<IdfObject> translateSurfacePropertyIncidentSolarMultiplier(model::SurfacePropertyIncidentSolarMultiplier& modelObject);
+
     boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor& modelObject);
 
-    boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
+    OS_DEPRECATED boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
+
+    boost::optional<IdfObject> translateTableLookup(model::TableLookup& modelObject);
+
+    boost::optional<IdfObject> translateTableIndependentVariable(model::TableIndependentVariable& modelObject);
 
     boost::optional<IdfObject> translateTemperingValve(model::TemperingValve& modelObject);
 
@@ -1649,13 +1673,7 @@ namespace energyplus {
     ProgressBar* m_progressBar;
 
     // ForwardTranslator options
-    bool m_keepRunControlSpecialDays;
-    bool m_ipTabularOutput;
-    bool m_excludeLCCObjects;
-    bool m_excludeSQliteOutputReport;  // exclude Output:Sqlite
-    bool m_excludeHTMLOutputReport;    // exclude Output:Table:SummaryReports
-    bool m_excludeVariableDictionary;  // exclude Output:VariableDictionary
-    bool m_excludeSpaceTranslation;
+    ForwardTranslatorOptions m_forwardTranslatorOptions;
   };
 
 }  // namespace energyplus

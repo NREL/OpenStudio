@@ -1615,27 +1615,5 @@ namespace model {
     return getImpl<detail::PlantLoop_Impl>()->removeAvailabilityManager(priority);
   }
 
-  // TODO: START DEPRECATED SECTION
-
-  boost::optional<AvailabilityManager> PlantLoop::availabilityManager() const {
-    boost::optional<AvailabilityManager> avm;
-    std::vector<AvailabilityManager> avmVector = availabilityManagers();
-    if (!avmVector.empty()) {
-      avm = avmVector[0];
-    }
-    return avm;
-  }
-
-  bool PlantLoop::setAvailabilityManager(const AvailabilityManager& availabilityManager) {
-    std::vector<AvailabilityManager> avmVector;
-    avmVector.push_back(availabilityManager);
-    return setAvailabilityManagers(avmVector);
-  }
-  void PlantLoop::resetAvailabilityManager() {
-    resetAvailabilityManagers();
-  }
-
-  // END DEPRECATED
-
 }  // namespace model
 }  // namespace openstudio

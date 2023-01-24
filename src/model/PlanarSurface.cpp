@@ -41,8 +41,6 @@
 #include "LayeredConstruction.hpp"
 #include "LayeredConstruction_Impl.hpp"
 #include "Material.hpp"
-#include "AirWallMaterial.hpp"
-#include "AirWallMaterial_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
 #include "GeneratorPhotovoltaic.hpp"
@@ -210,33 +208,8 @@ namespace model {
 
     /// is this surface an air wall
     bool PlanarSurface_Impl::isAirWall() const {
-      bool result = false;
-
       OptionalConstructionBase oConstruction = this->construction();
-      if (oConstruction && oConstruction->isModelPartition()) {
-
-        if (boost::optional<ConstructionAirBoundary> constructionAirBoundary = oConstruction->optionalCast<ConstructionAirBoundary>()) {
-          return true;
-        }
-
-        if (boost::optional<LayeredConstruction> construction = oConstruction->optionalCast<LayeredConstruction>()) {
-          if (construction->numLayers() == 1) {
-            MaterialVector layers = construction->layers();
-            OS_ASSERT(layers.size() == 1u);
-            if (layers[0].optionalCast<AirWallMaterial>()) {
-              result = true;
-              LOG(Warn, "AirWallMaterial is deprecated, use ConstructionAirBoundary instead.");
-            }
-          } else if (construction->numLayers() == 0) {
-            LOG(Info, "Construction detected with zero layers, classifying as non-air wall");
-            result = false;
-          } else {
-            LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
-            result = false;
-          }
-        }
-      }
-      return result;
+      return oConstruction && oConstruction->optionalCast<ConstructionAirBoundary>();
     }
 
     // compute gross area (m^2)

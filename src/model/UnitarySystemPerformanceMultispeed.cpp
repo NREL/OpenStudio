@@ -80,6 +80,17 @@ namespace model {
       OS_ASSERT(setString(OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation, ""));
     }
 
+    double UnitarySystemPerformanceMultispeed_Impl::noLoadSupplyAirflowRateRatio() const {
+      boost::optional<double> value = getDouble(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool UnitarySystemPerformanceMultispeed_Impl::setNoLoadSupplyAirflowRateRatio(double noLoadSupplyAirflowRateRatio) {
+      bool result = setDouble(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, noLoadSupplyAirflowRateRatio);
+      return result;
+    }
+
     boost::optional<double> UnitarySystemPerformanceMultispeed_Impl::readDoubleFieldOrAutosize(unsigned fieldNum,
                                                                                                const ModelExtensibleGroup& group) const {
       boost::optional<double> result = group.getDouble(fieldNum);
@@ -203,6 +214,9 @@ namespace model {
   UnitarySystemPerformanceMultispeed::UnitarySystemPerformanceMultispeed(const Model& model)
     : ModelObject(UnitarySystemPerformanceMultispeed::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>());
+
+    bool ok = setNoLoadSupplyAirflowRateRatio(1.0);
+    OS_ASSERT(ok);
   }
 
   IddObjectType UnitarySystemPerformanceMultispeed::iddObjectType() {
@@ -219,6 +233,14 @@ namespace model {
 
   void UnitarySystemPerformanceMultispeed::resetSingleModeOperation() {
     getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->resetSingleModeOperation();
+  }
+
+  double UnitarySystemPerformanceMultispeed::noLoadSupplyAirflowRateRatio() const {
+    return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->noLoadSupplyAirflowRateRatio();
+  }
+
+  bool UnitarySystemPerformanceMultispeed::setNoLoadSupplyAirflowRateRatio(double noLoadSupplyAirflowRateRatio) {
+    return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->setNoLoadSupplyAirflowRateRatio(noLoadSupplyAirflowRateRatio);
   }
 
   std::vector<SupplyAirflowRatioField> UnitarySystemPerformanceMultispeed::supplyAirflowRatioFields() const {

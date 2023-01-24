@@ -1715,11 +1715,11 @@ namespace isomodel {
         double area = cooling_coil_area_array[i];
         if (coil.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>()) {
           // check for single speed DX coil;
-          cop_sum += coil.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>().get().ratedCOP().get() * area;
+          cop_sum += coil.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>().get().ratedCOP() * area;
           cop_area_sum += area;
         } else if (coil.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>()) {
           // check for two speed DX coil;
-          cop_sum += coil.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP().get() * area;
+          cop_sum += coil.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP() * area;
           cop_area_sum += area;
         } else if (coil.optionalCast<openstudio::model::AirLoopHVACUnitaryHeatPumpAirToAir>()) {
           // check for heat pump;
@@ -1729,7 +1729,6 @@ namespace isomodel {
                        .optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>()
                        .get()
                        .ratedCOP()
-                       .get()
                      * area;
           cop_area_sum += area;
         } else if (coil.optionalCast<openstudio::model::ChillerElectricEIR>()) {
@@ -1751,11 +1750,11 @@ namespace isomodel {
             // if we are here then we don't have a specific area assigned to the cooling unit so use the full building floor area;
             if (component.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>()) {
               // check for single speed DX coil;
-              cop_sum += component.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>().get().ratedCOP().get();
+              cop_sum += component.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>().get().ratedCOP();
               cop_area_sum += building.floorArea();
             } else if (component.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>()) {
               // check for two speed DX coil;
-              cop_sum += component.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP().get();
+              cop_sum += component.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP();
               cop_area_sum += area;
             } else if (component.optionalCast<openstudio::model::ChillerElectricEIR>()) {
               // check for a chiller;

@@ -207,8 +207,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_Basic) {
     }
 
     EXPECT_EQ(stage.grossRatedCoolingCOP(), eg.getDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedGrossRatedCoolingCOP).get());
-    EXPECT_EQ(stage.ratedEvaporatorFanPowerPerVolumeFlowRate(),
-              eg.getDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate).get());
+    EXPECT_EQ(stage.ratedEvaporatorFanPowerPerVolumeFlowRate2017(),
+              eg.getDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate2017).get());
+    EXPECT_EQ(stage.ratedEvaporatorFanPowerPerVolumeFlowRate2023(),
+              eg.getDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate2023).get());
     EXPECT_EQ(stage.totalCoolingCapacityFunctionofTemperatureCurve().nameString(),
               eg.getString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName).get());
     EXPECT_EQ(stage.totalCoolingCapacityFunctionofFlowFractionCurve().nameString(),

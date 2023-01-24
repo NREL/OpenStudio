@@ -66,7 +66,7 @@ namespace energyplus {
       spaceInfiltrationEffectiveLeakageArea.setName(*s);
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneorSpaceName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {

@@ -714,3 +714,51 @@ TEST_F(ModelFixture, ChillerElectricEIR_ElectricInputToCoolingOutputRatioFunctio
     EXPECT_EQ(curveCubic, chiller.electricInputToCoolingOutputRatioFunctionOfPLR());
   }
 }
+
+TEST_F(ModelFixture, ChillerElectricEIR_HeatRecoverySetpointNode) {
+
+  // Test for #4724
+  model::Model model;
+  model::ChillerElectricEIR chiller(model);
+
+  // Chilled Water Loop: on the supply side
+  model::PlantLoop chwLoop(model);
+  EXPECT_TRUE(chwLoop.addSupplyBranchForComponent(chiller));
+  EXPECT_TRUE(chiller.plantLoop());
+  EXPECT_TRUE(chiller.chilledWaterLoop());
+
+  // Condenser Loop: on the demand side
+  model::PlantLoop cndwLoop(model);
+  EXPECT_TRUE(cndwLoop.addDemandBranchForComponent(chiller));
+  EXPECT_TRUE(chiller.secondaryPlantLoop());
+  EXPECT_TRUE(chiller.condenserWaterLoop());
+
+  model::PlantLoop hrLoop(model);
+  EXPECT_TRUE(hrLoop.addDemandBranchForComponent(chiller));
+  EXPECT_TRUE(chiller.tertiaryPlantLoop());
+  EXPECT_TRUE(chiller.heatRecoveryLoop());
+
+  // Double check everything is fine now
+  ASSERT_TRUE(chiller.plantLoop());
+  EXPECT_EQ(chwLoop, chiller.plantLoop().get());
+  ASSERT_TRUE(chiller.chilledWaterLoop());
+  EXPECT_EQ(chwLoop, chiller.chilledWaterLoop().get());
+
+  ASSERT_TRUE(chiller.secondaryPlantLoop());
+  EXPECT_EQ(cndwLoop, chiller.secondaryPlantLoop().get());
+  ASSERT_TRUE(chiller.condenserWaterLoop());
+  EXPECT_EQ(cndwLoop, chiller.condenserWaterLoop().get());
+
+  ASSERT_TRUE(chiller.tertiaryPlantLoop());
+  EXPECT_EQ(hrLoop, chiller.tertiaryPlantLoop().get());
+  ASSERT_TRUE(chiller.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, chiller.heatRecoveryLoop().get());
+
+  // Get the Chiller Tertirary Outlet Node = HR Loop Outlet Node
+  ASSERT_TRUE(chiller.tertiaryOutletModelObject());
+  auto hrOutletNode = chiller.tertiaryOutletModelObject()->cast<model::Node>();
+  // Actual test for #4724
+  EXPECT_TRUE(chiller.setHeatRecoveryLeavingTemperatureSetpointNode(hrOutletNode));
+  ASSERT_TRUE(chiller.heatRecoveryLeavingTemperatureSetpointNode());
+  EXPECT_EQ(hrOutletNode, chiller.heatRecoveryLeavingTemperatureSetpointNode().get());
+}

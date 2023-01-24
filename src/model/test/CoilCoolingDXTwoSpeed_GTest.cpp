@@ -96,13 +96,13 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_CoilCoolingDXTwoSpeed) {
   CoilCoolingDXTwoSpeed coil(m, s, ccfot, ccfof, eirfot, eirfof, plf, lsccfot, lseirfot);
 
   //ASSERT_EQ("Autosize",coil.getRatedHighSpeedTotalCoolingCapacity().get());
-  ASSERT_EQ(3, coil.getRatedHighSpeedCOP().get());
-  ASSERT_EQ(3, coil.getRatedLowSpeedCOP().get());
-  ASSERT_EQ(0, coil.getHighSpeedEvaporativeCondenserEffectiveness().get());
-  ASSERT_EQ(0, coil.getLowSpeedEvaporativeCondenserEffectiveness().get());
-  ASSERT_EQ(0, coil.getBasinHeaterCapacity().get());
-  ASSERT_EQ(10, coil.getBasinHeaterSetpointTemperature().get());
-  ASSERT_EQ("AirCooled", coil.getCondenserType());
+  ASSERT_EQ(3, coil.ratedHighSpeedCOP());
+  ASSERT_EQ(3, coil.ratedLowSpeedCOP());
+  ASSERT_EQ(0.9, coil.highSpeedEvaporativeCondenserEffectiveness());
+  ASSERT_EQ(0.9, coil.lowSpeedEvaporativeCondenserEffectiveness());
+  ASSERT_EQ(0, coil.basinHeaterCapacity());
+  ASSERT_EQ(2, coil.basinHeaterSetpointTemperature());
+  ASSERT_EQ("AirCooled", coil.condenserType());
 }
 
 //Test cloning the coil
@@ -147,25 +147,25 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_Clone) {
   //Clone into the same model
   auto coilClone = coil.clone(m).cast<CoilCoolingDXTwoSpeed>();
 
-  ASSERT_EQ(1, coilClone.getTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
-  ASSERT_EQ(2, coilClone.getTotalCoolingCapacityFunctionOfFlowFractionCurve().cast<CurveCubic>().coefficient1Constant());
-  ASSERT_EQ(3, coilClone.getEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
-  ASSERT_EQ(4, coilClone.getEnergyInputRatioFunctionOfFlowFractionCurve().cast<CurveQuadratic>().coefficient1Constant());
-  ASSERT_EQ(5, coilClone.getPartLoadFractionCorrelationCurve().cast<CurveCubic>().coefficient1Constant());
-  ASSERT_EQ(6, coilClone.getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
-  ASSERT_EQ(7, coilClone.getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  ASSERT_EQ(1, coilClone.totalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  ASSERT_EQ(2, coilClone.totalCoolingCapacityFunctionOfFlowFractionCurve().cast<CurveCubic>().coefficient1Constant());
+  ASSERT_EQ(3, coilClone.energyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  ASSERT_EQ(4, coilClone.energyInputRatioFunctionOfFlowFractionCurve().cast<CurveQuadratic>().coefficient1Constant());
+  ASSERT_EQ(5, coilClone.partLoadFractionCorrelationCurve().cast<CurveCubic>().coefficient1Constant());
+  ASSERT_EQ(6, coilClone.lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  ASSERT_EQ(7, coilClone.lowSpeedEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
 
   //Clone into another model
   Model m2;
   auto coilClone2 = coil.clone(m2).cast<CoilCoolingDXTwoSpeed>();
 
-  ASSERT_EQ(1, coilClone2.getTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
-  ASSERT_EQ(2, coilClone2.getTotalCoolingCapacityFunctionOfFlowFractionCurve().cast<CurveCubic>().coefficient1Constant());
-  ASSERT_EQ(3, coilClone2.getEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
-  ASSERT_EQ(4, coilClone2.getEnergyInputRatioFunctionOfFlowFractionCurve().cast<CurveQuadratic>().coefficient1Constant());
-  ASSERT_EQ(5, coilClone2.getPartLoadFractionCorrelationCurve().cast<CurveCubic>().coefficient1Constant());
-  ASSERT_EQ(6, coilClone2.getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
-  ASSERT_EQ(7, coilClone2.getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  ASSERT_EQ(1, coilClone2.totalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  ASSERT_EQ(2, coilClone2.totalCoolingCapacityFunctionOfFlowFractionCurve().cast<CurveCubic>().coefficient1Constant());
+  ASSERT_EQ(3, coilClone2.energyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  ASSERT_EQ(4, coilClone2.energyInputRatioFunctionOfFlowFractionCurve().cast<CurveQuadratic>().coefficient1Constant());
+  ASSERT_EQ(5, coilClone2.partLoadFractionCorrelationCurve().cast<CurveCubic>().coefficient1Constant());
+  ASSERT_EQ(6, coilClone2.lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  ASSERT_EQ(7, coilClone2.lowSpeedEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
 }
 
 //Test the methods that set and get all the fields
@@ -189,23 +189,23 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_SetGetFields) {
   //  A2 , \field Availability Schedule Name
   ScheduleCompact availSch(m);
   coil.setAvailabilitySchedule(availSch);
-  ASSERT_EQ(availSch, coil.getAvailabilitySchedule());
+  ASSERT_EQ(availSch, coil.availabilitySchedule());
 
   //  N1 , \field Rated High Speed Total Cooling Capacity
   coil.setRatedHighSpeedTotalCoolingCapacity(999);
-  ASSERT_EQ(999, coil.getRatedHighSpeedTotalCoolingCapacity().get());
+  ASSERT_EQ(999, coil.ratedHighSpeedTotalCoolingCapacity().get());
 
   //  N2 , \field Rated High Speed Sensible Heat Ratio
   coil.setRatedHighSpeedSensibleHeatRatio(0.999);
-  ASSERT_EQ(0.999, coil.getRatedHighSpeedSensibleHeatRatio().get());
+  ASSERT_EQ(0.999, coil.ratedHighSpeedSensibleHeatRatio().get());
 
   //  N3 , \field Rated High Speed COP
   coil.setRatedHighSpeedCOP(0.999);
-  ASSERT_EQ(0.999, coil.getRatedHighSpeedCOP().get());
+  ASSERT_EQ(0.999, coil.ratedHighSpeedCOP());
 
   //  N4 , \field Rated High Speed Air Flow Rate
   coil.setRatedHighSpeedAirFlowRate(999);
-  ASSERT_EQ(999, coil.getRatedHighSpeedAirFlowRate().get());
+  ASSERT_EQ(999, coil.ratedHighSpeedAirFlowRate().get());
 
   //create some curves for testing
   CurveBiquadratic testBiquadratic(m);
@@ -215,91 +215,91 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_SetGetFields) {
   //  A5 , \field Total Cooling Capacity Function of Temperature Curve Name
   //\object-list BiquadraticCurves
   ASSERT_TRUE(coil.setTotalCoolingCapacityFunctionOfTemperatureCurve(testBiquadratic));
-  ASSERT_EQ(testBiquadratic, coil.getTotalCoolingCapacityFunctionOfTemperatureCurve());
+  ASSERT_EQ(testBiquadratic, coil.totalCoolingCapacityFunctionOfTemperatureCurve());
 
   //  A6 , \field Total Cooling Capacity Function of Flow Fraction Curve Name
   //\object-list QuadraticCubicCurves
   ASSERT_TRUE(coil.setTotalCoolingCapacityFunctionOfFlowFractionCurve(testQuadratic));
-  ASSERT_EQ(testQuadratic, coil.getTotalCoolingCapacityFunctionOfFlowFractionCurve());
+  ASSERT_EQ(testQuadratic, coil.totalCoolingCapacityFunctionOfFlowFractionCurve());
   ASSERT_TRUE(coil.setTotalCoolingCapacityFunctionOfFlowFractionCurve(testCubic));
-  ASSERT_EQ(testCubic, coil.getTotalCoolingCapacityFunctionOfFlowFractionCurve());
+  ASSERT_EQ(testCubic, coil.totalCoolingCapacityFunctionOfFlowFractionCurve());
 
   //  A7 , \field Energy Input Ratio Function of Temperature Curve Name
   //\object-list BiquadraticCurves
   ASSERT_TRUE(coil.setEnergyInputRatioFunctionOfTemperatureCurve(testBiquadratic));
-  ASSERT_EQ(testBiquadratic, coil.getEnergyInputRatioFunctionOfTemperatureCurve());
+  ASSERT_EQ(testBiquadratic, coil.energyInputRatioFunctionOfTemperatureCurve());
 
   //  A8 , \field Energy Input Ratio Function of Flow Fraction Curve Name
   //\object-list QuadraticCubicCurves
   ASSERT_TRUE(coil.setEnergyInputRatioFunctionOfFlowFractionCurve(testQuadratic));
-  ASSERT_EQ(testQuadratic, coil.getEnergyInputRatioFunctionOfFlowFractionCurve());
+  ASSERT_EQ(testQuadratic, coil.energyInputRatioFunctionOfFlowFractionCurve());
   ASSERT_TRUE(coil.setEnergyInputRatioFunctionOfFlowFractionCurve(testCubic));
-  ASSERT_EQ(testCubic, coil.getEnergyInputRatioFunctionOfFlowFractionCurve());
+  ASSERT_EQ(testCubic, coil.energyInputRatioFunctionOfFlowFractionCurve());
 
   //  A9 , \field Part Load Fraction Correlation Curve Name
   //\object-list QuadraticCubicCurves
   ASSERT_TRUE(coil.setPartLoadFractionCorrelationCurve(testQuadratic));
-  ASSERT_EQ(testQuadratic, coil.getPartLoadFractionCorrelationCurve());
+  ASSERT_EQ(testQuadratic, coil.partLoadFractionCorrelationCurve());
   ASSERT_TRUE(coil.setPartLoadFractionCorrelationCurve(testCubic));
-  ASSERT_EQ(testCubic, coil.getPartLoadFractionCorrelationCurve());
+  ASSERT_EQ(testCubic, coil.partLoadFractionCorrelationCurve());
 
   //  N5 , \field Rated Low Speed Total Cooling Capacity
   coil.setRatedLowSpeedTotalCoolingCapacity(999);
-  ASSERT_EQ(999, coil.getRatedLowSpeedTotalCoolingCapacity().get());
+  ASSERT_EQ(999, coil.ratedLowSpeedTotalCoolingCapacity().get());
 
   //  N6 , \field Rated Low Speed Sensible Heat Ratio
   coil.setRatedLowSpeedSensibleHeatRatio(0.999);
-  ASSERT_EQ(0.999, coil.getRatedLowSpeedSensibleHeatRatio().get());
+  ASSERT_EQ(0.999, coil.ratedLowSpeedSensibleHeatRatio().get());
 
   //  N7 , \field Rated Low Speed COP
   coil.setRatedLowSpeedCOP(0.999);
-  ASSERT_EQ(0.999, coil.getRatedLowSpeedCOP().get());
+  ASSERT_EQ(0.999, coil.ratedLowSpeedCOP());
 
   //  N8 , \field Rated Low Speed Air Flow Rate
   coil.setRatedLowSpeedAirFlowRate(999);
-  ASSERT_EQ(999, coil.getRatedLowSpeedAirFlowRate().get());
+  ASSERT_EQ(999, coil.ratedLowSpeedAirFlowRate().get());
 
   //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
   //\object-list BiquadraticCurves
   ASSERT_TRUE(coil.setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(testBiquadratic));
-  ASSERT_EQ(testBiquadratic, coil.getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve());
+  ASSERT_EQ(testBiquadratic, coil.lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve());
 
   //  A11, \field Low Speed Energy Input Ratio Function of Temperature Curve Name
   //\object-list BiquadraticCurves
   ASSERT_TRUE(coil.setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(testBiquadratic));
-  ASSERT_EQ(testBiquadratic, coil.getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve());
+  ASSERT_EQ(testBiquadratic, coil.lowSpeedEnergyInputRatioFunctionOfTemperatureCurve());
 
   //  A12, \field Condenser Air Inlet Node Name
   coil.setCondenserAirInletNodeName("testNode");
-  ASSERT_EQ("testNode", coil.getCondenserAirInletNodeName().get());
+  ASSERT_EQ("testNode", coil.condenserAirInletNodeName().get());
 
   //  A13, \field Condenser Type
   coil.setCondenserType("EvaporativelyCooled");
-  ASSERT_EQ("EvaporativelyCooled", coil.getCondenserType());
+  ASSERT_EQ("EvaporativelyCooled", coil.condenserType());
 
   //   N9, \field High Speed Evaporative Condenser Effectiveness
   coil.setHighSpeedEvaporativeCondenserEffectiveness(0.999);
-  ASSERT_EQ(0.999, coil.getHighSpeedEvaporativeCondenserEffectiveness().get());
+  ASSERT_EQ(0.999, coil.highSpeedEvaporativeCondenserEffectiveness());
 
   //  N10, \field High Speed Evaporative Condenser Air Flow Rate
   coil.setHighSpeedEvaporativeCondenserAirFlowRate(999);
-  ASSERT_EQ(999, coil.getHighSpeedEvaporativeCondenserAirFlowRate().get());
+  ASSERT_EQ(999, coil.highSpeedEvaporativeCondenserAirFlowRate().get());
 
   //  N11, \field High Speed Evaporative Condenser Pump Rated Power Consumption
   coil.setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(999);
-  ASSERT_EQ(999, coil.getHighSpeedEvaporativeCondenserPumpRatedPowerConsumption().get());
+  ASSERT_EQ(999, coil.highSpeedEvaporativeCondenserPumpRatedPowerConsumption().get());
 
   //  N12, \field Low Speed Evaporative Condenser Effectiveness
   coil.setLowSpeedEvaporativeCondenserEffectiveness(0.999);
-  ASSERT_EQ(0.999, coil.getLowSpeedEvaporativeCondenserEffectiveness().get());
+  ASSERT_EQ(0.999, coil.lowSpeedEvaporativeCondenserEffectiveness());
 
   //  N13, \field Low Speed Evaporative Condenser Air Flow Rate
   coil.setLowSpeedEvaporativeCondenserAirFlowRate(999);
-  ASSERT_EQ(999, coil.getLowSpeedEvaporativeCondenserAirFlowRate().get());
+  ASSERT_EQ(999, coil.lowSpeedEvaporativeCondenserAirFlowRate().get());
 
   //  N14, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
   coil.setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(999);
-  ASSERT_EQ(999, coil.getLowSpeedEvaporativeCondenserPumpRatedPowerConsumption().get());
+  ASSERT_EQ(999, coil.lowSpeedEvaporativeCondenserPumpRatedPowerConsumption().get());
 
   //  A14, \field Supply Water Storage Tank Name
   //getSupplyWaterStorageTankName
@@ -311,16 +311,16 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_SetGetFields) {
 
   //  N15, \field Basin Heater Capacity
   coil.setBasinHeaterCapacity(999);
-  ASSERT_EQ(999, coil.getBasinHeaterCapacity().get());
+  ASSERT_EQ(999, coil.basinHeaterCapacity());
 
   //  N16, \field Basin Heater Setpoint Temperature
   coil.setBasinHeaterSetpointTemperature(35);
-  ASSERT_EQ(35, coil.getBasinHeaterSetpointTemperature().get());
+  ASSERT_EQ(35, coil.basinHeaterSetpointTemperature());
 
   //  A16; \field Basin Heater Operating Schedule Name
   ScheduleCompact basinSch(m);
   coil.setBasinHeaterOperatingSchedule(basinSch);
-  ASSERT_EQ(basinSch, coil.getBasinHeaterOperatingSchedule().get());
+  ASSERT_EQ(basinSch, coil.basinHeaterOperatingSchedule().get());
 
   // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
   // IDD Default

@@ -112,6 +112,7 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-6-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V22-1-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V22-2-0.sql
   utilities/xml/base.xml
   utilities/xml/hpxml_with_error.xml
   utilities/xml/schema/HPXML.xsd
@@ -161,6 +162,7 @@ set(model_resources_src
   model/offset_tests.osm
   model/ParkUnder_Retail_Office_C2.osm
   model/ASHRAECourthouse.osm
+  model/A205ExampleChiller.RS0001.a205.cbor
 )
 
 
@@ -394,4 +396,7 @@ CREATE_SRC_GROUPS("${airflow_resources_src}")
 
 ########################################################
 
+# Copy it for testing
+file(COPY "Examples" DESTINATION .)
+# And install
 install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")

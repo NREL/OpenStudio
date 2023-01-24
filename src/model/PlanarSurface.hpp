@@ -147,8 +147,7 @@ namespace model {
    *  horizontal floor/slab has tilt of pi rad. */
     static double stillAirFilmResistance(double tilt);
 
-    /// Checks if this surface is an air wall, returns true if the
-    /// Construction includes a single layer of type MaterialAirWall.
+    /// Checks if this surface is an air wall, returns true if it's a ConstructionAirBoundary
     bool isAirWall() const;
 
     /// Computes the surface's gross area (m^2).

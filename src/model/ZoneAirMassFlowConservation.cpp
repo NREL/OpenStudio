@@ -75,14 +75,6 @@ namespace model {
       return isEmpty(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingandReturnForAirMassFlowBalance);
     }
 
-    std::string ZoneAirMassFlowConservation_Impl::sourceZoneInfiltrationTreatment() const {
-      return "";
-    }
-
-    bool ZoneAirMassFlowConservation_Impl::isSourceZoneInfiltrationTreatmentDefaulted() const {
-      return false;
-    }
-
     std::string ZoneAirMassFlowConservation_Impl::infiltrationBalancingMethod() const {
       boost::optional<std::string> value = getString(OS_ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, true);
       OS_ASSERT(value);
@@ -115,12 +107,6 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneAirMassFlowConservation_Impl::setSourceZoneInfiltrationTreatment(const std::string& /*sourceZoneInfiltrationTreatment*/) {
-      return false;
-    }
-
-    void ZoneAirMassFlowConservation_Impl::resetSourceZoneInfiltrationTreatment() {}
-
     bool ZoneAirMassFlowConservation_Impl::setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod) {
       bool result = setString(OS_ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, infiltrationBalancingMethod);
       return result;
@@ -147,10 +133,6 @@ namespace model {
     return {IddObjectType::OS_ZoneAirMassFlowConservation};
   }
 
-  std::vector<std::string> ZoneAirMassFlowConservation::sourceZoneInfiltrationTreatmentValues() {
-    return {};
-  }
-
   std::vector<std::string> ZoneAirMassFlowConservation::adjustZoneMixingandReturnForAirMassFlowBalanceValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingandReturnForAirMassFlowBalance);
@@ -170,14 +152,6 @@ namespace model {
 
   bool ZoneAirMassFlowConservation::isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted() const {
     return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted();
-  }
-
-  std::string ZoneAirMassFlowConservation::sourceZoneInfiltrationTreatment() const {
-    return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->sourceZoneInfiltrationTreatment();
-  }
-
-  bool ZoneAirMassFlowConservation::isSourceZoneInfiltrationTreatmentDefaulted() const {
-    return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->isSourceZoneInfiltrationTreatmentDefaulted();
   }
 
   std::string ZoneAirMassFlowConservation::infiltrationBalancingMethod() const {
@@ -204,14 +178,6 @@ namespace model {
 
   void ZoneAirMassFlowConservation::resetAdjustZoneMixingandReturnForAirMassFlowBalance() {
     getImpl<detail::ZoneAirMassFlowConservation_Impl>()->resetAdjustZoneMixingandReturnForAirMassFlowBalance();
-  }
-
-  bool ZoneAirMassFlowConservation::setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment) {
-    return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->setSourceZoneInfiltrationTreatment(sourceZoneInfiltrationTreatment);
-  }
-
-  void ZoneAirMassFlowConservation::resetSourceZoneInfiltrationTreatment() {
-    getImpl<detail::ZoneAirMassFlowConservation_Impl>()->resetSourceZoneInfiltrationTreatment();
   }
 
   bool ZoneAirMassFlowConservation::setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod) {

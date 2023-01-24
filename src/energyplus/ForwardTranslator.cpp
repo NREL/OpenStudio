@@ -61,7 +61,6 @@
 #include "../model/ConcreteModelObjects.hpp"
 #include "../model/SpaceLoad.hpp"
 #include "../model/SpaceLoad_Impl.hpp"
-#include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceType.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
@@ -101,6 +100,8 @@
 
 #include "../utilities/idd/IddEnums.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 #include <algorithm>
 #include <iterator>
 #include <sstream>
@@ -114,25 +115,24 @@ namespace openstudio {
 
 namespace energyplus {
 
-  ForwardTranslator::ForwardTranslator()
-    : m_progressBar(nullptr),
-      m_keepRunControlSpecialDays(true),  // At 3.1.0 this was changed to true.
-      m_ipTabularOutput(false),
-      m_excludeLCCObjects(false),
-      m_excludeSQliteOutputReport(false),
-      m_excludeHTMLOutputReport(false),
-      m_excludeVariableDictionary(false),
-      m_excludeSpaceTranslation(false)  // At 3.4.1, this was changed to false
-  {
+  ForwardTranslator::ForwardTranslator() : m_progressBar(nullptr) {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
     createFluidPropertiesMap();
   }
 
+  ForwardTranslatorOptions ForwardTranslator::forwardTranslatorOptions() const {
+    return m_forwardTranslatorOptions;
+  }
+
+  void ForwardTranslator::setForwardTranslatorOptions(ForwardTranslatorOptions forwardTranslatorOptions) {
+    m_forwardTranslatorOptions = std::move(forwardTranslatorOptions);
+  }
+
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
 
-    // When m_excludeSpaceTranslation is false, could we skip the (expensive) clone since we aren't combining spaces?
+    // When m_forwardTranslatorOptions.excludeSpaceTranslation() is false, could we skip the (expensive) clone since we aren't combining spaces?
     // No, we are still doing stuff like removing orphan loads, spaces not part of a thermal zone, etc
     auto modelCopy = model.clone(true).cast<Model>();
 
@@ -171,60 +171,45 @@ namespace energyplus {
   }
 
   void ForwardTranslator::setKeepRunControlSpecialDays(bool keepRunControlSpecialDays) {
-    m_keepRunControlSpecialDays = keepRunControlSpecialDays;
+    m_forwardTranslatorOptions.setKeepRunControlSpecialDays(keepRunControlSpecialDays);
   }
 
   void ForwardTranslator::setIPTabularOutput(bool isIP) {
-    m_ipTabularOutput = isIP;
+    m_forwardTranslatorOptions.setIPTabularOutput(isIP);
   }
 
   void ForwardTranslator::setExcludeLCCObjects(bool excludeLCCObjects) {
-    m_excludeLCCObjects = excludeLCCObjects;
+    m_forwardTranslatorOptions.setExcludeLCCObjects(excludeLCCObjects);
   }
 
   void ForwardTranslator::setExcludeSQliteOutputReport(bool excludeSQliteOutputReport) {
-    m_excludeSQliteOutputReport = excludeSQliteOutputReport;
+    m_forwardTranslatorOptions.setExcludeSQliteOutputReport(excludeSQliteOutputReport);
   }
 
   void ForwardTranslator::setExcludeHTMLOutputReport(bool excludeHTMLOutputReport) {
-    m_excludeHTMLOutputReport = excludeHTMLOutputReport;
+    m_forwardTranslatorOptions.setExcludeHTMLOutputReport(excludeHTMLOutputReport);
   }
 
   void ForwardTranslator::setExcludeVariableDictionary(bool excludeVariableDictionary) {
-    m_excludeVariableDictionary = excludeVariableDictionary;
+    m_forwardTranslatorOptions.setExcludeVariableDictionary(excludeVariableDictionary);
   }
 
   void ForwardTranslator::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
-    m_excludeSpaceTranslation = excludeSpaceTranslation;
-  }
-
-  std::vector<ForwardTranslatorOptionKeyMethod> ForwardTranslator::forwardTranslatorOptionKeyMethods() {
-    return std::vector<ForwardTranslatorOptionKeyMethod>{{{"runcontrolspecialdays", "setKeepRunControlSpecialDays"},
-                                                          {"ip_tabular_output", "setIPTabularOutput"},
-                                                          {"no_lifecyclecosts", "setExcludeLCCObjects"},
-                                                          {"no_sqlite_output", "setExcludeSQliteOutputReport"},
-                                                          {"no_html_output", "setExcludeHTMLOutputReport"},
-                                                          {"no_variable_dictionary", "setExcludeVariableDictionary"},
-                                                          {"no_space_translation", "setExcludeSpaceTranslation"}}};
-  }
-
-  std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt) {
-    out << "(" << opt.json_name << ", " << opt.ft_method_name << ")";
-    return out;
+    m_forwardTranslatorOptions.setExcludeSpaceTranslation(excludeSpaceTranslation);
   }
 
   // Figure out which object
   // * If the load is assigned to a space,
-  //     * m_excludeSpaceTranslation = true: translate and return the IdfObject for the Zone
-  //     * m_excludeSpaceTranslation = false: translate and return the IdfObject for Space
+  //     * m_forwardTranslatorOptions.excludeSpaceTranslation() = true: translate and return the IdfObject for the Zone
+  //     * m_forwardTranslatorOptions.excludeSpaceTranslation() = false: translate and return the IdfObject for Space
   // * If the load is assigned to a spaceType:
-  //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_excludeSpaceTranslation is true, SpaceList otherwise)
-  IdfObject ForwardTranslator::getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType) {
+  //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_forwardTranslatorOptions.excludeSpaceTranslation() is true, SpaceList otherwise)
+  IdfObject ForwardTranslator::getSpaceLoadParent(const model::SpaceLoad& sp, bool allowSpaceType) {
 
     OptionalIdfObject relatedIdfObject;
 
     if (boost::optional<Space> space_ = sp.space()) {
-      if (m_excludeSpaceTranslation) {
+      if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
         if (auto thermalZone_ = space_->thermalZone()) {
           relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
         } else {
@@ -271,37 +256,6 @@ namespace energyplus {
       }
     }
 
-    // replace old style air wall Constructions with ConstructionAirBoundary
-    for (auto& construction : model.getModelObjects<LayeredConstruction>()) {
-      if (construction.isModelPartition() && (construction.numLayers() == 1)) {
-        MaterialVector layers = construction.layers();
-        OS_ASSERT(layers.size() == 1U);
-
-        // if this is an old style air wall
-        if (layers[0].optionalCast<AirWallMaterial>()) {
-          ConstructionAirBoundary newConstruction(model);
-          newConstruction.setName(construction.nameString() + "_ConstructionAirBoundary");
-
-          for (WorkspaceObject& source : construction.sources()) {
-            for (unsigned index : source.getSourceIndices(construction.handle())) {
-              bool test = source.setPointer(index, newConstruction.handle());
-              OS_ASSERT(test);
-            }
-          }
-
-          LOG(Warn, "Construction '" << construction.nameString() << "' has been converted to ConstructionAirBoundary '"
-                                     << newConstruction.nameString() << "'.");
-          construction.remove();
-        }
-      }
-    }
-
-    // remove all AirWallMaterial objects
-    for (auto& airWall : model.getConcreteModelObjects<AirWallMaterial>()) {
-      LOG(Warn, "Removing AirWallMaterial '" << airWall.nameString() << "'.");
-      airWall.remove();
-    }
-
     // check for spaces not in a thermal zone
     for (auto& space : model.getConcreteModelObjects<Space>()) {
       if (!space.thermalZone()) {
@@ -333,55 +287,37 @@ namespace energyplus {
       }
     }
 
-    if (m_excludeSpaceTranslation) {
+    if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
       // next thing to do is combine all spaces in each thermal zone
       // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
       for (auto& thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
         thermalZone.combineSpaces();
       }
     } else {
-      // We're going to have a bunch of troubles with the SpaceInfiltration objects as they cannot live on a Space in E+, they are on the zone
-      // So we do the same as combineSpaces but only for those infiltration objects: we hard apply them to each individual space, then remove the
-      // spacetype ones to be safe (make 100% sure they won't get translated)
-      // TODO: Technically we could just find a smart way to convert the SpaceInfiltration:DesignFlowRate object to a Flow / Zone and use a ZoneList,
-      // but it gets complicated with little benefit, so not doing it for now
+
+      // The SpaceInfiltration:EffectiveLeakageAreas and FlowCoefficients (unlike the SpaceInfiltration:DesignFlowRate),
+      // and the ElectricEquipment:ITE:AirCooled only accept a Zone or a Space, not a ZoneList nor a SpaceList
+      // So we need to put them on the spaces to avoid problems. But we do not need to hardSize() them (they end up going on a Space).
+      // then remove the spacetype ones to be safe (make 100% sure they won't get translated)
+
       for (auto& sp : model.getConcreteModelObjects<SpaceType>()) {
-        auto spi = sp.spaceInfiltrationDesignFlowRates();
+        // auto spi = sp.spaceInfiltrationDesignFlowRates();
         auto spiel = sp.spaceInfiltrationEffectiveLeakageAreas();
         auto spifc = sp.spaceInfiltrationFlowCoefficients();
-        std::vector<SpaceLoad> infiltrations;
-        infiltrations.reserve(spi.size() + spiel.size() + spifc.size());
-        infiltrations.insert(infiltrations.end(), spi.begin(), spi.end());
-        infiltrations.insert(infiltrations.end(), spiel.begin(), spiel.end());
-        infiltrations.insert(infiltrations.end(), spifc.begin(), spifc.end());
-        for (auto& infil : infiltrations) {
-          for (auto& space : sp.spaces()) {
-            auto infilClone = infil.clone(model).cast<SpaceLoad>();
-            infilClone.setParent(space);
-          }
-          infil.remove();
-        }
+        auto ites = sp.electricEquipmentITEAirCooled();
+        std::vector<SpaceLoad> loads;
+        loads.reserve(spiel.size() + spifc.size() + ites.size());
+        loads.insert(loads.end(), spiel.begin(), spiel.end());
+        loads.insert(loads.end(), spifc.begin(), spifc.end());
+        loads.insert(loads.end(), ites.begin(), ites.end());
 
-        // The ElectricEquipment:ITE:AirCooled only accepts a Zone or a Space, not a ZoneList nor a SpaceList
-        // So similarly, we need to put them on the spaces to avoid problems. But we do not need to hardSize() them
-        for (auto& ite : sp.electricEquipmentITEAirCooled()) {
-          std::string name = ite.nameString();
-          for (auto& space : sp.spaces()) {
-            auto iteClone = ite.clone(model).cast<SpaceLoad>();
-            iteClone.setParent(space);
-          }
-          ite.remove();
-        }
-      }
-
-      // We also convert all SpaceInfiltrationDesignFlowRate objects to Flow/Space (Flow/Zone) because these may not be absolute
-      // That includes the Space ones too.
-      // SpaceInfiltrationEffectiveLeakageAreas and SpaceInfiltrationFlowCoefficients don't need it, they are always absolute
-      for (auto& infil : model.getConcreteModelObjects<SpaceInfiltrationDesignFlowRate>()) {
-        // technically we only need to hardsize if the space it's assigned to is part of a thermalzone with more than one space
-        if (!openstudio::istringEqual("Flow/Space", infil.designFlowRateCalculationMethod())) {
-          if (infil.space() && infil.space()->thermalZone() && infil.space()->thermalZone()->spaces().size() > 1) {
-            infil.hardSize();  // translates to Flow/Zone
+        for (auto& infil : loads) {
+          if (infil.spaceType()) {
+            for (auto& space : sp.spaces()) {
+              auto infilClone = infil.clone(model).cast<SpaceLoad>();
+              infilClone.setParent(space);
+            }
+            infil.remove();
           }
         }
       }
@@ -534,7 +470,7 @@ namespace energyplus {
       }
     }
 
-    if (!m_keepRunControlSpecialDays) {
+    if (!m_forwardTranslatorOptions.keepRunControlSpecialDays()) {
       LOG(Warn, "You have manually choosen to not translate the RunPeriodControlSpecialDays, ignoring them.");
       for (model::RunPeriodControlSpecialDays holiday : model.getConcreteModelObjects<model::RunPeriodControlSpecialDays>()) {
         holiday.remove();
@@ -544,7 +480,7 @@ namespace energyplus {
     if (fullModelTranslation) {
 
       // translate life cycle cost parameters
-      if (!m_excludeLCCObjects) {
+      if (!m_forwardTranslatorOptions.excludeLCCObjects()) {
         boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
         if (!lifeCycleCostParameters) {
           // only warn if costs are present
@@ -590,7 +526,7 @@ namespace energyplus {
       // ensure that output table summary reports exists
       // If the user manually added an OutputTableSummaryReports, but he also opted-in to exclude it on the FT, which decision do we keep?
       // Given that it's a much harder to set the option on the FT, I'll respect that one
-      if (!m_excludeHTMLOutputReport) {
+      if (!m_forwardTranslatorOptions.excludeHTMLOutputReport()) {
         auto optOutputTableSummaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
         // Add default one if none explicitly specified
         if (!optOutputTableSummaryReports) {
@@ -895,11 +831,6 @@ namespace energyplus {
         retVal = translateAvailabilityManagerScheduledOff(mo);
         break;
       }
-      case openstudio::IddObjectType::OS_Material_AirWall: {
-        auto airWallMaterial = modelObject.cast<AirWallMaterial>();
-        retVal = translateAirWallMaterial(airWallMaterial);
-        break;
-      }
       case openstudio::IddObjectType::OS_AvailabilityManager_HybridVentilation: {
         auto mo = modelObject.cast<AvailabilityManagerHybridVentilation>();
         retVal = translateAvailabilityManagerHybridVentilation(mo);
@@ -983,6 +914,11 @@ namespace energyplus {
         retVal = translateChillerAbsorptionIndirect(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ASHRAE205: {
+        auto mo = modelObject.cast<ChillerElectricASHRAE205>();
+        retVal = translateChillerElectricASHRAE205(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         auto chiller = modelObject.cast<ChillerElectricEIR>();
         retVal = translateChillerElectricEIR(chiller);
@@ -1025,8 +961,12 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX: {
-        auto dx = modelObject.cast<CoilCoolingDX>();
-        retVal = translateCoilCoolingDX(dx);
+        model::CoilCoolingDX coil = modelObject.cast<CoilCoolingDX>();
+        if (this->isHVACComponentWithinUnitary(coil)) {
+          retVal = translateCoilCoolingDXWithoutUnitary(coil);
+        } else {
+          retVal = translateCoilCoolingDX(coil);
+        }
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX_CurveFit_Performance: {
@@ -1163,6 +1103,15 @@ namespace energyplus {
         auto coil = modelObject.cast<CoilHeatingElectric>();
         retVal = translateCoilHeatingElectric(coil);
         break;
+      }
+      case openstudio::IddObjectType::OS_Coil_Heating_Electric_MultiStage: {
+        model::CoilHeatingElectricMultiStage coil = modelObject.cast<CoilHeatingElectricMultiStage>();
+        retVal = translateCoilHeatingElectricMultiStage(coil);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Coil_Heating_Electric_MultiStage_StageData: {
+        // no-op
+        return retVal;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_Gas: {
         auto coil = modelObject.cast<CoilHeatingGas>();
@@ -2319,6 +2268,16 @@ namespace energyplus {
         retVal = translateOutputSQLite(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_Output_Schedules: {
+        auto mo = modelObject.cast<OutputSchedules>();
+        retVal = translateOutputSchedules(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Output_Constructions: {
+        auto mo = modelObject.cast<OutputConstructions>();
+        retVal = translateOutputConstructions(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Output_EnvironmentalImpactFactors: {
         auto mo = modelObject.cast<OutputEnvironmentalImpactFactors>();
         retVal = translateOutputEnvironmentalImpactFactors(mo);
@@ -2895,6 +2854,16 @@ namespace energyplus {
         retVal = translateSurfacePropertySurroundingSurfaces(obj);
         break;
       }
+      case openstudio::IddObjectType::OS_SurfaceProperty_GroundSurfaces: {
+        model::SurfacePropertyGroundSurfaces obj = modelObject.cast<SurfacePropertyGroundSurfaces>();
+        retVal = translateSurfacePropertyGroundSurfaces(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SurfaceProperty_IncidentSolarMultiplier: {
+        model::SurfacePropertyIncidentSolarMultiplier obj = modelObject.cast<SurfacePropertyIncidentSolarMultiplier>();
+        retVal = translateSurfacePropertyIncidentSolarMultiplier(obj);
+        break;
+      }
       case openstudio::IddObjectType::OS_SubSurface: {
         auto subSurface = modelObject.cast<SubSurface>();
         retVal = translateSubSurface(subSurface);
@@ -2905,9 +2874,33 @@ namespace energyplus {
         retVal = translateSwimmingPoolIndoor(obj);
         break;
       }
+
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
       case openstudio::IddObjectType::OS_Table_MultiVariableLookup: {
         auto table = modelObject.cast<TableMultiVariableLookup>();
         retVal = translateTableMultiVariableLookup(table);
+        break;
+      }
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
+
+      case openstudio::IddObjectType::OS_Table_Lookup: {
+        auto table = modelObject.cast<TableLookup>();
+        retVal = translateTableLookup(table);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Table_IndependentVariable: {
+        auto tableIndependentVariable = modelObject.cast<TableIndependentVariable>();
+        retVal = translateTableIndependentVariable(tableIndependentVariable);
         break;
       }
       case openstudio::IddObjectType::OS_TemperingValve: {
@@ -3287,15 +3280,12 @@ namespace energyplus {
       IddObjectType::OS_OutputControl_Files,
       IddObjectType::OS_OutputControl_ReportingTolerances,
       IddObjectType::OS_OutputControl_Table_Style,
+      IddObjectType::OS_Output_Constructions,
       IddObjectType::OS_Output_DebuggingData,
       IddObjectType::OS_Output_Diagnostics,
       IddObjectType::OS_Output_JSON,
+      IddObjectType::OS_Output_Schedules,
       IddObjectType::OS_Output_SQLite,
-
-      // Note: we just always translate Output:EnvironmentalImpactFactors, and in there (it exists), then trigger translatation of the two others
-      IddObjectType::OS_Output_EnvironmentalImpactFactors,
-      // IddObjectType::OS_EnvironmentalImpactFactors,
-      // IddObjectType::OS_FuelFactors,
 
       IddObjectType::OS_Output_Table_SummaryReports,
       IddObjectType::OS_PerformancePrecisionTradeoffs,
@@ -3434,17 +3424,10 @@ namespace energyplus {
       IddObjectType::OS_Curve_Sigmoid,
       IddObjectType::OS_Curve_Triquadratic,
       IddObjectType::OS_Table_MultiVariableLookup,
+      IddObjectType::OS_Table_Lookup,
       IddObjectType::OS_DistrictCooling,
       IddObjectType::OS_DistrictHeating,
       IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial,
-
-      // Equipments should be responsible for translating their fans
-      // IddObjectType::OS_Fan_Variable,
-      // IddObjectType::OS_Fan_ConstantVolume,
-      // JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList. Fan_OnOff by its containing
-      // HVACComponent
-      // IddObjectType::OS_Fan_OnOff,
-      // IddObjectType::OS_Fan_ZoneExhaust,
 
       IddObjectType::OS_Node,
       IddObjectType::OS_PlantLoop,
@@ -3544,7 +3527,6 @@ namespace energyplus {
       IddObjectType::OS_MaterialProperty_GlazingSpectralData,
       IddObjectType::OS_Material,
       IddObjectType::OS_Material_AirGap,
-      IddObjectType::OS_Material_AirWall,
       IddObjectType::OS_Material_InfraredTransparent,
       IddObjectType::OS_Material_NoMass,
       IddObjectType::OS_Material_RoofVegetation,
@@ -4372,24 +4354,24 @@ namespace energyplus {
   }
 
   void ForwardTranslator::createStandardOutputRequests(const model::Model& model) {
-    if (!m_excludeHTMLOutputReport) {
+    if (!m_forwardTranslatorOptions.excludeHTMLOutputReport()) {
       if (!model.getOptionalUniqueModelObject<model::OutputControlTableStyle>()) {
         IdfObject& tableStyle = m_idfObjects.emplace_back(IddObjectType::OutputControl_Table_Style);
         tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
-        if (m_ipTabularOutput) {
+        if (m_forwardTranslatorOptions.iPTabularOutput()) {
           tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion, "InchPound");
         }
       }
     }
 
-    if (!m_excludeVariableDictionary) {
+    if (!m_forwardTranslatorOptions.excludeVariableDictionary()) {
       IdfObject rddRequest(IddObjectType::Output_VariableDictionary);
       rddRequest.setString(Output_VariableDictionaryFields::KeyField, "IDF");
       rddRequest.setString(Output_VariableDictionaryFields::SortOption, "Unsorted");
       m_idfObjects.push_back(rddRequest);
     }
 
-    if (!m_excludeSQliteOutputReport) {
+    if (!m_forwardTranslatorOptions.excludeSQliteOutputReport()) {
       if (!model.getOptionalUniqueModelObject<model::OutputSQLite>()) {
         IdfObject& sqliteOutput = m_idfObjects.emplace_back(IddObjectType::Output_SQLite);
         sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
@@ -4397,7 +4379,7 @@ namespace energyplus {
     }
 
     // ensure at least one life cycle cost exists to prevent crash in E+ 8
-    if (!m_excludeLCCObjects) {
+    if (!m_forwardTranslatorOptions.excludeLCCObjects()) {
       bool hasAtLeastOneCost = std::any_of(m_idfObjects.cbegin(), m_idfObjects.cend(), [](const auto& obj) {
         auto iddObjType = obj.iddObject().type();
         return (iddObjType == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost)

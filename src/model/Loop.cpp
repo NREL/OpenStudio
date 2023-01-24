@@ -39,6 +39,8 @@
 #include "Splitter_Impl.hpp"
 #include "Mixer.hpp"
 #include "Mixer_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
 #include "StraightComponent.hpp"
 #include "StraightComponent_Impl.hpp"
 #include "WaterToAirComponent.hpp"

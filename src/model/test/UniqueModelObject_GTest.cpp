@@ -70,6 +70,10 @@
 #include "../OutputJSON_Impl.hpp"
 #include "../OutputSQLite.hpp"
 #include "../OutputSQLite_Impl.hpp"
+#include "../OutputSchedules.hpp"
+#include "../OutputSchedules_Impl.hpp"
+#include "../OutputConstructions.hpp"
+#include "../OutputConstructions_Impl.hpp"
 #include "../PerformancePrecisionTradeoffs.hpp"
 #include "../PerformancePrecisionTradeoffs_Impl.hpp"
 #include "../RadianceParameters.hpp"
@@ -541,6 +545,56 @@ TEST_F(ModelFixture, OutputSQLite_UniqueModelObject_Clone) {
   OutputSQLite outputSQLiteClone2 = outputSQLite.clone(model2).cast<OutputSQLite>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputSQLite>());
   EXPECT_EQ("! Custom Object", outputSQLiteClone2.comment());
+}
+
+TEST_F(ModelFixture, OutputSchedules_UniqueModelObject_Clone) {
+  // create a model to use
+  Model model;
+
+  // Get the Unique ModelObject
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputSchedules>());
+  OutputSchedules outputSchedules = model.getUniqueModelObject<OutputSchedules>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputSchedules>());
+  // We use a comment to see if cloning to another model works
+  outputSchedules.setComment("Custom Object");
+
+  // clone it into the same model
+  OutputSchedules outputSchedulesClone = outputSchedules.clone(model).cast<OutputSchedules>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(outputSchedules, outputSchedulesClone);
+  EXPECT_EQ("! Custom Object", outputSchedulesClone.comment());
+
+  // clone it into a different model
+  Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputSchedules>());
+  OutputSchedules outputSchedulesClone2 = outputSchedules.clone(model2).cast<OutputSchedules>();
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputSchedules>());
+  EXPECT_EQ("! Custom Object", outputSchedulesClone2.comment());
+}
+
+TEST_F(ModelFixture, OutputConstructions_UniqueModelObject_Clone) {
+  // create a model to use
+  Model model;
+
+  // Get the Unique ModelObject
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputConstructions>());
+  OutputConstructions outputConstructions = model.getUniqueModelObject<OutputConstructions>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputConstructions>());
+  // We use a comment to see if cloning to another model works
+  outputConstructions.setComment("Custom Object");
+
+  // clone it into the same model
+  OutputConstructions outputConstructionsClone = outputConstructions.clone(model).cast<OutputConstructions>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(outputConstructions, outputConstructionsClone);
+  EXPECT_EQ("! Custom Object", outputConstructionsClone.comment());
+
+  // clone it into a different model
+  Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputConstructions>());
+  OutputConstructions outputConstructionsClone2 = outputConstructions.clone(model2).cast<OutputConstructions>();
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputConstructions>());
+  EXPECT_EQ("! Custom Object", outputConstructionsClone2.comment());
 }
 
 TEST_F(ModelFixture, PerformancePrecisionTradeoffs_UniqueModelObject_Clone) {

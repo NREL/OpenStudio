@@ -167,8 +167,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXMultiSpeed_Basic) {
       EXPECT_EQ(stage.ratedAirFlowRate().get(), eg.getDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedAirFlowRate).get());
     }
 
-    EXPECT_EQ(stage.ratedSupplyAirFanPowerPerVolumeFlowRate(),
-              eg.getDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate).get());
+    EXPECT_EQ(stage.ratedSupplyAirFanPowerPerVolumeFlowRate2017(),
+              eg.getDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate2017).get());
+    EXPECT_EQ(stage.ratedSupplyAirFanPowerPerVolumeFlowRate2023(),
+              eg.getDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate2023).get());
     EXPECT_EQ(stage.heatingCapacityFunctionofTemperatureCurve().nameString(),
               eg.getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedHeatingCapacityFunctionofTemperatureCurveName).get());
     EXPECT_EQ(stage.heatingCapacityFunctionofFlowFractionCurve().nameString(),

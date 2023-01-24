@@ -36,6 +36,9 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/CurveCubic.hpp"
 #include "../../model/CurveCubic_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+
 #include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -88,12 +91,18 @@ namespace energyplus {
       }
       // ZoneName
       if ((wo = workspaceObject.getTarget(Refrigeration_CaseFields::ZoneName))) {
-        if (boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get())) {
-          if (boost::optional<ThermalZone> thermalZone = mo->optionalCast<ThermalZone>()) {
-            refrigerationCase->setThermalZone(thermalZone.get());
+        if (boost::optional<ModelObject> mo_ = translateAndMapWorkspaceObject(wo.get())) {
+          // Zone is translated, and a Space is returned instead
+          if (boost::optional<Space> space_ = mo_->optionalCast<Space>()) {
+            if (auto z_ = space_->thermalZone()) {
+              refrigerationCase->setThermalZone(z_.get());
+            }
+          } else {
+            LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Zone Name'");
           }
         }
       }
+
       // RatedAmbientTemperature
       value = workspaceObject.getDouble(Refrigeration_CaseFields::RatedAmbientTemperature);
       if (value) {

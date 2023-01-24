@@ -40,10 +40,22 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "CoilCoolingDXCurveFitPerformance.hpp"
 #include "CoilCoolingDXCurveFitPerformance_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -145,11 +157,68 @@ namespace model {
         }
       }
 
+      // CoilSystemCoolingDXHeatExchangerAssisted
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.coolingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+        }
+      }
+
       return boost::none;
     }
 
-    bool CoilCoolingDX_Impl::addToNode(Node& /*node*/) {
-      // Only meant to be in a AirLoopHVACUnitarySystem
+    boost::optional<ZoneHVACComponent> CoilCoolingDX_Impl::containingZoneHVACComponent() const {
+      // ZoneHVACPackagedTerminalAirConditioner
+
+      std::vector<ZoneHVACPackagedTerminalAirConditioner> zoneHVACPackagedTerminalAirConditioners =
+        this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
+
+      for (const auto& zoneHVACPackagedTerminalAirConditioner : zoneHVACPackagedTerminalAirConditioners) {
+        if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalAirConditioner.coolingCoil()) {
+          if (coil->handle() == this->handle()) {
+            return zoneHVACPackagedTerminalAirConditioner;
+          }
+        }
+      }
+
+      // ZoneHVACPackagedTerminalHeatPump
+
+      std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps =
+        this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+
+      for (const auto& zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps) {
+        if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.coolingCoil()) {
+          if (coil->handle() == this->handle()) {
+            return zoneHVACPackagedTerminalHeatPump;
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
+    bool CoilCoolingDX_Impl::addToNode(Node& node) {
+      if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
+        if (!airLoop->demandComponent(node.handle())) {
+          // TODO: JM 2019-03-12 I'm not sure we shouldn't just restrict to ANY containingHVACComponent (disallow if part of a UnitarySystem)
+          auto t_containingHVACComponent = containingHVACComponent();
+          if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+            LOG(Warn,
+                this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingDXHeatExchangerAssisted. "
+                                            "Please call CoilSystemCoolingDXHeatExchangerAssisted::addToNode instead");
+          } else {
+            return StraightComponent_Impl::addToNode(node);
+          }
+        }
+      } else if (boost::optional<AirLoopHVACOutdoorAirSystem> oas = node.airLoopHVACOutdoorAirSystem()) {
+        if (oas->airLoopHVACDedicatedOutdoorAirSystem()) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
       return false;
     }
 

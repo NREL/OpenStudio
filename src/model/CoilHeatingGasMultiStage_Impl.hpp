@@ -67,11 +67,23 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual unsigned inletPort() const override;
+
+      virtual unsigned outletPort() const override;
+
+      ModelObject clone(Model model) const override;
+
+      std::vector<ModelObject> children() const override;
+
+      boost::optional<HVACComponent> containingHVACComponent() const override;
+
+      bool addToNode(Node& node) override;
+
       //@}
       /** @name Getters */
       //@{
 
-      boost::optional<Schedule> availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
       boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
@@ -82,8 +94,6 @@ namespace model {
       //@{
 
       bool setAvailabilitySchedule(Schedule& schedule);
-
-      void resetAvailabilitySchedule();
 
       bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve);
 
@@ -97,26 +107,24 @@ namespace model {
       /** @name Other */
       //@{
 
-      virtual unsigned inletPort() const override;
-
-      virtual unsigned outletPort() const override;
-
-      ModelObject clone(Model model) const override;
-
-      std::vector<ModelObject> children() const override;
-
       std::vector<CoilHeatingGasMultiStageStageData> stages() const;
+      unsigned numberOfStages() const;
+      boost::optional<unsigned> stageIndex(const CoilHeatingGasMultiStageStageData& stage) const;
 
-      void addStage(CoilHeatingGasMultiStageStageData& stage);
-
-      boost::optional<HVACComponent> containingHVACComponent() const override;
-
-      bool addToNode(Node& node) override;
+      bool addStage(const CoilHeatingGasMultiStageStageData& stage);
+      bool addStage(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
+      bool setStageIndex(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
+      bool setStages(const std::vector<CoilHeatingGasMultiStageStageData>& stages);
+      void removeAllStages();
+      bool removeStage(const CoilHeatingGasMultiStageStageData& stage);
+      bool removeStage(unsigned index);
 
       //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
+
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
     };
 
   }  // namespace detail

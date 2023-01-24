@@ -46,8 +46,10 @@ if(BUILD_TESTING)
 
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 
-  # Glob all OSM files in test/ folder
+  # Glob all OSM/OSC files in test/ folder
   file(GLOB_RECURSE osversion_source_models "${CMAKE_CURRENT_SOURCE_DIR}/test/**/*.osm")
+  file(GLOB_RECURSE osversion_source_oscs   "${CMAKE_CURRENT_SOURCE_DIR}/test/**/*.osc")
+  list (APPEND osversion_source_models ${osversion_source_oscs})
 
   # Copy them to <build_dir>resources/osversion/
   foreach( _FILE ${osversion_source_models} )

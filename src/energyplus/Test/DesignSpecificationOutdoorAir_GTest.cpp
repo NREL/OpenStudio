@@ -352,7 +352,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
     std::vector<std::tuple<std::string, unsigned int, double>> expectedZvs{
       {"AirChanges/Hour", ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.125},
       {"Flow/Zone", ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 1.35},
-      {"Flow/Area", ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.001},
+      {"Flow/Area", ZoneVentilation_DesignFlowRateFields::FlowRateperFloorArea, 0.001},
       {"Flow/Person", ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.01}};
     auto checkZv = [&zvs, zoneName = z.nameString()](const std::string& method, unsigned int index, double value) -> void {
       auto it = std::find_if(zvs.cbegin(), zvs.cend(), [&method](const auto& zv) -> bool {
@@ -360,7 +360,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
         return openstudio::istringEqual(method, zv.getString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
       });
       ASSERT_NE(zvs.cend(), it) << "Cannot find the ZoneVentilation:DesignFlowRate object with method '" << method << "'.";
-      ASSERT_EQ(zoneName, it->getString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName).get());
+      ASSERT_EQ(zoneName, it->getString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName).get());
       ASSERT_TRUE(it->getDouble(index));
       EXPECT_DOUBLE_EQ(value, it->getDouble(index).get()) << "Failed for " << method;
     };
@@ -525,17 +525,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
     auto zvs = w.getObjectsByType(IddObjectType::ZoneVentilation_DesignFlowRate);
     ASSERT_EQ(4, zvs.size());
     std::vector<std::tuple<std::string, unsigned int, double>> expectedZvs{
-      {"AirChanges/Hour", ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.125},    // 0.5 * 360 / (4*360) = 0.125
-      {"Flow/Zone", ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.75},              // 0.65 + 0.1
-      {"Flow/Area", ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0025},  // 0.004*100 + 0.006*100 / (4 * 100) = 0.0025
-      {"Flow/Person", ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.01}};        // 0.015 * 20 + 10*0.00/ 30 = 0.01
+      {"AirChanges/Hour", ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.125},  // 0.5 * 360 / (4*360) = 0.125
+      {"Flow/Zone", ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.75},            // 0.65 + 0.1
+      {"Flow/Area", ZoneVentilation_DesignFlowRateFields::FlowRateperFloorArea, 0.0025},    // 0.004*100 + 0.006*100 / (4 * 100) = 0.0025
+      {"Flow/Person", ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.01}};      // 0.015 * 20 + 10*0.00/ 30 = 0.01
     auto checkZv = [&zvs, zoneName = z.nameString()](const std::string& method, unsigned int index, double value) -> void {
       auto it = std::find_if(zvs.cbegin(), zvs.cend(), [&method](const auto& zv) -> bool {
         EXPECT_TRUE(zv.getString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, false, true));
         return openstudio::istringEqual(method, zv.getString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
       });
       ASSERT_NE(zvs.cend(), it) << "Cannot find the ZoneVentilation:DesignFlowRate object with method '" << method << "'.";
-      ASSERT_EQ(zoneName, it->getString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName).get());
+      ASSERT_EQ(zoneName, it->getString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName).get());
       ASSERT_TRUE(it->getDouble(index));
       EXPECT_DOUBLE_EQ(value, it->getDouble(index).get()) << "Failed for " << method;
     };

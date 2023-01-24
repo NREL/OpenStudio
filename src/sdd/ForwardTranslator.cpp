@@ -81,7 +81,8 @@
 #include "../model/CurveRectangularHyperbola2.hpp"
 #include "../model/CurveSigmoid.hpp"
 #include "../model/CurveTriquadratic.hpp"
-#include "../model/TableMultiVariableLookup.hpp"
+#include "../model/TableLookup.hpp"
+#include "../model/TableIndependentVariable.hpp"
 #include "../model/DefaultConstructionSet.hpp"
 #include "../model/DefaultScheduleSet.hpp"
 #include "../model/DefaultSurfaceConstructions.hpp"
@@ -511,7 +512,8 @@ namespace sdd {
     m_ignoreTypes.push_back(model::SkyTemperature::iddObjectType());
     m_ignoreTypes.push_back(model::StandardsInformationConstruction::iddObjectType());
     m_ignoreTypes.push_back(model::StandardsInformationMaterial::iddObjectType());
-    m_ignoreTypes.push_back(model::TableMultiVariableLookup::iddObjectType());
+    m_ignoreTypes.push_back(model::TableLookup::iddObjectType());
+    m_ignoreTypes.push_back(model::TableIndependentVariable::iddObjectType());
     m_ignoreTypes.push_back(model::Timestep::iddObjectType());
     m_ignoreTypes.push_back(model::UtilityBill::iddObjectType());
     m_ignoreTypes.push_back(model::Version::iddObjectType());

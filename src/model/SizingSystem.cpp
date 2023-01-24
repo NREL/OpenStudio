@@ -763,11 +763,11 @@ namespace model {
         return result;
       }
 
-      // Query the Initialization Summary -> System Sizing Information table to get
+      // Query the InitializationSummary -> System Sizing Information table to get
       // the row names that contains information for this component.
       std::string rowsQuery = R"(
       SELECT RowName FROM TabularDataWithStrings
-        WHERE ReportName = 'Initialization Summary'
+        WHERE ReportName = 'InitializationSummary'
         AND ReportForString = 'Entire Facility'
         AND TableName = 'System Sizing Information'
         AND Value = ?;)";
@@ -778,17 +778,17 @@ namespace model {
 
       // Warn if the query failed
       if (!rowNames) {
-        LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary System Sizing table.");
+        LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the InitializationSummary System Sizing table.");
         return result;
       }
 
-      // Query each row of the Intialization Summary -> System Sizing table
+      // Query each row of the InitializationSummary -> System Sizing table
       // that contains this component to get the desired value.
       for (const std::string& rowName : rowNames.get()) {
 
         std::string rowCheckQuery = R"(
         SELECT Value FROM TabularDataWithStrings
-          WHERE ReportName = 'Initialization Summary'
+          WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'System Sizing Information'
           AND RowName = ?
@@ -804,7 +804,7 @@ namespace model {
         // This is the right row
         std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
-          WHERE ReportName = 'Initialization Summary'
+          WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'System Sizing Information'
           AND ColumnName='User Design Capacity'
@@ -850,11 +850,11 @@ namespace model {
         return result;
       }
 
-      // Query the Initialization Summary -> System Sizing table to get
+      // Query the InitializationSummary -> System Sizing table to get
       // the row names that contains information for this component.
       std::string rowsQuery = R"(
       SELECT RowName FROM TabularDataWithStrings
-        WHERE ReportName = 'Initialization Summary'
+        WHERE ReportName = 'InitializationSummary'
         AND ReportForString = 'Entire Facility'
         AND TableName = 'System Sizing Information'
         AND Value = ?;)";
@@ -865,17 +865,17 @@ namespace model {
 
       // Warn if the query failed
       if (!rowNames) {
-        LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary System Sizing table.");
+        LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the InitializationSummary System Sizing table.");
         return result;
       }
 
-      // Query each row of the Intialization Summary -> System Sizing table
+      // Query each row of the InitializationSummary -> System Sizing table
       // that contains this component to get the desired value.
       for (const std::string& rowName : rowNames.get()) {
 
         std::string rowCheckQuery = R"(
         SELECT Value FROM TabularDataWithStrings
-          WHERE ReportName = 'Initialization Summary'
+          WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'System Sizing Information'
           AND RowName = ?
@@ -891,7 +891,7 @@ namespace model {
         // This is the right row
         std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
-          WHERE ReportName = 'Initialization Summary'
+          WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'System Sizing Information'
           AND ColumnName='User Design Capacity'
@@ -975,7 +975,7 @@ namespace model {
         return result;
       }
 
-      // Query the Initialization Summary -> System Sizing table to get
+      // Query the InitializationSummary -> System Sizing table to get
       // the row names that contains information for this component.
       std::string rowsQuery = R"(
         SELECT Value FROM TabularDataWithStrings
@@ -1630,15 +1630,6 @@ namespace model {
 
   boost::optional<double> SizingSystem::autosizedOccupantDiversity() const {
     return getImpl<detail::SizingSystem_Impl>()->autosizedOccupantDiversity();
-  }
-
-  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
-  boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
-    return getImpl<detail::SizingSystem_Impl>()->centralHeatingMaximumSystemAirFlowRatio();
-  }
-  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
-  bool SizingSystem::setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
-    return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingMaximumSystemAirFlowRatio(centralHeatingMaximumSystemAirFlowRatio);
   }
 
 }  // namespace model

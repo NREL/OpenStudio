@@ -61,27 +61,27 @@ namespace energyplus {
 
     // hook up required objects
     try {
-      Schedule sched = modelObject.getAvailabilitySchedule();
+      Schedule sched = modelObject.availabilitySchedule();
       translateAndMapModelObject(sched);
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::AvailabilityScheduleName, sched.name().get());
 
-      Curve cb = modelObject.getTotalCoolingCapacityFunctionOfTemperatureCurve();
+      Curve cb = modelObject.totalCoolingCapacityFunctionOfTemperatureCurve();
       translateAndMapModelObject(cb);
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, cb.name().get());
 
-      Curve cq = modelObject.getTotalCoolingCapacityFunctionOfFlowFractionCurve();
+      Curve cq = modelObject.totalCoolingCapacityFunctionOfFlowFractionCurve();
       translateAndMapModelObject(cq);
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, cq.name().get());
 
-      cb = modelObject.getEnergyInputRatioFunctionOfTemperatureCurve();
+      cb = modelObject.energyInputRatioFunctionOfTemperatureCurve();
       translateAndMapModelObject(cb);
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, cb.name().get());
 
-      cq = modelObject.getEnergyInputRatioFunctionOfFlowFractionCurve();
+      cq = modelObject.energyInputRatioFunctionOfFlowFractionCurve();
       translateAndMapModelObject(cq);
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, cq.name().get());
 
-      cq = modelObject.getPartLoadFractionCorrelationCurve();
+      cq = modelObject.partLoadFractionCorrelationCurve();
       translateAndMapModelObject(cq);
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::PartLoadFractionCorrelationCurveName, cq.name().get());
     } catch (std::exception& e) {
@@ -103,10 +103,7 @@ namespace energyplus {
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::GrossRatedSensibleHeatRatio, "Autosize");
     }
 
-    d = modelObject.getRatedCOP();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::GrossRatedCoolingCOP, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::GrossRatedCoolingCOP, modelObject.ratedCOP());
 
     d = modelObject.ratedAirFlowRate();
     if (d) {
@@ -115,10 +112,11 @@ namespace energyplus {
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::RatedAirFlowRate, "Autosize");
     }
 
-    d = modelObject.getRatedEvaporatorFanPowerPerVolumeFlowRate();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                        modelObject.ratedEvaporatorFanPowerPerVolumeFlowRate2017());
+
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                        modelObject.ratedEvaporatorFanPowerPerVolumeFlowRate2023());
 
     OptionalModelObject omo = modelObject.inletModelObject();
     if (omo) {
@@ -138,80 +136,56 @@ namespace energyplus {
       }
     }
 
-    d = modelObject.getNominalTimeForCondensateRemovalToBegin();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::NominalTimeforCondensateRemovaltoBegin, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::NominalTimeforCondensateRemovaltoBegin,
+                        modelObject.nominalTimeForCondensateRemovalToBegin());
 
     idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
                         modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 
-    d = modelObject.getRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity,
+                        modelObject.ratioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity());
 
-    d = modelObject.getMaximumCyclingRate();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::MaximumCyclingRate, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::MaximumCyclingRate, modelObject.maximumCyclingRate());
 
-    d = modelObject.getLatentCapacityTimeConstant();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::LatentCapacityTimeConstant, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::LatentCapacityTimeConstant, modelObject.latentCapacityTimeConstant());
 
-    s = modelObject.getCondenserAirInletNodeName();
+    s = modelObject.condenserAirInletNodeName();
     if (s) {
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::CondenserAirInletNodeName, *s);
     }
 
-    idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::CondenserType, modelObject.getCondenserType());
+    idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::CondenserType, modelObject.condenserType());
 
-    d = modelObject.getEvaporativeCondenserEffectiveness();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserEffectiveness, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserEffectiveness, modelObject.evaporativeCondenserEffectiveness());
 
-    d = modelObject.getEvaporativeCondenserAirFlowRate();
+    d = modelObject.evaporativeCondenserAirFlowRate();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserAirFlowRate, *d);
     } else {
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserAirFlowRate, "Autosize");
     }
 
-    d = modelObject.getEvaporativeCondenserPumpRatedPowerConsumption();
+    d = modelObject.evaporativeCondenserPumpRatedPowerConsumption();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserPumpRatedPowerConsumption, *d);
     } else {
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
     }
 
-    d = modelObject.getCrankcaseHeaterCapacity();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::CrankcaseHeaterCapacity, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::CrankcaseHeaterCapacity, modelObject.crankcaseHeaterCapacity());
 
-    d = modelObject.getMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation,
+                        modelObject.maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation());
 
     //TODO
     //getSupplyWaterStorageTankName
     //getCondensateCollectionWaterStorageTankName
 
-    d = modelObject.getBasinHeaterCapacity();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::BasinHeaterCapacity, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::BasinHeaterCapacity, modelObject.basinHeaterCapacity());
 
-    d = modelObject.getBasinHeaterSetpointTemperature();
-    if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::BasinHeaterSetpointTemperature, *d);
-    }
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::BasinHeaterSetpointTemperature, modelObject.basinHeaterSetpointTemperature());
 
-    OptionalSchedule os = modelObject.getBasinHeaterOperatingSchedule();
+    OptionalSchedule os = modelObject.basinHeaterOperatingSchedule();
     if (os) {
       translateAndMapModelObject(*os);
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::BasinHeaterOperatingScheduleName, os->name().get());
@@ -245,7 +219,7 @@ namespace energyplus {
       coilSystemCoolingDXIdf.setName(*s + " CoilSystem");
     }
 
-    Schedule sched = modelObject.getAvailabilitySchedule();
+    Schedule sched = modelObject.availabilitySchedule();
     translateAndMapModelObject(sched);
 
     coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName, sched.name().get());

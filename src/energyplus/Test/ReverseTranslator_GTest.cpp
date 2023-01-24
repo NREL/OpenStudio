@@ -1331,7 +1331,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
   idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, "Autosize");
   idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::GrossCoolingCOP, "3.0");
   idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea, "1.0");
-  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, "773.3");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, "773.3");
   idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserPumpPowerFraction, "1.0");
   idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, "0.9");
   idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName,

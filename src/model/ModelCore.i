@@ -3,7 +3,7 @@
 #define MODEL_CORE_I
 
 #ifdef SWIGPYTHON
-  %module openstudiomodelcore
+  %module(directors="1") openstudiomodelcore
 #endif
 
 %include <model/Model_Common_Include.i>
@@ -42,6 +42,8 @@
   %ignore openstudio::model::Model::outputJSON;
   %ignore openstudio::model::Model::outputSQLite;
   %ignore openstudio::model::Model::outputTableSummaryReports;
+  %ignore openstudio::model::Model::outputSchedules;
+  %ignore openstudio::model::Model::outputConstructions;
   %ignore openstudio::model::Model::outsideSurfaceConvectionAlgorithm;
   %ignore openstudio::model::Model::performancePrecisionTradeoffs;
   %ignore openstudio::model::Model::runPeriodControlDaylightSavingTime;
@@ -189,6 +191,8 @@ class Construction;
 %feature("valuewrapper") ThermalZone;
 %feature("valuewrapper") Curve;
 %feature("valuewrapper") Construction;
+
+%feature("director") Model;
 
 }
 }

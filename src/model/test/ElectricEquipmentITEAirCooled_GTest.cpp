@@ -278,3 +278,40 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooledDefinition_approachtemperature
 
   // model.save(toPath("./ITE8.osm"), true);
 }
+
+TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_validValues) {
+  Model model;
+
+  ElectricEquipmentITEAirCooledDefinition definition(model);
+
+  std::vector<std::string> validAirFlowCalculationMethods(definition.validAirFlowCalculationMethodValues());
+  EXPECT_NE(std::find(validAirFlowCalculationMethods.begin(), validAirFlowCalculationMethods.end(), "FlowFromSystem"),
+            validAirFlowCalculationMethods.end());
+  EXPECT_NE(std::find(validAirFlowCalculationMethods.begin(), validAirFlowCalculationMethods.end(), "FlowControlWithApproachTemperatures"),
+            validAirFlowCalculationMethods.end());
+  EXPECT_EQ(validAirFlowCalculationMethods.size(), 2);
+
+  std::vector<std::string> validDesignPowerInputCalculationMethods(definition.validDesignPowerInputCalculationMethodValues());
+  EXPECT_NE(std::find(validDesignPowerInputCalculationMethods.begin(), validDesignPowerInputCalculationMethods.end(), "Watts/Unit"),
+            validDesignPowerInputCalculationMethods.end());
+  EXPECT_NE(std::find(validDesignPowerInputCalculationMethods.begin(), validDesignPowerInputCalculationMethods.end(), "Watts/Area"),
+            validDesignPowerInputCalculationMethods.end());
+  EXPECT_EQ(validDesignPowerInputCalculationMethods.size(), 2);
+
+  std::vector<std::string> validEnvironmentalClasses(definition.validEnvironmentalClassValues());
+  EXPECT_NE(std::find(validEnvironmentalClasses.begin(), validEnvironmentalClasses.end(), "None"), validEnvironmentalClasses.end());
+  EXPECT_NE(std::find(validEnvironmentalClasses.begin(), validEnvironmentalClasses.end(), "A1"), validEnvironmentalClasses.end());
+  EXPECT_NE(std::find(validEnvironmentalClasses.begin(), validEnvironmentalClasses.end(), "A2"), validEnvironmentalClasses.end());
+  EXPECT_NE(std::find(validEnvironmentalClasses.begin(), validEnvironmentalClasses.end(), "A3"), validEnvironmentalClasses.end());
+  EXPECT_NE(std::find(validEnvironmentalClasses.begin(), validEnvironmentalClasses.end(), "A4"), validEnvironmentalClasses.end());
+  EXPECT_NE(std::find(validEnvironmentalClasses.begin(), validEnvironmentalClasses.end(), "B"), validEnvironmentalClasses.end());
+  EXPECT_NE(std::find(validEnvironmentalClasses.begin(), validEnvironmentalClasses.end(), "C"), validEnvironmentalClasses.end());
+  EXPECT_NE(std::find(validEnvironmentalClasses.begin(), validEnvironmentalClasses.end(), "H1"), validEnvironmentalClasses.end());
+  EXPECT_EQ(validEnvironmentalClasses.size(), 8);
+
+  std::vector<std::string> validAirInletConnectionTypes(definition.validAirInletConnectionTypeValues());
+  EXPECT_NE(std::find(validAirInletConnectionTypes.begin(), validAirInletConnectionTypes.end(), "AdjustedSupply"),
+            validAirInletConnectionTypes.end());
+  EXPECT_NE(std::find(validAirInletConnectionTypes.begin(), validAirInletConnectionTypes.end(), "ZoneAirNode"), validAirInletConnectionTypes.end());
+  EXPECT_EQ(validAirInletConnectionTypes.size(), 2);
+}

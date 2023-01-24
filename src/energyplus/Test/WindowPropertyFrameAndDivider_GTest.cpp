@@ -126,7 +126,7 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
   vertices = testSubSurface->vertices();
   ASSERT_EQ(4u, vertices.size());
   EXPECT_DOUBLE_EQ(0.0, vertices[0].x());
-  EXPECT_DOUBLE_EQ(1.0, vertices[0].y());
+  EXPECT_DOUBLE_EQ(0.0, vertices[0].y());
   EXPECT_DOUBLE_EQ(1.0, vertices[0].z());
 
   testSubSurface = outModel->getConcreteModelObjectByName<SubSurface>("No Offset");

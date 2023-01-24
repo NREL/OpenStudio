@@ -37,6 +37,8 @@
 #include "../../model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDX_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
@@ -60,6 +62,7 @@
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
@@ -320,6 +323,10 @@ namespace energyplus {
       _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(dxCoil.get());
 
       m_map.insert(std::make_pair(coolingCoil.handle(), _coolingCoil.get()));
+    } else if (boost::optional<CoilCoolingDX> dxCoil = coolingCoil.optionalCast<CoilCoolingDX>()) {
+      _coolingCoil = translateCoilCoolingDXWithoutUnitary(dxCoil.get());
+
+      m_map.insert(std::make_pair(coolingCoil.handle(), _coolingCoil.get()));
     } else {
       _coolingCoil = translateAndMapModelObject(coolingCoil);
     }
@@ -343,11 +350,9 @@ namespace energyplus {
 
       if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, coolingCoilInletNodeName);
-
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, coolingCoilOutletNodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, coolingCoilInletNodeName);
-
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, coolingCoilOutletNodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted) {
         auto hx = coolingCoil.cast<CoilSystemCoolingDXHeatExchangerAssisted>().heatExchanger();
@@ -358,6 +363,9 @@ namespace energyplus {
             _heatExchanger->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName, coolingCoilOutletNodeName);
           }
         }
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX) {
+        _coolingCoil->setString(Coil_Cooling_DXFields::EvaporatorInletNodeName, coolingCoilInletNodeName);
+        _coolingCoil->setString(Coil_Cooling_DXFields::EvaporatorOutletNodeName, coolingCoilOutletNodeName);
       }
     }
 
@@ -427,10 +435,9 @@ namespace energyplus {
 
     // SupplyAirFanOperatingModeScheduleName
 
-    if (boost::optional<Schedule> schedule = modelObject.supplyAirFanOperatingModeSchedule()) {
-      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
-        idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName, _schedule->name().get());
-      }
+    Schedule fanOpSchedule = modelObject.supplyAirFanOperatingModeSchedule();
+    if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(fanOpSchedule)) {
+      idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName, _schedule->name().get());
     }
 
     return idfObject;

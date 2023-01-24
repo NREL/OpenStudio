@@ -81,7 +81,7 @@ namespace measure {
     OS_DEPRECATED virtual bool registerWithApplication() const;
 
    protected:
-    OSMeasure() {}
+    OSMeasure() = default;
 
     //@}
    private:

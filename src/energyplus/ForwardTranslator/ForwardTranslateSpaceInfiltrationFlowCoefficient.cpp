@@ -56,29 +56,9 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationFlowCoefficient(SpaceInfiltrationFlowCoefficient& modelObject) {
 
-    IdfObject idfObject(openstudio::IddObjectType::ZoneInfiltration_FlowCoefficient);
-    idfObject.setString(ZoneInfiltration_FlowCoefficientFields::Name, modelObject.nameString());
-
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      // Note: this can't be mapped to a Space, in E+ it's ZoneInfiltration:FlowCoefficient (so no need to check m_excludeSpaceTranslation)
-      boost::optional<ThermalZone> thermalZone = space->thermalZone();
-      if (thermalZone) {
-        idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneName, thermalZone->nameString());
-      }
-    } else if (spaceType) {
-      // TODO: This field is called 'ZoneName' and not 'ZoneorZoneListName'. It **DOES NOT** accept a Zone List
-      idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneName, zoneListNameForSpaceType(spaceType.get()));
-      OS_ASSERT(false);
-    } else {
-      // Note: a warning will be issued higher up already
-      // Object of type 'OS:SpaceInfiltration:FlowCoefficient' and named 'My Infiltration' is not associated with a Space or SpaceType, it will not be translated.
-      LOG(Warn, modelObject.briefDescription() << " has neither a Space nor a SpaceType attached, it will not be translated.");
-      return boost::none;
-    }
-
-    m_idfObjects.push_back(idfObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneInfiltration_FlowCoefficient, modelObject);
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject, false);  // We do not allow spaceType!
+    idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName, parentIdfObject.nameString());
 
     boost::optional<Schedule> schedule_ = modelObject.schedule();
     if (!schedule_) {

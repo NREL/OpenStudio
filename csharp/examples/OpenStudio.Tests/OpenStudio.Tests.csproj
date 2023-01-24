@@ -1,22 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-
+    <TargetFrameworks>NET7</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <Platform>x64</Platform>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
-    <PackageReference Include="coverlet.collector" Version="1.0.1" />
-    <Reference Include="OpenStudio">
-      <!-- OpenStudio.dll needs to be in the same folder as libopenstudio_csharp.so libopesntudio_model_csharp.so and libopenstudio_translators_csharp.so
-      (or a symlink works too: for me in build folder, I did `cd Products && ln -s ./csharp/Release/netcoreapp3.0/OpenStudio.dll ./OpenStudio.dll` -->
-      <HintPath>/home/julien/Software/Others/OS-build-release/Products/OpenStudio.dll</HintPath>
-    </Reference>
-
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+    <PackageReference Include="OpenStudio" Version="3.5.1" />
   </ItemGroup>
 
 </Project>

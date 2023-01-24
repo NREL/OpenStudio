@@ -55,36 +55,14 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationDesignFlowRate(SpaceInfiltrationDesignFlowRate& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::ZoneInfiltration_DesignFlowRate);
-    m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(ZoneInfiltration_DesignFlowRateFields::Name, modelObject.name().get());
-
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      // Note: this can't be mapped to a Space, in E+ it's ZoneInfiltration:DesignFlowRate (so no need to check m_excludeSpaceTranslation)
-      boost::optional<ThermalZone> thermalZone = space->thermalZone();
-      if (thermalZone) {
-        idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, thermalZone->name().get());
-      }
-    } else if (spaceType) {
-      // This is a weird one... we need a ZoneList, not a SpaceList, even if we do translate to E+ spaces. Use the helper to figure the out right name
-      // We shouldn't get in there, we have hard applied them to the Spaces early in translateModelPrivate
-      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, zoneListNameForSpaceType(spaceType.get()));
-      if (!m_excludeSpaceTranslation) {
-        OS_ASSERT(false);
-      }
-    } else {
-      // Note: a warning will be issued higher up already
-      // Object of type 'OS:SpaceInfiltration:FlowCoefficient' and named 'My Infiltration' is not associated with a Space or SpaceType, it will not be translated.
-      LOG(Warn, modelObject.briefDescription() << " has neither a Space nor a SpaceType attached, it will not be translated.");
-      return boost::none;
-    }
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneInfiltration_DesignFlowRate, modelObject);
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject, true);  // We **do** allow spaceType!
+    idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
     boost::optional<Schedule> schedule = modelObject.schedule();
     if (schedule) {
-      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ScheduleName, schedule->name().get());
+      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ScheduleName, schedule->nameString());
     }
 
     std::string designFlowRateCalculationMethod = modelObject.designFlowRateCalculationMethod();
@@ -100,17 +78,17 @@ namespace energyplus {
 
     d = modelObject.flowperSpaceFloorArea();
     if (d) {
-      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea, *d);
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea, *d);
     }
 
     d = modelObject.flowperExteriorSurfaceArea();
     if (d) {
-      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea, *d);
     }
 
     d = modelObject.flowperExteriorWallArea();
     if (d) {
-      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea, *d);
     }
 
     d = modelObject.airChangesperHour();

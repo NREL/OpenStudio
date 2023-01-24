@@ -67,7 +67,6 @@
 #include "DefaultConstructionSet.hpp"
 #include "DefaultConstructionSet_Impl.hpp"
 #include "DaylightingControl.hpp"
-#include "AirWallMaterial.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"

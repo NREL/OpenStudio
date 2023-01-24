@@ -35,6 +35,7 @@
 #include "ModelObject.hpp"
 #include "StraightComponent.hpp"
 #include "Connection.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -95,10 +96,16 @@ namespace model {
     Schedule availabilitySchedule() const;
 
     /** Returns the value of the RatedCOP field. **/
-    boost::optional<double> ratedCOP() const;
+    double ratedCOP() const;
 
     /** Returns the value of the RatedEvaporatorFanPowerPerVolumeFlowRate field. **/
-    boost::optional<double> ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+    OS_DEPRECATED double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+
+    /** Returns the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2017 field. **/
+    double ratedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+    /** Returns the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2023 field. **/
+    double ratedEvaporatorFanPowerPerVolumeFlowRate2023() const;
 
     /** Returns the CurveBiquadratic referred to by the TotalCoolingCapacityFunctionOfTemperatureCurveName field. **/
     Curve totalCoolingCapacityFunctionOfTemperatureCurve() const;
@@ -116,16 +123,16 @@ namespace model {
     Curve partLoadFractionCorrelationCurve() const;
 
     /** Returns the value of the NominalTimeForCondensateRemovalToBegin field. **/
-    boost::optional<double> nominalTimeForCondensateRemovalToBegin() const;
+    double nominalTimeForCondensateRemovalToBegin() const;
 
     /** Returns the value of the RatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity field. **/
-    boost::optional<double> ratioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity() const;
+    double ratioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity() const;
 
     /** Returns the value of the MaximumCyclingRate field. **/
-    boost::optional<double> maximumCyclingRate();
+    double maximumCyclingRate();
 
     /** Returns the value of the latentCapacityTimeConstant field. **/
-    boost::optional<double> latentCapacityTimeConstant() const;
+    double latentCapacityTimeConstant() const;
 
     boost::optional<std::string> condenserAirInletNodeName() const;
 
@@ -133,7 +140,7 @@ namespace model {
     std::string condenserType() const;
 
     /** Returns the value of the EvaporativeCondenserEffectiveness field. **/
-    boost::optional<double> evaporativeCondenserEffectiveness() const;
+    double evaporativeCondenserEffectiveness() const;
 
     /** Returns the value of the EvaporativeCondenserAirFlowRate field.
       optional == false means "autosize"
@@ -146,85 +153,19 @@ namespace model {
     boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption() const;
 
     /** Returns the value of the crankcaseHeaterCapacity field. **/
-    boost::optional<double> crankcaseHeaterCapacity() const;
+    double crankcaseHeaterCapacity() const;
 
     /** Returns the value of the MaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation field. **/
-    boost::optional<double> maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation() const;
+    double maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation() const;
 
     /** Returns the value of the BasinHeaterCapacity field. **/
-    boost::optional<double> basinHeaterCapacity() const;
+    double basinHeaterCapacity() const;
 
     /** Returns the value of the BasinHeaterSetpointTemperature field. **/
-    boost::optional<double> basinHeaterSetpointTemperature() const;
+    double basinHeaterSetpointTemperature() const;
 
     /** Returns the Schedule referred to by the BasinHeaterOperatingSchedule field. **/
     boost::optional<Schedule> basinHeaterOperatingSchedule() const;
-
-    /** \deprecated */
-    Schedule getAvailabilitySchedule() const;
-
-    /** \deprecated */
-    boost::optional<double> getRatedCOP() const;
-
-    /** \deprecated */
-    boost::optional<double> getRatedEvaporatorFanPowerPerVolumeFlowRate() const;
-
-    /** \deprecated */
-    Curve getTotalCoolingCapacityFunctionOfTemperatureCurve() const;
-
-    /** \deprecated */
-    Curve getTotalCoolingCapacityFunctionOfFlowFractionCurve() const;
-
-    /** \deprecated */
-    Curve getEnergyInputRatioFunctionOfTemperatureCurve() const;
-
-    /** \deprecated */
-    Curve getEnergyInputRatioFunctionOfFlowFractionCurve() const;
-
-    /** \deprecated */
-    Curve getPartLoadFractionCorrelationCurve() const;
-
-    /** \deprecated */
-    boost::optional<double> getNominalTimeForCondensateRemovalToBegin() const;
-
-    /** \deprecated */
-    boost::optional<double> getRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity() const;
-
-    /** \deprecated */
-    boost::optional<double> getMaximumCyclingRate();
-
-    /** \deprecated */
-    boost::optional<double> getLatentCapacityTimeConstant() const;
-
-    /** \deprecated */
-    boost::optional<std::string> getCondenserAirInletNodeName() const;
-
-    /** \deprecated */
-    std::string getCondenserType() const;
-
-    /** \deprecated */
-    boost::optional<double> getEvaporativeCondenserEffectiveness() const;
-
-    /** \deprecated */
-    boost::optional<double> getEvaporativeCondenserAirFlowRate() const;
-
-    /** \deprecated */
-    boost::optional<double> getEvaporativeCondenserPumpRatedPowerConsumption() const;
-
-    /** \deprecated */
-    boost::optional<double> getCrankcaseHeaterCapacity() const;
-
-    /** \deprecated */
-    boost::optional<double> getMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation() const;
-
-    /** \deprecated */
-    boost::optional<double> getBasinHeaterCapacity() const;
-
-    /** \deprecated */
-    boost::optional<double> getBasinHeaterSetpointTemperature() const;
-
-    /** \deprecated */
-    boost::optional<Schedule> getBasinHeaterOperatingSchedule() const;
 
     double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
@@ -241,9 +182,19 @@ namespace model {
     bool setRatedCOP(double value);
 
     /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate field. **/
-    bool setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value);
+    OS_DEPRECATED bool setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value);
 
-    bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double value);
+    /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2017 field. **/
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(boost::optional<double> value);
+
+    /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2023 field. **/
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(boost::optional<double> value);
+
+    OS_DEPRECATED bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double value);
+
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double value);
+
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double value);
 
     /** Sets the CurveBiquadratic referred to by the TotalCoolingCapacityFunctionOfTemperatureCurveName field. **/
     bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
@@ -292,6 +243,8 @@ namespace model {
 
     bool setEvaporativeCondenserEffectiveness(double value);
 
+    bool isEvaporativeCondenserAirFlowRateAutosized() const;
+
     /** Sets the value of the EvaporativeCondenserAirFlowRate field.
       if value==false then set field to "autosize"
   **/
@@ -299,12 +252,18 @@ namespace model {
 
     bool setEvaporativeCondenserAirFlowRate(double value);
 
+    void autosizeEvaporativeCondenserAirFlowRate();
+
+    bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
+
     /** Sets the value of the EvaporativeCondenserPumpRatedPowerConsumption field.
       if value==false then set field to "autosize"
   **/
     bool setEvaporativeCondenserPumpRatedPowerConsumption(boost::optional<double> value);
 
     bool setEvaporativeCondenserPumpRatedPowerConsumption(double value);
+
+    void autosizeEvaporativeCondenserPumpRatedPowerConsumption();
 
     /** Sets the value of the crankcaseHeaterCapacity field. **/
     bool setCrankcaseHeaterCapacity(boost::optional<double> value);

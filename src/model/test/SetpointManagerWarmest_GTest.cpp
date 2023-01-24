@@ -158,19 +158,3 @@ TEST_F(ModelFixture, SetpointManagerWarmest_customDataClone) {
   EXPECT_EQ(999.9, testObjectClone.maximumSetpointTemperature());
   EXPECT_EQ(999.9, testObjectClone.minimumSetpointTemperature());
 }
-
-TEST_F(ModelFixture, SetpointManagerWarmest_legacy) {
-  Model model;
-
-  SetpointManagerWarmest setpointManagerWarmest(model);
-
-  AirLoopHVAC airLoopHVAC(model);
-
-  Node node = airLoopHVAC.supplyOutletNode();
-
-  ASSERT_TRUE(setpointManagerWarmest.addToNode(node));
-
-  ASSERT_TRUE(node.setpointManagerWarmest());
-
-  ASSERT_EQ(setpointManagerWarmest, node.setpointManagerWarmest().get());
-}

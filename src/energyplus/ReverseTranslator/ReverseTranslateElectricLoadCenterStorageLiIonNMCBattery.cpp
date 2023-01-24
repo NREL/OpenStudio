@@ -36,6 +36,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
 #include <utilities/idd/ElectricLoadCenter_Storage_LiIonNMCBattery_FieldEnums.hxx>
 
@@ -50,8 +52,6 @@ namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageLiIonNMCBattery(const WorkspaceObject& workspaceObject) {
 
-    OptionalModelObject result;
-    OptionalModelObject temp;
     OptionalDouble d;
     boost::optional<WorkspaceObject> owo;
     OptionalString optS;
@@ -106,8 +106,11 @@ namespace energyplus {
     // ZoneName
     if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ZoneName))) {
       if (boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get())) {
-        if (boost::optional<ThermalZone> thermalZone = mo->optionalCast<ThermalZone>()) {
-          elcStorLiIonNMCBattery.setThermalZone(thermalZone.get());
+        // Zone is translated, and a Space is returned instead
+        if (boost::optional<Space> space_ = mo->optionalCast<Space>()) {
+          if (auto z_ = space_->thermalZone()) {
+            elcStorLiIonNMCBattery.setThermalZone(z_.get());
+          }
         }
       }
     }
@@ -202,7 +205,7 @@ namespace energyplus {
       elcStorLiIonNMCBattery.setBatteryCellInternalElectricalResistance(*d);
     }
 
-    return result;
+    return elcStorLiIonNMCBattery;
   }
 
 }  // namespace energyplus

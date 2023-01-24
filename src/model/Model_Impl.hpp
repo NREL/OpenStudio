@@ -42,6 +42,8 @@
 #include "OutputSQLite.hpp"
 #include "OutputEnergyManagementSystem.hpp"
 #include "OutputTableSummaryReports.hpp"
+#include "OutputSchedules.hpp"
+#include "OutputConstructions.hpp"
 #include "PerformancePrecisionTradeoffs.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "SizingParameters.hpp"
@@ -215,6 +217,14 @@ namespace model {
       /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
       boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
+
+      /** Get the OutputSchedules object if there is one, this implementation uses a cached reference to the OutputSchedules
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputSchedules>(). */
+      boost::optional<OutputSchedules> outputSchedules() const;
+
+      /** Get the OutputConstructions object if there is one, this implementation uses a cached reference to the OutputConstructions
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputConstructions>(). */
+      boost::optional<OutputConstructions> outputConstructions() const;
 
       /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
@@ -481,6 +491,8 @@ namespace model {
       mutable boost::optional<OutputSQLite> m_cachedOutputSQLite;
       mutable boost::optional<OutputEnergyManagementSystem> m_cachedOutputEnergyManagementSystem;
       mutable boost::optional<OutputTableSummaryReports> m_cachedOutputTableSummaryReports;
+      mutable boost::optional<OutputSchedules> m_cachedOutputSchedules;
+      mutable boost::optional<OutputConstructions> m_cachedOutputConstructions;
       mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
       mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
       mutable boost::optional<SizingParameters> m_cachedSizingParameters;
@@ -528,6 +540,8 @@ namespace model {
       void clearCachedOutputSQLite(const Handle& handle);
       void clearCachedOutputEnergyManagementSystem(const Handle& handle);
       void clearCachedOutputTableSummaryReports(const Handle& handle);
+      void clearCachedOutputSchedules(const Handle& handle);
+      void clearCachedOutputConstructions(const Handle& handle);
       void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
       void clearCachedLifeCycleCostParameters(const Handle& handle);
       void clearCachedSizingParameters(const Handle& handle);
