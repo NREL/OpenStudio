@@ -46,10 +46,9 @@ Checks: |
   -readability-redundant-access-specifiers,
   -cppcoreguidelines-explicit-virtual-functions,
   -readability-else-after-return,
-  -readability-uppercase-literal-suffix,
   -modernize-concat-nested-namespaces,
   -hicpp-*,
-  hicpp-avoid-goto,
+  -hicpp-avoid-goto,
   hicpp-exception-baseclass,
   hicpp-multiway-paths-covered,
   hicpp-no-assembler,
@@ -60,20 +59,27 @@ Checks: |
   -cppcoreguidelines-narrowing-conversions,
   -readability-function-cognitive-complexity,
   -cppcoreguidelines-avoid-non-const-global-variables,
+  -modernize-use-override,
+  -readability-uppercase-literal-suffix,
+  -readability-identifier-length,
+  -bugprone-easily-swappable-parameters,
+  -modernize-use-nodiscard,
+  -cert-err58-cpp,
 
-WarningsAsErrors: '*'
+WarningsAsErrors:  '*'
 HeaderFilterRegex: '*'
-FormatStyle:     file
+FormatStyle:       'file'
+UseColor:          'true'
 CheckOptions:
-  - key:             modernize-use-override.AllowOverrideAndFinal
-    value:           'true'
-  - key:             modernize-use-override.IgnoreDestructors
-    value:           'true'
-  - key:             performance-for-range-copy.WarnOnAllAutoCopies
-    value:           'true'
-  - key:             cppcoreguidelines-narrowing-conversions.WarnOnEquivalentBitWidth
-    value:           'false'
-  - key:             readability-implicit-bool-conversion.AllowPointerConditions
-    value:           'true'
-  - key:             misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
-    value:           'true'
+  - key:           modernize-use-override.AllowOverrideAndFinal
+    value:         'true'
+  - key:           modernize-use-override.IgnoreDestructors
+    value:         'true'
+  - key:           performance-for-range-copy.WarnOnAllAutoCopies
+    value:         'true'
+  - key:           cppcoreguidelines-narrowing-conversions.WarnOnEquivalentBitWidth
+    value:         'false'
+  - key:           readability-implicit-bool-conversion.AllowPointerConditions
+    value:         'true'
+  - key:           misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value:         'true'
