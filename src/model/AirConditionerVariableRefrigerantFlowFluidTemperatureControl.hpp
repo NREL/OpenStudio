@@ -34,9 +34,6 @@
 #include <model/ModelAPI.hpp>
 #include "StraightComponent.hpp"
 
-#include "Curve.hpp"
-#include "Curve_Impl.hpp"
-
 namespace openstudio {
 
 namespace model {
@@ -45,33 +42,13 @@ namespace model {
   class Curve;
   class ThermalZone;
   class ZoneHVACTerminalUnitVariableRefrigerantFlow;
+  class LoadingIndex;
 
   namespace detail {
 
     class AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl;
 
   }  // namespace detail
-
-  /** This class implements a loading index */
-  class MODEL_API LoadingIndex
-  {
-   public:
-    LoadingIndex(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
-                 const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
-
-    double compressorSpeed() const;
-    Curve evaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
-    Curve compressorPowerMultiplierFunctionofTemperatureCurve() const;
-
-   private:
-    double m_compressorSpeed;
-    Curve m_evaporativeCapacityMultiplierFunctionofTemperatureCurve;
-    Curve m_compressorPowerMultiplierFunctionofTemperatureCurve;
-    REGISTER_LOGGER("openstudio.model.LoadingIndex");
-  };
-
-  // Overload operator<<
-  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::LoadingIndex& loadingIndex);
 
   /** AirConditionerVariableRefrigerantFlowFluidTemperatureControl is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl'. */
   class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControl : public StraightComponent
@@ -95,21 +72,6 @@ namespace model {
     static std::vector<std::string> defrostStrategyValues();
 
     static std::vector<std::string> defrostControlValues();
-
-    //extensible fields
-
-    bool addLoadingIndex(const LoadingIndex& loadingIndex);
-
-    bool addLoadingIndex(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
-                         const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
-
-    void removeLoadingIndex(int groupIndex);
-
-    void removeAllLoadingIndexes();
-
-    std::vector<LoadingIndex> loadingIndexes() const;
-
-    bool addLoadingIndexes(const std::vector<LoadingIndex>& loadingIndexes);
 
     /** @name Getters */
     //@{
@@ -197,8 +159,6 @@ namespace model {
     double maximumOutdoorDrybulbTemperatureforDefrostOperation() const;
 
     double compressorMaximumDeltaPressure() const;
-
-    unsigned int numberofCompressorLoadingIndexEntries() const;
 
     //@}
     /** @name Setters */
@@ -298,6 +258,14 @@ namespace model {
     //@}
     /** @name Other */
     //@{
+
+    std::vector<LoadingIndex> loadingIndexes() const;
+
+    bool addLoadingIndex(const LoadingIndex& loadingIndex);
+
+    void removeLoadingIndex(const LoadingIndex& loadingIndex);
+
+    void removeAllLoadingIndexes();
 
     //@}
    protected:
