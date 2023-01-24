@@ -10231,7 +10231,6 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
        \memo Temperature Control
        \memo It describes the Variable Refrigerant Flow system excluding the performance of indoor units
        \memo Indoor units are modeled separately, see ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
-       \extensible:3 - repeat last three fields, remembering to remove ; from "inner" fields.
   A1,  \field Handle
        \type handle
        \required-field
@@ -10493,18 +10492,30 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
        \required-field
        \minimum 0.0
        \maximum 50000000.0
-  N31, \field Compressor Speed at Loading Index 1
+  A12; \field Loading Index List
+       \type object-list
+       \object-list ModelObjectLists
+
+OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:LoadingIndex,
+       \min-fields 5
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference AirConditionerVariableRefrigerantFlowFluidTemperatureControlLoadingIndex
+  N1,  \field Compressor Speed
        \required-field
        \type real
-       \begin-extensible
        \note Minimum compressor speed
        \units rev/min
        \minimum> 0
-  A12, \field Loading Index 1 Evaporative Capacity Multiplier Function of Temperature Curve Name
+  A3,  \field Evaporative Capacity Multiplier Function of Temperature Curve Name
        \required-field
        \type object-list
        \object-list BivariateFunctions
-  A13; \field Loading Index 1 Compressor Power Multiplier Function of Temperature Curve Name
+  A4;  \field Compressor Power Multiplier Function of Temperature Curve Name
        \required-field
        \type object-list
        \object-list BivariateFunctions
@@ -10513,7 +10524,6 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR,
        \memo This is a key object in the new physics based VRF Heat Recovery (HR) model applicable for Fluid
        \memo Temperature Control. It describes the VRF HR system excluding the performance of indoor units.
        \memo Indoor units are modeled separately in the ZoneHVAC:TerminalUnit:VariableRefrigerantFlow object
-       \extensible:3 repeat last three fields (changing numbering, please), remembering to remove ";" from "inner" fields.
   A1,  \field Handle
        \type handle
        \required-field
@@ -10895,21 +10905,9 @@ OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR,
        \required-field
        \note Describe the evaporative capacity difference because of system configuration
        \note difference between test bed and real system.
-  N48, \field Compressor Speed at Loading Index 1
-       \required-field
-       \type real
-       \note Minimum compressor speed
-       \begin-extensible
-       \units rev/min
-       \minimum> 0
-  A12, \field Loading Index 1 Evaporative Capacity Multiplier Function of Temperature Curve Name
-       \required-field
+  A12; \field Loading Index List
        \type object-list
-       \object-list BivariateFunctions
-  A13; \field Loading Index 1 Compressor Power Multiplier Function of Temperature Curve Name
-       \required-field
-       \type object-list
-       \object-list BivariateFunctions
+       \object-list ModelObjectLists
 
 OS:AirLoopHVAC,
        \memo Defines a central forced air system
