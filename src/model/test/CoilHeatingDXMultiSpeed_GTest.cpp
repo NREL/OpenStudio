@@ -165,7 +165,8 @@ TEST_F(ModelFixture, CoilHeatingDXMultiSpeed_Stages) {
   {
     int stageIndex = 3;
     std::vector<CoilHeatingDXMultiSpeedStageData> thisStages = dx.stages();
-    const auto& stageAtIndex = thisStages[stageIndex - 1];
+    // Explicit copy, so we can keep using it after it's been removed
+    const auto stageAtIndex = thisStages[stageIndex - 1];
     EXPECT_TRUE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
     auto optIndex = dx.stageIndex(stageAtIndex);
     ASSERT_TRUE(optIndex);
@@ -182,7 +183,8 @@ TEST_F(ModelFixture, CoilHeatingDXMultiSpeed_Stages) {
   {
     int stageIndex = 2;
     std::vector<CoilHeatingDXMultiSpeedStageData> thisStages = dx.stages();
-    const auto& stageAtIndex = thisStages[stageIndex - 1];
+    // Explicit copy, so we can keep using it after it's been removed
+    const auto stageAtIndex = thisStages[stageIndex - 1];
     EXPECT_TRUE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
     auto optIndex = dx.stageIndex(stageAtIndex);
     ASSERT_TRUE(optIndex);
