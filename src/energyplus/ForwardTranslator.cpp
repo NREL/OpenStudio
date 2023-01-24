@@ -3287,6 +3287,11 @@ namespace energyplus {
       IddObjectType::OS_Output_Schedules,
       IddObjectType::OS_Output_SQLite,
 
+      // Note: we just always translate Output:EnvironmentalImpactFactors, and in there (it exists), then trigger translatation of the two others
+      IddObjectType::OS_Output_EnvironmentalImpactFactors,
+      // IddObjectType::OS_EnvironmentalImpactFactors,
+      // IddObjectType::OS_FuelFactors,
+
       IddObjectType::OS_Output_Table_SummaryReports,
       IddObjectType::OS_PerformancePrecisionTradeoffs,
 
