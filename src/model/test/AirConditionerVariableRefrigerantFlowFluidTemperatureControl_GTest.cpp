@@ -361,17 +361,20 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   ZoneHVACTerminalUnitVariableRefrigerantFlow term2(model);
   vrf.addTerminal(term2);
   EXPECT_EQ(2u, vrf.terminals().size());
+  EXPECT_EQ(3u, vrf.loadingIndexes().size());
 
   AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrfClone =
     vrf.clone(model).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
   EXPECT_EQ("R12", vrfClone.refrigerantType());
   EXPECT_EQ(0u, vrfClone.terminals().size());
+  EXPECT_EQ(3u, vrfClone.loadingIndexes().size());
 
   Model model2;
   AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrfClone2 =
     vrf.clone(model2).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
   EXPECT_EQ("R12", vrfClone2.refrigerantType());
   EXPECT_EQ(0u, vrfClone2.terminals().size());
+  EXPECT_EQ(3u, vrfClone2.loadingIndexes().size());
 }
 
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Remove) {
@@ -387,7 +390,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(1u, vrf.terminals().size());
   EXPECT_FALSE(vrf.remove().empty());
   EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
-  EXPECT_EQ(6u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());  // FIXME: need to delete these from remove method?
+  EXPECT_EQ(6u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(CurveCubic::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
   EXPECT_EQ(size + 2, model.modelObjects().size());  // Always On Discrete, OnOff
