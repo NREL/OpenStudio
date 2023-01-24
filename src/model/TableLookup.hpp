@@ -58,6 +58,11 @@ namespace model {
     explicit TableLookup(const Model& model);
 
     virtual ~TableLookup() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    TableLookup(const TableLookup& other) = default;
+    TableLookup(TableLookup&& other) = default;
+    TableLookup& operator=(const TableLookup&) = default;
+    TableLookup& operator=(TableLookup&&) = default;
 
     //@}
 

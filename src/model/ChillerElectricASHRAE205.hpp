@@ -58,6 +58,11 @@ namespace model {
     explicit ChillerElectricASHRAE205(const ExternalFile& representationFile);
 
     virtual ~ChillerElectricASHRAE205() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ChillerElectricASHRAE205(const ChillerElectricASHRAE205& other) = default;
+    ChillerElectricASHRAE205(ChillerElectricASHRAE205&& other) = default;
+    ChillerElectricASHRAE205& operator=(const ChillerElectricASHRAE205&) = default;
+    ChillerElectricASHRAE205& operator=(ChillerElectricASHRAE205&&) = default;
 
     // TODO: once supported by E+, re-enable
     static constexpr bool isHeatRecoverySupportedByEnergyplus = false;

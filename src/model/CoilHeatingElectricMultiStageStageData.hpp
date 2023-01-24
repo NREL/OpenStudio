@@ -54,6 +54,10 @@ namespace model {
     explicit CoilHeatingElectricMultiStageStageData(const Model& model);
 
     virtual ~CoilHeatingElectricMultiStageStageData() = default;
+    CoilHeatingElectricMultiStageStageData(const CoilHeatingElectricMultiStageStageData& other) = default;
+    CoilHeatingElectricMultiStageStageData(CoilHeatingElectricMultiStageStageData&& other) = default;
+    CoilHeatingElectricMultiStageStageData& operator=(const CoilHeatingElectricMultiStageStageData&) = default;
+    CoilHeatingElectricMultiStageStageData& operator=(CoilHeatingElectricMultiStageStageData&&) = default;
 
     //@}
 

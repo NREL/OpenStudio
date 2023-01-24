@@ -55,6 +55,11 @@ namespace model {
     explicit TableIndependentVariable(const Model& model);
 
     virtual ~TableIndependentVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    TableIndependentVariable(const TableIndependentVariable& other) = default;
+    TableIndependentVariable(TableIndependentVariable&& other) = default;
+    TableIndependentVariable& operator=(const TableIndependentVariable&) = default;
+    TableIndependentVariable& operator=(TableIndependentVariable&&) = default;
 
     //@}
 
