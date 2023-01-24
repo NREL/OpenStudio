@@ -180,6 +180,20 @@ namespace model {
     std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::remove() {
       vrfModelObjectList().remove();
 
+      boost::optional<ModelObject> curve;
+
+      for (const LoadingIndex& loadingIndex : loadingIndexes()) {
+        curve = loadingIndex.evaporativeCapacityMultiplierFunctionofTemperatureCurve();
+        if (curve) {
+          curve->remove();
+        }
+
+        curve = loadingIndex.compressorPowerMultiplierFunctionofTemperatureCurve();
+        if (curve) {
+          curve->remove();
+        }
+      }
+
       return StraightComponent_Impl::remove();
     }
 
