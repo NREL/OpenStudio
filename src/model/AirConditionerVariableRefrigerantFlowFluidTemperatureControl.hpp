@@ -247,6 +247,10 @@ namespace model {
 
     bool setCompressorMaximumDeltaPressure(double compressorMaximumDeltaPressure);
 
+    //@}
+    /** @name Other */
+    //@{
+
     void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
 
     void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
@@ -255,17 +259,13 @@ namespace model {
 
     std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-    //@}
-    /** @name Other */
-    //@{
+    void addLoadingIndex(LoadingIndex& loadingIndex);
 
-    std::vector<LoadingIndex> loadingIndexes() const;
-
-    bool addLoadingIndex(const LoadingIndex& loadingIndex);
-
-    void removeLoadingIndex(const LoadingIndex& loadingIndex);
+    void removeLoadingIndex(LoadingIndex& loadingIndex);
 
     void removeAllLoadingIndexes();
+
+    std::vector<LoadingIndex> loadingIndexes() const;
 
     //@}
    protected:

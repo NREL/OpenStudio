@@ -42,7 +42,6 @@ namespace model {
   class ModelObjectList;
   class ZoneHVACTerminalUnitVariableRefrigerantFlow;
   class LoadingIndex;
-  class ModelObjectList;
 
   namespace detail {
 
@@ -270,6 +269,10 @@ namespace model {
 
       bool setCompressorMaximumDeltaPressure(double compressorMaximumDeltaPressure);
 
+      //@}
+      /** @name Other */
+      //@{
+
       ModelObjectList vrfModelObjectList() const;
 
       bool setVRFModelObjectList(const ModelObjectList& modelObjectList);
@@ -282,23 +285,17 @@ namespace model {
 
       std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-      //@}
-      /** @name Other */
-      //@{
+      ModelObjectList loadingIndexList() const;
 
-      bool setLoadingIndexList(const boost::optional<ModelObjectList>& modelObjectList);
-      
-      void resetLoadingIndexList();
-      
-      boost::optional<ModelObjectList> loadingIndexList() const;
+      bool setLoadingIndexList(const ModelObjectList& modelObjectList);
 
-      std::vector<LoadingIndex> loadingIndexes() const;
+      void addLoadingIndex(LoadingIndex& loadingIndex);
 
-      bool addLoadingIndex(const LoadingIndex& loadingIndex);
-
-      void removeLoadingIndex(const LoadingIndex& loadingIndex);
+      void removeLoadingIndex(LoadingIndex& loadingIndex);
 
       void removeAllLoadingIndexes();
+
+      std::vector<LoadingIndex> loadingIndexes() const;
 
       //@}
      private:
