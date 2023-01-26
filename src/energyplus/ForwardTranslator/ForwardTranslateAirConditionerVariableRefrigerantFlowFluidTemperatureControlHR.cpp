@@ -30,10 +30,10 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
 
-#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
-#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
+/* #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlLoadingIndex.hpp"
+#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlLoadingIndex_Impl.hpp" */
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
@@ -387,9 +387,10 @@ namespace energyplus {
                         compressorEvaporativeCapacityCorrectionFactor);
 
     // Number of Compressor Loading Index Entries: Optional Integer
-    int numberofCompressorLoadingIndexEntries = modelObject.numberofCompressorLoadingIndexEntries();
-    idfObject.setInt(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressorLoadingIndexEntries,
-                     numberofCompressorLoadingIndexEntries);
+/*     std::vector<LoadingIndex> loadingIndexes = modelObject.loadingIndexes();
+    if (auto num = loadingIndexes.size()) }
+      idfObject.setInt(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressorLoadingIndexEntries, num);
+    } */
 
     // Terminal Unit List
 
@@ -415,21 +416,32 @@ namespace energyplus {
       eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName, _terminal->name().get());
     }
 
-    // Loading Indexes
-    std::vector<LoadingIndex> loadingIndexes = modelObject.loadingIndexes();
-    if (!loadingIndexes.empty()) {
-      for (const LoadingIndex& loadingIndex : loadingIndexes) {
-        auto eg = idfObject.pushExtensibleGroup();
-        eg.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::CompressorSpeedatLoadingIndex,
-                     loadingIndex.compressorSpeed());
-        eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::
-                       LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName,
-                     loadingIndex.evaporativeCapacityMultiplierFunctionofTemperatureCurve().name().get());
-        eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::
-                       LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName,
-                     loadingIndex.compressorPowerMultiplierFunctionofTemperatureCurve().name().get());
+    // Loading Index Extensible Groups
+/*     for (auto& loadingIndex : loadingIndexes) {
+      auto eg = idfObject.pushExtensibleGroup();
+
+      // Compressor Speed at Loading Index
+      eg.setDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::CompressorSpeedatLoadingIndex,
+                   loadingIndex.compressorSpeed());
+
+      // Loading Index Evaporative Capacity Multiplier Function of Temperature Curve Name
+      {
+        auto curve = loadingIndex.evaporativeCapacityMultiplierFunctionofTemperatureCurve();
+        if (auto _curve = translateAndMapModelObject(curve)) {
+          eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName,
+                       _curve->name().get());
+        }
       }
-    }
+
+      // Loading Index Compressor Power Multiplier Function of Temperature Curve Name
+      {
+        auto curve = loadingIndex.compressorPowerMultiplierFunctionofTemperatureCurve();
+        if (auto _curve = translateAndMapModelObject(curve)) {
+          eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName,
+                       _curve->name().get());
+        }
+      }
+    } */
 
     return idfObject;
   }  // End of translate function

@@ -41,7 +41,7 @@ namespace model {
   class ThermalZone;
   class ModelObjectList;
   class ZoneHVACTerminalUnitVariableRefrigerantFlow;
-  class LoadingIndex;
+  /* class LoadingIndex; */
 
   namespace detail {
 
@@ -93,21 +93,6 @@ namespace model {
       virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
       virtual std::vector<std::string> emsInternalVariableNames() const override;
-
-      //extensible fields
-
-      bool addLoadingIndex(const LoadingIndex& loadingIndex);
-
-      bool addLoadingIndex(double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
-                           const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
-
-      bool removeLoadingIndex(unsigned groupIndex);
-
-      void removeAllLoadingIndexes();
-
-      std::vector<LoadingIndex> loadingIndexes() const;
-
-      bool addLoadingIndexes(const std::vector<LoadingIndex>& loadingIndexes);
 
       //@}
       /** @name Getters */
@@ -231,8 +216,6 @@ namespace model {
 
       double compressorEvaporativeCapacityCorrectionFactor() const;
 
-      unsigned int numberofCompressorLoadingIndexEntries() const;
-
       //@}
       /** @name Setters */
       //@{
@@ -355,6 +338,10 @@ namespace model {
 
       bool setCompressorEvaporativeCapacityCorrectionFactor(double compressorEvaporativeCapacityCorrectionFactor);
 
+      //@}
+      /** @name Other */
+      //@{
+
       ModelObjectList vrfModelObjectList() const;
 
       bool setVRFModelObjectList(const ModelObjectList& modelObjectList);
@@ -367,9 +354,17 @@ namespace model {
 
       std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-      //@}
-      /** @name Other */
-      //@{
+/*       ModelObjectList loadingIndexList() const;
+
+      bool setLoadingIndexList(const ModelObjectList& modelObjectList);
+
+      void addLoadingIndex(LoadingIndex& loadingIndex);
+
+      void removeLoadingIndex(LoadingIndex& loadingIndex);
+
+      void removeAllLoadingIndexes();
+
+      std::vector<LoadingIndex> loadingIndexes() const; */
 
       //@}
      private:

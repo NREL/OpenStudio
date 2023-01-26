@@ -249,7 +249,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_FALSE(vrf.autosizedResistiveDefrostHeaterCapacity());
 }
 
-TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_LoadingIndexes) {
+/* TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_LoadingIndexes) {
   Model model;
 
   AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf(model);
@@ -309,7 +309,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(4, loadingIndexes2[2].compressorSpeed());
   EXPECT_EQ(evaporativeCapacityMultiplierFunctionofTemperatureCurve1, loadingIndexes2[2].evaporativeCapacityMultiplierFunctionofTemperatureCurve());
   EXPECT_EQ(compressorPowerMultiplierFunctionofTemperatureCurve2, loadingIndexes2[2].compressorPowerMultiplierFunctionofTemperatureCurve());
-}
+} */
 
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Terminals) {
   Model model;
@@ -361,20 +361,20 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   ZoneHVACTerminalUnitVariableRefrigerantFlow term2(model);
   vrf.addTerminal(term2);
   EXPECT_EQ(2u, vrf.terminals().size());
-  EXPECT_EQ(3u, vrf.loadingIndexes().size());
+  /* EXPECT_EQ(3u, vrf.loadingIndexes().size()); */
 
   AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrfClone =
     vrf.clone(model).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
   EXPECT_EQ("R12", vrfClone.refrigerantType());
   EXPECT_EQ(0u, vrfClone.terminals().size());
-  EXPECT_EQ(3u, vrfClone.loadingIndexes().size());
+  /* EXPECT_EQ(3u, vrfClone.loadingIndexes().size()); */
 
   Model model2;
   AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrfClone2 =
     vrf.clone(model2).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
   EXPECT_EQ("R12", vrfClone2.refrigerantType());
   EXPECT_EQ(0u, vrfClone2.terminals().size());
-  EXPECT_EQ(3u, vrfClone2.loadingIndexes().size());
+  /* EXPECT_EQ(3u, vrfClone2.loadingIndexes().size()); */
 }
 
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Remove) {
