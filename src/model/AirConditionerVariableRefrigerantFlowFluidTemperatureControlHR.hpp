@@ -42,7 +42,7 @@ namespace model {
   class Curve;
   class ThermalZone;
   class ZoneHVACTerminalUnitVariableRefrigerantFlow;
-  /* class LoadingIndex; */
+  class LoadingIndex;
 
   namespace detail {
 
@@ -328,13 +328,13 @@ namespace model {
 
     std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-/*     void addLoadingIndex(LoadingIndex& loadingIndex);
+    void addLoadingIndex(LoadingIndex& loadingIndex);
 
     void removeLoadingIndex(LoadingIndex& loadingIndex);
 
     void removeAllLoadingIndexes();
 
-    std::vector<LoadingIndex> loadingIndexes() const; */
+    std::vector<LoadingIndex> loadingIndexes() const;
 
     //@}
    protected:

@@ -32,8 +32,8 @@
 
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
-/* #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlLoadingIndex.hpp"
-#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlLoadingIndex_Impl.hpp" */
+#include "../../model/LoadingIndex.hpp"
+#include "../../model/LoadingIndex_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
@@ -387,10 +387,10 @@ namespace energyplus {
                         compressorEvaporativeCapacityCorrectionFactor);
 
     // Number of Compressor Loading Index Entries: Optional Integer
-/*     std::vector<LoadingIndex> loadingIndexes = modelObject.loadingIndexes();
-    if (auto num = loadingIndexes.size()) }
+    std::vector<LoadingIndex> loadingIndexes = modelObject.loadingIndexes();
+    if (auto num = loadingIndexes.size()) {
       idfObject.setInt(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::NumberofCompressorLoadingIndexEntries, num);
-    } */
+    }
 
     // Terminal Unit List
 
@@ -417,7 +417,7 @@ namespace energyplus {
     }
 
     // Loading Index Extensible Groups
-/*     for (auto& loadingIndex : loadingIndexes) {
+    for (auto& loadingIndex : loadingIndexes) {
       auto eg = idfObject.pushExtensibleGroup();
 
       // Compressor Speed at Loading Index
@@ -428,7 +428,8 @@ namespace energyplus {
       {
         auto curve = loadingIndex.evaporativeCapacityMultiplierFunctionofTemperatureCurve();
         if (auto _curve = translateAndMapModelObject(curve)) {
-          eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName,
+          eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::
+                         LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName,
                        _curve->name().get());
         }
       }
@@ -437,11 +438,12 @@ namespace energyplus {
       {
         auto curve = loadingIndex.compressorPowerMultiplierFunctionofTemperatureCurve();
         if (auto _curve = translateAndMapModelObject(curve)) {
-          eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName,
+          eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::
+                         LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName,
                        _curve->name().get());
         }
       }
-    } */
+    }
 
     return idfObject;
   }  // End of translate function

@@ -37,75 +37,76 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class LoadingIndex_Impl;
+    class LoadingIndex_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** LoadingIndex is a ParentObject that wraps the OpenStudio IDD object 'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:LoadingIndex'. */
-class MODEL_API LoadingIndex : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** LoadingIndex is a ParentObject that wraps the OpenStudio IDD object 'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:LoadingIndex'. */
+  class MODEL_API LoadingIndex : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit LoadingIndex(const Model& model, double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve, const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
+    explicit LoadingIndex(const Model& model, double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
+                          const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
 
-  virtual ~LoadingIndex() = default;
+    virtual ~LoadingIndex() = default;
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double compressorSpeed() const;
+    double compressorSpeed() const;
 
-  Curve evaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
+    Curve evaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
 
-  Curve compressorPowerMultiplierFunctionofTemperatureCurve() const;
+    Curve compressorPowerMultiplierFunctionofTemperatureCurve() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCompressorSpeed(double compressorSpeed);
+    bool setCompressorSpeed(double compressorSpeed);
 
-  bool setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(const Curve& curve);
+    bool setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setCompressorPowerMultiplierFunctionofTemperatureCurve(const Curve& curve);
+    bool setCompressorPowerMultiplierFunctionofTemperatureCurve(const Curve& curve);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  using ImplType = detail::LoadingIndex_Impl;
+    //@}
+   protected:
+    /// @cond
+    using ImplType = detail::LoadingIndex_Impl;
 
-  explicit LoadingIndex(std::shared_ptr<detail::LoadingIndex_Impl> impl);
+    explicit LoadingIndex(std::shared_ptr<detail::LoadingIndex_Impl> impl);
 
-  friend class detail::LoadingIndex_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.LoadingIndex");
-};
+    friend class detail::LoadingIndex_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.LoadingIndex");
+  };
 
-/** \relates LoadingIndex*/
-using OptionalLoadingIndex = boost::optional<LoadingIndex>;
+  /** \relates LoadingIndex*/
+  using OptionalLoadingIndex = boost::optional<LoadingIndex>;
 
-/** \relates LoadingIndex*/
-using LoadingIndexVector = std::vector<LoadingIndex>;
+  /** \relates LoadingIndex*/
+  using LoadingIndexVector = std::vector<LoadingIndex>;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_LOADINGINDEX_HPP
-
+#endif  // MODEL_LOADINGINDEX_HPP

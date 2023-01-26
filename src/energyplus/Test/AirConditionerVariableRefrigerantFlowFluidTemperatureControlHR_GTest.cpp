@@ -34,8 +34,8 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
+#include "../../model/LoadingIndex.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/ScheduleConstant.hpp"
@@ -146,10 +146,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve3(model);
   CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve3(model);
 
-/*   vrf.removeAllLoadingIndexes();
-  EXPECT_TRUE(vrf.addLoadingIndex(1, evaporativeCapacityMultiplierFunctionofTemperatureCurve1, compressorPowerMultiplierFunctionofTemperatureCurve1));
-  EXPECT_TRUE(vrf.addLoadingIndex(2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2, compressorPowerMultiplierFunctionofTemperatureCurve2));
-  EXPECT_TRUE(vrf.addLoadingIndex(3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3, compressorPowerMultiplierFunctionofTemperatureCurve3)); */
+  vrf.removeAllLoadingIndexes();
+  LoadingIndex loadingIndex1(model, 1, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
+                             compressorPowerMultiplierFunctionofTemperatureCurve1);
+  vrf.addLoadingIndex(loadingIndex1);
+  LoadingIndex loadingIndex2(model, 2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
+                             compressorPowerMultiplierFunctionofTemperatureCurve2);
+  vrf.addLoadingIndex(loadingIndex2);
+  LoadingIndex loadingIndex3(model, 3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
+                             compressorPowerMultiplierFunctionofTemperatureCurve3);
+  vrf.addLoadingIndex(loadingIndex3);
 
   CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil(model);
   EXPECT_TRUE(coolingCoil.setAvailabilitySchedule(scheduleConstant));
@@ -379,7 +385,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
 
   EXPECT_EQ(3u, idf_vrf.numExtensibleGroups());
   auto egs = idf_vrf.extensibleGroups();
-/*   auto loadingIndexes = vrf.loadingIndexes();
+  auto loadingIndexes = vrf.loadingIndexes();
   for (size_t i = 0; i < idf_vrf.extensibleGroups().size(); ++i) {
     const IdfExtensibleGroup& eg = egs[i];
     const auto loadingIndex = loadingIndexes[i];
@@ -392,7 +398,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
     EXPECT_NE("", eg.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::
                                  LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName)
                     .get());
-  } */
+  }
 
   IdfObject idf_term = workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow)[0];
 

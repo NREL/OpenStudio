@@ -30,8 +30,8 @@
 #include <vector>
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
-/* #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlLoadingIndex.hpp"
-#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlLoadingIndex_Impl.hpp" */
+#include "LoadingIndex.hpp"
+#include "LoadingIndex_Impl.hpp"
 #include "ModelObjectList.hpp"
 #include "ModelObjectList_Impl.hpp"
 
@@ -143,15 +143,15 @@ namespace model {
         airConditionerClone.setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(clone);
       }
 
-/*       ModelObjectList loadingIndexList(model);
-      airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setLoadingIndexList(loadingIndexList); */
+      ModelObjectList loadingIndexList(model);
+      airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setLoadingIndexList(loadingIndexList);
 
       return airConditionerClone;
     }
 
     std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::remove() {
       vrfModelObjectList().remove();
-      /* loadingIndexList().remove(); */
+      loadingIndexList().remove();
       auto result = StraightComponent_Impl::remove();
 
       return result;
@@ -204,11 +204,9 @@ namespace model {
         result.push_back(curve.get());
       }
 
-/*       if (auto const _loadingIndexList = loadingIndexList()) {
-        for (const auto& mo : _loadingIndexList->modelObjects()) {
-          result.push_back(mo);
-        }
-      } */
+      for (const auto& mo : loadingIndexList().modelObjects()) {
+        result.push_back(mo);
+      }
 
       return result;
     }
@@ -529,7 +527,7 @@ namespace model {
       return value.get();
     }
 
-/*     ModelObjectList AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::loadingIndexList() const {
+    ModelObjectList AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::loadingIndexList() const {
       boost::optional<ModelObjectList> mo = getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(
         OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::LoadingIndexList);
 
@@ -542,7 +540,7 @@ namespace model {
       loadingIndexList().addModelObject(loadingIndex);
     }
 
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::removeLoadingIndex(const LoadingIndex& loadingIndex) {
+    void AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::removeLoadingIndex(LoadingIndex& loadingIndex) {
       loadingIndexList().removeModelObject(loadingIndex);
     }
 
@@ -555,8 +553,8 @@ namespace model {
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setLoadingIndexList(const ModelObjectList& modelObjectList) {
-      return setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::LoadingIndexList, modelObjectList.get().handle());
-    } */
+      return setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::LoadingIndexList, modelObjectList.handle());
+    }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setAvailabilitySchedule(Schedule& schedule) {
       bool result = setSchedule(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule,
@@ -1027,7 +1025,7 @@ namespace model {
     ok = getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setVRFModelObjectList(vrfModelObjectList);
     OS_ASSERT(ok);
 
-/*     ModelObjectList loadingIndexList(model);
+    ModelObjectList loadingIndexList(model);
     ok = getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setLoadingIndexList(loadingIndexList);
     OS_ASSERT(ok);
 
@@ -1055,7 +1053,8 @@ namespace model {
     compressorPowerMultiplierFunctionofTemperatureCurve1.setMinimumValueofy(-30);
     compressorPowerMultiplierFunctionofTemperatureCurve1.setMaximumValueofy(15);
 
-    LoadingIndex loadingIndex1(1500, evaporativeCapacityMultiplierFunctionofTemperatureCurve1, compressorPowerMultiplierFunctionofTemperatureCurve1);
+    LoadingIndex loadingIndex1(model, 1500, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
+                               compressorPowerMultiplierFunctionofTemperatureCurve1);
     addLoadingIndex(loadingIndex1);
 
     CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve2(model);
@@ -1082,7 +1081,8 @@ namespace model {
     compressorPowerMultiplierFunctionofTemperatureCurve2.setMinimumValueofy(-30);
     compressorPowerMultiplierFunctionofTemperatureCurve2.setMaximumValueofy(15);
 
-    LoadingIndex loadingIndex2(3600, evaporativeCapacityMultiplierFunctionofTemperatureCurve2, compressorPowerMultiplierFunctionofTemperatureCurve2);
+    LoadingIndex loadingIndex2(model, 3600, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
+                               compressorPowerMultiplierFunctionofTemperatureCurve2);
     addLoadingIndex(loadingIndex2);
 
     CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve3(model);
@@ -1109,8 +1109,9 @@ namespace model {
     compressorPowerMultiplierFunctionofTemperatureCurve3.setMinimumValueofy(-30);
     compressorPowerMultiplierFunctionofTemperatureCurve3.setMaximumValueofy(15);
 
-    LoadingIndex loadingIndex3(6000, evaporativeCapacityMultiplierFunctionofTemperatureCurve3, compressorPowerMultiplierFunctionofTemperatureCurve3);
-    addLoadingIndex(loadingIndex3); */
+    LoadingIndex loadingIndex3(model, 6000, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
+                               compressorPowerMultiplierFunctionofTemperatureCurve3);
+    addLoadingIndex(loadingIndex3);
   }
 
   IddObjectType AirConditionerVariableRefrigerantFlowFluidTemperatureControl::iddObjectType() {
@@ -1557,7 +1558,7 @@ namespace model {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->terminals();
   }
 
-/*   void AirConditionerVariableRefrigerantFlowFluidTemperatureControl::addLoadingIndex(LoadingIndex& loadingIndex) {
+  void AirConditionerVariableRefrigerantFlowFluidTemperatureControl::addLoadingIndex(LoadingIndex& loadingIndex) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->addLoadingIndex(loadingIndex);
   }
 
@@ -1571,7 +1572,7 @@ namespace model {
 
   std::vector<LoadingIndex> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::loadingIndexes() const {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->loadingIndexes();
-  } */
+  }
 
   /// @cond
   AirConditionerVariableRefrigerantFlowFluidTemperatureControl::AirConditionerVariableRefrigerantFlowFluidTemperatureControl(

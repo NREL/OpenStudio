@@ -41,7 +41,7 @@ namespace model {
   class ThermalZone;
   class ModelObjectList;
   class ZoneHVACTerminalUnitVariableRefrigerantFlow;
-  /* class LoadingIndex; */
+  class LoadingIndex;
 
   namespace detail {
 
@@ -354,7 +354,7 @@ namespace model {
 
       std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-/*       ModelObjectList loadingIndexList() const;
+      ModelObjectList loadingIndexList() const;
 
       bool setLoadingIndexList(const ModelObjectList& modelObjectList);
 
@@ -364,7 +364,7 @@ namespace model {
 
       void removeAllLoadingIndexes();
 
-      std::vector<LoadingIndex> loadingIndexes() const; */
+      std::vector<LoadingIndex> loadingIndexes() const;
 
       //@}
      private:

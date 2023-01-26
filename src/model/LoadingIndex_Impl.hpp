@@ -36,79 +36,73 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  /** LoadingIndex_Impl is a ParentObject_Impl that is the implementation class for LoadingIndex.*/
-  class MODEL_API LoadingIndex_Impl : public ParentObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** LoadingIndex_Impl is a ParentObject_Impl that is the implementation class for LoadingIndex.*/
+    class MODEL_API LoadingIndex_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    LoadingIndex_Impl(const IdfObject& idfObject,
-                      Model_Impl* model,
-                      bool keepHandle);
+      LoadingIndex_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    LoadingIndex_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      LoadingIndex_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    LoadingIndex_Impl(const LoadingIndex_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      LoadingIndex_Impl(const LoadingIndex_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~LoadingIndex_Impl() {}
+      virtual ~LoadingIndex_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double compressorSpeed() const;
+      double compressorSpeed() const;
 
-    Curve evaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
+      Curve evaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
 
-    Curve compressorPowerMultiplierFunctionofTemperatureCurve() const;
+      Curve compressorPowerMultiplierFunctionofTemperatureCurve() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCompressorSpeed(double compressorSpeed);
+      bool setCompressorSpeed(double compressorSpeed);
 
-    bool setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(const Curve& curve);
+      bool setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setCompressorPowerMultiplierFunctionofTemperatureCurve(const Curve& curve);
+      bool setCompressorPowerMultiplierFunctionofTemperatureCurve(const Curve& curve);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.LoadingIndex");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.LoadingIndex");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<BivariateFunctions> optionalEvaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
-    boost::optional<BivariateFunctions> optionalCompressorPowerMultiplierFunctionofTemperatureCurve() const;
-  };
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Curve> optionalEvaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalCompressorPowerMultiplierFunctionofTemperatureCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_LOADINGINDEX_IMPL_HPP
-
+#endif  // MODEL_LOADINGINDEX_IMPL_HPP
