@@ -63,6 +63,10 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual ModelObject clone(Model model) const override;
+
+      virtual std::vector<ModelObject> children() const override;
+
       //@}
       /** @name Getters */
       //@{

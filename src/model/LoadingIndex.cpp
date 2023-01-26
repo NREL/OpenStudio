@@ -32,6 +32,8 @@
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_LoadingIndex_FieldEnums.hxx>
@@ -67,6 +69,19 @@ namespace model {
 
     IddObjectType LoadingIndex_Impl::iddObjectType() const {
       return LoadingIndex::iddObjectType();
+    }
+
+    ModelObject LoadingIndex_Impl::clone(Model model) const {
+      auto t_clone = ParentObject_Impl::clone(model).cast<LoadingIndex>();
+
+      return t_clone;
+    }
+
+    std::vector<ModelObject> LoadingIndex_Impl::children() const {
+      std::vector<ModelObject> children;
+      children.push_back(evaporativeCapacityMultiplierFunctionofTemperatureCurve());
+      children.push_back(compressorPowerMultiplierFunctionofTemperatureCurve());
+      return children;
     }
 
     double LoadingIndex_Impl::compressorSpeed() const {
