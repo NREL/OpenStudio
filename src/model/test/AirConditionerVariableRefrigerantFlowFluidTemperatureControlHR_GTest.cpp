@@ -351,9 +351,8 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(4u, vrf.loadingIndexes().size());
 
   vrf.removeLoadingIndex(loadingIndex3);
-  EXPECT_EQ(5u, vrf.loadingIndexes().size());
   std::vector<LoadingIndex> loadingIndexes2 = vrf.loadingIndexes();
-  EXPECT_EQ(5u, loadingIndexes2.size());
+  EXPECT_EQ(3u, loadingIndexes2.size());
   EXPECT_EQ(2, loadingIndexes2[1].compressorSpeed());
   EXPECT_EQ(evaporativeCapacityMultiplierFunctionofTemperatureCurve2, loadingIndexes2[1].evaporativeCapacityMultiplierFunctionofTemperatureCurve());
   EXPECT_EQ(compressorPowerMultiplierFunctionofTemperatureCurve2, loadingIndexes2[1].compressorPowerMultiplierFunctionofTemperatureCurve());

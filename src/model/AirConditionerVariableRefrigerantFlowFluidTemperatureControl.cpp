@@ -143,16 +143,21 @@ namespace model {
         airConditionerClone.setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(clone);
       }
 
-      ModelObjectList loadingIndexList(model);
-      airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setLoadingIndexList(loadingIndexList);
+      ModelObjectList loadingIndexList = this->loadingIndexList();
+      ModelObjectList loadingIndexListClone = loadingIndexList.clone(model).cast<ModelObjectList>();
+      airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setLoadingIndexList(
+        loadingIndexListClone);
 
       return airConditionerClone;
     }
 
     std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::remove() {
       vrfModelObjectList().remove();
-      loadingIndexList().remove();
+      ModelObjectList _loadingIndexList = loadingIndexList();
       auto result = StraightComponent_Impl::remove();
+      if (!result.empty()) {
+        _loadingIndexList.remove();
+      }
 
       return result;
     }
