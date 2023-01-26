@@ -4172,7 +4172,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(LightingSimulationControl);
     REGISTER_CONSTRUCTOR(LightingSimulationZone);
     REGISTER_CONSTRUCTOR(Lights);
-    REGISTER_CONSTRUCTOR(LightsDefinition)
+    REGISTER_CONSTRUCTOR(LightsDefinition);
+    REGISTER_CONSTRUCTOR(LoadingIndex);
     REGISTER_CONSTRUCTOR(Luminaire);
     REGISTER_CONSTRUCTOR(LuminaireDefinition);
     REGISTER_CONSTRUCTOR(MaterialPropertyGlazingSpectralData);
@@ -4736,6 +4737,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(LightingSimulationZone);
     REGISTER_COPYCONSTRUCTORS(Lights);
     REGISTER_COPYCONSTRUCTORS(LightsDefinition);
+    REGISTER_COPYCONSTRUCTORS(LoadingIndex);
     REGISTER_COPYCONSTRUCTORS(Luminaire);
     REGISTER_COPYCONSTRUCTORS(LuminaireDefinition);
     REGISTER_COPYCONSTRUCTORS(MaterialPropertyGlazingSpectralData);

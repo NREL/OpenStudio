@@ -997,6 +997,9 @@ set(${target_name}_src
   LightsDefinition.hpp
   LightsDefinition_Impl.hpp
   LightsDefinition.cpp
+  LoadingIndex.hpp
+  LoadingIndex_Impl.hpp
+  LoadingIndex.cpp
   LoadProfilePlant.hpp
   LoadProfilePlant_Impl.hpp
   LoadProfilePlant.cpp
