@@ -153,10 +153,21 @@ namespace model {
 
     std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::remove() {
       vrfModelObjectList().remove();
-      ModelObjectList _loadingIndexList = loadingIndexList();
-      auto result = StraightComponent_Impl::remove();
-      if (!result.empty()) {
-        _loadingIndexList.remove();
+      loadingIndexList().remove();
+
+      return StraightComponent_Impl::remove();
+    }
+
+    std::vector<ModelObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      result.push_back(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve());
+      result.push_back(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve());
+
+      boost::optional<ModelObject> curve;
+      curve = defrostEnergyInputRatioModifierFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
       }
 
       return result;
@@ -187,33 +198,6 @@ namespace model {
       // Don't Switch the condenser type to "AirCooled"
       // this->setCondenserType("AirCooled");
       return ok;
-    }
-
-    std::vector<ModelObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      boost::optional<ModelObject> curve;
-
-      curve = outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      curve = defrostEnergyInputRatioModifierFunctionofTemperatureCurve();
-      if (curve) {
-        result.push_back(curve.get());
-      }
-
-      for (const auto& mo : loadingIndexList().modelObjects()) {
-        result.push_back(mo);
-      }
-
-      return result;
     }
 
     void AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::autosize() {

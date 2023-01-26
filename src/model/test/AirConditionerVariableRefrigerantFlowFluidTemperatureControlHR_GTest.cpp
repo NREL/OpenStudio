@@ -33,6 +33,8 @@
 #include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
 #include "../LoadingIndex.hpp"
 #include "../LoadingIndex_Impl.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
@@ -429,20 +431,29 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Remove) {
   Model model;
+
+  EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());
+
   auto size = model.modelObjects().size();
   AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf(model);
-  EXPECT_EQ(2u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
-  EXPECT_EQ(6u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
-  EXPECT_EQ(0u, model.getObjectsByType(CurveCubic::iddObjectType()).size());
   ZoneHVACTerminalUnitVariableRefrigerantFlow term(model);
-  EXPECT_EQ(1u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
   vrf.addTerminal(term);
   EXPECT_EQ(1u, vrf.terminals().size());
+  EXPECT_EQ(3u, vrf.loadingIndexes().size());
+
+  EXPECT_EQ(4u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());    // 2 on vrf + 2 on coils
+  EXPECT_EQ(8u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());  // 6 on vrf + 2 on coils
+  EXPECT_EQ(1u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  EXPECT_EQ(2u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());  // 1 terminals + 1 loading indexes
+
   EXPECT_FALSE(vrf.remove().empty());
   EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
-  EXPECT_EQ(0u, model.getObjectsByType(CurveCubic::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());
   EXPECT_EQ(size + 2, model.modelObjects().size());  // Always On Discrete, OnOff
 }
 
