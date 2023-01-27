@@ -27,116 +27,110 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_FILETYPES_RUNOPTIONS_HPP
-#define UTILITIES_FILETYPES_RUNOPTIONS_HPP
+#ifndef UTILITIES_FILETYPES_FORWARDTRANSLATOROPTIONS_HPP
+#define UTILITIES_FILETYPES_FORWARDTRANSLATOROPTIONS_HPP
 
 #include "../UtilitiesAPI.hpp"
 
 #include "../core/Logger.hpp"
-#include "../core/Deprecated.hpp"
 
 namespace Json {
 class Value;
 }
 
 namespace openstudio {
-
-class ForwardTranslatorOptions;
-
 namespace detail {
   class WorkflowJSON_Impl;
   class RunOptions_Impl;
   class ForwardTranslatorOptions_Impl;
 }  // namespace detail
 
-class UTILITIES_API CustomOutputAdapter
+struct ForwardTranslatorOptionKeyMethod
 {
- public:
-  CustomOutputAdapter(const std::string& customFileName, const std::string& className, const std::string& options);
-  std::string customFileName() const;
-  std::string className() const;
-  std::string options() const;
-
- private:
-  std::string m_customFileName;
-  std::string m_className;
-  std::string m_options;
+  std::string json_name;
+  std::string ft_method_name;
 };
+UTILITIES_API std::ostream& operator<<(std::ostream& out, const ForwardTranslatorOptionKeyMethod& opt);
 
-/** Base class for defining a run options for a OpenStudio Workflow. */
-class UTILITIES_API RunOptions
+class UTILITIES_API ForwardTranslatorOptions
 {
  public:
-  RunOptions();
+  ForwardTranslatorOptions();
 
-  // TODO: uneeded
-  virtual ~RunOptions();
+  void reset();
 
   /// Construct from JSON formatted string
-  static boost::optional<RunOptions> fromString(const std::string& s);
+  static boost::optional<ForwardTranslatorOptions> fromString(const std::string& s);
 
   /// Serialize to JSON formatted string
   std::string string() const;
 
-  bool debug() const;
-  bool setDebug(bool debug);
-  void resetDebug();
+  bool keepRunControlSpecialDays() const;
+  bool isKeepRunControlSpecialDaysDefaulted() const;
+  void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
+  void resetKeepRunControlSpecialDays();
 
-  bool epjson() const;
-  bool setEpjson(bool epjson);
-  void resetEpjson();
+  bool iPTabularOutput() const;
+  bool isIPTabularOutputDefaulted() const;
+  void setIPTabularOutput(bool iPTabularOutput);
+  void resetIPTabularOutput();
 
-  bool fast() const;
-  bool setFast(bool fast);
-  void resetFast();
+  bool excludeLCCObjects() const;
+  bool isExcludeLCCObjectsDefaulted() const;
+  void setExcludeLCCObjects(bool excludeLCCObjects);
+  void resetExcludeLCCObjects();
 
-  bool preserveRunDir() const;
-  bool setPreserveRunDir(bool preserve);
-  void resetPreserveRunDir();
+  bool excludeSQliteOutputReport() const;
+  bool isExcludeSQliteOutputReportDefaulted() const;
+  void setExcludeSQliteOutputReport(bool excludeSQliteOutputReport);
+  void resetExcludeSQliteOutputReport();
 
-  bool skipExpandObjects() const;
-  bool setSkipExpandObjects(bool skip);
-  void resetSkipExpandObjects();
+  bool excludeHTMLOutputReport() const;
+  bool isExcludeHTMLOutputReportDefaulted() const;
+  void setExcludeHTMLOutputReport(bool excludeHTMLOutputReport);
+  void resetExcludeHTMLOutputReport();
 
-  bool skipEnergyPlusPreprocess() const;
-  bool setSkipEnergyPlusPreprocess(bool skip);
-  void resetSkipEnergyPlusPreprocess();
+  bool excludeVariableDictionary() const;
+  bool isExcludeVariableDictionaryDefaulted() const;
+  void setExcludeVariableDictionary(bool excludeVariableDictionary);
+  void resetExcludeVariableDictionary();
 
-  bool cleanup() const;
-  bool setCleanup(bool cleanup);
-  void resetCleanup();
+  bool excludeSpaceTranslation() const;
+  bool isExcludeSpaceTranslationDefaulted() const;
+  void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
+  void resetExcludeSpaceTranslation();
 
-  boost::optional<CustomOutputAdapter> customOutputAdapter() const;
-  bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
-  void resetCustomOutputAdapter();
+  /* Any non-defaulted value from other is brought over */
+  void overrideValuesWith(const ForwardTranslatorOptions& other);
 
-  OS_DEPRECATED std::string forwardTranslateOptions() const;
-  OS_DEPRECATED bool setForwardTranslateOptions(const std::string& options);
-  OS_DEPRECATED void resetForwardTranslateOptions();
-
-  ForwardTranslatorOptions forwardTranslatorOptions() const;
-  bool setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions);
-  void resetForwardTranslatorOptions();
+  // TODO: keep?
+  static std::vector<ForwardTranslatorOptionKeyMethod> forwardTranslatorOptionKeyMethods();
 
  protected:
+  Json::Value json() const;
+  static ForwardTranslatorOptions fromJSON(const Json::Value& value);
+
   // get the impl
-  template <typename T>
-  std::shared_ptr<T> getImpl() const {
-    return std::dynamic_pointer_cast<T>(m_impl);
+  std::shared_ptr<detail::ForwardTranslatorOptions_Impl> getImpl() const {
+    return m_impl;
   }
 
-  friend class detail::WorkflowJSON_Impl;
+  explicit ForwardTranslatorOptions(std::shared_ptr<detail::ForwardTranslatorOptions_Impl> impl);
+
+  friend class detail::ForwardTranslatorOptions_Impl;
+  friend class RunOptions;
+  friend class detail::RunOptions_Impl;
 
  private:
   // configure logging
-  REGISTER_LOGGER("openstudio.RunOptions");
+  REGISTER_LOGGER("openstudio.ForwardTranslatorOptions");
 
   // pointer to implementation
-  std::shared_ptr<detail::RunOptions_Impl> m_impl;
+  std::shared_ptr<detail::ForwardTranslatorOptions_Impl> m_impl;
 };
 
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const RunOptions& runOptions);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const ForwardTranslatorOptions& forwardTranslatorOptions);
 
 }  // namespace openstudio
 
-#endif  //UTILITIES_FILETYPES_RUNOPTIONS_HPP
+#endif  // UTILITIES_FILETYPES_FORWARDTRANSLATOROPTIONS_HPP

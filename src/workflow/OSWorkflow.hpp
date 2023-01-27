@@ -1,7 +1,6 @@
 #ifndef WORKFLOW_OSWORKFLOW_HPP
 #define WORKFLOW_OSWORKFLOW_HPP
 
-#include "RunOptions.hpp"
 #include "../measure/OSRunner.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
 #include "../utilities/core/Filesystem.hpp"
@@ -13,6 +12,7 @@
 
 namespace openstudio {
 
+struct WorkflowRunOptions;
 class Variant;
 
 namespace measure {
@@ -24,7 +24,7 @@ class OSWorkflow
 {
  public:
   OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
-  OSWorkflow(WorkflowRunOptions t_runOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
+  OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
 
   void run();
 
@@ -38,7 +38,14 @@ class OSWorkflow
 #endif
   WorkflowJSON workflowJSON;
   measure::OSRunner runner{workflowJSON};
-  WorkflowRunOptions runOptions;
+
+  bool m_no_simulation = false;
+  bool m_post_process_only = false;
+
+  // stdout stuff
+  bool m_show_stdout = false;
+  bool m_add_timings = false;
+  bool m_style_stdout = false;
 
   static void applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue);
 };

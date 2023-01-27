@@ -75,7 +75,7 @@ namespace energyplus {
       translateAndMapModelObject(lifeCycleCost);
     }
 
-    if (m_excludeSpaceTranslation) {
+    if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
       return boost::none;
     }
 
