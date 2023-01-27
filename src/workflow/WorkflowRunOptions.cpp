@@ -27,38 +27,24 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "RunOptions.hpp"
+#include "WorkflowRunOptions.hpp"
 
 #include <fmt/format.h>
 
 namespace openstudio {
 
 void WorkflowRunOptions::debug_print() const {
-  fmt::print("\nRunOptions:\n");
+  fmt::print("\nWorkflowRunOptions:\n");
   fmt::print("osw_path={}\n", this->osw_path.string());
-  fmt::print("debug={}\n", this->debug);
   fmt::print("no_simulation={}\n", this->no_simulation);
-  fmt::print("post_process={}\n", this->post_process);
-  fmt::print("ep_json={}\n", this->ep_json);
   fmt::print("show_stdout={}\n", this->show_stdout);
   fmt::print("add_timings={}\n", this->add_timings);
   fmt::print("style_stdout={}\n", this->style_stdout);
-
   fmt::print("socket_port={}\n", this->socket_port);
 
-  this->ft_options.debug_print();
+  fmt::print("\nrunOptions={}\n", this->runOptions.string());
 
   fmt::print("\n\n");
-}
-
-void FtOptions::debug_print() const {
-  fmt::print("FtOptions:\n");
-  fmt::print("  * runcontrolspecialdays={}\n", runcontrolspecialdays);
-  fmt::print("  * ip_tabular_output={}\n", ip_tabular_output);
-  fmt::print("  * no_lifecyclecosts={}\n", no_lifecyclecosts);
-  fmt::print("  * no_sqlite_output={}\n", no_sqlite_output);
-  fmt::print("  * no_html_output={}\n", no_html_output);
-  fmt::print("  * no_space_translation={}\n", no_space_translation);
 }
 
 }  // namespace openstudio

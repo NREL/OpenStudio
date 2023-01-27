@@ -58,7 +58,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateInternalMass(model::InternalMass& modelObject) {
 
-    // TODO: handle (m_excludeSpaceTranslation = false)
+    // TODO: handle (m_forwardTranslatorOptions.excludeSpaceTranslation() = false)
     // Note: E+kept a ‘Zone or ZoneList name’ field and added a ‘Space or SpaceList’ field.
     // It should have been a single ‘Zone or ZoneList or Space or SpaceList Name’ like it's done on many other objects
     // If former is specified as a **ZONELIST** name, later is omitted.
@@ -143,7 +143,7 @@ namespace energyplus {
         if (thermalZone) {
           idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->nameString());
         }
-        if (!m_excludeSpaceTranslation) {
+        if (!m_forwardTranslatorOptions.excludeSpaceTranslation()) {
           idfObject.setString(InternalMassFields::SpaceorSpaceListName, space.nameString());
         }
 

@@ -134,7 +134,7 @@ namespace energyplus {
             }
           }
           //Give WArning that spaceType has multiple spaces
-          if (m_excludeSpaceTranslation && spaceType->spaces().size() > 1) {
+          if (m_forwardTranslatorOptions.excludeSpaceTranslation() && spaceType->spaces().size() > 1) {
             LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load.get().name().get()
                                    << "' attached to SpaceType '" << spaceType.get().nameString()
                                    << "', with multiple spaces. Check your EMS programs to make sure your actuators are correct.");
