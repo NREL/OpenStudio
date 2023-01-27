@@ -77,19 +77,19 @@ namespace model {
 
     AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      : HVACComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType());
     }
 
     AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle) {
+      : HVACComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType());
     }
 
     AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(
       const AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl& other, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle) {}
+      : HVACComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
@@ -124,7 +124,7 @@ namespace model {
 
     ModelObject AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::clone(Model model) const {
       AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR airConditionerClone =
-        StraightComponent_Impl::clone(model).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
+        HVACComponent_Impl::clone(model).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
 
       ModelObjectList modelObjectList(model);
       airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVRFModelObjectList(
@@ -157,7 +157,7 @@ namespace model {
       vrfModelObjectList().remove();
       loadingIndexList().remove();
 
-      return StraightComponent_Impl::remove();
+      return HVACComponent_Impl::remove();
     }
 
     std::vector<ModelObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::children() const {
@@ -179,27 +179,11 @@ namespace model {
       // Only accept the demand side of a PlantLoop
       if (boost::optional<PlantLoop> plant = node.plantLoop()) {
         if (plant->demandComponent(node.handle())) {
-          // bool success = StraightComponent_Impl::addToNode(node);
-          // if (success) {
-          // // If everything went well, then switch the condenser type
-          //   setCondenserType("WaterCooled");
-          //   return success;
-          // }
-          return StraightComponent_Impl::addToNode(node);
+          return HVACComponent_Impl::addToNode(node);
         }
       }
 
       return false;
-    }
-
-    // This override is rendered moot now.
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::removeFromLoop() {
-      // Disconnect the component
-      bool ok = StraightComponent_Impl::removeFromLoop();
-
-      // Don't Switch the condenser type to "AirCooled"
-      // this->setCondenserType("AirCooled");
-      return ok;
     }
 
     void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosize() {
@@ -1180,7 +1164,7 @@ namespace model {
   }  // namespace detail
 
   AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(const Model& model)
-    : StraightComponent(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType(), model) {
+    : HVACComponent(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>());
 
     bool ok = true;
@@ -2048,7 +2032,7 @@ namespace model {
   /// @cond
   AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(
     std::shared_ptr<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl> impl)
-    : StraightComponent(std::move(impl)) {}
+    : HVACComponent(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

@@ -31,7 +31,7 @@
 #define MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOWFLUIDTEMPERATURECONTROLHR_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "StraightComponent_Impl.hpp"
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -45,8 +45,8 @@ namespace model {
 
   namespace detail {
 
-    /** AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl is a StraightComponent_Impl that is the implementation class for AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.*/
-    class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl : public StraightComponent_Impl
+    /** AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl is a HVACComponent_Impl that is the implementation class for AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.*/
+    class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl : public HVACComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */
@@ -72,17 +72,11 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-      virtual unsigned inletPort() const override;
-
-      virtual unsigned outletPort() const override;
-
       virtual ModelObject clone(Model model) const override;
 
       virtual std::vector<openstudio::IdfObject> remove() override;
 
       virtual bool addToNode(Node& node) override;
-
-      virtual bool removeFromLoop() override;
 
       virtual std::vector<ModelObject> children() const override;
 

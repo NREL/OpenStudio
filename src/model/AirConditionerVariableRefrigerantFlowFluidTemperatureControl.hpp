@@ -32,7 +32,7 @@
 
 #include <vector>
 #include <model/ModelAPI.hpp>
-#include "StraightComponent.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 
@@ -50,8 +50,8 @@ namespace model {
 
   }  // namespace detail
 
-  /** AirConditionerVariableRefrigerantFlowFluidTemperatureControl is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl'. */
-  class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControl : public StraightComponent
+  /** AirConditionerVariableRefrigerantFlowFluidTemperatureControl is a HVACComponent that wraps the OpenStudio IDD object 'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl'. */
+  class MODEL_API AirConditionerVariableRefrigerantFlowFluidTemperatureControl : public HVACComponent
   {
    public:
     /** @name Constructors and Destructors */

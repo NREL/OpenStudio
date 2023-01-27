@@ -123,6 +123,8 @@ class CoilHeatingElectricMultiStage;
 //%ignore std::vector<openstudio::model::GFunction>::resize(size_type);
 //%template(GFunctionVector) std::vector<openstudio::model::GFunction>;
 
+MODELOBJECT_TEMPLATES(AirConditionerVariableRefrigerantFlowFluidTemperatureControl);
+MODELOBJECT_TEMPLATES(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR);
 MODELOBJECT_TEMPLATES(PortList);
 MODELOBJECT_TEMPLATES(Loop);
 MODELOBJECT_TEMPLATES(HVACComponent);
@@ -250,6 +252,8 @@ MODELOBJECT_TEMPLATES(SetpointManagerSystemNodeResetHumidity);
 MODELOBJECT_TEMPLATES(SetpointManagerSystemNodeResetTemperature);
 MODELOBJECT_TEMPLATES(LoadingIndex);
 
+SWIG_MODELOBJECT(AirConditionerVariableRefrigerantFlowFluidTemperatureControl,1);
+SWIG_MODELOBJECT(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR,1);
 SWIG_MODELOBJECT(PortList, 1);
 SWIG_MODELOBJECT(Loop, 0);
 SWIG_MODELOBJECT(HVACComponent, 0);
