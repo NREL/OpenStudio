@@ -2481,8 +2481,8 @@ TEST_F(OSVersionFixture, update_3_5_1_to_3_5_2_GroundHeatExchangerHorizontalTren
   WorkspaceObject ghx = ghxs[0];
 
   EXPECT_EQ("Ground Heat Exchanger Horizontal Trench 1", ghx.getString(1).get());  // Name
-  EXPECT_EQ("", ghx.getString(2).get());                                           // Inlet Node Name
-  EXPECT_EQ("", ghx.getString(3).get());                                           // Outlet Node Name
+  EXPECT_TRUE(ghx.isEmpty(2));                                                     // Inlet Node Name
+  EXPECT_TRUE(ghx.isEmpty(3));                                                     // Outlet Node Name
   EXPECT_EQ(0.004, ghx.getDouble(4).get());                                        // Design Flow Rate
   EXPECT_EQ(75, ghx.getDouble(5).get());                                           // Trench Length in Pipe Axial Direction
   EXPECT_EQ(2, ghx.getInt(6).get());                                               // Number of Trenches
