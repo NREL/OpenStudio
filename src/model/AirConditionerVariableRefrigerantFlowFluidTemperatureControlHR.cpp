@@ -114,14 +114,6 @@ namespace model {
       return result;
     }
 
-    unsigned AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::inletPort() const {
-      return 0;
-    }
-
-    unsigned AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outletPort() const {
-      return 0;
-    }
-
     ModelObject AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::clone(Model model) const {
       AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR airConditionerClone =
         HVACComponent_Impl::clone(model).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();

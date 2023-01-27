@@ -476,9 +476,11 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_FALSE(vrf.addToNode(supplyOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 
-  EXPECT_TRUE(plantLoop.addDemandBranchForComponent(vrf));
-  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+  EXPECT_FALSE(plantLoop.addDemandBranchForComponent(vrf));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
+  EXPECT_FALSE(vrf.plantLoop());
   vrf.disconnect();
   EXPECT_FALSE(vrf.plantLoop());
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
