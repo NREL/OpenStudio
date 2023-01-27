@@ -31,41 +31,41 @@
 #define WORKFLOW_RUNOPTIONS_HPP
 
 #include "../utilities/core/Filesystem.hpp"
+#include "../utilities/filetypes/RunOptions.hpp"
 
 namespace openstudio {
-
-struct FtOptions
-{
- public:
-  bool runcontrolspecialdays = true;
-  bool ip_tabular_output = false;
-  bool no_lifecyclecosts = false;
-  bool no_sqlite_output = false;
-  bool no_html_output = false;
-  bool no_variable_dictionary = false;
-  bool no_space_translation = false;
-
-  void debug_print() const;
-
-  static constexpr auto group_name = "Forward Translator Options";
-};
 
 struct WorkflowRunOptions
 {
  public:
   void debug_print() const;
 
-  bool debug = false;
+  // TODO: move all these to the RunOption class?
+  // Alter the jobs to be run
   bool no_simulation = false;
-  bool post_process = false;
-  bool ep_json = false;
+  bool post_process_only = false;
+
+  // stdout stuff
   bool show_stdout = false;
   bool add_timings = false;
   bool style_stdout = false;
+
+  // TODO: Remove
   unsigned socket_port = 0;
+
   openstudio::path osw_path = "./workflow.osw";
 
-  FtOptions ft_options;
+  RunOptions runOptions;
+  /*
+    bool m_debug = false;
+    bool m_epjson = false;
+    bool m_fast = false;
+    bool m_preserveRunDir = false;
+    bool m_skipExpandObjects = false;
+    bool m_skipEnergyPlusPreprocess = false;
+    ForwardTranslatorOptions m_forwardTranslatorOptions;
+    boost::optional<CustomOutputAdapter> m_customOutputAdapter
+*/
 };
 
 }  // namespace openstudio

@@ -1,4 +1,5 @@
-#include "./OSWorkflow.hpp"
+#include "OSWorkflow.hpp"
+#include "WorkflowRunOptions.hpp"
 
 #include "../osversion/VersionTranslator.hpp"
 #include "../measure/OSMeasure.hpp"
@@ -34,7 +35,7 @@ OSWorkflow::OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ru
     workflowJSON(oswPath) {
 }
 
-OSWorkflow::OSWorkflow(WorkflowRunOptions t_runOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
+OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
   :
 #if USE_RUBY_ENGINE
     rubyEngine(ruby),
@@ -42,8 +43,33 @@ OSWorkflow::OSWorkflow(WorkflowRunOptions t_runOptions, ScriptEngineInstance& ru
 #if USE_PYTHON_ENGINE
     pythonEngine(python),
 #endif
-    workflowJSON(t_runOptions.osw_path),
-    runOptions(std::move(t_runOptions)) {
+    workflowJSON(t_workflowRunOptions.osw_path),
+    m_no_simulation(t_workflowRunOptions.no_simulation),
+    m_post_process_only(t_workflowRunOptions.post_process_only),
+    m_show_stdout(t_workflowRunOptions.show_stdout),
+    m_add_timings(t_workflowRunOptions.add_timings),
+    m_style_stdout(t_workflowRunOptions.style_stdout) {
+
+  if (t_workflowRunOptions.runOptions.debug() || (workflowJSON.runOptions() && workflowJSON.runOptions()->debug())) {
+    fmt::print("Original workflowJSON={}\n", workflowJSON.string());
+    t_workflowRunOptions.debug_print();
+    fmt::print("m_no_simulation={}, m_post_process_only={}, m_show_stdout={}, m_add_timings={}, m_style_stdout={}", m_no_simulation,
+               m_post_process_only, m_show_stdout, m_add_timings, m_style_stdout);
+  }
+  auto runOpt_ = workflowJSON.runOptions();
+  if (!runOpt_) {
+    workflowJSON.setRunOptions(t_workflowRunOptions.runOptions);
+  } else {
+    auto ori_ftOptions = runOpt_->forwardTranslatorOptions();
+    workflowJSON.setRunOptions(t_workflowRunOptions.runOptions);
+    // user supplied CLI flags trump everything
+    ori_ftOptions.overrideValuesWith(t_workflowRunOptions.runOptions.forwardTranslatorOptions());
+    workflowJSON.runOptions()->setForwardTranslatorOptions(ori_ftOptions);
+  }
+
+  if (workflowJSON.runOptions()->debug()) {
+    fmt::print("workflowJSON={}\n", workflowJSON.string());
+  }
 }
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
@@ -79,7 +105,7 @@ void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::
 }
 
 void OSWorkflow::run() {
-  if (runOptions.debug) {
+  if (workflowJSON.runOptions()->debug()) {
     openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   }
 
@@ -155,13 +181,7 @@ void OSWorkflow::run() {
       // Save final Model
       model.save(runDir / "in.osm", true);
       openstudio::energyplus::ForwardTranslator ft;
-      auto& ftOptions = runOptions.ft_options;
-      ft.setKeepRunControlSpecialDays(ftOptions.runcontrolspecialdays);
-      ft.setIPTabularOutput(ftOptions.ip_tabular_output);
-      ft.setExcludeLCCObjects(ftOptions.no_lifecyclecosts);
-      ft.setExcludeSQliteOutputReport(ftOptions.no_sqlite_output);
-      ft.setExcludeHTMLOutputReport(ftOptions.no_html_output);
-      ft.setExcludeSpaceTranslation(ftOptions.no_space_translation);
+      ft.setForwardTranslatorOptions(workflowJSON.runOptions()->forwardTranslatorOptions());
       workspace_ = ft.translateModel(model);
     }
 

@@ -89,6 +89,7 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> run -w compact_ruby_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
+  set_tests_properties(OpenStudioCLI.run_compact_ruby_only_osw PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Labs.openstudio_version
     COMMAND $<TARGET_FILE:openstudio> labs openstudio_version
@@ -137,21 +138,25 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
+  set_tests_properties(OpenStudioCLI.Labs.Run_RubyOnly PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Labs.Run_PythonOnly
     COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
+  set_tests_properties(OpenStudioCLI.Labs.Run_PythonOnly PROPERTIES RESOURCE_LOCK "compact_osw")
 
-  add_test(NAME OpenStudioCLI.Labs.Run_RubyPythonOnly_TwoMeasure
+  add_test(NAME OpenStudioCLI.Labs.Run_PythonOnly_TwoMeasure
     COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_only_twomeasures.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
+  set_tests_properties(OpenStudioCLI.Labs.Run_PythonOnly_TwoMeasure PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Labs.Run_RubyPython
     COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_and_python.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
+  set_tests_properties(OpenStudioCLI.Labs.Run_RubyPython PROPERTIES RESOURCE_LOCK "compact_osw")
 
   file(GLOB RUBY_TEST_SRC
     # find all CLI test

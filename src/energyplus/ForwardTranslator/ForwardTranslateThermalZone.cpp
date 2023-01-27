@@ -221,7 +221,7 @@ namespace energyplus {
     // Spaces
 
     // Figure out the x, y, z and whether we write floor area or not
-    if (m_excludeSpaceTranslation) {
+    if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
       OS_ASSERT(spaces.size() == 1);
       auto& space = spaces[0];
 
@@ -952,7 +952,7 @@ namespace energyplus {
       bool needToRegisterDSOAList = false;
       bool atLeastOneDSOAWasWritten = true;
 
-      if (!m_excludeSpaceTranslation && sizingZoneIdf) {
+      if (!m_forwardTranslatorOptions.excludeSpaceTranslation() && sizingZoneIdf) {
         // DO not register it yet! E+ will crash if the DSOA Space List ends up empty
         dsoaList = IdfObject(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
         needToRegisterDSOAList = true;
@@ -979,7 +979,7 @@ namespace energyplus {
           // TODO: this isn't good. We also need to check the SpaceType-level DSOA...
           boost::optional<IdfObject> thisDSOA = translateAndMapModelObject(*designSpecificationOutdoorAir);
           if (sizingZoneIdf) {
-            if (m_excludeSpaceTranslation) {
+            if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
               // point the sizing object to the outdoor air spec
               sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, designSpecificationOutdoorAir->nameString());
             } else {
