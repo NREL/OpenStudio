@@ -795,69 +795,6 @@ class UTILITIES_API SqlFile
   /// Requires EnergyPlus simulation output to calculate.
   boost::optional<double> otherFuel2TotalEndUses() const;
 
-  // Deprecated Section
-
-  /// Returns the energy used for heating from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelHeating() const;
-
-  /// Returns the energy used for cooling from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelCooling() const;
-
-  /// Returns the energy used for interior lighting from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelInteriorLighting() const;
-
-  /// Returns the energy used for exterior lighting from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelExteriorLighting() const;
-
-  /// Returns the energy used for interior equipment from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelInteriorEquipment() const;
-
-  /// Returns the energy used for exterior equipment from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelExteriorEquipment() const;
-
-  /// Returns the energy used for fans from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelFans() const;
-
-  /// Returns the energy used for pumps from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelPumps() const;
-
-  /// Returns the energy used for heat rejection from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelHeatRejection() const;
-
-  /// Returns the energy used for humidification from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelHumidification() const;
-
-  /// Returns the energy used for heat recovery from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelHeatRecovery() const;
-
-  /// Returns the energy used for water systems from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelWaterSystems() const;
-
-  /// Returns the energy used for refrigeration from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelRefrigeration() const;
-
-  /// Returns the energy used for generators from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelGenerators() const;
-
-  /// Returns the energy used for all end uses from other fuel in gigajoules.
-  /// Requires EnergyPlus simulation output to calculate.
-  OS_DEPRECATED boost::optional<double> otherFuelTotalEndUses() const;
-  // end Deprecated
-
   /// Returns the district cooling energy used for heating in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
   boost::optional<double> districtCoolingHeating() const;

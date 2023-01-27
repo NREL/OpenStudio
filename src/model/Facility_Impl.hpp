@@ -310,23 +310,6 @@ namespace model {
       boost::optional<double> otherFuel2Generators() const;
       boost::optional<double> otherFuel2TotalEndUses() const;
 
-      // deprecated otherfuel / additionalfuel  
-      OS_DEPRECATED boost::optional<double> otherFuelHeating() const;
-      OS_DEPRECATED boost::optional<double> otherFuelCooling() const;
-      OS_DEPRECATED boost::optional<double> otherFuelInteriorLighting() const;
-      OS_DEPRECATED boost::optional<double> otherFuelExteriorLighting() const;
-      OS_DEPRECATED boost::optional<double> otherFuelInteriorEquipment() const;
-      OS_DEPRECATED boost::optional<double> otherFuelExteriorEquipment() const;
-      OS_DEPRECATED boost::optional<double> otherFuelFans() const;
-      OS_DEPRECATED boost::optional<double> otherFuelPumps() const;
-      OS_DEPRECATED boost::optional<double> otherFuelHeatRejection() const;
-      OS_DEPRECATED boost::optional<double> otherFuelHumidification() const;
-      OS_DEPRECATED boost::optional<double> otherFuelHeatRecovery() const;
-      OS_DEPRECATED boost::optional<double> otherFuelWaterSystems() const;
-      OS_DEPRECATED boost::optional<double> otherFuelRefrigeration() const;
-      OS_DEPRECATED boost::optional<double> otherFuelGenerators() const;
-      OS_DEPRECATED boost::optional<double> otherFuelTotalEndUses() const;
-
       boost::optional<double> districtCoolingHeating() const;
       boost::optional<double> districtCoolingCooling() const;
       boost::optional<double> districtCoolingInteriorLighting() const;
