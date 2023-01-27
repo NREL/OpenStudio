@@ -29,10 +29,12 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
-#include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
-#include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 #include "../AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
+#include "../LoadingIndex.hpp"
+#include "../LoadingIndex_Impl.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
@@ -307,7 +309,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
   AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf(model);
 
-  EXPECT_EQ(3u, vrf.numberofCompressorLoadingIndexEntries());
+  EXPECT_EQ(3u, vrf.loadingIndexes().size());
   vrf.removeAllLoadingIndexes();
 
   CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve1(model);
@@ -319,13 +321,19 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve3(model);
   CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve3(model);
 
-  EXPECT_EQ(0u, vrf.numberofCompressorLoadingIndexEntries());
-  EXPECT_TRUE(vrf.addLoadingIndex(1, evaporativeCapacityMultiplierFunctionofTemperatureCurve1, compressorPowerMultiplierFunctionofTemperatureCurve1));
-  EXPECT_EQ(1u, vrf.numberofCompressorLoadingIndexEntries());
-  EXPECT_TRUE(vrf.addLoadingIndex(2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2, compressorPowerMultiplierFunctionofTemperatureCurve2));
-  EXPECT_EQ(2u, vrf.numberofCompressorLoadingIndexEntries());
-  EXPECT_TRUE(vrf.addLoadingIndex(3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3, compressorPowerMultiplierFunctionofTemperatureCurve3));
-  EXPECT_EQ(3u, vrf.numberofCompressorLoadingIndexEntries());
+  EXPECT_EQ(0u, vrf.loadingIndexes().size());
+  LoadingIndex loadingIndex1(model, 1, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
+                             compressorPowerMultiplierFunctionofTemperatureCurve1);
+  vrf.addLoadingIndex(loadingIndex1);
+  EXPECT_EQ(1u, vrf.loadingIndexes().size());
+  LoadingIndex loadingIndex2(model, 2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
+                             compressorPowerMultiplierFunctionofTemperatureCurve2);
+  vrf.addLoadingIndex(loadingIndex2);
+  EXPECT_EQ(2u, vrf.loadingIndexes().size());
+  LoadingIndex loadingIndex3(model, 3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
+                             compressorPowerMultiplierFunctionofTemperatureCurve3);
+  vrf.addLoadingIndex(loadingIndex3);
+  EXPECT_EQ(3u, vrf.loadingIndexes().size());
 
   std::vector<LoadingIndex> loadingIndexes = vrf.loadingIndexes();
   EXPECT_EQ(3u, loadingIndexes.size());
@@ -339,23 +347,14 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(evaporativeCapacityMultiplierFunctionofTemperatureCurve3, loadingIndexes[2].evaporativeCapacityMultiplierFunctionofTemperatureCurve());
   EXPECT_EQ(compressorPowerMultiplierFunctionofTemperatureCurve3, loadingIndexes[2].compressorPowerMultiplierFunctionofTemperatureCurve());
 
-  LoadingIndex loadingIndex(4, evaporativeCapacityMultiplierFunctionofTemperatureCurve1, compressorPowerMultiplierFunctionofTemperatureCurve2);
-  EXPECT_TRUE(vrf.addLoadingIndex(loadingIndex));
-  EXPECT_EQ(4u, vrf.numberofCompressorLoadingIndexEntries());
+  LoadingIndex loadingIndex4(model, 4, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
+                             compressorPowerMultiplierFunctionofTemperatureCurve2);
+  vrf.addLoadingIndex(loadingIndex4);
+  EXPECT_EQ(4u, vrf.loadingIndexes().size());
 
-  std::vector<LoadingIndex> loadingIndexesToAdd;
-  LoadingIndex loadingIndex1(5, evaporativeCapacityMultiplierFunctionofTemperatureCurve2, compressorPowerMultiplierFunctionofTemperatureCurve3);
-  loadingIndexesToAdd.push_back(loadingIndex1);
-  LoadingIndex loadingIndex2(6, evaporativeCapacityMultiplierFunctionofTemperatureCurve1, compressorPowerMultiplierFunctionofTemperatureCurve1);
-  loadingIndexesToAdd.push_back(loadingIndex2);
-  EXPECT_TRUE(vrf.addLoadingIndexes(loadingIndexesToAdd));
-  EXPECT_EQ(6u, vrf.numberofCompressorLoadingIndexEntries());
-  EXPECT_EQ(6u, vrf.loadingIndexes().size());
-
-  vrf.removeLoadingIndex(2);
-  EXPECT_EQ(5u, vrf.numberofCompressorLoadingIndexEntries());
+  vrf.removeLoadingIndex(loadingIndex3);
   std::vector<LoadingIndex> loadingIndexes2 = vrf.loadingIndexes();
-  EXPECT_EQ(5u, loadingIndexes2.size());
+  EXPECT_EQ(3u, loadingIndexes2.size());
   EXPECT_EQ(2, loadingIndexes2[1].compressorSpeed());
   EXPECT_EQ(evaporativeCapacityMultiplierFunctionofTemperatureCurve2, loadingIndexes2[1].evaporativeCapacityMultiplierFunctionofTemperatureCurve());
   EXPECT_EQ(compressorPowerMultiplierFunctionofTemperatureCurve2, loadingIndexes2[1].compressorPowerMultiplierFunctionofTemperatureCurve());
@@ -432,20 +431,29 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Remove) {
   Model model;
+
+  EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());
+
   auto size = model.modelObjects().size();
   AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf(model);
-  EXPECT_EQ(2u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
-  EXPECT_EQ(6u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
-  EXPECT_EQ(0u, model.getObjectsByType(CurveCubic::iddObjectType()).size());
   ZoneHVACTerminalUnitVariableRefrigerantFlow term(model);
-  EXPECT_EQ(1u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
   vrf.addTerminal(term);
   EXPECT_EQ(1u, vrf.terminals().size());
+  EXPECT_EQ(3u, vrf.loadingIndexes().size());
+
+  EXPECT_EQ(4u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());    // 2 on vrf + 2 on coils
+  EXPECT_EQ(8u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());  // 6 on vrf + 2 on coils
+  EXPECT_EQ(1u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  EXPECT_EQ(2u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());  // 1 terminals + 1 loading indexes
+
   EXPECT_FALSE(vrf.remove().empty());
   EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
-  EXPECT_EQ(0u, model.getObjectsByType(CurveCubic::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());
   EXPECT_EQ(size + 2, model.modelObjects().size());  // Always On Discrete, OnOff
 }
 

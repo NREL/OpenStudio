@@ -34,8 +34,8 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "../../model/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
+#include "../../model/LoadingIndex.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/ScheduleConstant.hpp"
@@ -147,9 +147,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve3(model);
 
   vrf.removeAllLoadingIndexes();
-  EXPECT_TRUE(vrf.addLoadingIndex(1, evaporativeCapacityMultiplierFunctionofTemperatureCurve1, compressorPowerMultiplierFunctionofTemperatureCurve1));
-  EXPECT_TRUE(vrf.addLoadingIndex(2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2, compressorPowerMultiplierFunctionofTemperatureCurve2));
-  EXPECT_TRUE(vrf.addLoadingIndex(3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3, compressorPowerMultiplierFunctionofTemperatureCurve3));
+  LoadingIndex loadingIndex1(model, 1, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
+                             compressorPowerMultiplierFunctionofTemperatureCurve1);
+  vrf.addLoadingIndex(loadingIndex1);
+  LoadingIndex loadingIndex2(model, 2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
+                             compressorPowerMultiplierFunctionofTemperatureCurve2);
+  vrf.addLoadingIndex(loadingIndex2);
+  LoadingIndex loadingIndex3(model, 3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
+                             compressorPowerMultiplierFunctionofTemperatureCurve3);
+  vrf.addLoadingIndex(loadingIndex3);
 
   CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil(model);
   EXPECT_TRUE(coolingCoil.setAvailabilitySchedule(scheduleConstant));
