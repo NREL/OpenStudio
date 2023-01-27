@@ -72,9 +72,8 @@ namespace model {
       : HVACComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::outputVariableNames() const {
-      static std::vector<std::string> result;
-      if (result.empty()) {
-      }
+      static const std::vector<std::string> result{"Heating Coil Heating Rate", "Heating Coil Heating Energy", "Heating Coil Runtime Fraction",
+                                                   "Heating Coil VRF Condensing Temperature", "Heating Coil VRF Subcooling Degrees"};
       return result;
     }
 
@@ -116,7 +115,7 @@ namespace model {
     }
 
     boost::optional<double> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::autosizedRatedTotalHeatingCapacity() {
-      return getAutosizedValue("TODO_CHECK_SQL Rated Total Heating Capacity", "W");
+      return getAutosizedValue("Design Size Rated Total Heating Capacity", "W");
     }
 
     double CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::indoorUnitReferenceSubcooling() const {
@@ -203,6 +202,10 @@ namespace model {
       return result;
     }
 
+    boost::optional<double> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::autosizedRatedAirFlowRate() const {
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+    }
+
   }  // namespace detail
 
   CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(const Model& model)
@@ -276,6 +279,10 @@ namespace model {
   bool CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const Curve& curve) {
     return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()
       ->setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(curve);
+  }
+
+  boost::optional<double> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->autosizedRatedAirFlowRate();
   }
 
   /// @cond

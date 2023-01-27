@@ -92,9 +92,43 @@ namespace model {
       : HVACComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::outputVariableNames() const {
-      static std::vector<std::string> result;
-      if (result.empty()) {
-      }
+      static const std::vector<std::string> result{"VRF Heat Pump Total Cooling Rate",
+                                                   "VRF Heat Pump Total Heating Rate",
+                                                   "VRF Heat Pump Cooling Electricity Rate",
+                                                   "VRF Heat Pump Cooling Electricity Energy",
+                                                   "VRF Heat Pump Heating Electricity Rate",
+                                                   "VRF Heat Pump Heating Electricity Energy",
+                                                   "VRF Heat Pump Cooling COP",
+                                                   "VRF Heat Pump Heating COP",
+                                                   "VRF Heat Pump COP",
+                                                   "VRF Heat Pump Compressor Electricity Rate",
+                                                   "VRF Heat Pump Outdoor Unit Fan Power",
+                                                   "VRF Heat Pump Compressor Rotating Speed",
+                                                   "VRF Heat Pump Indoor Unit Evaporating Temperature",
+                                                   "VRF Heat Pump Outdoor Unit Condensing Temperature",
+                                                   "VRF Heat Pump Indoor Unit Condensing Temperature",
+                                                   "VRF Heat Pump Outdoor Unit Evaporating Temperature",
+                                                   "VRF Heat Pump Cooling Capacity at Max Compressor Speed",
+                                                   "VRF Heat Pump Heating Capacity at Max Compressor Speed",
+                                                   "VRF Heat Pump Indoor Unit Piping Correction for Cooling",
+                                                   "VRF Heat Pump Indoor Unit Piping Correction for Heating",
+                                                   "VRF Heat Pump Outdoor Unit Evaporator Heat Extract Rate",
+                                                   "VRF Heat Pump Outdoor Unit Condenser Heat Release Rate",
+                                                   "VRF Heat Pump Defrost Electricity Rate",
+                                                   "VRF Heat Pump Defrost Electricity Energy",
+                                                   "VRF Heat Pump Part Load Ratio",
+                                                   "VRF Heat Pump Runtime Fraction",
+                                                   "VRF Heat Pump Cycling Ratio",
+                                                   "VRF Heat Pump Operating Mode",
+                                                   "VRF Heat Pump Condenser Inlet Temperature",
+                                                   "VRF Heat Pump Crankcase Heater Electricity Rate",
+                                                   "VRF Heat Pump Crankcase Heater Electricity Energy",
+                                                   "VRF Heat Pump Terminal Unit Cooling Load Rate",
+                                                   "VRF Heat Pump Terminal Unit Heating Load Rate",
+                                                   "VRF Heat Pump Heat Recovery Status Change Multiplier",
+                                                   "VRF Heat Pump Simultaneous Cooling and Heating Efficiency",
+                                                   "VRF Heat Pump Heat Recovery Rate",
+                                                   "VRF Heat Pump Heat Recovery Energy"};
       return result;
     }
 
@@ -104,7 +138,6 @@ namespace model {
 
     std::vector<ScheduleTypeKey>
       AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -236,7 +269,7 @@ namespace model {
     }
 
     boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedRatedEvaporativeCapacity() {
-      return getAutosizedValue("TODO_CHECK_SQL Rated Evaporative Capacity", "W");
+      return getAutosizedValue("Design Size Rated Evaporative Capacity", "W");
     }
 
     double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::ratedCompressorPowerPerUnitofRatedEvaporativeCapacity() const {
@@ -531,7 +564,7 @@ namespace model {
     }
 
     boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedResistiveDefrostHeaterCapacity() {
-      return getAutosizedValue("TODO_CHECK_SQL Resistive Defrost Heater Capacity", "W");
+      return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "");
     }
 
     double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorDrybulbTemperatureforDefrostOperation() const {
@@ -1151,6 +1184,14 @@ namespace model {
 
     std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::terminals() const {
       return subsetCastVector<ZoneHVACTerminalUnitVariableRefrigerantFlow>(vrfModelObjectList().modelObjects());
+    }
+
+    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedGrossRatedTotalCoolingCapacity() const {
+      return getAutosizedValue("Design Size Rated Total Cooling Capacity (gross)", "W");
+    }
+
+    boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedGrossRatedHeatingCapacity() const {
+      return getAutosizedValue("Design Size Rated Total Heating Capacity", "W");
     }
 
   }  // namespace detail
@@ -2019,6 +2060,14 @@ namespace model {
 
   std::vector<LoadingIndex> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::loadingIndexes() const {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->loadingIndexes();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedGrossRatedTotalCoolingCapacity() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedGrossRatedTotalCoolingCapacity();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::autosizedGrossRatedHeatingCapacity() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->autosizedGrossRatedHeatingCapacity();
   }
 
   /// @cond

@@ -291,6 +291,10 @@ namespace model {
 
       std::vector<LoadingIndex> loadingIndexes() const;
 
+      boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const;
+
+      boost::optional<double> autosizedGrossRatedHeatingCapacity() const;
+
       //@}
      private:
       REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlowFluidTemperatureControl");

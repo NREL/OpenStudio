@@ -104,6 +104,8 @@ namespace model {
     /** @name Other */
     //@{
 
+    boost::optional<double> autosizedRatedAirFlowRate() const;
+
     //@}
    protected:
     /// @cond

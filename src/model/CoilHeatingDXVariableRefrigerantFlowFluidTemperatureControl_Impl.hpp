@@ -110,6 +110,8 @@ namespace model {
 
       std::vector<ModelObject> children() const override;
 
+      boost::optional<double> autosizedRatedAirFlowRate() const;
+
       //@}
      protected:
      private:

@@ -72,9 +72,10 @@ namespace model {
       : HVACComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::outputVariableNames() const {
-      static std::vector<std::string> result;
-      if (result.empty()) {
-      }
+      static const std::vector<std::string> result{
+        "Cooling Coil Total Cooling Rate",      "Cooling Coil Total Cooling Energy",        "Cooling Coil Sensible Cooling Rate",
+        "Cooling Coil Sensible Cooling Energy", "Cooling Coil Latent Cooling Rate",         "Cooling Coil Latent Cooling Energy",
+        "Cooling Coil Runtime Fraction",        "Cooling Coil VRF Evaporating Temperature", "Cooling Coil VRF Super Heating Degrees"};
       return result;
     }
 
@@ -116,7 +117,7 @@ namespace model {
     }
 
     boost::optional<double> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::autosizedRatedTotalCoolingCapacity() {
-      return getAutosizedValue("TODO_CHECK_SQL Rated Total Cooling Capacity", "W");
+      return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W");
     }
 
     boost::optional<double> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::ratedSensibleHeatRatio() const {
@@ -134,7 +135,7 @@ namespace model {
     }
 
     boost::optional<double> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::autosizedRatedSensibleHeatRatio() {
-      return getAutosizedValue("TODO_CHECK_SQL Rated Sensible Heat Ratio", "");
+      return getAutosizedValue("Design Size Rated Sensible Heat Ratio", "");
     }
 
     double CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::indoorUnitReferenceSuperheating() const {
@@ -239,6 +240,10 @@ namespace model {
       return result;
     }
 
+    boost::optional<double> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::autosizedRatedAirFlowRate() const {
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+    }
+
   }  // namespace detail
 
   CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(const Model& model)
@@ -334,6 +339,10 @@ namespace model {
     CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const Curve& curve) {
     return getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()
       ->setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(curve);
+  }
+
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl>()->autosizedRatedAirFlowRate();
   }
 
   /// @cond

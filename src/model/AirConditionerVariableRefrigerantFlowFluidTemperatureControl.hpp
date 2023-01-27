@@ -267,6 +267,10 @@ namespace model {
 
     std::vector<LoadingIndex> loadingIndexes() const;
 
+    boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const;
+
+    boost::optional<double> autosizedGrossRatedHeatingCapacity() const;
+
     //@}
    protected:
     /// @cond
