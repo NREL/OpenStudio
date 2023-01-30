@@ -227,7 +227,7 @@ add_library(rubyengine
   MODULE
   RubyEngine.hpp
   RubyEngine.cpp
-  InitRubyEngine.cpp
+  #InitRubyEngine.cpp
   GC_Value.hpp
   ${OUTPUT}
   "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
@@ -260,10 +260,10 @@ target_link_libraries(rubyengine
   openstudio_scriptengine
   openstudiolib
   rubybindings
-  rubyinterpreter
   CONAN_PKG::fmt
   ${ruby_extension_libs}
   ${ALL_RUBY_BINDING_TARGETS}
+  CONAN_PKG::openstudio_ruby
 )
 
 if( WIN32 )

@@ -36,11 +36,11 @@ target_link_libraries(
   Python::Python
 )
 
-target_compile_definitions(
-  pythonengine
-  PUBLIC
-  -DSWIGRUNTIME
-)
+#target_compile_definitions(
+#  pythonengine
+#  PUBLIC
+#  -DSWIGRUNTIME
+#)
 
 # tp_print is deprecated at of 3.8.
 target_compile_options(pythonengine PRIVATE

@@ -1,9 +1,9 @@
 #include "./RubyEngine.hpp"
 #include "./InitRubyEngine.hpp"
 #include "./GC_Value.hpp"
-#include <RubyInterpreter.hpp>
 #include <iostream>
 #include <embedded_files.hxx>
+#include "../interpreter/RubyEval.hpp"
 
 namespace openstudio {
 
@@ -39,14 +39,14 @@ void RubyEngine::initRubyEngine() {
   auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
 
   try {
-    rubyInterpreter.evalString(embedded_extensions_string);
+    openstudio::evalString(embedded_extensions_string);
   } catch (const std::exception& e) {
-    rubyInterpreter.evalString(R"(STDOUT.flush)");
+    openstudio::evalString(R"(STDOUT.flush)");
     std::cout << "Exception in embedded_help: " << e.what() << std::endl;  // endl will flush
     ruby_cleanup(1);
     throw;
   } catch (...) {
-    rubyInterpreter.evalString(R"(STDOUT.flush)");
+    openstudio::evalString(R"(STDOUT.flush)");
     std::cout << "Unknown Exception in embedded_help" << std::endl;  // endl will flush
     ruby_cleanup(1);
     throw;

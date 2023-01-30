@@ -18,8 +18,6 @@
 #include <PythonConfig.hxx>
 #include <Python.h>
 #include <SWIGPythonRuntime.hxx>
-#include <model/python_OpenStudioModelAirflow_wrap.cxx>
-#include <model/python_OpenStudioModelRefrigeration_wrap.cxx>
 
 #ifdef __GNUC__
 #  pragma GCC diagnostic pop
