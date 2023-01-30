@@ -3,24 +3,10 @@
 	"seed_file": "seb.osm",
 	"steps": [
 		{
-			"measure_dir_name": "IncreaseWallRValue",
-			"arguments": {}
+			"measure_dir_name": "IncreaseRoofRValue"
 		},
 		{
-			"measure_dir_name": "IncreaseRoofRValuePython",
-			"arguments": {
-				"r_value": 45
-			}
-		},
-		{
-			"measure_dir_name": "SetEplusInfiltration",
-			"arguments": {
-				"flowPerZoneFloorArea": 10.76
-			}
-		},
-		{
-			"measure_dir_name": "Standard Reports",
-			"arguments": {}
+			"measure_dir_name": "IncreaseRoofRValuePython"
 		}
 	]
 }

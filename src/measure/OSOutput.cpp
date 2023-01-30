@@ -100,7 +100,7 @@ namespace measure {
     m_units = units;
   }
 
-  std::string OSOutput::print() const {
+  std::string OSOutput::toString() const {
     std::stringstream ss;
 
     // name
@@ -122,7 +122,7 @@ namespace measure {
     : m_name(name), m_displayName(name), m_shortName(name), m_type(type), m_modelDependent(modelDependent) {}
 
   std::ostream& operator<<(std::ostream& os, const OSOutput& output) {
-    os << output.print();
+    os << output.toString();
     return os;
   }
 

@@ -1,6 +1,10 @@
 #include "PythonEngine.hpp"
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include "../../src/utilities/core/Filesystem.hpp"
+#include "../../src/measure/OSArgument.hpp"
+#include "../../src/measure/OSMeasure.hpp"
+#include "../../src/measure/ModelMeasure.hpp"
+#include "../../src/model/Model.hpp"
 #include <fmt/format.h>
 #include <stdexcept>
 #include <string>
@@ -14,12 +18,20 @@
 #include <PythonConfig.hxx>
 #include <Python.h>
 #include <SWIGPythonRuntime.hxx>
+#include <model/python_OpenStudioModelAirflow_wrap.cxx>
+#include <model/python_OpenStudioModelRefrigeration_wrap.cxx>
 
 #ifdef __GNUC__
 #  pragma GCC diagnostic pop
 #endif
 
 namespace openstudio {
+
+namespace measure {
+  class ModelMeasure;
+  class EnergyPlusMeasure;
+  class ReportingMeasure;
+}
 
 void addToPythonPath(const openstudio::path& includePath) {
   if (!includePath.empty()) {
@@ -69,6 +81,11 @@ PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), p
   //PyRun_SimpleString("from time import time,ctime\n"
   //                   "print('Today is', ctime(time()))\n");
   importOpenStudio();
+
+  registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+  registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
+  registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
+  registerType<std::vector<openstudio::measure::OSArgument> *>("openstudio::measure::OSArgumentVector *");
 }
 
 PythonEngine::~PythonEngine() {
@@ -197,6 +214,46 @@ void* PythonEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
 
   return return_value;
 }
+
+std::vector<measure::OSArgument> PythonEngine::getArguments(openstudio::measure::OSMeasure*, const model::Model&) {
+  std::vector<measure::OSArgument> result;
+
+  return result;
+}
+
+void PythonEngine::applyMeasure(model::Model model, measure::OSRunner& runner, const  BCLMeasure& bclMeasure) {
+  std::cout << "PythonEngine::applyMeasure" << std::endl;
+
+  const auto scriptPath_ = bclMeasure.primaryScriptPath();
+  if (!scriptPath_) {
+    fmt::print("Could not find primaryScript for Measure '{}'\n", openstudio::toString(bclMeasure.directory()));
+    return;
+  }
+
+  const std::string className = bclMeasure.className();
+  const MeasureLanguage measureLanguage = bclMeasure.measureLanguage();
+  
+  // TODO: will add a Logger later
+  fmt::print("Class Name: {}\n", className);
+  fmt::print("Measure Script Path: {}\n", openstudio::toString(scriptPath_.get()));
+  fmt::print("Measure Type: {}\n", bclMeasure.measureType().valueName());
+  fmt::print("Measure Language: {}\n", measureLanguage.valueName());
+  
+  auto importCmd = fmt::format(R"python(
+import importlib.util
+spec = importlib.util.spec_from_file_location('{}', r'{}')
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+)python", className, scriptPath_->generic_string());
+
+  exec(importCmd);
+  auto measureScriptObject = eval(fmt::format("module.{}()", className));
+  
+  measure::OSArgumentMap argmap;
+  auto measurePtr = getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+  static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model);
+}
+
 }  // namespace openstudio
 
 extern "C"

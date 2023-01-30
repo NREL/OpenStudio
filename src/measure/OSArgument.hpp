@@ -379,7 +379,7 @@ OPENSTUDIO_ENUM( OSDomainType,
     //@{
 
     /** Prints argument data for debugging purposes. */
-    std::string print() const;
+    std::string toString() const;
 
     /** Returns this argument's value printed to string. If printDefault, returns the default value if
    *  in the case of !hasValue() && hasDefaultValue(). If there is no value to print, the returned

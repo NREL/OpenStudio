@@ -1,9 +1,7 @@
 #ifndef MEASURE_I
 #define MEASURE_I
 
-#ifdef SWIGPYTHON
 %module(directors="1") openstudiomeasure
-#endif
 
 
 #define UTILITIES_API
@@ -24,18 +22,18 @@
   // Help in overload resolution preferring std::string over char const *
   %ignore openstudio::measure::OSArgument::setValue(char const*);
   %ignore openstudio::measure::OSArgument::setDefaultValue(char const*);
-#elif defined(SWIGRUBY)
-  %ignore openstudio::measure::PythonModelMeasure;
-  %ignore openstudio::measure::PythonEnergyPlusMeasure;
-  %ignore openstudio::measure::PythonReportingMeasure;
-#elif defined(SWIGPYTHON)
-  // Avoid triggering a SWIG warning: 'print' is a python keyword
-  %rename(toString) openstudio::measure::OSArgument::print;
-  %rename(toString) openstudio::measure::OSOutput::print;
-
-  %ignore openstudio::measure::ModelMeasure;
-  %ignore openstudio::measure::EnergyPlusMeasure;
-  %ignore openstudio::measure::ReportingMeasure;
+//#elif defined(SWIGRUBY)
+//  %ignore openstudio::measure::PythonModelMeasure;
+//  %ignore openstudio::measure::PythonEnergyPlusMeasure;
+//  %ignore openstudio::measure::PythonReportingMeasure;
+//#elif defined(SWIGPYTHON)
+//  // Avoid triggering a SWIG warning: 'print' is a python keyword
+//  %rename(toString) openstudio::measure::OSArgument::print;
+//  %rename(toString) openstudio::measure::OSOutput::print;
+//
+//  %ignore openstudio::measure::ModelMeasure;
+//  %ignore openstudio::measure::EnergyPlusMeasure;
+//  %ignore openstudio::measure::ReportingMeasure;
 #endif
 
 %{
@@ -68,18 +66,18 @@
 
 %feature("director") OSMeasure;
 
-#if defined(SWIGPYTHON)
-  %feature("director") PythonModelMeasure;
-  %feature("director") PythonEnergyPlusMeasure;
-  %feature("director") PythonReportingMeasure;
-  %rename (ModelMeasure) openstudio::measure::PythonModelMeasure;
-  %rename (EnergyPlusMeasure) openstudio::measure::PythonEnergyPlusMeasure;
-  %rename (ReportingMeasure) openstudio::measure::PythonReportingMeasure;
-#else
+//#if defined(SWIGPYTHON)
+//  %feature("director") PythonModelMeasure;
+//  %feature("director") PythonEnergyPlusMeasure;
+//  %feature("director") PythonReportingMeasure;
+//  %rename (ModelMeasure) openstudio::measure::PythonModelMeasure;
+//  %rename (EnergyPlusMeasure) openstudio::measure::PythonEnergyPlusMeasure;
+//  %rename (ReportingMeasure) openstudio::measure::PythonReportingMeasure;
+//#else
   %feature("director") ModelMeasure;
   %feature("director") EnergyPlusMeasure;
   %feature("director") ReportingMeasure;
-#endif
+//#endif
 %feature("director") OSRunner;
 %feature("director") OSArgument;
 
@@ -87,6 +85,8 @@
 %template(OSArgumentVector) std::vector<openstudio::measure::OSArgument>;
 %template(OptionalOSArgument) boost::optional<openstudio::measure::OSArgument>;
 %template(OSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
+%feature("director") OSArgumentMap;
+%feature("director") std::map<std::string, openstudio::measure::OSArgument>;
 
 %include <measure/OSArgument.hpp>
 %include <measure/OSOutput.hpp>

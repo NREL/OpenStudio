@@ -27,7 +27,7 @@ struct DynamicLibrary
   }
 
   explicit DynamicLibrary(openstudio::path location)
-    : m_location{std::move(location)}, m_handle{dlopen(m_location.c_str(), RTLD_LAZY | RTLD_LOCAL), m_handle_deleter} {
+    : m_location{std::move(location)}, m_handle{dlopen(m_location.c_str(), RTLD_LAZY | RTLD_LOCAL | RTLD_DEEPBIND), m_handle_deleter} {
     if (!m_handle) {
       throw std::runtime_error(fmt::format("Unable to load library '{}', reason: '{}'", m_location.string(), dlerror()));
     }

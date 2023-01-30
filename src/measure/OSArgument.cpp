@@ -867,7 +867,7 @@ namespace measure {
     return result;
   }
 
-  std::string OSArgument::print() const {
+  std::string OSArgument::toString() const {
     std::stringstream ss;
 
     // name
@@ -954,7 +954,7 @@ namespace measure {
 
   // ostream operators for OSArgument
   std::ostream& operator<<(std::ostream& os, const OSArgument& arg) {
-    os << arg.print();
+    os << arg.toString();
     return os;
   }
 

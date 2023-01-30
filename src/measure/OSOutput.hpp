@@ -134,7 +134,7 @@ OPENSTUDIO_ENUM(OSOutputType,
     //@{
 
     /** Prints output data for debugging purposes. */
-    std::string print() const;
+    std::string toString() const;
 
     //@}
    private:

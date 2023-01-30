@@ -13,6 +13,8 @@ foreach(p ${ALL_PYTHON_BINDING_TARGETS})
       Python::Python
     )
   endif()
+  #target_compile_definitions(${p} PUBLIC -DSWIGRUNTIME -DSWIGRUNTIMEINLINE)
+  #target_compile_definitions(${p} PUBLIC -DSWIGRUNTIME)
 endforeach()
 
 # convenience target to build the SDK

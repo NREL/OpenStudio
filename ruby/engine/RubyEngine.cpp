@@ -1,3 +1,7 @@
+#include "../../src/measure/OSArgument.hpp"
+#include "../../src/measure/OSMeasure.hpp"
+#include "../../src/measure/ModelMeasure.hpp"
+#include "../../src/model/Model.hpp"
 #include "RubyEngine.hpp"
 #include "InitRubyBindings.hpp"
 #include <embedded_files.hxx>
@@ -37,6 +41,13 @@ extern "C"
 
 namespace openstudio {
 
+namespace measure {
+  class ModelMeasure;
+  class EnergyPlusMeasure;
+  class ReportingMeasure;
+  class OSArgument;
+}
+
 VALUE initRestOfOpenStudio(...) {
   openstudio::ruby::initExtendedRubyBindings();
   return Qtrue;
@@ -54,12 +65,19 @@ RubyEngine::RubyEngine(int argc, char* argv[]) : ScriptEngine(argc, argv) {
   auto rubymodule = rb_define_module("OpenStudio");
   rb_define_module_function(rubymodule, "init_rest_of_openstudio", initRestOfOpenStudio, 0);
 
+  exec("OpenStudio::init_rest_of_openstudio()");
+
   ruby_set_argv(argc, argv);
 
   // DLM: this will interpret any strings passed on the command line as UTF-8
   // can we be smarter and detect the correct encoding? use wmain on windows to get utf-16?
   // or we might want to follow ruby and allow '--external-encoding=UTF-8' as an input argument?
   rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
+
+  registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+  registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
+  registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
+  registerType<std::vector<openstudio::measure::OSArgument> *>("openstudio::measure::OSArgumentVector *");
 }
 
 void RubyEngine::setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,
@@ -104,6 +122,40 @@ void* RubyEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
   }
 
   return return_value;
+}
+
+std::vector<measure::OSArgument> RubyEngine::getArguments(openstudio::measure::OSMeasure* measurePtr, const model::Model& model) {
+  //return static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->arguments(model);  // NOLINT
+  std::vector<measure::OSArgument> result;
+
+  return result;
+}
+
+void RubyEngine::applyMeasure(model::Model model, measure::OSRunner& runner, const  BCLMeasure& bclMeasure) {
+  const auto scriptPath_ = bclMeasure.primaryScriptPath();
+  if (!scriptPath_) {
+    fmt::print("Could not find primaryScript for Measure '{}'\n", openstudio::toString(bclMeasure.directory()));
+    return;
+  }
+
+  const std::string className = bclMeasure.className();
+  const MeasureLanguage measureLanguage = bclMeasure.measureLanguage();
+  
+  // TODO: will add a Logger later
+  fmt::print("Class Name: {}\n", className);
+  fmt::print("Measure Script Path: {}\n", openstudio::toString(scriptPath_.get()));
+  fmt::print("Measure Type: {}\n", bclMeasure.measureType().valueName());
+  fmt::print("Measure Language: {}\n", measureLanguage.valueName());
+  
+  openstudio::measure::OSMeasure* measurePtr = nullptr;
+  
+  auto importCmd = fmt::format("require '{}'", openstudio::toString(scriptPath_.get()));
+  exec(importCmd);
+  auto measureScriptObject = eval(fmt::format("{}.new()", className));
+  
+  measure::OSArgumentMap argmap;
+  measurePtr = getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+  static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model);
 }
 
 }  // namespace openstudio

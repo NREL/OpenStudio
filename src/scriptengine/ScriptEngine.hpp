@@ -14,8 +14,16 @@
 
 namespace openstudio {
 
+class BCLMeasure;
+
+namespace model {
+  class Model;
+}
+
 namespace measure {
-  class ModelMeasure;
+  class OSMeasure;
+  class OSArgument;
+  class OSRunner;
 }  // namespace measure
 
 class ScriptEngine;
@@ -34,7 +42,6 @@ class ScriptEngine
 {
  public:
   ScriptEngine([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) {
-    // registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   }
 
   virtual ~ScriptEngine() = default;
@@ -72,6 +79,10 @@ class ScriptEngine
   void registerType(std::string name) {
     types.emplace(std::cref(typeid(T)), std::move(name));
   }
+
+  virtual std::vector<measure::OSArgument> getArguments(openstudio::measure::OSMeasure*, const model::Model&) = 0;
+
+  virtual void applyMeasure(model::Model, measure::OSRunner&, const  BCLMeasure&) = 0;
 
  protected:
   // convert the underlying object to the correct type, then return it as a void *
