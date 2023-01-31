@@ -196,20 +196,20 @@ namespace model {
       if (m_currentFSStory.has_value()) {
 
         double minZ = m_currentStoryZ;
-        double maxZ = minZ + m_currentFSStory->getBelowFloorPlenumHeight();
-        if (m_currentFSStory->getBelowFloorPlenumHeight() > 0) {
+        double maxZ = minZ + entity.belowFloorPlenumHeight();
+        if (entity.belowFloorPlenumHeight() > 0) {
           createShadingSurfaceGroup(entity, minZ, maxZ, SpaceTypeEnum::BELOWFLOOR);
         }
 
         minZ = maxZ;
-        maxZ = minZ + m_currentFSStory->floorToCeilingHeight();
-        if (m_currentFSStory->floorToCeilingHeight() > 0) {
+        maxZ = minZ + entity.floorToCeilingHeight();
+        if (entity.floorToCeilingHeight() > 0) {
           createShadingSurfaceGroup(entity, minZ, maxZ, SpaceTypeEnum::ABOVEFLOOR);
         }
 
         minZ = maxZ;
-        maxZ = minZ + m_currentFSStory->aboveCeilingPlenumHeight();
-        if (m_currentFSStory->aboveCeilingPlenumHeight() > 0) {
+        maxZ = minZ + entity.aboveCeilingPlenumHeight();
+        if (entity.aboveCeilingPlenumHeight() > 0) {
           createShadingSurfaceGroup(entity, minZ, maxZ, SpaceTypeEnum::ABOVECEILING);
         }
       }
