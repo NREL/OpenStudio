@@ -937,15 +937,19 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
       // cppcheck-suppress constStatement
       std::vector<BoostPolygon> diffResult;
       boost::geometry::difference(boostPolygon, *boostHole, diffResult);
-      diffResult = removeSpikes(diffResult);
-      diffResult = removeHoles(diffResult);
       newBoostPolygons.insert(newBoostPolygons.end(), diffResult.begin(), diffResult.end());
     }
     boostPolygons.swap(newBoostPolygons);
+    newBoostPolygons.clear();
   }
 
+  // Remove the holes and spikes and convert back to our data types
   for (const BoostPolygon& boostPolygon : boostPolygons) {
-    result.push_back(verticesFromBoostPolygon(boostPolygon, allPoints, tol));
+    BoostPolygon removedSpikes = removeSpikes(boostPolygon);
+    std::vector<BoostPolygon> removedHoles = removeHoles(removedSpikes);
+    for (const BoostPolygon& removedHole : removedHoles) {
+      result.push_back(verticesFromBoostPolygon(removedHole, allPoints, tol));
+    }
   }
 
   return result;
