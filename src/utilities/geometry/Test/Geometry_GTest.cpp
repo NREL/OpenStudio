@@ -1017,7 +1017,6 @@ TEST_F(GeometryFixture, Triangulate_ComplexHoles) {
 }
 
 TEST_F(GeometryFixture, Triangulate_Windows_4783) {
-  double tol = 0.01;
   std::vector<Point3d> surfaceVertices;
   std::vector<std::vector<Point3d>> subSurfaceVertices;
 
