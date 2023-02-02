@@ -1100,10 +1100,18 @@ namespace model {
                           OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantType);
   }
 
+  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::validRefrigerantTypeValues() {
+    return refrigerantTypeValues();
+  }
+
   std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::refrigerantTemperatureControlAlgorithmforIndoorUnitValues() {
     return getIddKeyNames(
       IddFactory::instance().getObject(iddObjectType()).get(),
       OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantTemperatureControlAlgorithmforIndoorUnit);
+  }
+
+  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::validRefrigerantTemperatureControlAlgorithmforIndoorUnitValues() {
+    return refrigerantTemperatureControlAlgorithmforIndoorUnitValues();
   }
 
   std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::defrostStrategyValues() {
@@ -1111,9 +1119,17 @@ namespace model {
                           OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostStrategy);
   }
 
+  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::validDefrostStrategyValues() {
+    return defrostStrategyValues();
+  }
+
   std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::defrostControlValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostControl);
+  }
+
+  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::validDefrostControlValues() {
+    return defrostControlValues();
   }
 
   Schedule AirConditionerVariableRefrigerantFlowFluidTemperatureControl::availabilitySchedule() const {

@@ -1405,6 +1405,10 @@ namespace model {
                           OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RefrigerantType);
   }
 
+  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::validRefrigerantTypeValues() {
+    return refrigerantTypeValues();
+  }
+
   std::vector<std::string>
     AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::refrigerantTemperatureControlAlgorithmforIndoorUnitValues() {
     return getIddKeyNames(
@@ -1412,14 +1416,27 @@ namespace model {
       OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::RefrigerantTemperatureControlAlgorithmforIndoorUnit);
   }
 
+  std::vector<std::string>
+    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::validRefrigerantTemperatureControlAlgorithmforIndoorUnitValues() {
+    return refrigerantTemperatureControlAlgorithmforIndoorUnitValues();
+  }
+
   std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostStrategyValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostStrategy);
   }
 
+  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::validDefrostStrategyValues() {
+    return defrostStrategyValues();
+  }
+
   std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::defrostControlValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostControl);
+  }
+
+  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::validDefrostControlValues() {
+    return defrostControlValues();
   }
 
   Schedule AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::availabilitySchedule() const {
