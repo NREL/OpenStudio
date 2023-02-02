@@ -220,9 +220,9 @@ namespace model {
 
       bool setOutdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity(double outdoorUnitFanFlowRatePerUnitofRatedEvaporativeCapacity);
 
-      bool setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const boost::optional<Curve>& curve);
+      bool setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const Curve& curve);
 
-      bool setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const boost::optional<Curve>& curve);
+      bool setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const Curve& curve);
 
       bool setDiameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint(double diameterofMainPipeConnectingOutdoorUnittotheFirstBranchJoint);
 
@@ -249,7 +249,7 @@ namespace model {
 
       bool setDefrostControl(const std::string& defrostControl);
 
-      bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const boost::optional<Curve>& curve);
+      bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve);
 
       void resetDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
 
