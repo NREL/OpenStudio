@@ -66,7 +66,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputSQLite) {
     EXPECT_TRUE(idf_sqlite.isEmpty(Output_SQLiteFields::UnitConversionforTabularData));
   }
 
-  // Not there, m_excludeSQliteOutputReport = True
+  // Not there, m_forwardTranslatorOptions.excludeSQliteOutputReport() = True
   {
     Model m;
     ForwardTranslator ft;
