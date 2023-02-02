@@ -598,7 +598,7 @@ namespace energyplus {
     std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> vrfftcs =
       model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
     std::sort(vrfftcs.begin(), vrfftcs.end(), WorkspaceObjectNameLess());
-    for (AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrfftc : vrfftcs) {
+    for (auto& vrfftc : vrfftcs) {
       translateAndMapModelObject(vrfftc);
     }
 
@@ -606,7 +606,7 @@ namespace energyplus {
     std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR> vrfftchrs =
       model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
     std::sort(vrfftchrs.begin(), vrfftchrs.end(), WorkspaceObjectNameLess());
-    for (AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrfftchr : vrfftchrs) {
+    for (auto& vrfftchr : vrfftchrs) {
       translateAndMapModelObject(vrfftchr);
     }
 
