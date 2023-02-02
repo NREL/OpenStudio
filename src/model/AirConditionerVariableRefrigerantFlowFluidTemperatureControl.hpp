@@ -92,8 +92,6 @@ namespace model {
 
     bool isRatedEvaporativeCapacityAutosized() const;
 
-    boost::optional<double> autosizedRatedEvaporativeCapacity();
-
     double ratedCompressorPowerPerUnitofRatedEvaporativeCapacity() const;
 
     double minimumOutdoorAirTemperatureinCoolingMode() const;
@@ -161,8 +159,6 @@ namespace model {
     boost::optional<double> resistiveDefrostHeaterCapacity() const;
 
     bool isResistiveDefrostHeaterCapacityAutosized() const;
-
-    boost::optional<double> autosizedResistiveDefrostHeaterCapacity();
 
     double maximumOutdoorDrybulbTemperatureforDefrostOperation() const;
 
@@ -274,6 +270,10 @@ namespace model {
     void removeAllLoadingIndexes();
 
     std::vector<LoadingIndex> loadingIndexes() const;
+
+		boost::optional<double> autosizedRatedEvaporativeCapacity();
+
+		boost::optional<double> autosizedResistiveDefrostHeaterCapacity();
 
     boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const;
 
