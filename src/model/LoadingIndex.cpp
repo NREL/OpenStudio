@@ -148,10 +148,16 @@ namespace model {
     bool ok = true;
     ok = setCompressorSpeed(compressorSpeed);
     OS_ASSERT(ok);
-    ok = setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(evaporativeCapacityMultiplierFunctionofTemperatureCurve);
-    OS_ASSERT(ok);
-    ok = setCompressorPowerMultiplierFunctionofTemperatureCurve(compressorPowerMultiplierFunctionofTemperatureCurve);
-    OS_ASSERT(ok);
+    bool ok = setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(evaporativeCapacityMultiplierFunctionofTemperatureCurve);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Evaporative Capacity Multiplier Function of Temperature Curve to " << evaporativeCapacityMultiplierFunctionofTemperatureCurve.briefDescription() << ".");
+    }
+    bool ok = setCompressorPowerMultiplierFunctionofTemperatureCurve(compressorPowerMultiplierFunctionofTemperatureCurve);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Compressor Power Multiplier Function of Temperature Curve to " << compressorPowerMultiplierFunctionofTemperatureCurve.briefDescription() << ".");
+    }
   }
 
   IddObjectType LoadingIndex::iddObjectType() {
