@@ -395,13 +395,13 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
   EXPECT_EQ(4u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());    // 2 on vrf + 2 on coils
   EXPECT_EQ(8u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());  // 6 on vrf + 2 on coils
-  EXPECT_EQ(1u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
   EXPECT_EQ(2u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());  // 1 terminals + 1 loading indexes
 
   EXPECT_FALSE(vrf.remove().empty());
   EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
-  EXPECT_EQ(0u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
   EXPECT_EQ(0u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());
   EXPECT_EQ(size + 2, model.modelObjects().size());  // Always On Discrete, OnOff
 }
