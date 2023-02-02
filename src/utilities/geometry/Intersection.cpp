@@ -946,7 +946,7 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
   // Remove the holes and spikes and convert back to our data types
   for (const BoostPolygon& boostPolygon : boostPolygons) {
     BoostPolygon removedSpikes = removeSpikes(boostPolygon);
-    std::vector<BoostPolygon> removedHoles = removeHoles(removedSpikes);
+    const std::vector<BoostPolygon>& removedHoles = removeHoles(removedSpikes);
     for (const BoostPolygon& removedHole : removedHoles) {
       result.push_back(verticesFromBoostPolygon(removedHole, allPoints, tol));
     }
