@@ -704,12 +704,12 @@ namespace model {
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const Curve& curve) {
-			bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName, curve.get().handle());
+			bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName, curve.handle());
       return result;
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const Curve& curve) {
-			bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName, curve.get().handle());
+			bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName, curve.handle());
       return result;
     }
 
@@ -801,7 +801,7 @@ namespace model {
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
-			bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName, curve.get().handle());
+			bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName, curve.handle());
       return result;
     }
 
