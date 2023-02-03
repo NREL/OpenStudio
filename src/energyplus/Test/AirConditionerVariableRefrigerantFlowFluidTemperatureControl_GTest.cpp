@@ -298,22 +298,24 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_EQ(3,
             idf_vrf.getInt(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::NumberofCompressorLoadingIndexEntries, false).get());
 
-  EXPECT_EQ(3u, idf_vrf.numExtensibleGroups());
-  auto egs = idf_vrf.extensibleGroups();
-  auto loadingIndexes = vrf.loadingIndexes();
-  for (size_t i = 0; i < idf_vrf.extensibleGroups().size(); ++i) {
-    const IdfExtensibleGroup& eg = egs[i];
-    const auto loadingIndex = loadingIndexes[i];
+  ASSERT_EQ(3u, idf_vrf.numExtensibleGroups());
 
-    EXPECT_EQ(i + 1,
-              eg.getDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::CompressorSpeedatLoadingIndex).get());
-    EXPECT_NE("", eg.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::
-                                 LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName)
-                    .get());
-    EXPECT_NE("", eg.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::
-                                 LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName)
-                    .get());
-  }
+  auto egs = idf_vrf.extensibleGroups();
+
+	IdfExtensibleGroup eg1 = egs[0];
+	EXPECT_EQ(1, eg1.getDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::CompressorSpeedatLoadingIndex).get());
+	EXPECT_EQ(evaporativeCapacityMultiplierFunctionofTemperatureCurve1.nameString(), eg1.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName).get());
+	EXPECT_EQ(compressorPowerMultiplierFunctionofTemperatureCurve1.nameString(), eg1.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields:: LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName).get());
+
+	IdfExtensibleGroup eg2 = egs[1];
+	EXPECT_EQ(2, eg2.getDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::CompressorSpeedatLoadingIndex).get());
+	EXPECT_EQ(evaporativeCapacityMultiplierFunctionofTemperatureCurve2.nameString(), eg2.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName).get());
+	EXPECT_EQ(compressorPowerMultiplierFunctionofTemperatureCurve2.nameString(), eg2.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields:: LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName).get());
+
+	IdfExtensibleGroup eg3 = egs[2];
+	EXPECT_EQ(3, eg3.getDouble(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::CompressorSpeedatLoadingIndex).get());
+	EXPECT_EQ(evaporativeCapacityMultiplierFunctionofTemperatureCurve3.nameString(), eg3.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields::LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName).get());
+	EXPECT_EQ(compressorPowerMultiplierFunctionofTemperatureCurve3.nameString(), eg3.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlExtensibleFields:: LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName).get());
 
   IdfObject idf_term = workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow)[0];
 
