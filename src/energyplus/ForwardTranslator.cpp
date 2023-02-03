@@ -1092,6 +1092,10 @@ namespace energyplus {
         retVal = translateCoilCoolingWater(coil);
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_Cooling_Water_Panel_Radiant: {
+        // no-op
+        return retVal;
+      }
       case openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit: {
         model::CoilCoolingWaterToAirHeatPumpEquationFit coil = modelObject.cast<CoilCoolingWaterToAirHeatPumpEquationFit>();
         retVal = translateCoilCoolingWaterToAirHeatPumpEquationFit(coil);
