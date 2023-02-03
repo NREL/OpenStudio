@@ -78,9 +78,9 @@ namespace energyplus {
     }
 
     // Availability Schedule Name: Optional Object
-    if (boost::optional<Schedule> _availabilitySchedule = modelObject.availabilitySchedule()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_availabilitySchedule.get())) {
-        idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilityScheduleName, _owo->nameString());
+    if (boost::optional<Schedule> availabilitySchedule_ = modelObject.availabilitySchedule()) {
+      if (boost::optional<IdfObject> owo_ = translateAndMapModelObject(availabilitySchedule_.get())) {
+        idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilityScheduleName, owo_->nameString());
       }
     }
 
@@ -222,18 +222,18 @@ namespace energyplus {
 
     // Outdoor Unit Evaporating Temperature Function of Superheating Curve Name: Required Object
     Curve outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve = modelObject.outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve)) {
+    if (boost::optional<IdfObject> owo_ = translateAndMapModelObject(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve)) {
       idfObject.setString(
         AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName,
-        _owo->nameString());
+        owo_->nameString());
     }
 
     // Outdoor Unit Condensing Temperature Function of Subcooling Curve Name: Required Object
     Curve outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve = modelObject.outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve)) {
+    if (boost::optional<IdfObject> owo_ = translateAndMapModelObject(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve)) {
       idfObject.setString(
         AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName,
-        _owo->nameString());
+        owo_->nameString());
     }
 
     // Diameter of Main Pipe for Suction Gas: Optional Double
@@ -304,10 +304,10 @@ namespace energyplus {
     // Defrost Energy Input Ratio Modifier Function of Temperature Curve Name: Optional Object
     if (boost::optional<Curve> _defrostEnergyInputRatioModifierFunctionofTemperatureCurve =
           modelObject.defrostEnergyInputRatioModifierFunctionofTemperatureCurve()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_defrostEnergyInputRatioModifierFunctionofTemperatureCurve.get())) {
+      if (boost::optional<IdfObject> owo_ = translateAndMapModelObject(_defrostEnergyInputRatioModifierFunctionofTemperatureCurve.get())) {
         idfObject.setString(
           AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName,
-          _owo->nameString());
+          owo_->nameString());
       }
     }
 
@@ -407,13 +407,13 @@ namespace energyplus {
     std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
 
     for (auto& terminal : terminals) {
-      boost::optional<IdfObject> _terminal = translateAndMapModelObject(terminal);
+      boost::optional<IdfObject> terminal_ = translateAndMapModelObject(terminal);
 
-      OS_ASSERT(_terminal);
+      OS_ASSERT(terminal_);
 
       IdfExtensibleGroup eg = _zoneTerminalUnitList.pushExtensibleGroup();
 
-      eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName, _terminal->name().get());
+      eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName, terminal_->name().get());
     }
 
     // Loading Index Extensible Groups
@@ -427,20 +427,20 @@ namespace energyplus {
       // Loading Index Evaporative Capacity Multiplier Function of Temperature Curve Name
       {
         auto curve = loadingIndex.evaporativeCapacityMultiplierFunctionofTemperatureCurve();
-        if (auto _curve = translateAndMapModelObject(curve)) {
+        if (auto curve_ = translateAndMapModelObject(curve)) {
           eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::
                          LoadingIndexEvaporativeCapacityMultiplierFunctionofTemperatureCurveName,
-                       _curve->name().get());
+                       curve_->name().get());
         }
       }
 
       // Loading Index Compressor Power Multiplier Function of Temperature Curve Name
       {
         auto curve = loadingIndex.compressorPowerMultiplierFunctionofTemperatureCurve();
-        if (auto _curve = translateAndMapModelObject(curve)) {
+        if (auto curve_ = translateAndMapModelObject(curve)) {
           eg.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRExtensibleFields::
                          LoadingIndexCompressorPowerMultiplierFunctionofTemperatureCurveName,
-                       _curve->name().get());
+                       curve_->name().get());
         }
       }
     }
