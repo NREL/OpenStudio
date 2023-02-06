@@ -27,7 +27,6 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <vector>
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "LoadingIndex.hpp"
@@ -60,13 +59,14 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include "../utilities/core/Assert.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
+#include <algorithm>
+#include <vector>
 
 namespace openstudio {
 namespace model {
@@ -134,9 +134,10 @@ namespace model {
       AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-      if (std::find(b, e, OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule) != e) {
-        result.push_back(ScheduleTypeKey("AirConditionerVariableRefrigerantFlowFluidTemperatureControl", "Availability Schedule"));
+      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(),
+                    OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilitySchedule)
+          != fieldIndices.cend()) {
+        result.emplace_back("AirConditionerVariableRefrigerantFlowFluidTemperatureControl", "Availability Schedule");
       }
       return result;
     }
@@ -986,118 +987,140 @@ namespace model {
     ok = setCompressorMaximumDeltaPressure(4500000.0);
     OS_ASSERT(ok);
 
-    CurveQuadratic outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(model);
-    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient1Constant(0);
-    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient2x(6.05E-1);
-    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient3xPOW2(2.50E-2);
-    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMinimumValueofx(0);
-    outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMaximumValueofx(15);
-    ok = setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve);
-    OS_ASSERT(ok);
+    {
+      CurveQuadratic outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(model);
+      outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setName(name().get() + " OUEvapTempCurve");
+      outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient1Constant(0);
+      outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient2x(6.05E-1);
+      outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient3xPOW2(2.50E-2);
+      outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMinimumValueofx(0);
+      outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMaximumValueofx(15);
+      ok = setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve);
+      OS_ASSERT(ok);
+    }
 
-    CurveQuadratic outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(model);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient1Constant(0);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient2x(-2.91);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient3xPOW2(1.180);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMinimumValueofx(0);
-    outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMaximumValueofx(5);
-    ok = setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve);
-    OS_ASSERT(ok);
+    {
+      CurveQuadratic outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(model);
+      outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setName(name().get() + " OUCondTempCurve");
+      outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient1Constant(0);
+      outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient2x(-2.91);
+      outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient3xPOW2(1.180);
+      outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMinimumValueofx(0);
+      outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMaximumValueofx(5);
+      ok = setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve);
+      OS_ASSERT(ok);
+    }
 
     //ok = setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve();
     //OS_ASSERT(ok);
 
-    ModelObjectList vrfModelObjectList(model);
-    ok = getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setVRFModelObjectList(vrfModelObjectList);
-    OS_ASSERT(ok);
+    {
+      ModelObjectList vrfModelObjectList(model);
+      ok = getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setVRFModelObjectList(vrfModelObjectList);
+      OS_ASSERT(ok);
+    }
 
-    ModelObjectList loadingIndexList(model);
-    ok = getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setLoadingIndexList(loadingIndexList);
-    OS_ASSERT(ok);
+    {
+      ModelObjectList loadingIndexList(model);
+      ok = getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->setLoadingIndexList(loadingIndexList);
+      OS_ASSERT(ok);
+    }
 
-    CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve1(model);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient1Constant(3.19E-01);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient2x(-1.26E-03);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient3xPOW2(-2.15E-05);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient4y(1.20E-02);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient5yPOW2(1.05E-04);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient6xTIMESY(-8.66E-05);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMinimumValueofx(15);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMaximumValueofx(65);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMinimumValueofy(-30);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMaximumValueofy(15);
+    {
+      CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve1(model);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setName(name().get() + " MinSpdCooling");
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient1Constant(3.19E-01);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient2x(-1.26E-03);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient3xPOW2(-2.15E-05);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient4y(1.20E-02);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient5yPOW2(1.05E-04);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient6xTIMESY(-8.66E-05);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMinimumValueofx(15);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMaximumValueofx(65);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMinimumValueofy(-30);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMaximumValueofy(15);
 
-    CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve1(model);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient1Constant(8.79E-02);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient2x(-1.72E-04);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient3xPOW2(6.93E-05);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient4y(-3.38E-05);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient5yPOW2(-8.10E-06);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient6xTIMESY(-1.04E-05);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setMinimumValueofx(15);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setMaximumValueofx(65);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setMinimumValueofy(-30);
-    compressorPowerMultiplierFunctionofTemperatureCurve1.setMaximumValueofy(15);
+      CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve1(model);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setName(name().get() + " MinSpdPower");
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient1Constant(8.79E-02);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient2x(-1.72E-04);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient3xPOW2(6.93E-05);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient4y(-3.38E-05);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient5yPOW2(-8.10E-06);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient6xTIMESY(-1.04E-05);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setMinimumValueofx(15);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setMaximumValueofx(65);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setMinimumValueofy(-30);
+      compressorPowerMultiplierFunctionofTemperatureCurve1.setMaximumValueofy(15);
 
-    LoadingIndex loadingIndex1(model, 1500, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
-                               compressorPowerMultiplierFunctionofTemperatureCurve1);
-    addLoadingIndex(loadingIndex1);
+      LoadingIndex loadingIndex1(model, 1500, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
+                                 compressorPowerMultiplierFunctionofTemperatureCurve1);
+      addLoadingIndex(loadingIndex1);
+    }
 
-    CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve2(model);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient1Constant(8.12E-01);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient2x(-4.23E-03);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient3xPOW2(-4.11E-05);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient4y(2.97E-02);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient5yPOW2(2.67E-04);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient6xTIMESY(-2.23E-04);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMinimumValueofx(15);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMaximumValueofx(65);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMinimumValueofy(-30);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMaximumValueofy(15);
+    {
+      CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve2(model);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setName(name().get() + " Spd1Cooling");
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient1Constant(8.12E-01);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient2x(-4.23E-03);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient3xPOW2(-4.11E-05);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient4y(2.97E-02);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient5yPOW2(2.67E-04);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient6xTIMESY(-2.23E-04);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMinimumValueofx(15);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMaximumValueofx(65);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMinimumValueofy(-30);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMaximumValueofy(15);
 
-    CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve2(model);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient1Constant(3.26E-01);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient2x(-2.20E-03);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient3xPOW2(1.42E-04);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient4y(2.82E-03);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient5yPOW2(2.86E-05);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient6xTIMESY(-3.50E-05);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setMinimumValueofx(15);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setMaximumValueofx(65);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setMinimumValueofy(-30);
-    compressorPowerMultiplierFunctionofTemperatureCurve2.setMaximumValueofy(15);
+      CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve2(model);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setName(name().get() + " Spd1Power");
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient1Constant(3.26E-01);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient2x(-2.20E-03);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient3xPOW2(1.42E-04);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient4y(2.82E-03);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient5yPOW2(2.86E-05);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient6xTIMESY(-3.50E-05);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setMinimumValueofx(15);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setMaximumValueofx(65);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setMinimumValueofy(-30);
+      compressorPowerMultiplierFunctionofTemperatureCurve2.setMaximumValueofy(15);
 
-    LoadingIndex loadingIndex2(model, 3600, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
-                               compressorPowerMultiplierFunctionofTemperatureCurve2);
-    addLoadingIndex(loadingIndex2);
+      LoadingIndex loadingIndex2(model, 3600, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
+                                 compressorPowerMultiplierFunctionofTemperatureCurve2);
+      addLoadingIndex(loadingIndex2);
+    }
 
-    CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve3(model);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient1Constant(1.32E+00);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient2x(-6.20E-03);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient3xPOW2(-7.10E-05);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient4y(4.89E-02);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient5yPOW2(4.59E-04);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient6xTIMESY(-3.67E-04);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMinimumValueofx(15);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMaximumValueofx(65);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMinimumValueofy(-30);
-    evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMaximumValueofy(15);
+    {
+      CurveBiquadratic evaporativeCapacityMultiplierFunctionofTemperatureCurve3(model);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setName(name().get() + " Spd2Cooling");
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient1Constant(1.32E+00);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient2x(-6.20E-03);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient3xPOW2(-7.10E-05);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient4y(4.89E-02);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient5yPOW2(4.59E-04);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient6xTIMESY(-3.67E-04);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMinimumValueofx(15);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMaximumValueofx(65);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMinimumValueofy(-30);
+      evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMaximumValueofy(15);
 
-    CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve3(model);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient1Constant(6.56E-01);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient2x(-3.71E-03);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient3xPOW2(2.07E-04);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient4y(1.05E-02);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient5yPOW2(7.36E-05);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient6xTIMESY(-1.57E-04);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setMinimumValueofx(15);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setMaximumValueofx(65);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setMinimumValueofy(-30);
-    compressorPowerMultiplierFunctionofTemperatureCurve3.setMaximumValueofy(15);
+      CurveBiquadratic compressorPowerMultiplierFunctionofTemperatureCurve3(model);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setName(name().get() + " Spd2Power");
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient1Constant(6.56E-01);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient2x(-3.71E-03);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient3xPOW2(2.07E-04);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient4y(1.05E-02);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient5yPOW2(7.36E-05);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient6xTIMESY(-1.57E-04);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setMinimumValueofx(15);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setMaximumValueofx(65);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setMinimumValueofy(-30);
+      compressorPowerMultiplierFunctionofTemperatureCurve3.setMaximumValueofy(15);
 
-    LoadingIndex loadingIndex3(model, 6000, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
-                               compressorPowerMultiplierFunctionofTemperatureCurve3);
-    addLoadingIndex(loadingIndex3);
+      LoadingIndex loadingIndex3(model, 6000, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
+                                 compressorPowerMultiplierFunctionofTemperatureCurve3);
+      addLoadingIndex(loadingIndex3);
+    }
   }
 
   IddObjectType AirConditionerVariableRefrigerantFlowFluidTemperatureControl::iddObjectType() {

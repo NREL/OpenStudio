@@ -66,19 +66,15 @@ namespace model {
     static IddObjectType iddObjectType();
 
     static std::vector<std::string> refrigerantTypeValues();
-
-    static std::vector<std::string> refrigerantTemperatureControlAlgorithmforIndoorUnitValues();
-
-    static std::vector<std::string> defrostStrategyValues();
-
-    static std::vector<std::string> defrostControlValues();
-
     static std::vector<std::string> validRefrigerantTypeValues();
 
+    static std::vector<std::string> refrigerantTemperatureControlAlgorithmforIndoorUnitValues();
     static std::vector<std::string> validRefrigerantTemperatureControlAlgorithmforIndoorUnitValues();
 
+    static std::vector<std::string> defrostStrategyValues();
     static std::vector<std::string> validDefrostStrategyValues();
 
+    static std::vector<std::string> defrostControlValues();
     static std::vector<std::string> validDefrostControlValues();
 
     /** @name Getters */
