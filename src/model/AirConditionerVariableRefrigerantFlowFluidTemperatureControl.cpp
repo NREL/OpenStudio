@@ -703,13 +703,19 @@ namespace model {
       return result;
     }
 
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(const Curve& curve) {
-			bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName, curve.handle());
+    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(
+      const Curve& curve) {
+      bool result = setPointer(
+        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurveName,
+        curve.handle());
       return result;
     }
 
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(const Curve& curve) {
-			bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName, curve.handle());
+    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(
+      const Curve& curve) {
+      bool result = setPointer(
+        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::OutdoorUnitCondensingTemperatureFunctionofSubcoolingCurveName,
+        curve.handle());
       return result;
     }
 
@@ -800,8 +806,11 @@ namespace model {
       return result;
     }
 
-    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
-			bool result = setPointer(OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName, curve.handle());
+    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(
+      const Curve& curve) {
+      bool result = setPointer(
+        OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName,
+        curve.handle());
       return result;
     }
 
@@ -1110,7 +1119,8 @@ namespace model {
       OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantTemperatureControlAlgorithmforIndoorUnit);
   }
 
-  std::vector<std::string> AirConditionerVariableRefrigerantFlowFluidTemperatureControl::validRefrigerantTemperatureControlAlgorithmforIndoorUnitValues() {
+  std::vector<std::string>
+    AirConditionerVariableRefrigerantFlowFluidTemperatureControl::validRefrigerantTemperatureControlAlgorithmforIndoorUnitValues() {
     return refrigerantTemperatureControlAlgorithmforIndoorUnitValues();
   }
 

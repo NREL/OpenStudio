@@ -192,15 +192,15 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow_Remove) {
 
   EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
-	EXPECT_EQ(0u, model.getObjectsByType(CurveCubic::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(CurveCubic::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
 
   auto size = model.modelObjects().size();
   AirConditionerVariableRefrigerantFlow vrf(model);
-	ZoneHVACTerminalUnitVariableRefrigerantFlow term(model);
-	vrf.addTerminal(term);
-	EXPECT_EQ(1u, vrf.terminals().size());
-	
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term(model);
+  vrf.addTerminal(term);
+  EXPECT_EQ(1u, vrf.terminals().size());
+
   EXPECT_EQ(0u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());
   EXPECT_EQ(9u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
   EXPECT_EQ(11u, model.getObjectsByType(CurveCubic::iddObjectType()).size());

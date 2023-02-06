@@ -151,12 +151,14 @@ namespace model {
     ok = setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(evaporativeCapacityMultiplierFunctionofTemperatureCurve);
     if (!ok) {
       remove();
-      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Evaporative Capacity Multiplier Function of Temperature Curve to " << evaporativeCapacityMultiplierFunctionofTemperatureCurve.briefDescription() << ".");
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Evaporative Capacity Multiplier Function of Temperature Curve to "
+                                     << evaporativeCapacityMultiplierFunctionofTemperatureCurve.briefDescription() << ".");
     }
     ok = setCompressorPowerMultiplierFunctionofTemperatureCurve(compressorPowerMultiplierFunctionofTemperatureCurve);
     if (!ok) {
       remove();
-      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Compressor Power Multiplier Function of Temperature Curve to " << compressorPowerMultiplierFunctionofTemperatureCurve.briefDescription() << ".");
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Compressor Power Multiplier Function of Temperature Curve to "
+                                     << compressorPowerMultiplierFunctionofTemperatureCurve.briefDescription() << ".");
     }
   }
 

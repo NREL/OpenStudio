@@ -369,7 +369,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(2u, vrf.terminals().size());
   EXPECT_EQ(3u, vrf.loadingIndexes().size());
 
-  EXPECT_EQ(6u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());  // 2 on vrf + 4 on coils
+  EXPECT_EQ(6u, model.getObjectsByType(CurveQuadratic::iddObjectType()).size());     // 2 on vrf + 4 on coils
   EXPECT_EQ(10u, model.getObjectsByType(CurveBiquadratic::iddObjectType()).size());  // 6 on vrf + 4 on coils
   EXPECT_EQ(2u, model.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
   EXPECT_EQ(2u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());  // 1 terminals + 1 loading indexes
@@ -386,12 +386,12 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(4u, model.getObjectsByType(ModelObjectList::iddObjectType()).size());
 
   Model model2;
-	
+
   EXPECT_EQ(0u, model2.getObjectsByType(CurveQuadratic::iddObjectType()).size());
   EXPECT_EQ(0u, model2.getObjectsByType(CurveBiquadratic::iddObjectType()).size());
   EXPECT_EQ(0u, model2.getObjectsByType(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType()).size());
   EXPECT_EQ(0u, model2.getObjectsByType(ModelObjectList::iddObjectType()).size());
-	
+
   AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrfClone2 =
     vrf.clone(model2).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
   EXPECT_EQ("R12", vrfClone2.refrigerantType());

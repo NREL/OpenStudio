@@ -271,9 +271,9 @@ namespace model {
 
     std::vector<LoadingIndex> loadingIndexes() const;
 
-		boost::optional<double> autosizedRatedEvaporativeCapacity();
+    boost::optional<double> autosizedRatedEvaporativeCapacity();
 
-		boost::optional<double> autosizedResistiveDefrostHeaterCapacity();
+    boost::optional<double> autosizedResistiveDefrostHeaterCapacity();
 
     boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const;
 
