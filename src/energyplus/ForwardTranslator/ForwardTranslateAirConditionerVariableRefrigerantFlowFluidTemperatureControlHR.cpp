@@ -65,6 +65,13 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(
     model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR& modelObject) {
 
+		// Terminals
+		std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
+		if (terminals.empty()) {
+			LOG(Warn, modelObject.briefDescription() << " will not be translated as it has no terminals.";
+			return boost::none;
+		}
+
 		// Name
 		IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR, modelObject);
 
@@ -391,8 +398,6 @@ namespace energyplus {
     idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::ZoneTerminalUnitListName, terminalUnitListName);
 
     m_idfObjects.push_back(_zoneTerminalUnitList);
-
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
 
     for (auto& terminal : terminals) {
       boost::optional<IdfObject> terminal_ = translateAndMapModelObject(terminal);

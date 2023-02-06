@@ -388,3 +388,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
                  false)
       .get());
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlowFluidTemperatureControl_NoTerminals) {
+  Model model;
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf(model);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).size());
+  EXPECT_EQ(13u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
+  EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Curve_Cubic).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Fan_VariableVolume).size());
+}
