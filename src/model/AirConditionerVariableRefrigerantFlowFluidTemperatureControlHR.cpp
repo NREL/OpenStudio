@@ -153,21 +153,7 @@ namespace model {
       airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setVRFModelObjectList(
         modelObjectList);
 
-      if (boost::optional<Curve> curve = outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(clone);
-      }
-
-      if (boost::optional<Curve> curve = outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(clone);
-      }
-
-      if (auto curve = defrostEnergyInputRatioModifierFunctionofTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(clone);
-      }
-
+      // This will clone each LoadingIndex too
       ModelObjectList loadingIndexList = this->loadingIndexList();
       ModelObjectList loadingIndexListClone = loadingIndexList.clone(model).cast<ModelObjectList>();
       airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setLoadingIndexList(
@@ -186,6 +172,13 @@ namespace model {
     std::vector<ModelObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::children() const {
       std::vector<ModelObject> result;
 
+      std::vector<ModelObject> loadings;
+      // children() is called during remove(), except we already trashed the moList...
+      if (auto moList_ = optionalLoadingIndexList()) {
+        loadings = moList_->modelObjects();
+      }
+      result.reserve(loadings.size() + 3);
+
       result.push_back(outdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve());
       result.push_back(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve());
 
@@ -193,6 +186,10 @@ namespace model {
       curve = defrostEnergyInputRatioModifierFunctionofTemperatureCurve();
       if (curve) {
         result.push_back(curve.get());
+      }
+
+      for (auto&& loadIndex : loadings) {
+        result.emplace_back(std::move(loadIndex));
       }
 
       return result;
@@ -649,13 +646,17 @@ namespace model {
       return value.get();
     }
 
-    ModelObjectList AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::loadingIndexList() const {
-      boost::optional<ModelObjectList> mo = getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(
+    boost::optional<ModelObjectList> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::optionalLoadingIndexList() const {
+      return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(
         OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::LoadingIndexList);
+    }
 
-      OS_ASSERT(mo);
+    ModelObjectList AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::loadingIndexList() const {
+      boost::optional<ModelObjectList> moList_ = optionalLoadingIndexList();
 
-      return mo.get();
+      OS_ASSERT(moList_);
+
+      return moList_.get();
     }
 
     bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::addLoadingIndex(LoadingIndex& loadingIndex) {

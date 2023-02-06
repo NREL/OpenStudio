@@ -62,8 +62,6 @@ namespace model {
 
     const std::vector<std::string>& LoadingIndex_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
-      if (result.empty()) {
-      }
       return result;
     }
 
@@ -72,16 +70,12 @@ namespace model {
     }
 
     ModelObject LoadingIndex_Impl::clone(Model model) const {
-      auto t_clone = ParentObject_Impl::clone(model).cast<LoadingIndex>();
-
-      return t_clone;
+      // Don't clone the curves (listed as children)
+      return ModelObject_Impl::clone(model).cast<LoadingIndex>();  // NOLINT(bugprone-parent-virtual-call)
     }
 
     std::vector<ModelObject> LoadingIndex_Impl::children() const {
-      std::vector<ModelObject> children;
-      children.push_back(evaporativeCapacityMultiplierFunctionofTemperatureCurve());
-      children.push_back(compressorPowerMultiplierFunctionofTemperatureCurve());
-      return children;
+      return {evaporativeCapacityMultiplierFunctionofTemperatureCurve(), compressorPowerMultiplierFunctionofTemperatureCurve()};
     }
 
     double LoadingIndex_Impl::compressorSpeed() const {

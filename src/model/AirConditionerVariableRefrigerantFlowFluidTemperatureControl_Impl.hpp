@@ -299,6 +299,7 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlowFluidTemperatureControl");
 
+      boost::optional<ModelObjectList> optionalLoadingIndexList() const;  // For children()
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
       boost::optional<Curve> optionalOutdoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve() const;
       boost::optional<Curve> optionalOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve() const;

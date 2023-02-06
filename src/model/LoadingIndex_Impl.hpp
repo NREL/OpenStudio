@@ -53,7 +53,7 @@ namespace model {
 
       LoadingIndex_Impl(const LoadingIndex_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~LoadingIndex_Impl() {}
+      virtual ~LoadingIndex_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -63,9 +63,14 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      // Overriding clone and children here because we want to try to remove the Curves (if they aren't used by something else)
+      // So we list them as children. But ParentObject_Impl::clone would also clone them, so we override clone to call ModelObject_Impl::clone
       virtual ModelObject clone(Model model) const override;
 
       virtual std::vector<ModelObject> children() const override;
+
+      // No need to override, it bears only ResourceObjects
+      // virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
       //@}
       /** @name Getters */
@@ -96,10 +101,6 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.LoadingIndex");
 
-      // TODO: Check the return types of these methods.
-      // Optional getters for use by methods like children() so can remove() if the constructor fails.
-      // There are other ways for the public versions of these getters to fail--perhaps all required
-      // objects should be returned as boost::optionals
       boost::optional<Curve> optionalEvaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
       boost::optional<Curve> optionalCompressorPowerMultiplierFunctionofTemperatureCurve() const;
     };
