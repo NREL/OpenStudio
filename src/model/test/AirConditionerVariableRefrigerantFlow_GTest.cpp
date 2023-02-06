@@ -38,15 +38,19 @@
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 #include "../Curve.hpp"
 #include "../Curve_Impl.hpp"
-#include "../AirLoopHVACZoneSplitter.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveCubic.hpp"
 #include "../CurveCubic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
+#include "../CurveExponent.hpp"
+#include "../CurveExponent_Impl.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -190,26 +194,51 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow_addToNode) {
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow_Remove) {
   Model model;
 
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CurveQuadratic>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CurveBiquadratic>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CurveCubic>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  EXPECT_EQ(0, model.getModelObjects<Curve>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveQuadratic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveBiquadratic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveCubic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveExponent>().size());
+
+  EXPECT_EQ(0, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlow>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ModelObjectList>().size());
 
   auto size = model.modelObjects().size();
   AirConditionerVariableRefrigerantFlow vrf(model);
+  EXPECT_EQ(20, model.getModelObjects<Curve>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveQuadratic>().size());
+  EXPECT_EQ(9, model.getConcreteModelObjects<CurveBiquadratic>().size());
+  EXPECT_EQ(11, model.getConcreteModelObjects<CurveCubic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveExponent>().size());
+
+  EXPECT_EQ(1, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlow>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  EXPECT_EQ(1, model.getConcreteModelObjects<ModelObjectList>().size());
+
+  // VRFTU has no curves, but its Cooling Coil and Heating Coil each add a Quadratic and a Biquadratic, the FanOnOff add a Cubic and one Exponent
   ZoneHVACTerminalUnitVariableRefrigerantFlow term(model);
   vrf.addTerminal(term);
-  EXPECT_EQ(1u, vrf.terminals().size());
+  EXPECT_EQ(1, vrf.terminals().size());
 
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CurveQuadratic>().size());
-  EXPECT_EQ(9u, model.getConcreteModelObjects<CurveBiquadratic>().size());
-  EXPECT_EQ(11u, model.getConcreteModelObjects<CurveCubic>().size());
-  EXPECT_EQ(1u, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  EXPECT_EQ(26, model.getModelObjects<Curve>().size());
+  EXPECT_EQ(2, model.getConcreteModelObjects<CurveQuadratic>().size());
+  EXPECT_EQ(11, model.getConcreteModelObjects<CurveBiquadratic>().size());
+  EXPECT_EQ(12, model.getConcreteModelObjects<CurveCubic>().size());
+  EXPECT_EQ(1, model.getConcreteModelObjects<CurveExponent>().size());
+
+  EXPECT_EQ(1, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlow>().size());
+  EXPECT_EQ(1, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  EXPECT_EQ(1, model.getConcreteModelObjects<ModelObjectList>().size());
 
   EXPECT_FALSE(vrf.remove().empty());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CurveQuadratic>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CurveBiquadratic>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CurveCubic>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveQuadratic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveBiquadratic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveCubic>().size());
+
+  EXPECT_EQ(0, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlow>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ModelObjectList>().size());
+
   EXPECT_EQ(size + 2, model.modelObjects().size());  // Always On Discrete, OnOff
 }

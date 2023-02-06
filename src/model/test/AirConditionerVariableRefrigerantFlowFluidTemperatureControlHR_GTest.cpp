@@ -42,19 +42,21 @@
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
-#include "../Curve.hpp"
-#include "../Curve_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../Schedule.hpp"
 #include "../Schedule_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveCubic.hpp"
 #include "../CurveCubic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
+#include "../CurveExponent.hpp"
+#include "../CurveExponent_Impl.hpp"
 #include "../FanVariableVolume.hpp"
 #include "../FanVariableVolume_Impl.hpp"
 #include "../CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
@@ -405,52 +407,140 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Clone) {
   Model model;
 
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CurveQuadratic>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CurveBiquadratic>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<ModelObjectList>().size());
+  EXPECT_EQ(0, model.getModelObjects<Curve>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveQuadratic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveBiquadratic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveCubic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveExponent>().size());
+
+  EXPECT_EQ(0, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ModelObjectList>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<LoadingIndex>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
 
   AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf(model);
-
   EXPECT_TRUE(vrf.setRefrigerantType("R12"));
-  ZoneHVACTerminalUnitVariableRefrigerantFlow term1(model);
-  vrf.addTerminal(term1);
-  ZoneHVACTerminalUnitVariableRefrigerantFlow term2(model);
-  vrf.addTerminal(term2);
-  EXPECT_EQ(2u, vrf.terminals().size());
-  EXPECT_EQ(3u, vrf.loadingIndexes().size());
+  {
+    EXPECT_EQ(8, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(6, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveExponent>().size());
 
-  EXPECT_EQ(6u, model.getConcreteModelObjects<CurveQuadratic>().size());     // 2 on vrf + 4 on coils
-  EXPECT_EQ(10u, model.getConcreteModelObjects<CurveBiquadratic>().size());  // 6 on vrf + 4 on coils
-  EXPECT_EQ(2u, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
-  EXPECT_EQ(2u, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes
+    EXPECT_EQ(1, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes
+    EXPECT_EQ(3, model.getConcreteModelObjects<LoadingIndex>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
 
+    // VRFTU has no curves, but its Cooling Coil and Heating Coil each add a Quadratic and a Biquadratic, the FanOnOff add a Cubic and one Exponent
+    ZoneHVACTerminalUnitVariableRefrigerantFlow term1(model);
+    vrf.addTerminal(term1);
+    EXPECT_EQ(14, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(4, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(8, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveExponent>().size());
+
+    EXPECT_EQ(1, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes
+    EXPECT_EQ(3, model.getConcreteModelObjects<LoadingIndex>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+
+    ZoneHVACTerminalUnitVariableRefrigerantFlow term2(model);
+    vrf.addTerminal(term2);
+    EXPECT_EQ(20, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(6, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(10, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<CurveExponent>().size());
+
+    EXPECT_EQ(1, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes
+    EXPECT_EQ(3, model.getConcreteModelObjects<LoadingIndex>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+
+    EXPECT_EQ(2u, vrf.terminals().size());
+    EXPECT_EQ(3u, vrf.loadingIndexes().size());
+  }
+
+  // Cloning the VRF will clone the Loading Indexes, but not the underlying Curves (these are ResourceObjects after all!)
+  // The Terminals aren't cloned
   auto vrfClone = vrf.clone(model).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
-  EXPECT_EQ("R12", vrfClone.refrigerantType());
-  EXPECT_EQ(0u, vrfClone.terminals().size());
-  EXPECT_EQ(3u, vrfClone.loadingIndexes().size());
+  {
+    EXPECT_EQ("R12", vrfClone.refrigerantType());
+    EXPECT_EQ(0, vrfClone.terminals().size());
+    EXPECT_EQ(3, vrfClone.loadingIndexes().size());
 
-  EXPECT_EQ(6u, model.getConcreteModelObjects<CurveQuadratic>().size());
-  EXPECT_EQ(10u, model.getConcreteModelObjects<CurveBiquadratic>().size());
-  EXPECT_EQ(2u, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
-  EXPECT_EQ(4u, model.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(20, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(6, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(10, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<CurveExponent>().size());
 
-  Model model2;
+    EXPECT_EQ(2, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
+    EXPECT_EQ(4, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes times 2
+    EXPECT_EQ(6, model.getConcreteModelObjects<LoadingIndex>().size());     // 3 for each AirCondVRF
+    EXPECT_EQ(2, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  }
 
-  EXPECT_EQ(0u, model2.getConcreteModelObjects<CurveQuadratic>().size());
-  EXPECT_EQ(0u, model2.getConcreteModelObjects<CurveBiquadratic>().size());
-  EXPECT_EQ(0u, model2.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
-  EXPECT_EQ(0u, model2.getConcreteModelObjects<ModelObjectList>().size());
+  {
+    Model model2;
 
-  auto vrfClone2 = vrf.clone(model2).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
-  EXPECT_EQ("R12", vrfClone2.refrigerantType());
-  EXPECT_EQ(0u, vrfClone2.terminals().size());
-  EXPECT_EQ(3u, vrfClone2.loadingIndexes().size());
+    EXPECT_EQ(0, model2.getModelObjects<Curve>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CurveExponent>().size());
 
-  EXPECT_EQ(2u, model2.getConcreteModelObjects<CurveQuadratic>().size());
-  EXPECT_EQ(6u, model2.getConcreteModelObjects<CurveBiquadratic>().size());
-  EXPECT_EQ(0u, model2.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
-  EXPECT_EQ(2u, model2.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<LoadingIndex>().size());  // 3 for each AirCondVRF
+    EXPECT_EQ(0, model2.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+
+    auto vrfClone2 = vrf.clone(model2).cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
+    EXPECT_EQ("R12", vrfClone2.refrigerantType());
+    EXPECT_EQ(0, vrfClone2.terminals().size());
+    EXPECT_EQ(3, vrfClone2.loadingIndexes().size());
+
+    EXPECT_EQ(8, model2.getModelObjects<Curve>().size());
+    EXPECT_EQ(2, model2.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(6, model2.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CurveExponent>().size());
+
+    EXPECT_EQ(1, model2.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
+    EXPECT_EQ(2, model2.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes
+    EXPECT_EQ(3, model2.getConcreteModelObjects<LoadingIndex>().size());     // 3 for each AirCondVRF
+    EXPECT_EQ(0, model2.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  }
+
+  {
+    // VRF + its terminals are gone, but the cloned one should be left intact (its curves and co are still there)
+    vrf.remove();
+    EXPECT_EQ(8, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(6, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveExponent>().size());
+
+    EXPECT_EQ(1, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes
+    EXPECT_EQ(3, model.getConcreteModelObjects<LoadingIndex>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+
+    // Curves are no longer used anywhere, so should be removed too
+    vrfClone.remove();
+    EXPECT_EQ(0, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveExponent>().size());
+
+    EXPECT_EQ(0, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<LoadingIndex>().size());  // 3 for each AirCondVRF
+    EXPECT_EQ(0, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
+  }
 }
 
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Remove) {
