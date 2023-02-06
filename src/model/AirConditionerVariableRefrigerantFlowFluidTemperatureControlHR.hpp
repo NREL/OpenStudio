@@ -328,7 +328,7 @@ namespace model {
 
     std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-    void addLoadingIndex(LoadingIndex& loadingIndex);
+    bool addLoadingIndex(LoadingIndex& loadingIndex);
 
     void removeLoadingIndex(LoadingIndex& loadingIndex);
 

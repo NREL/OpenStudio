@@ -658,8 +658,8 @@ namespace model {
       return mo.get();
     }
 
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::addLoadingIndex(LoadingIndex& loadingIndex) {
-      loadingIndexList().addModelObject(loadingIndex);
+    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::addLoadingIndex(LoadingIndex& loadingIndex) {
+      return loadingIndexList().addModelObject(loadingIndex);
     }
 
     void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::removeLoadingIndex(LoadingIndex& loadingIndex) {
@@ -1357,7 +1357,7 @@ namespace model {
 
       LoadingIndex loadingIndex1(model, 1500, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
                                  compressorPowerMultiplierFunctionofTemperatureCurve1);
-      addLoadingIndex(loadingIndex1);
+      OS_ASSERT(addLoadingIndex(loadingIndex1));
     }
 
     {
@@ -1389,7 +1389,7 @@ namespace model {
 
       LoadingIndex loadingIndex2(model, 3600, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
                                  compressorPowerMultiplierFunctionofTemperatureCurve2);
-      addLoadingIndex(loadingIndex2);
+      OS_ASSERT(addLoadingIndex(loadingIndex2));
     }
 
     {
@@ -1421,7 +1421,7 @@ namespace model {
 
       LoadingIndex loadingIndex3(model, 6000, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
                                  compressorPowerMultiplierFunctionofTemperatureCurve3);
-      addLoadingIndex(loadingIndex3);
+      OS_ASSERT(addLoadingIndex(loadingIndex3));
     }
   }
 
@@ -2067,7 +2067,7 @@ namespace model {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->terminals();
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::addLoadingIndex(LoadingIndex& loadingIndex) {
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::addLoadingIndex(LoadingIndex& loadingIndex) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->addLoadingIndex(loadingIndex);
   }
 

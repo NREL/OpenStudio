@@ -531,8 +531,8 @@ namespace model {
       return mo.get();
     }
 
-    void AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::addLoadingIndex(LoadingIndex& loadingIndex) {
-      loadingIndexList().addModelObject(loadingIndex);
+    bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::addLoadingIndex(LoadingIndex& loadingIndex) {
+      return loadingIndexList().addModelObject(loadingIndex);
     }
 
     void AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl::removeLoadingIndex(LoadingIndex& loadingIndex) {
@@ -1055,7 +1055,7 @@ namespace model {
 
       LoadingIndex loadingIndex1(model, 1500, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
                                  compressorPowerMultiplierFunctionofTemperatureCurve1);
-      addLoadingIndex(loadingIndex1);
+      OS_ASSERT(addLoadingIndex(loadingIndex1));
     }
 
     {
@@ -1087,7 +1087,7 @@ namespace model {
 
       LoadingIndex loadingIndex2(model, 3600, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
                                  compressorPowerMultiplierFunctionofTemperatureCurve2);
-      addLoadingIndex(loadingIndex2);
+      OS_ASSERT(addLoadingIndex(loadingIndex2));
     }
 
     {
@@ -1119,7 +1119,7 @@ namespace model {
 
       LoadingIndex loadingIndex3(model, 6000, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
                                  compressorPowerMultiplierFunctionofTemperatureCurve3);
-      addLoadingIndex(loadingIndex3);
+      OS_ASSERT(addLoadingIndex(loadingIndex3));
     }
   }
 
@@ -1584,7 +1584,7 @@ namespace model {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->terminals();
   }
 
-  void AirConditionerVariableRefrigerantFlowFluidTemperatureControl::addLoadingIndex(LoadingIndex& loadingIndex) {
+  bool AirConditionerVariableRefrigerantFlowFluidTemperatureControl::addLoadingIndex(LoadingIndex& loadingIndex) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl>()->addLoadingIndex(loadingIndex);
   }
 

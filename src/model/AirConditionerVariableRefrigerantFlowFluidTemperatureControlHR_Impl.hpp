@@ -352,7 +352,7 @@ namespace model {
 
       bool setLoadingIndexList(const ModelObjectList& modelObjectList);
 
-      void addLoadingIndex(LoadingIndex& loadingIndex);
+      bool addLoadingIndex(LoadingIndex& loadingIndex);
 
       void removeLoadingIndex(LoadingIndex& loadingIndex);
 
