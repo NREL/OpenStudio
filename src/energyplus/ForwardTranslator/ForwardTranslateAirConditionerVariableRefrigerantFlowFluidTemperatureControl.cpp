@@ -64,18 +64,9 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(
     model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl& modelObject) {
-    boost::optional<std::string> s;
-    boost::optional<double> value;
 
-    IdfObject idfObject(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl);
-
-    m_idfObjects.push_back(idfObject);
-
-    // Heat Pump Name
-    s = modelObject.name();
-    if (s) {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::HeatPumpName, *s);
-    }
+		// Heat Pump Name
+		IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl, modelObject);
 
     // Availability Schedule Name: Optional Object
     if (boost::optional<Schedule> availabilitySchedule_ = modelObject.availabilitySchedule()) {
@@ -85,16 +76,13 @@ namespace energyplus {
     }
 
     // Refrigerant Type: Optional Object
-    s = modelObject.refrigerantType();
-    if (s) {
-      boost::optional<IdfObject> fluidProperties = createFluidProperties(s.get());
-      if (fluidProperties) {
-        boost::optional<std::string> value = fluidProperties.get().getString(FluidProperties_NameFields::FluidName, true);
-        if (value) {
-          idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantType, value.get());
-        }
-      }
-    }
+		boost::optional<IdfObject> fluidProperties = createFluidProperties(modelObject.refrigerantType());
+		if (fluidProperties) {
+			boost::optional<std::string> value = fluidProperties.get().getString(FluidProperties_NameFields::FluidName, true);
+			if (value) {
+				idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantType, value.get());
+			}
+		}
 
     if (modelObject.isRatedEvaporativeCapacityAutosized()) {
       idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedEvaporativeCapacity, "Autosize");
