@@ -283,9 +283,9 @@ class UTILITIES_API FSSpace : public FSBase
   boost::optional<FSConstructionSet> m_constructionSet;
   boost::optional<FSFace> m_face;
 
-  double m_belowFloorPlenumHeight = 0.0;
-  double m_floorToCeilingHeight = 0.0;
-  double m_aboveCeilingHeight = 0.0;
+  double m_below_floor_plenum_height = 0.0;
+  double m_floor_to_ceiling_height = 0.0;
+  double m_above_ceiling_plenum_height = 0.0;
   double m_offset = 0.0;
   bool m_openToBelow = false;
   int m_multiplier = 1;
@@ -387,14 +387,18 @@ class UTILITIES_API FSDoor : public FSFiller
 class UTILITIES_API FSShading : public FSBase
 {
  public:
-  explicit FSShading(const Json::Value& root, const FSStory& story);
-
+  explicit FSShading(const Json::Value& root, const FSModel& model, const FSStory& story);
+  double belowFloorPlenumHeight() const;
+  double floorToCeilingHeight() const;
+  double aboveCeilingPlenumHeight() const;
   void Accept(FSVisitor& visitor) const override;
-
   boost::optional<FSFace> face() const;
 
  private:
   boost::optional<FSFace> m_face;
+  double m_floor_to_ceiling_height = 0.0;
+  double m_below_floor_plenum_height = 0.0;
+  double m_above_ceiling_plenum_height = 0.0;
 };
 
 class UTILITIES_API FSStory : public FSBase
@@ -403,7 +407,7 @@ class UTILITIES_API FSStory : public FSBase
   explicit FSStory(const Json::Value& root, const FSModel& model);
   void Accept(FSVisitor& visitor) const override;
 
-  double getBelowFloorPlenumHeight() const;
+  double belowFloorPlenumHeight() const;
   double floorToCeilingHeight() const;
   double aboveCeilingPlenumHeight() const;
   double floorToFloorHeight() const;
