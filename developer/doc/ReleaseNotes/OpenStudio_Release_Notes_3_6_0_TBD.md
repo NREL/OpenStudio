@@ -70,6 +70,7 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 * [#4778](https://github.com/NREL/OpenStudio/pull/4778) - Wrap AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl and AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
     * `ZoneHVAC:TerminalUnit:VariableRefrigerantFlow` has API-breaking changes related to setters and getters for its heating and cooling coils. They now use `HVACComponent` instead of the more restrictive `CoilHeatingDXVariableRefrigerantFlow` and `CoilCoolingDXVariableRefrigerantFlow`.
+    * `AirConditionerVariableRefrigerantFlow::clone` was changed to stop cloning the child `Curve` objects (20 of them)
 
 ## Minor changes and bug fixes
 
