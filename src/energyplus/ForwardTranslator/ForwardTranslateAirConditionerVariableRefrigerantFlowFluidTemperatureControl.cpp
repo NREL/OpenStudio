@@ -68,7 +68,7 @@ namespace energyplus {
 		// Terminals
 		std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
 		if (terminals.empty()) {
-			LOG(Warn, modelObject.briefDescription() << " will not be translated as it has no terminals.";
+			LOG(Warn, modelObject.briefDescription() << " will not be translated as it has no terminals.");
 			return boost::none;
 		}
 
