@@ -170,7 +170,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
   Vector values = linspace(1, 8760, 8760);
 
   // Create a time series that starts at 01/01 00:00 (first timestamp = 01/01 01:00)
-  TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1)), Time(0, 1, 0), values, "");
+  TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0)), Time(0, 1, 0), values, "");
+  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1)), timeseries.startDateTime());
+  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0)), timeseries.firstReportDateTime());
+  EXPECT_EQ(Date(MonthOfYear::Jan, 1), timeseries.firstReportDateTime().date());
+  EXPECT_EQ(Time(0, 1, 0), timeseries.firstReportDateTime().time());
 
   Model model;
 
@@ -181,7 +185,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
 
   // Verify that the schedule gives us back the time series
   TimeSeries ts = scheduleInterval->timeSeries();
+  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1)), ts.startDateTime());
   EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0)), ts.firstReportDateTime());
+  EXPECT_EQ(Date(MonthOfYear::Jan, 1), ts.firstReportDateTime().date());
+  EXPECT_EQ(Time(0, 1, 0), ts.firstReportDateTime().time());
 
   // Forward translate the schedule
   ForwardTranslator ft;
@@ -297,7 +304,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
     ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
     EXPECT_EQ(1440, scheduleFixedInterval.intervalLength());  // one day in minutes
     EXPECT_EQ(1, scheduleFixedInterval.startMonth());
-    EXPECT_EQ(2, scheduleFixedInterval.startDay());  // unrelated to this test, but this should be fixed to be 1
+    EXPECT_EQ(1, scheduleFixedInterval.startDay());
 
     // Forward translate the schedule
     ForwardTranslator ft;
@@ -306,24 +313,24 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
     std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
     ASSERT_EQ(1u, objects.size());
 
-    EXPECT_EQ("Through: 01/02",
-              objects[0].getString(2, false).get());  // this aligns with start day, but start day should be 1 (so this should be 01/01)
+    EXPECT_EQ("Through: 01/01",
+              objects[0].getString(2, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
     EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
-    EXPECT_EQ("Through: 01/03", objects[0].getString(6, false).get());
+    EXPECT_EQ("Through: 01/02", objects[0].getString(6, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(7, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(8, false).get());
     EXPECT_EQ("9.98111111111111", objects[0].getString(9, false).get());
-    EXPECT_EQ("Through: 01/04", objects[0].getString(10, false).get());
+    EXPECT_EQ("Through: 01/03", objects[0].getString(10, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(11, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(12, false).get());
     EXPECT_EQ("9.92111111111111", objects[0].getString(13, false).get());
-    EXPECT_EQ("Through: 01/05", objects[0].getString(14, false).get());
+    EXPECT_EQ("Through: 01/04", objects[0].getString(14, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(15, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(16, false).get());
     EXPECT_EQ("9.86222222222222", objects[0].getString(17, false).get());
-    EXPECT_EQ("Through: 01/06", objects[0].getString(18, false).get());
+    EXPECT_EQ("Through: 01/05", objects[0].getString(18, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(19, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(20, false).get());
     EXPECT_EQ("9.80444444444445", objects[0].getString(21, false).get());
@@ -332,7 +339,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
   // timestep 7 days (weekly)
   {
     Model model;
-    Date start_date(MonthOfYear::Jan, 1, 2007);
+    Date start_date(MonthOfYear::Jan, 1, 2009);
     Time timestep_7day(7, 0);
     Vector weekly_wh_inlet_temperatures_c(5);
     weekly_wh_inlet_temperatures_c[0] = 10.0422222222222;
@@ -341,14 +348,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
     weekly_wh_inlet_temperatures_c[3] = 9.86222222222222;
     weekly_wh_inlet_temperatures_c[4] = 9.80444444444445;
     TimeSeries time_series_tmains(start_date, timestep_7day, weekly_wh_inlet_temperatures_c, "C");
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1)), time_series_tmains.startDateTime());
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(7, 0, 0)), time_series_tmains.firstReportDateTime());
+    EXPECT_EQ(Date(MonthOfYear::Jan, 8), time_series_tmains.firstReportDateTime().date());
+    EXPECT_EQ(Time(0, 0, 0), time_series_tmains.firstReportDateTime().time());
 
     boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(time_series_tmains, model);
     ASSERT_TRUE(scheduleInterval);
     EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
     ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
-    EXPECT_EQ(1440 * 7, scheduleFixedInterval.intervalLength());  // one day in minutes
+    EXPECT_EQ(1440 * 7, scheduleFixedInterval.intervalLength());  // seven days in minutes
     EXPECT_EQ(1, scheduleFixedInterval.startMonth());
-    EXPECT_EQ(2, scheduleFixedInterval.startDay());  // unrelated to this test, but this should be fixed to be 1
+    EXPECT_EQ(1, scheduleFixedInterval.startDay());
 
     // Forward translate the schedule
     ForwardTranslator ft;
@@ -357,24 +368,24 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
     std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
     ASSERT_EQ(1u, objects.size());
 
-    EXPECT_EQ("Through: 01/08",
-              objects[0].getString(2, false).get());  // this aligns with start day, but start day should be 1 (so this should be 01/01)
+    EXPECT_EQ("Through: 01/07",
+              objects[0].getString(2, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
     EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
-    EXPECT_EQ("Through: 01/15", objects[0].getString(6, false).get());
+    EXPECT_EQ("Through: 01/14", objects[0].getString(6, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(7, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(8, false).get());
     EXPECT_EQ("9.98111111111111", objects[0].getString(9, false).get());
-    EXPECT_EQ("Through: 01/22", objects[0].getString(10, false).get());
+    EXPECT_EQ("Through: 01/21", objects[0].getString(10, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(11, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(12, false).get());
     EXPECT_EQ("9.92111111111111", objects[0].getString(13, false).get());
-    EXPECT_EQ("Through: 01/29", objects[0].getString(14, false).get());
+    EXPECT_EQ("Through: 01/28", objects[0].getString(14, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(15, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(16, false).get());
     EXPECT_EQ("9.86222222222222", objects[0].getString(17, false).get());
-    EXPECT_EQ("Through: 02/05", objects[0].getString(18, false).get());
+    EXPECT_EQ("Through: 02/04", objects[0].getString(18, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(19, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(20, false).get());
     EXPECT_EQ("9.80444444444445", objects[0].getString(21, false).get());
@@ -531,12 +542,38 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_ThreePoint) {
 
   // Create an interval time series starting 1/1 00:00 with interval 182.5 days
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 0, 0)), Time(0, 4380, 0), values, "");
+  EXPECT_EQ(DateTime(Date(MonthOfYear::Jul, 2, 2008), Time(0, 12, 0)), timeseries.startDateTime());
+  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 0, 0)), timeseries.firstReportDateTime());
+  EXPECT_EQ(Date(MonthOfYear::Jan, 1), timeseries.firstReportDateTime().date());
+  EXPECT_EQ(Time(0, 0, 0), timeseries.firstReportDateTime().time());
 
   Model model;
 
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
-  // this should fail - the interval is 182.5 days
-  ASSERT_FALSE(scheduleInterval);
+  // this should not fail - the interval is 182.5 days
+  ASSERT_TRUE(scheduleInterval);
+  EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
+  ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
+  EXPECT_EQ(1440 * 182.5, scheduleFixedInterval.intervalLength());  // 182.5 days in minutes
+  EXPECT_EQ(7, scheduleFixedInterval.startMonth());
+  EXPECT_EQ(2, scheduleFixedInterval.startDay());
+
+  // Forward translate the schedule
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
+  ASSERT_EQ(1u, objects.size());
+
+  EXPECT_EQ("Through: 12/31",
+            objects[0].getString(2, false).get());
+  EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
+  EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
+  EXPECT_EQ("0", objects[0].getString(5, false).get());
+  EXPECT_EQ("Through: 01/01", objects[0].getString(6, false).get());
+  EXPECT_EQ("For: AllDays", objects[0].getString(7, false).get());
+  EXPECT_EQ("Until: 24:00", objects[0].getString(8, false).get());
+  EXPECT_EQ("1", objects[0].getString(9, false).get());
 }
 
 // TODO: This test was disabled since it is failing, need to fix it
