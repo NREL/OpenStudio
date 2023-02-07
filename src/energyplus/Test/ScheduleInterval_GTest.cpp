@@ -313,8 +313,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
     std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
     ASSERT_EQ(1u, objects.size());
 
-    EXPECT_EQ("Through: 01/01",
-              objects[0].getString(2, false).get());
+    EXPECT_EQ("Through: 01/01", objects[0].getString(2, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
     EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
@@ -368,8 +367,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
     std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
     ASSERT_EQ(1u, objects.size());
 
-    EXPECT_EQ("Through: 01/07",
-              objects[0].getString(2, false).get());
+    EXPECT_EQ("Through: 01/07", objects[0].getString(2, false).get());
     EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
     EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
@@ -565,8 +563,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_ThreePoint) {
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
   ASSERT_EQ(1u, objects.size());
 
-  EXPECT_EQ("Through: 12/31",
-            objects[0].getString(2, false).get());
+  EXPECT_EQ("Through: 12/31", objects[0].getString(2, false).get());
   EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
   EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
   EXPECT_EQ("0", objects[0].getString(5, false).get());

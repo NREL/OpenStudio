@@ -118,16 +118,11 @@ namespace model {
         return false;
       }
 
-      // check the interval
-/*       if (intervalTime->totalDays() > 1) {
-        return false;
-      } */
-
       // check that first report is whole number of intervals from start date
-      DateTime firstReportDateTime = timeSeries.firstReportDateTime();      
+      DateTime firstReportDateTime = timeSeries.firstReportDateTime();
       DateTime startDateTime = timeSeries.startDateTime();
       Date startDate = startDateTime.date();
-      
+
       Time firstReportTime = firstReportDateTime.time();
 
       double numIntervalsToFirstReport = std::max(1.0, firstReportTime.totalMinutes() / intervalLength);
