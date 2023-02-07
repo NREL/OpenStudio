@@ -159,6 +159,7 @@ namespace energyplus {
       // shift the start of the loop if needed
       int secondShift = firstReportDateTime.time().totalSeconds();
       unsigned int start = 0;
+      unsigned int nDays = 1;
       if (secondShift == 0) {
         start = 1;
         // JJR: interval lengths of at least one day shouldn't shift the start of the loop, right? why would we ever start with the second element of the values vector?
@@ -170,8 +171,8 @@ namespace energyplus {
           // If this is an interval representing one or more days
           if (intervalLengthAsInt % 1440 == 0) {
             start = 0;
-            const int nDays = intervalLengthAsInt / 1440;
-            lastDate -= dayDelta * nDays;
+            nDays = intervalLengthAsInt / 1440;
+            lastDate -= dayDelta;
           }
         }
       } else {
@@ -204,14 +205,14 @@ namespace energyplus {
           // Note that 00:00:00 counts as the end of the previous day - we only write
           // out the 24:00:00 value and not both.
           fieldIndex = addUntil(idfObject, fieldIndex, 24, 0, values[i]);
-          lastDate += dayDelta;
+          lastDate += dayDelta * nDays;
           fieldIndex = startNewDay(idfObject, fieldIndex, lastDate);
         } else {
           // This still could be on a different day
           if (today != lastDay) {
             // We're on a new day, need a 24:00:00 value and set up the next day
             fieldIndex = addUntil(idfObject, fieldIndex, 24, 0, values[i]);
-            lastDate += dayDelta;
+            lastDate += dayDelta * nDays;
             fieldIndex = startNewDay(idfObject, fieldIndex, lastDate);
           }
           if (values[i] == values[i + 1]) {

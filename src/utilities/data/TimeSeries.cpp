@@ -866,6 +866,10 @@ openstudio::DateTime TimeSeries::firstReportDateTime() const {
   return m_impl->firstReportDateTime();
 }
 
+openstudio::DateTime TimeSeries::startDateTime() const {
+  return m_impl->startDateTime();
+}
+
 openstudio::Vector TimeSeries::daysFromFirstReport() const {
   return m_impl->daysFromFirstReport();
 }
