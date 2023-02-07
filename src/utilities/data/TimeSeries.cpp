@@ -526,6 +526,11 @@ namespace detail {
     return m_firstReportDateTime;
   }
 
+  /// start date
+  openstudio::DateTime TimeSeries_Impl::startDateTime() const {
+    return m_startDateTime;
+  }
+
   /// get value at number of seconds from start date and time
   double TimeSeries_Impl::valueAtSecondsFromFirstReport(long secondsFromFirstReport) const {
     double result = m_outOfRangeValue;
