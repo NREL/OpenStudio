@@ -87,7 +87,8 @@ namespace model {
     }
 
     openstudio::TimeSeries ScheduleFixedInterval_Impl::timeSeries() const {
-      Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay());
+      year = 2009;  // FIXME: we need to pass calendar year in here, otherwise it defaults to 2009
+      Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay(), year);
       Time intervalLength(0, 0, (int)(this->intervalLength()));
 
       Vector values(this->numExtensibleGroups());
