@@ -65,15 +65,16 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(
     model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl& modelObject) {
 
-		// Terminals
-		std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
-		if (terminals.empty()) {
-			LOG(Warn, modelObject.briefDescription() << " will not be translated as it has no terminals.");
-			return boost::none;
-		}
+    // Terminals
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
+    if (terminals.empty()) {
+      LOG(Warn, modelObject.briefDescription() << " will not be translated as it has no terminals.");
+      return boost::none;
+    }
 
-		// Heat Pump Name
-		IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl, modelObject);
+    // Heat Pump Name
+    IdfObject idfObject =
+      createRegisterAndNameIdfObject(openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl, modelObject);
 
     // Availability Schedule Name: Optional Object
     if (boost::optional<Schedule> availabilitySchedule_ = modelObject.availabilitySchedule()) {
@@ -83,13 +84,13 @@ namespace energyplus {
     }
 
     // Refrigerant Type: Optional Object
-		boost::optional<IdfObject> fluidProperties = createFluidProperties(modelObject.refrigerantType());
-		if (fluidProperties) {
-			boost::optional<std::string> value = fluidProperties.get().getString(FluidProperties_NameFields::FluidName, true);
-			if (value) {
-				idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantType, value.get());
-			}
-		}
+    boost::optional<IdfObject> fluidProperties = createFluidProperties(modelObject.refrigerantType());
+    if (fluidProperties) {
+      boost::optional<std::string> value = fluidProperties.get().getString(FluidProperties_NameFields::FluidName, true);
+      if (value) {
+        idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RefrigerantType, value.get());
+      }
+    }
 
     if (modelObject.isRatedEvaporativeCapacityAutosized()) {
       idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::RatedEvaporativeCapacity, "Autosize");
