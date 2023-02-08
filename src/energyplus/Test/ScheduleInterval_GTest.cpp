@@ -46,6 +46,8 @@
 #include "../../model/ScheduleVariableInterval_Impl.hpp"
 #include "../../model/ScheduleFile.hpp"
 #include "../../model/ScheduleFile_Impl.hpp"
+#include "../../model/YearDescription.hpp"
+#include "../../model/YearDescription_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -429,6 +431,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hours) {
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_HoursLeapYear) {
   Model model;
+
+  model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(yd.setCalendarYear(2012));
+  EXPECT_EQ(2012, yd.assumedYear());
+
   Date start_date(MonthOfYear::Jan, 1, 2012);
   Time timestep_1day(1, 0);
   Vector values = linspace(1, 366, 366);
