@@ -34,6 +34,8 @@
 
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeLimits_Impl.hpp"
+#include "YearDescription.hpp"
+#include "YearDescription_Impl.hpp"
 
 #include <utilities/idd/OS_Schedule_FixedInterval_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -87,7 +89,12 @@ namespace model {
     }
 
     openstudio::TimeSeries ScheduleFixedInterval_Impl::timeSeries() const {
-      year = 2009;  // FIXME: we need to pass calendar year in here, otherwise it defaults to 2009
+      int year =
+        2009;  // we need to pass assumed year in here, otherwise it uses YearDescription().assumedYear from Date.cpp which doesn't return the same assumed year (?)
+      if (boost::optional<YearDescription> yd = this->model().getOptionalUniqueModelObject<YearDescription>()) {
+        year = yd->assumedYear();
+      }
+
       Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay(), year);
       Time intervalLength(0, 0, (int)(this->intervalLength()));
 
