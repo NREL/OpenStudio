@@ -173,7 +173,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
 
   IdfObject idf_vrf = workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl)[0];
 
-  EXPECT_EQ(vrf.nameString(), idf_vrf.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::HeatPumpName, false).get());
+  EXPECT_EQ(vrf.nameString(), idf_vrf.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::Name, false).get());
   EXPECT_EQ(scheduleConstant.nameString(),
             idf_vrf.getString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilityScheduleName, false).get());
   EXPECT_EQ(vrf.nameString() + " Terminal List",
