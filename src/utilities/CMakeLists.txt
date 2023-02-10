@@ -56,8 +56,6 @@ set(core_src
   core/PathHelpers.hpp
   core/PathHelpers.cpp
   core/Queue.hpp
-  core/RubyInterpreter.hpp
-  core/RubyException.hpp
   core/Singleton.hpp
   core/StaticInitializer.hpp
   core/String.hpp
@@ -254,19 +252,8 @@ source_group(units FILES ${units_src})
 source_group(documentation FILES ${documentation_src})
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
-# Must call CMake itself in order to set the SWIG_LIB env var for add_custom_command
-add_custom_command(
-  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
-  COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
-          "${SWIG_EXECUTABLE}"
-          "-v"
-          "-ruby"
-          -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
-)
-
 set(${target_name}_src
   UtilitiesAPI.hpp
-  "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
   ${bcl_src}
   ${core_src}
   ${data_src}

@@ -9,6 +9,16 @@
   <display_name>Increase R-value of Insulation for Roofs by a Specified Percentage.</display_name>
   <description>Increase the R value of the insulation layer in roof constructinons by a percentage.</description>
   <modeler_description>Insulation later is inferred by finding the existing layer with the highest thermal resistance.</modeler_description>
+  <arguments>
+    <argument>
+      <name>r_value</name>
+      <display_name>Percentage Increase of R-value for Roof Insulation.</display_name>
+      <type>Double</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>30</default_value>
+    </argument>
+  </arguments>
   <outputs/>
   <provenances/>
   <tags>

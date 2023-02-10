@@ -14,10 +14,18 @@
 namespace openstudio {
 
 class Variant;
+class MeasureStep;
+
+namespace model {
+
+class Model;
+
+} // namespace model
 
 namespace measure {
   class OSArgument;
   using OSArgumentMap = std::map<std::string, OSArgument>;
+  class ModelMeasure;
 }  // namespace measure
 
 class OSWorkflow
@@ -27,6 +35,8 @@ class OSWorkflow
   OSWorkflow(WorkflowRunOptions t_runOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
 
   void run();
+
+  static measure::OSArgumentMap argumentMap(measure::ModelMeasure* measure, const model::Model& model, const openstudio::MeasureStep& step);
 
  private:
   // TODO: add a Logger
@@ -41,6 +51,8 @@ class OSWorkflow
   WorkflowRunOptions runOptions;
 
   static void applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue);
+
+
 };
 
 }  // namespace openstudio

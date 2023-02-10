@@ -271,7 +271,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         # Suppress 'register' storage class specified warnings (coming from Ruby)
         set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-sometimes-uninitialized")
       else()
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-conversion-null -Wno-misleading-indentation")
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-conversion-null -Wno-misleading-indentation -Wno-subobject-linkage -fno-gnu-unique")
       endif()
     endif()
 
@@ -340,15 +340,18 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       message(STATUS "${MODULE_NAME} - Couldn't determine version of Python - Building SWIG Bindings for Python 3")
     endif()
 
+    set(COPY_PYTHON_GENERATED_SRC "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py")
+
     add_custom_command(
       OUTPUT "${SWIG_WRAPPER_FULL_PATH}" "${PYTHON_GENERATED_SRC}"
       COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
               "${SWIG_EXECUTABLE}"
-              "-python" ${SWIG_PYTHON_3_FLAGS} "-c++" ${PYTHON_AUTODOC}
+              "-python" ${SWIG_PYTHON_3_FLAGS} "-c++" "-fvirtual" ${PYTHON_AUTODOC}
               -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
               -module "${MODULE_NAME}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
               "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
+      COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${PYTHON_GENERATED_SRC}" "${COPY_PYTHON_GENERATED_SRC}"
       DEPENDS ${this_depends}
     )
 
@@ -362,7 +365,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     add_library(
       ${swig_target}
-      MODULE
+      OBJECT
       ${SWIG_WRAPPER}
     )
 
@@ -376,48 +379,50 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
     elseif(UNIX)
       if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized")
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized -Wno-unused-variable")
         # Undefined suppress needed to avoid linking to Python::Module
-        set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-flat_namespace -undefined suppress")
+        set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress")
+      elseif(CMAKE_COMPILER_IS_GNUCXX)
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized -Wno-unused-variable -fno-gnu-unique")
       else()
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-misleading-indentation")
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-misleading-indentation -Wno-unused-variable -Wno-subobject-linkage")
       endif()
     endif()
 
-    # TODO: for local testing, PYTHON_GENERATED_SRC should go into Products/python next to the .so files
-    set(COPY_PYTHON_GENERATED_SRC "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py")
-    add_custom_command(TARGET ${swig_target}
-      POST_BUILD
-      # OUTPUT "${PYTHON_GENERATED_SRC}"
-      COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${PYTHON_GENERATED_SRC}" "${COPY_PYTHON_GENERATED_SRC}"
-      DEPENDS "${PYTHON_GENERATED_SRC}"
-    )
-    set_source_files_properties(${COPY_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
+    ## TODO: for local testing, PYTHON_GENERATED_SRC should go into Products/python next to the .so files
+    #set(COPY_PYTHON_GENERATED_SRC "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py")
+    #add_custom_command(TARGET ${swig_target}
+    #  POST_BUILD
+    #  # OUTPUT "${PYTHON_GENERATED_SRC}"
+    #  COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${PYTHON_GENERATED_SRC}" "${COPY_PYTHON_GENERATED_SRC}"
+    #  DEPENDS "${PYTHON_GENERATED_SRC}"
+    #)
+    #set_source_files_properties(${COPY_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
 
-    # In build dir it's inside Products/python and we want to find Products/libopenstudiolib
-    # It installs in Python/ and we want to find lib/libopenstudiolib
-    if(APPLE)
-      set_target_properties(${swig_target}
-        PROPERTIES
-          SUFFIX ".so"
-          BUILD_RPATH "@loader_path;@loader_path/.."
-          INSTALL_RPATH "@loader_path;@loader_path/../lib"
-      )
-    elseif(UNIX)
-      set_target_properties(${swig_target}
-        PROPERTIES
-          BUILD_RPATH "$ORIGIN:$ORIGIN/../"
-          INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib:$ORIGIN/../EnergyPlus"   # Need to pick up libpython too, or we won't we able to import the python bindings inside system python
-      )
-    endif()
+    ## In build dir it's inside Products/python and we want to find Products/libopenstudiolib
+    ## It installs in Python/ and we want to find lib/libopenstudiolib
+    #if(APPLE)
+    #  set_target_properties(${swig_target}
+    #    PROPERTIES
+    #      SUFFIX ".so"
+    #      BUILD_RPATH "@loader_path;@loader_path/.."
+    #      INSTALL_RPATH "@loader_path;@loader_path/../lib"
+    #  )
+    #elseif(UNIX)
+    #  set_target_properties(${swig_target}
+    #    PROPERTIES
+    #      BUILD_RPATH "$ORIGIN:$ORIGIN/../"
+    #      INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib:$ORIGIN/../EnergyPlus"   # Need to pick up libpython too, or we won't we able to import the python bindings inside system python
+    #  )
+    #endif()
 
-    # TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
-    # We're not trying to make a CLI here
+    ## TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
+    ## We're not trying to make a CLI here
     target_link_libraries(${swig_target} PUBLIC ${${PARENT_TARGET}_depends})
-    if (MSVC)
-      target_link_libraries(${swig_target} PRIVATE Python::Module) # TODO: we're going to have to deal with this now, we'll need to copy python3.8.dll THRICE (E+, bin/ and now Python/)
-    endif()
-    add_dependencies(${swig_target} ${PARENT_TARGET})
+    #if (MSVC)
+    #  target_link_libraries(${swig_target} PRIVATE Python::Module) # TODO: we're going to have to deal with this now, we'll need to copy python3.8.dll THRICE (E+, bin/ and now Python/)
+    #endif()
+    #add_dependencies(${swig_target} ${PARENT_TARGET})
 
     install(FILES "${PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
     install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
@@ -426,8 +431,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     list(APPEND ALL_PYTHON_BINDING_TARGETS "${swig_target}")
     set(ALL_PYTHON_BINDING_TARGETS "${ALL_PYTHON_BINDING_TARGETS}" PARENT_SCOPE)
 
-    list(APPEND ALL_PYTHON_BINDING_DEPENDS "${${PARENT_TARGET}_depends}")
-    set(ALL_PYTHON_BINDING_DEPENDS "${ALL_PYTHON_BINDING_DEPENDS}" PARENT_SCOPE)
+    #list(APPEND ALL_PYTHON_BINDING_DEPENDS "${${PARENT_TARGET}_depends}")
+    #set(ALL_PYTHON_BINDING_DEPENDS "${ALL_PYTHON_BINDING_DEPENDS}" PARENT_SCOPE)
 
     list(APPEND ALL_PYTHON_BINDING_WRAPPERS "${SWIG_WRAPPER}")
     set(ALL_PYTHON_BINDING_WRAPPERS "${ALL_PYTHON_BINDING_WRAPPERS}" PARENT_SCOPE)
@@ -438,88 +443,88 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     list(APPEND ALL_PYTHON_GENERATED_SRCS "${PYTHON_GENERATED_SRC}")
     set(ALL_PYTHON_GENERATED_SRCS "${ALL_PYTHON_GENERATED_SRCS}" PARENT_SCOPE)
 
-    # I'd also like the .so directly in package folder
-    if (BUILD_PYTHON_PIP_PACKAGE)
-      set(MODIFIED_PYTHON_GENERATED_SRC "${PYTHON_PACKAGE_FOLDER}/openstudio/${LOWER_NAME}.py")
-      add_custom_command(TARGET ${swig_target}
-        POST_BUILD
-        # OUTPUT "${MODIFIED_PYTHON_GENERATED_SRC}"
-        COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/python/FixPythonImports.cmake" "${PYTHON_GENERATED_SRC}" "${MODIFIED_PYTHON_GENERATED_SRC}"
-        # COMMAND "${CMAKE_COMMAND}" -E copy $<TARGET_FILE:${swig_target}> "${PYTHON_PACKAGE_FOLDER}/openstudio/"
-        # COMMAND patchelf --set-rpath '$ORIGIN' "${PYTHON_PACKAGE_FOLDER}/openstudio/$<TARGET_FILE_NAME:${swig_target}>"
-        DEPENDS "${PYTHON_GENERATED_SRC}"
-      )
-      set_source_files_properties(${MODIFIED_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
-      list(APPEND ALL_PYTHON_PACKAGE_GENERATED_SRCS "${MODIFIED_PYTHON_GENERATED_SRC}")
-      set(ALL_PYTHON_PACKAGE_GENERATED_SRCS "${ALL_PYTHON_PACKAGE_GENERATED_SRCS}" PARENT_SCOPE)
+    ### I'd also like the .so directly in package folder
+    ##if (BUILD_PYTHON_PIP_PACKAGE)
+    ##  set(MODIFIED_PYTHON_GENERATED_SRC "${PYTHON_PACKAGE_FOLDER}/openstudio/${LOWER_NAME}.py")
+    ##  add_custom_command(TARGET ${swig_target}
+    ##    POST_BUILD
+    ##    # OUTPUT "${MODIFIED_PYTHON_GENERATED_SRC}"
+    ##    COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/python/FixPythonImports.cmake" "${PYTHON_GENERATED_SRC}" "${MODIFIED_PYTHON_GENERATED_SRC}"
+    ##    # COMMAND "${CMAKE_COMMAND}" -E copy $<TARGET_FILE:${swig_target}> "${PYTHON_PACKAGE_FOLDER}/openstudio/"
+    ##    # COMMAND patchelf --set-rpath '$ORIGIN' "${PYTHON_PACKAGE_FOLDER}/openstudio/$<TARGET_FILE_NAME:${swig_target}>"
+    ##    DEPENDS "${PYTHON_GENERATED_SRC}"
+    ##  )
+    ##  set_source_files_properties(${MODIFIED_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
+    ##  list(APPEND ALL_PYTHON_PACKAGE_GENERATED_SRCS "${MODIFIED_PYTHON_GENERATED_SRC}")
+    ##  set(ALL_PYTHON_PACKAGE_GENERATED_SRCS "${ALL_PYTHON_PACKAGE_GENERATED_SRCS}" PARENT_SCOPE)
 
-      set(swig_target "python_package_${NAME}")
+    ##  set(swig_target "python_package_${NAME}")
 
-      add_library(
-        ${swig_target}
-        MODULE
-        ${SWIG_WRAPPER}
-      )
+    ##  ###add_library(
+    ##  ###  ${swig_target}
+    ##  ###  MODULE
+    ##  ###  ${SWIG_WRAPPER}
+    ##  ###)
 
-      set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME})
-      set_target_properties(${swig_target} PROPERTIES PREFIX "")
-      set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_FOLDER}/openstudio/")
-      set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_FOLDER}/openstudio/")
-      set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_FOLDER}/openstudio/")
-      if(MSVC)
-        # Avoid having a python_package/openstudio/Release/*.pyd path.
-        set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PYTHON_PACKAGE_FOLDER}/openstudio/")
-        set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PYTHON_PACKAGE_FOLDER}/openstudio/")
-        set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${PYTHON_PACKAGE_FOLDER}/openstudio/")
-        set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG "${PYTHON_PACKAGE_FOLDER}/openstudio/")
-        set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PYTHON_PACKAGE_FOLDER}/openstudio/")
-        set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PYTHON_PACKAGE_FOLDER}/openstudio/")
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd4005") ## /wd4996 suppresses deprecated warning, /wd4005 suppresses macro redefinition warning
-        set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
-      elseif(UNIX)
-        # I'm copying libopenstudiolib inside the python_package folder already. We can use the same RPATH for build tree and install
-        if(APPLE)
-          set_target_properties(${swig_target}
-           PROPERTIES
-            SUFFIX ".so"
-            BUILD_WITH_INSTALL_RPATH TRUE
-            INSTALL_RPATH "@loader_path"
-            )
-        elseif(UNIX)
-          set_target_properties(${swig_target}
-           PROPERTIES
-             # when building, use the install RPATH already
-             BUILD_WITH_INSTALL_RPATH TRUE
+    ##  ###set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME})
+    ##  ###set_target_properties(${swig_target} PROPERTIES PREFIX "")
+    ##  ###set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+    ##  ###set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+    ##  ###set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+    ##  ###if(MSVC)
+    ##  ###  # Avoid having a python_package/openstudio/Release/*.pyd path.
+    ##  ###  set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+    ##  ###  set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+    ##  ###  set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+    ##  ###  set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+    ##  ###  set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+    ##  ###  set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+    ##  ###  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd4005") ## /wd4996 suppresses deprecated warning, /wd4005 suppresses macro redefinition warning
+    ##  ###  set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
+    ##  ###elseif(UNIX)
+    ##  ###  # I'm copying libopenstudiolib inside the python_package folder already. We can use the same RPATH for build tree and install
+    ##  ###  if(APPLE)
+    ##  ###    set_target_properties(${swig_target}
+    ##  ###     PROPERTIES
+    ##  ###      SUFFIX ".so"
+    ##  ###      BUILD_WITH_INSTALL_RPATH TRUE
+    ##  ###      INSTALL_RPATH "@loader_path"
+    ##  ###      )
+    ##  ###  elseif(UNIX)
+    ##  ###    set_target_properties(${swig_target}
+    ##  ###     PROPERTIES
+    ##  ###       # when building, use the install RPATH already
+    ##  ###       BUILD_WITH_INSTALL_RPATH TRUE
 
-             # the RPATH to be used when installing
-             INSTALL_RPATH $ORIGIN
-          )
-        endif()
-        # set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
-        if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
-          set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized")
-          # Undefined suppress needed to avoid linking to Python::Module
-          set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-flat_namespace -undefined suppress")
-        else()
-          set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-misleading-indentation")
-        endif()
-      endif()
+    ##  ###       # the RPATH to be used when installing
+    ##  ###       INSTALL_RPATH $ORIGIN
+    ##  ###    )
+    ##  ###  endif()
+    ##  ###  # set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
+    ##  ###  if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+    ##  ###    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized")
+    ##  ###    # Undefined suppress needed to avoid linking to Python::Module
+    ##  ###    set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-flat_namespace -undefined suppress")
+    ##  ###  else()
+    ##  ###    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-misleading-indentation")
+    ##  ###  endif()
+    ##  ###endif()
 
-      # TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
-      # We're not trying to make a CLI here
-      # This is not working: "cannot open file 'python37.lib'"
-      target_link_libraries(${swig_target} PUBLIC  ${${PARENT_TARGET}_depends})
-      if (MSVC)
-        message("Python_LIBRARIES=${Python_LIBRARIES}")
-        target_link_libraries(${swig_target} PRIVATE Python::Module)
-      endif()
-      #target_link_libraries(${swig_target} PUBLIC ${${PARENT_TARGET}_depends}) ${Python_LIBRARIES})
-      add_dependencies(${swig_target} ${PARENT_TARGET})
+    ##  #### TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
+    ##  #### We're not trying to make a CLI here
+    ##  #### This is not working: "cannot open file 'python37.lib'"
+    ##  ###target_link_libraries(${swig_target} PUBLIC  ${${PARENT_TARGET}_depends})
+    ##  ###if (MSVC)
+    ##  ###  message("Python_LIBRARIES=${Python_LIBRARIES}")
+    ##  ###  target_link_libraries(${swig_target} PRIVATE Python::Module)
+    ##  ###endif()
+    ##  ####target_link_libraries(${swig_target} PUBLIC ${${PARENT_TARGET}_depends}) ${Python_LIBRARIES})
+    ##  ###add_dependencies(${swig_target} ${PARENT_TARGET})
 
-      list(APPEND ALL_PYTHON_PACKAGE_TARGETS "${swig_target}")
-      set(ALL_PYTHON_PACKAGE_TARGETS "${ALL_PYTHON_PACKAGE_TARGETS}" PARENT_SCOPE)
+    ##  list(APPEND ALL_PYTHON_PACKAGE_TARGETS "${swig_target}")
+    ##  set(ALL_PYTHON_PACKAGE_TARGETS "${ALL_PYTHON_PACKAGE_TARGETS}" PARENT_SCOPE)
 
-    endif()
+    ##endif()
 
 
   endif()

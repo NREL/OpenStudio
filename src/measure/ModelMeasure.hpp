@@ -75,8 +75,7 @@ namespace measure {
    *  beginning of derived class implementations of this method. (In C++, that call looks like
    *  ModelMeasure::run(model, runner, user_arguments). In Ruby that call looks like
    *  super(model, runner, user_arguments). */
-    //virtual bool run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const;
-    virtual bool run(openstudio::model::Model model) const;
+    virtual bool run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const;
 
     //@}
     //

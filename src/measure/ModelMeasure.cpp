@@ -46,9 +46,8 @@ namespace measure {
     return {};
   }
 
-  //bool ModelMeasure::run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
-  bool ModelMeasure::run(openstudio::model::Model model) const {
-    //runner.prepareForMeasureRun(*this);
+  bool ModelMeasure::run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+    runner.prepareForMeasureRun(*this);
     return true;
   }
 

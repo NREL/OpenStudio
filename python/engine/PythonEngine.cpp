@@ -5,6 +5,7 @@
 #include "../../src/measure/OSMeasure.hpp"
 #include "../../src/measure/ModelMeasure.hpp"
 #include "../../src/model/Model.hpp"
+#include "../../src/workflow/OSWorkflow.hpp"
 #include <fmt/format.h>
 #include <stdexcept>
 #include <string>
@@ -22,6 +23,48 @@
 #ifdef __GNUC__
 #  pragma GCC diagnostic pop
 #endif
+
+extern "C" {
+
+PyObject* PyInit__openstudioairflow(void);
+PyObject* PyInit__openstudioenergyplus(void);
+PyObject* PyInit__openstudioepjson(void);
+PyObject* PyInit__openstudiogbxml(void);
+PyObject* PyInit__openstudiogltf(void);
+PyObject* PyInit__openstudioisomodel(void);
+PyObject* PyInit__openstudiomeasure(void);
+PyObject* PyInit__openstudiomodelairflow(void);
+PyObject* PyInit__openstudiomodelavailabilitymanager(void);
+PyObject* PyInit__openstudiomodelcore(void);
+PyObject* PyInit__openstudiomodelgenerators(void);
+PyObject* PyInit__openstudiomodelgeometry(void);
+PyObject* PyInit__openstudiomodelhvac(void);
+PyObject* PyInit__openstudiomodelplantequipmentoperationscheme(void);
+PyObject* PyInit__openstudiomodel(void);
+PyObject* PyInit__openstudiomodelrefrigeration(void);
+PyObject* PyInit__openstudiomodelresources(void);
+PyObject* PyInit__openstudiomodelsimulation(void);
+PyObject* PyInit__openstudiomodelstraightcomponent(void);
+PyObject* PyInit__openstudiomodelzonehvac(void);
+PyObject* PyInit__openstudioosversion(void);
+//PyObject* PyInit__openstudio(void);
+PyObject* PyInit__openstudioradiance(void);
+PyObject* PyInit__openstudiosdd(void);
+PyObject* PyInit__openstudioutilitiesbcl(void);
+PyObject* PyInit__openstudioutilitiescore(void);
+PyObject* PyInit__openstudioutilitiesdata(void);
+PyObject* PyInit__openstudioutilitiesfiletypes(void);
+PyObject* PyInit__openstudioutilitiesgeometry(void);
+PyObject* PyInit__openstudioutilitiesidd(void);
+PyObject* PyInit__openstudioutilitiesidf(void);
+PyObject* PyInit__openstudioutilitiesplot(void);
+PyObject* PyInit__openstudioutilities(void);
+PyObject* PyInit__openstudioutilitiessql(void);
+PyObject* PyInit__openstudioutilitiestime(void);
+PyObject* PyInit__openstudioutilitiesunits(void);
+PyObject* PyInit__openstudioutilitiesxml(void);
+
+}
 
 namespace openstudio {
 
@@ -57,6 +100,45 @@ void PythonEngine::setupPythonPath(const std::vector<openstudio::path>& includeD
 }
 
 PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), program(Py_DecodeLocale(pythonProgramName, nullptr)) {
+
+  PyImport_AppendInittab("_openstudioairflow", PyInit__openstudioairflow);
+  PyImport_AppendInittab("_openstudioenergyplus", PyInit__openstudioenergyplus);
+  PyImport_AppendInittab("_openstudioepjson", PyInit__openstudioepjson);
+  PyImport_AppendInittab("_openstudiogbxml", PyInit__openstudiogbxml);
+  PyImport_AppendInittab("_openstudiogltf", PyInit__openstudiogltf);
+  PyImport_AppendInittab("_openstudioisomodel", PyInit__openstudioisomodel);
+  PyImport_AppendInittab("_openstudiomeasure", PyInit__openstudiomeasure);
+  PyImport_AppendInittab("_openstudiomodelairflow", PyInit__openstudiomodelairflow);
+  PyImport_AppendInittab("_openstudiomodelavailabilitymanager", PyInit__openstudiomodelavailabilitymanager);
+  PyImport_AppendInittab("_openstudiomodelcore", PyInit__openstudiomodelcore);
+  PyImport_AppendInittab("_openstudiomodelgenerators", PyInit__openstudiomodelgenerators);
+  PyImport_AppendInittab("_openstudiomodelgeometry", PyInit__openstudiomodelgeometry);
+  PyImport_AppendInittab("_openstudiomodelhvac", PyInit__openstudiomodelhvac);
+  PyImport_AppendInittab("_openstudiomodelplantequipmentoperationscheme", PyInit__openstudiomodelplantequipmentoperationscheme);
+  PyImport_AppendInittab("_openstudiomodel", PyInit__openstudiomodel);
+  PyImport_AppendInittab("_openstudiomodelrefrigeration", PyInit__openstudiomodelrefrigeration);
+  PyImport_AppendInittab("_openstudiomodelresources", PyInit__openstudiomodelresources);
+  PyImport_AppendInittab("_openstudiomodelsimulation", PyInit__openstudiomodelsimulation);
+  PyImport_AppendInittab("_openstudiomodelstraightcomponent", PyInit__openstudiomodelstraightcomponent);
+  PyImport_AppendInittab("_openstudiomodelzonehvac", PyInit__openstudiomodelzonehvac);
+  PyImport_AppendInittab("_openstudioosversion", PyInit__openstudioosversion);
+//PyImport_AppendInittab("_openstudio", PyInit__openstudio);
+  PyImport_AppendInittab("_openstudioradiance", PyInit__openstudioradiance);
+  PyImport_AppendInittab("_openstudiosdd", PyInit__openstudiosdd);
+  PyImport_AppendInittab("_openstudioutilitiesbcl", PyInit__openstudioutilitiesbcl);
+  PyImport_AppendInittab("_openstudioutilitiescore", PyInit__openstudioutilitiescore);
+  PyImport_AppendInittab("_openstudioutilitiesdata", PyInit__openstudioutilitiesdata);
+  PyImport_AppendInittab("_openstudioutilitiesfiletypes", PyInit__openstudioutilitiesfiletypes);
+  PyImport_AppendInittab("_openstudioutilitiesgeometry", PyInit__openstudioutilitiesgeometry);
+  PyImport_AppendInittab("_openstudioutilitiesidd", PyInit__openstudioutilitiesidd);
+  PyImport_AppendInittab("_openstudioutilitiesidf", PyInit__openstudioutilitiesidf);
+  PyImport_AppendInittab("_openstudioutilitiesplot", PyInit__openstudioutilitiesplot);
+  PyImport_AppendInittab("_openstudioutilities", PyInit__openstudioutilities);
+  PyImport_AppendInittab("_openstudioutilitiessql", PyInit__openstudioutilitiessql);
+  PyImport_AppendInittab("_openstudioutilitiestime", PyInit__openstudioutilitiestime);
+  PyImport_AppendInittab("_openstudioutilitiesunits", PyInit__openstudioutilitiesunits);
+  PyImport_AppendInittab("_openstudioutilitiesxml", PyInit__openstudioutilitiesxml);
+
   // this frozen flag tells Python that the package and library have been frozen for embedding, so it shouldn't warn about missing prefixes
   Py_FrozenFlag = 1;
 
@@ -76,8 +158,6 @@ PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), p
   }
   m_globalDict = PyModule_GetDict(m);
 
-  //PyRun_SimpleString("from time import time,ctime\n"
-  //                   "print('Today is', ctime(time()))\n");
   importOpenStudio();
 
   registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
@@ -191,7 +271,6 @@ ScriptObject PythonEngine::eval(std::string_view sv) {
 }
 
 void* PythonEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
-
   auto val = std::any_cast<PythonObject>(obj.object);
 
   const auto& type_name = getRegisteredTypeName(ti);
@@ -219,7 +298,7 @@ std::vector<measure::OSArgument> PythonEngine::getArguments(openstudio::measure:
   return result;
 }
 
-void PythonEngine::applyMeasure(model::Model model, measure::OSRunner& runner, const  BCLMeasure& bclMeasure) {
+void PythonEngine::applyMeasure(model::Model& model, measure::OSRunner& runner, const BCLMeasure& bclMeasure, const MeasureStep& step) {
   std::cout << "PythonEngine::applyMeasure" << std::endl;
 
   const auto scriptPath_ = bclMeasure.primaryScriptPath();
@@ -245,11 +324,11 @@ spec.loader.exec_module(module)
 )python", className, scriptPath_->generic_string());
 
   exec(importCmd);
+
   auto measureScriptObject = eval(fmt::format("module.{}()", className));
-  
-  measure::OSArgumentMap argmap;
-  auto measurePtr = getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
-  static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model);
+  auto measure = getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+  auto args = OSWorkflow::argumentMap(measure, model, step);
+  measure->run(model, runner, args);
 }
 
 }  // namespace openstudio

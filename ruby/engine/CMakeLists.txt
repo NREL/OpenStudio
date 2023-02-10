@@ -223,6 +223,14 @@ add_custom_command(
 set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 source_group(embedded_files FILES ${OUTPUT})
 
+add_custom_command(
+  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+  COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+          "${SWIG_EXECUTABLE}"
+          "-ruby" "-c++" "-fvirtual"
+          -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+)
+
 add_library(rubyengine
   MODULE
   RubyEngine.hpp
@@ -231,6 +239,7 @@ add_library(rubyengine
   GC_Value.hpp
   ${OUTPUT}
   "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
+  "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
 )
 
 include(GenerateExportHeader)
@@ -258,6 +267,7 @@ set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap
 target_link_libraries(rubyengine
   PRIVATE
   openstudio_scriptengine
+  openstudio_workflow
   openstudiolib
   rubybindings
   CONAN_PKG::fmt

@@ -3,10 +3,10 @@ install(FILES "openstudio.py" DESTINATION Python COMPONENT "Python")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/openstudio.py ${PROJECT_BINARY_DIR}/Products/python/openstudio.py COPYONLY)
 
 foreach(p ${ALL_PYTHON_BINDING_TARGETS})
-  target_link_libraries(${p}
-    PRIVATE
-    openstudiolib
-  )
+  #target_link_libraries(${p}
+  #  PRIVATE
+  #  openstudiolib
+  #)
   if(UNIX AND NOT APPLE)
     target_link_libraries(${p}
       PRIVATE

@@ -28,7 +28,7 @@ class PythonEngine final : public ScriptEngine
   virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs, const openstudio::path& pythonHomeDir) override;
 
   virtual std::vector<measure::OSArgument> getArguments(openstudio::measure::OSMeasure*, const model::Model&) override;
-  virtual void applyMeasure(model::Model, measure::OSRunner&, const  BCLMeasure&) override;
+  virtual void applyMeasure(model::Model&, measure::OSRunner&, const BCLMeasure&, const MeasureStep&) override;
 
  protected:
   void* getAs_impl(ScriptObject& obj, const std::type_info&) override;

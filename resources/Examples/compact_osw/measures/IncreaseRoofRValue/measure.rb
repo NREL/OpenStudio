@@ -10,37 +10,33 @@ class IncreaseInsulationRValueForRoofsByPercentage < OpenStudio::Measure::ModelM
   def arguments(model)
     args = OpenStudio::Measure::OSArgumentVector.new
 
-    ##make an argument insulation R-value
-    #r_value = OpenStudio::Measure::OSArgument::makeDoubleArgument("r_value",true)
-    #r_value.setDisplayName("Percentage Increase of R-value for Roof Insulation.")
-    #r_value.setDefaultValue(30.0)
-    #args << r_value
+    #make an argument insulation R-value
+    r_value = OpenStudio::Measure::OSArgument::makeDoubleArgument("r_value",true)
+    r_value.setDisplayName("Percentage Increase of R-value for Roof Insulation.")
+    r_value.setDefaultValue(30.0)
+    args << r_value
 
     return args
   end #end the arguments method
 
   #define what happens when the measure is run
-  def run(model)
-    #super(model, runner, user_arguments)
-    #super(model, runner)
-    puts "lets go from ruby"
-    super(model)
+  def run(model, runner, user_arguments)
+    super(model, runner, user_arguments)
 
-
-    ##use the built-in error checking
-    #if not runner.validateUserArguments(arguments(model), user_arguments)
-    #  return false
-    #end
+    #use the built-in error checking
+    if not runner.validateUserArguments(arguments(model), user_arguments)
+      return false
+    end
 
     #assign the user inputs to variables
-    r_value = 30.0 #runner.getDoubleArgumentValue("r_value",user_arguments)
+    r_value = runner.getDoubleArgumentValue("r_value",user_arguments)
 
     #set limit for minimum insulation. This is used to limit input and for inferring insulation layer in construction.
     min_expected_r_value_ip = 1 #ip units
 
     #check the R-value for reasonableness
     if r_value <  -100
-      #runner.registerError("Percentage increase less than -100% is not valid.")
+      runner.registerError("Percentage increase less than -100% is not valid.")
       return false
     end
 
@@ -82,7 +78,7 @@ class IncreaseInsulationRValueForRoofsByPercentage < OpenStudio::Measure::ModelM
 
     # nothing will be done if there are no exterior surfaces
     if exterior_surfaces.empty?
-      #runner.registerAsNotApplicable("Model does not have any roofs.")
+      runner.registerAsNotApplicable("Model does not have any roofs.")
       return true
     end
 
@@ -93,7 +89,7 @@ class IncreaseInsulationRValueForRoofsByPercentage < OpenStudio::Measure::ModelM
       initial_conductance_ip = unit_helper(1/exterior_surface_construction.thermalConductance.to_f,"m^2*K/W", "ft^2*h*R/Btu")
       initial_string << "#{exterior_surface_construction.name.to_s} (R-#{(sprintf "%.1f",initial_conductance_ip)})"
     end
-    #runner.registerInitialCondition("The building had #{initial_string.size} roof constructions: #{initial_string.sort.join(", ")}.")
+    runner.registerInitialCondition("The building had #{initial_string.size} roof constructions: #{initial_string.sort.join(", ")}.")
 
     #hashes to track constructions and materials made by the measure, to avoid duplicates
     constructions_hash_old_new = {}
@@ -125,7 +121,7 @@ class IncreaseInsulationRValueForRoofsByPercentage < OpenStudio::Measure::ModelM
       end
 
       if not thermal_resistance_values.max > unit_helper(min_expected_r_value_ip, "ft^2*h*R/Btu","m^2*K/W")
-        #runner.registerWarning("Construction '#{exterior_surface_construction.name.to_s}' does not appear to have an insulation layer and was not altered.")
+        runner.registerWarning("Construction '#{exterior_surface_construction.name.to_s}' does not appear to have an insulation layer and was not altered.")
       else
         #clone the construction
         final_construction = exterior_surface_construction.clone(model)
@@ -160,7 +156,7 @@ class IncreaseInsulationRValueForRoofsByPercentage < OpenStudio::Measure::ModelM
           materials_hash[max_thermal_resistance_material.name.to_s] = new_material
           final_construction.eraseLayer(max_thermal_resistance_material_index)
           final_construction.insertLayer(max_thermal_resistance_material_index,new_material)
-          #runner.registerInfo("For construction'#{final_construction.name.to_s}', material'#{new_material.name.to_s}' was altered.")
+          runner.registerInfo("For construction'#{final_construction.name.to_s}', material'#{new_material.name.to_s}' was altered.")
 
           #edit insulation material
           new_material_matt = new_material.to_Material
@@ -215,7 +211,7 @@ class IncreaseInsulationRValueForRoofsByPercentage < OpenStudio::Measure::ModelM
               end
             end
             if found_const_flag == false # this should never happen but is just an extra test in case something goes wrong with the measure code
-              #runner.registerWarning("Measure couldn't find the construction named '#{target_const}' in the exterior surface hash.")
+              runner.registerWarning("Measure couldn't find the construction named '#{target_const}' in the exterior surface hash.")
             end
           end
 
@@ -282,7 +278,7 @@ class IncreaseInsulationRValueForRoofsByPercentage < OpenStudio::Measure::ModelM
 
     #add not applicable test if there were exterior roof constructions but non of them were altered (already enough insulation or doesn't look like insulated wall)
     if affected_area_si == 0
-      #runner.registerAsNotApplicable("No roofs were altered.")
+      runner.registerAsNotApplicable("No roofs were altered.")
       return true
       # affected_area_ip = affected_area_si
     else
@@ -291,7 +287,7 @@ class IncreaseInsulationRValueForRoofsByPercentage < OpenStudio::Measure::ModelM
     end
 
     #report final condition
-    #runner.registerFinalCondition("The existing insulation for roofs was increased by #{r_value}%. This was applied to #{neat_numbers(affected_area_ip,0)} (ft^2) across #{final_string.size} roof constructions: #{final_string.sort.join(", ")}.")
+    runner.registerFinalCondition("The existing insulation for roofs was increased by #{r_value}%. This was applied to #{neat_numbers(affected_area_ip,0)} (ft^2) across #{final_string.size} roof constructions: #{final_string.sort.join(", ")}.")
 
     return true
 

@@ -2,7 +2,7 @@ add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGPythonRuntime.hxx"
   COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
           "${SWIG_EXECUTABLE}"
-          "-python"
+          "-python" "-c++" "-fvirtual"
           -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGPythonRuntime.hxx"
 )
 
@@ -31,16 +31,12 @@ target_link_libraries(
   pythonengine
   PRIVATE
   openstudio_scriptengine
-  openstudio_utilities_minimal
+  openstudio_workflow
+  openstudiolib
   CONAN_PKG::fmt
+  ${ALL_PYTHON_BINDING_TARGETS}
   Python::Python
 )
-
-#target_compile_definitions(
-#  pythonengine
-#  PUBLIC
-#  -DSWIGRUNTIME
-#)
 
 # tp_print is deprecated at of 3.8.
 target_compile_options(pythonengine PRIVATE

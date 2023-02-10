@@ -39,7 +39,7 @@ class RubyEngine final : public ScriptEngine
   void exec(std::string_view sv) override;
 
   virtual std::vector<measure::OSArgument> getArguments(openstudio::measure::OSMeasure*, const model::Model&) override;
-  virtual void applyMeasure(model::Model, measure::OSRunner&, const  BCLMeasure&) override;
+  virtual void applyMeasure(model::Model&, measure::OSRunner&, const  BCLMeasure&, const MeasureStep&) override;
 
   virtual void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,
                                  const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,

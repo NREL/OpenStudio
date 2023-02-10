@@ -2,6 +2,7 @@
 #include "../../src/measure/OSMeasure.hpp"
 #include "../../src/measure/ModelMeasure.hpp"
 #include "../../src/model/Model.hpp"
+#include "../../src/workflow/OSWorkflow.hpp"
 #include "RubyEngine.hpp"
 #include "InitRubyBindings.hpp"
 #include <embedded_files.hxx>
@@ -13,7 +14,8 @@
 #include <ruby/encoding.h>
 #include <SWIGRubyRuntime.hxx>
 #include "../interpreter/RubyEval.hpp"
-#include "./GC_Value.hpp"
+//#include "GC_Value.hpp"
+//#include "./GC_Value.hpp"
 
 #ifdef __GNUC__
 #  pragma GCC diagnostic push
@@ -99,7 +101,7 @@ RubyEngine::RubyEngine(int argc, char* argv[]) : ScriptEngine(argc, argv) {
   // DLM: this will interpret any strings passed on the command line as UTF-8
   // can we be smarter and detect the correct encoding? use wmain on windows to get utf-16?
   // or we might want to follow ruby and allow '--external-encoding=UTF-8' as an input argument?
-  rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
+  //rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
 
   registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
@@ -152,13 +154,10 @@ void* RubyEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
 }
 
 std::vector<measure::OSArgument> RubyEngine::getArguments(openstudio::measure::OSMeasure* measurePtr, const model::Model& model) {
-  //return static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->arguments(model);  // NOLINT
-  std::vector<measure::OSArgument> result;
-
-  return result;
+  return static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->arguments(model);  // NOLINT
 }
 
-void RubyEngine::applyMeasure(model::Model model, measure::OSRunner& runner, const  BCLMeasure& bclMeasure) {
+void RubyEngine::applyMeasure(model::Model& model, measure::OSRunner& runner, const BCLMeasure& bclMeasure, const MeasureStep& step) {
   const auto scriptPath_ = bclMeasure.primaryScriptPath();
   if (!scriptPath_) {
     fmt::print("Could not find primaryScript for Measure '{}'\n", openstudio::toString(bclMeasure.directory()));
@@ -174,44 +173,42 @@ void RubyEngine::applyMeasure(model::Model model, measure::OSRunner& runner, con
   fmt::print("Measure Type: {}\n", bclMeasure.measureType().valueName());
   fmt::print("Measure Language: {}\n", measureLanguage.valueName());
   
-  openstudio::measure::OSMeasure* measurePtr = nullptr;
-  
   auto importCmd = fmt::format("require '{}'", openstudio::toString(scriptPath_.get()));
   exec(importCmd);
+
   auto measureScriptObject = eval(fmt::format("{}.new()", className));
-  
-  measure::OSArgumentMap argmap;
-  measurePtr = getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
-  static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model);
+  auto measure = getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+  auto args = OSWorkflow::argumentMap(measure, model, step);
+  measure->run(model, runner, args);
 }
 
 void RubyEngine::initRubyEngine() {
   RUBY_INIT_STACK;
   ruby_init();
 
-  swig::GC_VALUE::hash_id = rb_intern("hash");
-  swig::GC_VALUE::lt_id = rb_intern("<");
-  swig::GC_VALUE::gt_id = rb_intern(">");
-  swig::GC_VALUE::eq_id = rb_intern("==");
-  swig::GC_VALUE::le_id = rb_intern("<=");
-  swig::GC_VALUE::ge_id = rb_intern(">=");
+  //swig::GC_VALUE::hash_id = rb_intern("hash");
+  //swig::GC_VALUE::lt_id = rb_intern("<");
+  //swig::GC_VALUE::gt_id = rb_intern(">");
+  //swig::GC_VALUE::eq_id = rb_intern("==");
+  //swig::GC_VALUE::le_id = rb_intern("<=");
+  //swig::GC_VALUE::ge_id = rb_intern(">=");
 
-  swig::GC_VALUE::pos_id = rb_intern("+@");
-  swig::GC_VALUE::neg_id = rb_intern("-@");
-  swig::GC_VALUE::inv_id = rb_intern("~");
+  //swig::GC_VALUE::pos_id = rb_intern("+@");
+  //swig::GC_VALUE::neg_id = rb_intern("-@");
+  //swig::GC_VALUE::inv_id = rb_intern("~");
 
-  swig::GC_VALUE::add_id = rb_intern("+");
-  swig::GC_VALUE::sub_id = rb_intern("-");
-  swig::GC_VALUE::mul_id = rb_intern("*");
-  swig::GC_VALUE::div_id = rb_intern("/");
-  swig::GC_VALUE::mod_id = rb_intern("%");
+  //swig::GC_VALUE::add_id = rb_intern("+");
+  //swig::GC_VALUE::sub_id = rb_intern("-");
+  //swig::GC_VALUE::mul_id = rb_intern("*");
+  //swig::GC_VALUE::div_id = rb_intern("/");
+  //swig::GC_VALUE::mod_id = rb_intern("%");
 
-  swig::GC_VALUE::and_id = rb_intern("&");
-  swig::GC_VALUE::or_id = rb_intern("|");
-  swig::GC_VALUE::xor_id = rb_intern("^");
+  //swig::GC_VALUE::and_id = rb_intern("&");
+  //swig::GC_VALUE::or_id = rb_intern("|");
+  //swig::GC_VALUE::xor_id = rb_intern("^");
 
-  swig::GC_VALUE::lshift_id = rb_intern("<<");
-  swig::GC_VALUE::rshift_id = rb_intern(">>");
+  //swig::GC_VALUE::lshift_id = rb_intern("<<");
+  //swig::GC_VALUE::rshift_id = rb_intern(">>");
 
   // Need embedded_help for requiring files out of the embedded system
   auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");

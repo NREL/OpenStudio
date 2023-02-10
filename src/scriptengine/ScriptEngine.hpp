@@ -15,6 +15,7 @@
 namespace openstudio {
 
 class BCLMeasure;
+class MeasureStep;
 
 namespace model {
   class Model;
@@ -82,7 +83,7 @@ class ScriptEngine
 
   virtual std::vector<measure::OSArgument> getArguments(openstudio::measure::OSMeasure*, const model::Model&) = 0;
 
-  virtual void applyMeasure(model::Model, measure::OSRunner&, const  BCLMeasure&) = 0;
+  virtual void applyMeasure(model::Model&, measure::OSRunner&, const  BCLMeasure&, const openstudio::MeasureStep&) = 0;
 
  protected:
   // convert the underlying object to the correct type, then return it as a void *
