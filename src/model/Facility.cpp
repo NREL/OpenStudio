@@ -2699,68 +2699,6 @@ namespace model {
     return getImpl<detail::Facility_Impl>()->otherFuel2TotalEndUses();
   }
 
-  // Deprecated Section
-  OptionalDouble Facility::otherFuelHeating() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelHeating();
-  }
-
-  OptionalDouble Facility::otherFuelCooling() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelCooling();
-  }
-
-  OptionalDouble Facility::otherFuelInteriorLighting() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelInteriorLighting();
-  }
-
-  OptionalDouble Facility::otherFuelExteriorLighting() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelExteriorLighting();
-  }
-
-  OptionalDouble Facility::otherFuelInteriorEquipment() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelInteriorEquipment();
-  }
-
-  OptionalDouble Facility::otherFuelExteriorEquipment() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelExteriorEquipment();
-  }
-
-  OptionalDouble Facility::otherFuelFans() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelFans();
-  }
-
-  OptionalDouble Facility::otherFuelPumps() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelPumps();
-  }
-
-  OptionalDouble Facility::otherFuelHeatRejection() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelHeatRejection();
-  }
-
-  OptionalDouble Facility::otherFuelHumidification() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelHumidification();
-  }
-
-  OptionalDouble Facility::otherFuelHeatRecovery() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelHeatRecovery();
-  }
-
-  OptionalDouble Facility::otherFuelWaterSystems() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelWaterSystems();
-  }
-
-  OptionalDouble Facility::otherFuelRefrigeration() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelRefrigeration();
-  }
-
-  OptionalDouble Facility::otherFuelGenerators() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelGenerators();
-  }
-
-  OptionalDouble Facility::otherFuelTotalEndUses() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelTotalEndUses();
-  }
-  // End Deprecated Section
-
   OptionalDouble Facility::districtCoolingHeating() const {
     return getImpl<detail::Facility_Impl>()->districtCoolingHeating();
   }
