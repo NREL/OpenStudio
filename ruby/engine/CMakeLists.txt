@@ -233,10 +233,15 @@ add_custom_command(
 
 add_library(rubyengine
   MODULE
-  RubyEngine.hpp
-  RubyEngine.cpp
-  #InitRubyEngine.cpp
+  EmbeddedHelp.hpp
   GC_Value.hpp
+  InitRubyEngine.cpp
+  InitRubyEngine.hpp
+  InitRuby.hpp
+  RubyEngine.cpp
+  RubyEngine.hpp
+  RubyEval.hpp
+  RubyException.hpp
   ${OUTPUT}
   "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
   "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"

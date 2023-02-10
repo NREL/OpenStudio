@@ -28,7 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "InitRubyBindings.hpp"
-#include "RubyEval.hpp"
+#include "../engine/RubyEval.hpp"
 
 // #define HAVE_ISFINITE 1
 #include <ruby.h>

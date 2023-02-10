@@ -6,7 +6,7 @@ add_library( rubybindings OBJECT
 target_include_directories(rubybindings PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
-target_link_libraries(rubybindings PRIVATE ${ALL_RUBY_BINDING_TARGETS} rubyinterpreter-declarations)
+target_link_libraries(rubybindings PRIVATE ${ALL_RUBY_BINDING_TARGETS} CONAN_PKG::openstudio_ruby)
 
 # wd4996=no deprecated warnings ; wd5033=register
 target_compile_options(rubybindings PRIVATE

@@ -30,6 +30,8 @@
 #ifndef CLI_GC_VALUE_HPP
 #define CLI_GC_VALUE_HPP
 
+#include "ruby.h"
+
 namespace swig {
 class GC_VALUE
 {

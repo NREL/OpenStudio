@@ -1,9 +1,10 @@
-#include "./RubyEngine.hpp"
-#include "./InitRubyEngine.hpp"
-#include "./GC_Value.hpp"
+#include "RubyEngine.hpp"
+#include "InitRubyEngine.hpp"
+#include "GC_Value.hpp"
+#include "RubyEval.hpp"
 #include <iostream>
 #include <embedded_files.hxx>
-#include "../interpreter/RubyEval.hpp"
+#include "ruby.h"
 
 namespace openstudio {
 
