@@ -38452,7 +38452,7 @@ AirConditioner:VariableRefrigerantFlow,
        \memo or more electric compressors and outdoor fan). Serves one or more VRF zone terminal
        \memo units. See ZoneHVAC:TerminalUnit:VariableRefrigerantFlow and ZoneTerminalUnitList.
        \min-fields 37
-  A1 , \field Heat Pump Name
+  A1 , \field Name
        \required-field
        \type alpha
        \reference-class-name validBranchEquipmentTypes

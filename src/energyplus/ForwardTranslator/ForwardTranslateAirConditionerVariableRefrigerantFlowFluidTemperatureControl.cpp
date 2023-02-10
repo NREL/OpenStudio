@@ -47,13 +47,15 @@
 #include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "../../model/Curve.hpp"
 #include "../../model/Curve_Impl.hpp"
+
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
+#include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
 #include <utilities/idd/AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_FieldEnums.hxx>
 #include <utilities/idd/ZoneTerminalUnitList_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
 
 using namespace openstudio::model;
@@ -72,13 +74,14 @@ namespace energyplus {
       return boost::none;
     }
 
-    // Heat Pump Name
+    // Name
     IdfObject idfObject =
       createRegisterAndNameIdfObject(openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl, modelObject);
 
-    // Availability Schedule Name: Optional Object
-    if (boost::optional<Schedule> availabilitySchedule_ = modelObject.availabilitySchedule()) {
-      if (boost::optional<IdfObject> owo_ = translateAndMapModelObject(availabilitySchedule_.get())) {
+    // Availability Schedule Name: Optional Object, required in Model
+    {
+      auto sch = modelObject.availabilitySchedule();
+      if (boost::optional<IdfObject> owo_ = translateAndMapModelObject(sch)) {
         idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControlFields::AvailabilityScheduleName, owo_->nameString());
       }
     }

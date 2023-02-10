@@ -63,16 +63,14 @@ namespace energyplus {
     boost::optional<std::string> s;
     boost::optional<double> value;
 
-    IdfObject idfObject(IddObjectType::AirConditioner_VariableRefrigerantFlow);
-
-    m_idfObjects.push_back(idfObject);
-
-    // Name
-
-    s = modelObject.name();
-    if (s) {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatPumpName, *s);
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
+    if (terminals.empty()) {
+      LOG(Warn, modelObject.briefDescription() << " will not be translated as it has no terminals.");
+      return boost::none;
     }
+
+    // Heat Pump Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirConditioner_VariableRefrigerantFlow, modelObject);
 
     // AvailabilityScheduleName
 
@@ -671,8 +669,6 @@ namespace energyplus {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::ZoneTerminalUnitListName, terminalUnitListName);
 
     m_idfObjects.push_back(_zoneTerminalUnitList);
-
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
 
     for (auto& terminal : terminals) {
       boost::optional<IdfObject> _terminal = translateAndMapModelObject(terminal);
