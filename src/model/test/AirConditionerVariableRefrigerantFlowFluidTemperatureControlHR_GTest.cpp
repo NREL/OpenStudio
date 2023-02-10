@@ -59,10 +59,14 @@
 #include "../CurveExponent_Impl.hpp"
 #include "../FanVariableVolume.hpp"
 #include "../FanVariableVolume_Impl.hpp"
+#include "../FanOnOff.hpp"
+#include "../FanSystemModel.hpp"
 #include "../CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "../CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "../CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "../CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
+#include "../CoilCoolingDXVariableRefrigerantFlow.hpp"
+#include "../CoilHeatingDXVariableRefrigerantFlow.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -326,15 +330,15 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(0u, vrf.loadingIndexes().size());
   LoadingIndex loadingIndex1(model, 1, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
                              compressorPowerMultiplierFunctionofTemperatureCurve1);
-  vrf.addLoadingIndex(loadingIndex1);
+  EXPECT_TRUE(vrf.addLoadingIndex(loadingIndex1));
   EXPECT_EQ(1u, vrf.loadingIndexes().size());
   LoadingIndex loadingIndex2(model, 2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
                              compressorPowerMultiplierFunctionofTemperatureCurve2);
-  vrf.addLoadingIndex(loadingIndex2);
+  EXPECT_TRUE(vrf.addLoadingIndex(loadingIndex2));
   EXPECT_EQ(2u, vrf.loadingIndexes().size());
   LoadingIndex loadingIndex3(model, 3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
                              compressorPowerMultiplierFunctionofTemperatureCurve3);
-  vrf.addLoadingIndex(loadingIndex3);
+  EXPECT_TRUE(vrf.addLoadingIndex(loadingIndex3));
   EXPECT_EQ(3u, vrf.loadingIndexes().size());
 
   std::vector<LoadingIndex> loadingIndexes = vrf.loadingIndexes();
@@ -351,7 +355,7 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
   LoadingIndex loadingIndex4(model, 4, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
                              compressorPowerMultiplierFunctionofTemperatureCurve2);
-  vrf.addLoadingIndex(loadingIndex4);
+  EXPECT_TRUE(vrf.addLoadingIndex(loadingIndex4));
   EXPECT_EQ(4u, vrf.loadingIndexes().size());
 
   vrf.removeLoadingIndex(loadingIndex3);
@@ -387,9 +391,9 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
   EXPECT_EQ(0u, vrf.terminals().size());
 
-  vrf.addTerminal(term1);
-  vrf.addTerminal(term2);
-  vrf.addTerminal(term3);
+  EXPECT_TRUE(vrf.addTerminal(term1));
+  EXPECT_TRUE(vrf.addTerminal(term2));
+  EXPECT_TRUE(vrf.addTerminal(term3));
 
   EXPECT_EQ(3u, vrf.terminals().size());
 
@@ -432,27 +436,27 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
     EXPECT_EQ(3, model.getConcreteModelObjects<LoadingIndex>().size());
     EXPECT_EQ(0, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
 
-    // VRFTU has no curves, but its Cooling Coil and Heating Coil each add a Quadratic and a Biquadratic, the FanOnOff add a Cubic and one Exponent
-    ZoneHVACTerminalUnitVariableRefrigerantFlow term1(model);
-    vrf.addTerminal(term1);
-    EXPECT_EQ(14, model.getModelObjects<Curve>().size());
+    // VRFTU has no curves, but its Cooling Coil (FluidTempCtrl) and Heating Coil each add a Quadratic, the FanSystemModel adds none
+    ZoneHVACTerminalUnitVariableRefrigerantFlow term1(model, true);
+    EXPECT_TRUE(vrf.addTerminal(term1));
+    EXPECT_EQ(10, model.getModelObjects<Curve>().size());
     EXPECT_EQ(4, model.getConcreteModelObjects<CurveQuadratic>().size());
-    EXPECT_EQ(8, model.getConcreteModelObjects<CurveBiquadratic>().size());
-    EXPECT_EQ(1, model.getConcreteModelObjects<CurveCubic>().size());
-    EXPECT_EQ(1, model.getConcreteModelObjects<CurveExponent>().size());
+    EXPECT_EQ(6, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveExponent>().size());
 
     EXPECT_EQ(1, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
     EXPECT_EQ(2, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes
     EXPECT_EQ(3, model.getConcreteModelObjects<LoadingIndex>().size());
     EXPECT_EQ(1, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
 
-    ZoneHVACTerminalUnitVariableRefrigerantFlow term2(model);
-    vrf.addTerminal(term2);
-    EXPECT_EQ(20, model.getModelObjects<Curve>().size());
+    ZoneHVACTerminalUnitVariableRefrigerantFlow term2(model, true);
+    EXPECT_TRUE(vrf.addTerminal(term2));
+    EXPECT_EQ(12, model.getModelObjects<Curve>().size());
     EXPECT_EQ(6, model.getConcreteModelObjects<CurveQuadratic>().size());
-    EXPECT_EQ(10, model.getConcreteModelObjects<CurveBiquadratic>().size());
-    EXPECT_EQ(2, model.getConcreteModelObjects<CurveCubic>().size());
-    EXPECT_EQ(2, model.getConcreteModelObjects<CurveExponent>().size());
+    EXPECT_EQ(6, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveExponent>().size());
 
     EXPECT_EQ(1, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
     EXPECT_EQ(2, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes
@@ -471,11 +475,11 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
     EXPECT_EQ(0, vrfClone.terminals().size());
     EXPECT_EQ(3, vrfClone.loadingIndexes().size());
 
-    EXPECT_EQ(20, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(12, model.getModelObjects<Curve>().size());
     EXPECT_EQ(6, model.getConcreteModelObjects<CurveQuadratic>().size());
-    EXPECT_EQ(10, model.getConcreteModelObjects<CurveBiquadratic>().size());
-    EXPECT_EQ(2, model.getConcreteModelObjects<CurveCubic>().size());
-    EXPECT_EQ(2, model.getConcreteModelObjects<CurveExponent>().size());
+    EXPECT_EQ(6, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveCubic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveExponent>().size());
 
     EXPECT_EQ(2, model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>().size());
     EXPECT_EQ(4, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes times 2
@@ -553,13 +557,13 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
   auto size = model.modelObjects().size();
   AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf(model);
-  ZoneHVACTerminalUnitVariableRefrigerantFlow term(model);
-  vrf.addTerminal(term);
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term(model, true);
+  EXPECT_TRUE(vrf.addTerminal(term));
   EXPECT_EQ(1u, vrf.terminals().size());
   EXPECT_EQ(3u, vrf.loadingIndexes().size());
 
   EXPECT_EQ(4u, model.getConcreteModelObjects<CurveQuadratic>().size());    // 2 on vrf + 2 on coils
-  EXPECT_EQ(8u, model.getConcreteModelObjects<CurveBiquadratic>().size());  // 6 on vrf + 2 on coils
+  EXPECT_EQ(6u, model.getConcreteModelObjects<CurveBiquadratic>().size());  // 6 on vrf
   EXPECT_EQ(1u, model.getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>().size());
   EXPECT_EQ(2u, model.getConcreteModelObjects<ModelObjectList>().size());  // 1 terminals + 1 loading indexes
 
@@ -598,4 +602,36 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   vrf.disconnect();
   EXPECT_FALSE(vrf.plantLoop());
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+}
+
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_MatchingCoilTypes) {
+
+  Model model;
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf(model);
+
+  {
+    FanSystemModel fan(model);
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
+
+    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model, ccFluidCtrl, hcFluidCtrl, fan);
+    EXPECT_TRUE(vrfTerminal.isFluidTemperatureControl());
+
+    EXPECT_EQ(0, vrf.terminals().size());
+    EXPECT_TRUE(vrf.addTerminal(vrfTerminal));
+    EXPECT_EQ(1, vrf.terminals().size());
+  }
+
+  {
+    FanSystemModel fan(model);
+    CoilCoolingDXVariableRefrigerantFlow cc(model);
+    CoilHeatingDXVariableRefrigerantFlow hc(model);
+
+    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model, cc, hc, fan);
+    EXPECT_FALSE(vrfTerminal.isFluidTemperatureControl());
+
+    EXPECT_EQ(1, vrf.terminals().size());
+    EXPECT_FALSE(vrf.addTerminal(vrfTerminal));
+    EXPECT_EQ(1, vrf.terminals().size());
+  }
 }

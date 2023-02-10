@@ -35,6 +35,8 @@
 #include "../ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../CoilCoolingDXVariableRefrigerantFlow.hpp"
 #include "../CoilHeatingDXVariableRefrigerantFlow.hpp"
+#include "../CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
 #include "../CoilHeatingElectric.hpp"
 
 #include "../Node.hpp"
@@ -43,7 +45,10 @@
 #include "../PlantLoop.hpp"
 #include "../AirLoopHVACOutdoorAirSystem.hpp"
 #include "../ControllerOutdoorAir.hpp"
+#include "../FanConstantVolume.hpp"
 #include "../FanOnOff.hpp"
+#include "../FanVariableVolume.hpp"
+#include "../FanSystemModel.hpp"
 #include "../HVACComponent.hpp"
 #include "../HVACComponent_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
@@ -310,5 +315,116 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_SupplyAirFanPla
     EXPECT_EQ("BlowThrough", testObject.supplyAirFanPlacement());
     EXPECT_FALSE(testObject.setSupplyAirFanPlacement("BADENUM"));
     EXPECT_EQ("BlowThrough", testObject.supplyAirFanPlacement());
+  }
+}
+
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_MatchingCoilTypes) {
+
+  Model model;
+  {
+    FanOnOff fan(model);
+    CoilCoolingDXVariableRefrigerantFlow cc(model);
+    CoilHeatingDXVariableRefrigerantFlow hc(model);
+
+    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model, cc, hc, fan);
+    EXPECT_FALSE(vrfTerminal.isFluidTemperatureControl());
+    EXPECT_EQ(cc, vrfTerminal.coolingCoil().get());
+    EXPECT_EQ(hc, vrfTerminal.heatingCoil().get());
+    EXPECT_EQ(fan, vrfTerminal.supplyAirFan());
+
+    CoilCoolingDXVariableRefrigerantFlow cc2(model);
+    CoilHeatingDXVariableRefrigerantFlow hc2(model);
+    EXPECT_TRUE(vrfTerminal.setCoolingCoil(cc2));
+    EXPECT_TRUE(vrfTerminal.setHeatingCoil(hc2));
+    EXPECT_EQ(cc2, vrfTerminal.coolingCoil().get());
+    EXPECT_EQ(hc2, vrfTerminal.heatingCoil().get());
+
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
+    EXPECT_FALSE(vrfTerminal.setCoolingCoil(ccFluidCtrl));
+    EXPECT_FALSE(vrfTerminal.setHeatingCoil(hcFluidCtrl));
+    EXPECT_EQ(cc2, vrfTerminal.coolingCoil().get());
+    EXPECT_EQ(hc2, vrfTerminal.heatingCoil().get());
+  }
+
+  // Check Fan Type correctness for Non-FluidCtrl one
+  {
+    CoilCoolingDXVariableRefrigerantFlow cc(model);
+    CoilHeatingDXVariableRefrigerantFlow hc(model);
+    FanSystemModel fanSys(model);
+    EXPECT_NO_THROW(ZoneHVACTerminalUnitVariableRefrigerantFlow(model, cc, hc, fanSys));
+  }
+
+  {
+    CoilCoolingDXVariableRefrigerantFlow cc(model);
+    CoilHeatingDXVariableRefrigerantFlow hc(model);
+    FanOnOff fanOnOff(model);
+    EXPECT_NO_THROW(ZoneHVACTerminalUnitVariableRefrigerantFlow(model, cc, hc, fanOnOff));
+  }
+
+  {
+    CoilCoolingDXVariableRefrigerantFlow cc(model);
+    CoilHeatingDXVariableRefrigerantFlow hc(model);
+    FanConstantVolume fanCV(model);
+    EXPECT_NO_THROW(ZoneHVACTerminalUnitVariableRefrigerantFlow(model, cc, hc, fanCV));
+  }
+
+  {
+    CoilCoolingDXVariableRefrigerantFlow cc(model);
+    CoilHeatingDXVariableRefrigerantFlow hc(model);
+    FanVariableVolume fanVV(model);
+    EXPECT_ANY_THROW(ZoneHVACTerminalUnitVariableRefrigerantFlow(model, cc, hc, fanVV));
+  }
+
+  {
+    FanSystemModel fan(model);
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
+
+    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model, ccFluidCtrl, hcFluidCtrl, fan);
+    EXPECT_TRUE(vrfTerminal.isFluidTemperatureControl());
+    EXPECT_EQ(ccFluidCtrl, vrfTerminal.coolingCoil().get());
+    EXPECT_EQ(hcFluidCtrl, vrfTerminal.heatingCoil().get());
+    EXPECT_EQ(fan, vrfTerminal.supplyAirFan());
+
+    CoilCoolingDXVariableRefrigerantFlow cc(model);
+    CoilHeatingDXVariableRefrigerantFlow hc(model);
+    EXPECT_FALSE(vrfTerminal.setCoolingCoil(cc));
+    EXPECT_FALSE(vrfTerminal.setHeatingCoil(hc));
+    EXPECT_EQ(ccFluidCtrl, vrfTerminal.coolingCoil().get());
+    EXPECT_EQ(hcFluidCtrl, vrfTerminal.heatingCoil().get());
+
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl2(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl2(model);
+    EXPECT_TRUE(vrfTerminal.setCoolingCoil(ccFluidCtrl2));
+    EXPECT_TRUE(vrfTerminal.setHeatingCoil(hcFluidCtrl2));
+    EXPECT_EQ(ccFluidCtrl2, vrfTerminal.coolingCoil().get());
+    EXPECT_EQ(hcFluidCtrl2, vrfTerminal.heatingCoil().get());
+  }
+
+  // Check Fan Type correctness for FluidCtrl one
+  {
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
+    FanSystemModel fanSys(model);
+    EXPECT_NO_THROW(ZoneHVACTerminalUnitVariableRefrigerantFlow(model, ccFluidCtrl, hcFluidCtrl, fanSys));
+  }
+  {
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
+    FanVariableVolume fanVV(model);
+    EXPECT_NO_THROW(ZoneHVACTerminalUnitVariableRefrigerantFlow(model, ccFluidCtrl, hcFluidCtrl, fanVV));
+  }
+  {
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
+    FanOnOff fanOnOff(model);
+    EXPECT_ANY_THROW(ZoneHVACTerminalUnitVariableRefrigerantFlow(model, ccFluidCtrl, hcFluidCtrl, fanOnOff));
+  }
+  {
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
+    FanConstantVolume fanCV(model);
+    EXPECT_ANY_THROW(ZoneHVACTerminalUnitVariableRefrigerantFlow(model, ccFluidCtrl, hcFluidCtrl, fanCV));
   }
 }

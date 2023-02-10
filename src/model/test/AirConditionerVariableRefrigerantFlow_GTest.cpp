@@ -51,6 +51,12 @@
 #include "../CurveExponent_Impl.hpp"
 #include "../ModelObjectList.hpp"
 #include "../ModelObjectList_Impl.hpp"
+#include "../FanOnOff.hpp"
+#include "../FanSystemModel.hpp"
+#include "../CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../CoilCoolingDXVariableRefrigerantFlow.hpp"
+#include "../CoilHeatingDXVariableRefrigerantFlow.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -367,4 +373,36 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow_Remove) {
   EXPECT_EQ(0, model.getConcreteModelObjects<ModelObjectList>().size());
 
   EXPECT_EQ(size + 2, model.modelObjects().size());  // Always On Discrete, OnOff
+}
+
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow_MatchingCoilTypes) {
+
+  Model model;
+  AirConditionerVariableRefrigerantFlow vrf(model);
+
+  {
+    FanOnOff fan(model);
+    CoilCoolingDXVariableRefrigerantFlow cc(model);
+    CoilHeatingDXVariableRefrigerantFlow hc(model);
+
+    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model, cc, hc, fan);
+    EXPECT_FALSE(vrfTerminal.isFluidTemperatureControl());
+
+    EXPECT_EQ(0, vrf.terminals().size());
+    EXPECT_TRUE(vrf.addTerminal(vrfTerminal));
+    EXPECT_EQ(1, vrf.terminals().size());
+  }
+
+  {
+    FanSystemModel fan(model);
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
+
+    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model, ccFluidCtrl, hcFluidCtrl, fan);
+    EXPECT_TRUE(vrfTerminal.isFluidTemperatureControl());
+
+    EXPECT_EQ(1, vrf.terminals().size());
+    EXPECT_FALSE(vrf.addTerminal(vrfTerminal));
+    EXPECT_EQ(1, vrf.terminals().size());
+  }
 }

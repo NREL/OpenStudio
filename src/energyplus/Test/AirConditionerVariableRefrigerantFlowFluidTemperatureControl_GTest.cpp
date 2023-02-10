@@ -132,13 +132,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   vrf.removeAllLoadingIndexes();
   LoadingIndex loadingIndex1(model, 1, evaporativeCapacityMultiplierFunctionofTemperatureCurve1,
                              compressorPowerMultiplierFunctionofTemperatureCurve1);
-  vrf.addLoadingIndex(loadingIndex1);
+  EXPECT_TRUE(vrf.addLoadingIndex(loadingIndex1));
   LoadingIndex loadingIndex2(model, 2, evaporativeCapacityMultiplierFunctionofTemperatureCurve2,
                              compressorPowerMultiplierFunctionofTemperatureCurve2);
-  vrf.addLoadingIndex(loadingIndex2);
+  EXPECT_TRUE(vrf.addLoadingIndex(loadingIndex2));
   LoadingIndex loadingIndex3(model, 3, evaporativeCapacityMultiplierFunctionofTemperatureCurve3,
                              compressorPowerMultiplierFunctionofTemperatureCurve3);
-  vrf.addLoadingIndex(loadingIndex3);
+  EXPECT_TRUE(vrf.addLoadingIndex(loadingIndex3));
 
   CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coolingCoil(model);
   EXPECT_TRUE(coolingCoil.setAvailabilitySchedule(scheduleConstant));
@@ -158,7 +158,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   FanVariableVolume fan(model);
   ZoneHVACTerminalUnitVariableRefrigerantFlow term(model, coolingCoil, heatingCoil, fan);
 
-  vrf.addTerminal(term);
+  EXPECT_TRUE(vrf.addTerminal(term));
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -404,4 +404,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Fan_VariableVolume).size());
+
+  ASSERT_EQ(1, ft.warnings().size());
+  EXPECT_NE(std::string::npos, ft.warnings().front().logMessage().find("will not be translated as it has no terminals"));
+  EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl).size());
+
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term(model, true);
+  EXPECT_TRUE(vrf.addTerminal(term));
+  workspace = ft.translateModel(model);
+
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl).size());
 }

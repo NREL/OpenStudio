@@ -229,6 +229,9 @@ namespace model {
 
       bool setHeatingCoil(const HVACComponent& component);
 
+      // Returns true if the Cooling and Heating Coils are of the FluidTemperatureControl type
+      bool isFluidTemperatureControl() const;
+
       //@}
      protected:
      private:

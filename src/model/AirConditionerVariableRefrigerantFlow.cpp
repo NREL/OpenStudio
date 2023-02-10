@@ -1479,8 +1479,12 @@ namespace model {
       return setPointer(OS_AirConditioner_VariableRefrigerantFlowFields::ZoneTerminalUnitList, modelObjectList.handle());
     }
 
-    void AirConditionerVariableRefrigerantFlow_Impl::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
-      vrfModelObjectList().addModelObject(vrf);
+    bool AirConditionerVariableRefrigerantFlow_Impl::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
+      if (vrf.isFluidTemperatureControl()) {
+        LOG(Warn, "For " << briefDescription() << ", cannot add a terminal that uses FluidTemperatureControl coils: " << vrf.briefDescription());
+        return false;
+      }
+      return vrfModelObjectList().addModelObject(vrf);
     }
 
     void AirConditionerVariableRefrigerantFlow_Impl::removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
@@ -2913,8 +2917,8 @@ namespace model {
       heatRecoveryHeatingEnergyTimeConstant);
   }
 
-  void AirConditionerVariableRefrigerantFlow::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
-    getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->addTerminal(vrf);
+  bool AirConditionerVariableRefrigerantFlow::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->addTerminal(vrf);
   }
 
   void AirConditionerVariableRefrigerantFlow::removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {

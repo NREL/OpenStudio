@@ -220,6 +220,7 @@ namespace model {
     ok = setIndoorUnitReferenceSubcooling(5.0);
     OS_ASSERT(ok);
     CurveQuadratic indoorUnitCondensingTemperatureFunctionofSubcoolingCurve(model);
+    indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setName("VRFIUCondTempCurve");
     indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient1Constant(-1.85);
     indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient2x(0.411);
     indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient3xPOW2(0.0196);

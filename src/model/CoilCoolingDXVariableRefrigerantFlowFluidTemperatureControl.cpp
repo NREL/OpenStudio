@@ -259,6 +259,7 @@ namespace model {
     ok = setIndoorUnitReferenceSuperheating(5.0);
     OS_ASSERT(ok);
     CurveQuadratic indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(model);
+    indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setName("VRFIUEvapTempCurve");
     indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient1Constant(0);
     indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient2x(0.843);
     indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient3xPOW2(0);

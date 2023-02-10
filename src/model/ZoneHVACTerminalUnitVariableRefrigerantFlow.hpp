@@ -56,7 +56,7 @@ namespace model {
   {
 
    public:
-    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model);
+    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, bool isFluidTemperatureControl = false);
 
     explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, const CoilCoolingDXVariableRefrigerantFlow& coolingCoil,
                                                          const CoilHeatingDXVariableRefrigerantFlow& heatingCoil, const HVACComponent& fan);
@@ -152,11 +152,16 @@ namespace model {
 
     boost::optional<HVACComponent> coolingCoil() const;
 
+    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl²
     bool setCoolingCoil(const HVACComponent& coil);
 
     boost::optional<HVACComponent> heatingCoil() const;
 
+    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl²
     bool setHeatingCoil(const HVACComponent& coil);
+
+    // Returns true if the Cooling and Heating Coils are of the FluidTemperatureControl type
+    bool isFluidTemperatureControl() const;
 
     double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
 
