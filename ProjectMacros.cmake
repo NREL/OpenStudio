@@ -400,14 +400,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target}
         PROPERTIES
           SUFFIX ".so"
-          BUILD_RPATH "@loader_path;@loader_path/../"
-          INSTALL_RPATH "@loader_path;@loader_path/../lib/"
+          BUILD_RPATH "@loader_path;@loader_path/.."
+          INSTALL_RPATH "@loader_path;@loader_path/../lib"
       )
     elseif(UNIX)
       set_target_properties(${swig_target}
         PROPERTIES
           BUILD_RPATH "$ORIGIN:$ORIGIN/../"
-          INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib/"
+          INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib:$ORIGIN/../EnergyPlus"   # Need to pick up libpython too, or we won't we able to import the python bindings inside system python
       )
     endif()
 

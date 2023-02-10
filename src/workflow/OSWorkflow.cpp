@@ -1,6 +1,5 @@
-#include "./OSWorkflow.hpp"
-#include "../utilities/filetypes/WorkflowStep.hpp"
-#include "../utilities/bcl/BCLMeasure.hpp"
+#include "OSWorkflow.hpp"
+#include "WorkflowRunOptions.hpp"
 
 #include "../osversion/VersionTranslator.hpp"
 #include "../measure/OSMeasure.hpp"
@@ -11,10 +10,13 @@
 #include "../measure/OSRunner.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/data/Variant.hpp"
+#include "../utilities/core/Filesystem.hpp"
+#include "../utilities/core/Logger.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
-#include "utilities/core/Logger.hpp"
 
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -33,7 +35,7 @@ OSWorkflow::OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ru
     workflowJSON(oswPath) {
 }
 
-OSWorkflow::OSWorkflow(WorkflowRunOptions t_runOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
+OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
   :
 #if USE_RUBY_ENGINE
     rubyEngine(ruby),
@@ -41,8 +43,33 @@ OSWorkflow::OSWorkflow(WorkflowRunOptions t_runOptions, ScriptEngineInstance& ru
 #if USE_PYTHON_ENGINE
     pythonEngine(python),
 #endif
-    workflowJSON(t_runOptions.osw_path),
-    runOptions(std::move(t_runOptions)) {
+    workflowJSON(t_workflowRunOptions.osw_path),
+    m_no_simulation(t_workflowRunOptions.no_simulation),
+    m_post_process_only(t_workflowRunOptions.post_process_only),
+    m_show_stdout(t_workflowRunOptions.show_stdout),
+    m_add_timings(t_workflowRunOptions.add_timings),
+    m_style_stdout(t_workflowRunOptions.style_stdout) {
+
+  if (t_workflowRunOptions.runOptions.debug() || (workflowJSON.runOptions() && workflowJSON.runOptions()->debug())) {
+    fmt::print("Original workflowJSON={}\n", workflowJSON.string());
+    t_workflowRunOptions.debug_print();
+    fmt::print("m_no_simulation={}, m_post_process_only={}, m_show_stdout={}, m_add_timings={}, m_style_stdout={}", m_no_simulation,
+               m_post_process_only, m_show_stdout, m_add_timings, m_style_stdout);
+  }
+  auto runOpt_ = workflowJSON.runOptions();
+  if (!runOpt_) {
+    workflowJSON.setRunOptions(t_workflowRunOptions.runOptions);
+  } else {
+    auto ori_ftOptions = runOpt_->forwardTranslatorOptions();
+    workflowJSON.setRunOptions(t_workflowRunOptions.runOptions);
+    // user supplied CLI flags trump everything
+    ori_ftOptions.overrideValuesWith(t_workflowRunOptions.runOptions.forwardTranslatorOptions());
+    workflowJSON.runOptions()->setForwardTranslatorOptions(ori_ftOptions);
+  }
+
+  if (workflowJSON.runOptions()->debug()) {
+    fmt::print("workflowJSON={}\n", workflowJSON.string());
+  }
 }
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
@@ -78,12 +105,12 @@ void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::
 }
 
 void OSWorkflow::run() {
-  if (runOptions.debug) {
+  if (workflowJSON.runOptions()->debug()) {
     openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   }
 
 #if USE_RUBY_ENGINE
-  rubyEngine->exec("puts 'Hello from Ruby'");
+  // rubyEngine->exec("puts 'Hello from Ruby'");
   rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
   rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
@@ -91,7 +118,7 @@ void OSWorkflow::run() {
   rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
 #endif
 #if USE_PYTHON_ENGINE
-  pythonEngine->exec("print('Hello from Python')");
+  // pythonEngine->exec("print('Hello from Python')");
   pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
   pythonEngine->registerType<openstudio::measure::PythonEnergyPlusMeasure*>("openstudio::measure::PythonEnergyPlusMeasure *");
   pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
@@ -132,6 +159,10 @@ void OSWorkflow::run() {
   model::Model model = runInitialization();
   boost::optional<openstudio::Workspace> workspace_;
 
+  auto runDir = workflowJSON.absoluteRunDir();
+  openstudio::filesystem::remove_all(runDir);
+  openstudio::filesystem::create_directory(runDir);
+
   // 2. determine ruby or python
   // 3. import measure.(py|rb)
   // 4. instantiate measure
@@ -145,20 +176,16 @@ void OSWorkflow::run() {
   // TODO: need to merge workflowJSON flags with flags from command line (eg: FT options)
   // TODO: need to modify utilities/RunOptions.hpp instead of duplicating some of that work in workflow
 
-  for (openstudio::MeasureType stepType : {openstudio::MeasureType::ModelMeasure, openstudio::MeasureType::EnergyPlusMeasure}) {
-    const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
+  for (const auto stepType : {MeasureType::ModelMeasure, MeasureType::EnergyPlusMeasure}) {
     if (stepType == MeasureType::EnergyPlusMeasure) {
+      // Save final Model
+      model.save(runDir / "in.osm", true);
       openstudio::energyplus::ForwardTranslator ft;
-      auto& ftOptions = runOptions.ft_options;
-      ft.setKeepRunControlSpecialDays(ftOptions.runcontrolspecialdays);
-      ft.setIPTabularOutput(ftOptions.ip_tabular_output);
-      ft.setExcludeLCCObjects(ftOptions.no_lifecyclecosts);
-      ft.setExcludeSQliteOutputReport(ftOptions.no_sqlite_output);
-      ft.setExcludeHTMLOutputReport(ftOptions.no_html_output);
-      ft.setExcludeSpaceTranslation(ftOptions.no_space_translation);
+      ft.setForwardTranslatorOptions(workflowJSON.runOptions()->forwardTranslatorOptions());
       workspace_ = ft.translateModel(model);
     }
 
+    const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
     for (const auto& step : modelSteps) {
       unsigned stepIndex = workflowJSON.currentStepIndex();
       fmt::print("\n\nRunning step {}\n", stepIndex);
@@ -368,6 +395,9 @@ spec.loader.exec_module(module)
         }
       }
     }  // End for (const auto& step : modelSteps)
-  }
+  }    // End for StepType
+
+  // Save final IDF
+  workspace_->save(runDir / "in.idf");
 }
 }  // namespace openstudio

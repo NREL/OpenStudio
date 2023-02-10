@@ -46,20 +46,9 @@
 %ignore ForwardTranslatorInitializer;
 %ignore openstudio::energyplus::detail::ForwardTranslatorInitializer;
 
-%template(ForwardTranslatorOptionKeyMethodVector) std::vector<openstudio::energyplus::ForwardTranslatorOptionKeyMethod>;
-
 %include <energyplus/ErrorFile.hpp>
 %include <energyplus/ForwardTranslator.hpp>
 %include <energyplus/ReverseTranslator.hpp>
-
-// extend classes
-%extend openstudio::energyplus::ForwardTranslatorOptionKeyMethod {
-  std::string __str__() {
-    std::ostringstream os;
-    os << *$self;
-    return os.str();
-  }
-};
 
 #endif //ENERGYPLUS_I
 

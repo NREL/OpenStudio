@@ -11,6 +11,7 @@
 #include <OpenStudio.hxx>
 
 #include <fmt/format.h>
+#include <fmt/color.h>
 #include <string_view>
 
 #include <CLI/CLI.hpp>
@@ -25,13 +26,23 @@ int main(int argc, char* argv[]) {
 
   int result = 0;
 
-  // ScriptEngineInstance will delay load the engines
-  openstudio::ScriptEngineInstance rubyEngine("rubyengine", argc - 1, argv + 1);
-  openstudio::ScriptEngineInstance pythonEngine("pythonengine", argc - 1, argv + 1);
+  std::vector<std::string> args(argv, argv + argc);
+  // erase the first element
+  args.erase(args.begin());
 
-  if ((argc > 1) && (std::string_view(argv[1]) == "labs")) {
+  // ScriptEngineInstance will delay load the engines
+  openstudio::ScriptEngineInstance rubyEngine("rubyengine", args);
+  openstudio::ScriptEngineInstance pythonEngine("pythonengine", args);
+
+  if (!args.empty() && (std::string_view(args[0]) == "labs")) {
     CLI::App app{"openstudio"};
 
+    fmt::print(fmt::fg(fmt::color::red),
+               "┌{0:─^{2}}┐\n"
+               "│{1: ^{2}}│\n"
+               "└{0:─^{2}}┘\n",
+               "", "The `labs` command is experimental - Do not use in production", 80);
+    //
     app.get_formatter()->column_width(35);
 
     auto* const experimentalApp = app.add_subcommand("labs");
@@ -174,8 +185,7 @@ int main(int argc, char* argv[]) {
       updateCommand->add_option("path", updateOsmPath, "Path to OSM or directory containing osms")->required(true);
 
       updateCommand->callback([&keep, &updateOsmPath] {
-        bool result = openstudio::cli::runModelUpdateCommand(updateOsmPath, keep);
-        if (!result) {
+        if (!openstudio::cli::runModelUpdateCommand(updateOsmPath, keep)) {
           throw std::runtime_error("Failed to update some models");
         }
       });
@@ -206,19 +216,19 @@ int main(int argc, char* argv[]) {
     CLI11_PARSE(app, argc, argv);
 
     if (*execRubyOption) {
-      fmt::print("--execute Flag received {} times.\n", execRubyOption->count());
+      //  fmt::print("--execute Flag received {} times.\n", execRubyOption->count());
       runSetupEmbeddedGems();
       rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
       for (auto& cmd : executeRubyCmds) {
-        fmt::print("{}\n", cmd);
+        // fmt::print("{}\n", cmd);
         rubyEngine->exec(cmd);
       }
     }
     if (*execPythonOption) {
-      fmt::print("--pyexecute Flag received {} times.\n", execPythonOption->count());
+      // fmt::print("--pyexecute Flag received {} times.\n", execPythonOption->count());
       runSetupPythonPath();
       for (auto& cmd : executePythonCmds) {
-        fmt::print("{}\n", cmd);
+        // fmt::print("{}\n", cmd);
         pythonEngine->exec(cmd);
       }
     }

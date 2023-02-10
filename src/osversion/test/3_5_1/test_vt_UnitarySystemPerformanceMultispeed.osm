@@ -1,0 +1,14 @@
+
+OS:Version,
+  {d7f7e956-16ea-4ccc-91a3-5e4bcf8ae550}, !- Handle
+  3.5.0;                                  !- Version Identifier
+
+OS:UnitarySystemPerformance:Multispeed,
+  {6c8ec907-01e0-45f6-b86e-7049009538d4}, !- Handle
+  Unitary System Performance Multispeed 1, !- Name
+  No,                                     !- Single Mode Operation
+  1,                                      !- Heating Speed Supply Air Flow Ratio 1
+  2,                                      !- Cooling Speed Supply Air Flow Ratio 1
+  autosize,                               !- Heating Speed Supply Air Flow Ratio 2
+  3;                                      !- Cooling Speed Supply Air Flow Ratio 2
+

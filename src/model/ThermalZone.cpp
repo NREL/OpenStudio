@@ -314,8 +314,8 @@ namespace model {
         // if KSU
         "Zone Thermal Comfort KSU Model Thermal Sensation Index",
         // if AdaptiveASH55
-        "Zone Thermal Comfort ASHRAE 55 Adaptive Model 80%% Acceptability Status",
-        "Zone Thermal Comfort ASHRAE 55 Adaptive Model 90%% Acceptability Status",
+        "Zone Thermal Comfort ASHRAE 55 Adaptive Model 80% Acceptability Status",
+        "Zone Thermal Comfort ASHRAE 55 Adaptive Model 90% Acceptability Status",
         "Zone Thermal Comfort ASHRAE 55 Adaptive Model Running Average Outdoor Air Temperature",
         "Zone Thermal Comfort ASHRAE 55 Adaptive Model Temperature",
         // if AdaptiveCEN15251

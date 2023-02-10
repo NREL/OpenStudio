@@ -105,6 +105,9 @@ set(filetypes_src
   filetypes/RunOptions.hpp
   filetypes/RunOptions_Impl.hpp
   filetypes/RunOptions.cpp
+  filetypes/ForwardTranslatorOptions.hpp
+  filetypes/ForwardTranslatorOptions_Impl.hpp
+  filetypes/ForwardTranslatorOptions.cpp
   filetypes/StandardsJSON.hpp
   filetypes/StandardsJSON_Impl.hpp
   filetypes/StandardsJSON.cpp
