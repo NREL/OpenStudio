@@ -2272,7 +2272,7 @@ namespace model {
     return getImpl<detail::Facility_Impl>()->gasolineTotalEndUses();
   }
 
-   // Diesel
+  // Diesel
   OptionalDouble Facility::dieselHeating() const {
     return getImpl<detail::Facility_Impl>()->dieselHeating();
   }

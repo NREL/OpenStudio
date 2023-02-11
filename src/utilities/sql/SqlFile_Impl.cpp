@@ -2104,7 +2104,7 @@ namespace detail {
       "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Total End Uses') and (Units = 'GJ')");
   }
 
- /* Other Fuel 2 */
+  /* Other Fuel 2 */
   OptionalDouble SqlFile_Impl::otherFuel2Heating() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
