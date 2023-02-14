@@ -152,12 +152,12 @@ namespace model {
 
     boost::optional<HVACComponent> coolingCoil() const;
 
-    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl²
+    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl
     bool setCoolingCoil(const HVACComponent& coil);
 
     boost::optional<HVACComponent> heatingCoil() const;
 
-    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl²
+    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl
     bool setHeatingCoil(const HVACComponent& coil);
 
     // Returns true if the Cooling and Heating Coils are of the FluidTemperatureControl type
