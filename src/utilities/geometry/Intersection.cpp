@@ -57,6 +57,7 @@
 #endif
 
 #include <cmath>
+#include <iterator>
 
 using coordinate_type = double;
 using BoostPoint = boost::geometry::model::d2::point_xy<double>;
@@ -925,8 +926,8 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
   boostPolygons.push_back(*initialBoostPolygon);
 
   // cppcheck-suppress constStatement
-  std::vector<BoostPolygon> newBoostPolygons;
   for (const std::vector<Point3d>& hole : holes) {
+    std::vector<BoostPolygon> newBoostPolygons;
     // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostHole = nonIntersectingBoostPolygonFromVertices(hole, allPoints, tol);
     if (!boostHole) {
@@ -937,16 +938,17 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
       // cppcheck-suppress constStatement
       std::vector<BoostPolygon> diffResult;
       boost::geometry::difference(boostPolygon, *boostHole, diffResult);
-      newBoostPolygons.insert(newBoostPolygons.end(), diffResult.begin(), diffResult.end());
+      newBoostPolygons.reserve(newBoostPolygons.size() + diffResult.size());
+      newBoostPolygons.insert(newBoostPolygons.end(), std::make_move_iterator(diffResult.begin()), std::make_move_iterator(diffResult.end()));
     }
-    boostPolygons.swap(newBoostPolygons);
-    newBoostPolygons.clear();
+    boostPolygons = std::move(newBoostPolygons);
   }
 
   // Remove the holes and spikes and convert back to our data types
   for (const BoostPolygon& boostPolygon : boostPolygons) {
-    BoostPolygon removedSpikes = removeSpikes(boostPolygon);
+    const BoostPolygon removedSpikes = removeSpikes(boostPolygon);
     const std::vector<BoostPolygon>& removedHoles = removeHoles(removedSpikes);
+    result.reserve(result.size() + removedHoles.size());
     for (const BoostPolygon& removedHole : removedHoles) {
       result.push_back(verticesFromBoostPolygon(removedHole, allPoints, tol));
     }
