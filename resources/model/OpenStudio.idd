@@ -10322,6 +10322,689 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note Enter the time constant used to model the transition
        \note from cooling only mode to heat recovery mode
 
+OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
+       \memo This is a key object in the new physics based VRF model applicable for Fluid
+       \memo Temperature Control
+       \memo It describes the Variable Refrigerant Flow system excluding the performance of indoor units
+       \memo Indoor units are modeled separately, see ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+       \note Enter the name of a schedule that defines the availability of the unit
+       \note Schedule values of 0 denote the unit is off. All other values denote the unit is available
+       \note If this field is left blank, the unit is available the entire simulation
+  A4 , \field Zone Terminal Unit List
+       \required-field
+       \type object-list
+       \object-list ModelObjectLists
+       \note Enter the name of a ZoneTerminalUnitList. This list connects zone terminal units to this
+       \note heat pump
+  A5 , \field Refrigerant Type
+       \required-field
+       \type choice
+       \key R11
+       \key R12
+       \key R22
+       \key R123
+       \key R134a
+       \key R404a
+       \key R407a
+       \key R410a
+       \key NH3
+       \key R507a
+       \key R744
+  N1 , \field Rated Evaporative Capacity
+       \type real
+       \units W
+       \autosizable
+       \minimum> 0.0
+       \required-field
+       \note Enter the total evaporative capacity in watts at rated conditions
+       \note This is the capacity corresponding to the max compressor speed at rated conditions
+       \note The actual evaporative capacity is obtained by multiplying the
+       \note rated capacity with the modification factor calculated by Evaporative
+       \note Capacity Multiplier Function of Temperature Curve
+  N2 , \field Rated Compressor Power Per Unit of Rated Evaporative Capacity
+       \type real
+       \units dimensionless
+       \minimum> 0.0
+       \required-field
+       \note Enter the rated compressor power per Watt of rated evaporative capacity [W/W]
+       \note Rated compressor power corresponds to the max compressor speed at rated conditions
+       \note The actual compressor power is obtained by multiplying the
+       \note rated power with the modification factor calculated by Compressor
+       \note Power Multiplier Function of Temperature Curve
+  N3 , \field Minimum Outdoor Air Temperature in Cooling Mode
+       \type real
+       \units C
+       \required-field
+       \note Enter the minimum outdoor temperature allowed for cooling operation
+       \note Cooling is disabled below this temperature
+  N4 , \field Maximum Outdoor Air Temperature in Cooling Mode
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum outdoor temperature allowed for cooling operation
+       \note Cooling is disabled above this temperature
+  N5 , \field Minimum Outdoor Air Temperature in Heating Mode
+       \type real
+       \units C
+       \required-field
+       \note Enter the minimum outdoor temperature allowed for heating operation
+       \note Heating is disabled below this temperature
+  N6 , \field Maximum Outdoor Air Temperature in Heating Mode
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum outdoor temperature allowed for heating operation
+       \note Heating is disabled below this temperature
+  N7 , \field Reference Outdoor Unit Superheating
+       \type real
+       \units deltaC
+       \required-field
+  N8 , \field Reference Outdoor Unit Subcooling
+       \type real
+       \units deltaC
+       \required-field
+  A6 , \field Refrigerant Temperature Control Algorithm for Indoor Unit
+       \type choice
+       \key ConstantTemp
+       \key VariableTemp
+       \required-field
+  N9 , \field Reference Evaporating Temperature for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is ConstantTemp
+       \note Evaporating temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N10, \field Reference Condensing Temperature for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is ConstantTemp
+       \note Condensing temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N11, \field Variable Evaporating Temperature Minimum for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is VariableTemp
+       \note Evaporating temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N12, \field Variable Evaporating Temperature Maximum for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is VariableTemp
+       \note Evaporating temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N13, \field Variable Condensing Temperature Minimum for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is VariableTemp
+       \note Condensing temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N14, \field Variable Condensing Temperature Maximum for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is VariableTemp
+       \note Condensing temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N15, \field Outdoor Unit Fan Power Per Unit of Rated Evaporative Capacity
+       \note Enter the outdoor unit fan power per Watt of rated evaporative capacity [W/W]
+       \units dimensionless
+       \minimum> 0.0
+       \required-field
+       \type real
+  N16, \field Outdoor Unit Fan Flow Rate Per Unit of Rated Evaporative Capacity
+       \note This field is only used if the previous is set to autocalculate and performance input method is NominalCapacity
+       \units m3/s-W
+       \minimum> 0.0
+       \required-field
+       \type real
+  A7 , \field Outdoor Unit Evaporating Temperature Function of Superheating Curve Name
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
+  A8 , \field Outdoor Unit Condensing Temperature Function of Subcooling Curve Name
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
+  N17, \field Diameter of Main Pipe Connecting Outdoor Unit to the First Branch Joint
+       \note used to calculate the piping loss
+       \type real
+       \units m
+       \minimum 0.0
+       \required-field
+  N18, \field Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint
+       \note used to calculate the heat loss of the main pipe
+       \type real
+       \units m
+       \minimum 0.0
+       \required-field
+  N19, \field Equivalent Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint
+       \note used to calculate the refrigerant pressure drop of the main pipe
+       \type real
+       \units m
+       \minimum 0.0
+       \required-field
+  N20, \field Height Difference Between Outdoor Unit and Indoor Units
+       \note Difference between outdoor unit height and indoor unit height
+       \note Positive means outdoor unit is higher than indoor unit
+       \note Negative means outdoor unit is lower than indoor unit
+       \type real
+       \units m
+       \required-field
+  N21, \field Main Pipe Insulation Thickness
+       \type real
+       \units m
+       \minimum 0.0
+       \required-field
+  N22, \field Main Pipe Insulation Thermal Conductivity
+       \type real
+       \units W/m-K
+       \minimum 0.0
+       \required-field
+  N23, \field Crankcase Heater Power per Compressor
+       \type real
+       \units W
+       \required-field
+       \note Enter the value of the resistive heater located in the compressor(s). This heater
+       \note is used to warm the refrigerant and oil when the compressor is off
+  N24, \field Number of Compressors
+       \type integer
+       \units dimensionless
+       \required-field
+       \note Enter the total number of compressor. This input is used only for crankcase
+       \note heater calculations.
+  N25, \field Ratio of Compressor Size to Total Compressor Capacity
+       \type real
+       \units W/W
+       \required-field
+       \note Enter the ratio of the first stage compressor to total compressor capacity
+       \note All other compressors are assumed to be equally sized. This inputs is used
+       \note only for crankcase heater calculations
+  N26, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum outdoor temperature above which the crankcase heaters are disabled
+  A9 , \field Defrost Strategy
+       \type choice
+       \key ReverseCycle
+       \key Resistive
+       \required-field
+       \note Select a defrost strategy.
+       \note Reverse cycle reverses the operating mode from heating to
+       \note cooling to melt frost formation on the condenser coil
+       \note The resistive strategy uses a resistive heater
+       \note to melt the frost.
+  A10, \field Defrost Control
+       \type choice
+       \key Timed
+       \key OnDemand
+       \required-field
+       \note Choose a defrost control type
+       \note Either use a fixed Timed defrost period or select
+       \note OnDemand to defrost only when necessary
+  A11, \field Defrost Energy Input Ratio Modifier Function of Temperature Curve Name
+       \type object-list
+       \object-list BivariateFunctions
+       \note A valid performance curve must be used if ReverseCycle defrost strategy is selected
+  N27, \field Defrost Time Period Fraction
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Fraction of time in defrost mode
+       \note Only applicable if timed defrost control is specified
+  N28, \field Resistive Defrost Heater Capacity
+       \type real
+       \minimum 0.0
+       \required-field
+       \autosizable
+       \units W
+       \note Enter the size of the resistive defrost heating element
+       \note Only applicable if resistive defrost strategy is specified
+       \ip-units W
+  N29, \field Maximum Outdoor Dry-bulb Temperature for Defrost Operation
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum outdoor temperature above which the defrost operation is disabled
+  N30, \field Compressor Maximum Delta Pressure
+       \type real
+       \units Pa
+       \required-field
+       \minimum 0.0
+       \maximum 50000000.0
+  A12; \field Loading Index List
+       \type object-list
+       \object-list ModelObjectLists
+
+OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:LoadingIndex,
+       \min-fields 5
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference AirConditionerVariableRefrigerantFlowFluidTemperatureControlLoadingIndex
+  N1,  \field Compressor Speed
+       \required-field
+       \type real
+       \note Minimum compressor speed
+       \units rev/min
+       \minimum> 0
+  A3,  \field Evaporative Capacity Multiplier Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+  A4;  \field Compressor Power Multiplier Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+
+OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR,
+       \memo This is a key object in the new physics based VRF Heat Recovery (HR) model applicable for Fluid
+       \memo Temperature Control. It describes the VRF HR system excluding the performance of indoor units.
+       \memo Indoor units are modeled separately in the ZoneHVAC:TerminalUnit:VariableRefrigerantFlow object
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+       \note Enter the name of a schedule that defines the availability of the unit
+       \note Schedule values of 0 denote the unit is off. All other values denote the unit is available
+       \note If this field is left blank, the unit is available the entire simulation
+  A4 , \field Zone Terminal Unit List
+       \required-field
+       \type object-list
+       \object-list ModelObjectLists
+       \note Enter the name of a ZoneTerminalUnitList. This list connects zone terminal units to this
+       \note heat pump
+  A5 , \field Refrigerant Type
+       \required-field
+       \type choice
+       \key R11
+       \key R12
+       \key R22
+       \key R123
+       \key R134a
+       \key R404a
+       \key R407a
+       \key R410a
+       \key NH3
+       \key R507a
+       \key R744
+  N1 , \field Rated Evaporative Capacity
+       \type real
+       \units W
+       \autosizable
+       \minimum> 0.0
+       \required-field
+       \note Enter the total evaporative capacity in watts at rated conditions
+       \note This is the capacity corresponding to the max compressor speed at rated conditions
+       \note The actual evaporative capacity is obtained by multiplying the
+       \note rated capacity with the modification factor calculated by Evaporative
+       \note Capacity Multiplier Function of Temperature Curve
+  N2 , \field Rated Compressor Power Per Unit of Rated Evaporative Capacity
+       \type real
+       \units dimensionless
+       \minimum> 0.0
+       \required-field
+       \note Enter the rated compressor power per Watt of rated evaporative capacity [W/W]
+       \note Rated compressor power corresponds to the max compressor speed at rated conditions
+       \note The actual compressor power is obtained by multiplying the
+       \note rated power with the modification factor calculated by Compressor
+       \note Power Multiplier Function of Temperature Curve
+  N3 , \field Minimum Outdoor Air Temperature in Cooling Only Mode
+       \type real
+       \units C
+       \required-field
+       \note Enter the minimum outdoor temperature allowed for cooling operation
+       \note Cooling is disabled below this temperature
+  N4 , \field Maximum Outdoor Air Temperature in Cooling Only Mode
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum outdoor temperature allowed for cooling operation
+       \note Cooling is disabled above this temperature
+  N5 , \field Minimum Outdoor Air Temperature in Heating Only Mode
+       \type real
+       \units C
+       \required-field
+       \note Enter the minimum outdoor temperature allowed for heating operation
+       \note Heating is disabled below this temperature
+  N6 , \field Maximum Outdoor Air Temperature in Heating Only Mode
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum outdoor temperature allowed for heating operation
+       \note Heating is disabled below this temperature
+  N7 , \field Minimum Outdoor Temperature in Heat Recovery Mode
+       \type real
+       \units C
+       \required-field
+       \note The minimum outdoor temperature below which heat
+       \note recovery mode will not operate.
+  N8 , \field Maximum Outdoor Temperature in Heat Recovery Mode
+       \type real
+       \units C
+       \required-field
+       \note The maximum outdoor temperature above which heat
+       \note recovery mode will not operate.
+  A6 , \field Refrigerant Temperature Control Algorithm for Indoor Unit
+       \type choice
+       \key ConstantTemp
+       \key VariableTemp
+       \required-field
+  N9 , \field Reference Evaporating Temperature for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is ConstantTemp
+       \note Evaporating temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N10, \field Reference Condensing Temperature for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is ConstantTemp
+       \note Condensing temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N11, \field Variable Evaporating Temperature Minimum for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is VariableTemp
+       \note Evaporating temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N12, \field Variable Evaporating Temperature Maximum for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is VariableTemp
+       \note Evaporating temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N13, \field Variable Condensing Temperature Minimum for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is VariableTemp
+       \note Condensing temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N14, \field Variable Condensing Temperature Maximum for Indoor Unit
+       \note This field is used if Refrigerant Temperature Control Algorithm
+       \note is VariableTemp
+       \note Condensing temperature is the refrigerant temperature, not air temperature
+       \type real
+       \units C
+       \required-field
+  N15, \field Outdoor Unit Evaporator Reference Superheating
+       \type real
+       \units deltaC
+       \required-field
+  N16, \field Outdoor Unit Condenser Reference Subcooling
+       \type real
+       \units deltaC
+       \required-field
+  N17, \field Outdoor Unit Evaporator Rated Bypass Factor
+       \type real
+       \units dimensionless
+       \minimum> 0
+       \required-field
+  N18, \field Outdoor Unit Condenser Rated Bypass Factor
+       \type real
+       \units dimensionless
+       \minimum> 0
+       \required-field
+  N19, \field Difference between Outdoor Unit Evaporating Temperature and Outdoor Air Temperature in Heat Recovery Mode
+       \type real
+       \units deltaC
+       \required-field
+  N20, \field Outdoor Unit Heat Exchanger Capacity Ratio
+       \note Enter the rated capacity ratio between the main and supplementary outdoor unit heat exchangers [W/W]
+       \type real
+       \units dimensionless
+       \minimum> 0
+       \required-field
+  N21, \field Outdoor Unit Fan Power Per Unit of Rated Evaporative Capacity
+       \note Enter the outdoor unit fan power per Watt of rated evaporative capacity [W/W]
+       \units dimensionless
+       \minimum> 0.0
+       \required-field
+       \type real
+  N22, \field Outdoor Unit Fan Flow Rate Per Unit of Rated Evaporative Capacity
+       \note Enter the outdoor unit fan flow rate per Watt of rated evaporative capacity [W/W]
+       \units m3/s-W
+       \minimum> 0.0
+       \required-field
+       \type real
+  A7 , \field Outdoor Unit Evaporating Temperature Function of Superheating Curve Name
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
+  A8 , \field Outdoor Unit Condensing Temperature Function of Subcooling Curve Name
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
+  N23, \field Diameter of Main Pipe for Suction Gas
+       \note used to calculate the piping loss
+       \type real
+       \units m
+       \minimum 0.0
+       \required-field
+  N24, \field Diameter of Main Pipe for Discharge Gas
+       \note used to calculate the piping loss
+       \type real
+       \units m
+       \minimum 0.0
+       \required-field
+  N25, \field Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint
+       \note used to calculate the heat loss of the main pipe
+       \type real
+       \units m
+       \minimum 0.0
+       \required-field
+  N26, \field Equivalent Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint
+       \note used to calculate the refrigerant pressure drop of the main pipe
+       \type real
+       \units m
+       \minimum 0.0
+       \required-field
+  N27, \field Height Difference Between Outdoor Unit and Indoor Units
+       \note Difference between outdoor unit height and indoor unit height
+       \note Positive means outdoor unit is higher than indoor unit
+       \note Negative means outdoor unit is lower than indoor unit
+       \type real
+       \units m
+       \required-field
+  N28, \field Main Pipe Insulation Thickness
+       \type real
+       \units m
+       \minimum 0.0
+       \required-field
+  N29, \field Main Pipe Insulation Thermal Conductivity
+       \type real
+       \units W/m-K
+       \minimum 0.0
+       \required-field
+  N30, \field Crankcase Heater Power per Compressor
+       \type real
+       \units W
+       \required-field
+       \note Enter the value of the resistive heater located in the compressor(s). This heater
+       \note is used to warm the refrigerant and oil when the compressor is off
+  N31, \field Number of Compressors
+       \type integer
+       \units dimensionless
+       \required-field
+       \note Enter the total number of compressor. This input is used only for crankcase
+       \note heater calculations.
+  N32, \field Ratio of Compressor Size to Total Compressor Capacity
+       \type real
+       \units W/W
+       \required-field
+       \note Enter the ratio of the first stage compressor to total compressor capacity
+       \note All other compressors are assumed to be equally sized. This inputs is used
+       \note only for crankcase heater calculations
+  N33, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum outdoor temperature above which the crankcase heaters are disabled
+  A9 , \field Defrost Strategy
+       \type choice
+       \key ReverseCycle
+       \key Resistive
+       \required-field
+       \note Select a defrost strategy.
+       \note Reverse cycle reverses the operating mode from heating to
+       \note cooling to melt frost formation on the condenser coil
+       \note The resistive strategy uses a resistive heater
+       \note to melt the frost.
+  A10, \field Defrost Control
+       \type choice
+       \key Timed
+       \key OnDemand
+       \required-field
+       \note Choose a defrost control type
+       \note Either use a fixed Timed defrost period or select
+       \note OnDemand to defrost only when necessary
+  A11, \field Defrost Energy Input Ratio Modifier Function of Temperature Curve Name
+       \type object-list
+       \object-list BivariateFunctions
+       \note A valid performance curve must be used if ReverseCycle defrost strategy is selected
+  N34, \field Defrost Time Period Fraction
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Fraction of time in defrost mode
+       \note Only applicable if timed defrost control is specified
+  N35, \field Resistive Defrost Heater Capacity
+       \type real
+       \minimum 0.0
+       \required-field
+       \autosizable
+       \units W
+       \note Enter the size of the resistive defrost heating element
+       \note Only applicable if resistive defrost strategy is specified
+       \ip-units W
+  N36, \field Maximum Outdoor Dry-bulb Temperature for Defrost Operation
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum outdoor temperature above which the defrost operation is disabled
+  N37, \field Initial Heat Recovery Cooling Capacity Fraction
+       \type real
+       \units W/W
+       \required-field
+       \note This is used to describe the transition from Cooling Only mode to Heat Recovery mode
+       \note Enter the fractional capacity available at the start
+       \note of heat recovery mode. The capacity exponentially approaches
+       \note the steady-state value according to the inputs for
+       \note Heat Recovery Cooling Capacity Modifier and Heat Recovery
+       \note Cooling Capacity Time Constant
+  N38, \field Heat Recovery Cooling Capacity Time Constant
+       \type real
+       \units hr
+       \required-field
+       \note This is used to describe the transition from Cooling Only mode to Heat Recovery mode
+       \note Enter the time constant used to model the transition
+       \note from cooling only mode to heat recovery mode
+  N39, \field Initial Heat Recovery Cooling Energy Fraction
+       \type real
+       \units W/W
+       \required-field
+       \note This is used to describe the transition from Cooling Only mode to Heat Recovery mode
+       \note Enter the fractional electric consumption rate at the start
+       \note of heat recovery mode. The electric consumption rate exponentially
+       \note approaches the steady-state value according to the inputs for
+       \note Heat Recovery Cooling Energy Modifier and Heat Recovery
+       \note Cooling Energy Time Constant
+  N40, \field Heat Recovery Cooling Energy Time Constant
+       \type real
+       \units hr
+       \required-field
+       \note This is used to describe the transition from Cooling Only mode to Heat Recovery mode
+       \note Enter the time constant used to model the transition
+       \note from cooling only mode to heat recovery mode
+  N41, \field Initial Heat Recovery Heating Capacity Fraction
+       \type real
+       \units W/W
+       \required-field
+       \note This is used to describe the transition from Heating Only mode to Heat Recovery mode
+       \note Enter the fractional capacity available at the start
+       \note of heat recovery mode. The capacity exponentially approaches
+       \note the steady-state value according to the inputs for
+       \note Heat Recovery Heating Capacity Modifier and Heat Recovery
+       \note Heating Capacity Time Constant
+  N42, \field Heat Recovery Heating Capacity Time Constant
+       \type real
+       \units hr
+       \required-field
+       \note This is used to describe the transition from Heating Only mode to Heat Recovery mode
+       \note Enter the time constant used to model the transition
+       \note from cooling only mode to heat recovery mode
+  N43, \field Initial Heat Recovery Heating Energy Fraction
+       \type real
+       \units W/W
+       \required-field
+       \note This is used to describe the transition from Heating Only mode to Heat Recovery mode
+       \note Enter the fractional electric consumption rate at the start
+       \note of heat recovery mode. The electric consumption rate exponentially
+       \note approaches the steady-state value according to the inputs for
+       \note Heat Recovery Cooling Energy Modifier and Heat Recovery
+       \note Cooling Energy Time Constant
+  N44, \field Heat Recovery Heating Energy Time Constant
+       \type real
+       \units hr
+       \required-field
+       \note This is used to describe the transition from Heating Only mode to Heat Recovery mode
+       \note Enter the time constant used to model the transition
+       \note from cooling only mode to heat recovery mode
+  N45, \field Compressor Maximum Delta Pressure
+       \type real
+       \units Pa
+       \required-field
+       \minimum 0.0
+       \maximum 50000000.0
+  N46, \field Compressor Inverter Efficiency
+       \type real
+       \units dimensionless
+       \minimum> 0
+       \maximum 1.0
+       \required-field
+       \note Efficiency of the compressor inverter
+  N47, \field Compressor Evaporative Capacity Correction Factor
+       \type real
+       \units dimensionless
+       \minimum> 0
+       \required-field
+       \note Describe the evaporative capacity difference because of system configuration
+       \note difference between test bed and real system.
+  A12; \field Loading Index List
+       \type object-list
+       \object-list ModelObjectLists
+
 OS:AirLoopHVAC,
        \memo Defines a central forced air system
        \min-fields 13
@@ -17627,6 +18310,58 @@ OS:Coil:Cooling:DX:VariableRefrigerantFlow,
        \type object-list
        \object-list ConnectionNames
 
+OS:Coil:Cooling:DX:VariableRefrigerantFlow:FluidTemperatureControl,
+       \memo This is a key object in the new physics based VRF model applicable for Fluid
+       \memo Temperature Control. It describes the the indoor unit coil of the system at cooling mode.
+       \memo Used with ZoneHVAC:TerminalUnit:VariableRefrigerantFlow.
+       \memo Outdoor unit is modeled separately, see AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl
+       \memo or AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference CoolingCoilsDXVarRefrigFlowFluidTemperatureControl
+       \reference ConnectionObject
+  A3,  \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+       \note Enter the name of a schedule that defines the availability of the coil
+       \note Schedule values of 0 denote the unit is off. All other values denote the unit is available
+       \note If this field is left blank, the unit is available the entire simulation
+  A4,  \field Coil Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note the inlet node to the coil
+  A5,  \field Coil Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note the outlet node to the coil
+  N1,  \field Rated Total Cooling Capacity
+       \required-field
+       \autosizable
+       \type real
+       \units W
+       \minimum> 0.0
+       \note Supply air fan heat is not included
+  N2,  \field Rated Sensible Heat Ratio
+       \required-field
+       \autosizable
+       \type real
+       \minimum> 0.0
+       \note Supply air fan heat is not included
+  N3,  \field Indoor Unit Reference Superheating
+       \type real
+       \units deltaC
+       \minimum 0.0
+       \required-field
+  A6;  \field Indoor Unit Evaporating Temperature Function of Superheating Curve
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
+
 OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
         \min-fields 10
    A1 , \field Handle
@@ -18158,6 +18893,53 @@ OS:Coil:Heating:DX:VariableRefrigerantFlow,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
+
+OS:Coil:Heating:DX:VariableRefrigerantFlow:FluidTemperatureControl,
+       \memo This is a key object in the new physics based VRF model applicable for Fluid
+       \memo Temperature Control. It describes the the indoor unit coil of the system at heating mode.
+       \memo Used with ZoneHVAC:TerminalUnit:VariableRefrigerantFlow.
+       \memo Outdoor unit is modeled separately, see AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl
+       \memo or AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference HeatingCoilsDXVarRefrigFlowFluidTemperatureControl
+       \reference ConnectionObject
+  A3,  \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+       \note Enter the name of a schedule that defines the availability of the coil
+       \note Schedule values of 0 denote the unit is off. All other values denote the unit is available
+       \note If this field is left blank, the unit is available the entire simulation
+  A4,  \field Coil Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note the inlet node to the coil
+  A5,  \field Coil Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note the outlet node to the coil
+  N1,  \field Rated Total Heating Capacity
+       \required-field
+       \autosizable
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \note Supply air fan heat is not included
+  N2,  \field Indoor Unit Reference Subcooling
+       \type real
+       \units deltaC
+       \minimum 0.0
+       \required-field
+  A6;  \field Indoor Unit Condensing Temperature Function of Subcooling Curve
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
 
 OS:Coil:Heating:Electric,
        \min-fields 1
@@ -27865,11 +28647,13 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   A10,  \field Cooling Coil
         \type object-list
         \object-list CoolingCoilsDXVarRefrigFlow
+        \object-list CoolingCoilsDXVarRefrigFlowFluidTemperatureControl
         \note Cooling Coil Type must be Coil:Cooling:DX:VariableRefrigerantFlow
         \note This field may be left blank if heating-only mode is used
   A11,  \field Heating Coil
         \type object-list
         \object-list HeatingCoilsDXVarRefrigFlow
+        \object-list HeatingCoilsDXVarRefrigFlowFluidTemperatureControl
         \note Heating Coil Type must be Coil:Heating:DX:VariableRefrigerantFlow
         \note This field may be left blank if cooling-only mode is used
   N8 ,  \field Zone Terminal Unit On Parasitic Electric Energy Use

@@ -594,6 +594,22 @@ namespace energyplus {
       translateAndMapModelObject(vrf);
     }
 
+    // get AirConditionerVariableRefrigerantFlowFluidTemperatureControl objects in sorted order
+    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> vrfftcs =
+      model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
+    std::sort(vrfftcs.begin(), vrfftcs.end(), WorkspaceObjectNameLess());
+    for (auto& vrfftc : vrfftcs) {
+      translateAndMapModelObject(vrfftc);
+    }
+
+    // get AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR objects in sorted order
+    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR> vrfftchrs =
+      model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
+    std::sort(vrfftchrs.begin(), vrfftchrs.end(), WorkspaceObjectNameLess());
+    for (auto& vrfftchr : vrfftchrs) {
+      translateAndMapModelObject(vrfftchr);
+    }
+
     // get plant loops in sorted order
     std::vector<PlantLoop> plantLoops = model.getConcreteModelObjects<PlantLoop>();
     std::sort(plantLoops.begin(), plantLoops.end(), WorkspaceObjectNameLess());
@@ -686,6 +702,18 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow: {
         model::AirConditionerVariableRefrigerantFlow vrf = modelObject.cast<AirConditionerVariableRefrigerantFlow>();
         retVal = translateAirConditionerVariableRefrigerantFlow(vrf);
+        break;
+      }
+      case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl: {
+        model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf =
+          modelObject.cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
+        retVal = translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(vrf);
+        break;
+      }
+      case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR: {
+        model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf =
+          modelObject.cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
+        retVal = translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(vrf);
         break;
       }
       case openstudio::IddObjectType::OS_AirLoopHVAC: {
@@ -1032,6 +1060,12 @@ namespace energyplus {
         retVal = translateCoilCoolingDXVariableRefrigerantFlow(coil);
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl: {
+        model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coil =
+          modelObject.cast<CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl>();
+        retVal = translateCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(coil);
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed: {
         model::CoilCoolingDXVariableSpeed coil = modelObject.cast<CoilCoolingDXVariableSpeed>();
         if (this->isHVACComponentWithinUnitary(coil)) {
@@ -1057,6 +1091,10 @@ namespace energyplus {
         model::CoilCoolingWater coil = modelObject.cast<CoilCoolingWater>();
         retVal = translateCoilCoolingWater(coil);
         break;
+      }
+      case openstudio::IddObjectType::OS_Coil_Cooling_Water_Panel_Radiant: {
+        // no-op
+        return retVal;
       }
       case openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit: {
         model::CoilCoolingWaterToAirHeatPumpEquationFit coil = modelObject.cast<CoilCoolingWaterToAirHeatPumpEquationFit>();
@@ -1146,6 +1184,12 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow: {
         model::CoilHeatingDXVariableRefrigerantFlow coil = modelObject.cast<CoilHeatingDXVariableRefrigerantFlow>();
         retVal = translateCoilHeatingDXVariableRefrigerantFlow(coil);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl: {
+        model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl coil =
+          modelObject.cast<CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl>();
+        retVal = translateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(coil);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_Water: {
