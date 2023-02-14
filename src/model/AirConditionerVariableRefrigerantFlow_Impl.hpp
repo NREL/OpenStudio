@@ -486,7 +486,7 @@ namespace model {
 
       bool setVRFModelObjectList(const ModelObjectList& modelObjectList);
 
-      void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
+      bool addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
 
       void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
 
