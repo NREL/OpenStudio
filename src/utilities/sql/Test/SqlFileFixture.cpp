@@ -52,6 +52,11 @@ void SqlFileFixture::SetUpTestSuite() {
   path2 = resourcesPath() / toPath("energyplus/Office_With_Many_HVAC_Types/eplusout.sql");
   sqlFile2 = openstudio::SqlFile(path2);
   ASSERT_TRUE(sqlFile2.connectionOpen());
+
+  openstudio::path path3;
+  path3 = resourcesPath() / toPath("energyplus/AllFuelTypes/eplusout.sql");
+  sqlFile3 = openstudio::SqlFile(path3);
+  ASSERT_TRUE(sqlFile3.connectionOpen());
 }
 
 void SqlFileFixture::TearDownTestSuite() {
@@ -74,4 +79,5 @@ void SqlFileFixture::TearDownTestSuite() {
 // define static storage
 openstudio::SqlFile SqlFileFixture::sqlFile;
 openstudio::SqlFile SqlFileFixture::sqlFile2;
+openstudio::SqlFile SqlFileFixture::sqlFile3;
 boost::optional<openstudio::FileLogSink> SqlFileFixture::logFile;
