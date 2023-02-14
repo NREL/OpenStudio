@@ -35,6 +35,7 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/AirConditionerVariableRefrigerantFlow.hpp"
+#include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/Node.hpp"
 
@@ -49,7 +50,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow_harcodedCondenserType) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlow_harcodedCondenserType) {
 
   // Lambda to dry up code
   auto translateAndCheckOneVRFAndCondenserType = [](const Model& m, const std::string& expectedCondenserType, unsigned expectedNumberOfErrors) {
@@ -78,6 +79,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow
       AirConditionerVariableRefrigerantFlow vrf(m);
       vrf.setCondenserType(condenserType);
 
+      // need at least one terminal
+      auto vrfTerminal = ZoneHVACTerminalUnitVariableRefrigerantFlow(m, false);
+      EXPECT_TRUE(vrf.addTerminal(vrfTerminal));
+
       if (hasPlantLoop) {
         PlantLoop p(m);
         EXPECT_TRUE(p.addDemandBranchForComponent(vrf));
@@ -101,6 +106,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow
     AirConditionerVariableRefrigerantFlow vrf(m);
     vrf.setCondenserType(condenserType);
 
+    auto vrfTerminal = ZoneHVACTerminalUnitVariableRefrigerantFlow(m, false);
+    EXPECT_TRUE(vrf.addTerminal(vrfTerminal));
+
     if (hasPlantLoop) {
       PlantLoop p(m);
       EXPECT_TRUE(p.addDemandBranchForComponent(vrf));
@@ -115,7 +123,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow
   }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow_defaultedCondenserType) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlow_defaultedCondenserType) {
 
   ForwardTranslator ft;
 
@@ -127,6 +135,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow
 
     EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
     EXPECT_EQ("AirCooled", vrf.condenserType());
+
+    auto vrfTerminal = ZoneHVACTerminalUnitVariableRefrigerantFlow(m, false);
+    EXPECT_TRUE(vrf.addTerminal(vrfTerminal));
 
     // Translate
     Workspace w = ft.translateModel(m);
@@ -147,6 +158,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow
     Model m;
     AirConditionerVariableRefrigerantFlow vrf(m);
     vrf.resetCondenserType();
+
+    auto vrfTerminal = ZoneHVACTerminalUnitVariableRefrigerantFlow(m, false);
+    EXPECT_TRUE(vrf.addTerminal(vrfTerminal));
+
     PlantLoop p(m);
     EXPECT_TRUE(p.addDemandBranchForComponent(vrf));
 
@@ -166,4 +181,31 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow
 
     EXPECT_EQ(i_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(), "WaterCooled");
   }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlow_NoTerminals) {
+  Model model;
+  AirConditionerVariableRefrigerantFlow vrf(model);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).size());
+  EXPECT_EQ(9u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
+  EXPECT_EQ(11u, workspace.getObjectsByType(IddObjectType::Curve_Cubic).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Fan_VariableVolume).size());
+
+  ASSERT_EQ(1, ft.warnings().size());
+  EXPECT_NE(std::string::npos, ft.warnings().front().logMessage().find("will not be translated as it has no terminals"));
+  EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow).size());
+
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term(model);
+  EXPECT_TRUE(vrf.addTerminal(term));
+  workspace = ft.translateModel(model);
+
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow).size());
 }
