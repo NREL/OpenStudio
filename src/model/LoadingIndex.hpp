@@ -27,91 +27,86 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
-#define UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#ifndef MODEL_LOADINGINDEX_HPP
+#define MODEL_LOADINGINDEX_HPP
 
-#include "ForwardTranslatorOptions.hpp"
-
-#include "../UtilitiesAPI.hpp"
-
-#include "../core/Logger.hpp"
-#include "../core/Path.hpp"
-#include "../data/Variant.hpp"
-
-#include <json/json.h>
-
-#include <nano/nano_signal_slot.hpp>
+#include <model/ModelAPI.hpp>
+#include "ParentObject.hpp"
 
 namespace openstudio {
-class CustomOutputAdapter;
 
-namespace detail {
+namespace model {
 
-  class UTILITIES_API RunOptions_Impl
+  class Curve;
+
+  namespace detail {
+
+    class LoadingIndex_Impl;
+
+  }  // namespace detail
+
+  /** LoadingIndex is a ParentObject that wraps the OpenStudio IDD object 'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:LoadingIndex'. */
+  class MODEL_API LoadingIndex : public ParentObject
   {
    public:
-    RunOptions_Impl() = default;
+    /** @name Constructors and Destructors */
+    //@{
 
-    std::string string() const;
+    explicit LoadingIndex(const Model& model, double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
+                          const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
 
-    bool debug() const;
-    bool setDebug(bool debug);
-    void resetDebug();
+    virtual ~LoadingIndex() = default;
 
-    bool epjson() const;
-    bool setEpjson(bool epjson);
-    void resetEpjson();
+    //@}
 
-    bool fast() const;
-    bool setFast(bool fast);
-    void resetFast();
+    static IddObjectType iddObjectType();
 
-    bool preserveRunDir() const;
-    bool setPreserveRunDir(bool preserve);
-    void resetPreserveRunDir();
+    /** @name Getters */
+    //@{
 
-    bool skipExpandObjects() const;
-    bool setSkipExpandObjects(bool skip);
-    void resetSkipExpandObjects();
+    double compressorSpeed() const;
 
-    bool skipEnergyPlusPreprocess() const;
-    bool setSkipEnergyPlusPreprocess(bool skip);
-    void resetSkipEnergyPlusPreprocess();
+    Curve evaporativeCapacityMultiplierFunctionofTemperatureCurve() const;
 
-    bool cleanup() const;
-    bool setCleanup(bool cleanup);
-    void resetCleanup();
+    Curve compressorPowerMultiplierFunctionofTemperatureCurve() const;
 
-    boost::optional<CustomOutputAdapter> customOutputAdapter() const;
-    bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
-    void resetCustomOutputAdapter();
+    //@}
+    /** @name Setters */
+    //@{
 
-    ForwardTranslatorOptions forwardTranslatorOptions() const;
-    bool setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions);
-    void resetForwardTranslatorOptions();
+    bool setCompressorSpeed(double compressorSpeed);
 
-    // Emitted on any change
-    Nano::Signal<void()> onChange;
+    bool setEvaporativeCapacityMultiplierFunctionofTemperatureCurve(const Curve& curve);
 
+    bool setCompressorPowerMultiplierFunctionofTemperatureCurve(const Curve& curve);
+
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
    protected:
-    void onUpdate();
+    /// @cond
+    using ImplType = detail::LoadingIndex_Impl;
 
+    explicit LoadingIndex(std::shared_ptr<detail::LoadingIndex_Impl> impl);
+
+    friend class detail::LoadingIndex_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
    private:
-    // configure logging
-    REGISTER_LOGGER("openstudio.RunOptions");
-
-    bool m_debug = false;
-    bool m_epjson = false;
-    bool m_fast = false;
-    bool m_preserveRunDir = false;
-    bool m_skipExpandObjects = false;
-    bool m_skipEnergyPlusPreprocess = false;
-    bool m_cleanup = true;  // TODO this does absolutely nothing in the workflow-gem currently
-    ForwardTranslatorOptions m_forwardTranslatorOptions;
-    boost::optional<CustomOutputAdapter> m_customOutputAdapter;
+    REGISTER_LOGGER("openstudio.model.LoadingIndex");
   };
 
-}  // namespace detail
+  /** \relates LoadingIndex*/
+  using OptionalLoadingIndex = boost::optional<LoadingIndex>;
+
+  /** \relates LoadingIndex*/
+  using LoadingIndexVector = std::vector<LoadingIndex>;
+
+}  // namespace model
 }  // namespace openstudio
 
-#endif  //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#endif  // MODEL_LOADINGINDEX_HPP
