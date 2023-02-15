@@ -931,14 +931,15 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
   std::vector<BoostPolygon> boostPolygons;
   boostPolygons.push_back(*initialBoostPolygon);
 
-  // cppcheck-suppress constStatement
-  for (const std::vector<Point3d>& hole : holes) {
-    std::vector<BoostPolygon> newBoostPolygons;
+  for (const auto& hole : holes) {
     // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostHole = nonIntersectingBoostPolygonFromVertices(hole, allPoints, tol);
     if (!boostHole) {
       return result;
     }
+
+    // cppcheck-suppress constStatement
+    std::vector<BoostPolygon> newBoostPolygons;
 
     for (const BoostPolygon& boostPolygon : boostPolygons) {
       // cppcheck-suppress constStatement
