@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -52,13 +53,15 @@ namespace model {
 
     explicit GroundHeatExchangerHorizontalTrench(const Model& model);
 
-    virtual ~GroundHeatExchangerHorizontalTrench() {}
+    explicit GroundHeatExchangerHorizontalTrench(const Model& model, const ModelObject& undisturbedGroundTemperatureModel);
+
+    virtual ~GroundHeatExchangerHorizontalTrench() = default;
 
     //@}
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> groundTemperatureModelValues();
+    OS_DEPRECATED static std::vector<std::string> groundTemperatureModelValues();
 
     /** @name Getters */
     //@{
@@ -93,17 +96,20 @@ namespace model {
 
     double soilMoistureContentPercentatSaturation() const;
 
-    std::string groundTemperatureModel() const;
+    OS_DEPRECATED std::string groundTemperatureModel() const;
 
-    bool isGroundTemperatureModelDefaulted() const;
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED bool isGroundTemperatureModelDefaulted() const;
 
-    double kusudaAchenbachAverageSurfaceTemperature() const;
+    OS_DEPRECATED double kusudaAchenbachAverageSurfaceTemperature() const;
 
-    double kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const;
+    OS_DEPRECATED double kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const;
 
-    double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const;
+    OS_DEPRECATED double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const;
 
     double evapotranspirationGroundCoverParameter() const;
+
+    ModelObject undisturbedGroundTemperatureModel() const;
 
     //@}
     /** @name Setters */
@@ -139,17 +145,21 @@ namespace model {
 
     bool setSoilMoistureContentPercentatSaturation(double soilMoistureContentPercentatSaturation);
 
-    bool setGroundTemperatureModel(const std::string& groundTemperatureModel);
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED bool setGroundTemperatureModel(const std::string& groundTemperatureModel);
 
-    void resetGroundTemperatureModel();
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED void resetGroundTemperatureModel();
 
-    bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
+    OS_DEPRECATED bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
 
-    bool setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
+    OS_DEPRECATED bool setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
 
-    bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
+    OS_DEPRECATED bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
 
     bool setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter);
+
+    bool setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel);
 
     //@}
     /** @name Other */
@@ -158,7 +168,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GroundHeatExchangerHorizontalTrench_Impl ImplType;
+    using ImplType = detail::GroundHeatExchangerHorizontalTrench_Impl;
 
     explicit GroundHeatExchangerHorizontalTrench(std::shared_ptr<detail::GroundHeatExchangerHorizontalTrench_Impl> impl);
 
@@ -172,10 +182,10 @@ namespace model {
   };
 
   /** \relates GroundHeatExchangerHorizontalTrench*/
-  typedef boost::optional<GroundHeatExchangerHorizontalTrench> OptionalGroundHeatExchangerHorizontalTrench;
+  using OptionalGroundHeatExchangerHorizontalTrench = boost::optional<GroundHeatExchangerHorizontalTrench>;
 
   /** \relates GroundHeatExchangerHorizontalTrench*/
-  typedef std::vector<GroundHeatExchangerHorizontalTrench> GroundHeatExchangerHorizontalTrenchVector;
+  using GroundHeatExchangerHorizontalTrenchVector = std::vector<GroundHeatExchangerHorizontalTrench>;
 
 }  // namespace model
 }  // namespace openstudio

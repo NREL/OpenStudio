@@ -27,57 +27,45 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_GROUNDHEATEXCHANGERHORIZONTALTRENCH_IMPL_HPP
-#define MODEL_GROUNDHEATEXCHANGERHORIZONTALTRENCH_IMPL_HPP
+#ifndef MODEL_SITEGROUNDTEMPERATUREUNDISTURBEDXING_IMPL_HPP
+#define MODEL_SITEGROUNDTEMPERATUREUNDISTURBEDXING_IMPL_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
-#include "StraightComponent_Impl.hpp"
+#include "ModelObject_Impl.hpp"
+#include "../utilities/time/Date.hpp"
 
 namespace openstudio {
 namespace model {
 
   namespace detail {
 
-    /** GroundHeatExchangerHorizontalTrench_Impl is a StraightComponent_Impl that is the implementation class for GroundHeatExchangerHorizontalTrench.*/
-    class MODEL_API GroundHeatExchangerHorizontalTrench_Impl : public StraightComponent_Impl
+    /** SiteGroundTemperatureUndisturbedXing_Impl is a ModelObject_Impl that is the implementation class for SiteGroundTemperatureUndisturbedXing.*/
+    class MODEL_API SiteGroundTemperatureUndisturbedXing_Impl : public ModelObject_Impl
     {
+
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      GroundHeatExchangerHorizontalTrench_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SiteGroundTemperatureUndisturbedXing_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      GroundHeatExchangerHorizontalTrench_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      SiteGroundTemperatureUndisturbedXing_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      GroundHeatExchangerHorizontalTrench_Impl(const GroundHeatExchangerHorizontalTrench_Impl& other, Model_Impl* model, bool keepHandle);
+      SiteGroundTemperatureUndisturbedXing_Impl(const SiteGroundTemperatureUndisturbedXing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GroundHeatExchangerHorizontalTrench_Impl() = default;
+      virtual ~SiteGroundTemperatureUndisturbedXing_Impl() = default;
 
       //@}
-      /** @name Virtual Methods */
-      //@{
+
+      virtual boost::optional<ParentObject> parent() const override;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
 
-      //@}
       /** @name Getters */
       //@{
-
-      double designFlowRate() const;
-
-      double trenchLengthinPipeAxialDirection() const;
-
-      int numberofTrenches() const;
-
-      double horizontalSpacingBetweenPipes() const;
-
-      double pipeInnerDiameter() const;
-
-      double pipeOuterDiameter() const;
-
-      double burialDepth() const;
 
       double soilThermalConductivity() const;
 
@@ -85,37 +73,19 @@ namespace model {
 
       double soilSpecificHeat() const;
 
-      double pipeThermalConductivity() const;
+      double averageSoilSurfaceTemperature() const;
 
-      double pipeDensity() const;
+      double soilSurfaceTemperatureAmplitude1() const;
 
-      double pipeSpecificHeat() const;
+      double soilSurfaceTemperatureAmplitude2() const;
 
-      double soilMoistureContentPercent() const;
+      double phaseShiftofTemperatureAmplitude1() const;
 
-      double soilMoistureContentPercentatSaturation() const;
-
-      double evapotranspirationGroundCoverParameter() const;
-
-      ModelObject undisturbedGroundTemperatureModel() const;
+      double phaseShiftofTemperatureAmplitude2() const;
 
       //@}
       /** @name Setters */
       //@{
-
-      bool setDesignFlowRate(double designFlowRate);
-
-      bool setTrenchLengthinPipeAxialDirection(double trenchLengthinPipeAxialDirection);
-
-      bool setNumberofTrenches(int numberofTrenches);
-
-      bool setHorizontalSpacingBetweenPipes(double horizontalSpacingBetweenPipes);
-
-      bool setPipeInnerDiameter(double pipeInnerDiameter);
-
-      bool setPipeOuterDiameter(double pipeOuterDiameter);
-
-      bool setBurialDepth(double burialDepth);
 
       bool setSoilThermalConductivity(double soilThermalConductivity);
 
@@ -123,34 +93,20 @@ namespace model {
 
       bool setSoilSpecificHeat(double soilSpecificHeat);
 
-      bool setPipeThermalConductivity(double pipeThermalConductivity);
+      bool setAverageSoilSurfaceTemperature(double averageSoilSurfaceTemperature);
 
-      bool setPipeDensity(double pipeDensity);
+      bool setSoilSurfaceTemperatureAmplitude1(double soilSurfaceTemperatureAmplitude1);
 
-      bool setPipeSpecificHeat(double pipeSpecificHeat);
+      bool setSoilSurfaceTemperatureAmplitude2(double soilSurfaceTemperatureAmplitude2);
 
-      bool setSoilMoistureContentPercent(double soilMoistureContentPercent);
+      bool setPhaseShiftofTemperatureAmplitude1(double phaseShiftofTemperatureAmplitude1);
 
-      bool setSoilMoistureContentPercentatSaturation(double soilMoistureContentPercentatSaturation);
-
-      bool setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter);
-
-      bool setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel);
-
-      //@}
-      /** @name Other */
-      //@{
-
-      virtual unsigned inletPort() const override;
-
-      virtual unsigned outletPort() const override;
-
-      bool addToNode(Node& node) override;
+      bool setPhaseShiftofTemperatureAmplitude2(double phaseShiftofTemperatureAmplitude2);
 
       //@}
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.GroundHeatExchangerHorizontalTrench");
+      REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureUndisturbedXing");
     };
 
   }  // namespace detail
@@ -158,4 +114,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_GROUNDHEATEXCHANGERHORIZONTALTRENCH_IMPL_HPP
+#endif  // MODEL_SITEGROUNDTEMPERATUREUNDISTURBEDXING_IMPL_HPP

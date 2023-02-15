@@ -4308,6 +4308,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureDeep);
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureShallow);
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureFCfactorMethod);
+    REGISTER_CONSTRUCTOR(SiteGroundTemperatureUndisturbedKusudaAchenbach);
+    REGISTER_CONSTRUCTOR(SiteGroundTemperatureUndisturbedXing);
     REGISTER_CONSTRUCTOR(SiteWaterMainsTemperature);
     REGISTER_CONSTRUCTOR(SizingParameters);
     REGISTER_CONSTRUCTOR(SizingPlant);
@@ -4872,6 +4874,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureDeep);
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureShallow);
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureFCfactorMethod);
+    REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureUndisturbedKusudaAchenbach);
+    REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureUndisturbedXing);
     REGISTER_COPYCONSTRUCTORS(SiteWaterMainsTemperature);
     REGISTER_COPYCONSTRUCTORS(SizingParameters);
     REGISTER_COPYCONSTRUCTORS(SizingPlant);
