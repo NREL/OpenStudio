@@ -1740,7 +1740,7 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4237) {
 
   ThreeJSReverseTranslator rt;
 
-  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/issue_4237.json");
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/issue-4237.json");
   ASSERT_TRUE(exists(p));
 
   boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
