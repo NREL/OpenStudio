@@ -2336,7 +2336,7 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 
 /// <summary>
 /// Tests the offset buffer method
-/// Noyte the two tests are taken from
+/// Note the two tests are taken from
 /// https://www.boost.org/doc/libs/1_65_0/libs/geometry/doc/html/geometry/reference/strategies/strategy_buffer_join_miter.html
 /// </summary>
 /// <param name=""></param>
@@ -2344,22 +2344,19 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 TEST_F(GeometryFixture, Offset) {
 
   // A simple rectangle, when offset should produce a polygon with four points
-  Point3dVector poly1;
-  poly1.push_back(Point3d(8, 7, 0));
-  poly1.push_back(Point3d(8, 10, 0));
-  poly1.push_back(Point3d(11, 10, 0));
-  poly1.push_back(Point3d(11, 7, 0));
-  Point3dVector poly2;
-  poly2.push_back(Point3d(7.5, 10.5, 0));
-  poly2.push_back(Point3d(11.5, 10.5, 0));
-  poly2.push_back(Point3d(11.5, 6.5, 0));
-  poly2.push_back(Point3d(7.5, 6.5, 0));
+  Point3dVector poly1 {
+    {8, 7, 0}, {8, 10, 0}, {11, 10, 0}, {11, 7, 0}
+  };
+  Point3dVector poly2{
+    {7.5, 10.5, 0.0},
+    {11.5, 10.5, 0.0},
+    {11.5, 6.5, 0.0},
+    {7.5, 6.5, 0.0},
+  };
 
   boost::optional<std::vector<Point3d>> result1 = openstudio::buffer(poly1, 0.5, 0.01);
   ASSERT_TRUE(result1);
-  Point3dVectorVector tmp;
-  tmp.push_back(poly1);
-  tmp.push_back(*result1);
+  Point3dVectorVector tmp{poly1, *result1};
   LOG(Debug, tmp);
 
   ASSERT_EQ(4, result1.get().size());
