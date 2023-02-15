@@ -524,7 +524,7 @@ std::vector<Point3d> verticesFromBoostRing(const BoostRing& ring, std::vector<Po
   }
 
   if (result.size() < 3) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   return result;
@@ -846,8 +846,8 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   }
 
   BoostMultiPolygon polys;
-  boost::optional<BoostPolygon> poly = boostPolygonFromVertices(polygon2, allPoints, tol);
   if (extraLogging) {
+    boost::optional<BoostPolygon> poly = boostPolygonFromVertices(polygon2, allPoints, tol);
     polys.push_back(*poly);
   }
 
@@ -871,7 +871,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   }
 
   intersectionResult = removeSpikes(intersectionResult);
-  if (intersectionResult.size() == 0) {
+  if (intersectionResult.empty()) {
     return boost::none;
   }
   if (extraLogging) {
@@ -1068,12 +1068,9 @@ bool selfIntersects(const std::vector<Point3d>& polygon, double tol) {
   std::vector<Point3d> allPoints;
 
   // cppcheck-suppress constStatement
-  boost::optional<BoostPolygon> bp = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
-  if (bp) {
-    // able to get a non intersecting polygon, so does not self intersect
-    return false;
-  }
-  return true;
+  const boost::optional<BoostPolygon> bp = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
+  // if bp has a value, we're able to get a non intersecting polygon, so does not self intersect
+  return !bp.has_value();
 }
 
 bool intersects(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol) {
@@ -1211,10 +1208,11 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
 
   // this uses the Douglas-Peucker algorithm with a max difference of 0 so no non-collinear points will be removed
   // if we want to allow this algorithm to be called with a non-zero value I suggest naming it "approximate" or something
-  if (!removeCollinear)
+  if (!removeCollinear) {
     boost::geometry::simplify(*bp, out, 0.0);
-  else
+  } else {
     boost::geometry::simplify(*bp, out, tol);  // points within tol would already be merged
+  }
 
   std::vector<Point3d> tmp = verticesFromBoostPolygon(out, allPoints, tol, removeCollinear);
 
@@ -1526,7 +1524,7 @@ boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon
     return boost::none;
   }
 
-  const double miterLimit = 15;
+  constexpr double miterLimit = 15;
   //const double buffer_distance = 1.0;
   //const int points_per_circle = 36;
   boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
@@ -1561,7 +1559,7 @@ boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std:
     boostPolygons.push_back(boostPolygon.get());
   }
 
-  const double miterLimit = 15;
+  constexpr double miterLimit = 15;
   boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
   boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit);
   boost::geometry::strategy::buffer::end_flat end_strategy;
