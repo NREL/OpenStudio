@@ -43,8 +43,8 @@ namespace openstudio {
 class UTILITIES_API IntersectionResult
 {
  public:
-  IntersectionResult(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2,
-                     const std::vector<std::vector<Point3d>>& newPolygons1, const std::vector<std::vector<Point3d>>& newPolygons2);
+  IntersectionResult(std::vector<Point3d> polygon1, std::vector<Point3d> polygon2, std::vector<std::vector<Point3d>> newPolygons1,
+                     std::vector<std::vector<Point3d>> newPolygons2);
 
   // vertices of first polygon after intersection
   std::vector<Point3d> polygon1() const;
