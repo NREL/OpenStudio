@@ -418,14 +418,14 @@ FSStory::FSStory(const Json::Value& root, const FSModel& model) : FSBase(root) {
 
   const Json::Value& shadings = root.get("shading", Json::arrayValue);
   for (const auto& json_shading : shadings) {
-    FSShading shading = FSShading(json_shading, *this);
+    FSShading shading = FSShading(json_shading, model, *this);
     if (shading.face().has_value()) {
       m_shadings.push_back(shading);
     }
   }
 }
 
-double FSStory::getBelowFloorPlenumHeight() const {
+double FSStory::belowFloorPlenumHeight() const {
   return m_below_floor_plenum_height;
 }
 
@@ -525,7 +525,7 @@ void FSConstructionSet::Accept(FSVisitor& visitor) const {
 ///////////////////////////////////////////////////////////////////////////////////
 
 FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story)
-  : FSBase(root), m_belowFloorPlenumHeight(story.getBelowFloorPlenumHeight()) {
+  : FSBase(root), m_below_floor_plenum_height(story.belowFloorPlenumHeight()) {
 
   if (checkKeyAndType(root, "thermal_zone_id", Json::stringValue)) {
     m_thermalZone = model.thermalZone(root.get("thermal_zone_id", "").asString());
@@ -546,21 +546,22 @@ FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story)
   // Heights are optional, if not defined then the value is inherited from the story, if
   // defined then the value overrides the value from the story
 
+  m_below_floor_plenum_height = story.belowFloorPlenumHeight();
   if (checkKeyAndType(root, "below_floor_plenum_height", Json::realValue)) {
-    double defaultValue = m_belowFloorPlenumHeight / model.lengthToMeters();
-    m_belowFloorPlenumHeight = root.get("below_floor_plenum_height", defaultValue).asDouble() * model.lengthToMeters();
+    double defaultValue = m_below_floor_plenum_height / model.lengthToMeters();
+    m_below_floor_plenum_height = root.get("below_floor_plenum_height", defaultValue).asDouble() * model.lengthToMeters();
   }
 
-  m_floorToCeilingHeight = story.floorToCeilingHeight();
+  m_floor_to_ceiling_height = story.floorToCeilingHeight();
   if (checkKeyAndType(root, "floor_to_ceiling_height", Json::realValue)) {  // Doing this skips null values for exmaple
-    double defaultValue = m_floorToCeilingHeight / model.lengthToMeters();
-    m_floorToCeilingHeight = root.get("floor_to_ceiling_height", defaultValue).asDouble() * model.lengthToMeters();
+    double defaultValue = m_floor_to_ceiling_height / model.lengthToMeters();
+    m_floor_to_ceiling_height = root.get("floor_to_ceiling_height", defaultValue).asDouble() * model.lengthToMeters();
   }
 
-  m_aboveCeilingHeight = story.aboveCeilingPlenumHeight();
+  m_above_ceiling_plenum_height = story.aboveCeilingPlenumHeight();
   if (checkKeyAndType(root, "above_ceiling_plenum_height", Json::realValue)) {
     double defaultValue = story.aboveCeilingPlenumHeight() / model.lengthToMeters();
-    m_aboveCeilingHeight = root.get("above_ceiling_plenum_height", defaultValue).asDouble() * model.lengthToMeters();
+    m_above_ceiling_plenum_height = root.get("above_ceiling_plenum_height", defaultValue).asDouble() * model.lengthToMeters();
   }
 
   m_offset = root.get("floor_offset", 0).asDouble() * model.lengthToMeters();
@@ -603,15 +604,15 @@ int FSSpace::multiplier() const {
 }
 
 double FSSpace::belowFloorPlenumHeight() const {
-  return m_belowFloorPlenumHeight;
+  return m_below_floor_plenum_height;
 }
 
 double FSSpace::floorToCeilingHeight() const {
-  return m_floorToCeilingHeight;
+  return m_floor_to_ceiling_height;
 }
 
 double FSSpace::aboveCeilingHeight() const {
-  return m_aboveCeilingHeight;
+  return m_above_ceiling_plenum_height;
 }
 
 double FSSpace::offset() const {
@@ -980,17 +981,50 @@ boost::optional<FSDoorDefinition> FSDoor::doorDefinition() const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSShading::FSShading(const Json::Value& root, const FSStory& story) : FSBase(root) {
+FSShading::FSShading(const Json::Value& root, const FSModel& model, const FSStory& story) : FSBase(root) {
 
   // Get the face. Note: a shading must have a face for it to be added to the model
   if (checkKeyAndType(root, "face_id", Json::stringValue)) {
     std::string face_id = root.get("face_id", "").asString();
     m_face = story.geometry().face(face_id);
   }
+
+  // Heights are optional, if not defined then the value is inherited from the story, if
+  // defined then the value overrides the value from the story
+
+  m_below_floor_plenum_height = story.belowFloorPlenumHeight();
+  if (checkKeyAndType(root, "below_floor_plenum_height", Json::realValue)) {
+    double defaultValue = m_below_floor_plenum_height / model.lengthToMeters();
+    m_below_floor_plenum_height = root.get("below_floor_plenum_height", defaultValue).asDouble() * model.lengthToMeters();
+  }
+
+  m_floor_to_ceiling_height = story.floorToCeilingHeight();
+  if (checkKeyAndType(root, "floor_to_ceiling_height", Json::realValue)) {  // Doing this skips null values for exmaple
+    double defaultValue = m_floor_to_ceiling_height / model.lengthToMeters();
+    m_floor_to_ceiling_height = root.get("floor_to_ceiling_height", defaultValue).asDouble() * model.lengthToMeters();
+  }
+
+  m_above_ceiling_plenum_height = story.aboveCeilingPlenumHeight();
+  if (checkKeyAndType(root, "above_ceiling_plenum_height", Json::realValue)) {
+    double defaultValue = story.aboveCeilingPlenumHeight() / model.lengthToMeters();
+    m_above_ceiling_plenum_height = root.get("above_ceiling_plenum_height", defaultValue).asDouble() * model.lengthToMeters();
+  }
 }
 
 boost::optional<FSFace> FSShading::face() const {
   return m_face;
+}
+
+double FSShading::belowFloorPlenumHeight() const {
+  return m_below_floor_plenum_height;
+}
+
+double FSShading::floorToCeilingHeight() const {
+  return m_floor_to_ceiling_height;
+}
+
+double FSShading::aboveCeilingPlenumHeight() const {
+  return m_above_ceiling_plenum_height;
 }
 
 void FSShading::Accept(FSVisitor& visitor) const {

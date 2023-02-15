@@ -33,11 +33,20 @@
 #include "../UtilitiesAPI.hpp"
 
 #include "../core/Logger.hpp"
+#include "../core/Deprecated.hpp"
+
+namespace Json {
+class Value;
+}
 
 namespace openstudio {
+
+class ForwardTranslatorOptions;
+
 namespace detail {
   class WorkflowJSON_Impl;
   class RunOptions_Impl;
+  class ForwardTranslatorOptions_Impl;
 }  // namespace detail
 
 class UTILITIES_API CustomOutputAdapter
@@ -60,6 +69,7 @@ class UTILITIES_API RunOptions
  public:
   RunOptions();
 
+  // TODO: uneeded
   virtual ~RunOptions();
 
   /// Construct from JSON formatted string
@@ -100,9 +110,13 @@ class UTILITIES_API RunOptions
   bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
   void resetCustomOutputAdapter();
 
-  std::string forwardTranslateOptions() const;
-  bool setForwardTranslateOptions(const std::string& options);
-  void resetForwardTranslateOptions();
+  OS_DEPRECATED std::string forwardTranslateOptions() const;
+  OS_DEPRECATED bool setForwardTranslateOptions(const std::string& options);
+  OS_DEPRECATED void resetForwardTranslateOptions();
+
+  ForwardTranslatorOptions forwardTranslatorOptions() const;
+  bool setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions);
+  void resetForwardTranslatorOptions();
 
  protected:
   // get the impl

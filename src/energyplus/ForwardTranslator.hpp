@@ -37,6 +37,7 @@
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
+#include "../utilities/filetypes/ForwardTranslatorOptions.hpp"
 #include "../utilities/time/Time.hpp"
 
 #include "../utilities/core/Deprecated.hpp"
@@ -51,6 +52,8 @@ class Transformation;
 namespace model {
 
   class AirConditionerVariableRefrigerantFlow;
+  class AirConditionerVariableRefrigerantFlowFluidTemperatureControl;
+  class AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR;
   class AirflowNetworkSimulationControl;
   class AirflowNetworkZone;
   class AirflowNetworkSurface;
@@ -134,6 +137,7 @@ namespace model {
   class CoilCoolingDXTwoSpeed;
   class CoilCoolingDXTwoStageWithHumidityControlMode;
   class CoilCoolingDXVariableRefrigerantFlow;
+  class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl;
   class CoilCoolingDXVariableSpeed;
   class CoilCoolingWater;
   class CoilCoolingWaterToAirHeatPumpEquationFit;
@@ -142,6 +146,7 @@ namespace model {
   class CoilHeatingDXMultiSpeed;
   class CoilHeatingDXSingleSpeed;
   class CoilHeatingDXVariableRefrigerantFlow;
+  class CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl;
   class CoilHeatingDXVariableSpeed;
   class CoilHeatingElectric;
   class CoilHeatingElectricMultiStage;
@@ -514,14 +519,6 @@ namespace energyplus {
     struct ForwardTranslatorInitializer;
   };
 
-  struct ForwardTranslatorOptionKeyMethod
-  {
-    std::string json_name;
-    std::string ft_method_name;
-  };
-
-  ENERGYPLUS_API std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt);
-
 #define ENERGYPLUS_VERSION "22.2"
 
   class ENERGYPLUS_API ForwardTranslator
@@ -545,6 +542,13 @@ namespace energyplus {
    */
     std::vector<LogMessage> errors() const;
 
+    ForwardTranslatorOptions forwardTranslatorOptions() const;
+
+    void setForwardTranslatorOptions(ForwardTranslatorOptions forwardTranslatorOptions);
+
+    /** @Convenience methods for ForwardTranslatorOptions (and for backward compatibility) */
+    //@{
+    //
     /** keepRunControlSpecialDays is enabled by default. You can use this method to NOT translate the holidays in the model.
    */
     void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
@@ -577,7 +581,7 @@ namespace energyplus {
    *  Use this at your own risks */
     void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
 
-    static std::vector<ForwardTranslatorOptionKeyMethod> forwardTranslatorOptionKeyMethods();
+    //@}
 
    private:
     REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
@@ -605,6 +609,12 @@ namespace energyplus {
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
 
     boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlow(model::AirConditionerVariableRefrigerantFlow& modelObject);
+
+    boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(
+      model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl& modelObject);
+
+    boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(
+      model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR& modelObject);
 
     boost::optional<IdfObject> translateAirflowNetworkSimulationControl(model::AirflowNetworkSimulationControl& modelObject);
 
@@ -787,6 +797,9 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlow(model::CoilCoolingDXVariableRefrigerantFlow& modelObject);
 
+    boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(
+      model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject);
+
     boost::optional<IdfObject> translateCoilCoolingDXVariableSpeed(model::CoilCoolingDXVariableSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXVariableSpeedWithoutUnitary(model::CoilCoolingDXVariableSpeed& modelObject);
@@ -807,6 +820,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilHeatingDXSingleSpeedWithoutUnitary(model::CoilHeatingDXSingleSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlow(model::CoilHeatingDXVariableRefrigerantFlow& modelObject);
+
+    boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(
+      model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingDXVariableSpeed(model::CoilHeatingDXVariableSpeed& modelObject);
 
@@ -1671,13 +1687,7 @@ namespace energyplus {
     ProgressBar* m_progressBar;
 
     // ForwardTranslator options
-    bool m_keepRunControlSpecialDays;
-    bool m_ipTabularOutput;
-    bool m_excludeLCCObjects;
-    bool m_excludeSQliteOutputReport;  // exclude Output:Sqlite
-    bool m_excludeHTMLOutputReport;    // exclude Output:Table:SummaryReports
-    bool m_excludeVariableDictionary;  // exclude Output:VariableDictionary
-    bool m_excludeSpaceTranslation;
+    ForwardTranslatorOptions m_forwardTranslatorOptions;
   };
 
 }  // namespace energyplus

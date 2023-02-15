@@ -1,3 +1,503 @@
+## OpenStudio v3.5.0
+
+###### 2022-11-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v3.4.0...v3.5.0 )
+
+- ![Improved:][improved] [#4689](https://github.com/NREL/OpenStudio/pull/4689),[#4702](https://github.com/NREL/OpenStudio/pull/4702),[#4694](https://github.com/NREL/OpenStudio/pull/4694),[#4674](https://github.com/NREL/OpenStudio/pull/4674),[#4641](https://github.com/NREL/OpenStudio/pull/4641),[#4688](https://github.com/NREL/OpenStudio/pull/4688),[#4653](https://github.com/NREL/OpenStudio/pull/4653) - Phase 1 support to run Python based measures. 
+    * Currently, this functionality is experimental and can only be accessed from the CLI using the experimental `labs` subcommand. This also includes a redesigned help menu (`openstudio labs --help`) to explore the various new options this new feature has to offer. 
+    * Included in the installation are example .osw workflow files that contain Python based measures that can be ran using the labs subcommand. For instance, the following will run a python based workflow: `openstudio run -w ./Examples/compact_osw/compact_python_only.osw`
+    * For this release, only Python or Ruby can be ran in a single workflow file. Running both Python and Ruby support is planned for the next phase 2 installment in v3.6.0
+- ![Improved:][improved] [#4600](https://github.com/NREL/OpenStudio/pull/4600) - Phase 1 support to run Python EMS plugin using OpenStudio.
+- ![Improved:][improved] [#4623](https://github.com/NREL/OpenStudio/pull/4623) - FloorspaceJS to OpenStudio direct reverse translator vs the 3-way process of converting FloorspaceJS to ThreeJS to OSM. 
+- ![Improved:][improved] [#4571](https://github.com/NREL/OpenStudio/pull/4571) - Metadata mapped to GLTF data object at export. Allows users to view metadata in a glTF capable browser. 
+- ![Improved:][improved] [#4587](https://github.com/NREL/OpenStudio/pull/4587) - Error handling and gbXML schema validation when running gbXML based workflows. 
+- ![Improved:][improved] [#4616](https://github.com/NREL/OpenStudio/pull/4616) - Addresses #4611, allow non-Quadratic curves for the EIR-f-PLR for the Chiller:Electric:EIR object
+    * `Chiller:Electric:EIR` has a few API-breaking changes related to its Curves. The types for the constructor, getters and setters used to be explicit (eg: `CurveBiquadratic`): it is now the base class, more generic, `Curve` type for added flexibility.
+- ![Improved:][improved] [#4642](https://github.com/NREL/OpenStudio/pull/4642) - Addresses #4575, API change for EvaporativeCoolerFluid:SingleSpeed
+    * `EvaporativeCoolerFluid:SingleSpeed` has an API-breaking change related to its `performanceInputMethod` getter. It is now a required field that returns `std::string` instead of `boost::optional<std::string>`.
+- ![Improved:][improved] [#4644](https://github.com/NREL/OpenStudio/pull/4644) - Addresses #4575, API change for Coil:Cooling:DX:SingleSpeed and Coil:Cooling:DX:TwoSpeed
+    * `Coil:Cooling:DX:SingleSpeed` and `Coil:Cooling:DX:TwoSpeed` have API-breaking changes related to many of their getters. They are now required fields that return `double` instead of `boost::optional<double>`. Also removes many deprecated methods.
+- ![Improved:][improved] [#4632](https://github.com/NREL/OpenStudio/pull/4632) - Remove deprecated methods for AirWallMaterial, Node, SizingSystem, ZoneAirMassFlowConservation
+    * Removes the deprecated `AirWallMaterial` class completely, in favor of `ConstructionAirBoundary`
+    * Removes functions in `Node` that have been deprecated for 9+ years
+    * Removes deprecated methods in the `SizingSystem`, `ZoneAirMassFlowConservation`, `PlantLoop` & `AirLoopHVAC`, `AvailablilityManagerNightCycle`, `ZoneVentilationDesignFlowRate` classes
+    * Refer to the CSV file at [developer/ruby/deprecated_methods.csv](https://github.com/NREL/OpenStudio/blob/develop/developer/ruby/deprecated_methods.csv) for more information
+- ![Improved:][improved] [#4665](https://github.com/NREL/OpenStudio/pull/4665) - Deprecate methods on Coil DX objects
+    * `Coil:Cooling:DX:SingleSpeed`, `Coil:Cooling:DX:MultiSpeed:StageData`, and `Coil:Cooling:DX:CurveFit:Speed`: `ratedEvaporatorFanPowerPerVolumeFlowRate` and `setRatedEvaporatorFanPowerPerVolumeFlowRate` in favor of `ratedEvaporatorFanPowerPerVolumeFlowRate2017` and `setRatedEvaporatorFanPowerPerVolumeFlowRate2017`
+    * `Coil:Heating:DX:SingleSpeed` and `Coil:Heating:DX:MultiSpeed:StageData`: `ratedSupplyFanPowerPerVolumeFlowRate` and `setRatedSupplyFanPowerPerVolumeFlowRate` in favor of `ratedSupplyFanPowerPerVolumeFlowRate2017` and `setRatedSupplyFanPowerPerVolumeFlowRate2017`
+- ![Improved:][improved] [#4666](https://github.com/NREL/OpenStudio/pull/4666) - Changes related to availability schedule methods
+    * `Coil:Heating:Gas:MultiStage` has an API-breaking change related to its `availabilitySchedule` getter. It is now a required field that returns `Schedule` instead of `boost::optional<Schedule>`. Method `resetAvailabilitySchedule` is also removed.
+- ![Improved:][improved] [#4701](https://github.com/NREL/OpenStudio/pull/4701) - `ZoneHVACPackagedTerminalAirConditioner` and `ZoneHVACPackagedTerminalHeatPump`
+    * `ZoneHVACPackagedTerminalAirConditioner` and `ZoneHVACPackagedTerminalHeatPump` have an API-breaking change related to its `supplyAirFanOperatingModeSchedule` getter. It is now a required field that returns `Schedule` instead of `boost::optional<Schedule>`. Method `resetSupplyAirFanOperatingModeSchedule` is also removed.
+        * It is set to `alwaysOnDiscreteSchedule` (=Constant) in the Constructor if you provide a `FanConstantVolume` (This is **required** by E+)
+        * It is set to `alwaysOffDiscreteSchedule` (=Cycling) in the Constructor if you provide any other fan types (E+ treats a blank schedule as always off)
+    * There are unusual `VersionTranslator` Rules for Packaged Systems (PTAC or PTHP) that use a `FanConstantVolume` and that do not have a `Supply Air Fan Operating Mode Schedule`. In 22.1.0 this would effectively, and mistakenly, function as a cycling fan, but this is now disallowed in E+ 22.2.0. In order to retain a similar functionality and energy usage, the `FanConstantVolume` will be replaced by a `FanSystemModel` with an Always Off Schedule (=cycling fan, similar to a `Fan:OnOff`), mapping inputs such as pressure rise and efficiency appropriately.
+- ![Improved:][improved] [#4484](https://github.com/NREL/OpenStudio/pull/4484) - Enable C++20
+- ![Improved:][improved] [#4671](https://github.com/NREL/OpenStudio/pull/4671) - New Coil:*:WaterToAirHeatPump:EquationFit fields
+- ![Improved:][improved] [#4698](https://github.com/NREL/OpenStudio/pull/4698) - Update EnergyPlus to v22.2.0
+- ![Improved:][improved] [#4685](https://github.com/NREL/OpenStudio/pull/4685) - Address #4630, wrap Output:Schedules and Output:Constructions objects
+- ![Improved:][improved] [#4577](https://github.com/NREL/OpenStudio/pull/4577) - gbXML translation fixes and enhancements
+- ![Improved:][improved] [#4610](https://github.com/NREL/OpenStudio/pull/4610) - Addresses #4538, wrap phase change material properties
+- ![Improved:][improved] [#4625](https://github.com/NREL/OpenStudio/pull/4625) - Addresses #4615, wrap OutputControl:Table:Style and Output:SQLite
+- ![Improved:][improved] [#4580](https://github.com/NREL/OpenStudio/pull/4580) - Add color for Foundation boundary condition
+- ![Improved:][improved] [#4568](https://github.com/NREL/OpenStudio/pull/4568) - Installer adjustments for clang 13.1.6+, and some mac arm64 adjustments
+- ![Fixed:][fixed] [#4585](https://github.com/NREL/OpenStudio/pull/4585) - Add libintl.8.dylib to mac15 x86 for e+
+- ![Improved:][improved] [#4589](https://github.com/NREL/OpenStudio/pull/4589) - Switch to E+ Space FT by default
+- ![Improved:][improved] [#4579](https://github.com/NREL/OpenStudio/pull/4579) - Add Volume field to Space
+- ![Fixed:][fixed] [#4593](https://github.com/NREL/OpenStudio/pull/4593) - Fix ZoneInfiltration:DesignFlowRate FT when Space FT enabled
+- ![Fixed:][fixed] [#4597](https://github.com/NREL/OpenStudio/pull/4597) - Hotfix GLTF extras broke running tests in Debug
+- ![Improved:][improved] [#4594](https://github.com/NREL/OpenStudio/pull/4594) - Bump OS ruby to use fPIC and zlib/minizip to 1.2.12 to match
+- ![Fixed:][fixed] [#4590](https://github.com/NREL/OpenStudio/pull/4590) - Correct typo: Newell, not Newall
+- ![Improved:][improved] [#4316](https://github.com/NREL/OpenStudio/pull/4316) - Addresses #2610, insertComponent can create duplicate unique model objects
+- ![Improved:][improved] [#4604](https://github.com/NREL/OpenStudio/pull/4604) - Cached getters for all unique model objects
+- ![Improved:][improved] [#4605](https://github.com/NREL/OpenStudio/pull/4605) - Gltf Refactor
+- ![Fixed:][fixed] [#4612](https://github.com/NREL/OpenStudio/pull/4612) - Fix build error due to GLTF refactor on Windows
+- ![Fixed:][fixed] [#4596](https://github.com/NREL/OpenStudio/pull/4596) - Bump conan dependencies (which will allow MSVC 2022 and C++20) and clang 13.1+ fixes
+- ![Fixed:][fixed] [#4614](https://github.com/NREL/OpenStudio/pull/4614) - Support Ubuntu 18.04 and Centos7
+- ![Fixed:][fixed] [#4619](https://github.com/NREL/OpenStudio/pull/4619) - Fix #4543 - E+ 22.1.0: Wrap SetpointManager:SystemNodeReset:Temperature and SetpointManager:SystemNodeReset:Humidity
+- ![Fixed:][fixed] [#4622](https://github.com/NREL/OpenStudio/pull/4622) - Addresses #4620, harmonize (remove?) max. material thickness limit
+- ![Fixed:][fixed] [#4627](https://github.com/NREL/OpenStudio/pull/4627) - Fix #4547 - FT always warns about missing Design Specification Outdoor Air for AirTerminalSingleDuctInletSideMixer
+- ![Fixed:][fixed] [#4640](https://github.com/NREL/OpenStudio/pull/4640) - Fix python bindings github workflows with C++20
+- ![Fixed:][fixed] [#4626](https://github.com/NREL/OpenStudio/pull/4626) - Fix #4601 - add some useful log messages when requested WWR is rejected
+- ![Fixed:][fixed] [#4592](https://github.com/NREL/OpenStudio/pull/4592) - Fix#127 - Fix volume calculation to match EnergyPlus
+- ![Fixed:][fixed] [#4621](https://github.com/NREL/OpenStudio/pull/4621) - Fix #4551 - Add minimum/maximum values to numeric OSArguments and use it in validateUserArgument
+- ![Fixed:][fixed] [#4643](https://github.com/NREL/OpenStudio/pull/4643) - Update docs for setThermalConductance and setThermalResistance changing thickness
+- ![Fixed:][fixed] [#4650](https://github.com/NREL/OpenStudio/pull/4650) - Enable centos7 for c++20 
+- ![Fixed:][fixed] [#4629](https://github.com/NREL/OpenStudio/pull/4629) - Addresses #3666, CoilWaterHeaterDesuperheater: Issue Error in ForwardTranslator if Heat Reclaim Efficiency is out of bounds 
+- ![Fixed:][fixed] [#3912](https://github.com/NREL/OpenStudio/pull/3912) - Add consistently failing test for warnings/errors and document
+- ![Fixed:][fixed] [#4669](https://github.com/NREL/OpenStudio/pull/4669) - Fix #4668 - Wrap E+ 22.2 new People fields
+- ![Fixed:][fixed] [#4287](https://github.com/NREL/OpenStudio/pull/4287) - Build and test CSharp bindings for Linux/Mac/Windows
+- ![Fixed:][fixed] [#4652](https://github.com/NREL/OpenStudio/pull/4652) - Addresses #4647, wrap the E+ Table:Lookup, Table:IndependentVariableList, and Table:IndependentVariable objects 
+- ![Fixed:][fixed] [#4679](https://github.com/NREL/OpenStudio/pull/4679) - Remove cruft
+- ![Improved:][improved] [#4672](https://github.com/NREL/OpenStudio/pull/4672) - Fix #4645 - Update FT for space-level infiltration/ventilation objects (E+ 22.2.0-IOFreeze)
+- ![Fixed:][fixed] [#4676](https://github.com/NREL/OpenStudio/pull/4676) - Fix #4648 #4654 - SurfaceProperty:GroundSurfaces and SurfaceProperty:IncidentSolarMultiplier
+- ![Fixed:][fixed] [#4681](https://github.com/NREL/OpenStudio/pull/4681) - Fix glass U factor sql error
+- ![Fixed:][fixed] [#4661](https://github.com/NREL/OpenStudio/pull/4661) - Volume, CeilingHeight, FloorArea for Space object
+- ![Fixed:][fixed] [#4660](https://github.com/NREL/OpenStudio/pull/4660) - Fix #4120 - set boost's visibility to global/default instead of hidden
+- ![Fixed:][fixed] [#4680](https://github.com/NREL/OpenStudio/pull/4680) - Update ruby gems including the new tbd gem
+- ![Fixed:][fixed] [#4686](https://github.com/NREL/OpenStudio/pull/4686) - Addresses #4599, documentation for isGroundSurface() is missing an outside boundary condition
+- ![Fixed:][fixed] [#4677](https://github.com/NREL/OpenStudio/pull/4677) - Fix #4675 - E+ 22.2.0 - Sizing:Zone has new fields 
+- ![Fixed:][fixed] [#4691](https://github.com/NREL/OpenStudio/pull/4691) - Followup to #4575 
+- ![Fixed:][fixed] [#4662](https://github.com/NREL/OpenStudio/pull/4662) - Support CoilCoolingDX on ZoneHVAC, CoilSystem, Desuperheater
+- ![Fixed:][fixed] [#4694](https://github.com/NREL/OpenStudio/pull/4694) - Fix #4638 python ruby workflow
+- ![Fixed:][fixed] [#4687](https://github.com/NREL/OpenStudio/pull/4687) - Fix #4656 - E+ 22.2.0: Wrap Chiller:Electric:ASHRAE205 
+- ![Fixed:][fixed] [#4697](https://github.com/NREL/OpenStudio/pull/4697) - Volume, CeilingHeight, FloorArea for Space object
+- ![Fixed:][fixed] [#4658](https://github.com/NREL/OpenStudio/pull/4658) - Update to v22.2.0 
+- ![Fixed:][fixed] [#4683](https://github.com/NREL/OpenStudio/pull/4683) - Fix #4663 #4664 - Fix CoilCoolingDXMultiSpeed::clone and extend testing for AirLoopHVAC::clone
+- ![Fixed:][fixed] [#4702](https://github.com/NREL/OpenStudio/pull/4702) - Mod to Python Engine
+- ![Fixed:][fixed] [#4700](https://github.com/NREL/OpenStudio/pull/4700) - Fix #4673 - Allow setting ZoneMixing objects at Space level
+- ![Fixed:][fixed] [#4710](https://github.com/NREL/OpenStudio/pull/4710) - Update gems for standard 0.2.17.rc1
+- ![Fixed:][fixed] [#4712](https://github.com/NREL/OpenStudio/pull/4712) - Fix #4659 - Filesystem fixups
+- ![Fixed:][fixed] [#4713](https://github.com/NREL/OpenStudio/pull/4713) - Deprecated methods that date back to as early as v2.5.0 have been removed from this release. Moving forward, it is our goal to support deprecated methods for three release cycles and then remove them. If you run into errors (e.g. `undefined method`), please reference this [list](https://github.com/NREL/OpenStudio/blob/develop/developer/ruby/deprecated_methods.csv) for the suggested replacement. 
+- ![Improved:][improved] [OpenStudio-benchmarks](https://github.com/NREL/OpenStudio-benchmarks) - Added additional performance benchmark tests to improve SDK performance.
+
+## OpenStudio v3.4.0
+
+###### 2022-05-05 — [Diff]( https://github.com/NREL/OpenStudio/compare/v3.3.0...v3.4.0 )
+
+- ![Improved:][improved] [#4560](https://github.com/NREL/OpenStudio/pull/4560), [#4540](https://github.com/NREL/OpenStudio/pull/4540) - Update to EnergyPlus [v22.1.0](https://github.com/NREL/EnergyPlus/releases/tag/v22.1.0)
+- ![Improved:][improved] [#4550](https://github.com/NREL/OpenStudio/pull/4550) - Addresses #4403, add Sql helper methods to retrieve assembly U-factor, SHGC, and Visible Transmittance values for glazing systems
+- ![Fixed:][fixed]  [#4456](https://github.com/NREL/OpenStudio/pull/4493) - Fix #4456 - Improve performance of OpenStudio::UnzipFile::extractAllFiles
+- ![Fixed:][fixed]  [#4424](https://github.com/NREL/OpenStudio/pull/4424) - Fixes #4361 OpenStudio API-reported surface "netArea" (when dealing with Frame & Divider objects)
+- ![Improved:][improved] [#4502](https://github.com/NREL/OpenStudio/pull/4502) - #4496 - Add gems cbor and msgpack and allow using a package from an openstudio-gems PR
+- ![Fixed:][fixed]  [#4497](https://github.com/NREL/OpenStudio/pull/4497) - Addresses #4495, ElectricLoadCenterDistribution FT has incomplete charge/discharge logic
+- ![Fixed:][fixed]  [#4494](https://github.com/NREL/OpenStudio/pull/4494) - Addresses #4483, OS:Coil:Heating:DX:MultiSpeed:StageData has no Name field
+- ![Improved:][improved] [#4499](https://github.com/NREL/OpenStudio/pull/4499) - Addresses #4410, wrap AirflowNetwork:MultiZone:SpecifiedFlowRate
+- ![Fixed:][fixed]  [#4510](https://github.com/NREL/OpenStudio/pull/4510) - Addresses #4509, bad nodes created for AirLoopHVAC:UnitarySystem with only cooling coil and supplemental heating coil
+- ![Improved:][improved] [#4508](https://github.com/NREL/OpenStudio/pull/4508) - Addresses #4469, method to reverse translate the EnergyPlus ScheduleYear object to the OpenStudio ScheduleRuleset object
+- ![Fixed:][fixed]  [#4525](https://github.com/NREL/OpenStudio/pull/4525) - Fixes #4387 gltf changes as per PR [4520](https://github.com/NREL/OpenStudio/pull/4520) comments/suggestions
+- ![Fixed:][fixed]  [#4485](https://github.com/NREL/OpenStudio/pull/4485) - Fixes #4438 gbXML export order is not reproducible
+- ![Fixed:][fixed]  [#4444](https://github.com/NREL/OpenStudio/pull/4444) - Fixes #4375 gbXML Import reverses floors/ceilings normals and surface types
+- ![Fixed:][fixed]  [#4527](https://github.com/NREL/OpenStudio/pull/4527) - Fixes #4372 intersection issue found using create bar
+- ![Fixed:][fixed]  [#4535](https://github.com/NREL/OpenStudio/pull/4535) - Fixes #4533 - Wrap SurfaceProperty:LocalEnvironment and SurfaceProperty:SurroundingSurfaces
+- ![Improved:][improved] [#4513](https://github.com/NREL/OpenStudio/pull/4513) - Addresses #4457, support gbXML reverse translation where user-input `<Name>` is different from the ID
+- ![Improved:][improved] [#4534](https://github.com/NREL/OpenStudio/pull/4534) - Addresses #4311, add water heaters (mixed or stratified) to the supply side of different plant loops using source/use side connections (e.g., to configure a heat recovery chiller)
+- ![Fixed:][fixed]  [#4528](https://github.com/NREL/OpenStudio/pull/4528) - Cooling tower fixes (ctor for SingleSpeed, and missing IDD defaults) and model tests
+- ![Improved:][improved] [#4520](https://github.com/NREL/OpenStudio/pull/4520) - Adds exports functionality to a use web standard glTF to replace deprecated three.js JSON format
+- ![Fixed:][fixed]  [#4548](https://github.com/NREL/OpenStudio/pull/4548) - Addresses #4531, breaking changes for some model getters:
+    * CoolingTower:*Speed
+        * `evaporationLossMode` (`boost::optional<std::string>` to `std::string`)
+        * `blowdownCalculationMode` (`boost::optional<std::string>` to `std::string`)
+        * `cellControl` for CoolingTower:VariableSpeed
+    * PlantLoop
+        * `commonPipeSimulation` (`boost::optional<std::string>` to `std::string`)
+        * add new methods: `isCommonPipeSimulationDefaulted`, `commonPipeSimulationValues`, and `validCommonPipeSimulationValues`
+- ![Improved:][improved] [#4505](https://github.com/NREL/OpenStudio/pull/4505) Addresses #4477, improve handling of invalid values passed to SDK by adding optional switch for turning off IDD validity checking
+- ![Improved:][improved] [#4504](https://github.com/NREL/OpenStudio/pull/4504) Fix #2941 - Add option to show workflow run stdout + style + timings
+- ![Improved:][improved] [#4487](https://github.com/NREL/OpenStudio/pull/4487) - Add operator< for BCLComponent and BCLMeasure
+- ![Fixed:][fixed]  [#4482](https://github.com/NREL/OpenStudio/pull/4482) - Fix #4481 - add missing `\ip-units W` to the OpenStudio.idd
+- ![Fixed:][fixed]  [#4491](https://github.com/NREL/OpenStudio/pull/4491) - Fix #4490 - Expose RoofGeometry helpers to Swig bindings
+- ![Improved:][improved] [#4498](https://github.com/NREL/OpenStudio/pull/4498) - Bump to 3.3.1 and add default VT
+- ![Improved:][improved] [#4474](https://github.com/NREL/OpenStudio/pull/4474) - Better string representation of Matrix and Transformation in the bindings
+- ![Improved:][improved] [#4475](https://github.com/NREL/OpenStudio/pull/4475) - Add a method on the FT to get known ft options
+- ![Improved:][improved] [#4512](https://github.com/NREL/OpenStudio/pull/4512) - Update copyrights 2022
+- ![Fixed:][fixed]  [#4553](https://github.com/NREL/OpenStudio/pull/4553) - HotFix #4550 - Remove getExteriorFenestrationValue from public API
+- ![Fixed:][fixed]  [#4555](https://github.com/NREL/OpenStudio/pull/4555) - Adjustments to WindowPropertyFrameAndDivider and new model gtest
+- ![Fixed:][fixed]  [#4562](https://github.com/NREL/OpenStudio/pull/4562) - Update idfs to V22.1.0
+- ![Improved:][improved] [#4564](https://github.com/NREL/OpenStudio/pull/4564) - update openstudio gems for standards 0.2.16
+- ![Improved:][improved] [#4518](https://github.com/NREL/OpenStudio/pull/4518) - Bump openstudio-gems, conan-openstudio-ruby and add support for Apple M1
+- ![Improved:][improved] [#4558](https://github.com/NREL/OpenStudio/pull/4558) - Update macOS M1 (arm64) dependencies
+- ![Improved:][improved] [OpenStudio-benchmarks](https://github.com/NREL/OpenStudio-benchmarks) - Added additional performance benchmark tests to improve SDK performance. 
+
+## OpenStudio v3.3.0
+
+###### 2021-11-05 — [Diff]( https://github.com/NREL/OpenStudio/compare/v3.2.1...v3.3.0 )
+
+- ![Improved:][improved] [#4406](https://github.com/NREL/OpenStudio/pull/4406) - Update to EnergyPlus [v9.6.0_PlusSpaceFix1](https://github.com/NREL/EnergyPlus/releases/tag/v9.6.0_PlusSpaceFix1)
+    * Experimental Support for the EnergyPlus 9.6.0 [space concept](https://github.com/NREL/EnergyPlus/blob/develop/design/FY2021/NFP-Spaces.md) was added
+        * This feature is currently opt-in, either by manually calling `ForwardTranslator::setExcludeSpaceTranslation(false)` before calling `ForwardTranslator::translateModel(Model&)` or passing the CLI argument `--space-translation` to the `run` method (eg: `openstudio run --space-translation -w workflow.osw`)
+        * A few limitations due to DaylightingControls/IlluminanceMap exist: in case one of these objects is found in a ThermalZone, spaces will be combined for that ThermalZone (historical behavior)
+        * [#4471](https://github.com/NREL/OpenStudio/pull/4471) - Space PR: adjustments to make DaylightingControls work
+        * [#4434](https://github.com/NREL/OpenStudio/pull/4434) - Addresses #4409, forward translate Space
+        * [#4447](https://github.com/NREL/OpenStudio/pull/4447) - Add ForwardTranslator options to the CLI `run` method
+        * [#4465](https://github.com/NREL/OpenStudio/pull/4465) - [Developer] Refactor Forward Translation of ThermalZone in particular for Space translation PR
+    * **Note**: EnergyPlus due to the Space feature now enforces unicity of names within the `Zone`, `Space`, `ZoneList` and `SpaceList` objects. **As a result, we are now enforcing this in the `openstudio::model` namespace: the same name can no longer be used for objects of type `ThermalZone`, `Space`, `SpaceType`.**
+- ![Fixed:][fixed] [#4350](https://github.com/NREL/OpenStudio/pull/4350) - Fix #3599 - Add new fields to control outdoor air for AirTerminalSingleDuctInletMixer
+- ![Improved:][improved] [#4365](https://github.com/NREL/OpenStudio/pull/4365) - Addresses #4364, Availability Schedule for DaylightingControl
+- ![Fixed:][fixed] [#4342](https://github.com/NREL/OpenStudio/pull/4342) - Fix #4327 - FanSystemModel electricPowerFraction should be optional
+- ![Improved:][improved] [#4368](https://github.com/NREL/OpenStudio/pull/4368) - Addresses #4362, add support of HeatPump:PlantLoop:EIR:Heating and HeatPump:PlantLoop:EIR:Cooling to model air-to-water heat pump
+- ![Improved:][improved] [#4382](https://github.com/NREL/OpenStudio/pull/4382) - Addresses #4380, completing SDK support of Tubular and Light Well Daylighting Devices
+- ![Improved:][improved] [#4381](https://github.com/NREL/OpenStudio/pull/4381) - Addresses #3906, support new field 'Minimum Air Flow Turndown Schedule Name' for AirTerminals
+- ![Improved:][improved] [#4407](https://github.com/NREL/OpenStudio/pull/4407) - Add AirLoopHVAC to ThreeJS user data by @antoine-galataud
+- ![Improved:][improved] [#4402](https://github.com/NREL/OpenStudio/pull/4402) - Addresses #3910, realign OS:SizingPeriod:DesignDay with E+ IDD
+- ![Fixed:][fixed] [#4417](https://github.com/NREL/OpenStudio/pull/4417) - Fix #4156 - Support nested subfolders in approved Measure directories
+- ![Fixed:][fixed] [#4452](https://github.com/NREL/OpenStudio/pull/4452) - Fix #4448 - Issues with angles in DaylightingControl
+- ![Fixed:][fixed] [#4317](https://github.com/NREL/OpenStudio/pull/4317) - Addresses #3147, add HeatExchanger:Desiccant:BalancedFlow
+- ![Fixed:][fixed] [#4326](https://github.com/NREL/OpenStudio/pull/4326) - Fix Wrap E+ WaterHeater:Sizing object
+- ![Fixed:][fixed] [#4319](https://github.com/NREL/OpenStudio/pull/4319) - Fix Wrap E+ FuelFactors object
+- ![Fixed:][fixed] [#4418](https://github.com/NREL/OpenStudio/pull/4418) - Resolves #4395 Add in CLI option to use epJSON
+- ![Fixed:][fixed] [#4347](https://github.com/NREL/OpenStudio/pull/4347) - Fix #227 - Actually use the EPW start year or start day of week when "UseWeatherFile" is used in YearDescription for assumedYear
+    * Please note that before, while the IDD default was `UseWeatherFile`, it would typically use the Assumed Base Year instead (2009) which resulted in using `Thursday` as a Start Day of Week for simulation. Depending on your weather file, you might experience a different Start Day of Week which could lead to slight EUI deviations. More information can be seen on [NREL/OpenStudio-resources#153](https://github.com/NREL/OpenStudio-resources/pull/153)
+- ![Fixed:][fixed] [#4389](https://github.com/NREL/OpenStudio/pull/4389) - Update BCL to use BCL2 (https://bcl2.nrel.gov/)
+- ![Fixed:][fixed] [#4349](https://github.com/NREL/OpenStudio/pull/4349) - Fix #3514 - Make strings returned from openstudio to ruby UTF8
+- ![Fixed:][fixed] [#4346](https://github.com/NREL/OpenStudio/pull/4346) - Addresses #4329 and #4330, issues with AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass
+- ![Fixed:][fixed] [#4356](https://github.com/NREL/OpenStudio/pull/4356) - Fix #4353 - Add a missing reference in E+ Idd for PythonPlugin:Instance (`ProgramNames`)
+- ![Fixed:][fixed] [#4355](https://github.com/NREL/OpenStudio/pull/4355) - Fix #4354 - Issue AirLoopHVACOutdoorAirSystem::reliefComponents with ZoneHVACComponents: wrong order
+- ![Fixed:][fixed] [#4348](https://github.com/NREL/OpenStudio/pull/4348) - Fix #2145 - Do not create an extra singlezone SPM humidity min created if humidifier downstream of fan
+- ![Fixed:][fixed] [#4343](https://github.com/NREL/OpenStudio/pull/4343) - Fix #4335 - Should reset the air nodes when cloning a AirLoopHVACUnitarySystem
+- ![Fixed:][fixed] [#4345](https://github.com/NREL/OpenStudio/pull/4345) - #4046 - Clarify the situation with output file in the ReportingMeasure Template
+- ![Fixed:][fixed] [#4339](https://github.com/NREL/OpenStudio/pull/4339) - Fix #4338 - AirLoopHVAC_Impl::terminalForLastBranch doesn't handle Dual duct correctly
+- ![Fixed:][fixed] [#4359](https://github.com/NREL/OpenStudio/pull/4359) - Addresses #4314, add ScheduleRuleset custom day methods
+- ![Fixed:][fixed] [#4352](https://github.com/NREL/OpenStudio/pull/4352) - Fix #1571 - building.clone breaks space surface matching
+- ![Fixed:][fixed] [#4378](https://github.com/NREL/OpenStudio/pull/4378) - Addresses #1515, Reverse Translator should retain thermal zone name from IDF instead of re-naming it
+- ![Fixed:][fixed] [#4385](https://github.com/NREL/OpenStudio/pull/4385) - Fixes Crash in floorplanToThreeJS https://github.com/NREL/OpenStudio/issues/4384
+- ![Fixed:][fixed] [#4398](https://github.com/NREL/OpenStudio/pull/4398) - ref #4397 - Fix some issues in our Init calls for embedded ruby
+- ![Fixed:][fixed] [#4305](https://github.com/NREL/OpenStudio/pull/4305) - Fix #4304 - Minimal fix for GroundHeatExchanger:Vertical to avoid confusion between maximum and design flow rates
+- ![Fixed:][fixed] [#4400](https://github.com/NREL/OpenStudio/pull/4400) - #4399 - Surface fixes
+- ![Fixed:][fixed] [#4392](https://github.com/NREL/OpenStudio/pull/4392) - Fix #4390 - add OSRunner::getOptionalBoolArgumentValue
+- ![Fixed:][fixed] [#4420](https://github.com/NREL/OpenStudio/pull/4420) - Fix #4419 - custom mapping for LCC Use Price Escalation
+- ![Fixed:][fixed] [#4428](https://github.com/NREL/OpenStudio/pull/4428) - Avoid issues with openstudio_ruby revision not matching
+- ![Fixed:][fixed] [#4440](https://github.com/NREL/OpenStudio/pull/4440) - Fix #4439 - Correctly Reverse Translate gbXML Schedules
+- ![Fixed:][fixed] [#4450](https://github.com/NREL/OpenStudio/pull/4450) - Fix #4446 - add SizingSystem::autosizedOccupantDiversity.
+- ![Fixed:][fixed] [#4454](https://github.com/NREL/OpenStudio/pull/4454) - Fix #4404 #4453 - Fix issues with ForwardTranslator options
+- ![Fixed:][fixed] [#4431](https://github.com/NREL/OpenStudio/pull/4431) - Fixed an issue in Surface splitSurfaceForSubSurfaces
+- ![Fixed:][fixed] [#4459](https://github.com/NREL/OpenStudio/pull/4459) - Fix #3426 - ZoneHVACUnitHeater components missing air inlet/outlet node names when Fan:OnOff
+- ![Fixed:][fixed] [#4455](https://github.com/NREL/OpenStudio/pull/4455) - Fix #4445 - Fix API issues in Controller:WaterCoil
+- ![Fixed:][fixed] [#4462](https://github.com/NREL/OpenStudio/pull/4462) - Fix #4461 - DesignSpecificationOutdoorAir: when combining, Outdoor Air Flow rate for ACH is off by 3600 when "Maximum" method is used
+- ![Fixed:][fixed] [#4473](https://github.com/NREL/OpenStudio/pull/4473) - Fix #4472 - Modify Python in typemaps for `path` to accept string with Python 3 support
+- ![Fixed:][fixed] [#4307](https://github.com/NREL/OpenStudio/pull/4307) - Standardize Curve IDD references like E+ does (Uni/Bi...variateFunctions) and remove hard check in model code
+- ![Fixed:][fixed] [#4337](https://github.com/NREL/OpenStudio/pull/4337) - Fix Encode searchTerm in BCL (including spaces, not only "+" signs)
+- ![Fixed:][fixed] [#4344](https://github.com/NREL/OpenStudio/pull/4476) - Update openstudio-gems for new versions: openstudio-extension-gem (v0.5.1), openstudio-workflow-gem (v2.3.1) and openstudio-standards (v0.2.15)
+- ![Fixed:][fixed] [#4332](https://github.com/NREL/OpenStudio/pull/4332) - Fix StringHelpers openstudio::replace
+- ![Fixed:][fixed] [#4324](https://github.com/NREL/OpenStudio/pull/4324) - Fix Do not Warn if Sql doesn't have a Year field
+- ![Fixed:][fixed] [#4376](https://github.com/NREL/OpenStudio/pull/4376) - Fix #4309 - disable RUBYLIB env and use --include or -I using cli
+- ![Improved:][improved] [#4401](https://github.com/NREL/OpenStudio/pull/4401) - Update to new stable tag from Github Actions CI (includes CP720 fix)
+- ![Improved:][improved] [#4476](https://github.com/NREL/OpenStudio/pull/4476) - Update gems for workflow and extension gem updates
+- ![Improved:][improved] [#4463](https://github.com/NREL/OpenStudio/pull/4463) - Add a full FT test for DaylightingControls (backport from Space PR)
+- ![Improved:][improved] [#4467](https://github.com/NREL/OpenStudio/pull/4467) - Update unit tests for ElectricEquipmentITEAirCooled
+- ![Improved:][improved] [#4383](https://github.com/NREL/OpenStudio/pull/4383) - Provide more options for installation of openstudio dlls
+- ![Improved:][improved] [#4302](https://github.com/NREL/OpenStudio/pull/4302) - Fix Deprecation Warning of last argument as keyword parameters
+- ![Improved:][improved] [#4421](https://github.com/NREL/OpenStudio/pull/4421) - Fix #4220 - Don't pass built in POD types by const ref& but by value
+- ![Improved:][improved] [#4371](https://github.com/NREL/OpenStudio/pull/4371) - Github Actions to publish python bindings to pypi when it's a release and testing worked
+- ![Improved:][improved] [#4466](https://github.com/NREL/OpenStudio/pull/4466) - Add Full detailed tests for the FT of SpaceInfiltration objects (whether assigned to space or spacetype)
+- ![Improved:][improved] [#4468](https://github.com/NREL/OpenStudio/pull/4468) - Add a full FT test for ElectricEquipmentITEAirCooled (backport Space PR)
+- ![Improved:][improved] [#4427](https://github.com/NREL/OpenStudio/pull/4427) - Fix #4423 - enable coverage on one of the linux runners
+- ![Improved:][improved] [#4369](https://github.com/NREL/OpenStudio/pull/4369) - #4214 Add in automated testing for 32/64 bit nuget package
+
+## OpenStudio v3.2.1
+
+###### 2021-06-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v3.2.0...v3.2.1 )
+
+- ![Fixed:][fixed] [#4307](https://github.com/NREL/OpenStudio/pull/4307) - Standardize Curve IDD references like E+ does (Uni/Bi...variateFunctions) and remove hard check in model code 
+- ![Fixed:][fixed] [4337](https://github.com/NREL/OpenStudio/pull/4337) - Fix Encode searchTerm in BCL (including spaces, not only "+" signs)
+- ![Fixed:][fixed] [#4344](https://github.com/NREL/OpenStudio/pull/4344) - Update openstudio-gems for new versions of measure-tester-gem (v0.3.1), openstudio-extension-gem (v0.4.3), openstudio-workflow-gem (v2.2.1) and openstudio-standards (v0.2.14). 
+- ![Fixed:][fixed] [#4332](https://github.com/NREL/OpenStudio/pull/4332) -  Fix StringHelpers openstudio::replace
+- ![Fixed:][fixed] [#4326](https://github.com/NREL/OpenStudio/pull/4326) - Fix Wrap E+ WaterHeater:Sizing object
+- ![Fixed:][fixed] [#4324](https://github.com/NREL/OpenStudio/pull/4324) - FIx Do not Warn if Sql doesn't have a Year field
+- ![Fixed:][fixed] [#4319](https://github.com/NREL/OpenStudio/pull/4319) - Fix Wrap E+ FuelFactors object
+- ![Fixed:][fixed] [#4302](https://github.com/NREL/OpenStudio/pull/4302) - Fix Deprecation Warning of last argument as keyword parameters
+
+
+## OpenStudio v3.2.0
+
+###### 2021-04-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v3.1.0...v3.2.0 )
+
+
+- ![Improved:][improved] [#4271](https://github.com/NREL/OpenStudio/pull/4271) - Update to EnergyPlus v9.5.0
+    * Most of the actual changes were done in [#4212](https://github.com/NREL/OpenStudio/pull/4212) - Update to V9.5.0-IOFreeze
+    * [#4155](https://github.com/NREL/OpenStudio/pull/4155) - Wrap `Humidifier:Stream:Gas` in OS SDK
+    * [#4157](https://github.com/NREL/OpenStudio/pull/4157) - Wrap `ZoneHVAC:CoolingPanel:RadiantConvective:Water` in OS SDK
+    * [#4159](https://github.com/NREL/OpenStudio/pull/4159) - Wrap `Refrigeration:ComporessorRack` in OS SDK
+    * [#4186](https://github.com/NREL/OpenStudio/pull/4186) - Wrap `Chiller:Electric:ReformulatedEIR` in OS SDK
+    * [#4192](https://github.com/NREL/OpenStudio/pull/4192) - Wrap `Generator:WindTurbine` in OS SDK
+    * [#4193](https://github.com/NREL/OpenStudio/pull/4193) - Wrap `Fan:ComponentModel` in OS SDK
+    * [#4194](https://github.com/NREL/OpenStudio/pull/4194) - Wrap `PhotovoltaicPerformance:Sandia` in OS SDK
+        * The recommended instantiation is via the factory methods `GeneratorPhotovoltaic::sandia(const Model&)` or `GeneratorPhotovoltaic::fromSandiaDatabase(const Model&, const std::string& sandiaModulePerformanceName)` where `sandiaModulePerformanceName` is one of keys in the now-embedded Sandia database. Please use the `PhotovoltaicPerformanceSandia::sandiaModulePerformanceNames()` static method to lookup the valid names.
+    * [#4225](https://github.com/NREL/OpenStudio/pull/4225) - Wrap `ElectricLoadCenter:Storage:LiIonNMCBattery` in OS SDK
+    * [#4236](https://github.com/NREL/OpenStudio/pull/4236) - Wrap `CoilSystem:IntegratedHeatPump:AirSource` and `Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed` in OS SDK
+    * [#4258](https://github.com/NREL/OpenStudio/pull/4258) - Wrap `ZoneInfiltration:FlowCoefficient` in OS SDK.
+        * This object is wrapped as `SpaceInfiltrationFlowCoefficient` and is a `SpaceLoad`
+
+- ![Improved:][improved] [#4199](https://github.com/NREL/OpenStudio/pull/4199) - Add support for translating a Workspace/IdfFile to epJSON
+- ![Improved:][improved] [#4253](https://github.com/NREL/OpenStudio/pull/4253) - Allow ZoneHVAC:TerminalUnit:VariableRefrigerantFlow to connect to AirLoopHVAC
+
+- ![Fixed:][fixed] [#4180](https://github.com/NREL/OpenStudio/pull/4180) - Fixes [#4175](https://github.com/NREL/OpenStudio/issues/4175), issues with ft for ElectricLoadCenter:Distribution
+    * `ElectricLoadCenterDistribution` objects are now possible with no generators / transformers
+    * A default `ElectricLoadCenterDistribution` is no longer instantiated in the constructor of children objects: `GeneratorFuelCell`, `GeneratorMicroTurbine`, `GeneratorPhotovoltaic`, `GeneratorPVWatts`
+
+- ![Fixed:][fixed] [#4153](https://github.com/NREL/OpenStudio/pull/4153) - Fix #3532 #4152 - Make heating/cooling coils optional for ZoneHVACLowTempVariableFlow and add missing fields to coils
+    * This is an API breaking change, the coils are now optional so the getters have been modified to account for this.
+    ```diff
+    - HVACComponent heatingCoil() const;
+    + boost::optional<HVACComponent> heatingCoil() const;
+    - HVACComponent coolingCoil() const;
+    + boost::optional<HVACComponent> coolingCoil() const;
+    ```
+- ![Improved:][improved] [#4221](https://github.com/NREL/OpenStudio/pull/4221) - Geometry improvements including fixing intersection issues
+- ![Fixed:][fixed] [#4136](https://github.com/NREL/OpenStudio/pull/4136) - Fix #4125, Fix #4135 - GbXML ForwardTranslator: clear map&set, and add a modelToGbXMLString method
+- ![Fixed:][fixed] [#4137](https://github.com/NREL/OpenStudio/pull/4137) - Addresses #4076, radiant system enhancements
+- ![Fixed:][fixed] [#4149](https://github.com/NREL/OpenStudio/pull/4149) - Addresses #3706, add drain water heat exchanger methods to WaterUseConnections
+- ![Fixed:][fixed] [#4188](https://github.com/NREL/OpenStudio/pull/4188) - Fix #4187 - speed up `IdfFile::save` (and derived, such as `Model::save`) and general serialization to string by using '\n' instead of `std::endl`
+- ![Fixed:][fixed] [#4239](https://github.com/NREL/OpenStudio/pull/4239) -Fix #4226 - add int argument for ScheduleFile.setMinutesperItem method
+- ![Fixed:][fixed] [#4061](https://github.com/NREL/OpenStudio/pull/4061) - Fix Cloning a DualDuct AirLoopHVAC breaks the existing loop
+- ![Fixed:][fixed] [#4081](https://github.com/NREL/OpenStudio/pull/4081) - #4077 Remove name field from common HVAC data objects that are not visible to user
+- ![Fixed:][fixed] [#4123](https://github.com/NREL/OpenStudio/pull/4123) - Addresses #4110, align PTAC and PTHP coils with EnergyPlus
+- ![Fixed:][fixed] [#4173](https://github.com/NREL/OpenStudio/pull/4173) - Fixes FT of Design Maximum Continuous Input Power for ElectricLoadCenterStorageConverter
+- ![Fixed:][fixed] [#4179](https://github.com/NREL/OpenStudio/pull/4179) - Fixes bug in SurfaceProperty:ExposedFoundationPerimeter IDD
+- ![Fixed:][fixed] [#4180](https://github.com/NREL/OpenStudio/pull/4180) - Addresses #4175, issues with ft for ElectricLoadCenter:Distribution
+- ![Fixed:][fixed] [#4211](https://github.com/NREL/OpenStudio/pull/4211) - Fix #4205 - WorkspaceObject::setString allows setting invalid names for ModelObjects 
+- ![Fixed:][fixed] [#4218](https://github.com/NREL/OpenStudio/pull/4218) - Fix #4217 - Do not make an PlantEqOperationUncontrolled for a Component that is already on a PlantEquipmentOperationComponentSetpoint
+- ![Fixed:][fixed] [#4245](https://github.com/NREL/OpenStudio/pull/4245) - Fix #4166 - Merging FloorSpaceJS can delete unique model Objects such as Facility, Building, Site (and children)
+- ![Fixed:][fixed] [#4235](https://github.com/NREL/OpenStudio/pull/4235) - Fix #4111 - Shading:Building is improperly mapped when "World" coordinates are used for Rectangular Surfaces
+- ![Fixed:][fixed] [#4256](https://github.com/NREL/OpenStudio/pull/4256) - Fix #4254 - Set ComponentType::COOLING for EvaporativeFluidCoolerTwoSpeed
+- ![Fixed:][fixed] [#4243](https://github.com/NREL/OpenStudio/pull/4243) - Fix #4240 (and more): add missing \ip-units gal/min via a script
+
+## OpenStudio v3.1.0
+
+###### 2020-10-16 — [Diff]( https://github.com/NREL/OpenStudio/compare/v3.0.1...v3.1.0 )
+
+- ![Improved:][improved] [#3960](https://github.com/NREL/OpenStudio/pull/3960) - Added support for building the C# bindings via `dotnet` CLI, including on Unix platforms
+- ![Improved:][improved] [#3966](https://github.com/NREL/OpenStudio/pull/3966) - Closes [#3945](https://github.com/NREL/OpenStudio/issues/3945) - Support the EnergyPlus object SurfaceControl:MovableInsulation which can be used to add insulation surface(s) on top of opaque surfaces, such as a transparent coating that affects the radiative gains to a roof surface
+- ![Improved:][improved] [#3959](https://github.com/NREL/OpenStudio/pull/3959) - Also included some improvements in the generated C# bindings by reducing build warnings and properly exposing some types via SWIG
+    * `ScheduleTypeKey` (which is normally only use by OpenStudio internals in ScheduleTypeRegistry checks) previously mapped to a `std::pair<std::string, std::string>` which was SWIGed in ruby as an Array of strings of size two, but improperly exposed in C#. It now uses a dedicated helper class with two methods `ScheduleTypeKey::className()` and `ScheduleTypeKey::scheduleDisplayName()`
+- ![Improved:][improved] [#3987](https://github.com/NREL/OpenStudio/pull/3987) - Closes [#3907](https://github.com/NREL/OpenStudio/issues/3907) - Support new Coil:Cooling:DX, Coil:Cooling:DX:CurveFit:Performance, Coil:Cooling:DX:CurveFit:OperatingMode, Coil:Cooling:DX:CurveFit:Speed objects
+- ![Improved:][improved] [#4009](https://github.com/NREL/OpenStudio/pull/4009) - Closes [#4006](https://github.com/NREL/OpenStudio/issues/4006) - Add SwimmingPool:Indoor to SDK
+- ![Fixed:][fixed] [#4050](https://github.com/NREL/OpenStudio/pull/4050) - Fixes [#3921](https://github.com/NREL/OpenStudio/issues/3921) - Some children of RefrigerationSystem can be added several times and produce a fatal when System is removed
+    * `RefrigerationSystem` will now be enforcing unicity for all children. This was already the case for a few of the child objects such as Case and WalkIns, it is now the case for all objects (`RefrigerationCondenserCascade`, `RefrigerationSubcoolerMechanical` and `RefrigerationSubcoolerLiquidSuction`, etc.). What this means is that setter methods (or add methods in case of a list) will remove the child for any current RefrigerationSystem it is on first.
+- ![Improved:][improved] [#4066](https://github.com/NREL/OpenStudio/pull/4066) - Multiple shading controls referenced by a single subsurface
+    * `SubSurface` was historically the one referencing the `ShadingControl` object. Now it's a many-to-many relationship where `ShadingControl` has an extensible 'Sub Surface Name' field, and multiple `ShadingControl` objects can reference the same `SubSurface`. This is trickling down from a change introduced in EnergyPlus version 9.4, and specifically in PR [NREL/EnergyPlus#8196](https://github.com/NREL/EnergyPlus/pull/8196)
+    * Methods in `SubSurface` have been deprecated but are kept for backward compatibility. They will be removed in a future version of OpenStudio:
+        * `shadingControl()`: prefer `shadingControls()`
+        * `setShadingControl(ShadingControl&)`: use `addShadingControl(SubSurface&)`, `addShadingControls(std::vector<SubSurface>&)` or `setShadingControls(std::vector<SubSurface>&)`
+        * `resetShadingControl()`: use `removeAllShadingControls()` instead
+    * All Shading Control Type values should now be supported. Refer to issue [#4074](https://github.com/NREL/OpenStudio/issues/4074) for more information
+    * Fields 'Glare Control Is Active', 'Type of Slat Angle Control for Blinds', 'Slat Angle Schedule Name', 'Setpoint2', and 'Multiple Surface Control Type' are now implemented as well
+- ![Fixed:][fixed] [#4026](https://github.com/NREL/OpenStudio/pull/4026) - Fix OpenStudio Windows crashed during save attempt
+- ![Fixed:][fixed] [#4028](https://github.com/NREL/OpenStudio/pull/4028) - Fixes [#3835](https://github.com/NREL/OpenStudio/issues/3835) - Decrease overall load time of CLI and lazy load OpenStudio ruby bindings when possible
+- ![Improved:][improved] [#4059](https://github.com/NREL/OpenStudio/pull/4059) - Add new OutputControl:Files object to SDK, which allows conditionally turning on/off output from EnergyPlus
+- ![Improved:][improved] [#4101](https://github.com/NREL/OpenStudio/pull/4101) - Update EnergyPlus v940 official  
+- ![Improved:][improved] [#3961](https://github.com/NREL/OpenStudio/pull/3963) - Update cmake to use included FindPython method and fix zlib's crypt.h
+- ![Improved:][improved] [#3970](https://github.com/NREL/OpenStudio/pull/3970) - Update conan dependency fmt/6.2.0 and use option to define FMT_HEADER_ONLY
+- ![Improved:][improved] [#3979](#https://github.com/NREL/OpenStudio/pull/3979), [#4004](https://github.com/NREL/OpenStudio/pull/4004), [#4071](https://github.com/NREL/OpenStudio/pull/4071) - Update openstudio-gems to include openstudio-extension v0.3.0, openstudio-workflow v2.1.0, openstudio-standards v0.2.12, openstudio_measure_tester v0.2.3
+- ![Improved:][improved] [#4015](https://github.com/NREL/OpenStudio/pull/4015), [#4047](https://github.com/NREL/OpenStudio/pull/4047)- Updates the conan dependencies to try and pin version using hash
+- ![Improved:][improved] [#4027](https://github.com/NREL/OpenStudio/pull/4027) - Include 64/32 bit universal nuget package in cmake build process.
+- ![Improved:][improved] [#4029](https://github.com/NREL/OpenStudio/pull/4029) - Closes [#3832](https://github.com/NREL/OpenStudio/issues/3832) - Allow for silent install on windows
+- ![Improved:][improved] [#4055](https://github.com/NREL/OpenStudio/pull/4055) - Closes [#4054](https://github.com/NREL/OpenStudio/issues/4054) - Add latitude, longitude, elevation accessors to FloorplanJS
+- ![Improved:][improved] [#4068](https://github.com/NREL/OpenStudio/pull/4068) - Closes [#4067](https://github.com/NREL/OpenStudio/issues/4067) - Remove the ENV ruby bundle variables so the cli does not use them
+- ![Fixed:][fixed] [#3957](https://github.com/NREL/OpenStudio/pull/3969) - Fix for ruby bundle changes. 
+- ![Fixed:][fixed] [#3971](https://github.com/NREL/OpenStudio/pull/3971) - Fixes [#3943](https://github.com/NREL/OpenStudio/issues/3943) - ThreeJS should handle ConstructionAirBoundary 
+- ![Fixed:][fixed] [#3973](#https://github.com/NREL/OpenStudio/pull/3973) - Fixes [#3972](https://github.com/NREL/OpenStudio/issues/3972) - ScheduleRuleset remove winterDD/summerDD/holiday ScheduleDay in reset. 
+- ![Fixed:][fixed] [#3978](https://github.com/NREL/OpenStudio/pull/3978) - Fixes [#3976](https://github.com/NREL/OpenStudio/issues/3976) - Add 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' to all Coil:Cooling:DX:XXX objects
+- ![Fixed:][fixed] [#3980](https://github.com/NREL/OpenStudio/pull/3980) - Fixes [#2033](https://github.com/NREL/OpenStudio/issues/2033) - Properly connected the secondary/induced air node for ATUs
+- ![Fixed:][fixed] [#3981](https://github.com/NREL/OpenStudio/pull/3981) - Fixes [#2977](https://github.com/NREL/OpenStudio/issues/2977) -  Make VAVReheat Method consistent with IDD and other objects
+- ![Fixed:][fixed] [#3983](https://github.com/NREL/OpenStudio/pull/3983) - Fixes [#1058](https://github.com/NREL/OpenStudio/issues/1058) - Warn only if the file extension isn't OSM, OSC, IDF, IMF, or DDY
+- ![Fixed:][fixed] [#3985](https://github.com/NREL/OpenStudio/pull/3985) - Fixes [#3926](https://github.com/NREL/OpenStudio/issues/3926), Fixes [#3984](https://github.com/NREL/OpenStudio/issues/3984) - Handle multiple AirLoopHVACs and assign the DSOA to all ControllerMechanicalVentilation objects. AirLoopHVAC translates the AirLoopHVACOutdoorAirSystem, which in turns translates the ControllerOutdoorAir
+- ![Fixed:][fixed] [#3986](https://github.com/NREL/OpenStudio/pull/3986) - Fixes [#2797](https://github.com/NREL/OpenStudio/issues/2797) - Do not translate a ZoneHVACLowTempRadiant object if it doesn't have any surfaces with Internal Source
+- ![Fixed:][fixed] [#3988](https://github.com/NREL/OpenStudio/pull/3988) - Fix bug in GenerateClass.rb
+- ![Fixed:][fixed] [#3989](https://github.com/NREL/OpenStudio/pull/3989) - Fixes [#3076](https://github.com/NREL/OpenStudio/issues/3076) - Make openstudio::Vector "Enumerable" in ruby
+- ![Fixed:][fixed] [#3993](https://github.com/NREL/OpenStudio/pull/3993) - Added logic to rejoin previously triangulated window geometry before calling computeTriangulation on the base surface. Fixed several bugs in joinAll and translation to ThreeJS format
+- ![Fixed:][fixed] [#3995](https://github.com/NREL/OpenStudio/pull/3995) - Implements eql? and hash for UUID in Ruby so UUID can be used as a key in a Ruby Hash
+- ![Fixed:][fixed] [#3996](https://github.com/NREL/OpenStudio/pull/3996) - Fixes [#3990](https://github.com/NREL/OpenStudio/issues/3990) - Add an API to CoilCoolingDXMultiSpeed to add/remove stages
+- ![Fixed:][fixed] [#3998](https://github.com/NREL/OpenStudio/pull/3998) - Fixes [#3997](https://github.com/NREL/OpenStudio/issues/3997) - GbXMLReverseTranslator applies incorrect scaling to windows when unit isn't meter
+- ![Fixed:][fixed] [#3999](https://github.com/NREL/OpenStudio/pull/3999) - Removes a "Propane deprecated" warning message that no longer makes sense
+- ![Fixed:][fixed] [#4000](https://github.com/NREL/OpenStudio/pull/4000) - Fixes [#3314](https://github.com/NREL/OpenStudio/issues/3314) - GBXML translate spaces etc even if Facility and/or Building aren't isntantianted 
+- ![Fixed:][fixed] [#4002](https://github.com/NREL/OpenStudio/pull/4002) - Fixes [#2100](https://github.com/NREL/OpenStudio/issues/2100) - Remove if defaulted statements in ForwardTranslateThermalZone
+- ![Fixed:][fixed] [#4005](https://github.com/NREL/OpenStudio/pull/4005) - Fixes [#4001](https://github.com/NREL/OpenStudio/issues/4001) - gbXML issue on ForwardTranslation - surfaceType attribute written twice for SlabOnGrade
+3_bind* to ensure proper escaping of parameters such as Zone Names etc  
+- ![Fixed:][fixed] [#4008](https://github.com/NREL/OpenStudio/pull/4008) - Fixes [#1906](https://github.com/NREL/OpenStudio/issues/1906) - Use sqlite
+- ![Fixed:][fixed] [#4010](https://github.com/NREL/OpenStudio/pull/4010) - Fixes [#4007](https://github.com/NREL/OpenStudio/issues/4007) - Model objects returned in inconsistent order
+- ![Fixed:][fixed] [#4011](https://github.com/NREL/OpenStudio/pull/4011) - Fixes [#1675](https://github.com/NREL/OpenStudio/issues/1675) - ForwardTranslate WaterHeater:Mixed when not on loop but has Peak Use Flow Rate (standalone operation)
+- ![Fixed:][fixed] [#4012](https://github.com/NREL/OpenStudio/pull/4012) - Fixes [#2895](https://github.com/NREL/OpenStudio/issues/2895) - Extend the list of acceptable SubSurface types to include Skylight
+- ![Fixed:][fixed] [#4013](https://github.com/NREL/OpenStudio/pull/4013) - Fixes [32867](https://github.com/NREL/OpenStudio/issues/2867) - Sum of fraction radiant, fraction lost, etc can be > 1 
+- ![Fixed:][fixed] [#4021](https://github.com/NREL/OpenStudio/pull/4021) - Fixes [#4014](https://github.com/NREL/OpenStudio/issues/4014) - Extend download time to BCL 
+- ![Fixed:][fixed] [#4023](https://github.com/NREL/OpenStudio/pull/4023) - Fixes [#3936](https://github.com/NREL/OpenStudio/issues/3936) - SubSurface Type reset when assigned to surface
+- ![Fixed:][fixed] [#4030](https://github.com/NREL/OpenStudio/pull/4030) - Fixes [#4030](https://github.com/NREL/OpenStudio/issues/4020) - AvailabilityManagerNightCycle: Ensure ModelObjectLists are handled in clone/remove
+- ![Fixed:][fixed] [#4032](https://github.com/NREL/OpenStudio/pull/4032) - Fixes [#4016](https://github.com/NREL/OpenStudio/issues/4016) - Move VT from 2.9.0 to 3.0.0 for new fields at end of the ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
+- ![Fixed:][fixed] [#4037](https://github.com/NREL/OpenStudio/pull/4037) - Fixes [#3369](https://github.com/NREL/OpenStudio/issues/3369) - Add missing fields to AvailabilityManager:HybridVentilation
+- ![Fixed:][fixed] [#4044](https://github.com/NREL/OpenStudio/pull/4044) - Fixes [#4039](https://github.com/NREL/OpenStudio/issues/4039) - Add field ' Design Return Air Flow Fraction of Supply Air Flow' to AirLoopHVAC
+- ![Fixed:][fixed] [#4048](https://github.com/NREL/OpenStudio/pull/4048) - Fixes [#4036](https://github.com/NREL/OpenStudio/issues/4036) - Don't create windows or doors for plenums when translating from FloorspaceJSON
+- ![Fixed:][fixed] [#4065](https://github.com/NREL/OpenStudio/pull/4065) - Fixes [#4033](https://github.com/NREL/OpenStudio/issues/4033), Fixes [#4034](https://github.com/NREL/OpenStudio/issues/4034) - Fix AVMList clone between different models
+- ![Fixed:][fixed] [#4072](https://github.com/NREL/OpenStudio/pull/4072) - Fixes [#4064](https://github.com/NREL/OpenStudio/issues/4064) - RunPeriodControlSpecialDays are not Forward Translated 
+- ![Fixed:][fixed] [#4080](https://github.com/NREL/OpenStudio/pull/4080) - Fixes [#4079](https://github.com/NREL/OpenStudio/issues/4079) -  Install E+ pythonwrapper lib via CMake
+- ![Fixed:][fixed] [#4088](https://github.com/NREL/OpenStudio/pull/4088) - Hotfix for sql queries
+- ![Fixed:][fixed] [#4093](https://github.com/NREL/OpenStudio/pull/4093) - Fixes [#4091](https://github.com/NREL/OpenStudio/issues/4091) - Update FuelType/EndUseFuelType (and Sql) to match E+ 9.4.0
+- ![Fixed:][fixed] [#4097](https://github.com/NREL/OpenStudio/pull/4097) - Fixes [#4096](https://github.com/NREL/OpenStudio/issues/4096) - RT error for ZoneControlThermostat
+- ![Fixed:][fixed] [#4099](https://github.com/NREL/OpenStudio/pull/4099) - Fixes [#4089](https://github.com/NREL/OpenStudio/issues/4089) - Confirm if idf_output_requests still works in reporting measure template
+- ![Fixed:][fixed] [#4104](https://github.com/NREL/OpenStudio/pull/4104) - Fixes [#4102](https://github.com/NREL/OpenStudio/issues/4102) - Fuel Type Renames in EMS Actuator Names 
+- ![Fixed:][fixed] [#4155](https://github.com/NREL/OpenStudio/pull/4115) - Fixes [#4109](https://github.com/NREL/OpenStudio/issues/4109) - Fixes ruby bindings issue on windows when working with Sqlite3 db
+
+
+## OpenStudio v3.0.1
+
+###### 2020-06-26 — [Diff]( https://github.com/NREL/OpenStudio/compare/v3.0.0...v3.0.1 )
+- ![Fixed:][fixed] [#3951](https://github.com/NREL/OpenStudio/pull/3951)  - GbXMLReverseTranslator produces incorrect geometry with respect to the windows and exterior walls of the gbxml
+
+## OpenStudio v3.0.0
+
+###### 2020-04-27 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.9.1...v3.0.0 )
+
+- ![Improved:][improved] [#3044](https://github.com/NREL/OpenStudio/issues/3044) Added support for `FanSystemModel` to the Model API
+- ![Improved:][improved] `ThermalZone::addEquipment` is no longer exposed to the bindings to avoid confusion and problems, as you should always use `ZoneHVACComponent::addToThermalZone` instead (#2920, #3758)
+- ![Improved:][improved] [#3814](https://github.com/NREL/OpenStudio/pull/3814) - Add ability to create Holiday Schedules in ScheduleRuleset
+- ![Improved:][improved] [#3882](https://github.com/NREL/OpenStudio/pull/3882) - Add methods to edit `Output:Table:SummaryReports` in OpenStudio SDK
+- ![Improved:][improved] [#3875](https://github.com/NREL/OpenStudio/pull/3875) - Add OutputDiagnostics, OutputDebuggingData and OutputJSON to model SDK
+- ![Fixed:][fixed] [#3853](https://github.com/NREL/OpenStudio/pull/3853)  - Fixes bug where MasslessOpaqueMaterial incorrectly had methods for setting and getting conductivity, density, and specific heat
+
+- ![Improved:][improved] [#3744](https://github.com/NREL/OpenStudio/issues/3744) - New native extension gems have been added into the CLI:
+    * pycall v1.2.1 - Allows for calling Python functions from the Ruby language 
+    * sqlite3 v1.3.13 - Ruby bindings for the SQLite3 embedded database
+    * Oga v3.2 - Oga is an XML/HTML parser written in Ruby
+    * jara_winker v.1.5.4 - implementation of Jaro-Winkler distance algorithm needed for newer versions of rubocop >= v0.80.0  
+    
+- ![Improved:][improved] [#23](https://github.com/NREL/openstudio-gems/pull/23) - Updated extension gems have been added into the CLI:
+    * bundler v2.1.0
+    * openstudio-extension v0.2.1
+    * openstudio-workflow v2.0.0
+    * openstudio-standards v0.2.11
+    * openstudio_measure_tester v0.2.2  
+
+- ![Improved:][improved] [#3796](https://github.com/NREL/OpenStudio/pull/3796) - Reporting Measure: you can now pass `model` to the `arguments()` method of a reporting measure, for easier setup of output variables 
+- ![Improved:][improved] [#3847](https://github.com/NREL/OpenStudio/pull/3847) - Chiller:Electric:EIR node API refactor, ChillerAbsorption/ChillerAbsorption tertiary node refactor
+    * `ChillerElectricEIR::designHeatRecoveryWaterFlowRate()` now returns an `OptionalDouble` instead of a `double` since it can be now be autosized
+    * `ChillerElectricEIR` no longer has getter/setters that set/return std::string for Node Names. It also wraps two new E+ fields: "Condenser Heat Recovery Relative Capacity Fraction", "Heat Recovery Inlet High Temperature Limit Schedule Name" and "Heat Recovery Leaving Temperature Setpoint Node Name"
+    * Added missing Tertiary nodes for `ChillerAbsorption`
+    * For `ChillerAbsoprtion`, `ChillerAbsoprtionIndirect`, `ChillerElectricEIR`: 
+        * `addToTertiaryNode` overriden to only allow supply side connection.
+        * `addToNode` overriden to connect to tertiary loop if primary loop is already connected, and Node to connect to is on the supply side of a different plant loop than the current primary loop
+- ![Improved:][improved] [#3913](https://github.com/NREL/OpenStudio/pull/3913) - E+ 9.3.0: Update ShadowCalculation to match object refactor in EnergyPlus
+    * `ShadowCalculation::calculationMethod` was renamed to `ShadowCalculation::shadingCalculationUpdateFrequencyMethod` (same for setter, defaulted, and reset methods)
+    * `ShadowCalculation::calculationFrequency` was renamed to `ShadowCalculation::shadingCalculationUpdateFrequency` (same for setter, defaulted, and reset methods)
+    * `ShadowCalculation::polygonClippingAlgorithm()` and `ShadowCalculation::skyDiffuseModelingAlgorithm()`: return type changed from `OptionalString` (which was always initialized) to `std::string`
+    * All new fields in E+ 9.3.0 were also added
+- ![Improved:][improved] [#3846](https://github.com/NREL/OpenStudio/pull/3846) - `SiteWaterMainsTemperature` now defaults to the `CorrelationFromWeatherFile` Calculation Method just like in EnergyPlus.
+- ![Improved:][improved] [#3846](https://github.com/NREL/OpenStudio/pull/3846) - `BoilerHotWater` "Design Water Outlet Temperature" field to match E+
+- ![Fixed:][fixed] [#3868](https://github.com/NREL/OpenStudio/pull/3868) - Fix an error when querying `surfaces()` of `ZoneHVACLowTemperature` objects and surfaces have no construction
+- ![Fixed:][fixed] [#3844](https://github.com/NREL/OpenStudio/pull/3844) - Fix crash in FT for `HeatPumpWaterToWaterEquationFitCooling/Heating` when they reference each other as companion coils
+- ![Fixed:][fixed] [#3871](https://github.com/NREL/OpenStudio/pull/3871) - Remove deprecated Active Year/Institution fields in `OS:ClimateZones`
+- ![Improved:][improved] [#3878](https://github.com/NREL/OpenStudio/pull/3878) - Reporting Frequencies (eg: for `OutputVariable`) now differentiates between `RunPeriod` and `Annual` frequencies
+- ![Improved:][improved] [#3805](https://github.com/NREL/OpenStudio/pull/3805) - Support year in `EpwFile`/`EpwDataPoint`
+- ![Fixed:][fixed] [#3813](https://github.com/NREL/OpenStudio/pull/3813) - Change default specific heat of new materials to match E+
+- ![Improved:][improved] [#3849](https://github.com/NREL/OpenStudio/pull/3849) - Add a missing entry in ScheduleTypeRegistry for `SurfacePropertyOtherSideCoefficients`
+- ![Improved:][improved] [#3855](https://github.com/NREL/OpenStudio/pull/3855) - Autosize `ZoneHVACUnitHeater` Maximum Water flow rate in constructor
+- ![Fixed:][fixed] [#3857](https://github.com/NREL/OpenStudio/pull/3857) - Reverse translation of `WindowMaterial:Glazing` sets Optical Data type field incorrectly
+- ![Fixed:][fixed] [#3858](https://github.com/NREL/OpenStudio/pull/3858) - Wrong `OS:Daylighting:Control` rotation angle translated
+- ![Fixed:][fixed] [#3862](https://github.com/NREL/OpenStudio/pull/3862) - Minor change to the E+ IDD for `LifeCycleCost:UsePriceEscalation`
+- ![Improved:][improved] [#3867]() - Reset Surface Wind/SunExposure to NoSun/NoWind when setting Outside Boundary Condition to `OtherSideCoefficients` Fixed in [#3916](https://github.com/NREL/OpenStudio/pull/3916)
+- ![Improved:][improved] [#3903](https://github.com/NREL/OpenStudio/issues/3903) - Add new fields to PerformancePrecisionTradeoffs for E+ 9.3.0
+- ![Improved:][improved] [#3898](https://github.com/NREL/OpenStudio/issues/3898) - Add Minimum zone ventilation efficiency 
+- ![Improved:][improved] [#3894](https://github.com/NREL/OpenStudio/issues/3894) - SqlFile need to support the "Year" field for IlluminanceMaps 
+- ![Improved:][improved] [#3892](https://github.com/NREL/OpenStudio/issues/3892) - Add Wrap SimulationControl's Do HVAC Sizing Simulation for Sizing Periods 
+- ![Improved:][improved] [#3885](https://github.com/NREL/OpenStudio/issues/3885)- Allow "CorrelationFromWeatherFile" for SiteWaterMainsTemperature's calculation method
+- ![Improved:][improved] [#3872](https://github.com/NREL/OpenStudio/issues/3872) - Adding advanced output variables 
+- ![Improved:][improved] [#3786](https://github.com/NREL/OpenStudio/issues/3786) [#3787](https://github.com/NREL/OpenStudio/pull/3787)  - Allow SDK users to not have to write out SQLite files
+- ![Improved:][improved] [#3785](https://github.com/NREL/OpenStudio/issues/3785) - Expose the ZoneVentilation:WindandStackOpenArea in the Model SDK  
+- ![Fixed:][fixed] [#3938](https://github.com/NREL/OpenStudio/issues/3938) - Fix loading native ext gems for new gems that were added. 
+- ![Fixed:][fixed] [#3917](https://github.com/NREL/OpenStudio/issues/3917) - Connecting two ThermalZones in series on an AirLoopHVAC demand branch shouldn't be allowed
+- ![Fixed:][fixed] [#3888](https://github.com/NREL/OpenStudio/issues/3888) - Fix cloning issue for model objects. 
+- ![Fixed:][fixed] [3866](https://github.com/NREL/OpenStudio/issues/3866) - Fix Forward translator Runtime Error if a model has a ZoneHVAC:LowTemperatureRadiant:VariableFlow but no constructions assigned
+- ![Fixed:][fixed] [#3854](https://github.com/NREL/OpenStudio/issues/3854) - Fix Maximum Hot Water Flow Rate to autosize
+- ![Fixed:][fixed] [#3823](https://github.com/NREL/OpenStudio/issues/3823) - Fix RoofGeometry build errors 
+- ![Fixed:][fixed] [#3793](https://github.com/NREL/OpenStudio/issues/3793) - Fix ITE object supply/approach temperature difference schedule 
+- ![Fixed:][fixed] [#3792](https://github.com/NREL/OpenStudio/issues/3792 ) - Fix in support of OpenStudio Application
+
+
+
+## OpenStudio v2.9.1
+
+###### 2019-12-06 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.9.0...v2.9.1 )
+- ![Fixed:][fixed] [#3280]( https://github.com/NREL/OpenStudio/issues/3280) AirLoopHVAC:UnitarySystem missing control type SingleZoneVAV
+- ![Fixed:][fixed] [#2991]( https://github.com/NREL/OpenStudio/issues/2991) LoadProfilePlant.new(model) assigns bad default schedule scheduletypelimits
+
+
+# OpenStudio v2.9.0
+
+###### 2019-10-11 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.8.1...v2.9.0 )
+
+
+- ![Improved:][improved] [#3553]( https://github.com/NREL/OpenStudio/issues/3553)Added missing methods to model API, FT, RT and VT for HeaderedPumpsConstantSpeed and HeaderedPumpsVariableSpeed. These fields are related to the Design Sizing Method and allow you to enter electric power per flow rate, or per flow rate and head.
+- ![Improved:][improved] [#3668]( https://github.com/NREL/OpenStudio/issues/3668) Updated spider gbXML viewer 
+- ![Improved:][improved] [#3639]( https://github.com/NREL/OpenStudio/issues/3639) Added new Fields in AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass Added a new ‘Priority Control Mode’ choice `LoadPriority`, added the ‘Minimum Runtime Before Operating Mode Change’ field, and the ‘Plenum or Mixer Inlet Node Name’. For the latter, you can use `AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setPlenumorMixer(const Mixer& returnPathComponent)` to connect it to a `AirLoopHVAC:Mixer` or a `AirLoopHVAC:ReturnPlenum` object.
+- ![Improved:][improved] [#3584]( https://github.com/NREL/OpenStudio/issues/3584) Added ‘Temperature Difference Between Cutout And Setpoint’ for ZoneControl:Thermostat. This field is added to the `ThermostatSetpointDualSetpoint` class and handled during ForwardTranslation
+- ![Improved:][improved] [#3635]( https://github.com/NREL/OpenStudio/issues/3635) Translate AirWalls to Construction:AirBoundary 
+- ![Improved:][improved] [#3654]( https://github.com/NREL/OpenStudio/issues/3654) Added ThermalStorage:Ice:Detailed Charging and Discharging Curve Variable Specifications 
+- ![Improved:][improved] Updated EnergyPlus from v9.1 to v9.2
+- ![Fixed:][fixed] [#3600]( https://github.com/NREL/OpenStudio/issues/3600) Display plantLoop supply equipment in OpenStudioApplication in the same order as the resulting PlantEquipmentList after ForwardTranslaton
+- ![Improved:][improved] [#3651](https://github.com/NREL/OpenStudio/issues/3651) Updated idf translator for E+ change Table:MultiVariableLookup  In Energyplus version 9.2.0, the table objects such as Table:MultiVariableLookup object were replaced with a new Table:Lookup object. The corresponding OpenStudio API remains the same using TableMultiVariableLookup, and the appropriate adjustments have been made to OpenStudio's EnergyPlus translator to create valid Table:Lookup objects. For more information please review the New Feature Proposal for EnergyPlus https://github.com/NREL/EnergyPlus/blob/v9.2.0/design/FY2018/NFP-Table-Refactor.md.
+- ![Improved:][improved] [#3594]( https://github.com/NREL/OpenStudio/issues/3594) Display non-zero north angle 
+- ![Improved:][improved] [#3571]( https://github.com/NREL/OpenStudio/issues/3571) Adds ‘Calculation Method’ field to ShadowCalculation
+- ![Improved:][improved] [#3604]( https://github.com/NREL/OpenStudio/issues/3604) Allow AirConditioner:VariableRefrigerant condenser Type=WaterCooled (and EvaporativelyCooled. VRFs can now be connected to the demand side of a PlantLoop, including in the OpenStudioApplication directly, be sure to update the performance curves if you do so.
+- ![Fixed:][fixed] [#3347]( https://github.com/NREL/OpenStudio/issues/3347) Fixed Import ScheduleFile from IDF 
+- ![Improved:][improved] [#3555]( https://github.com/NREL/OpenStudio/issues/3555)  Added gbXMLId and improving CADObjectId import 
+- ![Fixed:][fixed] [#3590]( https://github.com/NREL/OpenStudio/issues/3590) Fixes crash in CLI if json native gem is installed
+- ![Fixed:][fixed] [#3591]( https://github.com/NREL/OpenStudio/issues/3591) ForwardTranslate End Use by Subcategory for Fan:VariableVolume and Fan:ConstantVolume 
+- ![Fixed:][fixed] [#3585]( https://github.com/NREL/OpenStudio/issues/3585) Fix FloorspaceJS json north axis not being imported into OS model 
+- ![Improved:][improved] [#3420]( https://github.com/NREL/OpenStudio/issues/3420) Added exportToBCVTB field to EnergyManagementSystemGlobalVariable 
+- ![Fixed:][fixed] [#2792]( https://github.com/NREL/OpenStudio/issues/2792) Fix crash when leaving tabs with combobox2 
+- ![Improved:][improved] [#3567]( https://github.com/NREL/OpenStudio/issues/3567) Use Custom Blocks in Foundation Kiva which implements use of custom blocks in the Foundation:Kiva object. Custom blocks can be used to represent solid materials in the two-dimensional context that are not otherwise covered by the other Foundation:Kiva fields 
+- ![Improved:][improved] [#3565]( https://github.com/NREL/OpenStudio/issues/3565), [#3647](https://github.com/NREL/OpenStudio/pull/3647) Add more heating source object type and tank object type enumerations for Coil:WaterHeating:Desuperheater object 
+- ![Improved:][improved] [#3664](https://github.com/NREL/OpenStudio/issues/3664),[#3671](https://github.com/NREL/OpenStudio/pull/3671) Wrap ZoneProperty:UserViewFactors:bySurfaceName object which allows users to specify the thermal radiation exchange view factors between surfaces in a zone 
+- ![Improved:][improved] [#3631]( https://github.com/NREL/OpenStudio/issues/3631) Wrap PerformancePrecisionTradeoffs object which enables users to choose certain options that speed up EnergyPlus simulations 
+- ![Improved:][improved] [#3583]( https://github.com/NREL/OpenStudio/issues/3583) Change the Sequential Load Fractions on ZoneHVAC:EquipmentList into schedules 
+- ![Improved:][improved] [#50]( https://github.com/NREL/OpenStudio/issues/50), [#3610](https://github.com/NREL/OpenStudio/pull/3610) ScheduleFixedInterval now with option to translate schedule to ScheduleFile using new CSVFile class 
+
+## OpenStudio v2.8.1
+
+###### 2018-06-19 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.8.0...v2.8.1 )
+
+- ![Fixed:][fixed] [#3487](https://github.com/NREL/OpenStudio/issues/3487) Wrong "Temperature Setpoint Node Name" in CoilHeatingElectric 
+
+## OpenStudio v2.8.0
+
+###### 2018-04-11 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.7.0...v2.8.0 )
+
+
+- ![Fixed:][fixed] [#3453](https://github.com/NREL/OpenStudio/issues/3453) Sql methods now make use of the Year field that was added in E+ 8.9.0 to avoid problems with leap years.
+- ![Fixed:][fixed] [#3458](https://github.com/NREL/OpenStudio/issues/3458) Force unique names to match new E+ convention following re-factor of E+’s Input Processor. For example, LifeCycleCost objects can no longer bear the same name.
+- ![Improved:][improved] [#3465](https://github.com/NREL/OpenStudio/issues/3465) Show Measure Directory Name in OpenStudio Application. This should make it easier to understand which measure is used even after the user has changed the editable name.
+- ![Fixed:][fixed] [#3462]( https://github.com/NREL/OpenStudio/issues/3462) Remove non-implemented UtilityCost_* objects from API documentation
+- ![Fixed:][fixed] [#3440]( https://github.com/NREL/OpenStudio/issues/3440) Fix an error in AirTerminalSingleDuctConstantVolumeFourPipeBeam::remove() method that was making the OpenStudio Application crash
+- ![Fixed:][fixed] [#3449] (https://github.com/NREL/OpenStudio/issues/3449) Fixes to API for CoilSystemCoolingDXHeatExchangerAssisted and CoilSystemCoolingWaterHeatExchangerAssisted
+- ![Fixed:][fixed] [#3452] (https://github.com/NREL/OpenStudio/issues/3452) Fix forward translator issues in CoilHeatingDesuperheater and CoilWaterHeatingDesuperheater
+- ![Improved:][improved] AirLoop::clone was modified to reconnect any supply side coils to the same plant loops as the original coils. This method will clone an AirLoopHVAC with the following rationale:
+    - Handle all non-branch components from both the supply and the demand side
+    - On the demand side branches, place one terminal of each IddObjectType that is present on the original AirLoopHVAC
+    - Clone any SetpointManagers and add them to the correct location
+    - If the supply component that is cloned is connected to a PlantLoop, we try to the connect the clone to the same PlantLoop by adding a demand branch
+- ![Improved:][improved] PlantLoop::clone was added and follows the same logic. This method will clone a Plant Loop with the following rationale:
+    - Handle all non-branch components from both the supply and the demand side
+    - Handle branch components on the supply side (between supply splitter and mixer)
+    - Clone any SetpointManagers and add them to the correct location
+    - If the component that is cloned is connected to another PlantLoop, we try to connect the clone to the same other PlantLoop (if comp is on the supply side, we add a demand branch to the other Plantloop)
+
 ## OpenStudio v2.7.0
 ###### 2018-10-12 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.6.0...v2.7.0 )
 
