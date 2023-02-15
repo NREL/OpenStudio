@@ -98,6 +98,7 @@ namespace model {
 
     OS_DEPRECATED std::string groundTemperatureModel() const;
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED bool isGroundTemperatureModelDefaulted() const;
 
     OS_DEPRECATED double kusudaAchenbachAverageSurfaceTemperature() const;
@@ -144,8 +145,10 @@ namespace model {
 
     bool setSoilMoistureContentPercentatSaturation(double soilMoistureContentPercentatSaturation);
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED bool setGroundTemperatureModel(const std::string& groundTemperatureModel);
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED void resetGroundTemperatureModel();
 
     OS_DEPRECATED bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
