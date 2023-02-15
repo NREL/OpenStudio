@@ -108,7 +108,7 @@ double Polygon3d::netArea() {
   return netArea;
 }
 
-double Polygon3d::perimeter() {
+double Polygon3d::perimeter() const {
 
   double perimeter = 0;
   for (size_t i = 0; i < m_outerPath.size(); i++) {
@@ -169,11 +169,11 @@ bool Polygon3d::inside(const Point3d& point, double tol) {
   return pointInPolygon(point, tol) || within(point, tol);
 }
 
-size_t Polygon3d::getSize() {
+size_t Polygon3d::getSize() const {
   return m_outerPath.size();
 }
 
-Point3dVector Polygon3d::getEdge(size_t i) {
+Point3dVector Polygon3d::getEdge(size_t i) const {
   Point3d p1 = m_outerPath[i];
   Point3d p2 = m_outerPath[(i + 1) % m_outerPath.size()];
   return Point3dVector{p1, p2};

@@ -840,7 +840,9 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   BoostMultiPolygon polys;
   if constexpr (extraLogging) {
     boost::optional<BoostPolygon> poly = boostPolygonFromVertices(polygon2, allPoints, tol);
-    polys.push_back(*poly);
+    if (poly.has_value()) {
+      polys.push_back(*poly);
+    }
   }
 
   // intersect the points in face coordinates,
@@ -1331,8 +1333,7 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVecto
       if ((i > 0) && (hole.back() == resultPoint)) {
         continue;
       }
-      // TODO: shouldn't this be resultPoint instead?! Or maybe the repeated check should use point3d in which case resultPoint is pointless
-      hole.emplace_back(std::move(point3d));
+      hole.emplace_back(std::move(resultPoint));
     }
     p.addHole(hole);
   }

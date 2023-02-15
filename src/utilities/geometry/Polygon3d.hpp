@@ -79,7 +79,7 @@ class UTILITIES_API Polygon3d
   double netArea();
 
   // Gets the perimeter of the outer path of the polygon
-  double perimeter();
+  double perimeter() const;
 
   // Determines whether the polygon os clockwise (normal down) or anti-clockwise (normal up)
   bool isClockwise();
@@ -97,10 +97,10 @@ class UTILITIES_API Polygon3d
   bool inside(const Point3d& point, double tol = 0.01);
 
   // gets the size of the outer path
-  size_t getSize();
+  size_t getSize() const;
 
   // gets an edge on thge outer path
-  Point3dVector getEdge(size_t i);
+  Point3dVector getEdge(size_t i) const;
 
   // Returns the ovelapping segments between this polygon and the line
   std::vector<Point3dVector> overlap(const Point3dVector& line) const;

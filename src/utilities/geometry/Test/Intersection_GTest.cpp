@@ -2344,9 +2344,7 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 TEST_F(GeometryFixture, Offset) {
 
   // A simple rectangle, when offset should produce a polygon with four points
-  Point3dVector poly1 {
-    {8, 7, 0}, {8, 10, 0}, {11, 10, 0}, {11, 7, 0}
-  };
+  Point3dVector poly1{{8, 7, 0}, {8, 10, 0}, {11, 10, 0}, {11, 7, 0}};
   Point3dVector poly2{
     {7.5, 10.5, 0.0},
     {11.5, 10.5, 0.0},
