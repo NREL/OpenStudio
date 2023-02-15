@@ -63,6 +63,7 @@ class SqlFileFixture : public ::testing::Test
   // sql files
   static openstudio::SqlFile sqlFile;
   static openstudio::SqlFile sqlFile2;
+  static openstudio::SqlFile sqlFile3;
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 

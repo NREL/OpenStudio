@@ -87,7 +87,7 @@ namespace detail {
     void resetCustomOutputAdapter();
 
     ForwardTranslatorOptions forwardTranslatorOptions() const;
-    bool setForwardTranslatorOptions(const ForwardTranslatorOptions& options);
+    bool setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions);
     void resetForwardTranslatorOptions();
 
     // Emitted on any change
