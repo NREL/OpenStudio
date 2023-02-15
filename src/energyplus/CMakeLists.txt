@@ -366,6 +366,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureDeep.cpp
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureFCfactorMethod.cpp
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureShallow.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureUndisturbedKusudaAchenbach.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureUndisturbedXing.cpp
   ForwardTranslator/ForwardTranslateSiteWaterMainsTemperature.cpp
   ForwardTranslator/ForwardTranslateSkyTemperature.cpp
   ForwardTranslator/ForwardTranslateSizingParameters.cpp
@@ -772,6 +774,8 @@ set(${target_name}_test_src
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp
   Test/SimulationControl_GTest.cpp
+  Test/SiteGroundTemperatureUndisturbedKusudaAchenbach_GTest.cpp
+  Test/SiteGroundTemperatureUndisturbedXing_GTest.cpp
   Test/SizingSystem_GTest.cpp
   Test/SizingZone_GTest.cpp
   Test/Space_GTest.cpp

@@ -70,6 +70,35 @@ TEST_F(SqlFileFixture, SummaryValues) {
   EXPECT_NEAR(570.38, *(sqlFile.totalSourceEnergy()), 2);  // for 6.0, was 564.41
 }
 
+TEST_F(SqlFileFixture, FuelTypes) {
+  // test all fuel types
+  // use sqlFile3 for this, ExteriorEquipment queries should not be 0
+  EXPECT_NEAR(31.54, *(sqlFile3.electricityExteriorEquipment()), 2);
+  EXPECT_NEAR(31.54, *(sqlFile3.electricityTotalEndUses()), 2);
+  EXPECT_NEAR(63.07, *(sqlFile3.naturalGasExteriorEquipment()), 2);
+  EXPECT_NEAR(63.07, *(sqlFile3.naturalGasTotalEndUses()), 2);
+  EXPECT_NEAR(220.75, *(sqlFile3.gasolineExteriorEquipment()), 2);
+  EXPECT_NEAR(220.75, *(sqlFile3.gasolineTotalEndUses()), 2);
+  EXPECT_NEAR(189.22, *(sqlFile3.dieselExteriorEquipment()), 2);
+  EXPECT_NEAR(189.22, *(sqlFile3.dieselTotalEndUses()), 2);
+  EXPECT_NEAR(252.29, *(sqlFile3.coalExteriorEquipment()), 2);
+  EXPECT_NEAR(252.29, *(sqlFile3.coalTotalEndUses()), 2);
+  EXPECT_NEAR(126.14, *(sqlFile3.fuelOilNo1ExteriorEquipment()), 2);
+  EXPECT_NEAR(126.14, *(sqlFile3.fuelOilNo1TotalEndUses()), 2);
+  EXPECT_NEAR(157.68, *(sqlFile3.fuelOilNo2ExteriorEquipment()), 2);
+  EXPECT_NEAR(157.68, *(sqlFile3.fuelOilNo2TotalEndUses()), 2);
+  EXPECT_NEAR(94.61, *(sqlFile3.propaneExteriorEquipment()), 2);
+  EXPECT_NEAR(95.61, *(sqlFile3.propaneTotalEndUses()), 2);
+  EXPECT_NEAR(283.82, *(sqlFile3.otherFuel1ExteriorEquipment()), 2);
+  EXPECT_NEAR(283.82, *(sqlFile3.otherFuel1TotalEndUses()), 2);
+  EXPECT_NEAR(315.36, *(sqlFile3.otherFuel2ExteriorEquipment()), 2);
+  EXPECT_NEAR(315.36, *(sqlFile3.otherFuel2TotalEndUses()), 2);
+  EXPECT_NEAR(409.97, *(sqlFile3.districtCoolingExteriorEquipment()), 2);
+  EXPECT_NEAR(409.97, *(sqlFile3.districtCoolingTotalEndUses()), 2);
+  EXPECT_NEAR(725.33, *(sqlFile3.districtHeatingExteriorEquipment()), 2);
+  EXPECT_NEAR(725.33, *(sqlFile3.districtHeatingTotalEndUses()), 2);
+}
+
 TEST_F(SqlFileFixture, EnvPeriods) {
   std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());

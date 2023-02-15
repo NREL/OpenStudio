@@ -27,57 +27,57 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "SqlFileFixture.hpp"
-#include <iomanip>
-#include <cmath>
+#include "../ForwardTranslator.hpp"
 
-using openstudio::Logger;
-using openstudio::FileLogSink;
-using openstudio::toPath;
+#include "../../model/SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
+#include "../../model/SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
 
-void SqlFileFixture::SetUp() {}
+#include <utilities/idd/Site_GroundTemperature_Undisturbed_KusudaAchenbach_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
-void SqlFileFixture::TearDown() {}
+using namespace openstudio::model;
 
-void SqlFileFixture::SetUpTestSuite() {
-  logFile = FileLogSink(toPath("./SqlFileFixture.log"));
-  logFile->setLogLevel(Debug);
+using namespace std;
 
-  openstudio::path path;
-  path = resourcesPath() / toPath("energyplus/5ZoneAirCooled/eplusout.sql");
-  sqlFile = openstudio::SqlFile(path);
-  ASSERT_TRUE(sqlFile.connectionOpen());
+namespace openstudio {
 
-  openstudio::path path2;
-  path2 = resourcesPath() / toPath("energyplus/Office_With_Many_HVAC_Types/eplusout.sql");
-  sqlFile2 = openstudio::SqlFile(path2);
-  ASSERT_TRUE(sqlFile2.connectionOpen());
+namespace energyplus {
 
-  openstudio::path path3;
-  path3 = resourcesPath() / toPath("energyplus/AllFuelTypes/eplusout.sql");
-  sqlFile3 = openstudio::SqlFile(path3);
-  ASSERT_TRUE(sqlFile3.connectionOpen());
-}
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSiteGroundTemperatureUndisturbedKusudaAchenbach(SiteGroundTemperatureUndisturbedKusudaAchenbach& modelObject) {
+    boost::optional<double> value;
 
-void SqlFileFixture::TearDownTestSuite() {
-  logFile->disable();
-}
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach, modelObject);
 
-::testing::AssertionResult SqlFileFixture::IsWithinRelativeTolerance(double expectedValue, double actualValue, double tolerance) {
-  double percentageDifference = (actualValue - expectedValue) / expectedValue;
-  if (std::fabs(percentageDifference) <= tolerance) {
-    return ::testing::AssertionSuccess();
-  } else {
-    // Google Test seems to be ingoring the fixed && precision iomanips
-    return ::testing::AssertionFailure() << "Value isn't within the required tolerance of " << std::fixed << std::setprecision(2) << (tolerance * 100)
-                                         << "%. "
-                                         << "Expected Value = " << expectedValue << ", Sql Value = " << actualValue
-                                         << ", Difference = " << (100 * percentageDifference) << "%.";
+    // SoilThermalConductivity
+    idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity, modelObject.soilThermalConductivity());
+
+    // SoilDensity
+    idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity, modelObject.soilDensity());
+
+    // SoilSpecificHeat
+    idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat, modelObject.soilSpecificHeat());
+
+    // AverageSoilSurfaceTemperature
+    if ((value = modelObject.averageSoilSurfaceTemperature())) {
+      idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature, value.get());
+    }
+
+    // AverageAmplitudeofSurfaceTemperature
+    if ((value = modelObject.averageAmplitudeofSurfaceTemperature())) {
+      idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature, value.get());
+    }
+
+    // PhaseShiftofMinimumSurfaceTemperature
+    if ((value = modelObject.phaseShiftofMinimumSurfaceTemperature())) {
+      idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, value.get());
+    }
+
+    return idfObject;
   }
-}
 
-// define static storage
-openstudio::SqlFile SqlFileFixture::sqlFile;
-openstudio::SqlFile SqlFileFixture::sqlFile2;
-openstudio::SqlFile SqlFileFixture::sqlFile3;
-boost::optional<openstudio::FileLogSink> SqlFileFixture::logFile;
+}  // namespace energyplus
+
+}  // namespace openstudio
