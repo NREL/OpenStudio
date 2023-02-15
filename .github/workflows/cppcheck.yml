@@ -33,6 +33,7 @@ jobs:
             --suppress=functionConst:src/utilities/filetypes/WorkflowStep.hpp \
             --suppress=functionConst:src/utilities/filetypes/WorkflowStepResult.hpp \
             --suppress=redundantAssignment:src/utilities/sql/SqlFile.hpp \
+            --suppress=constStatement:src/utilities/geometry/Intersection.cpp \
             --inline-suppr \
             --inconclusive \
             --template='[{file}:{line}]:({severity}),[{id}],{message}' \

@@ -106,9 +106,9 @@ std::ostream& operator<<(std::ostream& os, const BoostRing& boostRing) {
   os << "[";
   for (unsigned int i = 0; i < boostRing.size(); i++) {
     os << "{";
-    os << "\"X\":" << boostRing[i].x() << ",";
-    os << "\"Y\":" << boostRing[i].y() << ",";
-    os << "\"Z\":0.0},";
+    os << R"("X":)" << boostRing[i].x() << ",";
+    os << R"("Y":)" << boostRing[i].y() << ",";
+    os << R"("Z":0.0},)";
   }
   os << "],";
   return os;
@@ -125,11 +125,9 @@ std::ostream& operator<<(std::ostream& os, const std::vector<BoostRing>& boostRi
 
 std::ostream& operator<<(std::ostream& os, const BoostPolygon& boostPolygon) {
   os << "{";
-  os << "\"Color\":\"Black\",";
-  os << "\"OuterPath\":";
-  os << boostPolygon.outer();
-  os << "\"InnerPaths\":";
-  os << boostPolygon.inners();
+  os << R"("Color":"Black",)";
+  os << R"("OuterPath":)" << boostPolygon.outer();
+  os << R"("InnerPaths":)" << boostPolygon.inners();
   os << "},";
   return os;
 }
@@ -157,57 +155,53 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
 
   //const double buffer_distance = 1.0;
   //const int points_per_circle = 36;
-  bool extraLogging = false;
+  constexpr bool extraLogging = false;
   // The amount to shrink and expand the polygons by
-  const double offsetBy = 0.01;
-  const double tol = offsetBy;
+  constexpr double offsetBy = 0.01;
+  constexpr double tol = offsetBy;
   // Sets the limit to how far miters are extended for sharp corners
-  const double mitreLimit = 15;
-  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(offsetBy);
-  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-offsetBy);
-  boost::geometry::strategy::buffer::join_miter join_strategy(mitreLimit);
-  boost::geometry::strategy::buffer::end_flat end_strategy;
-  boost::geometry::strategy::buffer::side_straight side_strategy;
-  boost::geometry::strategy::buffer::point_circle point_strategy;
+  constexpr double mitreLimit = 15;
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(offsetBy);
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-offsetBy);
+  const boost::geometry::strategy::buffer::join_miter join_strategy(mitreLimit);
+  const boost::geometry::strategy::buffer::end_flat end_strategy;
+  const boost::geometry::strategy::buffer::side_straight side_strategy;
+  const boost::geometry::strategy::buffer::point_circle point_strategy;
 
-  // cppcheck-suppress constStatement
   BoostMultiPolygon resultExpand;
-  // cppcheck-suppress constStatement
   BoostMultiPolygon resultShrink;
-  // cppcheck-suppress constStatement
   BoostMultiPolygon result;
+
   // Used for extra logging
-  // cppcheck-suppress constStatement
   BoostMultiPolygon shrinkExpand;
   // cppcheck-suppress knownConditionTrueFalse
-  if (extraLogging) {
+  if constexpr (extraLogging) {
     shrinkExpand.push_back(polygon);
   }
 
   // Shrink the polygon
   boost::geometry::buffer(polygon, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
   // cppcheck-suppress knownConditionTrueFalse
-  if (extraLogging) {
+  if constexpr (extraLogging) {
     shrinkExpand.push_back(resultShrink[0]);
   }
 
   // Inflate the polygon
   boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
   // cppcheck-suppress knownConditionTrueFalse
-  if (extraLogging) {
+  if constexpr (extraLogging) {
     shrinkExpand.push_back(resultExpand[0]);
   }
 
   // Very small tolerance to remove artifacts from the inflate
-  double tol1 = 0.001;
+  constexpr double tol1 = 0.001;
   boost::geometry::simplify(resultExpand, result, tol1);
   // cppcheck-suppress knownConditionTrueFalse
-  if (extraLogging) {
+  if constexpr (extraLogging) {
     shrinkExpand.push_back(result[0]);
     LOG_FREE(Debug, "Shrink/Expand", shrinkExpand);
   }
 
-  // cppcheck-suppress constStatement
   std::vector<BoostPolygon> solution;
   if (result.empty()) {
     // There's no result because the polygon was completely removed so return nothing
@@ -220,20 +214,21 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
     for (auto& boostPolygon : result) {
 
       // The returned points are adjusted to the input polygon (which defines the canonical set)
-      for (unsigned i = 0; i < boostPolygon.outer().size(); ++i) {
-        Point3d point3d(boostPolygon.outer()[i].x(), boostPolygon.outer()[i].y(), 0.0);
+      for (auto& cleanedRing : boostPolygon.outer()) {
+        const Point3d point3d(cleanedRing.x(), cleanedRing.y(), 0.0);
 
         // Outer ring of the original polygon
-        for (unsigned j = 0; j < polygon.outer().size(); j++) {
-          Point3d p1(polygon.outer()[j].x(), polygon.outer()[j].y(), 0);
+        for (const auto& oriRing : polygon.outer()) {
+          const Point3d p1(oriRing.x(), oriRing.y(), 0);
           // Two points are within tolerance set the result to the original input point
           if (getDistance(point3d, p1) <= tol) {
-            boostPolygon.outer()[i].x(polygon.outer()[j].x());
-            boostPolygon.outer()[i].y(polygon.outer()[j].y());
+            cleanedRing.x(oriRing.x());
+            cleanedRing.y(oriRing.y());
             break;
           }
         }
       }
+
       solution.push_back(boostPolygon);
     }
     return solution;
@@ -276,7 +271,7 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
   outerPoly.SetOrientation(TPPL_CCW);
   polys.push_back(outerPoly);
 
-  std::vector<BoostRing> inners = boostPolygon.inners();
+  const std::vector<BoostRing>& inners = boostPolygon.inners();
   for (const BoostRing& inner : inners) {
     if (inner.size() < 3) {
       continue;
@@ -298,7 +293,7 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
   // do partitioning
   TPPLPartition pp;
   std::list<TPPLPoly> resultPolys;
-  int test = pp.ConvexPartition_HM(&polys, &resultPolys);
+  const int test = pp.ConvexPartition_HM(&polys, &resultPolys);
   if (test == 0) {
     LOG_FREE(Error, "utilities.geometry.removeHoles", "Failed to partition polygon");
     return result;
@@ -311,11 +306,11 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
     BoostPolygon newBoostPolygon;
     //std::cout << "result :";
     for (long i = 0; i < it->GetNumPoints(); ++i) {
-      TPPLPoint point = it->GetPoint(i);
+      const TPPLPoint& point = it->GetPoint(i);
       boost::geometry::append(newBoostPolygon, boost::make_tuple(point.x, point.y));
       //std::cout << "(" << point.x << ", " << point.y << ") ";
     }
-    TPPLPoint point = it->GetPoint(0);
+    const TPPLPoint& point = it->GetPoint(0);
     boost::geometry::append(newBoostPolygon, boost::make_tuple(point.x, point.y));
     //std::cout << "(" << point.x << ", " << point.y << ") ";
     //std::cout << '\n';
@@ -334,7 +329,6 @@ std::vector<BoostPolygon> removeHoles(const std::vector<BoostPolygon>& polygons)
       // DLM: might also want to partition if this polygon is self intersecting?
       result.push_back(polygon);
     } else {
-      // cppcheck-suppress constStatement
       std::vector<BoostPolygon> temp = removeHoles(polygon);
       result.insert(result.end(), temp.begin(), temp.end());
     }
@@ -350,7 +344,7 @@ boost::tuple<double, double> boostPointFromPoint3d(const Point3d& point3d, std::
   //return boost::make_tuple(point3d.x(), point3d.y());
 
   // detailed method, try to combine points within tolerance
-  Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
+  const Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
 
   return boost::make_tuple(resultPoint.x(), resultPoint.y());
 }
@@ -365,7 +359,7 @@ boost::optional<BoostPolygon> boostPolygonFromVertices(const std::vector<Point3d
   for (const Point3d& vertex : vertices) {
 
     // should all have zero z coordinate now
-    double z = vertex.z();
+    const double z = vertex.z();
     if (std::abs(z) > tol) {
       LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "All points must be on z = 0 plane");
       return boost::none;
@@ -391,7 +385,6 @@ boost::optional<BoostPolygon> boostPolygonFromVertices(const std::vector<Point3d
 
 boost::optional<BoostPolygon> nonIntersectingBoostPolygonFromVertices(const std::vector<Point3d>& polygon, std::vector<Point3d>& allPoints,
                                                                       double tol) {
-  // cppcheck-suppress constStatement
   boost::optional<BoostPolygon> result = boostPolygonFromVertices(polygon, allPoints, tol);
   if (!result) {
     return boost::none;
@@ -416,7 +409,7 @@ boost::optional<BoostRing> boostRingFromVertices(const std::vector<Point3d>& ver
   for (const Point3d& vertex : vertices) {
 
     // should all have zero z coordinate now
-    double z = vertex.z();
+    const double z = vertex.z();
     if (std::abs(z) > tol) {
       LOG_FREE(Error, "utilities.geometry.boostRingFromVertices", "All points must be on z = 0 plane");
       return boost::none;
@@ -467,7 +460,7 @@ std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::
 
   // add point for each vertex except final vertex
   for (unsigned i = 0; i < outer.size() - 1; ++i) {
-    Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
+    const Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
 
     // try to combine points within tolerance
     Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
@@ -476,7 +469,7 @@ std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::
     if ((i > 0) && (result.back() == resultPoint)) {
       continue;
     }
-    result.push_back(resultPoint);
+    result.emplace_back(std::move(resultPoint));
   }
 
   if (!polygon.inners().empty()) {
@@ -484,7 +477,9 @@ std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::
              "Converting polygon with " << polygon.inners().size() << " inner loops to OpenStudio vertices, inner loops ignored");
   }
 
-  if (removeCollinear) result = removeCollinearLegacy(result);
+  if (removeCollinear) {
+    result = removeCollinearLegacy(result);
+  }
 
   // don't keep repeated vertices
   if (result.front() == result.back()) {
@@ -504,7 +499,7 @@ std::vector<Point3d> verticesFromBoostRing(const BoostRing& ring, std::vector<Po
 
   // add point for each vertex except final vertex
   for (unsigned i = 0; i < ring.size() - 1; ++i) {
-    Point3d point3d(ring[i].x(), ring[i].y(), 0.0);
+    const Point3d point3d(ring[i].x(), ring[i].y(), 0.0);
 
     // try to combine points within tolerance
     Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
@@ -513,7 +508,7 @@ std::vector<Point3d> verticesFromBoostRing(const BoostRing& ring, std::vector<Po
     if ((i > 0) && (result.back() == resultPoint)) {
       continue;
     }
-    result.push_back(resultPoint);
+    result.emplace_back(std::move(resultPoint));
   }
 
   result = removeCollinearLegacy(result);
@@ -619,13 +614,12 @@ std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double to
   // convert vertices to boost rings
   std::vector<Point3d> allPoints;
 
-  // cppcheck-suppress constStatement
   boost::optional<BoostPolygon> boostPolygon = boostPolygonFromVertices(polygon, allPoints, tol);
   if (!boostPolygon) {
     return {};
   }
 
-  BoostPolygon boostResult = removeSpikes(*boostPolygon);
+  const BoostPolygon boostResult = removeSpikes(*boostPolygon);
 
   std::vector<Point3d> result = verticesFromBoostPolygon(boostResult, allPoints, tol);
 
@@ -654,8 +648,8 @@ bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& 
 
   for (const Point3d& point : points) {
     boost::tuple<double, double> p = boostPointFromPoint3d(point, allPoints, tol);
-    BoostPoint boostPoint(p.get<0>(), p.get<1>());
-    double distance = boost::geometry::distance(boostPoint, *boostPolygon);
+    const BoostPoint boostPoint(p.get<0>(), p.get<1>());
+    const double distance = boost::geometry::distance(boostPoint, *boostPolygon);
     if (distance >= 0.0001) {
       return false;
     }
@@ -677,7 +671,7 @@ bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, d
   }
 
   boost::tuple<double, double> p = boostPointFromPoint3d(point, allPoints, tol);
-  BoostPoint boostPoint(p.get<0>(), p.get<1>());
+  const BoostPoint boostPoint(p.get<0>(), p.get<1>());
 
   //boost::geometry::strategy::within::winding<BoostPoint> strategy;
   //boost::geometry::strategy::within::franklin<BoostPoint> strategy;
@@ -688,8 +682,8 @@ bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, d
 
   //bool result = boost::geometry::overlaps(boostPoint, *boostPolygon);
 
-  double distance = boost::geometry::distance(boostPoint, *boostPolygon);
-  bool result = (distance <= 0.0001);
+  const double distance = boost::geometry::distance(boostPoint, *boostPolygon);
+  const bool result = (distance <= 0.0001);
 
   return result;
 }
@@ -722,9 +716,7 @@ boost::optional<std::vector<Point3d>> join(const std::vector<Point3d>& polygon1,
   // should not be any holes, check for that below
 
   // check that union is ok
-  if (unionResult.empty()) {
-    return boost::none;
-  } else if (unionResult.size() > 1) {
+  if (unionResult.empty() or (unionResult.size() > 1)) {
     return boost::none;
   } else if (!unionResult[0].inners().empty()) {
     // check for holes
@@ -758,7 +750,7 @@ boost::optional<std::vector<Point3d>> join(const std::vector<Point3d>& polygon1,
 std::vector<std::vector<Point3d>> joinAll(const std::vector<std::vector<Point3d>>& polygons, double tol) {
   std::vector<std::vector<Point3d>> result;
 
-  size_t N = polygons.size();
+  const size_t N = polygons.size();
   if (N <= 1) {
     return polygons;
   }
@@ -783,7 +775,7 @@ std::vector<std::vector<Point3d>> joinAll(const std::vector<std::vector<Point3d>
     }
   }
 
-  std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
+  const std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
   for (const std::vector<unsigned>& component : connectedComponents) {
     std::vector<unsigned> orderedComponent(component);
     std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
@@ -795,7 +787,7 @@ std::vector<std::vector<Point3d>> joinAll(const std::vector<std::vector<Point3d>
     for (unsigned n = 0; n < component.size(); ++n) {
 
       // loop over polygons to join in order
-      for (unsigned i : orderedComponent) {
+      for (const unsigned i : orderedComponent) {
         if (points.empty()) {
           points = polygons[i];
           joinedComponents.insert(i);
@@ -828,7 +820,7 @@ std::vector<std::vector<Point3d>> joinAll(const std::vector<std::vector<Point3d>
 
 boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol) {
 
-  bool extraLogging = false;
+  constexpr bool extraLogging = false;
   //std::cout << "Initial polygon1 area " << getArea(polygon1).get() << '\n';
   //std::cout << "Initial polygon2 area " << getArea(polygon2).get() << '\n';
 
@@ -846,7 +838,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   }
 
   BoostMultiPolygon polys;
-  if (extraLogging) {
+  if constexpr (extraLogging) {
     boost::optional<BoostPolygon> poly = boostPolygonFromVertices(polygon2, allPoints, tol);
     polys.push_back(*poly);
   }
@@ -860,7 +852,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
     return boost::none;
   }
 
-  if (extraLogging) {
+  if constexpr (extraLogging) {
     polys.push_back(intersectionResult[0]);
   }
 
@@ -874,7 +866,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   if (intersectionResult.empty()) {
     return boost::none;
   }
-  if (extraLogging) {
+  if constexpr (extraLogging) {
     polys.push_back(intersectionResult[0]);
     LOG_FREE(Debug, "intersection result", polys);
   }
@@ -1018,28 +1010,23 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
   // convert vertices to boost rings
   std::vector<Point3d> allPoints;
 
-  // cppcheck-suppress constStatement
   boost::optional<BoostPolygon> initialBoostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
   if (!initialBoostPolygon) {
     return result;
   }
 
-  // cppcheck-suppress constStatement
   std::vector<BoostPolygon> boostPolygons;
   boostPolygons.push_back(*initialBoostPolygon);
 
   for (const auto& hole : holes) {
-    // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostHole = nonIntersectingBoostPolygonFromVertices(hole, allPoints, tol);
     if (!boostHole) {
       return result;
     }
 
-    // cppcheck-suppress constStatement
     std::vector<BoostPolygon> newBoostPolygons;
 
     for (const BoostPolygon& boostPolygon : boostPolygons) {
-      // cppcheck-suppress constStatement
       std::vector<BoostPolygon> diffResult;
       boost::geometry::difference(boostPolygon, *boostHole, diffResult);
       newBoostPolygons.reserve(newBoostPolygons.size() + diffResult.size());
@@ -1065,7 +1052,6 @@ bool selfIntersects(const std::vector<Point3d>& polygon, double tol) {
   // convert vertices to boost rings
   std::vector<Point3d> allPoints;
 
-  // cppcheck-suppress constStatement
   const boost::optional<BoostPolygon> bp = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
   // if bp has a value, we're able to get a non intersecting polygon, so does not self intersect
   return !bp.has_value();
@@ -1086,7 +1072,7 @@ bool intersects(const std::vector<Point3d>& polygon1, const std::vector<Point3d>
 }
 
 bool within(const Point3d& point1, const std::vector<Point3d>& polygon2, double tol) {
-  std::vector<Point3d> geometry1 = {point1};
+  const std::vector<Point3d> geometry1 = {point1};
   return within(geometry1, polygon2, tol);
 }
 
@@ -1100,7 +1086,7 @@ bool within(const std::vector<Point3d>& geometry1, const std::vector<Point3d>& p
     }
 
     boost::tuple<double, double> p = boostPointFromPoint3d(geometry1[0], allPoints, tol);
-    BoostPoint boostPoint(p.get<0>(), p.get<1>());
+    const BoostPoint boostPoint(p.get<0>(), p.get<1>());
 
     boost::optional<BoostPolygon> bp2 = boostPolygonFromVertices(polygon2, allPoints, tol);
 
@@ -1128,7 +1114,7 @@ bool within(const std::vector<Point3d>& geometry1, const std::vector<Point3d>& p
   if (bp2) {
     for (const Point3d& point : geometry1) {
       boost::tuple<double, double> p = boostPointFromPoint3d(point, allPoints, tol);
-      BoostPoint boostPoint(p.get<0>(), p.get<1>());
+      const BoostPoint boostPoint(p.get<0>(), p.get<1>());
 
       if (!boost::geometry::within(boostPoint, *bp2)) {
         return false;
@@ -1144,14 +1130,14 @@ bool within(const std::vector<Point3d>& geometry1, const std::vector<Point3d>& p
 boost::optional<double> getLinearAlpha(const Point3d& point0, const Point3d& point1, const Point3d& test) {
   // test = point0 + a*(point1 - point0)
   Vector3d diff1 = point1 - point0;
-  Vector3d diffTest = test - point0;
+  const Vector3d diffTest = test - point0;
 
-  double length = diff1.length();
+  const double length = diff1.length();
   if (length < 0.001) {
     return boost::none;
   }
 
-  double a;
+  double a = 0.0;
   if (std::abs(diff1.x()) > std::abs(diff1.y())) {
     if (std::abs(diff1.x()) > std::abs(diff1.z())) {
       a = diffTest.x() / diff1.x();
@@ -1167,8 +1153,8 @@ boost::optional<double> getLinearAlpha(const Point3d& point0, const Point3d& poi
   }
 
   diff1.setLength(a * length);
-  Point3d test2 = point0 + diff1;
-  double d = getDistance(test, test2);
+  const Point3d test2 = point0 + diff1;
+  const double d = getDistance(test, test2);
   if (d < 0.001) {
     if (a > 0 && a < 1) {
       return a;
@@ -1184,7 +1170,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   bool reversed = false;
   boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
   if (!outwardNormal) {
-    return std::vector<Point3d>();
+    return {};
   } else if (outwardNormal->z() > 0) {
     reversed = true;
   }
@@ -1197,7 +1183,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   }
 
   if (!bp) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   boost::geometry::remove_spikes(*bp);
@@ -1248,10 +1234,10 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   for (size_t i = 1; i < tmp.size(); ++i) {
     // see which remaining points fit in this segment, double is index in allPoints, alpha along line
     std::vector<std::pair<size_t, double>> pointsInSegment;
-    for (size_t j : pointsToAdd) {
+    for (const size_t j : pointsToAdd) {
       boost::optional<double> alpha = getLinearAlpha(tmp[i - 1], tmp[i], allPoints[j]);
       if (alpha) {
-        pointsInSegment.push_back(std::make_pair(j, *alpha));
+        pointsInSegment.emplace_back(j, *alpha);
       }
     }
 
@@ -1269,10 +1255,10 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
 
   // now check between last point and first point
   std::vector<std::pair<size_t, double>> pointsInSegment;
-  for (size_t j : pointsToAdd) {
+  for (const size_t j : pointsToAdd) {
     boost::optional<double> alpha = getLinearAlpha(tmp[tmp.size() - 1], tmp[0], allPoints[j]);
     if (alpha) {
-      pointsInSegment.push_back(std::make_pair(j, *alpha));
+      pointsInSegment.emplace_back(j, *alpha);
     }
   }
 
@@ -1322,13 +1308,13 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVecto
 
   Point3dVector points;
   for (unsigned i = 0; i < outer.size() - 1; ++i) {
-    Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
+    const Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
     Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
     // don't keep repeated vertices
     if ((i > 0) && (points.back() == resultPoint)) {
       continue;
     }
-    points.push_back(resultPoint);
+    points.emplace_back(std::move(resultPoint));
   }
 
   points = removeCollinearLegacy(points);
@@ -1340,12 +1326,13 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVecto
     Point3dVector hole;
     for (unsigned i = 0; i < inner.size() - 1; ++i) {
       Point3d point3d(inner[i].x(), inner[i].y(), 0.0);
-      Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
+      const Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
       // don't keep repeated vertices
       if ((i > 0) && (hole.back() == resultPoint)) {
         continue;
       }
-      hole.push_back(point3d);
+      // TODO: shouldn't this be resultPoint instead?! Or maybe the repeated check should use point3d in which case resultPoint is pointless
+      hole.emplace_back(std::move(point3d));
     }
     p.addHole(hole);
   }
@@ -1357,7 +1344,7 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVecto
 boost::optional<Polygon3d> join(const Polygon3d& polygon1, const Polygon3d& polygon2) {
   Point3dVector allPoints;
 
-  double tol = 0.01;
+  constexpr double tol = 0.01;
 
   // Convert polygons to boost polygon (not ring obvs)
   boost::optional<BoostPolygon> boostPolygon1 = BoostPolygonFromPolygon(polygon1, allPoints, tol);
@@ -1382,9 +1369,7 @@ boost::optional<Polygon3d> join(const Polygon3d& polygon1, const Polygon3d& poly
   unionResult = removeSpikes(unionResult);
 
   // Check the result - we do not have to bail for holes but we bail for > 1 poly
-  if (unionResult.empty()) {
-    return boost::none;
-  } else if (unionResult.size() > 1) {
+  if (unionResult.empty() or (unionResult.size() > 1)) {
     return boost::none;
   }
 
@@ -1408,11 +1393,11 @@ std::vector<Polygon3d> joinAllPolygons(const std::vector<std::vector<Point3d>>& 
   return joinAll(inputPolygons, tol);
 }
 
-std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double tol) {
+std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double /*tol*/) {
 
   std::vector<Polygon3d> result;
 
-  size_t N = polygons.size();
+  const size_t N = polygons.size();
   if (N <= 1) {
     return polygons;
   }
@@ -1437,7 +1422,7 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
     }
   }
 
-  std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
+  const std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
   for (const std::vector<unsigned>& component : connectedComponents) {
 
     std::vector<unsigned> orderedComponent(component);
@@ -1449,7 +1434,7 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
     for (unsigned n = 0; n < component.size(); ++n) {
 
       // loop over polygons to join in order
-      for (unsigned i : orderedComponent) {
+      for (const unsigned i : orderedComponent) {
         if (polygon.getOuterPath().empty()) {
           polygon = polygons[i];
           joinedComponents.insert(i);
@@ -1485,17 +1470,16 @@ std::vector<Polygon3d> bufferAll(const std::vector<Polygon3d>& polygons, double 
   std::vector<Point3d> allPoints;
 
   for (const Polygon3d& polygon : polygons) {
-    // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostPolygon = BoostPolygonFromPolygon(polygon, allPoints, tol);
     source.push_back(*boostPolygon);
   }
 
-  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(tol);
-  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-tol);
-  boost::geometry::strategy::buffer::join_miter join_strategy;
-  boost::geometry::strategy::buffer::end_flat end_strategy;
-  boost::geometry::strategy::buffer::side_straight side_strategy;
-  boost::geometry::strategy::buffer::point_circle point_strategy;
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(tol);
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-tol);
+  const boost::geometry::strategy::buffer::join_miter join_strategy;
+  const boost::geometry::strategy::buffer::end_flat end_strategy;
+  const boost::geometry::strategy::buffer::side_straight side_strategy;
+  const boost::geometry::strategy::buffer::point_circle point_strategy;
 
   BoostMultiPolygon resultExpand;
   BoostMultiPolygon resultShrink;
@@ -1503,11 +1487,11 @@ std::vector<Polygon3d> bufferAll(const std::vector<Polygon3d>& polygons, double 
   boost::geometry::buffer(resultExpand, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
 
   std::vector<Polygon3d> result;
+  result.reserve(resultShrink.size());
   for (const auto& boostPolygon : resultShrink) {
     BoostPolygon simplified;
     boost::geometry::simplify(boostPolygon, simplified, tol);
-    auto polygon = PolygonFromBoostPolygon(simplified, allPoints, tol);
-    result.push_back(polygon);
+    result.push_back(PolygonFromBoostPolygon(simplified, allPoints, tol));
   }
 
   return result;
@@ -1525,11 +1509,11 @@ boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon
   constexpr double miterLimit = 15;
   //const double buffer_distance = 1.0;
   //const int points_per_circle = 36;
-  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
-  boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit);
-  boost::geometry::strategy::buffer::end_flat end_strategy;
-  boost::geometry::strategy::buffer::side_straight side_strategy;
-  boost::geometry::strategy::buffer::point_circle point_strategy;
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
+  const boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit);
+  const boost::geometry::strategy::buffer::end_flat end_strategy;
+  const boost::geometry::strategy::buffer::side_straight side_strategy;
+  const boost::geometry::strategy::buffer::point_circle point_strategy;
 
   BoostMultiPolygon polygons;
   polygons.push_back(*boostPolygon1);
@@ -1548,8 +1532,8 @@ boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std:
   std::vector<Point3d> allPoints;
 
   BoostMultiPolygon boostPolygons;
+  boostPolygons.reserve(polygons.size());
   for (const auto& polygon : polygons) {
-    // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
     if (!boostPolygon) {
       return boost::none;
@@ -1558,11 +1542,11 @@ boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std:
   }
 
   constexpr double miterLimit = 15;
-  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
-  boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit);
-  boost::geometry::strategy::buffer::end_flat end_strategy;
-  boost::geometry::strategy::buffer::side_straight side_strategy;
-  boost::geometry::strategy::buffer::point_circle point_strategy;
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
+  const boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit);
+  const boost::geometry::strategy::buffer::end_flat end_strategy;
+  const boost::geometry::strategy::buffer::side_straight side_strategy;
+  const boost::geometry::strategy::buffer::point_circle point_strategy;
 
   BoostMultiPolygon offset;
   BoostMultiPolygon result;
@@ -1570,9 +1554,9 @@ boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std:
   boost::geometry::simplify(offset, result, 0.0005);
 
   std::vector<Point3dVector> results;
+  results.reserve(result.size());
   for (const auto& boostPolygon : result) {
-    std::vector<Point3d> points = verticesFromBoostPolygon(boostPolygon, allPoints, tol);
-    results.push_back(points);
+    results.push_back(verticesFromBoostPolygon(boostPolygon, allPoints, tol));
   }
   return results;
 }
@@ -1581,7 +1565,7 @@ boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std:
 std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double offset, double tol) {
   std::vector<std::vector<Point3d>> result;
 
-  size_t N = polygons.size();
+  const size_t N = polygons.size();
   if (N <= 1) {
     return polygons;
   }
@@ -1612,7 +1596,7 @@ std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vecto
     }
   }
 
-  std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
+  const std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
   for (const std::vector<unsigned>& component : connectedComponents) {
     std::vector<unsigned> orderedComponent(component);
     std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
@@ -1624,7 +1608,7 @@ std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vecto
     for (unsigned n = 0; n < component.size(); ++n) {
 
       // loop over polygons to join in order
-      for (unsigned i : orderedComponent) {
+      for (const unsigned i : orderedComponent) {
         if (points.empty()) {
           points = modifiedPolygons[i];
           joinedComponents.insert(i);
