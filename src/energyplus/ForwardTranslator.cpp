@@ -2797,6 +2797,16 @@ namespace energyplus {
         retVal = translateSiteGroundTemperatureShallow(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach: {
+        model::SiteGroundTemperatureUndisturbedKusudaAchenbach mo = modelObject.cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+        retVal = translateSiteGroundTemperatureUndisturbedKusudaAchenbach(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Site_GroundTemperature_Undisturbed_Xing: {
+        model::SiteGroundTemperatureUndisturbedXing mo = modelObject.cast<SiteGroundTemperatureUndisturbedXing>();
+        retVal = translateSiteGroundTemperatureUndisturbedXing(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Site_WaterMainsTemperature: {
         model::SiteWaterMainsTemperature mo = modelObject.cast<SiteWaterMainsTemperature>();
         retVal = translateSiteWaterMainsTemperature(mo);
