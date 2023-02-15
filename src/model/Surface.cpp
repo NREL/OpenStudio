@@ -90,7 +90,8 @@
 
 #include "../utilities/sql/SqlFile.hpp"
 
-#include <numeric>  // std::accumulate
+#include <iterator>  // std::make_move_iterator
+#include <numeric>   // std::accumulate
 
 using boost::to_upper_copy;
 
@@ -1017,17 +1018,14 @@ namespace model {
 
     bool Surface_Impl::intersect(Surface& otherSurface) {
       boost::optional<SurfaceIntersection> intersection = computeIntersection(otherSurface);
-      if (intersection) {
-        return true;
-      }
-      return false;
+      return intersection.has_value();
     }
 
     boost::optional<SurfaceIntersection> Surface_Impl::computeIntersection(Surface& otherSurface) {
       double tol = 0.01;       //  1 cm tolerance
       double areaTol = 0.001;  // 10 cm2 tolerance
 
-      bool extraLogging = false;
+      constexpr bool extraLogging = false;
 
       boost::optional<Space> space = this->space();
       boost::optional<Space> otherSpace = otherSurface.space();
@@ -1090,10 +1088,8 @@ namespace model {
       //std::reverse(otherFaceVertices.begin(), otherFaceVertices.end());
 
       //LOG(Info, "Trying intersection of '" << this->name().get() << "' with '" << otherSurface.name().get());
-      if (extraLogging) {
-        Point3dVectorVector tmp;
-        tmp.push_back(faceVertices);
-        tmp.push_back(otherFaceVertices);
+      if constexpr (extraLogging) {
+        Point3dVectorVector tmp{faceVertices, otherFaceVertices};
         LOG(Debug, tmp);
       }
       boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, otherFaceVertices, tol);
@@ -1102,11 +1098,12 @@ namespace model {
         return boost::none;
       }
 
-      if (extraLogging) {
+      if constexpr (extraLogging) {
         Point3dVectorVector tmp;
+        Point3dVectorVector newPolys = intersection->newPolygons2();
+        tmp.reserve(newPolys.size() + 1);
         tmp.push_back(intersection->polygon2());
-        for (auto& polygon : intersection->newPolygons2())
-          tmp.push_back(polygon);
+        tmp.insert(tmp.end(), std::make_move_iterator(newPolys.begin()), std::make_move_iterator(newPolys.end()));
         LOG(Debug, tmp);
       }
 

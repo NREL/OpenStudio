@@ -2314,7 +2314,9 @@ namespace model {
       Transformation transformation = this->transformation().inverse() * other.transformation();
 
       for (Surface surface : this->surfaces()) {
-        if (surface.adjacentSurface()) continue;
+        if (surface.adjacentSurface()) {
+          continue;
+        }
         std::vector<Point3d> vertices = surface.vertices();
         boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
         if (!outwardNormal) {
@@ -2322,7 +2324,9 @@ namespace model {
         }
 
         for (Surface otherSurface : other.surfaces()) {
-          if (otherSurface.adjacentSurface()) continue;
+          if (otherSurface.adjacentSurface()) {
+            continue;
+          }
           std::vector<Point3d> otherVertices = transformation * otherSurface.vertices();
           boost::optional<Vector3d> otherOutwardNormal = getOutwardNormal(otherVertices);
           if (!otherOutwardNormal) {
@@ -2394,8 +2398,6 @@ namespace model {
 
         for (Surface surface : surfaces) {
           std::string surfaceHandle = toString(surface.handle());
-          std::string surfaceName = surface.nameString();
-          std::string surfaceType = surface.surfaceType();
 
           if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()) {
             hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
@@ -2408,8 +2410,6 @@ namespace model {
 
           for (Surface otherSurface : otherSurfaces) {
             std::string otherSurfaceHandle = toString(otherSurface.handle());
-            std::string otherSurfaceName = otherSurface.nameString();
-            std::string otherSurfaceType = otherSurface.surfaceType();
 
             if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()) {
               hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
@@ -2417,11 +2417,6 @@ namespace model {
             }
 
             if (hasSubSurfaceMap[otherSurfaceHandle] || hasAdjacentSurfaceMap[otherSurfaceHandle]) {
-
-              auto subSurfaces = otherSurface.subSurfaces();
-              for (auto subSurface : subSurfaces) {
-                std::string subSurfaceName = subSurface.nameString();
-              }
               continue;
             }
 

@@ -92,7 +92,7 @@ inline bool has_self_intersections(Geometry const& geometry, bool throw_on_self_
   using point_type = typename boost::geometry::point_type<Geometry>::type;
   using rescale_policy_type = typename boost::geometry::rescale_policy_type<point_type>::type;
 
-  typename boost::geometry::strategies::relate::services::default_strategy<Geometry, Geometry>::type strategy;
+  typename boost::geometry::strategies::relate::services::default_strategy<Geometry, Geometry>::type const strategy;
 
   // typename boost::geometry::strategy::intersection::services::default_strategy<typename boost::geometry::cs_tag<Geometry>::type>::type strategy;
 
@@ -907,10 +907,6 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
     return boost::none;
   };
 
-  // intersections are the same
-  std::vector<Point3d> resultPolygon1 = intersectionVertices;
-  std::vector<Point3d> resultPolygon2 = intersectionVertices;
-
   std::vector<std::vector<Point3d>> newPolygons1;
   newPolygons1.reserve(intersectionResult.size() - 1);
 
@@ -1006,7 +1002,9 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
     newPolygons2.push_back(std::move(newPolygon2));
   }
 
-  IntersectionResult result(std::move(resultPolygon1), std::move(resultPolygon2), std::move(newPolygons1), std::move(newPolygons2));
+  // intersections are the same
+  std::vector<Point3d> resultPolygon1 = intersectionVertices;
+  IntersectionResult result(std::move(resultPolygon1), std::move(intersectionVertices), std::move(newPolygons1), std::move(newPolygons2));
 
   //std::cout << "Result area1 " << result.area1() << '\n';
   //std::cout << "Result area2 " << result.area2() << '\n';

@@ -561,16 +561,15 @@ namespace model {
 
     void FloorspaceReverseTranslator_Impl::createWallSurface(Space& osSpace, const FSSpace& fsSpace, const Point3d& p1, const Point3d& p2,
                                                              double minZ, double maxZ, bool createSubsurfaces) {
-      double tol = 0.001;
+      constexpr double tol = 0.001;
 
       Point3dVector wallVertices;
-      wallVertices.push_back(Point3d(p2.x(), p2.y(), maxZ));
-      wallVertices.push_back(Point3d(p1.x(), p1.y(), maxZ));
-      wallVertices.push_back(Point3d(p1.x(), p1.y(), minZ));
-      wallVertices.push_back(Point3d(p2.x(), p2.y(), minZ));
-      Point3dVector wallSegment;
-      wallSegment.push_back(p1);
-      wallSegment.push_back(p2);
+      wallVertices.reserve(4);
+      wallVertices.emplace_back(p2.x(), p2.y(), maxZ);
+      wallVertices.emplace_back(p1.x(), p1.y(), maxZ);
+      wallVertices.emplace_back(p1.x(), p1.y(), minZ);
+      wallVertices.emplace_back(p2.x(), p2.y(), minZ);
+      const Point3dVector wallSegment{p1, p2};
 
       Surface surface(wallVertices, m_model);
       surface.setName("Face " + std::to_string(m_nSurfaces++));
@@ -585,8 +584,8 @@ namespace model {
             // Get window's x/y position which is the alpha based on its edge
             // windows can have multiple alphas but we only need one
             auto edge = *window.edge();
-            double alpha = window.alphas()[0];
-            Point3d pp = window.centerVertex(alpha);
+            const double alpha = window.alphas()[0];
+            const Point3d pp = window.centerVertex(alpha);
 
             if (getDistancePointToLineSegment(pp, wallSegment) < tol) {
               createWindowSubsurface(window, surface, edge, minZ, maxZ);
@@ -596,8 +595,8 @@ namespace model {
           // Create a door subsurface for every window that is on this edge
           for (const auto& door : m_currentFSStory->doors()) {
             auto edge = *door.edge();
-            double alpha = door.alphas()[0];
-            Point3d pp = door.centerVertex(alpha);
+            const double alpha = door.alphas()[0];
+            const Point3d pp = door.centerVertex(alpha);
 
             if (getDistancePointToLineSegment(pp, wallSegment) < tol) {
               createDoorSubsurface(door, surface, edge, minZ);
