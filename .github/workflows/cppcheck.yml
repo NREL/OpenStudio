@@ -41,7 +41,7 @@ jobs:
             --inconclusive \
             --template='[{file}:{line}]:({severity}),[{id}],{message}' \
             -j $(nproc) \
-            --force \
+            --max-configs=1 \
             -i src/cli/test \
             -i src/airflow/contam \
             -i src/polypartition \
