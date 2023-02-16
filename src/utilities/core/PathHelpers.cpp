@@ -173,6 +173,8 @@ bool makeParentFolder(const path& p, const path& base, bool recursive) {
 }
 
 path relativePath(const path& p, const path& base) {
+  // Note: could just use openstudio::filesystem::relative(p, base);
+
   path wp = p;
   path wBase = base;
 
@@ -372,10 +374,19 @@ bool copyDirectory(const path& source, const path& destination) {
   // note : we are not using openstudio::filesystem::copy to copy recursively
   // because that copies the entire directory into the destination, not just the
   // contents of the directory
-  for (const auto& file : openstudio::filesystem::recursive_directory_files(source)) {
+
+  // Start by creating the destination directory if it doesn't exist
+  openstudio::filesystem::create_directories(destination);
+
+  for (const auto& dirEnt : openstudio::filesystem::directory_iterator{source}) {
+
+    const auto& srcFolderPath = dirEnt.path();
+    const auto& relativeFolderPath = openstudio::filesystem::relative(srcFolderPath, source);
+
     try {
-      openstudio::filesystem::create_directories((destination / file).parent_path());
-      openstudio::filesystem::copy_file(source / file, destination / file, openstudio::filesystem::copy_option::overwrite_if_exists);
+      // copy with recursive will deal with creating subfolders as needed
+      openstudio::filesystem::copy(srcFolderPath, destination / relativeFolderPath,
+                                   openstudio::filesystem::copy_options::recursive | openstudio::filesystem::copy_options::overwrite_existing);
     } catch (const std::exception&) {
       return false;
     }

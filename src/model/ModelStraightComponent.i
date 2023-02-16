@@ -347,14 +347,14 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
       }
     }
 
-    public partial class CoilHeatingGasMultiStage : ModelObject
+    public partial class CoilHeatingGasMultiStageStageData : ModelObject
     {
       public OptionalCoilHeatingGasMultiStage parentCoil() {
         return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);
       }
     }
 
-    public partial class CoilHeatingElectricMultiStage : ModelObject
+    public partial class CoilHeatingElectricMultiStageStageData : ModelObject
     {
       public OptionalCoilHeatingElectricMultiStage parentCoil() {
         return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);

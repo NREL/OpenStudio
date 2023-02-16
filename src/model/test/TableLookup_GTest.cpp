@@ -37,6 +37,8 @@
 #include "../TableIndependentVariable_Impl.hpp"
 #include "../ModelObjectList.hpp"
 #include "../ModelObjectList_Impl.hpp"
+#include "../BoilerHotWater.hpp"
+#include "../BoilerHotWater_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -152,22 +154,22 @@ TEST_F(ModelFixture, TableLookup_Clone) {
   TableIndependentVariable independentVariable1(m);
   EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable1));
 
-  EXPECT_EQ(1u, m.getModelObjects<TableLookup>().size());
-  EXPECT_EQ(1u, m.getModelObjects<ModelObjectList>().size());
-  EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
-  EXPECT_EQ(1u, tableLookup.independentVariables().size());
+  EXPECT_EQ(1, m.getModelObjects<TableLookup>().size());
+  EXPECT_EQ(1, m.getModelObjects<ModelObjectList>().size());
+  EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
+  EXPECT_EQ(1, tableLookup.independentVariables().size());
 
   // Clone into the same model
   {
     auto tableLookupClone = tableLookup.clone(m).cast<TableLookup>();
-    EXPECT_EQ(2u, m.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(2u, m.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(2, m.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(2, m.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
 
-    ASSERT_EQ(1u, tableLookup.independentVariables().size());
+    ASSERT_EQ(1, tableLookup.independentVariables().size());
     EXPECT_EQ(independentVariable1, tableLookup.independentVariables().front());
 
-    ASSERT_EQ(1u, tableLookupClone.independentVariables().size());
+    ASSERT_EQ(1, tableLookupClone.independentVariables().size());
     EXPECT_EQ(independentVariable1, tableLookupClone.independentVariables().front());
   }
 
@@ -177,19 +179,57 @@ TEST_F(ModelFixture, TableLookup_Clone) {
     auto tableLookupClone2 = tableLookup.clone(m2).cast<TableLookup>();
 
     // Check original model is unaffected
-    EXPECT_EQ(2u, m.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(2u, m.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(2, m.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(2, m.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
 
-    ASSERT_EQ(1u, tableLookup.independentVariables().size());
+    ASSERT_EQ(1, tableLookup.independentVariables().size());
     EXPECT_EQ(independentVariable1, tableLookup.independentVariables().front());
 
     // Check that the TableLookup and TableLookupIndependentVariable are carried into new model
-    EXPECT_EQ(1u, m2.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(1u, m2.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1u, m2.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(1, m2.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(1, m2.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m2.getModelObjects<TableIndependentVariable>().size());
 
-    ASSERT_EQ(1u, tableLookupClone2.independentVariables().size());
+    ASSERT_EQ(1, tableLookupClone2.independentVariables().size());
+    EXPECT_NE(independentVariable1, tableLookupClone2.independentVariables().front());
+  }
+
+  BoilerHotWater boiler(m);
+  EXPECT_TRUE(boiler.setNormalizedBoilerEfficiencyCurve(tableLookup));
+  EXPECT_EQ(6, m.numObjects());
+  EXPECT_EQ(2, m.getModelObjects<TableLookup>().size());
+  EXPECT_EQ(2, m.getModelObjects<ModelObjectList>().size());
+  EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
+  EXPECT_EQ(1, m.getModelObjects<BoilerHotWater>().size());
+
+  EXPECT_EQ(1, tableLookup.independentVariables().size());
+
+  // Clone a component that references a TableLookup into another model
+  {
+    Model m2;
+    auto boilerClone = boiler.clone(m2).cast<BoilerHotWater>();
+
+    ASSERT_TRUE(boilerClone.normalizedBoilerEfficiencyCurve());
+    auto tableLookupClone2 = boilerClone.normalizedBoilerEfficiencyCurve()->cast<TableLookup>();
+
+    // Check original model is unaffected
+    EXPECT_EQ(6, m.numObjects());
+    EXPECT_EQ(2, m.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(2, m.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(1, m.getModelObjects<BoilerHotWater>().size());
+
+    EXPECT_EQ(1, tableLookup.independentVariables().size());
+
+    // Check that the TableLookup and TableLookupIndependentVariable are carried into the new model
+    EXPECT_EQ(4, m2.numObjects());
+    EXPECT_EQ(1, m2.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(1, m2.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m2.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(1, m2.getModelObjects<BoilerHotWater>().size());
+
+    ASSERT_EQ(1, tableLookupClone2.independentVariables().size());
     EXPECT_NE(independentVariable1, tableLookupClone2.independentVariables().front());
   }
 }

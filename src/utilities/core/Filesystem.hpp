@@ -52,7 +52,7 @@ namespace filesystem {
 
   using boost::filesystem::recursive_directory_iterator;
   using boost::filesystem::filesystem_error;
-  using boost::filesystem::copy_option;
+  using boost::filesystem::copy_options;
   using boost::filesystem::directory_entry;
 
   // functions

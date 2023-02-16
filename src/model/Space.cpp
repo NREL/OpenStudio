@@ -114,6 +114,8 @@
 #include "DesignSpecificationOutdoorAir_Impl.hpp"
 #include "GlareSensor.hpp"
 #include "GlareSensor_Impl.hpp"
+#include "ZoneMixing.hpp"
+#include "ZoneMixing_Impl.hpp"
 
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
@@ -146,6 +148,7 @@
 #  pragma warning(pop)
 #endif
 
+#include <algorithm>
 #include <cmath>
 
 namespace openstudio {
@@ -258,6 +261,10 @@ namespace model {
       // SpaceInfiltration_FlowCoefficient
       SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = this->spaceInfiltrationFlowCoefficients();
       result.insert(result.end(), spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end());
+
+      // ZoneMixing
+      auto zoneMixings = this->supplyZoneMixing();
+      result.insert(result.end(), zoneMixings.begin(), zoneMixings.end());
 
       return result;
     }
@@ -2909,6 +2916,33 @@ namespace model {
       return boost::make_tuple(point3d.x(), point3d.y());
     }
 
+    std::vector<ZoneMixing> Space_Impl::zoneMixing() const {
+      return getObject<ModelObject>().getModelObjectSources<ZoneMixing>();
+    }
+
+    std::vector<ZoneMixing> Space_Impl::supplyZoneMixing() const {
+      std::vector<ZoneMixing> result = this->zoneMixing();
+
+      Handle handle = this->handle();
+      auto new_end =
+        std::remove_if(result.begin(), result.end(), [&](const ZoneMixing& mixing) { return (mixing.zoneOrSpace().handle() != handle); });
+
+      result.erase(new_end, result.end());
+      return result;
+    }
+
+    std::vector<ZoneMixing> Space_Impl::exhaustZoneMixing() const {
+      std::vector<ZoneMixing> result = this->zoneMixing();
+
+      Handle handle = this->handle();
+      auto new_end = std::remove_if(result.begin(), result.end(), [&](const ZoneMixing& mixing) {
+        return (!mixing.sourceZoneOrSpace() || (mixing.sourceZoneOrSpace()->handle() != handle));
+      });
+
+      result.erase(new_end, result.end());
+      return result;
+    }
+
   }  // namespace detail
 
   Space::Space(const Model& model) : PlanarSurfaceGroup(Space::iddObjectType(), model) {
@@ -3491,6 +3525,18 @@ namespace model {
 
   bool Space::isEnclosedVolume() const {
     return getImpl<detail::Space_Impl>()->isEnclosedVolume();
+  }
+
+  std::vector<ZoneMixing> Space::zoneMixing() const {
+    return getImpl<detail::Space_Impl>()->zoneMixing();
+  }
+
+  std::vector<ZoneMixing> Space::supplyZoneMixing() const {
+    return getImpl<detail::Space_Impl>()->supplyZoneMixing();
+  }
+
+  std::vector<ZoneMixing> Space::exhaustZoneMixing() const {
+    return getImpl<detail::Space_Impl>()->exhaustZoneMixing();
   }
 
   /// @cond

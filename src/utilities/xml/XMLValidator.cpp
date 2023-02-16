@@ -49,7 +49,6 @@
 #include <libxml/xpathInternals.h>  // BAD_CAST
 
 #include <src/utilities/embedded_files.hxx>
-#include <src/gbxml/embedded_files.hxx>
 
 #include <fmt/format.h>
 
@@ -199,12 +198,12 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
     logAndStore(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet.");
     // Let's use a temporary directory for this, so we avoid having two instances trying to write to the same file and we avoid issues where the
     // directory is write protected.
-    const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
-    if (tmpDir.empty()) {
-      LOG_AND_THROW(fmt::format("Failed to create a temporary directory for extracting the stylesheets need to transform the Schematron '{}'",
+    m_tempDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
+    if (m_tempDir->empty()) {
+      LOG_AND_THROW(fmt::format("Failed to create a temporary directory for extracting the stylesheets needed to transform the Schematron '{}'",
                                 toString(schemaPath)));
     }
-    m_schemaPath = schematronToXslt(m_schemaPath, tmpDir);
+    m_schemaPath = schematronToXslt(m_schemaPath, m_tempDir.get());
     logAndStore(Info, fmt::format("Transformed Schematron to an XSLT Stylesheet and saved it at {}.", toString(m_schemaPath)));
   } else {
     std::string logMessage = fmt::format("Schema path extension '{}' not supported.", toString(schemaPath.extension()));
@@ -213,16 +212,16 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
   }
 }
 
-// XMLValidator::~XMLValidator() {
-//   if (m_tempDir.empty()) {
-//     try {
-//       const auto count = openstudio::filesystem::remove_all(m_tempDir);
-//       LOG(Debug, "XMLValidator", "Removed temporary directory with " << count << " files");
-//     } catch (const std::exception& e) {
-//       LOG(Warn, "Error removing temporary directory at '" << toString(m_tempDir) << "', Description: " << e.what());
-//     }
-//   }
-// }
+XMLValidator::~XMLValidator() {
+  if (m_tempDir) {
+    try {
+      const auto count = openstudio::filesystem::remove_all(m_tempDir.get());
+      logAndStore(Debug, fmt::format("Removed temporary directory with {} files", count));
+    } catch (const std::exception& e) {
+      logAndStore(Warn, fmt::format("Error removing temporary directory at {}, Description: {}", toString(m_tempDir.get()), e.what()));
+    }
+  }
+}
 
 openstudio::path XMLValidator::schemaPath() const {
   return m_schemaPath;
@@ -265,9 +264,9 @@ bool XMLValidator::isValid() const {
 
 void XMLValidator::reset() {
 
-  m_logMessages.clear(),
+  m_logMessages.clear();
 
-    m_xmlPath = boost::none;
+  m_xmlPath = boost::none;
 
   m_fullValidationReport.clear();
 }
@@ -501,7 +500,7 @@ XMLValidator XMLValidator::gbxmlValidator() {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
   }
   bool quiet = true;
-  ::openstudiogbxml::embedded_files::extractFile(":/resources/GreenBuildingXML_Ver6.01.xsd", openstudio::toString(tmpDir), quiet);
+  ::openstudio::embedded_files::extractFile(":/xml/resources/GreenBuildingXML_Ver6.01.xsd", openstudio::toString(tmpDir), quiet);
   return XMLValidator(tmpDir / "GreenBuildingXML_Ver6.01.xsd");
 }
 

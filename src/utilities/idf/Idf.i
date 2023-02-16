@@ -149,6 +149,7 @@
 %include <utilities/idf/WorkspaceObjectOrder.hpp>
 %include <utilities/idf/WorkspaceExtensibleGroup.hpp>
 %include <utilities/idf/WorkspaceObject.hpp>
+%feature("director") Workspace;
 %include <utilities/idf/Workspace.hpp>
 
 %feature("director") IdfObjectWatcher;

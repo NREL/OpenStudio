@@ -79,6 +79,8 @@ UNIQUEMODELOBJECT_TEMPLATES(OutputDebuggingData);
 UNIQUEMODELOBJECT_TEMPLATES(OutputDiagnostics);
 UNIQUEMODELOBJECT_TEMPLATES(OutputJSON);
 UNIQUEMODELOBJECT_TEMPLATES(OutputSQLite);
+UNIQUEMODELOBJECT_TEMPLATES(OutputSchedules);
+UNIQUEMODELOBJECT_TEMPLATES(OutputConstructions);
 MODELOBJECT_TEMPLATES(OutputEnvironmentalImpactFactors);
 UNIQUEMODELOBJECT_TEMPLATES(EnvironmentalImpactFactors);
 MODELOBJECT_TEMPLATES(FuelFactors);
@@ -97,6 +99,8 @@ UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureBuildingSurface);
 UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureDeep);
 UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureShallow);
 UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureFCfactorMethod);
+MODELOBJECT_TEMPLATES(SiteGroundTemperatureUndisturbedKusudaAchenbach);
+MODELOBJECT_TEMPLATES(SiteGroundTemperatureUndisturbedXing);
 UNIQUEMODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
 #ifndef SWIGCSHARP
   // Ignored for Csharp, use Model::setCalendarYear etc
@@ -129,6 +133,8 @@ SWIG_UNIQUEMODELOBJECT(OutputDebuggingData);
 SWIG_UNIQUEMODELOBJECT(OutputDiagnostics);
 SWIG_UNIQUEMODELOBJECT(OutputJSON);
 SWIG_UNIQUEMODELOBJECT(OutputSQLite);
+SWIG_UNIQUEMODELOBJECT(OutputSchedules);
+SWIG_UNIQUEMODELOBJECT(OutputConstructions);
 SWIG_MODELOBJECT(OutputEnvironmentalImpactFactors, 1);
 SWIG_UNIQUEMODELOBJECT(EnvironmentalImpactFactors);
 SWIG_MODELOBJECT(FuelFactors, 1);
@@ -147,6 +153,8 @@ SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureBuildingSurface);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureDeep);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureShallow);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureFCfactorMethod);
+SWIG_MODELOBJECT(SiteGroundTemperatureUndisturbedKusudaAchenbach, 1);
+SWIG_MODELOBJECT(SiteGroundTemperatureUndisturbedXing, 1);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
 #ifndef SWIGCSHARP
   SWIG_UNIQUEMODELOBJECT(YearDescription);
@@ -224,6 +232,14 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
         boost::optional<OutputTableSummaryReports> outputTableSummaryReports(const openstudio::model::Model& model) {
           return model.outputTableSummaryReports();
+        }
+
+        boost::optional<OutputSchedules> outputSchedules(const openstudio::model::Model& model) {
+          return model.outputSchedules();
+        }
+
+        boost::optional<OutputConstructions> outputConstructions(const openstudio::model::Model& model) {
+          return model.outputConstructions();
         }
 
         boost::optional<OutsideSurfaceConvectionAlgorithm> outsideSurfaceConvectionAlgorithm(const openstudio::model::Model& model) {
@@ -383,6 +399,14 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
       public OptionalOutputTableSummaryReports outputTableSummaryReports() {
         return OpenStudio.OpenStudioModelSimulation.outputTableSummaryReports(this);
+      }
+
+      public OptionalOutputSchedules outputSchedules() {
+        return OpenStudio.OpenStudioModelSimulation.outputSchedules(this);
+      }
+
+      public OptionalOutputConstructions outputConstructions() {
+        return OpenStudio.OpenStudioModelSimulation.outputConstructions(this);
       }
 
       public OptionalOutsideSurfaceConvectionAlgorithm outsideSurfaceConvectionAlgorithm() {

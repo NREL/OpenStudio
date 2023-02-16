@@ -477,7 +477,7 @@ namespace model {
 
     bool setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant);
 
-    void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
+    bool addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
 
     void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
 

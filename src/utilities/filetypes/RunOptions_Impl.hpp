@@ -30,6 +30,8 @@
 #ifndef UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
 #define UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
 
+#include "ForwardTranslatorOptions.hpp"
+
 #include "../UtilitiesAPI.hpp"
 
 #include "../core/Logger.hpp"
@@ -41,14 +43,14 @@
 #include <nano/nano_signal_slot.hpp>
 
 namespace openstudio {
+class CustomOutputAdapter;
+
 namespace detail {
 
   class UTILITIES_API RunOptions_Impl
   {
    public:
-    RunOptions_Impl();
-
-    virtual ~RunOptions_Impl();
+    RunOptions_Impl() = default;
 
     std::string string() const;
 
@@ -84,9 +86,9 @@ namespace detail {
     bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
     void resetCustomOutputAdapter();
 
-    std::string forwardTranslateOptions() const;
-    bool setForwardTranslateOptions(const std::string& options);
-    void resetForwardTranslateOptions();
+    ForwardTranslatorOptions forwardTranslatorOptions() const;
+    bool setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions);
+    void resetForwardTranslatorOptions();
 
     // Emitted on any change
     Nano::Signal<void()> onChange;
@@ -98,14 +100,14 @@ namespace detail {
     // configure logging
     REGISTER_LOGGER("openstudio.RunOptions");
 
-    bool m_debug;
-    bool m_epjson;
-    bool m_fast;
-    bool m_preserveRunDir;
-    bool m_skipExpandObjects;
-    bool m_skipEnergyPlusPreprocess;
-    bool m_cleanup;
-    std::string m_forwardTranslateOptions;
+    bool m_debug = false;
+    bool m_epjson = false;
+    bool m_fast = false;
+    bool m_preserveRunDir = false;
+    bool m_skipExpandObjects = false;
+    bool m_skipEnergyPlusPreprocess = false;
+    bool m_cleanup = true;  // TODO this does absolutely nothing in the workflow-gem currently
+    ForwardTranslatorOptions m_forwardTranslatorOptions;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };
 

@@ -23,6 +23,9 @@ set(core_src
   core/Containers.hpp
   core/Containers.cpp
   core/Deprecated.hpp
+  core/DynamicLibrary.hpp
+  core/DynamicLibraryPOSIX.hpp
+  core/DynamicLibraryWindows.hpp
   core/Enum.hpp
   core/EnumHelpers.hpp
   core/Exception.hpp
@@ -102,6 +105,9 @@ set(filetypes_src
   filetypes/RunOptions.hpp
   filetypes/RunOptions_Impl.hpp
   filetypes/RunOptions.cpp
+  filetypes/ForwardTranslatorOptions.hpp
+  filetypes/ForwardTranslatorOptions_Impl.hpp
+  filetypes/ForwardTranslatorOptions.cpp
   filetypes/StandardsJSON.hpp
   filetypes/StandardsJSON_Impl.hpp
   filetypes/StandardsJSON.cpp
@@ -218,6 +224,13 @@ endforeach()
 
 file(GLOB_RECURSE XLST_TRANSFORM_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/xml/resources/*.xsl")
 foreach(_FILE ${XLST_TRANSFORM_FILES})
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
+  list(APPEND E_FILES ${_FILE})
+  list(APPEND E_PATHS ${LOCATION})
+endforeach()
+
+file(GLOB_RECURSE XSD_SCHEMA_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/xml/resources/*.xsd")
+foreach(_FILE ${XSD_SCHEMA_FILES})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})
@@ -451,6 +464,51 @@ target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_utilities_EXPORTS SHARED_OS_LIBS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR}/src)
+
+include(CheckIncludeFile)
+check_include_file("unistd.h" HAVE_UNISTD_H)
+if(HAVE_UNISTD_H)
+  target_compile_definitions(${target_name} PUBLIC "-DHAVE_UNISTD_H")
+endif()
+
+# To be used by the main cli program, this target
+# is the most minimal thing that provides Path, and Filesystem
+# capabilities, which the cli requires.
+add_library(openstudio_utilities_minimal
+  OBJECT
+  core/ApplicationPathHelpers.hpp
+  ${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx
+  core/DynamicLibrary.hpp
+  core/DynamicLibraryPOSIX.hpp
+  core/DynamicLibraryWindows.hpp
+  core/Filesystem.hpp
+  core/Filesystem.cpp
+  core/FilesystemHelpers.hpp
+  core/FilesystemHelpers.cpp
+  core/Logger.hpp
+  core/Logger.cpp
+  core/LogMessage.hpp
+  core/LogMessage.cpp
+  core/LogSink.hpp
+  core/LogSink_Impl.hpp
+  core/LogSink.cpp
+  core/Path.hpp
+  core/Path.cpp
+  core/PathHelpers.hpp
+  core/PathHelpers.cpp
+  core/String.hpp
+  core/String.cpp
+  core/StringHelpers.hpp
+  core/StringHelpers.cpp
+  core/StringStreamLogSink.hpp
+  core/StringStreamLogSink_Impl.hpp
+  core/StringStreamLogSink.cpp
+)
+target_link_libraries(openstudio_utilities_minimal PUBLIC ${${target_name}_depends})
+
+if(HAVE_UNISTD_H)
+  target_compile_definitions(openstudio_utilities_minimal PUBLIC "-DHAVE_UNISTD_H")
+endif()
 
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib)

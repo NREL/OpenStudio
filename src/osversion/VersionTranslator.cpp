@@ -63,9 +63,11 @@
 
 #include <OpenStudio.hxx>
 
-#include <thread>
+#include <algorithm>
+#include <iterator>
 #include <map>
 #include <sstream>
+#include <thread>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -147,7 +149,9 @@ namespace osversion {
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
     m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
     m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::update_3_4_0_to_3_5_0;
-    // m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
+    m_updateMethods[VersionString("3.5.2")] = &VersionTranslator::update_3_5_1_to_3_5_2;
+    // m_updateMethods[VersionString("3.5.2")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for release).
@@ -304,7 +308,9 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.2.1"));
     m_startVersions.push_back(VersionString("3.3.0"));
     m_startVersions.push_back(VersionString("3.4.0"));
-    // m_startVersions.push_back(VersionString("3.5.0"));
+    m_startVersions.push_back(VersionString("3.5.0"));
+    m_startVersions.push_back(VersionString("3.5.1"));
+    // m_startVersions.push_back(VersionString("3.5.2"));
     // Note: do **not** include the **current** version in m_startVersions, stop at the previous release
   }
 
@@ -643,8 +649,52 @@ namespace osversion {
         return;
       }
       IdfFile idfFile = *oIdfFile;
+      if (m_isComponent) {
+        updateComponentData(idfFile);
+      }
       m_map[oIdfFile->version()] = idfFile;
       LOG(Debug, "Translation to " << lastVersion.str() << " model has " << oIdfFile->numObjects() << " objects.");
+    }
+  }
+
+  void VersionTranslator::updateComponentData(IdfFile& idfFile) {
+    if (OptionalIddObject oIddObject = idfFile.iddFile().getObject("OS:ComponentData")) {
+      auto compDatas = idfFile.getObjectsByType(*oIddObject);
+      if (compDatas.empty()) {
+        return;
+      }
+
+      std::set<std::string> newHandles;
+      std::transform(m_new.cbegin(), m_new.cend(), std::inserter(newHandles, newHandles.begin()), [](const auto& n) { return n.getString(0).get(); });
+
+      std::set<std::string> deletedHandles;
+      std::transform(m_untranslated.cbegin(), m_untranslated.cend(), std::inserter(deletedHandles, deletedHandles.begin()),
+                     [](const auto& n) { return n.getString(0).get(); });
+      std::transform(m_deprecated.cbegin(), m_deprecated.cend(), std::inserter(deletedHandles, deletedHandles.begin()),
+                     [](const auto& n) { return n.getString(0).get(); });
+
+      std::erase_if(newHandles, [&deletedHandles](auto& s) { return deletedHandles.contains(s); });
+
+      // There should really be only one ComponentData object anyways, it'll throw in the Component ctor later if not...
+      for (auto& compData : compDatas) {
+        // We want to preserve the original order, so primary Object stays the same... so we don't use a set
+        std::vector<std::string> currentHandles;
+        auto egs = compData.extensibleGroups();
+        std::transform(egs.cbegin(), egs.cend(), std::back_inserter(currentHandles), [](const auto& eg) { return eg.getString(0).get(); });
+
+        std::erase_if(currentHandles, [&deletedHandles](auto& s) { return deletedHandles.contains(s); });
+
+        currentHandles.reserve(currentHandles.size() + newHandles.size());
+        // m_new isn 't cleared between distinct version updates, so we can't bindly copy everything.
+        std::copy_if(
+          std::make_move_iterator(newHandles.begin()), std::make_move_iterator(newHandles.end()), std::back_inserter(currentHandles),
+          [&currentHandles](const auto& elem) { return std::find(currentHandles.begin(), currentHandles.end(), elem) == currentHandles.end(); });
+
+        compData.clearExtensibleGroups();
+        for (auto& handle : currentHandles) {
+          compData.pushExtensibleGroup({handle});
+        }
+      }
     }
   }
 
@@ -6920,6 +6970,99 @@ namespace osversion {
     IdfFile targetIdf(idd_3_5_0.iddFile());
     ss << targetIdf.versionObject().get();
 
+    // ZoneHVAC:Packaged AirConditionner / HeatPump: prescan
+    // In E+ 22.1.0, you could have a Packaged system with a Fan:ConstantVolume and a blank schedule for Supply Air Fan Operating Mode Schedule Name
+    // and it would behave like a cycling fan (which it shouldn't have done). This is now disallowed in E+ 22.2.0, and you also cannot set a Schedule
+    // with 0 values with a Fan:ConstantVolume. So we must replace these fans with a Fan:SystemModel (that mimics a Fan:OnOff really, just planning
+    // for the future + avoid having to create 2 curves for FanOnOff)
+    std::vector<std::string> packagedFanCVHandleStrs;
+    {
+      std::vector<IdfObject> fanCVs = idf_3_4_0.getObjectsByType(idf_3_4_0.iddFile().getObject("OS:Fan:ConstantVolume").get());
+      std::vector<std::string> fanCVHandleStrs;
+      fanCVHandleStrs.reserve(fanCVs.size());
+      packagedFanCVHandleStrs.reserve(fanCVs.size());
+      std::transform(fanCVs.cbegin(), fanCVs.cend(), std::back_inserter(fanCVHandleStrs),
+                     [](const auto& idfObject) { return idfObject.getString(0).get(); });
+      for (const auto& ptac : idf_3_4_0.getObjectsByType(idf_3_4_0.iddFile().getObject("OS:ZoneHVAC:PackagedTerminalAirConditioner").get())) {
+        // If the Supply Air Fan Operating Mode Schedule is empty
+        if (ptac.isEmpty(17)) {
+          if (auto fanHandleStr_ = ptac.getString(13, false, true)) {
+            if (std::find(fanCVHandleStrs.cbegin(), fanCVHandleStrs.cend(), fanHandleStr_.get()) != fanCVHandleStrs.cend()) {
+              packagedFanCVHandleStrs.push_back(fanHandleStr_.get());
+            }
+          }
+        }
+      }
+      for (const auto& pthp : idf_3_4_0.getObjectsByType(idf_3_4_0.iddFile().getObject("OS:ZoneHVAC:PackagedTerminalHeatPump").get())) {
+        // If the Supply Air Fan Operating Mode Schedule is empty
+        if (pthp.isEmpty(23)) {
+          if (auto fanName_ = pthp.getString(13, false, true)) {
+            if (std::find(fanCVHandleStrs.cbegin(), fanCVHandleStrs.cend(), fanName_.get()) != fanCVHandleStrs.cend()) {
+              packagedFanCVHandleStrs.push_back(fanName_.get());
+            }
+          }
+        }
+      }
+    }
+
+    std::string alwaysOnDiscreteScheduleHandleStr;
+    std::string alwaysOffDiscreteScheduleHandleStr;
+
+    auto getOrCreateAlwaysDiscreteScheduleHandleStr = [this, &ss, &idf_3_4_0, &idd_3_5_0, &alwaysOnDiscreteScheduleHandleStr,
+                                                       &alwaysOffDiscreteScheduleHandleStr](bool isAlwaysOn) -> std::string {
+      auto& discreteSchHandleStr = isAlwaysOn ? alwaysOnDiscreteScheduleHandleStr : alwaysOffDiscreteScheduleHandleStr;
+      if (!discreteSchHandleStr.empty()) {
+        return discreteSchHandleStr;
+      }
+      std::string name = isAlwaysOn ? "Always On Discrete" : "Always Off Discrete";
+      double val = isAlwaysOn ? 1.0 : 0.0;
+      // Add an alwaysOnDiscreteSchedule if one does not already exist
+      for (const IdfObject& object : idf_3_4_0.getObjectsByType(idf_3_4_0.iddFile().getObject("OS:Schedule:Constant").get())) {
+        if (boost::optional<std::string> name_ = object.getString(1)) {
+          if (istringEqual(name_.get(), name)) {
+            if (boost::optional<double> value = object.getDouble(3)) {
+              if (equal<double>(value.get(), val)) {
+                discreteSchHandleStr = object.getString(0).get();
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      if (discreteSchHandleStr.empty()) {
+        auto discreteSch = IdfObject(idd_3_5_0.getObject("OS:Schedule:Constant").get());
+
+        discreteSchHandleStr = toString(createUUID());
+        discreteSch.setString(0, discreteSchHandleStr);
+        discreteSch.setString(1, name);
+        discreteSch.setDouble(3, val);
+
+        IdfObject typeLimits(idd_3_5_0.getObject("OS:ScheduleTypeLimits").get());
+        typeLimits.setString(0, toString(createUUID()));
+        typeLimits.setString(1, name + " Limits");
+        typeLimits.setDouble(2, 0.0);
+        typeLimits.setDouble(3, 1.0);
+        typeLimits.setString(4, "Discrete");
+        typeLimits.setString(5, "Availability");
+
+        discreteSch.setString(2, typeLimits.getString(0).get());
+
+        ss << discreteSch;
+        ss << typeLimits;
+
+        // Register new objects
+        m_new.push_back(discreteSch);
+        m_new.push_back(typeLimits);
+      }
+
+      return discreteSchHandleStr;
+    };
+
+    if (!packagedFanCVHandleStrs.empty()) {
+      alwaysOffDiscreteScheduleHandleStr = getOrCreateAlwaysDiscreteScheduleHandleStr(false);
+    }  // End locating or creating alwaysOnDiscreteSchedule
+
     for (const IdfObject& object : idf_3_4_0.objects()) {
       auto iddname = object.iddObject().name();
 
@@ -7321,6 +7464,15 @@ namespace osversion {
           }
         }
 
+        // New E+ 22.2.0 fields, IDD defaults for required fields set in Ctor
+        newObject.setString(26, "Sensible Load Only No Latent Load");
+        newObject.setString(27, "HumidityRatioDifference");
+        // newObject.setString(28, "");
+        newObject.setDouble(29, 0.005);
+        newObject.setString(30, "HumidityRatioDifference");
+        // newObject.setString(31, "");
+        newObject.setDouble(32, 0.005);
+
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
@@ -7330,47 +7482,212 @@ namespace osversion {
         // ------------------------------------------------
         // * Availability Schedule * 2
 
-        auto iddObject = idd_3_5_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
+        if (!object.isEmpty(2)) {
+          ss << object;
+        } else {
 
-        if (object.isEmpty(2)) {
-          // Add an always on discrete schedule if one does not already exist
-          boost::optional<IdfObject> alwaysOnSchedule;
-          for (const IdfObject& object : idf_3_4_0.objects()) {
-            if (object.iddObject().name() == "OS:Schedule:Constant") {
-              if (boost::optional<std::string> name = object.getString(1)) {
-                if (istringEqual(name.get(), "Always On Discrete")) {
-                  if (boost::optional<double> value = object.getDouble(3)) {
-                    if (equal<double>(value.get(), 1.0)) {
-                      alwaysOnSchedule = object;
-                    }
-                  }
-                }
-              }
+          auto iddObject = idd_3_5_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
             }
           }
+          newObject.setString(2, getOrCreateAlwaysDiscreteScheduleHandleStr(true));
 
-          if (!alwaysOnSchedule) {
-            alwaysOnSchedule = IdfObject(idd_3_5_0.getObject("OS:Schedule:Constant").get());
-            alwaysOnSchedule->setString(0, toString(createUUID()));
-            alwaysOnSchedule->setString(1, "Always On Discrete");
-            alwaysOnSchedule->setDouble(3, 1.0);
-            IdfObject typeLimits(idd_3_5_0.getObject("OS:ScheduleTypeLimits").get());
-            typeLimits.setString(0, toString(createUUID()));
-            typeLimits.setString(1, "Always On Discrete Limits");
-            typeLimits.setDouble(2, 0.0);
-            typeLimits.setDouble(3, 1.0);
-            typeLimits.setString(4, "Discrete");
-            typeLimits.setString(5, "Availability");
-            alwaysOnSchedule->setString(2, typeLimits.getString(0).get());
-            ss << alwaysOnSchedule.get();
-            ss << typeLimits;
-            m_new.push_back(alwaysOnSchedule.get());
-            m_new.push_back(typeLimits);
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
+        }
+
+      } else if (iddname == "OS:ZoneHVAC:PackagedTerminalHeatPump") {
+
+        if (!object.isEmpty(23)) {
+          ss << object;
+
+        } else {
+          auto iddObject = idd_3_5_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
+          // alwaysOffDiscreteScheduleHandleStr has already been initialized above
+          newObject.setString(23, alwaysOffDiscreteScheduleHandleStr);
+
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
+        }
+      } else if (iddname == "OS:ZoneHVAC:PackagedTerminalAirConditioner") {
+
+        if (!object.isEmpty(17)) {
+          ss << object;
+
+        } else {
+          auto iddObject = idd_3_5_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
+          // alwaysOffDiscreteScheduleHandleStr has already been initialized above
+          newObject.setString(17, alwaysOffDiscreteScheduleHandleStr);
+
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
+        }
+
+      } else if (iddname == "OS:Fan:ConstantVolume") {
+        std::string fanHandleStr = object.getString(0).get();
+        if (std::find(packagedFanCVHandleStrs.cbegin(), packagedFanCVHandleStrs.cend(), fanHandleStr) == packagedFanCVHandleStrs.cend()) {
+          ss << object;
+        } else {
+          LOG(Warn, "Fan:ConstantVolume "
+                      << object.nameString()
+                      << " is used in a Packaged System (PTAC or PTHP) that does not have a Supply Air Fan Operating Mode Schedule. "
+                         "In 22.1.0 this would effectively, and mistakenly, function as a cycling fan, but this is now disallowed in E+ 22.2.0. "
+                         "In order to retain a similar functionality and energy usage, this will be replaced by a Fan:SystemModel "
+                         "with an always Off Schedule (cycling fan, similar to a Fan:OnOff)");
+          IdfObject newObject(idd_3_5_0.getObject("OS:Fan:SystemModel").get());
+          // Handle
+          if ((value = object.getString(0))) {
+            newObject.setString(0, value.get());
           }
 
-          newObject.setString(2, alwaysOnSchedule->getString(0).get());
+          // Name
+          if ((value = object.getString(1))) {
+            newObject.setString(1, value.get());
+          }
+
+          // Availability Schedule Name
+          if ((value = object.getString(2))) {
+            newObject.setString(2, value.get());
+          }
+
+          // Note the use of "true" to return default. Fan:ConstantVolume has way more defaulted fields, while Fan:SystemModel adheres to the newer
+          // "make \required-field and hardcode in ctor" doctrine, AND has different defaults than Fan:ConstantVolume. So we do this to fulfil two
+          // goals: Put a value in all required-fields AND set the same values
+          // Fan Total Efficiency
+          if ((value = object.getString(3, true))) {
+            newObject.setString(15, value.get());
+          }
+
+          // Pressure Rise
+          if ((value = object.getString(4, true))) {
+            newObject.setString(8, value.get());
+          }
+
+          // Maximum Flow Rate
+          if ((value = object.getString(5, true))) {
+            newObject.setString(5, value.get());
+          }
+
+          // Motor Efficiency
+          if ((value = object.getString(6, true))) {
+            newObject.setString(9, value.get());
+          }
+
+          // Motor In Airstream Fraction
+          if ((value = object.getString(7, true))) {
+            newObject.setString(10, value.get());
+          }
+
+          // Nodes should be blank since it's inside a containing ZoneHVAC
+          // Air Inlet Node Name
+          if ((value = object.getString(8))) {
+            newObject.setString(3, value.get());
+          }
+
+          // Air Outlet Node Name
+          if ((value = object.getString(9))) {
+            newObject.setString(4, value.get());
+          }
+
+          // End-Use Subcategory
+          if ((value = object.getString(10, true))) {
+            newObject.setString(21, value.get());
+          }
+
+          // Speed Control Method
+          newObject.setString(6, "Discrete");
+
+          // Electric Power Minimum Flow Rate Fraction
+          newObject.setDouble(7, 0.0);
+
+          // Design Electric Power Consumption
+          newObject.setString(11, "Autosize");
+
+          // Design Power Sizing Method
+          newObject.setString(12, "TotalEfficiencyAndPressure");
+
+          // Electric Power Per Unit Flow Rate (not used given Power Sizing Method, but required-field & set in Ctor)
+          newObject.setDouble(13, 840.0);
+
+          // Electric Power Per Unit Flow Rate Per Unit Pressure (not used given Power Sizing Method, but required-field & set in Ctor)
+          newObject.setDouble(14, 1.66667);
+
+          // Electric Power Function of Flow Fraction Curve Name
+          newObject.setString(16, "");
+
+          // Night Ventilation Mode Pressure Rise
+          newObject.setString(17, "");
+
+          // Night Ventilation Mode Flow Fraction
+          newObject.setString(18, "");
+
+          // Motor Loss Zone Name
+          newObject.setString(19, "");
+
+          // Motor Loss Radiative Fraction
+          newObject.setDouble(20, 0.0);
+
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
         }
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_4_0_to_3_5_0
+
+  std::string VersionTranslator::update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_5_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_5_1.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_5_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:UnitarySystemPerformance:Multispeed") {
+
+        // 1 Field has been added from 3.5.0 to 3.5.1:
+        // ----------------------------------------------
+        // * No Load Supply Air Flow Rate Ratio * 3
+        auto iddObject = idd_3_5_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 3) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setDouble(3, 1.0);
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
@@ -7383,11 +7700,63 @@ namespace osversion {
 
     return ss.str();
 
-  }  // end update_3_4_0_to_3_5_0
+  }  // end update_3_5_0_to_3_5_1
 
-  /*   std::string VersionTranslator::update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1) {
+  std::string VersionTranslator::update_3_5_1_to_3_5_2(const IdfFile& idf_3_5_1, const IddFileAndFactoryWrapper& idd_3_5_2) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
 
-  }  // end update_3_5_0_to_3_5_1 */
+    ss << idf_3_5_1.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_5_2.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_5_1.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:GroundHeatExchanger:HorizontalTrench") {
+
+        // Kusuda fields get moved over to OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach
+
+        auto iddObject = idd_3_5_2.getObject(iddname);
+        IdfObject ghxObject(iddObject.get());
+        IdfObject kusudaObject(idd_3_5_2.getObject("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach").get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if (i < 19) {
+            if ((value = object.getString(i))) {
+              ghxObject.setString(i, value.get());
+              if (((i == 11) || (i == 12) || (i == 13))) {  // Soil xxx
+                kusudaObject.setString(i - 9, value.get());
+              }
+            }
+          } else if (i == 19) {  // Undisturbed Ground Temperature Model
+            ghxObject.setString(i, kusudaObject.getString(0).get());
+          } else if (i < 23) {  // Kusuda-Achenbach xxx
+            if ((value = object.getString(i))) {
+              kusudaObject.setString(i - 15, value.get());
+            }
+          } else if (i == 23) {  // Evapotranspiration Ground Cover Parameter
+            if ((value = object.getString(i))) {
+              ghxObject.setString(20, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, ghxObject));
+        m_new.push_back(kusudaObject);
+
+        ss << ghxObject;
+        ss << kusudaObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_5_1_to_3_5_2
 
 }  // namespace osversion
 }  // namespace openstudio

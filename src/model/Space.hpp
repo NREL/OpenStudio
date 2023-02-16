@@ -72,6 +72,7 @@ namespace model {
   class SpaceInfiltrationEffectiveLeakageArea;
   class SpaceInfiltrationFlowCoefficient;
   class DesignSpecificationOutdoorAir;
+  class ZoneMixing;
 
   namespace detail {
 
@@ -624,6 +625,15 @@ namespace model {
 
     Polyhedron polyhedron() const;
     bool isEnclosedVolume() const;
+
+    /** Returns all ZoneMixing objects associated with this space, includes supply and exhaust mixing objects */
+    std::vector<ZoneMixing> zoneMixing() const;
+
+    /** Returns all ZoneMixing objects which supply air to this space */
+    std::vector<ZoneMixing> supplyZoneMixing() const;
+
+    /** Returns all ZoneMixing objects which exhaust air from this space */
+    std::vector<ZoneMixing> exhaustZoneMixing() const;
 
     //@}
    protected:

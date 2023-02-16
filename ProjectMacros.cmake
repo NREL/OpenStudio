@@ -394,16 +394,33 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     )
     set_source_files_properties(${COPY_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
 
-    install(FILES "${PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
-    install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
+    # In build dir it's inside Products/python and we want to find Products/libopenstudiolib
+    # It installs in Python/ and we want to find lib/libopenstudiolib
+    if(APPLE)
+      set_target_properties(${swig_target}
+        PROPERTIES
+          SUFFIX ".so"
+          BUILD_RPATH "@loader_path;@loader_path/.."
+          INSTALL_RPATH "@loader_path;@loader_path/../lib"
+      )
+    elseif(UNIX)
+      set_target_properties(${swig_target}
+        PROPERTIES
+          BUILD_RPATH "$ORIGIN:$ORIGIN/../"
+          INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib:$ORIGIN/../EnergyPlus"   # Need to pick up libpython too, or we won't we able to import the python bindings inside system python
+      )
+    endif()
 
     # TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
     # We're not trying to make a CLI here
     target_link_libraries(${swig_target} PUBLIC ${${PARENT_TARGET}_depends})
     if (MSVC)
-      target_link_libraries(${swig_target} PRIVATE Python::Module)
+      target_link_libraries(${swig_target} PRIVATE Python::Module) # TODO: we're going to have to deal with this now, we'll need to copy python3.8.dll THRICE (E+, bin/ and now Python/)
     endif()
     add_dependencies(${swig_target} ${PARENT_TARGET})
+
+    install(FILES "${PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
+    install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
 
     # add this target to a "global" variable so python tests can require these
     list(APPEND ALL_PYTHON_BINDING_TARGETS "${swig_target}")
@@ -460,8 +477,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd4005") ## /wd4996 suppresses deprecated warning, /wd4005 suppresses macro redefinition warning
         set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
       elseif(UNIX)
-        # TODO: Probably something to be done here...
-        # note: macOS is APPLE and also UNIX !
+        # I'm copying libopenstudiolib inside the python_package folder already. We can use the same RPATH for build tree and install
         if(APPLE)
           set_target_properties(${swig_target}
            PROPERTIES
@@ -477,7 +493,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
              # the RPATH to be used when installing
              INSTALL_RPATH $ORIGIN
-         )
+          )
         endif()
         # set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
         if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)

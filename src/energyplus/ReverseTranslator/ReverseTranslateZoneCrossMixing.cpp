@@ -134,8 +134,8 @@ namespace energyplus {
     } else if (istringEqual("Flow/Area", *s)) {
       d = workspaceObject.getDouble(openstudio::ZoneCrossMixingFields::FlowRateperFloor);
       if (d) {
-        mixing.setFlowRateperZoneFloorArea(*d);
-        reverseMixing.setFlowRateperZoneFloorArea(*d);
+        mixing.setFlowRateperFloorArea(*d);
+        reverseMixing.setFlowRateperFloorArea(*d);
       } else {
         LOG(Error, "Flow/Area value not found for workspace object " << workspaceObject);
       }
@@ -181,8 +181,8 @@ namespace energyplus {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
         if (auto s = modelObject->optionalCast<Schedule>()) {
-          mixing.setMinimumZoneTemperatureSchedule(s.get());
-          reverseMixing.setMinimumZoneTemperatureSchedule(s.get());
+          mixing.setMinimumReceivingTemperatureSchedule(s.get());
+          reverseMixing.setMinimumReceivingTemperatureSchedule(s.get());
         }
       }
     }
@@ -192,8 +192,8 @@ namespace energyplus {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
         if (auto s = modelObject->optionalCast<Schedule>()) {
-          mixing.setMaximumZoneTemperatureSchedule(s.get());
-          reverseMixing.setMaximumZoneTemperatureSchedule(s.get());
+          mixing.setMaximumReceivingTemperatureSchedule(s.get());
+          reverseMixing.setMaximumReceivingTemperatureSchedule(s.get());
         }
       }
     }
@@ -203,8 +203,8 @@ namespace energyplus {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
         if (auto s = modelObject->optionalCast<Schedule>()) {
-          mixing.setMinimumSourceZoneTemperatureSchedule(s.get());
-          reverseMixing.setMinimumSourceZoneTemperatureSchedule(s.get());
+          mixing.setMinimumSourceTemperatureSchedule(s.get());
+          reverseMixing.setMinimumSourceTemperatureSchedule(s.get());
         }
       }
     }
@@ -214,8 +214,8 @@ namespace energyplus {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
         if (auto s = modelObject->optionalCast<Schedule>()) {
-          mixing.setMaximumSourceZoneTemperatureSchedule(s.get());
-          reverseMixing.setMaximumSourceZoneTemperatureSchedule(s.get());
+          mixing.setMaximumSourceTemperatureSchedule(s.get());
+          reverseMixing.setMaximumSourceTemperatureSchedule(s.get());
         }
       }
     }

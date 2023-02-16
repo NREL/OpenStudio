@@ -13,6 +13,8 @@ set(${target_name}_src
   ForwardTranslator.hpp
   ForwardTranslator.cpp
   ForwardTranslator/ForwardTranslateAirConditionerVariableRefrigerantFlow.cpp
+  ForwardTranslator/ForwardTranslateAirConditionerVariableRefrigerantFlowFluidTemperatureControl.cpp
+  ForwardTranslator/ForwardTranslateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.cpp
   ForwardTranslator/ForwardTranslateAirflowNetwork.cpp
   ForwardTranslator/ForwardTranslateAirGap.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVAC.cpp
@@ -75,6 +77,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoStageWithHumidityControlMode.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlow.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWater.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWaterToAirHeatPumpEquationFit.cpp
@@ -83,6 +86,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXVariableRefrigerantFlow.cpp
+  ForwardTranslator/ForwardTranslateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingElectric.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingElectricMultiStage.cpp
@@ -259,6 +263,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputJSON.cpp
   ForwardTranslator/ForwardTranslateOutputSQLite.cpp
   ForwardTranslator/ForwardTranslateOutputEnvironmentalImpactFactors.cpp
+  ForwardTranslator/ForwardTranslateOutputSchedules.cpp
+  ForwardTranslator/ForwardTranslateOutputConstructions.cpp
   ForwardTranslator/ForwardTranslateEnvironmentalImpactFactors.cpp
   ForwardTranslator/ForwardTranslateFuelFactors.cpp
   ForwardTranslator/ForwardTranslateOutputTableSummaryReports.cpp
@@ -360,6 +366,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureDeep.cpp
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureFCfactorMethod.cpp
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureShallow.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureUndisturbedKusudaAchenbach.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureUndisturbedXing.cpp
   ForwardTranslator/ForwardTranslateSiteWaterMainsTemperature.cpp
   ForwardTranslator/ForwardTranslateSkyTemperature.cpp
   ForwardTranslator/ForwardTranslateSizingParameters.cpp
@@ -543,6 +551,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputJSON.cpp
   ReverseTranslator/ReverseTranslateOutputSQLite.cpp
   ReverseTranslator/ReverseTranslateOutputEnvironmentalImpactFactors.cpp
+  ReverseTranslator/ReverseTranslateOutputSchedules.cpp
+  ReverseTranslator/ReverseTranslateOutputConstructions.cpp
   ReverseTranslator/ReverseTranslateEnvironmentalImpactFactors.cpp
   ReverseTranslator/ReverseTranslateFuelFactors.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
@@ -633,6 +643,8 @@ set(${target_name}_test_src
   Test/ReverseTranslator_GTest.cpp
 
   Test/AirConditionerVariableRefrigerantFlow_GTest.cpp
+  Test/AirConditionerVariableRefrigerantFlowFluidTemperatureControl_GTest.cpp
+  Test/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_GTest.cpp
   Test/AirflowNetwork_GTest.cpp
 
   Test/AirLoopHVACUnitarySystem_GTest.cpp
@@ -713,6 +725,7 @@ set(${target_name}_test_src
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
   Test/GeneratorWindTurbine_GTest.cpp
+  Test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   Test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
   Test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   Test/HeatPumpWaterToWaterEquationFit_GTest.cpp
@@ -738,6 +751,8 @@ set(${target_name}_test_src
   Test/OutputSQLite_GTest.cpp
   Test/OutputEnvironmentalImpactFactors_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
+  Test/OutputSchedules_GTest.cpp
+  Test/OutputConstructions_GTest.cpp
   Test/People_GTest.cpp
   Test/PhotovoltaicPerformanceSandia_GTest.cpp
   Test/PerformancePrecisionTradeoffs_GTest.cpp
@@ -759,6 +774,8 @@ set(${target_name}_test_src
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp
   Test/SimulationControl_GTest.cpp
+  Test/SiteGroundTemperatureUndisturbedKusudaAchenbach_GTest.cpp
+  Test/SiteGroundTemperatureUndisturbedXing_GTest.cpp
   Test/SizingSystem_GTest.cpp
   Test/SizingZone_GTest.cpp
   Test/Space_GTest.cpp
@@ -794,6 +811,7 @@ set(${target_name}_test_src
   Test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
   Test/ZoneHVACUnitHeater_GTest.cpp
   Test/ZoneHVACWaterToAirHeatPump_GTest.cpp
+  Test/ZoneMixing_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   Test/ZoneVentilationWindandStackOpenArea_GTest.cpp
 )

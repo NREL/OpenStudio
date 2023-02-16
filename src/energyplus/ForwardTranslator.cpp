@@ -118,19 +118,19 @@ namespace energyplus {
     m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
     createFluidPropertiesMap();
+  }
 
-    m_keepRunControlSpecialDays = true;  // At 3.1.0 this was changed to true.
-    m_ipTabularOutput = false;
-    m_excludeLCCObjects = false;
-    m_excludeSQliteOutputReport = false;
-    m_excludeHTMLOutputReport = false;
-    m_excludeVariableDictionary = false;
-    m_excludeSpaceTranslation = false;  // At 3.4.1, this was changed to false.
+  ForwardTranslatorOptions ForwardTranslator::forwardTranslatorOptions() const {
+    return m_forwardTranslatorOptions;
+  }
+
+  void ForwardTranslator::setForwardTranslatorOptions(ForwardTranslatorOptions forwardTranslatorOptions) {
+    m_forwardTranslatorOptions = std::move(forwardTranslatorOptions);
   }
 
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
 
-    // When m_excludeSpaceTranslation is false, could we skip the (expensive) clone since we aren't combining spaces?
+    // When m_forwardTranslatorOptions.excludeSpaceTranslation() is false, could we skip the (expensive) clone since we aren't combining spaces?
     // No, we are still doing stuff like removing orphan loads, spaces not part of a thermal zone, etc
     Model modelCopy = model.clone(true).cast<Model>();
 
@@ -177,60 +177,45 @@ namespace energyplus {
   }
 
   void ForwardTranslator::setKeepRunControlSpecialDays(bool keepRunControlSpecialDays) {
-    m_keepRunControlSpecialDays = keepRunControlSpecialDays;
+    m_forwardTranslatorOptions.setKeepRunControlSpecialDays(keepRunControlSpecialDays);
   }
 
   void ForwardTranslator::setIPTabularOutput(bool isIP) {
-    m_ipTabularOutput = isIP;
+    m_forwardTranslatorOptions.setIPTabularOutput(isIP);
   }
 
   void ForwardTranslator::setExcludeLCCObjects(bool excludeLCCObjects) {
-    m_excludeLCCObjects = excludeLCCObjects;
+    m_forwardTranslatorOptions.setExcludeLCCObjects(excludeLCCObjects);
   }
 
   void ForwardTranslator::setExcludeSQliteOutputReport(bool excludeSQliteOutputReport) {
-    m_excludeSQliteOutputReport = excludeSQliteOutputReport;
+    m_forwardTranslatorOptions.setExcludeSQliteOutputReport(excludeSQliteOutputReport);
   }
 
   void ForwardTranslator::setExcludeHTMLOutputReport(bool excludeHTMLOutputReport) {
-    m_excludeHTMLOutputReport = excludeHTMLOutputReport;
+    m_forwardTranslatorOptions.setExcludeHTMLOutputReport(excludeHTMLOutputReport);
   }
 
   void ForwardTranslator::setExcludeVariableDictionary(bool excludeVariableDictionary) {
-    m_excludeVariableDictionary = excludeVariableDictionary;
+    m_forwardTranslatorOptions.setExcludeVariableDictionary(excludeVariableDictionary);
   }
 
   void ForwardTranslator::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
-    m_excludeSpaceTranslation = excludeSpaceTranslation;
-  }
-
-  std::vector<ForwardTranslatorOptionKeyMethod> ForwardTranslator::forwardTranslatorOptionKeyMethods() {
-    return std::vector<ForwardTranslatorOptionKeyMethod>{{{"runcontrolspecialdays", "setKeepRunControlSpecialDays"},
-                                                          {"ip_tabular_output", "setIPTabularOutput"},
-                                                          {"no_lifecyclecosts", "setExcludeLCCObjects"},
-                                                          {"no_sqlite_output", "setExcludeSQliteOutputReport"},
-                                                          {"no_html_output", "setExcludeHTMLOutputReport"},
-                                                          {"no_variable_dictionary", "setExcludeVariableDictionary"},
-                                                          {"no_space_translation", "setExcludeSpaceTranslation"}}};
-  }
-
-  std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt) {
-    out << "(" << opt.json_name << ", " << opt.ft_method_name << ")";
-    return out;
+    m_forwardTranslatorOptions.setExcludeSpaceTranslation(excludeSpaceTranslation);
   }
 
   // Figure out which object
   // * If the load is assigned to a space,
-  //     * m_excludeSpaceTranslation = true: translate and return the IdfObject for the Zone
-  //     * m_excludeSpaceTranslation = false: translate and return the IdfObject for Space
+  //     * m_forwardTranslatorOptions.excludeSpaceTranslation() = true: translate and return the IdfObject for the Zone
+  //     * m_forwardTranslatorOptions.excludeSpaceTranslation() = false: translate and return the IdfObject for Space
   // * If the load is assigned to a spaceType:
-  //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_excludeSpaceTranslation is true, SpaceList otherwise)
+  //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_forwardTranslatorOptions.excludeSpaceTranslation() is true, SpaceList otherwise)
   IdfObject ForwardTranslator::getSpaceLoadParent(const model::SpaceLoad& sp, bool allowSpaceType) {
 
     OptionalIdfObject relatedIdfObject;
 
     if (boost::optional<Space> space_ = sp.space()) {
-      if (m_excludeSpaceTranslation) {
+      if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
         if (auto thermalZone_ = space_->thermalZone()) {
           relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
         } else {
@@ -308,7 +293,7 @@ namespace energyplus {
       }
     }
 
-    if (m_excludeSpaceTranslation) {
+    if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
       // next thing to do is combine all spaces in each thermal zone
       // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
       for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
@@ -493,7 +478,7 @@ namespace energyplus {
       }
     }
 
-    if (!m_keepRunControlSpecialDays) {
+    if (!m_forwardTranslatorOptions.keepRunControlSpecialDays()) {
       LOG(Warn, "You have manually choosen to not translate the RunPeriodControlSpecialDays, ignoring them.");
       for (model::RunPeriodControlSpecialDays holiday : model.getConcreteModelObjects<model::RunPeriodControlSpecialDays>()) {
         holiday.remove();
@@ -503,7 +488,7 @@ namespace energyplus {
     if (fullModelTranslation) {
 
       // translate life cycle cost parameters
-      if (!m_excludeLCCObjects) {
+      if (!m_forwardTranslatorOptions.excludeLCCObjects()) {
         boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
         if (!lifeCycleCostParameters) {
           // only warn if costs are present
@@ -549,7 +534,7 @@ namespace energyplus {
       // ensure that output table summary reports exists
       // If the user manually added an OutputTableSummaryReports, but he also opted-in to exclude it on the FT, which decision do we keep?
       // Given that it's a much harder to set the option on the FT, I'll respect that one
-      if (!m_excludeHTMLOutputReport) {
+      if (!m_forwardTranslatorOptions.excludeHTMLOutputReport()) {
         auto optOutputTableSummaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
         // Add default one if none explicitly specified
         if (!optOutputTableSummaryReports) {
@@ -607,6 +592,22 @@ namespace energyplus {
     std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
     for (AirConditionerVariableRefrigerantFlow vrf : vrfs) {
       translateAndMapModelObject(vrf);
+    }
+
+    // get AirConditionerVariableRefrigerantFlowFluidTemperatureControl objects in sorted order
+    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> vrfftcs =
+      model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
+    std::sort(vrfftcs.begin(), vrfftcs.end(), WorkspaceObjectNameLess());
+    for (auto& vrfftc : vrfftcs) {
+      translateAndMapModelObject(vrfftc);
+    }
+
+    // get AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR objects in sorted order
+    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR> vrfftchrs =
+      model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
+    std::sort(vrfftchrs.begin(), vrfftchrs.end(), WorkspaceObjectNameLess());
+    for (auto& vrfftchr : vrfftchrs) {
+      translateAndMapModelObject(vrfftchr);
     }
 
     // get plant loops in sorted order
@@ -701,6 +702,18 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow: {
         model::AirConditionerVariableRefrigerantFlow vrf = modelObject.cast<AirConditionerVariableRefrigerantFlow>();
         retVal = translateAirConditionerVariableRefrigerantFlow(vrf);
+        break;
+      }
+      case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl: {
+        model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf =
+          modelObject.cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
+        retVal = translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(vrf);
+        break;
+      }
+      case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR: {
+        model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf =
+          modelObject.cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
+        retVal = translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(vrf);
         break;
       }
       case openstudio::IddObjectType::OS_AirLoopHVAC: {
@@ -1047,6 +1060,12 @@ namespace energyplus {
         retVal = translateCoilCoolingDXVariableRefrigerantFlow(coil);
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl: {
+        model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl coil =
+          modelObject.cast<CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl>();
+        retVal = translateCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(coil);
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed: {
         model::CoilCoolingDXVariableSpeed coil = modelObject.cast<CoilCoolingDXVariableSpeed>();
         if (this->isHVACComponentWithinUnitary(coil)) {
@@ -1072,6 +1091,10 @@ namespace energyplus {
         model::CoilCoolingWater coil = modelObject.cast<CoilCoolingWater>();
         retVal = translateCoilCoolingWater(coil);
         break;
+      }
+      case openstudio::IddObjectType::OS_Coil_Cooling_Water_Panel_Radiant: {
+        // no-op
+        return retVal;
       }
       case openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit: {
         model::CoilCoolingWaterToAirHeatPumpEquationFit coil = modelObject.cast<CoilCoolingWaterToAirHeatPumpEquationFit>();
@@ -1161,6 +1184,12 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow: {
         model::CoilHeatingDXVariableRefrigerantFlow coil = modelObject.cast<CoilHeatingDXVariableRefrigerantFlow>();
         retVal = translateCoilHeatingDXVariableRefrigerantFlow(coil);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl: {
+        model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl coil =
+          modelObject.cast<CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl>();
+        retVal = translateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(coil);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_Water: {
@@ -2293,6 +2322,16 @@ namespace energyplus {
         retVal = translateOutputSQLite(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_Output_Schedules: {
+        auto mo = modelObject.cast<OutputSchedules>();
+        retVal = translateOutputSchedules(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Output_Constructions: {
+        auto mo = modelObject.cast<OutputConstructions>();
+        retVal = translateOutputConstructions(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Output_EnvironmentalImpactFactors: {
         auto mo = modelObject.cast<OutputEnvironmentalImpactFactors>();
         retVal = translateOutputEnvironmentalImpactFactors(mo);
@@ -2756,6 +2795,16 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Site_GroundTemperature_Shallow: {
         model::SiteGroundTemperatureShallow mo = modelObject.cast<SiteGroundTemperatureShallow>();
         retVal = translateSiteGroundTemperatureShallow(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach: {
+        model::SiteGroundTemperatureUndisturbedKusudaAchenbach mo = modelObject.cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+        retVal = translateSiteGroundTemperatureUndisturbedKusudaAchenbach(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Site_GroundTemperature_Undisturbed_Xing: {
+        model::SiteGroundTemperatureUndisturbedXing mo = modelObject.cast<SiteGroundTemperatureUndisturbedXing>();
+        retVal = translateSiteGroundTemperatureUndisturbedXing(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Site_WaterMainsTemperature: {
@@ -3306,6 +3355,8 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Output_Diagnostics);
     result.push_back(IddObjectType::OS_Output_JSON);
     result.push_back(IddObjectType::OS_Output_SQLite);
+    result.push_back(IddObjectType::OS_Output_Schedules);
+    result.push_back(IddObjectType::OS_Output_Constructions);
 
     // Note: we just always translate Output:EnvironmentalImpactFactors, and in there (it exists), then trigger translatation of the two others
     result.push_back(IddObjectType::OS_Output_EnvironmentalImpactFactors);
@@ -4389,24 +4440,24 @@ namespace energyplus {
   }
 
   void ForwardTranslator::createStandardOutputRequests(const model::Model& model) {
-    if (!m_excludeHTMLOutputReport) {
+    if (!m_forwardTranslatorOptions.excludeHTMLOutputReport()) {
       if (!model.getOptionalUniqueModelObject<model::OutputControlTableStyle>()) {
         IdfObject& tableStyle = m_idfObjects.emplace_back(IddObjectType::OutputControl_Table_Style);
         tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
-        if (m_ipTabularOutput) {
+        if (m_forwardTranslatorOptions.iPTabularOutput()) {
           tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion, "InchPound");
         }
       }
     }
 
-    if (!m_excludeVariableDictionary) {
+    if (!m_forwardTranslatorOptions.excludeVariableDictionary()) {
       IdfObject rddRequest(IddObjectType::Output_VariableDictionary);
       rddRequest.setString(Output_VariableDictionaryFields::KeyField, "IDF");
       rddRequest.setString(Output_VariableDictionaryFields::SortOption, "Unsorted");
       m_idfObjects.push_back(rddRequest);
     }
 
-    if (!m_excludeSQliteOutputReport) {
+    if (!m_forwardTranslatorOptions.excludeSQliteOutputReport()) {
       if (!model.getOptionalUniqueModelObject<model::OutputSQLite>()) {
         IdfObject& sqliteOutput = m_idfObjects.emplace_back(IddObjectType::Output_SQLite);
         sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
@@ -4414,7 +4465,7 @@ namespace energyplus {
     }
 
     // ensure at least one life cycle cost exists to prevent crash in E+ 8
-    if (!m_excludeLCCObjects) {
+    if (!m_forwardTranslatorOptions.excludeLCCObjects()) {
       bool hasAtLeastOneCost = std::any_of(m_idfObjects.cbegin(), m_idfObjects.cend(), [](const auto& obj) {
         auto iddObjType = obj.iddObject().type();
         return (iddObjType == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost)

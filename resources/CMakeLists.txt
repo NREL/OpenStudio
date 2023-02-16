@@ -68,6 +68,8 @@ set(utilities_resources_src
   utilities/Geometry/surface_match_floorplan.json
   utilities/Geometry/threejs.json
   utilities/Geometry/window_floorplan.json
+  utilities/Geometry/issue-4323.json
+  utilities/Geometry/shadingtest.json
   utilities/Geometry/minimal_GLTF_File.gltf
   utilities/Geometry/7-7_Windows_Complete.gltf
   utilities/Geometry/15023_Model12.gltf
@@ -396,4 +398,7 @@ CREATE_SRC_GROUPS("${airflow_resources_src}")
 
 ########################################################
 
+# Copy it for testing
+file(COPY "Examples" DESTINATION .)
+# And install
 install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")

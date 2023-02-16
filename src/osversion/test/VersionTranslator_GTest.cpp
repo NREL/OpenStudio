@@ -53,6 +53,7 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
+#include <utilities/idd/OS_Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -2185,21 +2186,25 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_SizingZone) {
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_SizingZone_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_SizingZone_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> szs = model->getObjectsByType("OS:Sizing:Zone");
   ASSERT_EQ(1u, szs.size());
   auto& sz = szs.front();
 
-  // 9 new fields inserted at position 26, without any harcoding
+  // 9 new fields inserted at position 26, with some harcoding
   // Field Before
   EXPECT_EQ(18.0, sz.getDouble(24).get());
   EXPECT_EQ(19.0, sz.getDouble(25).get());
 
-  for (unsigned i = 26; i < 35; ++i) {
-    EXPECT_TRUE(sz.isEmpty(i));
-  }
+  EXPECT_EQ("Sensible Load Only No Latent Load", sz.getString(26).get());
+  EXPECT_EQ("HumidityRatioDifference", sz.getString(27).get());
+  EXPECT_TRUE(sz.isEmpty(28));
+  EXPECT_EQ(0.005, sz.getDouble(29).get());
+  EXPECT_EQ("HumidityRatioDifference", sz.getString(30).get());
+  EXPECT_TRUE(sz.isEmpty(31));
+  EXPECT_EQ(0.005, sz.getDouble(32).get());
 
   // Field after
   EXPECT_EQ(0.8, sz.getDouble(35).get());
@@ -2223,4 +2228,291 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingGasMultiStage) {
 
   ASSERT_TRUE(coil.getTarget(2));
   EXPECT_EQ("Always On Discrete", coil.getTarget(2)->nameString());
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_ZoneHVACPackaged.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_ZoneHVACPackaged_updated.osm");
+  model->save(outPath, true);
+
+  EXPECT_EQ(2, model->getObjectsByType("OS:Fan:SystemModel").size());
+  {
+    std::vector<WorkspaceObject> ptacs = model->getObjectsByType("OS:ZoneHVAC:PackagedTerminalAirConditioner");
+    ASSERT_EQ(1u, ptacs.size());
+    auto& ptac = ptacs.front();
+
+    // Check the Supply Air Fan Operating Mode Schedule
+    ASSERT_TRUE(ptac.getTarget(17));
+    WorkspaceObject fanOpSch = ptac.getTarget(17).get();
+    EXPECT_EQ("Always Off Discrete", fanOpSch.nameString());
+    EXPECT_EQ(0.0, fanOpSch.getDouble(3).get());
+
+    // Check the Fan, converted from Fan:ConstantVolume to Fan:SystemModel
+    ASSERT_TRUE(ptac.getTarget(13));
+    WorkspaceObject fan = ptac.getTarget(13).get();
+
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_Fan_SystemModel), fan.iddObject().type());
+    EXPECT_EQ("PTAC Fan", fan.getString(OS_Fan_SystemModelFields::Name).get());
+    EXPECT_EQ("Always On Discrete", fan.getString(OS_Fan_SystemModelFields::AvailabilityScheduleName).get());
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirInletNodeName));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirOutletNodeName));
+    EXPECT_EQ(0.5, fan.getDouble(OS_Fan_SystemModelFields::DesignMaximumAirFlowRate).get());
+    EXPECT_EQ("Discrete", fan.getString(OS_Fan_SystemModelFields::SpeedControlMethod).get());
+    EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerMinimumFlowRateFraction).get());
+    EXPECT_EQ(265.0, fan.getDouble(OS_Fan_SystemModelFields::DesignPressureRise).get());
+    EXPECT_EQ(0.89, fan.getDouble(OS_Fan_SystemModelFields::MotorEfficiency).get());
+    EXPECT_EQ(0.92, fan.getDouble(OS_Fan_SystemModelFields::MotorInAirStreamFraction).get());
+    EXPECT_EQ("Autosize", fan.getString(OS_Fan_SystemModelFields::DesignElectricPowerConsumption).get());
+    EXPECT_EQ("TotalEfficiencyAndPressure", fan.getString(OS_Fan_SystemModelFields::DesignPowerSizingMethod).get());
+    EXPECT_EQ(840.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRate).get());
+    EXPECT_EQ(1.66667, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRatePerUnitPressure).get());
+    EXPECT_EQ(0.75, fan.getDouble(OS_Fan_SystemModelFields::FanTotalEfficiency).get());
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModePressureRise));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModeFlowFraction));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::MotorLossZoneName));
+    EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction).get());
+    EXPECT_EQ("PTAC Fans", fan.getString(OS_Fan_SystemModelFields::EndUseSubcategory).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> pthps = model->getObjectsByType("OS:ZoneHVAC:PackagedTerminalHeatPump");
+    ASSERT_EQ(1u, pthps.size());
+    auto& pthp = pthps.front();
+
+    // Check the Supply Air Fan Operating Mode Schedule
+    ASSERT_TRUE(pthp.getTarget(23));
+    WorkspaceObject fanOpSch = pthp.getTarget(23).get();
+    EXPECT_EQ("Always Off Discrete", fanOpSch.nameString());
+    EXPECT_EQ(0.0, fanOpSch.getDouble(3).get());
+
+    // Check the Fan, converted from Fan:ConstantVolume to Fan:SystemModel
+    ASSERT_TRUE(pthp.getTarget(13));
+    WorkspaceObject fan = pthp.getTarget(13).get();
+
+    // This one is all defaulted, ensure we get the SAME values
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_Fan_SystemModel), fan.iddObject().type());
+    EXPECT_EQ("PTHP Fan", fan.getString(OS_Fan_SystemModelFields::Name).get());
+    EXPECT_EQ("Always On Discrete", fan.getString(OS_Fan_SystemModelFields::AvailabilityScheduleName).get());
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirInletNodeName));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirOutletNodeName));
+    EXPECT_EQ("AutoSize", fan.getString(OS_Fan_SystemModelFields::DesignMaximumAirFlowRate).get());
+    EXPECT_EQ("Discrete", fan.getString(OS_Fan_SystemModelFields::SpeedControlMethod).get());
+    EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerMinimumFlowRateFraction).get());
+    EXPECT_EQ(250.0, fan.getDouble(OS_Fan_SystemModelFields::DesignPressureRise).get());
+    EXPECT_EQ(0.9, fan.getDouble(OS_Fan_SystemModelFields::MotorEfficiency).get());
+    EXPECT_EQ(1.0, fan.getDouble(OS_Fan_SystemModelFields::MotorInAirStreamFraction).get());
+    EXPECT_EQ("Autosize", fan.getString(OS_Fan_SystemModelFields::DesignElectricPowerConsumption).get());
+    EXPECT_EQ("TotalEfficiencyAndPressure", fan.getString(OS_Fan_SystemModelFields::DesignPowerSizingMethod).get());
+    EXPECT_EQ(840.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRate).get());
+    EXPECT_EQ(1.66667, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRatePerUnitPressure).get());
+    EXPECT_EQ(0.7, fan.getDouble(OS_Fan_SystemModelFields::FanTotalEfficiency).get());
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModePressureRise));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModeFlowFraction));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::MotorLossZoneName));
+    EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction).get());
+    EXPECT_EQ("General", fan.getString(OS_Fan_SystemModelFields::EndUseSubcategory).get());
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_TableMultiVariableLookup_oneDim_osc) {
+  openstudio::path p = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_oneDim.osc");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Component> comp_ = vt.loadComponent(p);
+  ASSERT_TRUE(comp_) << "Failed to load Component " << p;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_oneDim_updated.osc");
+  comp_->save(outPath, true);
+
+  // Ori OSC has ONE TableMultiVariableLookup object.
+  // We change that to 1 TableLookup, 1 ModelObjectList (=TableIndependentVariableList) and 1 TableIndependentVariable
+  auto compData = comp_->componentData();
+  EXPECT_EQ(3, compData.numComponentObjects());
+
+  Model model;
+  OptionalComponentData ocd = model.insertComponent(comp_.get());
+  ASSERT_TRUE(ocd);
+
+  std::vector<WorkspaceObject> tableLookUps = model.getObjectsByType("OS:Table:Lookup");
+  ASSERT_EQ(1u, tableLookUps.size());
+  ASSERT_EQ(1u, model.getObjectsByType("OS:Table:IndependentVariable").size());
+  ASSERT_EQ(1u, model.getObjectsByType("OS:ModelObjectList").size());
+
+  double norm_ref = 2.4;
+  std::vector<double> x1{0.0, 0.05, 0.33333, 0.5, 0.666667, 0.833333, 1.0, 1.333333};
+  std::vector<double> y{0.0, 0.0024, 1.704, 2.04, 2.208, 2.328, 2.4, 2.496};
+
+  auto& tableLookUp = tableLookUps.front();
+  EXPECT_EQ("CapModFuncOfWaterFlow", tableLookUp.nameString());
+
+  // We have a normalization reference originally, so it's DivisorOnly
+  EXPECT_EQ("DivisorOnly", tableLookUp.getString(3).get());    // Normalization Method
+  EXPECT_EQ(norm_ref, tableLookUp.getDouble(4).get());         // Normalization Divisor
+  EXPECT_EQ(0.0, tableLookUp.getDouble(5).get());              // Minimum Output
+  EXPECT_EQ(1.04 * norm_ref, tableLookUp.getDouble(6).get());  // Maximum Output
+  EXPECT_EQ("Dimensionless", tableLookUp.getString(7).get());  // Output Unit Type
+  EXPECT_TRUE(tableLookUp.isEmpty(8));                         // External File Name
+  EXPECT_TRUE(tableLookUp.isEmpty(9));                         // External File Column Number
+  EXPECT_TRUE(tableLookUp.isEmpty(10));                        // External File Starting Row Number
+  // Output Values
+  ASSERT_EQ(y.size(), tableLookUp.numExtensibleGroups());
+  for (size_t i = 0; auto& eg : tableLookUp.extensibleGroups()) {
+    EXPECT_EQ(y[i], eg.getDouble(0).get());
+    ++i;
+  }
+
+  auto varList_ = tableLookUp.getTarget(2);
+  ASSERT_TRUE(varList_);
+  EXPECT_EQ("CapModFuncOfWaterFlow_IndependentVariableList", varList_->nameString());
+  ASSERT_EQ(1, varList_->numExtensibleGroups());
+  auto var_ = varList_->extensibleGroups().front().cast<WorkspaceExtensibleGroup>().getTarget(0);
+  ASSERT_TRUE(var_);
+  EXPECT_EQ("CapModFuncOfWaterFlow_IndependentVariable_0", var_->nameString());
+
+  // Interpolation = EvaluateCurveToLimits maps to Cubic/Constant
+  EXPECT_EQ("Cubic", var_->getString(2).get());          // Interpolation Method
+  EXPECT_EQ("Constant", var_->getString(3).get());       // Extrapolation Method
+  EXPECT_EQ(0.0, var_->getDouble(4).get());              // Minimum Value
+  EXPECT_EQ(1.33, var_->getDouble(5).get());             // Maximum Value
+  EXPECT_TRUE(var_->isEmpty(6));                         // Normalization Reference Value
+  EXPECT_EQ("Dimensionless", var_->getString(7).get());  // Unit Type
+  EXPECT_TRUE(var_->isEmpty(8));                         // External File Name
+  EXPECT_TRUE(var_->isEmpty(9));                         // External File Column Number
+  EXPECT_TRUE(var_->isEmpty(10));                        // External File Starting Row Number
+
+  // Values
+  ASSERT_EQ(x1.size(), var_->numExtensibleGroups());
+  for (size_t i = 0; auto& eg : var_->extensibleGroups()) {
+    EXPECT_EQ(x1[i], eg.getDouble(0).get());
+    ++i;
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_UnitarySystemPerformanceMultispeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_1/test_vt_UnitarySystemPerformanceMultispeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_1/test_vt_UnitarySystemPerformanceMultispeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> perfs = model->getObjectsByType("OS:UnitarySystemPerformance:Multispeed");
+  ASSERT_EQ(1u, perfs.size());
+  WorkspaceObject perf = perfs[0];
+
+  EXPECT_EQ("Unitary System Performance Multispeed 1", perf.nameString());
+  EXPECT_EQ("No", perf.getString(2).get());  // OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation
+  EXPECT_EQ(1.0, perf.getDouble(3).get());   // OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio
+
+  EXPECT_EQ(2u, perf.numExtensibleGroups());
+  auto eg1 = perf.extensibleGroups()[0];
+  EXPECT_EQ(1.0, eg1.getDouble(0, false).get());
+  EXPECT_EQ(2.0, eg1.getDouble(1, false).get());
+  auto eg2 = perf.extensibleGroups()[1];
+  EXPECT_EQ("autosize", eg2.getString(0, false).get());
+  EXPECT_EQ(3.0, eg2.getDouble(1, false).get());
+}
+
+TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_VRF_Terminal_v350_osc) {
+  // In this one, the starting version is 3.5.0, so it already has Table:Lookup instead of Table:MultiVariableLookup
+  openstudio::path p = resourcesPath() / toPath("osversion/3_5_1/test_VRF_Terminal_v350.osc");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Component> comp_ = vt.loadComponent(p);
+  ASSERT_TRUE(comp_) << "Failed to load Component " << p;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_1/test_VRF_Terminal_v350_updated.osc");
+  comp_->save(outPath, true);
+
+  auto compData = comp_->componentData();
+  EXPECT_EQ(18, compData.numComponentObjects());
+  EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", compData.primaryComponentObject().iddObject().name());
+
+  Model model;
+  OptionalComponentData ocd = model.insertComponent(comp_.get());
+  ASSERT_TRUE(ocd);
+  EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", compData.primaryComponentObject().iddObject().name());
+  EXPECT_EQ(18, ocd->numComponentObjects());
+  EXPECT_EQ(19, model.numObjects());
+  EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", ocd->primaryComponentObject().iddObject().name());
+}
+
+TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_VRF_Terminal_v340_osc) {
+  // Here the starting version is 3.4.0, so it has only 12 objects to start with
+  openstudio::path p = resourcesPath() / toPath("osversion/3_5_1/test_VRF_Terminal_v340.osc");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Component> comp_ = vt.loadComponent(p);
+  ASSERT_TRUE(comp_) << "Failed to load Component " << p;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_1/test_VRF_Terminal_v340_updated.osc");
+  comp_->save(outPath, true);
+
+  // Ori OSC has ONE TableMultiVariableLookup object.
+  // We change that to 1 TableLookup, 1 ModelObjectList (=TableIndependentVariableList) and 1 TableIndependentVariable
+  auto compData = comp_->componentData();
+  EXPECT_EQ(18, compData.numComponentObjects());
+  EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", compData.primaryComponentObject().iddObject().name());
+
+  Model model;
+  OptionalComponentData ocd = model.insertComponent(comp_.get());
+  ASSERT_TRUE(ocd);
+  EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", compData.primaryComponentObject().iddObject().name());
+  EXPECT_EQ(18, ocd->numComponentObjects());
+  EXPECT_EQ(19, model.numObjects());
+  EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", ocd->primaryComponentObject().iddObject().name());
+}
+
+TEST_F(OSVersionFixture, update_3_5_1_to_3_5_2_GroundHeatExchangerHorizontalTrench) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_2/test_vt_GroundHeatExchangerHorizontalTrench.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_2/test_vt_GroundHeatExchangerHorizontalTrench_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> ghxs = model->getObjectsByType("OS:GroundHeatExchanger:HorizontalTrench");
+  ASSERT_EQ(1u, ghxs.size());
+  WorkspaceObject ghx = ghxs[0];
+
+  EXPECT_EQ("Ground Heat Exchanger Horizontal Trench 1", ghx.getString(1).get());  // Name
+  EXPECT_TRUE(ghx.isEmpty(2));                                                     // Inlet Node Name
+  EXPECT_TRUE(ghx.isEmpty(3));                                                     // Outlet Node Name
+  EXPECT_EQ(0.004, ghx.getDouble(4).get());                                        // Design Flow Rate
+  EXPECT_EQ(75, ghx.getDouble(5).get());                                           // Trench Length in Pipe Axial Direction
+  EXPECT_EQ(2, ghx.getInt(6).get());                                               // Number of Trenches
+  EXPECT_EQ(2, ghx.getDouble(7).get());                                            // Horizontal Spacing Between Pipes
+  EXPECT_EQ(0.016, ghx.getDouble(8).get());                                        // Pipe Inner Diameter
+  EXPECT_EQ(0.02667, ghx.getDouble(9).get());                                      // Pipe Outer Diameter
+  EXPECT_EQ(1.25, ghx.getDouble(10).get());                                        // Burial Depth
+  EXPECT_EQ(1.08, ghx.getDouble(11).get());                                        // Soil Thermal Conductivity
+  EXPECT_EQ(962, ghx.getDouble(12).get());                                         // Soil Density
+  EXPECT_EQ(2576, ghx.getDouble(13).get());                                        // Soil Specific Heat
+  EXPECT_EQ(0.3895, ghx.getDouble(14).get());                                      // Pipe Thermal Conductivity
+  EXPECT_EQ(641, ghx.getDouble(15).get());                                         // Pipe Density
+  EXPECT_EQ(2405, ghx.getDouble(16).get());                                        // Pipe Specific Heat
+  EXPECT_EQ(30, ghx.getDouble(17).get());                                          // Soil Moisture Content Percent
+  EXPECT_EQ(50, ghx.getDouble(18).get());                                          // Soil Moisture Content Percent at Saturation
+  EXPECT_NE("", ghx.getString(19).get());                                          // Undisturbed Ground Temperature Model
+  EXPECT_EQ(0.408, ghx.getDouble(20).get());                                       // Evapotranspiration Ground Cover Parameter
+
+  std::vector<WorkspaceObject> ukas = model->getObjectsByType("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach");
+  ASSERT_EQ(1u, ukas.size());
+
+  ASSERT_TRUE(ghx.getTarget(19));
+  WorkspaceObject uka = ghx.getTarget(19).get();
+  EXPECT_EQ(uka.nameString(), ghx.getTarget(19)->nameString());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach), uka.iddObject().type());
+  EXPECT_EQ("Site Ground Temperature Undisturbed Kusuda Achenbach 1", uka.getString(1).get());  // Name
+  EXPECT_EQ(1.08, uka.getDouble(2).get());                                                      // Soil Thermal Conductivity
+  EXPECT_EQ(962, uka.getDouble(3).get());                                                       // Soil Density
+  EXPECT_EQ(2576, uka.getDouble(4).get());                                                      // Soil Specific Heat
+  EXPECT_EQ(15.5, uka.getDouble(5).get());                                                      // Average Soil Surface Temperature
+  EXPECT_EQ(12.8, uka.getDouble(6).get());                                                      // Average Amplitude of Surface Temperature
+  EXPECT_EQ(17.3, uka.getDouble(7).get());                                                      // Phase Shift of Minimum Surface Temperature
 }

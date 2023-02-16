@@ -60,6 +60,8 @@ namespace model {
   class OutputSQLite;
   class OutputEnergyManagementSystem;
   class OutputTableSummaryReports;
+  class OutputSchedules;
+  class OutputConstructions;
   class PerformancePrecisionTradeoffs;
   class LifeCycleCostParameters;
   class SizingParameters;
@@ -191,6 +193,14 @@ namespace model {
     /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
     boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
+
+    /** Get the OutputSchedules object if there is one, this implementation uses a cached reference to the OutputSchedules
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputSchedules>(). */
+    boost::optional<OutputSchedules> outputSchedules() const;
+
+    /** Get the OutputConstructions object if there is one, this implementation uses a cached reference to the OutputConstructions
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputConstructions>(). */
+    boost::optional<OutputConstructions> outputConstructions() const;
 
     /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
@@ -719,6 +729,12 @@ namespace model {
 
   template <>
   MODEL_API OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>();
+
+  template <>
+  MODEL_API OutputSchedules Model::getUniqueModelObject<OutputSchedules>();
+
+  template <>
+  MODEL_API OutputConstructions Model::getUniqueModelObject<OutputConstructions>();
 
   template <>
   MODEL_API PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>();

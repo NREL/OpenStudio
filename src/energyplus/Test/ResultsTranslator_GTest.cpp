@@ -64,7 +64,7 @@ TEST_F(EnergyPlusFixture,ResultsTranslator_5ZoneAirCooled_NoErrorsNoWarnings)
   openstudio::path epDir = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/");
   openstudio::path origSqlPath = epDir / openstudio::toPath("eplusout.sql");
   openstudio::path testSqlPath = epDir / openstudio::toPath("eplusout_NoErrorsNoWarnings.sql");
-  openstudio::filesystem::copy_file(origSqlPath,testSqlPath,openstudio::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(origSqlPath,testSqlPath,openstudio::filesystem::copy_options::overwrite_existing);
   openstudio::path errorPath = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/NoErrorsNoWarnings.err");
 
   SqlFile sqlFile(testSqlPath);
@@ -95,7 +95,7 @@ TEST_F(EnergyPlusFixture,ResultsTranslator_5ZoneAirCooled_WarningsAndSevere)
   openstudio::path epDir = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/");
   openstudio::path origSqlPath = epDir / openstudio::toPath("eplusout.sql");
   openstudio::path testSqlPath = epDir / openstudio::toPath("eplusout_WarningsAndSevere.sql");
-  openstudio::filesystem::copy_file(origSqlPath, testSqlPath, openstudio::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(origSqlPath, testSqlPath, openstudio::filesystem::copy_options::overwrite_existing);
   openstudio::path errorPath = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/WarningsAndSevere.err");
 
   SqlFile sqlFile(testSqlPath);
@@ -126,7 +126,7 @@ TEST_F(EnergyPlusFixture,ResultsTranslator_5ZoneAirCooled_WarningsAndCrash)
   openstudio::path epDir = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/");
   openstudio::path origSqlPath = epDir / openstudio::toPath("eplusout.sql");
   openstudio::path testSqlPath = epDir / openstudio::toPath("eplusout_WarningsAndCrash.sql");
-  openstudio::filesystem::copy_file(origSqlPath,testSqlPath,openstudio::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(origSqlPath,testSqlPath,openstudio::filesystem::copy_options::overwrite_existing);
   openstudio::path errorPath = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/WarningsAndCrash.err");
 
   SqlFile sqlFile(testSqlPath);
