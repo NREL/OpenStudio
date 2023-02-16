@@ -90,7 +90,7 @@ namespace model {
         child.clone(model).cast<PythonPluginOutputVariable>().setPythonPluginVariable(newVar);
       }
 
-      return newVar;
+      return std::move(newVar);
     }
 
     std::vector<IdfObject> PythonPluginVariable_Impl::remove() {

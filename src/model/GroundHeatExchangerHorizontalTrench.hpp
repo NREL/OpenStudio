@@ -62,8 +62,6 @@ namespace model {
     GroundHeatExchangerHorizontalTrench& operator=(const GroundHeatExchangerHorizontalTrench&) = default;
     GroundHeatExchangerHorizontalTrench& operator=(GroundHeatExchangerHorizontalTrench&&) = default;
 
-    virtual ~GroundHeatExchangerHorizontalTrench() = default;
-
     //@}
 
     static IddObjectType iddObjectType();

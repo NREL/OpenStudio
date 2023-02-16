@@ -59,7 +59,8 @@ namespace model {
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& other) = default;
     CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl&& other) = default;
-    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& operator=(const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl&) = default;
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl&
+      operator=(const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl&) = default;
     CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& operator=(CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl&&) = default;
 
     //@}

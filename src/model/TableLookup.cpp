@@ -124,7 +124,7 @@ namespace model {
           modelObjectClone.addIndependentVariable(var);
         }
       }
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IdfObject> TableLookup_Impl::remove() {

@@ -1644,7 +1644,7 @@ namespace model {
       ModelObjectList modelObjectList(model);
       airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setVRFModelObjectList(modelObjectList);
 
-      return airConditionerClone;
+      return std::move(airConditionerClone);
     }
 
     std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlow_Impl::remove() {
