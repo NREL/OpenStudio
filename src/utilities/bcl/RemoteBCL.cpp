@@ -896,7 +896,7 @@ void RemoteBCL::onDownloadComplete() {
   // search for component.xml or measure.xml file
   boost::optional<openstudio::path> xmlPath;
 
-  for (const openstudio::path& path : createdFiles) {
+  for (const auto& path : createdFiles) {
     if (path.filename() == toPath("component.xml")) {
       componentType = "component";
       m_lastComponentDownload.reset();

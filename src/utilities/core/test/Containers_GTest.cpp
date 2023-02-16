@@ -267,7 +267,7 @@ TEST_F(CoreFixture, Concat) {
   EXPECT_EQ(moved, X::howManyMoved());
 
   LOG_FREE(Debug, "Concat", "concat!");
-  auto t = openstudio::concat<X>(vec1, std::move(vec2), vec3, std::move(vec4));
+  [[maybe_unused]] auto t = openstudio::concat<X>(vec1, std::move(vec2), vec3, std::move(vec4));
   EXPECT_EQ(s1 + s2 + s3 + s4, detail::X_Impl::howMany());
   EXPECT_EQ(s1 + s2 + s3 + s4 + s1 + s3, X::howMany());
   EXPECT_EQ(copied + s1 + s3, X::howManyCopied());

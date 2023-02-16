@@ -610,7 +610,7 @@ std::vector<Point3d> reverse(const Point3dVector& vertices) {
 
 bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, double desiredViewGlassSillHeight,
                                         double desiredDaylightingGlassHeaderHeight, double exteriorShadingProjectionFactor,
-                                        double interiorShelfProjectionFactor, const Point3dVector& vertices, Point3dVector& viewVertices,
+                                        double interiorShelfProjectionFactor, const Point3dVector& surfaceVertices, Point3dVector& viewVertices,
                                         Point3dVector& daylightingVertices, Point3dVector& exteriorShadingVertices,
                                         Point3dVector& interiorShelfVertices) {
   // check inputs for reasonableness
@@ -622,13 +622,13 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
     return false;
   }
 
-  boost::optional<double> grossArea = getArea(vertices);
+  boost::optional<double> grossArea = getArea(surfaceVertices);
   if (!grossArea) {
     return false;
   }
 
-  Transformation transformation = Transformation::alignFace(vertices);
-  Point3dVector faceVertices = transformation.inverse() * vertices;
+  Transformation transformation = Transformation::alignFace(surfaceVertices);
+  Point3dVector faceVertices = transformation.inverse() * surfaceVertices;
 
   if (faceVertices.empty()) {
     return false;

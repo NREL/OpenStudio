@@ -53,7 +53,7 @@ namespace filesystem {
 
   std::string read_as_string(openstudio::filesystem::ifstream& t_file) {
     const auto vec = read(t_file);
-    return {vec.begin(), vec.end()};
+    return std::string(vec.begin(), vec.end());
   }
 
   std::string read_as_string(const openstudio::path& t_path) {

@@ -33,6 +33,10 @@ jobs:
             --suppress=functionConst:src/utilities/filetypes/WorkflowStep.hpp \
             --suppress=functionConst:src/utilities/filetypes/WorkflowStepResult.hpp \
             --suppress=redundantAssignment:src/utilities/sql/SqlFile.hpp \
+            --suppress=constParameterCallback:src/utilities/idd/benchmark/IddObjectParse_Benchmark.cpp \
+            --suppress=constParameterCallback:src/utilities/idd/benchmark/LoadIdd_Benchmark.cpp \
+            --suppress=constParameterCallback:src/utilities/idf/benchmark/IdfObjectParse_Benchmark.cpp \
+            --suppress=constParameterCallback:src/utilities/idf/benchmark/LoadIdfFile_Benchmark.cpp \
             --inline-suppr \
             --inconclusive \
             --template='[{file}:{line}]:({severity}),[{id}],{message}' \
