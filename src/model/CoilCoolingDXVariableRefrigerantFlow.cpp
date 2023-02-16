@@ -148,7 +148,7 @@ namespace model {
     Curve CoilCoolingDXVariableRefrigerantFlow_Impl::coolingCapacityRatioModifierFunctionofTemperatureCurve() const {
       boost::optional<Curve> value = optionalCoolingCapacityRatioModifierFunctionofTemperatureCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Cooling Capacity Ratio Modifier Functionof Temperature Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Cooling Capacity Ratio Modifier Function of Temperature Curve attached.");
       }
       return value.get();
     }
@@ -156,7 +156,7 @@ namespace model {
     Curve CoilCoolingDXVariableRefrigerantFlow_Impl::coolingCapacityModifierCurveFunctionofFlowFraction() const {
       boost::optional<Curve> value = optionalCoolingCapacityModifierCurveFunctionofFlowFraction();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Cooling Capacity Modifier Curve Functionof Flow Fraction attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Cooling Capacity Modifier Curve Function of Flow Fraction attached.");
       }
       return value.get();
     }

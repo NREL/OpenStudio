@@ -3827,6 +3827,8 @@ namespace model {
 
     REGISTER_CONSTRUCTOR(AdditionalProperties);
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
+    REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlowFluidTemperatureControl);
+    REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR);
     REGISTER_CONSTRUCTOR(AirflowNetworkConstantPressureDrop);
     REGISTER_CONSTRUCTOR(AirflowNetworkCrack);
     REGISTER_CONSTRUCTOR(AirflowNetworkDetailedOpening);
@@ -3916,6 +3918,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoStageWithHumidityControlMode);
     REGISTER_CONSTRUCTOR(CoilCoolingDXVariableRefrigerantFlow);
+    REGISTER_CONSTRUCTOR(CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl);
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantConstFlow);
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(CoilCoolingDXVariableSpeed);
@@ -3931,6 +3934,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilHeatingDXMultiSpeedStageData);
     REGISTER_CONSTRUCTOR(CoilHeatingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlow);
+    REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
     REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStage);
     REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStageStageData);
@@ -4121,7 +4125,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(LightingSimulationControl);
     REGISTER_CONSTRUCTOR(LightingSimulationZone);
     REGISTER_CONSTRUCTOR(Lights);
-    REGISTER_CONSTRUCTOR(LightsDefinition)
+    REGISTER_CONSTRUCTOR(LightsDefinition);
+    REGISTER_CONSTRUCTOR(LoadingIndex);
     REGISTER_CONSTRUCTOR(Luminaire);
     REGISTER_CONSTRUCTOR(LuminaireDefinition);
     REGISTER_CONSTRUCTOR(MaterialPropertyGlazingSpectralData);
@@ -4256,6 +4261,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureDeep);
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureShallow);
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureFCfactorMethod);
+    REGISTER_CONSTRUCTOR(SiteGroundTemperatureUndisturbedKusudaAchenbach);
+    REGISTER_CONSTRUCTOR(SiteGroundTemperatureUndisturbedXing);
     REGISTER_CONSTRUCTOR(SiteWaterMainsTemperature);
     REGISTER_CONSTRUCTOR(SizingParameters);
     REGISTER_CONSTRUCTOR(SizingPlant);
@@ -4386,6 +4393,8 @@ namespace model {
   };
     REGISTER_COPYCONSTRUCTORS(AdditionalProperties);
     REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlow);
+    REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlowFluidTemperatureControl);
+    REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkConstantPressureDrop);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkCrack);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkDetailedOpening);
@@ -4475,6 +4484,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoStageWithHumidityControlMode);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableRefrigerantFlow);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantConstFlow);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableSpeed);
@@ -4490,6 +4500,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXMultiSpeedStageData);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlow);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStage);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStageStageData);
@@ -4681,6 +4692,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(LightingSimulationZone);
     REGISTER_COPYCONSTRUCTORS(Lights);
     REGISTER_COPYCONSTRUCTORS(LightsDefinition);
+    REGISTER_COPYCONSTRUCTORS(LoadingIndex);
     REGISTER_COPYCONSTRUCTORS(Luminaire);
     REGISTER_COPYCONSTRUCTORS(LuminaireDefinition);
     REGISTER_COPYCONSTRUCTORS(MaterialPropertyGlazingSpectralData);
@@ -4815,6 +4827,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureDeep);
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureShallow);
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureFCfactorMethod);
+    REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureUndisturbedKusudaAchenbach);
+    REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureUndisturbedXing);
     REGISTER_COPYCONSTRUCTORS(SiteWaterMainsTemperature);
     REGISTER_COPYCONSTRUCTORS(SizingParameters);
     REGISTER_COPYCONSTRUCTORS(SizingPlant);

@@ -82,7 +82,7 @@ namespace model {
 
       bool isTranslatetoScheduleFileDefaulted() const;
 
-      double intervalLength() const;
+      int intervalLength() const;
 
       double outOfRangeValue() const;
 
@@ -104,7 +104,7 @@ namespace model {
 
       void resetTranslatetoScheduleFile(bool driverMethod = true);
 
-      bool setIntervalLength(double intervalLength, bool driverMethod = true);
+      bool setIntervalLength(int intervalLength, bool driverMethod = true);
 
       bool setOutOfRangeValue(double outOfRangeValue, bool driverMethod = true);
 

@@ -52,6 +52,8 @@ class Transformation;
 namespace model {
 
   class AirConditionerVariableRefrigerantFlow;
+  class AirConditionerVariableRefrigerantFlowFluidTemperatureControl;
+  class AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR;
   class AirflowNetworkSimulationControl;
   class AirflowNetworkZone;
   class AirflowNetworkSurface;
@@ -135,6 +137,7 @@ namespace model {
   class CoilCoolingDXTwoSpeed;
   class CoilCoolingDXTwoStageWithHumidityControlMode;
   class CoilCoolingDXVariableRefrigerantFlow;
+  class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl;
   class CoilCoolingDXVariableSpeed;
   class CoilCoolingWater;
   class CoilCoolingWaterToAirHeatPumpEquationFit;
@@ -143,6 +146,7 @@ namespace model {
   class CoilHeatingDXMultiSpeed;
   class CoilHeatingDXSingleSpeed;
   class CoilHeatingDXVariableRefrigerantFlow;
+  class CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl;
   class CoilHeatingDXVariableSpeed;
   class CoilHeatingElectric;
   class CoilHeatingElectricMultiStage;
@@ -406,6 +410,8 @@ namespace model {
   class SiteGroundTemperatureDeep;
   class SiteGroundTemperatureFCfactorMethod;
   class SiteGroundTemperatureShallow;
+  class SiteGroundTemperatureUndisturbedKusudaAchenbach;
+  class SiteGroundTemperatureUndisturbedXing;
   class SiteWaterMainsTemperature;
   class SizingParameters;
   class SizingPlant;
@@ -608,6 +614,12 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlow(model::AirConditionerVariableRefrigerantFlow& modelObject);
 
+    boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(
+      model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl& modelObject);
+
+    boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(
+      model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR& modelObject);
+
     boost::optional<IdfObject> translateAirflowNetworkSimulationControl(model::AirflowNetworkSimulationControl& modelObject);
 
     boost::optional<IdfObject> translateAirflowNetworkZone(model::AirflowNetworkZone& modelObject);
@@ -789,6 +801,9 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlow(model::CoilCoolingDXVariableRefrigerantFlow& modelObject);
 
+    boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(
+      model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject);
+
     boost::optional<IdfObject> translateCoilCoolingDXVariableSpeed(model::CoilCoolingDXVariableSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXVariableSpeedWithoutUnitary(model::CoilCoolingDXVariableSpeed& modelObject);
@@ -809,6 +824,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilHeatingDXSingleSpeedWithoutUnitary(model::CoilHeatingDXSingleSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlow(model::CoilHeatingDXVariableRefrigerantFlow& modelObject);
+
+    boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(
+      model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingDXVariableSpeed(model::CoilHeatingDXVariableSpeed& modelObject);
 
@@ -1381,6 +1399,11 @@ namespace energyplus {
     boost::optional<IdfObject> translateSiteGroundTemperatureFCfactorMethod(model::SiteGroundTemperatureFCfactorMethod& modelObject);
 
     boost::optional<IdfObject> translateSiteGroundTemperatureShallow(model::SiteGroundTemperatureShallow& modelObject);
+
+    boost::optional<IdfObject>
+      translateSiteGroundTemperatureUndisturbedKusudaAchenbach(model::SiteGroundTemperatureUndisturbedKusudaAchenbach& modelObject);
+
+    boost::optional<IdfObject> translateSiteGroundTemperatureUndisturbedXing(model::SiteGroundTemperatureUndisturbedXing& modelObject);
 
     boost::optional<IdfObject> translateSiteWaterMainsTemperature(model::SiteWaterMainsTemperature& modelObject);
 

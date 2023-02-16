@@ -70,6 +70,8 @@ namespace detail {
 
     openstudio::DateTime firstReportDateTime() const;
 
+    openstudio::DateTime startDateTime() const;
+
     DateTimeVector dateTimes() const;
 
     openstudio::Vector daysFromFirstReport() const;
@@ -228,6 +230,9 @@ class UTILITIES_API TimeSeries
 
   /// Returns the date and time of first report value
   openstudio::DateTime firstReportDateTime() const;
+
+  /// Returns the date and time of start value
+  openstudio::DateTime startDateTime() const;
 
   /// Returns the vector of time in days from end of the first reporting interval
   openstudio::Vector daysFromFirstReport() const;

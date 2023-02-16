@@ -1489,94 +1489,724 @@ namespace detail {
       "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Total End Uses') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelHeating() const {
+  /* Gasoline */
+  OptionalDouble SqlFile_Impl::gasolineHeating() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Heating') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Heating') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelCooling() const {
+  OptionalDouble SqlFile_Impl::gasolineCooling() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Cooling') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Cooling') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelInteriorLighting() const {
+  OptionalDouble SqlFile_Impl::gasolineInteriorLighting() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Interior Lighting') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelExteriorLighting() const {
+  OptionalDouble SqlFile_Impl::gasolineExteriorLighting() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelInteriorEquipment() const {
+  OptionalDouble SqlFile_Impl::gasolineInteriorEquipment() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+  OptionalDouble SqlFile_Impl::gasolineExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelExteriorEquipment() const {
+  OptionalDouble SqlFile_Impl::gasolineFans() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Fans') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelFans() const {
+  OptionalDouble SqlFile_Impl::gasolinePumps() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Fans') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Pumps') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelPumps() const {
+  OptionalDouble SqlFile_Impl::gasolineHeatRejection() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Pumps') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Heat Rejection') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelHeatRejection() const {
+  OptionalDouble SqlFile_Impl::gasolineHumidification() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Humidification') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelHumidification() const {
+  OptionalDouble SqlFile_Impl::gasolineHeatRecovery() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Humidification') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Heat Recovery') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelHeatRecovery() const {
+  OptionalDouble SqlFile_Impl::gasolineWaterSystems() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Water Systems') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelWaterSystems() const {
+  OptionalDouble SqlFile_Impl::gasolineRefrigeration() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Water Systems') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Refrigeration') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelRefrigeration() const {
+  OptionalDouble SqlFile_Impl::gasolineGenerators() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Refrigeration') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Generators') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelGenerators() const {
+  OptionalDouble SqlFile_Impl::gasolineTotalEndUses() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Generators') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Gasoline') and (RowName ='Total End Uses') and (Units = 'GJ')");
   }
 
-  OptionalDouble SqlFile_Impl::otherFuelTotalEndUses() const {
+  /* Diesel */
+  OptionalDouble SqlFile_Impl::dieselHeating() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Total End Uses') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Heating') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselCooling() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Cooling') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselInteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselExteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselInteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+  OptionalDouble SqlFile_Impl::dieselExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselFans() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Fans') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselPumps() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Pumps') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselHeatRejection() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselHumidification() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Humidification') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselHeatRecovery() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselWaterSystems() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Water Systems') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselRefrigeration() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Refrigeration') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselGenerators() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Generators') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::dieselTotalEndUses() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Diesel') and (RowName ='Total End Uses') and (Units = 'GJ')");
+  }
+
+  /* Coal */
+  OptionalDouble SqlFile_Impl::coalHeating() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Heating') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalCooling() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Cooling') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalInteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalExteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalInteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+  OptionalDouble SqlFile_Impl::coalExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalFans() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Fans') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalPumps() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Pumps') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalHeatRejection() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalHumidification() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Humidification') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalHeatRecovery() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalWaterSystems() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Water Systems') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalRefrigeration() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Refrigeration') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalGenerators() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Generators') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::coalTotalEndUses() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Coal') and (RowName ='Total End Uses') and (Units = 'GJ')");
+  }
+
+  /* Fuel Oil No 1 */
+  OptionalDouble SqlFile_Impl::fuelOilNo1Heating() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Heating') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1Cooling() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Cooling') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1InteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1ExteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1InteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+  OptionalDouble SqlFile_Impl::fuelOilNo1ExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1Fans() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Fans') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1Pumps() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Pumps') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1HeatRejection() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1Humidification() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Humidification') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1HeatRecovery() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1WaterSystems() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Water Systems') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1Refrigeration() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Refrigeration') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1Generators() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Generators') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo1TotalEndUses() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 1') and (RowName ='Total End Uses') and (Units = 'GJ')");
+  }
+
+  /* Fuel Oil No 2 */
+  OptionalDouble SqlFile_Impl::fuelOilNo2Heating() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Heating') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2Cooling() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Cooling') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2InteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2ExteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2InteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+  OptionalDouble SqlFile_Impl::fuelOilNo2ExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2Fans() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Fans') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2Pumps() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Pumps') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2HeatRejection() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2Humidification() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Humidification') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2HeatRecovery() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2WaterSystems() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Water Systems') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2Refrigeration() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Refrigeration') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2Generators() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Generators') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::fuelOilNo2TotalEndUses() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Fuel Oil No 2') and (RowName ='Total End Uses') and (Units = 'GJ')");
+  }
+
+  /* Propane */
+  OptionalDouble SqlFile_Impl::propaneHeating() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Heating') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneCooling() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Cooling') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneInteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneExteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneInteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+  OptionalDouble SqlFile_Impl::propaneExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneFans() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Fans') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propanePumps() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Pumps') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneHeatRejection() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneHumidification() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Humidification') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneHeatRecovery() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneWaterSystems() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Water Systems') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneRefrigeration() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Refrigeration') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneGenerators() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Generators') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::propaneTotalEndUses() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Propane') and (RowName ='Total End Uses') and (Units = 'GJ')");
+  }
+
+  /* Other Fuel 1 */
+  OptionalDouble SqlFile_Impl::otherFuel1Heating() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Heating') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1Cooling() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Cooling') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1InteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1ExteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1InteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+  OptionalDouble SqlFile_Impl::otherFuel1ExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1Fans() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Fans') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1Pumps() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Pumps') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1HeatRejection() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1Humidification() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Humidification') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1HeatRecovery() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1WaterSystems() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Water Systems') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1Refrigeration() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Refrigeration') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1Generators() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Generators') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel1TotalEndUses() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 1') and (RowName ='Total End Uses') and (Units = 'GJ')");
+  }
+
+  /* Other Fuel 2 */
+  OptionalDouble SqlFile_Impl::otherFuel2Heating() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Heating') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2Cooling() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Cooling') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2InteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2ExteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2InteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+  OptionalDouble SqlFile_Impl::otherFuel2ExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2Fans() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Fans') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2Pumps() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Pumps') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2HeatRejection() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2Humidification() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Humidification') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2HeatRecovery() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2WaterSystems() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Water Systems') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2Refrigeration() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Refrigeration') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2Generators() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Generators') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::otherFuel2TotalEndUses() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Other Fuel 2') and (RowName ='Total End Uses') and (Units = 'GJ')");
   }
 
   OptionalDouble SqlFile_Impl::districtCoolingHeating() const {

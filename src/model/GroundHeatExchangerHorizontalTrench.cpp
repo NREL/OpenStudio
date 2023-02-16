@@ -33,6 +33,8 @@
 #include "PlantLoop_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
+#include "SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_GroundHeatExchanger_HorizontalTrench_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -158,40 +160,18 @@ namespace model {
       return value.get();
     }
 
-    std::string GroundHeatExchangerHorizontalTrench_Impl::groundTemperatureModel() const {
-      boost::optional<std::string> value = getString(OS_GroundHeatExchanger_HorizontalTrenchFields::GroundTemperatureModel, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool GroundHeatExchangerHorizontalTrench_Impl::isGroundTemperatureModelDefaulted() const {
-      return isEmpty(OS_GroundHeatExchanger_HorizontalTrenchFields::GroundTemperatureModel);
-    }
-
-    double GroundHeatExchangerHorizontalTrench_Impl::kusudaAchenbachAverageSurfaceTemperature() const {
-      boost::optional<double> value = getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageSurfaceTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double GroundHeatExchangerHorizontalTrench_Impl::kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const {
-      boost::optional<double> value =
-        getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageAmplitudeofSurfaceTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double GroundHeatExchangerHorizontalTrench_Impl::kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const {
-      boost::optional<double> value =
-        getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachPhaseShiftofMinimumSurfaceTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
     double GroundHeatExchangerHorizontalTrench_Impl::evapotranspirationGroundCoverParameter() const {
       boost::optional<double> value = getDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter, true);
       OS_ASSERT(value);
       return value.get();
+    }
+
+    ModelObject GroundHeatExchangerHorizontalTrench_Impl::undisturbedGroundTemperatureModel() const {
+      boost::optional<ModelObject> modelObject;
+      modelObject =
+        getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel);
+      OS_ASSERT(modelObject);
+      return modelObject.get();
     }
 
     bool GroundHeatExchangerHorizontalTrench_Impl::setDesignFlowRate(double designFlowRate) {
@@ -270,42 +250,15 @@ namespace model {
       return result;
     }
 
-    bool GroundHeatExchangerHorizontalTrench_Impl::setGroundTemperatureModel(const std::string& groundTemperatureModel) {
-      bool result = setString(OS_GroundHeatExchanger_HorizontalTrenchFields::GroundTemperatureModel, groundTemperatureModel);
-      return result;
-    }
-
-    void GroundHeatExchangerHorizontalTrench_Impl::resetGroundTemperatureModel() {
-      bool result = setString(OS_GroundHeatExchanger_HorizontalTrenchFields::GroundTemperatureModel, "");
-      OS_ASSERT(result);
-    }
-
-    bool GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature) {
-      bool result =
-        setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageSurfaceTemperature, kusudaAchenbachAverageSurfaceTemperature);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(
-      double kusudaAchenbachAverageAmplitudeofSurfaceTemperature) {
-      bool result = setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageAmplitudeofSurfaceTemperature,
-                              kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(
-      double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature) {
-      bool result = setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachPhaseShiftofMinimumSurfaceTemperature,
-                              kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
-      OS_ASSERT(result);
-      return result;
-    }
-
     bool GroundHeatExchangerHorizontalTrench_Impl::setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter) {
       bool result =
         setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter, evapotranspirationGroundCoverParameter);
+      return result;
+    }
+
+    bool GroundHeatExchangerHorizontalTrench_Impl::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
+      bool result =
+        setPointer(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel, undisturbedGroundTemperatureModel.handle());
       return result;
     }
 
@@ -348,11 +301,38 @@ namespace model {
     setPipeSpecificHeat(2405);
     setSoilMoistureContentPercent(30);
     setSoilMoistureContentPercentatSaturation(50);
-    setKusudaAchenbachAverageSurfaceTemperature(15.5);
-    setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(12.8);
-    setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(17.3);
     setEvapotranspirationGroundCoverParameter(0.408);
-    setGroundTemperatureModel("KusudaAchenbach");
+
+    SiteGroundTemperatureUndisturbedKusudaAchenbach undisturbedGroundTemperatureModel(model);
+    setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
+  }
+
+  GroundHeatExchangerHorizontalTrench::GroundHeatExchangerHorizontalTrench(const Model& model, const ModelObject& undisturbedGroundTemperatureModel)
+    : StraightComponent(GroundHeatExchangerHorizontalTrench::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>());
+
+    bool ok = setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Undisturbed Ground Temperature Model to "
+                                     << undisturbedGroundTemperatureModel.briefDescription() << ".");
+    }
+    setDesignFlowRate(0.004);
+    setTrenchLengthinPipeAxialDirection(75);
+    setNumberofTrenches(2);
+    setHorizontalSpacingBetweenPipes(2.0);
+    setPipeInnerDiameter(0.016);
+    setPipeOuterDiameter(0.02667);
+    setBurialDepth(1.25);
+    setSoilThermalConductivity(1.08);
+    setSoilDensity(962);
+    setSoilSpecificHeat(2576);
+    setPipeThermalConductivity(0.3895);
+    setPipeDensity(641);
+    setPipeSpecificHeat(2405);
+    setSoilMoistureContentPercent(30);
+    setSoilMoistureContentPercentatSaturation(50);
+    setEvapotranspirationGroundCoverParameter(0.408);
   }
 
   IddObjectType GroundHeatExchangerHorizontalTrench::iddObjectType() {
@@ -360,8 +340,10 @@ namespace model {
   }
 
   std::vector<std::string> GroundHeatExchangerHorizontalTrench::groundTemperatureModelValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_GroundHeatExchanger_HorizontalTrenchFields::GroundTemperatureModel);
+    LOG(Warn, "As of 3.6.0, groundTemperatureModelValues is deprecated. Use undisturbedGroundTemperatureModel instead. It will be removed within "
+              "three releases.");
+    std::vector<std::string> result{"KusudaAchenbach", "SiteGroundTemperature"};
+    return result;
   }
 
   double GroundHeatExchangerHorizontalTrench::designFlowRate() const {
@@ -425,27 +407,55 @@ namespace model {
   }
 
   std::string GroundHeatExchangerHorizontalTrench::groundTemperatureModel() const {
-    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->groundTemperatureModel();
+    LOG(
+      Warn,
+      "As of 3.6.0, groundTemperatureModel is deprecated. Use undisturbedGroundTemperatureModel instead. It will be removed within three releases.");
+    if (undisturbedGroundTemperatureModel().iddObjectType() == IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
+      return "KusudaAchenbach";
+    } else {
+      return "SiteGroundTemperature";
+    }
   }
 
   bool GroundHeatExchangerHorizontalTrench::isGroundTemperatureModelDefaulted() const {
-    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->isGroundTemperatureModelDefaulted();
+    LOG(Warn, "As of 3.6.0, isGroundTemperatureModelDefaulted is deprecated. Use undisturbedGroundTemperatureModel instead. It will be removed "
+              "within three releases.");
+    return false;
   }
 
   double GroundHeatExchangerHorizontalTrench::kusudaAchenbachAverageSurfaceTemperature() const {
-    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->kusudaAchenbachAverageSurfaceTemperature();
+    LOG(Warn, "As of 3.6.0, kusudaAchenbachAverageSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It will be "
+              "removed within three releases.");
+    if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
+      LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
+    }
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().averageSoilSurfaceTemperature().get();
   }
 
   double GroundHeatExchangerHorizontalTrench::kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const {
-    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->kusudaAchenbachAverageAmplitudeofSurfaceTemperature();
+    LOG(Warn, "As of 3.6.0, kusudaAchenbachAverageAmplitudeofSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It "
+              "will be removed within three releases.");
+    if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
+      LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
+    }
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().averageAmplitudeofSurfaceTemperature().get();
   }
 
   double GroundHeatExchangerHorizontalTrench::kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const {
-    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature();
+    LOG(Warn, "As of 3.6.0, kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It "
+              "will be removed within three releases.");
+    if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
+      LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
+    }
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().phaseShiftofMinimumSurfaceTemperature().get();
   }
 
   double GroundHeatExchangerHorizontalTrench::evapotranspirationGroundCoverParameter() const {
     return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->evapotranspirationGroundCoverParameter();
+  }
+
+  ModelObject GroundHeatExchangerHorizontalTrench::undisturbedGroundTemperatureModel() const {
+    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->undisturbedGroundTemperatureModel();
   }
 
   bool GroundHeatExchangerHorizontalTrench::setDesignFlowRate(double designFlowRate) {
@@ -510,33 +520,55 @@ namespace model {
   }
 
   bool GroundHeatExchangerHorizontalTrench::setGroundTemperatureModel(const std::string& groundTemperatureModel) {
-    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setGroundTemperatureModel(groundTemperatureModel);
+    LOG(Warn, "As of 3.6.0, setGroundTemperatureModel is deprecated. Use undisturbedGroundTemperatureModel instead. It will be removed within three "
+              "releases.");
+    return false;
   }
 
   void GroundHeatExchangerHorizontalTrench::resetGroundTemperatureModel() {
-    getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->resetGroundTemperatureModel();
+    LOG(Warn, "As of 3.6.0, groundTemperatureModelValues is deprecated. Use undisturbedGroundTemperatureModel instead. It will be removed within "
+              "three releases.");
   }
 
   bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature) {
-    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setKusudaAchenbachAverageSurfaceTemperature(
+    LOG(Warn, "As of 3.6.0, setKusudaAchenbachAverageSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It will be "
+              "removed within three releases.");
+    if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
+      LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
+    }
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().setAverageSoilSurfaceTemperature(
       kusudaAchenbachAverageSurfaceTemperature);
   }
 
   bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(
     double kusudaAchenbachAverageAmplitudeofSurfaceTemperature) {
-    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(
+    LOG(Warn, "As of 3.6.0, setKusudaAchenbachAverageAmplitudeofSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It "
+              "will be removed within three releases.");
+    if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
+      LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
+    }
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().setAverageAmplitudeofSurfaceTemperature(
       kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
   }
 
   bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(
     double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature) {
-    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(
+    LOG(Warn, "As of 3.6.0, setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It "
+              "will be removed within three releases.");
+    if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
+      LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
+    }
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().setPhaseShiftofMinimumSurfaceTemperature(
       kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
   }
 
   bool GroundHeatExchangerHorizontalTrench::setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter) {
     return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setEvapotranspirationGroundCoverParameter(
       evapotranspirationGroundCoverParameter);
+  }
+
+  bool GroundHeatExchangerHorizontalTrench::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
+    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
   }
 
   /// @cond

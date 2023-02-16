@@ -74,7 +74,7 @@ namespace model {
 
     bool isTranslatetoScheduleFileDefaulted() const;
 
-    double intervalLength() const;
+    int intervalLength() const;
 
     double outOfRangeValue() const;
 
@@ -96,7 +96,7 @@ namespace model {
 
     void resetTranslatetoScheduleFile();
 
-    bool setIntervalLength(double intervalLength);
+    bool setIntervalLength(int intervalLength);
 
     bool setOutOfRangeValue(double outOfRangeValue);
 

@@ -95,17 +95,9 @@ namespace model {
 
       double soilMoistureContentPercentatSaturation() const;
 
-      std::string groundTemperatureModel() const;
-
-      bool isGroundTemperatureModelDefaulted() const;
-
-      double kusudaAchenbachAverageSurfaceTemperature() const;
-
-      double kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const;
-
-      double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const;
-
       double evapotranspirationGroundCoverParameter() const;
+
+      ModelObject undisturbedGroundTemperatureModel() const;
 
       //@}
       /** @name Setters */
@@ -141,17 +133,9 @@ namespace model {
 
       bool setSoilMoistureContentPercentatSaturation(double soilMoistureContentPercentatSaturation);
 
-      bool setGroundTemperatureModel(const std::string& groundTemperatureModel);
-
-      void resetGroundTemperatureModel();
-
-      bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
-
-      bool setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
-
-      bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
-
       bool setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter);
+
+      bool setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel);
 
       //@}
       /** @name Other */

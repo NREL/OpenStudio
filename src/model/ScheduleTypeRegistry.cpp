@@ -112,6 +112,10 @@ namespace model {
 
     const ScheduleType scheduleTypes[] = {
       {"AirConditionerVariableRefrigerantFlow", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
+      {"AirConditionerVariableRefrigerantFlowFluidTemperatureControl", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0,
+       1.0},
+      {"AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0,
+       1.0},
       {"AirConditionerVariableRefrigerantFlow", "Thermostat Priority Schedule", "thermostatPrioritySchedule", false, "ControlMode", 0.0, 1.0},
       {"AirConditionerVariableRefrigerantFlow", "Basin Heater Operating Schedule", "basinHeaterOperatingSchedule", false, "Availability", 0.0, 1.0},
       {"AirLoopHVAC", "Return Air Bypass Flow Temperature Setpoint", "returnAirBypassFlowTemperatureSetpointSchedule", true, "Temperature",
@@ -191,6 +195,8 @@ namespace model {
       {"CoilCoolingDXMultiSpeed", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilCoolingDXMultiSpeed", "Basin Heater Operating Schedule", "basinHeaterOperatingSchedule", false, "Availability", 0.0, 1.0},
       {"CoilCoolingDXVariableRefrigerantFlow", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
+      {"CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0,
+       1.0},
       {"CoilCoolingDXVariableSpeed", "Basin Heater Operating", "basinHeaterOperatingSchedule", false, "Availability", 0.0, 1.0},
       {"CoilCoolingLowTempRadiantConstFlow", "Cooling High Water Temperature", "coolingHighWaterTemperatureSchedule", true, "Temperature",
        OptionalDouble(), OptionalDouble()},
@@ -208,6 +214,8 @@ namespace model {
       {"CoilHeatingDXMultiSpeed", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingDXSingleSpeed", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingDXVariableRefrigerantFlow", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
+      {"CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0,
+       1.0},
       {"CoilHeatingElectric", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingElectricMultiStage", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingGas", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},

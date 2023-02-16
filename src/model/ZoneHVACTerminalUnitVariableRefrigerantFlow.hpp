@@ -41,6 +41,8 @@ namespace model {
   class Schedule;
   class CoilHeatingDXVariableRefrigerantFlow;
   class CoilCoolingDXVariableRefrigerantFlow;
+  class CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl;
+  class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl;
   class ThermalZone;
 
   namespace detail {
@@ -54,10 +56,15 @@ namespace model {
   {
 
    public:
-    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model);
+    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, bool isFluidTemperatureControl = false);
 
     explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, const CoilCoolingDXVariableRefrigerantFlow& coolingCoil,
                                                          const CoilHeatingDXVariableRefrigerantFlow& heatingCoil, const HVACComponent& fan);
+
+    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model,
+                                                         const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& coolingCoil,
+                                                         const CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& heatingCoil,
+                                                         const HVACComponent& fan);
 
     virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() = default;
     // Default the copy and move operators because the virtual dtor is explicit
@@ -148,13 +155,18 @@ namespace model {
     // bool setSupplyAirFan(const HVACComponent& fan);
     // void resetSupplyAirFan();
 
-    boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
+    boost::optional<HVACComponent> coolingCoil() const;
 
-    bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow& coil);
+    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl
+    bool setCoolingCoil(const HVACComponent& coil);
 
-    boost::optional<CoilHeatingDXVariableRefrigerantFlow> heatingCoil() const;
+    boost::optional<HVACComponent> heatingCoil() const;
 
-    bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow& coil);
+    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl
+    bool setHeatingCoil(const HVACComponent& coil);
+
+    // Returns true if the Cooling and Heating Coils are of the FluidTemperatureControl type
+    bool isFluidTemperatureControl() const;
 
     double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
 

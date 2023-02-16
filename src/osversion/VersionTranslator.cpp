@@ -158,45 +158,54 @@ namespace osversion {
     m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
     m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::update_3_4_0_to_3_5_0;
     m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
-    // m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.5.2")] = &VersionTranslator::update_3_5_1_to_3_5_2;
+    // m_updateMethods[VersionString("3.5.2")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
     //     release).
     m_startVersions = {
-      VersionString("0.7.0"),  VersionString("0.7.1"),  VersionString("0.7.2"),  VersionString("0.7.3"),  VersionString("0.7.4"),
-      VersionString("0.7.5"),  VersionString("0.7.6"),  VersionString("0.8.0"),  VersionString("0.8.1"),  VersionString("0.8.2"),
-      VersionString("0.8.3"),  VersionString("0.8.4"),  VersionString("0.8.5"),  VersionString("0.9.0"),  VersionString("0.9.1"),
-      VersionString("0.9.2"),  VersionString("0.9.3"),  VersionString("0.9.4"),  VersionString("0.9.5"),  VersionString("0.9.6"),
-      VersionString("0.10.0"), VersionString("0.10.1"), VersionString("0.10.2"), VersionString("0.10.3"), VersionString("0.10.4"),
-      VersionString("0.10.5"), VersionString("0.11.0"), VersionString("0.11.1"), VersionString("0.11.2"), VersionString("0.11.3"),
-      VersionString("0.11.4"), VersionString("0.11.5"), VersionString("0.11.6"), VersionString("1.0.0"),  VersionString("1.0.1"),
-      VersionString("1.0.2"),  VersionString("1.0.3"),  VersionString("1.0.4"),  VersionString("1.0.5"),  VersionString("1.0.6"),
-      VersionString("1.0.7"),  VersionString("1.1.0"),  VersionString("1.1.1"),  VersionString("1.1.2"),  VersionString("1.1.3"),
-      VersionString("1.2.0"),  VersionString("1.2.1"),  VersionString("1.2.2"),  VersionString("1.2.3"),  VersionString("1.2.4"),
-      VersionString("1.2.5"),  VersionString("1.3.0"),  VersionString("1.3.1"),  VersionString("1.3.2"),  VersionString("1.3.3"),
-      VersionString("1.3.4"),  VersionString("1.3.5"),  VersionString("1.4.0"),  VersionString("1.4.1"),  VersionString("1.4.2"),
-      VersionString("1.4.3"),  VersionString("1.5.0"),  VersionString("1.5.1"),  VersionString("1.5.2"),  VersionString("1.5.3"),
-      VersionString("1.5.4"),  VersionString("1.5.5"),  VersionString("1.6.0"),  VersionString("1.6.1"),  VersionString("1.6.2"),
-      VersionString("1.6.3"),  VersionString("1.7.0"),  VersionString("1.7.1"),  VersionString("1.7.2"),  VersionString("1.7.3"),
-      VersionString("1.7.4"),  VersionString("1.7.5"),  VersionString("1.8.0"),  VersionString("1.8.1"),  VersionString("1.8.2"),
-      VersionString("1.8.3"),  VersionString("1.8.4"),  VersionString("1.8.5"),  VersionString("1.9.0"),  VersionString("1.9.1"),
-      VersionString("1.9.2"),  VersionString("1.9.3"),  VersionString("1.9.4"),  VersionString("1.9.5"),  VersionString("1.10.0"),
-      VersionString("1.10.1"), VersionString("1.10.2"), VersionString("1.10.3"), VersionString("1.10.4"), VersionString("1.10.5"),
-      VersionString("1.10.6"), VersionString("1.11.0"), VersionString("1.11.1"), VersionString("1.11.2"), VersionString("1.11.3"),
-      VersionString("1.11.4"), VersionString("1.11.5"), VersionString("1.11.6"), VersionString("1.12.0"), VersionString("1.12.1"),
-      VersionString("1.12.2"), VersionString("1.12.3"), VersionString("1.12.4"), VersionString("1.12.5"), VersionString("1.12.6"),
-      VersionString("1.13.0"), VersionString("1.13.1"), VersionString("1.13.2"), VersionString("1.13.3"), VersionString("1.13.4"),
-      VersionString("1.14.0"), VersionString("2.0.0"),  VersionString("2.0.1"),  VersionString("2.0.2"),  VersionString("2.0.3"),
-      VersionString("2.0.5"),  VersionString("2.1.0"),  VersionString("2.1.1"),  VersionString("2.1.2"),  VersionString("2.2.0"),
-      VersionString("2.2.1"),  VersionString("2.2.2"),  VersionString("2.3.0"),  VersionString("2.3.1"),  VersionString("2.4.0"),
-      VersionString("2.4.1"),  VersionString("2.4.2"),  VersionString("2.4.3"),  VersionString("2.5.0"),  VersionString("2.5.1"),
-      VersionString("2.5.2"),  VersionString("2.6.0"),  VersionString("2.6.1"),  VersionString("2.6.2"),  VersionString("2.7.0"),
-      VersionString("2.7.1"),  VersionString("2.7.2"),  VersionString("2.8.0"),  VersionString("2.8.1"),  VersionString("2.9.0"),
-      VersionString("2.9.1"),  VersionString("3.0.0"),  VersionString("3.0.1"),  VersionString("3.1.0"),  VersionString("3.2.0"),
-      VersionString("3.2.1"),  VersionString("3.3.0"),  VersionString("3.4.0"),  VersionString("3.5.0"),
+      VersionString("0.7.0"),  VersionString("0.7.1"),  VersionString("0.7.2"),  VersionString("0.7.3"),
+      VersionString("0.7.4"),  VersionString("0.7.5"),  VersionString("0.7.6"),  VersionString("0.8.0"),
+      VersionString("0.8.1"),  VersionString("0.8.2"),  VersionString("0.8.3"),  VersionString("0.8.4"),
+      VersionString("0.8.5"),  VersionString("0.9.0"),  VersionString("0.9.1"),  VersionString("0.9.2"),
+      VersionString("0.9.3"),  VersionString("0.9.4"),  VersionString("0.9.5"),  VersionString("0.9.6"),
+      VersionString("0.10.0"), VersionString("0.10.1"), VersionString("0.10.2"), VersionString("0.10.3"),
+      VersionString("0.10.4"), VersionString("0.10.5"), VersionString("0.11.0"), VersionString("0.11.1"),
+      VersionString("0.11.2"), VersionString("0.11.3"), VersionString("0.11.4"), VersionString("0.11.5"),
+      VersionString("0.11.6"), VersionString("1.0.0"),  VersionString("1.0.1"),  VersionString("1.0.2"),
+      VersionString("1.0.3"),  VersionString("1.0.4"),  VersionString("1.0.5"),  VersionString("1.0.6"),
+      VersionString("1.0.7"),  VersionString("1.1.0"),  VersionString("1.1.1"),  VersionString("1.1.2"),
+      VersionString("1.1.3"),  VersionString("1.2.0"),  VersionString("1.2.1"),  VersionString("1.2.2"),
+      VersionString("1.2.3"),  VersionString("1.2.4"),  VersionString("1.2.5"),  VersionString("1.3.0"),
+      VersionString("1.3.1"),  VersionString("1.3.2"),  VersionString("1.3.3"),  VersionString("1.3.4"),
+      VersionString("1.3.5"),  VersionString("1.4.0"),  VersionString("1.4.1"),  VersionString("1.4.2"),
+      VersionString("1.4.3"),  VersionString("1.5.0"),  VersionString("1.5.1"),  VersionString("1.5.2"),
+      VersionString("1.5.3"),  VersionString("1.5.4"),  VersionString("1.5.5"),  VersionString("1.6.0"),
+      VersionString("1.6.1"),  VersionString("1.6.2"),  VersionString("1.6.3"),  VersionString("1.7.0"),
+      VersionString("1.7.1"),  VersionString("1.7.2"),  VersionString("1.7.3"),  VersionString("1.7.4"),
+      VersionString("1.7.5"),  VersionString("1.8.0"),  VersionString("1.8.1"),  VersionString("1.8.2"),
+      VersionString("1.8.3"),  VersionString("1.8.4"),  VersionString("1.8.5"),  VersionString("1.9.0"),
+      VersionString("1.9.1"),  VersionString("1.9.2"),  VersionString("1.9.3"),  VersionString("1.9.4"),
+      VersionString("1.9.5"),  VersionString("1.10.0"), VersionString("1.10.1"), VersionString("1.10.2"),
+      VersionString("1.10.3"), VersionString("1.10.4"), VersionString("1.10.5"), VersionString("1.10.6"),
+      VersionString("1.11.0"), VersionString("1.11.1"), VersionString("1.11.2"), VersionString("1.11.3"),
+      VersionString("1.11.4"), VersionString("1.11.5"), VersionString("1.11.6"), VersionString("1.12.0"),
+      VersionString("1.12.1"), VersionString("1.12.2"), VersionString("1.12.3"), VersionString("1.12.4"),
+      VersionString("1.12.5"), VersionString("1.12.6"), VersionString("1.13.0"), VersionString("1.13.1"),
+      VersionString("1.13.2"), VersionString("1.13.3"), VersionString("1.13.4"), VersionString("1.14.0"),
+      VersionString("2.0.0"),  VersionString("2.0.1"),  VersionString("2.0.2"),  VersionString("2.0.3"),
+      VersionString("2.0.5"),  VersionString("2.1.0"),  VersionString("2.1.1"),  VersionString("2.1.2"),
+      VersionString("2.2.0"),  VersionString("2.2.1"),  VersionString("2.2.2"),  VersionString("2.3.0"),
+      VersionString("2.3.1"),  VersionString("2.4.0"),  VersionString("2.4.1"),  VersionString("2.4.2"),
+      VersionString("2.4.3"),  VersionString("2.5.0"),  VersionString("2.5.1"),  VersionString("2.5.2"),
+      VersionString("2.6.0"),  VersionString("2.6.1"),  VersionString("2.6.2"),  VersionString("2.7.0"),
+      VersionString("2.7.1"),  VersionString("2.7.2"),  VersionString("2.8.0"),  VersionString("2.8.1"),
+      VersionString("2.9.0"),  VersionString("2.9.1"),  VersionString("3.0.0"),  VersionString("3.0.1"),
+      VersionString("3.1.0"),  VersionString("3.2.0"),  VersionString("3.2.1"),  VersionString("3.3.0"),
+      VersionString("3.4.0"),  VersionString("3.5.0"),  VersionString("3.5.1")
       // Note: do **not** include the **current** version in m_startVersions, stop at the previous release
-      //VersionString("3.5.1"),
+      //VersionString("3.5.2"),
     };
   }
 
@@ -7574,6 +7583,62 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_5_0_to_3_5_1
+
+  std::string VersionTranslator::update_3_5_1_to_3_5_2(const IdfFile& idf_3_5_1, const IddFileAndFactoryWrapper& idd_3_5_2) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_5_1.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_5_2.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_5_1.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:GroundHeatExchanger:HorizontalTrench") {
+
+        // Kusuda fields get moved over to OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach
+
+        auto iddObject = idd_3_5_2.getObject(iddname);
+        IdfObject ghxObject(iddObject.get());
+        IdfObject kusudaObject(idd_3_5_2.getObject("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach").get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if (i < 19) {
+            if ((value = object.getString(i))) {
+              ghxObject.setString(i, value.get());
+              if (((i == 11) || (i == 12) || (i == 13))) {  // Soil xxx
+                kusudaObject.setString(i - 9, value.get());
+              }
+            }
+          } else if (i == 19) {  // Undisturbed Ground Temperature Model
+            ghxObject.setString(i, kusudaObject.getString(0).get());
+          } else if (i < 23) {  // Kusuda-Achenbach xxx
+            if ((value = object.getString(i))) {
+              kusudaObject.setString(i - 15, value.get());
+            }
+          } else if (i == 23) {  // Evapotranspiration Ground Cover Parameter
+            if ((value = object.getString(i))) {
+              ghxObject.setString(20, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, ghxObject));
+        m_new.push_back(kusudaObject);
+
+        ss << ghxObject;
+        ss << kusudaObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_5_1_to_3_5_2
 
 }  // namespace osversion
 }  // namespace openstudio

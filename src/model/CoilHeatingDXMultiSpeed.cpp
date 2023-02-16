@@ -37,6 +37,8 @@
 #include "Curve_Impl.hpp"
 #include "CoilHeatingDXMultiSpeedStageData.hpp"
 #include "CoilHeatingDXMultiSpeedStageData_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -470,6 +472,19 @@ namespace model {
     }
 
     boost::optional<HVACComponent> CoilHeatingDXMultiSpeed_Impl::containingHVACComponent() const {
+      // AirLoopHVACUnitarySystem
+      {
+        auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+        for (auto const& system : systems) {
+          if (auto heatingCoil = system.heatingCoil()) {
+            if (heatingCoil->handle() == this->handle()) {
+              return system;
+            }
+          }
+        }
+      }
+
       // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
       {
         auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();

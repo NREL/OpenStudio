@@ -928,6 +928,81 @@ TEST_F(GeometryFixture, Triangulate_ComplexHoles) {
   EXPECT_TRUE(checkNormals(normal, test));
 }
 
+TEST_F(GeometryFixture, Triangulate_Windows_4783) {
+  std::vector<Point3d> surfaceVertices;
+  std::vector<std::vector<Point3d>> subSurfaceVertices;
+
+  // Vertices come from Surface 2870 in 7_7_Windows.osm
+  // processed to be aligned to the x/y axes
+  // Before the fix for 4738 compute triangulationreturned over 700 triangles
+  // Even a not very good triangulation algorithm can do this in less than 50
+  // the actual result is 47
+  surfaceVertices.push_back(Point3d(33.274001, 3.7592, 0));
+  surfaceVertices.push_back(Point3d(33.274001, 0, 0));
+  surfaceVertices.push_back(Point3d(0, 0, 0));
+  surfaceVertices.push_back(Point3d(0, 3.7952, 0));
+
+  std::vector<Point3d> tmp1;
+  tmp1.push_back(Point3d(1.143, 3.0734, 0));
+  tmp1.push_back(Point3d(1.143, 0.9144, 0));
+  tmp1.push_back(Point3d(0, 0.9144, 0));
+  tmp1.push_back(Point3d(0, 3.0734, 0));
+
+  std::vector<Point3d> tmp2;
+  tmp2.push_back(Point3d(33.274, 3.0734, 0));
+  tmp2.push_back(Point3d(33.274, 0.9144, 0));
+  tmp2.push_back(Point3d(31.0642, 0.9144, 0));
+  tmp2.push_back(Point3d(31.0642, 3.0734, 0));
+
+  std::vector<Point3d> tmp3;
+  tmp3.push_back(Point3d(6.0706, 3.0734, 0));
+  tmp3.push_back(Point3d(6.0706, 0.9144, 0));
+  tmp3.push_back(Point3d(1.7272, 0.9144, 0));
+  tmp3.push_back(Point3d(1.7272, 3.0734, 0));
+
+  std::vector<Point3d> tmp4;
+  tmp4.push_back(Point3d(10.9982, 3.0734, 0));
+  tmp4.push_back(Point3d(10.9982, 0.9144, 0));
+  tmp4.push_back(Point3d(6.6548, 0.9144, 0));
+  tmp4.push_back(Point3d(6.6548, 3.0734, 0));
+
+  std::vector<Point3d> tmp5;
+  tmp5.push_back(Point3d(15.9258, 3.0734, 0));
+  tmp5.push_back(Point3d(15.9258, 0.9144, 0));
+  tmp5.push_back(Point3d(11.5824, 0.9144, 0));
+  tmp5.push_back(Point3d(11.5824, 3.0734, 0));
+
+  std::vector<Point3d> tmp6;
+  tmp6.push_back(Point3d(20.8534, 3.0734, 0));
+  tmp6.push_back(Point3d(20.8534, 0.9144, 0));
+  tmp6.push_back(Point3d(16.51, 0.9144, 0));
+  tmp6.push_back(Point3d(16.51, 3.0734, 0));
+
+  std::vector<Point3d> tmp7;
+  tmp7.push_back(Point3d(25.781, 3.0734, 0));
+  tmp7.push_back(Point3d(25.781, 0.9144, 0));
+  tmp7.push_back(Point3d(21.4376, 0.9144, 0));
+  tmp7.push_back(Point3d(21.4376, 3.0734, 0));
+
+  std::vector<Point3d> tmp8;
+  tmp8.push_back(Point3d(30.7086, 3.0734, 0));
+  tmp8.push_back(Point3d(30.7086, 0.9144, 0));
+  tmp8.push_back(Point3d(26.3652, 0.9144, 0));
+  tmp8.push_back(Point3d(26.3652, 3.0734, 0));
+
+  subSurfaceVertices.push_back(tmp1);
+  subSurfaceVertices.push_back(tmp2);
+  subSurfaceVertices.push_back(tmp3);
+  subSurfaceVertices.push_back(tmp4);
+  subSurfaceVertices.push_back(tmp5);
+  subSurfaceVertices.push_back(tmp6);
+  subSurfaceVertices.push_back(tmp7);
+  subSurfaceVertices.push_back(tmp8);
+
+  std::vector<std::vector<Point3d>> triangles = computeTriangulation(surfaceVertices, subSurfaceVertices);
+  ASSERT_EQ(triangles.size(), 47);
+}
+
 TEST_F(GeometryFixture, PointLatLon) {
   // building in Portland
   PointLatLon origin(45.521272355398, -122.686472758865);
