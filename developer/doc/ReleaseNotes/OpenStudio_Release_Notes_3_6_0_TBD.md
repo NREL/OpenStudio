@@ -72,6 +72,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
     * `ZoneHVAC:TerminalUnit:VariableRefrigerantFlow` has API-breaking changes related to setters and getters for its heating and cooling coils. They now use `HVACComponent` instead of the more restrictive `CoilHeatingDXVariableRefrigerantFlow` and `CoilCoolingDXVariableRefrigerantFlow`.
     * `AirConditionerVariableRefrigerantFlow::clone` was changed to stop cloning the child `Curve` objects (20 of them)
 
+* [#4740](https://github.com/NREL/OpenStudio/pull/4740) - Fix issues around `ScheduleFixedInterval`, with A minor API breaking change: `intervalLength`/`setIntervalLength` now return/accept an `int` rather than a `double` to conform to the IDD type `\integer`
+
 ## Minor changes and bug fixes
 
 
