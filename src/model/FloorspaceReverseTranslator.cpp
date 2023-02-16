@@ -583,23 +583,27 @@ namespace model {
           for (const auto& window : m_currentFSStory->windows()) {
             // Get window's x/y position which is the alpha based on its edge
             // windows can have multiple alphas but we only need one
-            auto edge = *window.edge();
-            const double alpha = window.alphas()[0];
-            const Point3d pp = window.centerVertex(alpha);
+            if (window.edge().has_value()) {
+              auto edge = *window.edge();
+              const double alpha = window.alphas()[0];
+              const Point3d pp = window.centerVertex(alpha);
 
-            if (getDistancePointToLineSegment(pp, wallSegment) < tol) {
-              createWindowSubsurface(window, surface, edge, minZ, maxZ);
+              if (getDistancePointToLineSegment(pp, wallSegment) < tol) {
+                createWindowSubsurface(window, surface, edge, minZ, maxZ);
+              }
             }
           }
 
           // Create a door subsurface for every window that is on this edge
           for (const auto& door : m_currentFSStory->doors()) {
-            auto edge = *door.edge();
-            const double alpha = door.alphas()[0];
-            const Point3d pp = door.centerVertex(alpha);
+            if (door.edge().has_value()) {
+              auto edge = *door.edge();
+              const double alpha = door.alphas()[0];
+              const Point3d pp = door.centerVertex(alpha);
 
-            if (getDistancePointToLineSegment(pp, wallSegment) < tol) {
-              createDoorSubsurface(door, surface, edge, minZ);
+              if (getDistancePointToLineSegment(pp, wallSegment) < tol) {
+                createDoorSubsurface(door, surface, edge, minZ);
+              }
             }
           }
         }

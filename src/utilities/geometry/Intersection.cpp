@@ -452,7 +452,6 @@ boost::optional<BoostRing> nonIntersectingBoostRingFromVertices(const std::vecto
 std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::vector<Point3d>& allPoints, double tol,
                                               bool removeCollinear = false) {
   std::vector<Point3d> result;
-  tol = 0.001;
   BoostRing outer = polygon.outer();
   if (outer.empty()) {
     return result;
