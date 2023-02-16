@@ -120,9 +120,19 @@ namespace model {
         return false;
       }
 
+      auto intervalLengthAsInteger = [](const double value) -> int {
+        double integralPart = 0.0;
+        if (std::modf(value, &integralPart) == 0.0) {
+          // The intervalLength is actually an int, not a double
+          return static_cast<int>(integralPart);
+        }
+        return -1;
+      };
+
       // check the interval
-      const double intervalLength = intervalTime->totalMinutes();
-      if (intervalLength - std::floor(intervalLength) > 0) {
+      const double intervalLengthDouble = intervalTime->totalMinutes();
+      const int intervalLength = intervalLengthAsInteger(intervalLengthDouble);
+      if (intervalLength < 0) {
         return false;
       }
 
@@ -133,8 +143,9 @@ namespace model {
 
       const Time firstReportTime = firstReportDateTime.time();
 
-      const double numIntervalsToFirstReport = std::max(1.0, firstReportTime.totalMinutes() / intervalLength);
-      if (numIntervalsToFirstReport - floor(numIntervalsToFirstReport) > 0) {
+      const double numIntervalsToFirstReportDouble = std::max(1.0, firstReportTime.totalMinutes() / intervalLengthDouble);
+      const int numIntervalsToFirstReport = intervalLengthAsInteger(numIntervalsToFirstReportDouble);
+      if (numIntervalsToFirstReport < 0) {
         return false;
       }
 
@@ -166,7 +177,7 @@ namespace model {
       const double outOfRangeValue = timeSeries.outOfRangeValue();
 
       // add in numIntervalsToFirstReport-1 outOfRangeValues to pad the timeseries
-      for (unsigned i = 0; i < numIntervalsToFirstReport - 1; ++i) {
+      for (int i = 0; i < numIntervalsToFirstReport - 1; ++i) {
         std::vector<std::string> temp;
         temp.push_back(toString(outOfRangeValue));
 
