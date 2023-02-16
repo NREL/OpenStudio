@@ -52,7 +52,7 @@ namespace model {
 
     explicit ScheduleFixedInterval(const Model& model);
 
-    virtual ~ScheduleFixedInterval() {}
+    virtual ~ScheduleFixedInterval() = default;
 
     //@}
 
@@ -69,7 +69,7 @@ namespace model {
 
     bool isTranslatetoScheduleFileDefaulted() const;
 
-    double intervalLength() const;
+    int intervalLength() const;
 
     double outOfRangeValue() const;
 
@@ -91,7 +91,7 @@ namespace model {
 
     void resetTranslatetoScheduleFile();
 
-    bool setIntervalLength(double intervalLength);
+    bool setIntervalLength(int intervalLength);
 
     bool setOutOfRangeValue(double outOfRangeValue);
 
@@ -104,7 +104,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleFixedInterval_Impl ImplType;
+    using ImplType = detail::ScheduleFixedInterval_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -118,10 +118,10 @@ namespace model {
   };
 
   /** \relates ScheduleFixedInterval*/
-  typedef boost::optional<ScheduleFixedInterval> OptionalScheduleFixedInterval;
+  using OptionalScheduleFixedInterval = boost::optional<ScheduleFixedInterval>;
 
   /** \relates ScheduleFixedInterval*/
-  typedef std::vector<ScheduleFixedInterval> ScheduleFixedIntervalVector;
+  using ScheduleFixedIntervalVector = std::vector<ScheduleFixedInterval>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -95,8 +95,8 @@ namespace model {
         year = yd->assumedYear();
       }
 
-      Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay(), year);
-      Time intervalLength(0, 0, (int)(this->intervalLength()));
+      const Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay(), year);
+      const Time intervalLength(0, 0, this->intervalLength());
 
       Vector values(this->numExtensibleGroups());
       unsigned i = 0;
@@ -121,28 +121,26 @@ namespace model {
       }
 
       // check the interval
-      double intervalLength = intervalTime->totalMinutes();
-      if (intervalLength - floor(intervalLength) > 0) {
+      const double intervalLength = intervalTime->totalMinutes();
+      if (intervalLength - std::floor(intervalLength) > 0) {
         return false;
       }
 
       // check that first report is whole number of intervals from start date
-      DateTime firstReportDateTime = timeSeries.firstReportDateTime();
-      DateTime startDateTime = timeSeries.startDateTime();
-      Date startDate = startDateTime.date();
+      const DateTime firstReportDateTime = timeSeries.firstReportDateTime();
+      const DateTime startDateTime = timeSeries.startDateTime();
+      const Date startDate = startDateTime.date();
 
-      Time firstReportTime = firstReportDateTime.time();
+      const Time firstReportTime = firstReportDateTime.time();
 
-      double numIntervalsToFirstReport = std::max(1.0, firstReportTime.totalMinutes() / intervalLength);
+      const double numIntervalsToFirstReport = std::max(1.0, firstReportTime.totalMinutes() / intervalLength);
       if (numIntervalsToFirstReport - floor(numIntervalsToFirstReport) > 0) {
         return false;
       }
 
       // check the values
-      openstudio::Vector values = timeSeries.values();
-      for (const auto& value : values) {
-        // Get the position
-        int pos = (int)(&value - &values[0]);
+      const openstudio::Vector values = timeSeries.values();
+      for (size_t pos = 0; const auto& value : values) {
         // Check validity, cannot be NaN, Inf, etc
         if (std::isinf(value)) {
           LOG(Warn, "There is Infinity on position " << pos << " in the timeSeries provided for " << this->briefDescription());
@@ -151,6 +149,7 @@ namespace model {
           LOG(Warn, "There is a NaN on position " << pos << " in the timeSeries provided for " << this->briefDescription());
           return false;
         }
+        ++pos;
       }
 
       // at this point we are going to change the object
@@ -164,23 +163,23 @@ namespace model {
       this->setStartDay(startDate.dayOfMonth(), false);
 
       // set the out of range value
-      double outOfRangeValue = timeSeries.outOfRangeValue();
+      const double outOfRangeValue = timeSeries.outOfRangeValue();
 
       // add in numIntervalsToFirstReport-1 outOfRangeValues to pad the timeseries
       for (unsigned i = 0; i < numIntervalsToFirstReport - 1; ++i) {
         std::vector<std::string> temp;
         temp.push_back(toString(outOfRangeValue));
 
-        ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
+        const auto group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
       }
 
       // set the values
-      for (unsigned i = 0; i < values.size(); ++i) {
+      for (const double value : values) {
         std::vector<std::string> temp;
-        temp.push_back(toString(values[i]));
+        temp.push_back(toString(value));
 
-        ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
+        const auto group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
       }
 
@@ -221,8 +220,8 @@ namespace model {
       return value.get();
     }
 
-    double ScheduleFixedInterval_Impl::intervalLength() const {
-      boost::optional<double> value = getDouble(OS_Schedule_FixedIntervalFields::IntervalLength, true);
+    int ScheduleFixedInterval_Impl::intervalLength() const {
+      boost::optional<int> value = getInt(OS_Schedule_FixedIntervalFields::IntervalLength, true);
       if (value) {
         return value.get();
       }
@@ -251,7 +250,7 @@ namespace model {
     }
 
     void ScheduleFixedInterval_Impl::resetInterpolatetoTimestep(bool driverMethod) {
-      bool result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "", driverMethod);
+      const bool result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "", driverMethod);
       OS_ASSERT(result);
     }
 
@@ -267,33 +266,33 @@ namespace model {
     }
 
     void ScheduleFixedInterval_Impl::resetTranslatetoScheduleFile(bool driverMethod) {
-      bool result = setString(OS_Schedule_FixedIntervalFields::TranslatetoScheduleFile, "", driverMethod);
+      const bool result = setString(OS_Schedule_FixedIntervalFields::TranslatetoScheduleFile, "", driverMethod);
       OS_ASSERT(result);
     }
 
     bool ScheduleFixedInterval_Impl::setStartMonth(int startMonth, bool driverMethod) {
-      bool result = setInt(OS_Schedule_FixedIntervalFields::StartMonth, startMonth, driverMethod);
+      const bool result = setInt(OS_Schedule_FixedIntervalFields::StartMonth, startMonth, driverMethod);
       return result;
     }
 
     bool ScheduleFixedInterval_Impl::setStartDay(int startDay, bool driverMethod) {
-      bool result = setInt(OS_Schedule_FixedIntervalFields::StartDay, startDay, driverMethod);
+      const bool result = setInt(OS_Schedule_FixedIntervalFields::StartDay, startDay, driverMethod);
       return result;
     }
 
-    bool ScheduleFixedInterval_Impl::setIntervalLength(double intervalLength, bool driverMethod) {
-      bool result = setDouble(OS_Schedule_FixedIntervalFields::IntervalLength, intervalLength, driverMethod);
+    bool ScheduleFixedInterval_Impl::setIntervalLength(int intervalLength, bool driverMethod) {
+      const bool result = setDouble(OS_Schedule_FixedIntervalFields::IntervalLength, intervalLength, driverMethod);
       return result;
     }
 
     bool ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
-      bool result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
+      const bool result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
       OS_ASSERT(result);
       return result;
     }
 
     void ScheduleFixedInterval_Impl::resetOutOfRangeValue(bool driverMethod) {
-      bool result = setString(OS_Schedule_FixedIntervalFields::OutOfRangeValue, "", driverMethod);
+      const bool result = setString(OS_Schedule_FixedIntervalFields::OutOfRangeValue, "", driverMethod);
       OS_ASSERT(result);
     }
 
@@ -345,7 +344,7 @@ namespace model {
     return getImpl<detail::ScheduleFixedInterval_Impl>()->startDay();
   }
 
-  double ScheduleFixedInterval::intervalLength() const {
+  int ScheduleFixedInterval::intervalLength() const {
     return getImpl<detail::ScheduleFixedInterval_Impl>()->intervalLength();
   }
 
@@ -381,7 +380,7 @@ namespace model {
     return getImpl<detail::ScheduleFixedInterval_Impl>()->setStartDay(startDay);
   }
 
-  bool ScheduleFixedInterval::setIntervalLength(double intervalLength) {
+  bool ScheduleFixedInterval::setIntervalLength(int intervalLength) {
     return getImpl<detail::ScheduleFixedInterval_Impl>()->setIntervalLength(intervalLength);
   }
 
