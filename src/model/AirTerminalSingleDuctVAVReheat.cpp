@@ -656,7 +656,7 @@ namespace model {
     }
 
     boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumFlowFractionDuringReheat() const {
-      return getAutosizedValue("Design Size Maximum Flow Fraction during Reheat", "typo_in_energyplus");
+      return getAutosizedValue("Design Size Maximum Flow Fraction during Reheat", "");
     }
 
     void AirTerminalSingleDuctVAVReheat_Impl::autosize() {

@@ -539,15 +539,18 @@ namespace model {
     }
 
     boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const {
-      return getAutosizedValue("Design Size Nominal Heating Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Nominal Heating Capacity", "W", "COIL:HEATING:DX:VARIABLESPEED");
     }
 
     boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
-      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s", "COIL:HEATING:DX:VARIABLESPEED");
     }
 
     boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {
-      return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W", "AS VS HEATING COIL");
     }
 
     void CoilHeatingDXVariableSpeed_Impl::autosize() {

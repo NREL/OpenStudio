@@ -143,12 +143,11 @@ namespace model {
       if (!indexAndNameOpt) {
         return result;
       }
-      auto indexAndName = indexAndNameOpt.get();
-      int index = std::get<0>(indexAndName);
-      CoilHeatingElectricMultiStage parentCoil = std::get<1>(indexAndName);
-      std::string sqlField = "Design Size Stage " + std::to_string(index) + " Nominal Capacity";
+      auto [index, parentCoil] = indexAndNameOpt.get();
+      const std::string sqlField = "Design Size Stage " + std::to_string(index) + " Nominal Capacity";
 
-      return parentCoil.getAutosizedValue(sqlField, "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return parentCoil.getImpl<CoilHeatingElectricMultiStage_Impl>()->getAutosizedValue(sqlField, "W", "Coil:Heating:ElectricMultiStage");
     }
 
     void CoilHeatingElectricMultiStageStageData_Impl::autosize() {
