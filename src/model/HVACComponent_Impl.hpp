@@ -37,6 +37,9 @@
 
 namespace openstudio {
 
+class AppGFuelType;
+class ComponentType;
+
 namespace model {
 
   class Node;
@@ -113,6 +116,10 @@ namespace model {
       virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
       virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+      virtual ComponentType componentType() const;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const;
 
      protected:
       friend class Model_Impl;

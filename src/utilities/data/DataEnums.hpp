@@ -249,7 +249,71 @@ OPENSTUDIO_ENUM(BuildingSector,
   ((Residential))
 );
 
+
+
+
+/** \class AppGFuelType
+ *  \brief heat for coil for Appendix G system type selections
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+ OPENSTUDIO_ENUM(AppGFuelType,
+  ((Fuel))
+  ((Electric))
+  ((District))
+  ((HeatPump))
+  ((Solar))
+  ((Mixed))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(AppGFuelType,
+  ((Fuel))
+  ((Electric))
+  ((District))
+  ((HeatPump))
+  ((Solar))
+  ((Mixed))
+  ((Other))
+);
+
+/** \class ComponentType
+ *  \brief What an HVACComponent is meant to do: heating, cooling, both or none
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+ OPENSTUDIO_ENUM(ComponentType,
+  ((Heating))
+  ((Cooling))
+  ((Both))
+  ((None))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(ComponentType,
+  ((Heating))
+  ((Cooling))
+  ((Both))
+  ((None))
+);
+
 // clang-format on
+
+inline UTILITIES_API AppGFuelType convertFuelTypeToAppG(FuelType fuelType) {
+
+  if (fuelType == FuelType::Electricity) {
+    return AppGFuelType::Electric;
+  } else if ((fuelType == FuelType::Gas) || (fuelType == FuelType::Gasoline) || (fuelType == FuelType::Diesel) || (fuelType == FuelType::Coal)
+             || (fuelType == FuelType::FuelOil_1) || (fuelType == FuelType::FuelOil_2) || (fuelType == FuelType::Propane)
+             || (fuelType == FuelType::Steam) || (fuelType == FuelType::OtherFuel_1) || (fuelType == FuelType::OtherFuel_2)) {
+    return AppGFuelType::Fuel;
+  } else if ((fuelType == FuelType::DistrictCooling) || (fuelType == FuelType::DistrictHeating)) {
+    return AppGFuelType::District;
+  }
+
+  // (fuelType == FuelType::Water)
+  // (fuelType == FuelType::EnergyTransfer)
+
+  return AppGFuelType::Other;
+}
 
 }  // namespace openstudio
 

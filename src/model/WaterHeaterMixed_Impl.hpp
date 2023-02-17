@@ -393,6 +393,10 @@ namespace model {
       boost::optional<PlantLoop> useSidePlantLoop() const;
       bool removeFromSourceSidePlantLoop();
 
+      virtual ComponentType componentType() const override;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
+
       //@}
      protected:
      private:
