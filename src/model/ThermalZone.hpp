@@ -546,6 +546,17 @@ namespace model {
 
     std::vector<AirLoopHVAC> airLoopHVACs() const;
 
+    // SQL Queries
+    boost::optional<double> getAutosizedValueFromZoneSizes(const std::string& columnName, const std::string& loadType) const;
+
+    boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const;
+    boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const;
+    boost::optional<double> autosizedCoolingDesignAirFlowRate() const;
+    boost::optional<double> autosizedHeatingDesignAirFlowRate() const;
+    boost::optional<double> coolingDesignLoad() const;
+    boost::optional<double> designAirFlowRate() const;
+    boost::optional<double> heatingDesignLoad() const;
+
     //@}
    protected:
     /// @cond

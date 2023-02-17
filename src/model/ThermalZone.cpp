@@ -135,6 +135,8 @@
 
 #include "../utilities/sql/SqlFile.hpp"
 
+#include <fmt/format.h>
+
 namespace openstudio {
 namespace model {
 
@@ -2631,6 +2633,79 @@ namespace model {
       return zoneProp;
     }
 
+    boost::optional<double> ThermalZone_Impl::getAutosizedValueFromZoneSizes(const std::string& columnName, const std::string& loadType) const {
+      // Check that the model has a sql file
+      if (!model().sqlFile()) {
+        LOG(Warn,
+            "This model has no sql file, cannot retrieve the ZoneSizes autosized value '" << columnName << "' with loadType '" << loadType << "'.");
+        return boost::none;
+      }
+
+      if ((loadType != "Cooling") && (loadType != "Heating")) {
+        LOG(Warn, "Cannot retrieve the ZoneSizes autosized value '" << columnName << ", Invalid loadType, must be one of ['Cooling', 'Heating']");
+        return boost::none;
+      }
+
+      // Get the object name and transform to the way it is recorded
+      // in the sql file
+      std::string sqlName = name().get();
+      boost::to_upper(sqlName);
+
+      const std::string directQuery = R"sql(
+      SELECT ? FROM ZoneSizes
+        WHERE ZoneName = ?
+          AND LoadType = ?;
+    )sql";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(directQuery,
+                                                                                     // bindArgs
+                                                                                     columnName, sqlName, loadType);
+      if (!val) {
+        LOG(Debug, fmt::format(R"sql(The direct query failed:
+SELECT {} FROM ZoneSizes
+  WHERE ZoneName = '{}'
+    AND LoadType = '{}';)sql",
+                               columnName, sqlName, loadType));
+      }
+
+      return val;
+    }
+
+    // SQL Queries
+    boost::optional<double> ThermalZone_Impl::autosizedMaximumOutdoorAirFlowRate() const {
+      //TODO: I don't think this is available anywhere actually
+      return boost::none;
+    }
+
+    boost::optional<double> ThermalZone_Impl::autosizedMinimumOutdoorAirFlowRate() const {
+      // The same value is passed for both cooling and heating, so no need to check both
+      return getAutosizedValueFromZoneSizes("CalcOutsideAirFlow", "Cooling");
+    }
+
+    boost::optional<double> ThermalZone_Impl::autosizedCoolingDesignAirFlowRate() const {
+      return getAutosizedValueFromZoneSizes("UserDesFlow", "Cooling");
+    }
+
+    boost::optional<double> ThermalZone_Impl::autosizedHeatingDesignAirFlowRate() const {
+      return getAutosizedValueFromZoneSizes("UserDesFlow", "Heating");
+    }
+
+    boost::optional<double> ThermalZone_Impl::coolingDesignLoad() const {
+      return getAutosizedValueFromZoneSizes("UserDesLoad", "Cooling");
+    }
+
+    boost::optional<double> ThermalZone_Impl::heatingDesignLoad() const {
+      return getAutosizedValueFromZoneSizes("UserDesLoad", "Heating");
+    }
+
+    boost::optional<double> ThermalZone_Impl::designAirFlowRate() const {
+      auto coolingFlow_ = autosizedCoolingDesignAirFlowRate();
+      auto heatingFlow_ = autosizedHeatingDesignAirFlowRate();
+      if (coolingFlow_ && heatingFlow_) {
+        return coolingFlow_.get() + heatingFlow_.get();
+      }
+      return boost::none;
+    }
+
   }  // namespace detail
 
   ThermalZone::ThermalZone(const Model& model) : HVACComponent(ThermalZone::iddObjectType(), model) {
@@ -3257,6 +3332,39 @@ namespace model {
   std::ostream& operator<<(std::ostream& out, const openstudio::model::TransitionZone& transitionZone) {
     out << "thermal zone name=" << transitionZone.thermalZone().name().get() << ", length=" << transitionZone.length();
     return out;
+  }
+
+  // SQL Queries
+  boost::optional<double> ThermalZone::getAutosizedValueFromZoneSizes(const std::string& columnName, const std::string& loadType) const {
+    return getImpl<detail::ThermalZone_Impl>()->getAutosizedValueFromZoneSizes(columnName, loadType);
+  }
+
+  boost::optional<double> ThermalZone::autosizedMaximumOutdoorAirFlowRate() const {
+    return getImpl<detail::ThermalZone_Impl>()->autosizedMaximumOutdoorAirFlowRate();
+  }
+
+  boost::optional<double> ThermalZone::autosizedMinimumOutdoorAirFlowRate() const {
+    return getImpl<detail::ThermalZone_Impl>()->autosizedMinimumOutdoorAirFlowRate();
+  }
+
+  boost::optional<double> ThermalZone::autosizedCoolingDesignAirFlowRate() const {
+    return getImpl<detail::ThermalZone_Impl>()->autosizedCoolingDesignAirFlowRate();
+  }
+
+  boost::optional<double> ThermalZone::autosizedHeatingDesignAirFlowRate() const {
+    return getImpl<detail::ThermalZone_Impl>()->autosizedHeatingDesignAirFlowRate();
+  }
+
+  boost::optional<double> ThermalZone::coolingDesignLoad() const {
+    return getImpl<detail::ThermalZone_Impl>()->coolingDesignLoad();
+  }
+
+  boost::optional<double> ThermalZone::designAirFlowRate() const {
+    return getImpl<detail::ThermalZone_Impl>()->designAirFlowRate();
+  }
+
+  boost::optional<double> ThermalZone::heatingDesignLoad() const {
+    return getImpl<detail::ThermalZone_Impl>()->heatingDesignLoad();
   }
 
 }  // namespace model
