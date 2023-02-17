@@ -2651,14 +2651,16 @@ namespace model {
       std::string sqlName = name().get();
       boost::to_upper(sqlName);
 
-      const std::string directQuery = R"sql(
-      SELECT ? FROM ZoneSizes
-        WHERE ZoneName = ?
-          AND LoadType = ?;
-    )sql";
+      const std::string directQuery = fmt::format(
+        R"sql(
+SELECT {} FROM ZoneSizes
+  WHERE ZoneName = ?
+    AND LoadType = ?;
+      )sql",
+        columnName);
       boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(directQuery,
                                                                                      // bindArgs
-                                                                                     columnName, sqlName, loadType);
+                                                                                     sqlName, loadType);
       if (!val) {
         LOG(Debug, fmt::format(R"sql(The direct query failed:
 SELECT {} FROM ZoneSizes
