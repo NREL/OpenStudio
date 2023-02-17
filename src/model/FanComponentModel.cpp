@@ -694,8 +694,8 @@ namespace model {
     }
 
     void FanComponentModel_Impl::autosize() {
-      autosizedMaximumFlowRate();
-      autosizedMinimumFlowRate();
+      autosizeMaximumFlowRate();
+      autosizeMinimumFlowRate();
       autosizeMotorFanPulleyRatio();
       autosizeBeltMaximumTorque();
       autosizeMaximumMotorOutputPower();
