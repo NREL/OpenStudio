@@ -40,12 +40,13 @@
 #include "CurveCubic_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
-#include <utilities/idd/IddFactory.hxx>
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_CoolingTower_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -746,6 +747,18 @@ namespace model {
       if (val) {
         setDesignFanPower(val.get());
       }
+    }
+
+    ComponentType CoolingTowerVariableSpeed_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<AppGFuelType> CoolingTowerVariableSpeed_Impl::coolingFuelTypes() const {
+      return {AppGFuelType::Electric};
+    }
+
+    std::vector<AppGFuelType> CoolingTowerVariableSpeed_Impl::heatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

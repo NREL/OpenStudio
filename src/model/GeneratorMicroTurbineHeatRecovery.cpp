@@ -45,11 +45,12 @@
 // TODO: add the tables class if they get added to OS later?
 //#include "DataTables.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Generator_MicroTurbine_HeatRecovery_FieldEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -447,6 +448,19 @@ namespace model {
       std::vector<std::string> types{"Generator Nominal Maximum Power", "Generator Nominal Thermal To Electric Ratio"};
       return types;
     }
+
+    ComponentType GeneratorMicroTurbineHeatRecovery_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<AppGFuelType> GeneratorMicroTurbineHeatRecovery_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> GeneratorMicroTurbineHeatRecovery_Impl::heatingFuelTypes() const {
+      return {convertFuelTypeToAppG(FuelType(generatorMicroTurbine().fuelType()))};
+    }
+
   }  // namespace detail
 
   // The constructor needs model, and a GeneratorMicroTurbine

@@ -34,6 +34,10 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
+class AppGFuelType;
+class ComponentType;
+
 namespace model {
 
   class Schedule;
@@ -72,6 +76,10 @@ namespace model {
       virtual unsigned outletPort() const override;
 
       virtual bool addToNode(Node& node) override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
 
       //@}
       /** @name Getters */

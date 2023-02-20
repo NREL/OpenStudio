@@ -34,6 +34,10 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
+class ComponentType;
+class AppGFuelType;
+
 namespace model {
 
   // TODO: Check the following class names against object getters and setters.
@@ -69,8 +73,11 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
-      // TODO: I think this should be virtual bool since it's defined in both HVACcomponent and StraightComponent. @Kyle?
       virtual bool addToNode(Node& node) override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
 
       // DLM: consider reimplementing any other virtual methods of StraightComponent or HVACComponent
 

@@ -34,6 +34,10 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
+class AppGFuelType;
+class ComponentType;
+
 namespace model {
 
   class Node;
@@ -63,13 +67,23 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
-      //@}
-      /** @name Getters */
-      //@{
-
       virtual unsigned inletPort() const override;
 
       virtual unsigned outletPort() const override;
+
+      virtual bool addToNode(Node& node) override;
+
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
+
+      //@}
+      /** @name Getters */
+      //@{
 
       std::string performanceInputMethod() const;
 
@@ -106,10 +120,6 @@ namespace model {
       boost::optional<double> autosizedDesignAirFlowRate() const;
 
       boost::optional<double> autosizedDesignAirFlowRateFanPower() const;
-
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
 
       //@}
       /** @name Setters */
@@ -148,8 +158,6 @@ namespace model {
       //@}
       /** @name Other */
       //@{
-
-      bool addToNode(Node& node) override;
 
       //@}
      protected:

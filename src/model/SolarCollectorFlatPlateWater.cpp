@@ -45,12 +45,11 @@
 #include "Node.hpp"
 #include "Model.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_SolarCollector_FlatPlate_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -196,6 +195,18 @@ namespace model {
     bool SolarCollectorFlatPlateWater_Impl::setSolarCollectorPerformanceNoClone(
       const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
       return setPointer(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName, solarCollectorPerformanceFlatPlate.handle());
+    }
+
+    ComponentType SolarCollectorFlatPlateWater_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<AppGFuelType> SolarCollectorFlatPlateWater_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> SolarCollectorFlatPlateWater_Impl::heatingFuelTypes() const {
+      return {AppGFuelType::Solar};
     }
 
   }  // namespace detail

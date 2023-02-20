@@ -47,13 +47,12 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_CentralHeatPumpSystem_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -327,6 +326,26 @@ namespace model {
     void CentralHeatPumpSystem_Impl::resetAncillaryOperationSchedule() {
       bool result = setString(OS_CentralHeatPumpSystemFields::AncillaryOperationScheduleName, "");
       OS_ASSERT(result);
+    }
+
+    ComponentType CentralHeatPumpSystem_Impl::componentType() const {
+      // Note (JM): This really depends on which loop is calling this...
+
+      // This component has a tertiary loop, and is placed on the supply side of TWO loops: Heating and Cooling
+      // If it's the supplyLoop (= cooling), we should probably have a PlantEquipmentOperation::CoolingLoad
+      // If it's the tertiaryLoop (= heating), PlantEquipmentOperation::HeatingLoad
+      // Returning BOTH will place it on a PlantEquipmentOperation::Uncontrolled
+
+      // As a result, this is handled in coolingComponents() and heatingComponents() directly
+      return ComponentType::None;
+    }
+
+    std::vector<AppGFuelType> CentralHeatPumpSystem_Impl::coolingFuelTypes() const {
+      return {AppGFuelType::Electric};
+    }
+
+    std::vector<AppGFuelType> CentralHeatPumpSystem_Impl::heatingFuelTypes() const {
+      return {AppGFuelType::Electric};
     }
 
   }  // namespace detail

@@ -34,6 +34,10 @@
 #include "WaterToWaterComponent_Impl.hpp"
 
 namespace openstudio {
+
+class AppGFuelType;
+class ComponentType;
+
 namespace model {
 
   class Schedule;
@@ -73,6 +77,14 @@ namespace model {
       virtual unsigned demandInletPort() const override;
 
       virtual unsigned demandOutletPort() const override;
+
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
 
       //@}
       /** @name Getters */
@@ -165,10 +177,6 @@ namespace model {
       boost::optional<double> autosizedUseSideDesignFlowRate() const;
 
       boost::optional<double> autosizedSourceSideDesignFlowRate() const;
-
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
 
       //@}
       /** @name Setters */

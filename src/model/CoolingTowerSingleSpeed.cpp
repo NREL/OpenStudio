@@ -36,12 +36,13 @@
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
 #include "SizingPlant.hpp"
-#include <utilities/idd/IddFactory.hxx>
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_CoolingTower_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -976,6 +977,18 @@ namespace model {
 
     bool CoolingTowerSingleSpeed_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       return setString(OS_CoolingTower_SingleSpeedFields::EndUseSubcategory, endUseSubcategory);
+    }
+
+    ComponentType CoolingTowerSingleSpeed_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<AppGFuelType> CoolingTowerSingleSpeed_Impl::coolingFuelTypes() const {
+      return {AppGFuelType::Electric};
+    }
+
+    std::vector<AppGFuelType> CoolingTowerSingleSpeed_Impl::heatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

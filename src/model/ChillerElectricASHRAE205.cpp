@@ -50,9 +50,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Chiller_Electric_ASHRAE205_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -835,6 +834,18 @@ namespace model {
       mo.setString(auxiliaryInletPort(), "");
       mo.setString(auxiliaryOutletPort(), "");
       return mo;
+    }
+
+    ComponentType ChillerElectricASHRAE205_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<AppGFuelType> ChillerElectricASHRAE205_Impl::coolingFuelTypes() const {
+      return {AppGFuelType::Electric};
+    }
+
+    std::vector<AppGFuelType> ChillerElectricASHRAE205_Impl::heatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

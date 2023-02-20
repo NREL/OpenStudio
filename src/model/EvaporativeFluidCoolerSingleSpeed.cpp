@@ -47,11 +47,13 @@
 #include "Node_Impl.hpp"
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
-#include <utilities/idd/IddFactory.hxx>
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_EvaporativeFluidCooler_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -621,6 +623,18 @@ namespace model {
       if (val) {
         setDesignWaterFlowRate(val.get());
       }
+    }
+
+    ComponentType EvaporativeFluidCoolerSingleSpeed_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<AppGFuelType> EvaporativeFluidCoolerSingleSpeed_Impl::coolingFuelTypes() const {
+      return {AppGFuelType::Electric};
+    }
+
+    std::vector<AppGFuelType> EvaporativeFluidCoolerSingleSpeed_Impl::heatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

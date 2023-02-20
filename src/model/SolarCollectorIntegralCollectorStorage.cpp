@@ -42,12 +42,11 @@
 #include "Node_Impl.hpp"
 #include "Model.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SolarCollector_IntegralCollectorStorage_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -212,6 +211,18 @@ namespace model {
     bool SolarCollectorIntegralCollectorStorage_Impl::setSolarCollectorPerformanceNoClone(
       const SolarCollectorPerformanceIntegralCollectorStorage& performance) {
       return setPointer(OS_SolarCollector_IntegralCollectorStorageFields::IntegralCollectorStorageParametersName, performance.handle());
+    }
+
+    ComponentType SolarCollectorIntegralCollectorStorage_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<AppGFuelType> SolarCollectorIntegralCollectorStorage_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> SolarCollectorIntegralCollectorStorage_Impl::heatingFuelTypes() const {
+      return {AppGFuelType::Solar};
     }
 
   }  // namespace detail

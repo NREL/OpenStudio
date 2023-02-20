@@ -34,6 +34,10 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
+class AppGFuelType;
+class ComponentType;
+
 namespace model {
   namespace detail {
 
@@ -66,15 +70,11 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
-      bool addToNode(Node& node) override;
+      virtual bool addToNode(Node& node) override;
 
-      bool addGFunction(double gFunctionLN, double gFunctionGValue);
-
-      void removeGFunction(unsigned groupIndex);
-
-      void removeAllGFunctions();
-
-      std::vector<std::pair<double, double>> gFunctions();
+      virtual ComponentType componentType() const override;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
 
       //@}
       /** @name Getters */
@@ -171,6 +171,14 @@ namespace model {
       //@}
       /** @name Other */
       //@{
+
+      bool addGFunction(double gFunctionLN, double gFunctionGValue);
+
+      void removeGFunction(unsigned groupIndex);
+
+      void removeAllGFunctions();
+
+      std::vector<std::pair<double, double>> gFunctions();
 
       //@}
      protected:

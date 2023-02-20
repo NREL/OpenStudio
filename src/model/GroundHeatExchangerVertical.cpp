@@ -34,11 +34,12 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_GroundHeatExchanger_Vertical_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -416,6 +417,18 @@ namespace model {
       }
 
       return result;
+    }
+
+    ComponentType GroundHeatExchangerVertical_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<AppGFuelType> GroundHeatExchangerVertical_Impl::coolingFuelTypes() const {
+      return {AppGFuelType::Other};
+    }
+
+    std::vector<AppGFuelType> GroundHeatExchangerVertical_Impl::heatingFuelTypes() const {
+      return {AppGFuelType::Other};
     }
 
   }  // namespace detail

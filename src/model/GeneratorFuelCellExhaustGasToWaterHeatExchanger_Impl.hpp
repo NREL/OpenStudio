@@ -34,6 +34,10 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
+class AppGFuelType;
+class ComponentType;
+
 namespace model {
 
   class Connection;
@@ -74,18 +78,20 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
-      bool addToNode(Node& node) override;
+      virtual bool addToNode(Node& node) override;
 
-      /*
-     *For OS App-related reasons, so we can drag this object from library onto a plantLoop
-     *This will clone the parent fuelCell (which clones all of his children) and return a reference
-     *to that clone's HX
-     */
+      /** For OS App-related reasons, so we can drag this object from library onto a plantLoop
+        * This will clone the parent fuelCell (which clones all of his children) and return a reference
+        * to that clone's HX */
       virtual ModelObject clone(Model model) const override;
 
       virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
       virtual std::vector<ModelObject> children() const override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
 
       //@}
       /** @name Getters */

@@ -34,6 +34,10 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
+class AppGFuelType;
+class ComponentType;
+
 namespace model {
 
   class CurveCubic;
@@ -70,6 +74,10 @@ namespace model {
       virtual unsigned inletPort() const override;
 
       virtual unsigned outletPort() const override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
 
       //@}
       /** @name Getters */

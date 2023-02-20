@@ -33,12 +33,14 @@
 #include "CurveQuadLinear.hpp"
 #include "CurveQuadLinear_Impl.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/OS_HeatPump_WaterToWater_EquationFit_Heating_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 #include "HeatPumpWaterToWaterEquationFitCooling.hpp"
 #include "HeatPumpWaterToWaterEquationFitCooling_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_HeatPump_WaterToWater_EquationFit_Heating_FieldEnums.hxx>
 
 namespace openstudio {
 namespace model {
@@ -314,6 +316,18 @@ namespace model {
       if (val) {
         setRatedHeatingPowerConsumption(val.get());
       }
+    }
+
+    ComponentType HeatPumpWaterToWaterEquationFitHeating_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<AppGFuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::heatingFuelTypes() const {
+      return {AppGFuelType::Electric};
     }
 
   }  // namespace detail

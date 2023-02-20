@@ -41,14 +41,12 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_HeatExchanger_FluidToFluid_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -447,6 +445,66 @@ namespace model {
       if (val) {
         setHeatExchangerUFactorTimesAreaValue(val.get());
       }
+    }
+
+    ComponentType HeatExchangerFluidToFluid_Impl::componentType() const {
+      const std::string controlType = this->controlType();
+
+      if (openstudio::istringEqual(controlType, "HeatingSetpointModulated") || openstudio::istringEqual(controlType, "HeatingSetpointOnOff")) {
+        return ComponentType::Heating;
+
+      } else if (openstudio::istringEqual(controlType, "CoolingSetpointModulated") || openstudio::istringEqual(controlType, "CoolingSetpointOnOff")
+                 || openstudio::istringEqual(controlType, "CoolingDifferentialOnOff")
+                 || openstudio::istringEqual(controlType, "CoolingSetpointOnOffWithComponentOverride")) {
+        return ComponentType::Cooling;
+
+      } else if (openstudio::istringEqual(controlType, "DualDeadbandSetpointModulated")
+                 || openstudio::istringEqual(controlType, "DualDeadbandSetpointOnOff")) {
+        return ComponentType::Both;
+      } else if (openstudio::istringEqual(controlType, "UncontrolledOn")) {
+        // Here we go check what's on the supply side of the secondary plantLoop if there is one
+        // It's going to crash if there isn't a secondary plant Loop anyways
+        // get the Source loop
+        if (boost::optional<PlantLoop> p_ = secondaryPlantLoop()) {
+          return p_->componentType();
+        } else {
+          // It isn't connected to a source side (beats the point of the HX)
+          return ComponentType::None;
+        }  // End if has source loop
+
+      } else {
+        // For OperationSchemeModulated and OperationSchemeOnOff
+        LOG(Debug, briefDescription() << "' doesn't have a controlType ('" << controlType
+                                      << "') that allows us to specify whether "
+                                         "it's heating or cooling, setting to ComponentType::BOTH");
+        return ComponentType::Both;
+      }
+    }
+
+    std::vector<AppGFuelType> HeatExchangerFluidToFluid_Impl::coolingFuelTypes() const {
+      const std::string controlType = this->controlType();
+      if (openstudio::istringEqual(controlType, "HeatingSetpointModulated") || openstudio::istringEqual(controlType, "HeatingSetpointOnOff")) {
+        return {};
+      }
+      if (auto p_ = secondaryPlantLoop()) {
+        return p_->coolingFuelTypes();
+      }
+
+      return {};
+    }
+
+    std::vector<AppGFuelType> HeatExchangerFluidToFluid_Impl::heatingFuelTypes() const {
+      const std::string controlType = this->controlType();
+      if (openstudio::istringEqual(controlType, "CoolingSetpointModulated") || openstudio::istringEqual(controlType, "CoolingSetpointOnOff")
+          || openstudio::istringEqual(controlType, "CoolingDifferentialOnOff")
+          || openstudio::istringEqual(controlType, "CoolingSetpointOnOffWithComponentOverride")) {
+        return {};
+      }
+      if (auto p_ = secondaryPlantLoop()) {
+        return p_->heatingFuelTypes();
+      }
+
+      return {};
     }
 
   }  // namespace detail

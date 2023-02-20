@@ -39,6 +39,10 @@
 #include "ThermalZone_Impl.hpp"
 
 namespace openstudio {
+
+class AppGFuelType;
+class ComponentType;
+
 namespace model {
 
   // TODO: Check the following class names against object getters and setters.
@@ -73,6 +77,22 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
+
+      virtual unsigned inletPort() const override;
+
+      virtual unsigned outletPort() const override;
+
+      virtual bool addToNode(Node& node) override;
+
+      virtual ModelObject clone(Model model) const override;
+
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
+
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
 
       //@}
       /** @name Getters */
@@ -176,18 +196,6 @@ namespace model {
       //@}
       /** @name Other */
       //@{
-
-      virtual unsigned inletPort() const override;
-
-      virtual unsigned outletPort() const override;
-
-      bool addToNode(Node& node) override;
-
-      virtual ModelObject clone(Model model) const override;
-
-      virtual std::vector<IddObjectType> allowableChildTypes() const override;
-
-      virtual std::vector<ModelObject> children() const override;
 
       //@}
      protected:

@@ -38,12 +38,12 @@
 #include "SizingPlant.hpp"
 #include "Node.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_CoolingTower_TwoSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -1217,6 +1217,18 @@ namespace model {
       if (val) {
         setDesignRangeTemperature(val.get());
       }
+    }
+
+    ComponentType CoolingTowerTwoSpeed_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<AppGFuelType> CoolingTowerTwoSpeed_Impl::coolingFuelTypes() const {
+      return {AppGFuelType::Electric};
+    }
+
+    std::vector<AppGFuelType> CoolingTowerTwoSpeed_Impl::heatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail
