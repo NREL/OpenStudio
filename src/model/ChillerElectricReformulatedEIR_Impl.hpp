@@ -34,9 +34,6 @@
 
 namespace openstudio {
 
-class AppGFuelType;
-class ComponentType;
-
 namespace model {
 
   class Curve;

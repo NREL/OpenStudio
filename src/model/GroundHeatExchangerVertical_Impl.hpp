@@ -35,9 +35,6 @@
 
 namespace openstudio {
 
-class AppGFuelType;
-class ComponentType;
-
 namespace model {
   namespace detail {
 

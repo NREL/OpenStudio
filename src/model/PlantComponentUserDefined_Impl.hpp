@@ -40,9 +40,6 @@
 
 namespace openstudio {
 
-class AppGFuelType;
-class ComponentType;
-
 namespace model {
 
   // TODO: Check the following class names against object getters and setters.
