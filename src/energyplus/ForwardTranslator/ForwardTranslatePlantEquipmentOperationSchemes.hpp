@@ -33,8 +33,11 @@
 #include <vector>
 #include <boost/optional.hpp>
 #include "../EnergyPlusAPI.hpp"
+#include "../../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
+
+class ComponentType;
 
 namespace model {
 
@@ -55,7 +58,7 @@ namespace energyplus {
     NONE
   };
 
-  ENERGYPLUS_API ComponentType componentType(const openstudio::model::HVACComponent& component);
+  OS_DEPRECATED ENERGYPLUS_API openstudio::energyplus::ComponentType componentType(const openstudio::model::HVACComponent& component);
 
   bool _isSetpointComponent(const openstudio::model::PlantLoop& plantLoop, const openstudio::model::ModelObject& comp);
 
@@ -75,7 +78,7 @@ namespace energyplus {
    * * If there is no cooling, no heating, no "both": None
    * * All other cases: "both"
    */
-  ENERGYPLUS_API ComponentType plantLoopType(const openstudio::model::PlantLoop& plantLoop);
+  OS_DEPRECATED ENERGYPLUS_API openstudio::energyplus::ComponentType plantLoopType(const openstudio::model::PlantLoop& plantLoop);
 
   /* Some plant components air in a containingHVACComponent() and it is that
    * container which needs to go on the plant operation scheme. Here is a filter to figure that out.
