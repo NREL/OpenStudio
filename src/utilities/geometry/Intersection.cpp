@@ -160,7 +160,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   constexpr double offsetBy = 0.01;
   constexpr double tol = offsetBy;
   // Sets the limit to how far miters are extended for sharp corners
-  constexpr double mitreLimit = 15;
+  constexpr double mitreLimit = 100;
   const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(offsetBy);
   const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-offsetBy);
   const boost::geometry::strategy::buffer::join_miter join_strategy(mitreLimit);
