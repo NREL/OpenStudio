@@ -45,8 +45,8 @@
 
 #include <utilities/idd/OS_ZoneHVAC_HighTemperatureRadiant_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -329,6 +329,22 @@ namespace model {
       if (val) {
         setMaximumPowerInput(val.get());
       }
+    }
+
+    ComponentType ZoneHVACHighTemperatureRadiant_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> ZoneHVACHighTemperatureRadiant_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ZoneHVACHighTemperatureRadiant_Impl::heatingFuelTypes() const {
+      return {FuelType(fuelType())};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACHighTemperatureRadiant_Impl::appGHeatingFuelTypes() const {
+      return {convertFuelTypeToAppG(FuelType(fuelType()))};
     }
 
   }  // namespace detail

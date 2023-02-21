@@ -57,9 +57,8 @@
 #include <utilities/idd/OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -574,6 +573,56 @@ namespace model {
       std::vector<std::string> types{"Hydronic Low Temp Radiant Design Water Volume Flow Rate for Heating",
                                      "Hydronic Low Temp Radiant Design Water Volume Flow Rate for Cooling"};
       return types;
+    }
+
+    ComponentType ZoneHVACLowTempRadiantVarFlow_Impl::componentType() const {
+      const bool has_cooling = heatingCoil().has_value();
+      const bool has_heating = coolingCoil().has_value();
+      if (has_cooling && !has_heating) {
+        return ComponentType::Cooling;
+
+        // If source side is purely heating
+      } else if (!has_cooling && has_heating) {
+        return ComponentType::Heating;
+
+        // If there is nothing
+      } else if (!has_cooling && !has_heating) {
+        return ComponentType::None;
+
+        // All other cases: BOTH
+      } else {
+        return ComponentType::Both;
+      }
+    }
+
+    std::vector<FuelType> ZoneHVACLowTempRadiantVarFlow_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      if (auto cc_ = coolingCoil()) {
+        for (auto ft : cc_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> ZoneHVACLowTempRadiantVarFlow_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      if (auto hc_ = heatingCoil()) {
+        for (auto ft : hc_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACLowTempRadiantVarFlow_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      if (auto hc_ = heatingCoil()) {
+        for (auto ft : hc_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

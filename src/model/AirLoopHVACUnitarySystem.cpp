@@ -1326,8 +1326,8 @@ namespace model {
     }
 
     ComponentType AirLoopHVACUnitarySystem_Impl::componentType() const {
-      bool has_cooling = coolingCoil().is_initialized();
-      bool has_heating = heatingCoil().is_initialized();
+      const bool has_cooling = coolingCoil().is_initialized();
+      const bool has_heating = heatingCoil().is_initialized();
 
       if (has_cooling && !has_heating) {
         return ComponentType::Cooling;

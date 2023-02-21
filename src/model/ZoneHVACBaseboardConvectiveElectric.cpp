@@ -38,8 +38,8 @@
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_ZoneHVAC_Baseboard_Convective_Electric_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -235,6 +235,22 @@ namespace model {
     std::vector<std::string> ZoneHVACBaseboardConvectiveElectric_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types{"Simple Zone Baseboard Capacity At Low Temperature", "Simple Zone Baseboard Capacity At High Temperature"};
       return types;
+    }
+
+    ComponentType ZoneHVACBaseboardConvectiveElectric_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> ZoneHVACBaseboardConvectiveElectric_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ZoneHVACBaseboardConvectiveElectric_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACBaseboardConvectiveElectric_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Electric};
     }
 
   }  // namespace detail

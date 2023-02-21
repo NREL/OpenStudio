@@ -47,9 +47,8 @@
 #include <utilities/idd/OS_ZoneHVAC_FourPipeFanCoil_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -784,6 +783,34 @@ namespace model {
       if (val) {
         setMaximumSupplyAirTemperatureInHeatingMode(val.get());
       }
+    }
+
+    ComponentType ZoneHVACFourPipeFanCoil_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> ZoneHVACFourPipeFanCoil_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : coolingCoil().coolingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> ZoneHVACFourPipeFanCoil_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : heatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACFourPipeFanCoil_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (auto ft : heatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

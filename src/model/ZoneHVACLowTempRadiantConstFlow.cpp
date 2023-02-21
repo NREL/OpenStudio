@@ -57,9 +57,8 @@
 #include <utilities/idd/OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -710,6 +709,34 @@ namespace model {
       if (val) {
         setRatedFlowRate(val.get());
       }
+    }
+
+    ComponentType ZoneHVACLowTempRadiantConstFlow_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> ZoneHVACLowTempRadiantConstFlow_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : coolingCoil().coolingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> ZoneHVACLowTempRadiantConstFlow_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : heatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACLowTempRadiantConstFlow_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (auto ft : heatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

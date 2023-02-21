@@ -45,6 +45,7 @@
 #include <utilities/idd/OS_ZoneHVAC_UnitVentilator_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -489,6 +490,57 @@ namespace model {
       if (val) {
         setMaximumOutdoorAirFlowRate(val.get());
       }
+    }
+
+    ComponentType ZoneHVACUnitVentilator_Impl::componentType() const {
+      const bool has_cooling = coolingCoil().is_initialized();
+      const bool has_heating = heatingCoil().is_initialized();
+
+      if (has_cooling && !has_heating) {
+        return ComponentType::Cooling;
+
+        // If source side is purely heating
+      } else if (!has_cooling && has_heating) {
+        return ComponentType::Heating;
+
+        // If there is nothing
+      } else if (!has_cooling && !has_heating) {
+        return ComponentType::None;
+
+        // All other cases: BOTH
+      } else {
+        return ComponentType::Both;
+      }
+    }
+
+    std::vector<FuelType> ZoneHVACUnitVentilator_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      if (auto cc_ = coolingCoil()) {
+        for (auto ft : cc_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> ZoneHVACUnitVentilator_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      if (auto hc_ = heatingCoil()) {
+        for (auto ft : hc_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACUnitVentilator_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      if (auto hc_ = heatingCoil()) {
+        for (auto ft : hc_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

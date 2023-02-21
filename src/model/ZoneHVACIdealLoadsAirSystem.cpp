@@ -40,9 +40,8 @@
 #include <utilities/idd/OS_ZoneHVAC_IdealLoadsAirSystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -811,6 +810,22 @@ namespace model {
     std::vector<std::string> ZoneHVACIdealLoadsAirSystem_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types;
       return types;
+    }
+
+    ComponentType ZoneHVACIdealLoadsAirSystem_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> ZoneHVACIdealLoadsAirSystem_Impl::coolingFuelTypes() const {
+      return {FuelType::DistrictCooling};
+    }
+
+    std::vector<FuelType> ZoneHVACIdealLoadsAirSystem_Impl::heatingFuelTypes() const {
+      return {FuelType::DistrictHeating};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACIdealLoadsAirSystem_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::District};
     }
 
   }  // namespace detail
