@@ -49,7 +49,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ZoneAirHeatBalanceAlgorithm() {}
+    virtual ~ZoneAirHeatBalanceAlgorithm() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneAirHeatBalanceAlgorithm(const ZoneAirHeatBalanceAlgorithm& other) = default;
+    ZoneAirHeatBalanceAlgorithm(ZoneAirHeatBalanceAlgorithm&& other) = default;
+    ZoneAirHeatBalanceAlgorithm& operator=(const ZoneAirHeatBalanceAlgorithm&) = default;
+    ZoneAirHeatBalanceAlgorithm& operator=(ZoneAirHeatBalanceAlgorithm&&) = default;
 
     //@}
 
@@ -68,7 +73,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setAlgorithm(std::string algorithm);
+    bool setAlgorithm(const std::string& algorithm);
 
     void resetAlgorithm();
 
@@ -79,7 +84,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneAirHeatBalanceAlgorithm_Impl ImplType;
+    using ImplType = detail::ZoneAirHeatBalanceAlgorithm_Impl;
 
     explicit ZoneAirHeatBalanceAlgorithm(std::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl);
 
@@ -95,10 +100,10 @@ namespace model {
   };
 
   /** \relates ZoneAirHeatBalanceAlgorithm*/
-  typedef boost::optional<ZoneAirHeatBalanceAlgorithm> OptionalZoneAirHeatBalanceAlgorithm;
+  using OptionalZoneAirHeatBalanceAlgorithm = boost::optional<ZoneAirHeatBalanceAlgorithm>;
 
   /** \relates ZoneAirHeatBalanceAlgorithm*/
-  typedef std::vector<ZoneAirHeatBalanceAlgorithm> ZoneAirHeatBalanceAlgorithmVector;
+  using ZoneAirHeatBalanceAlgorithmVector = std::vector<ZoneAirHeatBalanceAlgorithm>;
 
 }  // namespace model
 }  // namespace openstudio

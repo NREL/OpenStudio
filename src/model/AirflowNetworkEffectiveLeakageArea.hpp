@@ -56,7 +56,12 @@ namespace model {
     AirflowNetworkEffectiveLeakageArea(const Model& model, double effectiveLeakageArea, double dischargeCoefficient,
                                        double referencePressureDifference, double massFlowExponent);
 
-    virtual ~AirflowNetworkEffectiveLeakageArea() {}
+    virtual ~AirflowNetworkEffectiveLeakageArea() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkEffectiveLeakageArea(const AirflowNetworkEffectiveLeakageArea& other) = default;
+    AirflowNetworkEffectiveLeakageArea(AirflowNetworkEffectiveLeakageArea&& other) = default;
+    AirflowNetworkEffectiveLeakageArea& operator=(const AirflowNetworkEffectiveLeakageArea&) = default;
+    AirflowNetworkEffectiveLeakageArea& operator=(AirflowNetworkEffectiveLeakageArea&&) = default;
 
     //@}
 
@@ -100,7 +105,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkEffectiveLeakageArea_Impl ImplType;
+    using ImplType = detail::AirflowNetworkEffectiveLeakageArea_Impl;
 
     explicit AirflowNetworkEffectiveLeakageArea(std::shared_ptr<detail::AirflowNetworkEffectiveLeakageArea_Impl> impl);
 
@@ -114,10 +119,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkEffectiveLeakageArea*/
-  typedef boost::optional<AirflowNetworkEffectiveLeakageArea> OptionalAirflowNetworkEffectiveLeakageArea;
+  using OptionalAirflowNetworkEffectiveLeakageArea = boost::optional<AirflowNetworkEffectiveLeakageArea>;
 
   /** \relates AirflowNetworkEffectiveLeakageArea*/
-  typedef std::vector<AirflowNetworkEffectiveLeakageArea> AirflowNetworkEffectiveLeakageAreaVector;
+  using AirflowNetworkEffectiveLeakageAreaVector = std::vector<AirflowNetworkEffectiveLeakageArea>;
 
 }  // namespace model
 }  // namespace openstudio

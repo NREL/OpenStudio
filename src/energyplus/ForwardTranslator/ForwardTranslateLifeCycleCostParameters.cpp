@@ -136,7 +136,7 @@ namespace energyplus {
       static const boost::optional<IdfFile> usePriceEscalationFile = findIdfFile(":/Resources/LCCusePriceEscalationDataSet2011.idf");
       OS_ASSERT(usePriceEscalationFile);
 
-      for (IdfObject object : usePriceEscalationFile->objects()) {
+      for (const IdfObject& object : usePriceEscalationFile->objects()) {
         std::string name = object.nameString();
         if ((name.find(*region) == 0) && (name.find(*sector) != string::npos)) {
           m_idfObjects.push_back(object);

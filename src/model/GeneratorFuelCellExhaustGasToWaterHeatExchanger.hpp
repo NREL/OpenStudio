@@ -58,7 +58,12 @@ namespace model {
 
     explicit GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model, const Node& exhaustOutletAirNode);
 
-    virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger() {}
+    virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCellExhaustGasToWaterHeatExchanger(const GeneratorFuelCellExhaustGasToWaterHeatExchanger& other) = default;
+    GeneratorFuelCellExhaustGasToWaterHeatExchanger(GeneratorFuelCellExhaustGasToWaterHeatExchanger&& other) = default;
+    GeneratorFuelCellExhaustGasToWaterHeatExchanger& operator=(const GeneratorFuelCellExhaustGasToWaterHeatExchanger&) = default;
+    GeneratorFuelCellExhaustGasToWaterHeatExchanger& operator=(GeneratorFuelCellExhaustGasToWaterHeatExchanger&&) = default;
 
     //@}
 
@@ -209,7 +214,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl;
 
     explicit GeneratorFuelCellExhaustGasToWaterHeatExchanger(std::shared_ptr<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl> impl);
 
@@ -223,10 +228,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCellExhaustGasToWaterHeatExchanger*/
-  typedef boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> OptionalGeneratorFuelCellExhaustGasToWaterHeatExchanger;
+  using OptionalGeneratorFuelCellExhaustGasToWaterHeatExchanger = boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger>;
 
   /** \relates GeneratorFuelCellExhaustGasToWaterHeatExchanger*/
-  typedef std::vector<GeneratorFuelCellExhaustGasToWaterHeatExchanger> GeneratorFuelCellExhaustGasToWaterHeatExchangerVector;
+  using GeneratorFuelCellExhaustGasToWaterHeatExchangerVector = std::vector<GeneratorFuelCellExhaustGasToWaterHeatExchanger>;
 
 }  // namespace model
 }  // namespace openstudio

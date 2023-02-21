@@ -80,7 +80,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACBaseboardRadiantConvectiveElectric", "Availability"));
       }
@@ -96,7 +97,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       auto const thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (auto const& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -216,7 +217,7 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod) {
       bool result = setString(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
       return result;
     }
@@ -319,7 +320,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Electric);
+    return {IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Electric};
   }
 
   std::vector<std::string> ZoneHVACBaseboardRadiantConvectiveElectric::heatingDesignCapacityMethodValues() {
@@ -367,7 +368,7 @@ namespace model {
     return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool ZoneHVACBaseboardRadiantConvectiveElectric::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod) {
     return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
   }
 

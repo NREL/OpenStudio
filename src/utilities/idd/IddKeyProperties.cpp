@@ -31,9 +31,9 @@
 
 namespace openstudio {
 
-IddKeyProperties::IddKeyProperties() {}
+IddKeyProperties::IddKeyProperties() = default;
 
-IddKeyProperties::IddKeyProperties(const IddKeyProperties& other) : note(other.note) {}
+IddKeyProperties::IddKeyProperties(const IddKeyProperties& other) = default;
 
 bool IddKeyProperties::operator==(const IddKeyProperties& other) const {
   return ((this == &other) || (note == other.note));

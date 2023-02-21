@@ -53,7 +53,7 @@ namespace model {
 
       PlantEquipmentOperationScheme_Impl(const PlantEquipmentOperationScheme_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~PlantEquipmentOperationScheme_Impl() {}
+      virtual ~PlantEquipmentOperationScheme_Impl() = default;
 
       boost::optional<PlantLoop> plantLoop() const;
 

@@ -376,7 +376,7 @@ TEST_F(IdfFixture, WorkspaceObject_ClearGroups) {
   Workspace ws(epIdfFile);
   EXPECT_TRUE(ws.strictnessLevel() == StrictnessLevel::Minimal);
   WorkspaceObjectVector surfaces = ws.getObjectsByType(IddObjectType::BuildingSurface_Detailed);
-  ASSERT_TRUE(surfaces.size() > 0);
+  ASSERT_TRUE(!surfaces.empty());
   unsigned n = surfaces[0].numFields();
   surfaces[0].clearExtensibleGroups();
   EXPECT_TRUE(surfaces[0].numFields() < n);
@@ -385,7 +385,7 @@ TEST_F(IdfFixture, WorkspaceObject_ClearGroups) {
   ws = Workspace(epIdfFile);
   ws.setStrictnessLevel(StrictnessLevel::Final);
   surfaces = ws.getObjectsByType(IddObjectType::BuildingSurface_Detailed);
-  ASSERT_TRUE(surfaces.size() > 0);
+  ASSERT_TRUE(!surfaces.empty());
   n = surfaces[0].numFields();
   surfaces[0].clearExtensibleGroups();
   EXPECT_EQ(n, surfaces[0].numFields());
@@ -607,4 +607,52 @@ TEST_F(IdfFixture, WorkspaceObject_setName_allObjects) {
       }
     }
   }
+}
+
+TEST_F(IdfFixture, WorkspaceObject_SpecialMembers) {
+
+  static_assert(!std::is_trivial<WorkspaceObject>{});
+  static_assert(!std::is_pod<WorkspaceObject>{});
+
+  // checks if a type has a default constructor
+  static_assert(!std::is_default_constructible<WorkspaceObject>{});
+  static_assert(!std::is_trivially_default_constructible<WorkspaceObject>{});
+  static_assert(!std::is_nothrow_default_constructible<WorkspaceObject>{});
+
+  // checks if a type has a copy constructor
+  static_assert(std::is_copy_constructible<WorkspaceObject>{});
+  static_assert(!std::is_trivially_copy_constructible<WorkspaceObject>{});
+  static_assert(!std::is_nothrow_copy_constructible<WorkspaceObject>{});
+
+  // checks if a type can be constructed from an rvalue reference
+  // Note: Types without a move constructor, but with a copy constructor that accepts const T& arguments, satisfy std::is_move_constructible.
+  // Move constructors are usually noexcept, since otherwise they are unusable in any code that provides strong exception guarantee.
+  static_assert(std::is_move_constructible<WorkspaceObject>{});
+  static_assert(!std::is_trivially_move_constructible<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>>{});
+  static_assert(!std::is_trivially_move_constructible<WorkspaceObject>{});
+  static_assert(std::is_nothrow_move_constructible<WorkspaceObject>{});
+
+  // checks if a type has a copy assignment operator
+  static_assert(std::is_copy_assignable<WorkspaceObject>{});
+  static_assert(!std::is_trivially_copy_assignable<WorkspaceObject>{});
+  static_assert(!std::is_nothrow_copy_assignable<WorkspaceObject>{});  // We didn't specify noexcept on the user defined one
+
+  // checks if a type has a move assignment operator
+  static_assert(std::is_move_assignable<WorkspaceObject>{});
+  static_assert(!std::is_trivially_move_assignable<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>>{});
+  static_assert(!std::is_trivially_move_assignable<WorkspaceObject>{});
+  static_assert(std::is_nothrow_move_assignable<WorkspaceObject>{});
+
+  // checks if a type has a non-deleted destructor
+  static_assert(std::is_destructible<WorkspaceObject>{});
+  static_assert(!std::is_trivially_destructible<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>>{});
+  static_assert(!std::is_trivially_destructible<WorkspaceObject>{});
+  static_assert(std::is_nothrow_destructible<WorkspaceObject>{});
+
+  // checks if a type has a virtual destructor
+  static_assert(std::has_virtual_destructor<WorkspaceObject>{});
+
+  // checks if objects of a type can be swapped with objects of same or different type
+  static_assert(std::is_swappable<WorkspaceObject>{});
+  static_assert(std::is_nothrow_swappable<WorkspaceObject>{});
 }

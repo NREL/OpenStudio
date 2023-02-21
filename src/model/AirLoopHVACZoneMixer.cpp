@@ -59,8 +59,6 @@ namespace model {
     AirLoopHVACZoneMixer_Impl::AirLoopHVACZoneMixer_Impl(const AirLoopHVACZoneMixer_Impl& other, Model_Impl* model, bool keepHandle)
       : Mixer_Impl(other, model, keepHandle) {}
 
-    AirLoopHVACZoneMixer_Impl::~AirLoopHVACZoneMixer_Impl() {}
-
     const std::vector<std::string>& AirLoopHVACZoneMixer_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       // Not Appropriate: No variables available
@@ -83,7 +81,7 @@ namespace model {
 
     std::vector<openstudio::IdfObject> AirLoopHVACZoneMixer_Impl::remove() {
       if (this->airLoopHVAC()) {
-        return std::vector<openstudio::IdfObject>();
+        return {};
       } else {
         this->disconnect();
 
@@ -115,7 +113,7 @@ namespace model {
     }
 
     void AirLoopHVACZoneMixer_Impl::disconnect() {
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
       model().disconnect(mo, outletPort());
       for (int i = 0; i < int(nextBranchIndex()); i++) {
         model().disconnect(mo, inletPort(i));

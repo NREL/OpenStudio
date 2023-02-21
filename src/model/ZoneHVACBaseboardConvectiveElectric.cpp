@@ -74,7 +74,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACBaseboardConvectiveElectric_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_Baseboard_Convective_ElectricFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACBaseboardConvectiveElectric", "Availability"));
       }
@@ -171,7 +172,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -251,7 +252,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACBaseboardConvectiveElectric::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric);
+    return {IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric};
   }
 
   Schedule ZoneHVACBaseboardConvectiveElectric::availabilitySchedule() const {

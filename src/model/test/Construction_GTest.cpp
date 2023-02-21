@@ -102,9 +102,9 @@ TEST_F(ModelFixture, Construction_Layers) {
   EXPECT_TRUE(testLayers[2] == interior);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(4), modelClone.objects().size());
-  ConstructionVector constructions = modelClone.getModelObjects<Construction>();
+  ConstructionVector constructions = modelClone.getConcreteModelObjects<Construction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
@@ -189,15 +189,15 @@ TEST_F(ModelFixture, CFactorUndergroundWallConstruction) {
   Model model;
   CFactorUndergroundWallConstruction construction(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  CFactorUndergroundWallConstructionVector constructions = model.getModelObjects<CFactorUndergroundWallConstruction>();
+  CFactorUndergroundWallConstructionVector constructions = model.getConcreteModelObjects<CFactorUndergroundWallConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   EXPECT_TRUE(construction == constructions[0]);
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_CfactorUndergroundWall);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  constructions = modelClone.getModelObjects<CFactorUndergroundWallConstruction>();
+  constructions = modelClone.getConcreteModelObjects<CFactorUndergroundWallConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
@@ -209,15 +209,15 @@ TEST_F(ModelFixture, FFactorGroundFloorConstruction) {
   Model model;
   FFactorGroundFloorConstruction construction(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  FFactorGroundFloorConstructionVector constructions = model.getModelObjects<FFactorGroundFloorConstruction>();
+  FFactorGroundFloorConstructionVector constructions = model.getConcreteModelObjects<FFactorGroundFloorConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   EXPECT_TRUE(construction == constructions[0]);
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_FfactorGroundFloor);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  constructions = modelClone.getModelObjects<FFactorGroundFloorConstruction>();
+  constructions = modelClone.getConcreteModelObjects<FFactorGroundFloorConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
@@ -229,15 +229,15 @@ TEST_F(ModelFixture, WindowDataFile) {
   Model model;
   WindowDataFile construction(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  WindowDataFileVector constructions = model.getModelObjects<WindowDataFile>();
+  WindowDataFileVector constructions = model.getConcreteModelObjects<WindowDataFile>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   EXPECT_TRUE(construction == constructions[0]);
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_WindowDataFile);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  constructions = modelClone.getModelObjects<WindowDataFile>();
+  constructions = modelClone.getConcreteModelObjects<WindowDataFile>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
@@ -320,8 +320,8 @@ TEST_F(ModelFixture, Construction_AddObjects) {
   Model model;
   model.addObjects(idfFile.objects());
   EXPECT_EQ(model.numObjects(), idfFile.numObjects());
-  ASSERT_EQ(1u, model.getModelObjects<Construction>().size());
-  Construction construction = model.getModelObjects<Construction>()[0];
+  ASSERT_EQ(1u, model.getConcreteModelObjects<Construction>().size());
+  Construction construction = model.getConcreteModelObjects<Construction>()[0];
   ASSERT_EQ(8u, construction.numFields());
   for (int i = 3; i < 8; ++i) {
     EXPECT_FALSE(construction.isEmpty(i)) << "Index " << i << " is empty for:" << '\n' << construction;
@@ -369,7 +369,7 @@ TEST_F(ModelFixture, Construction_Clone) {
   auto clone2 = construction.clone(model).cast<Construction>();
   EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
 
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<Construction>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<Construction>().size());
 
   // Make sure materials are still hooked up
   ASSERT_EQ(static_cast<unsigned>(3), clone2.cast<Construction>().layers().size());
@@ -378,7 +378,7 @@ TEST_F(ModelFixture, Construction_Clone) {
   auto clone3 = construction.clone(model).cast<Construction>();
   EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
 
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Construction>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<Construction>().size());
 
   // Make sure materials are still hooked up
   ASSERT_EQ(static_cast<unsigned>(3), clone3.cast<Construction>().layers().size());
@@ -396,12 +396,12 @@ TEST_F(ModelFixture, DuplicateMaterialName) {
 TEST_F(ModelFixture, Construction_SetUFactor) {
   Model model = exampleModel();
 
-  OptionalConstruction tempC = model.getModelObjectByName<Construction>("Exterior Wall");
+  OptionalConstruction tempC = model.getConcreteModelObjectByName<Construction>("Exterior Wall");
   ASSERT_TRUE(tempC);
   Construction construction(*tempC);
   OptionalOpaqueMaterial tempM = construction.insulation();
   ASSERT_TRUE(tempM);
-  StandardOpaqueMaterial insulation = tempM->cast<StandardOpaqueMaterial>();
+  auto insulation = tempM->cast<StandardOpaqueMaterial>();
   // should not be able to make insulation thickness go < 0
   double originalResistance = 1.0 / construction.thermalConductance().get();
   double insulationResistance = insulation.thermalResistance();
@@ -446,11 +446,12 @@ TEST_F(ModelFixture, Construction_NetArea) {
 
   Space space(model);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 1, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
 
   Surface surface1(points, model);
   surface1.setSpace(space);
@@ -458,11 +459,12 @@ TEST_F(ModelFixture, Construction_NetArea) {
   EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
   EXPECT_DOUBLE_EQ(1.0, surface1.netArea());
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 1));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 1));
+  points = {
+    {0, 1, 1},
+    {0, 1, 0},
+    {0, 0, 0},
+    {0, 0, 1},
+  };
 
   Surface surface2(points, model);
   surface2.setSpace(space);
@@ -525,11 +527,12 @@ TEST_F(ModelFixture, Construction_NetArea) {
   EXPECT_DOUBLE_EQ(3.0, cost1->totalCost());
   EXPECT_DOUBLE_EQ(0, cost2->totalCost());
 
-  points.clear();
-  points.push_back(Point3d(0, 0.75, 0.5));
-  points.push_back(Point3d(0, 0.75, 0));
-  points.push_back(Point3d(0, 0.25, 0));
-  points.push_back(Point3d(0, 0.25, 0.5));
+  points = {
+    {0, 0.75, 0.5},
+    {0, 0.75, 0},
+    {0, 0.25, 0},
+    {0, 0.25, 0.5},
+  };
 
   SubSurface subSurface1(points, model);
   subSurface1.setSurface(surface1);
@@ -538,11 +541,12 @@ TEST_F(ModelFixture, Construction_NetArea) {
   EXPECT_DOUBLE_EQ(0.25, subSurface1.netArea());
   EXPECT_DOUBLE_EQ(0.75, surface1.netArea());
 
-  points.clear();
-  points.push_back(Point3d(0, 0.25, 0.5));
-  points.push_back(Point3d(0, 0.25, 0));
-  points.push_back(Point3d(0, 0.75, 0));
-  points.push_back(Point3d(0, 0.75, 0.5));
+  points = {
+    {0, 0.25, 0.5},
+    {0, 0.25, 0},
+    {0, 0.75, 0},
+    {0, 0.75, 0.5},
+  };
 
   SubSurface subSurface2(points, model);
   subSurface2.setSurface(surface2);
@@ -629,11 +633,12 @@ TEST_F(ModelFixture, Construction_NetArea_InteriorWall) {
 
   Space space(model);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 1, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
 
   Surface surface1(points, model);
   surface1.setSpace(space);
@@ -641,11 +646,12 @@ TEST_F(ModelFixture, Construction_NetArea_InteriorWall) {
   EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
   EXPECT_DOUBLE_EQ(1.0, surface1.netArea());
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 1));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 1));
+  points = {
+    {0, 1, 1},
+    {0, 1, 0},
+    {0, 0, 0},
+    {0, 0, 1},
+  };
 
   Surface surface2(points, model);
   surface2.setSpace(space);
@@ -713,11 +719,12 @@ TEST_F(ModelFixture, Construction_NetArea_SubSurface) {
   EXPECT_DOUBLE_EQ(0.0, construction1.getNetArea());
   EXPECT_DOUBLE_EQ(0.0, construction2.getNetArea());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 10));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(0, 10, 10));
+  Point3dVector points{
+    {0, 0, 10},
+    {0, 0, 0},
+    {0, 10, 0},
+    {0, 10, 10},
+  };
 
   Surface surface(points, model);
   surface.setConstruction(construction1);
@@ -728,11 +735,12 @@ TEST_F(ModelFixture, Construction_NetArea_SubSurface) {
   EXPECT_DOUBLE_EQ(0.0, construction2.getNetArea());
   EXPECT_DOUBLE_EQ(0, surface.windowToWallRatio());
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 2));
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 1, 1));
-  points.push_back(Point3d(0, 1, 2));
+  points = {
+    {0, 0, 2},
+    {0, 0, 1},
+    {0, 1, 1},
+    {0, 1, 2},
+  };
 
   SubSurface subSurface(points, model);
   subSurface.setConstruction(construction2);
@@ -814,13 +822,13 @@ TEST_F(ModelFixture, Construction_StandardsInformationConstruction) {
   Model model;
 
   Construction construction(model);
-  EXPECT_EQ(0, model.getModelObjects<StandardsInformationConstruction>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<StandardsInformationConstruction>().size());
 
   StandardsInformationConstruction tmp = construction.standardsInformation();
-  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationConstruction>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<StandardsInformationConstruction>().size());
 
   StandardsInformationConstruction info = construction.standardsInformation();
-  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationConstruction>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<StandardsInformationConstruction>().size());
   EXPECT_EQ(toString(info.handle()), toString(tmp.handle()));
   EXPECT_EQ(toString(construction.handle()), toString(info.construction().handle()));
 
@@ -841,7 +849,7 @@ TEST_F(ModelFixture, Construction_StandardsInformationConstruction) {
   // EXPECT_FALSE(info.suggestedConstructionStandardSources().empty());
 
   construction.remove();
-  EXPECT_EQ(0, model.getModelObjects<StandardsInformationConstruction>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<StandardsInformationConstruction>().size());
 }
 
 TEST_F(ModelFixture, Construction_NumLayers) {

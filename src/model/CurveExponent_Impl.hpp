@@ -52,7 +52,7 @@ namespace model {
 
       CurveExponent_Impl(const CurveExponent_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveExponent_Impl() {}
+      virtual ~CurveExponent_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

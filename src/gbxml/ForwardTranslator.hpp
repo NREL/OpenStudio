@@ -76,7 +76,7 @@ namespace gbxml {
    public:
     ForwardTranslator();
 
-    virtual ~ForwardTranslator();
+    ~ForwardTranslator();
 
     // Save the GbXML to a file
     bool modelToGbXML(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar = nullptr);

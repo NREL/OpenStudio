@@ -49,7 +49,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ConvergenceLimits() {}
+    virtual ~ConvergenceLimits() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConvergenceLimits(const ConvergenceLimits& other) = default;
+    ConvergenceLimits(ConvergenceLimits&& other) = default;
+    ConvergenceLimits& operator=(const ConvergenceLimits&) = default;
+    ConvergenceLimits& operator=(ConvergenceLimits&&) = default;
 
     //@}
 
@@ -99,7 +104,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ConvergenceLimits_Impl ImplType;
+    using ImplType = detail::ConvergenceLimits_Impl;
 
     explicit ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_Impl> impl);
 
@@ -116,10 +121,10 @@ namespace model {
   };
 
   /** \relates ConvergenceLimits */
-  typedef boost::optional<ConvergenceLimits> OptionalConvergenceLimits;
+  using OptionalConvergenceLimits = boost::optional<ConvergenceLimits>;
 
   /** \relates ConvergenceLimits*/
-  typedef std::vector<ConvergenceLimits> ConvergenceLimitsVector;
+  using ConvergenceLimitsVector = std::vector<ConvergenceLimits>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -55,7 +55,12 @@ namespace model {
 
     explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalSingleDuctConstantVolumeFourPipeInduction(const AirTerminalSingleDuctConstantVolumeFourPipeInduction& other) = default;
+    AirTerminalSingleDuctConstantVolumeFourPipeInduction(AirTerminalSingleDuctConstantVolumeFourPipeInduction&& other) = default;
+    AirTerminalSingleDuctConstantVolumeFourPipeInduction& operator=(const AirTerminalSingleDuctConstantVolumeFourPipeInduction&) = default;
+    AirTerminalSingleDuctConstantVolumeFourPipeInduction& operator=(AirTerminalSingleDuctConstantVolumeFourPipeInduction&&) = default;
 
     //@}
 
@@ -169,7 +174,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl;
 
     explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(
       std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl> impl);
@@ -184,10 +189,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctConstantVolumeFourPipeInduction*/
-  typedef boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction> OptionalAirTerminalSingleDuctConstantVolumeFourPipeInduction;
+  using OptionalAirTerminalSingleDuctConstantVolumeFourPipeInduction = boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction>;
 
   /** \relates AirTerminalSingleDuctConstantVolumeFourPipeInduction*/
-  typedef std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction> AirTerminalSingleDuctConstantVolumeFourPipeInductionVector;
+  using AirTerminalSingleDuctConstantVolumeFourPipeInductionVector = std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction>;
 
 }  // namespace model
 }  // namespace openstudio

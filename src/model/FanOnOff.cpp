@@ -131,9 +131,10 @@ namespace model {
     std::vector<ScheduleTypeKey> FanOnOff_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Fan_OnOffFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("FanOnOff", "Availability"));
+        result.emplace_back("FanOnOff", "Availability");
       }
       return result;
     }
@@ -274,7 +275,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool FanOnOff_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Fan_OnOffFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -325,9 +326,8 @@ namespace model {
     }
 
     ModelObject FanOnOff_Impl::clone(Model model) const {
-      FanOnOff newFan = ModelObject_Impl::clone(model).cast<FanOnOff>();
-
-      return newFan;
+      // TODO: why is this calling ModelObject_Impl::clone and not StraightComponent_Impl::clone?
+      return ModelObject_Impl::clone(model);
     }
 
     // Fan:OnOff can not be added to an AirLoopHVAC.
@@ -400,38 +400,52 @@ namespace model {
       for (const auto& elem : zoneHVACComponent) {
         switch (elem.iddObject().type().value()) {
           case openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil: {
-            ZoneHVACFourPipeFanCoil component = elem.cast<ZoneHVACFourPipeFanCoil>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACFourPipeFanCoil>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump: {
-            ZoneHVACPackagedTerminalHeatPump component = elem.cast<ZoneHVACPackagedTerminalHeatPump>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACPackagedTerminalHeatPump>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner: {
-            ZoneHVACPackagedTerminalAirConditioner component = elem.cast<ZoneHVACPackagedTerminalAirConditioner>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACPackagedTerminalAirConditioner>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow: {
-            ZoneHVACTerminalUnitVariableRefrigerantFlow component = elem.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump: {
-            ZoneHVACWaterToAirHeatPump component = elem.cast<ZoneHVACWaterToAirHeatPump>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACWaterToAirHeatPump>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater: {
-            ZoneHVACUnitHeater component = elem.cast<ZoneHVACUnitHeater>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACUnitHeater>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator: {
-            ZoneHVACUnitVentilator component = elem.cast<ZoneHVACUnitVentilator>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACUnitVentilator>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           default: {
@@ -582,7 +596,7 @@ namespace model {
   }
 
   IddObjectType FanOnOff::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Fan_OnOff);
+    return {IddObjectType::OS_Fan_OnOff};
   }
 
   // Field Availability Schedule Name
@@ -723,7 +737,7 @@ namespace model {
 
   // Field End-Use Subcategory
 
-  bool FanOnOff::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool FanOnOff::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

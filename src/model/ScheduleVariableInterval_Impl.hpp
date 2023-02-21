@@ -52,7 +52,7 @@ namespace model {
 
       ScheduleVariableInterval_Impl(const ScheduleVariableInterval_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ScheduleVariableInterval_Impl() {}
+      virtual ~ScheduleVariableInterval_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

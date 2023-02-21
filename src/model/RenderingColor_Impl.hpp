@@ -54,7 +54,7 @@ namespace model {
 
       RenderingColor_Impl(const RenderingColor_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RenderingColor_Impl() {}
+      virtual ~RenderingColor_Impl() = default;
 
       //@}
       virtual const std::vector<std::string>& outputVariableNames() const override;

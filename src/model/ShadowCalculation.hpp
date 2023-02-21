@@ -54,7 +54,12 @@ namespace model {
   class MODEL_API ShadowCalculation : public ModelObject
   {
    public:
-    virtual ~ShadowCalculation() {}
+    virtual ~ShadowCalculation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ShadowCalculation(const ShadowCalculation& other) = default;
+    ShadowCalculation(ShadowCalculation&& other) = default;
+    ShadowCalculation& operator=(const ShadowCalculation&) = default;
+    ShadowCalculation& operator=(ShadowCalculation&&) = default;
 
     /** @name Static Methods */
     //@{
@@ -154,7 +159,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::ShadowCalculation_Impl ImplType;
+    using ImplType = detail::ShadowCalculation_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -169,7 +174,7 @@ namespace model {
   };
 
   /** \relates ShadowCalculation */
-  typedef boost::optional<ShadowCalculation> OptionalShadowCalculation;
+  using OptionalShadowCalculation = boost::optional<ShadowCalculation>;
 
 }  // namespace model
 }  // namespace openstudio

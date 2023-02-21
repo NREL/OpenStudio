@@ -79,7 +79,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType ExternalInterface::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ExternalInterface);
+    return {IddObjectType::OS_ExternalInterface};
   }
 
   std::vector<std::string> ExternalInterface::nameofExternalInterfaceValues() {

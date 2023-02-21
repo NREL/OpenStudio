@@ -52,7 +52,12 @@ namespace model {
    public:
     WaterToWaterComponent(IddObjectType type, const Model& model);
 
-    virtual ~WaterToWaterComponent() {}
+    virtual ~WaterToWaterComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterToWaterComponent(const WaterToWaterComponent& other) = default;
+    WaterToWaterComponent(WaterToWaterComponent&& other) = default;
+    WaterToWaterComponent& operator=(const WaterToWaterComponent&) = default;
+    WaterToWaterComponent& operator=(WaterToWaterComponent&&) = default;
 
     /** Returns the supply inlet port. **/
     virtual unsigned supplyInletPort() const;
@@ -133,7 +138,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::WaterToWaterComponent_Impl ImplType;
+    using ImplType = detail::WaterToWaterComponent_Impl;
 
     explicit WaterToWaterComponent(std::shared_ptr<detail::WaterToWaterComponent_Impl> impl);
 
@@ -143,7 +148,7 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<WaterToWaterComponent> OptionalWaterToWaterComponent;
+  using OptionalWaterToWaterComponent = boost::optional<WaterToWaterComponent>;
 
 }  // namespace model
 

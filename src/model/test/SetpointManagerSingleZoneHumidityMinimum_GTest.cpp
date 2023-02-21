@@ -78,7 +78,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMinimum_addToNode) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerSingleZoneHumidityMinimum> setpointManagerSingleZoneHumidityMinimums =
-    m.getModelObjects<SetpointManagerSingleZoneHumidityMinimum>();
+    m.getConcreteModelObjects<SetpointManagerSingleZoneHumidityMinimum>();
   EXPECT_EQ(3, setpointManagerSingleZoneHumidityMinimums.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode().get());
@@ -88,7 +88,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMinimum_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerSingleZoneHumidityMinimums = m.getModelObjects<SetpointManagerSingleZoneHumidityMinimum>();
+  setpointManagerSingleZoneHumidityMinimums = m.getConcreteModelObjects<SetpointManagerSingleZoneHumidityMinimum>();
   EXPECT_EQ(2, setpointManagerSingleZoneHumidityMinimums.size());
 }
 
@@ -105,14 +105,14 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMinimum_remove) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerSingleZoneHumidityMinimum> setpointManagerSingleZoneHumidityMinimums =
-    m.getModelObjects<SetpointManagerSingleZoneHumidityMinimum>();
+    m.getConcreteModelObjects<SetpointManagerSingleZoneHumidityMinimum>();
   EXPECT_EQ(1, setpointManagerSingleZoneHumidityMinimums.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerSingleZoneHumidityMinimums = m.getModelObjects<SetpointManagerSingleZoneHumidityMinimum>();
+  setpointManagerSingleZoneHumidityMinimums = m.getConcreteModelObjects<SetpointManagerSingleZoneHumidityMinimum>();
   EXPECT_EQ(0, setpointManagerSingleZoneHumidityMinimums.size());
 }
 
@@ -127,7 +127,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMinimum_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerSingleZoneHumidityMinimum testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneHumidityMinimum>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneHumidityMinimum>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -151,7 +151,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMinimum_cloneTwoAirloop) {
 
   Model m2;
 
-  SetpointManagerSingleZoneHumidityMinimum testObjectClone = testObject.clone(m2).cast<SetpointManagerSingleZoneHumidityMinimum>();
+  auto testObjectClone = testObject.clone(m2).cast<SetpointManagerSingleZoneHumidityMinimum>();
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.controlZone());
 
@@ -185,7 +185,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMinimum_customDataClone) {
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
   EXPECT_EQ(thermalZone, testObject.controlZone().get());
 
-  SetpointManagerSingleZoneHumidityMinimum testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneHumidityMinimum>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneHumidityMinimum>();
 
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.controlZone());

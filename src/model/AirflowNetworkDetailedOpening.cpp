@@ -183,7 +183,7 @@ namespace model {
 
     std::vector<DetailedOpeningFactorData> AirflowNetworkDetailedOpening_Impl::openingFactors() const {
       std::vector<DetailedOpeningFactorData> results;
-      for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+      for (const auto& group : extensibleGroups()) {
         OptionalDouble openingFactor = group.getDouble(0);
         OptionalDouble dischargeCoefficient = group.getDouble(1);
         OptionalDouble widthFactor = group.getDouble(2);
@@ -256,20 +256,17 @@ namespace model {
       }
 
       clearExtensibleGroups(false);
-      for (auto factor : factors) {
+      for (const auto& factor : factors) {
         // Height Factor and Start Height Factor
         if (factor.heightFactor() + factor.startHeightFactor() > 1.0) {
           LOG(Error, "The sum of the Height Factor and the Start Height Factor cannot be more than 1");
           return false;
         }
-
-        std::vector<std::string> values;
-        values.push_back(toString(factor.openingFactor()));
-        values.push_back(toString(factor.dischargeCoefficient()));
-        values.push_back(toString(factor.widthFactor()));
-        values.push_back(toString(factor.heightFactor()));
-        values.push_back(toString(factor.startHeightFactor()));
-        ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
+        std::vector<std::string> values{
+          toString(factor.openingFactor()), toString(factor.dischargeCoefficient()), toString(factor.widthFactor()),
+          toString(factor.heightFactor()),  toString(factor.startHeightFactor()),
+        };
+        auto group = pushExtensibleGroup(values, false);
         OS_ASSERT(!group.empty());
       }
       return true;
@@ -309,7 +306,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkDetailedOpening::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkDetailedOpening);
+    return {IddObjectType::OS_AirflowNetworkDetailedOpening};
   }
 
   std::vector<std::string> AirflowNetworkDetailedOpening::typeofRectangularLargeVerticalOpeningValues() {

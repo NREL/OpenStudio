@@ -93,7 +93,7 @@ namespace model {
         resetThermalZone();
         result = true;
       } else if ((!thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACSupplyPlenum())
-                 && (!thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACReturnPlenum()) && (thermalZone->equipment().size() == 0)
+                 && (!thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACReturnPlenum()) && (thermalZone->equipment().empty())
                  && (!thermalZone->useIdealAirLoads())) {
         result = setPointer(OS_AirLoopHVAC_ReturnPlenumFields::ThermalZone, thermalZone.get().handle());
       }
@@ -111,7 +111,7 @@ namespace model {
     }
 
     PortList AirLoopHVACReturnPlenum_Impl::inducedAirOutletPortList() {
-      model::AirLoopHVACReturnPlenum plenum = getObject<model::AirLoopHVACReturnPlenum>();
+      auto plenum = getObject<model::AirLoopHVACReturnPlenum>();
       boost::optional<PortList> portList = plenum.getModelObjectTarget<PortList>(OS_AirLoopHVAC_ReturnPlenumFields::InducedAirOutletPortList);
       if (!portList) {
         portList = PortList(plenum);
@@ -373,7 +373,7 @@ namespace model {
   }
 
   IddObjectType AirLoopHVACReturnPlenum::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirLoopHVAC_ReturnPlenum);
+    return {IddObjectType::OS_AirLoopHVAC_ReturnPlenum};
   }
 
   boost::optional<ThermalZone> AirLoopHVACReturnPlenum::thermalZone() const {

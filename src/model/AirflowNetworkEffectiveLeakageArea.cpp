@@ -163,7 +163,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkEffectiveLeakageArea::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkEffectiveLeakageArea);
+    return {IddObjectType::OS_AirflowNetworkEffectiveLeakageArea};
   }
 
   double AirflowNetworkEffectiveLeakageArea::effectiveLeakageArea() const {

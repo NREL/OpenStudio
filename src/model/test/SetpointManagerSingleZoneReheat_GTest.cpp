@@ -75,7 +75,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneReheat_addToNode) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerSingleZoneReheat> setpointManagerSingleZoneReheats = m.getModelObjects<SetpointManagerSingleZoneReheat>();
+  std::vector<SetpointManagerSingleZoneReheat> setpointManagerSingleZoneReheats = m.getConcreteModelObjects<SetpointManagerSingleZoneReheat>();
   EXPECT_EQ(3, setpointManagerSingleZoneReheats.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode().get());
@@ -85,7 +85,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneReheat_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerSingleZoneReheats = m.getModelObjects<SetpointManagerSingleZoneReheat>();
+  setpointManagerSingleZoneReheats = m.getConcreteModelObjects<SetpointManagerSingleZoneReheat>();
   EXPECT_EQ(2, setpointManagerSingleZoneReheats.size());
 }
 
@@ -101,14 +101,14 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneReheat_remove) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerSingleZoneReheat> setpointManagerSingleZoneReheats = m.getModelObjects<SetpointManagerSingleZoneReheat>();
+  std::vector<SetpointManagerSingleZoneReheat> setpointManagerSingleZoneReheats = m.getConcreteModelObjects<SetpointManagerSingleZoneReheat>();
   EXPECT_EQ(1, setpointManagerSingleZoneReheats.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerSingleZoneReheats = m.getModelObjects<SetpointManagerSingleZoneReheat>();
+  setpointManagerSingleZoneReheats = m.getConcreteModelObjects<SetpointManagerSingleZoneReheat>();
   EXPECT_EQ(0, setpointManagerSingleZoneReheats.size());
 }
 
@@ -123,7 +123,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneReheat_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerSingleZoneReheat testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneReheat>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneReheat>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -151,7 +151,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneReheat_cloneTwoAirloop) {
 
   Model m2;
 
-  SetpointManagerSingleZoneReheat testObjectClone = testObject.clone(m2).cast<SetpointManagerSingleZoneReheat>();
+  auto testObjectClone = testObject.clone(m2).cast<SetpointManagerSingleZoneReheat>();
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.controlZone());
 
@@ -191,7 +191,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneReheat_customDataClone) {
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
   EXPECT_EQ(thermalZone, testObject.controlZone().get());
 
-  SetpointManagerSingleZoneReheat testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneReheat>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneReheat>();
 
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.controlZone());

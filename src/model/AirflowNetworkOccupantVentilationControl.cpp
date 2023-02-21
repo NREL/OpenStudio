@@ -78,7 +78,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirflowNetworkOccupantVentilationControlFields::OpeningProbabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirflowNetworkOccupantVentilationControl", "Opening Probability"));
       }
@@ -274,7 +275,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkOccupantVentilationControl::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkOccupantVentilationControl);
+    return {IddObjectType::OS_AirflowNetworkOccupantVentilationControl};
   }
 
   double AirflowNetworkOccupantVentilationControl::minimumOpeningTime() const {

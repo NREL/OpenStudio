@@ -57,7 +57,7 @@ namespace model {
 
       CoilCoolingDXVariableSpeed_Impl(const CoilCoolingDXVariableSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingDXVariableSpeed_Impl() {}
+      virtual ~CoilCoolingDXVariableSpeed_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -159,7 +159,7 @@ namespace model {
 
       // void resetCondenserAirInletNodeName();
 
-      bool setCondenserType(std::string condenserType);
+      bool setCondenserType(const std::string& condenserType);
 
       bool setEvaporativeCondenserPumpRatedPowerConsumption(boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption);
 

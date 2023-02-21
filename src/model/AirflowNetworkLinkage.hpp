@@ -52,7 +52,12 @@ namespace model {
 
     AirflowNetworkLinkage(IddObjectType type, const Model& model);
 
-    virtual ~AirflowNetworkLinkage() {}
+    virtual ~AirflowNetworkLinkage() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkLinkage(const AirflowNetworkLinkage& other) = default;
+    AirflowNetworkLinkage(AirflowNetworkLinkage&& other) = default;
+    AirflowNetworkLinkage& operator=(const AirflowNetworkLinkage&) = default;
+    AirflowNetworkLinkage& operator=(AirflowNetworkLinkage&&) = default;
 
     //@}
     /** @name Virtual Methods */
@@ -78,7 +83,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirflowNetworkLinkage_Impl ImplType;
+    using ImplType = detail::AirflowNetworkLinkage_Impl;
 
     explicit AirflowNetworkLinkage(std::shared_ptr<detail::AirflowNetworkLinkage_Impl> impl);
 
@@ -88,9 +93,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<AirflowNetworkLinkage> OptionalAirflowNetworkLinkage;
+  using OptionalAirflowNetworkLinkage = boost::optional<AirflowNetworkLinkage>;
 
-  typedef std::vector<AirflowNetworkLinkage> AirflowNetworkLinkageVector;
+  using AirflowNetworkLinkageVector = std::vector<AirflowNetworkLinkage>;
 
 }  // namespace model
 }  // namespace openstudio

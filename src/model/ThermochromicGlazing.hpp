@@ -51,7 +51,12 @@ namespace model {
 
     explicit ThermochromicGlazing(const Model& model, double opticalDataTemperature = 80.0);
 
-    virtual ~ThermochromicGlazing() {}
+    virtual ~ThermochromicGlazing() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ThermochromicGlazing(const ThermochromicGlazing& other) = default;
+    ThermochromicGlazing(ThermochromicGlazing&& other) = default;
+    ThermochromicGlazing& operator=(const ThermochromicGlazing&) = default;
+    ThermochromicGlazing& operator=(ThermochromicGlazing&&) = default;
 
     //@}
 
@@ -79,7 +84,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ThermochromicGlazing_Impl ImplType;
+    using ImplType = detail::ThermochromicGlazing_Impl;
 
     explicit ThermochromicGlazing(std::shared_ptr<detail::ThermochromicGlazing_Impl> impl);
 
@@ -93,10 +98,10 @@ namespace model {
   };
 
   /** \relates ThermochromicGlazing*/
-  typedef boost::optional<ThermochromicGlazing> OptionalThermochromicGlazing;
+  using OptionalThermochromicGlazing = boost::optional<ThermochromicGlazing>;
 
   /** \relates ThermochromicGlazing*/
-  typedef std::vector<ThermochromicGlazing> ThermochromicGlazingVector;
+  using ThermochromicGlazingVector = std::vector<ThermochromicGlazing>;
 
 }  // namespace model
 }  // namespace openstudio

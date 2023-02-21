@@ -59,7 +59,12 @@ namespace model {
 
     explicit ShadingSurfaceGroup(const Model& model);
 
-    virtual ~ShadingSurfaceGroup() {}
+    virtual ~ShadingSurfaceGroup() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ShadingSurfaceGroup(const ShadingSurfaceGroup& other) = default;
+    ShadingSurfaceGroup(ShadingSurfaceGroup&& other) = default;
+    ShadingSurfaceGroup& operator=(const ShadingSurfaceGroup&) = default;
+    ShadingSurfaceGroup& operator=(ShadingSurfaceGroup&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -80,7 +85,7 @@ namespace model {
     //@{
 
     /// this will fail if "Space" and space is not set, use setSpace instead
-    bool setShadingSurfaceType(std::string shadingSurfaceType);
+    bool setShadingSurfaceType(const std::string& shadingSurfaceType);
 
     //@}
 
@@ -113,7 +118,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ShadingSurfaceGroup_Impl ImplType;
+    using ImplType = detail::ShadingSurfaceGroup_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -126,10 +131,10 @@ namespace model {
   };
 
   /** \relates ShadingSurfaceGroup*/
-  typedef boost::optional<ShadingSurfaceGroup> OptionalShadingSurfaceGroup;
+  using OptionalShadingSurfaceGroup = boost::optional<ShadingSurfaceGroup>;
 
   /** \relates ShadingSurfaceGroup*/
-  typedef std::vector<ShadingSurfaceGroup> ShadingSurfaceGroupVector;
+  using ShadingSurfaceGroupVector = std::vector<ShadingSurfaceGroup>;
 
 }  // namespace model
 }  // namespace openstudio

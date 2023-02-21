@@ -51,7 +51,7 @@ namespace detail {
    public:
     WorkflowStep_Impl();
 
-    virtual ~WorkflowStep_Impl();
+    virtual ~WorkflowStep_Impl() = default;
 
     virtual std::string string() const = 0;
 

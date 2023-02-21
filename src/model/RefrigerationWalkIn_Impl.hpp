@@ -63,7 +63,7 @@ namespace model {
 
       RefrigerationWalkIn_Impl(const RefrigerationWalkIn_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationWalkIn_Impl() {}
+      virtual ~RefrigerationWalkIn_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -229,11 +229,11 @@ namespace model {
 
       void resetLightingSchedule();
 
-      bool setDefrostType(std::string defrostType);
+      bool setDefrostType(const std::string& defrostType);
 
       void resetDefrostType();
 
-      bool setDefrostControlType(std::string defrostControlType);
+      bool setDefrostControlType(const std::string& defrostControlType);
 
       void resetDefrostControlType();
 

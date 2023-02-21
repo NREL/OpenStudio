@@ -32,6 +32,7 @@
 #include "Intersection.hpp"
 #include "../data/Matrix.hpp"
 #include "../core/Assert.hpp"
+#include "../core/ContainersMove.hpp"
 #include "../core/Logger.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
@@ -169,9 +170,7 @@ BoostPolygon removeSpikes(const BoostPolygon& polygon) {
 std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons) {
   std::vector<BoostPolygon> result;
   for (const BoostPolygon& polygon : polygons) {
-    auto v = removeSpikesEx(polygon);
-    result.reserve(result.size() + v.size());
-    result.insert(result.end(), std::make_move_iterator(v.begin()), std::make_move_iterator(v.end()));
+    openstudio::detail::concat_helper(result, removeSpikesEx(polygon));
   }
   return result;
 }
@@ -443,7 +442,7 @@ std::vector<Point3d> verticesFromBoostRing(const BoostRing& ring, std::vector<Po
   }
 
   if (result.size() < 3) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   return result;
@@ -1090,7 +1089,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   bool reversed = false;
   boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
   if (!outwardNormal) {
-    return std::vector<Point3d>();
+    return {};
   } else if (outwardNormal->z() > 0) {
     reversed = true;
   }
@@ -1103,7 +1102,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   }
 
   if (!bp) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   boost::geometry::remove_spikes(*bp);
@@ -1311,7 +1310,7 @@ std::vector<Polygon3d> joinAllPolygons(const std::vector<std::vector<Point3d>>& 
   return joinAll(inputPolygons, tol);
 }
 
-std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double tol) {
+std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double /*tol*/) {
 
   std::vector<Polygon3d> result;
 

@@ -51,11 +51,12 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, SwimmingPoolIndoor_GettersSetters) {
   Model m;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, m);
   ASSERT_TRUE(space1);
   auto surfaces = space1->surfaces();
@@ -79,11 +80,12 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_GettersSetters) {
   EXPECT_FALSE(swimmingPoolIndoor.setSurface(wallSurface));
   EXPECT_EQ(floorSurface, swimmingPoolIndoor.surface());
 
-  floorPrint.clear();
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(20, 10, 0));
-  floorPrint.push_back(Point3d(20, 0, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
+  floorPrint = {
+    {10, 10, 0},
+    {20, 10, 0},
+    {20, 0, 0},
+    {10, 0, 0},
+  };
   boost::optional<Space> space2 = Space::fromFloorPrint(floorPrint, 3, m);
   ASSERT_TRUE(space2);
   auto surfaces2 = space2->surfaces();
@@ -194,11 +196,12 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_addToNode) {
 
   Model m;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, m);
   ASSERT_TRUE(space1);
   auto surfaces = space1->surfaces();
@@ -243,7 +246,7 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_addToNode) {
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterInletNode());
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterOutletNode());
 
-  SwimmingPoolIndoor swimmingPoolIndoorClone = swimmingPoolIndoor.clone(m).cast<SwimmingPoolIndoor>();
+  auto swimmingPoolIndoorClone = swimmingPoolIndoor.clone(m).cast<SwimmingPoolIndoor>();
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 

@@ -51,7 +51,12 @@ namespace model {
 
     explicit ThermostatSetpointDualSetpoint(const Model& model);
 
-    virtual ~ThermostatSetpointDualSetpoint() {}
+    virtual ~ThermostatSetpointDualSetpoint() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint& other) = default;
+    ThermostatSetpointDualSetpoint(ThermostatSetpointDualSetpoint&& other) = default;
+    ThermostatSetpointDualSetpoint& operator=(const ThermostatSetpointDualSetpoint&) = default;
+    ThermostatSetpointDualSetpoint& operator=(ThermostatSetpointDualSetpoint&&) = default;
 
     //@}
 
@@ -106,7 +111,7 @@ namespace model {
 
     friend class openstudio::IdfObject;
 
-    typedef detail::ThermostatSetpointDualSetpoint_Impl ImplType;
+    using ImplType = detail::ThermostatSetpointDualSetpoint_Impl;
 
     explicit ThermostatSetpointDualSetpoint(std::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl);
 
@@ -114,7 +119,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.ThermostatSetpointDualSetpoint");
   };
 
-  typedef boost::optional<ThermostatSetpointDualSetpoint> OptionalThermostatSetpointDualSetpoint;
+  using OptionalThermostatSetpointDualSetpoint = boost::optional<ThermostatSetpointDualSetpoint>;
 
 }  // namespace model
 }  // namespace openstudio

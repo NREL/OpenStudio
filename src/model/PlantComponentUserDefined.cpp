@@ -84,62 +84,62 @@ namespace model {
 
     ModelObject PlantComponentUserDefined_Impl::clone(Model model) const {
 
-      PlantComponentUserDefined newPlantComponentUserDefined = ModelObject_Impl::clone(model).cast<PlantComponentUserDefined>();
+      auto newPlantComponentUserDefined = ModelObject_Impl::clone(model).cast<PlantComponentUserDefined>();
       //designVolumeFlowRateActuator
       if (boost::optional<EnergyManagementSystemActuator> object = designVolumeFlowRateActuator()) {
-        EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
         //DO THIS HERE OR IN THE PlantComponentUserDefined_Impl::setDesignVolumeFlowRateActuator() method??
         objectClone.setActuatedComponent(newPlantComponentUserDefined);
         newPlantComponentUserDefined.setDesignVolumeFlowRateActuator(objectClone);
       }
       //minimumMassFlowRateActuator
       if (boost::optional<EnergyManagementSystemActuator> object = minimumMassFlowRateActuator()) {
-        EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
         objectClone.setActuatedComponent(newPlantComponentUserDefined);
         newPlantComponentUserDefined.setMinimumMassFlowRateActuator(objectClone);
       }
       //maximumMassFlowRateActuator
       if (boost::optional<EnergyManagementSystemActuator> object = maximumMassFlowRateActuator()) {
-        EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
         objectClone.setActuatedComponent(newPlantComponentUserDefined);
         newPlantComponentUserDefined.setMaximumMassFlowRateActuator(objectClone);
       }
       //minimumLoadingCapacityActuator
       if (boost::optional<EnergyManagementSystemActuator> object = minimumLoadingCapacityActuator()) {
-        EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
         objectClone.setActuatedComponent(newPlantComponentUserDefined);
         newPlantComponentUserDefined.setMinimumLoadingCapacityActuator(objectClone);
       }
       //maximumLoadingCapacityActuator
       if (boost::optional<EnergyManagementSystemActuator> object = maximumLoadingCapacityActuator()) {
-        EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
         objectClone.setActuatedComponent(newPlantComponentUserDefined);
         newPlantComponentUserDefined.setMaximumLoadingCapacityActuator(objectClone);
       }
       //optimalLoadingCapacityActuator
       if (boost::optional<EnergyManagementSystemActuator> object = optimalLoadingCapacityActuator()) {
-        EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
         objectClone.setActuatedComponent(newPlantComponentUserDefined);
         newPlantComponentUserDefined.setOptimalLoadingCapacityActuator(objectClone);
       }
       //outletTemperatureActuator
       if (boost::optional<EnergyManagementSystemActuator> object = outletTemperatureActuator()) {
-        EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
         objectClone.setActuatedComponent(newPlantComponentUserDefined);
         newPlantComponentUserDefined.setOutletTemperatureActuator(objectClone);
       }
       //massFlowRateActuator
       if (boost::optional<EnergyManagementSystemActuator> object = massFlowRateActuator()) {
-        EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
         objectClone.setActuatedComponent(newPlantComponentUserDefined);
         newPlantComponentUserDefined.setMassFlowRateActuator(objectClone);
       }
       //mainModelProgramCallingManager
       if (boost::optional<EnergyManagementSystemProgramCallingManager> object = mainModelProgramCallingManager()) {
-        EnergyManagementSystemProgramCallingManager objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
         //clone the program referenced in the callingManager
         if (boost::optional<EnergyManagementSystemProgram> program = mainModelProgram()) {
-          EnergyManagementSystemProgram cloneProgram = program.get().clone(model).cast<EnergyManagementSystemProgram>();
+          auto cloneProgram = program.get().clone(model).cast<EnergyManagementSystemProgram>();
           //add cloned program to cloned PCUD
           newPlantComponentUserDefined.setMainModelProgram(cloneProgram);
           //add cloned program to cloned programCallingManager
@@ -150,7 +150,7 @@ namespace model {
       }
       //plantInitializationProgramCallingManager
       if (boost::optional<EnergyManagementSystemProgramCallingManager> object = plantInitializationProgramCallingManager()) {
-        EnergyManagementSystemProgramCallingManager objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
         boost::optional<EnergyManagementSystemActuator> dvfr = newPlantComponentUserDefined.designVolumeFlowRateActuator();
         boost::optional<EnergyManagementSystemActuator> mmfr = newPlantComponentUserDefined.minimumMassFlowRateActuator();
         boost::optional<EnergyManagementSystemActuator> mxfr = newPlantComponentUserDefined.maximumMassFlowRateActuator();
@@ -170,7 +170,7 @@ namespace model {
       }
       //plantSimulationProgramCallingManager
       if (boost::optional<EnergyManagementSystemProgramCallingManager> object = plantSimulationProgramCallingManager()) {
-        EnergyManagementSystemProgramCallingManager objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
         boost::optional<EnergyManagementSystemActuator> ot = newPlantComponentUserDefined.outletTemperatureActuator();
         boost::optional<EnergyManagementSystemActuator> mfr = newPlantComponentUserDefined.massFlowRateActuator();
         //clone the program referenced in the callingManager
@@ -188,7 +188,7 @@ namespace model {
         //ThermalZone objectClone = object.get().clone(model).cast<ThermalZone>();
         newPlantComponentUserDefined.setAmbientZone(object.get());
       }
-      return newPlantComponentUserDefined;
+      return std::move(newPlantComponentUserDefined);
     }
 
     std::vector<IddObjectType> PlantComponentUserDefined_Impl::allowableChildTypes() const {
@@ -603,7 +603,7 @@ namespace model {
   }
 
   IddObjectType PlantComponentUserDefined::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PlantComponent_UserDefined);
+    return {IddObjectType::OS_PlantComponent_UserDefined};
   }
 
   std::vector<std::string> PlantComponentUserDefined::plantLoadingModeValues() {

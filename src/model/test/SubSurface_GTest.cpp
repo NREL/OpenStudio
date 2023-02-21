@@ -68,17 +68,17 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 void removeSubSurfaces(Surface& surface) {
-  for (SubSurface s : surface.subSurfaces()) {
+  for (SubSurface& s : surface.subSurfaces()) {
     s.remove();
   }
   EXPECT_EQ(0, surface.subSurfaces().size());
 }
 
 void removeSubSurfaces(Model& model) {
-  for (SubSurface s : model.getModelObjects<SubSurface>()) {
+  for (auto& s : model.getConcreteModelObjects<SubSurface>()) {
     s.remove();
   }
-  EXPECT_EQ(0, model.getModelObjects<SubSurface>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<SubSurface>().size());
 }
 
 /* HAS TO WAIT UNTIL WE GET A GOOD OSM EXAMPLE
@@ -95,7 +95,7 @@ TEST_F(ModelFixture, SubSurface_In_File)
   model.setSqlFile(sqlFile);
   ASSERT_TRUE(model.sqlFile());
 
-  SubSurfaceVector subSurfaces = model.getModelObjects<SubSurface>();
+  SubSurfaceVector subSurfaces = model.getConcreteModelObjects<SubSurface>();
   EXPECT_TRUE(subSurfaces.size() > 0);
 
   for (const SubSurface& subSurface : subSurfaces){
@@ -150,8 +150,9 @@ TEST_F(ModelFixture, 0_Vertex_SubSurface) {
 TEST_F(ModelFixture, 1_Vertex_SubSurface) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
+  std::vector<Point3d> vertices{
+    {0, 0, 1},
+  };
 
   EXPECT_THROW(SubSurface(vertices, model), openstudio::Exception);
 }
@@ -159,9 +160,10 @@ TEST_F(ModelFixture, 1_Vertex_SubSurface) {
 TEST_F(ModelFixture, 2_Vertex_SubSurface) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> vertices{
+    {0, 0, 1},
+    {0, 0, 0},
+  };
 
   EXPECT_THROW(SubSurface(vertices, model), openstudio::Exception);
 }
@@ -169,10 +171,11 @@ TEST_F(ModelFixture, 2_Vertex_SubSurface) {
 TEST_F(ModelFixture, 3_Vertex_SubSurface) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
+  std::vector<Point3d> vertices{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
 
   EXPECT_NO_THROW(SubSurface(vertices, model));
 }
@@ -180,11 +183,12 @@ TEST_F(ModelFixture, 3_Vertex_SubSurface) {
 TEST_F(ModelFixture, 4_Vertex_SubSurface) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   EXPECT_NO_THROW(SubSurface(vertices, model));
 }
@@ -192,12 +196,9 @@ TEST_F(ModelFixture, 4_Vertex_SubSurface) {
 TEST_F(ModelFixture, 5_Vertex_SubSurface) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(0.5, 0, 1.5));
+  std::vector<Point3d> vertices{
+    {0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}, {0.5, 0, 1.5},
+  };
 
   EXPECT_NO_THROW(SubSurface(vertices, model));
 }
@@ -205,11 +206,12 @@ TEST_F(ModelFixture, 5_Vertex_SubSurface) {
 TEST_F(ModelFixture, AdjacentSubSurface) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 3));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(3, 0, 0));
-  vertices.push_back(Point3d(3, 0, 3));
+  std::vector<Point3d> vertices{
+    {0, 0, 3},
+    {0, 0, 0},
+    {3, 0, 0},
+    {3, 0, 3},
+  };
 
   Space space1(model);
   Surface wall1(vertices, model);
@@ -223,11 +225,12 @@ TEST_F(ModelFixture, AdjacentSubSurface) {
   wall2.setSpace(space2);
   EXPECT_FALSE(wall2.adjacentSurface());
 
-  vertices.clear();
-  vertices.push_back(Point3d(1, 0, 2));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(2, 0, 1));
-  vertices.push_back(Point3d(2, 0, 2));
+  vertices = {
+    {1, 0, 2},
+    {1, 0, 1},
+    {2, 0, 1},
+    {2, 0, 2},
+  };
 
   SubSurface window1(vertices, model);
   EXPECT_FALSE(window1.adjacentSubSurface());
@@ -271,11 +274,12 @@ TEST_F(ModelFixture, AdjacentSubSurface) {
 TEST_F(ModelFixture, AdjacentSubSurface2) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 3));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(3, 0, 0));
-  vertices.push_back(Point3d(3, 0, 3));
+  std::vector<Point3d> vertices{
+    {0, 0, 3},
+    {0, 0, 0},
+    {3, 0, 0},
+    {3, 0, 3},
+  };
 
   Space space1(model);
   Surface wall1(vertices, model);
@@ -289,11 +293,12 @@ TEST_F(ModelFixture, AdjacentSubSurface2) {
   wall2.setSpace(space2);
   EXPECT_FALSE(wall2.adjacentSurface());
 
-  vertices.clear();
-  vertices.push_back(Point3d(1, 0, 2));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(2, 0, 1));
-  vertices.push_back(Point3d(2, 0, 2));
+  vertices = {
+    {1, 0, 2},
+    {1, 0, 1},
+    {2, 0, 1},
+    {2, 0, 2},
+  };
 
   SubSurface window1(vertices, model);
   window1.setSurface(wall1);
@@ -360,11 +365,12 @@ TEST_F(ModelFixture, AdjacentSubSurface2) {
 TEST_F(ModelFixture, AdjacentSubSurface3) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 3));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(3, 0, 0));
-  vertices.push_back(Point3d(3, 0, 3));
+  std::vector<Point3d> vertices{
+    {0, 0, 3},
+    {0, 0, 0},
+    {3, 0, 0},
+    {3, 0, 3},
+  };
 
   Space space1(model);
   Surface wall1(vertices, model);
@@ -378,11 +384,12 @@ TEST_F(ModelFixture, AdjacentSubSurface3) {
   wall2.setSpace(space2);
   EXPECT_FALSE(wall2.adjacentSurface());
 
-  vertices.clear();
-  vertices.push_back(Point3d(1, 0, 2));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(2, 0, 1));
-  vertices.push_back(Point3d(2, 0, 2));
+  vertices = {
+    {1, 0, 2},
+    {1, 0, 1},
+    {2, 0, 1},
+    {2, 0, 2},
+  };
 
   SubSurface window1(vertices, model);
   window1.setSurface(wall1);
@@ -424,11 +431,12 @@ TEST_F(ModelFixture, AdjacentSubSurface3) {
 TEST_F(ModelFixture, AdjacentSubSurface_SurfacePropertyOtherSideCoefficients) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 3));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(3, 0, 0));
-  vertices.push_back(Point3d(3, 0, 3));
+  std::vector<Point3d> vertices{
+    {0, 0, 3},
+    {0, 0, 0},
+    {3, 0, 0},
+    {3, 0, 3},
+  };
 
   Space space1(model);
   Surface wall1(vertices, model);
@@ -442,11 +450,12 @@ TEST_F(ModelFixture, AdjacentSubSurface_SurfacePropertyOtherSideCoefficients) {
   wall2.setSpace(space2);
   EXPECT_FALSE(wall2.adjacentSurface());
 
-  vertices.clear();
-  vertices.push_back(Point3d(1, 0, 2));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(2, 0, 1));
-  vertices.push_back(Point3d(2, 0, 2));
+  vertices = {
+    {1, 0, 2},
+    {1, 0, 1},
+    {2, 0, 1},
+    {2, 0, 2},
+  };
 
   SubSurface window1(vertices, model);
   EXPECT_FALSE(window1.adjacentSubSurface());
@@ -493,11 +502,12 @@ TEST_F(ModelFixture, AdjacentSubSurface_SurfacePropertyOtherSideCoefficients) {
 TEST_F(ModelFixture, AdjacentSubSurface_SurfacePropertyOtherSideConditionsModel) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 3));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(3, 0, 0));
-  vertices.push_back(Point3d(3, 0, 3));
+  std::vector<Point3d> vertices{
+    {0, 0, 3},
+    {0, 0, 0},
+    {3, 0, 0},
+    {3, 0, 3},
+  };
 
   Space space1(model);
   Surface wall1(vertices, model);
@@ -511,11 +521,12 @@ TEST_F(ModelFixture, AdjacentSubSurface_SurfacePropertyOtherSideConditionsModel)
   wall2.setSpace(space2);
   EXPECT_FALSE(wall2.adjacentSurface());
 
-  vertices.clear();
-  vertices.push_back(Point3d(1, 0, 2));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(2, 0, 1));
-  vertices.push_back(Point3d(2, 0, 2));
+  vertices = {
+    {1, 0, 2},
+    {1, 0, 1},
+    {2, 0, 1},
+    {2, 0, 2},
+  };
 
   SubSurface window1(vertices, model);
   EXPECT_FALSE(window1.adjacentSubSurface());
@@ -564,29 +575,32 @@ TEST_F(ModelFixture, ExampleDaylightingControlPlacement) {
 
   Space space(model);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 10, 0));
-  vertices.push_back(Point3d(10, 10, 0));
-  vertices.push_back(Point3d(10, 0, 0));
-  vertices.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> vertices{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
   Surface floor(vertices, model);
   floor.setSpace(space);
   EXPECT_EQ("Floor", floor.surfaceType());
 
-  vertices.clear();
-  vertices.push_back(Point3d(0, 0, 10));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(10, 0, 0));
-  vertices.push_back(Point3d(10, 0, 10));
+  vertices = {
+    {0, 0, 10},
+    {0, 0, 0},
+    {10, 0, 0},
+    {10, 0, 10},
+  };
   Surface wall(vertices, model);
   wall.setSpace(space);
   EXPECT_EQ("Wall", wall.surfaceType());
 
-  vertices.clear();
-  vertices.push_back(Point3d(2, 0, 8));
-  vertices.push_back(Point3d(2, 0, 2));
-  vertices.push_back(Point3d(8, 0, 2));
-  vertices.push_back(Point3d(8, 0, 8));
+  vertices = {
+    {2, 0, 8},
+    {2, 0, 2},
+    {8, 0, 2},
+    {8, 0, 8},
+  };
   SubSurface window(vertices, model);
   window.setSurface(wall);
 
@@ -629,11 +643,12 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface) {
 
   Space space(model);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(30, 0, 0));
-  vertices.push_back(Point3d(30, 20, 0));
-  vertices.push_back(Point3d(0, 20, 0));
+  std::vector<Point3d> vertices{
+    {0, 0, 0},
+    {30, 0, 0},
+    {30, 20, 0},
+    {0, 20, 0},
+  };
 
   Surface roof(vertices, model);
   roof.setSpace(space);
@@ -693,11 +708,12 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface) {
 
   // existing subsurfaces
   removeSubSurfaces(roof);
-  vertices.clear();
-  vertices.push_back(Point3d(20, 10, 0));
-  vertices.push_back(Point3d(22, 10, 0));
-  vertices.push_back(Point3d(22, 12, 0));
-  vertices.push_back(Point3d(20, 12, 0));
+  vertices = {
+    {20, 10, 0},
+    {22, 10, 0},
+    {22, 12, 0},
+    {20, 12, 0},
+  };
   SubSurface skylight(vertices, model);
   skylight.setSurface(roof);
   EXPECT_DOUBLE_EQ(4.0, skylight.grossArea());
@@ -726,11 +742,12 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface2) {
 
   Space space(model);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(10, -10, 0));
-  vertices.push_back(Point3d(40, -10, 0));
-  vertices.push_back(Point3d(40, 10, 0));
-  vertices.push_back(Point3d(10, 10, 0));
+  std::vector<Point3d> vertices{
+    {10, -10, 0},
+    {40, -10, 0},
+    {40, 10, 0},
+    {10, 10, 0},
+  };
 
   Surface roof(vertices, model);
   roof.setSpace(space);
@@ -785,10 +802,10 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface2) {
   EXPECT_NEAR(0.03, roof.skylightToProjectedFloorRatio(), 0.001);
 }
 
-void checkExpectedSkylightRatios(const Model& model, double expectedRoofArea, double expectedSkylightRatio, double tol) {
+void checkExpectedSkylightRatios(const Model& model, double /*expectedRoofArea*/, double expectedSkylightRatio, double tol) {
   double totalGrossRoofArea = 0.0;
   double totalSkylightArea = 0.0;
-  for (Surface surface : model.getModelObjects<Surface>()) {
+  for (const auto& surface : model.getConcreteModelObjects<Surface>()) {
     boost::optional<Space> space = surface.space();
     ASSERT_TRUE(space);
     double multiplier = space->multiplier();
@@ -830,51 +847,56 @@ TEST_F(ModelFixture, SkylightPattern_PerimCore) {
 
   std::vector<Point3d> vertices;
 
-  vertices.clear();
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(5, 5, 0));
-  vertices.push_back(Point3d(5, 15, 0));
-  vertices.push_back(Point3d(0, 20, 0));
+  vertices = {
+    {0, 0, 0},
+    {5, 5, 0},
+    {5, 15, 0},
+    {0, 20, 0},
+  };
   Surface roofWest(vertices, model);
   roofWest.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofWest.surfaceType());
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(30, 0, 0));
-  vertices.push_back(Point3d(15, 5, 0));
-  vertices.push_back(Point3d(5, 5, 0));
+  vertices = {
+    {0, 0, 0},
+    {30, 0, 0},
+    {15, 5, 0},
+    {5, 5, 0},
+  };
   Surface roofSouth(vertices, model);
   roofSouth.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofSouth.surfaceType());
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
 
-  vertices.clear();
-  vertices.push_back(Point3d(30, 0, 0));
-  vertices.push_back(Point3d(30, 20, 0));
-  vertices.push_back(Point3d(5, 15, 0));
-  vertices.push_back(Point3d(5, 5, 0));
+  vertices = {
+    {30, 0, 0},
+    {30, 20, 0},
+    {5, 15, 0},
+    {5, 5, 0},
+  };
   Surface roofEast(vertices, model);
   roofEast.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofEast.surfaceType());
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
 
-  vertices.clear();
-  vertices.push_back(Point3d(5, 15, 0));
-  vertices.push_back(Point3d(15, 15, 0));
-  vertices.push_back(Point3d(30, 20, 0));
-  vertices.push_back(Point3d(0, 20, 0));
+  vertices = {
+    {5, 15, 0},
+    {15, 15, 0},
+    {30, 20, 0},
+    {0, 20, 0},
+  };
   Surface roofNorth(vertices, model);
   roofNorth.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofNorth.surfaceType());
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
 
-  vertices.clear();
-  vertices.push_back(Point3d(5, 5, 0));
-  vertices.push_back(Point3d(15, 5, 0));
-  vertices.push_back(Point3d(15, 15, 0));
-  vertices.push_back(Point3d(5, 15, 0));
+  vertices = {
+    {5, 5, 0},
+    {15, 5, 0},
+    {15, 15, 0},
+    {5, 15, 0},
+  };
   Surface roofCore(vertices, model);
   roofCore.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofCore.surfaceType());
@@ -931,51 +953,56 @@ TEST_F(ModelFixture, SkylightPattern_PerimCore_Rotated) {
 
   std::vector<Point3d> vertices;
 
-  vertices.clear();
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(5, 5, 0));
-  vertices.push_back(Point3d(5, 15, 0));
-  vertices.push_back(Point3d(0, 20, 0));
+  vertices = {
+    {0, 0, 0},
+    {5, 5, 0},
+    {5, 15, 0},
+    {0, 20, 0},
+  };
   Surface roofWest(vertices, model);
   roofWest.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofWest.surfaceType());
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(30, 0, 0));
-  vertices.push_back(Point3d(15, 5, 0));
-  vertices.push_back(Point3d(5, 5, 0));
+  vertices = {
+    {0, 0, 0},
+    {30, 0, 0},
+    {15, 5, 0},
+    {5, 5, 0},
+  };
   Surface roofSouth(vertices, model);
   roofSouth.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofSouth.surfaceType());
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
 
-  vertices.clear();
-  vertices.push_back(Point3d(30, 0, 0));
-  vertices.push_back(Point3d(30, 20, 0));
-  vertices.push_back(Point3d(5, 15, 0));
-  vertices.push_back(Point3d(5, 5, 0));
+  vertices = {
+    {30, 0, 0},
+    {30, 20, 0},
+    {5, 15, 0},
+    {5, 5, 0},
+  };
   Surface roofEast(vertices, model);
   roofEast.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofEast.surfaceType());
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
 
-  vertices.clear();
-  vertices.push_back(Point3d(5, 15, 0));
-  vertices.push_back(Point3d(15, 15, 0));
-  vertices.push_back(Point3d(30, 20, 0));
-  vertices.push_back(Point3d(0, 20, 0));
+  vertices = {
+    {5, 15, 0},
+    {15, 15, 0},
+    {30, 20, 0},
+    {0, 20, 0},
+  };
   Surface roofNorth(vertices, model);
   roofNorth.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofNorth.surfaceType());
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
 
-  vertices.clear();
-  vertices.push_back(Point3d(5, 5, 0));
-  vertices.push_back(Point3d(15, 5, 0));
-  vertices.push_back(Point3d(15, 15, 0));
-  vertices.push_back(Point3d(5, 15, 0));
+  vertices = {
+    {5, 5, 0},
+    {15, 5, 0},
+    {15, 15, 0},
+    {5, 15, 0},
+  };
   Surface roofCore(vertices, model);
   roofCore.setSpace(space);
   EXPECT_EQ("RoofCeiling", roofCore.surfaceType());
@@ -985,28 +1012,28 @@ TEST_F(ModelFixture, SkylightPattern_PerimCore_Rotated) {
   removeSubSurfaces(model);
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
   pattern = generateSkylightPattern(spaces, 90, 0.05, 1, 1);
-  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  skylights = applySkylightPattern(pattern, model.getConcreteModelObjects<Space>(), boost::none);
   checkExpectedSkylightRatios(model, 600.0, 0.05, 0.005);
 
   // 3% square
   removeSubSurfaces(model);
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
   pattern = generateSkylightPattern(spaces, 45, 0.03, 1, 1);
-  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  skylights = applySkylightPattern(pattern, model.getConcreteModelObjects<Space>(), boost::none);
   checkExpectedSkylightRatios(model, 600.0, 0.03, 0.006);  // BUMP this up a bit
 
   // 5% rectangle
   removeSubSurfaces(model);
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
   pattern = generateSkylightPattern(spaces, 135, 0.05, 1, 1);
-  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  skylights = applySkylightPattern(pattern, model.getConcreteModelObjects<Space>(), boost::none);
   checkExpectedSkylightRatios(model, 600.0, 0.05, 0.005);
 
   // 3% rectangle
   removeSubSurfaces(model);
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
   pattern = generateSkylightPattern(spaces, 180, 0.03, 1, 1);
-  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  skylights = applySkylightPattern(pattern, model.getConcreteModelObjects<Space>(), boost::none);
   checkExpectedSkylightRatios(model, 600.0, 0.03, 0.005);
 }
 
@@ -1017,11 +1044,12 @@ TEST_F(ModelFixture, DefaultSubSurfaceType) {
   // with no base surface the default type is set by tilt only
   {
     // normal 0,0,1
-    vertices.clear();
-    vertices.push_back(Point3d(0, 1, 0));
-    vertices.push_back(Point3d(0, 0, 0));
-    vertices.push_back(Point3d(1, 0, 0));
-    vertices.push_back(Point3d(1, 1, 0));
+    vertices = {
+      {0, 1, 0},
+      {0, 0, 0},
+      {1, 0, 0},
+      {1, 1, 0},
+    };
 
     SubSurface s(vertices, model);
     s.assignDefaultSubSurfaceType();
@@ -1036,11 +1064,12 @@ TEST_F(ModelFixture, DefaultSubSurfaceType) {
   }
   {
     // normal 0,1,0
-    vertices.clear();
-    vertices.push_back(Point3d(0, 0, 1));
-    vertices.push_back(Point3d(0, 0, 0));
-    vertices.push_back(Point3d(1, 0, 0));
-    vertices.push_back(Point3d(1, 0, 1));
+    vertices = {
+      {0, 0, 1},
+      {0, 0, 0},
+      {1, 0, 0},
+      {1, 0, 1},
+    };
 
     SubSurface s(vertices, model);
     s.assignDefaultSubSurfaceType();
@@ -1055,27 +1084,30 @@ TEST_F(ModelFixture, DefaultSubSurfaceType) {
   }
 
   // with base surface the default type is set based on base surface
-  vertices.clear();
-  vertices.push_back(Point3d(0, 0, 10));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(10, 0, 0));
-  vertices.push_back(Point3d(10, 0, 10));
+  vertices = {
+    {0, 0, 10},
+    {0, 0, 0},
+    {10, 0, 0},
+    {10, 0, 10},
+  };
   Surface wall(vertices, model);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0, 10, 0));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(10, 0, 0));
-  vertices.push_back(Point3d(10, 10, 0));
+  vertices = {
+    {0, 10, 0},
+    {0, 0, 0},
+    {10, 0, 0},
+    {10, 10, 0},
+  };
   Surface roof(vertices, model);
 
   {
     // normal 0,0,1
-    vertices.clear();
-    vertices.push_back(Point3d(4, 5, 0));
-    vertices.push_back(Point3d(4, 4, 0));
-    vertices.push_back(Point3d(5, 4, 0));
-    vertices.push_back(Point3d(5, 5, 0));
+    vertices = {
+      {4, 5, 0},
+      {4, 4, 0},
+      {5, 4, 0},
+      {5, 5, 0},
+    };
 
     SubSurface s(vertices, model);
     s.setSurface(roof);
@@ -1085,11 +1117,12 @@ TEST_F(ModelFixture, DefaultSubSurfaceType) {
   }
   {
     // normal 0,1,0 on bottom edge
-    vertices.clear();
-    vertices.push_back(Point3d(0, 0, 1));
-    vertices.push_back(Point3d(0, 0, 0));
-    vertices.push_back(Point3d(1, 0, 0));
-    vertices.push_back(Point3d(1, 0, 1));
+    vertices = {
+      {0, 0, 1},
+      {0, 0, 0},
+      {1, 0, 0},
+      {1, 0, 1},
+    };
 
     SubSurface s(vertices, model);
     s.setSurface(wall);
@@ -1114,11 +1147,12 @@ TEST_F(ModelFixture, DefaultSubSurfaceType) {
   }
   {
     // normal 0,1,0 not on bottom edge
-    vertices.clear();
-    vertices.push_back(Point3d(4, 0, 5));
-    vertices.push_back(Point3d(4, 0, 4));
-    vertices.push_back(Point3d(5, 0, 4));
-    vertices.push_back(Point3d(5, 0, 5));
+    vertices = {
+      {4, 0, 5},
+      {4, 0, 4},
+      {5, 0, 4},
+      {5, 0, 5},
+    };
 
     SubSurface s(vertices, model);
     s.setSurface(wall);
@@ -1153,11 +1187,12 @@ TEST_F(ModelFixture, DefaultSubSurfaceType) {
 
   {
     // normal 0,1,0 on bottom edge
-    vertices.clear();
-    vertices.push_back(Point3d(4, 0, 1));
-    vertices.push_back(Point3d(4, 0, 0));
-    vertices.push_back(Point3d(5, 0, 0));
-    vertices.push_back(Point3d(5, 0, 1));
+    vertices = {
+      {4, 0, 1},
+      {4, 0, 0},
+      {5, 0, 0},
+      {5, 0, 1},
+    };
 
     SubSurface s(vertices, model);
     s.setSurface(wall);
@@ -1197,11 +1232,12 @@ TEST_F(ModelFixture, SubSurface_Clone) {
   std::vector<Point3d> vertices;
 
   // normal 0,0,1
-  vertices.clear();
-  vertices.push_back(Point3d(0, 1, 0));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 1, 0));
+  vertices = {
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   SubSurface s1(vertices, model);
   SurfacePropertyConvectionCoefficients cc(s1);
@@ -1210,7 +1246,7 @@ TEST_F(ModelFixture, SubSurface_Clone) {
   ShadingControl shadingControl(blind);
   s1.setShadingControl(shadingControl);
 
-  SubSurface s2 = s1.clone(model).cast<SubSurface>();
+  auto s2 = s1.clone(model).cast<SubSurface>();
   EXPECT_TRUE(s2.surfacePropertyConvectionCoefficients());
   EXPECT_TRUE(s2.shadingControl());
 }
@@ -1218,11 +1254,12 @@ TEST_F(ModelFixture, SubSurface_Clone) {
 TEST_F(ModelFixture, SubSurface_ShadingControls) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
   SubSurface subSurface(vertices, model);
 
   Blind blind1(model);
@@ -1435,11 +1472,12 @@ TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Non_Overlapping) {
   surface.setSpace(space);
   surface.setSurfaceType("Wall");
 
-  vertices.clear();
-  vertices.push_back(Point3d(0.5, 0, 1.5));
-  vertices.push_back(Point3d(0.5, 0, 0.5));
-  vertices.push_back(Point3d(1.5, 0, 0.5));
-  vertices.push_back(Point3d(1.5, 0, 1.5));
+  vertices = {
+    {0.5, 0, 1.5},
+    {0.5, 0, 0.5},
+    {1.5, 0, 0.5},
+    {1.5, 0, 1.5},
+  };
 
   SubSurface subSurface1(vertices, model);
   subSurface1.setSurface(surface);
@@ -1554,7 +1592,7 @@ TEST_F(ModelFixture, 4403_FenestrationAssembly) {
   model.setSqlFile(sqlFile);
   ASSERT_TRUE(model.sqlFile());
 
-  OptionalSubSurface subSurface = model.getModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
+  OptionalSubSurface subSurface = model.getConcreteModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
   ASSERT_TRUE(subSurface);
 
   ASSERT_TRUE(subSurface->assemblyUFactor());
@@ -1585,7 +1623,7 @@ TEST_F(ModelFixture, 4678_SubSurfaceGlassUFactorSqlError) {
   model.setSqlFile(sqlFile);
   ASSERT_TRUE(model.sqlFile());
 
-  OptionalSubSurface subSurface = model.getModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
+  OptionalSubSurface subSurface = model.getConcreteModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
   ASSERT_TRUE(subSurface);
 
   OptionalConstructionBase oConstruction = subSurface->construction();

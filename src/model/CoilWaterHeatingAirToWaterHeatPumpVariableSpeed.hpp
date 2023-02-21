@@ -55,7 +55,12 @@ namespace model {
 
     explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(const Model& model);
 
-    virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeed() {}
+    virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeed& other) = default;
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed&& other) = default;
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed& operator=(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeed&) = default;
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed& operator=(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed&&) = default;
 
     //@}
 
@@ -120,11 +125,11 @@ namespace model {
 
     void autocalculateRatedCondenserWaterFlowRate();
 
-    bool setEvaporatorFanPowerIncludedinRatedCOP(std::string evaporatorFanPowerIncludedinRatedCOP);
+    bool setEvaporatorFanPowerIncludedinRatedCOP(const std::string& evaporatorFanPowerIncludedinRatedCOP);
 
-    bool setCondenserPumpPowerIncludedinRatedCOP(std::string condenserPumpPowerIncludedinRatedCOP);
+    bool setCondenserPumpPowerIncludedinRatedCOP(const std::string& condenserPumpPowerIncludedinRatedCOP);
 
-    bool setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(std::string condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
+    bool setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(const std::string& condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
 
     bool setFractionofCondenserPumpHeattoWater(double fractionofCondenserPumpHeattoWater);
 
@@ -132,7 +137,7 @@ namespace model {
 
     bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
 
-    bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
+    bool setEvaporatorAirTemperatureTypeforCurveObjects(const std::string& evaporatorAirTemperatureTypeforCurveObjects);
 
     bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
 
@@ -155,7 +160,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl ImplType;
+    using ImplType = detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl;
 
     explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl> impl);
 
@@ -169,10 +174,10 @@ namespace model {
   };
 
   /** \relates CoilWaterHeatingAirToWaterHeatPumpVariableSpeed*/
-  typedef boost::optional<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed> OptionalCoilWaterHeatingAirToWaterHeatPumpVariableSpeed;
+  using OptionalCoilWaterHeatingAirToWaterHeatPumpVariableSpeed = boost::optional<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>;
 
   /** \relates CoilWaterHeatingAirToWaterHeatPumpVariableSpeed*/
-  typedef std::vector<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed> CoilWaterHeatingAirToWaterHeatPumpVariableSpeedVector;
+  using CoilWaterHeatingAirToWaterHeatPumpVariableSpeedVector = std::vector<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

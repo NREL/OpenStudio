@@ -157,27 +157,27 @@ TEST_F(ModelFixture, GeneratorWindTurbine_Clone) {
   generator.setAnnualLocalAverageWindSpeed(12.0);
 
   // clone it into the same model
-  GeneratorWindTurbine generatorClone = generator.clone(model).cast<GeneratorWindTurbine>();
+  auto generatorClone = generator.clone(model).cast<GeneratorWindTurbine>();
   ASSERT_TRUE(generatorClone.annualLocalAverageWindSpeed());
 
   // clone it into a different model
   Model model2;
-  GeneratorWindTurbine generatorClone2 = generator.clone(model2).cast<GeneratorWindTurbine>();
+  auto generatorClone2 = generator.clone(model2).cast<GeneratorWindTurbine>();
   ASSERT_TRUE(generatorClone2.annualLocalAverageWindSpeed());
 }
 
 TEST_F(ModelFixture, GeneratorWindTurbine_Remove) {
   Model model;
   //start with 0
-  std::vector<GeneratorWindTurbine> gens = model.getModelObjects<GeneratorWindTurbine>();
+  std::vector<GeneratorWindTurbine> gens = model.getConcreteModelObjects<GeneratorWindTurbine>();
   EXPECT_EQ(0u, gens.size());
   //add 1
   GeneratorWindTurbine generator(model);
-  gens = model.getModelObjects<GeneratorWindTurbine>();
+  gens = model.getConcreteModelObjects<GeneratorWindTurbine>();
   EXPECT_EQ(1u, gens.size());
   //remove
   EXPECT_FALSE(generator.remove().empty());
-  gens = model.getModelObjects<GeneratorWindTurbine>();
+  gens = model.getConcreteModelObjects<GeneratorWindTurbine>();
   EXPECT_EQ(0u, gens.size());
 }
 
@@ -207,7 +207,7 @@ TEST_F(ModelFixture, GeneratorWindTurbine_ElectricLoadCenterDistribution2) {
   GeneratorWindTurbine generator(model);
 
   //should be 0 default ELCD attached to wind turbine
-  std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
+  std::vector<ElectricLoadCenterDistribution> elcd = model.getConcreteModelObjects<ElectricLoadCenterDistribution>();
   EXPECT_EQ(0u, elcd.size());
   EXPECT_FALSE(generator.electricLoadCenterDistribution());
   //Add a ELCD
@@ -216,7 +216,7 @@ TEST_F(ModelFixture, GeneratorWindTurbine_ElectricLoadCenterDistribution2) {
   EXPECT_EQ(elcd1.handle(), generator.electricLoadCenterDistribution().get().handle());
   //Add another ELCD
   ElectricLoadCenterDistribution elcd2(model);
-  EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
+  EXPECT_EQ(2, model.getConcreteModelObjects<ElectricLoadCenterDistribution>().size());
   //Add the wind turbine to it which should remove the existing one attached to wind turbine
   EXPECT_TRUE(elcd2.addGenerator(generator));
   EXPECT_EQ(0, elcd1.generators().size());

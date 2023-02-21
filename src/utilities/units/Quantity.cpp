@@ -351,7 +351,7 @@ std::ostream& operator<<(std::ostream& os, const Quantity& q) {
   os << q.value();
   std::stringstream unitString;
   unitString << q.m_units;
-  if (unitString.str() != "") {
+  if (!unitString.str().empty()) {
     os << " " << unitString.str();
   }
   return os;
@@ -417,7 +417,8 @@ Quantity operator/(double d, const Quantity& rQuantity) {
 
 bool operator==(const Quantity& lQuantity, const Quantity& rQuantity) {
   if ((lQuantity.system() == rQuantity.system()) && (lQuantity.units() == rQuantity.units())) {
-    Quantity wl(lQuantity), wr(rQuantity);
+    Quantity wl(lQuantity);
+    Quantity wr(rQuantity);
     wl.setScale(0);
     wr.setScale(0);
     return equal(wl.value(), wr.value());

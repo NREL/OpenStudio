@@ -54,7 +54,12 @@ namespace model {
 
     explicit BuildingUnit(const Model& model);
 
-    virtual ~BuildingUnit() {}
+    virtual ~BuildingUnit() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    BuildingUnit(const BuildingUnit& other) = default;
+    BuildingUnit(BuildingUnit&& other) = default;
+    BuildingUnit& operator=(const BuildingUnit&) = default;
+    BuildingUnit& operator=(BuildingUnit&&) = default;
 
     //@}
 
@@ -137,7 +142,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::BuildingUnit_Impl ImplType;
+    using ImplType = detail::BuildingUnit_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;

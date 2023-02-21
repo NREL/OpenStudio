@@ -37,7 +37,7 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, OutputDiagnostics_GettersSetters) {
   Model m;
-  OutputDiagnostics mo = m.getUniqueModelObject<OutputDiagnostics>();
+  auto mo = m.getUniqueModelObject<OutputDiagnostics>();
 
   EXPECT_TRUE(mo.keys().empty());
 

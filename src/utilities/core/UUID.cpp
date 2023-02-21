@@ -49,7 +49,7 @@ namespace detail {
   };
   struct MakeSureBoostGeneratorsInitializerIsInitialized
   {
-    MakeSureBoostGeneratorsInitializerIsInitialized() {}
+    MakeSureBoostGeneratorsInitializerIsInitialized() = default;
 
     BoostGeneratorsInitializer m_i;
   };
@@ -88,7 +88,7 @@ UUID toUUID(const std::string& str) {
   try {
     return UUID::string_generate(str);
   } catch (...) {
-    return UUID();
+    return {};
   }
 }
 

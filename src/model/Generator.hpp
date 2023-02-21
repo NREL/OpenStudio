@@ -52,7 +52,12 @@ namespace model {
    public:
     Generator(IddObjectType type, const Model& model);
 
-    virtual ~Generator() {}
+    virtual ~Generator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Generator(const Generator& other) = default;
+    Generator(Generator&& other) = default;
+    Generator& operator=(const Generator&) = default;
+    Generator& operator=(Generator&&) = default;
 
     std::string generatorObjectType() const;
 
@@ -72,7 +77,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::Generator_Impl ImplType;
+    using ImplType = detail::Generator_Impl;
 
     explicit Generator(std::shared_ptr<detail::Generator_Impl> impl);
 
@@ -82,9 +87,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<Generator> OptionalGenerator;
+  using OptionalGenerator = boost::optional<Generator>;
 
-  typedef std::vector<Generator> GeneratorVector;
+  using GeneratorVector = std::vector<Generator>;
 
 }  // namespace model
 }  // namespace openstudio

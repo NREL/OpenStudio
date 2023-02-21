@@ -51,7 +51,12 @@ namespace model {
 
     explicit FFactorGroundFloorConstruction(const Model& model, double fFactor = 0.1, double area = 0.1, double perimeterExposed = 0.1);
 
-    virtual ~FFactorGroundFloorConstruction() {}
+    virtual ~FFactorGroundFloorConstruction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FFactorGroundFloorConstruction(const FFactorGroundFloorConstruction& other) = default;
+    FFactorGroundFloorConstruction(FFactorGroundFloorConstruction&& other) = default;
+    FFactorGroundFloorConstruction& operator=(const FFactorGroundFloorConstruction&) = default;
+    FFactorGroundFloorConstruction& operator=(FFactorGroundFloorConstruction&&) = default;
 
     double fFactor() const;
     bool setFFactor(double fFactor);
@@ -71,7 +76,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FFactorGroundFloorConstruction_Impl ImplType;
+    using ImplType = detail::FFactorGroundFloorConstruction_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -85,10 +90,10 @@ namespace model {
   };
 
   /** \relates FFactorGroundFloorConstruction */
-  typedef boost::optional<FFactorGroundFloorConstruction> OptionalFFactorGroundFloorConstruction;
+  using OptionalFFactorGroundFloorConstruction = boost::optional<FFactorGroundFloorConstruction>;
 
   /** \relates FFactorGroundFloorConstruction */
-  typedef std::vector<FFactorGroundFloorConstruction> FFactorGroundFloorConstructionVector;
+  using FFactorGroundFloorConstructionVector = std::vector<FFactorGroundFloorConstruction>;
 
 }  // namespace model
 }  // namespace openstudio

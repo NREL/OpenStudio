@@ -51,7 +51,12 @@ namespace model {
 
     explicit EnergyManagementSystemSubroutine(const Model& model);
 
-    virtual ~EnergyManagementSystemSubroutine() {}
+    virtual ~EnergyManagementSystemSubroutine() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemSubroutine(const EnergyManagementSystemSubroutine& other) = default;
+    EnergyManagementSystemSubroutine(EnergyManagementSystemSubroutine&& other) = default;
+    EnergyManagementSystemSubroutine& operator=(const EnergyManagementSystemSubroutine&) = default;
+    EnergyManagementSystemSubroutine& operator=(EnergyManagementSystemSubroutine&&) = default;
 
     //@}
 
@@ -87,7 +92,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemSubroutine_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemSubroutine_Impl;
 
     explicit EnergyManagementSystemSubroutine(std::shared_ptr<detail::EnergyManagementSystemSubroutine_Impl> impl);
 
@@ -101,10 +106,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemSubroutine*/
-  typedef boost::optional<EnergyManagementSystemSubroutine> OptionalEnergyManagementSystemSubroutine;
+  using OptionalEnergyManagementSystemSubroutine = boost::optional<EnergyManagementSystemSubroutine>;
 
   /** \relates EnergyManagementSystemSubroutine*/
-  typedef std::vector<EnergyManagementSystemSubroutine> EnergyManagementSystemSubroutineVector;
+  using EnergyManagementSystemSubroutineVector = std::vector<EnergyManagementSystemSubroutine>;
 
 }  // namespace model
 }  // namespace openstudio

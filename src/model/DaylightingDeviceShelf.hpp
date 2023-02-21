@@ -55,7 +55,12 @@ namespace model {
 
     explicit DaylightingDeviceShelf(const SubSurface& subSurface);
 
-    virtual ~DaylightingDeviceShelf() {}
+    virtual ~DaylightingDeviceShelf() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DaylightingDeviceShelf(const DaylightingDeviceShelf& other) = default;
+    DaylightingDeviceShelf(DaylightingDeviceShelf&& other) = default;
+    DaylightingDeviceShelf& operator=(const DaylightingDeviceShelf&) = default;
+    DaylightingDeviceShelf& operator=(DaylightingDeviceShelf&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -92,7 +97,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DaylightingDeviceShelf_Impl ImplType;
+    using ImplType = detail::DaylightingDeviceShelf_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -106,10 +111,10 @@ namespace model {
   };
 
   /** \relates DaylightingDeviceShelf*/
-  typedef boost::optional<DaylightingDeviceShelf> OptionalDaylightingDeviceShelf;
+  using OptionalDaylightingDeviceShelf = boost::optional<DaylightingDeviceShelf>;
 
   /** \relates DaylightingDeviceShelf*/
-  typedef std::vector<DaylightingDeviceShelf> DaylightingDeviceShelfVector;
+  using DaylightingDeviceShelfVector = std::vector<DaylightingDeviceShelf>;
 
 }  // namespace model
 }  // namespace openstudio

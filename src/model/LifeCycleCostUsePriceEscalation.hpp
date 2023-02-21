@@ -51,7 +51,12 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~LifeCycleCostUsePriceEscalation() {}
+    virtual ~LifeCycleCostUsePriceEscalation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LifeCycleCostUsePriceEscalation(const LifeCycleCostUsePriceEscalation& other) = default;
+    LifeCycleCostUsePriceEscalation(LifeCycleCostUsePriceEscalation&& other) = default;
+    LifeCycleCostUsePriceEscalation& operator=(const LifeCycleCostUsePriceEscalation&) = default;
+    LifeCycleCostUsePriceEscalation& operator=(LifeCycleCostUsePriceEscalation&&) = default;
 
     /// Constructs a new LifeCycleCostUsePriceEscalation object in the model.
     explicit LifeCycleCostUsePriceEscalation(const Model& model);
@@ -93,7 +98,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::LifeCycleCostUsePriceEscalation_Impl ImplType;
+    using ImplType = detail::LifeCycleCostUsePriceEscalation_Impl;
 
     friend class Model;
     friend class IdfObject;
@@ -108,10 +113,10 @@ namespace model {
   };
 
   /** \relates LifeCycleCostUsePriceEscalation */
-  typedef boost::optional<LifeCycleCostUsePriceEscalation> OptionalLifeCycleCostUsePriceEscalation;
+  using OptionalLifeCycleCostUsePriceEscalation = boost::optional<LifeCycleCostUsePriceEscalation>;
 
   /** \relates LifeCycleCostUsePriceEscalation */
-  typedef std::vector<LifeCycleCostUsePriceEscalation> LifeCycleCostUsePriceEscalationVector;
+  using LifeCycleCostUsePriceEscalationVector = std::vector<LifeCycleCostUsePriceEscalation>;
 
 }  // namespace model
 }  // namespace openstudio

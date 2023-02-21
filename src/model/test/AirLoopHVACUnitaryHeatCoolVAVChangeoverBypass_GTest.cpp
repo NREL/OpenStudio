@@ -183,7 +183,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Clone) {
   CoilCoolingDXSingleSpeed coolingCoil = makeCoolingCoil(m);
   AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass testObject = AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(m, fan, coolingCoil, heatingCoil);
 
-  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass clone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+  auto clone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
 
   ASSERT_FALSE(clone.heatingCoil().handle().isNull());
   ASSERT_FALSE(clone.coolingCoil().handle().isNull());
@@ -197,9 +197,9 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_PlenumorMixer
   CoilHeatingElectric heatingCoil = CoilHeatingElectric(m, s);
   CoilCoolingDXSingleSpeed coolingCoil = makeCoolingCoil(m);
 
-  unsigned n_nodes = m.getModelObjects<Node>().size();
+  unsigned n_nodes = m.getConcreteModelObjects<Node>().size();
   AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary = AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(m, fan, coolingCoil, heatingCoil);
-  EXPECT_EQ(n_nodes + 1, m.getModelObjects<Node>().size());
+  EXPECT_EQ(n_nodes + 1, m.getConcreteModelObjects<Node>().size());
 
   // Test newly added numeric field too
   EXPECT_EQ(0.0, unitary.minimumRuntimeBeforeOperatingModeChange());
@@ -221,7 +221,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_PlenumorMixer
   ASSERT_EQ(1u, plenums.size());
   AirLoopHVACReturnPlenum plenum = plenums[0];
   EXPECT_EQ(1u, plenum.inletModelObjects().size());
-  n_nodes = m.getModelObjects<Node>().size();
+  n_nodes = m.getConcreteModelObjects<Node>().size();
   // 7 AirLoopHVAC nodes, 2 ZoneAirNodes, 1 Unitary Node for Plenum Or Mixer
   EXPECT_EQ(10u, n_nodes);
 
@@ -240,7 +240,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_PlenumorMixer
 
   Node supplyOutletNode = a.supplyOutletNode();
   unitary.addToNode(supplyOutletNode);
-  n_nodes = m.getModelObjects<Node>().size();
+  n_nodes = m.getConcreteModelObjects<Node>().size();
   EXPECT_EQ(10u, n_nodes);
 
   EXPECT_TRUE(unitary.setPlenumorMixer(mixer));
@@ -256,12 +256,12 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_PlenumorMixer
   ASSERT_TRUE(unitary.plenumorMixer());
   EXPECT_EQ(plenum, unitary.plenumorMixer().get());
 
-  n_nodes = m.getModelObjects<Node>().size();
+  n_nodes = m.getConcreteModelObjects<Node>().size();
   EXPECT_EQ(10u, n_nodes);
 
   // Test remove
   unitary.remove();
-  n_nodes = m.getModelObjects<Node>().size();
+  n_nodes = m.getConcreteModelObjects<Node>().size();
   EXPECT_EQ(9u, n_nodes);  // Should remove the Unitary Node
   EXPECT_EQ(1u, mixer.inletModelObjects().size());
   EXPECT_EQ(1u, plenum.inletModelObjects().size());

@@ -55,7 +55,7 @@ namespace model {
       AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl& other, Model_Impl* model,
                                                        bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl() {}
+      virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -99,8 +99,8 @@ namespace model {
 
       void resetAvailabilitySchedule();
 
-      // bool setAirOutlet(std::string airOutlet);
-      // bool setAirInlet(std::string airInlet);
+      // bool setAirOutlet(const std::string& airOutlet);
+      // bool setAirInlet(const std::string& airInlet);
 
       bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
 

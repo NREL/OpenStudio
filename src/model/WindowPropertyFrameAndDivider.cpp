@@ -612,7 +612,7 @@ namespace model {
   }
 
   IddObjectType WindowPropertyFrameAndDivider::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WindowProperty_FrameAndDivider);
+    return {IddObjectType::OS_WindowProperty_FrameAndDivider};
   }
 
   std::vector<std::string> WindowPropertyFrameAndDivider::dividerTypeValues() {

@@ -53,7 +53,12 @@ namespace model {
 
     explicit AvailabilityManagerScheduledOff(const Model& model);
 
-    virtual ~AvailabilityManagerScheduledOff() {}
+    virtual ~AvailabilityManagerScheduledOff() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerScheduledOff(const AvailabilityManagerScheduledOff& other) = default;
+    AvailabilityManagerScheduledOff(AvailabilityManagerScheduledOff&& other) = default;
+    AvailabilityManagerScheduledOff& operator=(const AvailabilityManagerScheduledOff&) = default;
+    AvailabilityManagerScheduledOff& operator=(AvailabilityManagerScheduledOff&&) = default;
 
     //@}
 
@@ -80,7 +85,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerScheduledOff_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerScheduledOff_Impl;
 
     explicit AvailabilityManagerScheduledOff(std::shared_ptr<detail::AvailabilityManagerScheduledOff_Impl> impl);
 
@@ -94,10 +99,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerScheduledOff*/
-  typedef boost::optional<AvailabilityManagerScheduledOff> OptionalAvailabilityManagerScheduledOff;
+  using OptionalAvailabilityManagerScheduledOff = boost::optional<AvailabilityManagerScheduledOff>;
 
   /** \relates AvailabilityManagerScheduledOff*/
-  typedef std::vector<AvailabilityManagerScheduledOff> AvailabilityManagerScheduledOffVector;
+  using AvailabilityManagerScheduledOffVector = std::vector<AvailabilityManagerScheduledOff>;
 
 }  // namespace model
 }  // namespace openstudio

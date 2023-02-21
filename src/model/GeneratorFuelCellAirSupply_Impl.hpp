@@ -57,7 +57,7 @@ namespace model {
 
       GeneratorFuelCellAirSupply_Impl(const GeneratorFuelCellAirSupply_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorFuelCellAirSupply_Impl() {}
+      virtual ~GeneratorFuelCellAirSupply_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -73,7 +73,7 @@ namespace model {
 
       //extensible fields.
       bool addConstituent(const AirSupplyConstituent& constituent);
-      bool addConstituent(std::string name, double molarFraction);
+      bool addConstituent(const std::string& name, double molarFraction);
 
       bool removeConstituent(unsigned groupIndex);
 

@@ -55,10 +55,6 @@ namespace model {
 
     Component_Impl::Component_Impl(const Model_Impl& model, const std::vector<Handle>& hs) : Model_Impl(model, hs, false, StrictnessLevel::Draft) {}
 
-    Component_Impl::~Component_Impl() {
-      LOG(Trace, "Component_Impl destructor.");
-    }
-
     Workspace Component_Impl::clone(bool keepHandles) const {
       // copy everything but objects
       std::shared_ptr<Component_Impl> cloneImpl(new Component_Impl(*this, keepHandles));
@@ -92,63 +88,63 @@ namespace model {
 
     // SETTERS (override to do nothing)
 
-    bool Component_Impl::setStrictnessLevel(StrictnessLevel level) {
+    bool Component_Impl::setStrictnessLevel(StrictnessLevel /*level*/) {
       return false;
     }
 
-    boost::optional<WorkspaceObject> Component_Impl::addObject(const IdfObject& idfObject) {
+    boost::optional<WorkspaceObject> Component_Impl::addObject(const IdfObject& /*idfObject*/) {
       return boost::none;
     }
 
-    boost::optional<WorkspaceObject> Component_Impl::insertObject(const IdfObject& idfObject) {
+    boost::optional<WorkspaceObject> Component_Impl::insertObject(const IdfObject& /*idfObject*/) {
       return boost::none;
     }
 
-    std::vector<WorkspaceObject> Component_Impl::addObjects(const IdfObjectVector& idfObjects, bool checkNames) {
-      return WorkspaceObjectVector();
+    std::vector<WorkspaceObject> Component_Impl::addObjects(const IdfObjectVector& /*idfObjects*/, bool /*checkNames*/) {
+      return {};
     }
 
-    std::vector<WorkspaceObject> Component_Impl::insertObjects(const IdfObjectVector& idfObjects) {
-      return WorkspaceObjectVector();
+    std::vector<WorkspaceObject> Component_Impl::insertObjects(const IdfObjectVector& /*idfObjects*/) {
+      return {};
     }
 
-    std::vector<WorkspaceObject> Component_Impl::addAndInsertObjects(const std::vector<IdfObject>& objectsToAdd,
-                                                                     const std::vector<IdfObject>& objectsToInsert) {
-      return WorkspaceObjectVector();
+    std::vector<WorkspaceObject> Component_Impl::addAndInsertObjects(const std::vector<IdfObject>& /*objectsToAdd*/,
+                                                                     const std::vector<IdfObject>& /*objectsToInsert*/) {
+      return {};
     }
 
-    std::vector<WorkspaceObject> Component_Impl::addObjects(const std::vector<WorkspaceObject>& objects, bool checkNames) {
-      return WorkspaceObjectVector();
+    std::vector<WorkspaceObject> Component_Impl::addObjects(const std::vector<WorkspaceObject>& /*objects*/, bool /*checkNames*/) {
+      return {};
     }
 
-    std::vector<WorkspaceObject> Component_Impl::insertObjects(const std::vector<WorkspaceObject>& objects) {
-      return WorkspaceObjectVector();
+    std::vector<WorkspaceObject> Component_Impl::insertObjects(const std::vector<WorkspaceObject>& /*objects*/) {
+      return {};
     }
 
-    std::vector<WorkspaceObject> Component_Impl::addAndInsertObjects(const std::vector<WorkspaceObject>& objectsToAdd,
-                                                                     const std::vector<WorkspaceObject>& objectsToInsert) {
-      return WorkspaceObjectVector();
+    std::vector<WorkspaceObject> Component_Impl::addAndInsertObjects(const std::vector<WorkspaceObject>& /*objectsToAdd*/,
+                                                                     const std::vector<WorkspaceObject>& /*objectsToInsert*/) {
+      return {};
     }
 
-    std::vector<WorkspaceObject> Component_Impl::addAndInsertObjects(const std::vector<WorkspaceObject>& objectsToAdd,
-                                                                     const std::vector<std::vector<WorkspaceObject>>& objectsToInsert) {
-      return WorkspaceObjectVector();
+    std::vector<WorkspaceObject> Component_Impl::addAndInsertObjects(const std::vector<WorkspaceObject>& /*objectsToAdd*/,
+                                                                     const std::vector<std::vector<WorkspaceObject>>& /*objectsToInsert*/) {
+      return {};
     }
 
-    bool Component_Impl::setSqlFile(const openstudio::SqlFile& sqlFile) {
+    bool Component_Impl::setSqlFile(const openstudio::SqlFile& /*sqlFile*/) {
       return false;
     }
 
-    boost::optional<ComponentData> Component_Impl::insertComponent(const Component& component) {
+    boost::optional<ComponentData> Component_Impl::insertComponent(const Component& /*component*/) {
       return boost::none;
     }
 
     std::vector<openstudio::IdfObject> Component_Impl::purgeUnusedResourceObjects() {
-      return IdfObjectVector();
+      return {};
     }
 
-    std::vector<openstudio::IdfObject> Component_Impl::purgeUnusedResourceObjects(IddObjectType iddObjectType) {
-      return IdfObjectVector();
+    std::vector<openstudio::IdfObject> Component_Impl::purgeUnusedResourceObjects(IddObjectType /*iddObjectType*/) {
+      return {};
     }
 
     void Component_Impl::obsoleteComponentWatcher(const ComponentWatcher& watcher) {
@@ -214,10 +210,6 @@ namespace model {
     getImpl<detail::Model_Impl>()->createComponentWatchers();
   }
 
-  Component::~Component() {
-    LOG(Trace, "Component destructor.");
-  }
-
   boost::optional<Component> Component::load(const path& p) {
     OptionalComponent result;
     OptionalIdfFile oIdfFile = IdfFile::load(p, IddFileType::OpenStudio);
@@ -280,7 +272,7 @@ namespace model {
     // populate ComponentData
     componentData.clearExtensibleGroups();
     for (WorkspaceObject& newObject : newObjects) {
-      ModelObject mo = newObject.cast<ModelObject>();
+      auto mo = newObject.cast<ModelObject>();
       bool ok = componentData.getImpl<detail::ComponentData_Impl>()->registerObject(mo);
       OS_ASSERT(ok);
     }

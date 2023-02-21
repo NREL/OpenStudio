@@ -59,7 +59,12 @@ namespace model {
 
     explicit HeatPumpPlantLoopEIRCooling(const Model& model);
 
-    virtual ~HeatPumpPlantLoopEIRCooling() {}
+    virtual ~HeatPumpPlantLoopEIRCooling() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatPumpPlantLoopEIRCooling(const HeatPumpPlantLoopEIRCooling& other) = default;
+    HeatPumpPlantLoopEIRCooling(HeatPumpPlantLoopEIRCooling&& other) = default;
+    HeatPumpPlantLoopEIRCooling& operator=(const HeatPumpPlantLoopEIRCooling&) = default;
+    HeatPumpPlantLoopEIRCooling& operator=(HeatPumpPlantLoopEIRCooling&&) = default;
 
     //@}
 
@@ -158,7 +163,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeatPumpPlantLoopEIRCooling_Impl ImplType;
+    using ImplType = detail::HeatPumpPlantLoopEIRCooling_Impl;
 
     explicit HeatPumpPlantLoopEIRCooling(std::shared_ptr<detail::HeatPumpPlantLoopEIRCooling_Impl> impl);
 
@@ -172,10 +177,10 @@ namespace model {
   };
 
   /** \relates HeatPumpPlantLoopEIRCooling*/
-  typedef boost::optional<HeatPumpPlantLoopEIRCooling> OptionalHeatPumpPlantLoopEIRCooling;
+  using OptionalHeatPumpPlantLoopEIRCooling = boost::optional<HeatPumpPlantLoopEIRCooling>;
 
   /** \relates HeatPumpPlantLoopEIRCooling*/
-  typedef std::vector<HeatPumpPlantLoopEIRCooling> HeatPumpPlantLoopEIRCoolingVector;
+  using HeatPumpPlantLoopEIRCoolingVector = std::vector<HeatPumpPlantLoopEIRCooling>;
 
 }  // namespace model
 }  // namespace openstudio

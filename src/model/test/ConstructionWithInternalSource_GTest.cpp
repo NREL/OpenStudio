@@ -64,19 +64,19 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers) {
 
   OpaqueMaterialVector layers;
 
-  EXPECT_EQ(0, model.getModelObjects<ConstructionWithInternalSource>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ConstructionWithInternalSource>().size());
 
   EXPECT_EQ(0, layers.size());
   EXPECT_THROW((ConstructionWithInternalSource(layers)), std::exception);
 
-  EXPECT_EQ(0, model.getModelObjects<ConstructionWithInternalSource>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ConstructionWithInternalSource>().size());
 
   layers.push_back(exterior);
 
   EXPECT_EQ(1u, layers.size());
   EXPECT_THROW((ConstructionWithInternalSource(layers)), std::exception);
 
-  EXPECT_EQ(0, model.getModelObjects<ConstructionWithInternalSource>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<ConstructionWithInternalSource>().size());
 
   layers.push_back(interior);
 
@@ -161,11 +161,11 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInter
 
   ConstructionWithInternalSource construction(layers);
 
-  EXPECT_EQ(1u, model.getModelObjects<ConstructionWithInternalSource>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ConstructionWithInternalSource>().size());
 
   ConstructionWithInternalSource construction2 = construction.reverseConstructionWithInternalSource();
 
-  EXPECT_EQ(1u, model.getModelObjects<ConstructionWithInternalSource>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ConstructionWithInternalSource>().size());
   EXPECT_EQ(construction.handle(), construction2.handle());
 }
 
@@ -182,11 +182,11 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInter
 
   ConstructionWithInternalSource construction(layers);
 
-  EXPECT_EQ(1u, model.getModelObjects<ConstructionWithInternalSource>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ConstructionWithInternalSource>().size());
 
   ConstructionWithInternalSource construction2 = construction.reverseConstructionWithInternalSource();
 
-  EXPECT_EQ(2u, model.getModelObjects<ConstructionWithInternalSource>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<ConstructionWithInternalSource>().size());
   EXPECT_NE(construction.handle(), construction2.handle());
 
   MaterialVector testLayers = construction2.layers();
@@ -195,7 +195,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInter
   EXPECT_TRUE(testLayers[1] == exterior);
 
   ConstructionWithInternalSource construction3 = construction.reverseConstructionWithInternalSource();
-  EXPECT_EQ(2u, model.getModelObjects<ConstructionWithInternalSource>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<ConstructionWithInternalSource>().size());
   EXPECT_NE(construction.handle(), construction3.handle());
   EXPECT_EQ(construction2.handle(), construction3.handle());
 }

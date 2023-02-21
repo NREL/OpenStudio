@@ -59,7 +59,12 @@ namespace model {
    */
     explicit CentralHeatPumpSystem(const Model& model);
 
-    virtual ~CentralHeatPumpSystem() {}
+    virtual ~CentralHeatPumpSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CentralHeatPumpSystem(const CentralHeatPumpSystem& other) = default;
+    CentralHeatPumpSystem(CentralHeatPumpSystem&& other) = default;
+    CentralHeatPumpSystem& operator=(const CentralHeatPumpSystem&) = default;
+    CentralHeatPumpSystem& operator=(CentralHeatPumpSystem&&) = default;
 
     //@}
 
@@ -80,7 +85,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setControlMethod(std::string controlMethod);
+    bool setControlMethod(const std::string& controlMethod);
 
     bool setAncillaryPower(double ancillaryPower);
 
@@ -112,7 +117,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CentralHeatPumpSystem_Impl ImplType;
+    using ImplType = detail::CentralHeatPumpSystem_Impl;
 
     explicit CentralHeatPumpSystem(std::shared_ptr<detail::CentralHeatPumpSystem_Impl> impl);
 
@@ -126,10 +131,10 @@ namespace model {
   };
 
   /** \relates CentralHeatPumpSystem*/
-  typedef boost::optional<CentralHeatPumpSystem> OptionalCentralHeatPumpSystem;
+  using OptionalCentralHeatPumpSystem = boost::optional<CentralHeatPumpSystem>;
 
   /** \relates CentralHeatPumpSystem*/
-  typedef std::vector<CentralHeatPumpSystem> CentralHeatPumpSystemVector;
+  using CentralHeatPumpSystemVector = std::vector<CentralHeatPumpSystem>;
 
 }  // namespace model
 }  // namespace openstudio

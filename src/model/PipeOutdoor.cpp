@@ -162,7 +162,7 @@ namespace model {
   }
 
   IddObjectType PipeOutdoor::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Pipe_Outdoor);
+    return {IddObjectType::OS_Pipe_Outdoor};
   }
 
   boost::optional<Construction> PipeOutdoor::construction() const {

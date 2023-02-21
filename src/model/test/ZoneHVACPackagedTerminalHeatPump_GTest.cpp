@@ -285,7 +285,7 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_Clone) {
 
   model::Model m2;
 
-  model::ZoneHVACPackagedTerminalHeatPump pthp2 = pthp.clone(m2).cast<model::ZoneHVACPackagedTerminalHeatPump>();
+  auto pthp2 = pthp.clone(m2).cast<model::ZoneHVACPackagedTerminalHeatPump>();
 
   pthp.remove();
 

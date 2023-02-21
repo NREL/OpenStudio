@@ -54,7 +54,12 @@ namespace model {
 
     explicit SetpointManagerMultiZoneCoolingAverage(const Model& model);
 
-    virtual ~SetpointManagerMultiZoneCoolingAverage() {}
+    virtual ~SetpointManagerMultiZoneCoolingAverage() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerMultiZoneCoolingAverage(const SetpointManagerMultiZoneCoolingAverage& other) = default;
+    SetpointManagerMultiZoneCoolingAverage(SetpointManagerMultiZoneCoolingAverage&& other) = default;
+    SetpointManagerMultiZoneCoolingAverage& operator=(const SetpointManagerMultiZoneCoolingAverage&) = default;
+    SetpointManagerMultiZoneCoolingAverage& operator=(SetpointManagerMultiZoneCoolingAverage&&) = default;
 
     //@}
 
@@ -90,7 +95,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerMultiZoneCoolingAverage_Impl ImplType;
+    using ImplType = detail::SetpointManagerMultiZoneCoolingAverage_Impl;
 
     explicit SetpointManagerMultiZoneCoolingAverage(std::shared_ptr<detail::SetpointManagerMultiZoneCoolingAverage_Impl> impl);
 
@@ -104,10 +109,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerMultiZoneCoolingAverage*/
-  typedef boost::optional<SetpointManagerMultiZoneCoolingAverage> OptionalSetpointManagerMultiZoneCoolingAverage;
+  using OptionalSetpointManagerMultiZoneCoolingAverage = boost::optional<SetpointManagerMultiZoneCoolingAverage>;
 
   /** \relates SetpointManagerMultiZoneCoolingAverage*/
-  typedef std::vector<SetpointManagerMultiZoneCoolingAverage> SetpointManagerMultiZoneCoolingAverageVector;
+  using SetpointManagerMultiZoneCoolingAverageVector = std::vector<SetpointManagerMultiZoneCoolingAverage>;
 
 }  // namespace model
 }  // namespace openstudio

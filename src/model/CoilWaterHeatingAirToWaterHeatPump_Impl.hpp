@@ -53,7 +53,7 @@ namespace model {
 
       CoilWaterHeatingAirToWaterHeatPump_Impl(const CoilWaterHeatingAirToWaterHeatPump_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilWaterHeatingAirToWaterHeatPump_Impl() {}
+      virtual ~CoilWaterHeatingAirToWaterHeatPump_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -163,7 +163,7 @@ namespace model {
 
       bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
 
-      bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
+      bool setEvaporatorAirTemperatureTypeforCurveObjects(const std::string& evaporatorAirTemperatureTypeforCurveObjects);
 
       bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 

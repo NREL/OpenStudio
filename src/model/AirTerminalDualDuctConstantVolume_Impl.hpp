@@ -54,7 +54,7 @@ namespace model {
 
       AirTerminalDualDuctConstantVolume_Impl(const AirTerminalDualDuctConstantVolume_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirTerminalDualDuctConstantVolume_Impl() {}
+      virtual ~AirTerminalDualDuctConstantVolume_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

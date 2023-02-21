@@ -218,10 +218,10 @@ class UTILITIES_API IddObject
 };
 
 /** \relates IddObject */
-typedef boost::optional<IddObject> OptionalIddObject;
+using OptionalIddObject = boost::optional<IddObject>;
 
 /** \relates IddObject */
-typedef std::vector<IddObject> IddObjectVector;
+using IddObjectVector = std::vector<IddObject>;
 
 /** \relates IddObject */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IddObject& iddObject);

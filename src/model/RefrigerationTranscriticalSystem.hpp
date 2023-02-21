@@ -58,7 +58,12 @@ namespace model {
 
     explicit RefrigerationTranscriticalSystem(const Model& model);
 
-    virtual ~RefrigerationTranscriticalSystem() {}
+    virtual ~RefrigerationTranscriticalSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationTranscriticalSystem(const RefrigerationTranscriticalSystem& other) = default;
+    RefrigerationTranscriticalSystem(RefrigerationTranscriticalSystem&& other) = default;
+    RefrigerationTranscriticalSystem& operator=(const RefrigerationTranscriticalSystem&) = default;
+    RefrigerationTranscriticalSystem& operator=(RefrigerationTranscriticalSystem&&) = default;
 
     //@}
 
@@ -163,7 +168,7 @@ namespace model {
 
     void resetSubcoolerEffectiveness();
 
-    bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
+    bool setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType);
 
     bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
 
@@ -181,7 +186,7 @@ namespace model {
 
     void resetLowTemperatureSuctionPipingZone();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -192,7 +197,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationTranscriticalSystem_Impl ImplType;
+    using ImplType = detail::RefrigerationTranscriticalSystem_Impl;
 
     explicit RefrigerationTranscriticalSystem(std::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl);
 
@@ -206,10 +211,10 @@ namespace model {
   };
 
   /** \relates RefrigerationTranscriticalSystem*/
-  typedef boost::optional<RefrigerationTranscriticalSystem> OptionalRefrigerationTranscriticalSystem;
+  using OptionalRefrigerationTranscriticalSystem = boost::optional<RefrigerationTranscriticalSystem>;
 
   /** \relates RefrigerationTranscriticalSystem*/
-  typedef std::vector<RefrigerationTranscriticalSystem> RefrigerationTranscriticalSystemVector;
+  using RefrigerationTranscriticalSystemVector = std::vector<RefrigerationTranscriticalSystem>;
 
 }  // namespace model
 }  // namespace openstudio

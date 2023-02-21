@@ -116,7 +116,7 @@ namespace gbxml {
       bool test = false;
 
       if (materials[i].optionalCast<openstudio::model::OpaqueMaterial>()) {
-        openstudio::model::OpaqueMaterial opaqueMaterial = materials[i].cast<openstudio::model::OpaqueMaterial>();
+        auto opaqueMaterial = materials[i].cast<openstudio::model::OpaqueMaterial>();
 
         // assumes first material is the outside layer
         if (i == 0) {
@@ -316,7 +316,7 @@ namespace gbxml {
         std::vector<model::Material> layers = constructionBase.cast<model::LayeredConstruction>().layers();
         if (layers.size() == 1u) {
           if (layers[0].optionalCast<model::SimpleGlazing>()) {
-            model::SimpleGlazing glazing = layers[0].cast<model::SimpleGlazing>();
+            auto glazing = layers[0].cast<model::SimpleGlazing>();
             visibleTransmittance = glazing.visibleTransmittance();
             uFactor = glazing.uFactor();
             solarHeatGainCoefficient = glazing.solarHeatGainCoefficient();
@@ -397,7 +397,7 @@ namespace gbxml {
     boost::optional<double> visibleAbsorptance;
 
     if (material.optionalCast<openstudio::model::StandardOpaqueMaterial>()) {
-      openstudio::model::StandardOpaqueMaterial som = material.cast<openstudio::model::StandardOpaqueMaterial>();
+      auto som = material.cast<openstudio::model::StandardOpaqueMaterial>();
       thermalReflectance = som.thermalReflectance();
       solarReflectance = som.solarReflectance();
       visibleReflectance = som.visibleReflectance();
@@ -410,14 +410,14 @@ namespace gbxml {
       solarAbsorptance = som.solarAbsorptance();
       visibleAbsorptance = som.visibleAbsorptance();
     } else if (material.optionalCast<openstudio::model::MasslessOpaqueMaterial>()) {
-      openstudio::model::MasslessOpaqueMaterial mom = material.cast<openstudio::model::MasslessOpaqueMaterial>();
+      auto mom = material.cast<openstudio::model::MasslessOpaqueMaterial>();
       roughness = mom.roughness();
       resistance = mom.thermalResistance();
       thermalAbsorptance = mom.thermalAbsorptance();
       solarAbsorptance = mom.solarAbsorptance();
       visibleAbsorptance = mom.visibleAbsorptance();
     } else if (material.optionalCast<openstudio::model::AirGap>()) {
-      openstudio::model::AirGap gap = material.cast<openstudio::model::AirGap>();
+      auto gap = material.cast<openstudio::model::AirGap>();
       resistance = gap.thermalResistance();
     }
 

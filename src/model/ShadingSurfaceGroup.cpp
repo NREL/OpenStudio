@@ -130,7 +130,8 @@ namespace model {
     openstudio::Transformation ShadingSurfaceGroup_Impl::buildingTransformation() const {
       Transformation transformation;
 
-      if (istringEqual("Space", this->shadingSurfaceType())) {
+      auto shadingSurfaceType = this->shadingSurfaceType();
+      if (istringEqual("Space", shadingSurfaceType)) {
 
         boost::optional<Space> space = this->space();
         if (space) {
@@ -139,11 +140,11 @@ namespace model {
           transformation = this->transformation();
         }
 
-      } else if (istringEqual("Building", this->shadingSurfaceType())) {
+      } else if (istringEqual("Building", shadingSurfaceType)) {
 
         transformation = this->transformation();
 
-      } else if (istringEqual("Site", this->shadingSurfaceType())) {
+      } else if (istringEqual("Site", shadingSurfaceType)) {
 
         boost::optional<Building> building = this->model().building();
         if (building) {
@@ -167,7 +168,7 @@ namespace model {
 
       Transformation childTransformation = transformation.inverse() * oldTransformation;
 
-      for (ShadingSurface shadingSurface : this->shadingSurfaces()) {
+      for (ShadingSurface& shadingSurface : this->shadingSurfaces()) {
         bool test = shadingSurface.setVertices(childTransformation * shadingSurface.vertices());
         if (!test) {
           LOG(Error, "Could not transform vertices for ShadingSurface '" << shadingSurface.name().get() << "'.");
@@ -179,7 +180,7 @@ namespace model {
 
     openstudio::BoundingBox ShadingSurfaceGroup_Impl::boundingBox() const {
       BoundingBox result;
-      for (ShadingSurface shadingSurface : this->shadingSurfaces()) {
+      for (ShadingSurface& shadingSurface : this->shadingSurfaces()) {
         result.addPoints(shadingSurface.vertices());
       }
       return result;
@@ -231,7 +232,7 @@ namespace model {
       return isEmpty(OS_ShadingSurfaceGroupFields::ZOrigin);
     }
 
-    bool ShadingSurfaceGroup_Impl::setShadingSurfaceType(std::string shadingSurfaceType) {
+    bool ShadingSurfaceGroup_Impl::setShadingSurfaceType(const std::string& shadingSurfaceType) {
       bool result = false;
 
       if (istringEqual("Site", shadingSurfaceType)) {
@@ -462,7 +463,7 @@ namespace model {
     return getImpl<detail::ShadingSurfaceGroup_Impl>()->shadingSurfaceType();
   }
 
-  bool ShadingSurfaceGroup::setShadingSurfaceType(std::string shadingSurfaceType) {
+  bool ShadingSurfaceGroup::setShadingSurfaceType(const std::string& shadingSurfaceType) {
     return getImpl<detail::ShadingSurfaceGroup_Impl>()->setShadingSurfaceType(shadingSurfaceType);
   }
 

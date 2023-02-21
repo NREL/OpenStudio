@@ -107,7 +107,7 @@ namespace model {
         auto stageClone = stage.clone(model).cast<CoilHeatingElectricMultiStageStageData>();
         t_clone.addStage(stageClone);
       }
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilHeatingElectricMultiStage_Impl::children() const {

@@ -107,14 +107,14 @@ TEST_F(ModelFixture, MapOfAllOutputVariables) {
   std::map<std::string, boost::optional<OutputVariable>> outputVariableMap;
 
   // get list of all variable names
-  for (const ModelObject& modelObject : model.getModelObjects<ModelObject>()) {
+  for (const auto& modelObject : model.getModelObjects<ModelObject>()) {
     for (const std::string& variableName : modelObject.outputVariableNames()) {
       outputVariableMap[variableName] = boost::none;
     }
   }
 
   // add all variables to map, allow only one variable per variable name in this application
-  for (OutputVariable outputVariable : model.getModelObjects<OutputVariable>()) {
+  for (auto& outputVariable : model.getConcreteModelObjects<OutputVariable>()) {
     if (outputVariableMap[outputVariable.variableName()]) {
       // already have output variable for this name, then remove this object
       outputVariable.remove();
@@ -128,15 +128,14 @@ TEST_F(ModelFixture, MapOfAllOutputVariables) {
   }
 
   // now make an output variable for each variable name
-  typedef std::pair<std::string, boost::optional<OutputVariable>> MapType;
-  for (MapType mapVal : outputVariableMap) {
-    if (!mapVal.second) {
-      OutputVariable outputVariable(mapVal.first, model);
+  for (const auto& [varName, outVar_] : outputVariableMap) {
+    if (!outVar_) {
+      OutputVariable outputVariable(varName, model);
       outputVariable.setReportingFrequency("Hourly");
-      outputVariableMap[mapVal.first] = outputVariable;
+      outputVariableMap[varName] = outputVariable;
     }
 
-    boost::optional<OutputVariable> outputVariable = outputVariableMap[mapVal.first];
+    boost::optional<OutputVariable> outputVariable = outputVariableMap[varName];
     ASSERT_TRUE(outputVariable);
   }
 }

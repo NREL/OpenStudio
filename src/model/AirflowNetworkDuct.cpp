@@ -234,7 +234,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkDuct::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkDuct);
+    return {IddObjectType::OS_AirflowNetworkDuct};
   }
 
   double AirflowNetworkDuct::ductLength() const {

@@ -44,7 +44,7 @@ namespace contam {
    public:
     explicit Reader(openstudio::filesystem::ifstream& file);
     explicit Reader(const std::string& string, int starting = 0);
-    ~Reader();
+    ~Reader() = default;
 
     double readDouble();
     std::string readString();
@@ -99,10 +99,11 @@ namespace contam {
       value.read(*this);
       vector.push_back(value);
     }
-    if (name.empty())
+    if (name.empty()) {
       read999("Failed to find section termination");
-    else
+    } else {
       read999("Failed to find " + name + " section termination");
+    }
     return vector;
   }
 

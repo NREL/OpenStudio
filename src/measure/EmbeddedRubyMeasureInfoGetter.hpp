@@ -54,7 +54,7 @@ namespace measure {
       m_rubyInterpreter->evalString(infoExtractorRubyFunction());
     }
 
-    virtual ~EmbeddedRubyMeasureInfoGetter() {}
+    virtual ~EmbeddedRubyMeasureInfoGetter() = default;
 
     OSMeasureInfo getInfo(const BCLMeasure& measure) override {
       return m_rubyInterpreter->template execWithReturn<OSMeasureInfo>("infoExtractor", measure, model::OptionalModel(), OptionalWorkspace());

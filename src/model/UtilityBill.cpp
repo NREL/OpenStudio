@@ -440,7 +440,7 @@ namespace model {
       boost::optional<double> result;
       boost::optional<unsigned> timestepsInPeakDemandWindow = this->timestepsInPeakDemandWindow();
       if (timestepsInPeakDemandWindow) {
-        Timestep timestep = this->model().getUniqueModelObject<Timestep>();
+        auto timestep = this->model().getUniqueModelObject<Timestep>();
         result = (60.0 * timestepsInPeakDemandWindow.get()) / timestep.numberOfTimestepsPerHour();
       }
       return result;
@@ -489,7 +489,7 @@ namespace model {
     bool UtilityBill_Impl::setConsumptionUnit(const std::string& consumptionUnit) {
       bool result = false;
       std::vector<std::string> consumptionUnitValues = this->consumptionUnitValues();
-      std::vector<std::string>::const_iterator it = std::find(consumptionUnitValues.begin(), consumptionUnitValues.end(), consumptionUnit);
+      auto it = std::find(consumptionUnitValues.begin(), consumptionUnitValues.end(), consumptionUnit);
       if (it != consumptionUnitValues.end()) {
         std::string oldConsumptionUnit = this->consumptionUnit();
         result = setString(OS_UtilityBillFields::ConsumptionUnit, consumptionUnit);
@@ -516,7 +516,7 @@ namespace model {
       if (peakDemandUnitValues.empty() && peakDemandUnit.empty()) {
         result = setString(OS_UtilityBillFields::PeakDemandUnit, peakDemandUnit);
       } else {
-        std::vector<std::string>::const_iterator it = std::find(peakDemandUnitValues.begin(), peakDemandUnitValues.end(), peakDemandUnit);
+        auto it = std::find(peakDemandUnitValues.begin(), peakDemandUnitValues.end(), peakDemandUnit);
         if (it != peakDemandUnitValues.end()) {
           result = setString(OS_UtilityBillFields::PeakDemandUnit, peakDemandUnit);
         }
@@ -541,97 +541,97 @@ namespace model {
       FuelType fuelType = this->fuelType();
       switch (fuelType.value()) {
         case FuelType::Electricity:
-          result.push_back("kWh");
-          result.push_back("MWh");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("kWh");
+          result.emplace_back("MWh");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::Gas:
-          result.push_back("therms");
-          result.push_back("cf");
-          result.push_back("Ccf");
-          result.push_back("Mcf");
-          result.push_back("MMcf");
-          result.push_back("m3");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("therms");
+          result.emplace_back("cf");
+          result.emplace_back("Ccf");
+          result.emplace_back("Mcf");
+          result.emplace_back("MMcf");
+          result.emplace_back("m3");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::Gasoline:
-          result.push_back("gal");
-          result.push_back("L");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("gal");
+          result.emplace_back("L");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::Diesel:
-          result.push_back("gal");
-          result.push_back("L");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("gal");
+          result.emplace_back("L");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::Coal:
-          //  result.push_back("tons");
-          //  result.push_back("lbs");
-          //  result.push_back("kLbs");
-          //  result.push_back("MLbs");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          //  result.emplace_back("tons");
+          //  result.emplace_back("lbs");
+          //  result.emplace_back("kLbs");
+          //  result.emplace_back("MLbs");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::FuelOil_1:
-          result.push_back("gal");
-          result.push_back("L");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("gal");
+          result.emplace_back("L");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::FuelOil_2:
-          result.push_back("gal");
-          result.push_back("L");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("gal");
+          result.emplace_back("L");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::Propane:
-          result.push_back("cf");
-          result.push_back("Ccf");
-          result.push_back("Mcf");
-          result.push_back("MMcf");
-          result.push_back("m3");
-          result.push_back("gal");
-          result.push_back("L");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("cf");
+          result.emplace_back("Ccf");
+          result.emplace_back("Mcf");
+          result.emplace_back("MMcf");
+          result.emplace_back("m3");
+          result.emplace_back("gal");
+          result.emplace_back("L");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::Water:
-          result.push_back("gal");
-          result.push_back("L");
+          result.emplace_back("gal");
+          result.emplace_back("L");
           break;
         case FuelType::Steam:
-          result.push_back("lbs");
-          result.push_back("kLbs");
-          result.push_back("MLbs");
-          result.push_back("therms");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("lbs");
+          result.emplace_back("kLbs");
+          result.emplace_back("MLbs");
+          result.emplace_back("therms");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::DistrictCooling:
-          result.push_back("RTh");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("RTh");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::DistrictHeating:
-          result.push_back("therms");
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("therms");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::OtherFuel_1:
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::OtherFuel_2:
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         case FuelType::EnergyTransfer:
-          result.push_back("kBtu");
-          result.push_back("MBtu");
+          result.emplace_back("kBtu");
+          result.emplace_back("MBtu");
           break;
         default:
           LOG_AND_THROW("Unknown fuel type '" + fuelType.valueName() + "'");
@@ -645,9 +645,9 @@ namespace model {
       FuelType fuelType = this->fuelType();
       switch (fuelType.value()) {
         case FuelType::Electricity:
-          result.push_back("kW");
-          result.push_back("MW");
-          result.push_back("W");
+          result.emplace_back("kW");
+          result.emplace_back("MW");
+          result.emplace_back("W");
           break;
         case FuelType::Gas:
           break;
@@ -788,24 +788,28 @@ namespace model {
           yd = this->model().getUniqueModelObject<model::YearDescription>();
         }
 
-        values.push_back(toString(1));                  // month
-        values.push_back(toString(1));                  // day
-        values.push_back(toString(yd->assumedYear()));  // year
-        values.push_back(toString(30));                 // number of days
-        values.push_back("");                           // consumption
-        values.push_back("");                           // peak demand
-        values.push_back("");                           // cost
+        values = {
+          toString(1),                  // month
+          toString(1),                  // day
+          toString(yd->assumedYear()),  // year
+          toString(30),                 // number of days
+          "",                           // consumption
+          "",                           // peak demand
+          "",                           // cost
+        };
 
       } else {
         Date startDate = billingPeriods.back().endDate() + Time(1);
 
-        values.push_back(toString(startDate.monthOfYear().value()));       // month
-        values.push_back(toString(startDate.dayOfMonth()));                // day
-        values.push_back(toString(startDate.year()));                      // year
-        values.push_back(toString(billingPeriods.back().numberOfDays()));  // number of days
-        values.push_back("");                                              // consumption
-        values.push_back("");                                              // peak demand
-        values.push_back("");                                              // cost
+        values = {
+          toString(startDate.monthOfYear().value()),       // month
+          toString(startDate.dayOfMonth()),                // day
+          toString(startDate.year()),                      // year
+          toString(billingPeriods.back().numberOfDays()),  // number of days
+          "",                                              // consumption
+          "",                                              // peak demand
+          "",                                              // cost
+        };
       }
 
       IdfExtensibleGroup eg = pushExtensibleGroup(values, false);
@@ -813,7 +817,7 @@ namespace model {
 
       this->emitChangeSignals();
 
-      BillingPeriod result = eg.cast<BillingPeriod>();
+      auto result = eg.cast<BillingPeriod>();
 
       return result;
     }
@@ -890,14 +894,14 @@ namespace model {
   }  // namespace detail
 
   Date BillingPeriod::startDate() const {
-    boost::optional<unsigned> beginMonth = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth);
+    boost::optional<int> beginMonth = getInt(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth);
     OS_ASSERT(beginMonth);
     boost::optional<unsigned> beginDay = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth);
     OS_ASSERT(beginDay);
-    boost::optional<unsigned> beginYear = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear);
+    boost::optional<int> beginYear = getInt(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear);
     OS_ASSERT(beginYear);
 
-    return Date(beginMonth.get(), beginDay.get(), beginYear.get());
+    return {MonthOfYear{beginMonth.get()}, beginDay.get(), beginYear.get()};
   }
 
   Date BillingPeriod::endDate() const {
@@ -924,7 +928,6 @@ namespace model {
   }
 
   bool BillingPeriod::setStartDate(const Date& startDate) {
-    Date currentStartDate = this->startDate();
     Date currentEndDate = this->endDate();
 
     /* If startDate is before endDate then endDate is retained.
@@ -951,7 +954,6 @@ namespace model {
 
   bool BillingPeriod::setEndDate(const Date& endDate) {
     Date currentStartDate = this->startDate();
-    Date currentEndDate = this->endDate();
 
     unsigned currentNumberOfDays = this->numberOfDays();
 
@@ -1114,17 +1116,17 @@ namespace model {
 
     boost::optional<RunPeriod> runPeriod = model.runPeriod();
     if (!runPeriod) {
-      return Vector();
+      return {};
     }
 
     boost::optional<model::YearDescription> yd = model.yearDescription();
     if (!yd) {
-      return Vector();
+      return {};
     }
 
     boost::optional<int> calendarYear = yd->calendarYear();
     if (!calendarYear) {
-      return Vector();
+      return {};
     }
 
     Vector result;
@@ -1152,7 +1154,7 @@ namespace model {
         double value = timeseries->value(dateTime);
         if (value == outOfRangeValue) {
           LOG(Debug, "Could not find value of timeseries at dateTime " << dateTime);
-          return Vector();
+          return {};
         } else {
           result[i] = value;
         }
@@ -1264,8 +1266,7 @@ namespace model {
   UtilityBill::UtilityBill(const FuelType& fuelType, const Model& model) : ModelObject(UtilityBill::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::UtilityBill_Impl>());
 
-    bool test;
-    test = setString(OS_UtilityBillFields::FuelType, fuelType.valueName());
+    bool test = setString(OS_UtilityBillFields::FuelType, fuelType.valueName());
     if (!test) {
       remove();
       LOG_AND_THROW("Unable to create UtilityBill for FuelType " << fuelType.valueName() << ".");
@@ -1284,7 +1285,7 @@ namespace model {
   }
 
   IddObjectType UtilityBill::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_UtilityBill);
+    return {IddObjectType::OS_UtilityBill};
   }
 
   std::vector<std::string> UtilityBill::consumptionUnitValues() {

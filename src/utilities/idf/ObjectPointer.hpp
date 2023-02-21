@@ -39,14 +39,14 @@ namespace openstudio {
 template <class T, class U>
 struct ObjectPointer
 {
-  typedef T source_type;
-  typedef U target_type;
+  using source_type = T;
+  using target_type = U;
 
   T source;
   unsigned fieldIndex;
   U target;
 
-  ObjectPointer() {}
+  ObjectPointer() = default;
   ObjectPointer(const T& s, unsigned fi, const U& t) : source(s), fieldIndex(fi), target(t) {}
 };
 
@@ -65,17 +65,17 @@ bool fieldIndexEqualTo(const T& object, unsigned value) {
 
 /** ObjectPointer with source as index in IdfObjectVector, target as Handle. For Workspace, source
  *  will be outside of workspace, target will be within workspace. */
-typedef ObjectPointer<unsigned, Handle> UHPointer;
+using UHPointer = ObjectPointer<unsigned int, Handle>;
 /** ObjectPointer with source as Handle, target as index in IdfObjectVector. For Workspace, source
  *  will be within workspace, target will be outside of workspace. */
-typedef ObjectPointer<Handle, unsigned> HUPointer;
+using HUPointer = ObjectPointer<Handle, unsigned int>;
 /** ObjectPointer with source and target as Handles. For Workspace, both objects must be in a
  *  workspace. */
-typedef ObjectPointer<Handle, Handle> HHPointer;
+using HHPointer = ObjectPointer<Handle, Handle>;
 
-typedef std::vector<UHPointer> UHPointerVector;
-typedef std::vector<HUPointer> HUPointerVector;
-typedef std::vector<HHPointer> HHPointerVector;
+using UHPointerVector = std::vector<UHPointer>;
+using HUPointerVector = std::vector<HUPointer>;
+using HHPointerVector = std::vector<HHPointer>;
 
 }  // namespace openstudio
 

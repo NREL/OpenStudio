@@ -182,7 +182,7 @@ namespace model {
     ModelObject CoilHeatingDXVariableSpeedSpeedData_Impl::clone(Model model) const {
       auto t_clone = ParentObject_Impl::clone(model).cast<CoilHeatingDXVariableSpeedSpeedData>();
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilHeatingDXVariableSpeedSpeedData_Impl::children() const {
@@ -280,7 +280,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingDXVariableSpeedSpeedData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_DX_VariableSpeed_SpeedData);
+    return {IddObjectType::OS_Coil_Heating_DX_VariableSpeed_SpeedData};
   }
 
   double CoilHeatingDXVariableSpeedSpeedData::referenceUnitGrossRatedHeatingCapacity() const {

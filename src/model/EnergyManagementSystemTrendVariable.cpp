@@ -271,7 +271,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemTrendVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_TrendVariable);
+    return {IddObjectType::OS_EnergyManagementSystem_TrendVariable};
   }
 
   std::string EnergyManagementSystemTrendVariable::emsVariableName() const {

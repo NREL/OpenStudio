@@ -56,7 +56,12 @@ namespace model {
     // Constructs a new GeneratorMicroTurbineHeatRecovery object in the model, given a GeneratorMicroTurbine
     explicit GeneratorMicroTurbineHeatRecovery(const Model& model, GeneratorMicroTurbine& mchp);
 
-    virtual ~GeneratorMicroTurbineHeatRecovery() {}
+    virtual ~GeneratorMicroTurbineHeatRecovery() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& other) = default;
+    GeneratorMicroTurbineHeatRecovery(GeneratorMicroTurbineHeatRecovery&& other) = default;
+    GeneratorMicroTurbineHeatRecovery& operator=(const GeneratorMicroTurbineHeatRecovery&) = default;
+    GeneratorMicroTurbineHeatRecovery& operator=(GeneratorMicroTurbineHeatRecovery&&) = default;
 
     //@}
 
@@ -129,7 +134,7 @@ namespace model {
 
     bool setReferenceInletWaterTemperature(double referenceInletWaterTemperature);
 
-    bool setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode);
+    bool setHeatRecoveryWaterFlowOperatingMode(const std::string& heatRecoveryWaterFlowOperatingMode);
     void resetHeatRecoveryWaterFlowOperatingMode();
 
     bool setReferenceHeatRecoveryWaterFlowRate(double referenceHeatRecoveryWaterFlowRate);
@@ -174,7 +179,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorMicroTurbineHeatRecovery_Impl ImplType;
+    using ImplType = detail::GeneratorMicroTurbineHeatRecovery_Impl;
 
     explicit GeneratorMicroTurbineHeatRecovery(std::shared_ptr<detail::GeneratorMicroTurbineHeatRecovery_Impl> impl);
 
@@ -188,10 +193,10 @@ namespace model {
   };
 
   /** \relates GeneratorMicroTurbineHeatRecovery*/
-  typedef boost::optional<GeneratorMicroTurbineHeatRecovery> OptionalGeneratorMicroTurbineHeatRecovery;
+  using OptionalGeneratorMicroTurbineHeatRecovery = boost::optional<GeneratorMicroTurbineHeatRecovery>;
 
   /** \relates GeneratorMicroTurbineHeatRecovery*/
-  typedef std::vector<GeneratorMicroTurbineHeatRecovery> GeneratorMicroTurbineHeatRecoveryVector;
+  using GeneratorMicroTurbineHeatRecoveryVector = std::vector<GeneratorMicroTurbineHeatRecovery>;
 
 }  // namespace model
 }  // namespace openstudio

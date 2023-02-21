@@ -381,8 +381,8 @@ namespace model {
         faceIndices.push_back(openstudioFaceFormatId());
       }
 
-      Point3dVector::reverse_iterator it = finalVerts.rbegin();
-      Point3dVector::reverse_iterator itend = finalVerts.rend();
+      auto it = finalVerts.rbegin();
+      auto itend = finalVerts.rend();
       for (; it != itend; ++it) {
         faceIndices.push_back(getVertexIndex(*it, allVertices));
       }
@@ -430,26 +430,14 @@ namespace model {
   }
 
   std::vector<LogMessage> ThreeJSForwardTranslator::warnings() const {
-    std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() != Warn; }), result.end());
     return result;
   }
 
   std::vector<LogMessage> ThreeJSForwardTranslator::errors() const {
-    std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() <= Warn; }), result.end());
     return result;
   }
 

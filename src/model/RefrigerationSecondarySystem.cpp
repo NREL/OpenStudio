@@ -118,17 +118,17 @@ namespace model {
     }
 
     ModelObject RefrigerationSecondarySystem_Impl::clone(Model model) const {
-      RefrigerationSecondarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
 
       if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
-        ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
+        auto caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
       }
 
       modelObjectClone.resetDistributionPipingZone();
       modelObjectClone.resetReceiverSeparatorZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IddObjectType> RefrigerationSecondarySystem_Impl::allowableChildTypes() const {
@@ -459,7 +459,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationSecondarySystem_Impl::setCirculatingFluidName(std::string circulatingFluidName) {
+    bool RefrigerationSecondarySystem_Impl::setCirculatingFluidName(const std::string& circulatingFluidName) {
       bool result = setString(OS_Refrigeration_SecondarySystemFields::CirculatingFluidName, circulatingFluidName);
       return result;
     }
@@ -611,7 +611,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationSecondarySystem_Impl::setPumpDriveType(std::string pumpDriveType) {
+    bool RefrigerationSecondarySystem_Impl::setPumpDriveType(const std::string& pumpDriveType) {
       bool result = setString(OS_Refrigeration_SecondarySystemFields::PumpDriveType, pumpDriveType);
       return result;
     }
@@ -712,7 +712,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationSecondarySystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationSecondarySystem_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_SecondarySystemFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -726,8 +726,8 @@ namespace model {
     boost::optional<RefrigerationSystem> RefrigerationSecondarySystem_Impl::system() const {
       boost::optional<RefrigerationSystem> result;
 
-      RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
-      for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      auto refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
+      for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         RefrigerationSecondarySystemVector refrigerationSecondarySystems = refrigerationSystem.secondarySystemLoads();
         if (!refrigerationSecondarySystems.empty()
             && std::find(refrigerationSecondarySystems.begin(), refrigerationSecondarySystems.end(), refrigerationSecondarySystem)
@@ -742,7 +742,7 @@ namespace model {
 
     void RefrigerationSecondarySystem_Impl::removeFromSystem() {
       if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
-        RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
+        auto refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
         refrigerationSystem->removeSecondarySystemLoad(refrigerationSecondarySystem);
       }
     }
@@ -778,7 +778,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationSecondarySystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_SecondarySystem);
+    return {IddObjectType::OS_Refrigeration_SecondarySystem};
   }
 
   std::vector<std::string> RefrigerationSecondarySystem::circulatingFluidNameValues() {
@@ -957,7 +957,7 @@ namespace model {
     getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetRefrigeratedCaseAndWalkInList();
   }
 
-  bool RefrigerationSecondarySystem::setCirculatingFluidName(std::string circulatingFluidName) {
+  bool RefrigerationSecondarySystem::setCirculatingFluidName(const std::string& circulatingFluidName) {
     return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setCirculatingFluidName(circulatingFluidName);
   }
 
@@ -1041,7 +1041,7 @@ namespace model {
     getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetPhaseChangeCirculatingRate();
   }
 
-  bool RefrigerationSecondarySystem::setPumpDriveType(std::string pumpDriveType) {
+  bool RefrigerationSecondarySystem::setPumpDriveType(const std::string& pumpDriveType) {
     return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setPumpDriveType(pumpDriveType);
   }
 
@@ -1105,7 +1105,7 @@ namespace model {
     getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEvaporatorRefrigerantInventory();
   }
 
-  bool RefrigerationSecondarySystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationSecondarySystem::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

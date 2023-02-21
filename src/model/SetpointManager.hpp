@@ -52,7 +52,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SetpointManager() {}
+    virtual ~SetpointManager() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManager(const SetpointManager& other) = default;
+    SetpointManager(SetpointManager&& other) = default;
+    SetpointManager& operator=(const SetpointManager&) = default;
+    SetpointManager& operator=(SetpointManager&&) = default;
 
     //@}
 
@@ -92,7 +97,7 @@ namespace model {
     friend class detail::SetpointManager_Impl;
 
     /// @cond
-    typedef detail::SetpointManager_Impl ImplType;
+    using ImplType = detail::SetpointManager_Impl;
 
     explicit SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> impl);
 
@@ -101,8 +106,8 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<SetpointManager> OptionalSetpointManager;
-  typedef std::vector<SetpointManager> SetpointManagerVector;
+  using OptionalSetpointManager = boost::optional<SetpointManager>;
+  using SetpointManagerVector = std::vector<SetpointManager>;
 
 }  // namespace model
 

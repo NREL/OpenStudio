@@ -76,7 +76,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_SurfaceProperty_ConvectionCoefficients_MultipleSurfaceFields::ConvectionCoefficient1ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SurfacePropertyConvectionCoefficientsMultipleSurface", "Convection Coefficient 1"));
       }
@@ -267,7 +268,7 @@ namespace model {
   }
 
   IddObjectType SurfacePropertyConvectionCoefficientsMultipleSurface::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients_MultipleSurface);
+    return {IddObjectType::OS_SurfaceProperty_ConvectionCoefficients_MultipleSurface};
   }
 
   std::vector<std::string> SurfacePropertyConvectionCoefficientsMultipleSurface::surfaceTypeValues() {

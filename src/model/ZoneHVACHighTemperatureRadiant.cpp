@@ -82,7 +82,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACHighTemperatureRadiant_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACHighTemperatureRadiant", "Availability"));
       }
@@ -186,7 +187,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACHighTemperatureRadiant_Impl::setFuelType(std::string fuelType) {
+    bool ZoneHVACHighTemperatureRadiant_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::FuelType, fuelType);
       return result;
     }
@@ -213,7 +214,7 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACHighTemperatureRadiant_Impl::setTemperatureControlType(std::string temperatureControlType) {
+    bool ZoneHVACHighTemperatureRadiant_Impl::setTemperatureControlType(const std::string& temperatureControlType) {
       bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::TemperatureControlType, temperatureControlType);
       return result;
     }
@@ -249,7 +250,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneHVACHighTemperatureRadiant_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -348,7 +349,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACHighTemperatureRadiant::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant);
+    return {IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant};
   }
 
   std::vector<std::string> ZoneHVACHighTemperatureRadiant::fuelTypeValues() {
@@ -423,7 +424,7 @@ namespace model {
     getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->autosizeMaximumPowerInput();
   }
 
-  bool ZoneHVACHighTemperatureRadiant::setFuelType(std::string fuelType) {
+  bool ZoneHVACHighTemperatureRadiant::setFuelType(const std::string& fuelType) {
     return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFuelType(fuelType);
   }
 
@@ -444,7 +445,7 @@ namespace model {
     return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFractionofInputthatIsLost(fractionofInputthatIsLost);
   }
 
-  bool ZoneHVACHighTemperatureRadiant::setTemperatureControlType(std::string temperatureControlType) {
+  bool ZoneHVACHighTemperatureRadiant::setTemperatureControlType(const std::string& temperatureControlType) {
     return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setTemperatureControlType(temperatureControlType);
   }
 

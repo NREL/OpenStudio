@@ -56,7 +56,7 @@ namespace model {
 
       GasEquipment_Impl(const GasEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GasEquipment_Impl() {}
+      virtual ~GasEquipment_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -116,7 +116,7 @@ namespace model {
 
       void resetMultiplier();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

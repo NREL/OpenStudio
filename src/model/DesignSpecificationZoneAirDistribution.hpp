@@ -51,7 +51,12 @@ namespace model {
    public:
     explicit DesignSpecificationZoneAirDistribution(const Model& model);
 
-    virtual ~DesignSpecificationZoneAirDistribution() {}
+    virtual ~DesignSpecificationZoneAirDistribution() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DesignSpecificationZoneAirDistribution(const DesignSpecificationZoneAirDistribution& other) = default;
+    DesignSpecificationZoneAirDistribution(DesignSpecificationZoneAirDistribution&& other) = default;
+    DesignSpecificationZoneAirDistribution& operator=(const DesignSpecificationZoneAirDistribution&) = default;
+    DesignSpecificationZoneAirDistribution& operator=(DesignSpecificationZoneAirDistribution&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -87,7 +92,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DesignSpecificationZoneAirDistribution_Impl ImplType;
+    using ImplType = detail::DesignSpecificationZoneAirDistribution_Impl;
 
     explicit DesignSpecificationZoneAirDistribution(std::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl);
 
@@ -101,10 +106,10 @@ namespace model {
   };
 
   /** \relates DesignSpecificationZoneAirDistribution*/
-  typedef boost::optional<DesignSpecificationZoneAirDistribution> OptionalDesignSpecificationZoneAirDistribution;
+  using OptionalDesignSpecificationZoneAirDistribution = boost::optional<DesignSpecificationZoneAirDistribution>;
 
   /** \relates DesignSpecificationZoneAirDistribution*/
-  typedef std::vector<DesignSpecificationZoneAirDistribution> DesignSpecificationZoneAirDistributionVector;
+  using DesignSpecificationZoneAirDistributionVector = std::vector<DesignSpecificationZoneAirDistribution>;
 
 }  // namespace model
 }  // namespace openstudio

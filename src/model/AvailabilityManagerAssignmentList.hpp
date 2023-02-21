@@ -63,7 +63,12 @@ namespace model {
    */
     explicit AvailabilityManagerAssignmentList(const Loop& loop);
 
-    virtual ~AvailabilityManagerAssignmentList() {}
+    virtual ~AvailabilityManagerAssignmentList() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerAssignmentList(const AvailabilityManagerAssignmentList& other) = default;
+    AvailabilityManagerAssignmentList(AvailabilityManagerAssignmentList&& other) = default;
+    AvailabilityManagerAssignmentList& operator=(const AvailabilityManagerAssignmentList&) = default;
+    AvailabilityManagerAssignmentList& operator=(AvailabilityManagerAssignmentList&&) = default;
 
     //@}
 
@@ -153,7 +158,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerAssignmentList_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerAssignmentList_Impl;
 
     explicit AvailabilityManagerAssignmentList(const Model& model);
     explicit AvailabilityManagerAssignmentList(std::shared_ptr<detail::AvailabilityManagerAssignmentList_Impl> impl);
@@ -170,10 +175,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerAssignmentList*/
-  typedef boost::optional<AvailabilityManagerAssignmentList> OptionalAvailabilityManagerAssignmentList;
+  using OptionalAvailabilityManagerAssignmentList = boost::optional<AvailabilityManagerAssignmentList>;
 
   /** \relates AvailabilityManagerAssignmentList*/
-  typedef std::vector<AvailabilityManagerAssignmentList> AvailabilityManagerAssignmentListVector;
+  using AvailabilityManagerAssignmentListVector = std::vector<AvailabilityManagerAssignmentList>;
 
 }  // namespace model
 }  // namespace openstudio

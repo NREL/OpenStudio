@@ -50,7 +50,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~FoundationKivaSettings() {}
+    virtual ~FoundationKivaSettings() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FoundationKivaSettings(const FoundationKivaSettings& other) = default;
+    FoundationKivaSettings(FoundationKivaSettings&& other) = default;
+    FoundationKivaSettings& operator=(const FoundationKivaSettings&) = default;
+    FoundationKivaSettings& operator=(FoundationKivaSettings&&) = default;
 
     //@}
 
@@ -139,7 +144,7 @@ namespace model {
 
     void resetFarFieldWidth();
 
-    bool setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition);
+    bool setDeepGroundBoundaryCondition(const std::string& deepGroundBoundaryCondition);
 
     void resetDeepGroundBoundaryCondition();
 
@@ -155,7 +160,7 @@ namespace model {
 
     void resetMaximumCellGrowthCoefficient();
 
-    bool setSimulationTimestep(std::string simulationTimestep);
+    bool setSimulationTimestep(const std::string& simulationTimestep);
 
     void resetSimulationTimestep();
 
@@ -168,7 +173,7 @@ namespace model {
     explicit FoundationKivaSettings(Model& model);
 
     /// @cond
-    typedef detail::FoundationKivaSettings_Impl ImplType;
+    using ImplType = detail::FoundationKivaSettings_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -182,10 +187,10 @@ namespace model {
   };
 
   /** \relates FoundationKivaSettings*/
-  typedef boost::optional<FoundationKivaSettings> OptionalFoundationKivaSettings;
+  using OptionalFoundationKivaSettings = boost::optional<FoundationKivaSettings>;
 
   /** \relates FoundationKivaSettings*/
-  typedef std::vector<FoundationKivaSettings> FoundationKivaSettingsVector;
+  using FoundationKivaSettingsVector = std::vector<FoundationKivaSettings>;
 
 }  // namespace model
 }  // namespace openstudio

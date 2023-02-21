@@ -56,7 +56,12 @@ namespace model {
 
     explicit ZoneHVACIdealLoadsAirSystem(const Model& model);
 
-    virtual ~ZoneHVACIdealLoadsAirSystem() {}
+    virtual ~ZoneHVACIdealLoadsAirSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACIdealLoadsAirSystem(const ZoneHVACIdealLoadsAirSystem& other) = default;
+    ZoneHVACIdealLoadsAirSystem(ZoneHVACIdealLoadsAirSystem&& other) = default;
+    ZoneHVACIdealLoadsAirSystem& operator=(const ZoneHVACIdealLoadsAirSystem&) = default;
+    ZoneHVACIdealLoadsAirSystem& operator=(ZoneHVACIdealLoadsAirSystem&&) = default;
 
     //@}
 
@@ -274,7 +279,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACIdealLoadsAirSystem_Impl ImplType;
+    using ImplType = detail::ZoneHVACIdealLoadsAirSystem_Impl;
 
     explicit ZoneHVACIdealLoadsAirSystem(std::shared_ptr<detail::ZoneHVACIdealLoadsAirSystem_Impl> impl);
 
@@ -288,10 +293,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACIdealLoadsAirSystem*/
-  typedef boost::optional<ZoneHVACIdealLoadsAirSystem> OptionalZoneHVACIdealLoadsAirSystem;
+  using OptionalZoneHVACIdealLoadsAirSystem = boost::optional<ZoneHVACIdealLoadsAirSystem>;
 
   /** \relates ZoneHVACIdealLoadsAirSystem*/
-  typedef std::vector<ZoneHVACIdealLoadsAirSystem> ZoneHVACIdealLoadsAirSystemVector;
+  using ZoneHVACIdealLoadsAirSystemVector = std::vector<ZoneHVACIdealLoadsAirSystem>;
 
 }  // namespace model
 }  // namespace openstudio

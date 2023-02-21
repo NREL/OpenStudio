@@ -54,7 +54,7 @@ class UTILITIES_API Calendar
   };
 
   // map of Date to CalendarDay
-  typedef std::map<Date, CalendarDay> MapType;
+  using MapType = std::map<Date, CalendarDay>;
 
  public:
   REGISTER_LOGGER("utilities.time.Calendar");
@@ -112,10 +112,10 @@ class UTILITIES_API Calendar
 };
 
 /// optional Calendar
-typedef boost::optional<Calendar> OptionalCalendar;
+using OptionalCalendar = boost::optional<Calendar>;
 
 /// vector of Calendar
-typedef std::vector<Calendar> CalendarVector;
+using CalendarVector = std::vector<Calendar>;
 
 }  // namespace openstudio
 

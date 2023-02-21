@@ -72,7 +72,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Building() {}
+    virtual ~Building() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Building(const Building& other) = default;
+    Building(Building&& other) = default;
+    Building& operator=(const Building&) = default;
+    Building& operator=(Building&&) = default;
 
     //@}
 
@@ -323,7 +328,7 @@ namespace model {
     explicit Building(Model& model);
 
     /// @cond
-    typedef detail::Building_Impl ImplType;
+    using ImplType = detail::Building_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -336,10 +341,10 @@ namespace model {
   };
 
   /** \relates Building*/
-  typedef boost::optional<Building> OptionalBuilding;
+  using OptionalBuilding = boost::optional<Building>;
 
   /** \relates Building*/
-  typedef std::vector<Building> BuildingVector;
+  using BuildingVector = std::vector<Building>;
 
 }  // namespace model
 }  // namespace openstudio

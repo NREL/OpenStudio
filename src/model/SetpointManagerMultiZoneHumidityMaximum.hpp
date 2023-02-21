@@ -54,7 +54,12 @@ namespace model {
 
     explicit SetpointManagerMultiZoneHumidityMaximum(const Model& model);
 
-    virtual ~SetpointManagerMultiZoneHumidityMaximum() {}
+    virtual ~SetpointManagerMultiZoneHumidityMaximum() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerMultiZoneHumidityMaximum(const SetpointManagerMultiZoneHumidityMaximum& other) = default;
+    SetpointManagerMultiZoneHumidityMaximum(SetpointManagerMultiZoneHumidityMaximum&& other) = default;
+    SetpointManagerMultiZoneHumidityMaximum& operator=(const SetpointManagerMultiZoneHumidityMaximum&) = default;
+    SetpointManagerMultiZoneHumidityMaximum& operator=(SetpointManagerMultiZoneHumidityMaximum&&) = default;
 
     //@}
 
@@ -90,7 +95,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerMultiZoneHumidityMaximum_Impl ImplType;
+    using ImplType = detail::SetpointManagerMultiZoneHumidityMaximum_Impl;
 
     explicit SetpointManagerMultiZoneHumidityMaximum(std::shared_ptr<detail::SetpointManagerMultiZoneHumidityMaximum_Impl> impl);
 
@@ -104,10 +109,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerMultiZoneHumidityMaximum*/
-  typedef boost::optional<SetpointManagerMultiZoneHumidityMaximum> OptionalSetpointManagerMultiZoneHumidityMaximum;
+  using OptionalSetpointManagerMultiZoneHumidityMaximum = boost::optional<SetpointManagerMultiZoneHumidityMaximum>;
 
   /** \relates SetpointManagerMultiZoneHumidityMaximum*/
-  typedef std::vector<SetpointManagerMultiZoneHumidityMaximum> SetpointManagerMultiZoneHumidityMaximumVector;
+  using SetpointManagerMultiZoneHumidityMaximumVector = std::vector<SetpointManagerMultiZoneHumidityMaximum>;
 
 }  // namespace model
 }  // namespace openstudio

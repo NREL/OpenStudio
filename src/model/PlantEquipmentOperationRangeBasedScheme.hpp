@@ -56,7 +56,12 @@ namespace model {
    public:
     PlantEquipmentOperationRangeBasedScheme(IddObjectType type, const Model& model);
 
-    virtual ~PlantEquipmentOperationRangeBasedScheme() {}
+    virtual ~PlantEquipmentOperationRangeBasedScheme() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantEquipmentOperationRangeBasedScheme(const PlantEquipmentOperationRangeBasedScheme& other) = default;
+    PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationRangeBasedScheme&& other) = default;
+    PlantEquipmentOperationRangeBasedScheme& operator=(const PlantEquipmentOperationRangeBasedScheme&) = default;
+    PlantEquipmentOperationRangeBasedScheme& operator=(PlantEquipmentOperationRangeBasedScheme&&) = default;
 
     friend class openstudio::IdfObject;
 
@@ -114,7 +119,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationRangeBasedScheme_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationRangeBasedScheme_Impl;
 
     explicit PlantEquipmentOperationRangeBasedScheme(std::shared_ptr<detail::PlantEquipmentOperationRangeBasedScheme_Impl> impl);
 
@@ -127,9 +132,9 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
   };
 
-  typedef boost::optional<PlantEquipmentOperationRangeBasedScheme> OptionalPlantEquipmentOperationRangeBasedScheme;
+  using OptionalPlantEquipmentOperationRangeBasedScheme = boost::optional<PlantEquipmentOperationRangeBasedScheme>;
 
-  typedef std::vector<PlantEquipmentOperationRangeBasedScheme> PlantEquipmentOperationRangeBasedSchemeVector;
+  using PlantEquipmentOperationRangeBasedSchemeVector = std::vector<PlantEquipmentOperationRangeBasedScheme>;
 
 }  // namespace model
 }  // namespace openstudio

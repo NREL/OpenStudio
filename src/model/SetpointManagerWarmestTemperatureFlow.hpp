@@ -54,7 +54,12 @@ namespace model {
 
     explicit SetpointManagerWarmestTemperatureFlow(const Model& model);
 
-    virtual ~SetpointManagerWarmestTemperatureFlow() {}
+    virtual ~SetpointManagerWarmestTemperatureFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerWarmestTemperatureFlow(const SetpointManagerWarmestTemperatureFlow& other) = default;
+    SetpointManagerWarmestTemperatureFlow(SetpointManagerWarmestTemperatureFlow&& other) = default;
+    SetpointManagerWarmestTemperatureFlow& operator=(const SetpointManagerWarmestTemperatureFlow&) = default;
+    SetpointManagerWarmestTemperatureFlow& operator=(SetpointManagerWarmestTemperatureFlow&&) = default;
 
     //@}
 
@@ -103,7 +108,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerWarmestTemperatureFlow_Impl ImplType;
+    using ImplType = detail::SetpointManagerWarmestTemperatureFlow_Impl;
 
     explicit SetpointManagerWarmestTemperatureFlow(std::shared_ptr<detail::SetpointManagerWarmestTemperatureFlow_Impl> impl);
 
@@ -117,10 +122,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerWarmestTemperatureFlow*/
-  typedef boost::optional<SetpointManagerWarmestTemperatureFlow> OptionalSetpointManagerWarmestTemperatureFlow;
+  using OptionalSetpointManagerWarmestTemperatureFlow = boost::optional<SetpointManagerWarmestTemperatureFlow>;
 
   /** \relates SetpointManagerWarmestTemperatureFlow*/
-  typedef std::vector<SetpointManagerWarmestTemperatureFlow> SetpointManagerWarmestTemperatureFlowVector;
+  using SetpointManagerWarmestTemperatureFlowVector = std::vector<SetpointManagerWarmestTemperatureFlow>;
 
 }  // namespace model
 }  // namespace openstudio

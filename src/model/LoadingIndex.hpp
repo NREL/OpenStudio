@@ -56,6 +56,11 @@ namespace model {
                           const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
 
     virtual ~LoadingIndex() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LoadingIndex(const LoadingIndex& other) = default;
+    LoadingIndex(LoadingIndex&& other) = default;
+    LoadingIndex& operator=(const LoadingIndex&) = default;
+    LoadingIndex& operator=(LoadingIndex&&) = default;
 
     //@}
 

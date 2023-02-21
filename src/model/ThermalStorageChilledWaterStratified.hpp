@@ -55,7 +55,12 @@ namespace model {
 
     explicit ThermalStorageChilledWaterStratified(const Model& model);
 
-    virtual ~ThermalStorageChilledWaterStratified() {}
+    virtual ~ThermalStorageChilledWaterStratified() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ThermalStorageChilledWaterStratified(const ThermalStorageChilledWaterStratified& other) = default;
+    ThermalStorageChilledWaterStratified(ThermalStorageChilledWaterStratified&& other) = default;
+    ThermalStorageChilledWaterStratified& operator=(const ThermalStorageChilledWaterStratified&) = default;
+    ThermalStorageChilledWaterStratified& operator=(ThermalStorageChilledWaterStratified&&) = default;
 
     //@}
 
@@ -275,7 +280,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ThermalStorageChilledWaterStratified_Impl ImplType;
+    using ImplType = detail::ThermalStorageChilledWaterStratified_Impl;
 
     explicit ThermalStorageChilledWaterStratified(std::shared_ptr<detail::ThermalStorageChilledWaterStratified_Impl> impl);
 
@@ -289,10 +294,10 @@ namespace model {
   };
 
   /** \relates ThermalStorageChilledWaterStratified*/
-  typedef boost::optional<ThermalStorageChilledWaterStratified> OptionalThermalStorageChilledWaterStratified;
+  using OptionalThermalStorageChilledWaterStratified = boost::optional<ThermalStorageChilledWaterStratified>;
 
   /** \relates ThermalStorageChilledWaterStratified*/
-  typedef std::vector<ThermalStorageChilledWaterStratified> ThermalStorageChilledWaterStratifiedVector;
+  using ThermalStorageChilledWaterStratifiedVector = std::vector<ThermalStorageChilledWaterStratified>;
 
 }  // namespace model
 }  // namespace openstudio

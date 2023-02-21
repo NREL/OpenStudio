@@ -55,7 +55,7 @@ namespace model {
       AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl(const AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl& other, Model_Impl* model,
                                                          bool keepHandle);
 
-      virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl() {}
+      virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -181,7 +181,7 @@ namespace model {
 
       bool setSupplyAirFan(const HVACComponent& fansCVandOnOff);
 
-      bool setSupplyAirFanPlacement(std::string supplyAirFanPlacement);
+      bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
 
       bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
@@ -191,13 +191,13 @@ namespace model {
 
       bool setHeatingCoil(const HVACComponent& heatingCoilName);
 
-      bool setPriorityControlMode(std::string priorityControlMode);
+      bool setPriorityControlMode(const std::string& priorityControlMode);
 
       bool setMinimumOutletAirTemperatureDuringCoolingOperation(double minimumOutletAirTemperatureDuringCoolingOperation);
 
       bool setMaximumOutletAirTemperatureDuringHeatingOperation(double maximumOutletAirTemperatureDuringHeatingOperation);
 
-      bool setDehumidificationControlType(std::string dehumidificationControlType);
+      bool setDehumidificationControlType(const std::string& dehumidificationControlType);
 
       bool setMinimumRuntimeBeforeOperatingModeChange(double runtime);
 

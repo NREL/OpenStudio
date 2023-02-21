@@ -56,7 +56,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ExternalFile() {}
+    virtual ~ExternalFile() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalFile(const ExternalFile& other) = default;
+    ExternalFile(ExternalFile&& other) = default;
+    ExternalFile& operator=(const ExternalFile&) = default;
+    ExternalFile& operator=(ExternalFile&&) = default;
 
     //@}
 
@@ -100,7 +105,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
+    using ImplType = detail::ExternalFile_Impl;
 
     explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
 
@@ -117,10 +122,10 @@ namespace model {
   };
 
   /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
+  using OptionalExternalFile = boost::optional<ExternalFile>;
 
   /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
+  using ExternalFileVector = std::vector<ExternalFile>;
 
 }  // namespace model
 }  // namespace openstudio

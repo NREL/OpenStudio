@@ -344,12 +344,12 @@ namespace model {
       return result;
     }
 
-    bool ChillerAbsorption_Impl::setChillerFlowMode(std::string chillerFlowMode) {
+    bool ChillerAbsorption_Impl::setChillerFlowMode(const std::string& chillerFlowMode) {
       bool result = setString(OS_Chiller_AbsorptionFields::ChillerFlowMode, chillerFlowMode);
       return result;
     }
 
-    bool ChillerAbsorption_Impl::setGeneratorHeatSourceType(std::string generatorHeatSourceType) {
+    bool ChillerAbsorption_Impl::setGeneratorHeatSourceType(const std::string& generatorHeatSourceType) {
       bool ok = false;
       if (istringEqual("Steam", generatorHeatSourceType) && (this->generatorLoop())) {
         // We don't support Steam loops in OS right now
@@ -565,7 +565,7 @@ namespace model {
   }
 
   IddObjectType ChillerAbsorption::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Chiller_Absorption);
+    return {IddObjectType::OS_Chiller_Absorption};
   }
 
   std::vector<std::string> ChillerAbsorption::chillerFlowModeValues() {
@@ -758,11 +758,11 @@ namespace model {
     return getImpl<detail::ChillerAbsorption_Impl>()->setChilledWaterOutletTemperatureLowerLimit(chilledWaterOutletTemperatureLowerLimit);
   }
 
-  bool ChillerAbsorption::setChillerFlowMode(std::string chillerFlowMode) {
+  bool ChillerAbsorption::setChillerFlowMode(const std::string& chillerFlowMode) {
     return getImpl<detail::ChillerAbsorption_Impl>()->setChillerFlowMode(chillerFlowMode);
   }
 
-  bool ChillerAbsorption::setGeneratorHeatSourceType(std::string generatorHeatSourceType) {
+  bool ChillerAbsorption::setGeneratorHeatSourceType(const std::string& generatorHeatSourceType) {
     return getImpl<detail::ChillerAbsorption_Impl>()->setGeneratorHeatSourceType(generatorHeatSourceType);
   }
 

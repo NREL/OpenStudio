@@ -49,7 +49,7 @@ namespace measure {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~EnergyPlusMeasure();
+    virtual ~EnergyPlusMeasure() = default;
 
     //@}
     /** @name Getters */
@@ -93,7 +93,7 @@ namespace measure {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~PythonEnergyPlusMeasure();
+    virtual ~PythonEnergyPlusMeasure() = default;
 
     //@}
     /** @name Getters */

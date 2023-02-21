@@ -81,7 +81,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACUnitVentilator_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator", "Availability"));
       }
@@ -140,7 +141,7 @@ namespace model {
         }
       }
 
-      return objectClone;
+      return std::move(objectClone);
     }
 
     std::vector<IdfObject> ZoneHVACUnitVentilator_Impl::remove() {
@@ -302,7 +303,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACUnitVentilator_Impl::setOutdoorAirControlType(std::string outdoorAirControlType) {
+    bool ZoneHVACUnitVentilator_Impl::setOutdoorAirControlType(const std::string& outdoorAirControlType) {
       bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::OutdoorAirControlType, outdoorAirControlType);
       return result;
     }
@@ -547,7 +548,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACUnitVentilator::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_UnitVentilator);
+    return {IddObjectType::OS_ZoneHVAC_UnitVentilator};
   }
 
   std::vector<std::string> ZoneHVACUnitVentilator::outdoorAirControlTypeValues() {
@@ -638,7 +639,7 @@ namespace model {
     getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizeMaximumSupplyAirFlowRate();
   }
 
-  bool ZoneHVACUnitVentilator::setOutdoorAirControlType(std::string outdoorAirControlType) {
+  bool ZoneHVACUnitVentilator::setOutdoorAirControlType(const std::string& outdoorAirControlType) {
     return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setOutdoorAirControlType(outdoorAirControlType);
   }
 

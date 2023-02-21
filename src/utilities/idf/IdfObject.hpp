@@ -102,11 +102,26 @@ class UTILITIES_API IdfObject
    *  otherwise no name is assigned.*/
   explicit IdfObject(const IddObject&, bool fastName = false);
 
+  // TODO: virtual destructor is bad news for performance, do we need it? AFAIK none of the destructors in the chain do actual resource cleanup?
+  // Perhaps for nano signal slots though...? That means the move ctor and move assignment operator are deleted...
+  virtual ~IdfObject() = default;
+
+  // If we can get by without the OS_ASSERT(m_impl) in these, we could just default all of them
+  // IdfObject(const IdfObject& other) = default;
+  // IdfObject(IdfObject&& other) = default;
+  // IdfObject& operator=(const IdfObject&) = default;
+  // IdfObject& operator=(IdfObject&&) = default;
+
   /** Copy constructor. Shares data with other, so changes made by either copy affects the data of
    *  both. */
   IdfObject(const IdfObject& other);
 
-  virtual ~IdfObject() {}
+  // Move constructor. Must be noexcept to offer strong guarantee and have STL use it for move (std::move_if_noexcept)
+  IdfObject(IdfObject&& other) noexcept;
+
+  // Asignment operators, following the rule of 5/6
+  IdfObject& operator=(const IdfObject& other);
+  IdfObject& operator=(IdfObject&& other) noexcept;
 
   /** Creates a deep copy of this object. This object and the newly created object do not share
    *  data, and the new object is always unlocked. */
@@ -402,7 +417,7 @@ class UTILITIES_API IdfObject
   //@}
 
  protected:
-  typedef detail::IdfObject_Impl ImplType;
+  using ImplType = detail::IdfObject_Impl;
 
   friend struct IdfObjectImplLess;            // lets friend sort by impl
   friend class detail::IdfObject_Impl;        // for IdfObject_Impl::getObject<T>()
@@ -441,13 +456,13 @@ struct UTILITIES_API IdfObjectTypeLess
 };
 
 /** \relates IdfObject */
-typedef boost::optional<IdfObject> OptionalIdfObject;
+using OptionalIdfObject = boost::optional<IdfObject>;
 
 /** \relates IdfObject */
-typedef std::vector<IdfObject> IdfObjectVector;
+using IdfObjectVector = std::vector<IdfObject>;
 
 /** \relates IdfObject */
-typedef std::pair<IdfObject, IdfObject> IdfObjectPair;
+using IdfObjectPair = std::pair<IdfObject, IdfObject>;
 
 /** \relates IdfObject */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IdfObject& IdfObject);
@@ -468,8 +483,7 @@ UTILITIES_API std::string objectName(const IdfObject& obj);
 
 template <typename T>
 std::vector<T> sortByObjectName(std::vector<T> objects) {
-  std::sort(objects.begin(), objects.end(),
-            std::bind(&istringLess, std::bind(&objectName, std::placeholders::_1), std::bind(&objectName, std::placeholders::_1)));
+  std::sort(objects.begin(), objects.end(), [](const T& lhs, const T& rhs) { return istringLess(lhs.objectName(), rhs.objectName()); });
   return objects;
 }
 

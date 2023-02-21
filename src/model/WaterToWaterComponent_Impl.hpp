@@ -53,7 +53,7 @@ namespace model {
 
       WaterToWaterComponent_Impl(const WaterToWaterComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~WaterToWaterComponent_Impl() {}
+      virtual ~WaterToWaterComponent_Impl() = default;
 
       virtual unsigned supplyInletPort() const = 0;
 

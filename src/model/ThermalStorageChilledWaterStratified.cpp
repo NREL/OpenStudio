@@ -103,7 +103,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ThermalStorage_ChilledWater_StratifiedFields::SetpointTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ThermalStorageChilledWaterStratified", "Setpoint Temperature"));
       }
@@ -796,7 +797,7 @@ namespace model {
   }
 
   IddObjectType ThermalStorageChilledWaterStratified::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ThermalStorage_ChilledWater_Stratified);
+    return {IddObjectType::OS_ThermalStorage_ChilledWater_Stratified};
   }
 
   std::vector<std::string> ThermalStorageChilledWaterStratified::tankShapeValues() {

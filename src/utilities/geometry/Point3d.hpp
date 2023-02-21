@@ -90,13 +90,13 @@ UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
 
 // optional Point3d
-typedef boost::optional<Point3d> OptionalPoint3d;
+using OptionalPoint3d = boost::optional<Point3d>;
 
 // vector of Point3d
-typedef std::vector<Point3d> Point3dVector;
+using Point3dVector = std::vector<Point3d>;
 
 // vector of Point3dVector
-typedef std::vector<Point3dVector> Point3dVectorVector;
+using Point3dVectorVector = std::vector<Point3dVector>;
 
 }  // namespace openstudio
 

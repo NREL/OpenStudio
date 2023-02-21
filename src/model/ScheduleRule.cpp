@@ -67,8 +67,6 @@ namespace model {
     ScheduleRule_Impl::ScheduleRule_Impl(const ScheduleRule_Impl& other, Model_Impl* model, bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {}
 
-    ScheduleRule_Impl::~ScheduleRule_Impl() {}
-
     boost::optional<ParentObject> ScheduleRule_Impl::parent() const {
       return this->scheduleRuleset();
     }
@@ -106,7 +104,7 @@ namespace model {
     }
 
     std::vector<IdfObject> ScheduleRule_Impl::remove() {
-      ScheduleRule self = this->getObject<ScheduleRule>();
+      auto self = this->getObject<ScheduleRule>();
       ScheduleRuleset scheduleRuleset = this->scheduleRuleset();
       scheduleRuleset.moveToEnd(self);
 
@@ -322,7 +320,7 @@ namespace model {
     }
 
     bool ScheduleRule_Impl::applyWeekdays() const {
-      return (this->applyMonday() && this->applyTuesday() && this - applyWednesday() && this->applyThursday() && this->applyFriday());
+      return (this->applyMonday() && this->applyTuesday() && this->applyWednesday() && this->applyThursday() && this->applyFriday());
     }
 
     bool ScheduleRule_Impl::applyWeekends() const {
@@ -334,7 +332,7 @@ namespace model {
     }
 
     bool ScheduleRule_Impl::setApplyWeekdays(bool applyWeekdays) {
-      return (this->setApplyMonday(applyWeekdays) && this->setApplyTuesday(applyWeekdays) && this - setApplyWednesday(applyWeekdays)
+      return (this->setApplyMonday(applyWeekdays) && this->setApplyTuesday(applyWeekdays) && this->setApplyWednesday(applyWeekdays)
               && this->setApplyThursday(applyWeekdays) && this->setApplyFriday(applyWeekdays));
     }
 
@@ -396,11 +394,9 @@ namespace model {
       result = setString(OS_Schedule_RuleFields::EndDay, "", false);
       OS_ASSERT(result);
 
-      std::vector<std::string> values;
-      values.push_back(boost::lexical_cast<std::string>(date.monthOfYear().value()));
-      values.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
+      std::vector<std::string> values{std::to_string(date.monthOfYear().value()), std::to_string(date.dayOfMonth())};
 
-      ModelExtensibleGroup group = pushExtensibleGroup(values, true).cast<ModelExtensibleGroup>();
+      auto group = pushExtensibleGroup(values, true).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
 
       return true;
@@ -426,7 +422,7 @@ namespace model {
         }
       }
 
-      for (IdfExtensibleGroup group : this->extensibleGroups()) {
+      for (const IdfExtensibleGroup& group : this->extensibleGroups()) {
         boost::optional<int> month;
         boost::optional<int> day;
 

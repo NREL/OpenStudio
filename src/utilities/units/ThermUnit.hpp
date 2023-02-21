@@ -103,12 +103,12 @@ class UTILITIES_API ThermUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   ThermUnit(const std::string& scaleAbbreviation, const ThermExpnt& exponents = ThermExpnt(), const std::string& prettyString = "");
 
-  virtual ~ThermUnit() {}
+  virtual ~ThermUnit() = default;
 
   //@}
  protected:
   /// @cond
-  typedef detail::ThermUnit_Impl ImplType;
+  using ImplType = detail::ThermUnit_Impl;
 
   explicit ThermUnit(std::shared_ptr<detail::ThermUnit_Impl> impl);
 
@@ -121,10 +121,10 @@ class UTILITIES_API ThermUnit : public Unit
 };
 
 /** \relates ThermUnit*/
-typedef boost::optional<ThermUnit> OptionalThermUnit;
+using OptionalThermUnit = boost::optional<ThermUnit>;
 
 /** \relates ThermUnit*/
-typedef std::vector<ThermUnit> ThermUnitVector;
+using ThermUnitVector = std::vector<ThermUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

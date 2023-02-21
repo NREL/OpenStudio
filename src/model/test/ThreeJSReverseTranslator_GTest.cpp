@@ -133,11 +133,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
   ss << *model;
   std::string s = ss.str();
 
-  EXPECT_EQ(4u, model->getModelObjects<Space>().size());
-  EXPECT_EQ(24u, model->getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model->getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(24u, model->getConcreteModelObjects<Surface>().size());
 
   unsigned numMatched = 0;
-  for (const auto& surface : model->getModelObjects<Surface>()) {
+  for (const auto& surface : model->getConcreteModelObjects<Surface>()) {
     if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;
@@ -150,11 +150,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
   model::ModelMerger mm;
   mm.mergeModels(newModel, *model, rt.handleMapping());
 
-  EXPECT_EQ(4u, newModel.getModelObjects<Space>().size());
-  EXPECT_EQ(24u, newModel.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, newModel.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(24u, newModel.getConcreteModelObjects<Surface>().size());
 
   numMatched = 0;
-  for (const auto& surface : newModel.getModelObjects<Surface>()) {
+  for (const auto& surface : newModel.getConcreteModelObjects<Surface>()) {
     if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;
@@ -1194,7 +1194,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166
   // Start with a base model, put some climate zone in there
   // Add a Climate Zone to model1 only
   Model model;
-  ClimateZones czs = model.getUniqueModelObject<ClimateZones>();
+  auto czs = model.getUniqueModelObject<ClimateZones>();
   ClimateZone cz = czs.setClimateZone(ClimateZones::ashraeInstitutionName(), "4A");
   EXPECT_EQ(1, czs.numClimateZones());
   EXPECT_EQ(1, czs.climateZones().size());

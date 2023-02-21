@@ -60,7 +60,12 @@ namespace model {
     // ETH@20110615 This constructor should probably be protected, with Model (etc.) as a friend.
     ComponentWatcher(ComponentData& componentData);
 
-    virtual ~ComponentWatcher() {}
+    virtual ~ComponentWatcher() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ComponentWatcher(const ComponentWatcher& other) = default;
+    ComponentWatcher(ComponentWatcher&& other) = default;
+    ComponentWatcher& operator=(const ComponentWatcher&) = default;
+    ComponentWatcher& operator=(ComponentWatcher&&) = default;
 
     //@}
     /** @name Getters */
@@ -79,7 +84,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ComponentWatcher_Impl ImplType;
+    using ImplType = detail::ComponentWatcher_Impl;
 
     friend class detail::Model_Impl;
     friend class detail::ComponentWatcher_Impl;
@@ -94,7 +99,7 @@ namespace model {
   };
 
   /** \relates ComponentWatcher */
-  typedef std::vector<ComponentWatcher> ComponentWatcherVector;
+  using ComponentWatcherVector = std::vector<ComponentWatcher>;
 
 }  // namespace model
 }  // namespace openstudio

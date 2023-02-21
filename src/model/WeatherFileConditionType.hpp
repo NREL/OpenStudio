@@ -46,12 +46,17 @@ namespace model {
     // constructor
     explicit WeatherFileConditionType(const Model& model);
 
-    virtual ~WeatherFileConditionType() {}
+    virtual ~WeatherFileConditionType() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WeatherFileConditionType(const WeatherFileConditionType& other) = default;
+    WeatherFileConditionType(WeatherFileConditionType&& other) = default;
+    WeatherFileConditionType& operator=(const WeatherFileConditionType&) = default;
+    WeatherFileConditionType& operator=(WeatherFileConditionType&&) = default;
 
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::WeatherFileConditionType_Impl ImplType;
+    using ImplType = detail::WeatherFileConditionType_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -64,10 +69,10 @@ namespace model {
   };
 
   /** \relates WeatherFileConditionType */
-  typedef boost::optional<WeatherFileConditionType> OptionalWeatherFileConditionType;
+  using OptionalWeatherFileConditionType = boost::optional<WeatherFileConditionType>;
 
   /** \relates WeatherFileConditionType */
-  typedef std::vector<WeatherFileConditionType> WeatherFileConditionTypeVector;
+  using WeatherFileConditionTypeVector = std::vector<WeatherFileConditionType>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -85,7 +85,12 @@ namespace model {
 
     explicit GeneratorFuelCell(const Model& model);
 
-    virtual ~GeneratorFuelCell() {}
+    virtual ~GeneratorFuelCell() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCell(const GeneratorFuelCell& other) = default;
+    GeneratorFuelCell(GeneratorFuelCell&& other) = default;
+    GeneratorFuelCell& operator=(const GeneratorFuelCell&) = default;
+    GeneratorFuelCell& operator=(GeneratorFuelCell&&) = default;
 
     //@}
 
@@ -143,7 +148,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCell_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCell_Impl;
 
     explicit GeneratorFuelCell(std::shared_ptr<detail::GeneratorFuelCell_Impl> impl);
 
@@ -157,10 +162,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCell*/
-  typedef boost::optional<GeneratorFuelCell> OptionalGeneratorFuelCell;
+  using OptionalGeneratorFuelCell = boost::optional<GeneratorFuelCell>;
 
   /** \relates GeneratorFuelCell*/
-  typedef std::vector<GeneratorFuelCell> GeneratorFuelCellVector;
+  using GeneratorFuelCellVector = std::vector<GeneratorFuelCell>;
 
 }  // namespace model
 }  // namespace openstudio

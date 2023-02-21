@@ -54,7 +54,7 @@ namespace model {
 
       SetpointManagerScheduledDualSetpoint_Impl(const SetpointManagerScheduledDualSetpoint_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerScheduledDualSetpoint_Impl() {}
+      virtual ~SetpointManagerScheduledDualSetpoint_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

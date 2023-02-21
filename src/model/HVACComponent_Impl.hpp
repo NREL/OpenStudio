@@ -58,7 +58,7 @@ namespace model {
 
       HVACComponent_Impl(const HVACComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~HVACComponent_Impl() {}
+      virtual ~HVACComponent_Impl() = default;
 
       virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
 

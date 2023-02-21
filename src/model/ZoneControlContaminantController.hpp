@@ -54,7 +54,12 @@ namespace model {
 
     explicit ZoneControlContaminantController(const Model& model);
 
-    virtual ~ZoneControlContaminantController() {}
+    virtual ~ZoneControlContaminantController() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneControlContaminantController(const ZoneControlContaminantController& other) = default;
+    ZoneControlContaminantController(ZoneControlContaminantController&& other) = default;
+    ZoneControlContaminantController& operator=(const ZoneControlContaminantController&) = default;
+    ZoneControlContaminantController& operator=(ZoneControlContaminantController&&) = default;
 
     //@}
 
@@ -106,7 +111,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneControlContaminantController_Impl ImplType;
+    using ImplType = detail::ZoneControlContaminantController_Impl;
 
     explicit ZoneControlContaminantController(std::shared_ptr<detail::ZoneControlContaminantController_Impl> impl);
 
@@ -120,10 +125,10 @@ namespace model {
   };
 
   /** \relates ZoneControlContaminantController*/
-  typedef boost::optional<ZoneControlContaminantController> OptionalZoneControlContaminantController;
+  using OptionalZoneControlContaminantController = boost::optional<ZoneControlContaminantController>;
 
   /** \relates ZoneControlContaminantController*/
-  typedef std::vector<ZoneControlContaminantController> ZoneControlContaminantControllerVector;
+  using ZoneControlContaminantControllerVector = std::vector<ZoneControlContaminantController>;
 
 }  // namespace model
 }  // namespace openstudio

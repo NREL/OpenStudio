@@ -54,7 +54,7 @@ namespace model {
 
       SpaceInfiltrationDesignFlowRate_Impl(const SpaceInfiltrationDesignFlowRate_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SpaceInfiltrationDesignFlowRate_Impl() {}
+      virtual ~SpaceInfiltrationDesignFlowRate_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

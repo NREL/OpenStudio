@@ -143,7 +143,7 @@ class UTILITIES_API PreparedStatement
   [[nodiscard]] boost::optional<int> execAndReturnFirstInt() const;
 
   static std::string columnText(const unsigned char* column) {
-    return std::string(reinterpret_cast<const char*>(column));
+    return {reinterpret_cast<const char*>(column)};
   }
 
   [[nodiscard]] boost::optional<std::string> execAndReturnFirstString() const;

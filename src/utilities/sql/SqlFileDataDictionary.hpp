@@ -92,27 +92,28 @@ namespace detail {
   /// Define a multi_index_container of DataDictionaryItems with following indices:
   /// a unique index sorted by dataDictionary::recordIndex and dataDictionary::envPeriodIndex
   /// a non-unique index sorted by dataDictionary::name,
-  typedef boost::multi_index_container<
+  using DataDictionaryTable = boost::multi_index_container<
     DataDictionaryItem,
     boost::multi_index::indexed_by<
       boost::multi_index::ordered_unique<
         boost::multi_index::tag<id>,
         boost::multi_index::composite_key<DataDictionaryItem, boost::multi_index::member<DataDictionaryItem, int, &DataDictionaryItem::recordIndex>,
                                           boost::multi_index::member<DataDictionaryItem, int, &DataDictionaryItem::envPeriodIndex>>>,
-      boost::multi_index::ordered_non_unique<boost::multi_index::tag<name>, BOOST_MULTI_INDEX_MEMBER(DataDictionaryItem, std::string, name)>,
-      boost::multi_index::ordered_non_unique<boost::multi_index::tag<keyValue>, BOOST_MULTI_INDEX_MEMBER(DataDictionaryItem, std::string, keyValue)>,
+      boost::multi_index::ordered_non_unique<boost::multi_index::tag<name>,
+                                             ::boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::name>>,
+      boost::multi_index::ordered_non_unique<boost::multi_index::tag<keyValue>,
+                                             ::boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::keyValue>>,
       boost::multi_index::ordered_non_unique<boost::multi_index::tag<reportingFrequency>,
-                                             BOOST_MULTI_INDEX_MEMBER(DataDictionaryItem, std::string, reportingFrequency)>,
+                                             ::boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::reportingFrequency>>,
       boost::multi_index::ordered_non_unique<boost::multi_index::tag<envPeriod>,
-                                             BOOST_MULTI_INDEX_MEMBER(DataDictionaryItem, std::string, envPeriod)>,
+                                             ::boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::envPeriod>>,
       boost::multi_index::ordered_non_unique<
         boost::multi_index::tag<envPeriodReportingFrequencyNameKeyValue>,
         boost::multi_index::composite_key<DataDictionaryItem,
                                           boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::envPeriod>,
                                           boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::reportingFrequency>,
                                           boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::name>,
-                                          boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::keyValue>>>>>
-    DataDictionaryTable;
+                                          boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::keyValue>>>>>;
 
 }  // namespace detail
 }  // namespace openstudio

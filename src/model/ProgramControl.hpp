@@ -51,7 +51,12 @@ namespace model {
 
     explicit ProgramControl(const Model& model);
 
-    virtual ~ProgramControl() {}
+    virtual ~ProgramControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ProgramControl(const ProgramControl& other) = default;
+    ProgramControl(ProgramControl&& other) = default;
+    ProgramControl& operator=(const ProgramControl&) = default;
+    ProgramControl& operator=(ProgramControl&&) = default;
 
     //@}
 
@@ -77,7 +82,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ProgramControl_Impl ImplType;
+    using ImplType = detail::ProgramControl_Impl;
 
     explicit ProgramControl(std::shared_ptr<detail::ProgramControl_Impl> impl);
 
@@ -91,10 +96,10 @@ namespace model {
   };
 
   /** \relates ProgramControl*/
-  typedef boost::optional<ProgramControl> OptionalProgramControl;
+  using OptionalProgramControl = boost::optional<ProgramControl>;
 
   /** \relates ProgramControl*/
-  typedef std::vector<ProgramControl> ProgramControlVector;
+  using ProgramControlVector = std::vector<ProgramControl>;
 
 }  // namespace model
 }  // namespace openstudio

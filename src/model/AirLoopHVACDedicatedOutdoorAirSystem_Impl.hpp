@@ -55,7 +55,7 @@ namespace model {
 
       AirLoopHVACDedicatedOutdoorAirSystem_Impl(const AirLoopHVACDedicatedOutdoorAirSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirLoopHVACDedicatedOutdoorAirSystem_Impl() {}
+      virtual ~AirLoopHVACDedicatedOutdoorAirSystem_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -87,7 +87,7 @@ TEST_F(ModelFixture, PipeAdiabatic_addToNode) {
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop2.demandComponents().size());
 
-  PipeAdiabatic testObjectClone = testObject.clone(m).cast<PipeAdiabatic>();
+  auto testObjectClone = testObject.clone(m).cast<PipeAdiabatic>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

@@ -123,7 +123,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXTwoStageWithHumidityControlMode", "Availability Schedule"));
       }
@@ -397,27 +398,27 @@ namespace model {
       if (model != this->model()) {
         // If there are CoilPerformanceDXCooling objects, clone them as well
         if (boost::optional<CoilPerformanceDXCooling> coilPerf1 = normalModeStage1CoilPerformance()) {
-          CoilPerformanceDXCooling coilPerf1Clone = coilPerf1->clone(model).cast<CoilPerformanceDXCooling>();
+          auto coilPerf1Clone = coilPerf1->clone(model).cast<CoilPerformanceDXCooling>();
           newCoil.setNormalModeStage1CoilPerformance(coilPerf1Clone);
         }
 
         if (boost::optional<CoilPerformanceDXCooling> coilPerf2 = normalModeStage1Plus2CoilPerformance()) {
-          CoilPerformanceDXCooling coilPerf2Clone = coilPerf2->clone(model).cast<CoilPerformanceDXCooling>();
+          auto coilPerf2Clone = coilPerf2->clone(model).cast<CoilPerformanceDXCooling>();
           newCoil.setNormalModeStage1Plus2CoilPerformance(coilPerf2Clone);
         }
 
         if (boost::optional<CoilPerformanceDXCooling> coilPerf3 = dehumidificationMode1Stage1CoilPerformance()) {
-          CoilPerformanceDXCooling coilPerf3Clone = coilPerf3->clone(model).cast<CoilPerformanceDXCooling>();
+          auto coilPerf3Clone = coilPerf3->clone(model).cast<CoilPerformanceDXCooling>();
           newCoil.setDehumidificationMode1Stage1CoilPerformance(coilPerf3Clone);
         }
 
         if (boost::optional<CoilPerformanceDXCooling> coilPerf4 = dehumidificationMode1Stage1Plus2CoilPerformance()) {
-          CoilPerformanceDXCooling coilPerf4Clone = coilPerf4->clone(model).cast<CoilPerformanceDXCooling>();
+          auto coilPerf4Clone = coilPerf4->clone(model).cast<CoilPerformanceDXCooling>();
           newCoil.setDehumidificationMode1Stage1Plus2CoilPerformance(coilPerf4Clone);
         }
       }
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     std::vector<IddObjectType> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::allowableChildTypes() const {
@@ -730,7 +731,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXTwoStageWithHumidityControlMode::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode);
+    return {IddObjectType::OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode};
   }
 
   boost::optional<Schedule> CoilCoolingDXTwoStageWithHumidityControlMode::availabilitySchedule() const {

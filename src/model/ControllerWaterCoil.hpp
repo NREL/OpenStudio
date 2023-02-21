@@ -56,7 +56,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ControllerWaterCoil() {}
+    virtual ~ControllerWaterCoil() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ControllerWaterCoil(const ControllerWaterCoil& other) = default;
+    ControllerWaterCoil(ControllerWaterCoil&& other) = default;
+    ControllerWaterCoil& operator=(const ControllerWaterCoil&) = default;
+    ControllerWaterCoil& operator=(ControllerWaterCoil&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -149,7 +154,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ControllerWaterCoil_Impl ImplType;
+    using ImplType = detail::ControllerWaterCoil_Impl;
 
     friend class detail::ControllerWaterCoil_Impl;
 
@@ -172,10 +177,10 @@ namespace model {
   };
 
   /** \relates ControllerWaterCoil*/
-  typedef boost::optional<ControllerWaterCoil> OptionalControllerWaterCoil;
+  using OptionalControllerWaterCoil = boost::optional<ControllerWaterCoil>;
 
   /** \relates ControllerWaterCoil*/
-  typedef std::vector<ControllerWaterCoil> ControllerWaterCoilVector;
+  using ControllerWaterCoilVector = std::vector<ControllerWaterCoil>;
 
 }  // namespace model
 

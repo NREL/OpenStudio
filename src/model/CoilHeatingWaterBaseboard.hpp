@@ -52,7 +52,12 @@ namespace model {
 
     CoilHeatingWaterBaseboard(const Model& model);
 
-    virtual ~CoilHeatingWaterBaseboard() {}
+    virtual ~CoilHeatingWaterBaseboard() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingWaterBaseboard(const CoilHeatingWaterBaseboard& other) = default;
+    CoilHeatingWaterBaseboard(CoilHeatingWaterBaseboard&& other) = default;
+    CoilHeatingWaterBaseboard& operator=(const CoilHeatingWaterBaseboard&) = default;
+    CoilHeatingWaterBaseboard& operator=(CoilHeatingWaterBaseboard&&) = default;
 
     //@}
 
@@ -99,7 +104,7 @@ namespace model {
     //@}
     /** @name Setters */
     //@{
-    bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+    bool setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod);
 
     bool setHeatingDesignCapacity(double heatingDesignCapacity);
 
@@ -138,7 +143,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingWaterBaseboard_Impl ImplType;
+    using ImplType = detail::CoilHeatingWaterBaseboard_Impl;
 
     explicit CoilHeatingWaterBaseboard(std::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl);
 
@@ -152,10 +157,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingWaterBaseboard*/
-  typedef boost::optional<CoilHeatingWaterBaseboard> OptionalCoilHeatingWaterBaseboard;
+  using OptionalCoilHeatingWaterBaseboard = boost::optional<CoilHeatingWaterBaseboard>;
 
   /** \relates CoilHeatingWaterBaseboard*/
-  typedef std::vector<CoilHeatingWaterBaseboard> CoilHeatingWaterBaseboardVector;
+  using CoilHeatingWaterBaseboardVector = std::vector<CoilHeatingWaterBaseboard>;
 
 }  // namespace model
 }  // namespace openstudio

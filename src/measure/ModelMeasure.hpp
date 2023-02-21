@@ -50,7 +50,7 @@ namespace measure {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ModelMeasure();
+    virtual ~ModelMeasure() = default;
 
     //@}
     /** @name Getters */
@@ -93,7 +93,7 @@ namespace measure {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~PythonModelMeasure();
+    virtual ~PythonModelMeasure() = default;
 
     //@}
     /** @name Getters */

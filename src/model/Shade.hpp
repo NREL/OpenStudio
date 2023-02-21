@@ -54,7 +54,12 @@ namespace model {
                    double visibleReflectance = 0.5, double thermalHemisphericalEmissivity = 0.9, double thermalTransmittance = 0.0,
                    double thickness = 0.005, double conductivity = 0.1);
 
-    virtual ~Shade() {}
+    virtual ~Shade() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Shade(const Shade& other) = default;
+    Shade(Shade&& other) = default;
+    Shade& operator=(const Shade&) = default;
+    Shade& operator=(Shade&&) = default;
 
     //@}
 
@@ -182,7 +187,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Shade_Impl ImplType;
+    using ImplType = detail::Shade_Impl;
 
     explicit Shade(std::shared_ptr<detail::Shade_Impl> impl);
 
@@ -196,10 +201,10 @@ namespace model {
   };
 
   /** \relates Shade*/
-  typedef boost::optional<Shade> OptionalShade;
+  using OptionalShade = boost::optional<Shade>;
 
   /** \relates Shade*/
-  typedef std::vector<Shade> ShadeVector;
+  using ShadeVector = std::vector<Shade>;
 
 }  // namespace model
 }  // namespace openstudio

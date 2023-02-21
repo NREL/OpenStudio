@@ -64,7 +64,7 @@ bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b) {
 
 double totalArea(const std::vector<std::vector<Point3d>>& polygons) {
   double result = 0.0;
-  for (auto polygon : polygons) {
+  for (const auto& polygon : polygons) {
     boost::optional<double> a = getArea(polygon);
     if (a) {
       result += a.get();
@@ -74,7 +74,7 @@ double totalArea(const std::vector<std::vector<Point3d>>& polygons) {
 }
 
 bool checkNormals(const openstudio::Vector3d& normal, const std::vector<std::vector<Point3d>>& polygons) {
-  for (auto polygon : polygons) {
+  for (const auto& polygon : polygons) {
     boost::optional<Vector3d> a = getOutwardNormal(polygon);
     if (a) {
       if (!vectorEqual(normal, *a)) {

@@ -173,7 +173,7 @@ TEST_F(ModelFixture, HumidifierSteamGas_addToNode) {
     EXPECT_EQ((unsigned)3, outdoorAirSystem.reliefComponents().size());
   }
 
-  HumidifierSteamGas testObjectClone = testObject.clone(m).cast<HumidifierSteamGas>();
+  auto testObjectClone = testObject.clone(m).cast<HumidifierSteamGas>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

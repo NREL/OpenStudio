@@ -58,8 +58,6 @@ namespace model {
     PipeAdiabatic_Impl::PipeAdiabatic_Impl(const PipeAdiabatic_Impl& other, Model_Impl* model, bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {}
 
-    PipeAdiabatic_Impl::~PipeAdiabatic_Impl() {}
-
     const std::vector<std::string>& PipeAdiabatic_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       // Not appropriate: no specific output

@@ -56,7 +56,12 @@ namespace model {
 
     explicit SwimmingPoolIndoor(const Model& model, const Surface& floorSurface);
 
-    virtual ~SwimmingPoolIndoor() {}
+    virtual ~SwimmingPoolIndoor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SwimmingPoolIndoor(const SwimmingPoolIndoor& other) = default;
+    SwimmingPoolIndoor(SwimmingPoolIndoor&& other) = default;
+    SwimmingPoolIndoor& operator=(const SwimmingPoolIndoor&) = default;
+    SwimmingPoolIndoor& operator=(SwimmingPoolIndoor&&) = default;
 
     //@}
 
@@ -143,7 +148,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SwimmingPoolIndoor_Impl ImplType;
+    using ImplType = detail::SwimmingPoolIndoor_Impl;
 
     explicit SwimmingPoolIndoor(std::shared_ptr<detail::SwimmingPoolIndoor_Impl> impl);
 
@@ -157,10 +162,10 @@ namespace model {
   };
 
   /** \relates SwimmingPoolIndoor*/
-  typedef boost::optional<SwimmingPoolIndoor> OptionalSwimmingPoolIndoor;
+  using OptionalSwimmingPoolIndoor = boost::optional<SwimmingPoolIndoor>;
 
   /** \relates SwimmingPoolIndoor*/
-  typedef std::vector<SwimmingPoolIndoor> SwimmingPoolIndoorVector;
+  using SwimmingPoolIndoorVector = std::vector<SwimmingPoolIndoor>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -65,8 +65,6 @@ namespace model {
     SetpointManagerScheduled_Impl::SetpointManagerScheduled_Impl(const SetpointManagerScheduled_Impl& other, Model_Impl* model, bool keepHandles)
       : SetpointManager_Impl(other, model, keepHandles) {}
 
-    SetpointManagerScheduled_Impl::~SetpointManagerScheduled_Impl() {}
-
     const std::vector<std::string>& SetpointManagerScheduled_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       return result;
@@ -84,7 +82,8 @@ namespace model {
     std::vector<ScheduleTypeKey> SetpointManagerScheduled_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_SetpointManager_ScheduledFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SetpointManagerScheduled", scheduleDisplayName()));
       }

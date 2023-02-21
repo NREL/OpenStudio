@@ -126,7 +126,9 @@ namespace energyplus {
         zeroOA = (zeroOA && equal(value.get(), 0.0));
       }
 
-      if (zeroOA) return false;
+      if (zeroOA) {
+        return false;
+      }
 
       return true;
     };

@@ -53,7 +53,12 @@ namespace model {
     /** Initializes all coefficients to 0.0, and bounds x and y within [0.0,1.0]. */
     explicit CurveBicubic(const Model& model);
 
-    virtual ~CurveBicubic() {}
+    virtual ~CurveBicubic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveBicubic(const CurveBicubic& other) = default;
+    CurveBicubic(CurveBicubic&& other) = default;
+    CurveBicubic& operator=(const CurveBicubic&) = default;
+    CurveBicubic& operator=(CurveBicubic&&) = default;
 
     //@}
 
@@ -171,7 +176,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveBicubic_Impl ImplType;
+    using ImplType = detail::CurveBicubic_Impl;
 
     explicit CurveBicubic(std::shared_ptr<detail::CurveBicubic_Impl> impl);
 
@@ -186,10 +191,10 @@ namespace model {
   };
 
   /** \relates CurveBicubic*/
-  typedef boost::optional<CurveBicubic> OptionalCurveBicubic;
+  using OptionalCurveBicubic = boost::optional<CurveBicubic>;
 
   /** \relates CurveBicubic*/
-  typedef std::vector<CurveBicubic> CurveBicubicVector;
+  using CurveBicubicVector = std::vector<CurveBicubic>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -317,7 +317,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingCooledBeam::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_CooledBeam);
+    return {IddObjectType::OS_Coil_Cooling_CooledBeam};
   }
 
   double CoilCoolingCooledBeam::coilSurfaceAreaperCoilLength() const {

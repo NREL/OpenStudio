@@ -54,7 +54,12 @@ namespace model {
 
     explicit ZoneControlHumidistat(const Model& model);
 
-    virtual ~ZoneControlHumidistat() {}
+    virtual ~ZoneControlHumidistat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneControlHumidistat(const ZoneControlHumidistat& other) = default;
+    ZoneControlHumidistat(ZoneControlHumidistat&& other) = default;
+    ZoneControlHumidistat& operator=(const ZoneControlHumidistat&) = default;
+    ZoneControlHumidistat& operator=(ZoneControlHumidistat&&) = default;
 
     //@}
 
@@ -88,7 +93,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneControlHumidistat_Impl ImplType;
+    using ImplType = detail::ZoneControlHumidistat_Impl;
 
     explicit ZoneControlHumidistat(std::shared_ptr<detail::ZoneControlHumidistat_Impl> impl);
 
@@ -102,10 +107,10 @@ namespace model {
   };
 
   /** \relates ZoneControlHumidistat*/
-  typedef boost::optional<ZoneControlHumidistat> OptionalZoneControlHumidistat;
+  using OptionalZoneControlHumidistat = boost::optional<ZoneControlHumidistat>;
 
   /** \relates ZoneControlHumidistat*/
-  typedef std::vector<ZoneControlHumidistat> ZoneControlHumidistatVector;
+  using ZoneControlHumidistatVector = std::vector<ZoneControlHumidistat>;
 
 }  // namespace model
 }  // namespace openstudio

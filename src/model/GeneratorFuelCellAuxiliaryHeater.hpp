@@ -55,7 +55,12 @@ namespace model {
 
     explicit GeneratorFuelCellAuxiliaryHeater(const Model& model);
 
-    virtual ~GeneratorFuelCellAuxiliaryHeater() {}
+    virtual ~GeneratorFuelCellAuxiliaryHeater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCellAuxiliaryHeater(const GeneratorFuelCellAuxiliaryHeater& other) = default;
+    GeneratorFuelCellAuxiliaryHeater(GeneratorFuelCellAuxiliaryHeater&& other) = default;
+    GeneratorFuelCellAuxiliaryHeater& operator=(const GeneratorFuelCellAuxiliaryHeater&) = default;
+    GeneratorFuelCellAuxiliaryHeater& operator=(GeneratorFuelCellAuxiliaryHeater&&) = default;
 
     //@}
 
@@ -148,7 +153,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCellAuxiliaryHeater_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCellAuxiliaryHeater_Impl;
 
     explicit GeneratorFuelCellAuxiliaryHeater(std::shared_ptr<detail::GeneratorFuelCellAuxiliaryHeater_Impl> impl);
 
@@ -162,10 +167,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCellAuxiliaryHeater*/
-  typedef boost::optional<GeneratorFuelCellAuxiliaryHeater> OptionalGeneratorFuelCellAuxiliaryHeater;
+  using OptionalGeneratorFuelCellAuxiliaryHeater = boost::optional<GeneratorFuelCellAuxiliaryHeater>;
 
   /** \relates GeneratorFuelCellAuxiliaryHeater*/
-  typedef std::vector<GeneratorFuelCellAuxiliaryHeater> GeneratorFuelCellAuxiliaryHeaterVector;
+  using GeneratorFuelCellAuxiliaryHeaterVector = std::vector<GeneratorFuelCellAuxiliaryHeater>;
 
 }  // namespace model
 }  // namespace openstudio

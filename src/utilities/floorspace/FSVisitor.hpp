@@ -76,7 +76,7 @@ class UTILITIES_API FSVisitor
   virtual void Dispatch(const FSWindow& entity) = 0;
   virtual void Dispatch(const FSWindowDefinition& entity) = 0;
 
-  virtual ~FSVisitor() {}
+  virtual ~FSVisitor() = default;
 };
 
 // All visitable classes must implement the Accept method
@@ -84,7 +84,7 @@ class UTILITIES_API FSDispatchable
 {
  public:
   virtual void Accept(FSVisitor& visitor) const = 0;
-  virtual ~FSDispatchable() {}
+  virtual ~FSDispatchable() = default;
 };
 
 }  // namespace openstudio

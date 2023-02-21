@@ -105,7 +105,8 @@ namespace model {
     std::vector<ScheduleTypeKey> GasEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_GasEquipmentFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("GasEquipment", "Gas Equipment"));
       }
@@ -121,7 +122,7 @@ namespace model {
       this->makeUnique();
 
       GasEquipmentDefinition gasEquipmentDefinition = this->gasEquipmentDefinition();
-      for (LifeCycleCost cost : gasEquipmentDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : gasEquipmentDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 
@@ -190,7 +191,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool GasEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -378,7 +379,7 @@ namespace model {
     getImpl<detail::GasEquipment_Impl>()->resetMultiplier();
   }
 
-  bool GasEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool GasEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::GasEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

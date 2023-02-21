@@ -52,7 +52,7 @@ namespace model {
 
       CurveQuadratic_Impl(const CurveQuadratic_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveQuadratic_Impl() {}
+      virtual ~CurveQuadratic_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

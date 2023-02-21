@@ -56,29 +56,32 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceTubular) {
   Space space(model);
   space.setThermalZone(zone);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 10, 3));
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 3));
+  Point3dVector points{
+    {0, 10, 3},
+    {0, 10, 0},
+    {0, 0, 0},
+    {0, 0, 3},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
   EXPECT_EQ("Wall", surface.surfaceType());
 
-  Point3dVector points2;
-  points2.push_back(Point3d(0, 0, 1));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 1, 1));
+  Point3dVector points2{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface dome(points2, model);
   dome.setSubSurfaceType("TubularDaylightDome");
   dome.setSurface(surface);
 
-  Point3dVector points3;
-  points3.push_back(Point3d(0, 0, 2));
-  points3.push_back(Point3d(0, 0, 0));
-  points3.push_back(Point3d(0, 2, 0));
-  points3.push_back(Point3d(0, 2, 2));
+  Point3dVector points3{
+    {0, 0, 2},
+    {0, 0, 0},
+    {0, 2, 0},
+    {0, 2, 2},
+  };
   SubSurface diffuser(points3, model);
   diffuser.setSubSurfaceType("TubularDaylightDiffuser");
   diffuser.setSurface(surface);
@@ -88,7 +91,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceTubular) {
   DaylightingDeviceTubular tubular(dome, diffuser, construction, 1, 2, 3);
   EXPECT_TRUE(dome.daylightingDeviceTubular());
   EXPECT_TRUE(diffuser.daylightingDeviceTubular());
-  EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceTubular>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
 
   ThermalZone thermalZone1(model);
   ThermalZone thermalZone2(model);

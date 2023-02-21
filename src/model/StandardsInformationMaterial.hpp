@@ -50,7 +50,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~StandardsInformationMaterial() {}
+    virtual ~StandardsInformationMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    StandardsInformationMaterial(const StandardsInformationMaterial& other) = default;
+    StandardsInformationMaterial(StandardsInformationMaterial&& other) = default;
+    StandardsInformationMaterial& operator=(const StandardsInformationMaterial&) = default;
+    StandardsInformationMaterial& operator=(StandardsInformationMaterial&&) = default;
 
     //@}
 
@@ -157,7 +162,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::StandardsInformationMaterial_Impl ImplType;
+    using ImplType = detail::StandardsInformationMaterial_Impl;
 
     explicit StandardsInformationMaterial(const Material& material);
 
@@ -175,10 +180,10 @@ namespace model {
   };
 
   /** \relates StandardsInformationMaterial*/
-  typedef boost::optional<StandardsInformationMaterial> OptionalStandardsInformationMaterial;
+  using OptionalStandardsInformationMaterial = boost::optional<StandardsInformationMaterial>;
 
   /** \relates StandardsInformationMaterial*/
-  typedef std::vector<StandardsInformationMaterial> StandardsInformationMaterialVector;
+  using StandardsInformationMaterialVector = std::vector<StandardsInformationMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

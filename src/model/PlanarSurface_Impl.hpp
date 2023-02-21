@@ -83,7 +83,7 @@ namespace model {
       // clone copy constructor
       PlanarSurface_Impl(const PlanarSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PlanarSurface_Impl() {}
+      virtual ~PlanarSurface_Impl() = default;
 
       //@}
       /** @name Getters */

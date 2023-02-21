@@ -85,7 +85,8 @@ namespace model {
     std::vector<ScheduleTypeKey> HeaderedPumpsVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_HeaderedPumps_VariableSpeedFields::PumpFlowRateSchedule) != e) {
         result.push_back(ScheduleTypeKey("HeaderedPumpsVariableSpeed", "Pump Flow Rate Schedule"));
       }
@@ -443,7 +444,7 @@ namespace model {
   }
 
   IddObjectType HeaderedPumpsVariableSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_HeaderedPumps_VariableSpeed);
+    return {IddObjectType::OS_HeaderedPumps_VariableSpeed};
   }
 
   std::vector<std::string> HeaderedPumpsVariableSpeed::flowSequencingControlSchemeValues() {

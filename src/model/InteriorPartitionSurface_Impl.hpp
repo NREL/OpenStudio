@@ -56,7 +56,7 @@ namespace model {
 
       InteriorPartitionSurface_Impl(const InteriorPartitionSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~InteriorPartitionSurface_Impl() {}
+      virtual ~InteriorPartitionSurface_Impl() = default;
 
       //@}
 

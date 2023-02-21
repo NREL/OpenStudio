@@ -103,7 +103,10 @@ OptionalPoint3d getCentroid(const Point3dVector& points) {
     double cx = 0;
     double cy = 0;
     for (size_t i = 0; i < N; ++i) {
-      double x1, x2, y1, y2;
+      double x1;
+      double x2;
+      double y1;
+      double y2;
       if (i == N - 1) {
         x1 = surfacePoints[i].x();
         x2 = surfacePoints[0].x();
@@ -137,7 +140,7 @@ OptionalPoint3d getCentroid(const Point3dVector& points) {
 Point3dVector reorderULC(const Point3dVector& points) {
   size_t N = points.size();
   if (N < 3) {
-    return Point3dVector();
+    return {};
   }
 
   // transformation to align face
@@ -569,7 +572,8 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
   }
 
   // convert back to vertices
-  std::list<TPPLPoly>::iterator it, itend;
+  std::list<TPPLPoly>::iterator it;
+  std::list<TPPLPoly>::iterator itend;
   //std::cout << "Start" << '\n';
   for (it = resultPolys.begin(), itend = resultPolys.end(); it != itend; ++it) {
 
@@ -606,7 +610,7 @@ std::vector<Point3d> reverse(const Point3dVector& vertices) {
 
 bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, double desiredViewGlassSillHeight,
                                         double desiredDaylightingGlassHeaderHeight, double exteriorShadingProjectionFactor,
-                                        double interiorShelfProjectionFactor, const Point3dVector& vertices, Point3dVector& viewVertices,
+                                        double interiorShelfProjectionFactor, const Point3dVector& surfaceVertices, Point3dVector& viewVertices,
                                         Point3dVector& daylightingVertices, Point3dVector& exteriorShadingVertices,
                                         Point3dVector& interiorShelfVertices) {
   // check inputs for reasonableness
@@ -618,13 +622,13 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
     return false;
   }
 
-  boost::optional<double> grossArea = getArea(vertices);
+  boost::optional<double> grossArea = getArea(surfaceVertices);
   if (!grossArea) {
     return false;
   }
 
-  Transformation transformation = Transformation::alignFace(vertices);
-  Point3dVector faceVertices = transformation.inverse() * vertices;
+  Transformation transformation = Transformation::alignFace(surfaceVertices);
+  Point3dVector faceVertices = transformation.inverse() * surfaceVertices;
 
   if (faceVertices.empty()) {
     return false;

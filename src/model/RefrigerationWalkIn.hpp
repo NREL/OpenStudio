@@ -62,7 +62,12 @@ namespace model {
 
     explicit RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule);
 
-    virtual ~RefrigerationWalkIn() {}
+    virtual ~RefrigerationWalkIn() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationWalkIn(const RefrigerationWalkIn& other) = default;
+    RefrigerationWalkIn(RefrigerationWalkIn&& other) = default;
+    RefrigerationWalkIn& operator=(const RefrigerationWalkIn&) = default;
+    RefrigerationWalkIn& operator=(RefrigerationWalkIn&&) = default;
 
     //@}
 
@@ -218,11 +223,11 @@ namespace model {
 
     void resetLightingSchedule();
 
-    bool setDefrostType(std::string defrostType);
+    bool setDefrostType(const std::string& defrostType);
 
     void resetDefrostType();
 
-    bool setDefrostControlType(std::string defrostControlType);
+    bool setDefrostControlType(const std::string& defrostControlType);
 
     void resetDefrostControlType();
 
@@ -340,7 +345,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationWalkIn_Impl ImplType;
+    using ImplType = detail::RefrigerationWalkIn_Impl;
 
     explicit RefrigerationWalkIn(std::shared_ptr<detail::RefrigerationWalkIn_Impl> impl);
 
@@ -354,10 +359,10 @@ namespace model {
   };
 
   /** \relates RefrigerationWalkIn*/
-  typedef boost::optional<RefrigerationWalkIn> OptionalRefrigerationWalkIn;
+  using OptionalRefrigerationWalkIn = boost::optional<RefrigerationWalkIn>;
 
   /** \relates RefrigerationWalkIn*/
-  typedef std::vector<RefrigerationWalkIn> RefrigerationWalkInVector;
+  using RefrigerationWalkInVector = std::vector<RefrigerationWalkIn>;
 
 }  // namespace model
 }  // namespace openstudio

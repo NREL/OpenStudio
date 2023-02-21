@@ -44,7 +44,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ShadowCalculation) {
   Model model;
 
-  ShadowCalculation sc = model.getUniqueModelObject<ShadowCalculation>();
+  auto sc = model.getUniqueModelObject<ShadowCalculation>();
 
   // Shading Calculation Update Frequency Method
   EXPECT_TRUE(sc.isShadingCalculationUpdateFrequencyMethodDefaulted());
@@ -117,7 +117,7 @@ TEST_F(ModelFixture, ShadowCalculation) {
 TEST_F(ModelFixture, ShadowCalculation_ShadingZoneGroup) {
   Model model;
 
-  ShadowCalculation sc = model.getUniqueModelObject<ShadowCalculation>();
+  auto sc = model.getUniqueModelObject<ShadowCalculation>();
 
   ThermalZone z1(model);
   ThermalZone z2(model);

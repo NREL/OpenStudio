@@ -77,7 +77,12 @@ namespace model {
   class MODEL_API HVACComponent : public ParentObject
   {
    public:
-    virtual ~HVACComponent() {}
+    virtual ~HVACComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HVACComponent(const HVACComponent& other) = default;
+    HVACComponent(HVACComponent&& other) = default;
+    HVACComponent& operator=(const HVACComponent&) = default;
+    HVACComponent& operator=(HVACComponent&&) = default;
 
     /** Returns the optional Loop object that the HVAC component is attached to.
    *  If the component is part of an outdoor air system, the containing AirLoopHVAC will be returned.
@@ -168,7 +173,7 @@ namespace model {
    protected:
     HVACComponent(IddObjectType type, const Model& model);
 
-    typedef detail::HVACComponent_Impl ImplType;
+    using ImplType = detail::HVACComponent_Impl;
 
     friend class Model;
 
@@ -184,7 +189,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.HVACComponent");
   };
 
-  typedef boost::optional<HVACComponent> OptionalHVACComponent;
+  using OptionalHVACComponent = boost::optional<HVACComponent>;
 
 }  // namespace model
 }  // namespace openstudio

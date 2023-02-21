@@ -68,7 +68,7 @@ OptionalString IdfExtensibleGroup::fieldComment(unsigned fieldIndex, bool return
 
 bool IdfExtensibleGroup::isEmpty(unsigned fieldIndex) const {
   OptionalString test = this->getString(fieldIndex, false);
-  if (!test || test.get() == "") {
+  if (!test || test.get().empty()) {
     return true;
   }
   return false;
@@ -117,7 +117,7 @@ bool IdfExtensibleGroup::setFields(const std::vector<std::string>& values) {
 }
 
 bool IdfExtensibleGroup::setFields(const std::vector<std::string>& values, bool checkValidity) {
-  if ((values.size() == 0) || (values.size() != numFields())) {
+  if ((values.empty()) || (values.size() != numFields())) {
     return false;
   }
 
@@ -190,7 +190,7 @@ bool IdfExtensibleGroup::setInt(unsigned fieldIndex, int value) {
 IdfExtensibleGroup IdfExtensibleGroup::pushClone() const {
   if (empty()) {
     detail::IdfObject_ImplPtr p;
-    return IdfExtensibleGroup(p, 0);
+    return {p, 0};
   }
 
   StringVector values = fields();
@@ -201,7 +201,7 @@ IdfExtensibleGroup IdfExtensibleGroup::pushClone() const {
 IdfExtensibleGroup IdfExtensibleGroup::insertClone(unsigned groupIndex) const {
   if (empty()) {
     detail::IdfObject_ImplPtr p;
-    return IdfExtensibleGroup(p, 0);
+    return {p, 0};
   }
 
   StringVector values = fields();

@@ -67,18 +67,18 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_Remove) {
   RefrigerationCondenserAirCooled condenser = RefrigerationCondenserAirCooled(model);
   testObject.setHeatingSource(condenser);
 
-  std::vector<CoilHeatingDesuperheater> coilHeatingDesuperheaters = model.getModelObjects<CoilHeatingDesuperheater>();
+  std::vector<CoilHeatingDesuperheater> coilHeatingDesuperheaters = model.getConcreteModelObjects<CoilHeatingDesuperheater>();
   EXPECT_EQ(1, coilHeatingDesuperheaters.size());
 
-  std::vector<RefrigerationCondenserAirCooled> refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
+  std::vector<RefrigerationCondenserAirCooled> refrigerationCondensers = model.getConcreteModelObjects<RefrigerationCondenserAirCooled>();
   EXPECT_EQ(1, refrigerationCondensers.size());
 
   testObject.remove();
 
-  coilHeatingDesuperheaters = model.getModelObjects<CoilHeatingDesuperheater>();
+  coilHeatingDesuperheaters = model.getConcreteModelObjects<CoilHeatingDesuperheater>();
   EXPECT_EQ(0, coilHeatingDesuperheaters.size());
 
-  refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
+  refrigerationCondensers = model.getConcreteModelObjects<RefrigerationCondenserAirCooled>();
   EXPECT_EQ(1, refrigerationCondensers.size());
 }
 
@@ -139,7 +139,7 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_addToNode) {
     EXPECT_EQ((unsigned)3, outdoorAirSystem.reliefComponents().size());
   }
 
-  CoilHeatingDesuperheater testObjectClone = testObject.clone(m).cast<CoilHeatingDesuperheater>();
+  auto testObjectClone = testObject.clone(m).cast<CoilHeatingDesuperheater>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
@@ -176,7 +176,7 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_CloneModelWithDefaultData) {
 
   CoilHeatingDesuperheater testObject = CoilHeatingDesuperheater(model);
 
-  CoilHeatingDesuperheater testObjectClone = testObject.clone(model).cast<CoilHeatingDesuperheater>();
+  auto testObjectClone = testObject.clone(model).cast<CoilHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(testObjectClone.heatReclaimRecoveryEfficiency(), 0.8);
   EXPECT_DOUBLE_EQ(testObjectClone.parasiticElectricLoad(), 0.0);
@@ -196,7 +196,7 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_CloneModelWithCustomData) {
   testObject.setHeatingSource(condenser);
   testObject.setAvailabilitySchedule(alwaysOn);
 
-  CoilHeatingDesuperheater testObjectClone = testObject.clone(model).cast<CoilHeatingDesuperheater>();
+  auto testObjectClone = testObject.clone(model).cast<CoilHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(testObjectClone.heatReclaimRecoveryEfficiency(), 0.5);
   EXPECT_DOUBLE_EQ(testObjectClone.parasiticElectricLoad(), 1.0);
@@ -219,10 +219,10 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_CloneTwoModelWithCustomData) {
   testObject.setHeatingSource(condenser);
   testObject.setAvailabilitySchedule(alwaysOn);
 
-  CoilHeatingDesuperheater testObjectClone = testObject.clone(model).cast<CoilHeatingDesuperheater>();
+  auto testObjectClone = testObject.clone(model).cast<CoilHeatingDesuperheater>();
 
   Model model2;
-  CoilHeatingDesuperheater testObjectClone2 = testObject.clone(model2).cast<CoilHeatingDesuperheater>();
+  auto testObjectClone2 = testObject.clone(model2).cast<CoilHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(testObjectClone2.heatReclaimRecoveryEfficiency(), 0.5);
   EXPECT_DOUBLE_EQ(testObjectClone2.parasiticElectricLoad(), 1.0);

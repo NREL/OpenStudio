@@ -53,7 +53,12 @@ namespace model {
     /** Initializes all coefficients to 0.0, and sets the bounds on x and y to [0.0,1.0]. */
     explicit CurveBiquadratic(const Model& model);
 
-    virtual ~CurveBiquadratic() {}
+    virtual ~CurveBiquadratic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveBiquadratic(const CurveBiquadratic& other) = default;
+    CurveBiquadratic(CurveBiquadratic&& other) = default;
+    CurveBiquadratic& operator=(const CurveBiquadratic&) = default;
+    CurveBiquadratic& operator=(CurveBiquadratic&&) = default;
 
     //@}
 
@@ -155,7 +160,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveBiquadratic_Impl ImplType;
+    using ImplType = detail::CurveBiquadratic_Impl;
 
     explicit CurveBiquadratic(std::shared_ptr<detail::CurveBiquadratic_Impl> impl);
 
@@ -170,10 +175,10 @@ namespace model {
   };
 
   /** \relates CurveBiquadratic*/
-  typedef boost::optional<CurveBiquadratic> OptionalCurveBiquadratic;
+  using OptionalCurveBiquadratic = boost::optional<CurveBiquadratic>;
 
   /** \relates CurveBiquadratic*/
-  typedef std::vector<CurveBiquadratic> CurveBiquadraticVector;
+  using CurveBiquadraticVector = std::vector<CurveBiquadratic>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -51,7 +51,7 @@ TEST_F(IdfFixture, WorkspaceObjectOrder) {
   // order by enum
   wsOrder.setOrderByIddEnum();
   WorkspaceObjectVector objects = workspace.objects(true);
-  for (WorkspaceObjectVector::const_iterator it = objects.begin(), itEnd = objects.end() - 1; it != itEnd; ++it) {
+  for (auto it = objects.begin(), itEnd = objects.end() - 1; it != itEnd; ++it) {
     auto nxt = it;
     ++nxt;
     EXPECT_TRUE(it->iddObject().type() <= nxt->iddObject().type());

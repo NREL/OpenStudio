@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~OutputSchedules() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputSchedules(const OutputSchedules& other) = default;
+    OutputSchedules(OutputSchedules&& other) = default;
+    OutputSchedules& operator=(const OutputSchedules&) = default;
+    OutputSchedules& operator=(OutputSchedules&&) = default;
 
     //@}
 

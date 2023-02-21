@@ -57,7 +57,6 @@ namespace model {
     Connection_Impl::Connection_Impl(const Connection_Impl& other, Model_Impl* model, bool keepHandle) : ModelObject_Impl(other, model, keepHandle) {}
 
     // virtual destructor
-    Connection_Impl::~Connection_Impl() {}
 
     // Get all output variable names that could be associated with this object.
     const std::vector<std::string>& Connection_Impl::outputVariableNames() const {
@@ -91,7 +90,7 @@ namespace model {
       return this->getUnsigned(openstudio::OS_ConnectionFields::InletPort).get();
     }
 
-    bool Connection_Impl::setSourceObject(ModelObject object) {
+    bool Connection_Impl::setSourceObject(const ModelObject& object) {
       return setPointer(openstudio::OS_ConnectionFields::SourceObject, object.handle());
       ;
     }
@@ -100,7 +99,7 @@ namespace model {
       return this->setUnsigned(openstudio::OS_ConnectionFields::OutletPort, port);
     }
 
-    bool Connection_Impl::setTargetObject(ModelObject object) {
+    bool Connection_Impl::setTargetObject(const ModelObject& object) {
       return setPointer(openstudio::OS_ConnectionFields::TargetObject, object.handle());
       ;
     }
@@ -135,7 +134,7 @@ namespace model {
     return getImpl<detail::Connection_Impl>()->targetObjectPort();
   }
 
-  bool Connection::setSourceObject(ModelObject object) {
+  bool Connection::setSourceObject(const ModelObject& object) {
     return getImpl<detail::Connection_Impl>()->setSourceObject(object);
   }
 
@@ -143,7 +142,7 @@ namespace model {
     return getImpl<detail::Connection_Impl>()->setSourceObjectPort(port);
   }
 
-  bool Connection::setTargetObject(ModelObject object) {
+  bool Connection::setTargetObject(const ModelObject& object) {
     return getImpl<detail::Connection_Impl>()->setTargetObject(object);
   }
 

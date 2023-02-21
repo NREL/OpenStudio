@@ -54,7 +54,12 @@ namespace model {
     /** Sets all coefficients to 0.0 and sets the range for x to [0.0,1.0]. */
     explicit CurveDoubleExponentialDecay(const Model& model);
 
-    virtual ~CurveDoubleExponentialDecay() {}
+    virtual ~CurveDoubleExponentialDecay() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveDoubleExponentialDecay(const CurveDoubleExponentialDecay& other) = default;
+    CurveDoubleExponentialDecay(CurveDoubleExponentialDecay&& other) = default;
+    CurveDoubleExponentialDecay& operator=(const CurveDoubleExponentialDecay&) = default;
+    CurveDoubleExponentialDecay& operator=(CurveDoubleExponentialDecay&&) = default;
 
     //@}
 
@@ -138,7 +143,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveDoubleExponentialDecay_Impl ImplType;
+    using ImplType = detail::CurveDoubleExponentialDecay_Impl;
 
     explicit CurveDoubleExponentialDecay(std::shared_ptr<detail::CurveDoubleExponentialDecay_Impl> impl);
 
@@ -153,10 +158,10 @@ namespace model {
   };
 
   /** \relates CurveDoubleExponentialDecay*/
-  typedef boost::optional<CurveDoubleExponentialDecay> OptionalCurveDoubleExponentialDecay;
+  using OptionalCurveDoubleExponentialDecay = boost::optional<CurveDoubleExponentialDecay>;
 
   /** \relates CurveDoubleExponentialDecay*/
-  typedef std::vector<CurveDoubleExponentialDecay> CurveDoubleExponentialDecayVector;
+  using CurveDoubleExponentialDecayVector = std::vector<CurveDoubleExponentialDecay>;
 
 }  // namespace model
 }  // namespace openstudio

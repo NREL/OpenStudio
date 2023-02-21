@@ -53,7 +53,12 @@ namespace model {
     /** Sets \f$c_1 = 0,\ c_2 = 1.0,\ x\ \text{within}\ [0.0,1.0]\f$ */
     explicit CurveLinear(const Model& model);
 
-    virtual ~CurveLinear() {}
+    virtual ~CurveLinear() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveLinear(const CurveLinear& other) = default;
+    CurveLinear(CurveLinear&& other) = default;
+    CurveLinear& operator=(const CurveLinear&) = default;
+    CurveLinear& operator=(CurveLinear&&) = default;
 
     //@}
 
@@ -121,7 +126,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveLinear_Impl ImplType;
+    using ImplType = detail::CurveLinear_Impl;
 
     explicit CurveLinear(std::shared_ptr<detail::CurveLinear_Impl> impl);
 
@@ -136,10 +141,10 @@ namespace model {
   };
 
   /** \relates CurveLinear*/
-  typedef boost::optional<CurveLinear> OptionalCurveLinear;
+  using OptionalCurveLinear = boost::optional<CurveLinear>;
 
   /** \relates CurveLinear*/
-  typedef std::vector<CurveLinear> CurveLinearVector;
+  using CurveLinearVector = std::vector<CurveLinear>;
 
 }  // namespace model
 }  // namespace openstudio

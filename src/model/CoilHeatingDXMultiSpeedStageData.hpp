@@ -61,7 +61,12 @@ namespace model {
                                               const Curve& energyInputRatioFunctionofFlowFraction, const Curve& partLoadFractionCorrelation,
                                               const Curve& wasteHeatFunctionofTemperature);
 
-    virtual ~CoilHeatingDXMultiSpeedStageData() {}
+    virtual ~CoilHeatingDXMultiSpeedStageData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingDXMultiSpeedStageData(const CoilHeatingDXMultiSpeedStageData& other) = default;
+    CoilHeatingDXMultiSpeedStageData(CoilHeatingDXMultiSpeedStageData&& other) = default;
+    CoilHeatingDXMultiSpeedStageData& operator=(const CoilHeatingDXMultiSpeedStageData&) = default;
+    CoilHeatingDXMultiSpeedStageData& operator=(CoilHeatingDXMultiSpeedStageData&&) = default;
 
     //@}
 
@@ -152,7 +157,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingDXMultiSpeedStageData_Impl ImplType;
+    using ImplType = detail::CoilHeatingDXMultiSpeedStageData_Impl;
 
     explicit CoilHeatingDXMultiSpeedStageData(std::shared_ptr<detail::CoilHeatingDXMultiSpeedStageData_Impl> impl);
 
@@ -170,10 +175,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingDXMultiSpeedStageData*/
-  typedef boost::optional<CoilHeatingDXMultiSpeedStageData> OptionalCoilHeatingDXMultiSpeedStageData;
+  using OptionalCoilHeatingDXMultiSpeedStageData = boost::optional<CoilHeatingDXMultiSpeedStageData>;
 
   /** \relates CoilHeatingDXMultiSpeedStageData*/
-  typedef std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeedStageDataVector;
+  using CoilHeatingDXMultiSpeedStageDataVector = std::vector<CoilHeatingDXMultiSpeedStageData>;
 
 }  // namespace model
 }  // namespace openstudio

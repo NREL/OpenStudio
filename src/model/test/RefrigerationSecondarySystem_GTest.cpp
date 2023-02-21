@@ -92,10 +92,10 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_Remove) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = model.getModelObjects<RefrigerationSecondarySystem>();
+  std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = model.getConcreteModelObjects<RefrigerationSecondarySystem>();
   EXPECT_EQ(1, refrigerationSecondarySystems.size());
 
-  std::vector<ModelObjectList> refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
+  std::vector<ModelObjectList> refrigerationModelObjectLists = model.getConcreteModelObjects<ModelObjectList>();
   EXPECT_EQ(1, refrigerationModelObjectLists.size());
 
   CurveCubic variableSpeedPumpCubicCurve = CurveCubic(model);
@@ -107,19 +107,19 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_Remove) {
   variableSpeedPumpCubicCurve.setMaximumValueofx(20);
   testObject.setVariableSpeedPumpCubicCurve(variableSpeedPumpCubicCurve);
 
-  std::vector<CurveCubic> refrigerationCurveCubics = model.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> refrigerationCurveCubics = model.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(1, refrigerationCurveCubics.size());
 
   testObject.remove();
 
-  refrigerationSecondarySystems = model.getModelObjects<RefrigerationSecondarySystem>();
+  refrigerationSecondarySystems = model.getConcreteModelObjects<RefrigerationSecondarySystem>();
   EXPECT_EQ(0, refrigerationSecondarySystems.size());
 
-  refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
+  refrigerationModelObjectLists = model.getConcreteModelObjects<ModelObjectList>();
   EXPECT_EQ(0, refrigerationModelObjectLists.size());
 
   // Curve was used only by this object, so should have been removed
-  refrigerationCurveCubics = model.getModelObjects<CurveCubic>();
+  refrigerationCurveCubics = model.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(0, refrigerationCurveCubics.size());
 }
 
@@ -127,7 +127,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithDefaultData) 
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  RefrigerationSecondarySystem testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
 
   EXPECT_EQ("PropyleneGlycol", testObjectClone.circulatingFluidName());
   EXPECT_EQ(30, testObjectClone.glycolConcentration().get());
@@ -168,9 +168,9 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithCustomData) {
   testObject.setTotalPumpHead(999.0);
   testObject.setPumpMotorHeattoFluid(0.5);
 
-  RefrigerationSecondarySystem testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
 
-  std::vector<CurveCubic> refrigerationSecondarySystemCurves = model.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> refrigerationSecondarySystemCurves = model.getConcreteModelObjects<CurveCubic>();
   for (auto it = refrigerationSecondarySystemCurves.begin(); it != refrigerationSecondarySystemCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
@@ -197,11 +197,11 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneTwoModelsWithDefaultData)
   ThermalZone thermalZone(model);
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  RefrigerationSecondarySystem testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
 
   Model model2;
 
-  RefrigerationSecondarySystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationSecondarySystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationSecondarySystem>();
   EXPECT_EQ("PropyleneGlycol", testObjectClone2.circulatingFluidName());
   EXPECT_EQ(30, testObjectClone2.glycolConcentration().get());
   EXPECT_DOUBLE_EQ(35000.0, testObjectClone2.evaporatorCapacity().get());
@@ -256,7 +256,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCase) {
   testObject.addCase(case2);
   testObject.removeCase(case1);
 
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationCase> cases = testObject.cases();
@@ -264,7 +264,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCase) {
   EXPECT_EQ(case2.handle(), cases[0].handle());
 
   testObject.removeCase(case2);
-  testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   cases = testObject.cases();
   EXPECT_EQ(2, testRefrigerationCases.size());
   EXPECT_TRUE(cases.empty());
@@ -283,7 +283,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCases) {
   testObject.addCase(case2);
   testObject.removeAllCases();
 
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationCase> cases = testObject.cases();
@@ -330,7 +330,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAirChiller) {
   testObject.addAirChiller(airChiller2);
   testObject.removeAirChiller(airChiller1);
 
-  std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
+  std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getConcreteModelObjects<RefrigerationAirChiller>();
   EXPECT_EQ(2, testRefrigerationAirChillers.size());
 
   std::vector<RefrigerationAirChiller> airChillers = testObject.airChillers();
@@ -338,7 +338,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAirChiller) {
   EXPECT_EQ(airChiller2.handle(), airChillers[0].handle());
 
   testObject.removeAirChiller(airChiller2);
-  testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
+  testRefrigerationAirChillers = model.getConcreteModelObjects<RefrigerationAirChiller>();
   airChillers = testObject.airChillers();
   EXPECT_EQ(2, testRefrigerationAirChillers.size());
   EXPECT_TRUE(airChillers.empty());
@@ -357,7 +357,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllAirChillers) {
   testObject.addAirChiller(airChiller2);
   testObject.removeAllAirChillers();
 
-  std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
+  std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getConcreteModelObjects<RefrigerationAirChiller>();
   EXPECT_EQ(2, testRefrigerationAirChillers.size());
 
   std::vector<RefrigerationAirChiller> airChillers = testObject.airChillers();
@@ -404,7 +404,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveWalkIn) {
   testObject.addWalkin(walkin2);
   testObject.removeWalkin(walkin1);
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
 
   std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
@@ -412,7 +412,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveWalkIn) {
   EXPECT_EQ(walkin2.handle(), walkins[0].handle());
 
   testObject.removeWalkin(walkin2);
-  testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   walkins = testObject.walkins();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
   EXPECT_TRUE(walkins.empty());
@@ -431,7 +431,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllWalkIns) {
   testObject.addWalkin(walkin2);
   testObject.removeAllWalkins();
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
 
   std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
@@ -481,7 +481,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCaseAndWalkIn) {
   testObject.addWalkin(walkin2);
   testObject.removeWalkin(walkin1);
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
 
   std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
@@ -492,7 +492,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCaseAndWalkIn) {
   testObject.addCase(case2);
   testObject.removeCase(case1);
 
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationCase> cases = testObject.cases();
@@ -505,13 +505,13 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCaseAndWalkIn) {
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 
   testObject.removeWalkin(walkin2);
-  testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   walkins = testObject.walkins();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
   EXPECT_TRUE(walkins.empty());
 
   testObject.removeCase(case2);
-  testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   cases = testObject.cases();
   EXPECT_EQ(2, testRefrigerationCases.size());
   EXPECT_TRUE(cases.empty());
@@ -545,9 +545,9 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCasesAndWalkIns) {
   testObject.removeAllCases();
   testObject.removeAllWalkins();
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationWalkIn> walkins = testObject.walkins();

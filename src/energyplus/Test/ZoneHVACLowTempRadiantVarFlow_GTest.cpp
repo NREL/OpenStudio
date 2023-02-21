@@ -79,7 +79,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
   Model model = model::exampleModel();
 
   //loop through all zones and add a radiant system to each one
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
 
     //make a variable flow radiant unit
     ScheduleConstant availabilitySched(model);
@@ -93,8 +93,8 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
     CoilCoolingLowTempRadiantVarFlow testCC(model, coolingControlTemperatureSchedule);
     CoilHeatingLowTempRadiantVarFlow testHC(model, heatingControlTemperatureSchedule);
 
-    HVACComponent testCC1 = testCC.cast<HVACComponent>();
-    HVACComponent testHC1 = testHC.cast<HVACComponent>();
+    auto testCC1 = testCC.cast<HVACComponent>();
+    auto testHC1 = testHC.cast<HVACComponent>();
 
     ZoneHVACLowTempRadiantVarFlow testRad(model, availabilitySched, testHC1, testCC1);
 
@@ -122,7 +122,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
   ConstructionWithInternalSource construction(layers);
 
   //set building's default ceiling construction to internal source construction
-  DefaultConstructionSet defConSet = model.getModelObjects<DefaultConstructionSet>()[0];
+  DefaultConstructionSet defConSet = model.getConcreteModelObjects<DefaultConstructionSet>()[0];
   defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
 
   //translate the model to EnergyPlus
@@ -130,10 +130,10 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
   Workspace workspace = trans.translateModel(model);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (const ThermalZone& thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
 
     //get the radiant zone equipment
-    for (ModelObject equipment : thermalZone.equipment()) {
+    for (const ModelObject& equipment : thermalZone.equipment()) {
       if (equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>()) {
         ZoneHVACLowTempRadiantVarFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>().get();
         EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
@@ -144,7 +144,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
         EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
         EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
         EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
-        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
+        for (const IdfExtensibleGroup& extGrp : testRad.extensibleGroups()) {
           EXPECT_EQ(0.25, extGrp.getDouble(1, false).get());
         }
       }
@@ -160,11 +160,12 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Crash_no_constructions) 
   Model m;
 
   // make a space with some surfaces
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
   ASSERT_TRUE(_space1);
@@ -210,11 +211,12 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
   Model m;
 
   // make a space with some surfaces
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
   ASSERT_TRUE(_space1);

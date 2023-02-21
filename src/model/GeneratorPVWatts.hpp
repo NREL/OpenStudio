@@ -58,7 +58,12 @@ namespace model {
 
     explicit GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity);
 
-    virtual ~GeneratorPVWatts() {}
+    virtual ~GeneratorPVWatts() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorPVWatts(const GeneratorPVWatts& other) = default;
+    GeneratorPVWatts(GeneratorPVWatts&& other) = default;
+    GeneratorPVWatts& operator=(const GeneratorPVWatts&) = default;
+    GeneratorPVWatts& operator=(GeneratorPVWatts&&) = default;
 
     //@}
 
@@ -103,11 +108,11 @@ namespace model {
 
     bool setDCSystemCapacity(double dcSystemCapacity);
 
-    bool setModuleType(std::string moduleType);
+    bool setModuleType(const std::string& moduleType);
 
     void resetModuleType();
 
-    bool setArrayType(std::string arrayType);
+    bool setArrayType(const std::string& arrayType);
 
     void resetArrayType();
 
@@ -139,7 +144,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::GeneratorPVWatts_Impl ImplType;
+    using ImplType = detail::GeneratorPVWatts_Impl;
 
     explicit GeneratorPVWatts(std::shared_ptr<detail::GeneratorPVWatts_Impl> impl);
 
@@ -154,10 +159,10 @@ namespace model {
   };
 
   /** \relates GeneratorPVWatts*/
-  typedef boost::optional<GeneratorPVWatts> OptionalGeneratorPVWatts;
+  using OptionalGeneratorPVWatts = boost::optional<GeneratorPVWatts>;
 
   /** \relates GeneratorPVWatts*/
-  typedef std::vector<GeneratorPVWatts> GeneratorPVWattsVector;
+  using GeneratorPVWattsVector = std::vector<GeneratorPVWatts>;
 
 }  // namespace model
 }  // namespace openstudio

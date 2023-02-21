@@ -44,7 +44,6 @@ namespace isomodel {
   {
    public:
     SolarRadiation(const TimeFrame& frame, const EpwData& wdata, double tilt = 3.141592653589);
-    ~SolarRadiation(void);
 
     static const int NUM_SURFACES = 8;
     static const int MONTHS = 12;

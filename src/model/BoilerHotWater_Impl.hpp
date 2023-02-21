@@ -53,7 +53,7 @@ namespace model {
 
       BoilerHotWater_Impl(const BoilerHotWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~BoilerHotWater_Impl() {}
+      virtual ~BoilerHotWater_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -133,7 +133,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setFuelType(std::string fuelType);
+      bool setFuelType(const std::string& fuelType);
 
       bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
@@ -173,7 +173,7 @@ namespace model {
 
       void resetWaterOutletUpperTemperatureLimit();
 
-      bool setBoilerFlowMode(std::string boilerFlowMode);
+      bool setBoilerFlowMode(const std::string& boilerFlowMode);
 
       void resetBoilerFlowMode();
 

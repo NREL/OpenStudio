@@ -103,7 +103,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CentralHeatPumpSystem_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_CentralHeatPumpSystemFields::AncillaryOperationScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CentralHeatPumpSystem", "Ancillary Operation"));
       }
@@ -115,7 +116,7 @@ namespace model {
     ModelObject CentralHeatPumpSystem_Impl::clone(Model model) const {
 
       // Call the WaterToWater clone method, for a clean one, and that will reset the connections to loops
-      CentralHeatPumpSystem newCentralHP = WaterToWaterComponent_Impl::clone(model).cast<CentralHeatPumpSystem>();
+      auto newCentralHP = WaterToWaterComponent_Impl::clone(model).cast<CentralHeatPumpSystem>();
 
       // In the CentralHeatPumpSystem Implementation, the actual important object is the chillerHeaterModuleList
       // Create a new (blank) ModelObjectList, and set it
@@ -130,13 +131,13 @@ namespace model {
 
         // The CentralHeatPumpSystemModule_Impl::clone method will set the reference to the same
         // ChillerHeaterPerformanceElectricEIR as the original one
-        CentralHeatPumpSystemModule centralHPModClone = centralHPMod.clone(model).cast<CentralHeatPumpSystemModule>();
+        auto centralHPModClone = centralHPMod.clone(model).cast<CentralHeatPumpSystemModule>();
 
         // Add that to the new object
         newCentralHP.addModule(centralHPModClone);
       }
 
-      return newCentralHP;
+      return std::move(newCentralHP);
     }
 
     // CoolingLoop
@@ -307,7 +308,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CentralHeatPumpSystemFields::AncillaryOperationScheduleName);
     }
 
-    bool CentralHeatPumpSystem_Impl::setControlMethod(std::string controlMethod) {
+    bool CentralHeatPumpSystem_Impl::setControlMethod(const std::string& controlMethod) {
       bool result = setString(OS_CentralHeatPumpSystemFields::ControlMethod, controlMethod);
       return result;
     }
@@ -349,7 +350,7 @@ namespace model {
   }
 
   IddObjectType CentralHeatPumpSystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CentralHeatPumpSystem);
+    return {IddObjectType::OS_CentralHeatPumpSystem};
   }
 
   std::vector<std::string> CentralHeatPumpSystem::controlMethodValues() {
@@ -368,7 +369,7 @@ namespace model {
     return getImpl<detail::CentralHeatPumpSystem_Impl>()->ancillaryOperationSchedule();
   }
 
-  bool CentralHeatPumpSystem::setControlMethod(std::string controlMethod) {
+  bool CentralHeatPumpSystem::setControlMethod(const std::string& controlMethod) {
     return getImpl<detail::CentralHeatPumpSystem_Impl>()->setControlMethod(controlMethod);
   }
 

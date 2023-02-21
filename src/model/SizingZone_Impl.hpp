@@ -55,7 +55,7 @@ namespace model {
 
       SizingZone_Impl(const SizingZone_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SizingZone_Impl() {}
+      virtual ~SizingZone_Impl() = default;
 
       //@}
 
@@ -258,7 +258,7 @@ namespace model {
 
       bool setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
 
-      bool setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy);
+      bool setDedicatedOutdoorAirSystemControlStrategy(const std::string& dedicatedOutdoorAirSystemControlStrategy);
 
       bool setDedicatedOutdoorAirLowSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirLowSetpointTemperatureforDesign);
 

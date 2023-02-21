@@ -58,7 +58,7 @@ namespace model {
 
       FoundationKiva_Impl(const FoundationKiva_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FoundationKiva_Impl() {}
+      virtual ~FoundationKiva_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

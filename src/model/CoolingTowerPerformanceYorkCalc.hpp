@@ -52,7 +52,12 @@ namespace model {
 
     explicit CoolingTowerPerformanceYorkCalc(const Model& model);
 
-    virtual ~CoolingTowerPerformanceYorkCalc() {}
+    virtual ~CoolingTowerPerformanceYorkCalc() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoolingTowerPerformanceYorkCalc(const CoolingTowerPerformanceYorkCalc& other) = default;
+    CoolingTowerPerformanceYorkCalc(CoolingTowerPerformanceYorkCalc&& other) = default;
+    CoolingTowerPerformanceYorkCalc& operator=(const CoolingTowerPerformanceYorkCalc&) = default;
+    CoolingTowerPerformanceYorkCalc& operator=(CoolingTowerPerformanceYorkCalc&&) = default;
 
     //@}
 
@@ -216,7 +221,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoolingTowerPerformanceYorkCalc_Impl ImplType;
+    using ImplType = detail::CoolingTowerPerformanceYorkCalc_Impl;
 
     explicit CoolingTowerPerformanceYorkCalc(std::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl);
 
@@ -230,10 +235,10 @@ namespace model {
   };
 
   /** \relates CoolingTowerPerformanceYorkCalc*/
-  typedef boost::optional<CoolingTowerPerformanceYorkCalc> OptionalCoolingTowerPerformanceYorkCalc;
+  using OptionalCoolingTowerPerformanceYorkCalc = boost::optional<CoolingTowerPerformanceYorkCalc>;
 
   /** \relates CoolingTowerPerformanceYorkCalc*/
-  typedef std::vector<CoolingTowerPerformanceYorkCalc> CoolingTowerPerformanceYorkCalcVector;
+  using CoolingTowerPerformanceYorkCalcVector = std::vector<CoolingTowerPerformanceYorkCalc>;
 
 }  // namespace model
 }  // namespace openstudio

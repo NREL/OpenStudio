@@ -56,7 +56,7 @@ namespace model {
 
       ElectricLoadCenterStorageConverter_Impl(const ElectricLoadCenterStorageConverter_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricLoadCenterStorageConverter_Impl() {}
+      virtual ~ElectricLoadCenterStorageConverter_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

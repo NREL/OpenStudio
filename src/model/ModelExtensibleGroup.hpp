@@ -53,7 +53,12 @@ namespace model {
   class MODEL_API ModelExtensibleGroup : public WorkspaceExtensibleGroup
   {
    public:
-    virtual ~ModelExtensibleGroup() {}
+    virtual ~ModelExtensibleGroup() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ModelExtensibleGroup(const ModelExtensibleGroup& other) = default;
+    ModelExtensibleGroup(ModelExtensibleGroup&& other) = default;
+    ModelExtensibleGroup& operator=(const ModelExtensibleGroup&) = default;
+    ModelExtensibleGroup& operator=(ModelExtensibleGroup&&) = default;
 
     /** @name Template Methods */
     //@{
@@ -97,7 +102,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ModelObject_Impl ImplType;
+    using ImplType = detail::ModelObject_Impl;
 
     friend class IdfExtensibleGroup;
 

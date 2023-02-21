@@ -54,7 +54,12 @@ namespace model {
 
     explicit ZoneControlThermostatStagedDualSetpoint(const Model& model);
 
-    virtual ~ZoneControlThermostatStagedDualSetpoint() {}
+    virtual ~ZoneControlThermostatStagedDualSetpoint() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneControlThermostatStagedDualSetpoint(const ZoneControlThermostatStagedDualSetpoint& other) = default;
+    ZoneControlThermostatStagedDualSetpoint(ZoneControlThermostatStagedDualSetpoint&& other) = default;
+    ZoneControlThermostatStagedDualSetpoint& operator=(const ZoneControlThermostatStagedDualSetpoint&) = default;
+    ZoneControlThermostatStagedDualSetpoint& operator=(ZoneControlThermostatStagedDualSetpoint&&) = default;
 
     //@}
 
@@ -134,7 +139,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneControlThermostatStagedDualSetpoint_Impl ImplType;
+    using ImplType = detail::ZoneControlThermostatStagedDualSetpoint_Impl;
 
     explicit ZoneControlThermostatStagedDualSetpoint(std::shared_ptr<detail::ZoneControlThermostatStagedDualSetpoint_Impl> impl);
 
@@ -148,10 +153,10 @@ namespace model {
   };
 
   /** \relates ZoneControlThermostatStagedDualSetpoint*/
-  typedef boost::optional<ZoneControlThermostatStagedDualSetpoint> OptionalZoneControlThermostatStagedDualSetpoint;
+  using OptionalZoneControlThermostatStagedDualSetpoint = boost::optional<ZoneControlThermostatStagedDualSetpoint>;
 
   /** \relates ZoneControlThermostatStagedDualSetpoint*/
-  typedef std::vector<ZoneControlThermostatStagedDualSetpoint> ZoneControlThermostatStagedDualSetpointVector;
+  using ZoneControlThermostatStagedDualSetpointVector = std::vector<ZoneControlThermostatStagedDualSetpoint>;
 
 }  // namespace model
 }  // namespace openstudio

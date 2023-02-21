@@ -23,10 +23,10 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  auto infile = argv[1];
-  auto outfile = argv[2];
-  auto filenum = argv[3];
-  auto embeddedname = argv[4];
+  auto* infile = argv[1];
+  auto* outfile = argv[2];
+  auto* filenum = argv[3];
+  auto* embeddedname = argv[4];
 
   int ret, flush;
   unsigned have;

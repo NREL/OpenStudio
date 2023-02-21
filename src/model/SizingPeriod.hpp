@@ -43,13 +43,18 @@ namespace model {
   class MODEL_API SizingPeriod : public ParentObject
   {
    public:
-    virtual ~SizingPeriod() {}
+    virtual ~SizingPeriod() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SizingPeriod(const SizingPeriod& other) = default;
+    SizingPeriod(SizingPeriod&& other) = default;
+    SizingPeriod& operator=(const SizingPeriod&) = default;
+    SizingPeriod& operator=(SizingPeriod&&) = default;
 
     // ensure that this object does not contain the date 2/29
     void ensureNoLeapDays();
 
    protected:
-    typedef detail::SizingPeriod_Impl ImplType;
+    using ImplType = detail::SizingPeriod_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -64,10 +69,10 @@ namespace model {
   };
 
   /** \relates SizingPeriod */
-  typedef boost::optional<SizingPeriod> OptionalSizingPeriod;
+  using OptionalSizingPeriod = boost::optional<SizingPeriod>;
 
   /** \relates SizingPeriod */
-  typedef std::vector<SizingPeriod> SizingPeriodVector;
+  using SizingPeriodVector = std::vector<SizingPeriod>;
 
 }  // namespace model
 }  // namespace openstudio

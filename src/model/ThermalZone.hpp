@@ -68,7 +68,12 @@ namespace model {
 
     explicit ThermalZone(const Model& model);
 
-    virtual ~ThermalZone() {}
+    virtual ~ThermalZone() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ThermalZone(const ThermalZone& other) = default;
+    ThermalZone(ThermalZone&& other) = default;
+    ThermalZone& operator=(const ThermalZone&) = default;
+    ThermalZone& operator=(ThermalZone&&) = default;
 
     //@}
 
@@ -149,17 +154,17 @@ namespace model {
 
     bool setZoneInsideConvectionAlgorithm(boost::optional<std::string> zoneInsideConvectionAlgorithm);
 
-    bool setZoneInsideConvectionAlgorithm(std::string zoneInsideConvectionAlgorithm);
+    bool setZoneInsideConvectionAlgorithm(const std::string& zoneInsideConvectionAlgorithm);
 
     void resetZoneInsideConvectionAlgorithm();
 
     bool setZoneOutsideConvectionAlgorithm(boost::optional<std::string> zoneOutsideConvectionAlgorithm);
 
-    bool setZoneOutsideConvectionAlgorithm(std::string zoneOutsideConvectionAlgorithm);
+    bool setZoneOutsideConvectionAlgorithm(const std::string& zoneOutsideConvectionAlgorithm);
 
     void resetZoneOutsideConvectionAlgorithm();
 
-    bool setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
+    bool setZoneConditioningEquipmentListName(const std::string& zoneConditioningEquipmentListName);
 
     /** \deprecated */
     bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint& thermostat);
@@ -385,7 +390,7 @@ namespace model {
 
     std::string loadDistributionScheme() const;
 
-    bool setLoadDistributionScheme(std::string scheme);
+    bool setLoadDistributionScheme(const std::string& scheme);
 
     /** Set cooling priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList
@@ -544,7 +549,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ThermalZone_Impl ImplType;
+    using ImplType = detail::ThermalZone_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -558,10 +563,10 @@ namespace model {
   };
 
   /** \relates ThermalZone*/
-  typedef boost::optional<ThermalZone> OptionalThermalZone;
+  using OptionalThermalZone = boost::optional<ThermalZone>;
 
   /** \relates ThermalZone*/
-  typedef std::vector<ThermalZone> ThermalZoneVector;
+  using ThermalZoneVector = std::vector<ThermalZone>;
 
   /** This class implements a transition zone, for DaylightingDeviceTubular */
   class MODEL_API TransitionZone

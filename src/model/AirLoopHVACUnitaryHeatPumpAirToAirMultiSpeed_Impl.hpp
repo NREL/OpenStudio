@@ -55,7 +55,7 @@ namespace model {
       AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl(const AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl& other, Model_Impl* model,
                                                         bool keepHandle);
 
-      virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl() {}
+      virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -185,7 +185,7 @@ namespace model {
 
       bool setSupplyAirFan(const HVACComponent& fan);
 
-      bool setSupplyAirFanPlacement(std::string supplyAirFanPlacement);
+      bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
 
       bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 

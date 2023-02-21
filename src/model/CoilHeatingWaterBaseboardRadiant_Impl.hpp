@@ -53,7 +53,7 @@ namespace model {
 
       CoilHeatingWaterBaseboardRadiant_Impl(const CoilHeatingWaterBaseboardRadiant_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingWaterBaseboardRadiant_Impl() {}
+      virtual ~CoilHeatingWaterBaseboardRadiant_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -111,7 +111,7 @@ namespace model {
 
       bool setRatedWaterMassFlowRate(double ratedWaterMassFlowRate);
 
-      bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+      bool setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod);
 
       bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
 

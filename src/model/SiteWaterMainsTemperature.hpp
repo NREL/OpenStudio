@@ -52,7 +52,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SiteWaterMainsTemperature() {}
+    virtual ~SiteWaterMainsTemperature() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SiteWaterMainsTemperature(const SiteWaterMainsTemperature& other) = default;
+    SiteWaterMainsTemperature(SiteWaterMainsTemperature&& other) = default;
+    SiteWaterMainsTemperature& operator=(const SiteWaterMainsTemperature&) = default;
+    SiteWaterMainsTemperature& operator=(SiteWaterMainsTemperature&&) = default;
 
     //@}
 
@@ -78,7 +83,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setCalculationMethod(std::string calculationMethod);
+    bool setCalculationMethod(const std::string& calculationMethod);
 
     /** Also sets calculation method to 'Schedule'. */
     bool setTemperatureSchedule(Schedule& schedule);
@@ -100,7 +105,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SiteWaterMainsTemperature_Impl ImplType;
+    using ImplType = detail::SiteWaterMainsTemperature_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -116,10 +121,10 @@ namespace model {
   };
 
   /** \relates SiteWaterMainsTemperature*/
-  typedef boost::optional<SiteWaterMainsTemperature> OptionalSiteWaterMainsTemperature;
+  using OptionalSiteWaterMainsTemperature = boost::optional<SiteWaterMainsTemperature>;
 
   /** \relates SiteWaterMainsTemperature*/
-  typedef std::vector<SiteWaterMainsTemperature> SiteWaterMainsTemperatureVector;
+  using SiteWaterMainsTemperatureVector = std::vector<SiteWaterMainsTemperature>;
 
 }  // namespace model
 }  // namespace openstudio

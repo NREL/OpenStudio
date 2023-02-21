@@ -54,20 +54,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceLightWell) {
   Space space(model);
   space.setThermalZone(zone);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 10, 3));
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 3));
+  Point3dVector points{
+    {0, 10, 3},
+    {0, 10, 0},
+    {0, 0, 0},
+    {0, 0, 3},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
   EXPECT_EQ("Wall", surface.surfaceType());
 
-  Point3dVector points2;
-  points2.push_back(Point3d(0, 0, 1));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 1, 1));
+  Point3dVector points2{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface window(points2, model);
   window.setSubSurfaceType("FixedWindow");
   window.setSurface(surface);
@@ -75,7 +77,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceLightWell) {
   EXPECT_FALSE(window.daylightingDeviceLightWell());
   DaylightingDeviceLightWell lightWell(window, 1, 2, 3, 0.5);
   EXPECT_TRUE(window.daylightingDeviceLightWell());
-  EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceLightWell>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(model);

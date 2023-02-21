@@ -56,7 +56,7 @@ namespace model {
 
       DaylightingDeviceShelf_Impl(const DaylightingDeviceShelf_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DaylightingDeviceShelf_Impl() {}
+      virtual ~DaylightingDeviceShelf_Impl() = default;
 
       //@}
 

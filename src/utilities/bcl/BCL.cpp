@@ -373,7 +373,7 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_com
 
   auto provenanceElement = provenancesElement.child("provenance");
   while (provenanceElement) {
-    if (provenanceElement.first_child()) {
+    if (provenanceElement.first_child() != nullptr) {
       m_provenances.push_back(BCLProvenance(provenanceElement));
     } else {
       break;
@@ -394,7 +394,7 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_com
 
   auto attributeElement = attributesElement.child("attribute");
   while (attributeElement) {
-    if (attributeElement.first_child()) {
+    if (attributeElement.first_child() != nullptr) {
       std::string att_name = attributeElement.child("name").text().as_string();
       std::string value = attributeElement.child("value").text().as_string();
       std::string datatype = attributeElement.child("datatype").text().as_string();
@@ -441,7 +441,7 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_com
 
   auto fileElement = filesElement.child("file");
   while (fileElement) {
-    if (fileElement.first_child()) {
+    if (fileElement.first_child() != nullptr) {
       m_files.push_back(BCLFile(fileElement));
     } else {
       break;
@@ -452,7 +452,7 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_com
   if (m_componentType == "component") {
     auto costElement = costsElement.child("cost");
     while (costElement) {
-      if (costElement.first_child()) {
+      if (costElement.first_child() != nullptr) {
         m_costs.push_back(BCLCost(costElement));
       } else {
         break;
@@ -514,9 +514,7 @@ std::vector<BCLCost> BCLSearchResult::costs() const {
   return m_costs;
 }
 
-BCL::BCL() {}
-
-BCL::~BCL() {}
+BCL::BCL() = default;
 
 boost::optional<BCLComponent> getComponent(const std::string& uid, const std::string& versionId) {
   OptionalBCLComponent localComponent = LocalBCL::instance().getComponent(uid, versionId);

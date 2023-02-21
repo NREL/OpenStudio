@@ -61,11 +61,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingSurface_Site) {
   ShadingSurfaceGroup shadingSurfaceGroup(model);
   EXPECT_TRUE(shadingSurfaceGroup.setShadingSurfaceType("Site"));
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
 
   ShadingSurface shadingSurface(points, model);
   EXPECT_TRUE(shadingSurface.setShadingSurfaceGroup(shadingSurfaceGroup));
@@ -81,11 +82,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingSurface_Building) {
   ShadingSurfaceGroup shadingSurfaceGroup(model);
   EXPECT_TRUE(shadingSurfaceGroup.setShadingSurfaceType("Building"));
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
 
   ShadingSurface shadingSurface(points, model);
   EXPECT_TRUE(shadingSurface.setShadingSurfaceGroup(shadingSurfaceGroup));
@@ -101,11 +103,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingSurface_Space) {
 
   ThermalZone thermalZone(model);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space = Space::fromFloorPrint(points, 1, model);
   ASSERT_TRUE(space);

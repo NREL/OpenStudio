@@ -51,7 +51,7 @@ namespace model {
 
       Duct_Impl(const Duct_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Duct_Impl() {}
+      virtual ~Duct_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -533,18 +533,18 @@ TEST_F(ModelFixture, AirLoopHVAC_remove2) {
 TEST_F(ModelFixture, AirLoopHVAC_remove3) {
   Model m;
 
-  EXPECT_EQ(0u, m.getModelObjects<AirLoopHVAC>().size());
-  EXPECT_EQ(0u, m.getModelObjects<SizingSystem>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<AirLoopHVAC>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<SizingSystem>().size());
 
   Loop loop = addSystemType5(m);
 
-  EXPECT_EQ(1u, m.getModelObjects<AirLoopHVAC>().size());
-  EXPECT_EQ(1u, m.getModelObjects<SizingSystem>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<AirLoopHVAC>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<SizingSystem>().size());
 
   loop.remove();
 
-  EXPECT_EQ(0u, m.getModelObjects<AirLoopHVAC>().size());
-  EXPECT_EQ(0u, m.getModelObjects<SizingSystem>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<AirLoopHVAC>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<SizingSystem>().size());
 }
 
 TEST_F(ModelFixture, AirLoopHVAC_Cost) {
@@ -607,7 +607,7 @@ TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal) {
 
   EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
 
-  AirTerminalSingleDuctConstantVolumeNoReheat term2 = singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
+  auto term2 = singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, term2));
 
@@ -1099,10 +1099,10 @@ TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSi
 
 TEST_F(ModelFixture, AirLoopHVAC_AvailabilityManagers) {
   Model m;
-  ASSERT_EQ(0u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(0u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AirLoopHVAC a(m);
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   {
     auto schedule = m.alwaysOnDiscreteSchedule();
@@ -1110,37 +1110,37 @@ TEST_F(ModelFixture, AirLoopHVAC_AvailabilityManagers) {
   }
 
   ASSERT_EQ(0u, a.availabilityManagers().size());
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerLowTemperatureTurnOn aLTOn(m);
   ASSERT_TRUE(a.addAvailabilityManager(aLTOn));
   ASSERT_EQ(1u, a.availabilityManagers().size());
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerLowTemperatureTurnOff aLTOff(m);
   ASSERT_TRUE(a.addAvailabilityManager(aLTOff));
   ASSERT_EQ(2u, a.availabilityManagers().size());
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerHighTemperatureTurnOn aHTOn(m);
   ASSERT_TRUE(a.addAvailabilityManager(aHTOn));
   ASSERT_EQ(3u, a.availabilityManagers().size());
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerHighTemperatureTurnOff aHTOff(m);
   ASSERT_TRUE(a.addAvailabilityManager(aHTOff));
   ASSERT_EQ(4u, a.availabilityManagers().size());
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerDifferentialThermostat aDiffTstat(m);
   ASSERT_TRUE(a.addAvailabilityManager(aDiffTstat));
   ASSERT_EQ(5u, a.availabilityManagers().size());
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerOptimumStart aOptStart(m);
   ASSERT_TRUE(a.addAvailabilityManager(aOptStart));
   ASSERT_EQ(6u, a.availabilityManagers().size());
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   // Should work because this is a AirLoopHVAC
   AvailabilityManagerNightCycle avm_nc(m);
@@ -1167,16 +1167,16 @@ TEST_F(ModelFixture, AirLoopHVAC_AvailabilityManagers) {
   ASSERT_EQ(8u, a.availabilityManagers().size());
   a.setNightCycleControlType("CycleOnControlZone");
   ASSERT_EQ(9u, a.availabilityManagers().size());
-  AvailabilityManagerNightCycle avm_nc2 = a.availabilityManagers()[8].cast<AvailabilityManagerNightCycle>();
+  auto avm_nc2 = a.availabilityManagers()[8].cast<AvailabilityManagerNightCycle>();
   ASSERT_EQ("CycleOnControlZone", avm_nc2.controlType());
 
   // Test Clone, same model
-  AirLoopHVAC a2 = a.clone(m).cast<AirLoopHVAC>();
+  auto a2 = a.clone(m).cast<AirLoopHVAC>();
   ASSERT_EQ(9u, a2.availabilityManagers().size());
 
   // Test Clone, different model
   Model m2;
-  AirLoopHVAC a3 = a.clone(m2).cast<AirLoopHVAC>();
+  auto a3 = a.clone(m2).cast<AirLoopHVAC>();
   ASSERT_EQ(9u, a3.availabilityManagers().size());
 
   // reset shouldn't affect the clone
@@ -1469,7 +1469,7 @@ TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone) {
   EXPECT_EQ(5u, a.components(openstudio::IddObjectType::OS_Node).size());
 
   // Clone
-  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+  auto aClone = a.clone(m).cast<AirLoopHVAC>();
 
   EXPECT_EQ(10u, m.getConcreteModelObjects<Node>().size());
   EXPECT_EQ(5u, a.components(openstudio::IddObjectType::OS_Node).size());
@@ -1695,7 +1695,7 @@ TEST_F(ModelFixture, AirLoopHVAC_dualDuct_Clone) {
   EXPECT_EQ(6u, a.components(openstudio::IddObjectType::OS_Node).size());
 
   // Clone
-  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+  auto aClone = a.clone(m).cast<AirLoopHVAC>();
 
   EXPECT_EQ(12u, m.getConcreteModelObjects<Node>().size());
 
@@ -1829,7 +1829,7 @@ TEST_F(ModelFixture, AirLoopHVAC_dualDuct_Clone_WithComponents) {
   EXPECT_EQ(5u, m.getModelObjects<Mixer>().size());
 
   // Clone
-  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+  auto aClone = a.clone(m).cast<AirLoopHVAC>();
 
   EXPECT_EQ(8u, m.getModelObjects<Splitter>().size());
   EXPECT_EQ(6u, m.getModelObjects<Mixer>().size());

@@ -39,8 +39,6 @@ IdfObjectWatcher::IdfObjectWatcher(const IdfObject& idfObject) : m_enabled(true)
   objectImpl.get()->detail::IdfObject_Impl::onNameChange.connect<IdfObjectWatcher, &IdfObjectWatcher::nameChange>(this);
 }
 
-IdfObjectWatcher::~IdfObjectWatcher() {}
-
 bool IdfObjectWatcher::enabled() const {
   return m_enabled;
 }

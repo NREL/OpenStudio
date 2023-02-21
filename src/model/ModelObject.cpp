@@ -54,6 +54,7 @@
 #include "OutputVariable_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 #include "../utilities/sql/SqlFileEnums.hpp"
 #include "../utilities/sql/SqlFileTimeSeriesQuery.hpp"
 #include "../utilities/sql/SqlFile.hpp"
@@ -97,8 +98,7 @@ namespace model {
       std::vector<IdfObject> removedCosts;
       std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
       for (LifeCycleCost& lifeCycleCost : lifeCycleCosts) {
-        std::vector<IdfObject> tmp = lifeCycleCost.remove();
-        removedCosts.insert(removedCosts.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(removedCosts, lifeCycleCost.remove());
       }
       return removedCosts;
     }
@@ -136,7 +136,7 @@ namespace model {
       std::vector<std::string> variableNames = this->outputVariableNames();
       OptionalString name = this->name();
 
-      for (const OutputVariable& variable : this->model().getConcreteModelObjects<OutputVariable>()) {
+      for (OutputVariable& variable : this->model().getConcreteModelObjects<OutputVariable>()) {
         std::string keyValue = variable.keyValue();
         std::string variableName = variable.variableName();
 
@@ -151,7 +151,7 @@ namespace model {
         }
 
         if (std::find(variableNames.begin(), variableNames.end(), variableName) != variableNames.end()) {
-          variables.push_back(variable);
+          variables.emplace_back(std::move(variable));
         }
       }
       return variables;
@@ -213,20 +213,20 @@ namespace model {
       } else if (keyValue) {
         if (*keyValue == "*") {
           LOG(Error, "Variable specifies '*' for key value and object has no name.");
-          return OptionalString();
+          return {};
         }
       } else if (name) {
         LOG(Warn, "Variable does not specify key value, using object name.");
         keyValue = name;
       } else {
         LOG(Error, "Variable does not specify key value and object has no name.");
-        return OptionalString();
+        return {};
       }
       return keyValue;
     }
 
     /** Gets the autosized component value from the sql file **/
-    boost::optional<double> ModelObject_Impl::getAutosizedValue(std::string valueName, std::string units) const {
+    boost::optional<double> ModelObject_Impl::getAutosizedValue(const std::string& valueName, const std::string& unitString) const {
       boost::optional<double> result;
 
       // Get the object name
@@ -329,14 +329,14 @@ namespace model {
 
       // Query each row of the InitializationSummary -> Component Sizing table
       // that contains this component to get the desired value.
-      std::string valueNameAndUnits = valueName + std::string(" [") + units + std::string("]");
-      if (units == "") {
+      std::string valueNameAndUnits = valueName + std::string(" [") + unitString + std::string("]");
+      if (unitString.empty()) {
         valueNameAndUnits = valueName;
-      } else if (units == "typo_in_energyplus") {
+      } else if (unitString == "typo_in_energyplus") {
         valueNameAndUnits = valueName + std::string(" []");
       }
 
-      for (std::string rowName : rowNames.get()) {
+      for (const std::string& rowName : rowNames.get()) {
         std::string rowCheckQuery = R"(
         SELECT Value FROM TabularDataWithStrings
           WHERE ReportName = 'InitializationSummary'
@@ -509,7 +509,7 @@ namespace model {
       OptionalWorkspaceObject wo = this->getTarget(port);
       if (wo) {
 
-        Connection connection = wo->cast<Connection>();
+        auto connection = wo->cast<Connection>();
 
         boost::optional<ModelObject> targetObject = connection.targetObject();
         boost::optional<ModelObject> sourceObject = connection.sourceObject();
@@ -522,13 +522,13 @@ namespace model {
           }
         }
       }
-      return boost::optional<ModelObject>();
+      return {};
     }
 
     boost::optional<unsigned> ModelObject_Impl::connectedObjectPort(unsigned port) const {
       OptionalWorkspaceObject wo = this->getTarget(port);
       if (wo) {
-        Connection connection = wo->cast<Connection>();
+        auto connection = wo->cast<Connection>();
 
         if (boost::optional<ModelObject> sourceObject = connection.sourceObject()) {
           if (sourceObject->handle() == this->handle()) {
@@ -541,7 +541,7 @@ namespace model {
           }
         }
       }
-      return boost::optional<unsigned>();
+      return {};
     }
 
     ModelObject ModelObject_Impl::clone(Model model) const {
@@ -599,19 +599,17 @@ namespace model {
       // Not the same model. Resource handling is more complicated.
       result = model.addAndInsertObjects(toAdd, castArray<WorkspaceObject>(getRecursiveResourceSubTrees(getObject<ModelObject>(), true)));
       // Operation should work.
-      OS_ASSERT(result.size() > 0u);
+      OS_ASSERT(!result.empty());
       return result[0].cast<ModelObject>();
     }
 
     /// remove the object from the model, also removes any cost objects associated with this object
     /// return std::vector<IdfObject> containing any removed object(s)
     std::vector<IdfObject> ModelObject_Impl::remove() {
-      std::vector<IdfObject> result;
-      std::vector<IdfObject> removedCosts = this->removeLifeCycleCosts();
-      std::vector<IdfObject> removedProperties = this->removeAdditionalProperties();
-      result = WorkspaceObject_Impl::remove();
-      result.insert(result.end(), removedCosts.begin(), removedCosts.end());
-      result.insert(result.end(), removedProperties.begin(), removedProperties.end());
+      // We need to **guarantee** that WorkspaceObject_Impl::remove() is called last. C++ does not guarantee the order in which function parameters
+      // are evaluated, so I can't pass the three remove to concat<IdfObject>(Args&&...) (on GCC it was calling Workspace_Impl::remove first)
+      auto result = concat<IdfObject>(this->removeLifeCycleCosts(), this->removeAdditionalProperties());
+      openstudio::detail::concat_helper(result, WorkspaceObject_Impl::remove());
       return result;
     }
 
@@ -626,10 +624,10 @@ namespace model {
     }
 
     boost::optional<ParentObject> ModelObject_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
-    bool ModelObject_Impl::setParent(ParentObject& newParent) {
+    bool ModelObject_Impl::setParent(ParentObject& /*newParent*/) {
       return false;
     }
 
@@ -705,16 +703,16 @@ namespace model {
       return false;
     }
 
-    std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      return std::vector<ScheduleTypeKey>();
+    std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& /*schedule*/) const {
+      return {};
     }
 
     std::vector<EMSActuatorNames> ModelObject_Impl::emsActuatorNames() const {
-      return std::vector<EMSActuatorNames>();
+      return {};
     }
 
     std::vector<std::string> ModelObject_Impl::emsInternalVariableNames() const {
-      return std::vector<std::string>();
+      return {};
     }
 
     AdditionalProperties ModelObject_Impl::additionalProperties() const {
@@ -738,18 +736,14 @@ namespace model {
       AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
       for (AdditionalProperties& candidate : candidates) {
         std::vector<IdfObject> tmp = candidate.remove();
-        removed.insert(removed.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(removed, std::move(tmp));
       }
       return removed;
     }
 
     bool ModelObject_Impl::hasAdditionalProperties() const {
-      bool result = false;
       AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
-      if (candidates.size() > 0) {
-        result = true;
-      }
-      return result;
+      return !candidates.empty();
     }
 
     boost::optional<std::string> ModelObject_Impl::cadObjectId() const {
@@ -938,7 +932,7 @@ namespace model {
   ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p) : WorkspaceObject(std::move(p)) {}
 
   /** Gets the autosized component value from the sql file **/
-  boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const {
+  boost::optional<double> ModelObject::getAutosizedValue(const std::string& valueName, const std::string& units) const {
     return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
   }
 

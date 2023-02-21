@@ -53,7 +53,12 @@ namespace model {
 
     explicit SiteGroundTemperatureDeep(Model& model);
 
-    virtual ~SiteGroundTemperatureDeep() {}
+    virtual ~SiteGroundTemperatureDeep() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SiteGroundTemperatureDeep(const SiteGroundTemperatureDeep& other) = default;
+    SiteGroundTemperatureDeep(SiteGroundTemperatureDeep&& other) = default;
+    SiteGroundTemperatureDeep& operator=(const SiteGroundTemperatureDeep&) = default;
+    SiteGroundTemperatureDeep& operator=(SiteGroundTemperatureDeep&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -190,7 +195,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SiteGroundTemperatureDeep_Impl ImplType;
+    using ImplType = detail::SiteGroundTemperatureDeep_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -204,10 +209,10 @@ namespace model {
   };
 
   /** \relates SiteGroundTemperatureDeep*/
-  typedef boost::optional<SiteGroundTemperatureDeep> OptionalSiteGroundTemperatureDeep;
+  using OptionalSiteGroundTemperatureDeep = boost::optional<SiteGroundTemperatureDeep>;
 
   /** \relates SiteGroundTemperatureDeep*/
-  typedef std::vector<SiteGroundTemperatureDeep> SiteGroundTemperatureDeepVector;
+  using SiteGroundTemperatureDeepVector = std::vector<SiteGroundTemperatureDeep>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -49,7 +49,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~LightingSimulationControl() {}
+    virtual ~LightingSimulationControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LightingSimulationControl(const LightingSimulationControl& other) = default;
+    LightingSimulationControl(LightingSimulationControl&& other) = default;
+    LightingSimulationControl& operator=(const LightingSimulationControl&) = default;
+    LightingSimulationControl& operator=(LightingSimulationControl&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -84,7 +89,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::LightingSimulationControl_Impl ImplType;
+    using ImplType = detail::LightingSimulationControl_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -100,10 +105,10 @@ namespace model {
   };
 
   /** \relates LightingSimulationControl*/
-  typedef boost::optional<LightingSimulationControl> OptionalLightingSimulationControl;
+  using OptionalLightingSimulationControl = boost::optional<LightingSimulationControl>;
 
   /** \relates LightingSimulationControl*/
-  typedef std::vector<LightingSimulationControl> LightingSimulationControlVector;
+  using LightingSimulationControlVector = std::vector<LightingSimulationControl>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -159,9 +159,9 @@ namespace contam {
       setU_P(input.readInt());
       setCdaxis(input.readInt());
       setCfd(input.readInt());
-      if (cfd()) {
+      if (cfd() != 0) {
         setCfdname(input.readString());
-      } else if (cdaxis()) {
+      } else if (cdaxis() != 0) {
         input.readString();  // Read "1D:"
         setX1(input.readNumber<std::string>());
         setY1(input.readNumber<std::string>());
@@ -182,11 +182,12 @@ namespace contam {
                 + ANY_TO_STR(m_pl) + ' ' + ANY_TO_STR(m_relHt) + ' ' + ANY_TO_STR(m_Vol) + ' ' + ANY_TO_STR(m_T0) + ' ' + ANY_TO_STR(m_P0) + ' '
                 + m_name + ' ' + ANY_TO_STR(m_color) + ' ' + ANY_TO_STR(m_u_Ht) + ' ' + ANY_TO_STR(m_u_V) + ' ' + ANY_TO_STR(m_u_T) + ' '
                 + ANY_TO_STR(m_u_P) + ' ' + ANY_TO_STR(m_cdaxis) + ' ' + ANY_TO_STR(m_cfd);
-      if (m_cfd)
+      if (m_cfd != 0) {
         string += ' ' + m_cfdname;
-      else if (m_cdaxis)
+      } else if (m_cdaxis != 0) {
         string += ANY_TO_STR(m_X1) + ' ' + ANY_TO_STR(m_Y1) + ' ' + ANY_TO_STR(m_H1) + ' ' + ANY_TO_STR(m_X2) + ' ' + ANY_TO_STR(m_Y2) + ' '
                   + ANY_TO_STR(m_H2) + ' ' + ANY_TO_STR(m_celldx) + ' ' + ANY_TO_STR(m_axialD) + ' ' + ANY_TO_STR(m_u_aD) + ' ' + ANY_TO_STR(m_u_L);
+      }
       return string + '\n';
     }
 
@@ -483,36 +484,39 @@ namespace contam {
     }
 
     void ZoneImpl::setVariablePressure(bool b) {
-      if (b)
+      if (b) {
         m_flags |= ZoneFlags::VAR_P;
-      else
+      } else {
         m_flags &= ZoneFlags::NVAR_P;
+      }
     }
 
     bool ZoneImpl::variablePressure() const {
-      return m_flags & ZoneFlags::VAR_P;
+      return (m_flags & ZoneFlags::VAR_P) != 0u;
     }
 
     void ZoneImpl::setVariableContaminants(bool b) {
-      if (b)
+      if (b) {
         m_flags |= ZoneFlags::VAR_C;
-      else
+      } else {
         m_flags &= ZoneFlags::NVAR_C;
+      }
     }
 
     bool ZoneImpl::variableContaminants() const {
-      return m_flags & ZoneFlags::VAR_C;
+      return (m_flags & ZoneFlags::VAR_C) != 0u;
     }
 
     void ZoneImpl::setSystem(bool b) {
-      if (b)
+      if (b) {
         m_flags |= ZoneFlags::SYS_N;
-      else
+      } else {
         m_flags &= ZoneFlags::NSYS_N;
+      }
     }
 
     bool ZoneImpl::system() const {
-      return m_flags & ZoneFlags::SYS_N;
+      return (m_flags & ZoneFlags::SYS_N) != 0u;
     }
 
     double ZoneImpl::ic(const int i) const {
@@ -581,8 +585,8 @@ namespace contam {
                              std::string desc) {
       setDefaults();
       setNr(nr);
-      setSflag(sflag);
-      setNtflag(ntflag);
+      setSflag(sflag != 0);
+      setNtflag(ntflag != 0);
       setMolwt(molwt);
       setMdiam(mdiam);
       setEdens(edens);
@@ -603,8 +607,8 @@ namespace contam {
                              double Cp, int ucc, int umd, int ued, int udm, int ucp, std::string name, std::string desc) {
       setDefaults();
       setNr(nr);
-      setSflag(sflag);
-      setNtflag(ntflag);
+      setSflag(sflag != 0);
+      setNtflag(ntflag != 0);
       setMolwt(molwt);
       setMdiam(mdiam);
       setEdens(edens);
@@ -623,8 +627,8 @@ namespace contam {
 
     void SpeciesImpl::read(Reader& input) {
       setNr(input.read<int>());
-      setSflag(input.read<int>());
-      setNtflag(input.read<int>());
+      setSflag(input.read<int>() != 0);
+      setNtflag(input.read<int>() != 0);
       setMolwt(input.read<std::string>());
       setMdiam(input.read<std::string>());
       setEdens(input.read<std::string>());
@@ -1075,7 +1079,7 @@ namespace contam {
       setU_dP(input.read<int>());
       setU_F(input.read<int>());
       setCfd(input.read<int>());
-      if (m_cfd) {
+      if (m_cfd != 0) {
         setCfd_name(input.readString());
         setCfd_ptype(input.read<int>());
         setCfd_btype(input.read<int>());
@@ -1091,7 +1095,7 @@ namespace contam {
                 + ANY_TO_STR(m_wPset) + ' ' + ANY_TO_STR(m_wPmod) + ' ' + ANY_TO_STR(m_wazm) + ' ' + ANY_TO_STR(m_Fahs) + ' ' + ANY_TO_STR(m_Xmax)
                 + ' ' + ANY_TO_STR(m_Xmin) + ' ' + ANY_TO_STR(m_icon) + ' ' + ANY_TO_STR(m_dir) + ' ' + ANY_TO_STR(m_u_Ht) + ' ' + ANY_TO_STR(m_u_XY)
                 + ' ' + ANY_TO_STR(m_u_dP) + ' ' + ANY_TO_STR(m_u_F) + ' ' + ANY_TO_STR(m_cfd);
-      if (m_cfd) {
+      if (m_cfd != 0) {
         string += ' ' + m_cfd_name + ' ' + ANY_TO_STR(m_cfd_ptype) + ' ' + ANY_TO_STR(m_cfd_btype) + ' ' + ANY_TO_STR(m_cfd_capp);
       }
       return string + '\n';
@@ -1404,58 +1408,63 @@ namespace contam {
     }
 
     void AirflowPathImpl::setWindPressure(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::WIND;
-      else
+      } else {
         m_flags &= 0xFFFE;
+      }
     }
 
     bool AirflowPathImpl::windPressure() {
-      return m_flags & PathFlags::WIND;
+      return (m_flags & PathFlags::WIND) != 0;
     }
 
     void AirflowPathImpl::setSystem(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::AHS_S;
-      else
+      } else {
         m_flags &= 0xFFF7;
+      }
     }
 
     bool AirflowPathImpl::system() {
-      return m_flags & PathFlags::AHS_S;
+      return (m_flags & PathFlags::AHS_S) != 0;
     }
 
     void AirflowPathImpl::setExhaust(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::AHS_X;
-      else
+      } else {
         m_flags &= 0xFFBF;
+      }
     }
 
     bool AirflowPathImpl::exhaust() {
-      return m_flags & PathFlags::AHS_X;
+      return (m_flags & PathFlags::AHS_X) != 0;
     }
 
     void AirflowPathImpl::setRecirculation(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::AHS_R;
-      else
+      } else {
         m_flags &= 0xFFEF;
+      }
     }
 
     bool AirflowPathImpl::recirculation() {
-      return m_flags & PathFlags::AHS_R;
+      return (m_flags & PathFlags::AHS_R) != 0;
     }
 
     void AirflowPathImpl::setOutsideAir(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::AHS_O;
-      else
+      } else {
         m_flags &= 0xFFDF;
+      }
     }
 
     bool AirflowPathImpl::outsideAir() {
-      return m_flags & PathFlags::AHS_O;
+      return (m_flags & PathFlags::AHS_O) != 0;
     }
 
     void RunControlImpl::setDefaults() {
@@ -1942,12 +1951,14 @@ namespace contam {
                 + ANY_TO_STR(m_expsave) + ' ' + ANY_TO_STR(m_ebwsave) + ' ' + ANY_TO_STR(m_zaasave) + ' ' + ANY_TO_STR(m_zbwsave) + '\n';
       string += ANY_TO_STR(m_rzfsave) + ' ' + ANY_TO_STR(m_rzmsave) + ' ' + ANY_TO_STR(m_rz1save) + ' ' + ANY_TO_STR(m_csmsave) + ' '
                 + ANY_TO_STR(m_srfsave) + ' ' + ANY_TO_STR(m_logsave) + '\n';
-      for (int i = 0; i < 16; i++)
+      for (int i = 0; i < 16; i++) {
         string += ANY_TO_STR(m_save[i]) + ' ';
+      }
       string += '\n';
       string += ANY_TO_STR((int)m_rvals.size()) + '\n';
-      for (unsigned int i = 0; i < m_rvals.size(); i++)
+      for (unsigned int i = 0; i < m_rvals.size(); i++) {
         string += ANY_TO_STR(m_rvals[i]) + ' ';
+      }
       string += '\n';
       string += ANY_TO_STR(m_BldgFlowZ) + ' ' + ANY_TO_STR(m_BldgFlowD) + ' ' + ANY_TO_STR(m_BldgFlowC) + '\n';
       string += ANY_TO_STR(m_cfd_ctype) + ' ' + ANY_TO_STR(m_cfd_convcpl) + ' ' + ANY_TO_STR(m_cfd_var) + ' ' + ANY_TO_STR(m_cfd_zref) + ' '

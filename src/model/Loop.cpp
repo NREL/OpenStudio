@@ -114,12 +114,12 @@ namespace model {
 
       std::vector<HVACComponent> nodes = hvacComponent.getImpl<HVACComponent_Impl>()->edges(prev);
 
-      for (auto it = nodes.begin(); it != nodes.end(); it++) {
+      for (auto& node : nodes) {
         // if it node has already been visited or node is sink then continue
-        if (std::find(visited.begin(), visited.end(), *it) != visited.end() || *it == sink) {
+        if (std::find(visited.begin(), visited.end(), node) != visited.end() || node == sink) {
           continue;
         }
-        visited.push_back(*it);
+        visited.push_back(node);
         boost::optional<ModelObject> foundHandle = findModelObject(handle, sink, visited, isDemandComponents);
         if (foundHandle) {
           return *foundHandle;
@@ -129,7 +129,7 @@ namespace model {
       return boost::none;
     }
 
-    OptionalModelObject Loop_Impl::component(openstudio::Handle handle) {
+    OptionalModelObject Loop_Impl::component(openstudio::Handle handle) const {
       boost::optional<ModelObject> supplyComp = this->supplyComponent(handle);
       if (supplyComp) {
         return supplyComp;
@@ -164,36 +164,36 @@ namespace model {
     }
 
     std::vector<ModelObject> Loop_Impl::children() const {
-      return std::vector<ModelObject>();
+      return {};
     }
 
-    std::vector<ModelObject> Loop_Impl::supplyComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
-                                                         openstudio::IddObjectType type) const {
-      LOG(Warn, "supplyComponents method for " << briefDescription() << " is not implemented to take multiple inlet and outlet components");
-      return std::vector<ModelObject>();
-    }
+    // std::vector<ModelObject> Loop_Impl::supplyComponents(std::vector<HVACComponent> /*inletComps*/, std::vector<HVACComponent> /*outletComps*/,
+    //                                                      openstudio::IddObjectType /*type*/) const {
+    //   LOG(Warn, "supplyComponents method for " << briefDescription() << " is not implemented to take multiple inlet and outlet components");
+    //   return {};
+    // }
 
-    std::vector<ModelObject> Loop_Impl::demandComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
-                                                         openstudio::IddObjectType type) const {
-      return std::vector<ModelObject>();
-    }
+    // std::vector<ModelObject> Loop_Impl::demandComponents(std::vector<HVACComponent> /*inletComps*/, std::vector<HVACComponent> /*outletComps*/,
+    //                                                      openstudio::IddObjectType /*type*/) const {
+    //   return {};
+    // }
 
-    boost::optional<ModelObject> Loop_Impl::supplyInletNodeAsModelObject() {
+    boost::optional<ModelObject> Loop_Impl::supplyInletNodeAsModelObject() const {
       OptionalModelObject result = supplyInletNode();
       return result;
     }
 
-    boost::optional<ModelObject> Loop_Impl::supplyOutletNodeAsModelObject() {
+    boost::optional<ModelObject> Loop_Impl::supplyOutletNodeAsModelObject() const {
       OptionalModelObject result = supplyOutletNode();
       return result;
     }
 
-    boost::optional<ModelObject> Loop_Impl::demandInletNodeAsModelObject() {
+    boost::optional<ModelObject> Loop_Impl::demandInletNodeAsModelObject() const {
       OptionalModelObject result = demandInletNode();
       return result;
     }
 
-    boost::optional<ModelObject> Loop_Impl::demandOutletNodeAsModelObject() {
+    boost::optional<ModelObject> Loop_Impl::demandOutletNodeAsModelObject() const {
       OptionalModelObject result = demandOutletNode();
       return result;
     }
@@ -242,7 +242,8 @@ namespace model {
       }
     }
 
-    std::vector<ModelObject> Loop_Impl::demandComponents(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type) const {
+    std::vector<ModelObject> Loop_Impl::demandComponents(const HVACComponent& inletComp, const HVACComponent& outletComp,
+                                                         openstudio::IddObjectType type) const {
       std::vector<HVACComponent> visited;
       visited.push_back(inletComp);
       std::vector<HVACComponent> allPaths;
@@ -295,7 +296,7 @@ namespace model {
       if (t_supplyOutletNodes.size() > 1u) {
         Duplicate<ModelObject> pred;
         auto it = std::remove_if(result.begin(), result.end(), std::ref(pred));
-        return std::vector<ModelObject>(result.begin(), it);
+        return {result.begin(), it};
       } else {
         return result;
       }
@@ -316,13 +317,13 @@ namespace model {
       if (t_demandInletNodes.size() > 1u) {
         Duplicate<ModelObject> pred;
         auto it = std::remove_if(result.begin(), result.end(), std::ref(pred));
-        return std::vector<ModelObject>(result.begin(), it);
+        return {result.begin(), it};
       } else {
         return result;
       }
     }
 
-    std::vector<ModelObject> Loop_Impl::components(openstudio::IddObjectType type) {
+    std::vector<ModelObject> Loop_Impl::components(openstudio::IddObjectType type) const {
       std::vector<ModelObject> result;
       result = this->supplyComponents(type);
 
@@ -333,7 +334,8 @@ namespace model {
       return result;
     }
 
-    std::vector<ModelObject> Loop_Impl::supplyComponents(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type) const {
+    std::vector<ModelObject> Loop_Impl::supplyComponents(const HVACComponent& inletComp, const HVACComponent& outletComp,
+                                                         openstudio::IddObjectType type) const {
       std::vector<HVACComponent> visited;
       visited.push_back(inletComp);
       std::vector<HVACComponent> allPaths;
@@ -360,29 +362,26 @@ namespace model {
       return reducedModelObjects;
     }
 
-    std::vector<ModelObject> Loop_Impl::components(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type) {
+    std::vector<ModelObject> Loop_Impl::components(const HVACComponent& inletComp, const HVACComponent& outletComp,
+                                                   openstudio::IddObjectType type) const {
       if ((supplyComponent(inletComp.handle()) && supplyComponent(outletComp.handle()))) {
         return supplyComponents(inletComp, outletComp, type);
       } else if ((demandComponent(inletComp.handle()) && demandComponent(outletComp.handle()))) {
         return demandComponents(inletComp, outletComp, type);
       }
 
-      return std::vector<ModelObject>();
+      return {};
     }
 
     // default implementation does nothing.
     // should only be used by objects that have
     // no autosized fields
-    void Loop_Impl::autosize() {
-      return;
-    }
+    void Loop_Impl::autosize() {}
 
     // default implementation does nothing.
     // should only be used by objects that have
     // no autosized fields
-    void Loop_Impl::applySizingValues() {
-      return;
-    }
+    void Loop_Impl::applySizingValues() {}
 
   }  // namespace detail
 
@@ -390,30 +389,36 @@ namespace model {
     OS_ASSERT(getImpl<detail::Loop_Impl>());
   }
 
-  Loop::Loop(std::shared_ptr<detail::Loop_Impl> p) : ParentObject(std::move(p)) {}
+  Loop::Loop(std::shared_ptr<detail::Loop_Impl> impl) : ParentObject(std::move(impl)) {}
 
   std::vector<IdfObject> Loop::remove() {
     return getImpl<detail::Loop_Impl>()->remove();
   }
 
-  std::vector<ModelObject> Loop::components(openstudio::IddObjectType type) {
+  std::vector<ModelObject> Loop::components(openstudio::IddObjectType type) const {
     return getImpl<detail::Loop_Impl>()->components(type);
   }
 
-  std::vector<ModelObject> Loop::components(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type) {
+  std::vector<ModelObject> Loop::components(const HVACComponent& inletComp, const HVACComponent& outletComp, openstudio::IddObjectType type) {
     return getImpl<detail::Loop_Impl>()->components(inletComp, outletComp, type);
   }
 
-  boost::optional<ModelObject> Loop::component(openstudio::Handle handle) {
+  boost::optional<ModelObject> Loop::component(openstudio::Handle handle) const {
     return getImpl<detail::Loop_Impl>()->component(handle);
   }
 
-  std::vector<ModelObject> Loop::supplyComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
-                                                  openstudio::IddObjectType type) const {
-    return getImpl<detail::Loop_Impl>()->supplyComponents(inletComps, outletComps, type);
-  }
+  // std::vector<ModelObject> Loop::supplyComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
+  //                                                 openstudio::IddObjectType type) const {
+  //   return getImpl<detail::Loop_Impl>()->supplyComponents(inletComps, outletComps, type);
+  // }
 
-  std::vector<ModelObject> Loop::supplyComponents(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type) const {
+  // std::vector<ModelObject> Loop::demandComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
+  //                                                 openstudio::IddObjectType type) const {
+  //   return getImpl<detail::Loop_Impl>()->demandComponents(inletComps, outletComps, type);
+  // }
+
+  std::vector<ModelObject> Loop::supplyComponents(const HVACComponent& inletComp, const HVACComponent& outletComp,
+                                                  openstudio::IddObjectType type) const {
     return getImpl<detail::Loop_Impl>()->supplyComponents(inletComp, outletComp, type);
   }
 
@@ -421,12 +426,8 @@ namespace model {
     return getImpl<detail::Loop_Impl>()->supplyComponents(type);
   }
 
-  std::vector<ModelObject> Loop::demandComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
+  std::vector<ModelObject> Loop::demandComponents(const HVACComponent& inletComp, const HVACComponent& outletComp,
                                                   openstudio::IddObjectType type) const {
-    return getImpl<detail::Loop_Impl>()->demandComponents(inletComps, outletComps, type);
-  }
-
-  std::vector<ModelObject> Loop::demandComponents(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type) const {
     return getImpl<detail::Loop_Impl>()->demandComponents(inletComp, outletComp, type);
   }
 
@@ -446,7 +447,7 @@ namespace model {
     return getImpl<detail::Loop_Impl>()->demandComponent(handle);
   }
 
-  boost::optional<ModelObject> Loop::supplyComponent(openstudio::Handle handle) {
+  boost::optional<ModelObject> Loop::supplyComponent(openstudio::Handle handle) const {
     return getImpl<detail::Loop_Impl>()->supplyComponent(handle);
   }
 

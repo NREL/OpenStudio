@@ -155,7 +155,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_DesignDay) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<DesignDay> designDays = model.getModelObjects<DesignDay>();
+  std::vector<DesignDay> designDays = model.getConcreteModelObjects<DesignDay>();
   ASSERT_EQ(1u, designDays.size());
   DesignDay designDay = designDays[0];
   EXPECT_EQ("Design Day", designDay.name().get());

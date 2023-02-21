@@ -55,7 +55,12 @@ namespace model {
 
     explicit RefrigerationCondenserWaterCooled(const Model& model);
 
-    virtual ~RefrigerationCondenserWaterCooled() {}
+    virtual ~RefrigerationCondenserWaterCooled() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCondenserWaterCooled(const RefrigerationCondenserWaterCooled& other) = default;
+    RefrigerationCondenserWaterCooled(RefrigerationCondenserWaterCooled&& other) = default;
+    RefrigerationCondenserWaterCooled& operator=(const RefrigerationCondenserWaterCooled&) = default;
+    RefrigerationCondenserWaterCooled& operator=(RefrigerationCondenserWaterCooled&&) = default;
 
     //@}
 
@@ -171,7 +176,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCondenserWaterCooled_Impl ImplType;
+    using ImplType = detail::RefrigerationCondenserWaterCooled_Impl;
 
     explicit RefrigerationCondenserWaterCooled(std::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl);
 
@@ -185,10 +190,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCondenserWaterCooled*/
-  typedef boost::optional<RefrigerationCondenserWaterCooled> OptionalRefrigerationCondenserWaterCooled;
+  using OptionalRefrigerationCondenserWaterCooled = boost::optional<RefrigerationCondenserWaterCooled>;
 
   /** \relates RefrigerationCondenserWaterCooled*/
-  typedef std::vector<RefrigerationCondenserWaterCooled> RefrigerationCondenserWaterCooledVector;
+  using RefrigerationCondenserWaterCooledVector = std::vector<RefrigerationCondenserWaterCooled>;
 
 }  // namespace model
 }  // namespace openstudio

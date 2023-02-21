@@ -42,7 +42,7 @@ TEST_F(ModelFixture, ZoneAirMassFlowConservation) {
 
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
 
-  ZoneAirMassFlowConservation zamfc = model.getUniqueModelObject<ZoneAirMassFlowConservation>();
+  auto zamfc = model.getUniqueModelObject<ZoneAirMassFlowConservation>();
 
   EXPECT_EQ("None", zamfc.adjustZoneMixingandReturnForAirMassFlowBalance());
   EXPECT_TRUE(zamfc.isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted());

@@ -107,7 +107,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationCase_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_CaseFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationCase", "Availability"));
       }
@@ -130,7 +131,7 @@ namespace model {
     }
 
     ModelObject RefrigerationCase_Impl::clone(Model model) const {
-      RefrigerationCase modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCase>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCase>();
 
       if (boost::optional<RefrigerationDefrostCycleParameters> caseDefrostCycleParameters = this->optionalCaseDefrostCycleParameters()) {
         modelObjectClone.getImpl<RefrigerationCase_Impl>()->setCaseDefrostCycleParameters(
@@ -139,7 +140,7 @@ namespace model {
 
       modelObjectClone.resetThermalZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IdfObject> RefrigerationCase_Impl::remove() {
@@ -620,8 +621,8 @@ namespace model {
 
     boost::optional<RefrigerationSystem> RefrigerationCase_Impl::system() const {
       std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-      RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
-      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+      auto refrigerationCase = this->getObject<RefrigerationCase>();
+      for (const RefrigerationSystem& refrigerationSystem : refrigerationSystems) {
         RefrigerationCaseVector refrigerationCases = refrigerationSystem.cases();
         if (!refrigerationCases.empty()
             && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end()) {
@@ -633,8 +634,8 @@ namespace model {
 
     boost::optional<RefrigerationSecondarySystem> RefrigerationCase_Impl::secondarySystem() const {
       std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
-      RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
-      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+      auto refrigerationCase = this->getObject<RefrigerationCase>();
+      for (const RefrigerationSecondarySystem& refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationCaseVector refrigerationCases = refrigerationSecondarySystem.cases();
         if (!refrigerationCases.empty()
             && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end()) {
@@ -646,8 +647,8 @@ namespace model {
 
     boost::optional<RefrigerationCompressorRack> RefrigerationCase_Impl::compressorRack() const {
       std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
-      RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
-      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+      auto refrigerationCase = this->getObject<RefrigerationCase>();
+      for (const RefrigerationCompressorRack& refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationCaseVector refrigerationCases = refrigerationCompressorRack.cases();
         if (!refrigerationCases.empty()
             && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end()) {
@@ -747,7 +748,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCase_Impl::setLatentCaseCreditCurveType(std::string latentCaseCreditCurveType) {
+    bool RefrigerationCase_Impl::setLatentCaseCreditCurveType(const std::string& latentCaseCreditCurveType) {
       bool result = setString(OS_Refrigeration_CaseFields::LatentCaseCreditCurveType, latentCaseCreditCurveType);
       return result;
     }
@@ -850,7 +851,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCase_Impl::setAntiSweatHeaterControlType(std::string antiSweatHeaterControlType) {
+    bool RefrigerationCase_Impl::setAntiSweatHeaterControlType(const std::string& antiSweatHeaterControlType) {
       bool result = setString(OS_Refrigeration_CaseFields::AntiSweatHeaterControlType, antiSweatHeaterControlType);
       return result;
     }
@@ -901,7 +902,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCase_Impl::setCaseDefrostType(std::string caseDefrostType) {
+    bool RefrigerationCase_Impl::setCaseDefrostType(const std::string& caseDefrostType) {
       bool result = setString(OS_Refrigeration_CaseFields::CaseDefrostType, caseDefrostType);
       return result;
     }
@@ -932,7 +933,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCase_Impl::setDefrostEnergyCorrectionCurveType(std::string defrostEnergyCorrectionCurveType) {
+    bool RefrigerationCase_Impl::setDefrostEnergyCorrectionCurveType(const std::string& defrostEnergyCorrectionCurveType) {
       bool result = setString(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveType, defrostEnergyCorrectionCurveType);
       return result;
     }
@@ -1162,7 +1163,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCase_Impl::setUnitType(std::string unitType) {
+    bool RefrigerationCase_Impl::setUnitType(const std::string& unitType) {
       bool result = setString(OS_Refrigeration_CaseFields::UnitType, unitType);
       return result;
     }
@@ -1358,7 +1359,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCase::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Case);
+    return {IddObjectType::OS_Refrigeration_Case};
   }
 
   std::vector<std::string> RefrigerationCase::latentCaseCreditCurveTypeValues() {
@@ -1777,7 +1778,7 @@ namespace model {
     getImpl<detail::RefrigerationCase_Impl>()->resetCaseOperatingTemperature();
   }
 
-  bool RefrigerationCase::setLatentCaseCreditCurveType(std::string latentCaseCreditCurveType) {
+  bool RefrigerationCase::setLatentCaseCreditCurveType(const std::string& latentCaseCreditCurveType) {
     return getImpl<detail::RefrigerationCase_Impl>()->setLatentCaseCreditCurveType(latentCaseCreditCurveType);
   }
 
@@ -1853,7 +1854,7 @@ namespace model {
     getImpl<detail::RefrigerationCase_Impl>()->resetMinimumAntiSweatHeaterPowerperUnitLength();
   }
 
-  bool RefrigerationCase::setAntiSweatHeaterControlType(std::string antiSweatHeaterControlType) {
+  bool RefrigerationCase::setAntiSweatHeaterControlType(const std::string& antiSweatHeaterControlType) {
     return getImpl<detail::RefrigerationCase_Impl>()->setAntiSweatHeaterControlType(antiSweatHeaterControlType);
   }
 
@@ -1893,7 +1894,7 @@ namespace model {
     getImpl<detail::RefrigerationCase_Impl>()->resetCaseDefrostPowerperUnitLength();
   }
 
-  bool RefrigerationCase::setCaseDefrostType(std::string caseDefrostType) {
+  bool RefrigerationCase::setCaseDefrostType(const std::string& caseDefrostType) {
     return getImpl<detail::RefrigerationCase_Impl>()->setCaseDefrostType(caseDefrostType);
   }
 
@@ -1917,7 +1918,7 @@ namespace model {
     getImpl<detail::RefrigerationCase_Impl>()->resetCaseDefrostDripDownSchedule();
   }
 
-  bool RefrigerationCase::setDefrostEnergyCorrectionCurveType(std::string defrostEnergyCorrectionCurveType) {
+  bool RefrigerationCase::setDefrostEnergyCorrectionCurveType(const std::string& defrostEnergyCorrectionCurveType) {
     return getImpl<detail::RefrigerationCase_Impl>()->setDefrostEnergyCorrectionCurveType(defrostEnergyCorrectionCurveType);
   }
 
@@ -2046,7 +2047,7 @@ namespace model {
     getImpl<detail::RefrigerationCase_Impl>()->resetCaseDefrostPowerperDoor();
   }
 
-  bool RefrigerationCase::setUnitType(std::string unitType) {
+  bool RefrigerationCase::setUnitType(const std::string& unitType) {
     return getImpl<detail::RefrigerationCase_Impl>()->setUnitType(unitType);
   }
 

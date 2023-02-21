@@ -51,7 +51,7 @@ namespace model {
 
       OutputDiagnostics_Impl(const OutputDiagnostics_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputDiagnostics_Impl() {}
+      virtual ~OutputDiagnostics_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

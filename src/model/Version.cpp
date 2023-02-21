@@ -83,7 +83,7 @@ namespace model {
       return result;
     }
 
-    bool Version_Impl::setParent(ParentObject& newParent) {
+    bool Version_Impl::setParent(ParentObject& /*newParent*/) {
       return false;
     }
 

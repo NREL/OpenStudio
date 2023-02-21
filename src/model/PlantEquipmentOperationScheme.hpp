@@ -48,13 +48,18 @@ namespace model {
    public:
     PlantEquipmentOperationScheme(IddObjectType type, const Model& model);
 
-    virtual ~PlantEquipmentOperationScheme() {}
+    virtual ~PlantEquipmentOperationScheme() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& other) = default;
+    PlantEquipmentOperationScheme(PlantEquipmentOperationScheme&& other) = default;
+    PlantEquipmentOperationScheme& operator=(const PlantEquipmentOperationScheme&) = default;
+    PlantEquipmentOperationScheme& operator=(PlantEquipmentOperationScheme&&) = default;
 
     boost::optional<PlantLoop> plantLoop() const;
 
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationScheme_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationScheme_Impl;
 
     explicit PlantEquipmentOperationScheme(std::shared_ptr<detail::PlantEquipmentOperationScheme_Impl> impl);
 
@@ -67,9 +72,9 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationScheme");
   };
 
-  typedef boost::optional<PlantEquipmentOperationScheme> OptionalPlantEquipmentOperationScheme;
+  using OptionalPlantEquipmentOperationScheme = boost::optional<PlantEquipmentOperationScheme>;
 
-  typedef std::vector<PlantEquipmentOperationScheme> PlantEquipmentOperationSchemeVector;
+  using PlantEquipmentOperationSchemeVector = std::vector<PlantEquipmentOperationScheme>;
 
 }  // namespace model
 }  // namespace openstudio

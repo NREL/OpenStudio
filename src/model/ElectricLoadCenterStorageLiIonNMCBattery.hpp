@@ -58,7 +58,12 @@ namespace model {
     explicit ElectricLoadCenterStorageLiIonNMCBattery(const Model& model, const int numberofCellsinSeries, const int numberofStringsinParallel,
                                                       const double batteryMass, const double batterySurfaceArea);
 
-    virtual ~ElectricLoadCenterStorageLiIonNMCBattery() {}
+    virtual ~ElectricLoadCenterStorageLiIonNMCBattery() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricLoadCenterStorageLiIonNMCBattery(const ElectricLoadCenterStorageLiIonNMCBattery& other) = default;
+    ElectricLoadCenterStorageLiIonNMCBattery(ElectricLoadCenterStorageLiIonNMCBattery&& other) = default;
+    ElectricLoadCenterStorageLiIonNMCBattery& operator=(const ElectricLoadCenterStorageLiIonNMCBattery&) = default;
+    ElectricLoadCenterStorageLiIonNMCBattery& operator=(ElectricLoadCenterStorageLiIonNMCBattery&&) = default;
 
     //@}
 
@@ -171,7 +176,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl;
 
     explicit ElectricLoadCenterStorageLiIonNMCBattery(std::shared_ptr<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl> impl);
 
@@ -185,10 +190,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterStorageLiIonNMCBattery*/
-  typedef boost::optional<ElectricLoadCenterStorageLiIonNMCBattery> OptionalElectricLoadCenterStorageLiIonNMCBattery;
+  using OptionalElectricLoadCenterStorageLiIonNMCBattery = boost::optional<ElectricLoadCenterStorageLiIonNMCBattery>;
 
   /** \relates ElectricLoadCenterStorageLiIonNMCBattery*/
-  typedef std::vector<ElectricLoadCenterStorageLiIonNMCBattery> ElectricLoadCenterStorageLiIonNMCBatteryVector;
+  using ElectricLoadCenterStorageLiIonNMCBatteryVector = std::vector<ElectricLoadCenterStorageLiIonNMCBattery>;
 
 }  // namespace model
 }  // namespace openstudio

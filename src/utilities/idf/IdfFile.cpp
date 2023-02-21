@@ -110,8 +110,9 @@ std::vector<IdfObject> IdfFile::objects() const {
   IdfObjectVector result = m_objects;
   for (auto it = m_versionObjectIndices.rbegin(), itEnd = m_versionObjectIndices.rend(); it != itEnd; ++it) {
     auto oit = result.begin();
-    for (unsigned i = 0; i < *it; ++i, ++oit)
+    for (unsigned i = 0; i < *it; ++i, ++oit) {
       ;
+    }
     OS_ASSERT(oit->iddObject().isVersionObject()
               || ((oit->iddObject().type() == IddObjectType::Catchall) && (oit->numFields() > 0u)
                   && (boost::regex_match(oit->getString(0).get(), iddRegex::versionObjectName()))));
@@ -191,7 +192,9 @@ void IdfFile::insertObjectByIddObjectType(const IdfObject& object) {
 }
 
 bool IdfFile::removeObject(const IdfObject& object) {
-  auto it = std::find_if(m_objects.begin(), m_objects.end(), std::bind(handleEquals<IdfObject, Handle>, std::placeholders::_1, object.handle()));
+  auto it =
+    std::find_if(m_objects.begin(), m_objects.end(), [h = object.handle()](const IdfObject& obj) { return handleEquals<IdfObject, Handle>(obj, h); });
+
   if (it != m_objects.end()) {
     IdfObjectVector::size_type index(it - m_objects.begin());
     if (it->iddObject().isVersionObject()
@@ -229,10 +232,10 @@ int IdfFile::removeObjects(const std::vector<IdfObject>& objects) {
 // QUERIES
 
 bool IdfFile::empty() const {
-  if (m_header != "") {
+  if (!m_header.empty()) {
     return false;
   }
-  if (objects().size() > 0) {
+  if (!objects().empty()) {
     return false;
   }
   return true;
@@ -778,7 +781,7 @@ IdfObjectVector IdfFile::m_objectsWithConflictingNames(const std::string& name, 
         continue;
       }
       for (const std::string& ref : candidates[j].iddObject().references()) {
-        if (std::find_if(refs.begin(), refs.end(), std::bind(openstudio::istringEqual, std::placeholders::_1, ref)) != refs.end()) {
+        if (std::find_if(refs.begin(), refs.end(), [&ref](const auto& r) { return openstudio::istringEqual(r, ref); }) != refs.end()) {
           hasConflict[i] = true;
           hasConflict[j] = true;
           break;

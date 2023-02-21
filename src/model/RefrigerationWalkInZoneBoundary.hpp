@@ -55,7 +55,12 @@ namespace model {
 
     explicit RefrigerationWalkInZoneBoundary(const Model& model);
 
-    virtual ~RefrigerationWalkInZoneBoundary() {}
+    virtual ~RefrigerationWalkInZoneBoundary() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationWalkInZoneBoundary(const RefrigerationWalkInZoneBoundary& other) = default;
+    RefrigerationWalkInZoneBoundary(RefrigerationWalkInZoneBoundary&& other) = default;
+    RefrigerationWalkInZoneBoundary& operator=(const RefrigerationWalkInZoneBoundary&) = default;
+    RefrigerationWalkInZoneBoundary& operator=(RefrigerationWalkInZoneBoundary&&) = default;
 
     //@}
 
@@ -152,7 +157,7 @@ namespace model {
 
     void resetStockingDoorOpeningScheduleFacingZone();
 
-    bool setStockingDoorOpeningProtectionTypeFacingZone(std::string stockingDoorOpeningProtectionTypeFacingZone);
+    bool setStockingDoorOpeningProtectionTypeFacingZone(const std::string& stockingDoorOpeningProtectionTypeFacingZone);
 
     void resetStockingDoorOpeningProtectionTypeFacingZone();
 
@@ -163,7 +168,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationWalkInZoneBoundary_Impl ImplType;
+    using ImplType = detail::RefrigerationWalkInZoneBoundary_Impl;
 
     explicit RefrigerationWalkInZoneBoundary(std::shared_ptr<detail::RefrigerationWalkInZoneBoundary_Impl> impl);
 
@@ -177,10 +182,10 @@ namespace model {
   };
 
   /** \relates RefrigerationWalkInZoneBoundary*/
-  typedef boost::optional<RefrigerationWalkInZoneBoundary> OptionalRefrigerationWalkInZoneBoundary;
+  using OptionalRefrigerationWalkInZoneBoundary = boost::optional<RefrigerationWalkInZoneBoundary>;
 
   /** \relates RefrigerationWalkInZoneBoundary*/
-  typedef std::vector<RefrigerationWalkInZoneBoundary> RefrigerationWalkInZoneBoundaryVector;
+  using RefrigerationWalkInZoneBoundaryVector = std::vector<RefrigerationWalkInZoneBoundary>;
 
 }  // namespace model
 }  // namespace openstudio

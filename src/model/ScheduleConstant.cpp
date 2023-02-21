@@ -70,7 +70,7 @@ namespace model {
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> ScheduleConstant_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy

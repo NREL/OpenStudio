@@ -46,7 +46,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    OutsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+    auto mo = m_model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
 
     boost::optional<std::string> s = workspaceObject.getString(SurfaceConvectionAlgorithm_OutsideFields::Algorithm);
     if (s) {

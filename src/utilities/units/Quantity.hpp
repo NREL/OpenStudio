@@ -56,7 +56,7 @@ class UTILITIES_API Quantity
 
   Quantity& operator=(const Quantity& q);
 
-  virtual ~Quantity(){};
+  virtual ~Quantity() = default;
 
   //@}
   /** @name Value */
@@ -189,10 +189,10 @@ class UTILITIES_API Quantity
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Quantity& q);
 
 /** \relates Quantity */
-typedef boost::optional<Quantity> OptionalQuantity;
+using OptionalQuantity = boost::optional<Quantity>;
 
 /** \relates Quantity */
-typedef std::vector<Quantity> QuantityVector;
+using QuantityVector = std::vector<Quantity>;
 
 /** Negate a Quantity. */
 UTILITIES_API Quantity operator-(const Quantity& rQuantity);

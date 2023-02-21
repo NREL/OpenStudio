@@ -109,13 +109,13 @@ namespace model {
 
     ModelObject CoolingTowerVariableSpeed_Impl::clone(Model model) const {
       // StraightComponent_Impl will clone the CT and reset the inlet/outlet ports for us
-      CoolingTowerVariableSpeed newTower = StraightComponent_Impl::clone(model).cast<CoolingTowerVariableSpeed>();
+      auto newTower = StraightComponent_Impl::clone(model).cast<CoolingTowerVariableSpeed>();
 
       if (boost::optional<ModelObject> mo = modelCoefficient()) {
         newTower.setModelCoefficient(mo->clone(model));
       }
 
-      return newTower;
+      return std::move(newTower);
     }
 
     std::vector<IddObjectType> CoolingTowerVariableSpeed_Impl::allowableChildTypes() const {
@@ -142,7 +142,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoolingTowerVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_CoolingTower_VariableSpeedFields::BasinHeaterOperatingSchedule) != e) {
         result.push_back(ScheduleTypeKey("CoolingTowerVariableSpeed", "Basin Heater Operating Schedule"));
       }
@@ -784,7 +785,7 @@ namespace model {
   }
 
   IddObjectType CoolingTowerVariableSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoolingTower_VariableSpeed);
+    return {IddObjectType::OS_CoolingTower_VariableSpeed};
   }
 
   std::vector<std::string> CoolingTowerVariableSpeed::modelTypeValues() {
@@ -931,7 +932,7 @@ namespace model {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->sizingFactor();
   }
 
-  bool CoolingTowerVariableSpeed::setModelType(std::string modelType) {
+  bool CoolingTowerVariableSpeed::setModelType(const std::string& modelType) {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setModelType(modelType);
   }
 
@@ -1044,7 +1045,7 @@ namespace model {
     getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetBasinHeaterOperatingSchedule();
   }
 
-  bool CoolingTowerVariableSpeed::setEvaporationLossMode(std::string evaporationLossMode) {
+  bool CoolingTowerVariableSpeed::setEvaporationLossMode(const std::string& evaporationLossMode) {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setEvaporationLossMode(evaporationLossMode);
   }
 
@@ -1068,7 +1069,7 @@ namespace model {
     getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetDriftLossPercent();
   }
 
-  bool CoolingTowerVariableSpeed::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+  bool CoolingTowerVariableSpeed::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setBlowdownCalculationMode(blowdownCalculationMode);
   }
 
@@ -1100,7 +1101,7 @@ namespace model {
     getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetNumberofCells();
   }
 
-  bool CoolingTowerVariableSpeed::setCellControl(std::string cellControl) {
+  bool CoolingTowerVariableSpeed::setCellControl(const std::string& cellControl) {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setCellControl(cellControl);
   }
 

@@ -66,9 +66,9 @@ OPENSTUDIO_ENUM(ReportingFrequency,
 
 // clang-format on
 
-typedef boost::optional<ReportingFrequency> OptionalReportingFrequency;
-typedef std::vector<ReportingFrequency> ReportingFrequencyVector;
-typedef std::set<ReportingFrequency> ReportingFrequencySet;
+using OptionalReportingFrequency = boost::optional<ReportingFrequency>;
+using ReportingFrequencyVector = std::vector<ReportingFrequency>;
+using ReportingFrequencySet = std::set<ReportingFrequency>;
 
 /** \class EnvironmentType
  *  \brief Frequencies at which report variables may be specified.
@@ -82,7 +82,7 @@ OPENSTUDIO_ENUM(EnvironmentType,
  *  \endcode */
 OPENSTUDIO_ENUM(EnvironmentType, ((DesignDay)(DesignDay)(1))((DesignRunPeriod))((WeatherRunPeriod)));
 
-typedef boost::optional<EnvironmentType> OptionalEnvironmentType;
+using OptionalEnvironmentType = boost::optional<EnvironmentType>;
 
 }  // namespace openstudio
 

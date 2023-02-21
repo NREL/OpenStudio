@@ -76,4 +76,24 @@ if(BUILD_TESTING)
 
 endif()
 
+if(BUILD_BENCHMARK)
+
+  set(${target_name}_benchmark_src
+    benchmark/VersionTranslation_Benchmark.cpp
+  )
+
+  foreach( bench_file ${${target_name}_benchmark_src} )
+    get_filename_component(bench_name ${bench_file} NAME_WE)
+    message("bench_name=${bench_name}")
+    add_executable( ${bench_name} ${bench_file} )
+    target_link_libraries(${bench_name}
+      CONAN_PKG::benchmark
+      openstudiolib
+    )
+    set_target_properties(${bench_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/benchmark")
+    add_dependencies(run_benchmarks ${bench_name})
+  endforeach()
+
+endif()
+
 MAKE_SWIG_TARGET(OpenStudioOSVersion OSVersion "${CMAKE_CURRENT_SOURCE_DIR}/OSVersion.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)

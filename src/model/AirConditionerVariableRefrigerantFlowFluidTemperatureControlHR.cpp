@@ -159,7 +159,7 @@ namespace model {
       airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->setLoadingIndexList(
         loadingIndexListClone);
 
-      return airConditionerClone;
+      return std::move(airConditionerClone);
     }
 
     std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::remove() {

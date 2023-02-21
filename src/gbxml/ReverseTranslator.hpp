@@ -44,7 +44,8 @@
 
 namespace pugi {
 class xml_node;
-}
+class xml_document;
+}  // namespace pugi
 
 namespace openstudio {
 
@@ -63,7 +64,7 @@ namespace gbxml {
    public:
     ReverseTranslator();
 
-    virtual ~ReverseTranslator();
+    ~ReverseTranslator();
 
     boost::optional<openstudio::model::Model> loadModel(const openstudio::path& path, ProgressBar* progressBar = nullptr);
 

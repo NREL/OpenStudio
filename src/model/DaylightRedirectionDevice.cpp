@@ -100,7 +100,7 @@ namespace model {
   }
 
   IddObjectType DaylightRedirectionDevice::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice);
+    return {IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice};
   }
 
   std::vector<std::string> DaylightRedirectionDevice::daylightRedirectionDeviceTypeValues() {

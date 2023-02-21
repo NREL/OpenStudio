@@ -65,7 +65,12 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~WeatherFile() {}
+    virtual ~WeatherFile() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WeatherFile(const WeatherFile& other) = default;
+    WeatherFile(WeatherFile&& other) = default;
+    WeatherFile& operator=(const WeatherFile&) = default;
+    WeatherFile& operator=(WeatherFile&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -114,15 +119,15 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setCity(std::string city);
+    bool setCity(const std::string& city);
 
-    bool setStateProvinceRegion(std::string stateProvinceRegion);
+    bool setStateProvinceRegion(const std::string& stateProvinceRegion);
 
-    bool setCountry(std::string country);
+    bool setCountry(const std::string& country);
 
-    bool setDataSource(std::string dataSource);
+    bool setDataSource(const std::string& dataSource);
 
-    bool setWMONumber(std::string wMONumber);
+    bool setWMONumber(const std::string& wMONumber);
 
     bool setLatitude(double latitude);
 
@@ -136,13 +141,13 @@ namespace model {
 
     //bool setUrl(boost::optional<std::string> url);
 
-    //bool setUrl(std::string url);
+    //bool setUrl(const std::string& url);
 
     //void resetUrl();
 
     //bool setChecksum(boost::optional<std::string> checksum);
 
-    //bool setChecksum(std::string checksum);
+    //bool setChecksum(const std::string& checksum);
 
     //void resetChecksum();
 
@@ -170,7 +175,7 @@ namespace model {
     explicit WeatherFile(Model& model);
 
     /// @cond
-    typedef detail::WeatherFile_Impl ImplType;
+    using ImplType = detail::WeatherFile_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -183,10 +188,10 @@ namespace model {
   };
 
   /** \relates WeatherFile*/
-  typedef boost::optional<WeatherFile> OptionalWeatherFile;
+  using OptionalWeatherFile = boost::optional<WeatherFile>;
 
   /** \relates WeatherFile*/
-  typedef std::vector<WeatherFile> WeatherFileVector;
+  using WeatherFileVector = std::vector<WeatherFile>;
 
 }  // namespace model
 }  // namespace openstudio

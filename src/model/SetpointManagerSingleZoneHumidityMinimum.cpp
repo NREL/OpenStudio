@@ -81,7 +81,7 @@ namespace model {
           ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
           if (!modelObjectVector.empty()) {
             ModelObject mo = modelObjectVector.front();
-            ThermalZone thermalZone = mo.cast<ThermalZone>();
+            auto thermalZone = mo.cast<ThermalZone>();
             this->setControlZone(thermalZone);
           }
           return true;
@@ -91,9 +91,9 @@ namespace model {
     }
 
     ModelObject SetpointManagerSingleZoneHumidityMinimum_Impl::clone(Model model) const {
-      SetpointManagerSingleZoneHumidityMinimum clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneHumidityMinimum>();
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneHumidityMinimum>();
       clonedObject.resetControlZone();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerSingleZoneHumidityMinimum_Impl::controlVariable() const {
@@ -145,7 +145,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerSingleZoneHumidityMinimum::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_SingleZone_Humidity_Minimum);
+    return {IddObjectType::OS_SetpointManager_SingleZone_Humidity_Minimum};
   }
 
   std::vector<std::string> SetpointManagerSingleZoneHumidityMinimum::controlVariableValues() {

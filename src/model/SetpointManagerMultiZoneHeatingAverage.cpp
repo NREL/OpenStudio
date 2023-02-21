@@ -126,7 +126,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerMultiZoneHeatingAverage::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_MultiZone_Heating_Average);
+    return {IddObjectType::OS_SetpointManager_MultiZone_Heating_Average};
   }
 
   std::vector<std::string> SetpointManagerMultiZoneHeatingAverage::controlVariableValues() {

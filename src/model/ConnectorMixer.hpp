@@ -54,7 +54,12 @@ namespace model {
     /** Constructs a new Mixer object and places it inside the model. */
     explicit ConnectorMixer(const Model& model);
 
-    virtual ~ConnectorMixer() {}
+    virtual ~ConnectorMixer() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConnectorMixer(const ConnectorMixer& other) = default;
+    ConnectorMixer(ConnectorMixer&& other) = default;
+    ConnectorMixer& operator=(const ConnectorMixer&) = default;
+    ConnectorMixer& operator=(ConnectorMixer&&) = default;
 
     unsigned outletPort() const override;
 
@@ -71,7 +76,7 @@ namespace model {
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::ConnectorMixer_Impl ImplType;
+    using ImplType = detail::ConnectorMixer_Impl;
 
     friend class Model;
 
@@ -86,7 +91,7 @@ namespace model {
   };
 
   /** \relates ConnectorMixer */
-  typedef boost::optional<ConnectorMixer> OptionalConnectorMixer;
+  using OptionalConnectorMixer = boost::optional<ConnectorMixer>;
 
 }  // namespace model
 

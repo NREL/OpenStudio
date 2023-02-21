@@ -51,7 +51,7 @@ namespace model {
 
       CurveQuadLinear_Impl(const CurveQuadLinear_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveQuadLinear_Impl() {}
+      virtual ~CurveQuadLinear_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

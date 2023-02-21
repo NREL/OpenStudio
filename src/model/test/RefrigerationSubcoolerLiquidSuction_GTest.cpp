@@ -103,12 +103,12 @@ TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_Remove) {
   RefrigerationSubcoolerLiquidSuction testObject = RefrigerationSubcoolerLiquidSuction(model);
 
   std::vector<RefrigerationSubcoolerLiquidSuction> refrigerationLiquidSuctionSubcoolers =
-    model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
+    model.getConcreteModelObjects<RefrigerationSubcoolerLiquidSuction>();
   EXPECT_EQ(1, refrigerationLiquidSuctionSubcoolers.size());
 
   testObject.remove();
 
-  refrigerationLiquidSuctionSubcoolers = model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
+  refrigerationLiquidSuctionSubcoolers = model.getConcreteModelObjects<RefrigerationSubcoolerLiquidSuction>();
   EXPECT_EQ(0, refrigerationLiquidSuctionSubcoolers.size());
 }
 
@@ -117,8 +117,7 @@ TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_CloneOneModelWithDefaul
 
   RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuction = RefrigerationSubcoolerLiquidSuction(m);
 
-  RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuctionClone =
-    refrigerationSubcoolerLiquidSuction.clone(m).cast<RefrigerationSubcoolerLiquidSuction>();
+  auto refrigerationSubcoolerLiquidSuctionClone = refrigerationSubcoolerLiquidSuction.clone(m).cast<RefrigerationSubcoolerLiquidSuction>();
 
   EXPECT_NE(refrigerationSubcoolerLiquidSuctionClone.handle(), refrigerationSubcoolerLiquidSuction.handle());
 
@@ -135,8 +134,7 @@ TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_CloneOneModelWithCustom
   refrigerationSubcoolerLiquidSuction.setDesignLiquidInletTemperature(20.0);
   refrigerationSubcoolerLiquidSuction.setDesignVaporInletTemperature(10.0);
 
-  RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuctionClone =
-    refrigerationSubcoolerLiquidSuction.clone(m).cast<RefrigerationSubcoolerLiquidSuction>();
+  auto refrigerationSubcoolerLiquidSuctionClone = refrigerationSubcoolerLiquidSuction.clone(m).cast<RefrigerationSubcoolerLiquidSuction>();
 
   EXPECT_NE(refrigerationSubcoolerLiquidSuctionClone.handle(), refrigerationSubcoolerLiquidSuction.handle());
 

@@ -79,7 +79,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AvailabilityManager_NightVentilationFields::ApplicabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AvailabilityManagerNightVentilation", "Applicability Schedule"));
       }
@@ -197,7 +198,7 @@ namespace model {
   }
 
   IddObjectType AvailabilityManagerNightVentilation::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AvailabilityManager_NightVentilation);
+    return {IddObjectType::OS_AvailabilityManager_NightVentilation};
   }
 
   Schedule AvailabilityManagerNightVentilation::applicabilitySchedule() const {

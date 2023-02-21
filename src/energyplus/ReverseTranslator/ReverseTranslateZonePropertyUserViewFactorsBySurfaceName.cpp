@@ -124,7 +124,7 @@ namespace energyplus {
     }
 
     boost::optional<ModelObject> result;
-    for (ThermalZone thermalZone : thermalZones) {
+    for (const ThermalZone& thermalZone : thermalZones) {
 
       openstudio::model::ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
 
@@ -133,7 +133,7 @@ namespace energyplus {
       }
 
       for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
-        WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+        auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
         boost::optional<WorkspaceObject> fromTarget =
           workspaceGroup.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurface);

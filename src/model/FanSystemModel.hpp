@@ -79,7 +79,12 @@ namespace model {
 
     explicit FanSystemModel(const Model& model);
 
-    virtual ~FanSystemModel() {}
+    virtual ~FanSystemModel() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FanSystemModel(const FanSystemModel& other) = default;
+    FanSystemModel(FanSystemModel&& other) = default;
+    FanSystemModel& operator=(const FanSystemModel&) = default;
+    FanSystemModel& operator=(FanSystemModel&&) = default;
 
     //@}
 
@@ -213,7 +218,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FanSystemModel_Impl ImplType;
+    using ImplType = detail::FanSystemModel_Impl;
 
     explicit FanSystemModel(std::shared_ptr<detail::FanSystemModel_Impl> impl);
 
@@ -227,10 +232,10 @@ namespace model {
   };
 
   /** \relates FanSystemModel*/
-  typedef boost::optional<FanSystemModel> OptionalFanSystemModel;
+  using OptionalFanSystemModel = boost::optional<FanSystemModel>;
 
   /** \relates FanSystemModel*/
-  typedef std::vector<FanSystemModel> FanSystemModelVector;
+  using FanSystemModelVector = std::vector<FanSystemModel>;
 
 }  // namespace model
 }  // namespace openstudio

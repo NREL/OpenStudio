@@ -57,8 +57,6 @@ namespace model {
 
     SetpointManager_Impl::SetpointManager_Impl(IddObjectType type, Model_Impl* model) : HVACComponent_Impl(type, model) {}
 
-    SetpointManager_Impl::~SetpointManager_Impl() {}
-
     const std::vector<std::string>& SetpointManager_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       return result;
@@ -146,9 +144,9 @@ namespace model {
     }
 
     ModelObject SetpointManager_Impl::clone(Model model) const {
-      SetpointManager clonedObject = HVACComponent_Impl::clone(model).cast<SetpointManager>();
+      auto clonedObject = HVACComponent_Impl::clone(model).cast<SetpointManager>();
       clonedObject.getImpl<detail::SetpointManager_Impl>()->resetSetpointNode();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     boost::optional<Loop> SetpointManager_Impl::loop() const {

@@ -113,7 +113,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_AdiabaticSurface) {
   std::string surfname("Adiabatic_Surface");
 
   // Find a surface, make it adiabatic
-  for (auto& surf : model.getModelObjects<Surface>()) {
+  for (auto& surf : model.getConcreteModelObjects<Surface>()) {
     if (surf.outsideBoundaryCondition() == "Outdoors") {
       surf.setOutsideBoundaryCondition("Adiabatic");
       surf.setSunExposure("NoSun");
@@ -137,7 +137,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_AdiabaticSurface) {
 
   ASSERT_TRUE(model2);
 
-  auto osurf = model2->getModelObjectByName<Surface>(surfname);
+  auto osurf = model2->getConcreteModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Adiabatic", osurf->outsideBoundaryCondition());
   EXPECT_EQ("NoSun", osurf->sunExposure());
@@ -170,18 +170,19 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
 
   construction.setLayers(layers);
 
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
 
   Building building = model.getUniqueModelObject<Building>();
 
   Space space(model);
   space.setName("Space1");
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 0, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   //std::string surfname("Surface 1"); // DLM: note this will fail because "Surface 1" gets round tripped as "Surface_1"
   std::string surfname("Surface1");
@@ -207,7 +208,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
 
   ASSERT_TRUE(model2);
   //std::cout << *model2 << '\n';
-  auto osurf = model2->getModelObjectByName<Surface>(surfname);
+  auto osurf = model2->getConcreteModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   auto ocons = osurf->construction();
   ASSERT_TRUE(ocons);
@@ -256,11 +257,12 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
   Space space(model);
   space.setName("Space1");
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 0, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   //std::string surfname("Surface 1"); // DLM: note this will fail because "Surface 1" gets round tripped as "Surface_1"
   std::string surfname("Surface1");
@@ -294,16 +296,16 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
 
   ASSERT_TRUE(model2);
   //std::cout << *model2 << '\n';
-  auto osurf = model2->getModelObjectByName<Surface>(surfname);
+  auto osurf = model2->getConcreteModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
-  auto ospace = model2->getModelObjectByName<Space>(space.nameString());
+  auto ospace = model2->getConcreteModelObjectByName<Space>(space.nameString());
   ASSERT_TRUE(ospace);
-  auto ozone = model2->getModelObjectByName<ThermalZone>(zone.nameString());  // Dragostea Din Tei!
+  auto ozone = model2->getConcreteModelObjectByName<ThermalZone>(zone.nameString());  // Dragostea Din Tei!
   ASSERT_TRUE(ozone);
 
   // This really tests a RT feature, but doesn't really matter. When diffing original & rountripped, I noticed a diff in Material:
   // the roundtripped model has Roughness missing
-  auto omat = model2->getModelObjectByName<StandardOpaqueMaterial>("Material4");
+  auto omat = model2->getConcreteModelObjectByName<StandardOpaqueMaterial>("Material4");
   ASSERT_TRUE(omat);
   EXPECT_EQ("MediumSmooth", omat->roughness());
 
@@ -391,7 +393,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
 
     const auto& bounds = space.boundingBox();
     const auto& surfaces = space.surfaces();
-    for (auto& surface : surfaces) {
+    for (const auto& surface : surfaces) {
       std::string surfType = surface.surfaceType();
       std::string surfName = surface.name().value();
 
@@ -559,7 +561,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     model2->save(resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_1.osm"), true);
 
     {
-      auto _obj = model2->getModelObjectByName<Building>("Building_1");
+      auto _obj = model2->getConcreteModelObjectByName<Building>("Building_1");
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -576,7 +578,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<BuildingStory>("Building_Story_1");
+      auto _obj = model2->getConcreteModelObjectByName<BuildingStory>("Building_Story_1");
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -593,7 +595,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<Space>("Space_1");
+      auto _obj = model2->getConcreteModelObjectByName<Space>("Space_1");
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -610,7 +612,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<Surface>("Surface_1");
+      auto _obj = model2->getConcreteModelObjectByName<Surface>("Surface_1");
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -627,7 +629,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<SubSurface>("Sub_Surface_1");
+      auto _obj = model2->getConcreteModelObjectByName<SubSurface>("Sub_Surface_1");
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -644,7 +646,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<ThermalZone>("Thermal_Zone_1");
+      auto _obj = model2->getConcreteModelObjectByName<ThermalZone>("Thermal_Zone_1");
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -661,7 +663,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<Construction>("Exterior_Wall");
+      auto _obj = model2->getConcreteModelObjectByName<Construction>("Exterior_Wall");
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -697,43 +699,43 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
 
   // does have additional properties (gbXMLId, displayName, CADObjectId)
   {
-    auto _building = model.getModelObjectByName<Building>("Building 1");
+    auto _building = model.getConcreteModelObjectByName<Building>("Building 1");
     ASSERT_TRUE(_building);
     EXPECT_TRUE(_building->setGBXMLId("Building1"));
     EXPECT_TRUE(_building->setDisplayName("Building 1"));
     EXPECT_TRUE(_building->setCADObjectId("1234"));
 
-    auto _buildingStory = model.getModelObjectByName<BuildingStory>("Building Story 1");
+    auto _buildingStory = model.getConcreteModelObjectByName<BuildingStory>("Building Story 1");
     ASSERT_TRUE(_buildingStory);
     EXPECT_TRUE(_buildingStory->setGBXMLId("BuildingStory1"));
     EXPECT_TRUE(_buildingStory->setDisplayName("Building Story 1"));
     EXPECT_TRUE(_buildingStory->setCADObjectId("1234"));
 
-    auto _space = model.getModelObjectByName<Space>("Space 1");
+    auto _space = model.getConcreteModelObjectByName<Space>("Space 1");
     ASSERT_TRUE(_space);
     EXPECT_TRUE(_space->setGBXMLId("Space1"));
     EXPECT_TRUE(_space->setDisplayName("Space 1"));
     EXPECT_TRUE(_space->setCADObjectId("1234"));
 
-    auto _surface = model.getModelObjectByName<Surface>("Surface 1");
+    auto _surface = model.getConcreteModelObjectByName<Surface>("Surface 1");
     ASSERT_TRUE(_surface);
     EXPECT_TRUE(_surface->setGBXMLId("Surface1"));
     EXPECT_TRUE(_surface->setDisplayName("Surface 1"));
     EXPECT_TRUE(_surface->setCADObjectId("1234"));
 
-    auto _subSurface = model.getModelObjectByName<SubSurface>("Sub Surface 1");
+    auto _subSurface = model.getConcreteModelObjectByName<SubSurface>("Sub Surface 1");
     ASSERT_TRUE(_subSurface);
     EXPECT_TRUE(_subSurface->setGBXMLId("SubSurface1"));
     EXPECT_TRUE(_subSurface->setDisplayName("Sub Surface 1"));
     EXPECT_TRUE(_subSurface->setCADObjectId("1234"));
 
-    auto _zone = model.getModelObjectByName<ThermalZone>("Thermal Zone 1");
+    auto _zone = model.getConcreteModelObjectByName<ThermalZone>("Thermal Zone 1");
     ASSERT_TRUE(_zone);
     EXPECT_TRUE(_zone->setGBXMLId("ThermalZone1"));
     EXPECT_TRUE(_zone->setDisplayName("Thermal Zone 1"));
     EXPECT_TRUE(_zone->setCADObjectId("1234"));
 
-    auto _construction = model.getModelObjectByName<Construction>("Exterior Wall");
+    auto _construction = model.getConcreteModelObjectByName<Construction>("Exterior Wall");
     ASSERT_TRUE(_construction);
     EXPECT_TRUE(_construction->setGBXMLId("ExteriorWall"));
     EXPECT_TRUE(_construction->setDisplayName("Exterior Wall"));
@@ -755,7 +757,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     model2->save(resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_2.osm"), true);
 
     {
-      auto _obj = model2->getModelObjectByName<Building>("Building_1");  // Building doesn't use gbXMLId
+      auto _obj = model2->getConcreteModelObjectByName<Building>("Building_1");  // Building doesn't use gbXMLId
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));  // Building doesn't use CADObjectId
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -773,7 +775,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<BuildingStory>("BuildingStory1");
+      auto _obj = model2->getConcreteModelObjectByName<BuildingStory>("BuildingStory1");
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));  // BuildingStory doesn't use CADObjectId
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -791,7 +793,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<Space>("Space1");
+      auto _obj = model2->getConcreteModelObjectByName<Space>("Space1");
       ASSERT_TRUE(_obj);
       EXPECT_TRUE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -811,7 +813,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<Surface>("Surface1");
+      auto _obj = model2->getConcreteModelObjectByName<Surface>("Surface1");
       ASSERT_TRUE(_obj);
       EXPECT_TRUE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -831,7 +833,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<SubSurface>("SubSurface1");
+      auto _obj = model2->getConcreteModelObjectByName<SubSurface>("SubSurface1");
       ASSERT_TRUE(_obj);
       EXPECT_TRUE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -851,7 +853,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<ThermalZone>("ThermalZone1");
+      auto _obj = model2->getConcreteModelObjectByName<ThermalZone>("ThermalZone1");
       ASSERT_TRUE(_obj);
       EXPECT_TRUE(_obj->additionalProperties().hasFeature("CADObjectId"));
       ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -871,7 +873,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
 
     {
-      auto _obj = model2->getModelObjectByName<Construction>("ExteriorWall");
+      auto _obj = model2->getConcreteModelObjectByName<Construction>("ExteriorWall");
       ASSERT_TRUE(_obj);
       EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));  // Construction doesn't use CADObjectId
       ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
@@ -978,7 +980,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_spaceVolume) {
   {
     Model model = exampleModel();
 
-    auto ospace1 = model.getModelObjectByName<Space>("Space 1");
+    auto ospace1 = model.getConcreteModelObjectByName<Space>("Space 1");
     ASSERT_TRUE(ospace1);
     EXPECT_EQ(300.0, ospace1->volume());
 
@@ -1013,12 +1015,12 @@ TEST_F(gbXMLFixture, ForwardTranslator_spaceVolume) {
 
     ASSERT_TRUE(model2);
 
-    auto ospace2 = model2->getModelObjectByName<Space>("Space_1");
+    auto ospace2 = model2->getConcreteModelObjectByName<Space>("Space_1");
     ASSERT_TRUE(ospace2);
     EXPECT_EQ(300.0, ospace2->volume());
     EXPECT_FALSE(ospace2->isVolumeAutocalculated());
 
-    auto ospace3 = model2->getModelObjectByName<Space>("Shading_Surface_Group_1");
+    auto ospace3 = model2->getConcreteModelObjectByName<Space>("Shading_Surface_Group_1");
     ASSERT_TRUE(ospace3);
     EXPECT_EQ(0.0, ospace3->volume());
     EXPECT_TRUE(ospace3->isVolumeAutocalculated());
@@ -1027,7 +1029,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_spaceVolume) {
   {
     Model model = exampleModel();
 
-    auto ospace1 = model.getModelObjectByName<Space>("Space 1");
+    auto ospace1 = model.getConcreteModelObjectByName<Space>("Space 1");
     ASSERT_TRUE(ospace1);
     EXPECT_TRUE(ospace1->setVolume(305.0));
     EXPECT_EQ(305.0, ospace1->volume());
@@ -1063,7 +1065,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_spaceVolume) {
 
     ASSERT_TRUE(model2);
 
-    auto ospace2 = model2->getModelObjectByName<Space>("Space_1");
+    auto ospace2 = model2->getConcreteModelObjectByName<Space>("Space_1");
     ASSERT_TRUE(ospace2);
     EXPECT_EQ(305.0, ospace2->volume());
     EXPECT_FALSE(ospace2->isVolumeAutocalculated());

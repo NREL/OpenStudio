@@ -78,11 +78,11 @@ namespace model {
     }
 
     ModelObject RefrigerationSubcoolerMechanical_Impl::clone(Model model) const {
-      RefrigerationSubcoolerMechanical modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSubcoolerMechanical>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSubcoolerMechanical>();
 
       modelObjectClone.resetCapacityProvidingSystem();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical_Impl::capacityProvidingSystem() const {
@@ -133,7 +133,7 @@ namespace model {
       std::vector<RefrigerationSystem> systems =
         getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
 
-      if (systems.size() > 0u) {
+      if (!systems.empty()) {
         if (systems.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
         }
@@ -152,7 +152,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationSubcoolerMechanical::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Subcooler_Mechanical);
+    return {IddObjectType::OS_Refrigeration_Subcooler_Mechanical};
   }
 
   boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical::capacityProvidingSystem() const {

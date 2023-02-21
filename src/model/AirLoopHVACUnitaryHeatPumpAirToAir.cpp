@@ -91,15 +91,15 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     ModelObject AirLoopHVACUnitaryHeatPumpAirToAir_Impl::clone(Model model) const {
-      AirLoopHVACUnitaryHeatPumpAirToAir newUnitary = StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
+      auto newUnitary = StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
-      HVACComponent newFan = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto newFan = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
-      HVACComponent newCoolingCoil = this->coolingCoil().clone(model).cast<HVACComponent>();
+      auto newCoolingCoil = this->coolingCoil().clone(model).cast<HVACComponent>();
 
-      HVACComponent newHeatingCoil = this->heatingCoil().clone(model).cast<HVACComponent>();
+      auto newHeatingCoil = this->heatingCoil().clone(model).cast<HVACComponent>();
 
-      HVACComponent newSupHeatingCoil = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
+      auto newSupHeatingCoil = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
 
       newUnitary.setCoolingCoil(newCoolingCoil);
 
@@ -109,7 +109,7 @@ namespace model {
 
       newUnitary.setSupplementalHeatingCoil(newSupHeatingCoil);
 
-      return newUnitary;
+      return std::move(newUnitary);
     }
 
     const std::vector<std::string>& AirLoopHVACUnitaryHeatPumpAirToAir_Impl::outputVariableNames() const {
@@ -124,7 +124,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirLoopHVACUnitaryHeatPumpAirToAir", "Availability"));
       }
@@ -480,7 +481,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setFanPlacement(std::string fanPlacement) {
+    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setFanPlacement(const std::string& fanPlacement) {
       bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::FanPlacement, fanPlacement);
       return result;
     }
@@ -501,7 +502,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setDehumidificationControlType(std::string dehumidificationControlType) {
+    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setDehumidificationControlType(const std::string& dehumidificationControlType) {
       bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::DehumidificationControlType, dehumidificationControlType);
       return result;
     }
@@ -858,7 +859,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
   }
 
-  bool AirLoopHVACUnitaryHeatPumpAirToAir::setFanPlacement(std::string fanPlacement) {
+  bool AirLoopHVACUnitaryHeatPumpAirToAir::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setFanPlacement(fanPlacement);
   }
 
@@ -874,7 +875,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->resetSupplyAirFanOperatingModeSchedule();
   }
 
-  bool AirLoopHVACUnitaryHeatPumpAirToAir::setDehumidificationControlType(std::string dehumidificationControlType) {
+  bool AirLoopHVACUnitaryHeatPumpAirToAir::setDehumidificationControlType(const std::string& dehumidificationControlType) {
     return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setDehumidificationControlType(dehumidificationControlType);
   }
 

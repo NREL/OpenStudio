@@ -132,10 +132,10 @@ class UTILITIES_API Transformation
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Transformation& t);
 
 // optional Transformation
-typedef boost::optional<Transformation> OptionalTransformation;
+using OptionalTransformation = boost::optional<Transformation>;
 
 // vector of Transformation
-typedef std::vector<Transformation> TransformationVector;
+using TransformationVector = std::vector<Transformation>;
 
 /// create rotation about origin defined by axis and angle (radians)
 UTILITIES_API Transformation createRotation(const Vector3d& axis, double radians);

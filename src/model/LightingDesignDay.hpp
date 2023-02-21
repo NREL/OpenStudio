@@ -56,7 +56,12 @@ namespace model {
 
     LightingDesignDay(const std::string& cieSkyModel, const openstudio::Date& date, const Model& model);
 
-    virtual ~LightingDesignDay() {}
+    virtual ~LightingDesignDay() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LightingDesignDay(const LightingDesignDay& other) = default;
+    LightingDesignDay(LightingDesignDay&& other) = default;
+    LightingDesignDay& operator=(const LightingDesignDay&) = default;
+    LightingDesignDay& operator=(LightingDesignDay&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -80,7 +85,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setCIESkyModel(std::string cIESkyModel);
+    bool setCIESkyModel(const std::string& cIESkyModel);
 
     bool setSnowIndicator(int snowIndicator);
 
@@ -105,7 +110,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::LightingDesignDay_Impl ImplType;
+    using ImplType = detail::LightingDesignDay_Impl;
 
     friend class detail::LightingDesignDay_Impl;
     friend class Model;
@@ -119,10 +124,10 @@ namespace model {
   };
 
   /** \relates LightingDesignDay*/
-  typedef boost::optional<LightingDesignDay> OptionalLightingDesignDay;
+  using OptionalLightingDesignDay = boost::optional<LightingDesignDay>;
 
   /** \relates LightingDesignDay*/
-  typedef std::vector<LightingDesignDay> LightingDesignDayVector;
+  using LightingDesignDayVector = std::vector<LightingDesignDay>;
 
 }  // namespace model
 }  // namespace openstudio
