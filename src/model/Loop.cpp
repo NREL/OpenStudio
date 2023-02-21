@@ -417,8 +417,8 @@ namespace model {
       }
     }
 
-    std::vector<AppGFuelType> Loop_Impl::coolingFuelTypes() const {
-      std::set<AppGFuelType> result;
+    std::vector<FuelType> Loop_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
       for (const auto& comp : subsetCastVector<HVACComponent>(supplyComponents())) {
         for (auto& ft : comp.coolingFuelTypes()) {
           result.insert(ft);
@@ -427,10 +427,20 @@ namespace model {
       return {result.begin(), result.end()};
     }
 
-    std::vector<AppGFuelType> Loop_Impl::heatingFuelTypes() const {
-      std::set<AppGFuelType> result;
+    std::vector<FuelType> Loop_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
       for (const auto& comp : subsetCastVector<HVACComponent>(supplyComponents())) {
         for (auto& ft : comp.heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> Loop_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(supplyComponents())) {
+        for (auto& ft : comp.appGHeatingFuelTypes()) {
           result.insert(ft);
         }
       }
@@ -549,12 +559,16 @@ namespace model {
     return getImpl<detail::Loop_Impl>()->componentType();
   }
 
-  std::vector<AppGFuelType> Loop::coolingFuelTypes() const {
+  std::vector<FuelType> Loop::coolingFuelTypes() const {
     return getImpl<detail::Loop_Impl>()->coolingFuelTypes();
   }
 
-  std::vector<AppGFuelType> Loop::heatingFuelTypes() const {
+  std::vector<FuelType> Loop::heatingFuelTypes() const {
     return getImpl<detail::Loop_Impl>()->heatingFuelTypes();
+  }
+
+  std::vector<AppGFuelType> Loop::appGHeatingFuelTypes() const {
+    return getImpl<detail::Loop_Impl>()->appGHeatingFuelTypes();
   }
 
 }  // namespace model

@@ -295,11 +295,15 @@ namespace model {
       return ComponentType::Both;
     }
 
-    std::vector<AppGFuelType> ThermalStorageIceDetailed_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> ThermalStorageIceDetailed_Impl::coolingFuelTypes() const {
       return {};
     }
 
-    std::vector<AppGFuelType> ThermalStorageIceDetailed_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> ThermalStorageIceDetailed_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ThermalStorageIceDetailed_Impl::appGHeatingFuelTypes() const {
       return {};
     }
 

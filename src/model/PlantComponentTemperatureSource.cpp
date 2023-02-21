@@ -197,11 +197,15 @@ namespace model {
       return ComponentType::Both;
     }
 
-    std::vector<AppGFuelType> PlantComponentTemperatureSource_Impl::coolingFuelTypes() const {
-      return {AppGFuelType::Other};
+    std::vector<FuelType> PlantComponentTemperatureSource_Impl::coolingFuelTypes() const {
+      return {FuelType::EnergyTransfer};
     }
 
-    std::vector<AppGFuelType> PlantComponentTemperatureSource_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> PlantComponentTemperatureSource_Impl::heatingFuelTypes() const {
+      return {FuelType::EnergyTransfer};
+    }
+
+    std::vector<AppGFuelType> PlantComponentTemperatureSource_Impl::appGHeatingFuelTypes() const {
       return {AppGFuelType::Other};
     }
 

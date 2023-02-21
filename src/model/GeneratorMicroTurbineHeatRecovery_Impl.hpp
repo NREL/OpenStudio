@@ -73,8 +73,9 @@ namespace model {
       virtual bool addToNode(Node& node) override;
 
       virtual ComponentType componentType() const override;
-      virtual std::vector<AppGFuelType> coolingFuelTypes() const override;
-      virtual std::vector<AppGFuelType> heatingFuelTypes() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
 
       // DLM: consider reimplementing any other virtual methods of StraightComponent or HVACComponent
 

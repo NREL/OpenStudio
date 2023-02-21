@@ -39,6 +39,7 @@ namespace openstudio {
 
 class AppGFuelType;
 class ComponentType;
+class FuelType;
 
 namespace model {
 
@@ -118,8 +119,9 @@ namespace model {
       virtual std::vector<std::string> emsInternalVariableNames() const override;
 
       virtual ComponentType componentType() const;
-      virtual std::vector<AppGFuelType> coolingFuelTypes() const;
-      virtual std::vector<AppGFuelType> heatingFuelTypes() const;
+      virtual std::vector<FuelType> coolingFuelTypes() const;
+      virtual std::vector<FuelType> heatingFuelTypes() const;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const;
 
      protected:
       friend class Model_Impl;

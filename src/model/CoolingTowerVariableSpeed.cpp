@@ -753,12 +753,16 @@ namespace model {
       return ComponentType::Cooling;
     }
 
-    std::vector<AppGFuelType> CoolingTowerVariableSpeed_Impl::coolingFuelTypes() const {
-      return {AppGFuelType::Electric};
+    std::vector<FuelType> CoolingTowerVariableSpeed_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
     }
 
-    std::vector<AppGFuelType> CoolingTowerVariableSpeed_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> CoolingTowerVariableSpeed_Impl::heatingFuelTypes() const {
       return {};
+    }
+
+    std::vector<AppGFuelType> CoolingTowerVariableSpeed_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Electric};
     }
 
   }  // namespace detail

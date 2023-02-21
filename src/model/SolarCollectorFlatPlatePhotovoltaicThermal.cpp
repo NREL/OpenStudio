@@ -295,11 +295,15 @@ namespace model {
       return ComponentType::Heating;
     }
 
-    std::vector<AppGFuelType> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::coolingFuelTypes() const {
       return {};
     }
 
-    std::vector<AppGFuelType> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::heatingFuelTypes() const {
+      return {FuelType::EnergyTransfer};
+    }
+
+    std::vector<AppGFuelType> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::appGHeatingFuelTypes() const {
       return {AppGFuelType::Solar};
     }
 

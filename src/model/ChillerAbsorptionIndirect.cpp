@@ -674,14 +674,18 @@ namespace model {
       return ComponentType::Cooling;
     }
 
-    std::vector<AppGFuelType> ChillerAbsorptionIndirect_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> ChillerAbsorptionIndirect_Impl::coolingFuelTypes() const {
       if (auto generatorLoop_ = generatorLoop()) {
-        return generatorLoop_->coolingFuelTypes();
+        return generatorLoop_->heatingFuelTypes();  // This is done on purpose. We use heat to produce chilled water here!
       }
       return {};
     }
 
-    std::vector<AppGFuelType> ChillerAbsorptionIndirect_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> ChillerAbsorptionIndirect_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ChillerAbsorptionIndirect_Impl::appGHeatingFuelTypes() const {
       return {};
     }
 

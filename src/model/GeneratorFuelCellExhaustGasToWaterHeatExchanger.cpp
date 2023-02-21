@@ -528,11 +528,15 @@ namespace model {
       return ComponentType::Heating;
     }
 
-    std::vector<AppGFuelType> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::coolingFuelTypes() const {
       return {};
     }
 
-    std::vector<AppGFuelType> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity, FuelType::OtherFuel_1};  // TODO: is that right?
+    }
+
+    std::vector<AppGFuelType> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::appGHeatingFuelTypes() const {
       return {AppGFuelType::Electric, AppGFuelType::Fuel};  // TODO: is that right?
     }
 

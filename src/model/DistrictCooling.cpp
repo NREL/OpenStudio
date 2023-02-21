@@ -131,12 +131,16 @@ namespace model {
       return ComponentType::Cooling;
     }
 
-    std::vector<AppGFuelType> DistrictCooling_Impl::coolingFuelTypes() const {
-      return {AppGFuelType::District};
+    std::vector<FuelType> DistrictCooling_Impl::coolingFuelTypes() const {
+      return {FuelType::DistrictCooling};
     }
 
-    std::vector<AppGFuelType> DistrictCooling_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> DistrictCooling_Impl::heatingFuelTypes() const {
       return {};
+    }
+
+    std::vector<AppGFuelType> DistrictCooling_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::District};
     }
 
   }  // namespace detail

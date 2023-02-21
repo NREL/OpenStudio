@@ -365,12 +365,16 @@ namespace model {
       return ComponentType::Heating;
     }
 
-    std::vector<AppGFuelType> HeatPumpPlantLoopEIRHeating_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> HeatPumpPlantLoopEIRHeating_Impl::coolingFuelTypes() const {
       return {};
     }
 
-    std::vector<AppGFuelType> HeatPumpPlantLoopEIRHeating_Impl::heatingFuelTypes() const {
-      return {AppGFuelType::Electric};
+    std::vector<FuelType> HeatPumpPlantLoopEIRHeating_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> HeatPumpPlantLoopEIRHeating_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::HeatPump};
     }
 
   }  // namespace detail

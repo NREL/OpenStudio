@@ -820,11 +820,15 @@ namespace model {
       return ComponentType::Cooling;
     }
 
-    std::vector<AppGFuelType> ChillerElectricEIR_Impl::coolingFuelTypes() const {
-      return {AppGFuelType::Electric};
+    std::vector<FuelType> ChillerElectricEIR_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
     }
 
-    std::vector<AppGFuelType> ChillerElectricEIR_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> ChillerElectricEIR_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ChillerElectricEIR_Impl::appGHeatingFuelTypes() const {
       return {};
     }
 

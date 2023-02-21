@@ -322,12 +322,30 @@ namespace model {
       return ComponentType::Heating;
     }
 
-    std::vector<AppGFuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::coolingFuelTypes() const {
       return {};
     }
 
-    std::vector<AppGFuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::heatingFuelTypes() const {
-      return {AppGFuelType::Electric};
+    std::vector<FuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      result.insert(FuelType::Electricity);
+      if (auto p_ = secondaryPlantLoop()) {
+        for (auto& ft : p_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      result.insert(AppGFuelType::HeatPump);  // TODO: is that right?
+      if (auto p_ = secondaryPlantLoop()) {
+        for (auto& ft : p_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

@@ -453,11 +453,15 @@ namespace model {
       return ComponentType::Heating;
     }
 
-    std::vector<AppGFuelType> GeneratorMicroTurbineHeatRecovery_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> GeneratorMicroTurbineHeatRecovery_Impl::coolingFuelTypes() const {
       return {};
     }
 
-    std::vector<AppGFuelType> GeneratorMicroTurbineHeatRecovery_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> GeneratorMicroTurbineHeatRecovery_Impl::heatingFuelTypes() const {
+      return {FuelType(generatorMicroTurbine().fuelType())};
+    }
+
+    std::vector<AppGFuelType> GeneratorMicroTurbineHeatRecovery_Impl::appGHeatingFuelTypes() const {
       return {convertFuelTypeToAppG(FuelType(generatorMicroTurbine().fuelType()))};
     }
 

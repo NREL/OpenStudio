@@ -833,11 +833,15 @@ namespace model {
       return ComponentType::Cooling;
     }
 
-    std::vector<AppGFuelType> EvaporativeFluidCoolerTwoSpeed_Impl::coolingFuelTypes() const {
-      return {AppGFuelType::Electric};
+    std::vector<FuelType> EvaporativeFluidCoolerTwoSpeed_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
     }
 
-    std::vector<AppGFuelType> EvaporativeFluidCoolerTwoSpeed_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> EvaporativeFluidCoolerTwoSpeed_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> EvaporativeFluidCoolerTwoSpeed_Impl::appGHeatingFuelTypes() const {
       return {};
     }
 

@@ -1435,10 +1435,9 @@ namespace model {
       }  // end has a heater capacity
     }
 
-    std::vector<AppGFuelType> WaterHeaterMixed_Impl::coolingFuelTypes() const {
-      std::set<AppGFuelType> result;
+    std::vector<FuelType> WaterHeaterMixed_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
 
-      // TODO: only if cap == 0?
       if (boost::optional<PlantLoop> p_ = secondaryPlantLoop()) {
         auto plantFuelTypes = p_->coolingFuelTypes();
         result.insert(plantFuelTypes.begin(), plantFuelTypes.end());
@@ -1447,11 +1446,11 @@ namespace model {
       return {result.begin(), result.end()};
     }
 
-    std::vector<AppGFuelType> WaterHeaterMixed_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> WaterHeaterMixed_Impl::heatingFuelTypes() const {
 
-      std::set<AppGFuelType> result;
+      std::set<FuelType> result;
       if (boost::optional<double> _cap = heaterMaximumCapacity(); _cap.get() > 0.0) {
-        result.insert(convertFuelTypeToAppG(FuelType(heaterFuelType())));
+        result.insert(FuelType(heaterFuelType()));
       }
       if (boost::optional<PlantLoop> p_ = secondaryPlantLoop()) {
         auto plantFuelTypes = p_->heatingFuelTypes();
@@ -1459,6 +1458,23 @@ namespace model {
       }
       if (auto zoneComp_ = containingZoneHVACComponent()) {
         auto zcFuelTypes = zoneComp_->heatingFuelTypes();
+        result.insert(zcFuelTypes.begin(), zcFuelTypes.end());
+      }
+
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> WaterHeaterMixed_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      if (boost::optional<double> _cap = heaterMaximumCapacity(); _cap.get() > 0.0) {
+        result.insert(convertFuelTypeToAppG(FuelType(heaterFuelType())));
+      }
+      if (boost::optional<PlantLoop> p_ = secondaryPlantLoop()) {
+        auto plantFuelTypes = p_->appGHeatingFuelTypes();
+        result.insert(plantFuelTypes.begin(), plantFuelTypes.end());
+      }
+      if (auto zoneComp_ = containingZoneHVACComponent()) {
+        auto zcFuelTypes = zoneComp_->appGHeatingFuelTypes();
         result.insert(zcFuelTypes.begin(), zcFuelTypes.end());
       }
 

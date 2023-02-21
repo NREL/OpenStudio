@@ -746,14 +746,18 @@ namespace model {
       return ComponentType::Cooling;
     }
 
-    std::vector<AppGFuelType> ThermalStorageChilledWaterStratified_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> ThermalStorageChilledWaterStratified_Impl::coolingFuelTypes() const {
       if (auto p_ = secondaryPlantLoop()) {
         return p_->coolingFuelTypes();
       }
       return {};
     }
 
-    std::vector<AppGFuelType> ThermalStorageChilledWaterStratified_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> ThermalStorageChilledWaterStratified_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ThermalStorageChilledWaterStratified_Impl::appGHeatingFuelTypes() const {
       return {};
     }
 

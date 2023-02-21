@@ -469,11 +469,15 @@ namespace model {
       return ComponentType::None;
     }
 
-    std::vector<AppGFuelType> HVACComponent_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> HVACComponent_Impl::coolingFuelTypes() const {
       return {};
     }
 
-    std::vector<AppGFuelType> HVACComponent_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> HVACComponent_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> HVACComponent_Impl::appGHeatingFuelTypes() const {
       return {};
     }
 
@@ -549,12 +553,16 @@ namespace model {
     return getImpl<detail::HVACComponent_Impl>()->componentType();
   }
 
-  std::vector<AppGFuelType> HVACComponent::coolingFuelTypes() const {
+  std::vector<FuelType> HVACComponent::coolingFuelTypes() const {
     return getImpl<detail::HVACComponent_Impl>()->coolingFuelTypes();
   }
 
-  std::vector<AppGFuelType> HVACComponent::heatingFuelTypes() const {
+  std::vector<FuelType> HVACComponent::heatingFuelTypes() const {
     return getImpl<detail::HVACComponent_Impl>()->heatingFuelTypes();
+  }
+
+  std::vector<AppGFuelType> HVACComponent::appGHeatingFuelTypes() const {
+    return getImpl<detail::HVACComponent_Impl>()->appGHeatingFuelTypes();
   }
 
 }  // namespace model
