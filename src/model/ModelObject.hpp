@@ -263,7 +263,7 @@ namespace model {
     std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
     /** Gets the autosized component value from the sql file **/
-    boost::optional<double> getAutosizedValue(const std::string& valueName, const std::string& unitString) const;
+    boost::optional<double> getAutosizedValue(const std::string& valueName, const std::string& units) const;
 
     /** Return the names of the available ems actuators.
     */
