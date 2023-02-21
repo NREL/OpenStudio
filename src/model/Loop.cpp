@@ -387,7 +387,6 @@ namespace model {
     ComponentType Loop_Impl::componentType() const {
       bool has_cooling = false;
       bool has_heating = false;
-      bool has_both = false;
       for (const auto& comp : subsetCastVector<HVACComponent>(supplyComponents())) {
         auto compType = comp.componentType();
         if (compType == ComponentType::Cooling) {
@@ -395,20 +394,21 @@ namespace model {
         } else if (compType == ComponentType::Heating) {
           has_heating = true;
         } else if (compType == ComponentType::Both) {
-          has_both = true;
+          has_cooling = true;
+          has_heating = true;
         }
       }
 
       // If source side is purely cooling
-      if (has_cooling && !has_heating && !has_both) {
+      if (has_cooling && !has_heating) {
         return ComponentType::Cooling;
 
         // If source side is purely heating
-      } else if (!has_cooling && has_heating && !has_both) {
+      } else if (!has_cooling && has_heating) {
         return ComponentType::Heating;
 
         // If there is nothing
-      } else if (!has_cooling && !has_heating && !has_both) {
+      } else if (!has_cooling && !has_heating) {
         return ComponentType::None;
 
         // All other cases: BOTH
