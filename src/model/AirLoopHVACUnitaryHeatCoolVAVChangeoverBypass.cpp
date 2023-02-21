@@ -39,12 +39,12 @@
 #include "Node_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -661,6 +661,22 @@ namespace model {
     std::vector<std::string> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types{"Unitary HVAC Design Heating Capacity", "Unitary HVAC Design Cooling Capacity"};
       return types;
+    }
+
+    ComponentType AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::coolingFuelTypes() const {
+      return coolingCoil().coolingFuelTypes();
+    }
+
+    std::vector<FuelType> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::heatingFuelTypes() const {
+      return heatingCoil().heatingFuelTypes();
+    }
+
+    std::vector<AppGFuelType> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::appGHeatingFuelTypes() const {
+      return heatingCoil().appGHeatingFuelTypes();
     }
 
   }  // namespace detail

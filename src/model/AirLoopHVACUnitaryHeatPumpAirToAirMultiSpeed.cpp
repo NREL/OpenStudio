@@ -37,12 +37,13 @@
 #include "ThermalZone_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
-#include <utilities/idd/IddFactory.hxx>
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -768,6 +769,39 @@ namespace model {
     std::vector<std::string> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types{"Unitary HVAC Design Heating Capacity", "Unitary HVAC Design Cooling Capacity"};
       return types;
+    }
+
+    ComponentType AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::componentType() const {
+
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::coolingFuelTypes() const {
+      return coolingCoil().coolingFuelTypes();
+    }
+
+    std::vector<FuelType> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : heatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      // TODO: is supplemental needed?
+      for (auto ft : supplementalHeatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (auto ft : heatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      // TODO: is supplemental needed?
+      for (auto ft : supplementalHeatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail
