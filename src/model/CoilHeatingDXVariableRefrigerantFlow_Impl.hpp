@@ -54,11 +54,27 @@ namespace model {
 
       virtual ~CoilHeatingDXVariableRefrigerantFlow_Impl() = default;
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
+
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+      virtual ModelObject clone(Model model) const override;
+
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      //@}
+      /** @name Getters */
+      //@{
 
       Schedule availabilitySchedule() const;
 
@@ -74,6 +90,10 @@ namespace model {
 
       Curve heatingCapacityModifierFunctionofFlowFractionCurve() const;
 
+      //@}
+      /** @name Setters */
+      //@{
+
       bool setAvailabilitySchedule(Schedule& schedule);
 
       bool setRatedTotalHeatingCapacity(boost::optional<double> ratedTotalHeatingCapacity);
@@ -88,18 +108,15 @@ namespace model {
 
       bool setHeatingCapacityModifierFunctionofFlowFractionCurve(const Curve& curve);
 
-      ModelObject clone(Model model) const override;
-
-      std::vector<ModelObject> children() const override;
+      //@}
+      /** @name Other */
+      //@{
 
       boost::optional<double> autosizedRatedTotalHeatingCapacity() const;
 
       boost::optional<double> autosizedRatedAirFlowRate() const;
 
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
-
+      //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingDXVariableRefrigerantFlow");

@@ -81,12 +81,6 @@ namespace model {
 
       virtual std::vector<ModelObject> children() const override;
 
-      boost::optional<ModelObject> heatRejectionTarget() const;
-
-      bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
-
-      void removeFromHeatRejectionTarget();
-
       //@}
       /** @name Getters */
       //@{
@@ -186,6 +180,12 @@ namespace model {
       //@}
       /** @name Other */
       //@{
+
+      boost::optional<ModelObject> heatRejectionTarget() const;
+
+      bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
+
+      void removeFromHeatRejectionTarget();
 
       //@}
      protected:
