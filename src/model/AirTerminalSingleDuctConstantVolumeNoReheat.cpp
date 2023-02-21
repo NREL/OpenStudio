@@ -47,6 +47,7 @@
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -279,6 +280,35 @@ namespace model {
     std::vector<std::string> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types{"AirTerminal:SingleDuct:ConstantVolume:NoReheat Maximum Mass Flow Rate"};
       return types;
+    }
+
+    ComponentType AirTerminalSingleDuctConstantVolumeNoReheat_Impl::componentType() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->componentType();
+      }
+
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::coolingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->heatingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::heatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->heatingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<AppGFuelType> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::appGHeatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->appGHeatingFuelTypes();
+      }
+      return {};
     }
 
   }  // namespace detail
