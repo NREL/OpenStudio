@@ -45,8 +45,8 @@
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 
@@ -280,6 +280,22 @@ namespace model {
       if (val) {
         setRatedAirFlowRate(val.get());
       }
+    }
+
+    ComponentType CoilCoolingDXVariableRefrigerantFlow_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingDXVariableRefrigerantFlow_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> CoilCoolingDXVariableRefrigerantFlow_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingDXVariableRefrigerantFlow_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

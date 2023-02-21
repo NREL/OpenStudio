@@ -51,8 +51,8 @@
 #include <utilities/idd/OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
@@ -462,6 +462,27 @@ namespace model {
       if (val) {
         setRatedWaterFlowRateAtSelectedNominalSpeedLevel(val.get());
       }
+    }
+
+    ComponentType CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      result.insert(FuelType::Electricity);
+      if (auto p_ = plantLoop()) {
+        return p_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

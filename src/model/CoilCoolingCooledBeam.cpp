@@ -40,9 +40,9 @@
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -308,6 +308,25 @@ namespace model {
     void CoilCoolingCooledBeam_Impl::resetLeavingPipeInsideDiameter() {
       bool result = setString(OS_Coil_Cooling_CooledBeamFields::LeavingPipeInsideDiameter, "");
       OS_ASSERT(result);
+    }
+
+    ComponentType CoilCoolingCooledBeam_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingCooledBeam_Impl::coolingFuelTypes() const {
+      if (auto p_ = plantLoop()) {
+        return p_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> CoilCoolingCooledBeam_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingCooledBeam_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

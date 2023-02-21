@@ -50,9 +50,8 @@
 #include <utilities/idd/OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -392,6 +391,25 @@ namespace model {
       if (val) {
         setCoolingDesignCapacity(val.get());
       }
+    }
+
+    ComponentType CoilCoolingLowTempRadiantVarFlow_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingLowTempRadiantVarFlow_Impl::coolingFuelTypes() const {
+      if (auto p_ = plantLoop()) {
+        return p_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> CoilCoolingLowTempRadiantVarFlow_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingLowTempRadiantVarFlow_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

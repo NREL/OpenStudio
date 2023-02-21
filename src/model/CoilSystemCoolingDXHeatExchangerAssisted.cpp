@@ -57,6 +57,7 @@
 #include <utilities/idd/IddFactory.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -238,6 +239,22 @@ namespace model {
       //}
 
       return false;
+    }
+
+    ComponentType CoilSystemCoolingDXHeatExchangerAssisted_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilSystemCoolingDXHeatExchangerAssisted_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> CoilSystemCoolingDXHeatExchangerAssisted_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilSystemCoolingDXHeatExchangerAssisted_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

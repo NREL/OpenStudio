@@ -38,8 +38,8 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+// #include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -325,6 +325,22 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::PartLoadFractionCorrelationCurveName);
     }
+
+    // ComponentType CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::componentType() const {
+    //   return ComponentType::Heating;
+    // }
+
+    // std::vector<FuelType> CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::coolingFuelTypes() const {
+    //   return {};
+    // }
+
+    // std::vector<FuelType> CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::heatingFuelTypes() const {
+    //   return {FuelType::Electricity};
+    // }
+
+    // std::vector<AppGFuelType> CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::appGHeatingFuelTypes() const {
+    //   return {AppGFuelType::HeatPump};  // TODO: openstudio-standards uses Electric
+    // }
 
   }  // namespace detail
 

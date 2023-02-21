@@ -67,8 +67,8 @@
 #include <utilities/idd/OS_Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
@@ -678,6 +678,22 @@ namespace model {
       if (val) {
         setEvaporativeCondenserPumpRatedPowerConsumption(val.get());
       }
+    }
+
+    ComponentType CoilCoolingDXVariableSpeed_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingDXVariableSpeed_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> CoilCoolingDXVariableSpeed_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingDXVariableSpeed_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

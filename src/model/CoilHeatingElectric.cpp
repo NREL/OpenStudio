@@ -59,6 +59,7 @@
 #include <utilities/idd/OS_Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -401,6 +402,22 @@ namespace model {
       if (val) {
         setNominalCapacity(val.get());
       }
+    }
+
+    ComponentType CoilHeatingElectric_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> CoilHeatingElectric_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> CoilHeatingElectric_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> CoilHeatingElectric_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Electric};
     }
 
   }  // namespace detail

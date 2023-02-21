@@ -46,8 +46,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Cooling_Water_Panel_Radiant_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -331,6 +331,25 @@ namespace model {
       if (val) {
         setMaximumChilledWaterFlowRate(val.get());
       }
+    }
+
+    ComponentType CoilCoolingWaterPanelRadiant_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingWaterPanelRadiant_Impl::coolingFuelTypes() const {
+      if (auto p_ = plantLoop()) {
+        return p_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> CoilCoolingWaterPanelRadiant_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingWaterPanelRadiant_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

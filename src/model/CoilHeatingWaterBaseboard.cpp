@@ -40,9 +40,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -322,6 +321,28 @@ namespace model {
       if (val) {
         setMaximumWaterFlowRate(val.get());
       }
+    }
+
+    ComponentType CoilHeatingWaterBaseboard_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> CoilHeatingWaterBaseboard_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> CoilHeatingWaterBaseboard_Impl::heatingFuelTypes() const {
+      if (auto p_ = plantLoop()) {
+        return p_->heatingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilHeatingWaterBaseboard_Impl::appGHeatingFuelTypes() const {
+      if (auto p_ = plantLoop()) {
+        return p_->appGHeatingFuelTypes();
+      }
+      return {};
     }
 
   }  // namespace detail

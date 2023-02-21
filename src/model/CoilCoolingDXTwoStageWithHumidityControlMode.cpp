@@ -56,8 +56,8 @@
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 namespace openstudio {
@@ -489,6 +489,22 @@ namespace model {
       }
 
       return false;
+    }
+
+    ComponentType CoilCoolingDXTwoStageWithHumidityControlMode_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

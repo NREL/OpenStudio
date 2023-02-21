@@ -46,9 +46,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -239,6 +238,22 @@ namespace model {
 
     boost::optional<double> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::autosizedRatedAirFlowRate() const {
       return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+    }
+
+    ComponentType CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

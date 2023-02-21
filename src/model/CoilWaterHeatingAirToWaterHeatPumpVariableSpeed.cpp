@@ -50,8 +50,8 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -506,6 +506,22 @@ namespace model {
     boost::optional<double> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::autocalculatedRatedCondenserWaterFlowRate() const {
       // TODO: pending NREL/EnergyPlus#8611
       return getAutosizedValue("TODO", "m3/s");
+    }
+
+    ComponentType CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::HeatPump};  // TODO: openstudio-standards uses Electric
     }
 
   }  // namespace detail

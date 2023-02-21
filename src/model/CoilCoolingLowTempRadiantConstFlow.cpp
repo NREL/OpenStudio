@@ -49,9 +49,8 @@
 #include <utilities/idd/OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -344,6 +343,25 @@ namespace model {
       }
 
       return false;
+    }
+
+    ComponentType CoilCoolingLowTempRadiantConstFlow_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingLowTempRadiantConstFlow_Impl::coolingFuelTypes() const {
+      if (auto p_ = plantLoop()) {
+        return p_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> CoilCoolingLowTempRadiantConstFlow_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingLowTempRadiantConstFlow_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

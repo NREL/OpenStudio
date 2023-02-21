@@ -476,6 +476,64 @@ namespace model {
       return result;
     }
 
+    ComponentType CoilSystemIntegratedHeatPumpAirSource_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> CoilSystemIntegratedHeatPumpAirSource_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+
+      for (auto ft : spaceCoolingCoil().coolingFuelTypes()) {
+        result.insert(ft);
+      }
+
+      for (auto ft : scwhCoil().coolingFuelTypes()) {
+        result.insert(ft);
+      }
+      for (auto ft : scdwhCoolingCoil().coolingFuelTypes()) {
+        result.insert(ft);
+      }
+      for (auto ft : scdwhWaterHeatingCoil().coolingFuelTypes()) {
+        result.insert(ft);
+      }
+
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> CoilSystemIntegratedHeatPumpAirSource_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+
+      for (auto ft : spaceHeatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      // TODO: include dedicatedWaterHeatingCoil? The combined space cooling + water heating ones too?
+      for (auto ft : shdwhHeatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      for (auto ft : shdwhWaterHeatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> CoilSystemIntegratedHeatPumpAirSource_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+
+      for (auto ft : spaceHeatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      // TODO: include dedicatedWaterHeatingCoil? The combined space cooling + water heating ones too?
+      for (auto ft : shdwhHeatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      for (auto ft : shdwhWaterHeatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+
+      return {result.begin(), result.end()};
+    }
+
   }  // namespace detail
 
   CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model)

@@ -44,8 +44,8 @@
 
 #include <utilities/idd/OS_Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
@@ -299,6 +299,22 @@ namespace model {
         result = true;
       }
       return result;
+    }
+
+    ComponentType CoilHeatingElectricMultiStage_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> CoilHeatingElectricMultiStage_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> CoilHeatingElectricMultiStage_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> CoilHeatingElectricMultiStage_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Electric};
     }
 
   }  // namespace detail

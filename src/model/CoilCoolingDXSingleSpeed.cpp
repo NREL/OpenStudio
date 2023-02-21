@@ -66,6 +66,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
 
@@ -877,6 +878,22 @@ namespace model {
     std::vector<std::string> CoilCoolingDXSingleSpeed_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types;
       return types;
+    }
+
+    ComponentType CoilCoolingDXSingleSpeed_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingDXSingleSpeed_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> CoilCoolingDXSingleSpeed_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingDXSingleSpeed_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail
