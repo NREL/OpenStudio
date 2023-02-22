@@ -49,7 +49,7 @@
 #include "Model_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/data/DataEnums.hpp"
+// #include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -465,21 +465,21 @@ namespace model {
       return {};
     }
 
-    ComponentType HVACComponent_Impl::componentType() const {
-      return ComponentType::None;
-    }
+    // ComponentType HVACComponent_Impl::componentType() const {
+    //   return ComponentType::None;
+    // }
 
-    std::vector<FuelType> HVACComponent_Impl::coolingFuelTypes() const {
-      return {};
-    }
+    // std::vector<FuelType> HVACComponent_Impl::coolingFuelTypes() const {
+    //   return {};
+    // }
 
-    std::vector<FuelType> HVACComponent_Impl::heatingFuelTypes() const {
-      return {};
-    }
+    // std::vector<FuelType> HVACComponent_Impl::heatingFuelTypes() const {
+    //   return {};
+    // }
 
-    std::vector<AppGFuelType> HVACComponent_Impl::appGHeatingFuelTypes() const {
-      return {};
-    }
+    // std::vector<AppGFuelType> HVACComponent_Impl::appGHeatingFuelTypes() const {
+    //   return {};
+    // }
 
   }  // namespace detail
 
