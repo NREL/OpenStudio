@@ -37,10 +37,11 @@
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_Humidifier_Steam_Gas_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -341,6 +342,22 @@ namespace model {
       if (val) {
         setRatedGasUseRate(val.get());
       }
+    }
+
+    ComponentType HumidifierSteamGas_Impl::componentType() const {
+      return ComponentType::Heating;  // TODO: is that right?
+    }
+
+    std::vector<FuelType> HumidifierSteamGas_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> HumidifierSteamGas_Impl::heatingFuelTypes() const {
+      return {FuelType::Gas};  // TODO: is that right?
+    }
+
+    std::vector<AppGFuelType> HumidifierSteamGas_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Fuel};  // TODO: is that right?
     }
 
   }  // namespace detail

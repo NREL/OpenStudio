@@ -52,6 +52,7 @@
 #include <utilities/idd/OS_Pump_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -824,6 +825,22 @@ namespace model {
 
     bool PumpVariableSpeed_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       return setString(OS_Pump_VariableSpeedFields::EndUseSubcategory, endUseSubcategory);
+    }
+
+    ComponentType PumpVariableSpeed_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> PumpVariableSpeed_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> PumpVariableSpeed_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> PumpVariableSpeed_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

@@ -53,14 +53,12 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "Node.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_CompressorRack_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -682,6 +680,22 @@ namespace model {
     void RefrigerationCompressorRack_Impl::resetHeatRejectionZone() {
       bool result = setString(OS_Refrigeration_CompressorRackFields::HeatRejectionZoneName, "");
       OS_ASSERT(result);
+    }
+
+    ComponentType RefrigerationCompressorRack_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> RefrigerationCompressorRack_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> RefrigerationCompressorRack_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> RefrigerationCompressorRack_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

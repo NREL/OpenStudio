@@ -40,12 +40,11 @@
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Generator_FuelCell_StackCooler_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -479,6 +478,22 @@ namespace model {
       }
 
       return false;
+    }
+
+    ComponentType GeneratorFuelCellStackCooler_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> GeneratorFuelCellStackCooler_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> GeneratorFuelCellStackCooler_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity, FuelType::OtherFuel_1};  // TODO: is that right?
+    }
+
+    std::vector<AppGFuelType> GeneratorFuelCellStackCooler_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Electric, AppGFuelType::Fuel};  // TODO: is that right?
     }
 
   }  // namespace detail

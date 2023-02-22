@@ -36,9 +36,11 @@
 #include "PlantLoop.hpp"
 #include "Splitter.hpp"
 #include "Mixer.hpp"
-#include <algorithm>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <algorithm>
 
 namespace openstudio {
 
@@ -175,6 +177,22 @@ namespace model {
         return node->plantLoop();
       }
       return boost::none;
+    }
+
+    ComponentType SetpointManager_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> SetpointManager_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> SetpointManager_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> SetpointManager_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

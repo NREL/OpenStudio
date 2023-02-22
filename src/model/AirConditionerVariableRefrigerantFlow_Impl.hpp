@@ -89,6 +89,11 @@ namespace model {
 
       virtual std::vector<std::string> emsInternalVariableNames() const override;
 
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
       //@}
 
       Schedule availabilitySchedule() const;

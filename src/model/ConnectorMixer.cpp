@@ -32,10 +32,13 @@
 #include "Node.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
-#include <utilities/idd/OS_Connector_Mixer_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
+
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/OS_Connector_Mixer_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 namespace model {
@@ -94,6 +97,22 @@ namespace model {
 
     ModelObject ConnectorMixer_Impl::clone(Model model) const {
       return HVACComponent_Impl::clone(model);
+    }
+
+    ComponentType ConnectorMixer_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> ConnectorMixer_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ConnectorMixer_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ConnectorMixer_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

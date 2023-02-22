@@ -40,6 +40,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -139,6 +140,22 @@ namespace model {
         return myAFNItems[0];
       }
       return boost::none;
+    }
+
+    ComponentType AirLoopHVACZoneMixer_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirLoopHVACZoneMixer_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> AirLoopHVACZoneMixer_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> AirLoopHVACZoneMixer_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

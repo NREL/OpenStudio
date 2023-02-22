@@ -82,6 +82,11 @@ namespace model {
 
       boost::optional<ModelObject> zoneEquipmentForBranch(int branchIndex);
 
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
      private:
       REGISTER_LOGGER("openstudio.model.Splitter");
     };

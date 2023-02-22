@@ -52,10 +52,12 @@
 #include "ScheduleRuleset_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_HeatPump_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -542,6 +544,22 @@ namespace model {
       if (val) {
         setEvaporatorAirFlowRate(val.get());
       }
+    }
+
+    ComponentType WaterHeaterHeatPump_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> WaterHeaterHeatPump_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> WaterHeaterHeatPump_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> WaterHeaterHeatPump_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::HeatPump};  // TODO: openstudio-standards uses Electric
     }
 
   }  // namespace detail

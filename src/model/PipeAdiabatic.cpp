@@ -34,10 +34,13 @@
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
 #include "Model.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_Pipe_Adiabatic_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/core/Compare.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -82,6 +85,22 @@ namespace model {
       }
 
       return false;
+    }
+
+    ComponentType PipeAdiabatic_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> PipeAdiabatic_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> PipeAdiabatic_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> PipeAdiabatic_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

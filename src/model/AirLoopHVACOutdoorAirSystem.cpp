@@ -50,15 +50,18 @@
 #include "ModelExtensibleGroup.hpp"
 #include "SetpointManager.hpp"
 #include "SetpointManager_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/data/DataEnums.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
+
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utility>
 
-#include "../utilities/core/Compare.hpp"
-#include "../utilities/core/Assert.hpp"
+#include <utility>
 
 namespace openstudio {
 
@@ -610,6 +613,69 @@ namespace model {
         LOG(Error, "More than one AirLoopHVACDedicatedOutdoorAirSystem points to this AirLoopHVACOutdoorAirSystem");
         return boost::none;
       }
+    }
+
+    ComponentType AirLoopHVACOutdoorAirSystem_Impl::componentType() const {
+      bool has_cooling = false;
+      bool has_heating = false;
+      for (const auto& comp : subsetCastVector<HVACComponent>(components())) {
+        auto compType = comp.componentType();
+        if (compType == ComponentType::Cooling) {
+          has_cooling = true;
+        } else if (compType == ComponentType::Heating) {
+          has_heating = true;
+        } else if (compType == ComponentType::Both) {
+          has_cooling = true;
+          has_heating = true;
+        }
+      }
+
+      // If source side is purely cooling
+      if (has_cooling && !has_heating) {
+        return ComponentType::Cooling;
+
+        // If source side is purely heating
+      } else if (!has_cooling && has_heating) {
+        return ComponentType::Heating;
+
+        // If there is nothing
+      } else if (!has_cooling && !has_heating) {
+        return ComponentType::None;
+
+        // All other cases: BOTH
+      } else {
+        return ComponentType::Both;
+      }
+    }
+
+    std::vector<FuelType> AirLoopHVACOutdoorAirSystem_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(components())) {
+        for (auto& ft : comp.coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> AirLoopHVACOutdoorAirSystem_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(components())) {
+        for (auto& ft : comp.heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> AirLoopHVACOutdoorAirSystem_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(components())) {
+        for (auto& ft : comp.appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

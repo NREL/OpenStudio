@@ -54,13 +54,12 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_WaterHeater_HeatPump_WrappedCondenser_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -558,6 +557,22 @@ namespace model {
       }
 
       return result;
+    }
+
+    ComponentType WaterHeaterHeatPumpWrappedCondenser_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> WaterHeaterHeatPumpWrappedCondenser_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> WaterHeaterHeatPumpWrappedCondenser_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> WaterHeaterHeatPumpWrappedCondenser_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::HeatPump};  // TODO: openstudio-standards uses Electric
     }
 
   }  // namespace detail

@@ -65,6 +65,11 @@ namespace model {
 
       virtual ModelObject clone(Model model) const override;
 
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
      private:
       REGISTER_LOGGER("openstudio.model.ConnectorMixer");
     };

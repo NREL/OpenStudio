@@ -41,12 +41,12 @@
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Pipe_Indoor_FieldEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/units/Unit.hpp"
 
 namespace openstudio {
 namespace model {
@@ -206,6 +206,22 @@ namespace model {
       }
 
       return false;
+    }
+
+    ComponentType PipeIndoor_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> PipeIndoor_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> PipeIndoor_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> PipeIndoor_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

@@ -49,9 +49,12 @@
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
 #include "Model.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -243,6 +246,22 @@ namespace model {
         return myAFNItems[0];
       }
       return boost::none;
+    }
+
+    ComponentType Node_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> Node_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> Node_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> Node_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

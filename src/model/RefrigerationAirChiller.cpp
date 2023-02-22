@@ -46,14 +46,12 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "Model.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_AirChiller_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -755,6 +753,22 @@ namespace model {
       if (refrigerationCompressorRack) {
         refrigerationCompressorRack.get().removeAirChiller(this->getObject<RefrigerationAirChiller>());
       }
+    }
+
+    ComponentType RefrigerationAirChiller_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> RefrigerationAirChiller_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> RefrigerationAirChiller_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> RefrigerationAirChiller_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

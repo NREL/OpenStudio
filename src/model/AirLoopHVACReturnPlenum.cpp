@@ -51,6 +51,9 @@
 #include "Connection_Impl.hpp"
 #include "ZoneHVACIdealLoadsAirSystem.hpp"
 #include "ZoneHVACIdealLoadsAirSystem_Impl.hpp"
+
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -364,6 +367,22 @@ namespace model {
       }
 
       return result;
+    }
+
+    ComponentType AirLoopHVACReturnPlenum_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirLoopHVACReturnPlenum_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> AirLoopHVACReturnPlenum_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> AirLoopHVACReturnPlenum_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail
