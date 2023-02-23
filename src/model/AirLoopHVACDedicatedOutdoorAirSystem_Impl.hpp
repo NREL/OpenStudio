@@ -115,6 +115,8 @@ namespace model {
 
       void removeAllAirLoops();
 
+      virtual std::vector<openstudio::IdfObject> remove() override;
+
       bool addAirLoops(const std::vector<AirLoopHVAC>& airLoopHVACs);
 
       //@}
