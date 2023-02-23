@@ -44,6 +44,18 @@ namespace energyplus {
 
     idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::Algorithm, modelObject.algorithm());
 
+    if (modelObject.doSpaceHeatBalanceforSizing()) {
+      idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, "Yes");
+    } else {
+      idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, "No");
+    }
+
+    if (modelObject.doSpaceHeatBalanceforSimulation()) {
+      idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, "Yes");
+    } else {
+      idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, "No");
+    }
+
     m_idfObjects.push_back(idfObject);
 
     return boost::optional<IdfObject>(idfObject);
