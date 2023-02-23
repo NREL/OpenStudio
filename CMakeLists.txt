@@ -200,8 +200,7 @@ set(ENERGYPLUS_BUILD_SHA "ff86a13c18")
 # from the github releases
 set(ENERGYPLUS_RELEASE_NAME "v23.1.0-IOFreeze")
 
-# TODO: Temporary change to a fork until a patched release is issued on NREL's
-set(ENERGYPLUS_REPO "jmarrec")
+set(ENERGYPLUS_REPO "NREL")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -656,7 +655,7 @@ elseif(WIN32)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 76afec50c80fc4b53f2f4da572573688)
+    set(ENERGYPLUS_EXPECTED_HASH 0baa693ae4bca138933331632ebaf5e5)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
