@@ -245,7 +245,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem1);
   doaSystem.setName("Dedicated Outdoor Air System 1");
   doaSystem.addAirLoop(airLoop);
-  
+
   SetpointManagerOutdoorAirReset spm1(m);
   SetpointManagerOutdoorAirReset spm2(m);
   spm1.addToNode(coil1.outletModelObject()->optionalCast<Node>().get());
@@ -253,10 +253,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
 
   // delete doaSystem and make sure oaSystem2 is deleted (oaSystem1 remains)
   doaSystem.remove();
-  
+
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
-  
+
   // assert there is only one setpoint manager left in the model
   WorkspaceObjectVector idfSTPTs(w.getObjectsByType(IddObjectType::SetpointManager_OutdoorAirReset));
   ASSERT_EQ(1u, idfSTPTs.size());
@@ -264,7 +264,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   // assert there are no DOAS left
   WorkspaceObjectVector idfDOASs(w.getObjectsByType(IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem));
   ASSERT_EQ(0u, idfDOASs.size());
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem_CoilCoolingDXTwoSpeed) {

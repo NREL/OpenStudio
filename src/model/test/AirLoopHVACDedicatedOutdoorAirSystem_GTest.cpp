@@ -281,7 +281,6 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove3) {
   EXPECT_EQ(0u, doaSystems.size());
   std::vector<SetpointManagerOutdoorAirReset> spms = model.getModelObjects<SetpointManagerOutdoorAirReset>();
 
-
   ControllerOutdoorAir controller(model);
   AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
   AirLoopHVAC airLoop(model);
@@ -289,7 +288,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove3) {
   std::vector<AirLoopHVAC> airLoopHVACs;
   airLoopHVACs.push_back(airLoop);
   airLoopHVACs.push_back(airLoop2);
-  
+
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
   doaSystem.addAirLoops(airLoopHVACs);
 
@@ -308,7 +307,6 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove3) {
   EXPECT_EQ(0u, doaSystems.size());
   spms = model.getModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(0u, spms.size());
-
 }
 
 TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SupportedComponents) {

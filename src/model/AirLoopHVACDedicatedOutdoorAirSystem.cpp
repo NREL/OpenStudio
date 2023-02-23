@@ -273,11 +273,10 @@ namespace model {
     }
 
     std::vector<openstudio::IdfObject> AirLoopHVACDedicatedOutdoorAirSystem_Impl::remove() {
-     
-      airLoopHVACOutdoorAirSystem().remove();
-      
-      return ModelObject_Impl::remove();
 
+      airLoopHVACOutdoorAirSystem().remove();
+
+      return ModelObject_Impl::remove();
     }
 
     bool AirLoopHVACDedicatedOutdoorAirSystem_Impl::addAirLoops(const std::vector<AirLoopHVAC>& airLoopHVACs) {
