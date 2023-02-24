@@ -61,11 +61,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneAirHeatBalanceAlgorithm) {
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
-  
+
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneAirHeatBalanceAlgorithm).size());
-  
+
   IdfObject idf_zoneAHBA = workspace.getObjectsByType(IddObjectType::ZoneAirHeatBalanceAlgorithm)[0];
-  
+
   EXPECT_EQ("AnalyticalSolution", idf_zoneAHBA.getString(ZoneAirHeatBalanceAlgorithmFields::Algorithm, false).get());
   EXPECT_EQ("Yes", idf_zoneAHBA.getString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, false).get());
   EXPECT_EQ("Yes", idf_zoneAHBA.getString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, false).get());
@@ -79,17 +79,17 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneAirHeatBalanceAlgorithm) {
   Model model;
   model = rt.translateWorkspace(w);
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>());
-  
+
   OptionalWorkspaceObject idf_zoneAHBA = w.addObject(IdfObject(IddObjectType::ZoneAirHeatBalanceAlgorithm));
   ASSERT_TRUE(idf_zoneAHBA);
-  
+
   EXPECT_TRUE(idf_zoneAHBA->setString(ZoneAirHeatBalanceAlgorithmFields::Algorithm, "EulerMethod"));
   EXPECT_TRUE(idf_zoneAHBA->setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, "Yes"));
   EXPECT_TRUE(idf_zoneAHBA->setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, "No"));
-  
+
   model = rt.translateWorkspace(w);
   ZoneAirHeatBalanceAlgorithm zoneAHBA = model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
-  
+
   EXPECT_EQ("EulerMethod", zoneAHBA.algorithm());
   EXPECT_TRUE(zoneAHBA.doSpaceHeatBalanceforSizing());
   EXPECT_FALSE(zoneAHBA.doSpaceHeatBalanceforSimulation());
