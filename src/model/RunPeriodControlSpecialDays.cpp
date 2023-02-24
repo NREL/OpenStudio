@@ -184,7 +184,7 @@ namespace model {
         MonthOfYear monthOfYear(boost::lexical_cast<unsigned>(monthString));
 
         std::string dayOfMonthString(matches[2].first, matches[2].second);
-        unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
+        auto dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
 
         result = yd.makeDate(monthOfYear, dayOfMonth);
         return result;
@@ -194,7 +194,7 @@ namespace model {
                                                   boost::regex::icase))) {
 
         std::string dayOfMonthString(matches[1].first, matches[1].second);
-        unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
+        auto dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
         std::string monthString(matches[2].first, matches[2].second);
 
         result = yd.makeDate(monthOfYear(monthString), dayOfMonth);
@@ -206,7 +206,7 @@ namespace model {
 
         std::string monthString(matches[1].first, matches[1].second);
         std::string dayOfMonthString(matches[2].first, matches[2].second);
-        unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
+        auto dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
 
         result = yd.makeDate(monthOfYear(monthString), dayOfMonth);
         return result;
@@ -225,7 +225,7 @@ namespace model {
       }
 
       LOG_AND_THROW("Could not determine date for startDate = '" << text << "'");
-      return Date();
+      return {};
     }
 
   }  // namespace detail
@@ -243,7 +243,6 @@ namespace model {
     : ModelObject(RunPeriodControlSpecialDays::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::RunPeriodControlSpecialDays_Impl>());
     getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(monthOfYear, day);
-    Date test = this->startDate();
   }
 
   RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
@@ -251,7 +250,6 @@ namespace model {
     : ModelObject(RunPeriodControlSpecialDays::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::RunPeriodControlSpecialDays_Impl>());
     getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(nth, dayOfWeek, monthOfYear);
-    Date test = this->startDate();
   }
 
   std::vector<std::string> RunPeriodControlSpecialDays::specialDayTypeValues() {

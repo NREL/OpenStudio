@@ -104,12 +104,12 @@ class UTILITIES_API CFMUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   CFMUnit(const std::string& scaleAbbreviation, const CFMExpnt& exponents = CFMExpnt(), const std::string& prettyString = "");
 
-  virtual ~CFMUnit() {}
+  virtual ~CFMUnit() = default;
 
   //@}
  protected:
   /// @cond
-  typedef detail::CFMUnit_Impl ImplType;
+  using ImplType = detail::CFMUnit_Impl;
 
   explicit CFMUnit(std::shared_ptr<detail::CFMUnit_Impl> impl);
 
@@ -122,10 +122,10 @@ class UTILITIES_API CFMUnit : public Unit
 };
 
 /** \relates CFMUnit*/
-typedef boost::optional<CFMUnit> OptionalCFMUnit;
+using OptionalCFMUnit = boost::optional<CFMUnit>;
 
 /** \relates CFMUnit*/
-typedef std::vector<CFMUnit> CFMUnitVector;
+using CFMUnitVector = std::vector<CFMUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

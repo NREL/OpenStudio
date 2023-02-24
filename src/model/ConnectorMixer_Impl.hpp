@@ -47,7 +47,7 @@ namespace model {
 
       ConnectorMixer_Impl(const ConnectorMixer_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ConnectorMixer_Impl();
+      virtual ~ConnectorMixer_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

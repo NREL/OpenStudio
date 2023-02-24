@@ -179,7 +179,7 @@ Date Calendar::endDate() const {
 std::string Calendar::getName(const Date& date) const {
   if (!includesDate(date)) {
     LOG(Error, "Calendar does not include date " << date);
-    return std::string();
+    return {};
   }
 
   std::string result;

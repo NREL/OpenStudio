@@ -56,7 +56,12 @@ namespace model {
 
     explicit AirTerminalDualDuctVAV(const Model& model);
 
-    virtual ~AirTerminalDualDuctVAV() {}
+    virtual ~AirTerminalDualDuctVAV() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalDualDuctVAV(const AirTerminalDualDuctVAV& other) = default;
+    AirTerminalDualDuctVAV(AirTerminalDualDuctVAV&& other) = default;
+    AirTerminalDualDuctVAV& operator=(const AirTerminalDualDuctVAV&) = default;
+    AirTerminalDualDuctVAV& operator=(AirTerminalDualDuctVAV&&) = default;
 
     //@}
 
@@ -127,7 +132,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalDualDuctVAV_Impl ImplType;
+    using ImplType = detail::AirTerminalDualDuctVAV_Impl;
 
     explicit AirTerminalDualDuctVAV(std::shared_ptr<detail::AirTerminalDualDuctVAV_Impl> impl);
 
@@ -141,10 +146,10 @@ namespace model {
   };
 
   /** \relates AirTerminalDualDuctVAV*/
-  typedef boost::optional<AirTerminalDualDuctVAV> OptionalAirTerminalDualDuctVAV;
+  using OptionalAirTerminalDualDuctVAV = boost::optional<AirTerminalDualDuctVAV>;
 
   /** \relates AirTerminalDualDuctVAV*/
-  typedef std::vector<AirTerminalDualDuctVAV> AirTerminalDualDuctVAVVector;
+  using AirTerminalDualDuctVAVVector = std::vector<AirTerminalDualDuctVAV>;
 
 }  // namespace model
 }  // namespace openstudio

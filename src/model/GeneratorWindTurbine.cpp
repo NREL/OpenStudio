@@ -83,7 +83,8 @@ namespace model {
     std::vector<ScheduleTypeKey> GeneratorWindTurbine_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Generator_WindTurbineFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("GeneratorWindTurbine", "Availability"));
       }
@@ -251,12 +252,12 @@ namespace model {
       return result;
     }
 
-    bool GeneratorWindTurbine_Impl::setRotorType(std::string rotorType) {
+    bool GeneratorWindTurbine_Impl::setRotorType(const std::string& rotorType) {
       bool result = setString(OS_Generator_WindTurbineFields::RotorType, rotorType);
       return result;
     }
 
-    bool GeneratorWindTurbine_Impl::setPowerControl(std::string powerControl) {
+    bool GeneratorWindTurbine_Impl::setPowerControl(const std::string& powerControl) {
       bool result = setString(OS_Generator_WindTurbineFields::PowerControl, powerControl);
       return result;
     }
@@ -411,7 +412,7 @@ namespace model {
   }
 
   IddObjectType GeneratorWindTurbine::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_WindTurbine);
+    return {IddObjectType::OS_Generator_WindTurbine};
   }
 
   std::string GeneratorWindTurbine::rotorType() const {
@@ -514,11 +515,11 @@ namespace model {
     return getImpl<detail::GeneratorWindTurbine_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool GeneratorWindTurbine::setRotorType(std::string rotorType) {
+  bool GeneratorWindTurbine::setRotorType(const std::string& rotorType) {
     return getImpl<detail::GeneratorWindTurbine_Impl>()->setRotorType(rotorType);
   }
 
-  bool GeneratorWindTurbine::setPowerControl(std::string powerControl) {
+  bool GeneratorWindTurbine::setPowerControl(const std::string& powerControl) {
     return getImpl<detail::GeneratorWindTurbine_Impl>()->setPowerControl(powerControl);
   }
 

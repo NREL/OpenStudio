@@ -112,24 +112,24 @@ TEST_F(ModelFixture, FanOnOff_Remove) {
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
 
-  std::vector<FanOnOff> fans = m.getModelObjects<FanOnOff>();
+  std::vector<FanOnOff> fans = m.getConcreteModelObjects<FanOnOff>();
   EXPECT_EQ(1, fans.size());
 
-  std::vector<CurveExponent> curveExponents = m.getModelObjects<CurveExponent>();
+  std::vector<CurveExponent> curveExponents = m.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(1, curveExponents.size());
 
-  std::vector<CurveCubic> curveCubics = m.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> curveCubics = m.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(1, curveCubics.size());
 
   testObject.remove();
 
-  fans = m.getModelObjects<FanOnOff>();
+  fans = m.getConcreteModelObjects<FanOnOff>();
   EXPECT_EQ(0, fans.size());
 
   // Both curves were used only by this object, so should have been removed
-  curveExponents = m.getModelObjects<CurveExponent>();
+  curveExponents = m.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(0, curveExponents.size());
-  curveCubics = m.getModelObjects<CurveCubic>();
+  curveCubics = m.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(0, curveCubics.size());
 }
 
@@ -165,14 +165,14 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData) {
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
 
-  FanOnOff testObjectClone = testObject.clone(m).cast<FanOnOff>();
+  auto testObjectClone = testObject.clone(m).cast<FanOnOff>();
 
-  std::vector<CurveExponent> powerCurves = m.getModelObjects<CurveExponent>();
+  std::vector<CurveExponent> powerCurves = m.getConcreteModelObjects<CurveExponent>();
   for (auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
-  std::vector<CurveCubic> efficiencyCurves = m.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> efficiencyCurves = m.getConcreteModelObjects<CurveCubic>();
   for (auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
@@ -186,13 +186,13 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData) {
   EXPECT_EQ(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(),
             testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
 
-  EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
-  EXPECT_EQ(1, m.getModelObjects<CurveCubic>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CurveExponent>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CurveCubic>().size());
 
   testObjectClone.remove();
 
-  EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
-  EXPECT_EQ(1, m.getModelObjects<CurveCubic>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CurveExponent>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CurveCubic>().size());
 }
 
 TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData) {
@@ -209,7 +209,7 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData) {
   testObject.setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerFuncSpeedCurve);
   testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyFuncSpeedCurve);
 
-  FanOnOff testObjectClone = testObject.clone(m).cast<FanOnOff>();
+  auto testObjectClone = testObject.clone(m).cast<FanOnOff>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.pressureRise());
   EXPECT_DOUBLE_EQ(0.99, testObjectClone.fanTotalEfficiency());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.maximumFlowRate().get());
@@ -225,26 +225,26 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithDefaultData) {
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
 
-  FanOnOff testObjectClone = testObject.clone(m).cast<FanOnOff>();
+  auto testObjectClone = testObject.clone(m).cast<FanOnOff>();
 
   Model m2;
 
-  std::vector<CurveExponent> powerCurves = m.getModelObjects<CurveExponent>();
+  std::vector<CurveExponent> powerCurves = m.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(1, powerCurves.size());
-  std::vector<CurveExponent> powerCurves2 = m2.getModelObjects<CurveExponent>();
+  std::vector<CurveExponent> powerCurves2 = m2.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(0, powerCurves2.size());
 
-  std::vector<CurveCubic> efficiencyCurves = m.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> efficiencyCurves = m.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(1, efficiencyCurves.size());
-  std::vector<CurveCubic> efficiencyCurves2 = m2.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> efficiencyCurves2 = m2.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(0, efficiencyCurves2.size());
 
-  FanOnOff testObjectClone2 = testObject.clone(m2).cast<FanOnOff>();
+  auto testObjectClone2 = testObject.clone(m2).cast<FanOnOff>();
 
-  powerCurves2 = m2.getModelObjects<CurveExponent>();
+  powerCurves2 = m2.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(1, powerCurves2.size());
 
-  efficiencyCurves2 = m2.getModelObjects<CurveCubic>();
+  efficiencyCurves2 = m2.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(1, efficiencyCurves2.size());
 
   for (auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
@@ -287,26 +287,26 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData) {
   testObject.setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerFuncSpeedCurve);
   testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyFuncSpeedCurve);
 
-  FanOnOff testObjectClone = testObject.clone(m).cast<FanOnOff>();
+  auto testObjectClone = testObject.clone(m).cast<FanOnOff>();
 
   Model m2;
 
-  std::vector<CurveExponent> powerCurves = m.getModelObjects<CurveExponent>();
+  std::vector<CurveExponent> powerCurves = m.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(2, powerCurves.size());
-  std::vector<CurveExponent> powerCurves2 = m2.getModelObjects<CurveExponent>();
+  std::vector<CurveExponent> powerCurves2 = m2.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(0, powerCurves2.size());
 
-  std::vector<CurveCubic> efficiencyCurves = m.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> efficiencyCurves = m.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(2, efficiencyCurves.size());
-  std::vector<CurveCubic> efficiencyCurves2 = m2.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> efficiencyCurves2 = m2.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(0, efficiencyCurves2.size());
 
-  FanOnOff testObjectClone2 = testObject.clone(m2).cast<FanOnOff>();
+  auto testObjectClone2 = testObject.clone(m2).cast<FanOnOff>();
 
-  powerCurves2 = m2.getModelObjects<CurveExponent>();
+  powerCurves2 = m2.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(1, powerCurves2.size());
 
-  efficiencyCurves2 = m2.getModelObjects<CurveCubic>();
+  efficiencyCurves2 = m2.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(1, efficiencyCurves2.size());
 
   for (auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
@@ -524,7 +524,7 @@ TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACTerminalUnitVa
   Model m;
   ZoneHVACTerminalUnitVariableRefrigerantFlow zoneHVACTerminalUnitVariableRefrigerantFlow(m);
 
-  std::vector<FanOnOff> fans = m.getModelObjects<FanOnOff>();
+  std::vector<FanOnOff> fans = m.getConcreteModelObjects<FanOnOff>();
   EXPECT_EQ(1, fans.size());
 
   boost::optional<ZoneHVACComponent> component = fans[0].containingZoneHVACComponent();

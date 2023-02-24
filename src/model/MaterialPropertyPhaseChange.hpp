@@ -80,7 +80,7 @@ namespace model {
 
     explicit MaterialPropertyPhaseChange(MasslessOpaqueMaterial& material, const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
 
-    virtual ~MaterialPropertyPhaseChange() {}
+    virtual ~MaterialPropertyPhaseChange() = default;
 
     //@}
 
@@ -126,7 +126,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::MaterialPropertyPhaseChange_Impl ImplType;
+    using ImplType = detail::MaterialPropertyPhaseChange_Impl;
 
     explicit MaterialPropertyPhaseChange(std::shared_ptr<detail::MaterialPropertyPhaseChange_Impl> impl);
 
@@ -140,10 +140,10 @@ namespace model {
   };
 
   /** \relates MaterialPropertyPhaseChange*/
-  typedef boost::optional<MaterialPropertyPhaseChange> OptionalMaterialPropertyPhaseChange;
+  using OptionalMaterialPropertyPhaseChange = boost::optional<MaterialPropertyPhaseChange>;
 
   /** \relates MaterialPropertyPhaseChange*/
-  typedef std::vector<MaterialPropertyPhaseChange> MaterialPropertyPhaseChangeVector;
+  using MaterialPropertyPhaseChangeVector = std::vector<MaterialPropertyPhaseChange>;
 
 }  // namespace model
 }  // namespace openstudio

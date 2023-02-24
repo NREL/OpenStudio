@@ -108,7 +108,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkFan::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkFan);
+    return {IddObjectType::OS_AirflowNetworkFan};
   }
 
   boost::optional<FanConstantVolume> AirflowNetworkFan::fanConstantVolume() const {

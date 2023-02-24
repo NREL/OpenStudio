@@ -207,12 +207,12 @@ TEST_F(ModelFixture, SetpointManagerSystemNodeResetTemperature_remove) {
   EXPECT_TRUE(spm.addToNode(supplyOutlet));
 
   EXPECT_EQ(1, supplyOutlet.setpointManagers().size());
-  EXPECT_EQ(1, m.getModelObjects<SetpointManagerSystemNodeResetTemperature>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<SetpointManagerSystemNodeResetTemperature>().size());
 
   spm.remove();
 
   EXPECT_EQ(0, supplyOutlet.setpointManagers().size());
-  EXPECT_EQ(0, m.getModelObjects<SetpointManagerSystemNodeResetTemperature>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<SetpointManagerSystemNodeResetTemperature>().size());
 }
 
 TEST_F(ModelFixture, SetpointManagerSystemNodeResetTemperature_clone) {

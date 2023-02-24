@@ -63,7 +63,12 @@ namespace model {
    * for this object to be ForwardTranslated, so you will have to do it manually and use setCoolingCoil and/or setHeatingCoil */
     AirTerminalSingleDuctConstantVolumeFourPipeBeam(const Model& model);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalSingleDuctConstantVolumeFourPipeBeam(const AirTerminalSingleDuctConstantVolumeFourPipeBeam& other) = default;
+    AirTerminalSingleDuctConstantVolumeFourPipeBeam(AirTerminalSingleDuctConstantVolumeFourPipeBeam&& other) = default;
+    AirTerminalSingleDuctConstantVolumeFourPipeBeam& operator=(const AirTerminalSingleDuctConstantVolumeFourPipeBeam&) = default;
+    AirTerminalSingleDuctConstantVolumeFourPipeBeam& operator=(AirTerminalSingleDuctConstantVolumeFourPipeBeam&&) = default;
 
     //@}
 
@@ -167,7 +172,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl;
 
     explicit AirTerminalSingleDuctConstantVolumeFourPipeBeam(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl> impl);
 
@@ -181,10 +186,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctConstantVolumeFourPipeBeam*/
-  typedef boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> OptionalAirTerminalSingleDuctConstantVolumeFourPipeBeam;
+  using OptionalAirTerminalSingleDuctConstantVolumeFourPipeBeam = boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam>;
 
   /** \relates AirTerminalSingleDuctConstantVolumeFourPipeBeam*/
-  typedef std::vector<AirTerminalSingleDuctConstantVolumeFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeamVector;
+  using AirTerminalSingleDuctConstantVolumeFourPipeBeamVector = std::vector<AirTerminalSingleDuctConstantVolumeFourPipeBeam>;
 
 }  // namespace model
 }  // namespace openstudio

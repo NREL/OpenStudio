@@ -526,7 +526,7 @@ TEST_F(EnergyPlusFixture, GeometryTranslator_SimpleRelativeTest) {
     // check sizes
     EXPECT_EQ(refWorkspace.getObjectsByType(iddType).size(), relWorkspace.getObjectsByType(iddType).size());
     // loop over each surf in ref
-    for (WorkspaceObject refObject : refWorkspace.getObjectsByType(iddType)) {
+    for (const WorkspaceObject& refObject : refWorkspace.getObjectsByType(iddType)) {
       // find in test file
       OptionalWorkspaceObject relObject = relWorkspace.getObjectByTypeAndName(iddType, refObject.name().get());
       ASSERT_TRUE(relObject);

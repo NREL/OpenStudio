@@ -70,11 +70,12 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_Thermostat_Two_Schedules) {
   Model m;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   ThermalZone zone(m);
 
@@ -135,11 +136,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Thermostat_Two_Schedules) {
 TEST_F(EnergyPlusFixture, ForwardTranslator_Thermostat_Heat_Only) {
   Model m;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   ThermalZone zone(m);
 
@@ -195,11 +197,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Thermostat_Heat_Only) {
 TEST_F(EnergyPlusFixture, ForwardTranslator_Thermostat_Cool_Only) {
   Model m;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   ThermalZone zone(m);
 

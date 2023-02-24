@@ -55,7 +55,12 @@ namespace model {
                                          double visibleExtinctionCoefficient = 0.1);
     //double dirtCorrectionFactorforSolarandVisibleTransmittance = 0.1);
 
-    virtual ~RefractionExtinctionGlazing() {}
+    virtual ~RefractionExtinctionGlazing() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefractionExtinctionGlazing(const RefractionExtinctionGlazing& other) = default;
+    RefractionExtinctionGlazing(RefractionExtinctionGlazing&& other) = default;
+    RefractionExtinctionGlazing& operator=(const RefractionExtinctionGlazing&) = default;
+    RefractionExtinctionGlazing& operator=(RefractionExtinctionGlazing&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -169,7 +174,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefractionExtinctionGlazing_Impl ImplType;
+    using ImplType = detail::RefractionExtinctionGlazing_Impl;
 
     explicit RefractionExtinctionGlazing(std::shared_ptr<detail::RefractionExtinctionGlazing_Impl> impl);
 
@@ -183,10 +188,10 @@ namespace model {
   };
 
   /** \relates RefractionExtinctionGlazing*/
-  typedef boost::optional<RefractionExtinctionGlazing> OptionalRefractionExtinctionGlazing;
+  using OptionalRefractionExtinctionGlazing = boost::optional<RefractionExtinctionGlazing>;
 
   /** \relates RefractionExtinctionGlazing*/
-  typedef std::vector<RefractionExtinctionGlazing> RefractionExtinctionGlazingVector;
+  using RefractionExtinctionGlazingVector = std::vector<RefractionExtinctionGlazing>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -49,7 +49,7 @@ namespace energyplus {
 
     OptionalInt i;
 
-    ConvergenceLimits convergenceLimits = m_model.getUniqueModelObject<ConvergenceLimits>();
+    auto convergenceLimits = m_model.getUniqueModelObject<ConvergenceLimits>();
 
     if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumSystemTimestep))) {
       convergenceLimits.setMinimumSystemTimestep(*i);

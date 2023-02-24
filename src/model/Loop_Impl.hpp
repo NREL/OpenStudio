@@ -58,7 +58,7 @@ namespace model {
 
       Loop_Impl(const Loop_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~Loop_Impl() {}
+      virtual ~Loop_Impl() = default;
 
       /** This pure virtual method is intended to be overriden by child classes (namely PlantLoop and AirLoopHVAC) to create the basic topology of the
      * loop, that is to create the supply/demand inlet/outlet nodes, splitters and mixers as appropriate */
@@ -80,32 +80,32 @@ namespace model {
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
-      virtual std::vector<ModelObject> supplyComponents(HVACComponent inletComp, HVACComponent outletComp,
+      virtual std::vector<ModelObject> supplyComponents(const HVACComponent& inletComp, const HVACComponent& outletComp,
                                                         openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-      virtual std::vector<ModelObject> demandComponents(HVACComponent inletComp, HVACComponent outletComp,
+      virtual std::vector<ModelObject> demandComponents(const HVACComponent& inletComp, const HVACComponent& outletComp,
                                                         openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
       virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
       virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-      virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+      virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-      std::vector<ModelObject> components(HVACComponent inletComp, HVACComponent outletComp,
-                                          openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+      std::vector<ModelObject> components(const HVACComponent& inletComp, const HVACComponent& outletComp,
+                                          openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-      virtual boost::optional<ModelObject> component(openstudio::Handle handle);
+      virtual boost::optional<ModelObject> component(openstudio::Handle handle) const;
 
       virtual boost::optional<ModelObject> demandComponent(openstudio::Handle handle) const;
 
       virtual boost::optional<ModelObject> supplyComponent(openstudio::Handle handle) const;
 
-      virtual std::vector<ModelObject> supplyComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
-                                                        openstudio::IddObjectType type) const;
+      // virtual std::vector<ModelObject> supplyComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
+      //                                                   openstudio::IddObjectType type) const;
 
-      virtual std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
-                                                        openstudio::IddObjectType type) const;
+      // virtual std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
+      //                                                   openstudio::IddObjectType type) const;
 
       virtual std::vector<openstudio::IdfObject> remove() override;
 
@@ -124,11 +124,10 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.Loop");
 
-      // TODO: Make these const.
-      boost::optional<ModelObject> supplyInletNodeAsModelObject();
-      boost::optional<ModelObject> supplyOutletNodeAsModelObject();
-      boost::optional<ModelObject> demandInletNodeAsModelObject();
-      boost::optional<ModelObject> demandOutletNodeAsModelObject();
+      boost::optional<ModelObject> supplyInletNodeAsModelObject() const;
+      boost::optional<ModelObject> supplyOutletNodeAsModelObject() const;
+      boost::optional<ModelObject> demandInletNodeAsModelObject() const;
+      boost::optional<ModelObject> demandOutletNodeAsModelObject() const;
     };
 
   }  // namespace detail

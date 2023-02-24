@@ -86,14 +86,14 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_Clone) {
   groundTemp.setJanuaryDeepGroundTemperature(25.0);
 
   // Clone it into the same model
-  SiteGroundTemperatureDeep groundTempClone = groundTemp.clone(m).cast<SiteGroundTemperatureDeep>();
+  auto groundTempClone = groundTemp.clone(m).cast<SiteGroundTemperatureDeep>();
   ASSERT_FALSE(groundTempClone.isJanuaryDeepGroundTemperatureDefaulted());
   ASSERT_EQ(25.0, groundTempClone.januaryDeepGroundTemperature());
   ASSERT_TRUE(groundTempClone.isFebruaryDeepGroundTemperatureDefaulted());
 
   // Clone it into a different model
   Model m2;
-  SiteGroundTemperatureDeep groundTempClone2 = groundTemp.clone(m2).cast<SiteGroundTemperatureDeep>();
+  auto groundTempClone2 = groundTemp.clone(m2).cast<SiteGroundTemperatureDeep>();
   ASSERT_FALSE(groundTempClone2.isJanuaryDeepGroundTemperatureDefaulted());
   ASSERT_EQ(25.0, groundTempClone2.januaryDeepGroundTemperature());
   ASSERT_TRUE(groundTempClone2.isFebruaryDeepGroundTemperatureDefaulted());

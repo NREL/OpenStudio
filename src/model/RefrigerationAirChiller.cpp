@@ -115,7 +115,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationAirChiller_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_AirChillerFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationAirChiller", "Availability"));
       }
@@ -132,8 +133,8 @@ namespace model {
     }
 
     ModelObject RefrigerationAirChiller_Impl::clone(Model model) const {
-      RefrigerationAirChiller airChillerClone = ZoneHVACComponent_Impl::clone(model).cast<RefrigerationAirChiller>();
-      return airChillerClone;
+      auto airChillerClone = ZoneHVACComponent_Impl::clone(model).cast<RefrigerationAirChiller>();
+      return std::move(airChillerClone);
     }
 
     std::vector<IdfObject> RefrigerationAirChiller_Impl::remove() {
@@ -162,7 +163,7 @@ namespace model {
 
     boost::optional<ThermalZone> RefrigerationAirChiller_Impl::thermalZone() const {
       Model m = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = m.getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -390,8 +391,8 @@ namespace model {
 
     boost::optional<RefrigerationSystem> RefrigerationAirChiller_Impl::system() const {
       std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
-      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+      auto refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      for (const RefrigerationSystem& refrigerationSystem : refrigerationSystems) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSystem.airChillers();
         if (!refrigerationAirChillers.empty()
             && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
@@ -404,8 +405,8 @@ namespace model {
 
     boost::optional<RefrigerationSecondarySystem> RefrigerationAirChiller_Impl::secondarySystem() const {
       std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
-      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
-      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+      auto refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      for (const RefrigerationSecondarySystem& refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSecondarySystem.airChillers();
         if (!refrigerationAirChillers.empty()
             && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
@@ -418,8 +419,8 @@ namespace model {
 
     boost::optional<RefrigerationCompressorRack> RefrigerationAirChiller_Impl::compressorRack() const {
       std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
-      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
-      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+      auto refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      for (const RefrigerationCompressorRack& refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationCompressorRack.airChillers();
         if (!refrigerationAirChillers.empty()
             && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
@@ -440,7 +441,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setCapacityRatingType(std::string capacityRatingType) {
+    bool RefrigerationAirChiller_Impl::setCapacityRatingType(const std::string& capacityRatingType) {
       bool result = setString(OS_Refrigeration_AirChillerFields::CapacityRatingType, capacityRatingType);
       return result;
     }
@@ -539,7 +540,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    // bool RefrigerationAirChiller_Impl::setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType) {
+    // bool RefrigerationAirChiller_Impl::setCapacityCorrectionCurveType(const std::string& capacityCorrectionCurveType) {
     //   bool result = setString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType, capacityCorrectionCurveType);
     //   return result;
     // }
@@ -592,7 +593,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setFanSpeedControlType(std::string fanSpeedControlType) {
+    bool RefrigerationAirChiller_Impl::setFanSpeedControlType(const std::string& fanSpeedControlType) {
       bool result = setString(OS_Refrigeration_AirChillerFields::FanSpeedControlType, fanSpeedControlType);
       return result;
     }
@@ -628,7 +629,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setDefrostType(std::string defrostType) {
+    bool RefrigerationAirChiller_Impl::setDefrostType(const std::string& defrostType) {
       bool result = setString(OS_Refrigeration_AirChillerFields::DefrostType, defrostType);
       return result;
     }
@@ -638,7 +639,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setDefrostControlType(std::string defrostControlType) {
+    bool RefrigerationAirChiller_Impl::setDefrostControlType(const std::string& defrostControlType) {
       bool result = setString(OS_Refrigeration_AirChillerFields::DefrostControlType, defrostControlType);
       return result;
     }
@@ -698,7 +699,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setVerticalLocation(std::string verticalLocation) {
+    bool RefrigerationAirChiller_Impl::setVerticalLocation(const std::string& verticalLocation) {
       bool result = setString(OS_Refrigeration_AirChillerFields::VerticalLocation, verticalLocation);
       return result;
     }
@@ -798,7 +799,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationAirChiller::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_AirChiller);
+    return {IddObjectType::OS_Refrigeration_AirChiller};
   }
 
   std::vector<std::string> RefrigerationAirChiller::capacityRatingTypeValues() {
@@ -1002,7 +1003,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetAvailabilitySchedule();
   }
 
-  bool RefrigerationAirChiller::setCapacityRatingType(std::string capacityRatingType) {
+  bool RefrigerationAirChiller::setCapacityRatingType(const std::string& capacityRatingType) {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityRatingType(capacityRatingType);
   }
 
@@ -1064,7 +1065,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetRefrigerantCorrectionFactor();
   }
 
-  // bool RefrigerationAirChiller::setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType) {
+  // bool RefrigerationAirChiller::setCapacityCorrectionCurveType(const std::string& capacityCorrectionCurveType) {
   //   return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityCorrectionCurveType(capacityCorrectionCurveType);
   // }
 
@@ -1100,7 +1101,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetHeatingPowerSchedule();
   }
 
-  bool RefrigerationAirChiller::setFanSpeedControlType(std::string fanSpeedControlType) {
+  bool RefrigerationAirChiller::setFanSpeedControlType(const std::string& fanSpeedControlType) {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->setFanSpeedControlType(fanSpeedControlType);
   }
 
@@ -1128,7 +1129,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetMinimumFanAirFlowRatio();
   }
 
-  bool RefrigerationAirChiller::setDefrostType(std::string defrostType) {
+  bool RefrigerationAirChiller::setDefrostType(const std::string& defrostType) {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostType(defrostType);
   }
 
@@ -1136,7 +1137,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostType();
   }
 
-  bool RefrigerationAirChiller::setDefrostControlType(std::string defrostControlType) {
+  bool RefrigerationAirChiller::setDefrostControlType(const std::string& defrostControlType) {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostControlType(defrostControlType);
   }
 
@@ -1172,7 +1173,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetTemperatureTerminationDefrostFractiontoIce();
   }
 
-  // bool RefrigerationAirChiller::setVerticalLocation(std::string verticalLocation) {
+  // bool RefrigerationAirChiller::setVerticalLocation(const std::string& verticalLocation) {
   //   return getImpl<detail::RefrigerationAirChiller_Impl>()->setVerticalLocation(verticalLocation);
   // }
 

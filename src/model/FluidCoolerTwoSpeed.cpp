@@ -529,7 +529,7 @@ namespace model {
   }
 
   IddObjectType FluidCoolerTwoSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_FluidCooler_TwoSpeed);
+    return {IddObjectType::OS_FluidCooler_TwoSpeed};
   }
 
   std::vector<std::string> FluidCoolerTwoSpeed::performanceInputMethodValues() {

@@ -81,18 +81,18 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACWaterToAirHeatPump_Impl::clone(Model model) const {
-      ZoneHVACWaterToAirHeatPump wahpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACWaterToAirHeatPump>();
+      auto wahpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACWaterToAirHeatPump>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       auto t_coolingCoil = coolingCoil();
-      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
+      auto coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
       auto t_supplementalHeatingCoil = supplementalHeatingCoil();
-      HVACComponent supplementalHeatingCoilClone = t_supplementalHeatingCoil.clone(model).cast<HVACComponent>();
+      auto supplementalHeatingCoilClone = t_supplementalHeatingCoil.clone(model).cast<HVACComponent>();
 
       wahpClone.setSupplyAirFan(supplyFanClone);
 
@@ -120,7 +120,7 @@ namespace model {
         }
       }
 
-      return wahpClone;
+      return std::move(wahpClone);
     }
 
     std::vector<IdfObject> ZoneHVACWaterToAirHeatPump_Impl::remove() {
@@ -168,7 +168,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACWaterToAirHeatPump_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACWaterToAirHeatPump", "Availability"));
       }
@@ -677,7 +678,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACWaterToAirHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
+    bool ZoneHVACWaterToAirHeatPump_Impl::setFanPlacement(const std::string& fanPlacement) {
       bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::FanPlacement, fanPlacement);
       return result;
     }
@@ -687,7 +688,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode) {
+    bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpCoilWaterFlowMode(const std::string& heatPumpCoilWaterFlowMode) {
       bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode, heatPumpCoilWaterFlowMode);
       return result;
     }
@@ -943,7 +944,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACWaterToAirHeatPump::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump);
+    return {IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump};
   }
 
   std::vector<std::string> ZoneHVACWaterToAirHeatPump::fanPlacementValues() {
@@ -1284,7 +1285,7 @@ namespace model {
     getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
   }
 
-  bool ZoneHVACWaterToAirHeatPump::setFanPlacement(std::string fanPlacement) {
+  bool ZoneHVACWaterToAirHeatPump::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setFanPlacement(fanPlacement);
   }
 
@@ -1292,7 +1293,7 @@ namespace model {
     getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetFanPlacement();
   }
 
-  bool ZoneHVACWaterToAirHeatPump::setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode) {
+  bool ZoneHVACWaterToAirHeatPump::setHeatPumpCoilWaterFlowMode(const std::string& heatPumpCoilWaterFlowMode) {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpCoilWaterFlowMode(heatPumpCoilWaterFlowMode);
   }
 

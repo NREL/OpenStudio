@@ -56,7 +56,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ComponentCostAdjustments() {}
+    virtual ~ComponentCostAdjustments() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ComponentCostAdjustments(const ComponentCostAdjustments& other) = default;
+    ComponentCostAdjustments(ComponentCostAdjustments&& other) = default;
+    ComponentCostAdjustments& operator=(const ComponentCostAdjustments&) = default;
+    ComponentCostAdjustments& operator=(ComponentCostAdjustments&&) = default;
 
     //@}
     /** @name Getters */
@@ -102,7 +107,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::ComponentCostAdjustments_Impl ImplType;
+    using ImplType = detail::ComponentCostAdjustments_Impl;
 
     friend class Model;
     friend class IdfObject;
@@ -120,10 +125,10 @@ namespace model {
   };
 
   /** \relates ComponentCostAdjustments */
-  typedef boost::optional<ComponentCostAdjustments> OptionalComponentCostAdjustments;
+  using OptionalComponentCostAdjustments = boost::optional<ComponentCostAdjustments>;
 
   /** \relates ComponentCostAdjustments */
-  typedef std::vector<ComponentCostAdjustments> ComponentCostAdjustmentsVector;
+  using ComponentCostAdjustmentsVector = std::vector<ComponentCostAdjustments>;
 
 }  // namespace model
 }  // namespace openstudio

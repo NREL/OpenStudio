@@ -55,7 +55,7 @@ namespace model {
 
       HotWaterEquipment_Impl(const HotWaterEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HotWaterEquipment_Impl() {}
+      virtual ~HotWaterEquipment_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -115,7 +115,7 @@ namespace model {
 
       void resetMultiplier();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

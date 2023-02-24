@@ -52,7 +52,12 @@ namespace model {
 
     explicit AirGap(const Model& model, double thermalResistance = 0.1);
 
-    virtual ~AirGap() {}
+    virtual ~AirGap() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirGap(const AirGap& other) = default;
+    AirGap(AirGap&& other) = default;
+    AirGap& operator=(const AirGap&) = default;
+    AirGap& operator=(AirGap&&) = default;
 
     //@}
 
@@ -79,7 +84,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirGap_Impl ImplType;
+    using ImplType = detail::AirGap_Impl;
 
     explicit AirGap(std::shared_ptr<detail::AirGap_Impl> impl);
 
@@ -93,10 +98,10 @@ namespace model {
   };
 
   /** \relates AirGap*/
-  typedef boost::optional<AirGap> OptionalAirGap;
+  using OptionalAirGap = boost::optional<AirGap>;
 
   /** \relates AirGap*/
-  typedef std::vector<AirGap> AirGapVector;
+  using AirGapVector = std::vector<AirGap>;
 
 }  // namespace model
 }  // namespace openstudio

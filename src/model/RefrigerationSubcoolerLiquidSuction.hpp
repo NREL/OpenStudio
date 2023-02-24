@@ -54,7 +54,12 @@ namespace model {
 
     explicit RefrigerationSubcoolerLiquidSuction(const Model& model);
 
-    virtual ~RefrigerationSubcoolerLiquidSuction() {}
+    virtual ~RefrigerationSubcoolerLiquidSuction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationSubcoolerLiquidSuction(const RefrigerationSubcoolerLiquidSuction& other) = default;
+    RefrigerationSubcoolerLiquidSuction(RefrigerationSubcoolerLiquidSuction&& other) = default;
+    RefrigerationSubcoolerLiquidSuction& operator=(const RefrigerationSubcoolerLiquidSuction&) = default;
+    RefrigerationSubcoolerLiquidSuction& operator=(RefrigerationSubcoolerLiquidSuction&&) = default;
 
     //@}
 
@@ -96,7 +101,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationSubcoolerLiquidSuction_Impl ImplType;
+    using ImplType = detail::RefrigerationSubcoolerLiquidSuction_Impl;
 
     explicit RefrigerationSubcoolerLiquidSuction(std::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl);
 
@@ -110,10 +115,10 @@ namespace model {
   };
 
   /** \relates RefrigerationSubcoolerLiquidSuction*/
-  typedef boost::optional<RefrigerationSubcoolerLiquidSuction> OptionalRefrigerationSubcoolerLiquidSuction;
+  using OptionalRefrigerationSubcoolerLiquidSuction = boost::optional<RefrigerationSubcoolerLiquidSuction>;
 
   /** \relates RefrigerationSubcoolerLiquidSuction*/
-  typedef std::vector<RefrigerationSubcoolerLiquidSuction> RefrigerationSubcoolerLiquidSuctionVector;
+  using RefrigerationSubcoolerLiquidSuctionVector = std::vector<RefrigerationSubcoolerLiquidSuction>;
 
 }  // namespace model
 }  // namespace openstudio

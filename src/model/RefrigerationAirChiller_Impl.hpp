@@ -57,7 +57,7 @@ namespace model {
 
       RefrigerationAirChiller_Impl(const RefrigerationAirChiller_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationAirChiller_Impl() {}
+      virtual ~RefrigerationAirChiller_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -181,7 +181,7 @@ namespace model {
 
       void resetAvailabilitySchedule();
 
-      bool setCapacityRatingType(std::string capacityRatingType);
+      bool setCapacityRatingType(const std::string& capacityRatingType);
 
       bool setRatedUnitLoadFactor(boost::optional<double> ratedUnitLoadFactor);
 
@@ -212,7 +212,7 @@ namespace model {
 
       void resetRefrigerantCorrectionFactor();
 
-      // bool setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType);
+      // bool setCapacityCorrectionCurveType(const std::string& capacityCorrectionCurveType);
 
       // void resetCapacityCorrectionCurveType();
 
@@ -230,7 +230,7 @@ namespace model {
 
       void resetHeatingPowerSchedule();
 
-      bool setFanSpeedControlType(std::string fanSpeedControlType);
+      bool setFanSpeedControlType(const std::string& fanSpeedControlType);
 
       void resetFanSpeedControlType();
 
@@ -244,11 +244,11 @@ namespace model {
 
       void resetMinimumFanAirFlowRatio();
 
-      bool setDefrostType(std::string defrostType);
+      bool setDefrostType(const std::string& defrostType);
 
       void resetDefrostType();
 
-      bool setDefrostControlType(std::string defrostControlType);
+      bool setDefrostControlType(const std::string& defrostControlType);
 
       void resetDefrostControlType();
 
@@ -266,7 +266,7 @@ namespace model {
 
       void resetTemperatureTerminationDefrostFractiontoIce();
 
-      bool setVerticalLocation(std::string verticalLocation);
+      bool setVerticalLocation(const std::string& verticalLocation);
 
       void resetVerticalLocation();
 

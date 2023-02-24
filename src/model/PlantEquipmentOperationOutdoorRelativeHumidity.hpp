@@ -51,7 +51,12 @@ namespace model {
 
     explicit PlantEquipmentOperationOutdoorRelativeHumidity(const Model& model);
 
-    virtual ~PlantEquipmentOperationOutdoorRelativeHumidity() {}
+    virtual ~PlantEquipmentOperationOutdoorRelativeHumidity() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantEquipmentOperationOutdoorRelativeHumidity(const PlantEquipmentOperationOutdoorRelativeHumidity& other) = default;
+    PlantEquipmentOperationOutdoorRelativeHumidity(PlantEquipmentOperationOutdoorRelativeHumidity&& other) = default;
+    PlantEquipmentOperationOutdoorRelativeHumidity& operator=(const PlantEquipmentOperationOutdoorRelativeHumidity&) = default;
+    PlantEquipmentOperationOutdoorRelativeHumidity& operator=(PlantEquipmentOperationOutdoorRelativeHumidity&&) = default;
 
     //@}
 
@@ -71,7 +76,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl;
 
     explicit PlantEquipmentOperationOutdoorRelativeHumidity(std::shared_ptr<detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl> impl);
 
@@ -85,10 +90,10 @@ namespace model {
   };
 
   /** \relates PlantEquipmentOperationOutdoorRelativeHumidity*/
-  typedef boost::optional<PlantEquipmentOperationOutdoorRelativeHumidity> OptionalPlantEquipmentOperationOutdoorRelativeHumidity;
+  using OptionalPlantEquipmentOperationOutdoorRelativeHumidity = boost::optional<PlantEquipmentOperationOutdoorRelativeHumidity>;
 
   /** \relates PlantEquipmentOperationOutdoorRelativeHumidity*/
-  typedef std::vector<PlantEquipmentOperationOutdoorRelativeHumidity> PlantEquipmentOperationOutdoorRelativeHumidityVector;
+  using PlantEquipmentOperationOutdoorRelativeHumidityVector = std::vector<PlantEquipmentOperationOutdoorRelativeHumidity>;
 
 }  // namespace model
 }  // namespace openstudio

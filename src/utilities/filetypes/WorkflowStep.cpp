@@ -35,9 +35,7 @@
 namespace openstudio {
 namespace detail {
 
-  WorkflowStep_Impl::WorkflowStep_Impl() {}
-
-  WorkflowStep_Impl::~WorkflowStep_Impl() {}
+  WorkflowStep_Impl::WorkflowStep_Impl() = default;
 
   boost::optional<WorkflowStepResult> WorkflowStep_Impl::result() const {
     return m_result;
@@ -218,8 +216,6 @@ namespace detail {
 WorkflowStep::WorkflowStep(std::shared_ptr<detail::WorkflowStep_Impl> impl) : m_impl(impl) {
   OS_ASSERT(getImpl<detail::WorkflowStep_Impl>());
 }
-
-WorkflowStep::~WorkflowStep() {}
 
 boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s) {
   boost::optional<WorkflowStep> result;

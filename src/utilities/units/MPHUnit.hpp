@@ -101,12 +101,12 @@ class UTILITIES_API MPHUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   MPHUnit(const std::string& scaleAbbreviation, const MPHExpnt& exponents = MPHExpnt(), const std::string& prettyString = "");
 
-  virtual ~MPHUnit() {}
+  virtual ~MPHUnit() = default;
 
   //@}
  protected:
   /// @cond
-  typedef detail::MPHUnit_Impl ImplType;
+  using ImplType = detail::MPHUnit_Impl;
 
   explicit MPHUnit(std::shared_ptr<detail::MPHUnit_Impl> impl);
 
@@ -118,10 +118,10 @@ class UTILITIES_API MPHUnit : public Unit
 };
 
 /** \relates MPHUnit*/
-typedef boost::optional<MPHUnit> OptionalMPHUnit;
+using OptionalMPHUnit = boost::optional<MPHUnit>;
 
 /** \relates MPHUnit*/
-typedef std::vector<MPHUnit> MPHUnitVector;
+using MPHUnitVector = std::vector<MPHUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

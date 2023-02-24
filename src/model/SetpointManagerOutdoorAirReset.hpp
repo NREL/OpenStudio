@@ -52,7 +52,12 @@ namespace model {
    public:
     explicit SetpointManagerOutdoorAirReset(const Model& model);
 
-    virtual ~SetpointManagerOutdoorAirReset() {}
+    virtual ~SetpointManagerOutdoorAirReset() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerOutdoorAirReset(const SetpointManagerOutdoorAirReset& other) = default;
+    SetpointManagerOutdoorAirReset(SetpointManagerOutdoorAirReset&& other) = default;
+    SetpointManagerOutdoorAirReset& operator=(const SetpointManagerOutdoorAirReset&) = default;
+    SetpointManagerOutdoorAirReset& operator=(SetpointManagerOutdoorAirReset&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -116,7 +121,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::SetpointManagerOutdoorAirReset_Impl ImplType;
+    using ImplType = detail::SetpointManagerOutdoorAirReset_Impl;
 
     explicit SetpointManagerOutdoorAirReset(std::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl);
 
@@ -131,10 +136,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerOutdoorAirReset*/
-  typedef boost::optional<SetpointManagerOutdoorAirReset> OptionalSetpointManagerOutdoorAirReset;
+  using OptionalSetpointManagerOutdoorAirReset = boost::optional<SetpointManagerOutdoorAirReset>;
 
   /** \relates SetpointManagerOutdoorAirReset*/
-  typedef std::vector<SetpointManagerOutdoorAirReset> SetpointManagerOutdoorAirResetVector;
+  using SetpointManagerOutdoorAirResetVector = std::vector<SetpointManagerOutdoorAirReset>;
 
 }  // namespace model
 }  // namespace openstudio

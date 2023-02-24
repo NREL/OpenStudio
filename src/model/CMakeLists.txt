@@ -2375,7 +2375,10 @@ if(BUILD_TESTING)
 endif()
 
 SET(${target_name}_benchmark_src
-  test/Model_Benchmark.cpp
+  benchmark/Model_Benchmark.cpp
+  benchmark/ThermalZoneCombineSpaces_Benchmark.cpp
+  benchmark/Vector_remove_vs_copy_Benchmark.cpp
+  benchmark/Model_ModelObjects_Benchmark.cpp
 )
 
 if(BUILD_BENCHMARK)
@@ -2389,6 +2392,8 @@ if(BUILD_BENCHMARK)
       CONAN_PKG::fmt
       openstudiolib
     )
+    set_target_properties(${bench_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/benchmark")
+    add_dependencies(run_benchmarks ${bench_name})
   endforeach()
 
 endif()

@@ -42,7 +42,7 @@ EulerAngles::EulerAngles(double psi, double theta, double phi) : m_storage(3) {
 }
 
 /// copy constructor
-EulerAngles::EulerAngles(const EulerAngles& other) : m_storage(other.m_storage) {}
+EulerAngles::EulerAngles(const EulerAngles& other) = default;
 
 /// get psi
 double EulerAngles::psi() const {

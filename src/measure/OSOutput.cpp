@@ -116,7 +116,7 @@ namespace measure {
     return ss.str();
   }
 
-  OSOutput::OSOutput() {}
+  OSOutput::OSOutput() = default;
 
   OSOutput::OSOutput(const std::string& name, const OSOutputType& type, bool modelDependent)
     : m_name(name), m_displayName(name), m_shortName(name), m_type(type), m_modelDependent(modelDependent) {}

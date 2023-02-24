@@ -89,21 +89,21 @@ namespace model {
 
       // We call the parent generator's Clone method which will clone both the mchp and mchpHR
       GeneratorMicroTurbine mchp = generatorMicroTurbine();
-      GeneratorMicroTurbine mchpClone = mchp.clone(model).cast<GeneratorMicroTurbine>();
+      auto mchpClone = mchp.clone(model).cast<GeneratorMicroTurbine>();
 
       // We get the clone of the parent generator's MTHR so we can return that
       GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpClone.generatorMicroTurbineHeatRecovery().get();
 
-      return mchpHRClone;
+      return std::move(mchpHRClone);
     }
 
     std::vector<IddObjectType> GeneratorMicroTurbineHeatRecovery_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_Curve_Bicubic);
-      result.push_back(IddObjectType::OS_Curve_Biquadratic);
-      result.push_back(IddObjectType::OS_Curve_Cubic);
-      result.push_back(IddObjectType::OS_Curve_Quadratic);
-      return result;
+      return {
+        IddObjectType::OS_Curve_Bicubic,
+        IddObjectType::OS_Curve_Biquadratic,
+        IddObjectType::OS_Curve_Cubic,
+        IddObjectType::OS_Curve_Quadratic,
+      };
     }
 
     // Returns the children objects (max of 4 curves)
@@ -330,7 +330,7 @@ namespace model {
       return result;
     }
 
-    bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode) {
+    bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryWaterFlowOperatingMode(const std::string& heatRecoveryWaterFlowOperatingMode) {
       bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode, heatRecoveryWaterFlowOperatingMode);
       return result;
     }
@@ -483,7 +483,7 @@ namespace model {
   }
 
   IddObjectType GeneratorMicroTurbineHeatRecovery::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_MicroTurbine_HeatRecovery);
+    return {IddObjectType::OS_Generator_MicroTurbine_HeatRecovery};
   }
 
   std::vector<std::string> GeneratorMicroTurbineHeatRecovery::validHeatRecoveryWaterFlowOperatingModeValues() {
@@ -607,7 +607,7 @@ void GeneratorMicroTurbineHeatRecovery::resetHeatRecoveryWaterOutletNode() {
     return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->setReferenceInletWaterTemperature(value);
   }
 
-  bool GeneratorMicroTurbineHeatRecovery::setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode) {
+  bool GeneratorMicroTurbineHeatRecovery::setHeatRecoveryWaterFlowOperatingMode(const std::string& heatRecoveryWaterFlowOperatingMode) {
     return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->setHeatRecoveryWaterFlowOperatingMode(heatRecoveryWaterFlowOperatingMode);
   }
 

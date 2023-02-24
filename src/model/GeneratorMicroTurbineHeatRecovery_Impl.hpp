@@ -55,7 +55,7 @@ namespace model {
 
       GeneratorMicroTurbineHeatRecovery_Impl(const GeneratorMicroTurbineHeatRecovery_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorMicroTurbineHeatRecovery_Impl() {}
+      virtual ~GeneratorMicroTurbineHeatRecovery_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -143,7 +143,7 @@ namespace model {
 
       bool setReferenceInletWaterTemperature(double referenceInletWaterTemperature);
 
-      bool setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode);
+      bool setHeatRecoveryWaterFlowOperatingMode(const std::string& heatRecoveryWaterFlowOperatingMode);
       void resetHeatRecoveryWaterFlowOperatingMode();
 
       bool setReferenceHeatRecoveryWaterFlowRate(double referenceHeatRecoveryWaterFlowRate);

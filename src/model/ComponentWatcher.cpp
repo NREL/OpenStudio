@@ -105,7 +105,7 @@ namespace model {
       return;
     }
 
-    void ComponentWatcher_Impl::relationshipChange(int index, Handle newHandle, Handle oldHandle) {
+    void ComponentWatcher_Impl::relationshipChange(int /*index*/, Handle newHandle, Handle oldHandle) {
       OS_ASSERT(newHandle != oldHandle);
       // if oldHandle is in the Component nullify the component
       HandleVector hs = getHandles<ModelObject>(m_componentObjects);
@@ -127,7 +127,7 @@ namespace model {
       }
 
       // if removedObject is the primary componentObject, nullify the component.
-      OS_ASSERT(m_componentObjects.size() > 0);
+      OS_ASSERT(!m_componentObjects.empty());
       if (handleOfRemovedObject == m_componentObjects[0].handle()) {
         mf_removeComponent();
         return;
@@ -135,18 +135,19 @@ namespace model {
 
       // if removedObject is a componentObject, remove from the vector and refresh
       // component contents
-      auto it = std::find_if(m_componentObjects.begin(), m_componentObjects.end(),
-                             std::bind(handleEquals<ModelObject, Handle>, std::placeholders::_1, handleOfRemovedObject));
+      auto it = std::find_if(m_componentObjects.begin(), m_componentObjects.end(), [&handleOfRemovedObject](const ModelObject& mo) {
+        return handleEquals<ModelObject, Handle>(mo, handleOfRemovedObject);
+      });
       if (it != m_componentObjects.end()) {
         OS_ASSERT(it != m_componentObjects.begin());
         m_componentObjects.erase(it);
         mf_refreshComponentContents(false);
         return;
       }
-      return;
     }
 
-    void ComponentWatcher_Impl::objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+    void ComponentWatcher_Impl::objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& /*type*/,
+                                          const openstudio::UUID& /*uuid*/) {
       /*IddObjectType type =*/addedObject.iddObject().type();
       return;
     }
@@ -163,7 +164,7 @@ namespace model {
       implPtr.get()->ModelObject_Impl::onDataChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
     }
 
-    void ComponentWatcher_Impl::mf_refreshComponentContents(bool logWarnings) {
+    void ComponentWatcher_Impl::mf_refreshComponentContents(bool /*logWarnings*/) {
       // disconnect componentDataChange slot to avoid endless loop
       std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
       implPtr.get()->onDataChange.disconnect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);

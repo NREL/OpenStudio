@@ -68,12 +68,12 @@ TEST_F(ModelFixture, CoilCoolingWaterToAirHeatPumpEquationFit_Check_Clone) {
   coil.setRatedAirFlowRate(100);
 
   // Clone into the same model
-  CoilCoolingWaterToAirHeatPumpEquationFit cloneCoil = coil.clone(model).cast<model::CoilCoolingWaterToAirHeatPumpEquationFit>();
+  auto cloneCoil = coil.clone(model).cast<model::CoilCoolingWaterToAirHeatPumpEquationFit>();
   ASSERT_EQ(coil.ratedAirFlowRate().get(), cloneCoil.ratedAirFlowRate().get());
 
   // Clone into another model
   Model model2;
-  CoilCoolingWaterToAirHeatPumpEquationFit cloneCoil2 = coil.clone(model2).cast<model::CoilCoolingWaterToAirHeatPumpEquationFit>();
+  auto cloneCoil2 = coil.clone(model2).cast<model::CoilCoolingWaterToAirHeatPumpEquationFit>();
   ASSERT_EQ(coil.ratedAirFlowRate().get(), cloneCoil2.ratedAirFlowRate().get());
 }
 

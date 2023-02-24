@@ -81,7 +81,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ExteriorWaterEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Exterior_WaterEquipmentFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ExteriorWaterEquipment", "Exterior WaterEquipment"));
       }
@@ -159,7 +160,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ExteriorWaterEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool ExteriorWaterEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Exterior_WaterEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -304,7 +305,7 @@ namespace model {
     getImpl<detail::ExteriorWaterEquipment_Impl>()->resetMultiplier();
   }
 
-  bool ExteriorWaterEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool ExteriorWaterEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::ExteriorWaterEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

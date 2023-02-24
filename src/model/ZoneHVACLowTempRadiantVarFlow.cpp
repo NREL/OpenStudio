@@ -82,10 +82,10 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACLowTempRadiantVarFlow_Impl::clone(Model model) const {
-      ZoneHVACLowTempRadiantVarFlow lowTempRadiantVarFlowClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTempRadiantVarFlow>();
+      auto lowTempRadiantVarFlowClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTempRadiantVarFlow>();
 
       if (auto t_heatingCoil = optionalHeatingCoil()) {
-        HVACComponent heatingCoilClone = t_heatingCoil->clone(model).cast<HVACComponent>();
+        auto heatingCoilClone = t_heatingCoil->clone(model).cast<HVACComponent>();
         lowTempRadiantVarFlowClone.setHeatingCoil(heatingCoilClone);
         if (model == this->model()) {
           if (auto waterToAirComponent = t_heatingCoil->optionalCast<WaterToAirComponent>()) {
@@ -97,7 +97,7 @@ namespace model {
       }
 
       if (auto t_coolingCoil = optionalCoolingCoil()) {
-        HVACComponent coolingCoilClone = t_coolingCoil->clone(model).cast<HVACComponent>();
+        auto coolingCoilClone = t_coolingCoil->clone(model).cast<HVACComponent>();
         lowTempRadiantVarFlowClone.setCoolingCoil(coolingCoilClone);
         if (model == this->model()) {
           if (auto waterToAirComponent = t_coolingCoil->optionalCast<WaterToAirComponent>()) {
@@ -108,7 +108,7 @@ namespace model {
         }
       }
 
-      return lowTempRadiantVarFlowClone;
+      return std::move(lowTempRadiantVarFlowClone);
     }
 
     std::vector<IdfObject> ZoneHVACLowTempRadiantVarFlow_Impl::remove() {
@@ -145,7 +145,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACLowTempRadiantVarFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantVarFlow", "Availability"));
       }
@@ -505,7 +506,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneHVACLowTempRadiantVarFlow_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -618,7 +619,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACLowTempRadiantVarFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
+    return {IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow};
   }
 
   std::vector<std::string> ZoneHVACLowTempRadiantVarFlow::radiantSurfaceTypeValues() {

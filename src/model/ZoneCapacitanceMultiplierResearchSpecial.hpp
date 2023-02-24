@@ -50,7 +50,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ZoneCapacitanceMultiplierResearchSpecial() {}
+    virtual ~ZoneCapacitanceMultiplierResearchSpecial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneCapacitanceMultiplierResearchSpecial(const ZoneCapacitanceMultiplierResearchSpecial& other) = default;
+    ZoneCapacitanceMultiplierResearchSpecial(ZoneCapacitanceMultiplierResearchSpecial&& other) = default;
+    ZoneCapacitanceMultiplierResearchSpecial& operator=(const ZoneCapacitanceMultiplierResearchSpecial&) = default;
+    ZoneCapacitanceMultiplierResearchSpecial& operator=(ZoneCapacitanceMultiplierResearchSpecial&&) = default;
 
     //@}
 
@@ -94,7 +99,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneCapacitanceMultiplierResearchSpecial_Impl ImplType;
+    using ImplType = detail::ZoneCapacitanceMultiplierResearchSpecial_Impl;
 
     explicit ZoneCapacitanceMultiplierResearchSpecial(std::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl);
 
@@ -110,10 +115,10 @@ namespace model {
   };
 
   /** \relates ZoneCapacitanceMultiplierResearchSpecial*/
-  typedef boost::optional<ZoneCapacitanceMultiplierResearchSpecial> OptionalZoneCapacitanceMultiplierResearchSpecial;
+  using OptionalZoneCapacitanceMultiplierResearchSpecial = boost::optional<ZoneCapacitanceMultiplierResearchSpecial>;
 
   /** \relates ZoneCapacitanceMultiplierResearchSpecial*/
-  typedef std::vector<ZoneCapacitanceMultiplierResearchSpecial> ZoneCapacitanceMultiplierResearchSpecialVector;
+  using ZoneCapacitanceMultiplierResearchSpecialVector = std::vector<ZoneCapacitanceMultiplierResearchSpecial>;
 
 }  // namespace model
 }  // namespace openstudio

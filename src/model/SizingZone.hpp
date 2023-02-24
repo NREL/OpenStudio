@@ -55,7 +55,12 @@ namespace model {
 
     explicit SizingZone(const Model& model, const ThermalZone& thermalZone);
 
-    virtual ~SizingZone() {}
+    virtual ~SizingZone() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SizingZone(const SizingZone& other) = default;
+    SizingZone(SizingZone&& other) = default;
+    SizingZone& operator=(const SizingZone&) = default;
+    SizingZone& operator=(SizingZone&&) = default;
 
     //@}
 
@@ -252,7 +257,7 @@ namespace model {
 
     bool setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
 
-    bool setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy);
+    bool setDedicatedOutdoorAirSystemControlStrategy(const std::string& dedicatedOutdoorAirSystemControlStrategy);
 
     bool setDedicatedOutdoorAirLowSetpointTemperatureforDesign(double dedicatedOutdoorAirLowSetpointTemperatureforDesign);
 
@@ -319,7 +324,7 @@ namespace model {
     bool setThermalZone(const ThermalZone& thermalZone);
 
     /// @cond
-    typedef detail::SizingZone_Impl ImplType;
+    using ImplType = detail::SizingZone_Impl;
 
     explicit SizingZone(std::shared_ptr<detail::SizingZone_Impl> impl);
 
@@ -335,10 +340,10 @@ namespace model {
   };
 
   /** \relates SizingZone*/
-  typedef boost::optional<SizingZone> OptionalSizingZone;
+  using OptionalSizingZone = boost::optional<SizingZone>;
 
   /** \relates SizingZone*/
-  typedef std::vector<SizingZone> SizingZoneVector;
+  using SizingZoneVector = std::vector<SizingZone>;
 
 }  // namespace model
 }  // namespace openstudio

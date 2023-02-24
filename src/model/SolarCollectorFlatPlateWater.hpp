@@ -56,7 +56,12 @@ namespace model {
 
     explicit SolarCollectorFlatPlateWater(const Model& model);
 
-    virtual ~SolarCollectorFlatPlateWater() {}
+    virtual ~SolarCollectorFlatPlateWater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorFlatPlateWater(const SolarCollectorFlatPlateWater& other) = default;
+    SolarCollectorFlatPlateWater(SolarCollectorFlatPlateWater&& other) = default;
+    SolarCollectorFlatPlateWater& operator=(const SolarCollectorFlatPlateWater&) = default;
+    SolarCollectorFlatPlateWater& operator=(SolarCollectorFlatPlateWater&&) = default;
 
     //@}
 
@@ -100,7 +105,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SolarCollectorFlatPlateWater_Impl ImplType;
+    using ImplType = detail::SolarCollectorFlatPlateWater_Impl;
 
     explicit SolarCollectorFlatPlateWater(std::shared_ptr<detail::SolarCollectorFlatPlateWater_Impl> impl);
 
@@ -114,10 +119,10 @@ namespace model {
   };
 
   /** \relates SolarCollectorFlatPlateWater*/
-  typedef boost::optional<SolarCollectorFlatPlateWater> OptionalSolarCollectorFlatPlateWater;
+  using OptionalSolarCollectorFlatPlateWater = boost::optional<SolarCollectorFlatPlateWater>;
 
   /** \relates SolarCollectorFlatPlateWater*/
-  typedef std::vector<SolarCollectorFlatPlateWater> SolarCollectorFlatPlateWaterVector;
+  using SolarCollectorFlatPlateWaterVector = std::vector<SolarCollectorFlatPlateWater>;
 
 }  // namespace model
 }  // namespace openstudio

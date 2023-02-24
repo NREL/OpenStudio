@@ -61,12 +61,17 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Schedule() {}
+    virtual ~Schedule() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Schedule(const Schedule& other) = default;
+    Schedule(Schedule&& other) = default;
+    Schedule& operator=(const Schedule&) = default;
+    Schedule& operator=(Schedule&&) = default;
 
     //@}
    protected:
     /// @cond
-    typedef detail::Schedule_Impl ImplType;
+    using ImplType = detail::Schedule_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -83,10 +88,10 @@ namespace model {
   };
 
   // optional Schedule
-  typedef boost::optional<Schedule> OptionalSchedule;
+  using OptionalSchedule = boost::optional<Schedule>;
 
   // vector of Schedule
-  typedef std::vector<Schedule> ScheduleVector;
+  using ScheduleVector = std::vector<Schedule>;
 
 }  // namespace model
 }  // namespace openstudio

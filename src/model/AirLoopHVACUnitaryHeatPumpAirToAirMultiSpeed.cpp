@@ -77,7 +77,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed", "Availability Schedule"));
       }
@@ -367,7 +368,7 @@ namespace model {
       return result;
     }
 
-    bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::setSupplyAirFanPlacement(std::string supplyAirFanPlacement) {
+    bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement) {
       bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFanPlacement, supplyAirFanPlacement);
       return result;
     }
@@ -614,8 +615,7 @@ namespace model {
     }
 
     ModelObject AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::clone(Model model) const {
-      AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed modelObjectClone =
-        ModelObject_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
 
       if (boost::optional<HVACComponent> supplyFan = this->supplyAirFan()) {
         modelObjectClone.setSupplyAirFan(supplyFan->clone(model).cast<HVACComponent>());
@@ -630,7 +630,7 @@ namespace model {
         modelObjectClone.setSupplementalHeatingCoil(supplementalHeatingCoil->clone(model).cast<HVACComponent>());
       }
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::children() const {
@@ -829,7 +829,7 @@ namespace model {
   }
 
   IddObjectType AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed);
+    return {IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed};
   }
 
   std::vector<std::string> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::supplyAirFanPlacementValues() {
@@ -1001,7 +1001,7 @@ namespace model {
     return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->setSupplyAirFan(fan);
   }
 
-  bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setSupplyAirFanPlacement(std::string supplyAirFanPlacement) {
+  bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement) {
     return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->setSupplyAirFanPlacement(supplyAirFanPlacement);
   }
 

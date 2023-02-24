@@ -55,7 +55,7 @@ namespace model {
 
       CentralHeatPumpSystem_Impl(const CentralHeatPumpSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CentralHeatPumpSystem_Impl() {}
+      virtual ~CentralHeatPumpSystem_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -107,7 +107,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setControlMethod(std::string controlMethod);
+      bool setControlMethod(const std::string& controlMethod);
 
       bool setAncillaryPower(double ancillaryPower);
 

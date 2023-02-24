@@ -99,7 +99,7 @@ namespace detail {
     // is index in the regular fields
     if (index < m_fields.size()) {
       field = m_fields[index];
-    } else if (m_extensibleFields.size() > 0) {
+    } else if (!m_extensibleFields.empty()) {
       // if not subtract out fields size and mod by number of extensible fields
       index = index - m_fields.size();
       index = index % m_extensibleFields.size();
@@ -230,7 +230,7 @@ namespace detail {
   }
 
   bool IddObject_Impl::hasHandleField() const {
-    return ((m_fields.size() > 0) && (m_fields[0].properties().type == IddFieldType::HandleType));
+    return ((!m_fields.empty()) && (m_fields[0].properties().type == IddFieldType::HandleType));
   }
 
   bool IddObject_Impl::hasNameField() const {
@@ -411,7 +411,7 @@ namespace detail {
     try {
       result->parse(text);
     } catch (...) {
-      return std::shared_ptr<IddObject_Impl>();
+      return {};
     }
 
     return result;
@@ -682,7 +682,7 @@ namespace detail {
 
 IddObject::IddObject() : m_impl(std::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl())) {}
 
-IddObject::IddObject(const IddObject& other) : m_impl(other.m_impl) {}
+IddObject::IddObject(const IddObject& other) = default;
 
 // GETTERS
 

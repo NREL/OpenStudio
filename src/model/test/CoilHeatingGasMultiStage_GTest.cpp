@@ -119,7 +119,8 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
   {
     int stageIndex = 3;
     std::vector<CoilHeatingGasMultiStageStageData> thisStages = coil.stages();
-    const auto& stageAtIndex = thisStages[stageIndex - 1];
+    // Explicit copy, so we can keep using it after it's been removed
+    const auto stageAtIndex = thisStages[stageIndex - 1];
     EXPECT_TRUE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
     auto optIndex = coil.stageIndex(stageAtIndex);
     ASSERT_TRUE(optIndex);
@@ -136,7 +137,8 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
   {
     int stageIndex = 2;
     std::vector<CoilHeatingGasMultiStageStageData> thisStages = coil.stages();
-    const auto& stageAtIndex = thisStages[stageIndex - 1];
+    // Explicit copy, so we can keep using it after it's been removed
+    const auto stageAtIndex = thisStages[stageIndex - 1];
     EXPECT_TRUE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
     auto optIndex = coil.stageIndex(stageAtIndex);
     ASSERT_TRUE(optIndex);
@@ -225,8 +227,8 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Remove) {
 
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
-  auto schedules = m.getModelObjects<model::ScheduleConstant>();
-  auto limits = m.getModelObjects<model::ScheduleTypeLimits>();
+  auto schedules = m.getConcreteModelObjects<model::ScheduleConstant>();
+  auto limits = m.getConcreteModelObjects<model::ScheduleTypeLimits>();
   EXPECT_EQ(schedules.size() + limits.size(), m.modelObjects().size());
 }
 

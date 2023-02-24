@@ -53,7 +53,7 @@ namespace model {
 
       SurfacePropertyExposedFoundationPerimeter_Impl(const SurfacePropertyExposedFoundationPerimeter_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyExposedFoundationPerimeter_Impl() {}
+      virtual ~SurfacePropertyExposedFoundationPerimeter_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -81,7 +81,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod);
+      bool setExposedPerimeterCalculationMethod(const std::string& exposedPerimeterCalculationMethod);
 
       bool setTotalExposedPerimeter(double totalExposedPerimeter);
 

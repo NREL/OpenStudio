@@ -55,7 +55,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~RunPeriodControlDaylightSavingTime() {}
+    virtual ~RunPeriodControlDaylightSavingTime() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RunPeriodControlDaylightSavingTime(const RunPeriodControlDaylightSavingTime& other) = default;
+    RunPeriodControlDaylightSavingTime(RunPeriodControlDaylightSavingTime&& other) = default;
+    RunPeriodControlDaylightSavingTime& operator=(const RunPeriodControlDaylightSavingTime&) = default;
+    RunPeriodControlDaylightSavingTime& operator=(RunPeriodControlDaylightSavingTime&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -93,7 +98,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RunPeriodControlDaylightSavingTime_Impl ImplType;
+    using ImplType = detail::RunPeriodControlDaylightSavingTime_Impl;
 
     friend class detail::RunPeriodControlDaylightSavingTime_Impl;
     friend class Model;
@@ -110,10 +115,10 @@ namespace model {
   };
 
   /** \relates RunPeriodControlDaylightSavingTime*/
-  typedef boost::optional<RunPeriodControlDaylightSavingTime> OptionalRunPeriodControlDaylightSavingTime;
+  using OptionalRunPeriodControlDaylightSavingTime = boost::optional<RunPeriodControlDaylightSavingTime>;
 
   /** \relates RunPeriodControlDaylightSavingTime*/
-  typedef std::vector<RunPeriodControlDaylightSavingTime> RunPeriodControlDaylightSavingTimeVector;
+  using RunPeriodControlDaylightSavingTimeVector = std::vector<RunPeriodControlDaylightSavingTime>;
 
 }  // namespace model
 }  // namespace openstudio

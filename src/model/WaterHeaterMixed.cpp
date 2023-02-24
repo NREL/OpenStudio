@@ -146,13 +146,14 @@ namespace model {
 
       auto sizingClone = waterHeaterSizing().clone(model).cast<WaterHeaterSizing>();
       sizingClone.getImpl<WaterHeaterSizing_Impl>()->setWaterHeater(whClone);
-      return whClone;
+      return std::move(whClone);
     }
 
     std::vector<ScheduleTypeKey> WaterHeaterMixed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_WaterHeater_MixedFields::SetpointTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("WaterHeaterMixed", "Setpoint Temperature"));
       }
@@ -493,7 +494,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WaterHeaterMixed_Impl::setHeaterControlType(std::string heaterControlType) {
+    bool WaterHeaterMixed_Impl::setHeaterControlType(const std::string& heaterControlType) {
       bool result = setString(OS_WaterHeater_MixedFields::HeaterControlType, heaterControlType);
       return result;
     }
@@ -558,7 +559,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WaterHeaterMixed_Impl::setHeaterFuelType(std::string heaterFuelType) {
+    bool WaterHeaterMixed_Impl::setHeaterFuelType(const std::string& heaterFuelType) {
       bool result = setString(OS_WaterHeater_MixedFields::HeaterFuelType, heaterFuelType);
       return result;
     }
@@ -663,7 +664,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WaterHeaterMixed_Impl::setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator) {
+    bool WaterHeaterMixed_Impl::setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator) {
       bool result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureIndicator, ambientTemperatureIndicator);
       return result;
     }
@@ -1431,7 +1432,7 @@ namespace model {
   }
 
   IddObjectType WaterHeaterMixed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WaterHeater_Mixed);
+    return {IddObjectType::OS_WaterHeater_Mixed};
   }
 
   std::vector<std::string> WaterHeaterMixed::heaterControlTypeValues() {
@@ -1706,7 +1707,7 @@ namespace model {
     getImpl<detail::WaterHeaterMixed_Impl>()->resetMaximumTemperatureLimit();
   }
 
-  bool WaterHeaterMixed::setHeaterControlType(std::string heaterControlType) {
+  bool WaterHeaterMixed::setHeaterControlType(const std::string& heaterControlType) {
     return getImpl<detail::WaterHeaterMixed_Impl>()->setHeaterControlType(heaterControlType);
   }
 
@@ -1750,7 +1751,7 @@ namespace model {
     getImpl<detail::WaterHeaterMixed_Impl>()->resetHeaterIgnitionDelay();
   }
 
-  bool WaterHeaterMixed::setHeaterFuelType(std::string heaterFuelType) {
+  bool WaterHeaterMixed::setHeaterFuelType(const std::string& heaterFuelType) {
     return getImpl<detail::WaterHeaterMixed_Impl>()->setHeaterFuelType(heaterFuelType);
   }
 
@@ -1778,7 +1779,7 @@ namespace model {
     getImpl<detail::WaterHeaterMixed_Impl>()->resetOffCycleParasiticFuelConsumptionRate();
   }
 
-  bool WaterHeaterMixed::setOffCycleParasiticFuelType(std::string offCycleParasiticFuelType) {
+  bool WaterHeaterMixed::setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType) {
     return getImpl<detail::WaterHeaterMixed_Impl>()->setOffCycleParasiticFuelType(offCycleParasiticFuelType);
   }
 
@@ -1802,7 +1803,7 @@ namespace model {
     getImpl<detail::WaterHeaterMixed_Impl>()->resetOnCycleParasiticFuelConsumptionRate();
   }
 
-  bool WaterHeaterMixed::setOnCycleParasiticFuelType(std::string onCycleParasiticFuelType) {
+  bool WaterHeaterMixed::setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType) {
     return getImpl<detail::WaterHeaterMixed_Impl>()->setOnCycleParasiticFuelType(onCycleParasiticFuelType);
   }
 
@@ -1818,7 +1819,7 @@ namespace model {
     getImpl<detail::WaterHeaterMixed_Impl>()->resetOnCycleParasiticHeatFractiontoTank();
   }
 
-  bool WaterHeaterMixed::setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator) {
+  bool WaterHeaterMixed::setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator) {
     return getImpl<detail::WaterHeaterMixed_Impl>()->setAmbientTemperatureIndicator(ambientTemperatureIndicator);
   }
 
@@ -1838,7 +1839,7 @@ namespace model {
     getImpl<detail::WaterHeaterMixed_Impl>()->resetAmbientTemperatureThermalZone();
   }
 
-  bool WaterHeaterMixed::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
+  bool WaterHeaterMixed::setAmbientTemperatureOutdoorAirNodeName(const std::string& ambientTemperatureOutdoorAirNodeName) {
     return getImpl<detail::WaterHeaterMixed_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
   }
 

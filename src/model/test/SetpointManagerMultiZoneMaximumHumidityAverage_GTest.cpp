@@ -76,7 +76,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_addToNode) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerMultiZoneMaximumHumidityAverage> SetpointManagerMultiZoneMaximumHumidityAverages =
-    m.getModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
+    m.getConcreteModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
   EXPECT_EQ(3, SetpointManagerMultiZoneMaximumHumidityAverages.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode().get());
@@ -86,7 +86,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
   EXPECT_EQ(1, _setpointManagers.size());
-  SetpointManagerMultiZoneMaximumHumidityAverages = m.getModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
+  SetpointManagerMultiZoneMaximumHumidityAverages = m.getConcreteModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
   EXPECT_EQ(2, SetpointManagerMultiZoneMaximumHumidityAverages.size());
 }
 
@@ -103,14 +103,14 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_remove) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerMultiZoneMaximumHumidityAverage> SetpointManagerMultiZoneMaximumHumidityAverages =
-    m.getModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
+    m.getConcreteModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
   EXPECT_EQ(1, SetpointManagerMultiZoneMaximumHumidityAverages.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  SetpointManagerMultiZoneMaximumHumidityAverages = m.getModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
+  SetpointManagerMultiZoneMaximumHumidityAverages = m.getConcreteModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
   EXPECT_EQ(0, SetpointManagerMultiZoneMaximumHumidityAverages.size());
 }
 
@@ -125,7 +125,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerMultiZoneMaximumHumidityAverage testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneMaximumHumidityAverage>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneMaximumHumidityAverage>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -150,7 +150,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_customDataCl
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerMultiZoneMaximumHumidityAverage testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneMaximumHumidityAverage>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneMaximumHumidityAverage>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

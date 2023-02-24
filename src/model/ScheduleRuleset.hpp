@@ -66,7 +66,12 @@ namespace model {
   *  and assigns it to be the defaultDaySchedule(). */
     ScheduleRuleset(const Model& model, double value);
 
-    virtual ~ScheduleRuleset() {}
+    virtual ~ScheduleRuleset() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleRuleset(const ScheduleRuleset& other) = default;
+    ScheduleRuleset(ScheduleRuleset&& other) = default;
+    ScheduleRuleset& operator=(const ScheduleRuleset&) = default;
+    ScheduleRuleset& operator=(ScheduleRuleset&&) = default;
 
     //@}
 
@@ -186,7 +191,7 @@ namespace model {
     bool moveToEnd(ScheduleRule& scheduleRule);
 
     /// @cond
-    typedef detail::ScheduleRuleset_Impl ImplType;
+    using ImplType = detail::ScheduleRuleset_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -200,10 +205,10 @@ namespace model {
   };
 
   /** \relates ScheduleRuleset*/
-  typedef boost::optional<ScheduleRuleset> OptionalScheduleRuleset;
+  using OptionalScheduleRuleset = boost::optional<ScheduleRuleset>;
 
   /** \relates ScheduleRuleset*/
-  typedef std::vector<ScheduleRuleset> ScheduleRulesetVector;
+  using ScheduleRulesetVector = std::vector<ScheduleRuleset>;
 
 }  // namespace model
 }  // namespace openstudio

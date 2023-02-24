@@ -57,7 +57,12 @@ namespace model {
 
     explicit ElectricEquipmentITEAirCooled(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
 
-    virtual ~ElectricEquipmentITEAirCooled() {}
+    virtual ~ElectricEquipmentITEAirCooled() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricEquipmentITEAirCooled(const ElectricEquipmentITEAirCooled& other) = default;
+    ElectricEquipmentITEAirCooled(ElectricEquipmentITEAirCooled&& other) = default;
+    ElectricEquipmentITEAirCooled& operator=(const ElectricEquipmentITEAirCooled&) = default;
+    ElectricEquipmentITEAirCooled& operator=(ElectricEquipmentITEAirCooled&&) = default;
 
     //@}
 
@@ -137,7 +142,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricEquipmentITEAirCooled_Impl ImplType;
+    using ImplType = detail::ElectricEquipmentITEAirCooled_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -150,10 +155,10 @@ namespace model {
   };
 
   /** \relates ElectricEquipmentITEAirCooled*/
-  typedef boost::optional<ElectricEquipmentITEAirCooled> OptionalElectricEquipmentITEAirCooled;
+  using OptionalElectricEquipmentITEAirCooled = boost::optional<ElectricEquipmentITEAirCooled>;
 
   /** \relates ElectricEquipmentITEAirCooled*/
-  typedef std::vector<ElectricEquipmentITEAirCooled> ElectricEquipmentITEAirCooledVector;
+  using ElectricEquipmentITEAirCooledVector = std::vector<ElectricEquipmentITEAirCooled>;
 
 }  // namespace model
 }  // namespace openstudio

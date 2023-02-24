@@ -57,7 +57,7 @@ namespace model {
 
       AirLoopHVACUnitarySystem_Impl(const AirLoopHVACUnitarySystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirLoopHVACUnitarySystem_Impl() {}
+      virtual ~AirLoopHVACUnitarySystem_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -235,7 +235,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setControlType(std::string controlType);
+      bool setControlType(const std::string& controlType);
 
       void resetControlType();
 
@@ -243,7 +243,7 @@ namespace model {
 
       void resetControllingZoneorThermostatLocation();
 
-      bool setDehumidificationControlType(std::string dehumidificationControlType);
+      bool setDehumidificationControlType(const std::string& dehumidificationControlType);
 
       void resetDehumidificationControlType();
 
@@ -285,7 +285,7 @@ namespace model {
 
       void autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature();
 
-      bool setLatentLoadControl(std::string latentLoadControl);
+      bool setLatentLoadControl(const std::string& latentLoadControl);
 
       void resetLatentLoadControl();
 

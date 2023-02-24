@@ -87,7 +87,7 @@ TEST_F(ModelFixture, SetpointManagerScheduled_addToNode) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
-  std::vector<SetpointManagerScheduled> setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
+  std::vector<SetpointManagerScheduled> setpointManagerScheduleds = m.getConcreteModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(5, setpointManagerScheduleds.size());
 
   EXPECT_EQ(testObject, spm_3.setpointNode().get());
@@ -97,7 +97,7 @@ TEST_F(ModelFixture, SetpointManagerScheduled_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());
   EXPECT_EQ(3, _setpointManagers.size());
-  setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
+  setpointManagerScheduleds = m.getConcreteModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(4, setpointManagerScheduleds.size());
 }
 
@@ -115,14 +115,14 @@ TEST_F(ModelFixture, SetpointManagerScheduled_remove) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerScheduled> setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
+  std::vector<SetpointManagerScheduled> setpointManagerScheduleds = m.getConcreteModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(1, setpointManagerScheduleds.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
+  setpointManagerScheduleds = m.getConcreteModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(0, setpointManagerScheduleds.size());
 }
 
@@ -139,7 +139,7 @@ TEST_F(ModelFixture, SetpointManagerScheduled_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerScheduled testObjectClone = testObject.clone(m).cast<SetpointManagerScheduled>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerScheduled>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

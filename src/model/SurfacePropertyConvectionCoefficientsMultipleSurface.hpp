@@ -54,7 +54,12 @@ namespace model {
 
     explicit SurfacePropertyConvectionCoefficientsMultipleSurface(const Model& model);
 
-    virtual ~SurfacePropertyConvectionCoefficientsMultipleSurface() {}
+    virtual ~SurfacePropertyConvectionCoefficientsMultipleSurface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SurfacePropertyConvectionCoefficientsMultipleSurface(const SurfacePropertyConvectionCoefficientsMultipleSurface& other) = default;
+    SurfacePropertyConvectionCoefficientsMultipleSurface(SurfacePropertyConvectionCoefficientsMultipleSurface&& other) = default;
+    SurfacePropertyConvectionCoefficientsMultipleSurface& operator=(const SurfacePropertyConvectionCoefficientsMultipleSurface&) = default;
+    SurfacePropertyConvectionCoefficientsMultipleSurface& operator=(SurfacePropertyConvectionCoefficientsMultipleSurface&&) = default;
 
     //@}
 
@@ -154,7 +159,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl ImplType;
+    using ImplType = detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl;
 
     explicit SurfacePropertyConvectionCoefficientsMultipleSurface(
       std::shared_ptr<detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl> impl);
@@ -169,10 +174,10 @@ namespace model {
   };
 
   /** \relates SurfacePropertyConvectionCoefficientsMultipleSurface*/
-  typedef boost::optional<SurfacePropertyConvectionCoefficientsMultipleSurface> OptionalSurfacePropertyConvectionCoefficientsMultipleSurface;
+  using OptionalSurfacePropertyConvectionCoefficientsMultipleSurface = boost::optional<SurfacePropertyConvectionCoefficientsMultipleSurface>;
 
   /** \relates SurfacePropertyConvectionCoefficientsMultipleSurface*/
-  typedef std::vector<SurfacePropertyConvectionCoefficientsMultipleSurface> SurfacePropertyConvectionCoefficientsMultipleSurfaceVector;
+  using SurfacePropertyConvectionCoefficientsMultipleSurfaceVector = std::vector<SurfacePropertyConvectionCoefficientsMultipleSurface>;
 
 }  // namespace model
 }  // namespace openstudio

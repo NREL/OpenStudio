@@ -163,7 +163,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_SizingSystem) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<SizingSystem> sizingSystems = model.getModelObjects<SizingSystem>();
+  std::vector<SizingSystem> sizingSystems = model.getConcreteModelObjects<SizingSystem>();
   ASSERT_EQ(1u, sizingSystems.size());
   SizingSystem sizingSystem = sizingSystems[0];
 

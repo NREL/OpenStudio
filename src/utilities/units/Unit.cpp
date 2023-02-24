@@ -157,7 +157,7 @@ namespace detail {
   }
 
   std::string Unit_Impl::standardString(bool withScale) const {
-    if (withScale && (scale().abbr == "")) {
+    if (withScale && (scale().abbr.empty())) {
       withScale = false;
     }
 
@@ -165,8 +165,11 @@ namespace detail {
     bool parentheses(false);
 
     // determine number of non-zero, positive, and negative baseUnits
-    int nnz(0), npos(0);
-    std::vector<UnitElement>::const_iterator unitsIter, firstPosIter, firstNegIter;
+    int nnz(0);
+    int npos(0);
+    std::vector<UnitElement>::const_iterator unitsIter;
+    std::vector<UnitElement>::const_iterator firstPosIter;
+    std::vector<UnitElement>::const_iterator firstNegIter;
     auto unitsEnd = m_units.end();
 
     firstPosIter = unitsEnd;
@@ -304,7 +307,7 @@ namespace detail {
   }
 
   std::string Unit_Impl::print(bool withScale) const {
-    if (prettyString(false) != "") {
+    if (!prettyString(false).empty()) {
       return prettyString(withScale);
     }
     return standardString(withScale);
@@ -351,7 +354,7 @@ namespace detail {
     std::vector<UnitElement>::iterator lUnitsIter;
     auto lUnitsEnd = m_units.end();
     std::vector<UnitElement>::const_iterator rUnitsIter;
-    std::vector<UnitElement>::const_iterator rUnitsEnd = rUnit.getImpl<detail::Unit_Impl>()->m_units.end();
+    auto rUnitsEnd = rUnit.getImpl<detail::Unit_Impl>()->m_units.end();
     bool ordered = true;
     for (lUnitsIter = m_units.begin(), rUnitsIter = rUnit.getImpl<detail::Unit_Impl>()->m_units.begin();
          (lUnitsIter != lUnitsEnd) && (rUnitsIter != rUnitsEnd); ++lUnitsIter, ++rUnitsIter) {
@@ -403,13 +406,13 @@ namespace detail {
     setScale(resultScale.first().exponent);
 
     std::string prettyStringFromFactory = UnitFactory::instance().lookupPrettyString(standardString(false));
-    if (prettyStringFromFactory != "") {
+    if (!prettyStringFromFactory.empty()) {
       setPrettyString(prettyStringFromFactory);
     } else {
       // otherwise need to handle pretty string
-      if (prettyString(false) != "") {
+      if (!prettyString(false).empty()) {
         Unit wThisPretty = parseUnitString(prettyString(false));
-        if (rUnit.prettyString(false) != "") {
+        if (!rUnit.prettyString(false).empty()) {
           Unit wRUnitPretty = parseUnitString(rUnit.prettyString(false));
           wThisPretty *= wRUnitPretty;
         } else {
@@ -481,11 +484,11 @@ namespace detail {
     if (okToCallFactory) {
       prettyStringFromFactory = UnitFactory::instance().lookupPrettyString(stdStr);
     }
-    if (prettyStringFromFactory != "") {
+    if (!prettyStringFromFactory.empty()) {
       setPrettyString(prettyStringFromFactory);
     } else {
       // otherwise handle
-      if (prettyString(false) != "") {
+      if (!prettyString(false).empty()) {
         Unit wThisPretty = parseUnitString(prettyString(false));
         wThisPretty.pow(expNum, expDenom, okToCallFactory);
         setPrettyString(wThisPretty.standardString(false));
@@ -494,12 +497,14 @@ namespace detail {
   }
 
   std::vector<Unit_Impl::UnitElement>::iterator Unit_Impl::findBaseUnit(const std::string& baseUnit) {
-    auto result = std::find_if(m_units.begin(), m_units.end(), std::bind(firstOfPairEqual<std::string, int>, std::placeholders::_1, baseUnit));
+    auto result = std::find_if(m_units.begin(), m_units.end(),
+                               [&baseUnit](const auto& unitElement) { return firstOfPairEqual<std::string, int>(unitElement, baseUnit); });
     return result;
   }
 
   std::vector<Unit_Impl::UnitElement>::const_iterator Unit_Impl::findBaseUnit(const std::string& baseUnit) const {
-    auto result = std::find_if(m_units.begin(), m_units.end(), std::bind(firstOfPairEqual<std::string, int>, std::placeholders::_1, baseUnit));
+    auto result = std::find_if(m_units.cbegin(), m_units.cend(),
+                               [&baseUnit](const auto& unitElement) { return firstOfPairEqual<std::string, int>(unitElement, baseUnit); });
     return result;
   }
 
@@ -615,7 +620,7 @@ Unit parseUnitString(const std::string& unitString) {
   std::pair<std::vector<std::string>, std::vector<std::string>> compoundUnitParseResult = decomposeCompoundUnitString(compoundUnitString);
 
   std::vector<std::string>::const_iterator i;
-  std::vector<std::string>::const_iterator theEnd = compoundUnitParseResult.first.end();
+  auto theEnd = compoundUnitParseResult.first.end();
 
   // loop over numerator
   for (i = compoundUnitParseResult.first.begin(); i != theEnd; ++i) {

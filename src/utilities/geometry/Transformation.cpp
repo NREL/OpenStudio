@@ -51,7 +51,7 @@ namespace openstudio {
 Transformation::Transformation() : m_storage(identity_matrix<double>(4)) {}
 
 /// copy constructor
-Transformation::Transformation(const Transformation& other) : m_storage(other.m_storage) {}
+Transformation::Transformation(const Transformation& other) = default;
 
 /// constructor from storage, asserts matrix is 4x4
 Transformation::Transformation(const Matrix& matrix) : m_storage(matrix) {
@@ -196,7 +196,7 @@ Transformation Transformation::alignFace(const std::vector<Point3d>& vertices) {
   OptionalVector3d zPrime = getOutwardNormal(vertices);
   if (!zPrime) {
     LOG(Error, "Cannot compute outward normal for vertices");
-    return Transformation();
+    return {};
   }
 
   // align z' with outward normal
@@ -304,7 +304,7 @@ Point3d Transformation::operator*(const Point3d& point) const {
   temp(2) = point.z();
   temp(3) = 1.0;
   temp = prod(m_storage, temp);
-  return Point3d(temp[0], temp[1], temp[2]);
+  return {temp[0], temp[1], temp[2]};
 }
 
 /// apply the transformation to the vector
@@ -315,7 +315,7 @@ Vector3d Transformation::operator*(const Vector3d& vector) const {
   temp(2) = vector.z();
   temp(3) = 1.0;
   temp = prod(m_storage, temp);
-  return Vector3d(temp[0], temp[1], temp[2]);
+  return {temp[0], temp[1], temp[2]};
 }
 
 /// apply the transformation to the BoundingBox

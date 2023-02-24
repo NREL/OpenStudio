@@ -55,7 +55,7 @@ namespace model {
 
       SwimmingPoolIndoor_Impl(const SwimmingPoolIndoor_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SwimmingPoolIndoor_Impl() {}
+      virtual ~SwimmingPoolIndoor_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

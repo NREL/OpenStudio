@@ -53,7 +53,12 @@ namespace model {
     /** Initializes \f$c_1 = c_2 = 0.0,\ c_3 = 1.0,\ xmin = 0,\ xmax = 1\f$ */
     explicit CurveQuadratic(const Model& model);
 
-    virtual ~CurveQuadratic() {}
+    virtual ~CurveQuadratic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveQuadratic(const CurveQuadratic& other) = default;
+    CurveQuadratic(CurveQuadratic&& other) = default;
+    CurveQuadratic& operator=(const CurveQuadratic&) = default;
+    CurveQuadratic& operator=(CurveQuadratic&&) = default;
 
     //@}
 
@@ -125,7 +130,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveQuadratic_Impl ImplType;
+    using ImplType = detail::CurveQuadratic_Impl;
 
     explicit CurveQuadratic(std::shared_ptr<detail::CurveQuadratic_Impl> impl);
 
@@ -140,10 +145,10 @@ namespace model {
   };
 
   /** \relates CurveQuadratic*/
-  typedef boost::optional<CurveQuadratic> OptionalCurveQuadratic;
+  using OptionalCurveQuadratic = boost::optional<CurveQuadratic>;
 
   /** \relates CurveQuadratic*/
-  typedef std::vector<CurveQuadratic> CurveQuadraticVector;
+  using CurveQuadraticVector = std::vector<CurveQuadratic>;
 
 }  // namespace model
 }  // namespace openstudio

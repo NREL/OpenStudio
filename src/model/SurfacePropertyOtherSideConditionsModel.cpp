@@ -114,7 +114,7 @@ namespace model {
   }
 
   IddObjectType SurfacePropertyOtherSideConditionsModel::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
+    return {IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel};
   }
 
   std::vector<std::string> SurfacePropertyOtherSideConditionsModel::typeOfModelingValues() {

@@ -52,7 +52,12 @@ namespace model {
   class MODEL_API AirflowNetworkSimulationControl : public ParentObject
   {
    public:
-    virtual ~AirflowNetworkSimulationControl() {}
+    virtual ~AirflowNetworkSimulationControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkSimulationControl(const AirflowNetworkSimulationControl& other) = default;
+    AirflowNetworkSimulationControl(AirflowNetworkSimulationControl&& other) = default;
+    AirflowNetworkSimulationControl& operator=(const AirflowNetworkSimulationControl&) = default;
+    AirflowNetworkSimulationControl& operator=(AirflowNetworkSimulationControl&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -181,22 +186,22 @@ namespace model {
     //@{
 
     /** Sets the airflow network control type. */
-    bool setAirflowNetworkControl(std::string airflowNetworkControl);
+    bool setAirflowNetworkControl(const std::string& airflowNetworkControl);
     /** Resets the airflow network control type. */
     void resetAirflowNetworkControl();
 
     /** Sets the wind pressure coefficient type. */
-    bool setWindPressureCoefficientType(std::string type);
+    bool setWindPressureCoefficientType(const std::string& type);
     /** Resets the wind pressure coefficient type. */
     void resetWindPressureCoefficientType();
 
     /** Sets the height selection procedure. */
-    bool setHeightSelectionforLocalWindPressureCalculation(std::string height);
+    bool setHeightSelectionforLocalWindPressureCalculation(const std::string& height);
     /** Resets the height selection procedure. */
     void resetHeightSelectionforLocalWindPressureCalculation();
 
     /** Sets the building type. */
-    bool setBuildingType(std::string type);
+    bool setBuildingType(const std::string& type);
     /** Resets the building type. */
     void resetBuildingType();
 
@@ -206,7 +211,7 @@ namespace model {
     void resetMaximumNumberofIterations();
 
     /** Sets the initialization type. */
-    bool setInitializationType(std::string type);
+    bool setInitializationType(const std::string& type);
     /** Resets the initialization type. */
     void resetInitializationType();
 
@@ -264,7 +269,7 @@ namespace model {
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
 
-    typedef detail::AirflowNetworkSimulationControl_Impl ImplType;
+    using ImplType = detail::AirflowNetworkSimulationControl_Impl;
 
     explicit AirflowNetworkSimulationControl(std::shared_ptr<ImplType> impl);
 
@@ -275,7 +280,7 @@ namespace model {
   };
 
   /** \relates AirflowNetworkSimulationControl */
-  typedef boost::optional<AirflowNetworkSimulationControl> OptionalAirflowNetworkSimulationControl;
+  using OptionalAirflowNetworkSimulationControl = boost::optional<AirflowNetworkSimulationControl>;
 
 }  // namespace model
 }  // namespace openstudio

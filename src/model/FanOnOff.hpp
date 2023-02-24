@@ -62,7 +62,12 @@ namespace model {
 
     explicit FanOnOff(const Model& model);
 
-    virtual ~FanOnOff() {}
+    virtual ~FanOnOff() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FanOnOff(const FanOnOff& other) = default;
+    FanOnOff(FanOnOff&& other) = default;
+    FanOnOff& operator=(const FanOnOff&) = default;
+    FanOnOff& operator=(FanOnOff&&) = default;
 
     //@}
 
@@ -122,7 +127,7 @@ namespace model {
 
     void resetMotorInAirstreamFraction();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -145,7 +150,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FanOnOff_Impl ImplType;
+    using ImplType = detail::FanOnOff_Impl;
 
     explicit FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl);
 
@@ -159,10 +164,10 @@ namespace model {
   };
 
   /** \relates FanOnOff*/
-  typedef boost::optional<FanOnOff> OptionalFanOnOff;
+  using OptionalFanOnOff = boost::optional<FanOnOff>;
 
   /** \relates FanOnOff*/
-  typedef std::vector<FanOnOff> FanOnOffVector;
+  using FanOnOffVector = std::vector<FanOnOff>;
 
 }  // namespace model
 }  // namespace openstudio

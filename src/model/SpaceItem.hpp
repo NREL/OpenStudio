@@ -47,7 +47,12 @@ namespace model {
   class MODEL_API SpaceItem : public ModelObject
   {
    public:
-    virtual ~SpaceItem() {}
+    virtual ~SpaceItem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceItem(const SpaceItem& other) = default;
+    SpaceItem(SpaceItem&& other) = default;
+    SpaceItem& operator=(const SpaceItem&) = default;
+    SpaceItem& operator=(SpaceItem&&) = default;
 
     /// Returns the parent Space.
     boost::optional<Space> space() const;
@@ -68,7 +73,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::SpaceItem_Impl ImplType;
+    using ImplType = detail::SpaceItem_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -83,10 +88,10 @@ namespace model {
   };
 
   /** \relates SpaceItem */
-  typedef boost::optional<SpaceItem> OptionalSpaceItem;
+  using OptionalSpaceItem = boost::optional<SpaceItem>;
 
   /** \relates SpaceItem */
-  typedef std::vector<SpaceItem> SpaceItemVector;
+  using SpaceItemVector = std::vector<SpaceItem>;
 
 }  // namespace model
 }  // namespace openstudio

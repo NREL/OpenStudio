@@ -53,7 +53,12 @@ namespace model {
   class MODEL_API SetpointManagerMixedAir : public SetpointManager
   {
    public:
-    virtual ~SetpointManagerMixedAir() {}
+    virtual ~SetpointManagerMixedAir() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerMixedAir(const SetpointManagerMixedAir& other) = default;
+    SetpointManagerMixedAir(SetpointManagerMixedAir&& other) = default;
+    SetpointManagerMixedAir& operator=(const SetpointManagerMixedAir&) = default;
+    SetpointManagerMixedAir& operator=(SetpointManagerMixedAir&&) = default;
 
     /** Constructs a new SetpointManagerMixedAir object and places it inside the
    *  model.  The loop is fully initialized with all companion objects.
@@ -104,7 +109,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::SetpointManagerMixedAir_Impl ImplType;
+    using ImplType = detail::SetpointManagerMixedAir_Impl;
 
     explicit SetpointManagerMixedAir(std::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
 
@@ -114,9 +119,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<SetpointManagerMixedAir> OptionalSetpointManagerMixedAir;
+  using OptionalSetpointManagerMixedAir = boost::optional<SetpointManagerMixedAir>;
 
-  typedef std::vector<SetpointManagerMixedAir> SetpointManagerMixedAirVector;
+  using SetpointManagerMixedAirVector = std::vector<SetpointManagerMixedAir>;
 
 }  // namespace model
 

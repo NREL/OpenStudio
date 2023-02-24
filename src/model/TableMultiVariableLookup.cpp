@@ -96,7 +96,8 @@ namespace model {
 
   std::ostream& operator<<(std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point) {
     std::vector<double> xValues = point.x();
-    std::stringstream ss_left, ss_right;
+    std::stringstream ss_left;
+    std::stringstream ss_right;
     int i = 1;
     ss_left << "(";
     ss_right << "(";
@@ -708,7 +709,7 @@ namespace model {
       return numberofIndependentVariables();
     }
 
-    double TableMultiVariableLookup_Impl::evaluate(const std::vector<double>& x) const {
+    double TableMultiVariableLookup_Impl::evaluate(const std::vector<double>& /*x*/) const {
       LOG(Warn, "Curve evaluation isn't implemented for TableMultiVariableLookup");
       return -9999.0;
     }
@@ -925,7 +926,7 @@ namespace model {
   }
 
   IddObjectType TableMultiVariableLookup::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Table_MultiVariableLookup);
+    return {IddObjectType::OS_Table_MultiVariableLookup};
   }
 
   std::vector<std::string> TableMultiVariableLookup::interpolationMethodValues() {

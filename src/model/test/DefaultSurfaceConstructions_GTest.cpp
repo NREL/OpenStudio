@@ -77,7 +77,7 @@ TEST_F(ModelFixture, DefaultSurfaceConstructions_Clone) {
 
   unsigned numConstructions(0);
   unsigned numMaterials(0);
-  for (const DefaultSurfaceConstructions& object : exampleModel.getModelObjects<DefaultSurfaceConstructions>()) {
+  for (const DefaultSurfaceConstructions& object : exampleModel.getConcreteModelObjects<DefaultSurfaceConstructions>()) {
     object.clone(model);
     for (const ResourceObject& construction : object.resources()) {
       EXPECT_TRUE(construction.optionalCast<ConstructionBase>());
@@ -85,7 +85,8 @@ TEST_F(ModelFixture, DefaultSurfaceConstructions_Clone) {
       numMaterials += construction.resources().size();
     }
   }
-  EXPECT_EQ(exampleModel.getModelObjects<DefaultSurfaceConstructions>().size(), model.getModelObjects<DefaultSurfaceConstructions>().size());
+  EXPECT_EQ(exampleModel.getConcreteModelObjects<DefaultSurfaceConstructions>().size(),
+            model.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
   EXPECT_EQ(numConstructions, model.getModelObjects<ConstructionBase>().size());
   EXPECT_LE(model.getModelObjects<Material>().size(), numMaterials);  // some materials are reused
 

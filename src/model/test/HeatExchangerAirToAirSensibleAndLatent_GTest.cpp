@@ -191,7 +191,7 @@ TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_addToNode) {
   Model model;
   HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
 
-  AirLoopHVAC loop = addSystemType3(model).cast<AirLoopHVAC>();
+  auto loop = addSystemType3(model).cast<AirLoopHVAC>();
 
   AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
 
@@ -245,7 +245,7 @@ TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_remove) {
   Model model;
   HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
 
-  AirLoopHVAC loop = addSystemType3(model).cast<AirLoopHVAC>();
+  auto loop = addSystemType3(model).cast<AirLoopHVAC>();
 
   AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
 
@@ -282,5 +282,5 @@ TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_remove) {
   HeatExchangerAirToAirSensibleAndLatent hx7(model);
   EXPECT_TRUE(hx7.addToNode(outletNode));
 
-  EXPECT_TRUE(loop.remove().size() > 0);
+  EXPECT_TRUE(!loop.remove().empty());
 }

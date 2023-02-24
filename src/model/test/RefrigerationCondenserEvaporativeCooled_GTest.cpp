@@ -61,12 +61,12 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_Remove) {
   RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
 
   std::vector<RefrigerationCondenserEvaporativeCooled> refrigerationEvaporativeCooledCondensers =
-    model.getModelObjects<RefrigerationCondenserEvaporativeCooled>();
+    model.getConcreteModelObjects<RefrigerationCondenserEvaporativeCooled>();
   EXPECT_EQ(1, refrigerationEvaporativeCooledCondensers.size());
 
   testObject.remove();
 
-  refrigerationEvaporativeCooledCondensers = model.getModelObjects<RefrigerationCondenserEvaporativeCooled>();
+  refrigerationEvaporativeCooledCondensers = model.getConcreteModelObjects<RefrigerationCondenserEvaporativeCooled>();
   EXPECT_EQ(0, refrigerationEvaporativeCooledCondensers.size());
 }
 
@@ -477,7 +477,7 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithDe
   Model model;
   RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
 
-  RefrigerationCondenserEvaporativeCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
 
   EXPECT_DOUBLE_EQ(testObjectClone.ratedSubcoolingTemperatureDifference(), 0.0);
   EXPECT_DOUBLE_EQ(testObjectClone.ratedEffectiveTotalHeatRejectionRate(), 43100.0);
@@ -521,7 +521,7 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithCu
   testObject.setCondensateReceiverRefrigerantInventory(999.0);
   testObject.setCondensatePipingRefrigerantInventory(999.0);
 
-  RefrigerationCondenserEvaporativeCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
 
   EXPECT_DOUBLE_EQ(testObjectClone.ratedEffectiveTotalHeatRejectionRate(), 999.0);
   EXPECT_DOUBLE_EQ(testObjectClone.ratedSubcoolingTemperatureDifference(), 999.0);
@@ -551,10 +551,10 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithCu
 TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneTwoModelsWithDefaultData) {
   Model model;
   RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
-  RefrigerationCondenserEvaporativeCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
 
   Model model2;
-  RefrigerationCondenserEvaporativeCooled testObjectClone2 = testObject.clone(model2).cast<RefrigerationCondenserEvaporativeCooled>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationCondenserEvaporativeCooled>();
 
   EXPECT_DOUBLE_EQ(testObjectClone2.ratedSubcoolingTemperatureDifference(), 0.0);
   EXPECT_DOUBLE_EQ(testObjectClone2.ratedEffectiveTotalHeatRejectionRate(), 43100.0);

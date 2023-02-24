@@ -55,7 +55,12 @@ namespace model {
   {
 
    public:
-    virtual ~SetpointManagerSingleZoneReheat() {}
+    virtual ~SetpointManagerSingleZoneReheat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerSingleZoneReheat(const SetpointManagerSingleZoneReheat& other) = default;
+    SetpointManagerSingleZoneReheat(SetpointManagerSingleZoneReheat&& other) = default;
+    SetpointManagerSingleZoneReheat& operator=(const SetpointManagerSingleZoneReheat&) = default;
+    SetpointManagerSingleZoneReheat& operator=(SetpointManagerSingleZoneReheat&&) = default;
 
     /** Constructs a new SetpointManagerSingleZoneReheat object and places it inside the
    *  model.  The loop is fully initialized with all companion objects.
@@ -102,7 +107,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::SetpointManagerSingleZoneReheat_Impl ImplType;
+    using ImplType = detail::SetpointManagerSingleZoneReheat_Impl;
 
     explicit SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> impl);
 
@@ -112,9 +117,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<SetpointManagerSingleZoneReheat> OptionalSetpointManagerSingleZoneReheat;
+  using OptionalSetpointManagerSingleZoneReheat = boost::optional<SetpointManagerSingleZoneReheat>;
 
-  typedef std::vector<SetpointManagerSingleZoneReheat> SetpointManagerSingleZoneReheatVector;
+  using SetpointManagerSingleZoneReheatVector = std::vector<SetpointManagerSingleZoneReheat>;
 
 }  // namespace model
 

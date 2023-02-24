@@ -64,7 +64,7 @@ class UTILITIES_API IddFile
   IddFile();
 
   /** Copy constructor returns an IddFile that shares its data with other. */
-  IddFile(const IddFile& other);
+  // IddFile(const IddFile& other);
 
   /** Returns an IddFile containing a single, default constructed IddObject of Catchall type. */
   static IddFile catchallIddFile();
@@ -160,17 +160,18 @@ class UTILITIES_API IddFile
   // impl
   std::shared_ptr<detail::IddFile_Impl> m_impl;
 
-  IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl);
+  IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl) noexcept;
+  IddFile(std::shared_ptr<detail::IddFile_Impl>&& impl) noexcept;
 
   // configure logging
   REGISTER_LOGGER("utilities.idd.IddFile");
 };
 
 /** \relates IddFile */
-typedef boost::optional<IddFile> OptionalIddFile;
+using OptionalIddFile = boost::optional<IddFile>;
 
 /** \relates IddFile */
-typedef std::vector<IddFile> IddFileVector;
+using IddFileVector = std::vector<IddFile>;
 
 /** \relates IddFile */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IddFile& iddFile);

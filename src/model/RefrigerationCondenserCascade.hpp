@@ -54,7 +54,12 @@ namespace model {
 
     explicit RefrigerationCondenserCascade(const Model& model);
 
-    virtual ~RefrigerationCondenserCascade() {}
+    virtual ~RefrigerationCondenserCascade() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCondenserCascade(const RefrigerationCondenserCascade& other) = default;
+    RefrigerationCondenserCascade(RefrigerationCondenserCascade&& other) = default;
+    RefrigerationCondenserCascade& operator=(const RefrigerationCondenserCascade&) = default;
+    RefrigerationCondenserCascade& operator=(RefrigerationCondenserCascade&&) = default;
 
     //@}
 
@@ -95,7 +100,7 @@ namespace model {
 
     bool setRatedEffectiveTotalHeatRejectionRate(double ratedEffectiveTotalHeatRejectionRate);
 
-    bool setCondensingTemperatureControlType(std::string condensingTemperatureControlType);
+    bool setCondensingTemperatureControlType(const std::string& condensingTemperatureControlType);
 
     void resetCondensingTemperatureControlType();
 
@@ -130,7 +135,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCondenserCascade_Impl ImplType;
+    using ImplType = detail::RefrigerationCondenserCascade_Impl;
 
     explicit RefrigerationCondenserCascade(std::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl);
 
@@ -144,10 +149,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCondenserCascade*/
-  typedef boost::optional<RefrigerationCondenserCascade> OptionalRefrigerationCondenserCascade;
+  using OptionalRefrigerationCondenserCascade = boost::optional<RefrigerationCondenserCascade>;
 
   /** \relates RefrigerationCondenserCascade*/
-  typedef std::vector<RefrigerationCondenserCascade> RefrigerationCondenserCascadeVector;
+  using RefrigerationCondenserCascadeVector = std::vector<RefrigerationCondenserCascade>;
 
 }  // namespace model
 }  // namespace openstudio

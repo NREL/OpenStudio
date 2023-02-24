@@ -130,7 +130,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType ZoneAirMassFlowConservation::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneAirMassFlowConservation);
+    return {IddObjectType::OS_ZoneAirMassFlowConservation};
   }
 
   std::vector<std::string> ZoneAirMassFlowConservation::adjustZoneMixingandReturnForAirMassFlowBalanceValues() {

@@ -85,7 +85,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ElectricLoadCenterStorageLiIonNMCBattery_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ElectricLoadCenterStorageLiIonNMCBattery", "Availability"));
       }
@@ -443,7 +444,7 @@ namespace model {
   }
 
   IddObjectType ElectricLoadCenterStorageLiIonNMCBattery::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery);
+    return {IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery};
   }
 
   std::vector<std::string> ElectricLoadCenterStorageLiIonNMCBattery::lifetimeModelValues() {

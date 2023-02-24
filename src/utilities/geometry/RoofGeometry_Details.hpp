@@ -112,7 +112,7 @@ class Ray2d
     double A = vector.y();
 
     double C = -1 * (A * x + B * y);
-    return LineLinear2d(A, B, C);
+    return {A, B, C};
   }
 
   bool isOnLeftSide(const Point3d& p, double epsilon) const {
@@ -192,7 +192,8 @@ class Ray2d
       }
 
       //they are collinear segments - get overlap (or not)
-      double t0, t1;
+      double t0;
+      double t1;
       // endpoints of S1 in eqn for S2
       Vector3d w2 = s1p1 - s2p0;
 
@@ -549,7 +550,7 @@ class Face
     unsigned nodeIndex = getNodeIndex(node);
     nodes.erase(nodes.begin() + nodeIndex);
 
-    if (nodes.size() == 0) {
+    if (nodes.empty()) {
       return nullptr;
     } else if (nodeIndex > 0) {
       return nodes[nodes.size() - 1];
@@ -970,12 +971,12 @@ class SplitCandidate
 static std::vector<std::vector<Point3d>> facesToPoint3d(const std::vector<std::shared_ptr<Face>>& faces, double roofPitchDegrees, double zcoord) {
   std::vector<std::vector<Point3d>> roofsPoint3d;
   double roofSlope = tan(degToRad(roofPitchDegrees));
-  for (std::shared_ptr<Face> face : faces) {
-    if (face->nodes.size() == 0) {
+  for (const std::shared_ptr<Face>& face : faces) {
+    if (face->nodes.empty()) {
       continue;
     }
     std::vector<Point3d> roofPoint3d;
-    for (std::shared_ptr<FaceNode> v : face->nodes) {
+    for (const std::shared_ptr<FaceNode>& v : face->nodes) {
       Point3d p = Point3d(v->point.x(), v->point.y(), zcoord + v->distance * roofSlope);
       roofPoint3d.push_back(p);
     }
@@ -1096,7 +1097,7 @@ static void initSlav(const std::vector<Point3d>& polygon, std::vector<std::vecto
     edges[i]->next = edges[j];
   }
 
-  for (std::shared_ptr<Edge> edge : edges) {
+  for (const std::shared_ptr<Edge>& edge : edges) {
     std::shared_ptr<Edge> nextEdge = edge->next;
 
     std::shared_ptr<Ray2d> bisector(new Ray2d(calcBisector(edge->end, edge, nextEdge)));
@@ -1108,7 +1109,7 @@ static void initSlav(const std::vector<Point3d>& polygon, std::vector<std::vecto
 
   std::vector<std::shared_ptr<Vertex>> lav;
 
-  for (std::shared_ptr<Edge> edge : edges) {
+  for (const std::shared_ptr<Edge>& edge : edges) {
     std::shared_ptr<Edge> nextEdge = edge->next;
 
     std::shared_ptr<Vertex> vertex(new Vertex(edge->end, 0, edge->bisectorNext, edge, nextEdge));
@@ -1117,7 +1118,7 @@ static void initSlav(const std::vector<Point3d>& polygon, std::vector<std::vecto
   }
   sLav.push_back(lav);
 
-  for (std::shared_ptr<Vertex> vertex : lav) {
+  for (const std::shared_ptr<Vertex>& vertex : lav) {
     std::shared_ptr<Vertex> next = Vertex::next(vertex, lav);
 
     // create face on right site of vertex
@@ -1188,7 +1189,7 @@ static Vector3d orthogonalProjection(const Vector3d& unitVector, const Vector3d&
   double vy = px * ax * ay + py * ay * ay + pz * ay * az;
   double vz = px * ax * az + py * ay * az + pz * az * az;
 
-  return Vector3d(vx, vy, vz);
+  return {vx, vy, vz};
 }
 
 static double calcDistance(const Point3d& intersect, std::shared_ptr<Edge> currentEdge) {
@@ -1258,7 +1259,7 @@ static std::vector<SplitCandidate> calcOppositeEdges(std::shared_ptr<Vertex> ver
 
   std::vector<SplitCandidate> ret;
 
-  for (std::shared_ptr<Edge> edgeEntry : edges) {
+  for (const std::shared_ptr<Edge>& edgeEntry : edges) {
 
     LineLinear2d edge = LineLinear2d(edgeEntry->begin, edgeEntry->end);
 
@@ -1288,7 +1289,7 @@ static void computeSplitEvents(std::shared_ptr<Vertex> vertex, const std::vector
   std::vector<SplitCandidate> oppositeEdges = calcOppositeEdges(vertex, edges);
 
   // check if it is vertex split event
-  for (SplitCandidate oppositeEdge : oppositeEdges) {
+  for (const SplitCandidate& oppositeEdge : oppositeEdges) {
 
     if (distanceSquared) {
       if (getDistanceSquared(source, oppositeEdge.point) > distanceSquared.get() + EPSILON) {
@@ -1358,13 +1359,13 @@ static void computeEdgeEvents(std::shared_ptr<Vertex> previousVertex, std::share
 static void initEvents(std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& queue,
                        const std::vector<std::shared_ptr<Edge>>& edges) {
   for (std::vector<std::shared_ptr<Vertex>>& lav : sLav) {
-    for (std::shared_ptr<Vertex> vertex : lav) {
+    for (const std::shared_ptr<Vertex>& vertex : lav) {
       computeSplitEvents(vertex, edges, queue, boost::none);
     }
   }
 
   for (std::vector<std::shared_ptr<Vertex>>& lav : sLav) {
-    for (std::shared_ptr<Vertex> vertex : lav) {
+    for (const std::shared_ptr<Vertex>& vertex : lav) {
       std::shared_ptr<Vertex> next = Vertex::next(vertex, lav);
       computeEdgeEvents(vertex, next, queue);
     }
@@ -1437,7 +1438,7 @@ static std::vector<std::shared_ptr<QueueEvent>> loadLevelEvents(std::vector<std:
   std::vector<std::shared_ptr<QueueEvent>> level;
 
   std::shared_ptr<QueueEvent> levelStart = nullptr;
-  while (queue.size() > 0) {
+  while (!queue.empty()) {
     levelStart = queue[0];
     queue.erase(queue.begin());
     // skip all obsolete events in level
@@ -1457,7 +1458,7 @@ static std::vector<std::shared_ptr<QueueEvent>> loadLevelEvents(std::vector<std:
 
   std::shared_ptr<QueueEvent> event = nullptr;
 
-  while (queue.size() > 0) {
+  while (!queue.empty()) {
     event = queue[0];
     if (event->distance - levelStartHeight >= EPSILON) {
       break;
@@ -1513,7 +1514,7 @@ static std::vector<std::shared_ptr<QueueEvent>> createEdgeChain(std::vector<std:
 }
 
 static bool isInEdgeChain(std::shared_ptr<QueueEvent> split, const Chain& chain) {
-  for (std::shared_ptr<QueueEvent> edgeEvent : chain.edgeList) {
+  for (const std::shared_ptr<QueueEvent>& edgeEvent : chain.edgeList) {
     if (edgeEvent->previousVertex == split->parent || edgeEvent->nextVertex == split->parent) {
       return true;
     }
@@ -1535,7 +1536,7 @@ static std::vector<Chain> createChains(const std::vector<std::shared_ptr<QueueEv
   std::vector<std::shared_ptr<QueueEvent>> splitCluster;
   std::vector<std::shared_ptr<Vertex>> vertexEventsParents;
 
-  for (std::shared_ptr<QueueEvent> event : cluster) {
+  for (const std::shared_ptr<QueueEvent>& event : cluster) {
     if (event->eventType == QueueEvent::TYPE_EDGE) {
       edgeCluster.push_back(event);
     } else {
@@ -1552,7 +1553,7 @@ static std::vector<Chain> createChains(const std::vector<std::shared_ptr<QueueEv
     }
   }
 
-  for (std::shared_ptr<QueueEvent> event : cluster) {
+  for (const std::shared_ptr<QueueEvent>& event : cluster) {
     if (event->eventType == QueueEvent::TYPE_SPLIT_VERTEX) {
       bool found = std::find(vertexEventsParents.begin(), vertexEventsParents.end(), event->parent) != vertexEventsParents.end();
       if (!found) {
@@ -1571,7 +1572,7 @@ static std::vector<Chain> createChains(const std::vector<std::shared_ptr<QueueEv
 
   std::vector<Chain> edgeChains;
 
-  while (edgeCluster.size() > 0) {
+  while (!edgeCluster.empty()) {
     /*
     * We need to find all connected edge events, and create chains from
     * them. Two events are assumed to be connected if next parent of one
@@ -1587,7 +1588,7 @@ static std::vector<Chain> createChains(const std::vector<std::shared_ptr<QueueEv
     chains.push_back(edgeChain);
   }
 
-  while (splitCluster.size() > 0) {
+  while (!splitCluster.empty()) {
     std::shared_ptr<QueueEvent> split = splitCluster[0];
     splitCluster.erase(splitCluster.begin());
 
@@ -1637,7 +1638,7 @@ static LevelEvent createLevelEvent(Point3d& eventCenter, double distance, const 
     }
   }
 
-  for (Chain chain : chains) {
+  for (const Chain& chain : chains) {
     if (chain.getChainMode() == Chain::MODE_CLOSED_EDGE) {
       LOG_AND_THROW("found closed chain of events for single point, but found more then one chain");
     }
@@ -1651,7 +1652,7 @@ static std::vector<LevelEvent> groupLevelEvents(std::vector<std::shared_ptr<Queu
   std::vector<LevelEvent> ret;
   std::vector<std::shared_ptr<Vertex>> parentGroup;
 
-  while (levelEvents.size() > 0) {
+  while (!levelEvents.empty()) {
     parentGroup.clear();
 
     Point3d eventCenter = levelEvents[0]->point;
@@ -1761,7 +1762,7 @@ static bool isInsidePolygon(const Point3d& point, const std::vector<Point3d>& po
 
 static int chooseOppositeEdgeLavIndex(std::vector<std::shared_ptr<Vertex>>& edgeLavs, std::shared_ptr<Edge> oppositeEdge, const Point3d& center,
                                       std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav) {
-  if (edgeLavs.size() == 0) {
+  if (edgeLavs.empty()) {
     return -1;
   } else if (edgeLavs.size() == 1) {
     return 0;
@@ -2044,14 +2045,14 @@ static std::shared_ptr<Vertex> createOppositeEdgeVertex(std::shared_ptr<Vertex> 
   return vertex;
 }
 
-static void addFaceLeft(std::shared_ptr<Vertex> newVertex, std::shared_ptr<Vertex> va, std::vector<std::shared_ptr<Face>>& faces) {
+static void addFaceLeft(std::shared_ptr<Vertex> newVertex, std::shared_ptr<Vertex> va, std::vector<std::shared_ptr<Face>>& /*faces*/) {
   std::shared_ptr<Face> face = va->leftFaceNode->face;
   std::shared_ptr<FaceNode> fn(new FaceNode(newVertex->point, newVertex->distance, face));
   addPush(va->leftFaceNode, fn);
   newVertex->leftFaceNode = fn;
 }
 
-static void addFaceRight(std::shared_ptr<Vertex> newVertex, std::shared_ptr<Vertex> vb, std::vector<std::shared_ptr<Face>>& faces) {
+static void addFaceRight(std::shared_ptr<Vertex> newVertex, std::shared_ptr<Vertex> vb, std::vector<std::shared_ptr<Face>>& /*faces*/) {
   std::shared_ptr<Face> face = vb->rightFaceNode->face;
   std::shared_ptr<FaceNode> fn(new FaceNode(newVertex->point, newVertex->distance, face));
   addPush(vb->rightFaceNode, fn);
@@ -2151,7 +2152,7 @@ static std::vector<std::shared_ptr<Vertex>> cutLavPart(std::vector<std::shared_p
     }
   }
 
-  for (std::shared_ptr<Vertex> v : ret) {
+  for (const std::shared_ptr<Vertex>& v : ret) {
     Vertex::removeFromLav(v, lav);
   }
 
@@ -2198,7 +2199,7 @@ static void multiSplitEvent(LevelEvent& event, std::vector<std::vector<std::shar
 
       std::vector<std::shared_ptr<Vertex>> lav;
       lav.push_back(newVertex);
-      for (std::shared_ptr<Vertex> vertex : lavPart) {
+      for (const std::shared_ptr<Vertex>& vertex : lavPart) {
         lav.push_back(vertex);
       }
       sLav.push_back(lav);
@@ -2241,7 +2242,7 @@ static void multiSplitEvent(LevelEvent& event, std::vector<std::vector<std::shar
 }
 
 static void addFaceBack(std::shared_ptr<Vertex> newVertex, std::shared_ptr<Vertex> va, std::shared_ptr<Vertex> vb,
-                        std::vector<std::shared_ptr<Face>>& faces) {
+                        std::vector<std::shared_ptr<Face>>& /*faces*/) {
   std::shared_ptr<Face> face = va->rightFaceNode->face;
   std::shared_ptr<FaceNode> fn(new FaceNode(newVertex->point, newVertex->distance, face));
   addPush(va->rightFaceNode, fn);
@@ -2249,9 +2250,9 @@ static void addFaceBack(std::shared_ptr<Vertex> newVertex, std::shared_ptr<Verte
 }
 
 static void addMultiBackFaces(const std::vector<std::shared_ptr<QueueEvent>>& edgeList, std::shared_ptr<Vertex> edgeVertex,
-                              std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& queue,
+                              std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& /*queue*/,
                               std::vector<std::shared_ptr<Face>>& faces) {
-  for (std::shared_ptr<QueueEvent> edgeEvent : edgeList) {
+  for (const std::shared_ptr<QueueEvent>& edgeEvent : edgeList) {
 
     edgeEvent->previousVertex->processed = true;
     Vertex::removeFromLav(edgeEvent->previousVertex, sLav);
@@ -2264,7 +2265,7 @@ static void addMultiBackFaces(const std::vector<std::shared_ptr<QueueEvent>>& ed
 }
 
 static void pickEvent(LevelEvent& event, std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& queue,
-                      std::vector<std::shared_ptr<Edge>>& edges, std::vector<std::shared_ptr<Face>>& faces) {
+                      std::vector<std::shared_ptr<Edge>>& /*edges*/, std::vector<std::shared_ptr<Face>>& faces) {
   // lav will be removed so it is final vertex.
   std::shared_ptr<Vertex> pickVertex(new Vertex(event.point, event.distance, nullptr, nullptr, nullptr));
   pickVertex->processed = true;
@@ -2307,8 +2308,8 @@ static void multiEdgeEvent(LevelEvent& event, std::vector<std::vector<std::share
   computeEvents(edgeVertex, queue, edges, sLav);
 }
 
-static void processTwoNodeLavs(std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& queue,
-                               std::vector<std::shared_ptr<Face>>& faces) {
+static void processTwoNodeLavs(std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& /*queue*/,
+                               std::vector<std::shared_ptr<Face>>& /*faces*/) {
   for (std::vector<std::shared_ptr<Vertex>>& lav : sLav) {
     if (lav.size() == 2) {
       std::shared_ptr<Vertex> first = lav[0];
@@ -2337,7 +2338,7 @@ static void removeEventsUnderHeight(std::vector<std::shared_ptr<QueueEvent>>& qu
 
 static void removeEmptyLav(std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav) {
   for (unsigned i = 0; i < sLav.size(); i++) {
-    if (sLav[i].size() == 0) {
+    if (sLav[i].empty()) {
       sLav.erase(sLav.begin() + i);
       i--;
     }
@@ -2442,7 +2443,7 @@ static int getOppositeGableIndex(std::vector<std::vector<Point3d>>& surfaces, st
       continue;
     }
     std::vector<Point3d> tryVertices = getGableTopAndBottomVertices(surfaces[connectedSurfaces[i]]);
-    if (tryVertices.size() == 0) {
+    if (tryVertices.empty()) {
       continue;
     }
     Edge try1 = Edge(tryVertices[0], tryVertices[1]);
@@ -2467,7 +2468,7 @@ static void applyGableLogicTriangles(std::vector<std::vector<Point3d>>& surfaces
 
     std::vector<Point3d>& gable = surfaces[i];
     std::vector<Point3d> gableVertices = getGableTopAndBottomVertices(gable);
-    if (gableVertices.size() == 0) {
+    if (gableVertices.empty()) {
       continue;
     }
 
@@ -2754,7 +2755,7 @@ static std::vector<Point3d> getShedLine(const std::vector<Point3d>& polygon, dou
   // Reduce all vertex distances by minimum vertex distance. Combined with
   // roofPitchDegrees, this defines the height of the shed roof vertex.
   double roofSlope = tan(degToRad(roofPitchDegrees));
-  for (auto element : distances) {
+  for (const auto& element : distances) {
     distances[element.first] = element.second - minDistance;
   }
   for (Point3d& vertex : polygon) {

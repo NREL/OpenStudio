@@ -71,7 +71,12 @@ namespace model {
    */
     explicit Node(const Model& model);
 
-    virtual ~Node() {}
+    virtual ~Node() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Node(const Node& other) = default;
+    Node(Node&& other) = default;
+    Node& operator=(const Node&) = default;
+    Node& operator=(Node&&) = default;
 
     std::vector<SetpointManager> setpointManagers() const;
 
@@ -98,7 +103,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::Node_Impl ImplType;
+    using ImplType = detail::Node_Impl;
 
     explicit Node(std::shared_ptr<detail::Node_Impl> impl);
 
@@ -109,10 +114,10 @@ namespace model {
   };
 
   /** \relates Node */
-  typedef boost::optional<Node> OptionalNode;
+  using OptionalNode = boost::optional<Node>;
 
   /** \relates Node */
-  typedef std::vector<Node> NodeVector;
+  using NodeVector = std::vector<Node>;
 
 }  // namespace model
 }  // namespace openstudio

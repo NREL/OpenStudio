@@ -58,7 +58,12 @@ namespace model {
 
     ScheduleFile(const ExternalFile& externalfile, int column = 1, int rowsToSkip = 0);
 
-    virtual ~ScheduleFile() {}
+    virtual ~ScheduleFile() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleFile(const ScheduleFile& other) = default;
+    ScheduleFile(ScheduleFile&& other) = default;
+    ScheduleFile& operator=(const ScheduleFile&) = default;
+    ScheduleFile& operator=(ScheduleFile&&) = default;
 
     //@}
 
@@ -144,7 +149,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleFile_Impl ImplType;
+    using ImplType = detail::ScheduleFile_Impl;
 
     explicit ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl);
 
@@ -157,10 +162,10 @@ namespace model {
   };
 
   /** \relates ScheduleFile*/
-  typedef boost::optional<ScheduleFile> OptionalScheduleFile;
+  using OptionalScheduleFile = boost::optional<ScheduleFile>;
 
   /** \relates ScheduleFile*/
-  typedef std::vector<ScheduleFile> ScheduleFileVector;
+  using ScheduleFileVector = std::vector<ScheduleFile>;
 
 }  // namespace model
 }  // namespace openstudio

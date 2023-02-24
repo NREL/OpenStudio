@@ -45,7 +45,7 @@ TEST_F(ModelFixture, ClimateZones) {
   // construct directly
   Model model;
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ClimateZones>());
-  ClimateZones czs = model.getUniqueModelObject<ClimateZones>();
+  auto czs = model.getUniqueModelObject<ClimateZones>();
 
   // default
   ASSERT_EQ(0u, czs.numClimateZones());

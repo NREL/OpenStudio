@@ -64,7 +64,12 @@ namespace model {
 
     explicit DaylightingDeviceTubular(const SubSurface& dome, const SubSurface& diffuser, const ConstructionBase& construction);
 
-    virtual ~DaylightingDeviceTubular() {}
+    virtual ~DaylightingDeviceTubular() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DaylightingDeviceTubular(const DaylightingDeviceTubular& other) = default;
+    DaylightingDeviceTubular(DaylightingDeviceTubular&& other) = default;
+    DaylightingDeviceTubular& operator=(const DaylightingDeviceTubular&) = default;
+    DaylightingDeviceTubular& operator=(DaylightingDeviceTubular&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -118,7 +123,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DaylightingDeviceTubular_Impl ImplType;
+    using ImplType = detail::DaylightingDeviceTubular_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -132,10 +137,10 @@ namespace model {
   };
 
   /** \relates DaylightingDeviceTubular*/
-  typedef boost::optional<DaylightingDeviceTubular> OptionalDaylightingDeviceTubular;
+  using OptionalDaylightingDeviceTubular = boost::optional<DaylightingDeviceTubular>;
 
   /** \relates DaylightingDeviceTubular*/
-  typedef std::vector<DaylightingDeviceTubular> DaylightingDeviceTubularVector;
+  using DaylightingDeviceTubularVector = std::vector<DaylightingDeviceTubular>;
 
 }  // namespace model
 }  // namespace openstudio

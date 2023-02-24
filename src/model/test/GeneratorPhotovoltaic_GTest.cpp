@@ -66,11 +66,12 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Simple) {
   // Should be false now that ELCD is not in ctor
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   ShadingSurface shadingSurface(points, model);
 
@@ -123,11 +124,12 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_OneDiode) {
   // Should be false now that ELCD is not in ctor
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   ShadingSurface shadingSurface(points, model);
 
@@ -179,11 +181,12 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Sandia) {
   // Should be false now that ELCD is not in ctor
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   ShadingSurface shadingSurface(points, model);
 
@@ -266,7 +269,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_ElectricLoadCenterDistribution) {
   GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::simple(model);
 
   //should be 0 default ELCD attached to panel
-  std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
+  std::vector<ElectricLoadCenterDistribution> elcd = model.getConcreteModelObjects<ElectricLoadCenterDistribution>();
   EXPECT_EQ(0u, elcd.size());
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
   //Add a ELCD
@@ -275,7 +278,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_ElectricLoadCenterDistribution) {
   EXPECT_EQ(elcd1.handle(), panel.electricLoadCenterDistribution().get().handle());
   //Add another ELCD
   ElectricLoadCenterDistribution elcd2(model);
-  EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
+  EXPECT_EQ(2, model.getConcreteModelObjects<ElectricLoadCenterDistribution>().size());
   //Add the panel to it which should remove the existing one attached to panel
   EXPECT_TRUE(elcd2.addGenerator(panel));
   EXPECT_EQ(0, elcd1.generators().size());

@@ -53,7 +53,12 @@ namespace model {
    public:
     explicit CoilCoolingDXVariableRefrigerantFlow(const Model& model);
 
-    virtual ~CoilCoolingDXVariableRefrigerantFlow() {}
+    virtual ~CoilCoolingDXVariableRefrigerantFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDXVariableRefrigerantFlow(const CoilCoolingDXVariableRefrigerantFlow& other) = default;
+    CoilCoolingDXVariableRefrigerantFlow(CoilCoolingDXVariableRefrigerantFlow&& other) = default;
+    CoilCoolingDXVariableRefrigerantFlow& operator=(const CoilCoolingDXVariableRefrigerantFlow&) = default;
+    CoilCoolingDXVariableRefrigerantFlow& operator=(CoilCoolingDXVariableRefrigerantFlow&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -101,7 +106,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXVariableRefrigerantFlow_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXVariableRefrigerantFlow_Impl;
 
     explicit CoilCoolingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl);
 
@@ -116,10 +121,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXVariableRefrigerantFlow*/
-  typedef boost::optional<CoilCoolingDXVariableRefrigerantFlow> OptionalCoilCoolingDXVariableRefrigerantFlow;
+  using OptionalCoilCoolingDXVariableRefrigerantFlow = boost::optional<CoilCoolingDXVariableRefrigerantFlow>;
 
   /** \relates CoilCoolingDXVariableRefrigerantFlow*/
-  typedef std::vector<CoilCoolingDXVariableRefrigerantFlow> CoilCoolingDXVariableRefrigerantFlowVector;
+  using CoilCoolingDXVariableRefrigerantFlowVector = std::vector<CoilCoolingDXVariableRefrigerantFlow>;
 
 }  // namespace model
 }  // namespace openstudio

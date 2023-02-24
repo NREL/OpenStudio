@@ -55,7 +55,12 @@ namespace model {
 
     explicit SetpointManagerSingleZoneHeating(const Model& model);
 
-    virtual ~SetpointManagerSingleZoneHeating() {}
+    virtual ~SetpointManagerSingleZoneHeating() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerSingleZoneHeating(const SetpointManagerSingleZoneHeating& other) = default;
+    SetpointManagerSingleZoneHeating(SetpointManagerSingleZoneHeating&& other) = default;
+    SetpointManagerSingleZoneHeating& operator=(const SetpointManagerSingleZoneHeating&) = default;
+    SetpointManagerSingleZoneHeating& operator=(SetpointManagerSingleZoneHeating&&) = default;
 
     //@}
 
@@ -93,7 +98,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerSingleZoneHeating_Impl ImplType;
+    using ImplType = detail::SetpointManagerSingleZoneHeating_Impl;
 
     explicit SetpointManagerSingleZoneHeating(std::shared_ptr<detail::SetpointManagerSingleZoneHeating_Impl> impl);
 
@@ -107,10 +112,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerSingleZoneHeating*/
-  typedef boost::optional<SetpointManagerSingleZoneHeating> OptionalSetpointManagerSingleZoneHeating;
+  using OptionalSetpointManagerSingleZoneHeating = boost::optional<SetpointManagerSingleZoneHeating>;
 
   /** \relates SetpointManagerSingleZoneHeating*/
-  typedef std::vector<SetpointManagerSingleZoneHeating> SetpointManagerSingleZoneHeatingVector;
+  using SetpointManagerSingleZoneHeatingVector = std::vector<SetpointManagerSingleZoneHeating>;
 
 }  // namespace model
 }  // namespace openstudio

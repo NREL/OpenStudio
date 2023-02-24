@@ -51,7 +51,12 @@ namespace model {
   class MODEL_API InsideSurfaceConvectionAlgorithm : public ModelObject
   {
    public:
-    virtual ~InsideSurfaceConvectionAlgorithm() {}
+    virtual ~InsideSurfaceConvectionAlgorithm() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    InsideSurfaceConvectionAlgorithm(const InsideSurfaceConvectionAlgorithm& other) = default;
+    InsideSurfaceConvectionAlgorithm(InsideSurfaceConvectionAlgorithm&& other) = default;
+    InsideSurfaceConvectionAlgorithm& operator=(const InsideSurfaceConvectionAlgorithm&) = default;
+    InsideSurfaceConvectionAlgorithm& operator=(InsideSurfaceConvectionAlgorithm&&) = default;
 
     /** @name Static Methods */
     //@{
@@ -72,7 +77,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setAlgorithm(std::string algorithm);
+    bool setAlgorithm(const std::string& algorithm);
 
     void resetAlgorithm();
 
@@ -89,7 +94,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::InsideSurfaceConvectionAlgorithm_Impl ImplType;
+    using ImplType = detail::InsideSurfaceConvectionAlgorithm_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -104,7 +109,7 @@ namespace model {
   };
 
   /** \relates InsideSurfaceConvectionAlgorithm */
-  typedef boost::optional<InsideSurfaceConvectionAlgorithm> OptionalInsideSurfaceConvectionAlgorithm;
+  using OptionalInsideSurfaceConvectionAlgorithm = boost::optional<InsideSurfaceConvectionAlgorithm>;
 
 }  // namespace model
 }  // namespace openstudio

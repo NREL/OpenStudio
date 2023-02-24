@@ -64,7 +64,7 @@ namespace energyplus {
 
     if (modelObject.doZoneSizingCalculation()) {
       simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "Yes");
-    } else if ((numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<ThermalZone>().size() > 0)) {
+    } else if ((numSizingPeriods > 0) && (!modelObject.model().getConcreteModelObjects<ThermalZone>().empty())) {
       simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "Yes");
     } else {
       simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "No");
@@ -72,7 +72,7 @@ namespace energyplus {
 
     if (modelObject.doSystemSizingCalculation()) {
       simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "Yes");
-    } else if ((numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<AirLoopHVAC>().size() > 0)) {
+    } else if ((numSizingPeriods > 0) && (!modelObject.model().getConcreteModelObjects<AirLoopHVAC>().empty())) {
       simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "Yes");
     } else {
       simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "No");
@@ -80,7 +80,7 @@ namespace energyplus {
 
     if (modelObject.doPlantSizingCalculation()) {
       simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "Yes");
-    } else if ((numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<PlantLoop>().size() > 0)) {
+    } else if ((numSizingPeriods > 0) && (!modelObject.model().getConcreteModelObjects<PlantLoop>().empty())) {
       simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "Yes");
     } else {
       simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "No");

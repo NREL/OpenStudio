@@ -63,7 +63,12 @@ namespace model {
 
     explicit ChillerElectricReformulatedEIR(const Model& model);
 
-    virtual ~ChillerElectricReformulatedEIR() {}
+    virtual ~ChillerElectricReformulatedEIR() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ChillerElectricReformulatedEIR(const ChillerElectricReformulatedEIR& other) = default;
+    ChillerElectricReformulatedEIR(ChillerElectricReformulatedEIR&& other) = default;
+    ChillerElectricReformulatedEIR& operator=(const ChillerElectricReformulatedEIR&) = default;
+    ChillerElectricReformulatedEIR& operator=(ChillerElectricReformulatedEIR&&) = default;
 
     //@}
 
@@ -188,7 +193,7 @@ namespace model {
 
     bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve&);
 
-    bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(std::string electricInputToCoolingOutputRatioFunctionOfPLRType);
+    bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(const std::string& electricInputToCoolingOutputRatioFunctionOfPLRType);
 
     void resetElectricInputToCoolingOutputRatioFunctionOfPLRType();
 
@@ -218,7 +223,7 @@ namespace model {
 
     void resetLeavingChilledWaterLowerTemperatureLimit();
 
-    bool setChillerFlowMode(std::string chillerFlowMode);
+    bool setChillerFlowMode(const std::string& chillerFlowMode);
 
     void resetChillerFlowMode();
 
@@ -265,7 +270,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ChillerElectricReformulatedEIR_Impl ImplType;
+    using ImplType = detail::ChillerElectricReformulatedEIR_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -278,10 +283,10 @@ namespace model {
   };
 
   /** \relates ChillerElectricReformulatedEIR*/
-  typedef boost::optional<ChillerElectricReformulatedEIR> OptionalChillerElectricReformulatedEIR;
+  using OptionalChillerElectricReformulatedEIR = boost::optional<ChillerElectricReformulatedEIR>;
 
   /** \relates ChillerElectricReformulatedEIR*/
-  typedef std::vector<ChillerElectricReformulatedEIR> ChillerElectricReformulatedEIRVector;
+  using ChillerElectricReformulatedEIRVector = std::vector<ChillerElectricReformulatedEIR>;
 
 }  // namespace model
 

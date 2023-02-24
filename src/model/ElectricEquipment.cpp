@@ -105,7 +105,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ElectricEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ElectricEquipmentFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ElectricEquipment", "Electric Equipment"));
       }
@@ -121,7 +122,7 @@ namespace model {
       this->makeUnique();
 
       ElectricEquipmentDefinition electricEquipmentDefinition = this->electricEquipmentDefinition();
-      for (LifeCycleCost cost : electricEquipmentDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : electricEquipmentDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 
@@ -190,7 +191,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ElectricEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool ElectricEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -392,7 +393,7 @@ namespace model {
     getImpl<detail::ElectricEquipment_Impl>()->resetMultiplier();
   }
 
-  bool ElectricEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool ElectricEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::ElectricEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

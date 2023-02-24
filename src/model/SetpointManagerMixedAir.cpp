@@ -70,8 +70,6 @@ namespace model {
     SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(const SetpointManagerMixedAir_Impl& other, Model_Impl* model, bool keepHandles)
       : SetpointManager_Impl(other, model, keepHandles) {}
 
-    SetpointManagerMixedAir_Impl::~SetpointManagerMixedAir_Impl() {}
-
     const std::vector<std::string>& SetpointManagerMixedAir_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       return result;
@@ -121,11 +119,11 @@ namespace model {
     }
 
     ModelObject SetpointManagerMixedAir_Impl::clone(Model model) const {
-      SetpointManagerMixedAir clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerMixedAir>();
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerMixedAir>();
       clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetReferenceSetpointNode();
       clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetFanInletNode();
       clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetFanOutletNode();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerMixedAir_Impl::controlVariable() const {
@@ -268,7 +266,7 @@ namespace model {
       }
     }
 
-    if (fans.size() > 0) {
+    if (!fans.empty()) {
       boost::optional<ModelObject> mo;
 
       mo = fans.front().inletModelObject();

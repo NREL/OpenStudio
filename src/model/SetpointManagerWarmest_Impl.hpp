@@ -53,7 +53,7 @@ namespace model {
 
       SetpointManagerWarmest_Impl(const SetpointManagerWarmest_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerWarmest_Impl() {}
+      virtual ~SetpointManagerWarmest_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

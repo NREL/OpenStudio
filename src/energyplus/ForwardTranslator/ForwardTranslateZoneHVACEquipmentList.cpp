@@ -96,7 +96,7 @@ namespace energyplus {
     unsigned priority = 1;
     int offset = 0;
     for (const auto& elem : coolingVector) {
-      if (airChillers.size() > 0 && (airChiller = elem.optionalCast<RefrigerationAirChiller>())) {
+      if (!airChillers.empty() && (airChiller = elem.optionalCast<RefrigerationAirChiller>())) {
         if (chillerSetCoolingPriority == 0) {
           chillerSetCoolingPriority = priority;
         } else {
@@ -116,7 +116,7 @@ namespace energyplus {
     priority = 1;
     offset = 0;
     for (const auto& elem : heatingVector) {
-      if (airChillers.size() > 0 && (airChiller = elem.optionalCast<RefrigerationAirChiller>())) {
+      if (!airChillers.empty() && (airChiller = elem.optionalCast<RefrigerationAirChiller>())) {
         if (chillerSetHeatingPriority == 0) {
           chillerSetHeatingPriority = priority;
         } else {

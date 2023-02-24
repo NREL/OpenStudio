@@ -55,7 +55,12 @@ namespace model {
 
     explicit ZoneHVACEnergyRecoveryVentilatorController(const Model& model);
 
-    virtual ~ZoneHVACEnergyRecoveryVentilatorController() {}
+    virtual ~ZoneHVACEnergyRecoveryVentilatorController() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACEnergyRecoveryVentilatorController(const ZoneHVACEnergyRecoveryVentilatorController& other) = default;
+    ZoneHVACEnergyRecoveryVentilatorController(ZoneHVACEnergyRecoveryVentilatorController&& other) = default;
+    ZoneHVACEnergyRecoveryVentilatorController& operator=(const ZoneHVACEnergyRecoveryVentilatorController&) = default;
+    ZoneHVACEnergyRecoveryVentilatorController& operator=(ZoneHVACEnergyRecoveryVentilatorController&&) = default;
 
     //@}
 
@@ -135,7 +140,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACEnergyRecoveryVentilatorController_Impl ImplType;
+    using ImplType = detail::ZoneHVACEnergyRecoveryVentilatorController_Impl;
 
     explicit ZoneHVACEnergyRecoveryVentilatorController(std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl> impl);
 
@@ -149,10 +154,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACEnergyRecoveryVentilatorController*/
-  typedef boost::optional<ZoneHVACEnergyRecoveryVentilatorController> OptionalZoneHVACEnergyRecoveryVentilatorController;
+  using OptionalZoneHVACEnergyRecoveryVentilatorController = boost::optional<ZoneHVACEnergyRecoveryVentilatorController>;
 
   /** \relates ZoneHVACEnergyRecoveryVentilatorController*/
-  typedef std::vector<ZoneHVACEnergyRecoveryVentilatorController> ZoneHVACEnergyRecoveryVentilatorControllerVector;
+  using ZoneHVACEnergyRecoveryVentilatorControllerVector = std::vector<ZoneHVACEnergyRecoveryVentilatorController>;
 
 }  // namespace model
 }  // namespace openstudio

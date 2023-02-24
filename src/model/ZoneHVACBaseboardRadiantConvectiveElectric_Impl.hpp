@@ -56,7 +56,7 @@ namespace model {
       ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const ZoneHVACBaseboardRadiantConvectiveElectric_Impl& other, Model_Impl* model,
                                                       bool keepHandle);
 
-      virtual ~ZoneHVACBaseboardRadiantConvectiveElectric_Impl() {}
+      virtual ~ZoneHVACBaseboardRadiantConvectiveElectric_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -116,7 +116,7 @@ namespace model {
 
       bool setAvailabilitySchedule(Schedule& schedule);
 
-      bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+      bool setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod);
 
       bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
 

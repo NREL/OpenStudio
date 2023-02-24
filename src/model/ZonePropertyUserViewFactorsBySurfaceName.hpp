@@ -92,7 +92,12 @@ class InternalMass; */
    */
     explicit ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
 
-    virtual ~ZonePropertyUserViewFactorsBySurfaceName() {}
+    virtual ~ZonePropertyUserViewFactorsBySurfaceName() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZonePropertyUserViewFactorsBySurfaceName(const ZonePropertyUserViewFactorsBySurfaceName& other) = default;
+    ZonePropertyUserViewFactorsBySurfaceName(ZonePropertyUserViewFactorsBySurfaceName&& other) = default;
+    ZonePropertyUserViewFactorsBySurfaceName& operator=(const ZonePropertyUserViewFactorsBySurfaceName&) = default;
+    ZonePropertyUserViewFactorsBySurfaceName& operator=(ZonePropertyUserViewFactorsBySurfaceName&&) = default;
 
     //@}
 
@@ -151,7 +156,7 @@ class InternalMass; */
     //@}
    protected:
     /// @cond
-    typedef detail::ZonePropertyUserViewFactorsBySurfaceName_Impl ImplType;
+    using ImplType = detail::ZonePropertyUserViewFactorsBySurfaceName_Impl;
 
     explicit ZonePropertyUserViewFactorsBySurfaceName(std::shared_ptr<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl> impl);
 
@@ -165,10 +170,10 @@ class InternalMass; */
   };
 
   /** \relates ZonePropertyUserViewFactorsBySurfaceName*/
-  typedef boost::optional<ZonePropertyUserViewFactorsBySurfaceName> OptionalZonePropertyUserViewFactorsBySurfaceName;
+  using OptionalZonePropertyUserViewFactorsBySurfaceName = boost::optional<ZonePropertyUserViewFactorsBySurfaceName>;
 
   /** \relates ZonePropertyUserViewFactorsBySurfaceName*/
-  typedef std::vector<ZonePropertyUserViewFactorsBySurfaceName> ZonePropertyUserViewFactorsBySurfaceNameVector;
+  using ZonePropertyUserViewFactorsBySurfaceNameVector = std::vector<ZonePropertyUserViewFactorsBySurfaceName>;
 
 }  // namespace model
 }  // namespace openstudio

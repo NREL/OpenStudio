@@ -59,7 +59,7 @@ namespace model {
 
       SurfacePropertyLocalEnvironment_Impl(const SurfacePropertyLocalEnvironment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyLocalEnvironment_Impl() {}
+      virtual ~SurfacePropertyLocalEnvironment_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

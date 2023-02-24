@@ -55,7 +55,12 @@ namespace model {
 
     explicit Lights(const LightsDefinition& lightsDefinition);
 
-    virtual ~Lights() {}
+    virtual ~Lights() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Lights(const Lights& other) = default;
+    Lights(Lights&& other) = default;
+    Lights& operator=(const Lights&) = default;
+    Lights& operator=(Lights&&) = default;
 
     //@}
 
@@ -103,7 +108,7 @@ namespace model {
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -138,7 +143,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Lights_Impl ImplType;
+    using ImplType = detail::Lights_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -151,10 +156,10 @@ namespace model {
   };
 
   /** \relates Lights*/
-  typedef boost::optional<Lights> OptionalLights;
+  using OptionalLights = boost::optional<Lights>;
 
   /** \relates Lights*/
-  typedef std::vector<Lights> LightsVector;
+  using LightsVector = std::vector<Lights>;
 
 }  // namespace model
 }  // namespace openstudio

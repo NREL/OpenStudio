@@ -55,7 +55,12 @@ namespace model {
 
     explicit ThermalStorageIceDetailed(const Model& model);
 
-    virtual ~ThermalStorageIceDetailed() {}
+    virtual ~ThermalStorageIceDetailed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ThermalStorageIceDetailed(const ThermalStorageIceDetailed& other) = default;
+    ThermalStorageIceDetailed(ThermalStorageIceDetailed&& other) = default;
+    ThermalStorageIceDetailed& operator=(const ThermalStorageIceDetailed&) = default;
+    ThermalStorageIceDetailed& operator=(ThermalStorageIceDetailed&&) = default;
 
     //@}
 
@@ -118,7 +123,7 @@ namespace model {
 
     bool setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium);
 
-    bool setThawProcessIndicator(std::string thawProcessIndicator);
+    bool setThawProcessIndicator(const std::string& thawProcessIndicator);
 
     //@}
     /** @name Other */
@@ -127,7 +132,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ThermalStorageIceDetailed_Impl ImplType;
+    using ImplType = detail::ThermalStorageIceDetailed_Impl;
 
     explicit ThermalStorageIceDetailed(std::shared_ptr<detail::ThermalStorageIceDetailed_Impl> impl);
 
@@ -141,10 +146,10 @@ namespace model {
   };
 
   /** \relates ThermalStorageIceDetailed*/
-  typedef boost::optional<ThermalStorageIceDetailed> OptionalThermalStorageIceDetailed;
+  using OptionalThermalStorageIceDetailed = boost::optional<ThermalStorageIceDetailed>;
 
   /** \relates ThermalStorageIceDetailed*/
-  typedef std::vector<ThermalStorageIceDetailed> ThermalStorageIceDetailedVector;
+  using ThermalStorageIceDetailedVector = std::vector<ThermalStorageIceDetailed>;
 
 }  // namespace model
 }  // namespace openstudio

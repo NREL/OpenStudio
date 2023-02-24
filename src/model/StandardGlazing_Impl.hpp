@@ -54,7 +54,7 @@ namespace model {
 
       StandardGlazing_Impl(const StandardGlazing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~StandardGlazing_Impl() {}
+      virtual ~StandardGlazing_Impl() = default;
 
       //@}
 

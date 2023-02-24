@@ -71,7 +71,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneControlThermostatStagedDualSetpoint_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneControl_Thermostat_StagedDualSetpointFields::HeatingTemperatureSetpointSchedule) != e) {
         result.push_back(ScheduleTypeKey("ZoneControlThermostatStagedDualSetpoint", "Heating Temperature Setpoint Schedule"));
       }
@@ -268,7 +269,7 @@ namespace model {
   }
 
   IddObjectType ZoneControlThermostatStagedDualSetpoint::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
+    return {IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint};
   }
 
   int ZoneControlThermostatStagedDualSetpoint::numberofHeatingStages() const {

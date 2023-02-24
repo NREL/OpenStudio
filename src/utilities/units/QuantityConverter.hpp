@@ -104,8 +104,8 @@ class UTILITIES_API QuantityConverterSingleton
   REGISTER_LOGGER("openstudio.units.QuantityConverter");
   QuantityConverterSingleton();
 
-  typedef std::map<std::string, baseUnitConversionFactor> BaseUnitConversionMap;
-  typedef std::multimap<UnitSystem, baseUnitConversionFactor> UnitSystemConversionMultiMap;
+  using BaseUnitConversionMap = std::map<std::string, baseUnitConversionFactor>;
+  using UnitSystemConversionMultiMap = std::multimap<UnitSystem, baseUnitConversionFactor>;
 
   BaseUnitConversionMap m_toSImap;
   UnitSystemConversionMultiMap m_fromSIBySystemMap;
@@ -118,7 +118,7 @@ class UTILITIES_API QuantityConverterSingleton
 };
 
 /** \relates QuantityConverterSingleton */
-typedef openstudio::Singleton<QuantityConverterSingleton> QuantityConverter;
+using QuantityConverter = openstudio::Singleton<QuantityConverterSingleton>;
 
 /** Non-member function to simplify interface for users. \relates QuantityConverterSingleton */
 UTILITIES_API boost::optional<double> convert(double original, const std::string& originalUnits, const std::string& finalUnits);

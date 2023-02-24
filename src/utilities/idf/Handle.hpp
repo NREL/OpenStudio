@@ -41,17 +41,17 @@
 namespace openstudio {
 
 /// Objects can be identified by Handle.
-typedef openstudio::UUID Handle;
+using Handle = openstudio::UUID;
 /// Vector of Handles.
-typedef std::vector<Handle> HandleVector;
+using HandleVector = std::vector<Handle>;
 /// Set of Handles. Enforces uniqueness within a list.
-typedef std::set<Handle> HandleSet;
+using HandleSet = std::set<Handle>;
 /// Maps Handles to Handles.
-typedef std::map<Handle, Handle> HandleMap;
+using HandleMap = std::map<Handle, Handle>;
 /// Optional Handle.
-typedef boost::optional<Handle> OptionalHandle;
+using OptionalHandle = boost::optional<Handle>;
 /// Optional HandleVector.
-typedef boost::optional<HandleVector> OptionalHandleVector;
+using OptionalHandleVector = boost::optional<HandleVector>;
 
 /** Returns the handle that corresponds to original, where original is a handleMap key and the
  *  returned value is the corresponding value. If original is not a handleMap key, then the return

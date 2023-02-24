@@ -56,7 +56,12 @@ namespace model {
 
     explicit LoadProfilePlant(const Model& model, Schedule& loadSchedule, Schedule& flowRateFractionSchedule);
 
-    virtual ~LoadProfilePlant() {}
+    virtual ~LoadProfilePlant() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LoadProfilePlant(const LoadProfilePlant& other) = default;
+    LoadProfilePlant(LoadProfilePlant&& other) = default;
+    LoadProfilePlant& operator=(const LoadProfilePlant&) = default;
+    LoadProfilePlant& operator=(LoadProfilePlant&&) = default;
 
     //@}
 
@@ -88,7 +93,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::LoadProfilePlant_Impl ImplType;
+    using ImplType = detail::LoadProfilePlant_Impl;
 
     explicit LoadProfilePlant(std::shared_ptr<detail::LoadProfilePlant_Impl> impl);
 
@@ -102,10 +107,10 @@ namespace model {
   };
 
   /** \relates LoadProfilePlant*/
-  typedef boost::optional<LoadProfilePlant> OptionalLoadProfilePlant;
+  using OptionalLoadProfilePlant = boost::optional<LoadProfilePlant>;
 
   /** \relates LoadProfilePlant*/
-  typedef std::vector<LoadProfilePlant> LoadProfilePlantVector;
+  using LoadProfilePlantVector = std::vector<LoadProfilePlant>;
 
 }  // namespace model
 }  // namespace openstudio

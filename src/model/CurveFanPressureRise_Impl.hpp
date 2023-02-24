@@ -52,7 +52,7 @@ namespace model {
 
       CurveFanPressureRise_Impl(const CurveFanPressureRise_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveFanPressureRise_Impl() {}
+      virtual ~CurveFanPressureRise_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

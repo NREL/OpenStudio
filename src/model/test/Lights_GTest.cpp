@@ -147,13 +147,13 @@ TEST_F(ModelFixture, Lights_Remove) {
   Lights light(definition);
 
   EXPECT_EQ(2u, model.numObjects());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<Lights>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<LightsDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<LightsDefinition>().size());
   std::vector<IdfObject> removed = light.remove();
   ASSERT_EQ(static_cast<unsigned>(1), removed.size());
   EXPECT_EQ(IddObjectType::OS_Lights, removed[0].iddObject().type().value());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<Lights>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<LightsDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<LightsDefinition>().size());
   EXPECT_EQ(1u, model.numObjects());
 }
 
@@ -165,13 +165,13 @@ TEST_F(ModelFixture, Lights_Remove2) {
   Lights light2(definition);
 
   EXPECT_EQ(3u, model.numObjects());
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Lights>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<LightsDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<LightsDefinition>().size());
   std::vector<IdfObject> removed = light1.remove();
   ASSERT_EQ(static_cast<unsigned>(1), removed.size());
   EXPECT_EQ(IddObjectType::OS_Lights, removed[0].iddObject().type().value());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<Lights>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<LightsDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<LightsDefinition>().size());
   EXPECT_EQ(2u, model.numObjects());
 }
 
@@ -182,14 +182,14 @@ TEST_F(ModelFixture, Lights_RemoveDefinition) {
   Lights light(definition);
 
   EXPECT_EQ(2u, model.numObjects());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<Lights>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<LightsDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<LightsDefinition>().size());
   std::vector<IdfObject> removed = definition.remove();
   ASSERT_EQ(static_cast<unsigned>(2), removed.size());
   EXPECT_EQ(IddObjectType::OS_Lights_Definition, removed[0].iddObject().type().value());
   EXPECT_EQ(IddObjectType::OS_Lights, removed[1].iddObject().type().value());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<Lights>().size());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<LightsDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<LightsDefinition>().size());
   EXPECT_EQ(0u, model.numObjects());
 }
 
@@ -201,25 +201,25 @@ TEST_F(ModelFixture, Lights_RemoveDefinition2) {
   Lights light2(definition);
 
   EXPECT_EQ(3u, model.numObjects());
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Lights>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<LightsDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<LightsDefinition>().size());
   std::vector<IdfObject> removed = definition.remove();
   ASSERT_EQ(static_cast<unsigned>(3), removed.size());
   EXPECT_EQ(IddObjectType::OS_Lights_Definition, removed[0].iddObject().type().value());
   EXPECT_EQ(IddObjectType::OS_Lights, removed[1].iddObject().type().value());
   EXPECT_EQ(IddObjectType::OS_Lights, removed[2].iddObject().type().value());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<Lights>().size());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<LightsDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<LightsDefinition>().size());
   EXPECT_EQ(0u, model.numObjects());
 }
 
 TEST_F(ModelFixture, Lights_ExampleModel) {
   Model model = exampleModel();
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
   EXPECT_FALSE(lights.empty());
 
-  for (Lights light : lights) {
+  for (const Lights& light : lights) {
     EXPECT_TRUE(light.schedule());
   }
 }
@@ -388,11 +388,12 @@ TEST_F(ModelFixture, Lights_Costs2) {
   EXPECT_TRUE(definitionCost.setCostUnits("CostPerArea"));
   EXPECT_EQ("CostPerArea", definitionCost.costUnits());
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space);
@@ -433,11 +434,12 @@ TEST_F(ModelFixture, Lights_FloorArea) {
   SpaceType spaceType(model);
   building.setSpaceType(spaceType);
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);

@@ -65,7 +65,7 @@ class TestOSRunner : public OSRunner
  public:
   TestOSRunner(const WorkflowJSON& workflow) : OSRunner(workflow) {}
 
-  virtual bool inSelection(const openstudio::model::ModelObject& modelObject) const override {
+  virtual bool inSelection(const openstudio::model::ModelObject& /*modelObject*/) const override {
     return false;
   }
 };
@@ -90,7 +90,7 @@ class TestModelUserScript1 : public ModelMeasure
 
     // remove old spaces
     int count(0);
-    for (openstudio::model::Space space : model.getModelObjects<openstudio::model::Space>()) {
+    for (openstudio::model::Space space : model.getConcreteModelObjects<openstudio::model::Space>()) {
       space.remove();
       ++count;
     }
@@ -124,10 +124,10 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
 
   // test with empty model
   openstudio::model::Model model1;
-  EXPECT_EQ(0u, model1.getModelObjects<openstudio::model::Space>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<openstudio::model::Space>().size());
   EXPECT_EQ(0u, script.arguments(model1).size());
   script.run(model1, runner, user_arguments);
-  EXPECT_EQ(1u, model1.getModelObjects<openstudio::model::Space>().size());
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<openstudio::model::Space>().size());
   WorkflowStepResult result = runner.result();
   ASSERT_TRUE(result.stepResult());
   EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);
@@ -143,10 +143,10 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   openstudio::model::Model model2;
   openstudio::model::Space space1(model2);
   openstudio::model::Space space2(model2);
-  EXPECT_EQ(2u, model2.getModelObjects<openstudio::model::Space>().size());
+  EXPECT_EQ(2u, model2.getConcreteModelObjects<openstudio::model::Space>().size());
   EXPECT_EQ(0u, script.arguments(model2).size());
   script.run(model2, runner, user_arguments);
-  EXPECT_EQ(1u, model2.getModelObjects<openstudio::model::Space>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<openstudio::model::Space>().size());
   result = runner.result();
   ASSERT_TRUE(result.stepResult());
   EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);

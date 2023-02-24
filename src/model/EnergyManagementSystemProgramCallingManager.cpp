@@ -89,10 +89,10 @@ namespace model {
       auto groups = extensibleGroups();
 
       for (const auto& elem : groups) {
-        WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
+        auto group = elem.cast<WorkspaceExtensibleGroup>();
         boost::optional<WorkspaceObject> wo = group.getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName);
         if (wo) {
-          EnergyManagementSystemProgram program = wo->cast<EnergyManagementSystemProgram>();
+          auto program = wo->cast<EnergyManagementSystemProgram>();
           result.push_back(program);
         }
       }
@@ -106,10 +106,10 @@ namespace model {
       unsigned sizeOfGroup = numExtensibleGroups();
 
       if ((index < sizeOfGroup) && (!groups[index].empty())) {
-        WorkspaceExtensibleGroup group = groups[index].cast<WorkspaceExtensibleGroup>();
+        auto group = groups[index].cast<WorkspaceExtensibleGroup>();
         boost::optional<WorkspaceObject> wo = group.getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName);
         if (wo) {
-          EnergyManagementSystemProgram program = wo->cast<EnergyManagementSystemProgram>();
+          auto program = wo->cast<EnergyManagementSystemProgram>();
           result = program;
         }
       }
@@ -136,7 +136,7 @@ namespace model {
     bool EnergyManagementSystemProgramCallingManager_Impl::addProgram(const EnergyManagementSystemProgram& program) {
       //add program to end of vector of programs
       bool result = false;
-      WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
       return result;
     }
@@ -149,7 +149,7 @@ namespace model {
       if (index <= sizeOfGroup) {
         IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
         OS_ASSERT(!idfGroup.empty());
-        ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+        auto group = idfGroup.cast<ModelExtensibleGroup>();
         result = group.setPointer(0, program.handle());
       }
       return result;
@@ -159,8 +159,8 @@ namespace model {
       //add programs to end of vector of programs
       std::vector<bool> ok(programs.size(), false);
       bool result = false;
-      for (auto& program : programs) {
-        WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      for (const auto& program : programs) {
+        auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
         result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
         ok.at(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName) = result;
       }
@@ -183,7 +183,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemProgramCallingManager::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
+    return {IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager};
   }
 
   std::vector<std::string> EnergyManagementSystemProgramCallingManager::validCallingPointValues() {

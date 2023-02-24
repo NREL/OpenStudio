@@ -122,7 +122,7 @@ namespace energyplus {
 
         OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
         if (modelObject->optionalCast<Space>()) {
-          Space adjacentSpace = modelObject->cast<Space>();
+          auto adjacentSpace = modelObject->cast<Space>();
 
           if (surface->space()) {
             // insert this surface in the map so subsurface translation can find it
@@ -152,7 +152,7 @@ namespace energyplus {
           if (it != m_workspaceToModelMap.end()) {
             if (it->second.optionalCast<Surface>()) {
               // this will set other side boundary object on both surfaces
-              Surface adjacentSurface = it->second.cast<Surface>();
+              auto adjacentSurface = it->second.cast<Surface>();
               surface->setAdjacentSurface(adjacentSurface);
               return surface.get();
             }
@@ -164,7 +164,7 @@ namespace energyplus {
 
         OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
         if (modelObject->optionalCast<FoundationKiva>()) {
-          FoundationKiva foundationKiva = modelObject->cast<FoundationKiva>();
+          auto foundationKiva = modelObject->cast<FoundationKiva>();
           surface->setAdjacentFoundation(foundationKiva);
           return surface.get();
         }

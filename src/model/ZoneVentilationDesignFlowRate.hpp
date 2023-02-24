@@ -54,7 +54,12 @@ namespace model {
 
     explicit ZoneVentilationDesignFlowRate(const Model& model);
 
-    virtual ~ZoneVentilationDesignFlowRate() {}
+    virtual ~ZoneVentilationDesignFlowRate() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneVentilationDesignFlowRate(const ZoneVentilationDesignFlowRate& other) = default;
+    ZoneVentilationDesignFlowRate(ZoneVentilationDesignFlowRate&& other) = default;
+    ZoneVentilationDesignFlowRate& operator=(const ZoneVentilationDesignFlowRate&) = default;
+    ZoneVentilationDesignFlowRate& operator=(ZoneVentilationDesignFlowRate&&) = default;
 
     //@}
 

@@ -81,7 +81,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_GlassDoorToSubSurface) {
 
   ReverseTranslator rt;
   Model model = rt.translateWorkspace(ws);
-  SubSurfaceVector subSurfaces = model.getModelObjects<SubSurface>();
+  SubSurfaceVector subSurfaces = model.getConcreteModelObjects<SubSurface>();
   ASSERT_EQ(1u, subSurfaces.size());
   EXPECT_EQ("GlassDoor", subSurfaces[0].subSurfaceType());
 }
@@ -94,19 +94,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SubSurface) {
   Space space(model);
   space.setThermalZone(thermalZone);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 2, 0));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(2, 0, 0));
-  vertices.push_back(Point3d(2, 2, 0));
+  std::vector<Point3d> vertices{
+    {0, 2, 0},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 2, 0},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0, 1, 0));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 1, 0));
+  vertices = {
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);

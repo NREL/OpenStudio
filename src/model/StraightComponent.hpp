@@ -54,7 +54,12 @@ namespace model {
    public:
     StraightComponent(IddObjectType type, const Model& model);
 
-    virtual ~StraightComponent() {}
+    virtual ~StraightComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    StraightComponent(const StraightComponent& other) = default;
+    StraightComponent(StraightComponent&& other) = default;
+    StraightComponent& operator=(const StraightComponent&) = default;
+    StraightComponent& operator=(StraightComponent&&) = default;
 
     std::vector<openstudio::IdfObject> remove();
 
@@ -91,7 +96,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::StraightComponent_Impl ImplType;
+    using ImplType = detail::StraightComponent_Impl;
 
     explicit StraightComponent(std::shared_ptr<detail::StraightComponent_Impl> impl);
 
@@ -101,9 +106,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<StraightComponent> OptionalStraightComponent;
+  using OptionalStraightComponent = boost::optional<StraightComponent>;
 
-  typedef std::vector<StraightComponent> StraightComponentVector;
+  using StraightComponentVector = std::vector<StraightComponent>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -79,12 +79,12 @@ TEST_F(ModelFixture, AdditionalProperties_AdditionalProperties) {
   // create an additional properties object to use
   AdditionalProperties props = material.additionalProperties();
   EXPECT_EQ(2, model.modelObjects().size());
-  EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
+  EXPECT_EQ(1, model.getConcreteModelObjects<AdditionalProperties>().size());
 
   // return, instead of create, additional properies when it already exists
   AdditionalProperties props2 = material.additionalProperties();
   EXPECT_EQ(2, model.modelObjects().size());
-  EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
+  EXPECT_EQ(1, model.getConcreteModelObjects<AdditionalProperties>().size());
   EXPECT_EQ(props, props2);
 }
 
@@ -186,7 +186,7 @@ TEST_F(ModelFixture, AdditionalProperties_ModelObject) {
   EXPECT_EQ(props.handle(), props2.handle());
 
   ModelObject modelObject = props.modelObject();
-  StandardOpaqueMaterial material2 = modelObject.cast<StandardOpaqueMaterial>();
+  auto material2 = modelObject.cast<StandardOpaqueMaterial>();
   EXPECT_EQ(material, material2);
 }
 
@@ -247,7 +247,7 @@ TEST_F(ModelFixture, AdditionalProperties_ParentClone) {
   AdditionalProperties props = material.additionalProperties();
   EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
   EXPECT_EQ(2, model.modelObjects().size());
-  StandardOpaqueMaterial materialClone = material.clone(model).cast<StandardOpaqueMaterial>();
+  auto materialClone = material.clone(model).cast<StandardOpaqueMaterial>();
   EXPECT_EQ(4, model.modelObjects().size());
   EXPECT_EQ(2u, model.getConcreteModelObjects<AdditionalProperties>().size());
   EXPECT_NE(material.additionalProperties().handle(), materialClone.additionalProperties().handle());
@@ -255,7 +255,7 @@ TEST_F(ModelFixture, AdditionalProperties_ParentClone) {
   EXPECT_EQ(2u, model.getConcreteModelObjects<AdditionalProperties>().size());
 
   Model model2;
-  StandardOpaqueMaterial materialClone2 = material.clone(model2).cast<StandardOpaqueMaterial>();
+  auto materialClone2 = material.clone(model2).cast<StandardOpaqueMaterial>();
   EXPECT_EQ(2, model2.modelObjects().size());
   EXPECT_EQ(1u, model2.getConcreteModelObjects<AdditionalProperties>().size());
   EXPECT_NE(material.additionalProperties().handle(), materialClone2.additionalProperties().handle());
@@ -275,7 +275,7 @@ TEST_F(ModelFixture, AdditionalProperties_ChildClone) {
   EXPECT_EQ(0, props.resources().size());
 
   // DLM: do we want to allow this clone?
-  AdditionalProperties propsClone = props.clone(model).cast<AdditionalProperties>();
+  auto propsClone = props.clone(model).cast<AdditionalProperties>();
   EXPECT_EQ(3, model.modelObjects().size());
   EXPECT_EQ(2u, model.getConcreteModelObjects<AdditionalProperties>().size());
   EXPECT_EQ(props.modelObject().handle(), propsClone.modelObject().handle());
@@ -283,7 +283,7 @@ TEST_F(ModelFixture, AdditionalProperties_ChildClone) {
   Model model2;
 
   // DLM: do we want to allow this clone?
-  AdditionalProperties propsClone2 = props.clone(model2).cast<AdditionalProperties>();
+  auto propsClone2 = props.clone(model2).cast<AdditionalProperties>();
   EXPECT_EQ(1u, model2.modelObjects().size());
   EXPECT_EQ(1u, model2.getConcreteModelObjects<AdditionalProperties>().size());
 

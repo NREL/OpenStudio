@@ -64,7 +64,12 @@ namespace model {
 
     explicit ElectricLoadCenterDistribution(const Model& model);
 
-    virtual ~ElectricLoadCenterDistribution() {}
+    virtual ~ElectricLoadCenterDistribution() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricLoadCenterDistribution(const ElectricLoadCenterDistribution& other) = default;
+    ElectricLoadCenterDistribution(ElectricLoadCenterDistribution&& other) = default;
+    ElectricLoadCenterDistribution& operator=(const ElectricLoadCenterDistribution&) = default;
+    ElectricLoadCenterDistribution& operator=(ElectricLoadCenterDistribution&&) = default;
 
     //@}
 
@@ -240,7 +245,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterDistribution_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterDistribution_Impl;
 
     explicit ElectricLoadCenterDistribution(std::shared_ptr<detail::ElectricLoadCenterDistribution_Impl> impl);
 
@@ -254,10 +259,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterDistribution*/
-  typedef boost::optional<ElectricLoadCenterDistribution> OptionalElectricLoadCenterDistribution;
+  using OptionalElectricLoadCenterDistribution = boost::optional<ElectricLoadCenterDistribution>;
 
   /** \relates ElectricLoadCenterDistribution*/
-  typedef std::vector<ElectricLoadCenterDistribution> ElectricLoadCenterDistributionVector;
+  using ElectricLoadCenterDistributionVector = std::vector<ElectricLoadCenterDistribution>;
 
 }  // namespace model
 }  // namespace openstudio

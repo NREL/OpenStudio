@@ -56,7 +56,7 @@ namespace model {
 
       ShadingControl_Impl(const ShadingControl_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ShadingControl_Impl() {}
+      virtual ~ShadingControl_Impl() = default;
 
       //@}
 

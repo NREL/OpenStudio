@@ -39,23 +39,26 @@
 #include <set>
 #include <string>
 
+#include <iterator>     // for make_move_iterator
+#include <type_traits>  // for declval, conditional, decay_t, enable_if_t
+
 namespace openstudio {
 
-typedef std::vector<bool> BoolVector;
-typedef std::vector<unsigned> UnsignedVector;
-typedef std::vector<int> IntVector;
-typedef std::vector<double> DoubleVector;
-typedef std::vector<std::string> StringVector;
+using BoolVector = std::vector<bool>;
+using UnsignedVector = std::vector<unsigned int>;
+using IntVector = std::vector<int>;
+using DoubleVector = std::vector<double>;
+using StringVector = std::vector<std::string>;
 
-typedef std::set<unsigned> UnsignedSet;
-typedef std::set<int> IntSet;
-typedef std::set<double> DoubleSet;
-typedef std::set<std::string> StringSet;
+using UnsignedSet = std::set<unsigned int>;
+using IntSet = std::set<int>;
+using DoubleSet = std::set<double>;
+using StringSet = std::set<std::string>;
 
 /** Set of strings with case-insensitive comparison. */
-typedef std::set<std::string, IstringCompare> IStringSet;
+using IStringSet = std::set<std::string, IstringCompare>;
 
-typedef std::pair<std::string, std::string> StringPair;
+using StringPair = std::pair<std::string, std::string>;
 
 UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std::string>& sv);
 
@@ -63,9 +66,9 @@ UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std:
 template <typename T, typename U>
 std::vector<T> castVector(const std::vector<U>& objects) {
   std::vector<T> result;
+  result.reserve(objects.size());
   for (auto& object : objects) {
-    T castObject = object.template cast<T>();
-    result.push_back(castObject);
+    result.emplace_back(object.template cast<T>());
   }
   return result;
 }

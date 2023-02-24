@@ -54,7 +54,12 @@ namespace model {
 
     explicit AirTerminalSingleDuctVAVHeatAndCoolNoReheat(const Model& model);
 
-    virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat() {}
+    virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalSingleDuctVAVHeatAndCoolNoReheat(const AirTerminalSingleDuctVAVHeatAndCoolNoReheat& other) = default;
+    AirTerminalSingleDuctVAVHeatAndCoolNoReheat(AirTerminalSingleDuctVAVHeatAndCoolNoReheat&& other) = default;
+    AirTerminalSingleDuctVAVHeatAndCoolNoReheat& operator=(const AirTerminalSingleDuctVAVHeatAndCoolNoReheat&) = default;
+    AirTerminalSingleDuctVAVHeatAndCoolNoReheat& operator=(AirTerminalSingleDuctVAVHeatAndCoolNoReheat&&) = default;
 
     //@}
 
@@ -100,7 +105,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl;
 
     explicit AirTerminalSingleDuctVAVHeatAndCoolNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl> impl);
 
@@ -114,10 +119,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctVAVHeatAndCoolNoReheat*/
-  typedef boost::optional<AirTerminalSingleDuctVAVHeatAndCoolNoReheat> OptionalAirTerminalSingleDuctVAVHeatAndCoolNoReheat;
+  using OptionalAirTerminalSingleDuctVAVHeatAndCoolNoReheat = boost::optional<AirTerminalSingleDuctVAVHeatAndCoolNoReheat>;
 
   /** \relates AirTerminalSingleDuctVAVHeatAndCoolNoReheat*/
-  typedef std::vector<AirTerminalSingleDuctVAVHeatAndCoolNoReheat> AirTerminalSingleDuctVAVHeatAndCoolNoReheatVector;
+  using AirTerminalSingleDuctVAVHeatAndCoolNoReheatVector = std::vector<AirTerminalSingleDuctVAVHeatAndCoolNoReheat>;
 
 }  // namespace model
 }  // namespace openstudio

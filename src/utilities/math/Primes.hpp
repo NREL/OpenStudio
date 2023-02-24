@@ -46,7 +46,7 @@ bool isPrime(T val) {
     return false;
   } else {
     T divisor(3);
-    double dval = static_cast<double>(val);
+    auto dval = static_cast<double>(val);
     T upperLimit = static_cast<T>(std::sqrt(dval) + 1);
 
     while (divisor <= upperLimit) {

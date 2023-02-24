@@ -58,7 +58,7 @@ namespace model {
 
       RefrigerationTranscriticalSystem_Impl(const RefrigerationTranscriticalSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationTranscriticalSystem_Impl() {}
+      virtual ~RefrigerationTranscriticalSystem_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -198,7 +198,7 @@ namespace model {
 
       void resetSubcoolerEffectiveness();
 
-      bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
+      bool setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType);
 
       bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
 
@@ -216,7 +216,7 @@ namespace model {
 
       void resetLowTemperatureSuctionPipingZone();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

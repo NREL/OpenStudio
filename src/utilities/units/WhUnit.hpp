@@ -94,12 +94,12 @@ class UTILITIES_API WhUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   WhUnit(const std::string& scaleAbbreviation, const WhExpnt& exponents = WhExpnt(), const std::string& prettyString = "");
 
-  virtual ~WhUnit() {}
+  virtual ~WhUnit() = default;
 
   //@}
  protected:
   /// @cond
-  typedef detail::WhUnit_Impl ImplType;
+  using ImplType = detail::WhUnit_Impl;
 
   explicit WhUnit(std::shared_ptr<detail::WhUnit_Impl> impl);
 
@@ -112,10 +112,10 @@ class UTILITIES_API WhUnit : public Unit
 };
 
 /** \relates WhUnit*/
-typedef boost::optional<WhUnit> OptionalWhUnit;
+using OptionalWhUnit = boost::optional<WhUnit>;
 
 /** \relates WhUnit*/
-typedef std::vector<WhUnit> WhUnitVector;
+using WhUnitVector = std::vector<WhUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

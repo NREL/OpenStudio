@@ -80,6 +80,11 @@ namespace model {
     explicit SurfacePropertyGroundSurfaces(const Model& model);
 
     virtual ~SurfacePropertyGroundSurfaces() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SurfacePropertyGroundSurfaces(const SurfacePropertyGroundSurfaces& other) = default;
+    SurfacePropertyGroundSurfaces(SurfacePropertyGroundSurfaces&& other) = default;
+    SurfacePropertyGroundSurfaces& operator=(const SurfacePropertyGroundSurfaces&) = default;
+    SurfacePropertyGroundSurfaces& operator=(SurfacePropertyGroundSurfaces&&) = default;
 
     //@}
 

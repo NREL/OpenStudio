@@ -53,7 +53,12 @@ namespace model {
 
     explicit SpaceInfiltrationFlowCoefficient(const Model& model);
 
-    virtual ~SpaceInfiltrationFlowCoefficient() {}
+    virtual ~SpaceInfiltrationFlowCoefficient() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceInfiltrationFlowCoefficient(const SpaceInfiltrationFlowCoefficient& other) = default;
+    SpaceInfiltrationFlowCoefficient(SpaceInfiltrationFlowCoefficient&& other) = default;
+    SpaceInfiltrationFlowCoefficient& operator=(const SpaceInfiltrationFlowCoefficient&) = default;
+    SpaceInfiltrationFlowCoefficient& operator=(SpaceInfiltrationFlowCoefficient&&) = default;
 
     //@}
 
@@ -106,7 +111,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SpaceInfiltrationFlowCoefficient_Impl ImplType;
+    using ImplType = detail::SpaceInfiltrationFlowCoefficient_Impl;
 
     explicit SpaceInfiltrationFlowCoefficient(std::shared_ptr<detail::SpaceInfiltrationFlowCoefficient_Impl> impl);
 
@@ -119,10 +124,10 @@ namespace model {
   };
 
   /** \relates SpaceInfiltrationFlowCoefficient*/
-  typedef boost::optional<SpaceInfiltrationFlowCoefficient> OptionalSpaceInfiltrationFlowCoefficient;
+  using OptionalSpaceInfiltrationFlowCoefficient = boost::optional<SpaceInfiltrationFlowCoefficient>;
 
   /** \relates SpaceInfiltrationFlowCoefficient*/
-  typedef std::vector<SpaceInfiltrationFlowCoefficient> SpaceInfiltrationFlowCoefficientVector;
+  using SpaceInfiltrationFlowCoefficientVector = std::vector<SpaceInfiltrationFlowCoefficient>;
 
 }  // namespace model
 }  // namespace openstudio

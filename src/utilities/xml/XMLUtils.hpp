@@ -36,7 +36,7 @@
 #include <stdexcept>
 #include <string>
 
-typedef struct _xmlError xmlError;
+using xmlError = struct _xmlError;
 
 namespace openstudio {
 

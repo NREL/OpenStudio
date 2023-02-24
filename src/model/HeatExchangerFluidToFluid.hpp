@@ -55,7 +55,12 @@ namespace model {
 
     explicit HeatExchangerFluidToFluid(const Model& model);
 
-    virtual ~HeatExchangerFluidToFluid() {}
+    virtual ~HeatExchangerFluidToFluid() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatExchangerFluidToFluid(const HeatExchangerFluidToFluid& other) = default;
+    HeatExchangerFluidToFluid(HeatExchangerFluidToFluid&& other) = default;
+    HeatExchangerFluidToFluid& operator=(const HeatExchangerFluidToFluid&) = default;
+    HeatExchangerFluidToFluid& operator=(HeatExchangerFluidToFluid&&) = default;
 
     //@}
 
@@ -134,7 +139,7 @@ namespace model {
 
     void autosizeLoopSupplySideDesignFlowRate();
 
-    bool setHeatExchangeModelType(std::string heatExchangeModelType);
+    bool setHeatExchangeModelType(const std::string& heatExchangeModelType);
 
     void resetHeatExchangeModelType();
 
@@ -142,7 +147,7 @@ namespace model {
 
     void autosizeHeatExchangerUFactorTimesAreaValue();
 
-    bool setControlType(std::string controlType);
+    bool setControlType(const std::string& controlType);
 
     void resetControlType();
 
@@ -150,7 +155,7 @@ namespace model {
 
     void resetMinimumTemperatureDifferencetoActivateHeatExchanger();
 
-    bool setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType);
+    bool setHeatTransferMeteringEndUseType(const std::string& heatTransferMeteringEndUseType);
 
     void resetHeatTransferMeteringEndUseType();
 
@@ -162,7 +167,7 @@ namespace model {
 
     void resetComponentOverrideLoopDemandSideInletNode();
 
-    bool setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode);
+    bool setComponentOverrideCoolingControlTemperatureMode(const std::string& componentOverrideCoolingControlTemperatureMode);
 
     void resetComponentOverrideCoolingControlTemperatureMode();
 
@@ -191,7 +196,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeatExchangerFluidToFluid_Impl ImplType;
+    using ImplType = detail::HeatExchangerFluidToFluid_Impl;
 
     explicit HeatExchangerFluidToFluid(std::shared_ptr<detail::HeatExchangerFluidToFluid_Impl> impl);
 
@@ -205,10 +210,10 @@ namespace model {
   };
 
   /** \relates HeatExchangerFluidToFluid*/
-  typedef boost::optional<HeatExchangerFluidToFluid> OptionalHeatExchangerFluidToFluid;
+  using OptionalHeatExchangerFluidToFluid = boost::optional<HeatExchangerFluidToFluid>;
 
   /** \relates HeatExchangerFluidToFluid*/
-  typedef std::vector<HeatExchangerFluidToFluid> HeatExchangerFluidToFluidVector;
+  using HeatExchangerFluidToFluidVector = std::vector<HeatExchangerFluidToFluid>;
 
 }  // namespace model
 }  // namespace openstudio

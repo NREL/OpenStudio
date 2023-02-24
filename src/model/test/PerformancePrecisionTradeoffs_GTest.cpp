@@ -162,7 +162,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone) {
   EXPECT_TRUE(performancePrecisionTradeoffs.setUseRepresentativeSurfacesforCalculations(true));
 
   // clone it into the same model
-  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone = performancePrecisionTradeoffs.clone(model).cast<PerformancePrecisionTradeoffs>();
+  auto performancePrecisionTradeoffsClone = performancePrecisionTradeoffs.clone(model).cast<PerformancePrecisionTradeoffs>();
   EXPECT_FALSE(performancePrecisionTradeoffsClone.isUseCoilDirectSolutionsDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffsClone.useCoilDirectSolutions());
   EXPECT_FALSE(performancePrecisionTradeoffsClone.isZoneRadiantExchangeAlgorithmDefaulted());
@@ -178,8 +178,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone) {
 
   // clone it into a different model
   Model model2;
-  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone2 =
-    performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
+  auto performancePrecisionTradeoffsClone2 = performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isUseCoilDirectSolutionsDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffsClone2.useCoilDirectSolutions());
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isZoneRadiantExchangeAlgorithmDefaulted());

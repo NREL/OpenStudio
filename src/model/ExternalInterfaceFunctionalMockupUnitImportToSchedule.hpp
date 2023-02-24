@@ -57,7 +57,12 @@ namespace model {
                                                                    const std::string& fMUInstanceName, const std::string& fMUVariableName,
                                                                    double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitImportToSchedule() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitImportToSchedule() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterfaceFunctionalMockupUnitImportToSchedule(const ExternalInterfaceFunctionalMockupUnitImportToSchedule& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImportToSchedule(ExternalInterfaceFunctionalMockupUnitImportToSchedule&& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImportToSchedule& operator=(const ExternalInterfaceFunctionalMockupUnitImportToSchedule&) = default;
+    ExternalInterfaceFunctionalMockupUnitImportToSchedule& operator=(ExternalInterfaceFunctionalMockupUnitImportToSchedule&&) = default;
 
     //@}
 
@@ -93,7 +98,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl;
 
     explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(
       std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl> impl);
@@ -108,10 +113,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceFunctionalMockupUnitImportToSchedule*/
-  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImportToSchedule> OptionalExternalInterfaceFunctionalMockupUnitImportToSchedule;
+  using OptionalExternalInterfaceFunctionalMockupUnitImportToSchedule = boost::optional<ExternalInterfaceFunctionalMockupUnitImportToSchedule>;
 
   /** \relates ExternalInterfaceFunctionalMockupUnitImportToSchedule*/
-  typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToSchedule> ExternalInterfaceFunctionalMockupUnitImportToScheduleVector;
+  using ExternalInterfaceFunctionalMockupUnitImportToScheduleVector = std::vector<ExternalInterfaceFunctionalMockupUnitImportToSchedule>;
 
 }  // namespace model
 }  // namespace openstudio

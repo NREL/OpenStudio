@@ -59,7 +59,12 @@ namespace model {
 
     explicit Construction(const ModelPartitionMaterial& modelPartitionMaterial);
 
-    virtual ~Construction() {}
+    virtual ~Construction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Construction(const Construction& other) = default;
+    Construction(Construction&& other) = default;
+    Construction& operator=(const Construction&) = default;
+    Construction& operator=(Construction&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -75,7 +80,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::Construction_Impl ImplType;
+    using ImplType = detail::Construction_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -90,10 +95,10 @@ namespace model {
   };
 
   /** \relates Construction */
-  typedef boost::optional<Construction> OptionalConstruction;
+  using OptionalConstruction = boost::optional<Construction>;
 
   /** \relates Construction */
-  typedef std::vector<Construction> ConstructionVector;
+  using ConstructionVector = std::vector<Construction>;
 
 }  // namespace model
 }  // namespace openstudio

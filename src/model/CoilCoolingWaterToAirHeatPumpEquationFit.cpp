@@ -73,10 +73,7 @@ namespace model {
       : WaterToAirComponent_Impl(other, model, keepHandle) {}
 
     ModelObject CoilCoolingWaterToAirHeatPumpEquationFit_Impl::clone(Model model) const {
-      CoilCoolingWaterToAirHeatPumpEquationFit newCoil =
-        WaterToAirComponent_Impl::clone(model).optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>().get();
-
-      return newCoil;
+      return WaterToAirComponent_Impl::clone(model);
     }
 
     const std::vector<std::string>& CoilCoolingWaterToAirHeatPumpEquationFit_Impl::outputVariableNames() const {
@@ -110,7 +107,7 @@ namespace model {
         return WaterToAirComponent_Impl::remove();
       }
 
-      return std::vector<IdfObject>();
+      return {};
     }
 
     boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::ratedAirFlowRate() const {
@@ -560,7 +557,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit);
+    return {IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit};
   }
 
   boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit::ratedAirFlowRate() const {

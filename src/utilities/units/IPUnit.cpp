@@ -112,7 +112,7 @@ namespace detail {
 
   bool IPUnit_Impl::operator==(const Unit& rUnit) const {
     // compare using lb_m
-    IPUnit wLUnit = clone().cast<IPUnit>();
+    auto wLUnit = clone().cast<IPUnit>();
     wLUnit.lbfToLbm();
 
     Unit wRUnit = rUnit.clone();

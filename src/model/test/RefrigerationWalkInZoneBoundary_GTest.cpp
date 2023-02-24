@@ -58,12 +58,12 @@ TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_Remove) {
   Model model;
   RefrigerationWalkInZoneBoundary testObject = RefrigerationWalkInZoneBoundary(model);
 
-  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getModelObjects<RefrigerationWalkInZoneBoundary>();
+  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getConcreteModelObjects<RefrigerationWalkInZoneBoundary>();
   EXPECT_EQ(1, refrigerationWalkInZoneBoundaries.size());
 
   testObject.remove();
 
-  refrigerationWalkInZoneBoundaries = model.getModelObjects<RefrigerationWalkInZoneBoundary>();
+  refrigerationWalkInZoneBoundaries = model.getConcreteModelObjects<RefrigerationWalkInZoneBoundary>();
   EXPECT_EQ(0, refrigerationWalkInZoneBoundaries.size());
 }
 
@@ -71,7 +71,7 @@ TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneOneModelWithDefaultDat
   Model model;
   RefrigerationWalkInZoneBoundary testObject = RefrigerationWalkInZoneBoundary(model);
 
-  RefrigerationWalkInZoneBoundary testObjectClone = testObject.clone(model).cast<RefrigerationWalkInZoneBoundary>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkInZoneBoundary>();
 
   EXPECT_DOUBLE_EQ(43.4, testObjectClone.totalInsulatedSurfaceAreaFacingZone());
   EXPECT_DOUBLE_EQ(0.235, testObjectClone.insulatedSurfaceUValueFacingZone());
@@ -95,7 +95,7 @@ TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneOneModelWithCustomData
   testObject.setGlassReachInDoorOpeningScheduleFacingZone(discreteSchedule);
   testObject.setStockingDoorOpeningScheduleFacingZone(discreteSchedule);
 
-  RefrigerationWalkInZoneBoundary testObjectClone = testObject.clone(model).cast<RefrigerationWalkInZoneBoundary>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkInZoneBoundary>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.totalInsulatedSurfaceAreaFacingZone());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.insulatedSurfaceUValueFacingZone());
   EXPECT_EQ("AirCurtain", testObjectClone.stockingDoorOpeningProtectionTypeFacingZone());
@@ -113,11 +113,11 @@ TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneTwoModelsWithDefaultDa
   Model model;
   RefrigerationWalkInZoneBoundary testObject = RefrigerationWalkInZoneBoundary(model);
 
-  RefrigerationWalkInZoneBoundary testObjectClone = testObject.clone(model).cast<RefrigerationWalkInZoneBoundary>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkInZoneBoundary>();
 
   Model model2;
 
-  RefrigerationWalkInZoneBoundary testObjectClone2 = testObject.clone(model2).cast<RefrigerationWalkInZoneBoundary>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationWalkInZoneBoundary>();
 
   EXPECT_DOUBLE_EQ(43.4, testObjectClone2.totalInsulatedSurfaceAreaFacingZone());
   EXPECT_DOUBLE_EQ(0.235, testObjectClone2.insulatedSurfaceUValueFacingZone());

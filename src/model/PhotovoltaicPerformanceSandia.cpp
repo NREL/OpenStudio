@@ -738,7 +738,7 @@ namespace model {
   }
 
   IddObjectType PhotovoltaicPerformanceSandia::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PhotovoltaicPerformance_Sandia);
+    return {IddObjectType::OS_PhotovoltaicPerformance_Sandia};
   }
 
   double PhotovoltaicPerformanceSandia::activeArea() const {

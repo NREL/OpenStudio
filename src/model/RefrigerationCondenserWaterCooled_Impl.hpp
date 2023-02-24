@@ -54,7 +54,7 @@ namespace model {
 
       RefrigerationCondenserWaterCooled_Impl(const RefrigerationCondenserWaterCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCondenserWaterCooled_Impl() {}
+      virtual ~RefrigerationCondenserWaterCooled_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

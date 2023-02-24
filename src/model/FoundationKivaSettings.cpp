@@ -279,7 +279,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool FoundationKivaSettings_Impl::setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition) {
+    bool FoundationKivaSettings_Impl::setDeepGroundBoundaryCondition(const std::string& deepGroundBoundaryCondition) {
       bool result = setString(OS_Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, deepGroundBoundaryCondition);
       OS_ASSERT(result);
       return result;
@@ -323,7 +323,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool FoundationKivaSettings_Impl::setSimulationTimestep(std::string simulationTimestep) {
+    bool FoundationKivaSettings_Impl::setSimulationTimestep(const std::string& simulationTimestep) {
       bool result = setString(OS_Foundation_Kiva_SettingsFields::SimulationTimestep, simulationTimestep);
       OS_ASSERT(result);
       return result;
@@ -337,7 +337,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType FoundationKivaSettings::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Foundation_Kiva_Settings);
+    return {IddObjectType::OS_Foundation_Kiva_Settings};
   }
 
   double FoundationKivaSettings::soilConductivity() const {
@@ -492,7 +492,7 @@ namespace model {
     getImpl<detail::FoundationKivaSettings_Impl>()->resetFarFieldWidth();
   }
 
-  bool FoundationKivaSettings::setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition) {
+  bool FoundationKivaSettings::setDeepGroundBoundaryCondition(const std::string& deepGroundBoundaryCondition) {
     return getImpl<detail::FoundationKivaSettings_Impl>()->setDeepGroundBoundaryCondition(deepGroundBoundaryCondition);
   }
 
@@ -524,7 +524,7 @@ namespace model {
     getImpl<detail::FoundationKivaSettings_Impl>()->resetMaximumCellGrowthCoefficient();
   }
 
-  bool FoundationKivaSettings::setSimulationTimestep(std::string simulationTimestep) {
+  bool FoundationKivaSettings::setSimulationTimestep(const std::string& simulationTimestep) {
     return getImpl<detail::FoundationKivaSettings_Impl>()->setSimulationTimestep(simulationTimestep);
   }
 

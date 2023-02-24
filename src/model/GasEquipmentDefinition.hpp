@@ -54,7 +54,12 @@ namespace model {
 
     explicit GasEquipmentDefinition(const Model& model);
 
-    virtual ~GasEquipmentDefinition() {}
+    virtual ~GasEquipmentDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GasEquipmentDefinition(const GasEquipmentDefinition& other) = default;
+    GasEquipmentDefinition(GasEquipmentDefinition&& other) = default;
+    GasEquipmentDefinition& operator=(const GasEquipmentDefinition&) = default;
+    GasEquipmentDefinition& operator=(GasEquipmentDefinition&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -134,7 +139,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GasEquipmentDefinition_Impl ImplType;
+    using ImplType = detail::GasEquipmentDefinition_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -147,10 +152,10 @@ namespace model {
   };
 
   /** \relates GasEquipmentDefinition*/
-  typedef boost::optional<GasEquipmentDefinition> OptionalGasEquipmentDefinition;
+  using OptionalGasEquipmentDefinition = boost::optional<GasEquipmentDefinition>;
 
   /** \relates GasEquipmentDefinition*/
-  typedef std::vector<GasEquipmentDefinition> GasEquipmentDefinitionVector;
+  using GasEquipmentDefinitionVector = std::vector<GasEquipmentDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -54,7 +54,7 @@ namespace model {
 
       ElectricLoadCenterInverterSimple_Impl(const ElectricLoadCenterInverterSimple_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricLoadCenterInverterSimple_Impl() {}
+      virtual ~ElectricLoadCenterInverterSimple_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

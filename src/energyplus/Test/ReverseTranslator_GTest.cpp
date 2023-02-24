@@ -240,12 +240,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_Zone) {
   ASSERT_NO_THROW(reverseTranslator.translateWorkspace(inWorkspace));
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
 
-  ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::ThermalZone>().size());
-  openstudio::model::ThermalZone zone = model.getModelObjects<openstudio::model::ThermalZone>()[0];
-  ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::Space>().size());
-  openstudio::model::Space space = model.getModelObjects<openstudio::model::Space>()[0];
-  ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::Lights>().size());
-  openstudio::model::Lights lights = model.getModelObjects<openstudio::model::Lights>()[0];
+  ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::ThermalZone>().size());
+  openstudio::model::ThermalZone zone = model.getConcreteModelObjects<openstudio::model::ThermalZone>()[0];
+  ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::Space>().size());
+  openstudio::model::Space space = model.getConcreteModelObjects<openstudio::model::Space>()[0];
+  ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::Lights>().size());
+  openstudio::model::Lights lights = model.getConcreteModelObjects<openstudio::model::Lights>()[0];
   ASSERT_TRUE(lights.space());
   EXPECT_TRUE(space.handle() == lights.space()->handle());
   ASSERT_TRUE(lights.space()->thermalZone());
@@ -282,8 +282,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateScheduleCompact) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::ScheduleCompact>().size());
-  openstudio::model::ScheduleCompact scheduleCompact = model.getModelObjects<openstudio::model::ScheduleCompact>()[0];
+  ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::ScheduleCompact>().size());
+  openstudio::model::ScheduleCompact scheduleCompact = model.getConcreteModelObjects<openstudio::model::ScheduleCompact>()[0];
 
   EXPECT_EQ(unsigned(20), epScheduleCompact.numFields());
   EXPECT_EQ(unsigned(21), scheduleCompact.numFields());  // has handle field
@@ -324,8 +324,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateMasselessOpaqueMaterial
   ASSERT_NO_THROW(trans.translateWorkspace(ws));
   Model model = trans.translateWorkspace(ws);
 
-  ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::MasslessOpaqueMaterial>().size());
-  openstudio::model::MasslessOpaqueMaterial mat = model.getModelObjects<openstudio::model::MasslessOpaqueMaterial>()[0];
+  ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::MasslessOpaqueMaterial>().size());
+  openstudio::model::MasslessOpaqueMaterial mat = model.getConcreteModelObjects<openstudio::model::MasslessOpaqueMaterial>()[0];
 
   EXPECT_EQ("Rough", mat.roughness());
   EXPECT_EQ(3.05, mat.thermalResistance());
@@ -354,8 +354,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateStandardOpaqueMaterial)
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::StandardOpaqueMaterial>().size());
-  openstudio::model::StandardOpaqueMaterial mat = model.getModelObjects<openstudio::model::StandardOpaqueMaterial>()[0];
+  ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::StandardOpaqueMaterial>().size());
+  openstudio::model::StandardOpaqueMaterial mat = model.getConcreteModelObjects<openstudio::model::StandardOpaqueMaterial>()[0];
 
   EXPECT_EQ(unsigned(10), mat.numFields());
 
@@ -382,7 +382,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateConstruction) {
   Model model = trans.translateWorkspace(inWorkspace);
 
   boost::optional<openstudio::model::Construction> construction =
-    model.getModelObjectByName<openstudio::model::Construction>("Metal Building_NR_Roof");
+    model.getConcreteModelObjectByName<openstudio::model::Construction>("Metal Building_NR_Roof");
 
   ASSERT_TRUE(construction);
 
@@ -408,7 +408,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateSite) {
 
   ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::Site>());
 
-  openstudio::model::Site site = model.getUniqueModelObject<openstudio::model::Site>();
+  auto site = model.getUniqueModelObject<openstudio::model::Site>();
 
   EXPECT_EQ(7u, site.numFields());  // terrain moves from Building to Site in OS
   EXPECT_EQ("Test Site", *(site.name()));
@@ -425,7 +425,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_SmallOffice) {
   ReverseTranslator rt;
   Model model = rt.translateWorkspace(ws);
 
-  OptionalSubSurface osub = model.getModelObjectByName<SubSurface>("Perimeter_ZN_1_wall_south_door");
+  OptionalSubSurface osub = model.getConcreteModelObjectByName<SubSurface>("Perimeter_ZN_1_wall_south_door");
   ASSERT_TRUE(osub);
   EXPECT_EQ("GlassDoor", osub->subSurfaceType());
 }
@@ -437,7 +437,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_LargeOffice) {
   Model model = rt.translateWorkspace(ws);
 
   // surface named "Core_top_ZN_5_Floor" should have "Adiabatic" string for outsideBoundaryCondition
-  OptionalSurface osurf = model.getModelObjectByName<Surface>("Core_top_ZN_5_Floor");
+  OptionalSurface osurf = model.getConcreteModelObjectByName<Surface>("Core_top_ZN_5_Floor");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Adiabatic", osurf->outsideBoundaryCondition());
 }
@@ -449,7 +449,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_ZoneBoundaryCondition) {
   Model model = rt.translateWorkspace(ws);
 
   // surface named "1AF737" should have "surface" string for OutsideBoundaryCondition
-  OptionalSurface osurf_a = model.getModelObjectByName<Surface>("1AF737");
+  OptionalSurface osurf_a = model.getConcreteModelObjectByName<Surface>("1AF737");
   ASSERT_TRUE(osurf_a);
   EXPECT_EQ("Surface", osurf_a->outsideBoundaryCondition());
   // and the parent of the "outsideBoundaryObject" should be space named "8B02A8"
@@ -485,7 +485,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleDayInterval) {
   EXPECT_TRUE(translator.errors().empty());
   // There are warnings related to ws being a partial model.
   EXPECT_TRUE(translator.untranslatedIdfObjects().empty());
-  ScheduleDayVector daySchedules = model.getModelObjects<ScheduleDay>();
+  ScheduleDayVector daySchedules = model.getConcreteModelObjects<ScheduleDay>();
   ASSERT_EQ(1u, daySchedules.size());
   ScheduleDay daySchedule = daySchedules[0];
   DoubleVector values = daySchedule.values();
@@ -510,7 +510,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OtherEquipment) {
   ReverseTranslator trans;
   Model model = trans.translateWorkspace(ws);
 
-  OtherEquipmentVector otherEquipments = model.getModelObjects<OtherEquipment>();
+  OtherEquipmentVector otherEquipments = model.getConcreteModelObjects<OtherEquipment>();
   ASSERT_EQ(1u, otherEquipments.size());
   EXPECT_EQ(otherEquipments[0].name().get(), "Other Eq 1");
   EXPECT_EQ(otherEquipments[0].endUseSubcategory(), "Category A");
@@ -670,14 +670,14 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<FoundationKiva> foundationKivas = model.getModelObjects<FoundationKiva>();
+  std::vector<FoundationKiva> foundationKivas = model.getConcreteModelObjects<FoundationKiva>();
   ASSERT_EQ(1u, foundationKivas.size());
   FoundationKiva foundationKiva = foundationKivas[0];
   EXPECT_EQ(1, foundationKiva.numberofCustomBlocks());
   std::vector<CustomBlock> customBlocks = foundationKiva.customBlocks();
   EXPECT_EQ(customBlocks[0].material().name().get(), "Material 1");
 
-  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  std::vector<Surface> surfaces = model.getConcreteModelObjects<Surface>();
   ASSERT_EQ(1u, surfaces.size());
   Surface surface = surfaces[0];
   EXPECT_EQ(surface.adjacentFoundation().get().name().get(), "Foundation Kiva 1");
@@ -818,11 +818,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
+  std::vector<ThermalZone> thermalZones = model.getConcreteModelObjects<ThermalZone>();
   ASSERT_EQ(1u, thermalZones.size());
   ThermalZone thermalZone = thermalZones[0];
   EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1");
-  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  std::vector<Surface> surfaces = model.getConcreteModelObjects<Surface>();
   EXPECT_EQ(2u, surfaces.size());
   std::sort(surfaces.begin(), surfaces.end(), openstudio::WorkspaceObjectNameLess());
   EXPECT_EQ(surfaces[0].name().get(), "Surface 1");
@@ -894,11 +894,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
+  std::vector<ThermalZone> thermalZones = model.getConcreteModelObjects<ThermalZone>();
   ASSERT_EQ(1u, thermalZones.size());
   ThermalZone thermalZone = thermalZones[0];
   EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1");
-  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  std::vector<Surface> surfaces = model.getConcreteModelObjects<Surface>();
   ASSERT_EQ(1u, surfaces.size());
   Surface surface = surfaces[0];
   EXPECT_EQ(surface.name().get(), "Surface 1");
@@ -928,9 +928,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
   ASSERT_TRUE(_i_zoneList1);
   EXPECT_TRUE(_i_zoneList1->setName("ZoneList1 for Zone1 and Zone2"));
 
-  WorkspaceExtensibleGroup eg1 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto eg1 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(eg1.setPointer(ZoneListExtensibleFields::ZoneName, _i_zone1->handle()));
-  WorkspaceExtensibleGroup eg2 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto eg2 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(eg2.setPointer(ZoneListExtensibleFields::ZoneName, _i_zone2->handle()));
 
   // To avoid other warnings, we add required objects
@@ -952,21 +952,25 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     EXPECT_TRUE(reverseTranslator.errors().empty());
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-    std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
-    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
+    std::vector<openstudio::model::ThermalZone> zones = model.getConcreteModelObjects<openstudio::model::ThermalZone>();
+    ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::ThermalZone>().size());
+    boost::optional<openstudio::model::ThermalZone> _zone1 =
+      model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone2 =
+      model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
-    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::Space>().size());
+    boost::optional<openstudio::model::Space> _space1 =
+      model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
     ASSERT_TRUE(_space1);
-    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    boost::optional<openstudio::model::Space> _space2 =
+      model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
     ASSERT_TRUE(_space2);
 
-    ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::SpaceType>().size());
-    openstudio::model::SpaceType spaceType1 = model.getModelObjects<openstudio::model::SpaceType>()[0];
+    ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::SpaceType>().size());
+    openstudio::model::SpaceType spaceType1 = model.getConcreteModelObjects<openstudio::model::SpaceType>()[0];
     EXPECT_EQ(spaceType1.nameString(), _i_zoneList1->nameString());
 
     ASSERT_TRUE(_space1->thermalZone());
@@ -985,7 +989,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
   ASSERT_TRUE(_i_zoneList2);
   EXPECT_TRUE(_i_zoneList2->setName("ZoneList2 for Zone2"));
 
-  WorkspaceExtensibleGroup eg3 = _i_zoneList2->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto eg3 = _i_zoneList2->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(eg3.setPointer(ZoneListExtensibleFields::ZoneName, _i_zone2->handle()));
 
   // Translate again
@@ -997,23 +1001,29 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     EXPECT_EQ(1u, reverseTranslator.warnings().size());
     EXPECT_EQ("Overriding previously assigned SpaceType for Space 'Zone2 Space'", reverseTranslator.warnings()[0].logMessage());
 
-    std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
-    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
+    std::vector<openstudio::model::ThermalZone> zones = model.getConcreteModelObjects<openstudio::model::ThermalZone>();
+    ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::ThermalZone>().size());
+    boost::optional<openstudio::model::ThermalZone> _zone1 =
+      model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone2 =
+      model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
-    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::Space>().size());
+    boost::optional<openstudio::model::Space> _space1 =
+      model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
     ASSERT_TRUE(_space1);
-    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    boost::optional<openstudio::model::Space> _space2 =
+      model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
     ASSERT_TRUE(_space2);
 
-    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::SpaceType>().size());
-    boost::optional<openstudio::model::SpaceType> _spaceType1 = model.getModelObjectByName<openstudio::model::SpaceType>(_i_zoneList1->nameString());
+    ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::SpaceType>().size());
+    boost::optional<openstudio::model::SpaceType> _spaceType1 =
+      model.getConcreteModelObjectByName<openstudio::model::SpaceType>(_i_zoneList1->nameString());
     ASSERT_TRUE(_spaceType1);
-    boost::optional<openstudio::model::SpaceType> _spaceType2 = model.getModelObjectByName<openstudio::model::SpaceType>(_i_zoneList2->nameString());
+    boost::optional<openstudio::model::SpaceType> _spaceType2 =
+      model.getConcreteModelObjectByName<openstudio::model::SpaceType>(_i_zoneList2->nameString());
     ASSERT_TRUE(_spaceType2);
 
     ASSERT_TRUE(_space1->thermalZone());
@@ -1044,7 +1054,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<StandardGlazing> standardGlazings = model.getModelObjects<StandardGlazing>();
+  std::vector<StandardGlazing> standardGlazings = model.getConcreteModelObjects<StandardGlazing>();
   ASSERT_EQ(1u, standardGlazings.size());
   StandardGlazing standardGlazing = standardGlazings[0];
   EXPECT_EQ(standardGlazing.name().get(), "CLEAR 6MM");
@@ -1063,7 +1073,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_MaterialPropertyGlazingSpectralData)
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getModelObjects<MaterialPropertyGlazingSpectralData>();
+  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getConcreteModelObjects<MaterialPropertyGlazingSpectralData>();
   ASSERT_EQ(1u, spectralDatas.size());
 }
 
@@ -1086,11 +1096,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing_2) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<StandardGlazing> standardGlazings = model.getModelObjects<StandardGlazing>();
+  std::vector<StandardGlazing> standardGlazings = model.getConcreteModelObjects<StandardGlazing>();
   ASSERT_EQ(1u, standardGlazings.size());
   StandardGlazing standardGlazing = standardGlazings[0];
 
-  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getModelObjects<MaterialPropertyGlazingSpectralData>();
+  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getConcreteModelObjects<MaterialPropertyGlazingSpectralData>();
   ASSERT_EQ(1u, spectralDatas.size());
   MaterialPropertyGlazingSpectralData spectralData = spectralDatas[0];
 
@@ -1132,7 +1142,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<DaylightingControl> daylightingControls = model.getModelObjects<DaylightingControl>();
+  std::vector<DaylightingControl> daylightingControls = model.getConcreteModelObjects<DaylightingControl>();
   ASSERT_EQ(1u, daylightingControls.size());
   DaylightingControl daylightingControl = daylightingControls[0];
   EXPECT_EQ(daylightingControl.name().get(), "Reference Point 1");
@@ -1207,12 +1217,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<SurfaceControlMovableInsulation> mis = model.getModelObjects<SurfaceControlMovableInsulation>();
+  std::vector<SurfaceControlMovableInsulation> mis = model.getConcreteModelObjects<SurfaceControlMovableInsulation>();
   ASSERT_EQ(1u, mis.size());
   SurfaceControlMovableInsulation mi = mis[0];
   EXPECT_EQ("Inside", mi.insulationType());
 
-  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  std::vector<Surface> surfaces = model.getConcreteModelObjects<Surface>();
   ASSERT_EQ(1u, surfaces.size());
   Surface surface = surfaces[0];
   EXPECT_EQ(mi.surface().name().get(), surface.name().get());
@@ -1382,24 +1392,24 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<CurveBiquadratic> biquadratics = model.getModelObjects<CurveBiquadratic>();
+  std::vector<CurveBiquadratic> biquadratics = model.getConcreteModelObjects<CurveBiquadratic>();
   ASSERT_EQ(3u, biquadratics.size());
 
-  std::vector<CurveQuadratic> quadratics = model.getModelObjects<CurveQuadratic>();
+  std::vector<CurveQuadratic> quadratics = model.getConcreteModelObjects<CurveQuadratic>();
   ASSERT_EQ(3u, quadratics.size());
 
-  std::vector<CoilCoolingDXCurveFitSpeed> speeds = model.getModelObjects<CoilCoolingDXCurveFitSpeed>();
+  std::vector<CoilCoolingDXCurveFitSpeed> speeds = model.getConcreteModelObjects<CoilCoolingDXCurveFitSpeed>();
   ASSERT_EQ(1u, speeds.size());
   CoilCoolingDXCurveFitSpeed speed = speeds[0];
   EXPECT_EQ(1u, speed.coilCoolingDXCurveFitOperatingModes().size());
 
-  std::vector<CoilCoolingDXCurveFitOperatingMode> operatingModes = model.getModelObjects<CoilCoolingDXCurveFitOperatingMode>();
+  std::vector<CoilCoolingDXCurveFitOperatingMode> operatingModes = model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>();
   ASSERT_EQ(1u, operatingModes.size());
   CoilCoolingDXCurveFitOperatingMode operatingMode = operatingModes[0];
   ASSERT_EQ(1u, operatingMode.speeds().size());
   EXPECT_EQ(1u, operatingMode.coilCoolingDXCurveFitPerformances().size());
 
-  std::vector<CoilCoolingDXCurveFitPerformance> performances = model.getModelObjects<CoilCoolingDXCurveFitPerformance>();
+  std::vector<CoilCoolingDXCurveFitPerformance> performances = model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>();
   ASSERT_EQ(1u, performances.size());
   CoilCoolingDXCurveFitPerformance performance = performances[0];
   EXPECT_EQ(operatingMode, performance.baseOperatingMode());
@@ -1407,7 +1417,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
   EXPECT_FALSE(performance.alternativeOperatingMode2());
   EXPECT_EQ(1u, performance.coilCoolingDXs().size());
 
-  std::vector<CoilCoolingDX> dxs = model.getModelObjects<CoilCoolingDX>();
+  std::vector<CoilCoolingDX> dxs = model.getConcreteModelObjects<CoilCoolingDX>();
   ASSERT_EQ(1u, dxs.size());
   CoilCoolingDX dx = dxs[0];
   EXPECT_EQ(performance, dx.performanceObject());

@@ -125,7 +125,7 @@ namespace model {
   }
 
   IddObjectType ExternalInterfaceFunctionalMockupUnitExportFromVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_From_Variable);
+    return {IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_From_Variable};
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitExportFromVariable::outputVariableIndexKeyName() const {

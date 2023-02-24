@@ -55,7 +55,7 @@ TEST_F(ModelFixture, EMSOutput_EMSOutput) {
 
   // add Output:EnergyManagementSystem
 
-  OutputEnergyManagementSystem var = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto var = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   bool defaulted = var.isActuatorAvailabilityDictionaryReportingDefaulted();
   EXPECT_EQ(true, defaulted);
   defaulted = var.isInternalVariableAvailabilityDictionaryReportingDefaulted();

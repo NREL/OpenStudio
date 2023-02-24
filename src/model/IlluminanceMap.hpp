@@ -61,7 +61,12 @@ namespace model {
 
     explicit IlluminanceMap(const Model& model);
 
-    virtual ~IlluminanceMap() {}
+    virtual ~IlluminanceMap() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    IlluminanceMap(const IlluminanceMap& other) = default;
+    IlluminanceMap(IlluminanceMap&& other) = default;
+    IlluminanceMap& operator=(const IlluminanceMap&) = default;
+    IlluminanceMap& operator=(IlluminanceMap&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -165,7 +170,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::IlluminanceMap_Impl ImplType;
+    using ImplType = detail::IlluminanceMap_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -178,10 +183,10 @@ namespace model {
   };
 
   /** \relates IlluminanceMap*/
-  typedef boost::optional<IlluminanceMap> OptionalIlluminanceMap;
+  using OptionalIlluminanceMap = boost::optional<IlluminanceMap>;
 
   /** \relates IlluminanceMap*/
-  typedef std::vector<IlluminanceMap> IlluminanceMapVector;
+  using IlluminanceMapVector = std::vector<IlluminanceMap>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -51,7 +51,12 @@ namespace model {
    public:
     explicit WaterUseEquipmentDefinition(const Model& model);
 
-    virtual ~WaterUseEquipmentDefinition() {}
+    virtual ~WaterUseEquipmentDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterUseEquipmentDefinition(const WaterUseEquipmentDefinition& other) = default;
+    WaterUseEquipmentDefinition(WaterUseEquipmentDefinition&& other) = default;
+    WaterUseEquipmentDefinition& operator=(const WaterUseEquipmentDefinition&) = default;
+    WaterUseEquipmentDefinition& operator=(WaterUseEquipmentDefinition&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -75,7 +80,7 @@ namespace model {
     void resetLatentFractionSchedule();
 
    protected:
-    typedef detail::WaterUseEquipmentDefinition_Impl ImplType;
+    using ImplType = detail::WaterUseEquipmentDefinition_Impl;
 
     explicit WaterUseEquipmentDefinition(std::shared_ptr<detail::WaterUseEquipmentDefinition_Impl> impl);
 
@@ -88,9 +93,9 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.WaterUseEquipmentDefinition");
   };
 
-  typedef boost::optional<WaterUseEquipmentDefinition> OptionalWaterUseEquipmentDefinition;
+  using OptionalWaterUseEquipmentDefinition = boost::optional<WaterUseEquipmentDefinition>;
 
-  typedef std::vector<WaterUseEquipmentDefinition> WaterUseEquipmentDefinitionVector;
+  using WaterUseEquipmentDefinitionVector = std::vector<WaterUseEquipmentDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

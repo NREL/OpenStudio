@@ -49,7 +49,12 @@ namespace model {
   class MODEL_API ExteriorLoadInstance : public ModelObject
   {
    public:
-    virtual ~ExteriorLoadInstance() {}
+    virtual ~ExteriorLoadInstance() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorLoadInstance(const ExteriorLoadInstance& other) = default;
+    ExteriorLoadInstance(ExteriorLoadInstance&& other) = default;
+    ExteriorLoadInstance& operator=(const ExteriorLoadInstance&) = default;
+    ExteriorLoadInstance& operator=(ExteriorLoadInstance&&) = default;
 
     /** Returns the definition of this instance. **/
     ExteriorLoadDefinition definition() const;
@@ -81,7 +86,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::ExteriorLoadInstance_Impl ImplType;
+    using ImplType = detail::ExteriorLoadInstance_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -96,10 +101,10 @@ namespace model {
   };
 
   /** \relates ExteriorLoadInstance */
-  typedef boost::optional<ExteriorLoadInstance> OptionalExteriorLoadInstance;
+  using OptionalExteriorLoadInstance = boost::optional<ExteriorLoadInstance>;
 
   /** \relates ExteriorLoadInstance */
-  typedef std::vector<ExteriorLoadInstance> ExteriorLoadInstanceVector;
+  using ExteriorLoadInstanceVector = std::vector<ExteriorLoadInstance>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -80,7 +80,7 @@ TEST_F(ModelFixture, EvaporativeCoolerDirectResearchSpecial_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  EvaporativeCoolerDirectResearchSpecial testObjectClone = testObject.clone(m).cast<EvaporativeCoolerDirectResearchSpecial>();
+  auto testObjectClone = testObject.clone(m).cast<EvaporativeCoolerDirectResearchSpecial>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

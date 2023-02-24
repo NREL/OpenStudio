@@ -84,7 +84,7 @@ namespace model {
     }
 
     ModelObject ModelObjectList_Impl::clone(Model model) const {
-      ModelObjectList modelObjectListClone = ModelObject_Impl::clone(model).cast<ModelObjectList>();
+      auto modelObjectListClone = ModelObject_Impl::clone(model).cast<ModelObjectList>();
 
       std::vector<ModelObject> modelObjects = this->modelObjects();
 
@@ -96,7 +96,7 @@ namespace model {
         }
       }
 
-      return modelObjectListClone;
+      return std::move(modelObjectListClone);
     }
 
     std::vector<ModelObject> ModelObjectList_Impl::modelObjects() const {
@@ -123,7 +123,7 @@ namespace model {
 
       // DLM: should this class prevent duplicates in the list?
 
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
       bool ok = eg.setPointer(OS_ModelObjectListExtensibleFields::ModelObject, modelObject.handle());
 
@@ -191,7 +191,7 @@ namespace model {
   }
 
   IddObjectType ModelObjectList::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ModelObjectList);
+    return {IddObjectType::OS_ModelObjectList};
   }
 
   std::vector<IdfObject> ModelObjectList::remove() {

@@ -68,7 +68,7 @@ namespace energyplus {
         LOG(Error, workspaceObject.nameString() + ": ActuatedComponentUniqueName is not unique.  More than 1 object with that name.");
         return boost::none;
       }
-      if (wsObjects.size() == 0) {
+      if (wsObjects.empty()) {
         LOG(Error, workspaceObject.nameString() + ": ActuatedComponentUniqueName not found.");
         return boost::none;
       } else {

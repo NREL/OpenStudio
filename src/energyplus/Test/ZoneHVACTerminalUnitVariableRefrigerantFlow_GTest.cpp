@@ -455,7 +455,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
 
     // Should have one branch only
     ASSERT_EQ(1u, idf_brlist.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
     WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
 
     // There should be two pieces of equipment on the branch
@@ -464,7 +464,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
     // 1: the AirLoopHVACOutdoorAirSystem
     ASSERT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_OutdoorAirSystem).size());
     {
-      WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+      auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
       EXPECT_EQ("AirLoopHVAC:OutdoorAirSystem", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
       EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), outdoorAirSystem.nameString());
@@ -477,12 +477,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       ASSERT_EQ(3u, idf_oa_eq_list_->extensibleGroups().size());
 
       {
-        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        auto w_comp_eg = idf_oa_eq_list_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ("OutdoorAir:Mixer", w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
       }
 
       {
-        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+        auto w_comp_eg = idf_oa_eq_list_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
                   w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
         auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
@@ -498,7 +498,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       }
 
       {
-        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
+        auto w_comp_eg = idf_oa_eq_list_->extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
                   w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
         auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
@@ -514,7 +514,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
 
     // 2: The VRF TU
     {
-      WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+      auto w_eg2 = idf_branch.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
 
       EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
       EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), vrf.nameString());
@@ -592,7 +592,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
 
     // Should have one branch only
     ASSERT_EQ(1u, idf_brlist.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
     WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
 
     // There should be: OA Sys, VRF TU, fan
@@ -601,7 +601,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
     // 1: the AirLoopHVACOutdoorAirSystem
     ASSERT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_OutdoorAirSystem).size());
     {
-      WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+      auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
       EXPECT_EQ("AirLoopHVAC:OutdoorAirSystem", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
       EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), outdoorAirSystem.nameString());
@@ -614,12 +614,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       ASSERT_EQ(3u, idf_oa_eq_list_->extensibleGroups().size());
 
       {
-        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        auto w_comp_eg = idf_oa_eq_list_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ("OutdoorAir:Mixer", w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
       }
 
       {
-        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+        auto w_comp_eg = idf_oa_eq_list_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
                   w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
         auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
@@ -633,7 +633,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       }
 
       {
-        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
+        auto w_comp_eg = idf_oa_eq_list_->extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
                   w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
         auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
@@ -649,7 +649,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
 
     // 2: The VRF TU
     {
-      WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+      auto w_eg2 = idf_branch.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
 
       EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
       EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), vrf.nameString());

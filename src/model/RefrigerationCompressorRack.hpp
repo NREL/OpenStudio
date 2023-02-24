@@ -59,7 +59,12 @@ namespace model {
 
     explicit RefrigerationCompressorRack(const Model& model);
 
-    virtual ~RefrigerationCompressorRack() {}
+    virtual ~RefrigerationCompressorRack() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCompressorRack(const RefrigerationCompressorRack& other) = default;
+    RefrigerationCompressorRack(RefrigerationCompressorRack&& other) = default;
+    RefrigerationCompressorRack& operator=(const RefrigerationCompressorRack&) = default;
+    RefrigerationCompressorRack& operator=(RefrigerationCompressorRack&&) = default;
 
     //@}
 
@@ -132,7 +137,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setHeatRejectionLocation(std::string heatRejectionLocation);
+    bool setHeatRejectionLocation(const std::string& heatRejectionLocation);
 
     bool setDesignCompressorRackCOP(double designCompressorRackCOP);
 
@@ -144,9 +149,9 @@ namespace model {
 
     void resetCondenserFanPowerFunctionofTemperatureCurve();
 
-    bool setCondenserType(std::string condenserType);
+    bool setCondenserType(const std::string& condenserType);
 
-    bool setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType);
+    bool setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType);
 
     bool setWaterCooledCondenserOutletTemperatureSchedule(Schedule& schedule);
 
@@ -190,7 +195,7 @@ namespace model {
 
     // void resetCondenserAirInletNodeName();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -225,7 +230,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCompressorRack_Impl ImplType;
+    using ImplType = detail::RefrigerationCompressorRack_Impl;
 
     explicit RefrigerationCompressorRack(std::shared_ptr<detail::RefrigerationCompressorRack_Impl> impl);
 
@@ -239,10 +244,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCompressorRack*/
-  typedef boost::optional<RefrigerationCompressorRack> OptionalRefrigerationCompressorRack;
+  using OptionalRefrigerationCompressorRack = boost::optional<RefrigerationCompressorRack>;
 
   /** \relates RefrigerationCompressorRack*/
-  typedef std::vector<RefrigerationCompressorRack> RefrigerationCompressorRackVector;
+  using RefrigerationCompressorRackVector = std::vector<RefrigerationCompressorRack>;
 
 }  // namespace model
 }  // namespace openstudio

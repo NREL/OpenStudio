@@ -314,7 +314,7 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone_PlantLoops) {
   ASSERT_TRUE(central_hp.addToTertiaryNode(node3));
 
   //Clone into the same model
-  CentralHeatPumpSystem central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+  auto central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
   // Make sure it isn't connected to the same plant loop
   ASSERT_FALSE(central_hpClone.coolingPlantLoop());
   ASSERT_FALSE(central_hpClone.sourcePlantLoop());
@@ -322,7 +322,7 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone_PlantLoops) {
 
   //Clone into another model
   Model model2;
-  CentralHeatPumpSystem central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
+  auto central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
   // Make sure it isn't connected to any plant loops
   ASSERT_FALSE(central_hpClone2.coolingPlantLoop());
   ASSERT_FALSE(central_hpClone2.sourcePlantLoop());
@@ -335,13 +335,13 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone) {
   Model model;
   CentralHeatPumpSystem central_hp(model);
 
-  ASSERT_EQ(1u, model.getModelObjects<CentralHeatPumpSystem>().size());
-  ASSERT_EQ(0u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<CentralHeatPumpSystem>().size());
+  ASSERT_EQ(0u, model.getConcreteModelObjects<CentralHeatPumpSystemModule>().size());
 
   //Clone into the same model
-  CentralHeatPumpSystem central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
-  ASSERT_EQ(2u, model.getModelObjects<CentralHeatPumpSystem>().size());
-  ASSERT_EQ(0u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
+  auto central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+  ASSERT_EQ(2u, model.getConcreteModelObjects<CentralHeatPumpSystem>().size());
+  ASSERT_EQ(0u, model.getConcreteModelObjects<CentralHeatPumpSystemModule>().size());
 
   // Add a CentralHeatPumpSystemModule and clone again
   // Clear the modules first, just in case
@@ -349,8 +349,8 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone) {
 
   CentralHeatPumpSystemModule central_hp_module(model);
   // This should have create one module, and ChillerHeater
-  ASSERT_EQ(1u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
-  ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<CentralHeatPumpSystemModule>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
 
   ASSERT_TRUE(central_hp.addModule(central_hp_module));
   ASSERT_EQ(1u, central_hp.modules().size());
@@ -359,13 +359,13 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone) {
   ASSERT_EQ(0u, central_hpClone.modules().size());
 
   // Clone in same model and verify that the CentralHeatPumpSystemModule is also cloned
-  CentralHeatPumpSystem central_hpClone1 = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+  auto central_hpClone1 = central_hp.clone(model).cast<CentralHeatPumpSystem>();
   // There should now be 3 CentralHeatPumpSystems
-  ASSERT_EQ(3u, model.getModelObjects<CentralHeatPumpSystem>().size());
+  ASSERT_EQ(3u, model.getConcreteModelObjects<CentralHeatPumpSystem>().size());
   // The CentralHeatPumpModule should have been cloned
-  ASSERT_EQ(2u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
+  ASSERT_EQ(2u, model.getConcreteModelObjects<CentralHeatPumpSystemModule>().size());
   // The chillerHeater shouldn't have, it should point to the same
-  ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
 
   ASSERT_EQ(1u, central_hpClone1.modules().size());
   // Make sure it's not just pointing to the same one
@@ -379,11 +379,11 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone) {
 
   //Clone into another model
   Model model2;
-  CentralHeatPumpSystem central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
+  auto central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
   // Check that the Module and ChillerHeater are carried with
-  ASSERT_EQ(1u, model2.getModelObjects<CentralHeatPumpSystem>().size());
-  ASSERT_EQ(1u, model2.getModelObjects<CentralHeatPumpSystemModule>().size());
-  ASSERT_EQ(1u, model2.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+  ASSERT_EQ(1u, model2.getConcreteModelObjects<CentralHeatPumpSystem>().size());
+  ASSERT_EQ(1u, model2.getConcreteModelObjects<CentralHeatPumpSystemModule>().size());
+  ASSERT_EQ(1u, model2.getConcreteModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   ASSERT_EQ(1u, central_hpClone2.modules().size());
 
   CentralHeatPumpSystemModule central_hp_moduleClone2 = central_hpClone2.modules()[0];

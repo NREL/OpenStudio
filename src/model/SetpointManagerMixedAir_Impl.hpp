@@ -48,7 +48,7 @@ namespace model {
 
       SetpointManagerMixedAir_Impl(const SetpointManagerMixedAir_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~SetpointManagerMixedAir_Impl();
+      virtual ~SetpointManagerMixedAir_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

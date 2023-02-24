@@ -68,7 +68,12 @@ namespace model {
 
     CoilHeatingWater(const Model& model);
 
-    virtual ~CoilHeatingWater() {}
+    virtual ~CoilHeatingWater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingWater(const CoilHeatingWater& other) = default;
+    CoilHeatingWater(CoilHeatingWater&& other) = default;
+    CoilHeatingWater& operator=(const CoilHeatingWater&) = default;
+    CoilHeatingWater& operator=(CoilHeatingWater&&) = default;
 
     //@}
 
@@ -119,7 +124,7 @@ namespace model {
     /** Sets the value of the PerformanceInputMethod field.
    *  Options are UFactorTimesAreaAndDesignWaterFlowRate and NominalCapacity.
    */
-    bool setPerformanceInputMethod(std::string value);
+    bool setPerformanceInputMethod(const std::string& value);
 
     /** Returns the value of the RatedCapacity field. **/
     boost::optional<double> ratedCapacity();
@@ -191,7 +196,7 @@ namespace model {
     friend class openstudio::detail::IdfObject_Impl;
 
     /// @cond
-    typedef detail::CoilHeatingWater_Impl ImplType;
+    using ImplType = detail::CoilHeatingWater_Impl;
 
     explicit CoilHeatingWater(std::shared_ptr<detail::CoilHeatingWater_Impl> impl);
 
@@ -203,7 +208,7 @@ namespace model {
     /// @endcond
   };  // detail
 
-  typedef boost::optional<CoilHeatingWater> OptionalCoilHeatingWater;
+  using OptionalCoilHeatingWater = boost::optional<CoilHeatingWater>;
 
 }  // namespace model
 }  // namespace openstudio

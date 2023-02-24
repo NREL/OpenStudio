@@ -54,8 +54,8 @@ namespace program_options {
     return boost::program_options::wvalue<string_vector>(vec)->multitoken();
   }
 #else
-  typedef std::string string;
-  typedef std::vector<std::string> string_vector;
+  using string = std::string;
+  using string_vector = std::vector<std::string>;
 
   boost::program_options::typed_value<string, char>* value(string* str) {
     return boost::program_options::value<string>(str);

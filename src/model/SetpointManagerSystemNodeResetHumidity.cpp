@@ -81,7 +81,7 @@ namespace model {
     ModelObject SetpointManagerSystemNodeResetHumidity_Impl::clone(Model model) const {
       auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSystemNodeResetHumidity>();
       clonedObject.resetReferenceNode();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerSystemNodeResetHumidity_Impl::controlVariable() const {

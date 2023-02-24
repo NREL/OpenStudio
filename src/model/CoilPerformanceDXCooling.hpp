@@ -59,7 +59,12 @@ namespace model {
                                       const Curve& coolingCapacityFunctionofFlowFraction, const Curve& energyInputRatioFunctionofTemperature,
                                       const Curve& energyInputRatioFunctionofFlowFraction, const Curve& partLoadFractionCorrelation);
 
-    virtual ~CoilPerformanceDXCooling() {}
+    virtual ~CoilPerformanceDXCooling() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilPerformanceDXCooling(const CoilPerformanceDXCooling& other) = default;
+    CoilPerformanceDXCooling(CoilPerformanceDXCooling&& other) = default;
+    CoilPerformanceDXCooling& operator=(const CoilPerformanceDXCooling&) = default;
+    CoilPerformanceDXCooling& operator=(CoilPerformanceDXCooling&&) = default;
 
     //@}
 
@@ -165,7 +170,7 @@ namespace model {
 
     void resetCondenserAirInletNode();
 
-    bool setCondenserType(std::string condenserType);
+    bool setCondenserType(const std::string& condenserType);
 
     bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
 
@@ -206,7 +211,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilPerformanceDXCooling_Impl ImplType;
+    using ImplType = detail::CoilPerformanceDXCooling_Impl;
 
     explicit CoilPerformanceDXCooling(std::shared_ptr<detail::CoilPerformanceDXCooling_Impl> impl);
 
@@ -220,10 +225,10 @@ namespace model {
   };
 
   /** \relates CoilPerformanceDXCooling*/
-  typedef boost::optional<CoilPerformanceDXCooling> OptionalCoilPerformanceDXCooling;
+  using OptionalCoilPerformanceDXCooling = boost::optional<CoilPerformanceDXCooling>;
 
   /** \relates CoilPerformanceDXCooling*/
-  typedef std::vector<CoilPerformanceDXCooling> CoilPerformanceDXCoolingVector;
+  using CoilPerformanceDXCoolingVector = std::vector<CoilPerformanceDXCooling>;
 
 }  // namespace model
 }  // namespace openstudio

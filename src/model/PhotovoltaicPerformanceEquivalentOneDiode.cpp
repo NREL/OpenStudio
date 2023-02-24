@@ -479,7 +479,7 @@ namespace model {
   }
 
   IddObjectType PhotovoltaicPerformanceEquivalentOneDiode::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
+    return {IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode};
   }
 
   std::vector<std::string> PhotovoltaicPerformanceEquivalentOneDiode::celltypeValues() {

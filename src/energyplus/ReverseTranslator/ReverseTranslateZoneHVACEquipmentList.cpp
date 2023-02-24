@@ -58,7 +58,7 @@ namespace energyplus {
     boost::optional<openstudio::model::ThermalZone> thermalZone;
 
     std::vector<WorkspaceObject> zoneHVACEquipmentConnections = workspaceObject.getSources(IddObjectType::ZoneHVAC_EquipmentConnections);
-    if (zoneHVACEquipmentConnections.size() == 0) {
+    if (zoneHVACEquipmentConnections.empty()) {
       LOG(Error, "No ZoneHVAC:EquipmentConnections object associated with a zone. Check that IDF file is correct.");
       return boost::none;
     } else if (zoneHVACEquipmentConnections.size() > 1) {
@@ -68,7 +68,7 @@ namespace energyplus {
 
     for (const auto& zoneHVACEquipmentConnection : zoneHVACEquipmentConnections) {
       if (boost::optional<std::string> name = zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName)) {
-        boost::optional<model::Space> space = m_model.getModelObjectByName<model::Space>(name.get());
+        boost::optional<model::Space> space = m_model.getConcreteModelObjectByName<model::Space>(name.get());
 
         if (space) {
           thermalZone = space->thermalZone();

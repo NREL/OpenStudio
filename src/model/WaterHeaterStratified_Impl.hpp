@@ -57,7 +57,7 @@ namespace model {
 
       WaterHeaterStratified_Impl(const WaterHeaterStratified_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WaterHeaterStratified_Impl() {}
+      virtual ~WaterHeaterStratified_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -253,7 +253,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       bool setTankVolume(boost::optional<double> tankVolume);
 
@@ -263,7 +263,7 @@ namespace model {
 
       void autosizeTankHeight();
 
-      bool setTankShape(std::string tankShape);
+      bool setTankShape(const std::string& tankShape);
 
       bool setTankPerimeter(boost::optional<double> tankPerimeter);
 
@@ -271,7 +271,7 @@ namespace model {
 
       bool setMaximumTemperatureLimit(double maximumTemperatureLimit);
 
-      bool setHeaterPriorityControl(std::string heaterPriorityControl);
+      bool setHeaterPriorityControl(const std::string& heaterPriorityControl);
 
       bool setHeater1SetpointTemperatureSchedule(Schedule& schedule);
 
@@ -291,13 +291,13 @@ namespace model {
 
       bool setHeater2Height(double heater2Height);
 
-      bool setHeaterFuelType(std::string heaterFuelType);
+      bool setHeaterFuelType(const std::string& heaterFuelType);
 
       bool setHeaterThermalEfficiency(double heaterThermalEfficiency);
 
       bool setOffCycleParasiticFuelConsumptionRate(double offCycleParasiticFuelConsumptionRate);
 
-      bool setOffCycleParasiticFuelType(std::string offCycleParasiticFuelType);
+      bool setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType);
 
       bool setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank);
 
@@ -305,13 +305,13 @@ namespace model {
 
       bool setOnCycleParasiticFuelConsumptionRate(double onCycleParasiticFuelConsumptionRate);
 
-      bool setOnCycleParasiticFuelType(std::string onCycleParasiticFuelType);
+      bool setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType);
 
       bool setOnCycleParasiticHeatFractiontoTank(double onCycleParasiticHeatFractiontoTank);
 
       bool setOnCycleParasiticHeight(double onCycleParasiticHeight);
 
-      bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
+      bool setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator);
 
       bool setAmbientTemperatureSchedule(Schedule& schedule);
 
@@ -366,7 +366,7 @@ namespace model {
 
       bool setSourceSideOutletHeight(double sourceSideOutletHeight);
 
-      bool setInletMode(std::string inletMode);
+      bool setInletMode(const std::string& inletMode);
 
       bool setUseSideDesignFlowRate(boost::optional<double> useSideDesignFlowRate);
 
@@ -406,7 +406,7 @@ namespace model {
 
       bool setNode12AdditionalLossCoefficient(double node12AdditionalLossCoefficient);
 
-      bool setSourceSideFlowControlMode(std::string sourceSideFlowControlMode);
+      bool setSourceSideFlowControlMode(const std::string& sourceSideFlowControlMode);
 
       bool setIndirectAlternateSetpointTemperatureSchedule(Schedule& schedule);
 

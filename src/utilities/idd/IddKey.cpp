@@ -36,7 +36,7 @@ namespace openstudio {
 
 namespace detail {
 
-  IddKey_Impl::IddKey_Impl() {}
+  IddKey_Impl::IddKey_Impl() = default;
 
   /// equality operator
   bool IddKey_Impl::operator==(const IddKey_Impl& other) const {
@@ -96,7 +96,7 @@ namespace detail {
 
 IddKey::IddKey() : m_impl(std::shared_ptr<detail::IddKey_Impl>(new detail::IddKey_Impl())) {}
 
-IddKey::IddKey(const IddKey& other) : m_impl(other.m_impl) {}
+IddKey::IddKey(const IddKey& other) = default;
 
 bool IddKey::operator==(const IddKey& other) const {
   return (*m_impl == *(other.m_impl));

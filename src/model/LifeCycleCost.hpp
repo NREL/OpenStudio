@@ -59,7 +59,12 @@ namespace model {
     /// This will throw if the object type is not known
     explicit LifeCycleCost(const ModelObject& modelObject);
 
-    virtual ~LifeCycleCost() {}
+    virtual ~LifeCycleCost() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LifeCycleCost(const LifeCycleCost& other) = default;
+    LifeCycleCost(LifeCycleCost&& other) = default;
+    LifeCycleCost& operator=(const LifeCycleCost&) = default;
+    LifeCycleCost& operator=(LifeCycleCost&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -163,7 +168,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::LifeCycleCost_Impl ImplType;
+    using ImplType = detail::LifeCycleCost_Impl;
 
     friend class Model;
     friend class IdfObject;
@@ -178,10 +183,10 @@ namespace model {
   };
 
   /** \relates LifeCycleCost */
-  typedef boost::optional<LifeCycleCost> OptionalLifeCycleCost;
+  using OptionalLifeCycleCost = boost::optional<LifeCycleCost>;
 
   /** \relates LifeCycleCost */
-  typedef std::vector<LifeCycleCost> LifeCycleCostVector;
+  using LifeCycleCostVector = std::vector<LifeCycleCost>;
 
 }  // namespace model
 }  // namespace openstudio

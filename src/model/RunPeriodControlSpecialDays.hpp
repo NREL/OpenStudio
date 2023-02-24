@@ -64,7 +64,12 @@ namespace model {
     RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
                                 const openstudio::MonthOfYear& monthOfYear, Model& model);
 
-    virtual ~RunPeriodControlSpecialDays() {}
+    virtual ~RunPeriodControlSpecialDays() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RunPeriodControlSpecialDays(const RunPeriodControlSpecialDays& other) = default;
+    RunPeriodControlSpecialDays(RunPeriodControlSpecialDays&& other) = default;
+    RunPeriodControlSpecialDays& operator=(const RunPeriodControlSpecialDays&) = default;
+    RunPeriodControlSpecialDays& operator=(RunPeriodControlSpecialDays&&) = default;
 
     /** @name Static Methods */
     //@{
@@ -103,7 +108,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::RunPeriodControlSpecialDays_Impl ImplType;
+    using ImplType = detail::RunPeriodControlSpecialDays_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -118,10 +123,10 @@ namespace model {
   };
 
   /** \relates RunPeriodControlSpecialDays */
-  typedef boost::optional<RunPeriodControlSpecialDays> OptionalRunPeriodControlSpecialDays;
+  using OptionalRunPeriodControlSpecialDays = boost::optional<RunPeriodControlSpecialDays>;
 
   /** \relates RunPeriodControlSpecialDays */
-  typedef std::vector<RunPeriodControlSpecialDays> RunPeriodControlSpecialDaysVector;
+  using RunPeriodControlSpecialDaysVector = std::vector<RunPeriodControlSpecialDays>;
 
 }  // namespace model
 }  // namespace openstudio

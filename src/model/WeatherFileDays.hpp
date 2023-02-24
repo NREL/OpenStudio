@@ -46,12 +46,17 @@ namespace model {
     // constructor
     explicit WeatherFileDays(const Model& model);
 
-    virtual ~WeatherFileDays() {}
+    virtual ~WeatherFileDays() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WeatherFileDays(const WeatherFileDays& other) = default;
+    WeatherFileDays(WeatherFileDays&& other) = default;
+    WeatherFileDays& operator=(const WeatherFileDays&) = default;
+    WeatherFileDays& operator=(WeatherFileDays&&) = default;
 
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::WeatherFileDays_Impl ImplType;
+    using ImplType = detail::WeatherFileDays_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -64,10 +69,10 @@ namespace model {
   };
 
   /** \relates WeatherFileDays */
-  typedef boost::optional<WeatherFileDays> OptionalWeatherFileDays;
+  using OptionalWeatherFileDays = boost::optional<WeatherFileDays>;
 
   /** \relates WeatherFileDays */
-  typedef std::vector<WeatherFileDays> WeatherFileDaysVector;
+  using WeatherFileDaysVector = std::vector<WeatherFileDays>;
 
 }  // namespace model
 }  // namespace openstudio

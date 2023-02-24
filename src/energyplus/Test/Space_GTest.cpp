@@ -121,18 +121,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space) {
 TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   Model model;
 
-  Point3dVector points1;
-  points1.push_back(Point3d(0, 1, 0));
-  points1.push_back(Point3d(1, 1, 0));
-  points1.push_back(Point3d(1, 0, 0));
-  points1.push_back(Point3d(0, 0, 0));
+  Point3dVector points1{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
   Surface floor1(points1, model);
 
-  Point3dVector points2;
-  points2.push_back(Point3d(0, 2, 0));
-  points2.push_back(Point3d(2, 2, 0));
-  points2.push_back(Point3d(2, 0, 0));
-  points2.push_back(Point3d(0, 0, 0));
+  Point3dVector points2{
+    {0, 2, 0},
+    {2, 2, 0},
+    {2, 0, 0},
+    {0, 0, 0},
+  };
   Surface floor2(points2, model);
 
   Space space1(model);
@@ -212,11 +214,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   ASSERT_EQ(1U, idf_spaceList1.extensibleGroups().size());
   ASSERT_EQ(1U, idf_spaceList2.extensibleGroups().size());
 
-  WorkspaceExtensibleGroup eg_spaceList1 = idf_spaceList1.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto eg_spaceList1 = idf_spaceList1.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(eg_spaceList1.getString(SpaceListExtensibleFields::SpaceName));
   EXPECT_EQ(space1.name().get(), eg_spaceList1.getString(SpaceListExtensibleFields::SpaceName).get());
 
-  WorkspaceExtensibleGroup eg_spaceList2 = idf_spaceList2.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto eg_spaceList2 = idf_spaceList2.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(eg_spaceList2.getString(SpaceListExtensibleFields::SpaceName));
   EXPECT_EQ(space2.name().get(), eg_spaceList2.getString(SpaceListExtensibleFields::SpaceName).get());
 
@@ -250,8 +252,8 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
 
   Model m = model::exampleModel();
 
-  ASSERT_EQ(1U, m.getModelObjects<SpaceType>().size());
-  SpaceType spaceType = m.getModelObjects<SpaceType>()[0];
+  ASSERT_EQ(1U, m.getConcreteModelObjects<SpaceType>().size());
+  SpaceType spaceType = m.getConcreteModelObjects<SpaceType>()[0];
 
   ASSERT_EQ(1U, m.getConcreteModelObjects<ThermalZone>().size());
   ThermalZone thermalZone = m.getConcreteModelObjects<ThermalZone>()[0];
@@ -468,8 +470,8 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Geometry) {
 
   Model m = model::exampleModel();
 
-  ASSERT_EQ(1U, m.getModelObjects<SpaceType>().size());
-  SpaceType spaceType = m.getModelObjects<SpaceType>()[0];
+  ASSERT_EQ(1U, m.getConcreteModelObjects<SpaceType>().size());
+  SpaceType spaceType = m.getConcreteModelObjects<SpaceType>()[0];
 
   ASSERT_EQ(1U, m.getConcreteModelObjects<ThermalZone>().size());
   ThermalZone thermalZone = m.getConcreteModelObjects<ThermalZone>()[0];

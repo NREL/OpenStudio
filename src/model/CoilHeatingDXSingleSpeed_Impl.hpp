@@ -54,7 +54,7 @@ namespace model {
 
       CoilHeatingDXSingleSpeed_Impl(const CoilHeatingDXSingleSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingDXSingleSpeed_Impl() {}
+      virtual ~CoilHeatingDXSingleSpeed_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -178,11 +178,11 @@ namespace model {
 
       void resetMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
 
-      bool setDefrostStrategy(std::string defrostStrategy);
+      bool setDefrostStrategy(const std::string& defrostStrategy);
 
       void resetDefrostStrategy();
 
-      bool setDefrostControl(std::string defrostControl);
+      bool setDefrostControl(const std::string& defrostControl);
 
       void resetDefrostControl();
 

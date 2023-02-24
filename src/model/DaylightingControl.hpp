@@ -55,7 +55,12 @@ namespace model {
 
     explicit DaylightingControl(const Model& model);
 
-    virtual ~DaylightingControl() {}
+    virtual ~DaylightingControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DaylightingControl(const DaylightingControl& other) = default;
+    DaylightingControl(DaylightingControl&& other) = default;
+    DaylightingControl& operator=(const DaylightingControl&) = default;
+    DaylightingControl& operator=(DaylightingControl&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -197,7 +202,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DaylightingControl_Impl ImplType;
+    using ImplType = detail::DaylightingControl_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -210,10 +215,10 @@ namespace model {
   };
 
   /** \relates DaylightingControl*/
-  typedef boost::optional<DaylightingControl> OptionalDaylightingControl;
+  using OptionalDaylightingControl = boost::optional<DaylightingControl>;
 
   /** \relates DaylightingControl*/
-  typedef std::vector<DaylightingControl> DaylightingControlVector;
+  using DaylightingControlVector = std::vector<DaylightingControl>;
 
 }  // namespace model
 }  // namespace openstudio

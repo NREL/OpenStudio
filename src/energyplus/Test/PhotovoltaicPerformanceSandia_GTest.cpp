@@ -76,7 +76,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
   auto perfName = perfNames[5];
 
   GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::fromSandiaDatabase(m, perfName);
-  PhotovoltaicPerformanceSandia sandiaPerf = panel.photovoltaicPerformance().cast<PhotovoltaicPerformanceSandia>();
+  auto sandiaPerf = panel.photovoltaicPerformance().cast<PhotovoltaicPerformanceSandia>();
   panel.setNumberOfModulesInParallel(3);
   panel.setNumberOfModulesInSeries(6);
   panel.setRatedElectricPowerOutput(20000);
@@ -84,11 +84,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
   panel.setAvailabilitySchedule(alwaysOn);
 
   // Make a ShadingSurface, and a ShadingSurfaceGroup as it's needed
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
   ShadingSurface shadingSurface(points, m);
 
   ShadingSurfaceGroup shadingSurfaceGroup(m);
@@ -125,7 +126,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
 
   // There should be only one generator
   ASSERT_EQ(1u, idf_genlist.extensibleGroups().size());
-  WorkspaceExtensibleGroup w_eg_gen = idf_genlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg_gen = idf_genlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
   EXPECT_EQ("Generator:Photovoltaic", w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorObjectType).get());
   ASSERT_EQ(w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName).get(), panel.nameString());
@@ -310,7 +311,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PhotovoltaicPerformanceSandia) {
   EXPECT_TRUE(reverseTranslator.errors().empty());
   EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-  auto sandiaPerfs = model.getModelObjects<openstudio::model::PhotovoltaicPerformanceSandia>();
+  auto sandiaPerfs = model.getConcreteModelObjects<openstudio::model::PhotovoltaicPerformanceSandia>();
   ASSERT_EQ(1u, sandiaPerfs.size());
   PhotovoltaicPerformanceSandia sandiaPerf = sandiaPerfs[0];
 

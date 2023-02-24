@@ -58,7 +58,12 @@ namespace model {
 
     explicit DaylightingDeviceLightWell(const SubSurface& subSurface);
 
-    virtual ~DaylightingDeviceLightWell() {}
+    virtual ~DaylightingDeviceLightWell() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DaylightingDeviceLightWell(const DaylightingDeviceLightWell& other) = default;
+    DaylightingDeviceLightWell(DaylightingDeviceLightWell&& other) = default;
+    DaylightingDeviceLightWell& operator=(const DaylightingDeviceLightWell&) = default;
+    DaylightingDeviceLightWell& operator=(DaylightingDeviceLightWell&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -96,7 +101,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DaylightingDeviceLightWell_Impl ImplType;
+    using ImplType = detail::DaylightingDeviceLightWell_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -110,10 +115,10 @@ namespace model {
   };
 
   /** \relates DaylightingDeviceLightWell*/
-  typedef boost::optional<DaylightingDeviceLightWell> OptionalDaylightingDeviceLightWell;
+  using OptionalDaylightingDeviceLightWell = boost::optional<DaylightingDeviceLightWell>;
 
   /** \relates DaylightingDeviceLightWell*/
-  typedef std::vector<DaylightingDeviceLightWell> DaylightingDeviceLightWellVector;
+  using DaylightingDeviceLightWellVector = std::vector<DaylightingDeviceLightWell>;
 
 }  // namespace model
 }  // namespace openstudio

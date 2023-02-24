@@ -56,7 +56,12 @@ namespace model {
 
     explicit AirTerminalDualDuctVAVOutdoorAir(const Model& model);
 
-    virtual ~AirTerminalDualDuctVAVOutdoorAir() {}
+    virtual ~AirTerminalDualDuctVAVOutdoorAir() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalDualDuctVAVOutdoorAir(const AirTerminalDualDuctVAVOutdoorAir& other) = default;
+    AirTerminalDualDuctVAVOutdoorAir(AirTerminalDualDuctVAVOutdoorAir&& other) = default;
+    AirTerminalDualDuctVAVOutdoorAir& operator=(const AirTerminalDualDuctVAVOutdoorAir&) = default;
+    AirTerminalDualDuctVAVOutdoorAir& operator=(AirTerminalDualDuctVAVOutdoorAir&&) = default;
 
     //@}
 
@@ -121,7 +126,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalDualDuctVAVOutdoorAir_Impl ImplType;
+    using ImplType = detail::AirTerminalDualDuctVAVOutdoorAir_Impl;
 
     explicit AirTerminalDualDuctVAVOutdoorAir(std::shared_ptr<detail::AirTerminalDualDuctVAVOutdoorAir_Impl> impl);
 
@@ -135,10 +140,10 @@ namespace model {
   };
 
   /** \relates AirTerminalDualDuctVAVOutdoorAir*/
-  typedef boost::optional<AirTerminalDualDuctVAVOutdoorAir> OptionalAirTerminalDualDuctVAVOutdoorAir;
+  using OptionalAirTerminalDualDuctVAVOutdoorAir = boost::optional<AirTerminalDualDuctVAVOutdoorAir>;
 
   /** \relates AirTerminalDualDuctVAVOutdoorAir*/
-  typedef std::vector<AirTerminalDualDuctVAVOutdoorAir> AirTerminalDualDuctVAVOutdoorAirVector;
+  using AirTerminalDualDuctVAVOutdoorAirVector = std::vector<AirTerminalDualDuctVAVOutdoorAir>;
 
 }  // namespace model
 }  // namespace openstudio

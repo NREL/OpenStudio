@@ -55,7 +55,12 @@ namespace model {
 
     explicit ElectricLoadCenterInverterPVWatts(const Model& model);
 
-    virtual ~ElectricLoadCenterInverterPVWatts() {}
+    virtual ~ElectricLoadCenterInverterPVWatts() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricLoadCenterInverterPVWatts(const ElectricLoadCenterInverterPVWatts& other) = default;
+    ElectricLoadCenterInverterPVWatts(ElectricLoadCenterInverterPVWatts&& other) = default;
+    ElectricLoadCenterInverterPVWatts& operator=(const ElectricLoadCenterInverterPVWatts&) = default;
+    ElectricLoadCenterInverterPVWatts& operator=(ElectricLoadCenterInverterPVWatts&&) = default;
 
     //@}
 
@@ -91,7 +96,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterInverterPVWatts_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterInverterPVWatts_Impl;
 
     explicit ElectricLoadCenterInverterPVWatts(std::shared_ptr<detail::ElectricLoadCenterInverterPVWatts_Impl> impl);
 
@@ -105,10 +110,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterInverterPVWatts*/
-  typedef boost::optional<ElectricLoadCenterInverterPVWatts> OptionalElectricLoadCenterInverterPVWatts;
+  using OptionalElectricLoadCenterInverterPVWatts = boost::optional<ElectricLoadCenterInverterPVWatts>;
 
   /** \relates ElectricLoadCenterInverterPVWatts*/
-  typedef std::vector<ElectricLoadCenterInverterPVWatts> ElectricLoadCenterInverterPVWattsVector;
+  using ElectricLoadCenterInverterPVWattsVector = std::vector<ElectricLoadCenterInverterPVWatts>;
 
 }  // namespace model
 }  // namespace openstudio

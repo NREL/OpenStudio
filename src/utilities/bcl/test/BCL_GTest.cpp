@@ -339,7 +339,7 @@ TEST_F(BCLFixture, GetComponentByUID) {
 TEST_F(BCLFixture, RemoteBCLMetaSearchTest) {
   RemoteBCL remoteBCL;
 
-  typedef std::pair<std::string, unsigned> PairType;
+  using PairType = std::pair<std::string, unsigned int>;
 
   // get all constructions, via empty first arg and tid
   bool test = remoteBCL.metaSearchComponentLibrary("", 127).has_value();

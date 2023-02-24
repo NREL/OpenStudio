@@ -54,7 +54,7 @@ namespace model {
 
       ZoneHVACUnitHeater_Impl(const ZoneHVACUnitHeater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACUnitHeater_Impl() {}
+      virtual ~ZoneHVACUnitHeater_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -124,7 +124,7 @@ namespace model {
 
       void autosizeMaximumSupplyAirFlowRate();
 
-      bool setFanControlType(std::string fanControlType);
+      bool setFanControlType(const std::string& fanControlType);
 
       bool setHeatingCoil(const HVACComponent& hvacComponent);
 

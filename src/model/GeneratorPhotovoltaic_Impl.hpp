@@ -36,10 +36,11 @@
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class AllShadingAndHTSurfName;
   class PVModules;
   class Schedule;
+  class PlanarSurface;
+  class PhotovoltaicPerformance;
 
   namespace detail {
 
@@ -57,7 +58,7 @@ namespace model {
 
       GeneratorPhotovoltaic_Impl(const GeneratorPhotovoltaic_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorPhotovoltaic_Impl() {}
+      virtual ~GeneratorPhotovoltaic_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

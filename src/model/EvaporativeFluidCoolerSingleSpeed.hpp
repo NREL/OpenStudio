@@ -54,7 +54,12 @@ namespace model {
 
     explicit EvaporativeFluidCoolerSingleSpeed(const Model& model);
 
-    virtual ~EvaporativeFluidCoolerSingleSpeed() {}
+    virtual ~EvaporativeFluidCoolerSingleSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EvaporativeFluidCoolerSingleSpeed(const EvaporativeFluidCoolerSingleSpeed& other) = default;
+    EvaporativeFluidCoolerSingleSpeed(EvaporativeFluidCoolerSingleSpeed&& other) = default;
+    EvaporativeFluidCoolerSingleSpeed& operator=(const EvaporativeFluidCoolerSingleSpeed&) = default;
+    EvaporativeFluidCoolerSingleSpeed& operator=(EvaporativeFluidCoolerSingleSpeed&&) = default;
 
     //@}
 
@@ -177,7 +182,7 @@ namespace model {
 
     void resetDesignEnteringAirWetbulbTemperature();
 
-    bool setCapacityControl(std::string capacityControl);
+    bool setCapacityControl(const std::string& capacityControl);
 
     void resetCapacityControl();
 
@@ -185,7 +190,7 @@ namespace model {
 
     void resetSizingFactor();
 
-    bool setEvaporationLossMode(std::string evaporationLossMode);
+    bool setEvaporationLossMode(const std::string& evaporationLossMode);
 
     void resetEvaporationLossMode();
 
@@ -197,7 +202,7 @@ namespace model {
 
     void resetDriftLossPercent();
 
-    bool setBlowdownCalculationMode(std::string blowdownCalculationMode);
+    bool setBlowdownCalculationMode(const std::string& blowdownCalculationMode);
 
     void resetBlowdownCalculationMode();
 
@@ -224,7 +229,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EvaporativeFluidCoolerSingleSpeed_Impl ImplType;
+    using ImplType = detail::EvaporativeFluidCoolerSingleSpeed_Impl;
 
     explicit EvaporativeFluidCoolerSingleSpeed(std::shared_ptr<detail::EvaporativeFluidCoolerSingleSpeed_Impl> impl);
 
@@ -238,10 +243,10 @@ namespace model {
   };
 
   /** \relates EvaporativeFluidCoolerSingleSpeed*/
-  typedef boost::optional<EvaporativeFluidCoolerSingleSpeed> OptionalEvaporativeFluidCoolerSingleSpeed;
+  using OptionalEvaporativeFluidCoolerSingleSpeed = boost::optional<EvaporativeFluidCoolerSingleSpeed>;
 
   /** \relates EvaporativeFluidCoolerSingleSpeed*/
-  typedef std::vector<EvaporativeFluidCoolerSingleSpeed> EvaporativeFluidCoolerSingleSpeedVector;
+  using EvaporativeFluidCoolerSingleSpeedVector = std::vector<EvaporativeFluidCoolerSingleSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

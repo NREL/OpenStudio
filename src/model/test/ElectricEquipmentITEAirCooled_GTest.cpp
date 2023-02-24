@@ -151,11 +151,12 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
 TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_equipmentLevel) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
@@ -202,13 +203,13 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_Remove) {
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
 
   EXPECT_EQ(5u, model.numObjects());
-  EXPECT_EQ(1u, model.getModelObjects<ElectricEquipmentITEAirCooled>().size());
-  EXPECT_EQ(1u, model.getModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ElectricEquipmentITEAirCooled>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
   std::vector<IdfObject> removed = electricEquipmentITEAirCooled.remove();
   ASSERT_EQ(1u, removed.size());
   EXPECT_EQ(IddObjectType::OS_ElectricEquipment_ITE_AirCooled, removed[0].iddObject().type().value());
-  EXPECT_EQ(0u, model.getModelObjects<ElectricEquipmentITEAirCooled>().size());
-  EXPECT_EQ(1u, model.getModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ElectricEquipmentITEAirCooled>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
   EXPECT_EQ(4u, model.numObjects());
 
   //model.save(toPath("./ITE5.osm"), true);
@@ -222,14 +223,14 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_RemoveDefinition) {
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
 
   EXPECT_EQ(5u, model.numObjects());
-  EXPECT_EQ(1u, model.getModelObjects<ElectricEquipmentITEAirCooled>().size());
-  EXPECT_EQ(1u, model.getModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ElectricEquipmentITEAirCooled>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
   std::vector<IdfObject> removed = definition.remove();
   ASSERT_EQ(2u, removed.size());
   EXPECT_EQ(IddObjectType::OS_ElectricEquipment_ITE_AirCooled_Definition, removed[0].iddObject().type().value());
   EXPECT_EQ(IddObjectType::OS_ElectricEquipment_ITE_AirCooled, removed[1].iddObject().type().value());
-  EXPECT_EQ(0u, model.getModelObjects<ElectricEquipmentITEAirCooled>().size());
-  EXPECT_EQ(0u, model.getModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ElectricEquipmentITEAirCooled>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
   EXPECT_EQ(3u, model.numObjects());
 
   //model.save(toPath("./ITE6.osm"), true);

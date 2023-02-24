@@ -54,7 +54,12 @@ namespace model {
 
     explicit AirTerminalSingleDuctVAVNoReheat(const Model& model, Schedule& schedule);
 
-    virtual ~AirTerminalSingleDuctVAVNoReheat() {}
+    virtual ~AirTerminalSingleDuctVAVNoReheat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalSingleDuctVAVNoReheat(const AirTerminalSingleDuctVAVNoReheat& other) = default;
+    AirTerminalSingleDuctVAVNoReheat(AirTerminalSingleDuctVAVNoReheat&& other) = default;
+    AirTerminalSingleDuctVAVNoReheat& operator=(const AirTerminalSingleDuctVAVNoReheat&) = default;
+    AirTerminalSingleDuctVAVNoReheat& operator=(AirTerminalSingleDuctVAVNoReheat&&) = default;
 
     //@}
 
@@ -101,7 +106,7 @@ namespace model {
 
     void autosizeMaximumAirFlowRate();
 
-    bool setZoneMinimumAirFlowInputMethod(std::string zoneMinimumAirFlowInputMethod);
+    bool setZoneMinimumAirFlowInputMethod(const std::string& zoneMinimumAirFlowInputMethod);
 
     void resetZoneMinimumAirFlowInputMethod();
 
@@ -134,7 +139,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctVAVNoReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctVAVNoReheat_Impl;
 
     explicit AirTerminalSingleDuctVAVNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl);
 
@@ -148,10 +153,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctVAVNoReheat*/
-  typedef boost::optional<AirTerminalSingleDuctVAVNoReheat> OptionalAirTerminalSingleDuctVAVNoReheat;
+  using OptionalAirTerminalSingleDuctVAVNoReheat = boost::optional<AirTerminalSingleDuctVAVNoReheat>;
 
   /** \relates AirTerminalSingleDuctVAVNoReheat*/
-  typedef std::vector<AirTerminalSingleDuctVAVNoReheat> AirTerminalSingleDuctVAVNoReheatVector;
+  using AirTerminalSingleDuctVAVNoReheatVector = std::vector<AirTerminalSingleDuctVAVNoReheat>;
 
 }  // namespace model
 }  // namespace openstudio

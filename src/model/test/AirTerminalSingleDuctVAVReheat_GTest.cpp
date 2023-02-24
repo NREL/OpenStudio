@@ -94,7 +94,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVReheat_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  AirTerminalSingleDuctVAVReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctVAVReheat>();
+  auto testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctVAVReheat>();
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));
@@ -129,7 +129,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVReheat_remove) {
   auto terminals = airLoopHVAC.demandComponents(AirTerminalSingleDuctVAVReheat::iddObjectType());
   EXPECT_EQ(3u, terminals.size());
 
-  auto boiler = m.getModelObjects<BoilerHotWater>().front();
+  auto boiler = m.getConcreteModelObjects<BoilerHotWater>().front();
   auto plant = boiler.plantLoop().get();
   auto coils = plant.demandComponents(CoilHeatingWater::iddObjectType());
   EXPECT_EQ(4u, coils.size());

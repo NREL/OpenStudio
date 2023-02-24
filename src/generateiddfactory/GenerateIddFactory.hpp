@@ -37,7 +37,7 @@
 
 namespace openstudio {
 
-typedef openstudio::filesystem::path path;
+using path = openstudio::filesystem::path;
 
 /** Initialize one IddFileFactoryData object per Idd file, based on user input arguments. Throws
  *  on input error. */

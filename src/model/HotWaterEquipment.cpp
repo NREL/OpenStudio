@@ -105,7 +105,8 @@ namespace model {
     std::vector<ScheduleTypeKey> HotWaterEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_HotWaterEquipmentFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("HotWaterEquipment", "Hot Water Equipment"));
       }
@@ -121,7 +122,7 @@ namespace model {
       this->makeUnique();
 
       HotWaterEquipmentDefinition hotWaterEquipmentDefinition = this->hotWaterEquipmentDefinition();
-      for (LifeCycleCost cost : hotWaterEquipmentDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : hotWaterEquipmentDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 
@@ -190,7 +191,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool HotWaterEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool HotWaterEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_HotWaterEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -354,7 +355,7 @@ namespace model {
     getImpl<detail::HotWaterEquipment_Impl>()->resetMultiplier();
   }
 
-  bool HotWaterEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool HotWaterEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::HotWaterEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

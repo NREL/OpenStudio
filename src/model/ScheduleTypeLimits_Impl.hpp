@@ -52,7 +52,7 @@ namespace model {
 
       ScheduleTypeLimits_Impl(const ScheduleTypeLimits_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ScheduleTypeLimits_Impl() {}
+      virtual ~ScheduleTypeLimits_Impl() = default;
 
       //@}
 

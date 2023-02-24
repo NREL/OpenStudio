@@ -98,7 +98,7 @@ namespace model {
         }
       }
 
-      return ptacClone;
+      return std::move(ptacClone);
     }
 
     std::vector<IdfObject> ZoneHVACPackagedTerminalAirConditioner_Impl::remove() {

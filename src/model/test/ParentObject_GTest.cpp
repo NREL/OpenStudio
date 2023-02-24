@@ -106,7 +106,7 @@ TEST_F(ModelFixture, ParentChildObject_Daylighting_School_1)
 
   // check that building children includes buildingShades
   bool found = false;
-  for (ModelObject obj : building.children()){
+  for (const ModelObject& obj : building.children()){
     OptionalParentObject parent = obj.optionalCast<ParentObject>();
     if (parent){
       if (parent->handle() == buildingShades[0].handle()){
@@ -203,7 +203,7 @@ TEST_F(ModelFixture, ParentChildObject_AllowableChildTypes)
   EXPECT_TRUE(!allowableChildTypes.empty());
 
   // loop over and add an object of each type
-  for (IddObjectType iddObjectType : allowableChildTypes){
+  for (IddObjectType& iddObjectType : allowableChildTypes){
 
     // note that if any of the following steps failed we could call remove on the object and pretend it never happened
 
@@ -239,7 +239,7 @@ TEST_F(ModelFixture, ParentChildObject_AllowableChildTypes)
   EXPECT_TRUE(!allowableChildTypes.empty());
 
   // loop over and add an object of each type
-  for (IddObjectType iddObjectType : allowableChildTypes){
+  for (IddObjectType& iddObjectType : allowableChildTypes){
 
     // note that if any of the following steps failed we could call remove on the object and pretend it never happened
 

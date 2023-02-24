@@ -63,7 +63,12 @@ namespace model {
 
     explicit MasslessOpaqueMaterial(const Model& model, const std::string& roughness = "Smooth", double thermalResistance = 0.1);
 
-    virtual ~MasslessOpaqueMaterial() {}
+    virtual ~MasslessOpaqueMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    MasslessOpaqueMaterial(const MasslessOpaqueMaterial& other) = default;
+    MasslessOpaqueMaterial(MasslessOpaqueMaterial&& other) = default;
+    MasslessOpaqueMaterial& operator=(const MasslessOpaqueMaterial&) = default;
+    MasslessOpaqueMaterial& operator=(MasslessOpaqueMaterial&&) = default;
 
     //@}
 
@@ -149,7 +154,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::MasslessOpaqueMaterial_Impl ImplType;
+    using ImplType = detail::MasslessOpaqueMaterial_Impl;
 
     explicit MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl);
 
@@ -163,10 +168,10 @@ namespace model {
   };
 
   /** \relates MasslessOpaqueMaterial*/
-  typedef boost::optional<MasslessOpaqueMaterial> OptionalMasslessOpaqueMaterial;
+  using OptionalMasslessOpaqueMaterial = boost::optional<MasslessOpaqueMaterial>;
 
   /** \relates MasslessOpaqueMaterial*/
-  typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
+  using MasslessOpaqueMaterialVector = std::vector<MasslessOpaqueMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

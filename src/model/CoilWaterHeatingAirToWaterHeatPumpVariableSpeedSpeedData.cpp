@@ -76,7 +76,7 @@ namespace model {
     ModelObject CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::clone(Model model) const {
       auto t_clone = ParentObject_Impl::clone(model).cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>();
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::children() const {
@@ -358,7 +358,7 @@ namespace model {
   }
 
   IddObjectType CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_SpeedData);
+    return {IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_SpeedData};
   }
 
   double CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::ratedWaterHeatingCapacity() const {

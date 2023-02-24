@@ -54,7 +54,7 @@ namespace model {
 
       HeatPumpWaterToWaterEquationFitHeating_Impl(const HeatPumpWaterToWaterEquationFitHeating_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HeatPumpWaterToWaterEquationFitHeating_Impl() {}
+      virtual ~HeatPumpWaterToWaterEquationFitHeating_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -56,7 +56,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ScheduleBase() {}
+    virtual ~ScheduleBase() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleBase(const ScheduleBase& other) = default;
+    ScheduleBase(ScheduleBase&& other) = default;
+    ScheduleBase& operator=(const ScheduleBase&) = default;
+    ScheduleBase& operator=(ScheduleBase&&) = default;
 
     //@}
     /** @name Getters */
@@ -88,7 +93,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleBase_Impl ImplType;
+    using ImplType = detail::ScheduleBase_Impl;
 
     explicit ScheduleBase(std::shared_ptr<detail::ScheduleBase_Impl> impl);
 
@@ -105,10 +110,10 @@ namespace model {
   };
 
   /** \relates ScheduleBase*/
-  typedef boost::optional<ScheduleBase> OptionalScheduleBase;
+  using OptionalScheduleBase = boost::optional<ScheduleBase>;
 
   /** \relates ScheduleBase*/
-  typedef std::vector<ScheduleBase> ScheduleBaseVector;
+  using ScheduleBaseVector = std::vector<ScheduleBase>;
 
 }  // namespace model
 }  // namespace openstudio

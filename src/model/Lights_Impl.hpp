@@ -55,7 +55,7 @@ namespace model {
 
       Lights_Impl(const Lights_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Lights_Impl() {}
+      virtual ~Lights_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -123,7 +123,7 @@ namespace model {
 
       void resetMultiplier();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

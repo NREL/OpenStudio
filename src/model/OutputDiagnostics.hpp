@@ -49,7 +49,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputDiagnostics() {}
+    virtual ~OutputDiagnostics() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputDiagnostics(const OutputDiagnostics& other) = default;
+    OutputDiagnostics(OutputDiagnostics&& other) = default;
+    OutputDiagnostics& operator=(const OutputDiagnostics&) = default;
+    OutputDiagnostics& operator=(OutputDiagnostics&&) = default;
 
     //@}
 
@@ -86,7 +91,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputDiagnostics_Impl ImplType;
+    using ImplType = detail::OutputDiagnostics_Impl;
 
     explicit OutputDiagnostics(std::shared_ptr<detail::OutputDiagnostics_Impl> impl);
 
@@ -102,10 +107,10 @@ namespace model {
   };
 
   /** \relates OutputDiagnostics*/
-  typedef boost::optional<OutputDiagnostics> OptionalOutputDiagnostics;
+  using OptionalOutputDiagnostics = boost::optional<OutputDiagnostics>;
 
   /** \relates OutputDiagnostics*/
-  typedef std::vector<OutputDiagnostics> OutputDiagnosticsVector;
+  using OutputDiagnosticsVector = std::vector<OutputDiagnostics>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -55,7 +55,7 @@ namespace model {
 
       SurfacePropertySurroundingSurfaces_Impl(const SurfacePropertySurroundingSurfaces_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertySurroundingSurfaces_Impl() {}
+      virtual ~SurfacePropertySurroundingSurfaces_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

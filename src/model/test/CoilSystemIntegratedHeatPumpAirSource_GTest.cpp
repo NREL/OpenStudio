@@ -221,7 +221,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
   // Cloning clones the coils too.
 
   {
-    CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m).cast<CoilSystemIntegratedHeatPumpAirSource>();
+    auto coilSystemClone = coilSystem.clone(m).cast<CoilSystemIntegratedHeatPumpAirSource>();
 
     EXPECT_EQ(2 * nCoilCoolingDXVariableSpeed, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
     EXPECT_EQ(2 * nCoilHeatingDXVariableSpeed, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
@@ -241,7 +241,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
 
   {
     Model m2;
-    CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m2).cast<CoilSystemIntegratedHeatPumpAirSource>();
+    auto coilSystemClone = coilSystem.clone(m2).cast<CoilSystemIntegratedHeatPumpAirSource>();
 
     EXPECT_EQ(nCoilCoolingDXVariableSpeed, m2.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
     EXPECT_EQ(nCoilHeatingDXVariableSpeed, m2.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());

@@ -64,7 +64,12 @@ namespace model {
     explicit StandardOpaqueMaterial(const Model& model, const std::string& roughness = "Smooth", double thickness = 0.1, double conductivity = 0.1,
                                     double density = 0.1, double specificHeat = 1400);
 
-    virtual ~StandardOpaqueMaterial() {}
+    virtual ~StandardOpaqueMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    StandardOpaqueMaterial(const StandardOpaqueMaterial& other) = default;
+    StandardOpaqueMaterial(StandardOpaqueMaterial&& other) = default;
+    StandardOpaqueMaterial& operator=(const StandardOpaqueMaterial&) = default;
+    StandardOpaqueMaterial& operator=(StandardOpaqueMaterial&&) = default;
 
     //@}
 
@@ -221,7 +226,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::StandardOpaqueMaterial_Impl ImplType;
+    using ImplType = detail::StandardOpaqueMaterial_Impl;
 
     explicit StandardOpaqueMaterial(std::shared_ptr<detail::StandardOpaqueMaterial_Impl> impl);
 
@@ -235,10 +240,10 @@ namespace model {
   };
 
   /** \relates StandardOpaqueMaterial*/
-  typedef boost::optional<StandardOpaqueMaterial> OptionalStandardOpaqueMaterial;
+  using OptionalStandardOpaqueMaterial = boost::optional<StandardOpaqueMaterial>;
 
   /** \relates StandardOpaqueMaterial*/
-  typedef std::vector<StandardOpaqueMaterial> StadardOpaqueMaterialVector;
+  using StadardOpaqueMaterialVector = std::vector<StandardOpaqueMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -59,7 +59,12 @@ namespace model {
 
     explicit CurveTriquadratic(const Model& model);
 
-    virtual ~CurveTriquadratic() {}
+    virtual ~CurveTriquadratic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveTriquadratic(const CurveTriquadratic& other) = default;
+    CurveTriquadratic(CurveTriquadratic&& other) = default;
+    CurveTriquadratic& operator=(const CurveTriquadratic&) = default;
+    CurveTriquadratic& operator=(CurveTriquadratic&&) = default;
 
     //@}
 
@@ -330,7 +335,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveTriquadratic_Impl ImplType;
+    using ImplType = detail::CurveTriquadratic_Impl;
 
     explicit CurveTriquadratic(std::shared_ptr<detail::CurveTriquadratic_Impl> impl);
 
@@ -345,10 +350,10 @@ namespace model {
   };
 
   /** \relates CurveTriquadratic*/
-  typedef boost::optional<CurveTriquadratic> OptionalCurveTriquadratic;
+  using OptionalCurveTriquadratic = boost::optional<CurveTriquadratic>;
 
   /** \relates CurveTriquadratic*/
-  typedef std::vector<CurveTriquadratic> CurveTriquadraticVector;
+  using CurveTriquadraticVector = std::vector<CurveTriquadratic>;
 
 }  // namespace model
 }  // namespace openstudio

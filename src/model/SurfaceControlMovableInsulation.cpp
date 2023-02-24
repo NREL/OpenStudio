@@ -94,7 +94,8 @@ namespace model {
     std::vector<ScheduleTypeKey> SurfaceControlMovableInsulation_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_SurfaceControl_MovableInsulationFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SurfaceControlMovableInsulation", "Resistance Modifier Fraction"));
       }
@@ -173,7 +174,7 @@ namespace model {
   }
 
   IddObjectType SurfaceControlMovableInsulation::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SurfaceControl_MovableInsulation);
+    return {IddObjectType::OS_SurfaceControl_MovableInsulation};
   }
 
   std::vector<std::string> SurfaceControlMovableInsulation::insulationTypeValues() {

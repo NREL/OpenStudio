@@ -47,7 +47,12 @@ namespace model {
     // constructor
     explicit Connection(const Model& model);
 
-    virtual ~Connection() {}
+    virtual ~Connection() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Connection(const Connection& other) = default;
+    Connection(Connection&& other) = default;
+    Connection& operator=(const Connection&) = default;
+    Connection& operator=(Connection&&) = default;
 
     boost::optional<ModelObject> sourceObject() const;
 
@@ -57,18 +62,18 @@ namespace model {
 
     boost::optional<unsigned> targetObjectPort() const;
 
-    bool setSourceObject(ModelObject object);
+    bool setSourceObject(const ModelObject& object);
 
     bool setSourceObjectPort(unsigned port);
 
-    bool setTargetObject(ModelObject object);
+    bool setTargetObject(const ModelObject& object);
 
     bool setTargetObjectPort(unsigned port);
 
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::Connection_Impl ImplType;
+    using ImplType = detail::Connection_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -82,10 +87,10 @@ namespace model {
   };
 
   /** \relates Connection */
-  typedef boost::optional<Connection> OptionalConnection;
+  using OptionalConnection = boost::optional<Connection>;
 
   /** \relates Connection */
-  typedef std::vector<Connection> ConnectionVector;
+  using ConnectionVector = std::vector<Connection>;
 
 }  // namespace model
 }  // namespace openstudio

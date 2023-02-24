@@ -46,7 +46,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    SiteGroundTemperatureBuildingSurface mo = m_model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
+    auto mo = m_model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
 
     boost::optional<double> value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::JanuaryGroundTemperature);
     if (value) {

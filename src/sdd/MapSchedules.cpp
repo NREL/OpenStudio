@@ -81,7 +81,7 @@ namespace sdd {
     model::ScheduleDay scheduleDay(model);
     scheduleDay.setName(name);
 
-    boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
+    boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getConcreteModelObjectByName<model::ScheduleTypeLimits>(type);
     bool isTemperature = false;
     if (type == "Temperature") {
       isTemperature = true;
@@ -159,14 +159,14 @@ namespace sdd {
     model::ScheduleWeek scheduleWeek(model);
     scheduleWeek.setName(name);
 
-    boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
+    boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getConcreteModelObjectByName<model::ScheduleTypeLimits>(type);
     if (scheduleTypeLimits) {
       //scheduleWeek.setScheduleTypeLimits(*scheduleTypeLimits);
     }
 
     if (schDaySunRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDaySunRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDaySunRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setSundaySchedule(*scheduleDay);
       } else {
@@ -176,7 +176,7 @@ namespace sdd {
 
     if (schDayMonRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayMonRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDayMonRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setMondaySchedule(*scheduleDay);
       } else {
@@ -186,7 +186,7 @@ namespace sdd {
 
     if (schDayTueRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayTueRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDayTueRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setTuesdaySchedule(*scheduleDay);
       } else {
@@ -196,7 +196,7 @@ namespace sdd {
 
     if (schDayWedRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayWedRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDayWedRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setWednesdaySchedule(*scheduleDay);
       } else {
@@ -206,7 +206,7 @@ namespace sdd {
 
     if (schDayThuRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayThuRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDayThuRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setThursdaySchedule(*scheduleDay);
       } else {
@@ -216,7 +216,7 @@ namespace sdd {
 
     if (schDayFriRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayFriRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDayFriRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setFridaySchedule(*scheduleDay);
       } else {
@@ -226,7 +226,7 @@ namespace sdd {
 
     if (schDaySatRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDaySatRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDaySatRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setSaturdaySchedule(*scheduleDay);
       } else {
@@ -236,7 +236,7 @@ namespace sdd {
 
     if (schDayHolRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayHolRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDayHolRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setHolidaySchedule(*scheduleDay);
         scheduleWeek.setCustomDay1Schedule(*scheduleDay);
@@ -248,7 +248,7 @@ namespace sdd {
 
     if (schDayClgDDRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayClgDDRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDayClgDDRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setSummerDesignDaySchedule(*scheduleDay);
       } else {
@@ -258,7 +258,7 @@ namespace sdd {
 
     if (schDayHtgDDRefElement) {
       boost::optional<model::ScheduleDay> scheduleDay =
-        model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayHtgDDRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleDay>(escapeName(schDayHtgDDRefElement.text().as_string()));
       if (scheduleDay) {
         scheduleWeek.setWinterDesignDaySchedule(*scheduleDay);
       } else {
@@ -306,7 +306,7 @@ namespace sdd {
     model::ScheduleYear scheduleYear(model);
     scheduleYear.setName(name);
 
-    boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
+    boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getConcreteModelObjectByName<model::ScheduleTypeLimits>(type);
     if (scheduleTypeLimits) {
       scheduleYear.setScheduleTypeLimits(*scheduleTypeLimits);
     }
@@ -317,7 +317,7 @@ namespace sdd {
       pugi::xml_node schWeekRefElement = schWeekRefElements[i];
 
       boost::optional<model::ScheduleWeek> scheduleWeek =
-        model.getModelObjectByName<model::ScheduleWeek>(escapeName(schWeekRefElement.text().as_string()));
+        model.getConcreteModelObjectByName<model::ScheduleWeek>(escapeName(schWeekRefElement.text().as_string()));
       if (scheduleWeek) {
 
         boost::optional<model::YearDescription> yearDescription = model.getOptionalUniqueModelObject<model::YearDescription>();

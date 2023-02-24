@@ -119,10 +119,10 @@ TEST_F(ModelFixture, Component_LightingSchedule_FromScratch) {
   Component lightsComponent = light1.createComponent();
   EXPECT_EQ(static_cast<unsigned>(4), lightsComponent.componentData().numComponentObjects());
   EXPECT_EQ(static_cast<unsigned>(5), lightsComponent.numObjects());
-  EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getModelObjects<ComponentData>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getModelObjects<Lights>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getModelObjects<ScheduleTypeLimits>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getModelObjects<ScheduleCompact>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getConcreteModelObjects<ComponentData>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getConcreteModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getConcreteModelObjects<ScheduleTypeLimits>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getConcreteModelObjects<ScheduleCompact>().size());
 }
 
 TEST_F(ModelFixture, ComponentWatcher_FromScratch) {
@@ -168,7 +168,7 @@ TEST_F(ModelFixture, ComponentWatcher_FromScratch) {
   // changing type limits used by schedule in component invalidates the component
   Handle h = componentData.handle();
   EXPECT_TRUE(justLights.isMember(h));
-  ScheduleTypeLimits newTypeLimits = typeLimits.clone(justLights).cast<ScheduleTypeLimits>();
+  auto newTypeLimits = typeLimits.clone(justLights).cast<ScheduleTypeLimits>();
   EXPECT_FALSE(newTypeLimits.handle() == typeLimits.handle());
   EXPECT_TRUE(schedule.setPointer(OS_Schedule_CompactFields::ScheduleTypeLimitsName, newTypeLimits.handle()));
   EXPECT_FALSE(componentData.initialized());
@@ -199,7 +199,7 @@ TEST_F(ModelFixture, ComponentWatcher_FromLoadedFile) {
   EXPECT_EQ(static_cast<unsigned>(2), model.numObjects());
 
   // get ComponentData object
-  ComponentDataVector cdv = model.getModelObjects<ComponentData>();
+  ComponentDataVector cdv = model.getConcreteModelObjects<ComponentData>();
   ASSERT_EQ(static_cast<unsigned>(1), cdv.size());
   ComponentData cd = cdv[0];
   UUID versionUUID = cd.versionUUID();
@@ -493,9 +493,9 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
     ASSERT_TRUE(ocd->primaryComponentObject().optionalCast<SiteWaterMainsTemperature>());
 
     // check model
-    EXPECT_EQ(1u, model.getModelObjects<SiteWaterMainsTemperature>().size());
-    ASSERT_EQ(1u, model.getModelObjects<ComponentData>().size());
-    EXPECT_EQ(ocd->handle(), model.getModelObjects<ComponentData>()[0].handle());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<SiteWaterMainsTemperature>().size());
+    ASSERT_EQ(1u, model.getConcreteModelObjects<ComponentData>().size());
+    EXPECT_EQ(ocd->handle(), model.getConcreteModelObjects<ComponentData>()[0].handle());
     EXPECT_EQ(2u, model.numObjects());
     EXPECT_NE(siteWaterMainsTemperature2.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // cloned
   }
@@ -526,9 +526,9 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
     ASSERT_TRUE(ocd->primaryComponentObject().optionalCast<SiteWaterMainsTemperature>());
 
     // check model
-    EXPECT_EQ(1u, model.getModelObjects<SiteWaterMainsTemperature>().size());
-    ASSERT_EQ(1u, model.getModelObjects<ComponentData>().size());
-    EXPECT_EQ(ocd->handle(), model.getModelObjects<ComponentData>()[0].handle());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<SiteWaterMainsTemperature>().size());
+    ASSERT_EQ(1u, model.getConcreteModelObjects<ComponentData>().size());
+    EXPECT_EQ(ocd->handle(), model.getConcreteModelObjects<ComponentData>()[0].handle());
     EXPECT_EQ(2u, model.numObjects());
     EXPECT_NE(siteWaterMainsTemperature1.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // removed
     EXPECT_NE(siteWaterMainsTemperature2.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // cloned
@@ -561,9 +561,9 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
     ASSERT_TRUE(ocd->primaryComponentObject().optionalCast<Building>());
 
     // check model
-    EXPECT_EQ(1u, model.getModelObjects<Building>().size());
-    ASSERT_EQ(1u, model.getModelObjects<ComponentData>().size());
-    EXPECT_EQ(ocd->handle(), model.getModelObjects<ComponentData>()[0].handle());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<Building>().size());
+    ASSERT_EQ(1u, model.getConcreteModelObjects<ComponentData>().size());
+    EXPECT_EQ(ocd->handle(), model.getConcreteModelObjects<ComponentData>()[0].handle());
     EXPECT_EQ(2u, model.numObjects());
     EXPECT_NE(building1.handle(), model.getUniqueModelObject<Building>().handle());  // removed
     EXPECT_NE(building2.handle(), model.getUniqueModelObject<Building>().handle());  // cloned

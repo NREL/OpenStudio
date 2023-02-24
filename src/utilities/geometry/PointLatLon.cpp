@@ -51,7 +51,7 @@ PointLatLon::PointLatLon(const PointLatLon& other) : m_storage(other.m_storage) 
   m_localCartesianConverter.reset();
 }
 
-PointLatLon::~PointLatLon() {}
+PointLatLon::~PointLatLon() = default;
 
 /// get lat
 double PointLatLon::lat() const {
@@ -88,9 +88,11 @@ double PointLatLon::operator-(const PointLatLon& other) const {
 
 Point3d PointLatLon::toLocalCartesian(const PointLatLon& point) const {
   initLocalCartesianConverter();
-  double x, y, z;
+  double x;
+  double y;
+  double z;
   m_localCartesianConverter->Forward(point.lat(), point.lon(), point.height(), x, y, z);
-  return Point3d(x, y, z);
+  return {x, y, z};
 }
 
 std::vector<Point3d> PointLatLon::toLocalCartesian(const std::vector<PointLatLon>& points) const {
@@ -103,9 +105,11 @@ std::vector<Point3d> PointLatLon::toLocalCartesian(const std::vector<PointLatLon
 
 PointLatLon PointLatLon::fromLocalCartesian(const Point3d& point) const {
   initLocalCartesianConverter();
-  double lat, lon, h;
+  double lat;
+  double lon;
+  double h;
   m_localCartesianConverter->Reverse(point.x(), point.y(), point.z(), lat, lon, h);
-  return PointLatLon(lat, lon, h);
+  return {lat, lon, h};
 }
 
 std::vector<PointLatLon> PointLatLon::fromLocalCartesian(const std::vector<Point3d>& points) const {
@@ -123,9 +127,12 @@ int PointLatLon::utmZone() const {
 Point3d PointLatLon::toUTM(const PointLatLon& point) const {
   int zone;
   bool northp;
-  double x, y, gamma, k;
+  double x;
+  double y;
+  double gamma;
+  double k;
   GeographicLib::UTMUPS::Forward(point.lat(), point.lon(), zone, northp, x, y, gamma, k, utmZone());
-  return Point3d(x, y, point.height());
+  return {x, y, point.height()};
 }
 
 std::vector<Point3d> PointLatLon::toUTM(const std::vector<PointLatLon>& points) const {
@@ -140,13 +147,19 @@ PointLatLon PointLatLon::fromUTM(const Point3d& point) const {
   int zone;
   bool northp;
   {
-    double x, y, gamma, k;
+    double x;
+    double y;
+    double gamma;
+    double k;
     GeographicLib::UTMUPS::Forward(lat(), lon(), zone, northp, x, y, gamma, k);
   }
 
-  double lat, lon, gamma, k;
+  double lat;
+  double lon;
+  double gamma;
+  double k;
   GeographicLib::UTMUPS::Reverse(zone, northp, point.x(), point.y(), lat, lon, gamma, k);
-  return PointLatLon(lat, lon, point.z());
+  return {lat, lon, point.z()};
 }
 
 std::vector<PointLatLon> PointLatLon::fromUTM(const std::vector<Point3d>& points) const {

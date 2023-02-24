@@ -59,7 +59,12 @@ namespace model {
                                                                    const std::string& fMUInstanceName, const std::string& fMUVariableName,
                                                                    double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterfaceFunctionalMockupUnitImportToActuator(const ExternalInterfaceFunctionalMockupUnitImportToActuator& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImportToActuator(ExternalInterfaceFunctionalMockupUnitImportToActuator&& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImportToActuator& operator=(const ExternalInterfaceFunctionalMockupUnitImportToActuator&) = default;
+    ExternalInterfaceFunctionalMockupUnitImportToActuator& operator=(ExternalInterfaceFunctionalMockupUnitImportToActuator&&) = default;
 
     //@}
 
@@ -107,7 +112,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl;
 
     explicit ExternalInterfaceFunctionalMockupUnitImportToActuator(
       std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl> impl);
@@ -122,10 +127,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceFunctionalMockupUnitImportToActuator*/
-  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImportToActuator> OptionalExternalInterfaceFunctionalMockupUnitImportToActuator;
+  using OptionalExternalInterfaceFunctionalMockupUnitImportToActuator = boost::optional<ExternalInterfaceFunctionalMockupUnitImportToActuator>;
 
   /** \relates ExternalInterfaceFunctionalMockupUnitImportToActuator*/
-  typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToActuator> ExternalInterfaceFunctionalMockupUnitImportToActuatorVector;
+  using ExternalInterfaceFunctionalMockupUnitImportToActuatorVector = std::vector<ExternalInterfaceFunctionalMockupUnitImportToActuator>;
 
 }  // namespace model
 }  // namespace openstudio

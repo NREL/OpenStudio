@@ -861,7 +861,7 @@ namespace contam {
 
     void IndexModelImpl::addLevel(Level& level) {
       double refHt = 0;
-      if (m_levels.size() > 0) {
+      if (!m_levels.empty()) {
         // Note that CONTAM stores heights in meters, so this next statement requires no conversion
         refHt = m_levels[m_levels.size() - 1].refht() + m_levels[m_levels.size() - 1].delht();
       }
@@ -966,7 +966,7 @@ namespace contam {
       int ncontaminants = contaminants().size();
       int nctm = ncontaminants * (m_zones.size() - start);
       std::string string = ANY_TO_STR(nctm) + " ! initial zone concentrations:\n";
-      if (nctm) {
+      if (nctm != 0) {
         for (unsigned i = start; i < m_zones.size(); i++) {
           string += ANY_TO_STR(i + offset);
           for (unsigned j = 0; j < (unsigned)ncontaminants; j++) {

@@ -54,6 +54,10 @@ namespace model {
     explicit CoilHeatingElectricMultiStageStageData(const Model& model);
 
     virtual ~CoilHeatingElectricMultiStageStageData() = default;
+    CoilHeatingElectricMultiStageStageData(const CoilHeatingElectricMultiStageStageData& other) = default;
+    CoilHeatingElectricMultiStageStageData(CoilHeatingElectricMultiStageStageData&& other) = default;
+    CoilHeatingElectricMultiStageStageData& operator=(const CoilHeatingElectricMultiStageStageData&) = default;
+    CoilHeatingElectricMultiStageStageData& operator=(CoilHeatingElectricMultiStageStageData&&) = default;
 
     //@}
 
@@ -94,7 +98,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingElectricMultiStageStageData_Impl ImplType;
+    using ImplType = detail::CoilHeatingElectricMultiStageStageData_Impl;
 
     explicit CoilHeatingElectricMultiStageStageData(std::shared_ptr<detail::CoilHeatingElectricMultiStageStageData_Impl> impl);
 
@@ -112,10 +116,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingElectricMultiStageStageData*/
-  typedef boost::optional<CoilHeatingElectricMultiStageStageData> OptionalCoilHeatingElectricMultiStageStageData;
+  using OptionalCoilHeatingElectricMultiStageStageData = boost::optional<CoilHeatingElectricMultiStageStageData>;
 
   /** \relates CoilHeatingElectricMultiStageStageData*/
-  typedef std::vector<CoilHeatingElectricMultiStageStageData> CoilHeatingElectricMultiStageStageDataVector;
+  using CoilHeatingElectricMultiStageStageDataVector = std::vector<CoilHeatingElectricMultiStageStageData>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -244,10 +244,10 @@ class UTILITIES_API IdfFile
 };
 
 /// optional idf file
-typedef boost::optional<IdfFile> OptionalIdfFile;
+using OptionalIdfFile = boost::optional<IdfFile>;
 
 /// vector of idf file
-typedef std::vector<IdfFile> IdfFileVector;
+using IdfFileVector = std::vector<IdfFile>;
 
 // ostream operator<<
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IdfFile& idfFile);

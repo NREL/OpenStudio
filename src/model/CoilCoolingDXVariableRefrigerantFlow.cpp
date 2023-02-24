@@ -90,7 +90,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingDXVariableRefrigerantFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXVariableRefrigerantFlow", "Availability Schedule"));
       }
@@ -231,9 +232,9 @@ namespace model {
     }
 
     ModelObject CoilCoolingDXVariableRefrigerantFlow_Impl::clone(Model model) const {
-      CoilCoolingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
+      auto objectClone = HVACComponent_Impl::clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
 
-      return objectClone;
+      return std::move(objectClone);
     }
 
     std::vector<ModelObject> CoilCoolingDXVariableRefrigerantFlow_Impl::children() const {
@@ -323,7 +324,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXVariableRefrigerantFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow);
+    return {IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow};
   }
 
   Schedule CoilCoolingDXVariableRefrigerantFlow::availabilitySchedule() const {

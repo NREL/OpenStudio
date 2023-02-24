@@ -91,7 +91,7 @@ namespace model {
       return isEmpty(OS_LightingDesignDayFields::SnowIndicator);
     }
 
-    bool LightingDesignDay_Impl::setCIESkyModel(std::string cIESkyModel) {
+    bool LightingDesignDay_Impl::setCIESkyModel(const std::string& cIESkyModel) {
       bool result = setString(OS_LightingDesignDayFields::CIESkyModel, cIESkyModel);
       return result;
     }
@@ -111,7 +111,7 @@ namespace model {
       OptionalInt dayofMonth = getInt(OS_LightingDesignDayFields::DayofMonth, true);
       OS_ASSERT(month);
       OS_ASSERT(dayofMonth);
-      return Date(MonthOfYear(*month), *dayofMonth);
+      return {MonthOfYear(*month), static_cast<unsigned int>(*dayofMonth)};
     }
 
     bool LightingDesignDay_Impl::setDate(const openstudio::Date& date) {
@@ -130,7 +130,7 @@ namespace model {
         OptionalInt minute = group.getInt(OS_LightingDesignDayExtensibleFields::MinutetoSimulate, true);
         OS_ASSERT(hour);
         OS_ASSERT(minute);
-        result.push_back(Time(0, *hour, *minute));
+        result.emplace_back(0, *hour, *minute);
       }
 
       return result;
@@ -145,7 +145,7 @@ namespace model {
         OptionalInt minute = group.getInt(OS_LightingDesignDayExtensibleFields::MinutetoSimulate, true);
         OS_ASSERT(hour);
         OS_ASSERT(minute);
-        result.push_back(DateTime(date, Time(0, *hour, *minute)));
+        result.emplace_back(date, Time(0, *hour, *minute));
       }
 
       return result;
@@ -155,20 +155,16 @@ namespace model {
       double totalDays = time.totalDays();
       unsigned hours = time.hours();
       unsigned minutes = time.minutes();
-      if (totalDays > 1) {
-        return false;
-      } else if (totalDays < 0) {
+      if ((totalDays > 1) || (totalDays < 0)) {
         return false;
       } else if (totalDays == 1) {
         hours = 24;
         minutes = 0;
       }
 
-      std::vector<std::string> temp;
-      temp.push_back(boost::lexical_cast<std::string>(hours));
-      temp.push_back(boost::lexical_cast<std::string>(minutes));
+      std::vector<std::string> temp{std::to_string(hours), std::to_string(minutes)};
 
-      ModelExtensibleGroup group = pushExtensibleGroup(temp).cast<ModelExtensibleGroup>();
+      auto group = pushExtensibleGroup(temp).cast<ModelExtensibleGroup>();
       return (!group.empty());
     }
 
@@ -219,7 +215,7 @@ namespace model {
     return getImpl<detail::LightingDesignDay_Impl>()->isSnowIndicatorDefaulted();
   }
 
-  bool LightingDesignDay::setCIESkyModel(std::string cIESkyModel) {
+  bool LightingDesignDay::setCIESkyModel(const std::string& cIESkyModel) {
     return getImpl<detail::LightingDesignDay_Impl>()->setCIESkyModel(cIESkyModel);
   }
 

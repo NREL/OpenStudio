@@ -46,7 +46,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    SiteGroundReflectance mo = m_model.getUniqueModelObject<SiteGroundReflectance>();
+    auto mo = m_model.getUniqueModelObject<SiteGroundReflectance>();
 
     boost::optional<double> value = workspaceObject.getDouble(Site_GroundReflectanceFields::JanuaryGroundReflectance);
     if (value) {

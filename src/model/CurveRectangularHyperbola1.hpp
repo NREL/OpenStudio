@@ -53,7 +53,12 @@ namespace model {
     /** Initializes \f$c_1 = c_2 = 1.0,\ c_3 = 0.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
     explicit CurveRectangularHyperbola1(const Model& model);
 
-    virtual ~CurveRectangularHyperbola1() {}
+    virtual ~CurveRectangularHyperbola1() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveRectangularHyperbola1(const CurveRectangularHyperbola1& other) = default;
+    CurveRectangularHyperbola1(CurveRectangularHyperbola1&& other) = default;
+    CurveRectangularHyperbola1& operator=(const CurveRectangularHyperbola1&) = default;
+    CurveRectangularHyperbola1& operator=(CurveRectangularHyperbola1&&) = default;
 
     //@}
 
@@ -125,7 +130,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveRectangularHyperbola1_Impl ImplType;
+    using ImplType = detail::CurveRectangularHyperbola1_Impl;
 
     explicit CurveRectangularHyperbola1(std::shared_ptr<detail::CurveRectangularHyperbola1_Impl> impl);
 
@@ -140,10 +145,10 @@ namespace model {
   };
 
   /** \relates CurveRectangularHyperbola1*/
-  typedef boost::optional<CurveRectangularHyperbola1> OptionalCurveRectangularHyperbola1;
+  using OptionalCurveRectangularHyperbola1 = boost::optional<CurveRectangularHyperbola1>;
 
   /** \relates CurveRectangularHyperbola1*/
-  typedef std::vector<CurveRectangularHyperbola1> CurveRectangularHyperbola1Vector;
+  using CurveRectangularHyperbola1Vector = std::vector<CurveRectangularHyperbola1>;
 
 }  // namespace model
 }  // namespace openstudio

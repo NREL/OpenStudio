@@ -55,7 +55,12 @@ namespace model {
     //@{
     explicit EnergyManagementSystemInternalVariable(const Model& model, const std::string& internalDataType);
 
-    virtual ~EnergyManagementSystemInternalVariable() {}
+    virtual ~EnergyManagementSystemInternalVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemInternalVariable(const EnergyManagementSystemInternalVariable& other) = default;
+    EnergyManagementSystemInternalVariable(EnergyManagementSystemInternalVariable&& other) = default;
+    EnergyManagementSystemInternalVariable& operator=(const EnergyManagementSystemInternalVariable&) = default;
+    EnergyManagementSystemInternalVariable& operator=(EnergyManagementSystemInternalVariable&&) = default;
 
     //@}
 
@@ -85,7 +90,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemInternalVariable_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemInternalVariable_Impl;
 
     explicit EnergyManagementSystemInternalVariable(std::shared_ptr<detail::EnergyManagementSystemInternalVariable_Impl> impl);
 
@@ -101,10 +106,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemInternalVariable*/
-  typedef boost::optional<EnergyManagementSystemInternalVariable> OptionalEnergyManagementSystemInternalVariable;
+  using OptionalEnergyManagementSystemInternalVariable = boost::optional<EnergyManagementSystemInternalVariable>;
 
   /** \relates EnergyManagementSystemInternalVariable*/
-  typedef std::vector<EnergyManagementSystemInternalVariable> EnergyManagementSystemInternalVariableVector;
+  using EnergyManagementSystemInternalVariableVector = std::vector<EnergyManagementSystemInternalVariable>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -58,7 +58,7 @@ namespace model {
 
       ScheduleRule_Impl(const ScheduleRule_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ScheduleRule_Impl();
+      virtual ~ScheduleRule_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

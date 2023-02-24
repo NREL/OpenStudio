@@ -115,7 +115,7 @@ namespace model {
         auto stageClone = stage.clone(model).cast<CoilHeatingGasMultiStageStageData>();
         t_clone.addStage(stageClone);
       }
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilHeatingGasMultiStage_Impl::children() const {

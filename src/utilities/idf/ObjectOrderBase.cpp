@@ -83,8 +83,9 @@ bool ObjectOrderBase::insert(IddObjectType type, unsigned index) {
   }
   if (index < m_iddOrder->size()) {
     auto it = m_iddOrder->begin();
-    for (unsigned i = 0; i < index; ++i, ++it)
+    for (unsigned i = 0; i < index; ++i, ++it) {
       ;
+    }
     m_iddOrder->insert(it, type);
   } else {
     m_iddOrder->push_back(type);

@@ -426,17 +426,15 @@ BCLMeasure::BCLMeasure(const openstudio::path& dir) : m_directory(openstudio::fi
   }
 }
 
-BCLMeasure::~BCLMeasure() {}
-
 std::string BCLMeasure::makeClassName(const std::string& name) {
   std::string str(name);
 
   bool startsWithLetter = false;
   for (std::size_t i = 0; i < str.size(); ++i) {
-    if (!(std::isalpha(str[i]) || std::isdigit(str[i]))) {
+    if (!((std::isalpha(str[i]) != 0) || (std::isdigit(str[i]) != 0))) {
       str[i] = ' ';
     } else if (i == 0) {
-      startsWithLetter = std::isalpha(str[i]);
+      startsWithLetter = (std::isalpha(str[i]) != 0);
     }
   }
 

@@ -124,7 +124,7 @@ namespace energyplus {
       } else {
         // March through the equipment on the supply branch and convert them.
         for (unsigned i = 0; !_supplyBranch->getExtensibleGroup(i).empty(); i++) {
-          WorkspaceExtensibleGroup eg = _supplyBranch->getExtensibleGroup(i).cast<WorkspaceExtensibleGroup>();
+          auto eg = _supplyBranch->getExtensibleGroup(i).cast<WorkspaceExtensibleGroup>();
           boost::optional<std::string> componentName = eg.getString(BranchExtensibleFields::ComponentName);
           boost::optional<std::string> componentType = eg.getString(BranchExtensibleFields::ComponentObjectType);
           boost::optional<std::string> componentInletNodeName = eg.getString(BranchExtensibleFields::ComponentInletNodeName);
@@ -133,7 +133,7 @@ namespace energyplus {
           OptionalNode node;
           OptionalModelObject targetModelObject;
 
-          if (componentName && (componentName.get() != "") && componentType && (componentType.get() != "")) {
+          if (componentName && (!componentName.get().empty()) && componentType && (!componentType.get().empty())) {
             IddObjectType iddType(componentType.get());
             wo = _workspace.getObjectByTypeAndName(iddType, componentName.get());
           }

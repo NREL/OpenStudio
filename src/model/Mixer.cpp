@@ -60,10 +60,10 @@ namespace model {
 
     boost::optional<ModelObject> Mixer_Impl::lastInletModelObject() const {
       std::vector<ModelObject> objects = inletModelObjects();
-      if (objects.size() > 0) {
+      if (!objects.empty()) {
         return OptionalModelObject(objects.back());
       } else {
-        return OptionalModelObject();
+        return {};
       }
     }
 
@@ -126,7 +126,7 @@ namespace model {
       return result;
     }
 
-    std::vector<HVACComponent> Mixer_Impl::edges(const boost::optional<HVACComponent>& prev) {
+    std::vector<HVACComponent> Mixer_Impl::edges(const boost::optional<HVACComponent>& /*prev*/) {
       std::vector<HVACComponent> edges;
       if (auto edgeModelObject = this->outletModelObject()) {
         if (auto edgeObject = edgeModelObject->optionalCast<HVACComponent>()) {

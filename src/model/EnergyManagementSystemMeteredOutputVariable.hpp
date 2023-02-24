@@ -79,7 +79,12 @@ namespace model {
 
     explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
-    virtual ~EnergyManagementSystemMeteredOutputVariable() {}
+    virtual ~EnergyManagementSystemMeteredOutputVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemMeteredOutputVariable(const EnergyManagementSystemMeteredOutputVariable& other) = default;
+    EnergyManagementSystemMeteredOutputVariable(EnergyManagementSystemMeteredOutputVariable&& other) = default;
+    EnergyManagementSystemMeteredOutputVariable& operator=(const EnergyManagementSystemMeteredOutputVariable&) = default;
+    EnergyManagementSystemMeteredOutputVariable& operator=(EnergyManagementSystemMeteredOutputVariable&&) = default;
 
     //@}
 
@@ -169,7 +174,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemMeteredOutputVariable_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemMeteredOutputVariable_Impl;
 
     explicit EnergyManagementSystemMeteredOutputVariable(std::shared_ptr<detail::EnergyManagementSystemMeteredOutputVariable_Impl> impl);
 
@@ -185,10 +190,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemMeteredOutputVariable*/
-  typedef boost::optional<EnergyManagementSystemMeteredOutputVariable> OptionalEnergyManagementSystemMeteredOutputVariable;
+  using OptionalEnergyManagementSystemMeteredOutputVariable = boost::optional<EnergyManagementSystemMeteredOutputVariable>;
 
   /** \relates EnergyManagementSystemMeteredOutputVariable*/
-  typedef std::vector<EnergyManagementSystemMeteredOutputVariable> EnergyManagementSystemMeteredOutputVariableVector;
+  using EnergyManagementSystemMeteredOutputVariableVector = std::vector<EnergyManagementSystemMeteredOutputVariable>;
 
 }  // namespace model
 }  // namespace openstudio

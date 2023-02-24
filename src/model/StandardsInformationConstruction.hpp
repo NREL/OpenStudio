@@ -55,7 +55,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~StandardsInformationConstruction() {}
+    virtual ~StandardsInformationConstruction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    StandardsInformationConstruction(const StandardsInformationConstruction& other) = default;
+    StandardsInformationConstruction(StandardsInformationConstruction&& other) = default;
+    StandardsInformationConstruction& operator=(const StandardsInformationConstruction&) = default;
+    StandardsInformationConstruction& operator=(StandardsInformationConstruction&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -234,7 +239,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::StandardsInformationConstruction_Impl ImplType;
+    using ImplType = detail::StandardsInformationConstruction_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -252,10 +257,10 @@ namespace model {
   };
 
   /** \relates StandardsInformationConstruction */
-  typedef boost::optional<StandardsInformationConstruction> OptionalStandardsInformationConstruction;
+  using OptionalStandardsInformationConstruction = boost::optional<StandardsInformationConstruction>;
 
   /** \relates StandardsInformationConstruction */
-  typedef std::vector<StandardsInformationConstruction> StandardsInformationConstructionVector;
+  using StandardsInformationConstructionVector = std::vector<StandardsInformationConstruction>;
 
 }  // namespace model
 }  // namespace openstudio

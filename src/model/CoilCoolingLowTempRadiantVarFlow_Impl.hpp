@@ -55,7 +55,7 @@ namespace model {
 
       CoilCoolingLowTempRadiantVarFlow_Impl(const CoilCoolingLowTempRadiantVarFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingLowTempRadiantVarFlow_Impl() {}
+      virtual ~CoilCoolingLowTempRadiantVarFlow_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -130,7 +130,7 @@ namespace model {
 
       void resetCoolingControlTemperatureSchedule();
 
-      bool setCondensationControlType(std::string condensationControlType);
+      bool setCondensationControlType(const std::string& condensationControlType);
 
       void resetCondensationControlType();
 

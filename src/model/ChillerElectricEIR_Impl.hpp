@@ -52,7 +52,7 @@ namespace model {
 
       ChillerElectricEIR_Impl(const ChillerElectricEIR_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ChillerElectricEIR_Impl() {}
+      virtual ~ChillerElectricEIR_Impl() = default;
 
       /** @name Virtual Methods */
       //@{
@@ -252,7 +252,7 @@ namespace model {
 
       void resetMinimumUnloadingRatio();
 
-      bool setCondenserType(std::string condenserType);
+      bool setCondenserType(const std::string& condenserType);
 
       void resetCondenserType();
 
@@ -268,7 +268,7 @@ namespace model {
 
       void resetLeavingChilledWaterLowerTemperatureLimit();
 
-      bool setChillerFlowMode(std::string chillerFlowMode);
+      bool setChillerFlowMode(const std::string& chillerFlowMode);
 
       void resetChillerFlowMode();
 

@@ -57,7 +57,12 @@ namespace model {
 
     explicit InteriorPartitionSurfaceGroup(const Model& model);
 
-    virtual ~InteriorPartitionSurfaceGroup() {}
+    virtual ~InteriorPartitionSurfaceGroup() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    InteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& other) = default;
+    InteriorPartitionSurfaceGroup(InteriorPartitionSurfaceGroup&& other) = default;
+    InteriorPartitionSurfaceGroup& operator=(const InteriorPartitionSurfaceGroup&) = default;
+    InteriorPartitionSurfaceGroup& operator=(InteriorPartitionSurfaceGroup&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -96,7 +101,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::InteriorPartitionSurfaceGroup_Impl ImplType;
+    using ImplType = detail::InteriorPartitionSurfaceGroup_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -109,10 +114,10 @@ namespace model {
   };
 
   /** \relates InteriorPartitionSurfaceGroup*/
-  typedef boost::optional<InteriorPartitionSurfaceGroup> OptionalInteriorPartitionSurfaceGroup;
+  using OptionalInteriorPartitionSurfaceGroup = boost::optional<InteriorPartitionSurfaceGroup>;
 
   /** \relates InteriorPartitionSurfaceGroup*/
-  typedef std::vector<InteriorPartitionSurfaceGroup> InteriorPartitionSurfaceGroupVector;
+  using InteriorPartitionSurfaceGroupVector = std::vector<InteriorPartitionSurfaceGroup>;
 
 }  // namespace model
 }  // namespace openstudio

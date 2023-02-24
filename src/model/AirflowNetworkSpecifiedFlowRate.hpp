@@ -55,7 +55,12 @@ namespace model {
     /** Construct a specified flow rate object with a specified airflow value. */
     AirflowNetworkSpecifiedFlowRate(const Model& model, double airFlowValue);
 
-    virtual ~AirflowNetworkSpecifiedFlowRate() {}
+    virtual ~AirflowNetworkSpecifiedFlowRate() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkSpecifiedFlowRate(const AirflowNetworkSpecifiedFlowRate& other) = default;
+    AirflowNetworkSpecifiedFlowRate(AirflowNetworkSpecifiedFlowRate&& other) = default;
+    AirflowNetworkSpecifiedFlowRate& operator=(const AirflowNetworkSpecifiedFlowRate&) = default;
+    AirflowNetworkSpecifiedFlowRate& operator=(AirflowNetworkSpecifiedFlowRate&&) = default;
 
     //@}
 
@@ -87,7 +92,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkSpecifiedFlowRate_Impl ImplType;
+    using ImplType = detail::AirflowNetworkSpecifiedFlowRate_Impl;
 
     explicit AirflowNetworkSpecifiedFlowRate(std::shared_ptr<detail::AirflowNetworkSpecifiedFlowRate_Impl> impl);
 
@@ -101,10 +106,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkSpecifiedFlowRate*/
-  typedef boost::optional<AirflowNetworkSpecifiedFlowRate> OptionalAirflowNetworkSpecifiedFlowRate;
+  using OptionalAirflowNetworkSpecifiedFlowRate = boost::optional<AirflowNetworkSpecifiedFlowRate>;
 
   /** \relates AirflowNetworkSpecifiedFlowRate*/
-  typedef std::vector<AirflowNetworkSpecifiedFlowRate> AirflowNetworkSpecifiedFlowRateVector;
+  using AirflowNetworkSpecifiedFlowRateVector = std::vector<AirflowNetworkSpecifiedFlowRate>;
 
 }  // namespace model
 }  // namespace openstudio

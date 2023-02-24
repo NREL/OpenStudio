@@ -54,7 +54,12 @@ namespace model {
 
     explicit SetpointManagerOutdoorAirPretreat(const Model& model);
 
-    virtual ~SetpointManagerOutdoorAirPretreat() {}
+    virtual ~SetpointManagerOutdoorAirPretreat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerOutdoorAirPretreat(const SetpointManagerOutdoorAirPretreat& other) = default;
+    SetpointManagerOutdoorAirPretreat(SetpointManagerOutdoorAirPretreat&& other) = default;
+    SetpointManagerOutdoorAirPretreat& operator=(const SetpointManagerOutdoorAirPretreat&) = default;
+    SetpointManagerOutdoorAirPretreat& operator=(SetpointManagerOutdoorAirPretreat&&) = default;
 
     //@}
 
@@ -140,7 +145,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerOutdoorAirPretreat_Impl ImplType;
+    using ImplType = detail::SetpointManagerOutdoorAirPretreat_Impl;
 
     explicit SetpointManagerOutdoorAirPretreat(std::shared_ptr<detail::SetpointManagerOutdoorAirPretreat_Impl> impl);
 
@@ -154,10 +159,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerOutdoorAirPretreat*/
-  typedef boost::optional<SetpointManagerOutdoorAirPretreat> OptionalSetpointManagerOutdoorAirPretreat;
+  using OptionalSetpointManagerOutdoorAirPretreat = boost::optional<SetpointManagerOutdoorAirPretreat>;
 
   /** \relates SetpointManagerOutdoorAirPretreat*/
-  typedef std::vector<SetpointManagerOutdoorAirPretreat> SetpointManagerOutdoorAirPretreatVector;
+  using SetpointManagerOutdoorAirPretreatVector = std::vector<SetpointManagerOutdoorAirPretreat>;
 
 }  // namespace model
 }  // namespace openstudio

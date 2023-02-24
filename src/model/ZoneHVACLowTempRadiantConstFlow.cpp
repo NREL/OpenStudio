@@ -82,13 +82,13 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACLowTempRadiantConstFlow_Impl::clone(Model model) const {
-      ZoneHVACLowTempRadiantConstFlow LowTempRadiantConstFlowClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTempRadiantConstFlow>();
+      auto LowTempRadiantConstFlowClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTempRadiantConstFlow>();
 
       auto t_coolingCoil = coolingCoil();
-      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
+      auto coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       LowTempRadiantConstFlowClone.setHeatingCoil(heatingCoilClone);
 
@@ -107,7 +107,7 @@ namespace model {
         }
       }
 
-      return LowTempRadiantConstFlowClone;
+      return std::move(LowTempRadiantConstFlowClone);
     }
 
     std::vector<IdfObject> ZoneHVACLowTempRadiantConstFlow_Impl::remove() {
@@ -153,7 +153,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACLowTempRadiantConstFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantConstFlow", "Availability"));
       }
@@ -636,7 +637,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneHVACLowTempRadiantConstFlow_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -756,7 +757,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACLowTempRadiantConstFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
+    return {IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow};
   }
 
   std::vector<std::string> ZoneHVACLowTempRadiantConstFlow::radiantSurfaceTypeValues() {

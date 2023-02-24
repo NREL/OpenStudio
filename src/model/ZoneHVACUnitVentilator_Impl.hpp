@@ -54,7 +54,7 @@ namespace model {
 
       ZoneHVACUnitVentilator_Impl(const ZoneHVACUnitVentilator_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACUnitVentilator_Impl() {}
+      virtual ~ZoneHVACUnitVentilator_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -136,7 +136,7 @@ namespace model {
 
       void autosizeMaximumSupplyAirFlowRate();
 
-      bool setOutdoorAirControlType(std::string outdoorAirControlType);
+      bool setOutdoorAirControlType(const std::string& outdoorAirControlType);
 
       bool setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate);
 

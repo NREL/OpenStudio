@@ -56,7 +56,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~HeatBalanceAlgorithm() {}
+    virtual ~HeatBalanceAlgorithm() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatBalanceAlgorithm(const HeatBalanceAlgorithm& other) = default;
+    HeatBalanceAlgorithm(HeatBalanceAlgorithm&& other) = default;
+    HeatBalanceAlgorithm& operator=(const HeatBalanceAlgorithm&) = default;
+    HeatBalanceAlgorithm& operator=(HeatBalanceAlgorithm&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -91,7 +96,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setAlgorithm(std::string algorithm);
+    bool setAlgorithm(const std::string& algorithm);
 
     void resetAlgorithm();
 
@@ -120,7 +125,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::HeatBalanceAlgorithm_Impl ImplType;
+    using ImplType = detail::HeatBalanceAlgorithm_Impl;
 
     friend class detail::HeatBalanceAlgorithm_Impl;
     friend class Model;
@@ -137,10 +142,10 @@ namespace model {
   };
 
   /** \relates HeatBalanceAlgorithm*/
-  typedef boost::optional<HeatBalanceAlgorithm> OptionalHeatBalanceAlgorithm;
+  using OptionalHeatBalanceAlgorithm = boost::optional<HeatBalanceAlgorithm>;
 
   /** \relates HeatBalanceAlgorithm*/
-  typedef std::vector<HeatBalanceAlgorithm> HeatBalanceAlgorithmVector;
+  using HeatBalanceAlgorithmVector = std::vector<HeatBalanceAlgorithm>;
 
 }  // namespace model
 }  // namespace openstudio

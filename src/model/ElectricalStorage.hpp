@@ -51,7 +51,12 @@ It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStora
    public:
     ElectricalStorage(IddObjectType type, const Model& model);
 
-    virtual ~ElectricalStorage() {}
+    virtual ~ElectricalStorage() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricalStorage(const ElectricalStorage& other) = default;
+    ElectricalStorage(ElectricalStorage&& other) = default;
+    ElectricalStorage& operator=(const ElectricalStorage&) = default;
+    ElectricalStorage& operator=(ElectricalStorage&&) = default;
 
     boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
@@ -68,7 +73,7 @@ It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStora
 
     /// @cond
 
-    typedef detail::ElectricalStorage_Impl ImplType;
+    using ImplType = detail::ElectricalStorage_Impl;
 
     explicit ElectricalStorage(std::shared_ptr<detail::ElectricalStorage_Impl> impl);
 
@@ -78,9 +83,9 @@ It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStora
     /// @endcond
   };
 
-  typedef boost::optional<ElectricalStorage> OptionalElectricalStorage;
+  using OptionalElectricalStorage = boost::optional<ElectricalStorage>;
 
-  typedef std::vector<ElectricalStorage> ElectricalStorageVector;
+  using ElectricalStorageVector = std::vector<ElectricalStorage>;
 
 }  // namespace model
 }  // namespace openstudio

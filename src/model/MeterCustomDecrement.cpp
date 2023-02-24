@@ -99,7 +99,7 @@ namespace model {
 
     // Add a new (Key, Var) group
     bool MeterCustomDecrement_Impl::addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName) {
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
       bool temp = eg.setString(OS_Meter_CustomDecrementExtensibleFields::KeyName, keyName);
       bool ok = eg.setString(OS_Meter_CustomDecrementExtensibleFields::OutputVariableorMeterName, outputVariableorMeterName);
@@ -217,7 +217,7 @@ namespace model {
   }
 
   IddObjectType MeterCustomDecrement::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Meter_CustomDecrement);
+    return {IddObjectType::OS_Meter_CustomDecrement};
   }
 
   std::vector<std::string> MeterCustomDecrement::fuelTypeValues() {

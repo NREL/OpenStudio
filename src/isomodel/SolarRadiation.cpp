@@ -59,8 +59,6 @@ namespace isomodel {
       m_hourlyDewPointTemp(MONTHS, std::vector<double>(HOURS, 0)),
       m_hourlyGlobalHorizontalRadiation(MONTHS, std::vector<double>(HOURS, 0)) {}
 
-  SolarRadiation::~SolarRadiation() {}
-
   /**
    * compute the monthly average solar radiation incident on the vertical surfaces for the
    * eight primary directions (N, S, E, W, NW, SW, NE, SE)

@@ -53,7 +53,12 @@ namespace model {
     explicit Screen(const Model& model, double diffuseSolarReflectance = 0.08, double diffuseVisibleReflectance = 0.08,
                     double screenMaterialSpacing = 0.00157, double screenMaterialDiameter = 0.000381);
 
-    virtual ~Screen() {}
+    virtual ~Screen() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Screen(const Screen& other) = default;
+    Screen(Screen&& other) = default;
+    Screen& operator=(const Screen&) = default;
+    Screen& operator=(Screen&&) = default;
 
     //@}
 
@@ -183,7 +188,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Screen_Impl ImplType;
+    using ImplType = detail::Screen_Impl;
 
     explicit Screen(std::shared_ptr<detail::Screen_Impl> impl);
 
@@ -197,10 +202,10 @@ namespace model {
   };
 
   /** \relates Screen*/
-  typedef boost::optional<Screen> OptionalScreen;
+  using OptionalScreen = boost::optional<Screen>;
 
   /** \relates Screen*/
-  typedef std::vector<Screen> ScreenVector;
+  using ScreenVector = std::vector<Screen>;
 
 }  // namespace model
 }  // namespace openstudio

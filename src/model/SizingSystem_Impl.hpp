@@ -52,7 +52,7 @@ namespace model {
 
       SizingSystem_Impl(const SizingSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SizingSystem_Impl() {}
+      virtual ~SizingSystem_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
@@ -170,7 +170,7 @@ namespace model {
 
       bool isOccupantDiversityAutosized() const;
 
-      bool setTypeofLoadtoSizeOn(std::string typeofLoadtoSizeOn);
+      bool setTypeofLoadtoSizeOn(const std::string& typeofLoadtoSizeOn);
 
       void resetTypeofLoadtoSizeOn();
 
@@ -198,7 +198,7 @@ namespace model {
 
       bool setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
 
-      bool setSizingOption(std::string sizingOption);
+      bool setSizingOption(const std::string& sizingOption);
 
       void resetSizingOption();
 
@@ -218,7 +218,7 @@ namespace model {
 
       void resetCentralHeatingDesignSupplyAirHumidityRatio();
 
-      bool setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod);
+      bool setCoolingDesignAirFlowMethod(const std::string& coolingDesignAirFlowMethod);
 
       void resetCoolingDesignAirFlowMethod();
 
@@ -226,7 +226,7 @@ namespace model {
 
       void resetCoolingDesignAirFlowRate();
 
-      bool setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod);
+      bool setHeatingDesignAirFlowMethod(const std::string& heatingDesignAirFlowMethod);
 
       void resetHeatingDesignAirFlowMethod();
 
@@ -234,7 +234,7 @@ namespace model {
 
       void resetHeatingDesignAirFlowRate();
 
-      bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
+      bool setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod);
 
       void resetSystemOutdoorAirMethod();
 
@@ -254,7 +254,7 @@ namespace model {
 
       bool setHeatingSupplyAirFlowRatePerUnitHeatingCapacity(double heatingSupplyAirFlowRatePerUnitHeatingCapacity);
 
-      bool setCoolingDesignCapacityMethod(std::string coolingDesignCapacityMethod);
+      bool setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod);
 
       bool setCoolingDesignCapacity(boost::optional<double> coolingDesignCapacity);
 
@@ -264,7 +264,7 @@ namespace model {
 
       bool setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity);
 
-      bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+      bool setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod);
 
       bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
 
@@ -274,7 +274,7 @@ namespace model {
 
       bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-      bool setCentralCoolingCapacityControlMethod(std::string centralCoolingCapacityControlMethod);
+      bool setCentralCoolingCapacityControlMethod(const std::string& centralCoolingCapacityControlMethod);
 
       bool setOccupantDiversity(double occupantDiversity);
 

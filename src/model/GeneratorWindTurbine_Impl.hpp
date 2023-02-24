@@ -52,7 +52,7 @@ namespace model {
 
       GeneratorWindTurbine_Impl(const GeneratorWindTurbine_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorWindTurbine_Impl() {}
+      virtual ~GeneratorWindTurbine_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -130,9 +130,9 @@ namespace model {
 
       bool setAvailabilitySchedule(Schedule& schedule);
 
-      bool setRotorType(std::string rotorType);
+      bool setRotorType(const std::string& rotorType);
 
-      bool setPowerControl(std::string powerControl);
+      bool setPowerControl(const std::string& powerControl);
 
       bool setRatedRotorSpeed(double ratedRotorSpeed);
 

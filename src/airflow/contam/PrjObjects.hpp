@@ -74,7 +74,7 @@ namespace contam {
     /** Create a new object from another object. */
     Zone(const Zone& other);
     /** Destroy the object. */
-    ~Zone();
+    ~Zone() = default;
 
     //@}
     /** @name Operators */
@@ -293,7 +293,7 @@ namespace contam {
     /** Create a new object from another object. */
     Species(const Species& other);
     /** Destroy the object. */
-    ~Species();
+    ~Species() = default;
 
     //@}
     /** @name Operators */
@@ -422,7 +422,7 @@ namespace contam {
     /** Create a new object from another object. */
     Ahs(const Ahs& other);
     /** Destroy the object. */
-    ~Ahs();
+    ~Ahs() = default;
 
     //@}
     /** @name Operators */
@@ -515,7 +515,7 @@ namespace contam {
     /** Create a new object from another object. */
     AirflowPath(const AirflowPath& other);
     /** Destroy the object. */
-    ~AirflowPath();
+    ~AirflowPath() = default;
 
     //@}
     /** @name Operators */
@@ -763,7 +763,7 @@ namespace contam {
     /** Create a new object from another object. */
     RunControl(const RunControl& other);
     /** Destroy the object. */
-    ~RunControl();
+    ~RunControl() = default;
 
     //@}
     /** @name Operators */
@@ -1280,7 +1280,7 @@ namespace contam {
     /** Create a new object from another object. */
     Level(const Level& other);
     /** Destroy the object. */
-    ~Level();
+    ~Level() = default;
 
     //@}
     /** @name Operators */
@@ -1357,7 +1357,7 @@ namespace contam {
     /** Create a new object from another object. */
     DaySchedule(const DaySchedule& other);
     /** Destroy the object. */
-    ~DaySchedule();
+    ~DaySchedule() = default;
 
     //@}
     /** @name Operators */
@@ -1433,7 +1433,7 @@ namespace contam {
     /** Create a new object from another object. */
     WeekSchedule(const WeekSchedule& other);
     /** Destroy the object. */
-    ~WeekSchedule();
+    ~WeekSchedule() = default;
 
     //@}
     /** @name Operators */
@@ -1504,7 +1504,7 @@ namespace contam {
     /** Create a new object from another object. */
     WindPressureProfile(const WindPressureProfile& other);
     /** Destroy the object. */
-    ~WindPressureProfile();
+    ~WindPressureProfile() = default;
 
     //@}
     /** @name Operators */
@@ -1603,7 +1603,7 @@ namespace contam {
       UNKNOWN
     };
     /** Destroy the object. */
-    virtual ~ControlNode() {}
+    virtual ~ControlNode() = default;
     /** Write the object to a string. */
     virtual std::string write() = 0;
     /** Convert an input string into a control node type enum. */
@@ -1663,7 +1663,7 @@ namespace contam {
     /** Create a new object from another object. */
     CdvDat(const CdvDat& other);
     /** Destroy the object. */
-    ~CdvDat();
+    ~CdvDat() = default;
 
     //@}
     /** @name Operators */

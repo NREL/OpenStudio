@@ -60,7 +60,12 @@ namespace model {
     /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit object and places it inside the model.  The coil is fully initialized with all companion objects. */
     CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model);
 
-    virtual ~CoilCoolingWaterToAirHeatPumpEquationFit() {}
+    virtual ~CoilCoolingWaterToAirHeatPumpEquationFit() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingWaterToAirHeatPumpEquationFit(const CoilCoolingWaterToAirHeatPumpEquationFit& other) = default;
+    CoilCoolingWaterToAirHeatPumpEquationFit(CoilCoolingWaterToAirHeatPumpEquationFit&& other) = default;
+    CoilCoolingWaterToAirHeatPumpEquationFit& operator=(const CoilCoolingWaterToAirHeatPumpEquationFit&) = default;
+    CoilCoolingWaterToAirHeatPumpEquationFit& operator=(CoilCoolingWaterToAirHeatPumpEquationFit&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -216,7 +221,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl ImplType;
+    using ImplType = detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl;
 
     explicit CoilCoolingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl);
 
@@ -230,10 +235,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingWaterToAirHeatPumpEquationFit*/
-  typedef boost::optional<CoilCoolingWaterToAirHeatPumpEquationFit> OptionalCoilCoolingWaterToAirHeatPumpEquationFit;
+  using OptionalCoilCoolingWaterToAirHeatPumpEquationFit = boost::optional<CoilCoolingWaterToAirHeatPumpEquationFit>;
 
   /** \relates CoilCoolingWaterToAirHeatPumpEquationFit*/
-  typedef std::vector<CoilCoolingWaterToAirHeatPumpEquationFit> CoilCoolingWaterToAirHeatPumpEquationFitVector;
+  using CoilCoolingWaterToAirHeatPumpEquationFitVector = std::vector<CoilCoolingWaterToAirHeatPumpEquationFit>;
 
 }  // namespace model
 }  // namespace openstudio

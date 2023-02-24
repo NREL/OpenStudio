@@ -96,12 +96,12 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2SameSpaces) {
   EXPECT_TRUE(space2.setThermalZone(thermalZone));
   EXPECT_TRUE(space2.setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir));
 
-  EXPECT_EQ(1u, model.getModelObjects<DesignSpecificationOutdoorAir>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DesignSpecificationOutdoorAir>().size());
   boost::optional<Space> combinedSpace = thermalZone.combineSpaces();
   ASSERT_TRUE(combinedSpace);
   EXPECT_FALSE(combinedSpace->isDesignSpecificationOutdoorAirDefaulted());
   ASSERT_TRUE(combinedSpace->designSpecificationOutdoorAir());
-  EXPECT_EQ(1u, model.getModelObjects<DesignSpecificationOutdoorAir>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DesignSpecificationOutdoorAir>().size());
   EXPECT_EQ(designSpecificationOutdoorAir.handle(), combinedSpace->designSpecificationOutdoorAir()->handle());
 }
 
@@ -109,11 +109,12 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces)
   Model model;
 
   // 1 m^2
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   ThermalZone thermalZone(model);
 
@@ -146,12 +147,12 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces)
   space2.setPeoplePerFloorArea(2.0);
   EXPECT_EQ(2.0, space2.numberOfPeople());
 
-  EXPECT_EQ(2u, model.getModelObjects<DesignSpecificationOutdoorAir>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<DesignSpecificationOutdoorAir>().size());
   boost::optional<Space> combinedSpace = thermalZone.combineSpaces();
   ASSERT_TRUE(combinedSpace);
   EXPECT_FALSE(combinedSpace->isDesignSpecificationOutdoorAirDefaulted());
   ASSERT_TRUE(combinedSpace->designSpecificationOutdoorAir());
-  EXPECT_EQ(3u, model.getModelObjects<DesignSpecificationOutdoorAir>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<DesignSpecificationOutdoorAir>().size());
   EXPECT_NE(designSpecificationOutdoorAir1.handle(), combinedSpace->designSpecificationOutdoorAir()->handle());
   EXPECT_NE(designSpecificationOutdoorAir2.handle(), combinedSpace->designSpecificationOutdoorAir()->handle());
 

@@ -122,11 +122,11 @@ namespace model {
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> ComponentCostAdjustments_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // set the parent, child may have to call methods on the parent
-    bool ComponentCostAdjustments_Impl::setParent(ParentObject& newParent) {
+    bool ComponentCostAdjustments_Impl::setParent(ParentObject& /*newParent*/) {
       //if (newParent.optionalCast<SomeParentClass>() && (newParent.model() == model())) {
       //  return true;
       //}

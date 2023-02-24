@@ -54,7 +54,7 @@ namespace model {
 
       AvailabilityManagerNightVentilation_Impl(const AvailabilityManagerNightVentilation_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerNightVentilation_Impl() {}
+      virtual ~AvailabilityManagerNightVentilation_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

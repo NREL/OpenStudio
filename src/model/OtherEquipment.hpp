@@ -55,7 +55,12 @@ namespace model {
 
     explicit OtherEquipment(const OtherEquipmentDefinition& definition);
 
-    virtual ~OtherEquipment() {}
+    virtual ~OtherEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OtherEquipment(const OtherEquipment& other) = default;
+    OtherEquipment(OtherEquipment&& other) = default;
+    OtherEquipment& operator=(const OtherEquipment&) = default;
+    OtherEquipment& operator=(OtherEquipment&&) = default;
 
     //@}
 
@@ -135,7 +140,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OtherEquipment_Impl ImplType;
+    using ImplType = detail::OtherEquipment_Impl;
 
     friend class detail::OtherEquipment_Impl;
     friend class openstudio::detail::IdfObject_Impl;
@@ -150,10 +155,10 @@ namespace model {
   };
 
   /** \relates OtherEquipment*/
-  typedef boost::optional<OtherEquipment> OptionalOtherEquipment;
+  using OptionalOtherEquipment = boost::optional<OtherEquipment>;
 
   /** \relates OtherEquipment*/
-  typedef std::vector<OtherEquipment> OtherEquipmentVector;
+  using OtherEquipmentVector = std::vector<OtherEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

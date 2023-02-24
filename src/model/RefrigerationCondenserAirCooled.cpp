@@ -95,11 +95,11 @@ namespace model {
     }
 
     ModelObject RefrigerationCondenserAirCooled_Impl::clone(Model model) const {
-      RefrigerationCondenserAirCooled modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserAirCooled>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserAirCooled>();
 
       modelObjectClone.resetAirInletZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IddObjectType> RefrigerationCondenserAirCooled_Impl::allowableChildTypes() const {
@@ -231,7 +231,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCondenserAirCooled_Impl::setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType) {
+    bool RefrigerationCondenserAirCooled_Impl::setCondenserFanSpeedControlType(const std::string& condenserFanSpeedControlType) {
       bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::CondenserFanSpeedControlType, condenserFanSpeedControlType);
       return result;
     }
@@ -277,7 +277,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -330,7 +330,7 @@ namespace model {
       std::vector<RefrigerationSystem> systems =
         getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
 
-      if (systems.size() > 0u) {
+      if (!systems.empty()) {
         if (systems.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
         }
@@ -364,7 +364,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCondenserAirCooled::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Condenser_AirCooled);
+    return {IddObjectType::OS_Refrigeration_Condenser_AirCooled};
   }
 
   std::vector<std::string> RefrigerationCondenserAirCooled::condenserFanSpeedControlTypeValues() {
@@ -460,7 +460,7 @@ namespace model {
     getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetRatedSubcoolingTemperatureDifference();
   }
 
-  bool RefrigerationCondenserAirCooled::setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType) {
+  bool RefrigerationCondenserAirCooled::setCondenserFanSpeedControlType(const std::string& condenserFanSpeedControlType) {
     return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondenserFanSpeedControlType(condenserFanSpeedControlType);
   }
 
@@ -492,7 +492,7 @@ namespace model {
     getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetAirInletZone();
   }
 
-  bool RefrigerationCondenserAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserAirCooled::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

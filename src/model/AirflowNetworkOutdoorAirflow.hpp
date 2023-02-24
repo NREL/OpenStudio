@@ -53,7 +53,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AirflowNetworkOutdoorAirflow() {}
+    virtual ~AirflowNetworkOutdoorAirflow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkOutdoorAirflow(const AirflowNetworkOutdoorAirflow& other) = default;
+    AirflowNetworkOutdoorAirflow(AirflowNetworkOutdoorAirflow&& other) = default;
+    AirflowNetworkOutdoorAirflow& operator=(const AirflowNetworkOutdoorAirflow&) = default;
+    AirflowNetworkOutdoorAirflow& operator=(AirflowNetworkOutdoorAirflow&&) = default;
 
     //@}
 
@@ -81,7 +86,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkOutdoorAirflow_Impl ImplType;
+    using ImplType = detail::AirflowNetworkOutdoorAirflow_Impl;
 
     AirflowNetworkOutdoorAirflow(const Model& model, const AirflowNetworkCrack& crack, const Handle& handle);
 
@@ -102,10 +107,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkOutdoorAirflow*/
-  typedef boost::optional<AirflowNetworkOutdoorAirflow> OptionalAirflowNetworkOutdoorAirflow;
+  using OptionalAirflowNetworkOutdoorAirflow = boost::optional<AirflowNetworkOutdoorAirflow>;
 
   /** \relates AirflowNetworkOutdoorAirflow*/
-  typedef std::vector<AirflowNetworkOutdoorAirflow> AirflowNetworkOutdoorAirflowVector;
+  using AirflowNetworkOutdoorAirflowVector = std::vector<AirflowNetworkOutdoorAirflow>;
 
 }  // namespace model
 }  // namespace openstudio

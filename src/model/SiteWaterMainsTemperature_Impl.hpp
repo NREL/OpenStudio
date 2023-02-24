@@ -54,7 +54,7 @@ namespace model {
 
       SiteWaterMainsTemperature_Impl(const SiteWaterMainsTemperature_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SiteWaterMainsTemperature_Impl() {}
+      virtual ~SiteWaterMainsTemperature_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -84,7 +84,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setCalculationMethod(std::string calculationMethod);
+      bool setCalculationMethod(const std::string& calculationMethod);
 
       bool setTemperatureSchedule(Schedule& schedule);
 

@@ -72,10 +72,13 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 #include "../utilities/geometry/Intersection.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
+
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
@@ -98,35 +101,13 @@ namespace model {
     }
 
     std::vector<ModelObject> Building_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      // meters
-      OutputMeterVector meters = this->meters();
-      result.insert(result.end(), meters.begin(), meters.end());
-
-      // building stories
-      BuildingStoryVector stories = this->buildingStories();
-      result.insert(result.end(), stories.begin(), stories.end());
-
-      // exterior shading groups
-      ShadingSurfaceGroupVector shadingSurfaceGroups = this->shadingSurfaceGroups();
-      result.insert(result.end(), shadingSurfaceGroups.begin(), shadingSurfaceGroups.end());
-
-      // thermal zones
-      ThermalZoneVector thermalZones = this->thermalZones();
-      result.insert(result.end(), thermalZones.begin(), thermalZones.end());
-
-      // spaces
-      SpaceVector spaces = this->spaces();
-      result.insert(result.end(), spaces.begin(), spaces.end());
-
       // TODO: JM 2019-05-13: handle HVAC (#2449)
       // AirLoopHVACs should be considered de facto part of the building
       // PlantLoops may merit more attention:
       // if a PlantLoop doesn't serve an AirLoopHVAC or a ThermalZone, should it be considered part of the Building?
       // eg: a PlantLoop serving only a LoadProfile:Plant?
 
-      return result;
+      return concat<ModelObject>(this->meters(), this->buildingStories(), this->shadingSurfaceGroups(), this->thermalZones(), this->spaces());
     }
 
     // TODO: this is far from perfect, currently this is just trying to address a known issue #3524
@@ -139,36 +120,30 @@ namespace model {
 
       // Spaces
       for (auto& s : this->spaces()) {
-        tmp = s.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, s.remove());
       }
 
       // thermal zones
       for (auto& z : this->thermalZones()) {
-        tmp = z.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, z.remove());
       }
 
       // exterior shading groups
       for (auto& sg : this->shadingSurfaceGroups()) {
-        tmp = sg.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, sg.remove());
       }
 
       // building stories
       for (auto& bs : this->buildingStories()) {
-        tmp = bs.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, bs.remove());
       }
 
       // meters
       for (auto& m : this->meters()) {
-        tmp = m.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, m.remove());
       }
 
-      tmp = ParentObject_Impl::remove();
-      result.insert(result.end(), tmp.begin(), tmp.end());
+      openstudio::detail::concat_helper(result, ParentObject_Impl::remove());
 
       return result;
     }
@@ -186,7 +161,7 @@ namespace model {
           otherBuilding->remove();
         }
 
-        //auto buildings = t_model.getModelObjects<Building>();
+        //auto buildings = t_model.getConcreteModelObjects<Building>();
         //if( ! buildings.empty() ) {
         //  // If Destination model already has a building then first remove it
         //  buildings.front().remove();
@@ -304,11 +279,7 @@ namespace model {
     }
 
     std::vector<IddObjectType> Building_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_Space);
-      result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
-      result.push_back(IddObjectType::OS_ThermalZone);
-      return result;
+      return std::vector<IddObjectType>{IddObjectType::OS_Space, IddObjectType::OS_ShadingSurfaceGroup, IddObjectType::OS_ThermalZone};
     }
 
     const std::vector<std::string>& Building_Impl::outputVariableNames() const {
@@ -419,7 +390,7 @@ namespace model {
       // If standardsTemplate isn't set, return empty
       boost::optional<std::string> standardsTemplate = this->standardsTemplate();
       if (!standardsTemplate) {
-        return std::vector<std::string>();
+        return {};
       } else {
 
         boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
@@ -625,13 +596,13 @@ namespace model {
     }
 
     OutputMeterVector Building_Impl::meters() const {
-      OutputMeterVector result;
-      OutputMeterVector meters = this->model().getConcreteModelObjects<OutputMeter>();
-      for (const OutputMeter& meter : meters) {
-        if (meter.installLocationType() && (InstallLocationType::Building == meter.installLocationType().get().value())) {
-          result.push_back(meter);
-        }
-      }
+      auto filterOutMeter = [](const auto& meter) {
+        auto instalLocType_ = meter.installLocationType();
+        return instalLocType_ && (InstallLocationType::Building != instalLocType_.get().value());
+      };
+
+      OutputMeterVector result = this->model().getConcreteModelObjects<OutputMeter>();
+      result.erase(std::remove_if(result.begin(), result.end(), filterOutMeter), result.end());
       return result;
     }
 
@@ -651,7 +622,7 @@ namespace model {
 
     ShadingSurfaceGroupVector Building_Impl::shadingSurfaceGroups() const {
       ShadingSurfaceGroupVector result;
-      for (ShadingSurfaceGroup shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()) {
+      for (const ShadingSurfaceGroup& shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()) {
         if (istringEqual(shadingGroup.shadingSurfaceType(), "Building")) {
           result.push_back(shadingGroup);
         }
@@ -665,36 +636,32 @@ namespace model {
     }
 
     std::vector<Surface> Building_Impl::exteriorWalls() const {
-      SurfaceVector result;
-      SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
-      for (const Surface& candidate : candidates) {
-        std::string surfaceType = candidate.surfaceType();
-        std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
-        if (openstudio::istringEqual(surfaceType, "Wall") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
-          result.push_back(candidate);
-        }
-      }
+
+      auto isNotExtWall = [](const Surface& s) -> bool {
+        return !openstudio::istringEqual(s.surfaceType(), "Wall") || !openstudio::istringEqual(s.outsideBoundaryCondition(), "Outdoors");
+      };
+
+      SurfaceVector result = model().getConcreteModelObjects<Surface>();
+      result.erase(std::remove_if(result.begin(), result.end(), isNotExtWall), result.end());
+
       return result;
     }
 
     std::vector<Surface> Building_Impl::roofs() const {
-      SurfaceVector result;
-      SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
-      for (const Surface& candidate : candidates) {
-        std::string surfaceType = candidate.surfaceType();
-        std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
-        if (openstudio::istringEqual(surfaceType, "RoofCeiling") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
-          result.push_back(candidate);
-        }
-      }
+      auto isNotExtRoof = [](const Surface& s) -> bool {
+        return !openstudio::istringEqual(s.surfaceType(), "RoofCeiling") || !openstudio::istringEqual(s.outsideBoundaryCondition(), "Outdoors");
+      };
+
+      SurfaceVector result = model().getConcreteModelObjects<Surface>();
+      result.erase(std::remove_if(result.begin(), result.end(), isNotExtRoof), result.end());
+
       return result;
     }
 
     double Building_Impl::floorArea() const {
       double result = 0;
       for (const Space& space : spaces()) {
-        bool partofTotalFloorArea = space.partofTotalFloorArea();
-        if (partofTotalFloorArea) {
+        if (space.partofTotalFloorArea()) {
           result += space.multiplier() * space.floorArea();
         }
       }

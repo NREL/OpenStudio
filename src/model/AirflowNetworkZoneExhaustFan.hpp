@@ -53,7 +53,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AirflowNetworkZoneExhaustFan() {}
+    virtual ~AirflowNetworkZoneExhaustFan() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkZoneExhaustFan(const AirflowNetworkZoneExhaustFan& other) = default;
+    AirflowNetworkZoneExhaustFan(AirflowNetworkZoneExhaustFan&& other) = default;
+    AirflowNetworkZoneExhaustFan& operator=(const AirflowNetworkZoneExhaustFan&) = default;
+    AirflowNetworkZoneExhaustFan& operator=(AirflowNetworkZoneExhaustFan&&) = default;
 
     //@}
 
@@ -83,7 +88,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkZoneExhaustFan_Impl ImplType;
+    using ImplType = detail::AirflowNetworkZoneExhaustFan_Impl;
 
     AirflowNetworkZoneExhaustFan(const Model& model, const AirflowNetworkCrack& crack, const Handle& handle);
 
@@ -102,10 +107,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkZoneExhaustFan*/
-  typedef boost::optional<AirflowNetworkZoneExhaustFan> OptionalAirflowNetworkZoneExhaustFan;
+  using OptionalAirflowNetworkZoneExhaustFan = boost::optional<AirflowNetworkZoneExhaustFan>;
 
   /** \relates AirflowNetworkZoneExhaustFan*/
-  typedef std::vector<AirflowNetworkZoneExhaustFan> AirflowNetworkZoneExhaustFanVector;
+  using AirflowNetworkZoneExhaustFanVector = std::vector<AirflowNetworkZoneExhaustFan>;
 
 }  // namespace model
 }  // namespace openstudio

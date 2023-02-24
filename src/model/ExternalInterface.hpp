@@ -49,7 +49,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ExternalInterface() {}
+    virtual ~ExternalInterface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterface(const ExternalInterface& other) = default;
+    ExternalInterface(ExternalInterface&& other) = default;
+    ExternalInterface& operator=(const ExternalInterface&) = default;
+    ExternalInterface& operator=(ExternalInterface&&) = default;
 
     //@}
 
@@ -75,7 +80,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterface_Impl ImplType;
+    using ImplType = detail::ExternalInterface_Impl;
 
     explicit ExternalInterface(std::shared_ptr<detail::ExternalInterface_Impl> impl);
 
@@ -91,10 +96,10 @@ namespace model {
   };
 
   /** \relates ExternalInterface*/
-  typedef boost::optional<ExternalInterface> OptionalExternalInterface;
+  using OptionalExternalInterface = boost::optional<ExternalInterface>;
 
   /** \relates ExternalInterface*/
-  typedef std::vector<ExternalInterface> ExternalInterfaceVector;
+  using ExternalInterfaceVector = std::vector<ExternalInterface>;
 
 }  // namespace model
 }  // namespace openstudio

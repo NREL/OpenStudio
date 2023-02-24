@@ -54,7 +54,12 @@ namespace model {
   class MODEL_API WaterToAirComponent : public HVACComponent
   {
    public:
-    virtual ~WaterToAirComponent() {}
+    virtual ~WaterToAirComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterToAirComponent(const WaterToAirComponent& other) = default;
+    WaterToAirComponent(WaterToAirComponent&& other) = default;
+    WaterToAirComponent& operator=(const WaterToAirComponent&) = default;
+    WaterToAirComponent& operator=(WaterToAirComponent&&) = default;
 
     /** Returns the air inlet port. **/
     virtual unsigned airInletPort() const;
@@ -115,7 +120,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::WaterToAirComponent_Impl ImplType;
+    using ImplType = detail::WaterToAirComponent_Impl;
 
     explicit WaterToAirComponent(std::shared_ptr<detail::WaterToAirComponent_Impl> impl);
 
@@ -127,7 +132,7 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<WaterToAirComponent> OptionalWaterToAirComponent;
+  using OptionalWaterToAirComponent = boost::optional<WaterToAirComponent>;
 
 }  // namespace model
 

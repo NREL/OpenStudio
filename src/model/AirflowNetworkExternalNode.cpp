@@ -177,7 +177,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkExternalNode::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkExternalNode);
+    return {IddObjectType::OS_AirflowNetworkExternalNode};
   }
 
   std::vector<std::string> AirflowNetworkExternalNode::windAngleTypeValues() {

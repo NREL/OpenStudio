@@ -78,7 +78,12 @@ namespace model {
 
     explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
-    virtual ~EnergyManagementSystemOutputVariable() {}
+    virtual ~EnergyManagementSystemOutputVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemOutputVariable(const EnergyManagementSystemOutputVariable& other) = default;
+    EnergyManagementSystemOutputVariable(EnergyManagementSystemOutputVariable&& other) = default;
+    EnergyManagementSystemOutputVariable& operator=(const EnergyManagementSystemOutputVariable&) = default;
+    EnergyManagementSystemOutputVariable& operator=(EnergyManagementSystemOutputVariable&&) = default;
 
     //@}
 
@@ -158,7 +163,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemOutputVariable_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemOutputVariable_Impl;
 
     explicit EnergyManagementSystemOutputVariable(std::shared_ptr<detail::EnergyManagementSystemOutputVariable_Impl> impl);
 
@@ -174,10 +179,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemOutputVariable*/
-  typedef boost::optional<EnergyManagementSystemOutputVariable> OptionalEnergyManagementSystemOutputVariable;
+  using OptionalEnergyManagementSystemOutputVariable = boost::optional<EnergyManagementSystemOutputVariable>;
 
   /** \relates EnergyManagementSystemOutputVariable*/
-  typedef std::vector<EnergyManagementSystemOutputVariable> EnergyManagementSystemOutputVariableVector;
+  using EnergyManagementSystemOutputVariableVector = std::vector<EnergyManagementSystemOutputVariable>;
 
 }  // namespace model
 }  // namespace openstudio

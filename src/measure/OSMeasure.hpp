@@ -50,7 +50,7 @@ namespace measure {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OSMeasure();
+    virtual ~OSMeasure() = default;
 
     //@}
     /** @name Getters */
@@ -81,7 +81,7 @@ namespace measure {
     OS_DEPRECATED virtual bool registerWithApplication() const;
 
    protected:
-    OSMeasure() {}
+    OSMeasure() = default;
 
     //@}
    private:
@@ -89,10 +89,10 @@ namespace measure {
   };
 
   /** \relates OSMeasure */
-  typedef boost::optional<OSMeasure> OptionalOSMeasure;
+  using OptionalOSMeasure = boost::optional<OSMeasure>;
 
   /** \relates OSMeasure */
-  typedef std::vector<OSMeasure> OSMeasureVector;
+  using OSMeasureVector = std::vector<OSMeasure>;
 
 }  // namespace measure
 }  // namespace openstudio

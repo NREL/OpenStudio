@@ -58,7 +58,7 @@ namespace model {
       PlanarSurfaceGroup_Impl(const PlanarSurfaceGroup_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~PlanarSurfaceGroup_Impl() {}
+      virtual ~PlanarSurfaceGroup_Impl() = default;
 
       virtual double directionofRelativeNorth() const = 0;
 

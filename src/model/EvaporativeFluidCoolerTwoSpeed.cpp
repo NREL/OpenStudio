@@ -101,7 +101,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_EvaporativeFluidCooler_TwoSpeedFields::BlowdownMakeupWaterUsageScheduleName) != e) {
         result.push_back(ScheduleTypeKey("EvaporativeFluidCoolerTwoSpeed", "Blowdown Makeup Water Usage"));
       }
@@ -867,7 +868,7 @@ namespace model {
   }
 
   IddObjectType EvaporativeFluidCoolerTwoSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed);
+    return {IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed};
   }
 
   std::vector<std::string> EvaporativeFluidCoolerTwoSpeed::performanceInputMethodValues() {

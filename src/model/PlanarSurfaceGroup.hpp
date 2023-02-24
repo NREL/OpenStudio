@@ -50,7 +50,12 @@ namespace model {
   class MODEL_API PlanarSurfaceGroup : public ParentObject
   {
    public:
-    virtual ~PlanarSurfaceGroup() {}
+    virtual ~PlanarSurfaceGroup() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlanarSurfaceGroup(const PlanarSurfaceGroup& other) = default;
+    PlanarSurfaceGroup(PlanarSurfaceGroup&& other) = default;
+    PlanarSurfaceGroup& operator=(const PlanarSurfaceGroup&) = default;
+    PlanarSurfaceGroup& operator=(PlanarSurfaceGroup&&) = default;
 
     /** @name Getters */
     //@{
@@ -132,7 +137,7 @@ namespace model {
     //@}
 
     /// @cond
-    typedef detail::PlanarSurfaceGroup_Impl ImplType;
+    using ImplType = detail::PlanarSurfaceGroup_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -146,10 +151,10 @@ namespace model {
   };
 
   /** \relates PlanarSurfaceGroup */
-  typedef boost::optional<PlanarSurfaceGroup> OptionalPlanarSurfaceGroup;
+  using OptionalPlanarSurfaceGroup = boost::optional<PlanarSurfaceGroup>;
 
   /** \relates PlanarSurfaceGroup */
-  typedef std::vector<PlanarSurfaceGroup> PlanarSurfaceGroupVector;
+  using PlanarSurfaceGroupVector = std::vector<PlanarSurfaceGroup>;
 
 }  // namespace model
 }  // namespace openstudio

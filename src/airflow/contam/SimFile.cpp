@@ -126,7 +126,7 @@ namespace contam {
         LOG(Error, "LFR data line has " << row.size() << " columns, not the expected " << ncols);
         return false;
       }
-      if (time.size()) {
+      if (!time.empty()) {
         if (time[time.size() - 1] != row[1]) {
           day.push_back(row[0]);
           time.push_back(row[1]);
@@ -247,7 +247,7 @@ namespace contam {
         LOG(Error, "NFR data line has " << row.size() << " columns, not the expected " << ncols);
         return false;
       }
-      if (time.size()) {
+      if (!time.empty()) {
         if (time[time.size() - 1] != row[1]) {
           day.push_back(row[0]);
           time.push_back(row[1]);
@@ -318,7 +318,7 @@ namespace contam {
     file.close();
     // Something should probably be done here to make sure that the times here match up with what we
     // already have. For now, if nothing is known about the dates, then try to compute it
-    if (m_dateTimes.size() == 0) {
+    if (m_dateTimes.empty()) {
       if (!computeDateTimes(day, time)) {
         clearLfr();
         m_dateTimes.clear();
@@ -347,7 +347,7 @@ namespace contam {
   boost::optional<openstudio::TimeSeries> SimFile::pathDeltaP(int nr) const {
     int index = indexOf(m_pathNr, nr);
     if (index == -1) {
-      return boost::optional<openstudio::TimeSeries>();
+      return {};
     }
     openstudio::TimeSeries series = convertData(m_dateTimes, m_dP[index], "Pa");
     return boost::optional<openstudio::TimeSeries>(series);
@@ -356,7 +356,7 @@ namespace contam {
   boost::optional<openstudio::TimeSeries> SimFile::pathFlow0(int nr) const {
     int index = indexOf(m_pathNr, nr);
     if (index == -1) {
-      return boost::optional<openstudio::TimeSeries>();
+      return {};
     }
     openstudio::TimeSeries series = convertData(m_dateTimes, m_F0[index], "kg/s");
     return boost::optional<openstudio::TimeSeries>(series);
@@ -365,7 +365,7 @@ namespace contam {
   boost::optional<openstudio::TimeSeries> SimFile::pathFlow1(int nr) const {
     int index = indexOf(m_pathNr, nr);
     if (index == -1) {
-      return boost::optional<openstudio::TimeSeries>();
+      return {};
     }
     openstudio::TimeSeries series = convertData(m_dateTimes, m_F1[index], "kg/s");
     return boost::optional<openstudio::TimeSeries>(series);
@@ -374,7 +374,7 @@ namespace contam {
   boost::optional<openstudio::TimeSeries> SimFile::pathFlow(int nr) const {
     int index = indexOf(m_pathNr, nr);
     if (index == -1) {
-      return boost::optional<openstudio::TimeSeries>();
+      return {};
     }
     std::vector<double> flow(m_dateTimes.size());
     for (unsigned i = 0; i < m_dateTimes.size(); i++) {
@@ -388,7 +388,7 @@ namespace contam {
   boost::optional<openstudio::TimeSeries> SimFile::nodeTemperature(int nr) const {
     int index = indexOf(m_nodeNr, nr);
     if (index == -1) {
-      return boost::optional<openstudio::TimeSeries>();
+      return {};
     }
     openstudio::TimeSeries series = convertData(m_dateTimes, m_T[index], "K");
     return boost::optional<openstudio::TimeSeries>(series);
@@ -397,7 +397,7 @@ namespace contam {
   boost::optional<openstudio::TimeSeries> SimFile::nodePressure(int nr) const {
     int index = indexOf(m_nodeNr, nr);
     if (index == -1) {
-      return boost::optional<openstudio::TimeSeries>();
+      return {};
     }
     openstudio::TimeSeries series = convertData(m_dateTimes, m_P[index], "Pa");
     return boost::optional<openstudio::TimeSeries>(series);
@@ -406,7 +406,7 @@ namespace contam {
   boost::optional<openstudio::TimeSeries> SimFile::nodeDensity(int nr) const {
     int index = indexOf(m_nodeNr, nr);
     if (index == -1) {
-      return boost::optional<openstudio::TimeSeries>();
+      return {};
     }
     openstudio::TimeSeries series = convertData(m_dateTimes, m_D[index], "kg/m^3");
     return boost::optional<openstudio::TimeSeries>(series);
@@ -414,9 +414,9 @@ namespace contam {
 
   std::vector<openstudio::DateTime> SimFile::dateTimes() const {
     if (m_dateTimes.size() == 1) {
-      return std::vector<openstudio::DateTime>(m_dateTimes.begin(), m_dateTimes.end());
+      return {m_dateTimes.begin(), m_dateTimes.end()};
     } else {
-      return std::vector<openstudio::DateTime>(m_dateTimes.begin() + 1, m_dateTimes.end());
+      return {m_dateTimes.begin() + 1, m_dateTimes.end()};
     }
   }
 

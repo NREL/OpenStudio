@@ -181,7 +181,7 @@ namespace energyplus {
         lowerNodes.erase(lowerNodes.end() - 1);
       }
 
-      auto isTemperatureControl = [](SetpointManager& spm) -> bool { return istringEqual("Temperature", spm.controlVariable()); };
+      auto isTemperatureControl = [](const SetpointManager& spm) -> bool { return istringEqual("Temperature", spm.controlVariable()); };
 
       for (auto& upperNode : upperNodes) {
         std::vector<SetpointManager> _setpointManagers = upperNode.setpointManagers();
@@ -195,9 +195,9 @@ namespace energyplus {
       for (auto& lowerNode : lowerNodes) {
         std::vector<SetpointManager> _setpointManagers = lowerNode.setpointManagers();
         if (std::find_if(_setpointManagers.begin(), _setpointManagers.end(), isTemperatureControl) == _setpointManagers.end()) {
-          for (auto _setpointManager : _supplyOutletSetpointManagers) {
+          for (const auto& _setpointManager : _supplyOutletSetpointManagers) {
             if (isTemperatureControl(_setpointManager)) {
-              SetpointManager spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
+              auto spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
               spmClone.addToNode(lowerNode);
               spmClone.setName(lowerNode.name().get() + " OS Default SPM");
             }
@@ -316,7 +316,7 @@ namespace energyplus {
       }
     }
 
-    if (controllers.size() > 0) {
+    if (!controllers.empty()) {
       IdfObject _controllerList(IddObjectType::AirLoopHVAC_ControllerList);
       _controllerList.clearExtensibleGroups();
       _controllerList.setName(airLoopHVAC.name().get() + " Controllers");

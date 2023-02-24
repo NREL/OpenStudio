@@ -55,7 +55,12 @@ namespace model {
 
     explicit ZoneHVACCoolingPanelRadiantConvectiveWater(const Model& model);
 
-    virtual ~ZoneHVACCoolingPanelRadiantConvectiveWater() {}
+    virtual ~ZoneHVACCoolingPanelRadiantConvectiveWater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACCoolingPanelRadiantConvectiveWater(const ZoneHVACCoolingPanelRadiantConvectiveWater& other) = default;
+    ZoneHVACCoolingPanelRadiantConvectiveWater(ZoneHVACCoolingPanelRadiantConvectiveWater&& other) = default;
+    ZoneHVACCoolingPanelRadiantConvectiveWater& operator=(const ZoneHVACCoolingPanelRadiantConvectiveWater&) = default;
+    ZoneHVACCoolingPanelRadiantConvectiveWater& operator=(ZoneHVACCoolingPanelRadiantConvectiveWater&&) = default;
 
     //@}
 
@@ -105,7 +110,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACCoolingPanelRadiantConvectiveWater_Impl ImplType;
+    using ImplType = detail::ZoneHVACCoolingPanelRadiantConvectiveWater_Impl;
 
     explicit ZoneHVACCoolingPanelRadiantConvectiveWater(std::shared_ptr<detail::ZoneHVACCoolingPanelRadiantConvectiveWater_Impl> impl);
 
@@ -119,10 +124,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACCoolingPanelRadiantConvectiveWater*/
-  typedef boost::optional<ZoneHVACCoolingPanelRadiantConvectiveWater> OptionalZoneHVACCoolingPanelRadiantConvectiveWater;
+  using OptionalZoneHVACCoolingPanelRadiantConvectiveWater = boost::optional<ZoneHVACCoolingPanelRadiantConvectiveWater>;
 
   /** \relates ZoneHVACCoolingPanelRadiantConvectiveWater*/
-  typedef std::vector<ZoneHVACCoolingPanelRadiantConvectiveWater> ZoneHVACCoolingPanelRadiantConvectiveWaterVector;
+  using ZoneHVACCoolingPanelRadiantConvectiveWaterVector = std::vector<ZoneHVACCoolingPanelRadiantConvectiveWater>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -55,7 +55,12 @@ namespace model {
 
     explicit HeaderedPumpsConstantSpeed(const Model& model);
 
-    virtual ~HeaderedPumpsConstantSpeed() {}
+    virtual ~HeaderedPumpsConstantSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeaderedPumpsConstantSpeed(const HeaderedPumpsConstantSpeed& other) = default;
+    HeaderedPumpsConstantSpeed(HeaderedPumpsConstantSpeed&& other) = default;
+    HeaderedPumpsConstantSpeed& operator=(const HeaderedPumpsConstantSpeed&) = default;
+    HeaderedPumpsConstantSpeed& operator=(HeaderedPumpsConstantSpeed&&) = default;
 
     //@}
 
@@ -160,7 +165,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeaderedPumpsConstantSpeed_Impl ImplType;
+    using ImplType = detail::HeaderedPumpsConstantSpeed_Impl;
 
     explicit HeaderedPumpsConstantSpeed(std::shared_ptr<detail::HeaderedPumpsConstantSpeed_Impl> impl);
 
@@ -174,10 +179,10 @@ namespace model {
   };
 
   /** \relates HeaderedPumpsConstantSpeed*/
-  typedef boost::optional<HeaderedPumpsConstantSpeed> OptionalHeaderedPumpsConstantSpeed;
+  using OptionalHeaderedPumpsConstantSpeed = boost::optional<HeaderedPumpsConstantSpeed>;
 
   /** \relates HeaderedPumpsConstantSpeed*/
-  typedef std::vector<HeaderedPumpsConstantSpeed> HeaderedPumpsConstantSpeedVector;
+  using HeaderedPumpsConstantSpeedVector = std::vector<HeaderedPumpsConstantSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

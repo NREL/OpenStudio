@@ -157,12 +157,12 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_Remove) {
   Model model;
   RefrigerationCondenserCascade testObject = RefrigerationCondenserCascade(model);
 
-  std::vector<RefrigerationCondenserCascade> refrigerationCascadeCondensers = model.getModelObjects<RefrigerationCondenserCascade>();
+  std::vector<RefrigerationCondenserCascade> refrigerationCascadeCondensers = model.getConcreteModelObjects<RefrigerationCondenserCascade>();
   EXPECT_EQ(1, refrigerationCascadeCondensers.size());
 
   testObject.remove();
 
-  refrigerationCascadeCondensers = model.getModelObjects<RefrigerationCondenserCascade>();
+  refrigerationCascadeCondensers = model.getConcreteModelObjects<RefrigerationCondenserCascade>();
   EXPECT_EQ(0, refrigerationCascadeCondensers.size());
 }
 
@@ -171,7 +171,7 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithDefaultData)
 
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
-  RefrigerationCondenserCascade refrigerationCondenserCascadeClone = refrigerationCondenserCascade.clone(m).cast<RefrigerationCondenserCascade>();
+  auto refrigerationCondenserCascadeClone = refrigerationCondenserCascade.clone(m).cast<RefrigerationCondenserCascade>();
 
   EXPECT_NE(refrigerationCondenserCascadeClone.handle(), refrigerationCondenserCascade.handle());
 
@@ -190,7 +190,7 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithCustomData) 
   refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(21000.0);
   refrigerationCondenserCascade.setCondensingTemperatureControlType("Float");
 
-  RefrigerationCondenserCascade refrigerationCondenserCascadeClone = refrigerationCondenserCascade.clone(m).cast<RefrigerationCondenserCascade>();
+  auto refrigerationCondenserCascadeClone = refrigerationCondenserCascade.clone(m).cast<RefrigerationCondenserCascade>();
 
   EXPECT_NE(refrigerationCondenserCascadeClone.handle(), refrigerationCondenserCascade.handle());
 

@@ -56,7 +56,12 @@ namespace model {
 
     explicit DefaultConstructionSet(const Model& model);
 
-    virtual ~DefaultConstructionSet() {}
+    virtual ~DefaultConstructionSet() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DefaultConstructionSet(const DefaultConstructionSet& other) = default;
+    DefaultConstructionSet(DefaultConstructionSet&& other) = default;
+    DefaultConstructionSet& operator=(const DefaultConstructionSet&) = default;
+    DefaultConstructionSet& operator=(DefaultConstructionSet&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -142,7 +147,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DefaultConstructionSet_Impl ImplType;
+    using ImplType = detail::DefaultConstructionSet_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -155,10 +160,10 @@ namespace model {
   };
 
   /** \relates DefaultConstructionSet*/
-  typedef boost::optional<DefaultConstructionSet> OptionalDefaultConstructionSet;
+  using OptionalDefaultConstructionSet = boost::optional<DefaultConstructionSet>;
 
   /** \relates DefaultConstructionSet*/
-  typedef std::vector<DefaultConstructionSet> DefaultConstructionSetVector;
+  using DefaultConstructionSetVector = std::vector<DefaultConstructionSet>;
 
 }  // namespace model
 }  // namespace openstudio

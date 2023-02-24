@@ -38,9 +38,7 @@
 namespace openstudio {
 namespace measure {
 
-  ReportingMeasure::~ReportingMeasure() = default;
-
-  std::vector<OSArgument> ReportingMeasure::arguments(const openstudio::model::Model& model) const {
+  std::vector<OSArgument> ReportingMeasure::arguments(const openstudio::model::Model& /*model*/) const {
     return {};
   }
 
@@ -48,16 +46,15 @@ namespace measure {
     return {};
   }
 
-  bool ReportingMeasure::run(OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+  bool ReportingMeasure::run(OSRunner& runner, const std::map<std::string, OSArgument>& /*user_arguments*/) const {
     runner.prepareForMeasureRun(*this);
     return true;
   }
 
-  std::vector<IdfObject> ReportingMeasure::energyPlusOutputRequests(OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+  std::vector<IdfObject> ReportingMeasure::energyPlusOutputRequests(OSRunner& /*runner*/,
+                                                                    const std::map<std::string, OSArgument>& /*user_arguments*/) const {
     return {};
   }
-
-  PythonReportingMeasure::~PythonReportingMeasure() = default;
 
   std::vector<OSArgument> PythonReportingMeasure::arguments(const openstudio::model::Model& model) const {
     return {};

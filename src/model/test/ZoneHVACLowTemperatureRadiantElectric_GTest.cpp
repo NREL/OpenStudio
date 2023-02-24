@@ -105,13 +105,12 @@ TEST_F(ModelFixture, ZoneHVACLowTemperatureRadiantElectric_Check_Clone) {
   zoneHVACLowTemperatureRadiantElectric.setMaximumElectricalPowertoPanel(100);
 
   // Clone into the same model
-  ZoneHVACLowTemperatureRadiantElectric cloneLTRE =
-    zoneHVACLowTemperatureRadiantElectric.clone(model).cast<model::ZoneHVACLowTemperatureRadiantElectric>();
+  auto cloneLTRE = zoneHVACLowTemperatureRadiantElectric.clone(model).cast<model::ZoneHVACLowTemperatureRadiantElectric>();
   ASSERT_EQ(zoneHVACLowTemperatureRadiantElectric.maximumElectricalPowertoPanel().get(), cloneLTRE.maximumElectricalPowertoPanel().get());
 
   // Clone into another model
   Model model2;
-  ZoneHVACLowTemperatureRadiantElectric cloneLTRE2 = cloneLTRE.clone(model2).cast<model::ZoneHVACLowTemperatureRadiantElectric>();
+  auto cloneLTRE2 = cloneLTRE.clone(model2).cast<model::ZoneHVACLowTemperatureRadiantElectric>();
   ASSERT_EQ(cloneLTRE.maximumElectricalPowertoPanel().get(), cloneLTRE2.maximumElectricalPowertoPanel().get());
 }
 
@@ -198,11 +197,12 @@ TEST_F(ModelFixture, ZoneHVACLowTemperatureRadiantElectric_surfaces) {
   Model m;
 
   // make a space with some surfaces
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
   ASSERT_TRUE(_space1);
