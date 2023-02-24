@@ -208,7 +208,7 @@ namespace model {
   }
 
   void ZoneAirHeatBalanceAlgorithm::resetDoSpaceHeatBalanceforSizing() {
-    getImpl<detail::SimulationControl_Impl>()->resetDoSpaceHeatBalanceforSizing();
+    getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->resetDoSpaceHeatBalanceforSizing();
   }
 
   bool ZoneAirHeatBalanceAlgorithm::setDoSpaceHeatBalanceforSimulation(bool doSpaceHeatBalanceforSimulation) {
@@ -216,7 +216,7 @@ namespace model {
   }
 
   void ZoneAirHeatBalanceAlgorithm::resetDoSpaceHeatBalanceforSimulation() {
-    getImpl<detail::SimulationControl_Impl>()->resetDoSpaceHeatBalanceforSimulation();
+    getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->resetDoSpaceHeatBalanceforSimulation();
   }
 
   /// @cond
@@ -227,6 +227,8 @@ namespace model {
     OS_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
 
     setAlgorithm("ThirdOrderBackwardDifference");
+    setDoSpaceHeatBalanceforSizing("No");
+    setDoSpaceHeatBalanceforSimulation("No");
   }
 
   /// @endcond
