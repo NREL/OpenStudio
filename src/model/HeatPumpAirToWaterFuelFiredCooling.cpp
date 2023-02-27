@@ -257,16 +257,6 @@ namespace model {
       return value.get();
     }
 
-    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setWaterInletNode(const Connection& connection) {
-      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName, connection.handle());
-      return result;
-    }
-
-    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setWaterOutletNode(const Connection& connection) {
-      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName, connection.handle());
-      return result;
-    }
-
     bool HeatPumpAirToWaterFuelFiredCooling_Impl::setCompanionHeatingHeatPump(
       const HeatPumpAirToWaterFuelFiredHeating& heatPumpAirToWaterFuelFiredHeating) {
       bool result =
@@ -472,14 +462,6 @@ namespace model {
       }
     }
 
-    boost::optional<Connection> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalWaterInletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName);
-    }
-
-    boost::optional<Connection> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalWaterOutletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName);
-    }
-
     boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalNormalizedCapacityFunctionofTemperatureCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_HeatPump_AirToWater_FuelFired_CoolingFields::NormalizedCapacityFunctionofTemperatureCurveName);
@@ -644,14 +626,6 @@ namespace model {
                           OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterTemperatureCurveInputVariable);
   }
 
-  Connection HeatPumpAirToWaterFuelFiredCooling::waterInletNode() const {
-    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->waterInletNode();
-  }
-
-  Connection HeatPumpAirToWaterFuelFiredCooling::waterOutletNode() const {
-    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->waterOutletNode();
-  }
-
   boost::optional<HeatPumpAirToWaterFuelFiredHeating> HeatPumpAirToWaterFuelFiredCooling::companionHeatingHeatPump() const {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->companionHeatingHeatPump();
   }
@@ -766,14 +740,6 @@ namespace model {
 
   double HeatPumpAirToWaterFuelFiredCooling::standbyElectricPower() const {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->standbyElectricPower();
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling::setWaterInletNode(const Connection& connection) {
-    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setWaterInletNode(connection);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling::setWaterOutletNode(const Connection& connection) {
-    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setWaterOutletNode(connection);
   }
 
   bool HeatPumpAirToWaterFuelFiredCooling::setCompanionHeatingHeatPump(const HeatPumpAirToWaterFuelFiredHeating& heatPumpAirToWaterFuelFiredHeating) {

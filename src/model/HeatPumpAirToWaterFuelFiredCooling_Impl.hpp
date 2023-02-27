@@ -220,9 +220,9 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.HeatPumpAirToWaterFuelFiredCooling");
 
-      boost::optional<BivariateFunctions> optionalNormalizedCapacityFunctionofTemperatureCurve() const;
-      boost::optional<BivariateFunctions> optionalFuelEnergyInputRatioFunctionofTemperatureCurve() const;
-      boost::optional<UnivariateFunctions> optionalFuelEnergyInputRatioFunctionofPLRCurve() const;
+      boost::optional<Curve> optionalNormalizedCapacityFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalFuelEnergyInputRatioFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalFuelEnergyInputRatioFunctionofPLRCurve() const;
     };
 
   }  // namespace detail
