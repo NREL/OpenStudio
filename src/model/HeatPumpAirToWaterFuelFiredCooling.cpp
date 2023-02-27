@@ -85,7 +85,7 @@ namespace model {
       return OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName;
     }
 
-    unsigned HeatPumpAirToWaterFuelFiredHeating_Impl::outletPort() const {
+    unsigned HeatPumpAirToWaterFuelFiredCooling_Impl::outletPort() const {
       return OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName;
     }
 
