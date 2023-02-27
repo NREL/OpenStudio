@@ -216,7 +216,7 @@ namespace model {
     Curve HeatPumpAirToWaterFuelFiredHeating_Impl::fuelEnergyInputRatioFunctionofPLRCurve() const {
       boost::optional<Curve> value = optionalFuelEnergyInputRatioFunctionofPLRCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Fuel Energy Input Ratio Function of PLRCurve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Fuel Energy Input Ratio Function of PLR Curve attached.");
       }
       return value.get();
     }
@@ -582,12 +582,110 @@ namespace model {
     OS_ASSERT(ok);
     ok = setWaterTemperatureCurveInputVariable("EnteringCondenser");
     OS_ASSERT(ok);
-    // ok = setNormalizedCapacityFunctionofTemperatureCurve();
+
+    CurveBiquadratic normalizedCapacityFunctionofTemperatureCurve(model);
+    normalizedCapacityFunctionofTemperatureCurve.setCoefficient1Constant(1);
+    normalizedCapacityFunctionofTemperatureCurve.setCoefficient2x(0);
+    normalizedCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
+    normalizedCapacityFunctionofTemperatureCurve.setCoefficient4y(0);
+    normalizedCapacityFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
+    normalizedCapacityFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
+    normalizedCapacityFunctionofTemperatureCurve.setMinimumValueofx(5);
+    normalizedCapacityFunctionofTemperatureCurve.setMaximumValueofx(10);
+    normalizedCapacityFunctionofTemperatureCurve.setMinimumValueofy(24);
+    normalizedCapacityFunctionofTemperatureCurve.setMaximumValueofy(35);
+    normalizedCapacityFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
+    normalizedCapacityFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
+    ok = setNormalizedCapacityFunctionofTemperatureCurve(normalizedCapacityFunctionofTemperatureCurve);
     OS_ASSERT(ok);
-    // ok = setFuelEnergyInputRatioFunctionofTemperatureCurve();
+
+    CurveBiquadratic fuelEnergyInputRatioFunctionofTemperatureCurve(model);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient2x(0);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient4y(0);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(5);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(10);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setMinimumValueofy(24);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setMaximumValueofy(35);
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
+    fuelEnergyInputRatioFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
+    ok = setFuelEnergyInputRatioFunctionofTemperatureCurve(fuelEnergyInputRatioFunctionofTemperatureCurve);
     OS_ASSERT(ok);
-    // ok = setFuelEnergyInputRatioFunctionofPLRCurve();
+
+    CurveQuadratic fuelEnergyInputRatioFunctionofPLRCurve(model);
+    fuelEnergyInputRatioFunctionofPLRCurve.setCoefficient1Constant(1);
+    fuelEnergyInputRatioFunctionofPLRCurve.setCoefficient2x(0);
+    fuelEnergyInputRatioFunctionofPLRCurve.setCoefficient3xPOW2(0);
+    fuelEnergyInputRatioFunctionofPLRCurve.setMinimumValueofx(0);
+    fuelEnergyInputRatioFunctionofPLRCurve.setMaximumValueofx(1);
+    ok = setFuelEnergyInputRatioFunctionofPLRCurve(fuelEnergyInputRatioFunctionofPLRCurve);
     OS_ASSERT(ok);
+
+    ok = setMinimumPartLoadRatio(0.1);
+    OS_ASSERT(ok);
+    ok = setMaximumPartLoadRatio(1.0);
+    OS_ASSERT(ok);
+    ok = setDefrostControlType("Timed");
+    OS_ASSERT(ok);
+    ok = setDefrostOperationTimeFraction(0);
+    OS_ASSERT(ok);
+    ok = setResistiveDefrostHeaterCapacity(0);
+    OS_ASSERT(ok);
+    ok = setMaximumOutdoorDrybulbTemperatureforDefrostOperation(5);
+    OS_ASSERT(ok);
+    ok = setStandbyElectricPower(0);
+    OS_ASSERT(ok);
+  }
+
+  HeatPumpAirToWaterFuelFiredHeating::HeatPumpAirToWaterFuelFiredHeating(const Model& model,
+                                                                         const Curve& normalizedCapacityFunctionofTemperatureCurve,
+                                                                         const Curve& fuelEnergyInputRatioFunctionofTemperatureCurve,
+                                                                         const Curve& fuelEnergyInputRatioFunctionofPLRCurve)
+    : StraightComponent(HeatPumpAirToWaterFuelFiredHeating::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::HeatPumpAirToWaterFuelFiredHeating_Impl>());
+
+    bool ok = true;
+    ok = setFuelType("NaturalGas");
+    OS_ASSERT(ok);
+    ok = setNominalCOP(1.0);
+    OS_ASSERT(ok);
+    ok = setDesignSupplyTemperature(60);
+    OS_ASSERT(ok);
+    ok = setDesignTemperatureLift(11.1);
+    OS_ASSERT(ok);
+    ok = setSizingFactor(1.0);
+    OS_ASSERT(ok);
+    ok = setFlowMode("NotModulated");
+    OS_ASSERT(ok);
+    ok = setOutdoorAirTemperatureCurveInputVariable("DryBulb");
+    OS_ASSERT(ok);
+    ok = setWaterTemperatureCurveInputVariable("EnteringCondenser");
+    OS_ASSERT(ok);
+
+    ok = setNormalizedCapacityFunctionofTemperatureCurve(normalizedCapacityFunctionofTemperatureCurve);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s normalized capacity modifier function of temperature curve to "
+                                     << normalizedCapacityFunctionofTemperatureCurve.briefDescription() << ".");
+    }
+
+    ok = setFuelEnergyInputRatioFunctionofTemperatureCurve(fuelEnergyInputRatioFunctionofTemperatureCurve);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s fuel energy input ratio function of temperature curve to "
+                                     << fuelEnergyInputRatioFunctionofTemperatureCurve.briefDescription() << ".");
+    }
+
+    ok = setFuelEnergyInputRatioFunctionofPLRCurve(fuelEnergyInputRatioFunctionofPLRCurve);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s fuel energy input ratio function of PLR curve to "
+                                     << fuelEnergyInputRatioFunctionofPLRCurve.briefDescription() << ".");
+    }
+
     ok = setMinimumPartLoadRatio(0.1);
     OS_ASSERT(ok);
     ok = setMaximumPartLoadRatio(1.0);

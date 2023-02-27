@@ -56,6 +56,10 @@ namespace model {
 
     explicit HeatPumpAirToWaterFuelFiredHeating(const Model& model);
 
+    explicit HeatPumpAirToWaterFuelFiredHeating(const Model& model, const Curve& normalizedCapacityFunctionofTemperatureCurve,
+                                                const Curve& fuelEnergyInputRatioFunctionofTemperatureCurve,
+                                                const Curve& fuelEnergyInputRatioFunctionofPLRCurve);
+
     virtual ~HeatPumpAirToWaterFuelFiredHeating() = default;
 
     //@}
