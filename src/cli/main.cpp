@@ -145,9 +145,9 @@ int main(int argc, char* argv[]) {
     // This is a callback that's stored on the ScriptEngineInstance, triggered only the first time
     std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs, &pythonHomeDir]() {
       pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
-      pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
-      pythonEngine->registerType<openstudio::measure::PythonEnergyPlusMeasure*>("openstudio::measure::PythonEnergyPlusMeasure *");
-      pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
+      pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+      pythonEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
+      pythonEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
       // pythonEngine->registerType<std::string*>("std::string *");
     };
     pythonEngine.registerInitializationFunction(runSetupPythonPath);

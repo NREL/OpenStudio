@@ -312,7 +312,7 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
         fmt::print("measureTypeStr={}\n", measureTypeStr);
 
         if (measureType == MeasureType::ModelMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonModelMeasure*>(measureScriptObject);
+          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
 
           name = measurePtr->name();
           description = measurePtr->description();
@@ -324,7 +324,7 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
           outputs = measurePtr->outputs();
 
         } else if (measureType == MeasureType::EnergyPlusMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonEnergyPlusMeasure*>(measureScriptObject);
+          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
           name = measurePtr->name();
           description = measurePtr->description();
           taxonomy = measurePtr->taxonomy();
@@ -334,7 +334,7 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
           arguments = measurePtr->arguments(workspace);
           outputs = measurePtr->outputs();
         } else if (measureType == MeasureType::ReportingMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonModelMeasure*>(measureScriptObject);
+          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
           name = measurePtr->name();
           description = measurePtr->description();
           taxonomy = measurePtr->taxonomy();

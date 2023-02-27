@@ -118,25 +118,13 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
       if (measureType == MeasureType::ModelMeasure) {
         // For computing arguments
         auto modelClone = model.clone(true).cast<model::Model>();
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          arguments = static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          arguments = static_cast<openstudio::measure::PythonModelMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
-        }
+        arguments = static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
       } else if (measureType == MeasureType::EnergyPlusMeasure) {
         auto workspaceClone = workspace_->clone(true).cast<openstudio::Workspace>();
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          arguments = static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->arguments(workspaceClone);  // NOLINT
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          arguments = static_cast<openstudio::measure::PythonEnergyPlusMeasure*>(measurePtr)->arguments(workspaceClone);  // NOLINT
-        }
+        arguments = static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->arguments(workspaceClone);  // NOLINT
       } else if (measureType == MeasureType::ReportingMeasure) {
         auto modelClone = model.clone(true).cast<model::Model>();
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          arguments = static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          arguments = static_cast<openstudio::measure::PythonReportingMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
-        }
+        arguments = static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
       }
 
       measure::OSArgumentMap argumentMap;
@@ -212,50 +200,26 @@ spec.loader.exec_module(module)
     // This pointer will only be valid for as long as the above PythonMeasure is in scope
     // After that, dereferencing the measure pointer will crash the program
     if (measureType == MeasureType::ModelMeasure) {
-      if (measureLanguage == MeasureLanguage::Ruby) {
-        measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
-      } else if (measureLanguage == MeasureLanguage::Python) {
-        measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonModelMeasure*>(measureScriptObject);
-      }
+      measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
     } else if (measureType == MeasureType::EnergyPlusMeasure) {
-      if (measureLanguage == MeasureLanguage::Ruby) {
-        measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
-      } else if (measureLanguage == MeasureLanguage::Python) {
-        measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonEnergyPlusMeasure*>(measureScriptObject);
-      }
+      measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
     } else if (measureType == MeasureType::ReportingMeasure) {
-      if (measureLanguage == MeasureLanguage::Ruby) {
-        measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
-      } else if (measureLanguage == MeasureLanguage::Python) {
-        measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonReportingMeasure*>(measureScriptObject);
-      }
+      measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
     }
 
     const auto argmap = getArguments(measurePtr);
     // There is a bug. I can run one measure but not two. The one measure can be either python or ruby
     // I think it might have to do with the operations that must be done to the runner to reset state. maybe?
     if (measureType == MeasureType::ModelMeasure) {
-      if (measureLanguage == MeasureLanguage::Ruby) {
-        static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model, runner, argmap);
-      } else if (measureLanguage == MeasureLanguage::Python) {
-        static_cast<openstudio::measure::PythonModelMeasure*>(measurePtr)->run(model, runner, argmap);
-      }
+      static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model, runner, argmap);
     } else if (measureType == MeasureType::EnergyPlusMeasure) {
-      if (measureLanguage == MeasureLanguage::Ruby) {
-        static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
-      } else if (measureLanguage == MeasureLanguage::Python) {
-        static_cast<openstudio::measure::PythonEnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
-      }
+      static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
     } else if (measureType == MeasureType::ReportingMeasure) {
       if (energyplus_output_requests) {
         LOG(Debug, "Calling measure.energyPlusOutputRequests for '" << measureDirName << "'");
 
         std::vector<IdfObject> idfObjects;
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          idfObjects = static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->energyPlusOutputRequests(runner, argmap);
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          idfObjects = static_cast<openstudio::measure::PythonReportingMeasure*>(measurePtr)->energyPlusOutputRequests(runner, argmap);
-        }
+        idfObjects = static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->energyPlusOutputRequests(runner, argmap);
 
         int num_added = 0;
         for (auto& idfObject : idfObjects) {
@@ -265,11 +229,7 @@ spec.loader.exec_module(module)
         }
         LOG(Debug, "Finished measure.energyPlusOutputRequests for '" << measureDirName << "', " << num_added << " output requests added");
       } else {
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->run(runner, argmap);
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          static_cast<openstudio::measure::PythonReportingMeasure*>(measurePtr)->run(runner, argmap);
-        }
+        static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->run(runner, argmap);
       }
     }
 

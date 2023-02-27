@@ -53,21 +53,5 @@ namespace measure {
     return true;
   }
 
-  PythonEnergyPlusMeasure::~PythonEnergyPlusMeasure() = default;
-
-  std::vector<OSArgument> PythonEnergyPlusMeasure::arguments(const openstudio::Workspace& workspace) const {
-    return {};
-  }
-
-  std::vector<OSOutput> PythonEnergyPlusMeasure::outputs() const {
-    return {};
-  }
-
-  bool PythonEnergyPlusMeasure::run(openstudio::Workspace& workspace, OSRunner& runner,
-                                    const std::map<std::string, OSArgument>& user_arguments) const {
-    runner.prepareForMeasureRun(*this);
-    return true;
-  }
-
 }  // namespace measure
 }  // namespace openstudio
