@@ -1948,7 +1948,7 @@ namespace energyplus {
         retVal = translateHeatExchangerFluidToFluid(mo);
         break;
       }
-      
+
       case openstudio::IddObjectType::OS_HeatPump_AirToWater_FuelFired_Heating: {
         auto mo = modelObject.cast<HeatPumpAirToWaterFuelFiredHeating>();
         retVal = translateHeatPumpAirToWaterFuelFiredHeating(mo);
@@ -1959,7 +1959,7 @@ namespace energyplus {
         retVal = translateHeatPumpAirToWaterFuelFiredCooling(mo);
         break;
       }
-      
+
       case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling: {
         auto mo = modelObject.cast<HeatPumpWaterToWaterEquationFitCooling>();
         retVal = translateHeatPumpWaterToWaterEquationFitCooling(mo);
