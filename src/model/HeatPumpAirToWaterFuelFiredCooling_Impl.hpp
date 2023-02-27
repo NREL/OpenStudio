@@ -36,242 +36,198 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
-class OutdoorAirNode;
-class HeatPumpAirToWaterFuelFiredHeating;
-class BivariateFunctions;
-class BivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class BivariateFunctions;
-class UnivariateFunctions;
+  class HeatPumpAirToWaterFuelFiredHeating;
+  class Curve;
+  // class OutdoorAirNode;
 
-namespace detail {
+  namespace detail {
 
-  /** HeatPumpAirToWaterFuelFiredCooling_Impl is a StraightComponent_Impl that is the implementation class for HeatPumpAirToWaterFuelFiredCooling.*/
-  class MODEL_API HeatPumpAirToWaterFuelFiredCooling_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** HeatPumpAirToWaterFuelFiredCooling_Impl is a StraightComponent_Impl that is the implementation class for HeatPumpAirToWaterFuelFiredCooling.*/
+    class MODEL_API HeatPumpAirToWaterFuelFiredCooling_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    HeatPumpAirToWaterFuelFiredCooling_Impl(const IdfObject& idfObject,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      HeatPumpAirToWaterFuelFiredCooling_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    HeatPumpAirToWaterFuelFiredCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      HeatPumpAirToWaterFuelFiredCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    HeatPumpAirToWaterFuelFiredCooling_Impl(const HeatPumpAirToWaterFuelFiredCooling_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      HeatPumpAirToWaterFuelFiredCooling_Impl(const HeatPumpAirToWaterFuelFiredCooling_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~HeatPumpAirToWaterFuelFiredCooling_Impl() {}
+      virtual ~HeatPumpAirToWaterFuelFiredCooling_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual unsigned inletPort() const override;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection waterInletNode() const;
+      virtual unsigned outletPort() const override;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection waterOutletNode() const;
+      virtual void autosize() override;
 
-    // TODO: Check return type. From object lists, some candidates are: OutdoorAirNode.
-    boost::optional<OutdoorAirNode> airSourceNode() const;
+      virtual void applySizingValues() override;
 
-    // TODO: Check return type. From object lists, some candidates are: HeatPumpAirToWaterFuelFiredHeating.
-    boost::optional<HeatPumpAirToWaterFuelFiredHeating> companionHeatingHeatPump() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string fuelType() const;
+      // boost::optional<OutdoorAirNode> airSourceNode() const;
 
-    std::string endUseSubcategory() const;
+      boost::optional<HeatPumpAirToWaterFuelFiredHeating> companionHeatingHeatPump() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      std::string fuelType() const;
 
-    boost::optional<double> nominalCoolingCapacity() const;
+      std::string endUseSubcategory() const;
 
-    bool isNominalCoolingCapacityAutosized() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    boost::optional <double> autosizedNominalCoolingCapacity();
+      boost::optional<double> nominalCoolingCapacity() const;
 
-    double nominalCOP() const;
+      bool isNominalCoolingCapacityAutosized() const;
 
-    boost::optional<double> designFlowRate() const;
+      boost::optional<double> autosizedNominalCoolingCapacity();
 
-    bool isDesignFlowRateAutosized() const;
+      double nominalCOP() const;
 
-    boost::optional <double> autosizedDesignFlowRate();
+      boost::optional<double> designFlowRate() const;
 
-    double designSupplyTemperature() const;
+      bool isDesignFlowRateAutosized() const;
 
-    boost::optional<double> designTemperatureLift() const;
+      boost::optional<double> autosizedDesignFlowRate();
 
-    bool isDesignTemperatureLiftAutosized() const;
+      double designSupplyTemperature() const;
 
-    boost::optional <double> autosizedDesignTemperatureLift();
+      boost::optional<double> designTemperatureLift() const;
 
-    double sizingFactor() const;
+      bool isDesignTemperatureLiftAutosized() const;
 
-    std::string flowMode() const;
+      boost::optional<double> autosizedDesignTemperatureLift();
 
-    std::string outdoorAirTemperatureCurveInputVariable() const;
+      double sizingFactor() const;
 
-    std::string waterTemperatureCurveInputVariable() const;
+      std::string flowMode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: BivariateFunctions.
-    BivariateFunctions normalizedCapacityFunctionofTemperatureCurve() const;
+      std::string outdoorAirTemperatureCurveInputVariable() const;
 
-    // TODO: Check return type. From object lists, some candidates are: BivariateFunctions.
-    BivariateFunctions fuelEnergyInputRatioFunctionofTemperatureCurve() const;
+      std::string waterTemperatureCurveInputVariable() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions fuelEnergyInputRatioFunctionofPLRCurve() const;
+      Curve normalizedCapacityFunctionofTemperatureCurve() const;
 
-    double minimumPartLoadRatio() const;
+      Curve fuelEnergyInputRatioFunctionofTemperatureCurve() const;
 
-    double maximumPartLoadRatio() const;
+      Curve fuelEnergyInputRatioFunctionofPLRCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> cyclingRatioFactorCurve() const;
+      double minimumPartLoadRatio() const;
 
-    boost::optional<double> nominalAuxiliaryElectricPower() const;
+      double maximumPartLoadRatio() const;
 
-    // TODO: Check return type. From object lists, some candidates are: BivariateFunctions.
-    boost::optional<BivariateFunctions> auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() const;
+      boost::optional<Curve> cyclingRatioFactorCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> auxiliaryElectricEnergyInputRatioFunctionofPLRCurve() const;
+      boost::optional<double> nominalAuxiliaryElectricPower() const;
 
-    double standbyElectricPower() const;
+      boost::optional<Curve> auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<Curve> auxiliaryElectricEnergyInputRatioFunctionofPLRCurve() const;
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setWaterInletNode(const Connection& connection);
+      double standbyElectricPower() const;
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setWaterOutletNode(const Connection& connection);
+      //@}
+      /** @name Setters */
+      //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: OutdoorAirNode.
-    bool setAirSourceNode(const OutdoorAirNode& outdoorAirNode);
+      // bool setAirSourceNode(const OutdoorAirNode& outdoorAirNode);
 
-    void resetAirSourceNode();
+      // void resetAirSourceNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: HeatPumpAirToWaterFuelFiredHeating.
-    bool setCompanionHeatingHeatPump(const HeatPumpAirToWaterFuelFiredHeating& heatPumpAirToWaterFuelFiredHeating);
+      bool setCompanionHeatingHeatPump(const HeatPumpAirToWaterFuelFiredHeating& heatPumpAirToWaterFuelFiredHeating);
 
-    void resetCompanionHeatingHeatPump();
+      void resetCompanionHeatingHeatPump();
 
-    bool setFuelType(const std::string& fuelType);
+      bool setFuelType(const std::string& fuelType);
 
-    bool setEndUseSubcategory(const std::string& endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    bool setNominalCoolingCapacity(double nominalCoolingCapacity);
+      bool setNominalCoolingCapacity(double nominalCoolingCapacity);
 
-    void resetNominalCoolingCapacity();
+      void resetNominalCoolingCapacity();
 
-    void autosizeNominalCoolingCapacity();
+      void autosizeNominalCoolingCapacity();
 
-    bool setNominalCOP(double nominalCOP);
+      bool setNominalCOP(double nominalCOP);
 
-    bool setDesignFlowRate(double designFlowRate);
+      bool setDesignFlowRate(double designFlowRate);
 
-    void resetDesignFlowRate();
+      void resetDesignFlowRate();
 
-    void autosizeDesignFlowRate();
+      void autosizeDesignFlowRate();
 
-    bool setDesignSupplyTemperature(double designSupplyTemperature);
+      bool setDesignSupplyTemperature(double designSupplyTemperature);
 
-    bool setDesignTemperatureLift(double designTemperatureLift);
+      bool setDesignTemperatureLift(double designTemperatureLift);
 
-    void autosizeDesignTemperatureLift();
+      void autosizeDesignTemperatureLift();
 
-    bool setSizingFactor(double sizingFactor);
+      bool setSizingFactor(double sizingFactor);
 
-    bool setFlowMode(const std::string& flowMode);
+      bool setFlowMode(const std::string& flowMode);
 
-    bool setOutdoorAirTemperatureCurveInputVariable(const std::string& outdoorAirTemperatureCurveInputVariable);
+      bool setOutdoorAirTemperatureCurveInputVariable(const std::string& outdoorAirTemperatureCurveInputVariable);
 
-    bool setWaterTemperatureCurveInputVariable(const std::string& waterTemperatureCurveInputVariable);
+      bool setWaterTemperatureCurveInputVariable(const std::string& waterTemperatureCurveInputVariable);
 
-    // TODO: Check argument type. From object lists, some candidates are: BivariateFunctions.
-    bool setNormalizedCapacityFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions);
+      bool setNormalizedCapacityFunctionofTemperatureCurve(const Curve& normalizedCapacityFunctionofTemperatureCurve);
 
-    // TODO: Check argument type. From object lists, some candidates are: BivariateFunctions.
-    bool setFuelEnergyInputRatioFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions);
+      bool setFuelEnergyInputRatioFunctionofTemperatureCurve(const Curve& fuelEnergyInputRatioFunctionofTemperatureCurve);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setFuelEnergyInputRatioFunctionofPLRCurve(const UnivariateFunctions& univariateFunctions);
+      bool setFuelEnergyInputRatioFunctionofPLRCurve(const Curve& fuelEnergyInputRatioFunctionofPLRCurve);
 
-    bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
+      bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
 
-    bool setMaximumPartLoadRatio(double maximumPartLoadRatio);
+      bool setMaximumPartLoadRatio(double maximumPartLoadRatio);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setCyclingRatioFactorCurve(const UnivariateFunctions& univariateFunctions);
+      bool setCyclingRatioFactorCurve(const Curve& cyclingRatioFactorCurve);
 
-    void resetCyclingRatioFactorCurve();
+      void resetCyclingRatioFactorCurve();
 
-    bool setNominalAuxiliaryElectricPower(double nominalAuxiliaryElectricPower);
+      bool setNominalAuxiliaryElectricPower(double nominalAuxiliaryElectricPower);
 
-    void resetNominalAuxiliaryElectricPower();
+      void resetNominalAuxiliaryElectricPower();
 
-    // TODO: Check argument type. From object lists, some candidates are: BivariateFunctions.
-    bool setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions);
+      bool setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(const Curve& auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve);
 
-    void resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve();
+      void resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(const UnivariateFunctions& univariateFunctions);
+      bool setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(const Curve& auxiliaryElectricEnergyInputRatioFunctionofPLRCurve);
 
-    void resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve();
+      void resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve();
 
-    bool setStandbyElectricPower(double standbyElectricPower);
+      bool setStandbyElectricPower(double standbyElectricPower);
 
-    virtual void autosize() override;
+      //@}
+      /** @name Other */
+      //@{
 
-    virtual void applySizingValues() override;
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.HeatPumpAirToWaterFuelFiredCooling");
 
-    //@}
-    /** @name Other */
-    //@{
+      boost::optional<BivariateFunctions> optionalNormalizedCapacityFunctionofTemperatureCurve() const;
+      boost::optional<BivariateFunctions> optionalFuelEnergyInputRatioFunctionofTemperatureCurve() const;
+      boost::optional<UnivariateFunctions> optionalFuelEnergyInputRatioFunctionofPLRCurve() const;
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.HeatPumpAirToWaterFuelFiredCooling");
+  }  // namespace detail
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalWaterInletNode() const;
-    boost::optional<Connection> optionalWaterOutletNode() const;
-    boost::optional<BivariateFunctions> optionalNormalizedCapacityFunctionofTemperatureCurve() const;
-    boost::optional<BivariateFunctions> optionalFuelEnergyInputRatioFunctionofTemperatureCurve() const;
-    boost::optional<UnivariateFunctions> optionalFuelEnergyInputRatioFunctionofPLRCurve() const;
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_HEATPUMPAIRTOWATERFUELFIREDCOOLING_IMPL_HPP
-
+#endif  // MODEL_HEATPUMPAIRTOWATERFUELFIREDCOOLING_IMPL_HPP

@@ -30,27 +30,17 @@
 #include "HeatPumpAirToWaterFuelFiredCooling.hpp"
 #include "HeatPumpAirToWaterFuelFiredCooling_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "OutdoorAirNode.hpp"
-#include "OutdoorAirNode_Impl.hpp"
+#include "Model.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "HeatPumpAirToWaterFuelFiredHeating.hpp"
 #include "HeatPumpAirToWaterFuelFiredHeating_Impl.hpp"
-#include "BivariateFunctions.hpp"
-#include "BivariateFunctions_Impl.hpp"
-#include "BivariateFunctions.hpp"
-#include "BivariateFunctions_Impl.hpp"
-#include "UnivariateFunctions.hpp"
-#include "UnivariateFunctions_Impl.hpp"
-#include "UnivariateFunctions.hpp"
-#include "UnivariateFunctions_Impl.hpp"
-#include "BivariateFunctions.hpp"
-#include "BivariateFunctions_Impl.hpp"
-#include "UnivariateFunctions.hpp"
-#include "UnivariateFunctions_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -63,812 +53,785 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-
-  HeatPumpAirToWaterFuelFiredCooling_Impl::HeatPumpAirToWaterFuelFiredCooling_Impl(const IdfObject& idfObject,
-                                                                                   Model_Impl* model,
-                                                                                   bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == HeatPumpAirToWaterFuelFiredCooling::iddObjectType());
-  }
-
-  HeatPumpAirToWaterFuelFiredCooling_Impl::HeatPumpAirToWaterFuelFiredCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                   Model_Impl* model,
-                                                                                   bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == HeatPumpAirToWaterFuelFiredCooling::iddObjectType());
-  }
-
-  HeatPumpAirToWaterFuelFiredCooling_Impl::HeatPumpAirToWaterFuelFiredCooling_Impl(const HeatPumpAirToWaterFuelFiredCooling_Impl& other,
-                                                                                   Model_Impl* model,
-                                                                                   bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& HeatPumpAirToWaterFuelFiredCooling_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    if (result.empty()){
-    }
-    return result;
-  }
-
-  IddObjectType HeatPumpAirToWaterFuelFiredCooling_Impl::iddObjectType() const {
-    return HeatPumpAirToWaterFuelFiredCooling::iddObjectType();
-  }
-
-  Connection HeatPumpAirToWaterFuelFiredCooling_Impl::waterInletNode() const {
-    boost::optional<Connection> value = optionalWaterInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Water Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection HeatPumpAirToWaterFuelFiredCooling_Impl::waterOutletNode() const {
-    boost::optional<Connection> value = optionalWaterOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Water Outlet Node attached.");
-    }
-    return value.get();
-  }
-
-  boost::optional<OutdoorAirNode> HeatPumpAirToWaterFuelFiredCooling_Impl::airSourceNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<OutdoorAirNode>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AirSourceNodeName);
-  }
-
-  boost::optional<HeatPumpAirToWaterFuelFiredHeating> HeatPumpAirToWaterFuelFiredCooling_Impl::companionHeatingHeatPump() const {
-    return getObject<ModelObject>().getModelObjectTarget<HeatPumpAirToWaterFuelFiredHeating>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CompanionHeatingHeatPumpName);
-  }
-
-  std::string HeatPumpAirToWaterFuelFiredCooling_Impl::fuelType() const {
-    boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string HeatPumpAirToWaterFuelFiredCooling_Impl::endUseSubcategory() const {
-    boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::isEndUseSubcategoryDefaulted() const {
-    return isEmpty(OS_HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory);
-  }
-
-  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::nominalCoolingCapacity() const {
-    return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity,true);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::isNominalCoolingCapacityAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  boost::optional <double> HeatPumpAirToWaterFuelFiredCooling_Impl::autosizedNominalCoolingCapacity() {
-    return getAutosizedValue("TODO_CHECK_SQL Nominal Cooling Capacity", "W");
-  }
-
-  double HeatPumpAirToWaterFuelFiredCooling_Impl::nominalCOP() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCOP,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::designFlowRate() const {
-    return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate,true);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::isDesignFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  boost::optional <double> HeatPumpAirToWaterFuelFiredCooling_Impl::autosizedDesignFlowRate() {
-    return getAutosizedValue("TODO_CHECK_SQL Design Flow Rate", "m3/s");
-  }
-
-  double HeatPumpAirToWaterFuelFiredCooling_Impl::designSupplyTemperature() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignSupplyTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::designTemperatureLift() const {
-    return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignTemperatureLift,true);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::isDesignTemperatureLiftAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignTemperatureLift, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  boost::optional <double> HeatPumpAirToWaterFuelFiredCooling_Impl::autosizedDesignTemperatureLift() {
-    return getAutosizedValue("TODO_CHECK_SQL Design Temperature Lift", "deltaC");
-  }
-
-  double HeatPumpAirToWaterFuelFiredCooling_Impl::sizingFactor() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::SizingFactor,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string HeatPumpAirToWaterFuelFiredCooling_Impl::flowMode() const {
-    boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FlowMode,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string HeatPumpAirToWaterFuelFiredCooling_Impl::outdoorAirTemperatureCurveInputVariable() const {
-    boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::OutdoorAirTemperatureCurveInputVariable,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string HeatPumpAirToWaterFuelFiredCooling_Impl::waterTemperatureCurveInputVariable() const {
-    boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterTemperatureCurveInputVariable,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  BivariateFunctions HeatPumpAirToWaterFuelFiredCooling_Impl::normalizedCapacityFunctionofTemperatureCurve() const {
-    boost::optional<BivariateFunctions> value = optionalNormalizedCapacityFunctionofTemperatureCurve();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Normalized Capacity Functionof Temperature Curve attached.");
-    }
-    return value.get();
-  }
-
-  BivariateFunctions HeatPumpAirToWaterFuelFiredCooling_Impl::fuelEnergyInputRatioFunctionofTemperatureCurve() const {
-    boost::optional<BivariateFunctions> value = optionalFuelEnergyInputRatioFunctionofTemperatureCurve();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Fuel Energy Input Ratio Functionof Temperature Curve attached.");
-    }
-    return value.get();
-  }
-
-  UnivariateFunctions HeatPumpAirToWaterFuelFiredCooling_Impl::fuelEnergyInputRatioFunctionofPLRCurve() const {
-    boost::optional<UnivariateFunctions> value = optionalFuelEnergyInputRatioFunctionofPLRCurve();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Fuel Energy Input Ratio Functionof PLRCurve attached.");
-    }
-    return value.get();
-  }
-
-  double HeatPumpAirToWaterFuelFiredCooling_Impl::minimumPartLoadRatio() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::MinimumPartLoadRatio,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double HeatPumpAirToWaterFuelFiredCooling_Impl::maximumPartLoadRatio() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::MaximumPartLoadRatio,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<UnivariateFunctions> HeatPumpAirToWaterFuelFiredCooling_Impl::cyclingRatioFactorCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CyclingRatioFactorCurveName);
-  }
-
-  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::nominalAuxiliaryElectricPower() const {
-    return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower,true);
-  }
-
-  boost::optional<BivariateFunctions> HeatPumpAirToWaterFuelFiredCooling_Impl::auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName);
-  }
-
-  boost::optional<UnivariateFunctions> HeatPumpAirToWaterFuelFiredCooling_Impl::auxiliaryElectricEnergyInputRatioFunctionofPLRCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName);
-  }
-
-  double HeatPumpAirToWaterFuelFiredCooling_Impl::standbyElectricPower() const {
-    boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::StandbyElectricPower,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setWaterInletNode(const Connection& connection) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setWaterOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName, connection.handle());
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setAirSourceNode(const OutdoorAirNode& outdoorAirNode) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AirSourceNodeName, outdoorAirNode.handle());
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::resetAirSourceNode() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AirSourceNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setCompanionHeatingHeatPump(const HeatPumpAirToWaterFuelFiredHeating& heatPumpAirToWaterFuelFiredHeating) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CompanionHeatingHeatPumpName, heatPumpAirToWaterFuelFiredHeating.handle());
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::resetCompanionHeatingHeatPump() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CompanionHeatingHeatPumpName, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setFuelType(const std::string& fuelType) {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelType, fuelType);
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::resetEndUseSubcategory() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setNominalCoolingCapacity(double nominalCoolingCapacity) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, nominalCoolingCapacity);
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::resetNominalCoolingCapacity() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, "");
-    OS_ASSERT(result);
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::autosizeNominalCoolingCapacity() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setNominalCOP(double nominalCOP) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCOP, nominalCOP);
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setDesignFlowRate(double designFlowRate) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, designFlowRate);
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::resetDesignFlowRate() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, "");
-    OS_ASSERT(result);
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::autosizeDesignFlowRate() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setDesignSupplyTemperature(double designSupplyTemperature) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignSupplyTemperature, designSupplyTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setDesignTemperatureLift(double designTemperatureLift) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignTemperatureLift, designTemperatureLift);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::autosizeDesignTemperatureLift() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignTemperatureLift, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setSizingFactor(double sizingFactor) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::SizingFactor, sizingFactor);
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setFlowMode(const std::string& flowMode) {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FlowMode, flowMode);
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setOutdoorAirTemperatureCurveInputVariable(const std::string& outdoorAirTemperatureCurveInputVariable) {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::OutdoorAirTemperatureCurveInputVariable, outdoorAirTemperatureCurveInputVariable);
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setWaterTemperatureCurveInputVariable(const std::string& waterTemperatureCurveInputVariable) {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterTemperatureCurveInputVariable, waterTemperatureCurveInputVariable);
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setNormalizedCapacityFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NormalizedCapacityFunctionofTemperatureCurveName, bivariateFunctions.handle());
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setFuelEnergyInputRatioFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName, bivariateFunctions.handle());
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setFuelEnergyInputRatioFunctionofPLRCurve(const UnivariateFunctions& univariateFunctions) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofPLRCurveName, univariateFunctions.handle());
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::MinimumPartLoadRatio, minimumPartLoadRatio);
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setMaximumPartLoadRatio(double maximumPartLoadRatio) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::MaximumPartLoadRatio, maximumPartLoadRatio);
-    return result;
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setCyclingRatioFactorCurve(const UnivariateFunctions& univariateFunctions) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CyclingRatioFactorCurveName, univariateFunctions.handle());
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::resetCyclingRatioFactorCurve() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CyclingRatioFactorCurveName, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setNominalAuxiliaryElectricPower(double nominalAuxiliaryElectricPower) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, nominalAuxiliaryElectricPower);
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::resetNominalAuxiliaryElectricPower() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName, bivariateFunctions.handle());
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(const UnivariateFunctions& univariateFunctions) {
-    bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName, univariateFunctions.handle());
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve() {
-    bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatPumpAirToWaterFuelFiredCooling_Impl::setStandbyElectricPower(double standbyElectricPower) {
-    bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::StandbyElectricPower, standbyElectricPower);
-    return result;
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::autosize() {
-    autosizeNominalCoolingCapacity();
-    autosizeDesignFlowRate();
-    autosizeDesignTemperatureLift();
-  }
-
-  void HeatPumpAirToWaterFuelFiredCooling_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedNominalCoolingCapacity();
-    if (val) {
-      setNominalCoolingCapacity(val.get());
+  namespace detail {
+
+    HeatPumpAirToWaterFuelFiredCooling_Impl::HeatPumpAirToWaterFuelFiredCooling_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == HeatPumpAirToWaterFuelFiredCooling::iddObjectType());
     }
 
-    val = autosizedDesignFlowRate();
-    if (val) {
-      setDesignFlowRate(val.get());
+    HeatPumpAirToWaterFuelFiredCooling_Impl::HeatPumpAirToWaterFuelFiredCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                     Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == HeatPumpAirToWaterFuelFiredCooling::iddObjectType());
     }
 
-    val = autosizedDesignTemperatureLift();
-    if (val) {
-      setDesignTemperatureLift(val.get());
+    HeatPumpAirToWaterFuelFiredCooling_Impl::HeatPumpAirToWaterFuelFiredCooling_Impl(const HeatPumpAirToWaterFuelFiredCooling_Impl& other,
+                                                                                     Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& HeatPumpAirToWaterFuelFiredCooling_Impl::outputVariableNames() const {
+      static std::vector<std::string> result;
+      if (result.empty()) {
+      }
+      return result;
     }
 
+    IddObjectType HeatPumpAirToWaterFuelFiredCooling_Impl::iddObjectType() const {
+      return HeatPumpAirToWaterFuelFiredCooling::iddObjectType();
+    }
+
+    unsigned HeatPumpAirToWaterFuelFiredCooling_Impl::inletPort() const {
+      return OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName;
+    }
+
+    unsigned HeatPumpAirToWaterFuelFiredHeating_Impl::outletPort() const {
+      return OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName;
+    }
+
+    boost::optional<HeatPumpAirToWaterFuelFiredHeating> HeatPumpAirToWaterFuelFiredCooling_Impl::companionHeatingHeatPump() const {
+      return getObject<ModelObject>().getModelObjectTarget<HeatPumpAirToWaterFuelFiredHeating>(
+        OS_HeatPump_AirToWater_FuelFired_CoolingFields::CompanionHeatingHeatPumpName);
+    }
+
+    std::string HeatPumpAirToWaterFuelFiredCooling_Impl::fuelType() const {
+      boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string HeatPumpAirToWaterFuelFiredCooling_Impl::endUseSubcategory() const {
+      boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::isEndUseSubcategoryDefaulted() const {
+      return isEmpty(OS_HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory);
+    }
+
+    boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::nominalCoolingCapacity() const {
+      return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, true);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::isNominalCoolingCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::autosizedNominalCoolingCapacity() {
+      return getAutosizedValue("TODO_CHECK_SQL Nominal Cooling Capacity", "W");
+    }
+
+    double HeatPumpAirToWaterFuelFiredCooling_Impl::nominalCOP() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCOP, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::designFlowRate() const {
+      return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, true);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::isDesignFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::autosizedDesignFlowRate() {
+      return getAutosizedValue("TODO_CHECK_SQL Design Flow Rate", "m3/s");
+    }
+
+    double HeatPumpAirToWaterFuelFiredCooling_Impl::designSupplyTemperature() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignSupplyTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::designTemperatureLift() const {
+      return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignTemperatureLift, true);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::isDesignTemperatureLiftAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignTemperatureLift, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::autosizedDesignTemperatureLift() {
+      return getAutosizedValue("TODO_CHECK_SQL Design Temperature Lift", "deltaC");
+    }
+
+    double HeatPumpAirToWaterFuelFiredCooling_Impl::sizingFactor() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::SizingFactor, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string HeatPumpAirToWaterFuelFiredCooling_Impl::flowMode() const {
+      boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FlowMode, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string HeatPumpAirToWaterFuelFiredCooling_Impl::outdoorAirTemperatureCurveInputVariable() const {
+      boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::OutdoorAirTemperatureCurveInputVariable, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string HeatPumpAirToWaterFuelFiredCooling_Impl::waterTemperatureCurveInputVariable() const {
+      boost::optional<std::string> value = getString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterTemperatureCurveInputVariable, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    Curve HeatPumpAirToWaterFuelFiredCooling_Impl::normalizedCapacityFunctionofTemperatureCurve() const {
+      boost::optional<Curve> value = optionalNormalizedCapacityFunctionofTemperatureCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Normalized Capacity Functionof Temperature Curve attached.");
+      }
+      return value.get();
+    }
+
+    Curve HeatPumpAirToWaterFuelFiredCooling_Impl::fuelEnergyInputRatioFunctionofTemperatureCurve() const {
+      boost::optional<Curve> value = optionalFuelEnergyInputRatioFunctionofTemperatureCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Fuel Energy Input Ratio Functionof Temperature Curve attached.");
+      }
+      return value.get();
+    }
+
+    Curve HeatPumpAirToWaterFuelFiredCooling_Impl::fuelEnergyInputRatioFunctionofPLRCurve() const {
+      boost::optional<Curve> value = optionalFuelEnergyInputRatioFunctionofPLRCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Fuel Energy Input Ratio Functionof PLRCurve attached.");
+      }
+      return value.get();
+    }
+
+    double HeatPumpAirToWaterFuelFiredCooling_Impl::minimumPartLoadRatio() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::MinimumPartLoadRatio, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double HeatPumpAirToWaterFuelFiredCooling_Impl::maximumPartLoadRatio() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::MaximumPartLoadRatio, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling_Impl::cyclingRatioFactorCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CyclingRatioFactorCurveName);
+    }
+
+    boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::nominalAuxiliaryElectricPower() const {
+      return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, true);
+    }
+
+    boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling_Impl::auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName);
+    }
+
+    boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling_Impl::auxiliaryElectricEnergyInputRatioFunctionofPLRCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName);
+    }
+
+    double HeatPumpAirToWaterFuelFiredCooling_Impl::standbyElectricPower() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::StandbyElectricPower, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setWaterInletNode(const Connection& connection) {
+      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName, connection.handle());
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setWaterOutletNode(const Connection& connection) {
+      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName, connection.handle());
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setCompanionHeatingHeatPump(
+      const HeatPumpAirToWaterFuelFiredHeating& heatPumpAirToWaterFuelFiredHeating) {
+      bool result =
+        setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CompanionHeatingHeatPumpName, heatPumpAirToWaterFuelFiredHeating.handle());
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::resetCompanionHeatingHeatPump() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CompanionHeatingHeatPumpName, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setFuelType(const std::string& fuelType) {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelType, fuelType);
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory, endUseSubcategory);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::resetEndUseSubcategory() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setNominalCoolingCapacity(double nominalCoolingCapacity) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, nominalCoolingCapacity);
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::resetNominalCoolingCapacity() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, "");
+      OS_ASSERT(result);
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::autosizeNominalCoolingCapacity() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setNominalCOP(double nominalCOP) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalCOP, nominalCOP);
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setDesignFlowRate(double designFlowRate) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, designFlowRate);
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::resetDesignFlowRate() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::autosizeDesignFlowRate() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setDesignSupplyTemperature(double designSupplyTemperature) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignSupplyTemperature, designSupplyTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setDesignTemperatureLift(double designTemperatureLift) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignTemperatureLift, designTemperatureLift);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::autosizeDesignTemperatureLift() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::DesignTemperatureLift, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setSizingFactor(double sizingFactor) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::SizingFactor, sizingFactor);
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setFlowMode(const std::string& flowMode) {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FlowMode, flowMode);
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setOutdoorAirTemperatureCurveInputVariable(
+      const std::string& outdoorAirTemperatureCurveInputVariable) {
+      bool result =
+        setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::OutdoorAirTemperatureCurveInputVariable, outdoorAirTemperatureCurveInputVariable);
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setWaterTemperatureCurveInputVariable(const std::string& waterTemperatureCurveInputVariable) {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterTemperatureCurveInputVariable, waterTemperatureCurveInputVariable);
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setNormalizedCapacityFunctionofTemperatureCurve(
+      const Curve& normalizedCapacityFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NormalizedCapacityFunctionofTemperatureCurveName,
+                               normalizedCapacityFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setFuelEnergyInputRatioFunctionofTemperatureCurve(
+      const Curve& fuelEnergyInputRatioFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName,
+                               fuelEnergyInputRatioFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setFuelEnergyInputRatioFunctionofPLRCurve(const Curve& fuelEnergyInputRatioFunctionofPLRCurve) {
+      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofPLRCurveName,
+                               fuelEnergyInputRatioFunctionofPLRCurve.handle());
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::MinimumPartLoadRatio, minimumPartLoadRatio);
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setMaximumPartLoadRatio(double maximumPartLoadRatio) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::MaximumPartLoadRatio, maximumPartLoadRatio);
+      return result;
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setCyclingRatioFactorCurve(const Curve& cyclingRatioFactorCurve) {
+      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CyclingRatioFactorCurveName, cyclingRatioFactorCurve.handle());
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::resetCyclingRatioFactorCurve() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CyclingRatioFactorCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setNominalAuxiliaryElectricPower(double nominalAuxiliaryElectricPower) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, nominalAuxiliaryElectricPower);
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::resetNominalAuxiliaryElectricPower() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(
+      const Curve& auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName,
+                               auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(
+      const Curve& auxiliaryElectricEnergyInputRatioFunctionofPLRCurve) {
+      bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName,
+                               auxiliaryElectricEnergyInputRatioFunctionofPLRCurve.handle());
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve() {
+      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::setStandbyElectricPower(double standbyElectricPower) {
+      bool result = setDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::StandbyElectricPower, standbyElectricPower);
+      return result;
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::autosize() {
+      autosizeNominalCoolingCapacity();
+      autosizeDesignFlowRate();
+      autosizeDesignTemperatureLift();
+    }
+
+    void HeatPumpAirToWaterFuelFiredCooling_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedNominalCoolingCapacity();
+      if (val) {
+        setNominalCoolingCapacity(val.get());
+      }
+
+      val = autosizedDesignFlowRate();
+      if (val) {
+        setDesignFlowRate(val.get());
+      }
+
+      val = autosizedDesignTemperatureLift();
+      if (val) {
+        setDesignTemperatureLift(val.get());
+      }
+    }
+
+    boost::optional<Connection> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalWaterInletNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName);
+    }
+
+    boost::optional<Connection> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalWaterOutletNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName);
+    }
+
+    boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalNormalizedCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_AirToWater_FuelFired_CoolingFields::NormalizedCapacityFunctionofTemperatureCurveName);
+    }
+
+    boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalFuelEnergyInputRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName);
+    }
+
+    boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalFuelEnergyInputRatioFunctionofPLRCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofPLRCurveName);
+    }
+
+  }  // namespace detail
+
+  HeatPumpAirToWaterFuelFiredCooling::HeatPumpAirToWaterFuelFiredCooling(const Model& model)
+    : StraightComponent(HeatPumpAirToWaterFuelFiredCooling::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>());
+
+    bool ok = true;
+    ok = setFuelType("NaturalGas");
+    OS_ASSERT(ok);
+    ok = setNominalCOP(1.0);
+    OS_ASSERT(ok);
+    ok = setDesignSupplyTemperature(7.0);
+    OS_ASSERT(ok);
+    ok = setDesignTemperatureLift(11.1);
+    OS_ASSERT(ok);
+    ok = setSizingFactor(1.0);
+    OS_ASSERT(ok);
+    ok = setFlowMode("NotModulated");
+    OS_ASSERT(ok);
+    ok = setOutdoorAirTemperatureCurveInputVariable("DryBulb");
+    OS_ASSERT(ok);
+    ok = setWaterTemperatureCurveInputVariable("EnteringEvaporator");
+    OS_ASSERT(ok);
+    // ok = setNormalizedCapacityFunctionofTemperatureCurve();
+    OS_ASSERT(ok);
+    // ok = setFuelEnergyInputRatioFunctionofTemperatureCurve();
+    OS_ASSERT(ok);
+    // ok = setFuelEnergyInputRatioFunctionofPLRCurve();
+    OS_ASSERT(ok);
+    ok = setMinimumPartLoadRatio(0.1);
+    OS_ASSERT(ok);
+    ok = setMaximumPartLoadRatio(1.0);
+    OS_ASSERT(ok);
+    ok = setStandbyElectricPower(0);
+    OS_ASSERT(ok);
   }
 
-  boost::optional<Connection> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName);
+  IddObjectType HeatPumpAirToWaterFuelFiredCooling::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_HeatPump_AirToWater_FuelFired_Cooling);
   }
 
-  boost::optional<Connection> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName);
+  std::vector<std::string> HeatPumpAirToWaterFuelFiredCooling::fuelTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelType);
   }
 
-  boost::optional<BivariateFunctions> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalNormalizedCapacityFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NormalizedCapacityFunctionofTemperatureCurveName);
+  std::vector<std::string> HeatPumpAirToWaterFuelFiredCooling::flowModeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_HeatPump_AirToWater_FuelFired_CoolingFields::FlowMode);
   }
 
-  boost::optional<BivariateFunctions> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalFuelEnergyInputRatioFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName);
+  std::vector<std::string> HeatPumpAirToWaterFuelFiredCooling::outdoorAirTemperatureCurveInputVariableValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_HeatPump_AirToWater_FuelFired_CoolingFields::OutdoorAirTemperatureCurveInputVariable);
   }
 
-  boost::optional<UnivariateFunctions> HeatPumpAirToWaterFuelFiredCooling_Impl::optionalFuelEnergyInputRatioFunctionofPLRCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofPLRCurveName);
+  std::vector<std::string> HeatPumpAirToWaterFuelFiredCooling::waterTemperatureCurveInputVariableValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterTemperatureCurveInputVariable);
   }
 
-} // detail
+  Connection HeatPumpAirToWaterFuelFiredCooling::waterInletNode() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->waterInletNode();
+  }
 
-HeatPumpAirToWaterFuelFiredCooling::HeatPumpAirToWaterFuelFiredCooling(const Model& model)
-  : StraightComponent(HeatPumpAirToWaterFuelFiredCooling::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>());
+  Connection HeatPumpAirToWaterFuelFiredCooling::waterOutletNode() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->waterOutletNode();
+  }
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName
-  //     OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName
-  //     OS_HeatPump_AirToWater_FuelFired_CoolingFields::NormalizedCapacityFunctionofTemperatureCurveName
-  //     OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName
-  //     OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofPLRCurveName
-  bool ok = true;
-  // ok = setWaterInletNode();
-  OS_ASSERT(ok);
-  // ok = setWaterOutletNode();
-  OS_ASSERT(ok);
-  // ok = setFuelType();
-  OS_ASSERT(ok);
-  // ok = setNominalCOP();
-  OS_ASSERT(ok);
-  // setDesignSupplyTemperature();
-  // setDesignTemperatureLift();
-  // ok = setSizingFactor();
-  OS_ASSERT(ok);
-  // ok = setFlowMode();
-  OS_ASSERT(ok);
-  // ok = setOutdoorAirTemperatureCurveInputVariable();
-  OS_ASSERT(ok);
-  // ok = setWaterTemperatureCurveInputVariable();
-  OS_ASSERT(ok);
-  // ok = setNormalizedCapacityFunctionofTemperatureCurve();
-  OS_ASSERT(ok);
-  // ok = setFuelEnergyInputRatioFunctionofTemperatureCurve();
-  OS_ASSERT(ok);
-  // ok = setFuelEnergyInputRatioFunctionofPLRCurve();
-  OS_ASSERT(ok);
-  // ok = setMinimumPartLoadRatio();
-  OS_ASSERT(ok);
-  // ok = setMaximumPartLoadRatio();
-  OS_ASSERT(ok);
-  // ok = setStandbyElectricPower();
-  OS_ASSERT(ok);
-}
+  boost::optional<HeatPumpAirToWaterFuelFiredHeating> HeatPumpAirToWaterFuelFiredCooling::companionHeatingHeatPump() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->companionHeatingHeatPump();
+  }
 
-IddObjectType HeatPumpAirToWaterFuelFiredCooling::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_HeatPump_AirToWater_FuelFired_Cooling);
-}
+  std::string HeatPumpAirToWaterFuelFiredCooling::fuelType() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->fuelType();
+  }
 
-std::vector<std::string> HeatPumpAirToWaterFuelFiredCooling::fuelTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_HeatPump_AirToWater_FuelFired_CoolingFields::FuelType);
-}
+  std::string HeatPumpAirToWaterFuelFiredCooling::endUseSubcategory() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->endUseSubcategory();
+  }
 
-std::vector<std::string> HeatPumpAirToWaterFuelFiredCooling::flowModeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_HeatPump_AirToWater_FuelFired_CoolingFields::FlowMode);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::isEndUseSubcategoryDefaulted() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->isEndUseSubcategoryDefaulted();
+  }
 
-std::vector<std::string> HeatPumpAirToWaterFuelFiredCooling::outdoorAirTemperatureCurveInputVariableValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_HeatPump_AirToWater_FuelFired_CoolingFields::OutdoorAirTemperatureCurveInputVariable);
-}
+  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::nominalCoolingCapacity() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->nominalCoolingCapacity();
+  }
 
-std::vector<std::string> HeatPumpAirToWaterFuelFiredCooling::waterTemperatureCurveInputVariableValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterTemperatureCurveInputVariable);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::isNominalCoolingCapacityAutosized() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->isNominalCoolingCapacityAutosized();
+  }
 
-Connection HeatPumpAirToWaterFuelFiredCooling::waterInletNode() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->waterInletNode();
-}
-
-Connection HeatPumpAirToWaterFuelFiredCooling::waterOutletNode() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->waterOutletNode();
-}
-
-boost::optional<OutdoorAirNode> HeatPumpAirToWaterFuelFiredCooling::airSourceNode() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->airSourceNode();
-}
-
-boost::optional<HeatPumpAirToWaterFuelFiredHeating> HeatPumpAirToWaterFuelFiredCooling::companionHeatingHeatPump() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->companionHeatingHeatPump();
-}
-
-std::string HeatPumpAirToWaterFuelFiredCooling::fuelType() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->fuelType();
-}
-
-std::string HeatPumpAirToWaterFuelFiredCooling::endUseSubcategory() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->endUseSubcategory();
-}
-
-bool HeatPumpAirToWaterFuelFiredCooling::isEndUseSubcategoryDefaulted() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->isEndUseSubcategoryDefaulted();
-}
-
-boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::nominalCoolingCapacity() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->nominalCoolingCapacity();
-}
-
-bool HeatPumpAirToWaterFuelFiredCooling::isNominalCoolingCapacityAutosized() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->isNominalCoolingCapacityAutosized();
-}
-
-  boost::optional <double> HeatPumpAirToWaterFuelFiredCooling::autosizedNominalCoolingCapacity() {
+  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::autosizedNominalCoolingCapacity() {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->autosizedNominalCoolingCapacity();
   }
 
-double HeatPumpAirToWaterFuelFiredCooling::nominalCOP() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->nominalCOP();
-}
+  double HeatPumpAirToWaterFuelFiredCooling::nominalCOP() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->nominalCOP();
+  }
 
-boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::designFlowRate() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->designFlowRate();
-}
+  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::designFlowRate() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->designFlowRate();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::isDesignFlowRateAutosized() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->isDesignFlowRateAutosized();
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::isDesignFlowRateAutosized() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->isDesignFlowRateAutosized();
+  }
 
-  boost::optional <double> HeatPumpAirToWaterFuelFiredCooling::autosizedDesignFlowRate() {
+  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::autosizedDesignFlowRate() {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->autosizedDesignFlowRate();
   }
 
-double HeatPumpAirToWaterFuelFiredCooling::designSupplyTemperature() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->designSupplyTemperature();
-}
+  double HeatPumpAirToWaterFuelFiredCooling::designSupplyTemperature() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->designSupplyTemperature();
+  }
 
-boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::designTemperatureLift() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->designTemperatureLift();
-}
+  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::designTemperatureLift() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->designTemperatureLift();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::isDesignTemperatureLiftAutosized() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->isDesignTemperatureLiftAutosized();
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::isDesignTemperatureLiftAutosized() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->isDesignTemperatureLiftAutosized();
+  }
 
-  boost::optional <double> HeatPumpAirToWaterFuelFiredCooling::autosizedDesignTemperatureLift() {
+  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::autosizedDesignTemperatureLift() {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->autosizedDesignTemperatureLift();
   }
 
-double HeatPumpAirToWaterFuelFiredCooling::sizingFactor() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->sizingFactor();
-}
+  double HeatPumpAirToWaterFuelFiredCooling::sizingFactor() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->sizingFactor();
+  }
 
-std::string HeatPumpAirToWaterFuelFiredCooling::flowMode() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->flowMode();
-}
+  std::string HeatPumpAirToWaterFuelFiredCooling::flowMode() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->flowMode();
+  }
 
-std::string HeatPumpAirToWaterFuelFiredCooling::outdoorAirTemperatureCurveInputVariable() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->outdoorAirTemperatureCurveInputVariable();
-}
+  std::string HeatPumpAirToWaterFuelFiredCooling::outdoorAirTemperatureCurveInputVariable() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->outdoorAirTemperatureCurveInputVariable();
+  }
 
-std::string HeatPumpAirToWaterFuelFiredCooling::waterTemperatureCurveInputVariable() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->waterTemperatureCurveInputVariable();
-}
+  std::string HeatPumpAirToWaterFuelFiredCooling::waterTemperatureCurveInputVariable() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->waterTemperatureCurveInputVariable();
+  }
 
-BivariateFunctions HeatPumpAirToWaterFuelFiredCooling::normalizedCapacityFunctionofTemperatureCurve() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->normalizedCapacityFunctionofTemperatureCurve();
-}
+  Curve HeatPumpAirToWaterFuelFiredCooling::normalizedCapacityFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->normalizedCapacityFunctionofTemperatureCurve();
+  }
 
-BivariateFunctions HeatPumpAirToWaterFuelFiredCooling::fuelEnergyInputRatioFunctionofTemperatureCurve() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->fuelEnergyInputRatioFunctionofTemperatureCurve();
-}
+  Curve HeatPumpAirToWaterFuelFiredCooling::fuelEnergyInputRatioFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->fuelEnergyInputRatioFunctionofTemperatureCurve();
+  }
 
-UnivariateFunctions HeatPumpAirToWaterFuelFiredCooling::fuelEnergyInputRatioFunctionofPLRCurve() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->fuelEnergyInputRatioFunctionofPLRCurve();
-}
+  Curve HeatPumpAirToWaterFuelFiredCooling::fuelEnergyInputRatioFunctionofPLRCurve() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->fuelEnergyInputRatioFunctionofPLRCurve();
+  }
 
-double HeatPumpAirToWaterFuelFiredCooling::minimumPartLoadRatio() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->minimumPartLoadRatio();
-}
+  double HeatPumpAirToWaterFuelFiredCooling::minimumPartLoadRatio() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->minimumPartLoadRatio();
+  }
 
-double HeatPumpAirToWaterFuelFiredCooling::maximumPartLoadRatio() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->maximumPartLoadRatio();
-}
+  double HeatPumpAirToWaterFuelFiredCooling::maximumPartLoadRatio() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->maximumPartLoadRatio();
+  }
 
-boost::optional<UnivariateFunctions> HeatPumpAirToWaterFuelFiredCooling::cyclingRatioFactorCurve() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->cyclingRatioFactorCurve();
-}
+  boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling::cyclingRatioFactorCurve() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->cyclingRatioFactorCurve();
+  }
 
-boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::nominalAuxiliaryElectricPower() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->nominalAuxiliaryElectricPower();
-}
+  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::nominalAuxiliaryElectricPower() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->nominalAuxiliaryElectricPower();
+  }
 
-boost::optional<BivariateFunctions> HeatPumpAirToWaterFuelFiredCooling::auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve();
-}
+  boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling::auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve();
+  }
 
-boost::optional<UnivariateFunctions> HeatPumpAirToWaterFuelFiredCooling::auxiliaryElectricEnergyInputRatioFunctionofPLRCurve() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->auxiliaryElectricEnergyInputRatioFunctionofPLRCurve();
-}
+  boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling::auxiliaryElectricEnergyInputRatioFunctionofPLRCurve() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->auxiliaryElectricEnergyInputRatioFunctionofPLRCurve();
+  }
 
-double HeatPumpAirToWaterFuelFiredCooling::standbyElectricPower() const {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->standbyElectricPower();
-}
+  double HeatPumpAirToWaterFuelFiredCooling::standbyElectricPower() const {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->standbyElectricPower();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setWaterInletNode(const Connection& connection) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setWaterInletNode(connection);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setWaterInletNode(const Connection& connection) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setWaterInletNode(connection);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setWaterOutletNode(connection);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setWaterOutletNode(const Connection& connection) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setWaterOutletNode(connection);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setAirSourceNode(const OutdoorAirNode& outdoorAirNode) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setAirSourceNode(outdoorAirNode);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setCompanionHeatingHeatPump(const HeatPumpAirToWaterFuelFiredHeating& heatPumpAirToWaterFuelFiredHeating) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setCompanionHeatingHeatPump(heatPumpAirToWaterFuelFiredHeating);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::resetAirSourceNode() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetAirSourceNode();
-}
+  void HeatPumpAirToWaterFuelFiredCooling::resetCompanionHeatingHeatPump() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetCompanionHeatingHeatPump();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setCompanionHeatingHeatPump(const HeatPumpAirToWaterFuelFiredHeating& heatPumpAirToWaterFuelFiredHeating) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setCompanionHeatingHeatPump(heatPumpAirToWaterFuelFiredHeating);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setFuelType(const std::string& fuelType) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setFuelType(fuelType);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::resetCompanionHeatingHeatPump() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetCompanionHeatingHeatPump();
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setEndUseSubcategory(const std::string& endUseSubcategory) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setFuelType(const std::string& fuelType) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setFuelType(fuelType);
-}
+  void HeatPumpAirToWaterFuelFiredCooling::resetEndUseSubcategory() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetEndUseSubcategory();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setEndUseSubcategory(const std::string& endUseSubcategory) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setEndUseSubcategory(endUseSubcategory);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setNominalCoolingCapacity(double nominalCoolingCapacity) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setNominalCoolingCapacity(nominalCoolingCapacity);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::resetEndUseSubcategory() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetEndUseSubcategory();
-}
+  void HeatPumpAirToWaterFuelFiredCooling::resetNominalCoolingCapacity() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetNominalCoolingCapacity();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setNominalCoolingCapacity(double nominalCoolingCapacity) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setNominalCoolingCapacity(nominalCoolingCapacity);
-}
+  void HeatPumpAirToWaterFuelFiredCooling::autosizeNominalCoolingCapacity() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->autosizeNominalCoolingCapacity();
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::resetNominalCoolingCapacity() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetNominalCoolingCapacity();
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setNominalCOP(double nominalCOP) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setNominalCOP(nominalCOP);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::autosizeNominalCoolingCapacity() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->autosizeNominalCoolingCapacity();
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setDesignFlowRate(double designFlowRate) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setDesignFlowRate(designFlowRate);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setNominalCOP(double nominalCOP) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setNominalCOP(nominalCOP);
-}
+  void HeatPumpAirToWaterFuelFiredCooling::resetDesignFlowRate() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetDesignFlowRate();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setDesignFlowRate(double designFlowRate) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setDesignFlowRate(designFlowRate);
-}
+  void HeatPumpAirToWaterFuelFiredCooling::autosizeDesignFlowRate() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->autosizeDesignFlowRate();
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::resetDesignFlowRate() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetDesignFlowRate();
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setDesignSupplyTemperature(double designSupplyTemperature) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setDesignSupplyTemperature(designSupplyTemperature);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::autosizeDesignFlowRate() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->autosizeDesignFlowRate();
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setDesignTemperatureLift(double designTemperatureLift) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setDesignTemperatureLift(designTemperatureLift);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setDesignSupplyTemperature(double designSupplyTemperature) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setDesignSupplyTemperature(designSupplyTemperature);
-}
+  void HeatPumpAirToWaterFuelFiredCooling::autosizeDesignTemperatureLift() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->autosizeDesignTemperatureLift();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setDesignTemperatureLift(double designTemperatureLift) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setDesignTemperatureLift(designTemperatureLift);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setSizingFactor(double sizingFactor) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setSizingFactor(sizingFactor);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::autosizeDesignTemperatureLift() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->autosizeDesignTemperatureLift();
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setFlowMode(const std::string& flowMode) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setFlowMode(flowMode);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setSizingFactor(double sizingFactor) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setSizingFactor(sizingFactor);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setOutdoorAirTemperatureCurveInputVariable(const std::string& outdoorAirTemperatureCurveInputVariable) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setOutdoorAirTemperatureCurveInputVariable(
+      outdoorAirTemperatureCurveInputVariable);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setFlowMode(const std::string& flowMode) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setFlowMode(flowMode);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setWaterTemperatureCurveInputVariable(const std::string& waterTemperatureCurveInputVariable) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setWaterTemperatureCurveInputVariable(waterTemperatureCurveInputVariable);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setOutdoorAirTemperatureCurveInputVariable(const std::string& outdoorAirTemperatureCurveInputVariable) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setOutdoorAirTemperatureCurveInputVariable(outdoorAirTemperatureCurveInputVariable);
-}
+  bool
+    HeatPumpAirToWaterFuelFiredCooling::setNormalizedCapacityFunctionofTemperatureCurve(const Curve& normalizedCapacityFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setNormalizedCapacityFunctionofTemperatureCurve(
+      normalizedCapacityFunctionofTemperatureCurve);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setWaterTemperatureCurveInputVariable(const std::string& waterTemperatureCurveInputVariable) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setWaterTemperatureCurveInputVariable(waterTemperatureCurveInputVariable);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setFuelEnergyInputRatioFunctionofTemperatureCurve(
+    const Curve& fuelEnergyInputRatioFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setFuelEnergyInputRatioFunctionofTemperatureCurve(
+      fuelEnergyInputRatioFunctionofTemperatureCurve);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setNormalizedCapacityFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setNormalizedCapacityFunctionofTemperatureCurve(bivariateFunctions);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setFuelEnergyInputRatioFunctionofPLRCurve(const Curve& fuelEnergyInputRatioFunctionofPLRCurve) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setFuelEnergyInputRatioFunctionofPLRCurve(
+      fuelEnergyInputRatioFunctionofPLRCurve);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setFuelEnergyInputRatioFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setFuelEnergyInputRatioFunctionofTemperatureCurve(bivariateFunctions);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setMinimumPartLoadRatio(minimumPartLoadRatio);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setFuelEnergyInputRatioFunctionofPLRCurve(const UnivariateFunctions& univariateFunctions) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setFuelEnergyInputRatioFunctionofPLRCurve(univariateFunctions);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setMaximumPartLoadRatio(double maximumPartLoadRatio) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setMaximumPartLoadRatio(maximumPartLoadRatio);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setMinimumPartLoadRatio(minimumPartLoadRatio);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setCyclingRatioFactorCurve(const Curve& cyclingRatioFactorCurve) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setCyclingRatioFactorCurve(cyclingRatioFactorCurve);
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setMaximumPartLoadRatio(double maximumPartLoadRatio) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setMaximumPartLoadRatio(maximumPartLoadRatio);
-}
+  void HeatPumpAirToWaterFuelFiredCooling::resetCyclingRatioFactorCurve() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetCyclingRatioFactorCurve();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setCyclingRatioFactorCurve(const UnivariateFunctions& univariateFunctions) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setCyclingRatioFactorCurve(univariateFunctions);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setNominalAuxiliaryElectricPower(double nominalAuxiliaryElectricPower) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setNominalAuxiliaryElectricPower(nominalAuxiliaryElectricPower);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::resetCyclingRatioFactorCurve() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetCyclingRatioFactorCurve();
-}
+  void HeatPumpAirToWaterFuelFiredCooling::resetNominalAuxiliaryElectricPower() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetNominalAuxiliaryElectricPower();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setNominalAuxiliaryElectricPower(double nominalAuxiliaryElectricPower) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setNominalAuxiliaryElectricPower(nominalAuxiliaryElectricPower);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(
+    const Curve& auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(
+      auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::resetNominalAuxiliaryElectricPower() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetNominalAuxiliaryElectricPower();
-}
+  void HeatPumpAirToWaterFuelFiredCooling::resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(const BivariateFunctions& bivariateFunctions) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(bivariateFunctions);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(
+    const Curve& auxiliaryElectricEnergyInputRatioFunctionofPLRCurve) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(
+      auxiliaryElectricEnergyInputRatioFunctionofPLRCurve);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve();
-}
+  void HeatPumpAirToWaterFuelFiredCooling::resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve() {
+    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve();
+  }
 
-bool HeatPumpAirToWaterFuelFiredCooling::setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(const UnivariateFunctions& univariateFunctions) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(univariateFunctions);
-}
+  bool HeatPumpAirToWaterFuelFiredCooling::setStandbyElectricPower(double standbyElectricPower) {
+    return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setStandbyElectricPower(standbyElectricPower);
+  }
 
-void HeatPumpAirToWaterFuelFiredCooling::resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve() {
-  getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve();
-}
+  /// @cond
+  HeatPumpAirToWaterFuelFiredCooling::HeatPumpAirToWaterFuelFiredCooling(std::shared_ptr<detail::HeatPumpAirToWaterFuelFiredCooling_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
-bool HeatPumpAirToWaterFuelFiredCooling::setStandbyElectricPower(double standbyElectricPower) {
-  return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setStandbyElectricPower(standbyElectricPower);
-}
-
-/// @cond
-HeatPumpAirToWaterFuelFiredCooling::HeatPumpAirToWaterFuelFiredCooling(std::shared_ptr<detail::HeatPumpAirToWaterFuelFiredCooling_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

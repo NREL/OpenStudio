@@ -81,12 +81,12 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredHeating_GettersSetters) {
   // Water Inlet Node Name: Required Object
   Connection obj(m);
   EXPECT_TRUE(heatPumpAirToWaterFuelFiredHeating.setWaterInletNode(obj));
-EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.waterInletNode());
+  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.waterInletNode());
 
   // Water Outlet Node Name: Required Object
   Connection obj(m);
   EXPECT_TRUE(heatPumpAirToWaterFuelFiredHeating.setWaterOutletNode(obj));
-EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.waterOutletNode());
+  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.waterOutletNode());
 
   // Air Source Node Name: Optional Object
   boost::optional<OutdoorAirNode> obj(m);
@@ -199,17 +199,17 @@ EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.waterOutletNode());
   // Normalized Capacity Function of Temperature Curve Name: Required Object
   BivariateFunctions obj(m);
   EXPECT_TRUE(heatPumpAirToWaterFuelFiredHeating.setNormalizedCapacityFunctionofTemperatureCurve(obj));
-EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.normalizedCapacityFunctionofTemperatureCurve());
+  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.normalizedCapacityFunctionofTemperatureCurve());
 
   // Fuel Energy Input Ratio Function of Temperature Curve Name: Required Object
   BivariateFunctions obj(m);
   EXPECT_TRUE(heatPumpAirToWaterFuelFiredHeating.setFuelEnergyInputRatioFunctionofTemperatureCurve(obj));
-EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.fuelEnergyInputRatioFunctionofTemperatureCurve());
+  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.fuelEnergyInputRatioFunctionofTemperatureCurve());
 
   // Fuel Energy Input Ratio Function of PLR Curve Name: Required Object
   UnivariateFunctions obj(m);
   EXPECT_TRUE(heatPumpAirToWaterFuelFiredHeating.setFuelEnergyInputRatioFunctionofPLRCurve(obj));
-EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.fuelEnergyInputRatioFunctionofPLRCurve());
+  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.fuelEnergyInputRatioFunctionofPLRCurve());
 
   // Minimum Part Load Ratio: Required Double
   EXPECT_TRUE(heatPumpAirToWaterFuelFiredHeating.setMinimumPartLoadRatio(0.955));
@@ -292,5 +292,4 @@ EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredHeating.fuelEnergyInputRatioFunctionof
   // Bad Value
   EXPECT_FALSE(heatPumpAirToWaterFuelFiredHeating.setStandbyElectricPower(-10.0));
   EXPECT_EQ(3.2, heatPumpAirToWaterFuelFiredHeating.standbyElectricPower());
-
 }

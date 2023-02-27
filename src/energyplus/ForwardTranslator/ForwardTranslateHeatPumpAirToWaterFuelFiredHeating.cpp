@@ -58,210 +58,199 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateHeatPumpAirToWaterFuelFiredHeating( model::HeatPumpAirToWaterFuelFiredHeating& modelObject )
-{
-  boost::optional<IdfObject> result;
-  boost::optional<WorkspaceObject> _wo;
-  boost::optional<ModelObject> _mo;
+  boost::optional<IdfObject> ForwardTranslator::translateHeatPumpAirToWaterFuelFiredHeating(model::HeatPumpAirToWaterFuelFiredHeating& modelObject) {
+    boost::optional<IdfObject> result;
+    boost::optional<WorkspaceObject> _wo;
+    boost::optional<ModelObject> _mo;
 
-  // Instantiate an IdfObject of the class to store the values
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatPump_AirToWater_FuelFired_Heating, modelObject);
-  // If it doesn't have a name, or if you aren't sure you are going to want to return it
-  // IdfObject idfObject( openstudio::IddObjectType::HeatPump_AirToWater_FuelFired_Heating );
-  // m_idfObjects.push_back(idfObject);
+    // Instantiate an IdfObject of the class to store the values
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatPump_AirToWater_FuelFired_Heating, modelObject);
+    // If it doesn't have a name, or if you aren't sure you are going to want to return it
+    // IdfObject idfObject( openstudio::IddObjectType::HeatPump_AirToWater_FuelFired_Heating );
+    // m_idfObjects.push_back(idfObject);
 
-  // TODO: Note JM 2018-10-17
-  // You are responsible for implementing any additional logic based on choice fields, etc.
-  // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    // TODO: Note JM 2018-10-17
+    // You are responsible for implementing any additional logic based on choice fields, etc.
+    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
-  // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-  // But in some cases, you'll want to handle failure without pushing to the map
-  // Name
-  if (boost::optional<std::string> moName = modelObject.name()) {
-    idfObject.setName(*moName);
-  }
-
-  // Water Inlet Node Name: Required Node
-  Node waterInletNodeName = modelObject.waterInletNodeName();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(waterInletNodeName) )  {
-    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterInletNodeName, _owo->nameString());
-  }
-
-  // Water Outlet Node Name: Required Node
-  Node waterOutletNodeName = modelObject.waterOutletNodeName();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(waterOutletNodeName) )  {
-    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterOutletNodeName, _owo->nameString());
-  }
-
-  // Air Source Node Name: Optional Object
-  if (boost::optional<OutdoorAirNode> _airSourceNode = modelObject.airSourceNode()) {
-    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_airSourceNode.get()) )  {
-      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::AirSourceNodeName, _owo->nameString());
+    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
+    // But in some cases, you'll want to handle failure without pushing to the map
+    // Name
+    if (boost::optional<std::string> moName = modelObject.name()) {
+      idfObject.setName(*moName);
     }
-  }
 
-  // Companion Cooling Heat Pump Name: Optional Object
-  if (boost::optional<HeatPumpAirToWaterFuelFiredCooling> _companionCoolingHeatPump = modelObject.companionCoolingHeatPump()) {
-    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_companionCoolingHeatPump.get()) )  {
-      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::CompanionCoolingHeatPumpName, _owo->nameString());
+    // Water Inlet Node Name: Required Node
+    Node waterInletNodeName = modelObject.waterInletNodeName();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(waterInletNodeName)) {
+      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterInletNodeName, _owo->nameString());
     }
-  }
 
-  // Fuel Type: Optional String
-  std::string fuelType = modelObject.fuelType();
-  idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelType, fuelType);
-
-
-  // End-Use Subcategory: Optional String
-  std::string endUseSubcategory = modelObject.endUseSubcategory();
-  idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::EndUseSubcategory, endUseSubcategory);
-
-
-  if (modelObject.isNominalHeatingCapacityAutosized()) {
-    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::NominalHeatingCapacity, "Autosize");
-  } else {
-    // Nominal Heating Capacity: boost::optional<double>
-    if (boost::optional<double> _nominalHeatingCapacity = modelObject.nominalHeatingCapacity()) {
-      idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::NominalHeatingCapacity, _nominalHeatingCapacity.get());
+    // Water Outlet Node Name: Required Node
+    Node waterOutletNodeName = modelObject.waterOutletNodeName();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(waterOutletNodeName)) {
+      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterOutletNodeName, _owo->nameString());
     }
-  }
 
-  // Nominal COP: Optional Double
-  double nominalCOP = modelObject.nominalCOP();
-  idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::NominalCOP, nominalCOP);
-
-
-  if (modelObject.isDesignFlowRateAutosized()) {
-    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::DesignFlowRate, "Autosize");
-  } else {
-    // Design Flow Rate: boost::optional<double>
-    if (boost::optional<double> _designFlowRate = modelObject.designFlowRate()) {
-      idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DesignFlowRate, _designFlowRate.get());
+    // Air Source Node Name: Optional Object
+    if (boost::optional<OutdoorAirNode> _airSourceNode = modelObject.airSourceNode()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_airSourceNode.get())) {
+        idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::AirSourceNodeName, _owo->nameString());
+      }
     }
-  }
 
-  // Design Supply Temperature: Optional Double
-  double designSupplyTemperature = modelObject.designSupplyTemperature();
-  idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DesignSupplyTemperature, designSupplyTemperature);
-
-
-  if (modelObject.isDesignTemperatureLiftAutosized()) {
-    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::DesignTemperatureLift, "Autosize");
-  } else {
-    // Design Temperature Lift: boost::optional<double>
-    if (boost::optional<double> _designTemperatureLift = modelObject.designTemperatureLift()) {
-      idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DesignTemperatureLift, _designTemperatureLift.get());
+    // Companion Cooling Heat Pump Name: Optional Object
+    if (boost::optional<HeatPumpAirToWaterFuelFiredCooling> _companionCoolingHeatPump = modelObject.companionCoolingHeatPump()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_companionCoolingHeatPump.get())) {
+        idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::CompanionCoolingHeatPumpName, _owo->nameString());
+      }
     }
-  }
 
-  // Sizing Factor: Optional Double
-  double sizingFactor = modelObject.sizingFactor();
-  idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::SizingFactor, sizingFactor);
+    // Fuel Type: Optional String
+    std::string fuelType = modelObject.fuelType();
+    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelType, fuelType);
 
+    // End-Use Subcategory: Optional String
+    std::string endUseSubcategory = modelObject.endUseSubcategory();
+    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::EndUseSubcategory, endUseSubcategory);
 
-  // Flow Mode: Optional String
-  std::string flowMode = modelObject.flowMode();
-  idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FlowMode, flowMode);
-
-
-  // Outdoor Air Temperature Curve Input Variable: Optional String
-  std::string outdoorAirTemperatureCurveInputVariable = modelObject.outdoorAirTemperatureCurveInputVariable();
-  idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::OutdoorAirTemperatureCurveInputVariable, outdoorAirTemperatureCurveInputVariable);
-
-
-  // Water Temperature Curve Input Variable: Optional String
-  std::string waterTemperatureCurveInputVariable = modelObject.waterTemperatureCurveInputVariable();
-  idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterTemperatureCurveInputVariable, waterTemperatureCurveInputVariable);
-
-
-  // Normalized Capacity Function of Temperature Curve Name: Required Object
-  BivariateFunctions normalizedCapacityFunctionofTemperatureCurve = modelObject.normalizedCapacityFunctionofTemperatureCurve();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(normalizedCapacityFunctionofTemperatureCurve) )  {
-    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::NormalizedCapacityFunctionofTemperatureCurveName, _owo->nameString());
-  }
-
-  // Fuel Energy Input Ratio Function of Temperature Curve Name: Required Object
-  BivariateFunctions fuelEnergyInputRatioFunctionofTemperatureCurve = modelObject.fuelEnergyInputRatioFunctionofTemperatureCurve();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(fuelEnergyInputRatioFunctionofTemperatureCurve) )  {
-    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName, _owo->nameString());
-  }
-
-  // Fuel Energy Input Ratio Function of PLR Curve Name: Required Object
-  UnivariateFunctions fuelEnergyInputRatioFunctionofPLRCurve = modelObject.fuelEnergyInputRatioFunctionofPLRCurve();
-  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(fuelEnergyInputRatioFunctionofPLRCurve) )  {
-    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioFunctionofPLRCurveName, _owo->nameString());
-  }
-
-  // Minimum Part Load Ratio: Optional Double
-  double minimumPartLoadRatio = modelObject.minimumPartLoadRatio();
-  idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::MinimumPartLoadRatio, minimumPartLoadRatio);
-
-
-  // Maximum Part Load Ratio: Optional Double
-  double maximumPartLoadRatio = modelObject.maximumPartLoadRatio();
-  idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::MaximumPartLoadRatio, maximumPartLoadRatio);
-
-
-  // Defrost Control Type: Optional String
-  std::string defrostControlType = modelObject.defrostControlType();
-  idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::DefrostControlType, defrostControlType);
-
-
-  // Defrost Operation Time Fraction: Optional Double
-  double defrostOperationTimeFraction = modelObject.defrostOperationTimeFraction();
-  idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DefrostOperationTimeFraction, defrostOperationTimeFraction);
-
-
-  // Fuel Energy Input Ratio Defrost Adjustment Curve Name: Optional Object
-  if (boost::optional<UnivariateFunctions> _fuelEnergyInputRatioDefrostAdjustmentCurve = modelObject.fuelEnergyInputRatioDefrostAdjustmentCurve()) {
-    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_fuelEnergyInputRatioDefrostAdjustmentCurve.get()) )  {
-      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioDefrostAdjustmentCurveName, _owo->nameString());
+    if (modelObject.isNominalHeatingCapacityAutosized()) {
+      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::NominalHeatingCapacity, "Autosize");
+    } else {
+      // Nominal Heating Capacity: boost::optional<double>
+      if (boost::optional<double> _nominalHeatingCapacity = modelObject.nominalHeatingCapacity()) {
+        idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::NominalHeatingCapacity, _nominalHeatingCapacity.get());
+      }
     }
-  }
 
-  // Resistive Defrost Heater Capacity: Optional Double
-  double resistiveDefrostHeaterCapacity = modelObject.resistiveDefrostHeaterCapacity();
-  idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::ResistiveDefrostHeaterCapacity, resistiveDefrostHeaterCapacity);
+    // Nominal COP: Optional Double
+    double nominalCOP = modelObject.nominalCOP();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::NominalCOP, nominalCOP);
 
-
-  // Maximum Outdoor Dry-bulb Temperature for Defrost Operation: Optional Double
-  double maximumOutdoorDrybulbTemperatureforDefrostOperation = modelObject.maximumOutdoorDrybulbTemperatureforDefrostOperation();
-  idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation, maximumOutdoorDrybulbTemperatureforDefrostOperation);
-
-
-  // Cycling Ratio Factor Curve Name: Optional Object
-  if (boost::optional<UnivariateFunctions> _cyclingRatioFactorCurve = modelObject.cyclingRatioFactorCurve()) {
-    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_cyclingRatioFactorCurve.get()) )  {
-      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::CyclingRatioFactorCurveName, _owo->nameString());
+    if (modelObject.isDesignFlowRateAutosized()) {
+      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::DesignFlowRate, "Autosize");
+    } else {
+      // Design Flow Rate: boost::optional<double>
+      if (boost::optional<double> _designFlowRate = modelObject.designFlowRate()) {
+        idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DesignFlowRate, _designFlowRate.get());
+      }
     }
-  }
 
-  // Nominal Auxiliary Electric Power: boost::optional<double>
-  if (boost::optional<double> _nominalAuxiliaryElectricPower = modelObject.nominalAuxiliaryElectricPower()) {
-    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::NominalAuxiliaryElectricPower, _nominalAuxiliaryElectricPower.get());
-  }
+    // Design Supply Temperature: Optional Double
+    double designSupplyTemperature = modelObject.designSupplyTemperature();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DesignSupplyTemperature, designSupplyTemperature);
 
-  // Auxiliary Electric Energy Input Ratio Function of Temperature Curve Name: Optional Object
-  if (boost::optional<BivariateFunctions> _auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve = modelObject.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve()) {
-    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve.get()) )  {
-      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName, _owo->nameString());
+    if (modelObject.isDesignTemperatureLiftAutosized()) {
+      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::DesignTemperatureLift, "Autosize");
+    } else {
+      // Design Temperature Lift: boost::optional<double>
+      if (boost::optional<double> _designTemperatureLift = modelObject.designTemperatureLift()) {
+        idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DesignTemperatureLift, _designTemperatureLift.get());
+      }
     }
-  }
 
-  // Auxiliary Electric Energy Input Ratio Function of PLR Curve Name: Optional Object
-  if (boost::optional<UnivariateFunctions> _auxiliaryElectricEnergyInputRatioFunctionofPLRCurve = modelObject.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve()) {
-    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_auxiliaryElectricEnergyInputRatioFunctionofPLRCurve.get()) )  {
-      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName, _owo->nameString());
+    // Sizing Factor: Optional Double
+    double sizingFactor = modelObject.sizingFactor();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::SizingFactor, sizingFactor);
+
+    // Flow Mode: Optional String
+    std::string flowMode = modelObject.flowMode();
+    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FlowMode, flowMode);
+
+    // Outdoor Air Temperature Curve Input Variable: Optional String
+    std::string outdoorAirTemperatureCurveInputVariable = modelObject.outdoorAirTemperatureCurveInputVariable();
+    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::OutdoorAirTemperatureCurveInputVariable,
+                        outdoorAirTemperatureCurveInputVariable);
+
+    // Water Temperature Curve Input Variable: Optional String
+    std::string waterTemperatureCurveInputVariable = modelObject.waterTemperatureCurveInputVariable();
+    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterTemperatureCurveInputVariable, waterTemperatureCurveInputVariable);
+
+    // Normalized Capacity Function of Temperature Curve Name: Required Object
+    BivariateFunctions normalizedCapacityFunctionofTemperatureCurve = modelObject.normalizedCapacityFunctionofTemperatureCurve();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(normalizedCapacityFunctionofTemperatureCurve)) {
+      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::NormalizedCapacityFunctionofTemperatureCurveName, _owo->nameString());
     }
-  }
 
-  // Standby Electric Power: Optional Double
-  double standbyElectricPower = modelObject.standbyElectricPower();
-  idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::StandbyElectricPower, standbyElectricPower);
+    // Fuel Energy Input Ratio Function of Temperature Curve Name: Required Object
+    BivariateFunctions fuelEnergyInputRatioFunctionofTemperatureCurve = modelObject.fuelEnergyInputRatioFunctionofTemperatureCurve();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(fuelEnergyInputRatioFunctionofTemperatureCurve)) {
+      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName, _owo->nameString());
+    }
 
+    // Fuel Energy Input Ratio Function of PLR Curve Name: Required Object
+    UnivariateFunctions fuelEnergyInputRatioFunctionofPLRCurve = modelObject.fuelEnergyInputRatioFunctionofPLRCurve();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(fuelEnergyInputRatioFunctionofPLRCurve)) {
+      idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioFunctionofPLRCurveName, _owo->nameString());
+    }
 
-  return idfObject;
-} // End of translate function
+    // Minimum Part Load Ratio: Optional Double
+    double minimumPartLoadRatio = modelObject.minimumPartLoadRatio();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::MinimumPartLoadRatio, minimumPartLoadRatio);
 
-} // end namespace energyplus
-} // end namespace openstudio
+    // Maximum Part Load Ratio: Optional Double
+    double maximumPartLoadRatio = modelObject.maximumPartLoadRatio();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::MaximumPartLoadRatio, maximumPartLoadRatio);
+
+    // Defrost Control Type: Optional String
+    std::string defrostControlType = modelObject.defrostControlType();
+    idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::DefrostControlType, defrostControlType);
+
+    // Defrost Operation Time Fraction: Optional Double
+    double defrostOperationTimeFraction = modelObject.defrostOperationTimeFraction();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DefrostOperationTimeFraction, defrostOperationTimeFraction);
+
+    // Fuel Energy Input Ratio Defrost Adjustment Curve Name: Optional Object
+    if (boost::optional<UnivariateFunctions> _fuelEnergyInputRatioDefrostAdjustmentCurve = modelObject.fuelEnergyInputRatioDefrostAdjustmentCurve()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_fuelEnergyInputRatioDefrostAdjustmentCurve.get())) {
+        idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioDefrostAdjustmentCurveName, _owo->nameString());
+      }
+    }
+
+    // Resistive Defrost Heater Capacity: Optional Double
+    double resistiveDefrostHeaterCapacity = modelObject.resistiveDefrostHeaterCapacity();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::ResistiveDefrostHeaterCapacity, resistiveDefrostHeaterCapacity);
+
+    // Maximum Outdoor Dry-bulb Temperature for Defrost Operation: Optional Double
+    double maximumOutdoorDrybulbTemperatureforDefrostOperation = modelObject.maximumOutdoorDrybulbTemperatureforDefrostOperation();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation,
+                        maximumOutdoorDrybulbTemperatureforDefrostOperation);
+
+    // Cycling Ratio Factor Curve Name: Optional Object
+    if (boost::optional<UnivariateFunctions> _cyclingRatioFactorCurve = modelObject.cyclingRatioFactorCurve()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_cyclingRatioFactorCurve.get())) {
+        idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::CyclingRatioFactorCurveName, _owo->nameString());
+      }
+    }
+
+    // Nominal Auxiliary Electric Power: boost::optional<double>
+    if (boost::optional<double> _nominalAuxiliaryElectricPower = modelObject.nominalAuxiliaryElectricPower()) {
+      idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::NominalAuxiliaryElectricPower, _nominalAuxiliaryElectricPower.get());
+    }
+
+    // Auxiliary Electric Energy Input Ratio Function of Temperature Curve Name: Optional Object
+    if (boost::optional<BivariateFunctions> _auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve =
+          modelObject.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve.get())) {
+        idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName,
+                            _owo->nameString());
+      }
+    }
+
+    // Auxiliary Electric Energy Input Ratio Function of PLR Curve Name: Optional Object
+    if (boost::optional<UnivariateFunctions> _auxiliaryElectricEnergyInputRatioFunctionofPLRCurve =
+          modelObject.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_auxiliaryElectricEnergyInputRatioFunctionofPLRCurve.get())) {
+        idfObject.setString(HeatPump_AirToWater_FuelFired_HeatingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName, _owo->nameString());
+      }
+    }
+
+    // Standby Electric Power: Optional Double
+    double standbyElectricPower = modelObject.standbyElectricPower();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_HeatingFields::StandbyElectricPower, standbyElectricPower);
+
+    return idfObject;
+  }  // End of translate function
+
+}  // end namespace energyplus
+}  // end namespace openstudio
