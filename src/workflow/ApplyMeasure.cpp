@@ -105,8 +105,7 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
     ScriptObject measureScriptObject;
     openstudio::measure::OSMeasure* measurePtr = nullptr;
 
-    auto getArguments = [this, &measureType, &scriptPath_, &step,
-                         &measureLanguage](openstudio::measure::OSMeasure* measurePtr) -> measure::OSArgumentMap {
+    auto getArguments = [this, &measureType, &scriptPath_, &step](openstudio::measure::OSMeasure* measurePtr) -> measure::OSArgumentMap {
       if (!measurePtr) {
         throw std::runtime_error(fmt::format("Could not load measure at '{}'", openstudio::toString(scriptPath_.get())));
       }
