@@ -254,14 +254,13 @@ puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
           arguments = measurePtr->arguments(workspace);
           outputs = measurePtr->outputs();
         } else if (measureType == MeasureType::ReportingMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
           name = measurePtr->name();
           description = measurePtr->description();
           taxonomy = measurePtr->taxonomy();
           modelerDescription = measurePtr->modeler_description();
 
           openstudio::model::Model model;
-          // auto arguments = static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->arguments(model)
           arguments = measurePtr->arguments(model);
           outputs = measurePtr->outputs();
 
@@ -334,14 +333,13 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
           arguments = measurePtr->arguments(workspace);
           outputs = measurePtr->outputs();
         } else if (measureType == MeasureType::ReportingMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
           name = measurePtr->name();
           description = measurePtr->description();
           taxonomy = measurePtr->taxonomy();
           modelerDescription = measurePtr->modeler_description();
 
           openstudio::model::Model model;
-          // auto arguments = static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->arguments(model)
           arguments = measurePtr->arguments(model);
           outputs = measurePtr->outputs();
 
