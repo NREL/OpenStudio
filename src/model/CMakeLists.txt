@@ -902,6 +902,12 @@ set(${target_name}_src
   HeatBalanceAlgorithm.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatBalanceAlgorithm.cpp
+  HeatPumpAirToWaterFuelFiredHeating.hpp
+  HeatPumpAirToWaterFuelFiredHeating_Impl.hpp
+  HeatPumpAirToWaterFuelFiredHeating.cpp
+  HeatPumpAirToWaterFuelFiredCooling.hpp
+  HeatPumpAirToWaterFuelFiredCooling_Impl.hpp
+  HeatPumpAirToWaterFuelFiredCooling.cpp
   HeatPumpWaterToWaterEquationFitCooling.hpp
   HeatPumpWaterToWaterEquationFitCooling_Impl.hpp
   HeatPumpWaterToWaterEquationFitCooling.cpp
@@ -2118,6 +2124,8 @@ set(${target_name}_test_src
   test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
   test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
+  test/HeatPumpAirToWaterFuelFiredHeating_GTest.cpp
+  test/HeatPumpAirToWaterFuelFiredCooling_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
   test/HeatPumpPlantLoopEIRHeating_GTest.cpp
