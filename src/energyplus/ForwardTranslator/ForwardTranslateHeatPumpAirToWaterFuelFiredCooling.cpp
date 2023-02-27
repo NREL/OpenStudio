@@ -31,25 +31,15 @@
 #include "../../model/Model.hpp"
 
 #include "../../model/HeatPumpAirToWaterFuelFiredCooling.hpp"
-
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
-
-#include "../../model/OutdoorAirNode.hpp"
-#include "../../model/OutdoorAirNode_Impl.hpp"
-
 #include "../../model/HeatPumpAirToWaterFuelFiredHeating.hpp"
 #include "../../model/HeatPumpAirToWaterFuelFiredHeating_Impl.hpp"
-
-#include "../../model/BivariateFunctions.hpp"
-#include "../../model/BivariateFunctions_Impl.hpp"
-
-#include "../../model/UnivariateFunctions.hpp"
-#include "../../model/UnivariateFunctions_Impl.hpp"
+#include "../../model/CurveBiquadratic.hpp"
+#include "../../model/CurveQuadratic.hpp"
 
 #include <utilities/idd/HeatPump_AirToWater_FuelFired_Cooling_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -65,38 +55,19 @@ namespace energyplus {
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatPump_AirToWater_FuelFired_Cooling, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::HeatPump_AirToWater_FuelFired_Cooling );
-    // m_idfObjects.push_back(idfObject);
 
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
-
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
-    // Name
-    if (boost::optional<std::string> moName = modelObject.name()) {
-      idfObject.setName(*moName);
+    // Water Inlet Node Name
+    _mo = modelObject.inletModelObject();
+    if (_mo) {
+      translateAndMapModelObject(*_mo);
+      idfObject.setString(openstudio::HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName, _mo->nameString());
     }
 
-    // Water Inlet Node Name: Required Node
-    Node waterInletNodeName = modelObject.waterInletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(waterInletNodeName)) {
-      idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName, _owo->nameString());
-    }
-
-    // Water Outlet Node Name: Required Node
-    Node waterOutletNodeName = modelObject.waterOutletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(waterOutletNodeName)) {
-      idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName, _owo->nameString());
-    }
-
-    // Air Source Node Name: Optional Object
-    if (boost::optional<OutdoorAirNode> _airSourceNode = modelObject.airSourceNode()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_airSourceNode.get())) {
-        idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::AirSourceNodeName, _owo->nameString());
-      }
+    // Water Outlet Node Name
+    _mo = modelObject.outletModelObject();
+    if (_mo) {
+      translateAndMapModelObject(*_mo);
+      idfObject.setString(openstudio::HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName, _mo->nameString());
     }
 
     // Companion Heating Heat Pump Name: Optional Object
@@ -167,19 +138,19 @@ namespace energyplus {
     idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::WaterTemperatureCurveInputVariable, waterTemperatureCurveInputVariable);
 
     // Normalized Capacity Function of Temperature Curve Name: Required Object
-    BivariateFunctions normalizedCapacityFunctionofTemperatureCurve = modelObject.normalizedCapacityFunctionofTemperatureCurve();
+    Curve normalizedCapacityFunctionofTemperatureCurve = modelObject.normalizedCapacityFunctionofTemperatureCurve();
     if (boost::optional<IdfObject> _owo = translateAndMapModelObject(normalizedCapacityFunctionofTemperatureCurve)) {
       idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::NormalizedCapacityFunctionofTemperatureCurveName, _owo->nameString());
     }
 
     // Fuel Energy Input Ratio Function of Temperature Curve Name: Required Object
-    BivariateFunctions fuelEnergyInputRatioFunctionofTemperatureCurve = modelObject.fuelEnergyInputRatioFunctionofTemperatureCurve();
+    Curve fuelEnergyInputRatioFunctionofTemperatureCurve = modelObject.fuelEnergyInputRatioFunctionofTemperatureCurve();
     if (boost::optional<IdfObject> _owo = translateAndMapModelObject(fuelEnergyInputRatioFunctionofTemperatureCurve)) {
       idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName, _owo->nameString());
     }
 
     // Fuel Energy Input Ratio Function of PLR Curve Name: Required Object
-    UnivariateFunctions fuelEnergyInputRatioFunctionofPLRCurve = modelObject.fuelEnergyInputRatioFunctionofPLRCurve();
+    Curve fuelEnergyInputRatioFunctionofPLRCurve = modelObject.fuelEnergyInputRatioFunctionofPLRCurve();
     if (boost::optional<IdfObject> _owo = translateAndMapModelObject(fuelEnergyInputRatioFunctionofPLRCurve)) {
       idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofPLRCurveName, _owo->nameString());
     }
@@ -193,7 +164,7 @@ namespace energyplus {
     idfObject.setDouble(HeatPump_AirToWater_FuelFired_CoolingFields::MaximumPartLoadRatio, maximumPartLoadRatio);
 
     // Cycling Ratio Factor Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> _cyclingRatioFactorCurve = modelObject.cyclingRatioFactorCurve()) {
+    if (boost::optional<Curve> _cyclingRatioFactorCurve = modelObject.cyclingRatioFactorCurve()) {
       if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_cyclingRatioFactorCurve.get())) {
         idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::CyclingRatioFactorCurveName, _owo->nameString());
       }
@@ -205,7 +176,7 @@ namespace energyplus {
     }
 
     // Auxiliary Electric Energy Input Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> _auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve =
+    if (boost::optional<Curve> _auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve =
           modelObject.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve.get())) {
         idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName,
@@ -214,7 +185,7 @@ namespace energyplus {
     }
 
     // Auxiliary Electric Energy Input Ratio Function of PLR Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> _auxiliaryElectricEnergyInputRatioFunctionofPLRCurve =
+    if (boost::optional<Curve> _auxiliaryElectricEnergyInputRatioFunctionofPLRCurve =
           modelObject.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve()) {
       if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_auxiliaryElectricEnergyInputRatioFunctionofPLRCurve.get())) {
         idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName, _owo->nameString());
