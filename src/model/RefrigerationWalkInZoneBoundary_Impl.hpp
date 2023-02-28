@@ -54,7 +54,7 @@ namespace model {
 
       RefrigerationWalkInZoneBoundary_Impl(const RefrigerationWalkInZoneBoundary_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationWalkInZoneBoundary_Impl() {}
+      virtual ~RefrigerationWalkInZoneBoundary_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -158,7 +158,7 @@ namespace model {
 
       void resetStockingDoorOpeningScheduleFacingZone();
 
-      bool setStockingDoorOpeningProtectionTypeFacingZone(std::string stockingDoorOpeningProtectionTypeFacingZone);
+      bool setStockingDoorOpeningProtectionTypeFacingZone(const std::string& stockingDoorOpeningProtectionTypeFacingZone);
 
       void resetStockingDoorOpeningProtectionTypeFacingZone();
 

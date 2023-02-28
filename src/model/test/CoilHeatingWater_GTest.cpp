@@ -81,7 +81,7 @@ TEST_F(ModelFixture, CoilHeatingWater_remove) {
   coil.remove();
   ASSERT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
-  ASSERT_TRUE(m.getModelObjects<CoilHeatingWater>().empty());
+  ASSERT_TRUE(m.getConcreteModelObjects<CoilHeatingWater>().empty());
 
   CoilHeatingWater coil2(m, s);
   coil2.addToNode(supplyOutletNode);
@@ -89,11 +89,11 @@ TEST_F(ModelFixture, CoilHeatingWater_remove) {
   PlantLoop plant(m);
   plant.addDemandBranchForComponent(coil2);
 
-  ASSERT_EQ((unsigned)1, m.getModelObjects<CoilHeatingWater>().size());
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilHeatingWater>().size());
   ASSERT_EQ((unsigned)1, plant.demandComponents(CoilHeatingWater::iddObjectType()).size());
 
   coil2.remove();
-  ASSERT_TRUE(m.getModelObjects<CoilHeatingWater>().empty());
+  ASSERT_TRUE(m.getConcreteModelObjects<CoilHeatingWater>().empty());
 }
 
 // Add ONLY to PlantLoop
@@ -105,11 +105,11 @@ TEST_F(ModelFixture, CoilHeatingWater_remove2) {
 
   PlantLoop plant(m);
   plant.addDemandBranchForComponent(coil);
-  ASSERT_EQ((unsigned)1, m.getModelObjects<CoilHeatingWater>().size());
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilHeatingWater>().size());
   ASSERT_EQ((unsigned)1, plant.demandComponents(CoilHeatingWater::iddObjectType()).size());
 
   coil.remove();
-  ASSERT_TRUE(m.getModelObjects<CoilHeatingWater>().empty());
+  ASSERT_TRUE(m.getConcreteModelObjects<CoilHeatingWater>().empty());
 }
 
 // Add ONLY to PlantLoop
@@ -122,12 +122,12 @@ TEST_F(ModelFixture, CoilHeatingWater_remove3) {
   PlantLoop plant(m);
   plant.addDemandBranchForComponent(coil);
 
-  ASSERT_EQ((unsigned)1, m.getModelObjects<CoilHeatingWater>().size());
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilHeatingWater>().size());
   ASSERT_EQ((unsigned)1, plant.demandComponents(CoilHeatingWater::iddObjectType()).size());
 
   plant.removeDemandBranchWithComponent(coil);
   ASSERT_TRUE(plant.demandComponents(CoilHeatingWater::iddObjectType()).empty());
-  ASSERT_TRUE(m.getModelObjects<CoilHeatingWater>().empty());
+  ASSERT_TRUE(m.getConcreteModelObjects<CoilHeatingWater>().empty());
 }
 
 // Add CoilHeatingWater to AirLoopHVAC and PlantLoop
@@ -147,13 +147,13 @@ TEST_F(ModelFixture, CoilHeatingWater_remove4) {
   EXPECT_TRUE(plant.addDemandBranchForComponent(coil));
 
   ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
-  ASSERT_EQ((unsigned)1, m.getModelObjects<CoilHeatingWater>().size());
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilHeatingWater>().size());
   ASSERT_EQ((unsigned)1, plant.demandComponents(CoilHeatingWater::iddObjectType()).size());
 
   plant.removeDemandBranchWithComponent(coil);
   ASSERT_TRUE(plant.demandComponents(CoilHeatingWater::iddObjectType()).empty());
   ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
-  ASSERT_EQ((unsigned)1, m.getModelObjects<CoilHeatingWater>().size());
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilHeatingWater>().size());
 }
 
 TEST_F(ModelFixture, CoilHeatingWater_controller) {

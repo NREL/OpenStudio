@@ -55,7 +55,12 @@ namespace model {
 
     ZoneHVACUnitHeater(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& heatingCoil);
 
-    virtual ~ZoneHVACUnitHeater() {}
+    virtual ~ZoneHVACUnitHeater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACUnitHeater(const ZoneHVACUnitHeater& other) = default;
+    ZoneHVACUnitHeater(ZoneHVACUnitHeater&& other) = default;
+    ZoneHVACUnitHeater& operator=(const ZoneHVACUnitHeater&) = default;
+    ZoneHVACUnitHeater& operator=(ZoneHVACUnitHeater&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -98,7 +103,7 @@ namespace model {
 
     void autosizeMaximumSupplyAirFlowRate();
 
-    bool setFanControlType(std::string fanControlType);
+    bool setFanControlType(const std::string& fanControlType);
 
     bool setHeatingCoil(const HVACComponent& heatingCoil);
 
@@ -124,7 +129,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ZoneHVACUnitHeater_Impl ImplType;
+    using ImplType = detail::ZoneHVACUnitHeater_Impl;
 
     explicit ZoneHVACUnitHeater(std::shared_ptr<detail::ZoneHVACUnitHeater_Impl> impl);
 
@@ -139,10 +144,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACUnitHeater*/
-  typedef boost::optional<ZoneHVACUnitHeater> OptionalZoneHVACUnitHeater;
+  using OptionalZoneHVACUnitHeater = boost::optional<ZoneHVACUnitHeater>;
 
   /** \relates ZoneHVACUnitHeater*/
-  typedef std::vector<ZoneHVACUnitHeater> ZoneHVACUnitHeaterVector;
+  using ZoneHVACUnitHeaterVector = std::vector<ZoneHVACUnitHeater>;
 
 }  // namespace model
 }  // namespace openstudio

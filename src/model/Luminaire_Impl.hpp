@@ -60,7 +60,7 @@ namespace model {
 
       Luminaire_Impl(const Luminaire_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Luminaire_Impl() {}
+      virtual ~Luminaire_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -156,7 +156,7 @@ namespace model {
 
       void resetMultiplier();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

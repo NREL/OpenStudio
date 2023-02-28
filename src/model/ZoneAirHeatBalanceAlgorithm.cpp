@@ -95,7 +95,7 @@ namespace model {
       return isEmpty(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm);
     }
 
-    bool ZoneAirHeatBalanceAlgorithm_Impl::setAlgorithm(std::string algorithm) {
+    bool ZoneAirHeatBalanceAlgorithm_Impl::setAlgorithm(const std::string& algorithm) {
       bool result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm, algorithm);
       return result;
     }
@@ -112,7 +112,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType ZoneAirHeatBalanceAlgorithm::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneAirHeatBalanceAlgorithm);
+    return {IddObjectType::OS_ZoneAirHeatBalanceAlgorithm};
   }
 
   std::vector<std::string> ZoneAirHeatBalanceAlgorithm::validAlgorithmValues() {
@@ -127,7 +127,7 @@ namespace model {
     return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->isAlgorithmDefaulted();
   }
 
-  bool ZoneAirHeatBalanceAlgorithm::setAlgorithm(std::string algorithm) {
+  bool ZoneAirHeatBalanceAlgorithm::setAlgorithm(const std::string& algorithm) {
     return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->setAlgorithm(algorithm);
   }
 

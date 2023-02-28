@@ -56,7 +56,7 @@ namespace model {
       // Clone copy constructor.
       Curve_Impl(const Curve_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Curve_Impl() {}
+      virtual ~Curve_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

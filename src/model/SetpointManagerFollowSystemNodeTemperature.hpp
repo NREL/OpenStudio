@@ -54,7 +54,12 @@ namespace model {
 
     explicit SetpointManagerFollowSystemNodeTemperature(const Model& model);
 
-    virtual ~SetpointManagerFollowSystemNodeTemperature() {}
+    virtual ~SetpointManagerFollowSystemNodeTemperature() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerFollowSystemNodeTemperature(const SetpointManagerFollowSystemNodeTemperature& other) = default;
+    SetpointManagerFollowSystemNodeTemperature(SetpointManagerFollowSystemNodeTemperature&& other) = default;
+    SetpointManagerFollowSystemNodeTemperature& operator=(const SetpointManagerFollowSystemNodeTemperature&) = default;
+    SetpointManagerFollowSystemNodeTemperature& operator=(SetpointManagerFollowSystemNodeTemperature&&) = default;
 
     //@}
 
@@ -106,7 +111,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerFollowSystemNodeTemperature_Impl ImplType;
+    using ImplType = detail::SetpointManagerFollowSystemNodeTemperature_Impl;
 
     explicit SetpointManagerFollowSystemNodeTemperature(std::shared_ptr<detail::SetpointManagerFollowSystemNodeTemperature_Impl> impl);
 
@@ -120,10 +125,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerFollowSystemNodeTemperature*/
-  typedef boost::optional<SetpointManagerFollowSystemNodeTemperature> OptionalSetpointManagerFollowSystemNodeTemperature;
+  using OptionalSetpointManagerFollowSystemNodeTemperature = boost::optional<SetpointManagerFollowSystemNodeTemperature>;
 
   /** \relates SetpointManagerFollowSystemNodeTemperature*/
-  typedef std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatureVector;
+  using SetpointManagerFollowSystemNodeTemperatureVector = std::vector<SetpointManagerFollowSystemNodeTemperature>;
 
 }  // namespace model
 }  // namespace openstudio

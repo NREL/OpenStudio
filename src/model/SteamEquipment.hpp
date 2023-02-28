@@ -56,7 +56,12 @@ namespace model {
 
     explicit SteamEquipment(const SteamEquipmentDefinition& definition);
 
-    virtual ~SteamEquipment() {}
+    virtual ~SteamEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SteamEquipment(const SteamEquipment& other) = default;
+    SteamEquipment(SteamEquipment&& other) = default;
+    SteamEquipment& operator=(const SteamEquipment&) = default;
+    SteamEquipment& operator=(SteamEquipment&&) = default;
 
     //@}
 
@@ -94,7 +99,7 @@ namespace model {
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -117,7 +122,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SteamEquipment_Impl ImplType;
+    using ImplType = detail::SteamEquipment_Impl;
 
     friend class detail::SteamEquipment_Impl;
     friend class openstudio::detail::IdfObject_Impl;
@@ -132,10 +137,10 @@ namespace model {
   };
 
   /** \relates SteamEquipment*/
-  typedef boost::optional<SteamEquipment> OptionalSteamEquipment;
+  using OptionalSteamEquipment = boost::optional<SteamEquipment>;
 
   /** \relates SteamEquipment*/
-  typedef std::vector<SteamEquipment> SteamEquipmentVector;
+  using SteamEquipmentVector = std::vector<SteamEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

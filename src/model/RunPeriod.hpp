@@ -51,7 +51,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~RunPeriod() {}
+    virtual ~RunPeriod() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RunPeriod(const RunPeriod& other) = default;
+    RunPeriod(RunPeriod&& other) = default;
+    RunPeriod& operator=(const RunPeriod&) = default;
+    RunPeriod& operator=(RunPeriod&&) = default;
 
     //@}
     /** @name Getters */
@@ -108,7 +113,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::RunPeriod_Impl ImplType;
+    using ImplType = detail::RunPeriod_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -126,10 +131,10 @@ namespace model {
   };
 
   /** \relates RunPeriod */
-  typedef boost::optional<RunPeriod> OptionalRunPeriod;
+  using OptionalRunPeriod = boost::optional<RunPeriod>;
 
   /** \relates RunPeriod */
-  typedef std::vector<RunPeriod> RunPeriodVector;
+  using RunPeriodVector = std::vector<RunPeriod>;
 
 }  // namespace model
 }  // namespace openstudio

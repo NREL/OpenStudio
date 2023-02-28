@@ -83,7 +83,8 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_addToNode) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerScheduledDualSetpoint> setpointManagerScheduledDualSetpoints = m.getModelObjects<SetpointManagerScheduledDualSetpoint>();
+  std::vector<SetpointManagerScheduledDualSetpoint> setpointManagerScheduledDualSetpoints =
+    m.getConcreteModelObjects<SetpointManagerScheduledDualSetpoint>();
   EXPECT_EQ(3, setpointManagerScheduledDualSetpoints.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode().get());
@@ -92,7 +93,7 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_addToNode) {
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerScheduledDualSetpoints = m.getModelObjects<SetpointManagerScheduledDualSetpoint>();
+  setpointManagerScheduledDualSetpoints = m.getConcreteModelObjects<SetpointManagerScheduledDualSetpoint>();
   EXPECT_EQ(2, setpointManagerScheduledDualSetpoints.size());
 }
 
@@ -112,14 +113,15 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_remove) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerScheduledDualSetpoint> setpointManagerScheduledDualSetpoints = m.getModelObjects<SetpointManagerScheduledDualSetpoint>();
+  std::vector<SetpointManagerScheduledDualSetpoint> setpointManagerScheduledDualSetpoints =
+    m.getConcreteModelObjects<SetpointManagerScheduledDualSetpoint>();
   EXPECT_EQ(1, setpointManagerScheduledDualSetpoints.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerScheduledDualSetpoints = m.getModelObjects<SetpointManagerScheduledDualSetpoint>();
+  setpointManagerScheduledDualSetpoints = m.getConcreteModelObjects<SetpointManagerScheduledDualSetpoint>();
   EXPECT_EQ(0, setpointManagerScheduledDualSetpoints.size());
 }
 
@@ -140,7 +142,7 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_clone) {
   ASSERT_TRUE(testObject.lowSetpointSchedule());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerScheduledDualSetpoint testObjectClone = testObject.clone(m).cast<SetpointManagerScheduledDualSetpoint>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerScheduledDualSetpoint>();
   EXPECT_FALSE(testObjectClone.setpointNode());
   ASSERT_TRUE(testObjectClone.highSetpointSchedule());
   ASSERT_TRUE(testObjectClone.lowSetpointSchedule());

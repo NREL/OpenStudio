@@ -55,7 +55,7 @@ namespace model {
 
       HeatExchangerAirToAirSensibleAndLatent_Impl(const HeatExchangerAirToAirSensibleAndLatent_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HeatExchangerAirToAirSensibleAndLatent_Impl() {}
+      virtual ~HeatExchangerAirToAirSensibleAndLatent_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -165,9 +165,9 @@ namespace model {
 
       bool setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
 
-      bool setHeatExchangerType(std::string heatExchangerType);
+      bool setHeatExchangerType(const std::string& heatExchangerType);
 
-      bool setFrostControlType(std::string frostControlType);
+      bool setFrostControlType(const std::string& frostControlType);
 
       bool setThresholdTemperature(double thresholdTemperature);
 

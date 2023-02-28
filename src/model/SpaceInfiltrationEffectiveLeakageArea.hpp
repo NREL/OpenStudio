@@ -54,7 +54,12 @@ namespace model {
 
     explicit SpaceInfiltrationEffectiveLeakageArea(const Model& model);
 
-    virtual ~SpaceInfiltrationEffectiveLeakageArea() {}
+    virtual ~SpaceInfiltrationEffectiveLeakageArea() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceInfiltrationEffectiveLeakageArea(const SpaceInfiltrationEffectiveLeakageArea& other) = default;
+    SpaceInfiltrationEffectiveLeakageArea(SpaceInfiltrationEffectiveLeakageArea&& other) = default;
+    SpaceInfiltrationEffectiveLeakageArea& operator=(const SpaceInfiltrationEffectiveLeakageArea&) = default;
+    SpaceInfiltrationEffectiveLeakageArea& operator=(SpaceInfiltrationEffectiveLeakageArea&&) = default;
 
     //@}
 
@@ -95,7 +100,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SpaceInfiltrationEffectiveLeakageArea_Impl ImplType;
+    using ImplType = detail::SpaceInfiltrationEffectiveLeakageArea_Impl;
 
     explicit SpaceInfiltrationEffectiveLeakageArea(std::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl);
 
@@ -108,10 +113,10 @@ namespace model {
   };
 
   /** \relates SpaceInfiltrationEffectiveLeakageArea*/
-  typedef boost::optional<SpaceInfiltrationEffectiveLeakageArea> OptionalSpaceInfiltrationEffectiveLeakageArea;
+  using OptionalSpaceInfiltrationEffectiveLeakageArea = boost::optional<SpaceInfiltrationEffectiveLeakageArea>;
 
   /** \relates SpaceInfiltrationEffectiveLeakageArea*/
-  typedef std::vector<SpaceInfiltrationEffectiveLeakageArea> SpaceInfiltrationEffectiveLeakageAreaVector;
+  using SpaceInfiltrationEffectiveLeakageAreaVector = std::vector<SpaceInfiltrationEffectiveLeakageArea>;
 
 }  // namespace model
 }  // namespace openstudio

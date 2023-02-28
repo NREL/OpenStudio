@@ -51,7 +51,7 @@ namespace model {
 
       ExteriorLightsDefinition_Impl(const ExteriorLightsDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExteriorLightsDefinition_Impl() {}
+      virtual ~ExteriorLightsDefinition_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

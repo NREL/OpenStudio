@@ -41,6 +41,8 @@ namespace model {
   class Schedule;
   class CoilHeatingDXVariableRefrigerantFlow;
   class CoilCoolingDXVariableRefrigerantFlow;
+  class CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl;
+  class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl;
   class ThermalZone;
 
   namespace detail {
@@ -54,12 +56,22 @@ namespace model {
   {
 
    public:
-    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model);
+    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, bool isFluidTemperatureControl = false);
 
     explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, const CoilCoolingDXVariableRefrigerantFlow& coolingCoil,
                                                          const CoilHeatingDXVariableRefrigerantFlow& heatingCoil, const HVACComponent& fan);
 
-    virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() {}
+    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model,
+                                                         const CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& coolingCoil,
+                                                         const CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& heatingCoil,
+                                                         const HVACComponent& fan);
+
+    virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACTerminalUnitVariableRefrigerantFlow(const ZoneHVACTerminalUnitVariableRefrigerantFlow& other) = default;
+    ZoneHVACTerminalUnitVariableRefrigerantFlow(ZoneHVACTerminalUnitVariableRefrigerantFlow&& other) = default;
+    ZoneHVACTerminalUnitVariableRefrigerantFlow& operator=(const ZoneHVACTerminalUnitVariableRefrigerantFlow&) = default;
+    ZoneHVACTerminalUnitVariableRefrigerantFlow& operator=(ZoneHVACTerminalUnitVariableRefrigerantFlow&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -143,13 +155,18 @@ namespace model {
     // bool setSupplyAirFan(const HVACComponent& fan);
     // void resetSupplyAirFan();
 
-    boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
+    boost::optional<HVACComponent> coolingCoil() const;
 
-    bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow& coil);
+    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl
+    bool setCoolingCoil(const HVACComponent& coil);
 
-    boost::optional<CoilHeatingDXVariableRefrigerantFlow> heatingCoil() const;
+    boost::optional<HVACComponent> heatingCoil() const;
 
-    bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow& coil);
+    // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl
+    bool setHeatingCoil(const HVACComponent& coil);
+
+    // Returns true if the Cooling and Heating Coils are of the FluidTemperatureControl type
+    bool isFluidTemperatureControl() const;
 
     double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
 
@@ -208,7 +225,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl ImplType;
+    using ImplType = detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl;
 
     explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(std::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl);
 
@@ -224,10 +241,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACTerminalUnitVariableRefrigerantFlow*/
-  typedef boost::optional<ZoneHVACTerminalUnitVariableRefrigerantFlow> OptionalZoneHVACTerminalUnitVariableRefrigerantFlow;
+  using OptionalZoneHVACTerminalUnitVariableRefrigerantFlow = boost::optional<ZoneHVACTerminalUnitVariableRefrigerantFlow>;
 
   /** \relates ZoneHVACTerminalUnitVariableRefrigerantFlow*/
-  typedef std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlowVector;
+  using ZoneHVACTerminalUnitVariableRefrigerantFlowVector = std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow>;
 
 }  // namespace model
 }  // namespace openstudio

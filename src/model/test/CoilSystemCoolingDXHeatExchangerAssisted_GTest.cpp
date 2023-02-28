@@ -81,8 +81,8 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_addToNode) {
   AirLoopHVAC a(m);
   Node n = a.supplyOutletNode();
 
-  CoilCoolingDXSingleSpeed cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
-  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+  auto cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
+  auto hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
 
   EXPECT_EQ(2, a.supplyComponents().size());
 
@@ -124,7 +124,7 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_addToNode2) {
   AirLoopHVAC a(m);
   Node n = a.supplyOutletNode();
 
-  CoilCoolingDXSingleSpeed cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
+  auto cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
 
   EXPECT_EQ(2, a.supplyComponents().size());
 
@@ -162,8 +162,8 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_GettersSetters) {
 
   // Create a CoilSystem, connected to an AirLoopHVAC
   CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
-  CoilCoolingDXSingleSpeed cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
-  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+  auto cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
+  auto hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
 
   // Check the cooling coils
   CoilCoolingDXTwoSpeed cc_bad(m);
@@ -186,8 +186,8 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
 
   // Create a CoilSystem, connected to an AirLoopHVAC
   CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
-  CoilCoolingDXSingleSpeed cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
-  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+  auto cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
+  auto hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
 
   AirLoopHVAC a(m);
   Node n = a.supplyOutletNode();
@@ -202,18 +202,18 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
   // ASSERT_TRUE(coilSystem.airLoopHVAC());
   // EXPECT_EQ(coilSystem.airLoopHVAC()->handle(), a.handle());
 
-  EXPECT_EQ(1u, m.getModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
-  EXPECT_EQ(1u, m.getModelObjects<CoilCoolingDXSingleSpeed>().size());
-  EXPECT_EQ(1u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilCoolingDXSingleSpeed>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
 
   // TODO: should these work?
   // EXPECT_TRUE(hx.airLoopHVAC());
 
-  CoilSystemCoolingDXHeatExchangerAssisted coilSystem2 = coilSystem.clone(m).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
+  auto coilSystem2 = coilSystem.clone(m).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
 
-  EXPECT_EQ(2u, m.getModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
-  EXPECT_EQ(2u, m.getModelObjects<CoilCoolingDXSingleSpeed>().size());
-  EXPECT_EQ(2u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilCoolingDXSingleSpeed>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
 
   // Cannot be directly on airLoopHVAC right now
   // EXPECT_TRUE(coilSystem.airLoopHVAC());
@@ -224,8 +224,8 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
   EXPECT_FALSE(coilSystem2.inletModelObject());
   EXPECT_FALSE(coilSystem2.outletModelObject());
 
-  CoilCoolingDXSingleSpeed cc2 = coilSystem2.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
-  HeatExchangerAirToAirSensibleAndLatent hx2 = coilSystem2.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+  auto cc2 = coilSystem2.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
+  auto hx2 = coilSystem2.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
 
   EXPECT_NE(cc2.handle(), cc.handle());
   EXPECT_NE(hx2.handle(), hx.handle());

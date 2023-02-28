@@ -150,7 +150,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     subelement = element.child("outputs");
     if (subelement) {
       for (auto& outputElement : subelement.children("output")) {
-        if (outputElement.first_child()) {
+        if (outputElement.first_child() != nullptr) {
           try {
             m_outputs.emplace_back(outputElement);
           } catch (const std::exception&) {
@@ -164,7 +164,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
   subelement = element.child("files");
   if (subelement) {
     for (auto& fileElement : subelement.children("file")) {
-      if (fileElement.first_child()) {
+      if (fileElement.first_child() != nullptr) {
 
         std::string softwareProgram;
         std::string softwareProgramVersion;
@@ -241,7 +241,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
   subelement = element.child("attributes");
   if (subelement) {
     for (auto& attributeElement : subelement.children("attribute")) {
-      if (attributeElement.first_child()) {
+      if (attributeElement.first_child() != nullptr) {
         std::string name = attributeElement.child("name").text().as_string();
         std::string value = attributeElement.child("value").text().as_string();
         std::string datatype = attributeElement.child("datatype").text().as_string();

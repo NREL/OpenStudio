@@ -55,7 +55,7 @@ namespace model {
 
       ZoneHVACEnergyRecoveryVentilator_Impl(const ZoneHVACEnergyRecoveryVentilator_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACEnergyRecoveryVentilator_Impl() {}
+      virtual ~ZoneHVACEnergyRecoveryVentilator_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

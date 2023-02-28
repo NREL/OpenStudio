@@ -84,7 +84,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_LoadProfile_PlantFields::LoadScheduleName) != e) {
         result.push_back(ScheduleTypeKey("LoadProfilePlant", "Load"));
       }
@@ -200,7 +201,7 @@ namespace model {
   }
 
   IddObjectType LoadProfilePlant::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_LoadProfile_Plant);
+    return {IddObjectType::OS_LoadProfile_Plant};
   }
 
   Schedule LoadProfilePlant::loadSchedule() const {

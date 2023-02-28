@@ -247,7 +247,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemActuator::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Actuator);
+    return {IddObjectType::OS_EnergyManagementSystem_Actuator};
   }
 
   boost::optional<ModelObject> EnergyManagementSystemActuator::actuatedComponent() const {

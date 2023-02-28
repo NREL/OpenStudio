@@ -54,7 +54,7 @@ namespace model {
 
       HeaderedPumpsVariableSpeed_Impl(const HeaderedPumpsVariableSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HeaderedPumpsVariableSpeed_Impl() {}
+      virtual ~HeaderedPumpsVariableSpeed_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

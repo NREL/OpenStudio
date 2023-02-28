@@ -63,7 +63,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl) {
   Model m;
 
   // Get the unique object
-  SimulationControl simCon = m.getUniqueModelObject<SimulationControl>();
+  auto simCon = m.getUniqueModelObject<SimulationControl>();
 
   // Check all cases where a single output request is True so we know we assigned the fields correctly
   auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
@@ -102,7 +102,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl_Logic) {
   Model m;
 
   // Get the unique object
-  SimulationControl simCon = m.getUniqueModelObject<SimulationControl>();
+  auto simCon = m.getUniqueModelObject<SimulationControl>();
 
   {
     Workspace w = ft.translateModel(m);
@@ -213,7 +213,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SimulationControl) {
 
     Model m = rt.translateWorkspace(w);
     // Get the unique object
-    SimulationControl simCon = m.getUniqueModelObject<SimulationControl>();
+    auto simCon = m.getUniqueModelObject<SimulationControl>();
 
     EXPECT_EQ(status[0], simCon.doZoneSizingCalculation());
     EXPECT_EQ(status[1], simCon.doSystemSizingCalculation());

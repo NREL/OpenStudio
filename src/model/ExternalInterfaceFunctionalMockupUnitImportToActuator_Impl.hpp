@@ -56,7 +56,7 @@ namespace model {
       ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl(const ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl& other,
                                                                  Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl() {}
+      virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -381,7 +381,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateConstruction) {
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSite) {
   openstudio::model::Model model;
-  openstudio::model::Site site = model.getUniqueModelObject<openstudio::model::Site>();
+  auto site = model.getUniqueModelObject<openstudio::model::Site>();
 
   site.setName("Test Site");
   site.setLatitude(39.6);
@@ -405,7 +405,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSite) {
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundReflectance) {
   openstudio::model::Model model;
-  openstudio::model::SiteGroundReflectance groundreflect = model.getUniqueModelObject<openstudio::model::SiteGroundReflectance>();
+  auto groundreflect = model.getUniqueModelObject<openstudio::model::SiteGroundReflectance>();
 
   groundreflect.setJanuaryGroundReflectance(0.11);
   groundreflect.setFebruaryGroundReflectance(0.12);
@@ -443,8 +443,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundReflectance) 
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureBuildingSurface) {
   openstudio::model::Model model;
-  openstudio::model::SiteGroundTemperatureBuildingSurface groundtemp =
-    model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureBuildingSurface>();
+  auto groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureBuildingSurface>();
 
   groundtemp.setJanuaryGroundTemperature(19.527);
   groundtemp.setFebruaryGroundTemperature(19.502);
@@ -482,7 +481,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureBu
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureDeep) {
   openstudio::model::Model model;
-  openstudio::model::SiteGroundTemperatureDeep groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureDeep>();
+  auto groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureDeep>();
 
   std::vector<double> monthly_temps = {19.527, 19.502, 19.536, 19.598, 20.002, 21.64, 22.225, 22.375, 21.449, 20.121, 19.802, 19.633};
   groundtemp.setAllMonthlyTemperatures(monthly_temps);
@@ -501,8 +500,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureDe
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureFCfactorMethod) {
   openstudio::model::Model model;
-  openstudio::model::SiteGroundTemperatureFCfactorMethod groundtemp =
-    model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureFCfactorMethod>();
+  auto groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureFCfactorMethod>();
 
   std::vector<double> monthly_temps = {19.527, 19.502, 19.536, 19.598, 20.002, 21.64, 22.225, 22.375, 21.449, 20.121, 19.802, 19.633};
   groundtemp.setAllMonthlyTemperatures(monthly_temps);
@@ -521,7 +519,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureFC
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureShallow) {
   openstudio::model::Model model;
-  openstudio::model::SiteGroundTemperatureShallow groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureShallow>();
+  auto groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureShallow>();
 
   std::vector<double> monthly_temps = {19.527, 19.502, 19.536, 19.598, 20.002, 21.64, 22.225, 22.375, 21.449, 20.121, 19.802, 19.633};
   groundtemp.setAllMonthlyTemperatures(monthly_temps);
@@ -540,7 +538,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureSh
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteWaterMainsTemperature) {
   openstudio::model::Model model;
-  openstudio::model::SiteWaterMainsTemperature watertemp = model.getUniqueModelObject<openstudio::model::SiteWaterMainsTemperature>();
+  auto watertemp = model.getUniqueModelObject<openstudio::model::SiteWaterMainsTemperature>();
 
   watertemp.setAnnualAverageOutdoorAirTemperature(9.69);
   watertemp.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(28.1);
@@ -750,8 +748,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateZoneCapacitanceMultiplierResearchSpecial) {
   openstudio::model::Model model;
-  openstudio::model::ZoneCapacitanceMultiplierResearchSpecial zcm =
-    model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
+  auto zcm = model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
 
   zcm.setTemperatureCapacityMultiplier(2.0);
   zcm.setHumidityCapacityMultiplier(3.0);
@@ -789,7 +786,7 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
     model2.addObjects(idf->objects());
 
     ASSERT_EQ(2u, model2.getConcreteModelObjects<OutputVariable>().size());
-    for (auto outputVariable : model2.getConcreteModelObjects<OutputVariable>()) {
+    for (const auto& outputVariable : model2.getConcreteModelObjects<OutputVariable>()) {
       std::string s = outputVariable.variableName();
       EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
     }
@@ -799,7 +796,7 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
   Workspace workspace = trans.translateModel(model);
 
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Output_Variable).size());
-  for (auto object : workspace.getObjectsByType(IddObjectType::Output_Variable)) {
+  for (const auto& object : workspace.getObjectsByType(IddObjectType::Output_Variable)) {
     ASSERT_TRUE(object.getString(Output_VariableFields::VariableName)) << object;
     std::string s = object.getString(Output_VariableFields::VariableName).get();
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
@@ -813,7 +810,7 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
 
   Workspace workspace2(idf2.get());
   ASSERT_EQ(2u, workspace2.getObjectsByType(IddObjectType::Output_Variable).size());
-  for (auto object : workspace2.getObjectsByType(IddObjectType::Output_Variable)) {
+  for (const auto& object : workspace2.getObjectsByType(IddObjectType::Output_Variable)) {
     ASSERT_TRUE(object.getString(Output_VariableFields::VariableName)) << object;
     std::string s = object.getString(Output_VariableFields::VariableName).get();
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
@@ -823,7 +820,7 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
   boost::optional<Model> model2 = rt.translateWorkspace(workspace2);
   ASSERT_TRUE(model2);
   ASSERT_EQ(2u, model2->getConcreteModelObjects<OutputVariable>().size());
-  for (auto outputVariable : model2->getConcreteModelObjects<OutputVariable>()) {
+  for (const auto& outputVariable : model2->getConcreteModelObjects<OutputVariable>()) {
     std::string s = outputVariable.variableName();
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
   }

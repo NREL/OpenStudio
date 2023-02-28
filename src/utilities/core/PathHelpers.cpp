@@ -40,23 +40,23 @@
 namespace openstudio {
 
 std::string modelFileExtension() {
-  return std::string("osm");
+  return {"osm"};
 }
 
 std::string componentFileExtension() {
-  return std::string("osc");
+  return {"osc"};
 }
 
 std::string tableFileExtension() {
-  return std::string("ost");
+  return {"ost"};
 }
 
 std::string documentFileExtension() {
-  return std::string("osd");
+  return {"osd"};
 }
 
 std::string rulesetFileExtension() {
-  return std::string("osr");
+  return {"osr"};
 }
 
 bool pathBeginsWith(const openstudio::path& t_shorter, const openstudio::path& t_longer) {
@@ -95,7 +95,7 @@ path completePathToFile(const path& p, const path& base, const std::string& ext,
       }
     } catch (...) {
       LOG_FREE(Info, "openstudio.completePathToFile", "Unable to compete path '" << toString(p) << "'. Returning an empty path.");
-      return path();
+      return {};
     }
   }
 
@@ -103,7 +103,7 @@ path completePathToFile(const path& p, const path& base, const std::string& ext,
   if (!openstudio::filesystem::is_regular_file(result)) {
     LOG_FREE(Info, "openstudio.completePathToFile",
              "Path '" << toString(p) << "' could not be resolved to an existing file. Returning an empty path.");
-    return path();
+    return {};
   }
 
   return result;
@@ -196,7 +196,7 @@ path relativePath(const path& p, const path& base) {
       return relativePath(completeP, completeBase);
     } else {
       LOG_FREE(Debug, "openstudio.utilities.core", "Path '" << toString(p) << "' does not extend base '" << toString(base) << "'.");
-      return path();
+      return {};
     }
   }
 

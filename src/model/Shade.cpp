@@ -365,7 +365,7 @@ namespace model {
   }
 
   IddObjectType Shade::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WindowMaterial_Shade);
+    return {IddObjectType::OS_WindowMaterial_Shade};
   }
 
   double Shade::thermalConductivity() const {

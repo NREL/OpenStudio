@@ -43,7 +43,8 @@ namespace openstudio {
 namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateThermostatSetpointDualSetpoint(const WorkspaceObject& workspaceObject) {
-    OptionalModelObject result, temp;
+    OptionalModelObject result;
+    OptionalModelObject temp;
     OptionalSchedule schedule;
 
     ThermostatSetpointDualSetpoint tsds(m_model);

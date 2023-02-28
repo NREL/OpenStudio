@@ -57,7 +57,12 @@ namespace model {
 
     explicit AirLoopHVACUnitarySystem(const Model& model);
 
-    virtual ~AirLoopHVACUnitarySystem() {}
+    virtual ~AirLoopHVACUnitarySystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACUnitarySystem(const AirLoopHVACUnitarySystem& other) = default;
+    AirLoopHVACUnitarySystem(AirLoopHVACUnitarySystem&& other) = default;
+    AirLoopHVACUnitarySystem& operator=(const AirLoopHVACUnitarySystem&) = default;
+    AirLoopHVACUnitarySystem& operator=(AirLoopHVACUnitarySystem&&) = default;
 
     //@}
 
@@ -233,7 +238,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setControlType(std::string controlType);
+    bool setControlType(const std::string& controlType);
 
     void resetControlType();
 
@@ -241,7 +246,7 @@ namespace model {
 
     void resetControllingZoneorThermostatLocation();
 
-    bool setDehumidificationControlType(std::string dehumidificationControlType);
+    bool setDehumidificationControlType(const std::string& dehumidificationControlType);
 
     void resetDehumidificationControlType();
 
@@ -253,7 +258,7 @@ namespace model {
 
     void resetSupplyFan();
 
-    bool setFanPlacement(std::string fanPlacement);
+    bool setFanPlacement(const std::string& fanPlacement);
 
     void resetFanPlacement();
 
@@ -285,7 +290,7 @@ namespace model {
     // Would remove
     void resetDOASDXCoolingCoilLeavingMinimumAirTemperature();
 
-    bool setLatentLoadControl(std::string latentLoadControl);
+    bool setLatentLoadControl(const std::string& latentLoadControl);
 
     void resetLatentLoadControl();
 
@@ -293,7 +298,7 @@ namespace model {
 
     void resetSupplementalHeatingCoil();
 
-    bool setSupplyAirFlowRateMethodDuringCoolingOperation(std::string supplyAirFlowRateMethodDuringCoolingOperation);
+    bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
 
     void resetSupplyAirFlowRateMethodDuringCoolingOperation();
 
@@ -315,7 +320,7 @@ namespace model {
 
     void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
 
-    bool setSupplyAirFlowRateMethodDuringHeatingOperation(std::string supplyAirFlowRateMethodDuringHeatingOperation);
+    bool setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation);
 
     void resetSupplyAirFlowRateMethodDuringHeatingOperation();
 
@@ -337,7 +342,7 @@ namespace model {
 
     void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
 
-    bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(std::string supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
+    bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(const std::string& supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
 
     void resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
 
@@ -381,7 +386,7 @@ namespace model {
 
     void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-    bool setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
+    bool setOutdoorDryBulbTemperatureSensorNodeName(const std::string& outdoorDryBulbTemperatureSensorNodeName);
 
     void resetOutdoorDryBulbTemperatureSensorNodeName();
 
@@ -438,7 +443,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirLoopHVACUnitarySystem_Impl ImplType;
+    using ImplType = detail::AirLoopHVACUnitarySystem_Impl;
 
     explicit AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl);
 
@@ -452,10 +457,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACUnitarySystem*/
-  typedef boost::optional<AirLoopHVACUnitarySystem> OptionalAirLoopHVACUnitarySystem;
+  using OptionalAirLoopHVACUnitarySystem = boost::optional<AirLoopHVACUnitarySystem>;
 
   /** \relates AirLoopHVACUnitarySystem*/
-  typedef std::vector<AirLoopHVACUnitarySystem> AirLoopHVACUnitarySystemVector;
+  using AirLoopHVACUnitarySystemVector = std::vector<AirLoopHVACUnitarySystem>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -1,0 +1,763 @@
+{
+	"application": {
+		"currentSelections": {
+			"story": null,
+			"story_id": "1",
+			"subselection_ids": {
+				"1": "43",
+				"194": "199"
+			},
+			"component_id": null,
+			"component_definition_id": null,
+			"component_instance_id": null,
+			"space_property_id": null,
+			"tool": "Rectangle",
+			"mode": "spaces",
+			"snapMode": "grid-strict",
+			"modeTab": "floorplan",
+			"subselectionType": "shading"
+		},
+		"modes": [
+			"spaces",
+			"shading",
+			"building_units",
+			"thermal_zones",
+			"pitched_roofs",
+			"space_types",
+			"images"
+		],
+		"tools": [
+			"Pan",
+			"Drag",
+			"Rectangle",
+			"Polygon",
+			"Eraser",
+			"Select",
+			"Map",
+			"Fill",
+			"Place Component",
+			"Image",
+			"Apply Property"
+		],
+		"scale": {
+			"x": {
+				"pixels": 1576,
+				"rwuRange": [
+					-293.7944862155388,
+					53.794486215538828
+				]
+			},
+			"y": {
+				"pixels": 798,
+				"rwuRange": [
+					-78,
+					98
+				]
+			}
+		}
+	},
+	"project": {
+		"config": {
+			"units": "ip",
+			"unitsEditable": true,
+			"language": "EN-US"
+		},
+		"north_axis": 0,
+		"ground": {
+			"floor_offset": 0,
+			"azimuth_angle": 0,
+			"tilt_slope": 0
+		},
+		"grid": {
+			"visible": true,
+			"spacing": 5
+		},
+		"view": {
+			"min_x": -408.62384044439747,
+			"min_y": -273.8788240498126,
+			"max_x": 536.0929384496819,
+			"max_y": 204.47396120239262
+		},
+		"map": {
+			"initialized": false,
+			"enabled": false,
+			"visible": true,
+			"latitude": 39.7653,
+			"longitude": -104.9863,
+			"zoom": 4.5,
+			"rotation": 0,
+			"elevation": 0
+		},
+		"previous_story": {
+			"visible": true
+		},
+		"show_import_export": true,
+		"preview3D": {
+			"enabled": true
+		},
+		"footprintID": "a7b3-a7fe-90bf-a1f0"
+	},
+	"stories": [
+		{
+			"id": "1",
+			"handle": null,
+			"name": "Story 1",
+			"image_visible": true,
+			"below_floor_plenum_height": 2,
+			"floor_to_ceiling_height": 8,
+			"above_ceiling_plenum_height": 2,
+			"multiplier": 1,
+			"color": "#88ccee",
+			"geometry": {
+				"id": "2",
+				"vertices": [
+					{
+						"id": "5",
+						"x": -170,
+						"y": 90,
+						"edge_ids": [
+							"9",
+							"12"
+						]
+					},
+					{
+						"id": "6",
+						"x": 5,
+						"y": 90,
+						"edge_ids": [
+							"9",
+							"10"
+						]
+					},
+					{
+						"id": "7",
+						"x": 5,
+						"y": -70,
+						"edge_ids": [
+							"10",
+							"11"
+						]
+					},
+					{
+						"id": "8",
+						"x": -170,
+						"y": -70,
+						"edge_ids": [
+							"11",
+							"12"
+						]
+					},
+					{
+						"id": "14",
+						"x": -245,
+						"y": 85,
+						"edge_ids": [
+							"18",
+							"21"
+						]
+					},
+					{
+						"id": "15",
+						"x": -180,
+						"y": 85,
+						"edge_ids": [
+							"18",
+							"19"
+						]
+					},
+					{
+						"id": "16",
+						"x": -180,
+						"y": -55,
+						"edge_ids": [
+							"19",
+							"20"
+						]
+					},
+					{
+						"id": "17",
+						"x": -245,
+						"y": -55,
+						"edge_ids": [
+							"20",
+							"21"
+						]
+					},
+					{
+						"id": "24",
+						"x": -165,
+						"y": -85,
+						"edge_ids": [
+							"28",
+							"31"
+						]
+					},
+					{
+						"id": "25",
+						"x": 0,
+						"y": -85,
+						"edge_ids": [
+							"28",
+							"29"
+						]
+					},
+					{
+						"id": "26",
+						"x": 0,
+						"y": -135,
+						"edge_ids": [
+							"29",
+							"30"
+						]
+					},
+					{
+						"id": "27",
+						"x": -165,
+						"y": -135,
+						"edge_ids": [
+							"30",
+							"31"
+						]
+					},
+					{
+						"id": "34",
+						"x": 20,
+						"y": 75,
+						"edge_ids": [
+							"38",
+							"41"
+						]
+					},
+					{
+						"id": "35",
+						"x": 90,
+						"y": 75,
+						"edge_ids": [
+							"38",
+							"39"
+						]
+					},
+					{
+						"id": "36",
+						"x": 90,
+						"y": -55,
+						"edge_ids": [
+							"39",
+							"40"
+						]
+					},
+					{
+						"id": "37",
+						"x": 20,
+						"y": -55,
+						"edge_ids": [
+							"40",
+							"41"
+						]
+					},
+					{
+						"id": "44",
+						"x": -155,
+						"y": 155,
+						"edge_ids": [
+							"48",
+							"51"
+						]
+					},
+					{
+						"id": "45",
+						"x": -5,
+						"y": 155,
+						"edge_ids": [
+							"48",
+							"49"
+						]
+					},
+					{
+						"id": "46",
+						"x": -5,
+						"y": 105,
+						"edge_ids": [
+							"49",
+							"50"
+						]
+					},
+					{
+						"id": "47",
+						"x": -155,
+						"y": 105,
+						"edge_ids": [
+							"50",
+							"51"
+						]
+					}
+				],
+				"edges": [
+					{
+						"id": "9",
+						"vertex_ids": [
+							"5",
+							"6"
+						],
+						"face_ids": [
+							"13"
+						]
+					},
+					{
+						"id": "10",
+						"vertex_ids": [
+							"6",
+							"7"
+						],
+						"face_ids": [
+							"13"
+						]
+					},
+					{
+						"id": "11",
+						"vertex_ids": [
+							"7",
+							"8"
+						],
+						"face_ids": [
+							"13"
+						]
+					},
+					{
+						"id": "12",
+						"vertex_ids": [
+							"8",
+							"5"
+						],
+						"face_ids": [
+							"13"
+						]
+					},
+					{
+						"id": "18",
+						"vertex_ids": [
+							"14",
+							"15"
+						],
+						"face_ids": [
+							"22"
+						]
+					},
+					{
+						"id": "19",
+						"vertex_ids": [
+							"15",
+							"16"
+						],
+						"face_ids": [
+							"22"
+						]
+					},
+					{
+						"id": "20",
+						"vertex_ids": [
+							"16",
+							"17"
+						],
+						"face_ids": [
+							"22"
+						]
+					},
+					{
+						"id": "21",
+						"vertex_ids": [
+							"17",
+							"14"
+						],
+						"face_ids": [
+							"22"
+						]
+					},
+					{
+						"id": "28",
+						"vertex_ids": [
+							"24",
+							"25"
+						],
+						"face_ids": [
+							"32"
+						]
+					},
+					{
+						"id": "29",
+						"vertex_ids": [
+							"25",
+							"26"
+						],
+						"face_ids": [
+							"32"
+						]
+					},
+					{
+						"id": "30",
+						"vertex_ids": [
+							"26",
+							"27"
+						],
+						"face_ids": [
+							"32"
+						]
+					},
+					{
+						"id": "31",
+						"vertex_ids": [
+							"27",
+							"24"
+						],
+						"face_ids": [
+							"32"
+						]
+					},
+					{
+						"id": "38",
+						"vertex_ids": [
+							"34",
+							"35"
+						],
+						"face_ids": [
+							"42"
+						]
+					},
+					{
+						"id": "39",
+						"vertex_ids": [
+							"35",
+							"36"
+						],
+						"face_ids": [
+							"42"
+						]
+					},
+					{
+						"id": "40",
+						"vertex_ids": [
+							"36",
+							"37"
+						],
+						"face_ids": [
+							"42"
+						]
+					},
+					{
+						"id": "41",
+						"vertex_ids": [
+							"37",
+							"34"
+						],
+						"face_ids": [
+							"42"
+						]
+					},
+					{
+						"id": "48",
+						"vertex_ids": [
+							"44",
+							"45"
+						],
+						"face_ids": [
+							"52"
+						]
+					},
+					{
+						"id": "49",
+						"vertex_ids": [
+							"45",
+							"46"
+						],
+						"face_ids": [
+							"52"
+						]
+					},
+					{
+						"id": "50",
+						"vertex_ids": [
+							"46",
+							"47"
+						],
+						"face_ids": [
+							"52"
+						]
+					},
+					{
+						"id": "51",
+						"vertex_ids": [
+							"47",
+							"44"
+						],
+						"face_ids": [
+							"52"
+						]
+					}
+				],
+				"faces": [
+					{
+						"id": "13",
+						"edge_ids": [
+							"9",
+							"10",
+							"11",
+							"12"
+						],
+						"edge_order": [
+							1,
+							1,
+							1,
+							1
+						]
+					},
+					{
+						"id": "22",
+						"edge_ids": [
+							"18",
+							"19",
+							"20",
+							"21"
+						],
+						"edge_order": [
+							1,
+							1,
+							1,
+							1
+						]
+					},
+					{
+						"id": "32",
+						"edge_ids": [
+							"28",
+							"29",
+							"30",
+							"31"
+						],
+						"edge_order": [
+							1,
+							1,
+							1,
+							1
+						]
+					},
+					{
+						"id": "42",
+						"edge_ids": [
+							"38",
+							"39",
+							"40",
+							"41"
+						],
+						"edge_order": [
+							1,
+							1,
+							1,
+							1
+						]
+					},
+					{
+						"id": "52",
+						"edge_ids": [
+							"48",
+							"49",
+							"50",
+							"51"
+						],
+						"edge_order": [
+							1,
+							1,
+							1,
+							1
+						]
+					}
+				]
+			},
+			"images": [],
+			"spaces": [
+				{
+					"id": "3",
+					"handle": null,
+					"name": "Space 1 - 1",
+					"face_id": "13",
+					"building_unit_id": null,
+					"thermal_zone_id": null,
+					"space_type_id": null,
+					"construction_set_id": null,
+					"pitched_roof_id": null,
+					"daylighting_controls": [],
+					"below_floor_plenum_height": null,
+					"floor_to_ceiling_height": null,
+					"above_ceiling_plenum_height": null,
+					"floor_offset": null,
+					"open_to_below": null,
+					"building_type_id": null,
+					"template": null,
+					"color": "#88ccee",
+					"type": "space"
+				}
+			],
+			"shading": [
+				{
+					"handle": null,
+					"id": "4",
+					"name": "Shading 1 - 1",
+					"face_id": "22",
+					"color": "#E8E3E5",
+					"below_floor_plenum_height": 0,
+					"floor_to_ceiling_height": 20,
+					"above_ceiling_plenum_height": 10,
+					"type": "shading"
+				},
+				{
+					"id": "23",
+					"handle": null,
+					"name": "Shading 1 - 2",
+					"face_id": "32",
+					"color": "#E8E3E5",
+					"type": "shading"
+				},
+				{
+					"id": "33",
+					"handle": null,
+					"name": "Shading 1 - 3",
+					"face_id": "42",
+					"color": "#E8E3E5",
+					"floor_to_ceiling_height": 20,
+					"type": "shading"
+				},
+				{
+					"id": "43",
+					"handle": null,
+					"name": "Shading 1 - 4",
+					"face_id": "52",
+					"color": "#E8E3E5",
+					"above_ceiling_plenum_height": 10,
+					"type": "shading"
+				}
+			],
+			"windows": [],
+			"doors": []
+		}
+	],
+	"building_units": [],
+	"building_types": [
+		{
+			"handle": null,
+			"id": "SecondarySchool",
+			"name": "Secondary School"
+		},
+		{
+			"handle": null,
+			"id": "PrimarySchool",
+			"name": "Primary School"
+		},
+		{
+			"handle": null,
+			"id": "SmallOffice",
+			"name": "Small Office"
+		},
+		{
+			"handle": null,
+			"id": "MediumOffice",
+			"name": "Medium Office"
+		},
+		{
+			"handle": null,
+			"id": "LargeOffice",
+			"name": "Large Office"
+		},
+		{
+			"handle": null,
+			"id": "SmallHotel",
+			"name": "Small Hotel"
+		},
+		{
+			"handle": null,
+			"id": "LargeHotel",
+			"name": "Large Hotel"
+		},
+		{
+			"handle": null,
+			"id": "Warehouse",
+			"name": "Warehouse"
+		},
+		{
+			"handle": null,
+			"id": "RetailStandalone",
+			"name": "Retail Standalone"
+		},
+		{
+			"handle": null,
+			"id": "RetailStripmall",
+			"name": "Retail Stripmall"
+		},
+		{
+			"handle": null,
+			"id": "QuickServiceRestaurant",
+			"name": "Quick Service Restaurant"
+		},
+		{
+			"handle": null,
+			"id": "FullServiceRestaurant",
+			"name": "Full Service Restaurant"
+		},
+		{
+			"handle": null,
+			"id": "MidriseApartment",
+			"name": "Midrise Apartment"
+		},
+		{
+			"handle": null,
+			"id": "HighriseApartment",
+			"name": "Highrise Apartment"
+		},
+		{
+			"handle": null,
+			"id": "Hospital",
+			"name": "Hospital"
+		},
+		{
+			"handle": null,
+			"id": "Outpatient",
+			"name": "Outpatient"
+		},
+		{
+			"handle": null,
+			"id": "SuperMarket",
+			"name": "Super Market"
+		},
+		{
+			"handle": null,
+			"id": "Laboratory",
+			"name": "Laboratory"
+		},
+		{
+			"handle": null,
+			"id": "LargeDataCenterLowITE",
+			"name": "Large Data Center Low ITE"
+		},
+		{
+			"handle": null,
+			"id": "LargeDataCenterHighITE",
+			"name": "Large Data Center High ITE"
+		},
+		{
+			"handle": null,
+			"id": "SmallDataCenterLowITE",
+			"name": "Small Data Center Low ITE"
+		},
+		{
+			"handle": null,
+			"id": "SmallDataCenterHighITE",
+			"name": "Small Data Center High ITE"
+		}
+	],
+	"thermal_zones": [],
+	"space_types": [],
+	"construction_sets": [],
+	"window_definitions": [],
+	"daylighting_control_definitions": [],
+	"pitched_roofs": [],
+	"door_definitions": [],
+	"version": "0.7.0"
+}

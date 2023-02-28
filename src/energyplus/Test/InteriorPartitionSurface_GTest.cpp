@@ -67,11 +67,12 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_InteriorPartitionSurface) {
   Model model;
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 1, model);
   boost::optional<Space> space2 = Space::fromFloorPrint(points, 1, model);
@@ -103,10 +104,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_InteriorPartitionSurface) {
   space2->setThermalZone(zone);
   space1->matchSurfaces(*space2);
 
-  EXPECT_EQ(12u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(12u, model.getConcreteModelObjects<Surface>().size());
 
   unsigned n = 0;
-  for (Surface surface : space1->surfaces()) {
+  for (const Surface& surface : space1->surfaces()) {
     EXPECT_EQ(1.0, surface.grossArea());
     if (surface.adjacentSurface()) {
       ++n;

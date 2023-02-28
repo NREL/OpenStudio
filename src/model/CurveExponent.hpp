@@ -53,7 +53,12 @@ namespace model {
     /** Initializes \f$c_1 = 0.0,\ c_2 = c_3 = 1.0\f$. Sets the range for x to [0.0,1.0]. */
     explicit CurveExponent(const Model& model);
 
-    virtual ~CurveExponent() {}
+    virtual ~CurveExponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveExponent(const CurveExponent& other) = default;
+    CurveExponent(CurveExponent&& other) = default;
+    CurveExponent& operator=(const CurveExponent&) = default;
+    CurveExponent& operator=(CurveExponent&&) = default;
 
     //@}
 
@@ -125,7 +130,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveExponent_Impl ImplType;
+    using ImplType = detail::CurveExponent_Impl;
 
     explicit CurveExponent(std::shared_ptr<detail::CurveExponent_Impl> impl);
 
@@ -140,10 +145,10 @@ namespace model {
   };
 
   /** \relates CurveExponent*/
-  typedef boost::optional<CurveExponent> OptionalCurveExponent;
+  using OptionalCurveExponent = boost::optional<CurveExponent>;
 
   /** \relates CurveExponent*/
-  typedef std::vector<CurveExponent> CurveExponentVector;
+  using CurveExponentVector = std::vector<CurveExponent>;
 
 }  // namespace model
 }  // namespace openstudio

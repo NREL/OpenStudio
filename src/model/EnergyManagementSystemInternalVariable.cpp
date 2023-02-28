@@ -112,7 +112,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemInternalVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_InternalVariable);
+    return {IddObjectType::OS_EnergyManagementSystem_InternalVariable};
   }
 
   std::string EnergyManagementSystemInternalVariable::internalDataIndexKeyName() const {

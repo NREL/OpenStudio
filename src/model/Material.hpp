@@ -50,7 +50,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Material() {}
+    virtual ~Material() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Material(const Material& other) = default;
+    Material(Material&& other) = default;
+    Material& operator=(const Material&) = default;
+    Material& operator=(Material&&) = default;
 
     //@}
     /** @name Getters */
@@ -81,7 +86,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Material_Impl ImplType;
+    using ImplType = detail::Material_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -98,10 +103,10 @@ namespace model {
   };
 
   /** \relates Material */
-  typedef boost::optional<Material> OptionalMaterial;
+  using OptionalMaterial = boost::optional<Material>;
 
   /** \relates Material */
-  typedef std::vector<Material> MaterialVector;
+  using MaterialVector = std::vector<Material>;
 
 }  // namespace model
 }  // namespace openstudio

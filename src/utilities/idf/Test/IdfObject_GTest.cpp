@@ -33,6 +33,7 @@
 #include "../IdfObject_Impl.hpp"
 #include "../IdfExtensibleGroup.hpp"
 #include "../IdfRegex.hpp"
+#include <memory>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../../idd/IddRegex.hpp"
@@ -50,8 +51,9 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include <sstream>
 #include <limits>
+#include <type_traits>
+#include <sstream>
 
 using namespace std;
 using namespace boost;
@@ -713,9 +715,9 @@ TEST_F(IdfFixture, DoubleDisplayedAsString) {
   double value = 0.05;
 
   // boost::lexical_cast
-  std::string str = boost::lexical_cast<std::string>(value);
+  auto str = boost::lexical_cast<std::string>(value);
   // EXPECT_EQ("0.05",str); // behavior is platform dependent
-  double roundTripValue = boost::lexical_cast<double>(str);
+  auto roundTripValue = boost::lexical_cast<double>(str);
   EXPECT_DOUBLE_EQ(value, roundTripValue);
 
   // std::stringstream
@@ -770,26 +772,20 @@ TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
   EXPECT_TRUE(eg.getDouble(2).get() < -100);
 
   // new extensible group
-  std::vector<std::string> group;
-  group.push_back("1");
-  group.push_back("2");
+  std::vector<std::string> group{"1", "2"};
   group.push_back(toString(std::numeric_limits<double>::quiet_NaN()));
   EXPECT_EQ(1u, object2.numExtensibleGroups());
   EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
   EXPECT_EQ(2u, object2.numExtensibleGroups());
 
   group.clear();
-  group.push_back("1");
-  group.push_back("2");
-  group.push_back(toString(std::numeric_limits<double>::infinity()));
+  group = {"1", "2", toString(std::numeric_limits<double>::infinity())};
   EXPECT_EQ(2u, object2.numExtensibleGroups());
   EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
   EXPECT_EQ(3u, object2.numExtensibleGroups());
 
   group.clear();
-  group.push_back("1");
-  group.push_back("2");
-  group.push_back(toString(3.0));
+  group = {"1", "2", toString(3.0)};
   EXPECT_EQ(3u, object2.numExtensibleGroups());
   EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
   EXPECT_EQ(4u, object2.numExtensibleGroups());
@@ -857,4 +853,52 @@ TEST_F(IdfFixture, IdfObject_ExtensibleGroup_Failure_4268_TruncatedExtensibleFie
   EXPECT_EQ(nNonExtensible + groupSize * 2, obj.numFields());
   ASSERT_NO_THROW(obj.numExtensibleGroups());
   EXPECT_EQ(2, obj.numExtensibleGroups());
+}
+
+TEST_F(IdfFixture, IdfObject_SpecialMembers) {
+
+  static_assert(!std::is_trivial<IdfObject>{});
+  static_assert(!std::is_pod<IdfObject>{});
+
+  // checks if a type has a default constructor
+  static_assert(!std::is_default_constructible<IdfObject>{});
+  static_assert(!std::is_trivially_default_constructible<IdfObject>{});
+  static_assert(!std::is_nothrow_default_constructible<IdfObject>{});
+
+  // checks if a type has a copy constructor
+  static_assert(std::is_copy_constructible<IdfObject>{});
+  static_assert(!std::is_trivially_copy_constructible<IdfObject>{});
+  static_assert(!std::is_nothrow_copy_constructible<IdfObject>{});
+
+  // checks if a type can be constructed from an rvalue reference
+  // Note: Types without a move constructor, but with a copy constructor that accepts const T& arguments, satisfy std::is_move_constructible.
+  // Move constructors are usually noexcept, since otherwise they are unusable in any code that provides strong exception guarantee.
+  static_assert(std::is_move_constructible<IdfObject>{});
+  static_assert(!std::is_trivially_move_constructible<std::shared_ptr<openstudio::detail::IdfObject_Impl>>{});
+  static_assert(!std::is_trivially_move_constructible<IdfObject>{});
+  static_assert(std::is_nothrow_move_constructible<IdfObject>{});
+
+  // checks if a type has a copy assignment operator
+  static_assert(std::is_copy_assignable<IdfObject>{});
+  static_assert(!std::is_trivially_copy_assignable<IdfObject>{});
+  static_assert(!std::is_nothrow_copy_assignable<IdfObject>{});  // We didn't specify noexcept on the user defined one
+
+  // checks if a type has a move assignment operator
+  static_assert(std::is_move_assignable<IdfObject>{});
+  static_assert(!std::is_trivially_move_assignable<std::shared_ptr<openstudio::detail::IdfObject_Impl>>{});
+  static_assert(!std::is_trivially_move_assignable<IdfObject>{});
+  static_assert(std::is_nothrow_move_assignable<IdfObject>{});
+
+  // checks if a type has a non-deleted destructor
+  static_assert(std::is_destructible<IdfObject>{});
+  static_assert(!std::is_trivially_destructible<std::shared_ptr<openstudio::detail::IdfObject_Impl>>{});
+  static_assert(!std::is_trivially_destructible<IdfObject>{});
+  static_assert(std::is_nothrow_destructible<IdfObject>{});
+
+  // checks if a type has a virtual destructor
+  static_assert(std::has_virtual_destructor<IdfObject>{});
+
+  // checks if objects of a type can be swapped with objects of same or different type
+  static_assert(std::is_swappable<IdfObject>{});
+  static_assert(std::is_nothrow_swappable<IdfObject>{});
 }

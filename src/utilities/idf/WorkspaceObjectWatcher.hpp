@@ -42,7 +42,7 @@ class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher
   WorkspaceObjectWatcher(const WorkspaceObject& workspaceObject);
 
   /// virtual destructor
-  virtual ~WorkspaceObjectWatcher();
+  virtual ~WorkspaceObjectWatcher() = default;
 
   /// true if a pointer field changed
   bool relationshipChanged() const;

@@ -54,7 +54,12 @@ namespace model {
 
     explicit AvailabilityManagerHighTemperatureTurnOff(const Model& model);
 
-    virtual ~AvailabilityManagerHighTemperatureTurnOff() {}
+    virtual ~AvailabilityManagerHighTemperatureTurnOff() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerHighTemperatureTurnOff(const AvailabilityManagerHighTemperatureTurnOff& other) = default;
+    AvailabilityManagerHighTemperatureTurnOff(AvailabilityManagerHighTemperatureTurnOff&& other) = default;
+    AvailabilityManagerHighTemperatureTurnOff& operator=(const AvailabilityManagerHighTemperatureTurnOff&) = default;
+    AvailabilityManagerHighTemperatureTurnOff& operator=(AvailabilityManagerHighTemperatureTurnOff&&) = default;
 
     //@}
 
@@ -84,7 +89,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerHighTemperatureTurnOff_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerHighTemperatureTurnOff_Impl;
 
     explicit AvailabilityManagerHighTemperatureTurnOff(std::shared_ptr<detail::AvailabilityManagerHighTemperatureTurnOff_Impl> impl);
 
@@ -98,10 +103,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerHighTemperatureTurnOff*/
-  typedef boost::optional<AvailabilityManagerHighTemperatureTurnOff> OptionalAvailabilityManagerHighTemperatureTurnOff;
+  using OptionalAvailabilityManagerHighTemperatureTurnOff = boost::optional<AvailabilityManagerHighTemperatureTurnOff>;
 
   /** \relates AvailabilityManagerHighTemperatureTurnOff*/
-  typedef std::vector<AvailabilityManagerHighTemperatureTurnOff> AvailabilityManagerHighTemperatureTurnOffVector;
+  using AvailabilityManagerHighTemperatureTurnOffVector = std::vector<AvailabilityManagerHighTemperatureTurnOff>;
 
 }  // namespace model
 }  // namespace openstudio

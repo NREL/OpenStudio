@@ -57,7 +57,12 @@ namespace model {
     /// Constructor with vector of material layers, throws if opaqueMaterials size < 2.
     explicit ConstructionWithInternalSource(const std::vector<OpaqueMaterial>& opaqueMaterials);
 
-    virtual ~ConstructionWithInternalSource() {}
+    virtual ~ConstructionWithInternalSource() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConstructionWithInternalSource(const ConstructionWithInternalSource& other) = default;
+    ConstructionWithInternalSource(ConstructionWithInternalSource&& other) = default;
+    ConstructionWithInternalSource& operator=(const ConstructionWithInternalSource&) = default;
+    ConstructionWithInternalSource& operator=(ConstructionWithInternalSource&&) = default;
 
     /// The source is located after layer number.  Must be >= 1 and <= numLayers-1.
     /// Defaults to 1.
@@ -104,7 +109,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ConstructionWithInternalSource_Impl ImplType;
+    using ImplType = detail::ConstructionWithInternalSource_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -117,10 +122,10 @@ namespace model {
   };
 
   /** \relates ConstructionWithInternalSource */
-  typedef boost::optional<ConstructionWithInternalSource> OptionalConstructionWithInternalSource;
+  using OptionalConstructionWithInternalSource = boost::optional<ConstructionWithInternalSource>;
 
   /** \relates ConstructionWithInternalSource */
-  typedef std::vector<ConstructionWithInternalSource> ConstructionWithInternalSourceVector;
+  using ConstructionWithInternalSourceVector = std::vector<ConstructionWithInternalSource>;
 
 }  // namespace model
 }  // namespace openstudio

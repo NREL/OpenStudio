@@ -123,11 +123,11 @@ namespace model {
       return AirGap::iddObjectType();
     }
 
-    bool AirGap_Impl::setThickness(double value) {
+    bool AirGap_Impl::setThickness(double /*value*/) {
       return false;
     }
 
-    bool AirGap_Impl::setThermalConductivity(double value) {
+    bool AirGap_Impl::setThermalConductivity(double /*value*/) {
       return false;
     }
 
@@ -135,7 +135,7 @@ namespace model {
       return setThermalResistance(1.0 / value);
     }
 
-    bool AirGap_Impl::setThermalResistivity(double value) {
+    bool AirGap_Impl::setThermalResistivity(double /*value*/) {
       return false;
     }
 
@@ -143,27 +143,27 @@ namespace model {
       return setDouble(OS_Material_AirGapFields::ThermalResistance, value);
     }
 
-    bool AirGap_Impl::setThermalAbsorptance(double value) {
+    bool AirGap_Impl::setThermalAbsorptance(double /*value*/) {
       return false;
     }
 
-    bool AirGap_Impl::setThermalReflectance(OptionalDouble value) {
+    bool AirGap_Impl::setThermalReflectance(OptionalDouble /*value*/) {
       return false;
     }
 
-    bool AirGap_Impl::setSolarAbsorptance(OptionalDouble value) {
+    bool AirGap_Impl::setSolarAbsorptance(OptionalDouble /*value*/) {
       return false;
     }
 
-    bool AirGap_Impl::setSolarReflectance(OptionalDouble value) {
+    bool AirGap_Impl::setSolarReflectance(OptionalDouble /*value*/) {
       return false;
     }
 
-    bool AirGap_Impl::setVisibleAbsorptance(OptionalDouble value) {
+    bool AirGap_Impl::setVisibleAbsorptance(OptionalDouble /*value*/) {
       return false;
     }
 
-    bool AirGap_Impl::setVisibleReflectance(OptionalDouble value) {
+    bool AirGap_Impl::setVisibleReflectance(OptionalDouble /*value*/) {
       return false;
     }
 
@@ -199,7 +199,7 @@ namespace model {
   }
 
   IddObjectType AirGap::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Material_AirGap);
+    return {IddObjectType::OS_Material_AirGap};
   }
 
   double AirGap::thermalResistance() const {

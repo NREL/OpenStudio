@@ -60,7 +60,7 @@ namespace model {
     explicit SurfacePropertyLocalEnvironment(const Surface& surface);
     explicit SurfacePropertyLocalEnvironment(const SubSurface& surface);
 
-    virtual ~SurfacePropertyLocalEnvironment() {}
+    virtual ~SurfacePropertyLocalEnvironment() = default;
 
     //@}
 

@@ -357,7 +357,7 @@ std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std
   std::vector<std::string> tokens;
   boost::split(tokens, line, boost::is_any_of(delimiters));
 
-  for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end();) {
+  for (auto it = tokens.begin(); it != tokens.end();) {
     // We trim eventual parenthesis
     boost::replace_all(*it, "(", "");
     boost::replace_all(*it, ")", "");

@@ -56,7 +56,12 @@ namespace model {
 
     explicit CoilCoolingDXTwoStageWithHumidityControlMode(const Model& model);
 
-    virtual ~CoilCoolingDXTwoStageWithHumidityControlMode() {}
+    virtual ~CoilCoolingDXTwoStageWithHumidityControlMode() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDXTwoStageWithHumidityControlMode(const CoilCoolingDXTwoStageWithHumidityControlMode& other) = default;
+    CoilCoolingDXTwoStageWithHumidityControlMode(CoilCoolingDXTwoStageWithHumidityControlMode&& other) = default;
+    CoilCoolingDXTwoStageWithHumidityControlMode& operator=(const CoilCoolingDXTwoStageWithHumidityControlMode&) = default;
+    CoilCoolingDXTwoStageWithHumidityControlMode& operator=(CoilCoolingDXTwoStageWithHumidityControlMode&&) = default;
 
     //@}
 
@@ -146,7 +151,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
 
     explicit CoilCoolingDXTwoStageWithHumidityControlMode(std::shared_ptr<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl> impl);
 
@@ -160,10 +165,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXTwoStageWithHumidityControlMode*/
-  typedef boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> OptionalCoilCoolingDXTwoStageWithHumidityControlMode;
+  using OptionalCoilCoolingDXTwoStageWithHumidityControlMode = boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode>;
 
   /** \relates CoilCoolingDXTwoStageWithHumidityControlMode*/
-  typedef std::vector<CoilCoolingDXTwoStageWithHumidityControlMode> CoilCoolingDXTwoStageWithHumidityControlModeVector;
+  using CoilCoolingDXTwoStageWithHumidityControlModeVector = std::vector<CoilCoolingDXTwoStageWithHumidityControlMode>;
 
 }  // namespace model
 }  // namespace openstudio

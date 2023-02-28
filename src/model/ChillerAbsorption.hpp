@@ -52,7 +52,12 @@ namespace model {
 
     explicit ChillerAbsorption(const Model& model);
 
-    virtual ~ChillerAbsorption() {}
+    virtual ~ChillerAbsorption() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ChillerAbsorption(const ChillerAbsorption& other) = default;
+    ChillerAbsorption(ChillerAbsorption&& other) = default;
+    ChillerAbsorption& operator=(const ChillerAbsorption&) = default;
+    ChillerAbsorption& operator=(ChillerAbsorption&&) = default;
 
     //@}
 
@@ -157,10 +162,10 @@ namespace model {
 
     bool setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
 
-    bool setChillerFlowMode(std::string chillerFlowMode);
+    bool setChillerFlowMode(const std::string& chillerFlowMode);
 
     // Will not accept "Steam" if chiller is connected to a Generator Loop as we do not support Steam Loops (yet)
-    bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
+    bool setGeneratorHeatSourceType(const std::string& generatorHeatSourceType);
 
     bool setDesignGeneratorFluidFlowRate(double designGeneratorFluidFlowRate);
 
@@ -196,7 +201,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ChillerAbsorption_Impl ImplType;
+    using ImplType = detail::ChillerAbsorption_Impl;
 
     explicit ChillerAbsorption(std::shared_ptr<detail::ChillerAbsorption_Impl> impl);
 
@@ -210,10 +215,10 @@ namespace model {
   };
 
   /** \relates ChillerAbsorption*/
-  typedef boost::optional<ChillerAbsorption> OptionalChillerAbsorption;
+  using OptionalChillerAbsorption = boost::optional<ChillerAbsorption>;
 
   /** \relates ChillerAbsorption*/
-  typedef std::vector<ChillerAbsorption> ChillerAbsorptionVector;
+  using ChillerAbsorptionVector = std::vector<ChillerAbsorption>;
 
 }  // namespace model
 }  // namespace openstudio

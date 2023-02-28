@@ -49,11 +49,12 @@ TEST_F(ModelFixture, WindowPropertyFrameAndDivider) {
 
   WindowPropertyFrameAndDivider frameAndDivider(model);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   SubSurface subSurface(vertices, model);
 

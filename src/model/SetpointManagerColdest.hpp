@@ -54,7 +54,12 @@ namespace model {
 
     explicit SetpointManagerColdest(const Model& model);
 
-    virtual ~SetpointManagerColdest() {}
+    virtual ~SetpointManagerColdest() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerColdest(const SetpointManagerColdest& other) = default;
+    SetpointManagerColdest(SetpointManagerColdest&& other) = default;
+    SetpointManagerColdest& operator=(const SetpointManagerColdest&) = default;
+    SetpointManagerColdest& operator=(SetpointManagerColdest&&) = default;
 
     //@}
 
@@ -96,7 +101,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerColdest_Impl ImplType;
+    using ImplType = detail::SetpointManagerColdest_Impl;
 
     explicit SetpointManagerColdest(std::shared_ptr<detail::SetpointManagerColdest_Impl> impl);
 
@@ -110,10 +115,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerColdest*/
-  typedef boost::optional<SetpointManagerColdest> OptionalSetpointManagerColdest;
+  using OptionalSetpointManagerColdest = boost::optional<SetpointManagerColdest>;
 
   /** \relates SetpointManagerColdest*/
-  typedef std::vector<SetpointManagerColdest> SetpointManagerColdestVector;
+  using SetpointManagerColdestVector = std::vector<SetpointManagerColdest>;
 
 }  // namespace model
 }  // namespace openstudio

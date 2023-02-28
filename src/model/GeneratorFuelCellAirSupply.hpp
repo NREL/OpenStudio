@@ -46,12 +46,12 @@ namespace model {
   class MODEL_API AirSupplyConstituent
   {
    public:
-    AirSupplyConstituent(std::string constituentName, double molarFraction);
+    AirSupplyConstituent(const std::string& constituentName, double molarFraction);
 
     std::string constituentName() const;
     double molarFraction() const;
 
-    static bool isValid(std::string constituentName);
+    static bool isValid(const std::string& constituentName);
     static std::vector<std::string> constituentNameValues();
     static std::vector<std::string> validConstituentNameValues();
 
@@ -87,7 +87,12 @@ namespace model {
     explicit GeneratorFuelCellAirSupply(const Model& model, const Node& airInletNode, const CurveQuadratic& electricPowerCurve,
                                         const CurveQuadratic& fuelRateCurve, const CurveCubic& blowerPowerCurve);
 
-    virtual ~GeneratorFuelCellAirSupply() {}
+    virtual ~GeneratorFuelCellAirSupply() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCellAirSupply(const GeneratorFuelCellAirSupply& other) = default;
+    GeneratorFuelCellAirSupply(GeneratorFuelCellAirSupply&& other) = default;
+    GeneratorFuelCellAirSupply& operator=(const GeneratorFuelCellAirSupply&) = default;
+    GeneratorFuelCellAirSupply& operator=(GeneratorFuelCellAirSupply&&) = default;
 
     //@}
 
@@ -102,7 +107,7 @@ namespace model {
     //extensible fields
     bool addConstituent(const AirSupplyConstituent& constituent);
     // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
-    bool addConstituent(std::string name, double molarFraction);
+    bool addConstituent(const std::string& name, double molarFraction);
 
     // TODO: this should return bool (to indicate whether groupIndex is valid...)
     void removeConstituent(int groupIndex);
@@ -188,7 +193,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCellAirSupply_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCellAirSupply_Impl;
 
     explicit GeneratorFuelCellAirSupply(std::shared_ptr<detail::GeneratorFuelCellAirSupply_Impl> impl);
 
@@ -202,10 +207,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCellAirSupply*/
-  typedef boost::optional<GeneratorFuelCellAirSupply> OptionalGeneratorFuelCellAirSupply;
+  using OptionalGeneratorFuelCellAirSupply = boost::optional<GeneratorFuelCellAirSupply>;
 
   /** \relates GeneratorFuelCellAirSupply*/
-  typedef std::vector<GeneratorFuelCellAirSupply> GeneratorFuelCellAirSupplyVector;
+  using GeneratorFuelCellAirSupplyVector = std::vector<GeneratorFuelCellAirSupply>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -49,7 +49,12 @@ namespace model {
   class MODEL_API SpaceLoadInstance : public SpaceLoad
   {
    public:
-    virtual ~SpaceLoadInstance() {}
+    virtual ~SpaceLoadInstance() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceLoadInstance(const SpaceLoadInstance& other) = default;
+    SpaceLoadInstance(SpaceLoadInstance&& other) = default;
+    SpaceLoadInstance& operator=(const SpaceLoadInstance&) = default;
+    SpaceLoadInstance& operator=(SpaceLoadInstance&&) = default;
 
     /** Returns the definition of this instance. **/
     SpaceLoadDefinition definition() const;
@@ -87,7 +92,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::SpaceLoadInstance_Impl ImplType;
+    using ImplType = detail::SpaceLoadInstance_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -102,10 +107,10 @@ namespace model {
   };
 
   /** \relates SpaceLoadInstance */
-  typedef boost::optional<SpaceLoadInstance> OptionalSpaceLoadInstance;
+  using OptionalSpaceLoadInstance = boost::optional<SpaceLoadInstance>;
 
   /** \relates SpaceLoadInstance */
-  typedef std::vector<SpaceLoadInstance> SpaceLoadInstanceVector;
+  using SpaceLoadInstanceVector = std::vector<SpaceLoadInstance>;
 
 }  // namespace model
 }  // namespace openstudio

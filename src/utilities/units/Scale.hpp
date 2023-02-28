@@ -52,7 +52,7 @@ struct UTILITIES_API Scale
 
 /** Function pointer to a constant scale object. Implemented as function
    *  pointer to ensure timely instantiation. */
-typedef std::function<const Scale&()> ScaleConstant;
+using ScaleConstant = std::function<const Scale&()>;
 
 /** Outputs all information about Scale s. Examples: \verbatim
       Scale s = {"T", "tera",12,1.0E12};

@@ -503,7 +503,7 @@ namespace model {
   }
 
   IddObjectType StandardGlazing::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WindowMaterial_Glazing);
+    return {IddObjectType::OS_WindowMaterial_Glazing};
   }
 
   std::vector<std::string> StandardGlazing::opticalDataTypeValues() {

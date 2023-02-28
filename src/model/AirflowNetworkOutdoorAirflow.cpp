@@ -107,7 +107,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkOutdoorAirflow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkOutdoorAirflow);
+    return {IddObjectType::OS_AirflowNetworkOutdoorAirflow};
   }
 
   boost::optional<ControllerOutdoorAir> AirflowNetworkOutdoorAirflow::controllerOutdoorAir() const {

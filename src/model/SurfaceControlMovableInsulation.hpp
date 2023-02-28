@@ -57,7 +57,12 @@ namespace model {
     // Constructor takes required-field arguments Surface and Material. The Schedule is defaulted to alwaysOnContinuousSchedule
     explicit SurfaceControlMovableInsulation(const Surface& surface, const Material& material);
 
-    virtual ~SurfaceControlMovableInsulation() {}
+    virtual ~SurfaceControlMovableInsulation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SurfaceControlMovableInsulation(const SurfaceControlMovableInsulation& other) = default;
+    SurfaceControlMovableInsulation(SurfaceControlMovableInsulation&& other) = default;
+    SurfaceControlMovableInsulation& operator=(const SurfaceControlMovableInsulation&) = default;
+    SurfaceControlMovableInsulation& operator=(SurfaceControlMovableInsulation&&) = default;
 
     //@}
 
@@ -99,7 +104,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SurfaceControlMovableInsulation_Impl ImplType;
+    using ImplType = detail::SurfaceControlMovableInsulation_Impl;
 
     explicit SurfaceControlMovableInsulation(std::shared_ptr<detail::SurfaceControlMovableInsulation_Impl> impl);
 
@@ -113,10 +118,10 @@ namespace model {
   };
 
   /** \relates SurfaceControlMovableInsulation*/
-  typedef boost::optional<SurfaceControlMovableInsulation> OptionalSurfaceControlMovableInsulation;
+  using OptionalSurfaceControlMovableInsulation = boost::optional<SurfaceControlMovableInsulation>;
 
   /** \relates SurfaceControlMovableInsulation*/
-  typedef std::vector<SurfaceControlMovableInsulation> SurfaceControlMovableInsulationVector;
+  using SurfaceControlMovableInsulationVector = std::vector<SurfaceControlMovableInsulation>;
 
 }  // namespace model
 }  // namespace openstudio

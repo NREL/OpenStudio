@@ -55,7 +55,12 @@ namespace model {
 
     explicit ElectricLoadCenterStorageSimple(const Model& model);
 
-    virtual ~ElectricLoadCenterStorageSimple() {}
+    virtual ~ElectricLoadCenterStorageSimple() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricLoadCenterStorageSimple(const ElectricLoadCenterStorageSimple& other) = default;
+    ElectricLoadCenterStorageSimple(ElectricLoadCenterStorageSimple&& other) = default;
+    ElectricLoadCenterStorageSimple& operator=(const ElectricLoadCenterStorageSimple&) = default;
+    ElectricLoadCenterStorageSimple& operator=(ElectricLoadCenterStorageSimple&&) = default;
 
     //@}
 
@@ -130,7 +135,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterStorageSimple_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterStorageSimple_Impl;
 
     explicit ElectricLoadCenterStorageSimple(std::shared_ptr<detail::ElectricLoadCenterStorageSimple_Impl> impl);
 
@@ -144,10 +149,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterStorageSimple*/
-  typedef boost::optional<ElectricLoadCenterStorageSimple> OptionalElectricLoadCenterStorageSimple;
+  using OptionalElectricLoadCenterStorageSimple = boost::optional<ElectricLoadCenterStorageSimple>;
 
   /** \relates ElectricLoadCenterStorageSimple*/
-  typedef std::vector<ElectricLoadCenterStorageSimple> ElectricLoadCenterStorageSimpleVector;
+  using ElectricLoadCenterStorageSimpleVector = std::vector<ElectricLoadCenterStorageSimple>;
 
 }  // namespace model
 }  // namespace openstudio

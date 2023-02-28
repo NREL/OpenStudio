@@ -52,7 +52,12 @@ namespace model {
 
     explicit CoilCoolingCooledBeam(const Model& model);
 
-    virtual ~CoilCoolingCooledBeam() {}
+    virtual ~CoilCoolingCooledBeam() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingCooledBeam(const CoilCoolingCooledBeam& other) = default;
+    CoilCoolingCooledBeam(CoilCoolingCooledBeam&& other) = default;
+    CoilCoolingCooledBeam& operator=(const CoilCoolingCooledBeam&) = default;
+    CoilCoolingCooledBeam& operator=(CoilCoolingCooledBeam&&) = default;
 
     //@}
 
@@ -148,7 +153,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingCooledBeam_Impl ImplType;
+    using ImplType = detail::CoilCoolingCooledBeam_Impl;
 
     explicit CoilCoolingCooledBeam(std::shared_ptr<detail::CoilCoolingCooledBeam_Impl> impl);
 
@@ -162,10 +167,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingCooledBeam*/
-  typedef boost::optional<CoilCoolingCooledBeam> OptionalCoilCoolingCooledBeam;
+  using OptionalCoilCoolingCooledBeam = boost::optional<CoilCoolingCooledBeam>;
 
   /** \relates CoilCoolingCooledBeam*/
-  typedef std::vector<CoilCoolingCooledBeam> CoilCoolingCooledBeamVector;
+  using CoilCoolingCooledBeamVector = std::vector<CoilCoolingCooledBeam>;
 
 }  // namespace model
 }  // namespace openstudio

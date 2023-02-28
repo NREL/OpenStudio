@@ -431,7 +431,7 @@ namespace model {
     ModelObject CoilCoolingDXMultiSpeedStageData_Impl::clone(Model model) const {
       auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXMultiSpeedStageData>();
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<IdfObject> CoilCoolingDXMultiSpeedStageData_Impl::remove() {
@@ -721,7 +721,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXMultiSpeedStageData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_MultiSpeed_StageData);
+    return {IddObjectType::OS_Coil_Cooling_DX_MultiSpeed_StageData};
   }
 
   boost::optional<double> CoilCoolingDXMultiSpeedStageData::grossRatedTotalCoolingCapacity() const {

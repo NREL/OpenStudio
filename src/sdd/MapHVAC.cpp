@@ -314,7 +314,7 @@ namespace sdd {
   model::ScheduleYear deepScheduleYearClone(const model::ScheduleYear& scheduleYear, const std::string& name) {
     model::Model model = scheduleYear.model();
 
-    model::ScheduleYear scheduleYearClone = scheduleYear.clone(model).cast<model::ScheduleYear>();
+    auto scheduleYearClone = scheduleYear.clone(model).cast<model::ScheduleYear>();
     scheduleYearClone.setName(name);
     scheduleYearClone.clearScheduleWeeks();
 
@@ -326,80 +326,80 @@ namespace sdd {
     int i = 1;
 
     for (const auto& scheduleWeek : scheduleWeeks) {
-      model::ScheduleWeek scheduleWeekClone = scheduleWeek.clone(model).cast<model::ScheduleWeek>();
+      auto scheduleWeekClone = scheduleWeek.clone(model).cast<model::ScheduleWeek>();
       scheduleWeekClone.setName(name + " Week " + openstudio::string_conversions::number(i));
       scheduleYearClone.addScheduleWeek(*dateIt, scheduleWeekClone);
 
       boost::optional<model::ScheduleDay> scheduleDay;
 
       if ((scheduleDay = scheduleWeek.sundaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Sunday");
         scheduleWeekClone.setSundaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.mondaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Monday");
         scheduleWeekClone.setMondaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.tuesdaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Tuesday");
         scheduleWeekClone.setTuesdaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.wednesdaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Wednesday");
         scheduleWeekClone.setWednesdaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.thursdaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Thursday");
         scheduleWeekClone.setThursdaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.fridaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Friday");
         scheduleWeekClone.setFridaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.saturdaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Saturday");
         scheduleWeekClone.setSaturdaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.holidaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Holiday");
         scheduleWeekClone.setHolidaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.summerDesignDaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Summer");
         scheduleWeekClone.setSummerDesignDaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.winterDesignDaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Winter");
         scheduleWeekClone.setWinterDesignDaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.customDay1Schedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Custom 1");
         scheduleWeekClone.setCustomDay1Schedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.customDay2Schedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Custom 2");
         scheduleWeekClone.setCustomDay2Schedule(s);
       }
@@ -687,7 +687,7 @@ namespace sdd {
     }
 
     {
-      auto value = vrfSysElement.child("DefHtSrc").text().as_string();
+      const auto* value = vrfSysElement.child("DefHtSrc").text().as_string();
       if (istringEqual("HotGas", value)) {
         vrf.setDefrostStrategy("ReverseCycle");
       } else if (istringEqual("Electric", value)) {
@@ -696,7 +696,7 @@ namespace sdd {
     }
 
     {
-      auto value = vrfSysElement.child("DefCtrl").text().as_string();
+      const auto* value = vrfSysElement.child("DefCtrl").text().as_string();
       if (istringEqual("OnDemand", value)) {
         vrf.setDefrostControl("OnDemand");
       } else if (istringEqual("TimedCycle", value)) {
@@ -776,7 +776,7 @@ namespace sdd {
     }
 
     {
-      auto value = vrfSysElement.child("HtgCrvOutdoorTempType").text().as_string();
+      const auto* value = vrfSysElement.child("HtgCrvOutdoorTempType").text().as_string();
       if (istringEqual(value, "WetBulb")) {
         vrf.setHeatingPerformanceCurveOutdoorTemperatureType("WetBulbTemperature");
       } else if (istringEqual(value, "DryBulb")) {
@@ -958,7 +958,7 @@ namespace sdd {
       airLoopHVAC.setAvailabilitySchedule(availabilitySchedule.get());
     }
 
-    auto controlZone = airSystemElement.child("CtrlZnRef").text().as_string();
+    const auto* controlZone = airSystemElement.child("CtrlZnRef").text().as_string();
 
     // Optimum Start
     auto optStartElement = airSystemElement.child("OptStart");
@@ -1231,7 +1231,7 @@ namespace sdd {
             if (boost::optional<model::ModelObject> mo = translateCoilCooling(airSegmentChildElement, model)) {
               lastComponent = mo;
 
-              model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
+              auto hvacComponent = mo->cast<model::HVACComponent>();
               hvacComponent.addToNode(dropNode.get());
 
               coolingComponents.push_back(mo.get());
@@ -1256,7 +1256,7 @@ namespace sdd {
             if (auto mo = translateCoilHeating(airSegmentChildElement, model)) {
               lastComponent = mo;
 
-              model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
+              auto hvacComponent = mo->cast<model::HVACComponent>();
               if (!hvacComponent.addToNode(dropNode.get())) {
                 LOG(Error, "Cannot add HVACComponent named '" << hvacComponent.nameString() << "' to node '" << dropNode->nameString()
                                                               << "' on AirLoopHVAC '" << airLoopHVAC.nameString());
@@ -1300,7 +1300,7 @@ namespace sdd {
             if (boost::optional<model::ModelObject> mo = translateEvapClr(airSegmentChildElement, model)) {
               lastComponent = mo;
 
-              model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
+              auto hvacComponent = mo->cast<model::HVACComponent>();
               hvacComponent.addToNode(dropNode.get());
 
               coolingComponents.push_back(mo.get());
@@ -1372,11 +1372,11 @@ namespace sdd {
         }
 
         // CtrlType
-        auto ctrlType = airSystemOACtrlElement.child("CtrlType").text().as_string();
+        const auto* ctrlType = airSystemOACtrlElement.child("CtrlType").text().as_string();
         oaController.setEconomizerControlActionType(ctrlType);
 
         // MinLimitType
-        auto minLimitType = airSystemOACtrlElement.child("MinLimitType").text().as_string();
+        const auto* minLimitType = airSystemOACtrlElement.child("MinLimitType").text().as_string();
         if (istringEqual(minLimitType, "Fixed")) {
           oaController.setMinimumLimitType("FixedMinimum");
         } else if (istringEqual(minLimitType, "Proportional")) {
@@ -1384,11 +1384,11 @@ namespace sdd {
         }
 
         // HtRcvryBypassCtrlType
-        auto htRcvryBypassCtrlType = airSystemOACtrlElement.child("HtRcvryBypassCtrlType").text().as_string();
+        const auto* htRcvryBypassCtrlType = airSystemOACtrlElement.child("HtRcvryBypassCtrlType").text().as_string();
         oaController.setHeatRecoveryBypassControlType(htRcvryBypassCtrlType);
 
         // EconoAvailSchRef
-        auto econoAvailSchRef = airSystemOACtrlElement.child("EconoAvailSchRef").text().as_string();
+        const auto* econoAvailSchRef = airSystemOACtrlElement.child("EconoAvailSchRef").text().as_string();
         if (auto schedule = model.getModelObjectByName<model::Schedule>(econoAvailSchRef)) {
           oaController.setTimeofDayEconomizerControlSchedule(schedule.get());
         }
@@ -1544,7 +1544,7 @@ namespace sdd {
           hx.addToNode(outboardOANode);
 
           // TempCtrl
-          auto tempCtrl = htRcvryElement.child("TempCtrl").text().as_string();
+          const auto* tempCtrl = htRcvryElement.child("TempCtrl").text().as_string();
           if (istringEqual(tempCtrl, "None")) {
             hx.setSupplyAirOutletTemperatureControl(false);
           } else if (istringEqual(tempCtrl, "Fixed")) {
@@ -1566,7 +1566,7 @@ namespace sdd {
             }
           } else if (istringEqual(tempCtrl, "Scheduled")) {
             hx.setSupplyAirOutletTemperatureControl(true);
-            auto schRef = htRcvryElement.child("TempSetptSchRef").text().as_string();
+            const auto* schRef = htRcvryElement.child("TempSetptSchRef").text().as_string();
             auto sch = model.getModelObjectByName<model::Schedule>(schRef);
             if (sch) {
               model::SetpointManagerScheduled spm(model, sch.get());
@@ -2793,14 +2793,14 @@ namespace sdd {
       hx.setNominalElectricPower(_auxPwr.get());
     }
 
-    auto type = element.child("Type").text().as_string();
+    const auto* type = element.child("Type").text().as_string();
     if (istringEqual(type, "Plate")) {
       hx.setHeatExchangerType("Plate");
     } else if (istringEqual(type, "Wheel")) {
       hx.setHeatExchangerType("Rotary");
     }
 
-    auto defrostCtrl = element.child("DefrostCtrl").text().as_string();
+    const auto* defrostCtrl = element.child("DefrostCtrl").text().as_string();
     hx.setFrostControlType(defrostCtrl);
 
     auto defrostCtrlTempElement = element.child("DefrostCtrlTemp");
@@ -2825,7 +2825,7 @@ namespace sdd {
     }
 
     // EconoLockout
-    auto econoLockout = element.child("EconoLockout").text().as_string();
+    const auto* econoLockout = element.child("EconoLockout").text().as_string();
     if (istringEqual(econoLockout, "No")) {
       hx.setEconomizerLockout(false);
     } else {
@@ -3522,7 +3522,7 @@ namespace sdd {
     // Name
     pugi::xml_node nameElement = thermalZoneElement.child("Name");
     std::string name = nameElement.text().as_string();
-    optionalThermalZone = model.getModelObjectByName<model::ThermalZone>(name);
+    optionalThermalZone = model.getConcreteModelObjectByName<model::ThermalZone>(name);
 
     if (!optionalThermalZone) {
       return result;
@@ -3839,7 +3839,7 @@ namespace sdd {
 
       BoundingBox pointBox;
       pointBox.addPoint(Point3d(x, y, z));
-      for (model::Space space : spaces) {
+      for (const model::Space& space : spaces) {
         BoundingBox boundingBox = space.boundingBox();
         if (boundingBox.intersects(pointBox)) {
           daylightingControl1->setSpace(space);
@@ -3916,7 +3916,7 @@ namespace sdd {
 
         BoundingBox pointBox;
         pointBox.addPoint(Point3d(x, y, z));
-        for (model::Space space : spaces) {
+        for (const model::Space& space : spaces) {
           BoundingBox boundingBox = space.boundingBox();
           if (boundingBox.intersects(pointBox)) {
             daylightingControl2->setSpace(space);
@@ -4016,7 +4016,7 @@ namespace sdd {
     }
 
     if (translateVentSys) {
-      airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(ventSysRefElement.text().as_string());
+      airLoopHVAC = model.getConcreteModelObjectByName<model::AirLoopHVAC>(ventSysRefElement.text().as_string());
 
       if (airLoopHVAC && !thermalZone.airLoopHVAC()) {
         pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement);
@@ -4025,7 +4025,8 @@ namespace sdd {
             ventSysEquip = trmlUnit;
             airLoopHVAC->addBranchForZone(thermalZone, trmlUnit->cast<model::StraightComponent>());
             pugi::xml_node inducedAirZnRefElement = trmlUnitElement.child("InducedAirZnRef");
-            if (boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
+            if (boost::optional<model::ThermalZone> tz =
+                  model.getConcreteModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
               if (tz->isPlenum()) {
                 if (boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu =
                       trmlUnit->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>()) {
@@ -4091,7 +4092,7 @@ namespace sdd {
           }
         }
       } else {
-        airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(sysInfo.SysRefElement.text().as_string());
+        airLoopHVAC = model.getConcreteModelObjectByName<model::AirLoopHVAC>(sysInfo.SysRefElement.text().as_string());
 
         if (airLoopHVAC && !thermalZone.airLoopHVAC()) {
           pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement);
@@ -4101,7 +4102,7 @@ namespace sdd {
               airLoopHVAC->addBranchForZone(thermalZone, trmlUnit->cast<model::StraightComponent>());
               pugi::xml_node inducedAirZnRefElement = trmlUnitElement.child("InducedAirZnRef");
               if (boost::optional<model::ThermalZone> tz =
-                    model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
+                    model.getConcreteModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
                 if (tz->isPlenum()) {
                   if (boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu =
                         trmlUnit->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>()) {
@@ -4298,14 +4299,14 @@ namespace sdd {
     if (airLoopHVAC) {
       pugi::xml_node rtnPlenumZnRefElement = thermalZoneElement.child("RetPlenumZnRef");
       boost::optional<model::ThermalZone> returnPlenumZone;
-      returnPlenumZone = model.getModelObjectByName<model::ThermalZone>(rtnPlenumZnRefElement.text().as_string());
+      returnPlenumZone = model.getConcreteModelObjectByName<model::ThermalZone>(rtnPlenumZnRefElement.text().as_string());
       if (returnPlenumZone) {
         thermalZone.setReturnPlenum(returnPlenumZone.get());
       }
 
       pugi::xml_node supPlenumZnRefElement = thermalZoneElement.child("SupPlenumZnRef");
       boost::optional<model::ThermalZone> supplyPlenumZone;
-      supplyPlenumZone = model.getModelObjectByName<model::ThermalZone>(supPlenumZnRefElement.text().as_string());
+      supplyPlenumZone = model.getConcreteModelObjectByName<model::ThermalZone>(supPlenumZnRefElement.text().as_string());
       if (supplyPlenumZone) {
         thermalZone.setSupplyPlenum(supplyPlenumZone.get());
       }
@@ -4400,7 +4401,7 @@ namespace sdd {
 
     // Name
     pugi::xml_node nameElement = trmlUnitElement.child("Name");
-    auto name = nameElement.text().as_string();
+    const auto* name = nameElement.text().as_string();
 
     // AvailSchRef
     pugi::xml_node availSchRefElement = trmlUnitElement.child("AvailSchRef");
@@ -4574,7 +4575,7 @@ namespace sdd {
         coil = model::CoilHeatingElectric(model, schedule);
         LOG(Warn, name << " is assigned a default electric heating coil.");
       }
-      model::HVACComponent hvacComponentCoil = coil->cast<model::HVACComponent>();
+      auto hvacComponentCoil = coil->cast<model::HVACComponent>();
 
       // Fan
       pugi::xml_node fanElement = trmlUnitElement.child("Fan");
@@ -4584,7 +4585,7 @@ namespace sdd {
         fan = model::FanConstantVolume(model, schedule);
         LOG(Warn, name << " is assigned a default constant volume fan.");
       }
-      model::HVACComponent hvacComponentFan = fan->cast<model::HVACComponent>();
+      auto hvacComponentFan = fan->cast<model::HVACComponent>();
 
       // Terminal
       model::AirTerminalSingleDuctSeriesPIUReheat terminal(model, hvacComponentFan, hvacComponentCoil);
@@ -4639,7 +4640,7 @@ namespace sdd {
         LOG(Warn, name << " is assigned a default electric heating coil.");
       }
 
-      model::HVACComponent hvacComponentCoil = coil->cast<model::HVACComponent>();
+      auto hvacComponentCoil = coil->cast<model::HVACComponent>();
 
       // Fan
 
@@ -4654,7 +4655,7 @@ namespace sdd {
         LOG(Warn, name << " is assigned a default constant volume fan.");
       }
 
-      model::HVACComponent hvacComponentFan = fan->cast<model::HVACComponent>();
+      auto hvacComponentFan = fan->cast<model::HVACComponent>();
 
       // Terminal
 
@@ -4739,7 +4740,7 @@ namespace sdd {
     pugi::xml_node nameElement = fluidSysElement.child("Name");
     std::string plantName = nameElement.text().as_string();
 
-    if (boost::optional<model::PlantLoop> plant = model.getModelObjectByName<model::PlantLoop>(plantName)) {
+    if (boost::optional<model::PlantLoop> plant = model.getConcreteModelObjectByName<model::PlantLoop>(plantName)) {
       return plant.get();
     }
 
@@ -4845,21 +4846,21 @@ namespace sdd {
       thermalStorage->setSetpointTemperatureSchedule(tesSchedule.get());
 
       {
-        auto schRef = thrmlEngyStorElement.child("ChlrOnlySchRef").text().as_string();
+        const auto* schRef = thrmlEngyStorElement.child("ChlrOnlySchRef").text().as_string();
         if (auto sch = model.getModelObjectByName<model::Schedule>(schRef)) {
           plantLoop.setPlantEquipmentOperationCoolingLoadSchedule(sch.get());
         }
       }
 
       {
-        auto schRef = thrmlEngyStorElement.child("DischrgSchRef").text().as_string();
+        const auto* schRef = thrmlEngyStorElement.child("DischrgSchRef").text().as_string();
         if (auto sch = model.getModelObjectByName<model::Schedule>(schRef)) {
           plantLoop.setPrimaryPlantEquipmentOperationSchemeSchedule(sch.get());
         }
       }
 
       {
-        auto schRef = thrmlEngyStorElement.child("ChrgSchRef").text().as_string();
+        const auto* schRef = thrmlEngyStorElement.child("ChrgSchRef").text().as_string();
         if (auto sch = model.getModelObjectByName<model::Schedule>(schRef)) {
           plantLoop.setComponentSetpointOperationSchemeSchedule(sch.get());
         }
@@ -4914,7 +4915,7 @@ namespace sdd {
 
       if (auto mo = translateHX(hxElement, model)) {
         auto hx = mo->cast<model::HeatExchangerFluidToFluid>();
-        auto economizerIntegration = hxElement.child("EconoIntegration").text().as_string();
+        const auto* economizerIntegration = hxElement.child("EconoIntegration").text().as_string();
         if (istringEqual("Nonintegrated", economizerIntegration)) {
           plantLoop.addSupplyBranchForComponent(hx);
         } else {
@@ -4950,7 +4951,7 @@ namespace sdd {
 
       std::vector<model::ModelObject> waterHeaters = plantLoop.supplyComponents(model::WaterHeaterMixed::iddObjectType());
 
-      if (waterHeaters.size() > 0) {
+      if (!waterHeaters.empty()) {
         waterHeater = waterHeaters.front().cast<model::WaterHeaterMixed>();
       }
 
@@ -4964,7 +4965,7 @@ namespace sdd {
         spm.addToNode(supplyOutletNode);
       }
 
-      if (waterHeaters.size() > 0) {
+      if (!waterHeaters.empty()) {
         model::PumpVariableSpeed pumpVariableSpeed(model);
 
         model::Node supplyInletNode = plantLoop.supplyInletNode();
@@ -4986,7 +4987,7 @@ namespace sdd {
       if (openstudio::istringEqual(fluidSegTypeElement.text().as_string(), "secondarysupply")) {
         pugi::xml_node pumpElement = fluidSegElement.child("Pump");
 
-        if (pumpElement && !openstudio::istringEqual(typeElement.text().as_string(), "ServiceHotWater")) {
+        if ((pumpElement != nullptr) && !openstudio::istringEqual(typeElement.text().as_string(), "ServiceHotWater")) {
           boost::optional<model::ModelObject> mo = translatePump(pumpElement, model);
 
           if (mo) {
@@ -5032,14 +5033,14 @@ namespace sdd {
 
       std::vector<model::ModelObject> variablePumps;
       variablePumps = plantLoop.supplyComponents(plantLoop.supplyInletNode(), plantLoop.supplySplitter(), model::PumpVariableSpeed::iddObjectType());
-      if (constantPumps.size() > 0) {
-        model::PumpConstantSpeed pump = constantPumps.front().cast<model::PumpConstantSpeed>();
+      if (!constantPumps.empty()) {
+        auto pump = constantPumps.front().cast<model::PumpConstantSpeed>();
         if (boost::optional<double> value = pump.ratedFlowRate()) {
           plantLoop.setMaximumLoopFlowRate(value.get());
           //plantLoop.setMinimumLoopFlowRate(value.get());
         }
-      } else if (variablePumps.size() > 0) {
-        model::PumpVariableSpeed pump = variablePumps.front().cast<model::PumpVariableSpeed>();
+      } else if (!variablePumps.empty()) {
+        auto pump = variablePumps.front().cast<model::PumpVariableSpeed>();
         if (boost::optional<double> value = pump.ratedFlowRate()) {
           plantLoop.setMaximumLoopFlowRate(value.get());
         }
@@ -5053,7 +5054,7 @@ namespace sdd {
         double flowRate = 0.0;
 
         constantPumps = plantLoop.supplyComponents(plantLoop.supplySplitter(), plantLoop.supplyMixer(), model::PumpConstantSpeed::iddObjectType());
-        if (constantPumps.size() > 0) {
+        if (!constantPumps.empty()) {
           for (auto it = constantPumps.begin(); it != constantPumps.end(); ++it) {
             if (boost::optional<double> ratedFlowRate = it->cast<model::PumpConstantSpeed>().ratedFlowRate()) {
               flowRate = flowRate + ratedFlowRate.get();
@@ -5064,7 +5065,7 @@ namespace sdd {
         }
 
         variablePumps = plantLoop.supplyComponents(plantLoop.supplySplitter(), plantLoop.supplyMixer(), model::PumpVariableSpeed::iddObjectType());
-        if (variablePumps.size() > 0) {
+        if (!variablePumps.empty()) {
           for (auto it = variablePumps.begin(); it != variablePumps.end(); ++it) {
             if (boost::optional<double> ratedFlowRate = it->cast<model::PumpVariableSpeed>().ratedFlowRate()) {
               flowRate = flowRate + ratedFlowRate.get();
@@ -5089,7 +5090,7 @@ namespace sdd {
     // Plant Operation Schemes
 
     std::vector<double> ldRngLims;
-    typedef std::vector<std::string> EquipmentList;
+    using EquipmentList = std::vector<std::string>;
     std::vector<EquipmentList> equipmentLists;
 
     // Lambda to sort two pugi::xml_node according to their 'index' attribute
@@ -5535,7 +5536,7 @@ namespace sdd {
     boost::optional<double> flowCap;
     boost::optional<double> pwr;
 
-    auto pumpName = pumpElement.child("Name").text().as_string();
+    const auto* pumpName = pumpElement.child("Name").text().as_string();
 
     pugi::xml_node mtrEffElement = pumpElement.child("MtrEff");
     boost::optional<double> _mtrEff = lexicalCastToDouble(mtrEffElement);
@@ -5658,7 +5659,7 @@ namespace sdd {
 
       boost::optional<model::CurveCubic> pwr_fPLRCrv;
       pugi::xml_node pwr_fPLRCrvRefElement = pumpElement.child("Pwr_fPLRCrvRef");
-      pwr_fPLRCrv = model.getModelObjectByName<model::CurveCubic>(pwr_fPLRCrvRefElement.text().as_string());
+      pwr_fPLRCrv = model.getConcreteModelObjectByName<model::CurveCubic>(pwr_fPLRCrvRefElement.text().as_string());
 
       if (pwr_fPLRCrv) {
         double c1 = pwr_fPLRCrv->coefficient1Constant();
@@ -5875,7 +5876,7 @@ namespace sdd {
 
       boost::optional<model::CurveCubic> vsdFanPwrRatio_fQRatio;
       pugi::xml_node vsdFanPwrRatio_fQRatioElement = htRejElement.child("VSDFanPwrRatio_fQRatio");
-      vsdFanPwrRatio_fQRatio = model.getModelObjectByName<model::CurveCubic>(vsdFanPwrRatio_fQRatioElement.text().as_string());
+      vsdFanPwrRatio_fQRatio = model.getConcreteModelObjectByName<model::CurveCubic>(vsdFanPwrRatio_fQRatioElement.text().as_string());
 
       if (vsdFanPwrRatio_fQRatio) {
         tower.setFanPowerRatioFunctionofAirFlowRateRatioCurve(vsdFanPwrRatio_fQRatio.get());
@@ -6089,7 +6090,7 @@ namespace sdd {
     if (istringEqual("Zone", storLctnSim)) {
       tes.setAmbientTemperatureIndicator("Zone");
       std::string storZnRef = tesElement.child("StorZnRef").text().as_string();
-      if (auto tz = model.getModelObjectByName<model::ThermalZone>(storZnRef)) {
+      if (auto tz = model.getConcreteModelObjectByName<model::ThermalZone>(storZnRef)) {
         tes.setAmbientTemperatureThermalZone(tz.get());
       }
     } else {
@@ -6313,7 +6314,7 @@ namespace sdd {
       // Cap_fTempCrvRef
       boost::optional<model::CurveBiquadratic> cap_fTempCrv;
       pugi::xml_node cap_fTempCrvElement = chillerElement.child("Cap_fTempCrvRef");
-      cap_fTempCrv = model.getModelObjectByName<model::CurveBiquadratic>(cap_fTempCrvElement.text().as_string());
+      cap_fTempCrv = model.getConcreteModelObjectByName<model::CurveBiquadratic>(cap_fTempCrvElement.text().as_string());
       if (!cap_fTempCrv) {
         LOG(Error, "Coil: " << name << " Broken Cap_fTempCrv");
 
@@ -6333,7 +6334,7 @@ namespace sdd {
       // EIR_fTempCrvRef
       boost::optional<model::CurveBiquadratic> eir_fTempCrv;
       pugi::xml_node eir_fTempCrvElement = chillerElement.child("EIR_fTempCrvRef");
-      eir_fTempCrv = model.getModelObjectByName<model::CurveBiquadratic>(eir_fTempCrvElement.text().as_string());
+      eir_fTempCrv = model.getConcreteModelObjectByName<model::CurveBiquadratic>(eir_fTempCrvElement.text().as_string());
       if (!eir_fTempCrv) {
         LOG(Error, "Coil: " << name << "Broken EIR_fTempCrvRef");
 
@@ -6353,7 +6354,7 @@ namespace sdd {
       // EIR_fPLRCrvRef
       boost::optional<model::CurveQuadratic> eir_fPLRCrv;
       pugi::xml_node eir_fPLRCrvElement = chillerElement.child("EIR_fPLRCrvRef");
-      eir_fPLRCrv = model.getModelObjectByName<model::CurveQuadratic>(eir_fPLRCrvElement.text().as_string());
+      eir_fPLRCrv = model.getConcreteModelObjectByName<model::CurveQuadratic>(eir_fPLRCrvElement.text().as_string());
       if (!eir_fPLRCrv) {
         LOG(Error, "Coil: " << name << "Broken EIR_fPLRCrvRef");
 
@@ -6494,7 +6495,7 @@ namespace sdd {
 
       // Might have to relocate after zones are available
       std::string cprsrZnRef = element.child("CprsrZnRef").text().as_string();
-      if (auto zone = model.getModelObjectByName<model::ThermalZone>(cprsrZnRef)) {
+      if (auto zone = model.getConcreteModelObjectByName<model::ThermalZone>(cprsrZnRef)) {
         heatPump.addToThermalZone(zone.get());
       }
 
@@ -6538,7 +6539,7 @@ namespace sdd {
       }
 
       std::string storZnRef = element.child("StorZnRef").text().as_string();
-      if (auto zone = model.getModelObjectByName<model::ThermalZone>(storZnRef)) {
+      if (auto zone = model.getConcreteModelObjectByName<model::ThermalZone>(storZnRef)) {
         waterHeater.setAmbientTemperatureThermalZone(zone.get());
       }
 
@@ -6573,7 +6574,7 @@ namespace sdd {
       waterHeater.setHeaterFuelType(fuelSrc);
 
       {
-        auto curveRef = element.child("HIR_fPLRCrvRef").text().as_string();
+        const auto* curveRef = element.child("HIR_fPLRCrvRef").text().as_string();
         auto newcurve = model.getModelObjectByName<model::Curve>(curveRef);
         if (newcurve) {
           auto oldcurve = waterHeater.partLoadFactorCurve();
@@ -6663,7 +6664,7 @@ namespace sdd {
       auto setCurve = [&](const std::string& elementName,
                           const std::function<bool(model::CoilWaterHeatingAirToWaterHeatPump&, const model::Curve&)>& osSetter,
                           const std::function<model::Curve(model::CoilWaterHeatingAirToWaterHeatPump&)>& osGetter) {
-        auto value = element.child(elementName.c_str()).text().as_string();
+        const auto* value = element.child(elementName.c_str()).text().as_string();
         auto newcurve = model.getModelObjectByName<model::Curve>(value);
         if (newcurve) {
           auto oldcurve = osGetter(coil);
@@ -6834,7 +6835,7 @@ namespace sdd {
       // HIR_fPLRCrvRef
 
       pugi::xml_node hirfPLRCrvRefElement = element.child("HIR_fPLRCrvRef");
-      boost::optional<model::CurveCubic> hirfPLRCrv = model.getModelObjectByName<model::CurveCubic>(hirfPLRCrvRefElement.text().as_string());
+      boost::optional<model::CurveCubic> hirfPLRCrv = model.getConcreteModelObjectByName<model::CurveCubic>(hirfPLRCrvRefElement.text().as_string());
       if (hirfPLRCrv) {
         waterHeaterMixed.setPartLoadFactorCurve(hirfPLRCrv.get());
       }
@@ -7505,8 +7506,8 @@ namespace sdd {
         result = vrfTerminal;
 
         {
-          auto value = element.child("VRFSysRef").text().as_string();
-          auto vrfSys = model.getModelObjectByName<model::AirConditionerVariableRefrigerantFlow>(value);
+          const auto* value = element.child("VRFSysRef").text().as_string();
+          auto vrfSys = model.getConcreteModelObjectByName<model::AirConditionerVariableRefrigerantFlow>(value);
           if (vrfSys) {
             vrfSys->addTerminal(vrfTerminal);
           } else {
@@ -7638,7 +7639,7 @@ namespace sdd {
     model::CoilHeatingDXVariableRefrigerantFlow coil(model);
 
     {
-      auto value = element.child("Name").text().as_string();
+      const auto* value = element.child("Name").text().as_string();
       coil.setName(value);
     }
 
@@ -7653,7 +7654,7 @@ namespace sdd {
     auto setCurve = [&](const std::string& elementName,
                         const std::function<bool(model::CoilHeatingDXVariableRefrigerantFlow&, const model::Curve&)>& osSetter,
                         const std::function<model::Curve(model::CoilHeatingDXVariableRefrigerantFlow&)>& osGetter) {
-      auto value = element.child(elementName.c_str()).text().as_string();
+      const auto* value = element.child(elementName.c_str()).text().as_string();
       auto newcurve = model.getModelObjectByName<model::Curve>(value);
       if (newcurve) {
         auto oldcurve = osGetter(coil);
@@ -7692,7 +7693,7 @@ namespace sdd {
     model::CoilCoolingDXVariableRefrigerantFlow coil(model);
 
     {
-      auto value = element.child("Name").text().as_string();
+      const auto* value = element.child("Name").text().as_string();
       coil.setName(value);
     }
 
@@ -7707,7 +7708,7 @@ namespace sdd {
     auto setCurve = [&](const std::string& elementName,
                         const std::function<bool(model::CoilCoolingDXVariableRefrigerantFlow&, const model::Curve&)>& osSetter,
                         const std::function<model::Curve(model::CoilCoolingDXVariableRefrigerantFlow&)>& osGetter) {
-      auto value = element.child(elementName.c_str()).text().as_string();
+      const auto* value = element.child(elementName.c_str()).text().as_string();
       auto newcurve = model.getModelObjectByName<model::Curve>(value);
       if (newcurve) {
         auto oldcurve = osGetter(coil);
@@ -8258,7 +8259,7 @@ namespace sdd {
       var1.setMaximumValue(_maxVar1.get());
     }
 
-    auto text = element.child("InterpMthd").text().as_string();
+    const auto* text = element.child("InterpMthd").text().as_string();
     std::string newInterpMethod = "Cubic";
     std::string newExtrapMethod = "Constant";
     if (openstudio::istringEqual(text, "LagrangeInterpolationLinearExtrapolation")) {
@@ -8309,7 +8310,7 @@ namespace sdd {
     }
 
     LOG(Debug, "Couldn't locate the ZnSys element with name '" << znSysName << "'.");
-    return pugi::xml_node();
+    return {};
   }
 
   pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const pugi::xml_node& znNameElement) {
@@ -8337,7 +8338,7 @@ namespace sdd {
 
     LOG(Debug, "Couldn't locate the TrmlUnit element for zoneName '" << zoneName << "'.");
 
-    return pugi::xml_node();
+    return {};
   }
 
   pugi::xml_node ReverseTranslator::findAirSysElement(const pugi::xml_node& airSyRefElement) {
@@ -8371,7 +8372,7 @@ namespace sdd {
 
     LOG(Debug, "Couldn't locate the AirSys element for airSysName '" << airSysName << "'.");
 
-    return pugi::xml_node();
+    return {};
   }
 
   boost::optional<pugi::xml_node> ForwardTranslator::translateAirLoopHVAC(const model::AirLoopHVAC& airLoop, pugi::xml_node& root) {
@@ -8485,10 +8486,11 @@ namespace sdd {
     std::string fanPos;
     auto inletComp = supplyOutletNode.inletModelObject();
     OS_ASSERT(inletComp);
-    if (inletComp->optionalCast<model::FanConstantVolume>() || inletComp->optionalCast<model::FanVariableVolume>())
+    if (inletComp->optionalCast<model::FanConstantVolume>() || inletComp->optionalCast<model::FanVariableVolume>()) {
       fanPos = "DrawThrough";
-    else
+    } else {
       fanPos = "BlowThrough";
+    }
     auto fanPosElement = result.append_child("FanPos");
     fanPosElement.text() = fanPos.c_str();
 

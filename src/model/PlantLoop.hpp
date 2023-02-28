@@ -67,7 +67,12 @@ namespace model {
    */
     explicit PlantLoop(Model& model);
 
-    virtual ~PlantLoop() {}
+    virtual ~PlantLoop() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantLoop(const PlantLoop& other) = default;
+    PlantLoop(PlantLoop&& other) = default;
+    PlantLoop& operator=(const PlantLoop&) = default;
+    PlantLoop& operator=(PlantLoop&&) = default;
 
     static std::vector<std::string> loadDistributionSchemeValues();
 
@@ -99,7 +104,7 @@ namespace model {
   **/
     std::string loadDistributionScheme();
 
-    bool setLoadDistributionScheme(std::string scheme);
+    bool setLoadDistributionScheme(const std::string& scheme);
 
     std::string fluidType();
 

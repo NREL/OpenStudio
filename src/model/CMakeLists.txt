@@ -46,6 +46,12 @@ set(${target_name}_src
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirConditionerVariableRefrigerantFlow.cpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControl.cpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.cpp
   AirflowNetworkComponent.hpp
   AirflowNetworkComponent_Impl.hpp
   AirflowNetworkComponent.cpp
@@ -329,6 +335,9 @@ set(${target_name}_src
   CoilCoolingDXVariableRefrigerantFlow.hpp
   CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
   CoilCoolingDXVariableRefrigerantFlow.cpp
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp
+  CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   CoilCoolingDXVariableSpeed.hpp
   CoilCoolingDXVariableSpeed_Impl.hpp
   CoilCoolingDXVariableSpeed.cpp
@@ -374,6 +383,9 @@ set(${target_name}_src
   CoilHeatingDXVariableRefrigerantFlow.hpp
   CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
   CoilHeatingDXVariableRefrigerantFlow.cpp
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp
+  CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   CoilHeatingElectric.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingElectric.cpp
@@ -985,6 +997,9 @@ set(${target_name}_src
   LightsDefinition.hpp
   LightsDefinition_Impl.hpp
   LightsDefinition.cpp
+  LoadingIndex.hpp
+  LoadingIndex_Impl.hpp
+  LoadingIndex.cpp
   LoadProfilePlant.hpp
   LoadProfilePlant_Impl.hpp
   LoadProfilePlant.cpp
@@ -1438,6 +1453,12 @@ set(${target_name}_src
   SiteGroundTemperatureFCfactorMethod.hpp
   SiteGroundTemperatureFCfactorMethod_Impl.hpp
   SiteGroundTemperatureFCfactorMethod.cpp
+  SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp
+  SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp
+  SiteGroundTemperatureUndisturbedKusudaAchenbach.cpp
+  SiteGroundTemperatureUndisturbedXing.hpp
+  SiteGroundTemperatureUndisturbedXing_Impl.hpp
+  SiteGroundTemperatureUndisturbedXing.cpp
   SiteWaterMainsTemperature.hpp
   SiteWaterMainsTemperature_Impl.hpp
   SiteWaterMainsTemperature.cpp
@@ -1845,6 +1866,8 @@ endif()
 set(${target_name}_test_src
   test/AdditionalProperties_GTest.cpp
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
+  test/AirConditionerVariableRefrigerantFlowFluidTemperatureControl_GTest.cpp
+  test/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_GTest.cpp
   test/AirflowNetworkCrack_GTest.cpp
   test/AirflowNetworkDetailedOpening_GTest.cpp
   test/AirflowNetworkDistributionNode_GTest.cpp
@@ -1922,6 +1945,7 @@ set(${target_name}_test_src
   test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   test/CoilCoolingDXVariableSpeed_GTest.cpp
   test/CoilCoolingDXVariableSpeedSpeedData_GTest.cpp
+  test/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_GTest.cpp
   test/CoilCoolingFourPipeBeam_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
@@ -1936,6 +1960,7 @@ set(${target_name}_test_src
   test/CoilHeatingDXSingleSpeed_GTest.cpp
   test/CoilHeatingDXVariableSpeed_GTest.cpp
   test/CoilHeatingDXVariableSpeedSpeedData_GTest.cpp
+  test/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingElectricMultiStage_GTest.cpp
   test/CoilHeatingElectricMultiStageStageData_GTest.cpp
@@ -2242,6 +2267,8 @@ set(${target_name}_test_src
   test/SiteGroundTemperatureFCfactorMethod_GTest.cpp
   test/SiteGroundTemperatureShallow_GTest.cpp
   test/SiteGroundTemperatureBuildingSurface_GTest.cpp
+  test/SiteGroundTemperatureUndisturbedKusudaAchenbach_GTest.cpp
+  test/SiteGroundTemperatureUndisturbedXing_GTest.cpp
   test/SiteWaterMainsTemperature_GTest.cpp
   test/SizingPlant_GTest.cpp
   test/SizingSystem_GTest.cpp
@@ -2348,7 +2375,10 @@ if(BUILD_TESTING)
 endif()
 
 SET(${target_name}_benchmark_src
-  test/Model_Benchmark.cpp
+  benchmark/Model_Benchmark.cpp
+  benchmark/ThermalZoneCombineSpaces_Benchmark.cpp
+  benchmark/Vector_remove_vs_copy_Benchmark.cpp
+  benchmark/Model_ModelObjects_Benchmark.cpp
 )
 
 if(BUILD_BENCHMARK)
@@ -2362,6 +2392,8 @@ if(BUILD_BENCHMARK)
       CONAN_PKG::fmt
       openstudiolib
     )
+    set_target_properties(${bench_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/benchmark")
+    add_dependencies(run_benchmarks ${bench_name})
   endforeach()
 
 endif()

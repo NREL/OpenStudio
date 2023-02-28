@@ -13,6 +13,8 @@ set(${target_name}_src
   ForwardTranslator.hpp
   ForwardTranslator.cpp
   ForwardTranslator/ForwardTranslateAirConditionerVariableRefrigerantFlow.cpp
+  ForwardTranslator/ForwardTranslateAirConditionerVariableRefrigerantFlowFluidTemperatureControl.cpp
+  ForwardTranslator/ForwardTranslateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.cpp
   ForwardTranslator/ForwardTranslateAirflowNetwork.cpp
   ForwardTranslator/ForwardTranslateAirGap.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVAC.cpp
@@ -75,6 +77,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoStageWithHumidityControlMode.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlow.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWater.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWaterToAirHeatPumpEquationFit.cpp
@@ -83,6 +86,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXVariableRefrigerantFlow.cpp
+  ForwardTranslator/ForwardTranslateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingElectric.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingElectricMultiStage.cpp
@@ -362,6 +366,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureDeep.cpp
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureFCfactorMethod.cpp
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureShallow.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureUndisturbedKusudaAchenbach.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureUndisturbedXing.cpp
   ForwardTranslator/ForwardTranslateSiteWaterMainsTemperature.cpp
   ForwardTranslator/ForwardTranslateSkyTemperature.cpp
   ForwardTranslator/ForwardTranslateSizingParameters.cpp
@@ -637,6 +643,8 @@ set(${target_name}_test_src
   Test/ReverseTranslator_GTest.cpp
 
   Test/AirConditionerVariableRefrigerantFlow_GTest.cpp
+  Test/AirConditionerVariableRefrigerantFlowFluidTemperatureControl_GTest.cpp
+  Test/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_GTest.cpp
   Test/AirflowNetwork_GTest.cpp
 
   Test/AirLoopHVACUnitarySystem_GTest.cpp
@@ -766,6 +774,8 @@ set(${target_name}_test_src
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp
   Test/SimulationControl_GTest.cpp
+  Test/SiteGroundTemperatureUndisturbedKusudaAchenbach_GTest.cpp
+  Test/SiteGroundTemperatureUndisturbedXing_GTest.cpp
   Test/SizingSystem_GTest.cpp
   Test/SizingZone_GTest.cpp
   Test/Space_GTest.cpp
@@ -873,6 +883,26 @@ if(BUILD_TESTING)
   add_dependencies(${target_name}_tests
     openstudio_energyplus_resources
   )
+
+endif()
+
+if(BUILD_BENCHMARK)
+
+  set(${target_name}_benchmark_src
+    benchmark/ForwardTranslator_Benchmark.cpp
+  )
+
+  foreach( bench_file ${${target_name}_benchmark_src} )
+    get_filename_component(bench_name ${bench_file} NAME_WE)
+    message("bench_name=${bench_name}")
+    add_executable( ${bench_name} ${bench_file} )
+    target_link_libraries(${bench_name}
+      CONAN_PKG::benchmark
+      openstudiolib
+    )
+    set_target_properties(${bench_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/benchmark")
+    add_dependencies(run_benchmarks ${bench_name})
+  endforeach()
 
 endif()
 

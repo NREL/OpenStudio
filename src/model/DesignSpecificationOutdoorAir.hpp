@@ -54,7 +54,12 @@ namespace model {
 
     explicit DesignSpecificationOutdoorAir(const Model& model);
 
-    virtual ~DesignSpecificationOutdoorAir() {}
+    virtual ~DesignSpecificationOutdoorAir() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DesignSpecificationOutdoorAir(const DesignSpecificationOutdoorAir& other) = default;
+    DesignSpecificationOutdoorAir(DesignSpecificationOutdoorAir&& other) = default;
+    DesignSpecificationOutdoorAir& operator=(const DesignSpecificationOutdoorAir&) = default;
+    DesignSpecificationOutdoorAir& operator=(DesignSpecificationOutdoorAir&&) = default;
 
     //@}
 
@@ -123,7 +128,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::DesignSpecificationOutdoorAir_Impl ImplType;
+    using ImplType = detail::DesignSpecificationOutdoorAir_Impl;
 
     explicit DesignSpecificationOutdoorAir(std::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl);
 
@@ -140,10 +145,10 @@ namespace model {
   };
 
   /** \relates DesignSpecificationOutdoorAir*/
-  typedef boost::optional<DesignSpecificationOutdoorAir> OptionalDesignSpecificationOutdoorAir;
+  using OptionalDesignSpecificationOutdoorAir = boost::optional<DesignSpecificationOutdoorAir>;
 
   /** \relates DesignSpecificationOutdoorAir*/
-  typedef std::vector<DesignSpecificationOutdoorAir> DesignSpecificationOutdoorAirVector;
+  using DesignSpecificationOutdoorAirVector = std::vector<DesignSpecificationOutdoorAir>;
 
 }  // namespace model
 }  // namespace openstudio

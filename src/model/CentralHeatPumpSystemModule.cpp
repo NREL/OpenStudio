@@ -79,7 +79,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesControlScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CentralHeatPumpSystemModule", "Chiller Heater Modules Control"));
       }
@@ -90,7 +91,7 @@ namespace model {
    * By using the "children" method and listing the chillerHeaterModulesPerformanceComponent there ModelObject_Impl::clone will automatically do
    * the right thing -> NO IT DOESN'T */
     ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const {
-      CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
+      auto newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
 
       // If not using "children", then expliclity do it:
       bool ok = true;
@@ -105,15 +106,14 @@ namespace model {
         // If it's a different model
       } else {
         // We clone the chillerHeaterPerformance into the target model
-        ChillerHeaterPerformanceElectricEIR chillerHeaterPerf =
-          this->chillerHeaterModulesPerformanceComponent().clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+        auto chillerHeaterPerf = this->chillerHeaterModulesPerformanceComponent().clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
         ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(chillerHeaterPerf);
       }
 
       // This better have worked
       OS_ASSERT(ok);
 
-      return newCentralHPMod;
+      return std::move(newCentralHPMod);
     }
 
     // Returns allowable child types: ChillerHeaterPerformanceElectricEIR
@@ -219,7 +219,7 @@ namespace model {
   }
 
   IddObjectType CentralHeatPumpSystemModule::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CentralHeatPumpSystem_Module);
+    return {IddObjectType::OS_CentralHeatPumpSystem_Module};
   }
 
   ChillerHeaterPerformanceElectricEIR CentralHeatPumpSystemModule::chillerHeaterModulesPerformanceComponent() const {

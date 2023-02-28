@@ -50,7 +50,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~PerformancePrecisionTradeoffs() {}
+    virtual ~PerformancePrecisionTradeoffs() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PerformancePrecisionTradeoffs(const PerformancePrecisionTradeoffs& other) = default;
+    PerformancePrecisionTradeoffs(PerformancePrecisionTradeoffs&& other) = default;
+    PerformancePrecisionTradeoffs& operator=(const PerformancePrecisionTradeoffs&) = default;
+    PerformancePrecisionTradeoffs& operator=(PerformancePrecisionTradeoffs&&) = default;
 
     //@}
 
@@ -114,7 +119,7 @@ namespace model {
     explicit PerformancePrecisionTradeoffs(Model& model);
 
     /// @cond
-    typedef detail::PerformancePrecisionTradeoffs_Impl ImplType;
+    using ImplType = detail::PerformancePrecisionTradeoffs_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -128,10 +133,10 @@ namespace model {
   };
 
   /** \relates PerformancePrecisionTradeoffs*/
-  typedef boost::optional<PerformancePrecisionTradeoffs> OptionalPerformancePrecisionTradeoffs;
+  using OptionalPerformancePrecisionTradeoffs = boost::optional<PerformancePrecisionTradeoffs>;
 
   /** \relates PerformancePrecisionTradeoffs*/
-  typedef std::vector<PerformancePrecisionTradeoffs> PerformancePrecisionTradeoffsVector;
+  using PerformancePrecisionTradeoffsVector = std::vector<PerformancePrecisionTradeoffs>;
 
 }  // namespace model
 }  // namespace openstudio

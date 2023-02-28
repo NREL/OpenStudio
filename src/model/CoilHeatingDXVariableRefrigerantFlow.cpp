@@ -82,7 +82,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_DX_VariableRefrigerantFlowFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("CoilHeatingDXVariableRefrigerantFlow", "Availability Schedule"));
       }
@@ -126,7 +127,7 @@ namespace model {
     Curve CoilHeatingDXVariableRefrigerantFlow_Impl::heatingCapacityRatioModifierFunctionofTemperatureCurve() const {
       boost::optional<Curve> value = optionalHeatingCapacityRatioModifierFunctionofTemperatureCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Heating Capacity Ratio Modifier Functionof Temperature Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Heating Capacity Ratio Modifier Function of Temperature Curve attached.");
       }
       return value.get();
     }
@@ -134,7 +135,7 @@ namespace model {
     Curve CoilHeatingDXVariableRefrigerantFlow_Impl::heatingCapacityModifierFunctionofFlowFractionCurve() const {
       boost::optional<Curve> value = optionalHeatingCapacityModifierFunctionofFlowFractionCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Heating Capacity Modifier Functionof Flow Fraction Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Heating Capacity Modifier Function of Flow Fraction Curve attached.");
       }
       return value.get();
     }
@@ -197,9 +198,9 @@ namespace model {
     }
 
     ModelObject CoilHeatingDXVariableRefrigerantFlow_Impl::clone(Model model) const {
-      CoilHeatingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilHeatingDXVariableRefrigerantFlow>();
+      auto objectClone = HVACComponent_Impl::clone(model).cast<CoilHeatingDXVariableRefrigerantFlow>();
 
-      return objectClone;
+      return std::move(objectClone);
     }
 
     std::vector<ModelObject> CoilHeatingDXVariableRefrigerantFlow_Impl::children() const {
@@ -277,7 +278,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingDXVariableRefrigerantFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow);
+    return {IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow};
   }
 
   Schedule CoilHeatingDXVariableRefrigerantFlow::availabilitySchedule() const {

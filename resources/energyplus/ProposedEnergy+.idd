@@ -1951,7 +1951,7 @@ Site:GroundTemperature:Undisturbed:Xing,
        \type real
        \units J/kg-K
        \minimum> 0.0
-  N4,  \field Average Soil Surface Tempeature
+  N4,  \field Average Soil Surface Temperature
        \required-field
        \type real
        \units C
@@ -38452,7 +38452,7 @@ AirConditioner:VariableRefrigerantFlow,
        \memo or more electric compressors and outdoor fan). Serves one or more VRF zone terminal
        \memo units. See ZoneHVAC:TerminalUnit:VariableRefrigerantFlow and ZoneTerminalUnitList.
        \min-fields 37
-  A1 , \field Heat Pump Name
+  A1 , \field Name
        \required-field
        \type alpha
        \reference-class-name validBranchEquipmentTypes
@@ -39015,7 +39015,7 @@ AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
        \memo Indoor units are modeled separately, see ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
        \extensible:3 - repeat last three fields, remembering to remove ; from "inner" fields.
        \min-fields 41
-  A1 , \field Heat Pump Name
+  A1 , \field Name
        \required-field
        \type alpha
        \note Enter a unique name for this variable refrigerant flow heat pump

@@ -579,7 +579,7 @@ namespace model {
       ;
     }
 
-    bool SizingZone_Impl::setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy) {
+    bool SizingZone_Impl::setDedicatedOutdoorAirSystemControlStrategy(const std::string& dedicatedOutdoorAirSystemControlStrategy) {
       bool result = setString(OS_Sizing_ZoneFields::DedicatedOutdoorAirSystemControlStrategy, dedicatedOutdoorAirSystemControlStrategy);
       return result;
     }
@@ -784,7 +784,7 @@ namespace model {
 
       // Query each row of the InitializationSummary -> Zone Sizing DOAS Inputs table
       // that contains this component to get the desired value.
-      for (std::string rowName : rowNames.get()) {
+      for (const std::string& rowName : rowNames.get()) {
         std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
           WHERE ReportName = 'InitializationSummary'
@@ -857,7 +857,7 @@ namespace model {
 
       // Query each row of the InitializationSummary -> Zone Sizing DOAS Inputs table
       // that contains this component to get the desired value.
-      for (std::string rowName : rowNames.get()) {
+      for (const std::string& rowName : rowNames.get()) {
         std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
           WHERE ReportName = 'InitializationSummary'
@@ -1344,7 +1344,7 @@ namespace model {
     return getImpl<detail::SizingZone_Impl>()->setAccountforDedicatedOutdoorAirSystem(accountforDedicatedOutdoorAirSystem);
   }
 
-  bool SizingZone::setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy) {
+  bool SizingZone::setDedicatedOutdoorAirSystemControlStrategy(const std::string& dedicatedOutdoorAirSystemControlStrategy) {
     return getImpl<detail::SizingZone_Impl>()->setDedicatedOutdoorAirSystemControlStrategy(dedicatedOutdoorAirSystemControlStrategy);
   }
 

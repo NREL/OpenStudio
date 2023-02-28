@@ -63,7 +63,12 @@ namespace model {
 
     explicit CoilHeatingDesuperheater(const Model& model);
 
-    virtual ~CoilHeatingDesuperheater() {}
+    virtual ~CoilHeatingDesuperheater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingDesuperheater(const CoilHeatingDesuperheater& other) = default;
+    CoilHeatingDesuperheater(CoilHeatingDesuperheater&& other) = default;
+    CoilHeatingDesuperheater& operator=(const CoilHeatingDesuperheater&) = default;
+    CoilHeatingDesuperheater& operator=(CoilHeatingDesuperheater&&) = default;
 
     //@}
 
@@ -129,7 +134,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingDesuperheater_Impl ImplType;
+    using ImplType = detail::CoilHeatingDesuperheater_Impl;
 
     explicit CoilHeatingDesuperheater(std::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl);
 
@@ -143,10 +148,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingDesuperheater*/
-  typedef boost::optional<CoilHeatingDesuperheater> OptionalCoilHeatingDesuperheater;
+  using OptionalCoilHeatingDesuperheater = boost::optional<CoilHeatingDesuperheater>;
 
   /** \relates CoilHeatingDesuperheater*/
-  typedef std::vector<CoilHeatingDesuperheater> CoilHeatingDesuperheaterVector;
+  using CoilHeatingDesuperheaterVector = std::vector<CoilHeatingDesuperheater>;
 
 }  // namespace model
 }  // namespace openstudio

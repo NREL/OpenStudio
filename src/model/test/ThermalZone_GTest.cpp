@@ -192,11 +192,12 @@ TEST_F(ModelFixture, CombinedInfiltration) {
   ThermalZone thermalZone(model);
 
   // 100 m^2
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> points{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   // 100 m^2, 200 m^2
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 2, model);
@@ -360,17 +361,18 @@ TEST_F(ModelFixture, ThermalZone_Cost) {
 
   thermalZone.remove();
 
-  EXPECT_EQ(0u, model.getModelObjects<LifeCycleCost>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<LifeCycleCost>().size());
 }
 
 TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
@@ -394,7 +396,7 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost) {
 
   boost::optional<Space> newSpace = thermalZone.combineSpaces();
   ASSERT_TRUE(newSpace);
-  ASSERT_EQ(2u, model.getModelObjects<LifeCycleCost>().size());
+  ASSERT_EQ(2u, model.getConcreteModelObjects<LifeCycleCost>().size());
   ASSERT_EQ(2u, newSpace->lifeCycleCosts().size());
   EXPECT_EQ("CostPerEach", newSpace->lifeCycleCosts()[0].costUnits());
   EXPECT_EQ(100, newSpace->lifeCycleCosts()[0].totalCost());
@@ -405,11 +407,12 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost) {
 TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost2) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
@@ -435,7 +438,7 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost2) {
 
   boost::optional<Space> newSpace = thermalZone.combineSpaces();
   ASSERT_TRUE(newSpace);
-  ASSERT_EQ(2u, model.getModelObjects<LifeCycleCost>().size());
+  ASSERT_EQ(2u, model.getConcreteModelObjects<LifeCycleCost>().size());
   EXPECT_EQ(0u, newSpace->lifeCycleCosts().size());
   ASSERT_EQ(2u, newSpace->lights().size());
   ASSERT_EQ(1u, newSpace->lights()[0].definition().lifeCycleCosts().size());
@@ -449,11 +452,12 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost2) {
 TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost3) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
@@ -485,7 +489,7 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost3) {
 
   boost::optional<Space> newSpace = thermalZone.combineSpaces();
   ASSERT_TRUE(newSpace);
-  ASSERT_EQ(2u, model.getModelObjects<LifeCycleCost>().size());
+  ASSERT_EQ(2u, model.getConcreteModelObjects<LifeCycleCost>().size());
   EXPECT_EQ(0u, newSpace->lifeCycleCosts().size());
   ASSERT_EQ(2u, newSpace->electricEquipment().size());
   ASSERT_EQ(1u, newSpace->electricEquipment()[0].definition().lifeCycleCosts().size());
@@ -665,7 +669,7 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController) {
     returnvalue = zone2.zoneControlContaminantController();
     ASSERT_TRUE(returnvalue);
     EXPECT_NE(returnvalue.get(), controller1);
-    auto controllers = m.getModelObjects<ZoneControlContaminantController>();
+    auto controllers = m.getConcreteModelObjects<ZoneControlContaminantController>();
     EXPECT_EQ(2u, controllers.size());
 
     ZoneControlContaminantController controller2(m);
@@ -673,7 +677,7 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController) {
     EXPECT_TRUE(returnvalue->handle().isNull());
     ASSERT_TRUE(zone2.zoneControlContaminantController());
     EXPECT_EQ(controller2.handle(), zone2.zoneControlContaminantController()->handle());
-    EXPECT_EQ(2u, m.getModelObjects<ZoneControlContaminantController>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<ZoneControlContaminantController>().size());
   }
 
   {
@@ -686,7 +690,7 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController) {
     ASSERT_TRUE(zone.zoneControlContaminantController());
     ASSERT_TRUE(zone2.zoneControlContaminantController());
     EXPECT_NE(zone.zoneControlContaminantController()->handle(), zone2.zoneControlContaminantController()->handle());
-    EXPECT_EQ(2u, m.getModelObjects<model::ZoneControlContaminantController>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<model::ZoneControlContaminantController>().size());
   }
 }
 
@@ -713,7 +717,7 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat) {
     returnvalue = zone2.zoneControlHumidistat();
     ASSERT_TRUE(returnvalue);
     EXPECT_NE(returnvalue.get(), controller1);
-    auto controllers = m.getModelObjects<ZoneControlHumidistat>();
+    auto controllers = m.getConcreteModelObjects<ZoneControlHumidistat>();
     EXPECT_EQ(2u, controllers.size());
 
     ZoneControlHumidistat controller2(m);
@@ -721,7 +725,7 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat) {
     EXPECT_TRUE(returnvalue->handle().isNull());
     ASSERT_TRUE(zone2.zoneControlHumidistat());
     EXPECT_EQ(controller2.handle(), zone2.zoneControlHumidistat()->handle());
-    EXPECT_EQ(2u, m.getModelObjects<ZoneControlHumidistat>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<ZoneControlHumidistat>().size());
   }
 
   {
@@ -734,7 +738,7 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat) {
     ASSERT_TRUE(zone.zoneControlHumidistat());
     ASSERT_TRUE(zone2.zoneControlHumidistat());
     EXPECT_NE(zone.zoneControlHumidistat()->handle(), zone2.zoneControlHumidistat()->handle());
-    EXPECT_EQ(2u, m.getModelObjects<model::ZoneControlHumidistat>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<model::ZoneControlHumidistat>().size());
   }
 }
 

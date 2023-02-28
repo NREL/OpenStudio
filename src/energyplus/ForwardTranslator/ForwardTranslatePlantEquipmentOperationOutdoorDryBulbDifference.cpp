@@ -81,7 +81,7 @@ namespace energyplus {
         equipmentList.setName(equipmentListName);
         eg.setString(PlantEquipmentOperation_OutdoorDryBulbDifferenceExtensibleFields::RangeEquipmentListName, equipmentListName);
 
-        for (auto component : equipment) {
+        for (auto& component : equipment) {
           auto eg2 = equipmentList.pushExtensibleGroup();
           auto idf_component = translateAndMapModelObject(component);
           OS_ASSERT(idf_component);

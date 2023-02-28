@@ -327,12 +327,12 @@ namespace model {
       return result;
     }
 
-    bool CoilHeatingDXVariableSpeed_Impl::setDefrostStrategy(std::string defrostStrategy) {
+    bool CoilHeatingDXVariableSpeed_Impl::setDefrostStrategy(const std::string& defrostStrategy) {
       bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostStrategy, defrostStrategy);
       return result;
     }
 
-    bool CoilHeatingDXVariableSpeed_Impl::setDefrostControl(std::string defrostControl) {
+    bool CoilHeatingDXVariableSpeed_Impl::setDefrostControl(const std::string& defrostControl) {
       bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostControl, defrostControl);
       return result;
     }
@@ -367,7 +367,7 @@ namespace model {
         t_clone.getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
       }
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilHeatingDXVariableSpeed_Impl::children() const {
@@ -647,7 +647,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingDXVariableSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_DX_VariableSpeed);
+    return {IddObjectType::OS_Coil_Heating_DX_VariableSpeed};
   }
 
   std::vector<std::string> CoilHeatingDXVariableSpeed::defrostStrategyValues() {
@@ -791,11 +791,11 @@ namespace model {
       maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
   }
 
-  bool CoilHeatingDXVariableSpeed::setDefrostStrategy(std::string defrostStrategy) {
+  bool CoilHeatingDXVariableSpeed::setDefrostStrategy(const std::string& defrostStrategy) {
     return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostStrategy(defrostStrategy);
   }
 
-  bool CoilHeatingDXVariableSpeed::setDefrostControl(std::string defrostControl) {
+  bool CoilHeatingDXVariableSpeed::setDefrostControl(const std::string& defrostControl) {
     return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostControl(defrostControl);
   }
 

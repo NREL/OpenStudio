@@ -56,7 +56,12 @@ namespace model {
 
     explicit RefrigerationCondenserAirCooled(const Model& model);
 
-    virtual ~RefrigerationCondenserAirCooled() {}
+    virtual ~RefrigerationCondenserAirCooled() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCondenserAirCooled(const RefrigerationCondenserAirCooled& other) = default;
+    RefrigerationCondenserAirCooled(RefrigerationCondenserAirCooled&& other) = default;
+    RefrigerationCondenserAirCooled& operator=(const RefrigerationCondenserAirCooled&) = default;
+    RefrigerationCondenserAirCooled& operator=(RefrigerationCondenserAirCooled&&) = default;
 
     //@}
 
@@ -115,7 +120,7 @@ namespace model {
 
     void resetRatedSubcoolingTemperatureDifference();
 
-    bool setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType);
+    bool setCondenserFanSpeedControlType(const std::string& condenserFanSpeedControlType);
 
     void resetCondenserFanSpeedControlType();
 
@@ -131,7 +136,7 @@ namespace model {
 
     void resetAirInletZone();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -158,7 +163,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCondenserAirCooled_Impl ImplType;
+    using ImplType = detail::RefrigerationCondenserAirCooled_Impl;
 
     explicit RefrigerationCondenserAirCooled(std::shared_ptr<detail::RefrigerationCondenserAirCooled_Impl> impl);
 
@@ -172,10 +177,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCondenserAirCooled*/
-  typedef boost::optional<RefrigerationCondenserAirCooled> OptionalRefrigerationCondenserAirCooled;
+  using OptionalRefrigerationCondenserAirCooled = boost::optional<RefrigerationCondenserAirCooled>;
 
   /** \relates RefrigerationCondenserAirCooled*/
-  typedef std::vector<RefrigerationCondenserAirCooled> RefrigerationCondenserAirCooledVector;
+  using RefrigerationCondenserAirCooledVector = std::vector<RefrigerationCondenserAirCooled>;
 
 }  // namespace model
 }  // namespace openstudio

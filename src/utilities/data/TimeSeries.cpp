@@ -356,7 +356,9 @@ namespace detail {
           delta = m_secondsFromStart[1] - m_secondsFromStart[0];
           foundInterval = true;
           for (unsigned i = 2; i < m_secondsFromStart.size(); i++) {
-            if (delta != m_secondsFromStart[i] - m_secondsFromStart[i - 1]) foundInterval = false;
+            if (delta != m_secondsFromStart[i] - m_secondsFromStart[i - 1]) {
+              foundInterval = false;
+            }
             break;
           }
         }
@@ -524,6 +526,11 @@ namespace detail {
   /// first report date
   openstudio::DateTime TimeSeries_Impl::firstReportDateTime() const {
     return m_firstReportDateTime;
+  }
+
+  /// start date
+  openstudio::DateTime TimeSeries_Impl::startDateTime() const {
+    return m_startDateTime;
   }
 
   /// get value at number of seconds from start date and time
@@ -820,7 +827,7 @@ namespace detail {
   }
 
   double TimeSeries_Impl::averageValue() const {
-    if (m_secondsFromStart.size() > 0) {
+    if (!m_secondsFromStart.empty()) {
       return integrate() / m_secondsFromStart.back();
     }
     return 0;
@@ -859,6 +866,10 @@ openstudio::DateTimeVector TimeSeries::dateTimes() const {
 
 openstudio::DateTime TimeSeries::firstReportDateTime() const {
   return m_impl->firstReportDateTime();
+}
+
+openstudio::DateTime TimeSeries::startDateTime() const {
+  return m_impl->startDateTime();
 }
 
 openstudio::Vector TimeSeries::daysFromFirstReport() const {
@@ -915,22 +926,22 @@ void TimeSeries::setOutOfRangeValue(double value) {
 
 TimeSeries TimeSeries::operator+(const TimeSeries& other) const {
   std::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl) + *(other.m_impl);
-  return TimeSeries(impl);
+  return {impl};
 }
 
 TimeSeries TimeSeries::operator-(const TimeSeries& other) const {
   std::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl) - *(other.m_impl);
-  return TimeSeries(impl);
+  return {impl};
 }
 
 TimeSeries TimeSeries::operator*(double d) const {
   std::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl) * d;
-  return TimeSeries(impl);
+  return {impl};
 }
 
 TimeSeries TimeSeries::operator/(double d) const {
   std::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl) * (1.0 / d);
-  return TimeSeries(impl);
+  return {impl};
 }
 
 double TimeSeries::integrate() const {
@@ -968,7 +979,7 @@ TimeSeries sum(const std::vector<TimeSeries>& timeSeriesVector) {
 }
 
 boost::function1<TimeSeries, const std::vector<TimeSeries>&> sumTimeSeriesFunctor() {
-  typedef TimeSeries (*functype)(const std::vector<TimeSeries>&);
+  using functype = TimeSeries (*)(const std::vector<TimeSeries>&);
   return std::function<TimeSeries(const std::vector<TimeSeries>&)>(functype(&sum));
 }
 

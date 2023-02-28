@@ -170,7 +170,7 @@ namespace model {
     }
 
     ModelObject PlantLoop_Impl::clone(Model model) const {
-      PlantLoop plantLoopClone = Loop_Impl::clone(model).cast<PlantLoop>();
+      auto plantLoopClone = Loop_Impl::clone(model).cast<PlantLoop>();
 
       plantLoopClone.setString(supplyInletPort(), "");
       plantLoopClone.setString(supplyOutletPort(), "");
@@ -182,7 +182,7 @@ namespace model {
 
       {
         // Perhaps call a clone(Loop loop) instead...
-        AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
+        auto avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
         avmListClone.setName(plantLoopClone.name().get() + " AvailabilityManagerAssigmentList");
         plantLoopClone.setPointer(OS_PlantLoopFields::AvailabilityManagerListName, avmListClone.handle());
       }
@@ -287,7 +287,7 @@ namespace model {
         }  // END OF Initialization
 
         // We loop on the components of the original plant loop
-        for (std::vector<ModelObject>::iterator it = components.begin(); it != components.end(); ++it) {
+        for (auto it = components.begin(); it != components.end(); ++it) {
           ModelObject comp = *it;
           if (comp.iddObjectType() == Node::iddObjectType()) {
             // If a Node, we don't clone, we just push it to the nodes vector
@@ -484,7 +484,7 @@ namespace model {
         }
       }
 
-      return plantLoopClone;
+      return std::move(plantLoopClone);
     }
 
     unsigned PlantLoop_Impl::supplyInletPort() const {
@@ -722,7 +722,9 @@ namespace model {
 
     Mixer PlantLoop_Impl::supplyMixer() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::SupplyMixerName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
       return supplyComponents(IddObjectType::OS_Connector_Mixer).front().cast<Mixer>();
     }
 
@@ -734,7 +736,9 @@ namespace model {
 
     Splitter PlantLoop_Impl::supplySplitter() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::SupplySplitterName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
       return supplyComponents(IddObjectType::OS_Connector_Splitter).front().cast<Splitter>();
     }
 
@@ -746,7 +750,9 @@ namespace model {
 
     Mixer PlantLoop_Impl::demandMixer() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::DemandMixerName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
       return demandComponents(IddObjectType::OS_Connector_Mixer).front().cast<Mixer>();
     }
 
@@ -758,7 +764,9 @@ namespace model {
 
     Splitter PlantLoop_Impl::demandSplitter() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::DemandSplitterName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
       return demandComponents(IddObjectType::OS_Connector_Splitter).front().cast<Splitter>();
     }
 
@@ -774,13 +782,14 @@ namespace model {
       return value.get();
     }
 
-    bool PlantLoop_Impl::setLoadDistributionScheme(std::string scheme) {
-      if (istringEqual(scheme, "Sequential")) {
-        scheme = "SequentialLoad";
-      } else if (istringEqual(scheme, "Uniform")) {
-        scheme = "UniformLoad";
+    bool PlantLoop_Impl::setLoadDistributionScheme(const std::string& scheme) {
+      auto thisScheme = scheme;
+      if (istringEqual(thisScheme, "Sequential")) {
+        thisScheme = "SequentialLoad";
+      } else if (istringEqual(thisScheme, "Uniform")) {
+        thisScheme = "UniformLoad";
       }
-      return setString(OS_PlantLoopFields::LoadDistributionScheme, scheme);
+      return setString(OS_PlantLoopFields::LoadDistributionScheme, thisScheme);
     }
 
     double PlantLoop_Impl::maximumLoopTemperature() {
@@ -1500,7 +1509,7 @@ namespace model {
     return getImpl<detail::PlantLoop_Impl>()->loadDistributionScheme();
   }
 
-  bool PlantLoop::setLoadDistributionScheme(std::string scheme) {
+  bool PlantLoop::setLoadDistributionScheme(const std::string& scheme) {
     return getImpl<detail::PlantLoop_Impl>()->setLoadDistributionScheme(scheme);
   }
 

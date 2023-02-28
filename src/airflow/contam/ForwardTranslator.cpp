@@ -98,7 +98,7 @@ namespace contam {
     char buffer[256];
     sprintf(buffer, "%02d/%02d\t%02d:%02d:%02d", month(datetime.date().monthOfYear()), datetime.date().dayOfMonth(), datetime.time().hours(),
             datetime.time().minutes(), datetime.time().seconds());
-    return std::string(buffer);
+    return {buffer};
   }
 
   bool CvFile::write(openstudio::path filepath) {
@@ -198,7 +198,7 @@ namespace contam {
           keys.push_back(pair.first);
         }
       }
-      if (keys.size() > 0) {
+      if (!keys.empty()) {
         if (keys.size() > 1) {
           LOG(Warn, "Lookup table " << name << " contains multiple " << nr << " values");
         }
@@ -206,7 +206,7 @@ namespace contam {
       }
     }
     LOG(Warn, "Unable to reverse look up " << nr << " in " << name);
-    return std::string();
+    return {};
   }
 
   Handle ForwardTranslator::reverseLookup(std::map<Handle, int> map, int nr, const char* name) {
@@ -217,7 +217,7 @@ namespace contam {
           keys.push_back(pair.first);
         }
       }
-      if (keys.size() > 0) {
+      if (!keys.empty()) {
         if (keys.size() > 1) {
           LOG(Warn, "Lookup table " << name << " contains multiple " << nr << " values");
         }
@@ -225,7 +225,7 @@ namespace contam {
       }
     }
     LOG(Warn, "Unable to reverse look up " << nr << " in " << name);
-    return Handle();
+    return {};
   }
 
   // Getters and setters
@@ -294,25 +294,25 @@ namespace contam {
     int nr;
     // Exterior walls
     nr = model.airflowElementNrByName(wallExt[index]);
-    if (!nr) {
+    if (nr == 0) {
       return false;
     }
     afeMap["exterior"] = nr;
     // Interior walls
     nr = model.airflowElementNrByName(wallInt[index]);
-    if (!nr) {
+    if (nr == 0) {
       return false;
     }
     afeMap["interior"] = nr;
     // Floors
     nr = model.airflowElementNrByName(floor[index]);
-    if (!nr) {
+    if (nr == 0) {
       return false;
     }
     afeMap["floor"] = nr;
     // Roof
     nr = model.airflowElementNrByName(roof[index]);
-    if (!nr) {
+    if (nr == 0) {
       return false;
     }
     afeMap["roof"] = nr;
@@ -358,7 +358,7 @@ namespace contam {
   }
 
   bool ForwardTranslator::modelToPrj(const openstudio::model::Model& model, const openstudio::path& path, bool translateHVAC,
-                                     std::string leakageDescriptor, ProgressBar* progressBar) {
+                                     std::string leakageDescriptor, ProgressBar* /*progressBar*/) {
     ForwardTranslator translator;
     translator.setTranslateHVAC(translateHVAC);
     translator.setAirtightnessLevel(leakageDescriptor);
@@ -407,12 +407,12 @@ namespace contam {
     if (m_leakageDescriptor) {
       if (!applyAirtightnessLevel(m_prjModel)) {
         LOG(Error, "Application of airtightness level failed.");
-        return boost::optional<contam::IndexModel>();
+        return {};
       }
     } else {
       if (!applyExteriorFlowRate(m_prjModel)) {
         LOG(Error, "Application of exterior flow rate failed.");
-        return boost::optional<contam::IndexModel>();
+        return {};
       }
     }
 
@@ -432,7 +432,8 @@ namespace contam {
     boost::optional<openstudio::model::RunPeriod> rp = model.runPeriod();
     if (rp) {
       bool goodDates = true;
-      std::string startString, endString;
+      std::string startString;
+      std::string endString;
       try {
         char buffer[256];
 
@@ -497,16 +498,16 @@ namespace contam {
     }
     m_prjModel.setWind_H(std::to_string(totalHeight));
     // Check for levels - translation can't proceed without levels
-    if (m_prjModel.levels().size() == 0) {
+    if (m_prjModel.levels().empty()) {
       LOG(Error, "Failed to find building stories in model, translation aborted");
-      return boost::optional<contam::IndexModel>();
+      return {};
     }
     // Translate each thermal zone and generate a lookup table by name.
     std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
     initProgress(thermalZones.size(), "Translating Zones");
 
     nr = 0;
-    for (model::ThermalZone thermalZone : thermalZones) {
+    for (const model::ThermalZone& thermalZone : thermalZones) {
       nr++;
       openstudio::contam::Zone zone;
       m_zoneMap[thermalZone.handle()] = nr;
@@ -521,7 +522,7 @@ namespace contam {
         // Since it seems this is a pretty common thing, no warning unless we can't get a value
         // LOG(Warn, "Zone '" << name.toStdString() << "' has zero volume, trying to sum space volumes");
         double vol = 0.0;
-        for (openstudio::model::Space space : thermalZone.spaces()) {
+        for (const openstudio::model::Space& space : thermalZone.spaces()) {
           vol += space.volume();
         }
         if (vol == 0.0) {
@@ -537,18 +538,18 @@ namespace contam {
       // where a zone is on more than one level. There are ugly workarounds - will need to
       // think about
       int levelNr = 0;
-      for (openstudio::model::Space space : thermalZone.spaces()) {
+      for (const openstudio::model::Space& space : thermalZone.spaces()) {
         boost::optional<openstudio::model::BuildingStory> story = space.buildingStory();
         if (story) {
           levelNr = tableLookup(m_levelMap, (*story).handle(), "levelMap");
           break;
         }
       }
-      if (levelNr) {
+      if (levelNr != 0) {
         zone.setPl(levelNr);
       } else {
         LOG(Error, "Unable to set level for zone '" << thermalZone.name().get() << "', translation aborted");
-        return boost::optional<contam::IndexModel>();
+        return {};
       }
       // set T0
       zone.setT0("293.15");
@@ -570,9 +571,9 @@ namespace contam {
       initProgress(systems.size(), "Translating AirLoops");
 
       nr = 0;
-      for (openstudio::model::AirLoopHVAC airloop : systems) {
+      for (const openstudio::model::AirLoopHVAC& airloop : systems) {
         // Skip loops with no zones attached
-        if (!airloop.thermalZones().size()) {
+        if (airloop.thermalZones().empty()) {
           progress();
           continue;
         }
@@ -604,7 +605,7 @@ namespace contam {
         m_prjModel.addZone(rz);
         m_prjModel.addZone(sz);
         // Now hook the served zones up to the supply and return zones
-        for (openstudio::model::ThermalZone thermalZone : airloop.thermalZones()) {
+        for (const openstudio::model::ThermalZone& thermalZone : airloop.thermalZones()) {
           int zoneNr = tableLookup(m_zoneMap, thermalZone.handle(), "zoneMap");
           // Supply path
           openstudio::contam::AirflowPath sp;
@@ -685,14 +686,14 @@ namespace contam {
         //  std::cout << '\t' << var << '\n';
         //}
         std::string envPeriod;
-        for (std::string t : sqlFile->availableEnvPeriods()) {
+        for (const std::string& t : sqlFile->availableEnvPeriods()) {
           envPeriod = t;  // should only ever be one
           break;
         }
         // bool setTime=false;
         if (std::find(available.begin(), available.end(), "Zone Mean Air Temperature") != available.end()) {
           // Loop through and get a time series for each zone we can find
-          for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>()) {
+          for (const model::ThermalZone& thermalZone : model.getConcreteModelObjects<model::ThermalZone>()) {
             boost::optional<std::string> name = thermalZone.name();
             if (!name) {
               LOG(Warn, "Zone " << openstudio::toString(thermalZone.handle()) << " has no name and will have constant temperature");
@@ -725,7 +726,7 @@ namespace contam {
           LOG(Warn, "Zone equipment not yet accounted for.");
           // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
           // This should be moved to inside the contam translator
-          for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>()) {
+          for (const model::ThermalZone& thermalZone : model.getConcreteModelObjects<model::ThermalZone>()) {
             // todo: this does not include OA from zone equipment (PTAC, PTHP, etc) or exhaust fans
 
             boost::optional<model::Node> supplyAirNode;
@@ -745,7 +746,7 @@ namespace contam {
                   nr = it->second;
                 }
                 // There really should not be a case of missing number here, but it is better to be safe
-                if (!nr) {
+                if (nr == 0) {
                   LOG(Error, "Supply node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
                   continue;
                 }
@@ -768,7 +769,7 @@ namespace contam {
                     nr = it->second;
                   }
                   // There really should not be a case of missing number here, but it is better to be safe
-                  if (!nr) {
+                  if (nr == 0) {
                     LOG(Error, "Failed to find return path for zone '" << thermalZone.name().get() << "'");
                     continue;
                   }
@@ -804,7 +805,7 @@ namespace contam {
                     nr = it->second;
                   }
                   // There really should not be a case of missing number here, but it is better to be safe
-                  if (!nr) {
+                  if (nr == 0) {
                     LOG(Error, "Return node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
                     continue;
                   }
@@ -828,9 +829,9 @@ namespace contam {
       } else {
         LOG(Warn, "Simulation results not available, using 1 scfm/ft^2 to set supply flows");
         // Use the 1 scfm/ft^2 approximation with 90% return
-        for (openstudio::model::ThermalZone thermalZone : model.getConcreteModelObjects<openstudio::model::ThermalZone>()) {
+        for (const openstudio::model::ThermalZone& thermalZone : model.getConcreteModelObjects<openstudio::model::ThermalZone>()) {
           double area = 0.0;
-          for (openstudio::model::Space space : thermalZone.spaces()) {
+          for (const openstudio::model::Space& space : thermalZone.spaces()) {
             area += space.floorArea();
           }
           if (area == 0.0) {
@@ -844,7 +845,7 @@ namespace contam {
             if (its != m_pathMap.end()) {
               supplyNr = its->second;
             }
-            if (supplyNr) {
+            if (supplyNr != 0) {
               m_prjModel.airflowPaths()[supplyNr - 1].setFahs(std::to_string(flowRate));
             }
 
@@ -853,7 +854,7 @@ namespace contam {
             if (itr != m_pathMap.end()) {
               returnNr = itr->second;
             }
-            if (returnNr) {
+            if (returnNr != 0) {
               m_prjModel.airflowPaths()[returnNr - 1].setFahs(std::to_string(m_returnSupplyRatio * flowRate));
             }
           }
@@ -939,12 +940,12 @@ namespace contam {
     return false;
   }
 
-  bool ForwardTranslator::linkExteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space,
+  bool ForwardTranslator::linkExteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space /*space*/,
                                               openstudio::model::Surface surface) {
     contam::AirflowPath path;
     // Use the lookup table to get the zone info
     int zoneNr;
-    if (!(zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap"))) {
+    if ((zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap")) == 0) {
       // Maybe this needs a warning?
       return false;
     }
@@ -981,13 +982,13 @@ namespace contam {
     return true;
   }
 
-  bool ForwardTranslator::linkInteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
-                                              openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace,
-                                              openstudio::model::ThermalZone adjacentZone) {
+  bool ForwardTranslator::linkInteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space /*space*/,
+                                              openstudio::model::Surface surface, openstudio::model::Surface adjacentSurface,
+                                              openstudio::model::Space /*adjacentSpace*/, openstudio::model::ThermalZone adjacentZone) {
     contam::AirflowPath path;
     // Use the lookup table to get the zone info
     int zoneNr;
-    if (!(zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap"))) {
+    if ((zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap")) == 0) {
       // Maybe this needs a warning?
       return false;
     }
@@ -1020,16 +1021,16 @@ namespace contam {
     return true;
   }
 
-  bool ForwardTranslator::linkExteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space,
-                                                 openstudio::model::Surface surface, openstudio::model::SubSurface subSurface) {
+  bool ForwardTranslator::linkExteriorSubSurface(openstudio::model::ThermalZone /*zone*/, openstudio::model::Space /*space*/,
+                                                 openstudio::model::Surface /*surface*/, openstudio::model::SubSurface /*subSurface*/) {
     // Not doing this yet
     return true;
   }
 
-  bool ForwardTranslator::linkInteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space,
-                                                 openstudio::model::Surface surface, openstudio::model::SubSurface subSurface,
-                                                 openstudio::model::SubSurface adjacentSubSurface, openstudio::model::Surface adjacentSurface,
-                                                 openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone) {
+  bool ForwardTranslator::linkInteriorSubSurface(openstudio::model::ThermalZone /*zone*/, openstudio::model::Space /*space*/,
+                                                 openstudio::model::Surface /*surface*/, openstudio::model::SubSurface /*subSurface*/,
+                                                 openstudio::model::SubSurface /*adjacentSubSurface*/, openstudio::model::Surface /*adjacentSurface*/,
+                                                 openstudio::model::Space /*adjacentSpace*/, openstudio::model::ThermalZone /*adjacentZone*/) {
     // Not doing this yet
     return true;
   }
@@ -1037,7 +1038,7 @@ namespace contam {
   std::vector<LogMessage> ForwardTranslator::warnings() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() == Warn) {
         result.push_back(logMessage);
       }
@@ -1049,7 +1050,7 @@ namespace contam {
   std::vector<LogMessage> ForwardTranslator::errors() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() > Warn) {
         result.push_back(logMessage);
       }

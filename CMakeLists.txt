@@ -16,7 +16,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.5.1)
+project(OpenStudio VERSION 3.5.2)
 
 include(CMake/compiler_flags.cmake)
 
@@ -286,6 +286,14 @@ mark_as_advanced(BUILD_PYTHON_BINDINGS)
 option(BUILD_TESTING "Build testing targets" OFF)
 
 option(BUILD_BENCHMARK "Build benchmarking targets" OFF)
+if(BUILD_BENCHMARK)
+  configure_file(${PROJECT_SOURCE_DIR}/developer/python/run_benchmark.py ${PROJECT_BINARY_DIR}/run_benchmark.py COPYONLY)
+  add_custom_target(run_benchmarks
+    COMMAND python run_benchmark.py --quiet --all
+    DEPENDS "${PROJECT_BINARY_DIR}/run_benchmark.py"
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+  )
+endif()
 
 option(BUILD_RUBY_BINDINGS "Build Ruby bindings" ON)
 mark_as_advanced(BUILD_RUBY_BINDINGS)

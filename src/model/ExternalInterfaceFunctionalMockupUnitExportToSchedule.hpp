@@ -52,7 +52,12 @@ namespace model {
 
     explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model, const std::string& fMUVariableName, double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterfaceFunctionalMockupUnitExportToSchedule(const ExternalInterfaceFunctionalMockupUnitExportToSchedule& other) = default;
+    ExternalInterfaceFunctionalMockupUnitExportToSchedule(ExternalInterfaceFunctionalMockupUnitExportToSchedule&& other) = default;
+    ExternalInterfaceFunctionalMockupUnitExportToSchedule& operator=(const ExternalInterfaceFunctionalMockupUnitExportToSchedule&) = default;
+    ExternalInterfaceFunctionalMockupUnitExportToSchedule& operator=(ExternalInterfaceFunctionalMockupUnitExportToSchedule&&) = default;
 
     //@}
 
@@ -80,7 +85,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl;
 
     explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(
       std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl> impl);
@@ -95,10 +100,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceFunctionalMockupUnitExportToSchedule*/
-  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitExportToSchedule> OptionalExternalInterfaceFunctionalMockupUnitExportToSchedule;
+  using OptionalExternalInterfaceFunctionalMockupUnitExportToSchedule = boost::optional<ExternalInterfaceFunctionalMockupUnitExportToSchedule>;
 
   /** \relates ExternalInterfaceFunctionalMockupUnitExportToSchedule*/
-  typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToSchedule> ExternalInterfaceFunctionalMockupUnitExportToScheduleVector;
+  using ExternalInterfaceFunctionalMockupUnitExportToScheduleVector = std::vector<ExternalInterfaceFunctionalMockupUnitExportToSchedule>;
 
 }  // namespace model
 }  // namespace openstudio

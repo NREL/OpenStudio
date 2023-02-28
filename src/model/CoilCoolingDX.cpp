@@ -105,7 +105,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingDX_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DXFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDX", "Availability Schedule"));
       }
@@ -350,7 +351,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDX::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX);
+    return {IddObjectType::OS_Coil_Cooling_DX};
   }
 
   Schedule CoilCoolingDX::availabilitySchedule() const {

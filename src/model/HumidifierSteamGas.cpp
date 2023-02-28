@@ -88,7 +88,8 @@ namespace model {
     std::vector<ScheduleTypeKey> HumidifierSteamGas_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Humidifier_Steam_GasFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("HumidifierSteamGas", "Availability"));
       }
@@ -352,7 +353,7 @@ namespace model {
   }
 
   IddObjectType HumidifierSteamGas::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Humidifier_Steam_Gas);
+    return {IddObjectType::OS_Humidifier_Steam_Gas};
   }
 
   boost::optional<Schedule> HumidifierSteamGas::availabilitySchedule() const {
@@ -479,7 +480,7 @@ namespace model {
   //   getImpl<detail::HumidifierSteamGas_Impl>()->resetWaterStorageTank();
   // }
 
-  bool HumidifierSteamGas::setInletWaterTemperatureOption(std::string inletWaterTemperatureOption) {
+  bool HumidifierSteamGas::setInletWaterTemperatureOption(const std::string& inletWaterTemperatureOption) {
     return getImpl<detail::HumidifierSteamGas_Impl>()->setInletWaterTemperatureOption(inletWaterTemperatureOption);
   }
 

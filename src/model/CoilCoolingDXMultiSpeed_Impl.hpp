@@ -54,7 +54,7 @@ namespace model {
 
       CoilCoolingDXMultiSpeed_Impl(const CoilCoolingDXMultiSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingDXMultiSpeed_Impl() {}
+      virtual ~CoilCoolingDXMultiSpeed_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -114,7 +114,7 @@ namespace model {
 
       void resetAvailabilitySchedule();
 
-      bool setCondenserType(std::string condenserType);
+      bool setCondenserType(const std::string& condenserType);
 
       bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
@@ -134,7 +134,7 @@ namespace model {
 
       void resetBasinHeaterOperatingSchedule();
 
-      bool setFuelType(std::string fuelType);
+      bool setFuelType(const std::string& fuelType);
 
       bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 

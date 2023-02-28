@@ -130,8 +130,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ConstructionWithInternalSource) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  ASSERT_EQ(0u, model.getModelObjects<Construction>().size());
-  std::vector<ConstructionWithInternalSource> constructions = model.getModelObjects<ConstructionWithInternalSource>();
+  ASSERT_EQ(0u, model.getConcreteModelObjects<Construction>().size());
+  std::vector<ConstructionWithInternalSource> constructions = model.getConcreteModelObjects<ConstructionWithInternalSource>();
   ASSERT_EQ(1u, constructions.size());
   ConstructionWithInternalSource construction = constructions[0];
   EXPECT_EQ(1, construction.numLayers());

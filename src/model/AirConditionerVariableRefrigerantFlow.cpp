@@ -127,7 +127,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirConditionerVariableRefrigerantFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirConditioner_VariableRefrigerantFlowFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirConditionerVariableRefrigerantFlow", "Availability Schedule"));
       }
@@ -967,7 +968,7 @@ namespace model {
     }
 
     bool AirConditionerVariableRefrigerantFlow_Impl::setHeatingPerformanceCurveOutdoorTemperatureType(
-      std::string heatingPerformanceCurveOutdoorTemperatureType) {
+      const std::string& heatingPerformanceCurveOutdoorTemperatureType) {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlowFields::HeatingPerformanceCurveOutdoorTemperatureType,
                               heatingPerformanceCurveOutdoorTemperatureType);
       return result;
@@ -1065,7 +1066,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirConditionerVariableRefrigerantFlow_Impl::setMasterThermostatPriorityControlType(std::string masterThermostatPriorityControlType) {
+    bool AirConditionerVariableRefrigerantFlow_Impl::setMasterThermostatPriorityControlType(const std::string& masterThermostatPriorityControlType) {
       bool result =
         setString(OS_AirConditioner_VariableRefrigerantFlowFields::MasterThermostatPriorityControlType, masterThermostatPriorityControlType);
       return result;
@@ -1189,12 +1190,12 @@ namespace model {
       return result;
     }
 
-    bool AirConditionerVariableRefrigerantFlow_Impl::setDefrostStrategy(std::string defrostStrategy) {
+    bool AirConditionerVariableRefrigerantFlow_Impl::setDefrostStrategy(const std::string& defrostStrategy) {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlowFields::DefrostStrategy, defrostStrategy);
       return result;
     }
 
-    bool AirConditionerVariableRefrigerantFlow_Impl::setDefrostControl(std::string defrostControl) {
+    bool AirConditionerVariableRefrigerantFlow_Impl::setDefrostControl(const std::string& defrostControl) {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlowFields::DefrostControl, defrostControl);
       return result;
     }
@@ -1311,7 +1312,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirConditionerVariableRefrigerantFlow_Impl::setFuelType(std::string fuelType) {
+    bool AirConditionerVariableRefrigerantFlow_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlowFields::FuelType, fuelType);
       return result;
     }
@@ -1479,8 +1480,12 @@ namespace model {
       return setPointer(OS_AirConditioner_VariableRefrigerantFlowFields::ZoneTerminalUnitList, modelObjectList.handle());
     }
 
-    void AirConditionerVariableRefrigerantFlow_Impl::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
-      vrfModelObjectList().addModelObject(vrf);
+    bool AirConditionerVariableRefrigerantFlow_Impl::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
+      if (vrf.isFluidTemperatureControl()) {
+        LOG(Warn, "For " << briefDescription() << ", cannot add a terminal that uses FluidTemperatureControl coils: " << vrf.briefDescription());
+        return false;
+      }
+      return vrfModelObjectList().addModelObject(vrf);
     }
 
     void AirConditionerVariableRefrigerantFlow_Impl::removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
@@ -1634,278 +1639,16 @@ namespace model {
     }
 
     ModelObject AirConditionerVariableRefrigerantFlow_Impl::clone(Model model) const {
-      AirConditionerVariableRefrigerantFlow airConditionerClone = StraightComponent_Impl::clone(model).cast<AirConditionerVariableRefrigerantFlow>();
+      auto airConditionerClone = StraightComponent_Impl::clone(model).cast<AirConditionerVariableRefrigerantFlow>();
 
       ModelObjectList modelObjectList(model);
       airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setVRFModelObjectList(modelObjectList);
 
-      if (auto curve = coolingCapacityRatioModifierFunctionofLowTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve(clone);
-      }
-
-      if (auto curve = coolingCapacityRatioBoundaryCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingCapacityRatioBoundaryCurve(clone);
-      }
-
-      if (auto curve = coolingCapacityRatioModifierFunctionofHighTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioBoundaryCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioBoundaryCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(clone);
-      }
-
-      if (auto curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(clone);
-      }
-
-      if (auto curve = coolingCombinationRatioCorrectionFactorCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingCombinationRatioCorrectionFactorCurve(clone);
-      }
-
-      if (auto curve = coolingPartLoadFractionCorrelationCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setCoolingPartLoadFractionCorrelationCurve(clone);
-      }
-
-      if (auto curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve(clone);
-      }
-
-      if (auto curve = heatingCapacityRatioBoundaryCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingCapacityRatioBoundaryCurve(clone);
-      }
-
-      if (auto curve = heatingCapacityRatioModifierFunctionofHighTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioBoundaryCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioBoundaryCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(clone);
-      }
-
-      if (auto curve = heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(clone);
-      }
-
-      if (auto curve = heatingCombinationRatioCorrectionFactorCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingCombinationRatioCorrectionFactorCurve(clone);
-      }
-
-      if (auto curve = heatingPartLoadFractionCorrelationCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatingPartLoadFractionCorrelationCurve(clone);
-      }
-
-      if (auto curve = pipingCorrectionFactorforLengthinCoolingModeCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setPipingCorrectionFactorforLengthinCoolingModeCurve(clone);
-      }
-
-      if (auto curve = pipingCorrectionFactorforLengthinHeatingModeCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setPipingCorrectionFactorforLengthinHeatingModeCurve(clone);
-      }
-
-      if (auto curve = heatRecoveryCoolingCapacityModifierCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatRecoveryCoolingCapacityModifierCurve(clone);
-      }
-
-      if (auto curve = heatRecoveryCoolingEnergyModifierCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatRecoveryCoolingEnergyModifierCurve(clone);
-      }
-
-      if (auto curve = heatRecoveryHeatingCapacityModifierCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatRecoveryHeatingCapacityModifierCurve(clone);
-      }
-
-      if (auto curve = heatRecoveryHeatingEnergyModifierCurve()) {
-        auto clone = curve->clone(model).cast<Curve>();
-        airConditionerClone.setHeatRecoveryHeatingEnergyModifierCurve(clone);
-      }
-
-      return airConditionerClone;
+      return std::move(airConditionerClone);
     }
 
     std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlow_Impl::remove() {
       vrfModelObjectList().remove();
-
-      boost::optional<Curve> curve;
-
-      curve = coolingCapacityRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingCapacityRatioBoundaryCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingCapacityRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioBoundaryCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingCombinationRatioCorrectionFactorCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = coolingPartLoadFractionCorrelationCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingCapacityRatioBoundaryCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingCapacityRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioBoundaryCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingCombinationRatioCorrectionFactorCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatingPartLoadFractionCorrelationCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatRecoveryCoolingCapacityModifierCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatRecoveryCoolingEnergyModifierCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatRecoveryHeatingCapacityModifierCurve();
-      if (curve) {
-        curve->remove();
-      }
-
-      curve = heatRecoveryHeatingEnergyModifierCurve();
-      if (curve) {
-        curve->remove();
-      }
 
       return StraightComponent_Impl::remove();
     }
@@ -2398,7 +2141,7 @@ namespace model {
   }
 
   IddObjectType AirConditionerVariableRefrigerantFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirConditioner_VariableRefrigerantFlow);
+    return {IddObjectType::OS_AirConditioner_VariableRefrigerantFlow};
   }
 
   std::vector<std::string> AirConditionerVariableRefrigerantFlow::heatingPerformanceCurveOutdoorTemperatureTypeValues() {
@@ -2880,7 +2623,7 @@ namespace model {
   }
 
   bool AirConditionerVariableRefrigerantFlow::setHeatingPerformanceCurveOutdoorTemperatureType(
-    std::string heatingPerformanceCurveOutdoorTemperatureType) {
+    const std::string& heatingPerformanceCurveOutdoorTemperatureType) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setHeatingPerformanceCurveOutdoorTemperatureType(
       heatingPerformanceCurveOutdoorTemperatureType);
   }
@@ -2929,7 +2672,7 @@ namespace model {
     getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->resetZoneforMasterThermostatLocation();
   }
 
-  bool AirConditionerVariableRefrigerantFlow::setMasterThermostatPriorityControlType(std::string masterThermostatPriorityControlType) {
+  bool AirConditionerVariableRefrigerantFlow::setMasterThermostatPriorityControlType(const std::string& masterThermostatPriorityControlType) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setMasterThermostatPriorityControlType(masterThermostatPriorityControlType);
   }
 
@@ -3010,11 +2753,11 @@ namespace model {
       maximumOutdoorDrybulbTemperatureforCrankcaseHeater);
   }
 
-  bool AirConditionerVariableRefrigerantFlow::setDefrostStrategy(std::string defrostStrategy) {
+  bool AirConditionerVariableRefrigerantFlow::setDefrostStrategy(const std::string& defrostStrategy) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setDefrostStrategy(defrostStrategy);
   }
 
-  bool AirConditionerVariableRefrigerantFlow::setDefrostControl(std::string defrostControl) {
+  bool AirConditionerVariableRefrigerantFlow::setDefrostControl(const std::string& defrostControl) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setDefrostControl(defrostControl);
   }
 
@@ -3089,7 +2832,7 @@ namespace model {
     getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->resetBasinHeaterOperatingSchedule();
   }
 
-  bool AirConditionerVariableRefrigerantFlow::setFuelType(std::string fuelType) {
+  bool AirConditionerVariableRefrigerantFlow::setFuelType(const std::string& fuelType) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setFuelType(fuelType);
   }
 
@@ -3175,8 +2918,8 @@ namespace model {
       heatRecoveryHeatingEnergyTimeConstant);
   }
 
-  void AirConditionerVariableRefrigerantFlow::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
-    getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->addTerminal(vrf);
+  bool AirConditionerVariableRefrigerantFlow::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->addTerminal(vrf);
   }
 
   void AirConditionerVariableRefrigerantFlow::removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf) {

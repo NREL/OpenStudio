@@ -59,7 +59,7 @@ namespace model {
       /** @name Virtual Methods */
       //@{
 
-      virtual ~AirConditionerVariableRefrigerantFlow_Impl() {}
+      virtual ~AirConditionerVariableRefrigerantFlow_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
@@ -346,7 +346,7 @@ namespace model {
 
       void resetHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
 
-      bool setHeatingPerformanceCurveOutdoorTemperatureType(std::string heatingPerformanceCurveOutdoorTemperatureType);
+      bool setHeatingPerformanceCurveOutdoorTemperatureType(const std::string& heatingPerformanceCurveOutdoorTemperatureType);
 
       bool setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(const boost::optional<Curve>& curve);
 
@@ -370,7 +370,7 @@ namespace model {
 
       void resetZoneforMasterThermostatLocation();
 
-      bool setMasterThermostatPriorityControlType(std::string masterThermostatPriorityControlType);
+      bool setMasterThermostatPriorityControlType(const std::string& masterThermostatPriorityControlType);
 
       bool setThermostatPrioritySchedule(Schedule& schedule);
 
@@ -406,9 +406,9 @@ namespace model {
 
       bool setMaximumOutdoorDrybulbTemperatureforCrankcaseHeater(double maximumOutdoorDrybulbTemperatureforCrankcaseHeater);
 
-      bool setDefrostStrategy(std::string defrostStrategy);
+      bool setDefrostStrategy(const std::string& defrostStrategy);
 
-      bool setDefrostControl(std::string defrostControl);
+      bool setDefrostControl(const std::string& defrostControl);
 
       bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const boost::optional<Curve>& curve);
 
@@ -444,7 +444,7 @@ namespace model {
 
       void resetBasinHeaterOperatingSchedule();
 
-      bool setFuelType(std::string fuelType);
+      bool setFuelType(const std::string& fuelType);
 
       bool setMinimumOutdoorTemperatureinHeatRecoveryMode(double minimumOutdoorTemperatureinHeatRecoveryMode);
 
@@ -486,7 +486,7 @@ namespace model {
 
       bool setVRFModelObjectList(const ModelObjectList& modelObjectList);
 
-      void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
+      bool addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
 
       void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow& vrf);
 

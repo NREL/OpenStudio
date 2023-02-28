@@ -70,7 +70,12 @@ namespace model {
     explicit AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule,
                                                   Schedule& minimumOutdoorVentilationAirSchedule);
 
-    virtual ~AvailabilityManagerHybridVentilation() {}
+    virtual ~AvailabilityManagerHybridVentilation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerHybridVentilation(const AvailabilityManagerHybridVentilation& other) = default;
+    AvailabilityManagerHybridVentilation(AvailabilityManagerHybridVentilation&& other) = default;
+    AvailabilityManagerHybridVentilation& operator=(const AvailabilityManagerHybridVentilation&) = default;
+    AvailabilityManagerHybridVentilation& operator=(AvailabilityManagerHybridVentilation&&) = default;
 
     //@}
 
@@ -165,7 +170,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerHybridVentilation_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerHybridVentilation_Impl;
 
     explicit AvailabilityManagerHybridVentilation(std::shared_ptr<detail::AvailabilityManagerHybridVentilation_Impl> impl);
 
@@ -179,10 +184,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerHybridVentilation*/
-  typedef boost::optional<AvailabilityManagerHybridVentilation> OptionalAvailabilityManagerHybridVentilation;
+  using OptionalAvailabilityManagerHybridVentilation = boost::optional<AvailabilityManagerHybridVentilation>;
 
   /** \relates AvailabilityManagerHybridVentilation*/
-  typedef std::vector<AvailabilityManagerHybridVentilation> AvailabilityManagerHybridVentilationVector;
+  using AvailabilityManagerHybridVentilationVector = std::vector<AvailabilityManagerHybridVentilation>;
 
 }  // namespace model
 }  // namespace openstudio

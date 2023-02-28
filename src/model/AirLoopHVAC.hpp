@@ -83,7 +83,12 @@ namespace model {
    */
     explicit AirLoopHVAC(Model& model, bool dualDuct = false);
 
-    virtual ~AirLoopHVAC() {}
+    virtual ~AirLoopHVAC() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVAC(const AirLoopHVAC& other) = default;
+    AirLoopHVAC(AirLoopHVAC&& other) = default;
+    AirLoopHVAC& operator=(const AirLoopHVAC&) = default;
+    AirLoopHVAC& operator=(AirLoopHVAC&&) = default;
 
     boost::optional<double> designSupplyAirFlowRate() const;
 
@@ -212,7 +217,7 @@ namespace model {
     /** Returns all of the components on the outdoor air system including the mixer itself.
    *  If type is given then the results will be limited to the given IddObjectType.
    */
-    std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+    std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
     /** Returns the AirLoopHVACOutdoorAirSystem object associated with the air loop.
    * A freshly constructed AirLoopHVAC object will not have an outdoor air system
@@ -288,7 +293,7 @@ namespace model {
     /** Configure the system to night cycle
     * This is a convenience for creating and attaching a new AvailabilityManagerNightCycle.
     * Valid options are StayOff, CycleOnAny, and CycleOnAnyZoneFansOnly **/
-    bool setNightCycleControlType(std::string const& controlType);
+    bool setNightCycleControlType(const std::string& controlType);
 
     /** Returns a string indicating if the system is configured to night cycle
     * If there is no AvailabilityManagerNightCycle this method will return StayOff **/

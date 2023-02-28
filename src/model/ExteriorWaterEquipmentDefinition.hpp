@@ -53,7 +53,12 @@ namespace model {
     /** Defaults design level to 0.0 W. */
     explicit ExteriorWaterEquipmentDefinition(const Model& model);
 
-    virtual ~ExteriorWaterEquipmentDefinition() {}
+    virtual ~ExteriorWaterEquipmentDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorWaterEquipmentDefinition(const ExteriorWaterEquipmentDefinition& other) = default;
+    ExteriorWaterEquipmentDefinition(ExteriorWaterEquipmentDefinition&& other) = default;
+    ExteriorWaterEquipmentDefinition& operator=(const ExteriorWaterEquipmentDefinition&) = default;
+    ExteriorWaterEquipmentDefinition& operator=(ExteriorWaterEquipmentDefinition&&) = default;
 
     //@}
 
@@ -77,7 +82,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorWaterEquipmentDefinition_Impl ImplType;
+    using ImplType = detail::ExteriorWaterEquipmentDefinition_Impl;
 
     explicit ExteriorWaterEquipmentDefinition(std::shared_ptr<detail::ExteriorWaterEquipmentDefinition_Impl> impl);
 
@@ -91,10 +96,10 @@ namespace model {
   };
 
   /** \relates ExteriorWaterEquipmentDefinition*/
-  typedef boost::optional<ExteriorWaterEquipmentDefinition> OptionalExteriorWaterEquipmentDefinition;
+  using OptionalExteriorWaterEquipmentDefinition = boost::optional<ExteriorWaterEquipmentDefinition>;
 
   /** \relates ExteriorWaterEquipmentDefinition*/
-  typedef std::vector<ExteriorWaterEquipmentDefinition> ExteriorWaterEquipmentDefinitionVector;
+  using ExteriorWaterEquipmentDefinitionVector = std::vector<ExteriorWaterEquipmentDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

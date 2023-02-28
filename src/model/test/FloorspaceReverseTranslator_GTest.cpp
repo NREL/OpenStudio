@@ -82,6 +82,37 @@ using namespace openstudio::model;
     OutputDebugString(os_.str().c_str()); \
   }
 
+void CompareSurfaceGroups(Model& model, Model& baseline) {
+
+  auto shadingGroups1 = model.getModelObjects<ShadingSurfaceGroup>();
+  auto shadingGroups2 = baseline.getModelObjects<ShadingSurfaceGroup>();
+  EXPECT_EQ(shadingGroups1.size(), shadingGroups2.size());
+  for (auto& shadingGroup : shadingGroups1) {
+    // Shading Surface Group names only match for building shading
+    if (shadingGroup.shadingSurfaceType() == "Building") {
+      auto shadingGroupName = shadingGroup.nameString();
+      auto match = baseline.getModelObjectByName<ShadingSurfaceGroup>(shadingGroupName);
+      EXPECT_TRUE(match.has_value()) << "Could not locate shading group '" << shadingGroupName << "'";
+      std::string surfaceType = shadingGroup.shadingSurfaceType();
+      EXPECT_EQ(shadingGroup.shadingSurfaceType(), match->shadingSurfaceType()) << "For shading group '" << shadingGroupName << "'";
+      EXPECT_EQ(shadingGroup.shadingSurfaces().size(), match->shadingSurfaces().size()) << "For shading group '" << shadingGroupName << "'";
+
+      // Match surfaces by vertices
+      for (auto& shadingSurface : shadingGroup.shadingSurfaces()) {
+        bool matched = false;
+        for (auto& shadingSurface2 : match->shadingSurfaces()) {
+          if (circularEqual(shadingSurface.vertices(), shadingSurface2.vertices())) {
+            matched = true;
+            break;
+          }
+        }
+        EXPECT_TRUE(matched) << "For shading group '" << shadingGroupName << "' vertices did not match for Shading Surface '"
+                             << shadingSurface.nameString() << "'";
+      }
+    }
+  }
+}
+
 void CompareTwoModels(Model& model, Model& baseline) {
 
   // Compare story count
@@ -89,12 +120,12 @@ void CompareTwoModels(Model& model, Model& baseline) {
   //   Match by name,compare properties
   //   Compare shading count
   double tol = 0.001;  // Same tolerance as defaults for circularEqual
-  auto thermalZones1 = model.getModelObjects<ThermalZone>();
-  auto thermalZones2 = baseline.getModelObjects<ThermalZone>();
+  auto thermalZones1 = model.getConcreteModelObjects<ThermalZone>();
+  auto thermalZones2 = baseline.getConcreteModelObjects<ThermalZone>();
   EXPECT_EQ(thermalZones1.size(), thermalZones2.size());
 
   for (auto& thermalZone : thermalZones1) {
-    auto match = baseline.getModelObjectByName<ThermalZone>(*thermalZone.name());
+    auto match = baseline.getConcreteModelObjectByName<ThermalZone>(*thermalZone.name());
     EXPECT_TRUE(match.has_value());
     // Multiplier
     EXPECT_EQ(thermalZone.multiplier(), match->multiplier());
@@ -130,61 +161,37 @@ void CompareTwoModels(Model& model, Model& baseline) {
   }
 
   // Compare building units
-  auto buildingUnits1 = model.getModelObjects<BuildingUnit>();
-  auto buildingUnits2 = baseline.getModelObjects<BuildingUnit>();
+  auto buildingUnits1 = model.getConcreteModelObjects<BuildingUnit>();
+  auto buildingUnits2 = baseline.getConcreteModelObjects<BuildingUnit>();
   EXPECT_EQ(buildingUnits1.size(), buildingUnits2.size());
   for (auto& buildingUnit : buildingUnits1) {
-    auto match = baseline.getModelObjectByName<BuildingUnit>(*buildingUnit.name());
+    auto match = baseline.getConcreteModelObjectByName<BuildingUnit>(*buildingUnit.name());
     EXPECT_TRUE(match.has_value());
     EXPECT_EQ(buildingUnit.renderingColor().has_value(), match->renderingColor().has_value());
   }
 
   // Compare constructions
-  auto constructions1 = model.getModelObjects<DefaultConstructionSet>();
-  auto constructions2 = baseline.getModelObjects<DefaultConstructionSet>();
+  auto constructions1 = model.getConcreteModelObjects<DefaultConstructionSet>();
+  auto constructions2 = baseline.getConcreteModelObjects<DefaultConstructionSet>();
   EXPECT_EQ(constructions1.size(), constructions2.size());
   for (auto& construction : constructions1) {
-    auto match = baseline.getModelObjectByName<DefaultConstructionSet>(*construction.name());
+    auto match = baseline.getConcreteModelObjectByName<DefaultConstructionSet>(*construction.name());
     EXPECT_TRUE(match.has_value());
   }
 
   // Compare daylighting
-  auto daylightings1 = model.getModelObjects<DaylightingControl>();
-  auto daylightings2 = baseline.getModelObjects<DaylightingControl>();
+  auto daylightings1 = model.getConcreteModelObjects<DaylightingControl>();
+  auto daylightings2 = baseline.getConcreteModelObjects<DaylightingControl>();
   EXPECT_EQ(daylightings1.size(), daylightings2.size());
   for (auto& daylighting : daylightings1) {
-    auto match = baseline.getModelObjectByName<DaylightingControl>(*daylighting.name());
+    auto match = baseline.getConcreteModelObjectByName<DaylightingControl>(*daylighting.name());
     // Daylighting control names don't match:
     // Daylighting Control 1 - 1 (as in the floorspace model) vs Face nn
     //ASSERT_TRUE(match.has_value());
   }
 
   // Compare ShadingSurfaceGroup
-  auto shadingGroup1 = model.getModelObjects<ShadingSurfaceGroup>();
-  auto shadingGroup2 = baseline.getModelObjects<ShadingSurfaceGroup>();
-  EXPECT_EQ(shadingGroup1.size(), shadingGroup2.size());
-  for (auto& shadingGroup : shadingGroup1) {
-    // Shading Surface Group names only match for building shading
-    if (shadingGroup.shadingSurfaceType() == "Building") {
-      auto match = baseline.getModelObjectByName<ShadingSurfaceGroup>(*shadingGroup.name());
-      EXPECT_TRUE(match.has_value());
-      std::string surfaceType = shadingGroup.shadingSurfaceType();
-      EXPECT_EQ(shadingGroup.shadingSurfaceType(), match->shadingSurfaceType());
-      EXPECT_EQ(shadingGroup.shadingSurfaces().size(), match->shadingSurfaces().size());
-
-      // Match surfaces by vertices
-      for (auto& shadingSurface : shadingGroup.shadingSurfaces()) {
-        bool matched = false;
-        for (auto& shadingSurface2 : match->shadingSurfaces()) {
-          if (circularEqual(shadingSurface.vertices(), shadingSurface2.vertices())) {
-            matched = true;
-            break;
-          }
-        }
-        EXPECT_TRUE(matched);
-      }
-    }
-  }
+  CompareSurfaceGroups(model, baseline);
 
   // Compare stories
   auto stories1 = model.getConcreteModelObjects<BuildingStory>();
@@ -255,7 +262,9 @@ void CompareTwoModels(Model& model, Model& baseline) {
 
     // Check space surfaces and subsurfaces
     EXPECT_EQ(space.surfaces().size(), match->surfaces().size());
-
+    if (space.surfaces().size() != match->surfaces().size()) {
+      EXPECT_EQ(*space.name(), "test");
+    }
     for (auto& surface1 : space.surfaces()) {
       std::string name1 = *surface1.name();
       bool matchedSurface = false;
@@ -292,6 +301,7 @@ void CompareTwoModels(Model& model, Model& baseline) {
     }
   }
 
+  CompareSurfaceGroups(model, baseline);
   auto shading1 = model.getConcreteModelObjects<ShadingSurfaceGroup>();
   auto shading2 = baseline.getConcreteModelObjects<ShadingSurfaceGroup>();
   EXPECT_EQ(shading1.size(), shading2.size());
@@ -380,11 +390,11 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_SurfaceMatch) {
   ss << *model;
   std::string s = ss.str();
 
-  EXPECT_EQ(4u, model->getModelObjects<Space>().size());
-  EXPECT_EQ(24u, model->getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model->getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(24u, model->getConcreteModelObjects<Surface>().size());
 
   unsigned numMatched = 0;
-  for (const auto& surface : model->getModelObjects<Surface>()) {
+  for (const auto& surface : model->getConcreteModelObjects<Surface>()) {
     if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;
@@ -397,11 +407,11 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_SurfaceMatch) {
   model::ModelMerger mm;
   mm.mergeModels(newModel, *model, rt.handleMapping());
 
-  EXPECT_EQ(4u, newModel.getModelObjects<Space>().size());
-  EXPECT_EQ(24u, newModel.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, newModel.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(24u, newModel.getConcreteModelObjects<Surface>().size());
 
   numMatched = 0;
-  for (const auto& surface : newModel.getModelObjects<Surface>()) {
+  for (const auto& surface : newModel.getConcreteModelObjects<Surface>()) {
     if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;
@@ -1388,4 +1398,66 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Site_ClimateZones_4
   ASSERT_TRUE(newModel_->getOptionalUniqueModelObject<Building>());
   EXPECT_EQ(-30.0, newModel_->getOptionalUniqueModelObject<Building>()->northAxis());
   EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
+}
+
+// Tests issue 4764 where the height of shading objects is incorrect
+
+TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4764) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/issue-4323.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+  model->save(resourcesPath() / toPath("model/issue-4764_threejs.osm"), true);
+
+  FloorspaceReverseTranslator frt;
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
+  ASSERT_TRUE(model1);
+
+  model1->save(resourcesPath() / toPath("model/issue-4764_direct.osm"), true);
+
+  CompareSurfaceGroups(*model1, *model);
+}
+
+// Figuring out how floorspace is supposed to model shading because the schema does not help
+// Presumably the floor_to_ceiling_height is an override, but
+// does it also have an above_ceiling_plenum_height like space?
+//      Answer: Yes It Does. If no heightts are specified then three stacked shading ojects are made if the story
+//      has below floor and above ceiling
+// If a height is not specified the heoght is taken from the story, but which height?
+//      Answer seems to be the below floor, above ceiling and floro to ceiling heights
+
+TEST_F(ModelFixture, FloorspaceReverseTranslator_shadingtest) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/shadingtest.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+  model->save(resourcesPath() / toPath("utilities/Geometry/shadingtest_threejs.osm"), true);
+
+  FloorspaceReverseTranslator frt;
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
+  ASSERT_TRUE(model1);
+
+  model1->save(resourcesPath() / toPath("utilities/Geometry/shadingtest_direct.osm"), true);
+
+  CompareSurfaceGroups(*model1, *model);
 }

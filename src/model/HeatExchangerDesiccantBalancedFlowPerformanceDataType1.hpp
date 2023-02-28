@@ -54,7 +54,12 @@ namespace model {
 
     explicit HeatExchangerDesiccantBalancedFlowPerformanceDataType1(const Model& model);
 
-    virtual ~HeatExchangerDesiccantBalancedFlowPerformanceDataType1() {}
+    virtual ~HeatExchangerDesiccantBalancedFlowPerformanceDataType1() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1(const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& other) = default;
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1(HeatExchangerDesiccantBalancedFlowPerformanceDataType1&& other) = default;
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1& operator=(const HeatExchangerDesiccantBalancedFlowPerformanceDataType1&) = default;
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1& operator=(HeatExchangerDesiccantBalancedFlowPerformanceDataType1&&) = default;
 
     //@}
 
@@ -302,7 +307,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl ImplType;
+    using ImplType = detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl;
 
     explicit HeatExchangerDesiccantBalancedFlowPerformanceDataType1(
       std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl> impl);
@@ -317,10 +322,10 @@ namespace model {
   };
 
   /** \relates HeatExchangerDesiccantBalancedFlowPerformanceDataType1*/
-  typedef boost::optional<HeatExchangerDesiccantBalancedFlowPerformanceDataType1> OptionalHeatExchangerDesiccantBalancedFlowPerformanceDataType1;
+  using OptionalHeatExchangerDesiccantBalancedFlowPerformanceDataType1 = boost::optional<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>;
 
   /** \relates HeatExchangerDesiccantBalancedFlowPerformanceDataType1*/
-  typedef std::vector<HeatExchangerDesiccantBalancedFlowPerformanceDataType1> HeatExchangerDesiccantBalancedFlowPerformanceDataType1Vector;
+  using HeatExchangerDesiccantBalancedFlowPerformanceDataType1Vector = std::vector<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>;
 
 }  // namespace model
 }  // namespace openstudio

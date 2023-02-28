@@ -56,7 +56,12 @@ namespace model {
 
     explicit CoilHeatingElectricMultiStage(const Model& model);
 
-    virtual ~CoilHeatingElectricMultiStage() {}
+    virtual ~CoilHeatingElectricMultiStage() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingElectricMultiStage(const CoilHeatingElectricMultiStage& other) = default;
+    CoilHeatingElectricMultiStage(CoilHeatingElectricMultiStage&& other) = default;
+    CoilHeatingElectricMultiStage& operator=(const CoilHeatingElectricMultiStage&) = default;
+    CoilHeatingElectricMultiStage& operator=(CoilHeatingElectricMultiStage&&) = default;
 
     //@}
 
@@ -131,7 +136,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingElectricMultiStage_Impl ImplType;
+    using ImplType = detail::CoilHeatingElectricMultiStage_Impl;
 
     explicit CoilHeatingElectricMultiStage(std::shared_ptr<detail::CoilHeatingElectricMultiStage_Impl> impl);
 
@@ -145,10 +150,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingElectricMultiStage*/
-  typedef boost::optional<CoilHeatingElectricMultiStage> OptionalCoilHeatingElectricMultiStage;
+  using OptionalCoilHeatingElectricMultiStage = boost::optional<CoilHeatingElectricMultiStage>;
 
   /** \relates CoilHeatingElectricMultiStage*/
-  typedef std::vector<CoilHeatingElectricMultiStage> CoilHeatingElectricMultiStageVector;
+  using CoilHeatingElectricMultiStageVector = std::vector<CoilHeatingElectricMultiStage>;
 
 }  // namespace model
 }  // namespace openstudio

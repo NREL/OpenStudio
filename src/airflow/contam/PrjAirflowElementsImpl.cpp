@@ -3541,8 +3541,9 @@ namespace contam {
       string += m_desc + '\n';
       string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' ' + ANY_TO_STR(m_rdens) + ' ' + ANY_TO_STR(m_fdf) + ' '
                 + ANY_TO_STR(m_sop) + ' ' + ANY_TO_STR(m_off) + '\n';
-      for (int i = 0; i < 4; i++)
+      for (int i = 0; i < 4; i++) {
         string += ANY_TO_STR(m_fpc[i]) + ' ';
+      }
       string += '\n';
       string += ANY_TO_STR((int)m_data.size()) + ' ' + ANY_TO_STR(m_Sarea) + ' ' + ANY_TO_STR(m_u_Sa) + '\n';
       for (unsigned int i = 0; i < m_data.size(); i++) {

@@ -510,15 +510,15 @@ TEST_F(ModelFixture, FanSystemModel_Clone_SameModel) {
   CurveExponent fanPowerFuncFlowCurve(m);
   EXPECT_TRUE(fan.setElectricPowerFunctionofFlowFractionCurve(fanPowerFuncFlowCurve));
 
-  std::vector<CurveExponent> powerCurves = m.getModelObjects<CurveExponent>();
+  std::vector<CurveExponent> powerCurves = m.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(1, powerCurves.size());
-  EXPECT_EQ(1, m.getModelObjects<FanSystemModel>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<FanSystemModel>().size());
 
-  FanSystemModel fanClone = fan.clone(m).cast<FanSystemModel>();
+  auto fanClone = fan.clone(m).cast<FanSystemModel>();
 
-  EXPECT_EQ(2, m.getModelObjects<FanSystemModel>().size());
+  EXPECT_EQ(2, m.getConcreteModelObjects<FanSystemModel>().size());
 
-  powerCurves = m.getModelObjects<CurveExponent>();
+  powerCurves = m.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(1, powerCurves.size());
 
   EXPECT_DOUBLE_EQ(999.0, fanClone.designPressureRise());
@@ -539,21 +539,21 @@ TEST_F(ModelFixture, FanSystemModel_Clone_OtherModel) {
   EXPECT_TRUE(fan.setElectricPowerFunctionofFlowFractionCurve(fanPowerFuncFlowCurve));
 
   Model m2;
-  EXPECT_EQ(1, m.getModelObjects<FanSystemModel>().size());
-  EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
-  EXPECT_EQ(0, m2.getModelObjects<FanSystemModel>().size());
-  EXPECT_EQ(0, m2.getModelObjects<CurveExponent>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<FanSystemModel>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CurveExponent>().size());
+  EXPECT_EQ(0, m2.getConcreteModelObjects<FanSystemModel>().size());
+  EXPECT_EQ(0, m2.getConcreteModelObjects<CurveExponent>().size());
 
-  FanSystemModel fanClone = fan.clone(m2).cast<FanSystemModel>();
-  EXPECT_EQ(1, m.getModelObjects<FanSystemModel>().size());
-  EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
-  EXPECT_EQ(1, m2.getModelObjects<FanSystemModel>().size());
-  EXPECT_EQ(1, m2.getModelObjects<CurveExponent>().size());
+  auto fanClone = fan.clone(m2).cast<FanSystemModel>();
+  EXPECT_EQ(1, m.getConcreteModelObjects<FanSystemModel>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CurveExponent>().size());
+  EXPECT_EQ(1, m2.getConcreteModelObjects<FanSystemModel>().size());
+  EXPECT_EQ(1, m2.getConcreteModelObjects<CurveExponent>().size());
 
-  std::vector<CurveExponent> powerCurves = m.getModelObjects<CurveExponent>();
+  std::vector<CurveExponent> powerCurves = m.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(1, powerCurves.size());
 
-  std::vector<CurveExponent> powerCurves2 = m2.getModelObjects<CurveExponent>();
+  std::vector<CurveExponent> powerCurves2 = m2.getConcreteModelObjects<CurveExponent>();
   EXPECT_EQ(1, powerCurves2.size());
 
   for (const auto& c : powerCurves) {

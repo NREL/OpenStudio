@@ -57,7 +57,12 @@ namespace model {
 
     explicit InternalMass(const InternalMassDefinition& internalMassDefinition);
 
-    virtual ~InternalMass() {}
+    virtual ~InternalMass() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    InternalMass(const InternalMass& other) = default;
+    InternalMass(InternalMass&& other) = default;
+    InternalMass& operator=(const InternalMass&) = default;
+    InternalMass& operator=(InternalMass&&) = default;
 
     //@}
 
@@ -114,7 +119,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::InternalMass_Impl ImplType;
+    using ImplType = detail::InternalMass_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -127,10 +132,10 @@ namespace model {
   };
 
   /** \relates InternalMass*/
-  typedef boost::optional<InternalMass> OptionalInternalMass;
+  using OptionalInternalMass = boost::optional<InternalMass>;
 
   /** \relates InternalMass*/
-  typedef std::vector<InternalMass> InternalMassVector;
+  using InternalMassVector = std::vector<InternalMass>;
 
 }  // namespace model
 }  // namespace openstudio

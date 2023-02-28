@@ -53,7 +53,7 @@ namespace model {
 
       CoilHeatingWaterBaseboard_Impl(const CoilHeatingWaterBaseboard_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingWaterBaseboard_Impl() {}
+      virtual ~CoilHeatingWaterBaseboard_Impl() = default;
 
       //@}
 
@@ -113,7 +113,7 @@ namespace model {
       //@}
       /** @name Setters */
       //@{
-      bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+      bool setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod);
 
       bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
 

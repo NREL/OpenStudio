@@ -57,7 +57,12 @@ namespace model {
 
     explicit ElectricLoadCenterStorageConverter(const Model& model);
 
-    virtual ~ElectricLoadCenterStorageConverter() {}
+    virtual ~ElectricLoadCenterStorageConverter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricLoadCenterStorageConverter(const ElectricLoadCenterStorageConverter& other) = default;
+    ElectricLoadCenterStorageConverter(ElectricLoadCenterStorageConverter&& other) = default;
+    ElectricLoadCenterStorageConverter& operator=(const ElectricLoadCenterStorageConverter&) = default;
+    ElectricLoadCenterStorageConverter& operator=(ElectricLoadCenterStorageConverter&&) = default;
 
     //@}
 
@@ -136,7 +141,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterStorageConverter_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterStorageConverter_Impl;
 
     explicit ElectricLoadCenterStorageConverter(std::shared_ptr<detail::ElectricLoadCenterStorageConverter_Impl> impl);
 
@@ -150,10 +155,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterStorageConverter */
-  typedef boost::optional<ElectricLoadCenterStorageConverter> OptionalElectricLoadCenterStorageConverter;
+  using OptionalElectricLoadCenterStorageConverter = boost::optional<ElectricLoadCenterStorageConverter>;
 
   /** \relates ElectricLoadCenterStorageConverter */
-  typedef std::vector<ElectricLoadCenterStorageConverter> ElectricLoadCenterStorageConverterVector;
+  using ElectricLoadCenterStorageConverterVector = std::vector<ElectricLoadCenterStorageConverter>;
 
 }  // namespace model
 }  // namespace openstudio

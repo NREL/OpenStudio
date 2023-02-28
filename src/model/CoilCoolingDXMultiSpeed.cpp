@@ -35,6 +35,8 @@
 #include "Schedule_Impl.hpp"
 #include "CoilCoolingDXMultiSpeedStageData.hpp"
 #include "CoilCoolingDXMultiSpeedStageData_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -113,7 +115,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DX_MultiSpeedFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXMultiSpeed", "Availability Schedule"));
       }
@@ -195,7 +198,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXMultiSpeed_Impl::setCondenserType(std::string condenserType) {
+    bool CoilCoolingDXMultiSpeed_Impl::setCondenserType(const std::string& condenserType) {
       bool result = setString(OS_Coil_Cooling_DX_MultiSpeedFields::CondenserType, condenserType);
       return result;
     }
@@ -256,7 +259,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXMultiSpeed_Impl::setFuelType(std::string fuelType) {
+    bool CoilCoolingDXMultiSpeed_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_Coil_Cooling_DX_MultiSpeedFields::FuelType, fuelType);
       return result;
     }
@@ -291,7 +294,7 @@ namespace model {
         auto stageClone = stage.clone(model).cast<CoilCoolingDXMultiSpeedStageData>();
         t_clone.addStage(stageClone);
       }
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilCoolingDXMultiSpeed_Impl::children() const {
@@ -429,6 +432,19 @@ namespace model {
     }
 
     boost::optional<HVACComponent> CoilCoolingDXMultiSpeed_Impl::containingHVACComponent() const {
+      // AirLoopHVACUnitarySystem
+      {
+        auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+        for (auto const& system : systems) {
+          if (auto coolingCoil = system.coolingCoil()) {
+            if (coolingCoil->handle() == this->handle()) {
+              return system;
+            }
+          }
+        }
+      }
+
       // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
       {
         auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
@@ -443,7 +459,7 @@ namespace model {
       return boost::none;
     }
 
-    bool CoilCoolingDXMultiSpeed_Impl::addToNode(Node& node) {
+    bool CoilCoolingDXMultiSpeed_Impl::addToNode(Node& /*node*/) {
       return false;
     }
 
@@ -499,7 +515,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXMultiSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_MultiSpeed);
+    return {IddObjectType::OS_Coil_Cooling_DX_MultiSpeed};
   }
 
   std::vector<std::string> CoilCoolingDXMultiSpeed::condenserTypeValues() {
@@ -562,7 +578,7 @@ namespace model {
     getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->resetAvailabilitySchedule();
   }
 
-  bool CoilCoolingDXMultiSpeed::setCondenserType(std::string condenserType) {
+  bool CoilCoolingDXMultiSpeed::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setCondenserType(condenserType);
   }
 
@@ -604,7 +620,7 @@ namespace model {
     getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->resetBasinHeaterOperatingSchedule();
   }
 
-  bool CoilCoolingDXMultiSpeed::setFuelType(std::string fuelType) {
+  bool CoilCoolingDXMultiSpeed::setFuelType(const std::string& fuelType) {
     return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setFuelType(fuelType);
   }
 

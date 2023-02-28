@@ -55,7 +55,12 @@ namespace model {
 
     explicit EvaporativeFluidCoolerTwoSpeed(const Model& model);
 
-    virtual ~EvaporativeFluidCoolerTwoSpeed() {}
+    virtual ~EvaporativeFluidCoolerTwoSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EvaporativeFluidCoolerTwoSpeed(const EvaporativeFluidCoolerTwoSpeed& other) = default;
+    EvaporativeFluidCoolerTwoSpeed(EvaporativeFluidCoolerTwoSpeed&& other) = default;
+    EvaporativeFluidCoolerTwoSpeed& operator=(const EvaporativeFluidCoolerTwoSpeed&) = default;
+    EvaporativeFluidCoolerTwoSpeed& operator=(EvaporativeFluidCoolerTwoSpeed&&) = default;
 
     //@}
 
@@ -287,7 +292,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EvaporativeFluidCoolerTwoSpeed_Impl ImplType;
+    using ImplType = detail::EvaporativeFluidCoolerTwoSpeed_Impl;
 
     explicit EvaporativeFluidCoolerTwoSpeed(std::shared_ptr<detail::EvaporativeFluidCoolerTwoSpeed_Impl> impl);
 
@@ -301,10 +306,10 @@ namespace model {
   };
 
   /** \relates EvaporativeFluidCoolerTwoSpeed*/
-  typedef boost::optional<EvaporativeFluidCoolerTwoSpeed> OptionalEvaporativeFluidCoolerTwoSpeed;
+  using OptionalEvaporativeFluidCoolerTwoSpeed = boost::optional<EvaporativeFluidCoolerTwoSpeed>;
 
   /** \relates EvaporativeFluidCoolerTwoSpeed*/
-  typedef std::vector<EvaporativeFluidCoolerTwoSpeed> EvaporativeFluidCoolerTwoSpeedVector;
+  using EvaporativeFluidCoolerTwoSpeedVector = std::vector<EvaporativeFluidCoolerTwoSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

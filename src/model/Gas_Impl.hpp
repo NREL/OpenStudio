@@ -52,7 +52,7 @@ namespace model {
 
       Gas_Impl(const Gas_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Gas_Impl() {}
+      virtual ~Gas_Impl() = default;
 
       //@}
 
@@ -149,7 +149,7 @@ namespace model {
 
       bool setCustomMolecularWeight(double value);
 
-      bool setGasType(std::string gasType);
+      bool setGasType(const std::string& gasType);
 
       bool setConductivityCoefficientA(boost::optional<double> conductivityCoefficientA);
 

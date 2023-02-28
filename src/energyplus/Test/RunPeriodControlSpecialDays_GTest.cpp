@@ -126,7 +126,8 @@ TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_RunPeriodControlSpecialDays
   {
     Model m = rt.translateWorkspace(w);
 
-    std::vector<openstudio::model::RunPeriodControlSpecialDays> specialDays = m.getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
+    std::vector<openstudio::model::RunPeriodControlSpecialDays> specialDays =
+      m.getConcreteModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
     ASSERT_EQ(1u, specialDays.size());
     RunPeriodControlSpecialDays specialDay = specialDays[0];
 
@@ -148,7 +149,8 @@ TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_RunPeriodControlSpecialDays
   {
     Model m = rt.translateWorkspace(w);
 
-    std::vector<openstudio::model::RunPeriodControlSpecialDays> specialDays = m.getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
+    std::vector<openstudio::model::RunPeriodControlSpecialDays> specialDays =
+      m.getConcreteModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
     ASSERT_EQ(1u, specialDays.size());
     RunPeriodControlSpecialDays specialDay = specialDays[0];
 

@@ -49,7 +49,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputEnergyManagementSystem() {}
+    virtual ~OutputEnergyManagementSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputEnergyManagementSystem(const OutputEnergyManagementSystem& other) = default;
+    OutputEnergyManagementSystem(OutputEnergyManagementSystem&& other) = default;
+    OutputEnergyManagementSystem& operator=(const OutputEnergyManagementSystem&) = default;
+    OutputEnergyManagementSystem& operator=(OutputEnergyManagementSystem&&) = default;
 
     //@}
 
@@ -99,7 +104,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputEnergyManagementSystem_Impl ImplType;
+    using ImplType = detail::OutputEnergyManagementSystem_Impl;
 
     explicit OutputEnergyManagementSystem(std::shared_ptr<detail::OutputEnergyManagementSystem_Impl> impl);
 
@@ -115,10 +120,10 @@ namespace model {
   };
 
   /** \relates OutputEnergyManagementSystem*/
-  typedef boost::optional<OutputEnergyManagementSystem> OptionalOutputEnergyManagementSystem;
+  using OptionalOutputEnergyManagementSystem = boost::optional<OutputEnergyManagementSystem>;
 
   /** \relates OutputEnergyManagementSystem*/
-  typedef std::vector<OutputEnergyManagementSystem> OutputEnergyManagementSystemVector;
+  using OutputEnergyManagementSystemVector = std::vector<OutputEnergyManagementSystem>;
 
 }  // namespace model
 }  // namespace openstudio

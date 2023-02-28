@@ -94,7 +94,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkConstantPressureDrop::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkConstantPressureDrop);
+    return {IddObjectType::OS_AirflowNetworkConstantPressureDrop};
   }
 
   double AirflowNetworkConstantPressureDrop::pressureDrop() const {

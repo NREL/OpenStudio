@@ -67,11 +67,11 @@ namespace model {
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> CurrencyType_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // set the parent, child may have to call methods on the parent
-    bool CurrencyType_Impl::setParent(ParentObject& newParent) {
+    bool CurrencyType_Impl::setParent(ParentObject& /*newParent*/) {
       //if (newParent.optionalCast<SomeParentClass>() && (newParent.model() == model())) {
       //  return true;
       //}

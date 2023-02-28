@@ -67,7 +67,12 @@ namespace model {
 
     explicit EnergyManagementSystemSensor(const Model& model, const std::string& outputVariableOrMeterName);
 
-    virtual ~EnergyManagementSystemSensor() {}
+    virtual ~EnergyManagementSystemSensor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemSensor(const EnergyManagementSystemSensor& other) = default;
+    EnergyManagementSystemSensor(EnergyManagementSystemSensor&& other) = default;
+    EnergyManagementSystemSensor& operator=(const EnergyManagementSystemSensor&) = default;
+    EnergyManagementSystemSensor& operator=(EnergyManagementSystemSensor&&) = default;
 
     //@}
 
@@ -98,7 +103,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemSensor_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemSensor_Impl;
 
     explicit EnergyManagementSystemSensor(std::shared_ptr<detail::EnergyManagementSystemSensor_Impl> impl);
 
@@ -114,10 +119,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemSensor*/
-  typedef boost::optional<EnergyManagementSystemSensor> OptionalEnergyManagementSystemSensor;
+  using OptionalEnergyManagementSystemSensor = boost::optional<EnergyManagementSystemSensor>;
 
   /** \relates EnergyManagementSystemSensor*/
-  typedef std::vector<EnergyManagementSystemSensor> EnergyManagementSystemSensorVector;
+  using EnergyManagementSystemSensorVector = std::vector<EnergyManagementSystemSensor>;
 
 }  // namespace model
 }  // namespace openstudio

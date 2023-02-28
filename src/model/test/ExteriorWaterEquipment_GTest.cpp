@@ -106,7 +106,7 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_SettersGetters) {
   EXPECT_EQ(alwaysOn.handle(), waterEq.schedule().handle());
 
   // Facility
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
   EXPECT_EQ(facility.handle(), waterEq.facility().handle());
 }
 
@@ -120,14 +120,14 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveEquipment) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(4u, model.numObjects());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorWaterEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorWaterEquipmentDefinition>().size());
 
     std::vector<IdfObject> removed = waterEq.remove();
     ASSERT_EQ(1u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_WaterEquipment, removed[0].iddObject().type().value());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorWaterEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorWaterEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorWaterEquipmentDefinition>().size());
     EXPECT_EQ(3u, model.numObjects());
   }
 
@@ -140,14 +140,14 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveEquipment) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(5u, model.numObjects());
-    EXPECT_EQ(2u, model.getModelObjects<ExteriorWaterEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
+    EXPECT_EQ(2u, model.getConcreteModelObjects<ExteriorWaterEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorWaterEquipmentDefinition>().size());
 
     std::vector<IdfObject> removed = waterEq1.remove();
     ASSERT_EQ(1u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_WaterEquipment, removed[0].iddObject().type().value());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorWaterEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorWaterEquipmentDefinition>().size());
     EXPECT_EQ(4u, model.numObjects());
   }
 }
@@ -162,15 +162,15 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveDefinition) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(4u, model.numObjects());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorWaterEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorWaterEquipmentDefinition>().size());
 
     std::vector<IdfObject> removed = definition.remove();
     ASSERT_EQ(2u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_WaterEquipment_Definition, removed[0].iddObject().type().value());
     EXPECT_EQ(IddObjectType::OS_Exterior_WaterEquipment, removed[1].iddObject().type().value());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorWaterEquipment>().size());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorWaterEquipment>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorWaterEquipmentDefinition>().size());
     EXPECT_EQ(2u, model.numObjects());
   }
 
@@ -183,15 +183,15 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveDefinition) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(5u, model.numObjects());
-    EXPECT_EQ(2u, model.getModelObjects<ExteriorWaterEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
+    EXPECT_EQ(2u, model.getConcreteModelObjects<ExteriorWaterEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorWaterEquipmentDefinition>().size());
     std::vector<IdfObject> removed = definition.remove();
     ASSERT_EQ(3u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_WaterEquipment_Definition, removed[0].iddObject().type().value());
     EXPECT_EQ(IddObjectType::OS_Exterior_WaterEquipment, removed[1].iddObject().type().value());
     EXPECT_EQ(IddObjectType::OS_Exterior_WaterEquipment, removed[2].iddObject().type().value());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorWaterEquipment>().size());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorWaterEquipment>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorWaterEquipmentDefinition>().size());
     EXPECT_EQ(2u, model.numObjects());
   }
 }

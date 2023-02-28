@@ -104,12 +104,12 @@ class UTILITIES_API GPDUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   GPDUnit(const std::string& scaleAbbreviation, const GPDExpnt& exponents = GPDExpnt(), const std::string& prettyString = "");
 
-  virtual ~GPDUnit() {}
+  virtual ~GPDUnit() = default;
 
   //@}
  protected:
   /// @cond
-  typedef detail::GPDUnit_Impl ImplType;
+  using ImplType = detail::GPDUnit_Impl;
 
   explicit GPDUnit(std::shared_ptr<detail::GPDUnit_Impl> impl);
 
@@ -121,10 +121,10 @@ class UTILITIES_API GPDUnit : public Unit
 };
 
 /** \relates GPDUnit*/
-typedef boost::optional<GPDUnit> OptionalGPDUnit;
+using OptionalGPDUnit = boost::optional<GPDUnit>;
 
 /** \relates GPDUnit*/
-typedef std::vector<GPDUnit> GPDUnitVector;
+using GPDUnitVector = std::vector<GPDUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

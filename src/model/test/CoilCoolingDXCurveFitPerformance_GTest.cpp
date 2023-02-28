@@ -84,7 +84,7 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_CoilCoolingDXCurveFitPerfo
   EXPECT_EQ(2.0, performance.evaporativeCondenserBasinHeaterSetpointTemperature());
   ASSERT_TRUE(performance.evaporativeCondenserBasinHeaterOperatingSchedule().optionalCast<Schedule>());
   ASSERT_TRUE(performance.evaporativeCondenserBasinHeaterOperatingSchedule().optionalCast<ScheduleConstant>());
-  ScheduleConstant schedule = performance.evaporativeCondenserBasinHeaterOperatingSchedule().cast<ScheduleConstant>();
+  auto schedule = performance.evaporativeCondenserBasinHeaterOperatingSchedule().cast<ScheduleConstant>();
   EXPECT_EQ(1.0, schedule.value());
   ASSERT_TRUE(performance.baseOperatingMode().optionalCast<CoilCoolingDXCurveFitOperatingMode>());
   ASSERT_FALSE(performance.alternativeOperatingMode1());

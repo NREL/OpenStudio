@@ -54,7 +54,12 @@ namespace model {
     // Constructs a new MeterCustom object in the model.
     explicit MeterCustom(const Model& model);
 
-    virtual ~MeterCustom() {}
+    virtual ~MeterCustom() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    MeterCustom(const MeterCustom& other) = default;
+    MeterCustom(MeterCustom&& other) = default;
+    MeterCustom& operator=(const MeterCustom&) = default;
+    MeterCustom& operator=(MeterCustom&&) = default;
 
     //@}
 
@@ -115,7 +120,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::MeterCustom_Impl ImplType;
+    using ImplType = detail::MeterCustom_Impl;
 
     explicit MeterCustom(std::shared_ptr<detail::MeterCustom_Impl> impl);
 
@@ -131,10 +136,10 @@ namespace model {
   };
 
   /** \relates MeterCustom*/
-  typedef boost::optional<MeterCustom> OptionalMeterCustom;
+  using OptionalMeterCustom = boost::optional<MeterCustom>;
 
   /** \relates MeterCustom*/
-  typedef std::vector<MeterCustom> MeterCustomVector;
+  using MeterCustomVector = std::vector<MeterCustom>;
 
 }  // namespace model
 }  // namespace openstudio

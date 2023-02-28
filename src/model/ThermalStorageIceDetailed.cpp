@@ -94,7 +94,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ThermalStorageIceDetailed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ThermalStorage_Ice_DetailedFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("ThermalStorageIceDetailed", "Availability Schedule"));
       }
@@ -242,7 +243,7 @@ namespace model {
       return result;
     }
 
-    bool ThermalStorageIceDetailed_Impl::setThawProcessIndicator(std::string thawProcessIndicator) {
+    bool ThermalStorageIceDetailed_Impl::setThawProcessIndicator(const std::string& thawProcessIndicator) {
       bool result = setString(OS_ThermalStorage_Ice_DetailedFields::ThawProcessIndicator, thawProcessIndicator);
       return result;
     }
@@ -276,7 +277,7 @@ namespace model {
     ModelObject ThermalStorageIceDetailed_Impl::clone(Model model) const {
       auto newMo = StraightComponent_Impl::clone(model).cast<ThermalStorageIceDetailed>();
 
-      return newMo;
+      return std::move(newMo);
     }
 
     std::vector<ModelObject> ThermalStorageIceDetailed_Impl::children() const {
@@ -337,7 +338,7 @@ namespace model {
   }
 
   IddObjectType ThermalStorageIceDetailed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ThermalStorage_Ice_Detailed);
+    return {IddObjectType::OS_ThermalStorage_Ice_Detailed};
   }
 
   std::vector<std::string> ThermalStorageIceDetailed::thawProcessIndicatorValues() {
@@ -440,7 +441,7 @@ namespace model {
     return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setFreezingTemperatureofStorageMedium(freezingTemperatureofStorageMedium);
   }
 
-  bool ThermalStorageIceDetailed::setThawProcessIndicator(std::string thawProcessIndicator) {
+  bool ThermalStorageIceDetailed::setThawProcessIndicator(const std::string& thawProcessIndicator) {
     return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setThawProcessIndicator(thawProcessIndicator);
   }
 

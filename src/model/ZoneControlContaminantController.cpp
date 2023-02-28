@@ -73,7 +73,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneControlContaminantController_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneControl_ContaminantControllerFields::CarbonDioxideControlAvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneControlContaminantController", "Carbon Dioxide Control Availability"));
       }
@@ -197,7 +198,7 @@ namespace model {
   }
 
   IddObjectType ZoneControlContaminantController::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneControl_ContaminantController);
+    return {IddObjectType::OS_ZoneControl_ContaminantController};
   }
 
   boost::optional<Schedule> ZoneControlContaminantController::carbonDioxideControlAvailabilitySchedule() const {

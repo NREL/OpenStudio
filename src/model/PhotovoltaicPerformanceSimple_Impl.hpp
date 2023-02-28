@@ -53,7 +53,7 @@ namespace model {
 
       PhotovoltaicPerformanceSimple_Impl(const PhotovoltaicPerformanceSimple_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PhotovoltaicPerformanceSimple_Impl() {}
+      virtual ~PhotovoltaicPerformanceSimple_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -102,14 +102,14 @@ TEST_F(ModelFixture, ResourceObject_Clone) {
   EXPECT_EQ(1u, construction.numLayers()) << construction;
 
   // clone into original
-  Construction newConstruction = construction.clone(original).cast<Construction>();
+  auto newConstruction = construction.clone(original).cast<Construction>();
   // self cloned
   EXPECT_FALSE(newConstruction == construction);
   EXPECT_TRUE(newConstruction.model() == construction.model());
   // child cloned
-  EXPECT_EQ(2u, original.getModelObjects<StandardsInformationConstruction>().size()) << original;
+  EXPECT_EQ(2u, original.getConcreteModelObjects<StandardsInformationConstruction>().size()) << original;
   EXPECT_FALSE(newConstruction.standardsInformation() == construction.standardsInformation());
-  EXPECT_EQ(2u, original.getModelObjects<StandardsInformationConstruction>().size()) << original;
+  EXPECT_EQ(2u, original.getConcreteModelObjects<StandardsInformationConstruction>().size()) << original;
   // resource not cloned
   EXPECT_EQ(1u, newConstruction.numLayers());
   EXPECT_TRUE(newConstruction.layers() == construction.layers());
@@ -122,7 +122,7 @@ TEST_F(ModelFixture, ResourceObject_Clone) {
   EXPECT_EQ(3u, newModel.numObjects()) << newModel;
   EXPECT_EQ("Material 1", newConstruction.layers()[0].name().get());
   // clone again -- object and child added again, resource reused
-  Construction anotherNewConstruction = construction.clone(newModel).cast<Construction>();
+  auto anotherNewConstruction = construction.clone(newModel).cast<Construction>();
   EXPECT_FALSE(anotherNewConstruction == newConstruction);
   EXPECT_EQ(5u, newModel.numObjects()) << newModel;
   EXPECT_EQ("Material 1", anotherNewConstruction.layers()[0].name().get());

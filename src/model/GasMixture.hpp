@@ -55,7 +55,12 @@ namespace model {
                         std::string gas1Type = "Air", double gas1Fraction = .97, std::string gas2Type = "Argon", double gas2Fraction = 0.01,
                         std::string gas3Type = "Krypton", double gas3Fraction = 0.01, std::string gas4Type = "Xenon", double gas4Fraction = 0.01);
 
-    virtual ~GasMixture() {}
+    virtual ~GasMixture() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GasMixture(const GasMixture& other) = default;
+    GasMixture(GasMixture&& other) = default;
+    GasMixture& operator=(const GasMixture&) = default;
+    GasMixture& operator=(GasMixture&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -150,7 +155,7 @@ namespace model {
 
     bool setNumberofGasesinMixture(int numberofGasesinMixture);
 
-    bool setGas1Type(std::string gas1Type);
+    bool setGas1Type(const std::string& gas1Type);
 
     void resetGas1Type();
 
@@ -158,7 +163,7 @@ namespace model {
 
     void resetGas1Fraction();
 
-    bool setGas2Type(std::string gas2Type);
+    bool setGas2Type(const std::string& gas2Type);
 
     void resetGas2Type();
 
@@ -166,7 +171,7 @@ namespace model {
 
     void resetGas2Fraction();
 
-    bool setGas3Type(std::string gas3Type);
+    bool setGas3Type(const std::string& gas3Type);
 
     void resetGas3Type();
 
@@ -174,7 +179,7 @@ namespace model {
 
     void resetGas3Fraction();
 
-    bool setGas4Type(std::string gas4Type);
+    bool setGas4Type(const std::string& gas4Type);
 
     void resetGas4Type();
 
@@ -195,7 +200,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GasMixture_Impl ImplType;
+    using ImplType = detail::GasMixture_Impl;
 
     explicit GasMixture(std::shared_ptr<detail::GasMixture_Impl> impl);
 
@@ -209,10 +214,10 @@ namespace model {
   };
 
   /** \relates GasMixture*/
-  typedef boost::optional<GasMixture> OptionalGasMixture;
+  using OptionalGasMixture = boost::optional<GasMixture>;
 
   /** \relates GasMixture*/
-  typedef std::vector<GasMixture> GasMixtureVector;
+  using GasMixtureVector = std::vector<GasMixture>;
 
 }  // namespace model
 }  // namespace openstudio

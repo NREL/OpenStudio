@@ -68,7 +68,7 @@ namespace model {
       return boost::none;
     }
 
-    bool Material_Impl::setThickness(double value) {
+    bool Material_Impl::setThickness(double /*value*/) {
       return false;
     }
 

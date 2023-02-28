@@ -54,7 +54,12 @@ namespace model {
    public:
     explicit WaterUseEquipment(const WaterUseEquipmentDefinition& waterUseEquipmentDefinition);
 
-    virtual ~WaterUseEquipment() {}
+    virtual ~WaterUseEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterUseEquipment(const WaterUseEquipment& other) = default;
+    WaterUseEquipment(WaterUseEquipment&& other) = default;
+    WaterUseEquipment& operator=(const WaterUseEquipment&) = default;
+    WaterUseEquipment& operator=(WaterUseEquipment&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -70,7 +75,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::WaterUseEquipment_Impl ImplType;
+    using ImplType = detail::WaterUseEquipment_Impl;
 
     explicit WaterUseEquipment(std::shared_ptr<detail::WaterUseEquipment_Impl> impl);
 
@@ -86,10 +91,10 @@ namespace model {
   };
 
   /** \relates WaterUseEquipment*/
-  typedef boost::optional<WaterUseEquipment> OptionalWaterUseEquipment;
+  using OptionalWaterUseEquipment = boost::optional<WaterUseEquipment>;
 
   /** \relates WaterUseEquipment*/
-  typedef std::vector<WaterUseEquipment> WaterUseEquipmentVector;
+  using WaterUseEquipmentVector = std::vector<WaterUseEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

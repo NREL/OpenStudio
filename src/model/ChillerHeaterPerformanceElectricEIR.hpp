@@ -60,7 +60,12 @@ namespace model {
                                                  const Curve& chillerHeaterClgEIRFPLR, const Curve& chillerHeaterHtgCapFT,
                                                  const Curve& chillerHeaterHtgEIRFT, const Curve& chillerHeaterHtgEIRFPLR);
 
-    virtual ~ChillerHeaterPerformanceElectricEIR() {}
+    virtual ~ChillerHeaterPerformanceElectricEIR() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ChillerHeaterPerformanceElectricEIR(const ChillerHeaterPerformanceElectricEIR& other) = default;
+    ChillerHeaterPerformanceElectricEIR(ChillerHeaterPerformanceElectricEIR&& other) = default;
+    ChillerHeaterPerformanceElectricEIR& operator=(const ChillerHeaterPerformanceElectricEIR&) = default;
+    ChillerHeaterPerformanceElectricEIR& operator=(ChillerHeaterPerformanceElectricEIR&&) = default;
 
     //@}
 
@@ -239,7 +244,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ChillerHeaterPerformanceElectricEIR_Impl ImplType;
+    using ImplType = detail::ChillerHeaterPerformanceElectricEIR_Impl;
 
     explicit ChillerHeaterPerformanceElectricEIR(std::shared_ptr<detail::ChillerHeaterPerformanceElectricEIR_Impl> impl);
 
@@ -253,10 +258,10 @@ namespace model {
   };
 
   /** \relates ChillerHeaterPerformanceElectricEIR*/
-  typedef boost::optional<ChillerHeaterPerformanceElectricEIR> OptionalChillerHeaterPerformanceElectricEIR;
+  using OptionalChillerHeaterPerformanceElectricEIR = boost::optional<ChillerHeaterPerformanceElectricEIR>;
 
   /** \relates ChillerHeaterPerformanceElectricEIR*/
-  typedef std::vector<ChillerHeaterPerformanceElectricEIR> ChillerHeaterPerformanceElectricEIRVector;
+  using ChillerHeaterPerformanceElectricEIRVector = std::vector<ChillerHeaterPerformanceElectricEIR>;
 
 }  // namespace model
 }  // namespace openstudio

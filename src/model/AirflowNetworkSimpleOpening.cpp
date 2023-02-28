@@ -148,7 +148,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkSimpleOpening::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkSimpleOpening);
+    return {IddObjectType::OS_AirflowNetworkSimpleOpening};
   }
 
   double AirflowNetworkSimpleOpening::airMassFlowCoefficientWhenOpeningisClosed() const {

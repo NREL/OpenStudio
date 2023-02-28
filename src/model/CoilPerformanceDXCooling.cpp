@@ -350,7 +350,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilPerformanceDXCooling_Impl::setCondenserType(std::string condenserType) {
+    bool CoilPerformanceDXCooling_Impl::setCondenserType(const std::string& condenserType) {
       bool result = setString(OS_CoilPerformance_DX_CoolingFields::CondenserType, condenserType);
       return result;
     }
@@ -477,7 +477,7 @@ namespace model {
     ModelObject CoilPerformanceDXCooling_Impl::clone(Model model) const {
       auto newObject = ModelObject_Impl::clone(model).cast<CoilPerformanceDXCooling>();
 
-      return newObject;
+      return std::move(newObject);
     }
 
     boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedGrossRatedTotalCoolingCapacity() const {
@@ -645,7 +645,7 @@ namespace model {
   }
 
   IddObjectType CoilPerformanceDXCooling::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoilPerformance_DX_Cooling);
+    return {IddObjectType::OS_CoilPerformance_DX_Cooling};
   }
 
   std::vector<std::string> CoilPerformanceDXCooling::condenserTypeValues() {
@@ -834,7 +834,7 @@ namespace model {
     getImpl<detail::CoilPerformanceDXCooling_Impl>()->resetCondenserAirInletNode();
   }
 
-  bool CoilPerformanceDXCooling::setCondenserType(std::string condenserType) {
+  bool CoilPerformanceDXCooling::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::CoilPerformanceDXCooling_Impl>()->setCondenserType(condenserType);
   }
 

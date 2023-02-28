@@ -82,7 +82,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ElectricEquipmentITEAirCooledDefinition_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::SupplyTemperatureDifferenceSchedule) != e) {
         result.push_back(ScheduleTypeKey("ElectricEquipmentITEAirCooledDefinition", "Supply Temperature Difference Schedule"));
       }
@@ -585,7 +586,7 @@ namespace model {
   }
 
   IddObjectType ElectricEquipmentITEAirCooledDefinition::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ElectricEquipment_ITE_AirCooled_Definition);
+    return {IddObjectType::OS_ElectricEquipment_ITE_AirCooled_Definition};
   }
 
   std::vector<std::string> ElectricEquipmentITEAirCooledDefinition::validAirFlowCalculationMethodValues() {

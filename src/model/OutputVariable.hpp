@@ -59,7 +59,12 @@ namespace model {
   class MODEL_API OutputVariable : public ModelObject
   {
    public:
-    virtual ~OutputVariable() {}
+    virtual ~OutputVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputVariable(const OutputVariable& other) = default;
+    OutputVariable(OutputVariable&& other) = default;
+    OutputVariable& operator=(const OutputVariable&) = default;
+    OutputVariable& operator=(OutputVariable&&) = default;
 
     /** @name Constructors and Destructors */
     //@{
@@ -120,7 +125,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::OutputVariable_Impl ImplType;
+    using ImplType = detail::OutputVariable_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -135,10 +140,10 @@ namespace model {
   };
 
   /** \relates OutputVariable */
-  typedef boost::optional<OutputVariable> OptionalOutputVariable;
+  using OptionalOutputVariable = boost::optional<OutputVariable>;
 
   /** \relates OutputVariable */
-  typedef std::vector<OutputVariable> OutputVariableVector;
+  using OutputVariableVector = std::vector<OutputVariable>;
 
 }  // namespace model
 }  // namespace openstudio

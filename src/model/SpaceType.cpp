@@ -93,6 +93,7 @@
 #include "../utilities/math/FloatCompare.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 
 #include <model/embedded_files.hxx>
 #include "../utilities/filetypes/StandardsJSON.hpp"
@@ -154,61 +155,10 @@ namespace model {
     }
 
     std::vector<ModelObject> SpaceType_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      // internal mass
-      InternalMassVector internalMass = this->internalMass();
-      result.insert(result.end(), internalMass.begin(), internalMass.end());
-
-      // people
-      PeopleVector people = this->people();
-      result.insert(result.end(), people.begin(), people.end());
-
-      // lights
-      LightsVector lights = this->lights();
-      result.insert(result.end(), lights.begin(), lights.end());
-
-      // luminaires
-      LuminaireVector luminaires = this->luminaires();
-      result.insert(result.end(), luminaires.begin(), luminaires.end());
-
-      // electric equipment
-      ElectricEquipmentVector electricEquipment = this->electricEquipment();
-      result.insert(result.end(), electricEquipment.begin(), electricEquipment.end());
-
-      // IT electric equipment
-      ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = this->electricEquipmentITEAirCooled();
-      result.insert(result.end(), electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end());
-
-      // gas equipment
-      GasEquipmentVector gasEquipment = this->gasEquipment();
-      result.insert(result.end(), gasEquipment.begin(), gasEquipment.end());
-
-      // hot water equipment
-      HotWaterEquipmentVector hotWaterEquipment = this->hotWaterEquipment();
-      result.insert(result.end(), hotWaterEquipment.begin(), hotWaterEquipment.end());
-
-      // steam equipment
-      SteamEquipmentVector steamEquipment = this->steamEquipment();
-      result.insert(result.end(), steamEquipment.begin(), steamEquipment.end());
-
-      // other equipment
-      OtherEquipmentVector otherEquipment = this->otherEquipment();
-      result.insert(result.end(), otherEquipment.begin(), otherEquipment.end());
-
-      // SpaceInfiltration_DesignFlowRate
-      SpaceInfiltrationDesignFlowRateVector spaceInfiltrationDesignFlowRates = this->spaceInfiltrationDesignFlowRates();
-      result.insert(result.end(), spaceInfiltrationDesignFlowRates.begin(), spaceInfiltrationDesignFlowRates.end());
-
-      // SpaceInfiltration_EffectiveLeakageArea
-      SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = this->spaceInfiltrationEffectiveLeakageAreas();
-      result.insert(result.end(), spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end());
-
-      // SpaceInfiltration_FlowCoefficient
-      SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = this->spaceInfiltrationFlowCoefficients();
-      result.insert(result.end(), spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end());
-
-      return result;
+      return concat<ModelObject>(this->internalMass(), this->people(), this->lights(), this->luminaires(), this->electricEquipment(),
+                                 this->electricEquipmentITEAirCooled(), this->gasEquipment(), this->hotWaterEquipment(), this->steamEquipment(),
+                                 this->otherEquipment(), this->spaceInfiltrationDesignFlowRates(), this->spaceInfiltrationEffectiveLeakageAreas(),
+                                 this->spaceInfiltrationFlowCoefficients());
     }
 
     boost::optional<std::string> SpaceType_Impl::setNameProtected(const std::string& newName) {
@@ -322,7 +272,7 @@ namespace model {
       for (const auto& v : getStandardsJSON()) {
         const Json::Value _template = v["template"];
         if (_template.isString()) {
-          result.push_back(_template.asString());
+          result.emplace_back(_template.asString());
         }
       }
 
@@ -340,7 +290,7 @@ namespace model {
         }
         boost::optional<std::string> otherTemplate = other.standardsTemplate();
         if (otherTemplate) {
-          result.push_back(*otherTemplate);
+          result.emplace_back(*otherTemplate);
         }
       }
 
@@ -418,7 +368,7 @@ namespace model {
           if (thisTemplate == standardsTemplate.get()) {
             const Json::Value _buildingType = v["building_type"];
             if (_buildingType.isString()) {
-              result.push_back(_buildingType.asString());
+              result.emplace_back(_buildingType.asString());
             }
           }
         }
@@ -438,7 +388,7 @@ namespace model {
         }
         boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
         if (otherBuildingType) {
-          result.push_back(*otherBuildingType);
+          result.emplace_back(*otherBuildingType);
         }
       }
 
@@ -507,15 +457,15 @@ namespace model {
           if ((thisTemplate == standardsTemplate.get()) && (thisBuildingType == standardsBuildingType.get())) {
             const Json::Value _spaceType = v["space_type"];
             if (_spaceType.isString()) {
-              result.push_back(_spaceType.asString());
+              result.emplace_back(_spaceType.asString());
             }
           }
         }
       }
 
       // always add these hard coded types
-      result.push_back("Attic");
-      result.push_back("Plenum");
+      result.emplace_back("Attic");
+      result.emplace_back("Plenum");
 
       // include values from model
       for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()) {
@@ -538,7 +488,7 @@ namespace model {
 
         boost::optional<std::string> otherSpaceType = other.standardsSpaceType();
         if (otherSpaceType) {
-          result.push_back(*otherSpaceType);
+          result.emplace_back(*otherSpaceType);
         }
       }
 
@@ -581,11 +531,11 @@ namespace model {
       std::vector<Space> result;
 
       Handle handle = this->handle();
-      for (const Space& space : this->model().getConcreteModelObjects<Space>()) {
+      for (Space& space : this->model().getConcreteModelObjects<Space>()) {
         OptionalSpaceType spaceType = space.spaceType();
         if (spaceType) {
           if (spaceType->handle() == handle) {
-            result.push_back(space);
+            result.emplace_back(std::move(space));
           }
         }
       }
@@ -665,9 +615,9 @@ namespace model {
     }
 
     void SpaceType_Impl::hardApplySpaceLoadSchedules() {
-      for (ModelObject child : this->children()) {
-        if (child.optionalCast<SpaceLoad>()) {
-          child.cast<SpaceLoad>().hardApplySchedules();
+      for (const ModelObject& child : this->children()) {
+        if (auto load_ = child.optionalCast<SpaceLoad>()) {
+          load_->hardApplySchedules();
         }
       }
     }

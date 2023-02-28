@@ -51,7 +51,12 @@ namespace model {
    public:
     explicit ZoneHVACEquipmentList(const ThermalZone& thermalZone);
 
-    virtual ~ZoneHVACEquipmentList() {}
+    virtual ~ZoneHVACEquipmentList() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACEquipmentList(const ZoneHVACEquipmentList& other) = default;
+    ZoneHVACEquipmentList(ZoneHVACEquipmentList&& other) = default;
+    ZoneHVACEquipmentList& operator=(const ZoneHVACEquipmentList&) = default;
+    ZoneHVACEquipmentList& operator=(ZoneHVACEquipmentList&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -61,7 +66,7 @@ namespace model {
 
     std::string loadDistributionScheme() const;
 
-    bool setLoadDistributionScheme(std::string scheme);
+    bool setLoadDistributionScheme(const std::string& scheme);
 
     /** Add new equipment setting the heating and cooling priorities
    *  to the next available priority level.
@@ -160,7 +165,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::ZoneHVACEquipmentList_Impl ImplType;
+    using ImplType = detail::ZoneHVACEquipmentList_Impl;
 
     explicit ZoneHVACEquipmentList(std::shared_ptr<detail::ZoneHVACEquipmentList_Impl> impl);
 
@@ -176,10 +181,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACEquipmentList*/
-  typedef boost::optional<ZoneHVACEquipmentList> OptionalZoneHVACEquipmentList;
+  using OptionalZoneHVACEquipmentList = boost::optional<ZoneHVACEquipmentList>;
 
   /** \relates ZoneHVACEquipmentList*/
-  typedef std::vector<ZoneHVACEquipmentList> ZoneHVACEquipmentListVector;
+  using ZoneHVACEquipmentListVector = std::vector<ZoneHVACEquipmentList>;
 
 }  // namespace model
 }  // namespace openstudio

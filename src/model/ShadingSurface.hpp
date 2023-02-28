@@ -56,7 +56,12 @@ namespace model {
 
     explicit ShadingSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~ShadingSurface() {}
+    virtual ~ShadingSurface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ShadingSurface(const ShadingSurface& other) = default;
+    ShadingSurface(ShadingSurface&& other) = default;
+    ShadingSurface& operator=(const ShadingSurface&) = default;
+    ShadingSurface& operator=(ShadingSurface&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -109,7 +114,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ShadingSurface_Impl ImplType;
+    using ImplType = detail::ShadingSurface_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -123,10 +128,10 @@ namespace model {
   };
 
   /** \relates ShadingSurface*/
-  typedef boost::optional<ShadingSurface> OptionalShadingSurface;
+  using OptionalShadingSurface = boost::optional<ShadingSurface>;
 
   /** \relates ShadingSurface*/
-  typedef std::vector<ShadingSurface> ShadingSurfaceVector;
+  using ShadingSurfaceVector = std::vector<ShadingSurface>;
 
 }  // namespace model
 }  // namespace openstudio

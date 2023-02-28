@@ -56,7 +56,12 @@ namespace model {
 
     explicit SolarCollectorFlatPlatePhotovoltaicThermal(const Model& model);
 
-    virtual ~SolarCollectorFlatPlatePhotovoltaicThermal() {}
+    virtual ~SolarCollectorFlatPlatePhotovoltaicThermal() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorFlatPlatePhotovoltaicThermal(const SolarCollectorFlatPlatePhotovoltaicThermal& other) = default;
+    SolarCollectorFlatPlatePhotovoltaicThermal(SolarCollectorFlatPlatePhotovoltaicThermal&& other) = default;
+    SolarCollectorFlatPlatePhotovoltaicThermal& operator=(const SolarCollectorFlatPlatePhotovoltaicThermal&) = default;
+    SolarCollectorFlatPlatePhotovoltaicThermal& operator=(SolarCollectorFlatPlatePhotovoltaicThermal&&) = default;
 
     //@}
 
@@ -108,7 +113,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl ImplType;
+    using ImplType = detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
 
     explicit SolarCollectorFlatPlatePhotovoltaicThermal(std::shared_ptr<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl> impl);
 
@@ -122,10 +127,10 @@ namespace model {
   };
 
   /** \relates SolarCollectorFlatPlatePhotovoltaicThermal*/
-  typedef boost::optional<SolarCollectorFlatPlatePhotovoltaicThermal> OptionalSolarCollectorFlatPlatePhotovoltaicThermal;
+  using OptionalSolarCollectorFlatPlatePhotovoltaicThermal = boost::optional<SolarCollectorFlatPlatePhotovoltaicThermal>;
 
   /** \relates SolarCollectorFlatPlatePhotovoltaicThermal*/
-  typedef std::vector<SolarCollectorFlatPlatePhotovoltaicThermal> SolarCollectorFlatPlatePhotovoltaicThermalVector;
+  using SolarCollectorFlatPlatePhotovoltaicThermalVector = std::vector<SolarCollectorFlatPlatePhotovoltaicThermal>;
 
 }  // namespace model
 }  // namespace openstudio

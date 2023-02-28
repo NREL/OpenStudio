@@ -48,7 +48,12 @@ namespace model {
    public:
     PhotovoltaicPerformance(IddObjectType type, const Model& model);
 
-    virtual ~PhotovoltaicPerformance() {}
+    virtual ~PhotovoltaicPerformance() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PhotovoltaicPerformance(const PhotovoltaicPerformance& other) = default;
+    PhotovoltaicPerformance(PhotovoltaicPerformance&& other) = default;
+    PhotovoltaicPerformance& operator=(const PhotovoltaicPerformance&) = default;
+    PhotovoltaicPerformance& operator=(PhotovoltaicPerformance&&) = default;
 
    protected:
     friend class Model;
@@ -57,7 +62,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::PhotovoltaicPerformance_Impl ImplType;
+    using ImplType = detail::PhotovoltaicPerformance_Impl;
 
     explicit PhotovoltaicPerformance(std::shared_ptr<detail::PhotovoltaicPerformance_Impl> impl);
 
@@ -67,9 +72,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<PhotovoltaicPerformance> OptionalPhotovoltaicPerformance;
+  using OptionalPhotovoltaicPerformance = boost::optional<PhotovoltaicPerformance>;
 
-  typedef std::vector<PhotovoltaicPerformance> PhotovoltaicPerformanceVector;
+  using PhotovoltaicPerformanceVector = std::vector<PhotovoltaicPerformance>;
 
 }  // namespace model
 }  // namespace openstudio

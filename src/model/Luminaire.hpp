@@ -59,7 +59,12 @@ namespace model {
 
     explicit Luminaire(const LuminaireDefinition& luminaireDefinition);
 
-    virtual ~Luminaire() {}
+    virtual ~Luminaire() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Luminaire(const Luminaire& other) = default;
+    Luminaire(Luminaire&& other) = default;
+    Luminaire& operator=(const Luminaire&) = default;
+    Luminaire& operator=(Luminaire&&) = default;
 
     //@}
 
@@ -143,7 +148,7 @@ namespace model {
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -176,7 +181,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Luminaire_Impl ImplType;
+    using ImplType = detail::Luminaire_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -189,10 +194,10 @@ namespace model {
   };
 
   /** \relates Luminaire*/
-  typedef boost::optional<Luminaire> OptionalLuminaire;
+  using OptionalLuminaire = boost::optional<Luminaire>;
 
   /** \relates Luminaire*/
-  typedef std::vector<Luminaire> LuminaireVector;
+  using LuminaireVector = std::vector<Luminaire>;
 
 }  // namespace model
 }  // namespace openstudio

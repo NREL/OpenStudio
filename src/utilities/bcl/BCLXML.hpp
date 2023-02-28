@@ -104,7 +104,7 @@ class UTILITIES_API BCLXML
   //@{
 
   /// Virtual destructor
-  virtual ~BCLXML() {}
+  virtual ~BCLXML() = default;
 
   //@}
   /** @name Getters */

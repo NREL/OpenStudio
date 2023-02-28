@@ -52,7 +52,7 @@ namespace model {
 
       OutputControlTableStyle_Impl(const OutputControlTableStyle_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputControlTableStyle_Impl() {}
+      virtual ~OutputControlTableStyle_Impl() = default;
 
       //@}
 

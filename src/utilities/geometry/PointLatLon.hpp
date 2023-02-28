@@ -121,10 +121,10 @@ UTILITIES_API std::ostream& operator<<(std::ostream& os, const PointLatLon& poin
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<PointLatLon>& pointVector);
 
 // optional PointLatLon
-typedef boost::optional<PointLatLon> OptionalPointLatLon;
+using OptionalPointLatLon = boost::optional<PointLatLon>;
 
 // vector of PointLatLon
-typedef std::vector<PointLatLon> PointLatLonVector;
+using PointLatLonVector = std::vector<PointLatLon>;
 
 /// compute distance in meters between two points on the Earth's surface
 /// lat and lon are specified in degrees

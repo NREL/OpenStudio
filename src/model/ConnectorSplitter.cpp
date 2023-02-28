@@ -58,8 +58,6 @@ namespace model {
     ConnectorSplitter_Impl::ConnectorSplitter_Impl(const ConnectorSplitter_Impl& other, Model_Impl* model, bool keepHandle)
       : Splitter_Impl(other, model, keepHandle) {}
 
-    ConnectorSplitter_Impl::~ConnectorSplitter_Impl() {}
-
     const std::vector<std::string>& ConnectorSplitter_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       return result;

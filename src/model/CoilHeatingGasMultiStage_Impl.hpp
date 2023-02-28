@@ -55,7 +55,7 @@ namespace model {
 
       CoilHeatingGasMultiStage_Impl(const CoilHeatingGasMultiStage_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingGasMultiStage_Impl() {}
+      virtual ~CoilHeatingGasMultiStage_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

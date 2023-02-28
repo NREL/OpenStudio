@@ -113,11 +113,12 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
 
   EXPECT_FALSE(collector.surface());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   ShadingSurface shadingSurface(points, model);
 
@@ -147,7 +148,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_Clone) {
 
     ModelObject clone = collector.clone(model);
     ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlateWater>());
-    SolarCollectorFlatPlateWater collector2 = clone.cast<SolarCollectorFlatPlateWater>();
+    auto collector2 = clone.cast<SolarCollectorFlatPlateWater>();
     SolarCollectorPerformanceFlatPlate performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());
@@ -161,7 +162,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_Clone) {
     Model model2;
     ModelObject clone = collector.clone(model2);
     ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlateWater>());
-    SolarCollectorFlatPlateWater collector2 = clone.cast<SolarCollectorFlatPlateWater>();
+    auto collector2 = clone.cast<SolarCollectorFlatPlateWater>();
     SolarCollectorPerformanceFlatPlate performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());

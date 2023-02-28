@@ -56,7 +56,12 @@ namespace model {
 
     explicit CoilCoolingFourPipeBeam(const Model& model);
 
-    virtual ~CoilCoolingFourPipeBeam() {}
+    virtual ~CoilCoolingFourPipeBeam() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingFourPipeBeam(const CoilCoolingFourPipeBeam& other) = default;
+    CoilCoolingFourPipeBeam(CoilCoolingFourPipeBeam&& other) = default;
+    CoilCoolingFourPipeBeam& operator=(const CoilCoolingFourPipeBeam&) = default;
+    CoilCoolingFourPipeBeam& operator=(CoilCoolingFourPipeBeam&&) = default;
 
     //@}
 
@@ -116,7 +121,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingFourPipeBeam_Impl ImplType;
+    using ImplType = detail::CoilCoolingFourPipeBeam_Impl;
 
     explicit CoilCoolingFourPipeBeam(std::shared_ptr<detail::CoilCoolingFourPipeBeam_Impl> impl);
 
@@ -130,10 +135,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingFourPipeBeam*/
-  typedef boost::optional<CoilCoolingFourPipeBeam> OptionalCoilCoolingFourPipeBeam;
+  using OptionalCoilCoolingFourPipeBeam = boost::optional<CoilCoolingFourPipeBeam>;
 
   /** \relates CoilCoolingFourPipeBeam*/
-  typedef std::vector<CoilCoolingFourPipeBeam> CoilCoolingFourPipeBeamVector;
+  using CoilCoolingFourPipeBeamVector = std::vector<CoilCoolingFourPipeBeam>;
 
 }  // namespace model
 }  // namespace openstudio

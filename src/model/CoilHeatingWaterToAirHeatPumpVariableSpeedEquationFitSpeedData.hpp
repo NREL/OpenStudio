@@ -62,7 +62,15 @@ namespace model {
                                                                             const Curve& energyInputRatioFunctionofWaterFlowFraction,
                                                                             const Curve& wasteHeatFunctionofTemperature);
 
-    virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData() {}
+    virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& other) =
+      default;
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData&& other) = default;
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData&
+      operator=(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData&) = default;
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData&
+      operator=(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData&&) = default;
 
     //@}
 
@@ -130,7 +138,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl ImplType;
+    using ImplType = detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl;
 
     explicit CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(
       std::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl> impl);
@@ -145,12 +153,12 @@ namespace model {
   };
 
   /** \relates CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData*/
-  typedef boost::optional<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>
-    OptionalCoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
+  using OptionalCoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData =
+    boost::optional<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>;
 
   /** \relates CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData*/
-  typedef std::vector<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>
-    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedDataVector;
+  using CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedDataVector =
+    std::vector<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>;
 
 }  // namespace model
 }  // namespace openstudio

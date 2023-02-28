@@ -58,7 +58,7 @@ namespace model {
 
     explicit MaterialPropertyPhaseChangeHysteresis(MasslessOpaqueMaterial& material);
 
-    virtual ~MaterialPropertyPhaseChangeHysteresis() {}
+    virtual ~MaterialPropertyPhaseChangeHysteresis() = default;
 
     //@}
 
@@ -134,7 +134,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::MaterialPropertyPhaseChangeHysteresis_Impl ImplType;
+    using ImplType = detail::MaterialPropertyPhaseChangeHysteresis_Impl;
 
     explicit MaterialPropertyPhaseChangeHysteresis(std::shared_ptr<detail::MaterialPropertyPhaseChangeHysteresis_Impl> impl);
 
@@ -148,10 +148,10 @@ namespace model {
   };
 
   /** \relates MaterialPropertyPhaseChangeHysteresis*/
-  typedef boost::optional<MaterialPropertyPhaseChangeHysteresis> OptionalMaterialPropertyPhaseChangeHysteresis;
+  using OptionalMaterialPropertyPhaseChangeHysteresis = boost::optional<MaterialPropertyPhaseChangeHysteresis>;
 
   /** \relates MaterialPropertyPhaseChangeHysteresis*/
-  typedef std::vector<MaterialPropertyPhaseChangeHysteresis> MaterialPropertyPhaseChangeHysteresisVector;
+  using MaterialPropertyPhaseChangeHysteresisVector = std::vector<MaterialPropertyPhaseChangeHysteresis>;
 
 }  // namespace model
 }  // namespace openstudio

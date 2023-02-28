@@ -64,11 +64,13 @@ namespace detail {
 
     TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units);
 
-    ~TimeSeries_Impl() {}
+    ~TimeSeries_Impl() = default;
 
     openstudio::OptionalTime intervalLength() const;
 
     openstudio::DateTime firstReportDateTime() const;
+
+    openstudio::DateTime startDateTime() const;
 
     DateTimeVector dateTimes() const;
 
@@ -214,7 +216,7 @@ class UTILITIES_API TimeSeries
   TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units);
 
   /// Virtual destructor
-  ~TimeSeries() {}
+  ~TimeSeries() = default;
 
   //@}
   /** @name Getters */
@@ -228,6 +230,9 @@ class UTILITIES_API TimeSeries
 
   /// Returns the date and time of first report value
   openstudio::DateTime firstReportDateTime() const;
+
+  /// Returns the date and time of start value
+  openstudio::DateTime startDateTime() const;
 
   /// Returns the vector of time in days from end of the first reporting interval
   openstudio::Vector daysFromFirstReport() const;
@@ -309,10 +314,10 @@ class UTILITIES_API TimeSeries
 };
 
 // optional TimeSeries
-typedef boost::optional<TimeSeries> OptionalTimeSeries;
+using OptionalTimeSeries = boost::optional<TimeSeries>;
 
 // vector of TimeSeries
-typedef std::vector<TimeSeries> TimeSeriesVector;
+using TimeSeriesVector = std::vector<TimeSeries>;
 
 /** double * TimeSeries */
 UTILITIES_API TimeSeries operator*(double d, const TimeSeries& series);

@@ -53,7 +53,7 @@ namespace model {
 
       TemperingValve_Impl(const TemperingValve_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~TemperingValve_Impl() {}
+      virtual ~TemperingValve_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

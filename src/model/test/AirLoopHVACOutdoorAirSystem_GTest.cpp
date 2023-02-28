@@ -74,7 +74,7 @@ TEST_F(ModelFixture, AirLoopHVACOutdoorAirSystem_clone) {
 
   ASSERT_EQ(openstudio::IddObjectType::OS_Controller_OutdoorAir, oaSystem.getControllerOutdoorAir().iddObjectType().value());
 
-  AirLoopHVACOutdoorAirSystem oaSystem2 = oaSystem.clone(model2).cast<AirLoopHVACOutdoorAirSystem>();
+  auto oaSystem2 = oaSystem.clone(model2).cast<AirLoopHVACOutdoorAirSystem>();
 
   ASSERT_EQ(openstudio::IddObjectType::OS_Controller_OutdoorAir, oaSystem2.getControllerOutdoorAir().iddObjectType().value());
 }

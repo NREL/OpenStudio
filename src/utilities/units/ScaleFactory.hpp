@@ -51,7 +51,7 @@ class UTILITIES_API ScaleFactorySingleton
 
  public:
   /// Destructor.
-  ~ScaleFactorySingleton();
+  ~ScaleFactorySingleton() = default;
 
   /** Store a scale callback function for future lookup using the scale exponent or
    *  abbreviation. By default, SI scales are registered during factory construction. */
@@ -76,15 +76,15 @@ class UTILITIES_API ScaleFactorySingleton
   /// Private constructor initializes ScaleFactory with standard SI scales.
   ScaleFactorySingleton();
 
-  typedef std::map<int, ScaleConstant> ExponentLookupMap;
-  typedef std::map<std::string, ScaleConstant> AbbreviationLookupMap;
+  using ExponentLookupMap = std::map<int, ScaleConstant>;
+  using AbbreviationLookupMap = std::map<std::string, ScaleConstant>;
   ExponentLookupMap m_exponentMap;
   AbbreviationLookupMap m_abbreviationMap;
 
   ScaleConstant m_recoverFromFailedCreate() const;
 };
 
-typedef openstudio::Singleton<ScaleFactorySingleton> ScaleFactory;
+using ScaleFactory = openstudio::Singleton<ScaleFactorySingleton>;
 
 /** Prints scales that are registered in the factory (and thus available for use in
  *  Units and Quantities). */
@@ -102,7 +102,7 @@ UTILITIES_API std::pair<std::string, std::string> extractScaleAbbreviation(const
  *  for its use. */
 // DLM: this is ill-conceived and easy to misuse (which is what was happening) in #2240
 // all operations (e.g. *) between two Scales should return a Scale
-typedef std::pair<ScaleConstant, double> ScaleOpReturnType;
+using ScaleOpReturnType = std::pair<ScaleConstant, double>;
 
 /** Multiplication of scales. If result implied by adding exponents is not
  *  available, .second is amount multiplication of values should be multiplied

@@ -56,7 +56,7 @@ namespace model {
 
       ExteriorLights_Impl(const ExteriorLights_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExteriorLights_Impl() {}
+      virtual ~ExteriorLights_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -105,7 +105,7 @@ namespace model {
       bool setSchedule(Schedule& schedule);
 
       void resetSchedule();
-      bool setControlOption(std::string controlOption);
+      bool setControlOption(const std::string& controlOption);
 
       void resetControlOption();
 
@@ -113,7 +113,7 @@ namespace model {
 
       void resetMultiplier();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

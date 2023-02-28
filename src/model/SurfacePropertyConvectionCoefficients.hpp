@@ -61,7 +61,12 @@ namespace model {
 
     explicit SurfacePropertyConvectionCoefficients(const InternalMass& surface);
 
-    virtual ~SurfacePropertyConvectionCoefficients() {}
+    virtual ~SurfacePropertyConvectionCoefficients() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SurfacePropertyConvectionCoefficients(const SurfacePropertyConvectionCoefficients& other) = default;
+    SurfacePropertyConvectionCoefficients(SurfacePropertyConvectionCoefficients&& other) = default;
+    SurfacePropertyConvectionCoefficients& operator=(const SurfacePropertyConvectionCoefficients&) = default;
+    SurfacePropertyConvectionCoefficients& operator=(SurfacePropertyConvectionCoefficients&&) = default;
 
     //@}
 
@@ -147,7 +152,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SurfacePropertyConvectionCoefficients_Impl ImplType;
+    using ImplType = detail::SurfacePropertyConvectionCoefficients_Impl;
 
     explicit SurfacePropertyConvectionCoefficients(std::shared_ptr<detail::SurfacePropertyConvectionCoefficients_Impl> impl);
 
@@ -161,10 +166,10 @@ namespace model {
   };
 
   /** \relates SurfacePropertyConvectionCoefficients*/
-  typedef boost::optional<SurfacePropertyConvectionCoefficients> OptionalSurfacePropertyConvectionCoefficients;
+  using OptionalSurfacePropertyConvectionCoefficients = boost::optional<SurfacePropertyConvectionCoefficients>;
 
   /** \relates SurfacePropertyConvectionCoefficients*/
-  typedef std::vector<SurfacePropertyConvectionCoefficients> SurfacePropertyConvectionCoefficientsVector;
+  using SurfacePropertyConvectionCoefficientsVector = std::vector<SurfacePropertyConvectionCoefficients>;
 
 }  // namespace model
 }  // namespace openstudio

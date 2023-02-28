@@ -39,21 +39,18 @@ namespace energyplus {
     bool result = true;
     unsigned numFields = oldObject.numFields();
     for (unsigned i = 0; i < numFields; ++i) {
-      OptionalString oldStr = oldObject.getString(i);
-      if (oldStr) {
-        result = result && newObject.setString(i, *oldStr);
+      if (auto s_ = oldObject.getString(i)) {
+        result = result && newObject.setString(i, s_.get());
       }
     }
     return result;
   }
 
-  bool mapFields(const IdfObject& oldObject, IdfObject& newObject, std::vector<std::pair<unsigned, unsigned>> fieldMap) {
+  bool mapFields(const IdfObject& oldObject, IdfObject& newObject, const std::vector<std::pair<unsigned, unsigned>>& fieldMap) {
     bool result = true;
-    typedef std::pair<unsigned, unsigned> PairType;
-    for (PairType p : fieldMap) {
-      OptionalString oldStr = oldObject.getString(p.first);
-      if (oldStr) {
-        result = result && newObject.setString(p.second, *oldStr);
+    for (const auto& [oriIndex, targetIndex] : fieldMap) {
+      if (auto s_ = oldObject.getString(oriIndex)) {
+        result = result && newObject.setString(targetIndex, s_.get());
       }
     }
     return result;

@@ -67,11 +67,11 @@ namespace model {
       : HVACComponent_Impl(other, model, keepHandles) {}
 
     std::vector<ModelObject> ZoneHVACComponent_Impl::children() const {
-      return std::vector<ModelObject>();
+      return {};
     }
 
     boost::optional<ParentObject> ZoneHVACComponent_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     const std::vector<std::string>& ZoneHVACComponent_Impl::outputVariableNames() const {
@@ -88,7 +88,7 @@ namespace model {
         clone.setString(clone.outletPort(), "");
       }
 
-      return clone;
+      return std::move(clone);
     }
 
     boost::optional<ThermalZone> ZoneHVACComponent_Impl::thermalZone() const {
@@ -107,8 +107,8 @@ namespace model {
     //  auto m = model();
     //  auto h = handle();
 
-    //  auto connections = subsetCastVector<Connection>(m.getModelObjects<Connection>());
-    //  auto plenums = subsetCastVector<AirLoopHVACReturnPlenum>(m.getModelObjects<AirLoopHVACReturnPlenum>());
+    //  auto connections = subsetCastVector<Connection>(m.getConcreteModelObjects<Connection>());
+    //  auto plenums = subsetCastVector<AirLoopHVACReturnPlenum>(m.getConcreteModelObjects<AirLoopHVACReturnPlenum>());
     //  for ( auto & c : connections ) {
     //    auto target = c.targetObject();
     //    if ( target && ( target->handle() == h ) ) {
@@ -251,7 +251,7 @@ namespace model {
         PortList exhaustPortList = thermalZone.exhaustPortList();
         unsigned nextPort = exhaustPortList.nextPort();
         m.connect(exhaustPortList, nextPort, exhaustNode, exhaustNode.inletPort());
-        ModelObject mo = this->getObject<ModelObject>();
+        auto mo = this->getObject<ModelObject>();
         m.connect(exhaustNode, exhaustNode.outletPort(), mo, this->inletPort());
 
         // Air Inlet Node
@@ -271,7 +271,7 @@ namespace model {
       boost::optional<ThermalZone> thermalZone = this->thermalZone();
       boost::optional<AirLoopHVAC> airLoopHVAC = this->airLoopHVAC();
       Model m = this->model();
-      ZoneHVACComponent mo = getObject<ZoneHVACComponent>();
+      auto mo = getObject<ZoneHVACComponent>();
 
       bool inletSideMixer = false;
       if (airLoopHVAC) {
@@ -362,7 +362,7 @@ namespace model {
           removeFromThermalZone();
         }
         thermalZone->setUseIdealAirLoads(false);
-        ZoneHVACComponent thisObject = getObject<ZoneHVACComponent>();
+        auto thisObject = getObject<ZoneHVACComponent>();
         thermalZone->addEquipment(thisObject);
         thermalZone->setCoolingPriority(thisObject, 1);
         thermalZone->setHeatingPriority(thisObject, 1);
@@ -423,7 +423,7 @@ namespace model {
       return boost::none;
     }
 
-    std::vector<HVACComponent> ZoneHVACComponent_Impl::edges(const boost::optional<HVACComponent>& prev) {
+    std::vector<HVACComponent> ZoneHVACComponent_Impl::edges(const boost::optional<HVACComponent>& /*prev*/) {
       std::vector<HVACComponent> edges;
       if (boost::optional<Node> t_node = this->outletNode()) {
         edges.push_back(t_node->cast<HVACComponent>());
@@ -461,13 +461,17 @@ namespace model {
 
     boost::optional<ModelObject> ZoneHVACComponent_Impl::airInletModelObject() const {
       auto node = inletNode();
-      if (node) return node->cast<ModelObject>();
+      if (node) {
+        return node->cast<ModelObject>();
+      }
       return boost::none;
     }
 
     boost::optional<ModelObject> ZoneHVACComponent_Impl::airOutletModelObject() const {
       auto node = outletNode();
-      if (node) return node->cast<ModelObject>();
+      if (node) {
+        return node->cast<ModelObject>();
+      }
       return boost::none;
     }
 

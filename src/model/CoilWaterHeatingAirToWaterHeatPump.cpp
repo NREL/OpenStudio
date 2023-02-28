@@ -357,7 +357,7 @@ namespace model {
     }
 
     bool CoilWaterHeatingAirToWaterHeatPump_Impl::setEvaporatorAirTemperatureTypeforCurveObjects(
-      std::string evaporatorAirTemperatureTypeforCurveObjects) {
+      const std::string& evaporatorAirTemperatureTypeforCurveObjects) {
       bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPumpFields::EvaporatorAirTemperatureTypeforCurveObjects,
                               evaporatorAirTemperatureTypeforCurveObjects);
       return result;
@@ -435,7 +435,7 @@ namespace model {
     ModelObject CoilWaterHeatingAirToWaterHeatPump_Impl::clone(Model model) const {
       auto newCoil = ModelObject_Impl::clone(model).cast<CoilWaterHeatingAirToWaterHeatPump>();
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     std::vector<ModelObject> CoilWaterHeatingAirToWaterHeatPump_Impl::children() const {
@@ -622,7 +622,7 @@ namespace model {
   }
 
   IddObjectType CoilWaterHeatingAirToWaterHeatPump::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump);
+    return {IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump};
   }
 
   std::vector<std::string> CoilWaterHeatingAirToWaterHeatPump::evaporatorAirTemperatureTypeforCurveObjectsValues() {
@@ -804,7 +804,8 @@ namespace model {
       maximumAmbientTemperatureforCrankcaseHeaterOperation);
   }
 
-  bool CoilWaterHeatingAirToWaterHeatPump::setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects) {
+  bool CoilWaterHeatingAirToWaterHeatPump::setEvaporatorAirTemperatureTypeforCurveObjects(
+    const std::string& evaporatorAirTemperatureTypeforCurveObjects) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPump_Impl>()->setEvaporatorAirTemperatureTypeforCurveObjects(
       evaporatorAirTemperatureTypeforCurveObjects);
   }

@@ -105,7 +105,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType OutputJSON::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Output_JSON);
+    return {IddObjectType::OS_Output_JSON};
   }
 
   std::vector<std::string> OutputJSON::optionTypeValues() {

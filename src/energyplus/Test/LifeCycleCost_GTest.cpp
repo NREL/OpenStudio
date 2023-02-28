@@ -97,11 +97,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Construction) {
   space.setThermalZone(thermalZone);
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 2, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 2, 0},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
   surface.setConstruction(construction);
@@ -159,11 +160,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Construction2) {
   space.setThermalZone(thermalZone);
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 2, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 2, 0},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
   surface.setConstruction(construction);
@@ -220,11 +222,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Construction3) {
   space.setThermalZone(thermalZone);
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 2, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 2, 0},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
   surface.setConstruction(construction);
@@ -271,11 +274,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Lights) {
   lights.setSpace(space);
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
+  points = {
+    {2, 0, 0},
+    {0, 0, 0},
+    {0, 2, 0},
+    {2, 2, 0},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
 
@@ -335,11 +339,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Lights_Multiplier) {
   lights.setMultiplier(3.0);
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
+  points = {
+    {2, 0, 0},
+    {0, 0, 0},
+    {0, 2, 0},
+    {2, 2, 0},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
 
@@ -393,11 +398,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Building) {
   space.setThermalZone(thermalZone);
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
+  points = {
+    {2, 0, 0},
+    {0, 0, 0},
+    {0, 2, 0},
+    {2, 2, 0},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
 

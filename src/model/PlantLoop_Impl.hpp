@@ -60,7 +60,7 @@ namespace model {
 
       PlantLoop_Impl(const PlantLoop_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PlantLoop_Impl() {}
+      virtual ~PlantLoop_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -83,7 +83,7 @@ namespace model {
 
       std::string loadDistributionScheme();
 
-      bool setLoadDistributionScheme(std::string scheme);
+      bool setLoadDistributionScheme(const std::string& scheme);
 
       std::string fluidType();
 

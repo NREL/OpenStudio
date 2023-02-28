@@ -54,7 +54,7 @@ namespace model {
 
     PythonPluginInstance(const ExternalFile& externalfile, const std::string& pluginClassName);
 
-    virtual ~PythonPluginInstance() {}
+    virtual ~PythonPluginInstance() = default;
 
     //@}
 

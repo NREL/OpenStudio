@@ -82,11 +82,10 @@ namespace model {
       : HVACComponent_Impl(other, model, keepHandle) {}
 
     // virtual destructor
-    AirLoopHVACOutdoorAirSystem_Impl::~AirLoopHVACOutdoorAirSystem_Impl() {}
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> AirLoopHVACOutdoorAirSystem_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     std::vector<ModelObject> AirLoopHVACOutdoorAirSystem_Impl::children() const {
@@ -228,7 +227,7 @@ namespace model {
         }
       }
 
-      return oaclone;
+      return std::move(oaclone);
     }
 
     std::vector<IdfObject> AirLoopHVACOutdoorAirSystem_Impl::remove() {
@@ -293,7 +292,7 @@ namespace model {
       return ModelObject_Impl::remove();
     }
 
-    std::vector<HVACComponent> AirLoopHVACOutdoorAirSystem_Impl::edges(const boost::optional<HVACComponent>& prev) {
+    std::vector<HVACComponent> AirLoopHVACOutdoorAirSystem_Impl::edges(const boost::optional<HVACComponent>& /*prev*/) {
       std::vector<HVACComponent> edges;
       if (auto edgeModelObject = this->mixedAirModelObject()) {
         if (auto edgeObject = edgeModelObject->optionalCast<HVACComponent>()) {
@@ -369,7 +368,7 @@ namespace model {
       ModelObjectVector modelObjects;
       modelObjects = this->oaComponents();
 
-      if (modelObjects.size() > 0) {
+      if (!modelObjects.empty()) {
         ModelObject modelObject = modelObjects.front();
         result = modelObject.optionalCast<Node>();
       }
@@ -382,7 +381,7 @@ namespace model {
       ModelObjectVector modelObjects;
       modelObjects = this->reliefComponents();
 
-      if (modelObjects.size() > 0) {
+      if (!modelObjects.empty()) {
         ModelObject modelObject = modelObjects.back();
         result = modelObject.optionalCast<Node>();
       }
@@ -460,12 +459,12 @@ namespace model {
 
     bool AirLoopHVACOutdoorAirSystem_Impl::addToNode(Node& node) {
       Model _model = node.model();
-      ModelObject thisModelObject = getObject<ModelObject>();
+      auto thisModelObject = getObject<ModelObject>();
 
       if (OptionalAirLoopHVAC optionalAirLoop = node.airLoopHVAC()) {
         AirLoopHVAC airLoop = optionalAirLoop.get();
 
-        if (airLoop.supplyComponents(this->iddObjectType()).size() > 0) {
+        if (!airLoop.supplyComponents(this->iddObjectType()).empty()) {
           return false;
         }
 
@@ -600,7 +599,7 @@ namespace model {
     }
 
     boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem_Impl::airLoopHVACDedicatedOutdoorAirSystem() const {
-      AirLoopHVACOutdoorAirSystem thisOASystem = getObject<AirLoopHVACOutdoorAirSystem>();
+      auto thisOASystem = getObject<AirLoopHVACOutdoorAirSystem>();
       std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems =
         thisOASystem.getModelObjectSources<AirLoopHVACDedicatedOutdoorAirSystem>(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
       if (doaSystems.empty()) {

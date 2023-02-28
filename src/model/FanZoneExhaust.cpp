@@ -96,7 +96,8 @@ namespace model {
     std::vector<ScheduleTypeKey> FanZoneExhaust_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Fan_ZoneExhaustFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FanZoneExhaust", "Availability"));
       }
@@ -151,7 +152,7 @@ namespace model {
 
       m.connect(exhaustPortList, nextPort, exhaustNode, exhaustNode.inletPort());
 
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
 
       m.connect(exhaustNode, exhaustNode.outletPort(), mo, this->inletPort());
 
@@ -255,7 +256,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool FanZoneExhaust_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool FanZoneExhaust_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Fan_ZoneExhaustFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -271,7 +272,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool FanZoneExhaust_Impl::setSystemAvailabilityManagerCouplingMode(std::string systemAvailabilityManagerCouplingMode) {
+    bool FanZoneExhaust_Impl::setSystemAvailabilityManagerCouplingMode(const std::string& systemAvailabilityManagerCouplingMode) {
       bool result = setString(OS_Fan_ZoneExhaustFields::SystemAvailabilityManagerCouplingMode, systemAvailabilityManagerCouplingMode);
       return result;
     }
@@ -348,7 +349,7 @@ namespace model {
   }
 
   IddObjectType FanZoneExhaust::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Fan_ZoneExhaust);
+    return {IddObjectType::OS_Fan_ZoneExhaust};
   }
 
   std::vector<std::string> FanZoneExhaust::systemAvailabilityManagerCouplingModeValues() {
@@ -423,7 +424,7 @@ namespace model {
     getImpl<detail::FanZoneExhaust_Impl>()->resetMaximumFlowRate();
   }
 
-  bool FanZoneExhaust::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool FanZoneExhaust::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::FanZoneExhaust_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 
@@ -435,7 +436,7 @@ namespace model {
     getImpl<detail::FanZoneExhaust_Impl>()->resetFlowFractionSchedule();
   }
 
-  bool FanZoneExhaust::setSystemAvailabilityManagerCouplingMode(std::string systemAvailabilityManagerCouplingMode) {
+  bool FanZoneExhaust::setSystemAvailabilityManagerCouplingMode(const std::string& systemAvailabilityManagerCouplingMode) {
     return getImpl<detail::FanZoneExhaust_Impl>()->setSystemAvailabilityManagerCouplingMode(systemAvailabilityManagerCouplingMode);
   }
 

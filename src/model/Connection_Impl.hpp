@@ -46,7 +46,7 @@ namespace model {
 
       Connection_Impl(const Connection_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Connection_Impl();
+      virtual ~Connection_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
@@ -60,11 +60,11 @@ namespace model {
 
       boost::optional<unsigned> targetObjectPort() const;
 
-      bool setSourceObject(ModelObject object);
+      bool setSourceObject(const ModelObject& object);
 
       bool setSourceObjectPort(unsigned port);
 
-      bool setTargetObject(ModelObject object);
+      bool setTargetObject(const ModelObject& object);
 
       bool setTargetObjectPort(unsigned port);
 

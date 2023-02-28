@@ -45,7 +45,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //{
 
-    virtual ~Version() {}
+    virtual ~Version() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Version(const Version& other) = default;
+    Version(Version&& other) = default;
+    Version& operator=(const Version&) = default;
+    Version& operator=(Version&&) = default;
 
     //@}
 
@@ -71,7 +76,7 @@ namespace model {
     // constructor
     explicit Version(const Model& model);
 
-    typedef detail::Version_Impl ImplType;
+    using ImplType = detail::Version_Impl;
 
     friend class detail::Model_Impl;
     friend class openstudio::IdfObject;
@@ -85,7 +90,7 @@ namespace model {
   };
 
   /** \relates Version */
-  typedef boost::optional<Version> OptionalVersion;
+  using OptionalVersion = boost::optional<Version>;
 
 }  // namespace model
 }  // namespace openstudio

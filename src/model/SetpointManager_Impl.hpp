@@ -49,7 +49,7 @@ namespace model {
 
       SetpointManager_Impl(const SetpointManager_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~SetpointManager_Impl();
+      virtual ~SetpointManager_Impl() = default;
 
       /** This method will delete any existing SPM with the same controlVariable, and check if placing the SPM is allowed:
      * <ul>

@@ -55,7 +55,12 @@ namespace model {
 
     explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model);
 
-    virtual ~EnergyManagementSystemCurveOrTableIndexVariable() {}
+    virtual ~EnergyManagementSystemCurveOrTableIndexVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemCurveOrTableIndexVariable(const EnergyManagementSystemCurveOrTableIndexVariable& other) = default;
+    EnergyManagementSystemCurveOrTableIndexVariable(EnergyManagementSystemCurveOrTableIndexVariable&& other) = default;
+    EnergyManagementSystemCurveOrTableIndexVariable& operator=(const EnergyManagementSystemCurveOrTableIndexVariable&) = default;
+    EnergyManagementSystemCurveOrTableIndexVariable& operator=(EnergyManagementSystemCurveOrTableIndexVariable&&) = default;
 
     //@}
 
@@ -79,7 +84,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl;
 
     explicit EnergyManagementSystemCurveOrTableIndexVariable(std::shared_ptr<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl> impl);
 
@@ -93,10 +98,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemCurveOrTableIndexVariable*/
-  typedef boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> OptionalEnergyManagementSystemCurveOrTableIndexVariable;
+  using OptionalEnergyManagementSystemCurveOrTableIndexVariable = boost::optional<EnergyManagementSystemCurveOrTableIndexVariable>;
 
   /** \relates EnergyManagementSystemCurveOrTableIndexVariable*/
-  typedef std::vector<EnergyManagementSystemCurveOrTableIndexVariable> EnergyManagementSystemCurveOrTableIndexVariableVector;
+  using EnergyManagementSystemCurveOrTableIndexVariableVector = std::vector<EnergyManagementSystemCurveOrTableIndexVariable>;
 
 }  // namespace model
 }  // namespace openstudio

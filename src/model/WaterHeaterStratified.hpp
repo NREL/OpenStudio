@@ -58,7 +58,12 @@ namespace model {
 
     explicit WaterHeaterStratified(const Model& model);
 
-    virtual ~WaterHeaterStratified() {}
+    virtual ~WaterHeaterStratified() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterHeaterStratified(const WaterHeaterStratified& other) = default;
+    WaterHeaterStratified(WaterHeaterStratified&& other) = default;
+    WaterHeaterStratified& operator=(const WaterHeaterStratified&) = default;
+    WaterHeaterStratified& operator=(WaterHeaterStratified&&) = default;
 
     //@}
 
@@ -225,7 +230,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     bool setTankVolume(double tankVolume);
 
@@ -235,7 +240,7 @@ namespace model {
 
     void autosizeTankHeight();
 
-    bool setTankShape(std::string tankShape);
+    bool setTankShape(const std::string& tankShape);
 
     bool setTankPerimeter(double tankPerimeter);
 
@@ -243,7 +248,7 @@ namespace model {
 
     bool setMaximumTemperatureLimit(double maximumTemperatureLimit);
 
-    bool setHeaterPriorityControl(std::string heaterPriorityControl);
+    bool setHeaterPriorityControl(const std::string& heaterPriorityControl);
 
     bool setHeater1SetpointTemperatureSchedule(Schedule& schedule);
 
@@ -263,13 +268,13 @@ namespace model {
 
     bool setHeater2Height(double heater2Height);
 
-    bool setHeaterFuelType(std::string heaterFuelType);
+    bool setHeaterFuelType(const std::string& heaterFuelType);
 
     bool setHeaterThermalEfficiency(double heaterThermalEfficiency);
 
     bool setOffCycleParasiticFuelConsumptionRate(double offCycleParasiticFuelConsumptionRate);
 
-    bool setOffCycleParasiticFuelType(std::string offCycleParasiticFuelType);
+    bool setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType);
 
     bool setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank);
 
@@ -277,13 +282,13 @@ namespace model {
 
     bool setOnCycleParasiticFuelConsumptionRate(double onCycleParasiticFuelConsumptionRate);
 
-    bool setOnCycleParasiticFuelType(std::string onCycleParasiticFuelType);
+    bool setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType);
 
     bool setOnCycleParasiticHeatFractiontoTank(double onCycleParasiticHeatFractiontoTank);
 
     bool setOnCycleParasiticHeight(double onCycleParasiticHeight);
 
-    bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
+    bool setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator);
 
     bool setAmbientTemperatureSchedule(Schedule& schedule);
 
@@ -293,7 +298,7 @@ namespace model {
 
     void resetAmbientTemperatureThermalZone();
 
-    bool setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
+    bool setAmbientTemperatureOutdoorAirNodeName(const std::string& ambientTemperatureOutdoorAirNodeName);
 
     void resetAmbientTemperatureOutdoorAirNodeName();
 
@@ -337,7 +342,7 @@ namespace model {
 
     bool setSourceSideOutletHeight(double sourceSideOutletHeight);
 
-    bool setInletMode(std::string inletMode);
+    bool setInletMode(const std::string& inletMode);
 
     bool setUseSideDesignFlowRate(double useSideDesignFlowRate);
 
@@ -377,7 +382,7 @@ namespace model {
 
     bool setNode12AdditionalLossCoefficient(double node12AdditionalLossCoefficient);
 
-    bool setSourceSideFlowControlMode(std::string sourceSideFlowControlMode);
+    bool setSourceSideFlowControlMode(const std::string& sourceSideFlowControlMode);
 
     bool setIndirectAlternateSetpointTemperatureSchedule(Schedule& schedule);
 
@@ -425,7 +430,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::WaterHeaterStratified_Impl ImplType;
+    using ImplType = detail::WaterHeaterStratified_Impl;
 
     explicit WaterHeaterStratified(std::shared_ptr<detail::WaterHeaterStratified_Impl> impl);
 
@@ -439,10 +444,10 @@ namespace model {
   };
 
   /** \relates WaterHeaterStratified*/
-  typedef boost::optional<WaterHeaterStratified> OptionalWaterHeaterStratified;
+  using OptionalWaterHeaterStratified = boost::optional<WaterHeaterStratified>;
 
   /** \relates WaterHeaterStratified*/
-  typedef std::vector<WaterHeaterStratified> WaterHeaterStratifiedVector;
+  using WaterHeaterStratifiedVector = std::vector<WaterHeaterStratified>;
 
 }  // namespace model
 }  // namespace openstudio

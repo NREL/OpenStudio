@@ -243,7 +243,7 @@ namespace model {
         return result;
       }
 
-      ModelExtensibleGroup group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
+      auto group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
 
       boost::optional<ModelObjectList> mo_list = group.getModelObjectTarget<ModelObjectList>(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup);
 
@@ -288,7 +288,7 @@ namespace model {
         }
       }
 
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       ok = eg.setPointer(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup, shadingZoneGroupList.handle());
       OS_ASSERT(ok);
 
@@ -309,8 +309,8 @@ namespace model {
 
     void ShadowCalculation_Impl::removeAllShadingZoneGroups() {
 
-      for (auto eg : extensibleGroups()) {
-        ModelExtensibleGroup group = eg.cast<ModelExtensibleGroup>();
+      for (const auto& eg : extensibleGroups()) {
+        auto group = eg.cast<ModelExtensibleGroup>();
         if (boost::optional<ModelObjectList> _mo_list =
               group.getModelObjectTarget<ModelObjectList>(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup)) {
           _mo_list->removeAllModelObjects();

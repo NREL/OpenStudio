@@ -70,7 +70,12 @@ namespace model {
     // as it will throw if it cannot find it
     static PhotovoltaicPerformanceSandia fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
-    virtual ~PhotovoltaicPerformanceSandia() {}
+    virtual ~PhotovoltaicPerformanceSandia() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PhotovoltaicPerformanceSandia(const PhotovoltaicPerformanceSandia& other) = default;
+    PhotovoltaicPerformanceSandia(PhotovoltaicPerformanceSandia&& other) = default;
+    PhotovoltaicPerformanceSandia& operator=(const PhotovoltaicPerformanceSandia&) = default;
+    PhotovoltaicPerformanceSandia& operator=(PhotovoltaicPerformanceSandia&&) = default;
 
     //@}
 
@@ -248,7 +253,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PhotovoltaicPerformanceSandia_Impl ImplType;
+    using ImplType = detail::PhotovoltaicPerformanceSandia_Impl;
 
     explicit PhotovoltaicPerformanceSandia(std::shared_ptr<detail::PhotovoltaicPerformanceSandia_Impl> impl);
 
@@ -262,10 +267,10 @@ namespace model {
   };
 
   /** \relates PhotovoltaicPerformanceSandia*/
-  typedef boost::optional<PhotovoltaicPerformanceSandia> OptionalPhotovoltaicPerformanceSandia;
+  using OptionalPhotovoltaicPerformanceSandia = boost::optional<PhotovoltaicPerformanceSandia>;
 
   /** \relates PhotovoltaicPerformanceSandia*/
-  typedef std::vector<PhotovoltaicPerformanceSandia> PhotovoltaicPerformanceSandiaVector;
+  using PhotovoltaicPerformanceSandiaVector = std::vector<PhotovoltaicPerformanceSandia>;
 
 }  // namespace model
 }  // namespace openstudio

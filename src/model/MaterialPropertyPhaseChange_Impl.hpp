@@ -56,7 +56,7 @@ namespace model {
 
       MaterialPropertyPhaseChange_Impl(const MaterialPropertyPhaseChange_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~MaterialPropertyPhaseChange_Impl() {}
+      virtual ~MaterialPropertyPhaseChange_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

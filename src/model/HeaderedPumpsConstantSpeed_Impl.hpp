@@ -54,7 +54,7 @@ namespace model {
 
       HeaderedPumpsConstantSpeed_Impl(const HeaderedPumpsConstantSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HeaderedPumpsConstantSpeed_Impl() {}
+      virtual ~HeaderedPumpsConstantSpeed_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

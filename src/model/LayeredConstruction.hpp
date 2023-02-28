@@ -53,7 +53,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~LayeredConstruction() {}
+    virtual ~LayeredConstruction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LayeredConstruction(const LayeredConstruction& other) = default;
+    LayeredConstruction(LayeredConstruction&& other) = default;
+    LayeredConstruction& operator=(const LayeredConstruction&) = default;
+    LayeredConstruction& operator=(LayeredConstruction&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -166,7 +171,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::LayeredConstruction_Impl ImplType;
+    using ImplType = detail::LayeredConstruction_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -183,10 +188,10 @@ namespace model {
   };
 
   /** \relates LayeredConstruction */
-  typedef boost::optional<LayeredConstruction> OptionalLayeredConstruction;
+  using OptionalLayeredConstruction = boost::optional<LayeredConstruction>;
 
   /** \relates LayeredConstruction */
-  typedef std::vector<LayeredConstruction> LayeredConstructionVector;
+  using LayeredConstructionVector = std::vector<LayeredConstruction>;
 
 }  // namespace model
 }  // namespace openstudio

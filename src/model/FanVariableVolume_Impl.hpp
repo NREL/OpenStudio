@@ -56,7 +56,7 @@ namespace model {
 
       FanVariableVolume_Impl(const FanVariableVolume_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FanVariableVolume_Impl() {}
+      virtual ~FanVariableVolume_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -150,7 +150,7 @@ namespace model {
 
       void autosizeMaximumFlowRate();
 
-      bool setFanPowerMinimumFlowRateInputMethod(std::string fanPowerMinimumFlowRateInputMethod);
+      bool setFanPowerMinimumFlowRateInputMethod(const std::string& fanPowerMinimumFlowRateInputMethod);
 
       void resetFanPowerMinimumFlowRateInputMethod();
 
@@ -190,7 +190,7 @@ namespace model {
 
       void resetFanPowerCoefficient5();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

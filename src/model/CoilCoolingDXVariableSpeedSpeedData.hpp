@@ -59,7 +59,12 @@ namespace model {
                                                  const Curve& energyInputRatioFunctionofTemperatureCurve,
                                                  const Curve& energyInputRatioFunctionofAirFlowFractionCurve);
 
-    virtual ~CoilCoolingDXVariableSpeedSpeedData() {}
+    virtual ~CoilCoolingDXVariableSpeedSpeedData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDXVariableSpeedSpeedData(const CoilCoolingDXVariableSpeedSpeedData& other) = default;
+    CoilCoolingDXVariableSpeedSpeedData(CoilCoolingDXVariableSpeedSpeedData&& other) = default;
+    CoilCoolingDXVariableSpeedSpeedData& operator=(const CoilCoolingDXVariableSpeedSpeedData&) = default;
+    CoilCoolingDXVariableSpeedSpeedData& operator=(CoilCoolingDXVariableSpeedSpeedData&&) = default;
 
     //@}
 
@@ -123,7 +128,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXVariableSpeedSpeedData_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXVariableSpeedSpeedData_Impl;
 
     explicit CoilCoolingDXVariableSpeedSpeedData(std::shared_ptr<detail::CoilCoolingDXVariableSpeedSpeedData_Impl> impl);
 
@@ -137,10 +142,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXVariableSpeedSpeedData*/
-  typedef boost::optional<CoilCoolingDXVariableSpeedSpeedData> OptionalCoilCoolingDXVariableSpeedSpeedData;
+  using OptionalCoilCoolingDXVariableSpeedSpeedData = boost::optional<CoilCoolingDXVariableSpeedSpeedData>;
 
   /** \relates CoilCoolingDXVariableSpeedSpeedData*/
-  typedef std::vector<CoilCoolingDXVariableSpeedSpeedData> CoilCoolingDXVariableSpeedSpeedDataVector;
+  using CoilCoolingDXVariableSpeedSpeedDataVector = std::vector<CoilCoolingDXVariableSpeedSpeedData>;
 
 }  // namespace model
 }  // namespace openstudio

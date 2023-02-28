@@ -151,7 +151,7 @@ namespace openstudio {
 namespace energyplus {
 
   IdfObject ForwardTranslator::populateBranch(IdfObject& branchIdfObject, std::vector<ModelObject>& modelObjects, Loop& loop, bool isSupplyBranch) {
-    if (modelObjects.size() > 0) {
+    if (!modelObjects.empty()) {
       int i = 0;
 
       boost::optional<Node> prevNode_;
@@ -902,7 +902,7 @@ namespace energyplus {
 
     // Install a bypass branch with a pipe
 
-    if (splitterOutletObjects.size() > 0u) {
+    if (!splitterOutletObjects.empty()) {
       IdfObject _equipmentBranch(IddObjectType::Branch);
       _equipmentBranch.clearExtensibleGroups();
       _equipmentBranch.setName(plantLoop.name().get() + " Demand Bypass Branch");

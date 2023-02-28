@@ -95,9 +95,10 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACDehumidifierDX_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_Dehumidifier_DXFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ZoneHVACDehumidifierDX", "Availability"));
+        result.emplace_back("ZoneHVACDehumidifierDX", "Availability");
       }
       return result;
     }
@@ -105,7 +106,7 @@ namespace model {
     ModelObject ZoneHVACDehumidifierDX_Impl::clone(Model model) const {
       auto clone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACDehumidifierDX>();
 
-      return clone;
+      return std::move(clone);
     }
 
     std::vector<ModelObject> ZoneHVACDehumidifierDX_Impl::children() const {
@@ -375,7 +376,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACDehumidifierDX::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_Dehumidifier_DX);
+    return {IddObjectType::OS_ZoneHVAC_Dehumidifier_DX};
   }
 
   Schedule ZoneHVACDehumidifierDX::availabilitySchedule() const {

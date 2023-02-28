@@ -50,7 +50,12 @@ namespace model {
    public:
     explicit AirLoopHVACSupplyPlenum(const Model& model);
 
-    virtual ~AirLoopHVACSupplyPlenum() {}
+    virtual ~AirLoopHVACSupplyPlenum() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACSupplyPlenum(const AirLoopHVACSupplyPlenum& other) = default;
+    AirLoopHVACSupplyPlenum(AirLoopHVACSupplyPlenum&& other) = default;
+    AirLoopHVACSupplyPlenum& operator=(const AirLoopHVACSupplyPlenum&) = default;
+    AirLoopHVACSupplyPlenum& operator=(AirLoopHVACSupplyPlenum&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -84,7 +89,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::AirLoopHVACSupplyPlenum_Impl ImplType;
+    using ImplType = detail::AirLoopHVACSupplyPlenum_Impl;
 
     explicit AirLoopHVACSupplyPlenum(std::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl);
 
@@ -98,10 +103,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACSupplyPlenum*/
-  typedef boost::optional<AirLoopHVACSupplyPlenum> OptionalAirLoopHVACSupplyPlenum;
+  using OptionalAirLoopHVACSupplyPlenum = boost::optional<AirLoopHVACSupplyPlenum>;
 
   /** \relates AirLoopHVACSupplyPlenum*/
-  typedef std::vector<AirLoopHVACSupplyPlenum> AirLoopHVACSupplyPlenumVector;
+  using AirLoopHVACSupplyPlenumVector = std::vector<AirLoopHVACSupplyPlenum>;
 
 }  // namespace model
 }  // namespace openstudio

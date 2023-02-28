@@ -68,12 +68,12 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACUnitHeater_Impl::clone(Model model) const {
-      ZoneHVACUnitHeater unitHeaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACUnitHeater>();
+      auto unitHeaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACUnitHeater>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       unitHeaterClone.setSupplyAirFan(supplyFanClone);
 
@@ -87,7 +87,7 @@ namespace model {
         }
       }
 
-      return unitHeaterClone;
+      return std::move(unitHeaterClone);
     }
 
     std::vector<IdfObject> ZoneHVACUnitHeater_Impl::remove() {
@@ -113,7 +113,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACUnitHeater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
 
       if (std::find(b, e, OS_ZoneHVAC_UnitHeaterFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACUnitHeater", "Availability"));
@@ -242,7 +243,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACUnitHeater_Impl::setFanControlType(std::string fanControlType) {
+    bool ZoneHVACUnitHeater_Impl::setFanControlType(const std::string& fanControlType) {
       bool result = setString(OS_ZoneHVAC_UnitHeaterFields::FanControlType, fanControlType);
       return result;
     }
@@ -426,7 +427,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACUnitHeater::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_UnitHeater);
+    return {IddObjectType::OS_ZoneHVAC_UnitHeater};
   }
 
   std::vector<std::string> ZoneHVACUnitHeater::fanControlTypeValues() {
@@ -497,7 +498,7 @@ namespace model {
     getImpl<detail::ZoneHVACUnitHeater_Impl>()->autosizeMaximumSupplyAirFlowRate();
   }
 
-  bool ZoneHVACUnitHeater::setFanControlType(std::string fanControlType) {
+  bool ZoneHVACUnitHeater::setFanControlType(const std::string& fanControlType) {
     return getImpl<detail::ZoneHVACUnitHeater_Impl>()->setFanControlType(fanControlType);
   }
 

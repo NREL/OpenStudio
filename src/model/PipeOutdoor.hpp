@@ -55,7 +55,12 @@ namespace model {
 
     explicit PipeOutdoor(const Model& model);
 
-    virtual ~PipeOutdoor() {}
+    virtual ~PipeOutdoor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PipeOutdoor(const PipeOutdoor& other) = default;
+    PipeOutdoor(PipeOutdoor&& other) = default;
+    PipeOutdoor& operator=(const PipeOutdoor&) = default;
+    PipeOutdoor& operator=(PipeOutdoor&&) = default;
 
     //@}
 
@@ -95,7 +100,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PipeOutdoor_Impl ImplType;
+    using ImplType = detail::PipeOutdoor_Impl;
 
     explicit PipeOutdoor(std::shared_ptr<detail::PipeOutdoor_Impl> impl);
 
@@ -109,10 +114,10 @@ namespace model {
   };
 
   /** \relates PipeOutdoor*/
-  typedef boost::optional<PipeOutdoor> OptionalPipeOutdoor;
+  using OptionalPipeOutdoor = boost::optional<PipeOutdoor>;
 
   /** \relates PipeOutdoor*/
-  typedef std::vector<PipeOutdoor> PipeOutdoorVector;
+  using PipeOutdoorVector = std::vector<PipeOutdoor>;
 
 }  // namespace model
 }  // namespace openstudio

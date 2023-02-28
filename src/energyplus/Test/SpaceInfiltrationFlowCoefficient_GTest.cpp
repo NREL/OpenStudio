@@ -194,7 +194,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SpaceInfiltrationFlowCoefficient) {
     EXPECT_EQ(1, rt.errors().size());
     EXPECT_TRUE(rt.warnings().empty());
 
-    auto infiltrations = model.getModelObjects<openstudio::model::SpaceInfiltrationFlowCoefficient>();
+    auto infiltrations = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationFlowCoefficient>();
     EXPECT_EQ(0, infiltrations.size());
   }
 
@@ -211,7 +211,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SpaceInfiltrationFlowCoefficient) {
     EXPECT_TRUE(rt.errors().empty());
     EXPECT_TRUE(rt.warnings().empty());
 
-    auto infiltrations = model.getModelObjects<openstudio::model::SpaceInfiltrationFlowCoefficient>();
+    auto infiltrations = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationFlowCoefficient>();
     ASSERT_EQ(1, infiltrations.size());
     auto infiltration = infiltrations[0];
 

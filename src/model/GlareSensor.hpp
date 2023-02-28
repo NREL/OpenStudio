@@ -55,7 +55,12 @@ namespace model {
 
     explicit GlareSensor(const Model& model);
 
-    virtual ~GlareSensor() {}
+    virtual ~GlareSensor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GlareSensor(const GlareSensor& other) = default;
+    GlareSensor(GlareSensor&& other) = default;
+    GlareSensor& operator=(const GlareSensor&) = default;
+    GlareSensor& operator=(GlareSensor&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -139,7 +144,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::GlareSensor_Impl ImplType;
+    using ImplType = detail::GlareSensor_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -152,10 +157,10 @@ namespace model {
   };
 
   /** \relates GlareSensor*/
-  typedef boost::optional<GlareSensor> OptionalGlareSensor;
+  using OptionalGlareSensor = boost::optional<GlareSensor>;
 
   /** \relates GlareSensor*/
-  typedef std::vector<GlareSensor> GlareSensorVector;
+  using GlareSensorVector = std::vector<GlareSensor>;
 
 }  // namespace model
 }  // namespace openstudio

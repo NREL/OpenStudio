@@ -85,7 +85,7 @@ namespace energyplus {
 
     boost::optional<std::string> outletNodeName;
 
-    for (auto oaComponent : oaSystem.oaComponents()) {
+    for (const auto& oaComponent : oaSystem.oaComponents()) {
       if (boost::optional<HeatExchangerAirToAirSensibleAndLatent> hx = oaComponent.optionalCast<HeatExchangerAirToAirSensibleAndLatent>()) {
         if (boost::optional<ModelObject> secondaryAirInletModelObject = hx->secondaryAirInletModelObject()) {
           outletNodeName = secondaryAirInletModelObject->name();
@@ -131,7 +131,7 @@ namespace energyplus {
 
     // AirLoopHVAC x Name
     boost::optional<AirLoopHVACOutdoorAirSystem> oas;
-    for (auto airLoop : modelObject.airLoops()) {
+    for (const auto& airLoop : modelObject.airLoops()) {
       auto eg = idfObject.pushExtensibleGroup();
       eg.setString(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName, airLoop.nameString());
 

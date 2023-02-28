@@ -43,7 +43,6 @@
 #include <utilities/idd/IddFactory.hxx>
 
 #include <fmt/format.h>
-#include <fmt/printf.h>
 
 using namespace openstudio::model;
 
@@ -53,9 +52,9 @@ namespace openstudio {
 
 namespace energyplus {
 
-  static unsigned startNewDay(IdfObject& idfObject, unsigned fieldIndex, Date date) {
-    std::string string = fmt::sprintf("Through: %02d/%02d", date.monthOfYear().value(), date.dayOfMonth());
-    idfObject.setString(fieldIndex, string);
+  static unsigned startNewDay(IdfObject& idfObject, unsigned fieldIndex, const Date& date) {
+    const std::string s = fmt::format("Through: {:02d}/{:02d}", date.monthOfYear().value(), date.dayOfMonth());
+    idfObject.setString(fieldIndex, s);
     ++fieldIndex;
     idfObject.setString(fieldIndex, "For: AllDays");
     ++fieldIndex;
@@ -63,8 +62,8 @@ namespace energyplus {
   }
 
   static unsigned addUntil(IdfObject& idfObject, unsigned fieldIndex, int hours, int minutes, double value) {
-    std::string string = fmt::sprintf("Until: %02d:%02d", hours, minutes);
-    idfObject.setString(fieldIndex, string);
+    const std::string s = fmt::format("Until: {:02d}:{:02d}", hours, minutes);
+    idfObject.setString(fieldIndex, s);
     ++fieldIndex;
     idfObject.setDouble(fieldIndex, value);
     ++fieldIndex;
@@ -88,9 +87,9 @@ namespace energyplus {
 
     TimeSeries timeseries = modelObject.timeSeries();
     // Check that the time series has at least one point
-    if (timeseries.values().size() == 0) {
+    if (timeseries.values().empty()) {
       LOG(Error, "Time series in schedule '" << modelObject.name().get() << "' has no values, schedule will not be translated");
-      return boost::optional<IdfObject>();
+      return {};
     }
     DateTime firstReportDateTime = timeseries.firstReportDateTime();
     Vector daysFromFirst = timeseries.daysFromFirstReport();

@@ -193,7 +193,7 @@ void testExampleComponent(int major, int minor) {
         ASSERT_NO_THROW(contents.primaryComponentObject());
         model::ModelObject prime = contents.primaryComponentObject();
         ASSERT_TRUE(prime.optionalCast<model::Construction>());
-        model::Construction construction = prime.cast<model::Construction>();
+        auto construction = prime.cast<model::Construction>();
         EXPECT_FALSE(construction.layers().empty());
         // make sure save and load is ok
         componentPath = it->path() / toPath("example_updated.osc");
@@ -408,7 +408,7 @@ TEST_F(OSVersionFixture,VersionTranslator_0_7_4_NameRefsTranslated) {
   EXPECT_EQ(VersionString("0.7.3"),translator.originalVersion());
 
   // Confirm that expected pointers are still there
-  model::ConstructionVector constructions = model.getModelObjects<model::Construction>();
+  model::ConstructionVector constructions = model.getConcreteModelObjects<model::Construction>();
   EXPECT_FALSE(constructions.empty());
   for (const model::Construction construction : constructions) {
     ASSERT_FALSE(construction.layers().empty());
@@ -1111,7 +1111,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ConstructionWithInternalSource) {
 
   EXPECT_EQ(3u, c.extensibleGroups().size());
   for (const IdfExtensibleGroup& eg : c.extensibleGroups()) {
-    WorkspaceExtensibleGroup w_eg = eg.cast<WorkspaceExtensibleGroup>();
+    auto w_eg = eg.cast<WorkspaceExtensibleGroup>();
     ASSERT_TRUE(w_eg.getTarget(0));
     EXPECT_EQ("OS:Material", w_eg.getTarget(0).get().iddObject().name());
   }
@@ -1268,7 +1268,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   EXPECT_EQ("Sequential", sc.getString(13, false, true).get());
   ASSERT_EQ(1u, sc.numExtensibleGroups());
 
-  WorkspaceExtensibleGroup w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(w_eg.getTarget(0));
   EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
 }
@@ -2465,4 +2465,54 @@ TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_VRF_Terminal_v340_osc) {
   EXPECT_EQ(18, ocd->numComponentObjects());
   EXPECT_EQ(19, model.numObjects());
   EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", ocd->primaryComponentObject().iddObject().name());
+}
+
+TEST_F(OSVersionFixture, update_3_5_1_to_3_5_2_GroundHeatExchangerHorizontalTrench) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_2/test_vt_GroundHeatExchangerHorizontalTrench.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_2/test_vt_GroundHeatExchangerHorizontalTrench_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> ghxs = model->getObjectsByType("OS:GroundHeatExchanger:HorizontalTrench");
+  ASSERT_EQ(1u, ghxs.size());
+  WorkspaceObject ghx = ghxs[0];
+
+  EXPECT_EQ("Ground Heat Exchanger Horizontal Trench 1", ghx.getString(1).get());  // Name
+  EXPECT_TRUE(ghx.isEmpty(2));                                                     // Inlet Node Name
+  EXPECT_TRUE(ghx.isEmpty(3));                                                     // Outlet Node Name
+  EXPECT_EQ(0.004, ghx.getDouble(4).get());                                        // Design Flow Rate
+  EXPECT_EQ(75, ghx.getDouble(5).get());                                           // Trench Length in Pipe Axial Direction
+  EXPECT_EQ(2, ghx.getInt(6).get());                                               // Number of Trenches
+  EXPECT_EQ(2, ghx.getDouble(7).get());                                            // Horizontal Spacing Between Pipes
+  EXPECT_EQ(0.016, ghx.getDouble(8).get());                                        // Pipe Inner Diameter
+  EXPECT_EQ(0.02667, ghx.getDouble(9).get());                                      // Pipe Outer Diameter
+  EXPECT_EQ(1.25, ghx.getDouble(10).get());                                        // Burial Depth
+  EXPECT_EQ(1.08, ghx.getDouble(11).get());                                        // Soil Thermal Conductivity
+  EXPECT_EQ(962, ghx.getDouble(12).get());                                         // Soil Density
+  EXPECT_EQ(2576, ghx.getDouble(13).get());                                        // Soil Specific Heat
+  EXPECT_EQ(0.3895, ghx.getDouble(14).get());                                      // Pipe Thermal Conductivity
+  EXPECT_EQ(641, ghx.getDouble(15).get());                                         // Pipe Density
+  EXPECT_EQ(2405, ghx.getDouble(16).get());                                        // Pipe Specific Heat
+  EXPECT_EQ(30, ghx.getDouble(17).get());                                          // Soil Moisture Content Percent
+  EXPECT_EQ(50, ghx.getDouble(18).get());                                          // Soil Moisture Content Percent at Saturation
+  EXPECT_NE("", ghx.getString(19).get());                                          // Undisturbed Ground Temperature Model
+  EXPECT_EQ(0.408, ghx.getDouble(20).get());                                       // Evapotranspiration Ground Cover Parameter
+
+  std::vector<WorkspaceObject> ukas = model->getObjectsByType("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach");
+  ASSERT_EQ(1u, ukas.size());
+
+  ASSERT_TRUE(ghx.getTarget(19));
+  WorkspaceObject uka = ghx.getTarget(19).get();
+  EXPECT_EQ(uka.nameString(), ghx.getTarget(19)->nameString());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach), uka.iddObject().type());
+  EXPECT_EQ("Site Ground Temperature Undisturbed Kusuda Achenbach 1", uka.getString(1).get());  // Name
+  EXPECT_EQ(1.08, uka.getDouble(2).get());                                                      // Soil Thermal Conductivity
+  EXPECT_EQ(962, uka.getDouble(3).get());                                                       // Soil Density
+  EXPECT_EQ(2576, uka.getDouble(4).get());                                                      // Soil Specific Heat
+  EXPECT_EQ(15.5, uka.getDouble(5).get());                                                      // Average Soil Surface Temperature
+  EXPECT_EQ(12.8, uka.getDouble(6).get());                                                      // Average Amplitude of Surface Temperature
+  EXPECT_EQ(17.3, uka.getDouble(7).get());                                                      // Phase Shift of Minimum Surface Temperature
 }

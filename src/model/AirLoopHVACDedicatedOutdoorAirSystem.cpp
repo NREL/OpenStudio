@@ -102,7 +102,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirLoopHVACDedicatedOutdoorAirSystem_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirLoopHVACDedicatedOutdoorAirSystem", "Availability Schedule"));
       }
@@ -154,7 +155,7 @@ namespace model {
     std::vector<AirLoopHVAC> AirLoopHVACDedicatedOutdoorAirSystem_Impl::airLoops() const {
       std::vector<AirLoopHVAC> result;
       auto groups = extensibleGroups();
-      for (auto group : groups) {
+      for (const auto& group : groups) {
         auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoop);
         if (target) {
           if (auto airLoop = target->optionalCast<AirLoopHVAC>()) {
@@ -236,7 +237,7 @@ namespace model {
 
       bool result;
 
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool airloop = eg.setPointer(OS_AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoop, airLoopHVAC.handle());
       if (airloop) {
         result = true;
@@ -298,7 +299,7 @@ namespace model {
   }
 
   IddObjectType AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem);
+    return {IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem};
   }
 
   AirLoopHVACOutdoorAirSystem AirLoopHVACDedicatedOutdoorAirSystem::airLoopHVACOutdoorAirSystem() const {

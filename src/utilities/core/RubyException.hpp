@@ -40,8 +40,11 @@ class RubyException : public std::runtime_error
 {
  public:
   RubyException(const std::string& msg, const std::string& location) : std::runtime_error(msg), m_location(location) {}
-
-  virtual ~RubyException() throw() {}
+  RubyException(const RubyException&) = default;
+  RubyException& operator=(const RubyException&) = default;
+  RubyException(RubyException&&) = default;
+  RubyException& operator=(RubyException&&) = default;
+  virtual ~RubyException() noexcept override = default;
 
   std::string location() const {
     return m_location;

@@ -88,7 +88,7 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_addToNode) {
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
-  RefrigerationCondenserWaterCooled testObjectClone = testObject.clone(m).cast<RefrigerationCondenserWaterCooled>();
+  auto testObjectClone = testObject.clone(m).cast<RefrigerationCondenserWaterCooled>();
   demandOutletNode = plantLoop.demandOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
@@ -329,7 +329,8 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_Remove) {
   RefrigerationCondenserWaterCooled testObject = RefrigerationCondenserWaterCooled(model);
   ScheduleCompact schedule(model);
 
-  std::vector<RefrigerationCondenserWaterCooled> refrigerationWaterCooledCondensers = model.getModelObjects<RefrigerationCondenserWaterCooled>();
+  std::vector<RefrigerationCondenserWaterCooled> refrigerationWaterCooledCondensers =
+    model.getConcreteModelObjects<RefrigerationCondenserWaterCooled>();
   EXPECT_EQ(1, refrigerationWaterCooledCondensers.size());
 
   std::vector<Schedule> refrigerationSchedules = model.getModelObjects<Schedule>();
@@ -339,7 +340,7 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_Remove) {
 
   testObject.remove();
 
-  refrigerationWaterCooledCondensers = model.getModelObjects<RefrigerationCondenserWaterCooled>();
+  refrigerationWaterCooledCondensers = model.getConcreteModelObjects<RefrigerationCondenserWaterCooled>();
   EXPECT_EQ(0, refrigerationWaterCooledCondensers.size());
 
   refrigerationSchedules = model.getModelObjects<Schedule>();
@@ -351,8 +352,7 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithDefaultD
 
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
-  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone =
-    refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
+  auto refrigerationCondenserWaterCooledClone = refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
 
   EXPECT_NE(refrigerationCondenserWaterCooledClone.handle(), refrigerationCondenserWaterCooled.handle());
 
@@ -381,8 +381,7 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithCustomDa
   refrigerationCondenserWaterCooled.setWaterMaximumWaterOutletTemperature(50.0);
   refrigerationCondenserWaterCooled.setWaterMinimumWaterInletTemperature(15.0);
 
-  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone =
-    refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
+  auto refrigerationCondenserWaterCooledClone = refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
 
   EXPECT_NE(refrigerationCondenserWaterCooledClone.handle(), refrigerationCondenserWaterCooled.handle());
 
@@ -400,12 +399,10 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithCustomDa
 TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneTwoModelsWithDefaultData) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
-  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone =
-    refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
+  auto refrigerationCondenserWaterCooledClone = refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
 
   Model m2;
-  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone2 =
-    refrigerationCondenserWaterCooled.clone(m2).cast<RefrigerationCondenserWaterCooled>();
+  auto refrigerationCondenserWaterCooledClone2 = refrigerationCondenserWaterCooled.clone(m2).cast<RefrigerationCondenserWaterCooled>();
 
   EXPECT_NE(refrigerationCondenserWaterCooledClone.handle(), refrigerationCondenserWaterCooled.handle());
   EXPECT_NE(refrigerationCondenserWaterCooledClone2.handle(), refrigerationCondenserWaterCooled.handle());

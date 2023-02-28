@@ -81,15 +81,15 @@ TEST_F(ModelFixture, OpaqueMaterial_AirGap_Constructors) {
   Model model;
   AirGap airGap(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  AirGapVector airGaps = model.getModelObjects<AirGap>();
+  AirGapVector airGaps = model.getConcreteModelObjects<AirGap>();
   ASSERT_EQ(static_cast<unsigned>(1), airGaps.size());
   EXPECT_TRUE(airGap == airGaps[0]);
   EXPECT_TRUE(airGap.iddObject().type() == IddObjectType::OS_Material_AirGap);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  airGaps = modelClone.getModelObjects<AirGap>();
+  airGaps = modelClone.getConcreteModelObjects<AirGap>();
   ASSERT_EQ(static_cast<unsigned>(1), airGaps.size());
   airGap = airGaps[0];
   EXPECT_FALSE(airGap.model() == model);
@@ -101,15 +101,15 @@ TEST_F(ModelFixture, OpaqueMaterial_MasslessOpaqueMaterial_Constructors) {
   Model model;
   MasslessOpaqueMaterial masslessMaterial(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  MasslessOpaqueMaterialVector masslessMaterials = model.getModelObjects<MasslessOpaqueMaterial>();
+  MasslessOpaqueMaterialVector masslessMaterials = model.getConcreteModelObjects<MasslessOpaqueMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), masslessMaterials.size());
   EXPECT_TRUE(masslessMaterial == masslessMaterials[0]);
   EXPECT_TRUE(masslessMaterial.iddObject().type() == IddObjectType::OS_Material_NoMass);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  masslessMaterials = modelClone.getModelObjects<MasslessOpaqueMaterial>();
+  masslessMaterials = modelClone.getConcreteModelObjects<MasslessOpaqueMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), masslessMaterials.size());
   masslessMaterial = masslessMaterials[0];
   EXPECT_FALSE(masslessMaterial.model() == model);
@@ -121,15 +121,15 @@ TEST_F(ModelFixture, OpaqueMaterial_RoofVegetation_Constructors) {
   Model model;
   RoofVegetation greenRoof(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  RoofVegetationVector greenRoofs = model.getModelObjects<RoofVegetation>();
+  RoofVegetationVector greenRoofs = model.getConcreteModelObjects<RoofVegetation>();
   ASSERT_EQ(static_cast<unsigned>(1), greenRoofs.size());
   EXPECT_TRUE(greenRoof == greenRoofs[0]);
   EXPECT_TRUE(greenRoof.iddObject().type() == IddObjectType::OS_Material_RoofVegetation);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  greenRoofs = modelClone.getModelObjects<RoofVegetation>();
+  greenRoofs = modelClone.getConcreteModelObjects<RoofVegetation>();
   ASSERT_EQ(static_cast<unsigned>(1), greenRoofs.size());
   greenRoof = greenRoofs[0];
   EXPECT_FALSE(greenRoof.model() == model);
@@ -141,15 +141,15 @@ TEST_F(ModelFixture, OpaqueMaterial_StandardOpaqueMaterial_Constructors) {
   Model model;
   StandardOpaqueMaterial material(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  std::vector<StandardOpaqueMaterial> materials = model.getModelObjects<StandardOpaqueMaterial>();
+  std::vector<StandardOpaqueMaterial> materials = model.getConcreteModelObjects<StandardOpaqueMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), materials.size());
   EXPECT_TRUE(material == materials[0]);
   EXPECT_TRUE(material.iddObject().type() == IddObjectType::OS_Material);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  materials = modelClone.getModelObjects<StandardOpaqueMaterial>();
+  materials = modelClone.getConcreteModelObjects<StandardOpaqueMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), materials.size());
   material = materials[0];
   EXPECT_FALSE(material.model() == model);
@@ -161,13 +161,13 @@ TEST_F(ModelFixture, OpaqueMaterial_StandardsInformationMaterial) {
   Model model;
 
   StandardOpaqueMaterial material(model);
-  EXPECT_EQ(0, model.getModelObjects<StandardsInformationMaterial>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<StandardsInformationMaterial>().size());
 
   StandardsInformationMaterial tmp = material.standardsInformation();
-  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationMaterial>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<StandardsInformationMaterial>().size());
 
   StandardsInformationMaterial info = material.standardsInformation();
-  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationMaterial>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<StandardsInformationMaterial>().size());
   EXPECT_EQ(toString(info.handle()), toString(tmp.handle()));
 
   std::vector<std::string> test;
@@ -199,5 +199,5 @@ TEST_F(ModelFixture, OpaqueMaterial_StandardsInformationMaterial) {
   EXPECT_FALSE(info.suggestedStandardsIdentifiers().empty());
 
   material.remove();
-  EXPECT_EQ(0, model.getModelObjects<StandardsInformationMaterial>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<StandardsInformationMaterial>().size());
 }

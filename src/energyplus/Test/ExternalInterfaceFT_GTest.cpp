@@ -135,7 +135,7 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterface) {
   Model model;
 
-  ExternalInterface externalinterface = model.getUniqueModelObject<ExternalInterface>();
+  auto externalinterface = model.getUniqueModelObject<ExternalInterface>();
   EXPECT_EQ("PtolemyServer", externalinterface.nameofExternalInterface());
   EXPECT_TRUE(externalinterface.setNameofExternalInterface("FunctionalMockupUnitImport"));
 

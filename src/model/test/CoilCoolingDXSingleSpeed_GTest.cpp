@@ -173,8 +173,8 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeed_addToNode) {
   // resolution: Due to using ModelObject::clone instead of StraightComponent::clone in reimplementation
   AirLoopHVAC airLoop2(m);
   EXPECT_EQ((unsigned)5, airLoop.supplyComponents().size());
-  CoilCoolingDXSingleSpeed testObjectClone = testObject.clone(m).cast<CoilCoolingDXSingleSpeed>();
-  CoilCoolingDXSingleSpeed testObjectClone2 = testObject.clone(m).cast<CoilCoolingDXSingleSpeed>();
+  auto testObjectClone = testObject.clone(m).cast<CoilCoolingDXSingleSpeed>();
+  auto testObjectClone2 = testObject.clone(m).cast<CoilCoolingDXSingleSpeed>();
   EXPECT_EQ((unsigned)5, airLoop.supplyComponents().size());
   Node supplyOutletNode2 = airLoop2.supplyOutletNode();
   supplyOutletNode = airLoop.supplyOutletNode();

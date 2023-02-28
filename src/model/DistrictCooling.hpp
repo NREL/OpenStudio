@@ -54,7 +54,12 @@ namespace model {
 
     explicit DistrictCooling(const Model& model);
 
-    virtual ~DistrictCooling() {}
+    virtual ~DistrictCooling() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DistrictCooling(const DistrictCooling& other) = default;
+    DistrictCooling(DistrictCooling&& other) = default;
+    DistrictCooling& operator=(const DistrictCooling&) = default;
+    DistrictCooling& operator=(DistrictCooling&&) = default;
 
     //@}
 
@@ -90,7 +95,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DistrictCooling_Impl ImplType;
+    using ImplType = detail::DistrictCooling_Impl;
 
     explicit DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl);
 
@@ -106,10 +111,10 @@ namespace model {
   };
 
   /** \relates DistrictCooling*/
-  typedef boost::optional<DistrictCooling> OptionalDistrictCooling;
+  using OptionalDistrictCooling = boost::optional<DistrictCooling>;
 
   /** \relates DistrictCooling*/
-  typedef std::vector<DistrictCooling> DistrictCoolingVector;
+  using DistrictCoolingVector = std::vector<DistrictCooling>;
 
 }  // namespace model
 }  // namespace openstudio

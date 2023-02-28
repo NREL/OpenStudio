@@ -55,7 +55,12 @@ namespace model {
 
     explicit GeneratorFuelCellStackCooler(const Model& model);
 
-    virtual ~GeneratorFuelCellStackCooler() {}
+    virtual ~GeneratorFuelCellStackCooler() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCellStackCooler(const GeneratorFuelCellStackCooler& other) = default;
+    GeneratorFuelCellStackCooler(GeneratorFuelCellStackCooler&& other) = default;
+    GeneratorFuelCellStackCooler& operator=(const GeneratorFuelCellStackCooler&) = default;
+    GeneratorFuelCellStackCooler& operator=(GeneratorFuelCellStackCooler&&) = default;
 
     //@}
 
@@ -186,7 +191,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCellStackCooler_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCellStackCooler_Impl;
 
     explicit GeneratorFuelCellStackCooler(std::shared_ptr<detail::GeneratorFuelCellStackCooler_Impl> impl);
 
@@ -200,10 +205,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCellStackCooler*/
-  typedef boost::optional<GeneratorFuelCellStackCooler> OptionalGeneratorFuelCellStackCooler;
+  using OptionalGeneratorFuelCellStackCooler = boost::optional<GeneratorFuelCellStackCooler>;
 
   /** \relates GeneratorFuelCellStackCooler*/
-  typedef std::vector<GeneratorFuelCellStackCooler> GeneratorFuelCellStackCoolerVector;
+  using GeneratorFuelCellStackCoolerVector = std::vector<GeneratorFuelCellStackCooler>;
 
 }  // namespace model
 }  // namespace openstudio

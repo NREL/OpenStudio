@@ -183,7 +183,7 @@ openstudio::path LocalBCL::dbPath() const {
 }
 
 std::string LocalBCL::columnText(const unsigned char* column) {
-  return std::string(reinterpret_cast<const char*>(column));
+  return {reinterpret_cast<const char*>(column)};
 }
 
 // http://sqlite.org/faq.html#q14
@@ -907,7 +907,7 @@ std::vector<std::string> LocalBCL::measureUids() const {
   return uids;
 }
 
-std::vector<BCLComponent> LocalBCL::searchComponents(const std::string& searchTerm, const std::string& componentType) const {
+std::vector<BCLComponent> LocalBCL::searchComponents(const std::string& searchTerm, const std::string& /*componentType*/) const {
   std::vector<BCLComponent> results;
 
   if (m_db) {
@@ -954,11 +954,11 @@ std::vector<BCLComponent> LocalBCL::searchComponents(const std::string& searchTe
   return results;
 }
 
-std::vector<BCLComponent> LocalBCL::searchComponents(const std::string& searchTerm, const unsigned componentTypeTID) const {
+std::vector<BCLComponent> LocalBCL::searchComponents(const std::string& searchTerm, const unsigned /*componentTypeTID*/) const {
   return searchComponents(searchTerm, "");
 }
 
-std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm, const std::string& componentType) const {
+std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm, const std::string& /*componentType*/) const {
 
   std::vector<BCLMeasure> results;
 
@@ -1007,7 +1007,7 @@ std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm, 
   return results;
 }
 
-std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm, const unsigned componentTypeTID) const {
+std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm, const unsigned /*componentTypeTID*/) const {
   return searchMeasures(searchTerm, "");
 }
 
@@ -1016,7 +1016,7 @@ std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm, 
 // cppcheck-suppress constParameter
 bool LocalBCL::addComponent(BCLComponent& component) {
   //Check for uid
-  if (m_db && !component.uid().empty() && !component.versionId().empty()) {
+  if ((m_db != nullptr) && !component.uid().empty() && !component.versionId().empty()) {
 
     // Start a transaction, so we can handle failures without messing up the database
     if (!beginTransaction()) {
@@ -1088,7 +1088,8 @@ bool LocalBCL::addComponent(BCLComponent& component) {
     }
 
     for (const Attribute& attribute : component.attributes()) {
-      std::string dataValue, dataType;
+      std::string dataValue;
+      std::string dataType;
       if (attribute.valueType().value() == AttributeValueType::Boolean) {
         dataValue = boost::lexical_cast<std::string>(attribute.valueAsBoolean());
         dataType = "boolean";
@@ -1129,7 +1130,7 @@ bool LocalBCL::addComponent(BCLComponent& component) {
 // cppcheck-suppress constParameter
 bool LocalBCL::removeComponent(BCLComponent& component) {
   // if uid is empty or not found in database return false
-  if (!m_db || component.uid().empty() || component.versionId().empty()) {
+  if ((m_db == nullptr) || component.uid().empty() || component.versionId().empty()) {
     return false;
   }
 
@@ -1202,7 +1203,7 @@ bool LocalBCL::removeComponent(BCLComponent& component) {
 bool LocalBCL::addMeasure(BCLMeasure& measure) {
 
   // if uid is empty or not found in database return false
-  if (!m_db || measure.uid().empty() || measure.versionId().empty()) {
+  if ((m_db == nullptr) || measure.uid().empty() || measure.versionId().empty()) {
     return false;
   }
 
@@ -1274,7 +1275,8 @@ bool LocalBCL::addMeasure(BCLMeasure& measure) {
   }
 
   for (const Attribute& attribute : measure.attributes()) {
-    std::string dataValue, dataType;
+    std::string dataValue;
+    std::string dataType;
     if (attribute.valueType().value() == AttributeValueType::Boolean) {
       dataValue = boost::lexical_cast<std::string>(attribute.valueAsBoolean());
       dataType = "boolean";
@@ -1311,7 +1313,7 @@ bool LocalBCL::addMeasure(BCLMeasure& measure) {
 // cppcheck-suppress constParameter
 bool LocalBCL::removeMeasure(BCLMeasure& measure) {
   // if uid is empty
-  if (!m_db || measure.uid().empty() || measure.versionId().empty()) {
+  if ((m_db == nullptr) || measure.uid().empty() || measure.versionId().empty()) {
     return false;
   }
 
@@ -1385,7 +1387,7 @@ bool LocalBCL::removeMeasure(BCLMeasure& measure) {
 std::vector<BCLComponent> LocalBCL::componentAttributeSearch(const std::vector<std::pair<std::string, std::string>>& searchTerms) const {
   auto uids = attributeSearch(searchTerms, "component");
   if (uids.empty()) {
-    return std::vector<BCLComponent>();
+    return {};
   }
 
   std::vector<BCLComponent> result;
@@ -1402,7 +1404,7 @@ std::vector<BCLComponent> LocalBCL::componentAttributeSearch(const std::vector<s
 std::vector<BCLMeasure> LocalBCL::measureAttributeSearch(const std::vector<std::pair<std::string, std::string>>& searchTerms) const {
   auto uids = this->attributeSearch(searchTerms, "measure");
   if (uids.empty()) {
-    return std::vector<BCLMeasure>();
+    return {};
   }
 
   std::vector<BCLMeasure> result;
@@ -1418,8 +1420,8 @@ std::vector<BCLMeasure> LocalBCL::measureAttributeSearch(const std::vector<std::
 
 std::set<std::pair<std::string, std::string>> LocalBCL::attributeSearch(const std::vector<std::pair<std::string, std::string>>& searchTerms,
                                                                         const std::string& componentType) const {
-  typedef std::vector<std::pair<std::string, std::string>> UidsVecType;
-  typedef std::set<std::pair<std::string, std::string>> UidsType;
+  using UidsVecType = std::vector<std::pair<std::string, std::string>>;
+  using UidsType = std::set<std::pair<std::string, std::string>>;
 
   UidsType uids;
 
@@ -1437,7 +1439,7 @@ std::set<std::pair<std::string, std::string>> LocalBCL::attributeSearch(const st
     if (code != SQLITE_OK) {
       LOG(Error, "Cannot prepare statement (in searchTerms): " << statement);
       sqlite3_finalize(sqlStmtPtr);  // No-op
-      return UidsType();
+      return {};
     }
 
     // Loop until done (or failed)
@@ -1471,7 +1473,7 @@ std::set<std::pair<std::string, std::string>> LocalBCL::attributeSearch(const st
     if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
       LOG(Error, "Cannot prepare statement (in searchTerms): " << statement);
       sqlite3_finalize(sqlStmtPtr);  // No-op
-      return UidsType();
+      return {};
     }
 
     for (const auto& searchTerm : searchTerms) {
@@ -1488,11 +1490,11 @@ std::set<std::pair<std::string, std::string>> LocalBCL::attributeSearch(const st
       if (sqlite3_bind_text(sqlStmtPtr, 1, name.c_str(), name.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
         LOG(Error, "Error binding to the 1st parameter (in searchTerms), name: " << name);
         sqlite3_finalize(sqlStmtPtr);
-        return UidsType();
+        return {};
       } else if (sqlite3_bind_text(sqlStmtPtr, 2, value.c_str(), value.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
         LOG(Error, "Error binding to the 2nd parameter (in searchTerms), value: " << value);
         sqlite3_finalize(sqlStmtPtr);
-        return UidsType();
+        return {};
       }
 
       int code = SQLITE_OK;
@@ -1522,7 +1524,7 @@ std::set<std::pair<std::string, std::string>> LocalBCL::attributeSearch(const st
 
       if (uids.empty()) {
         sqlite3_finalize(sqlStmtPtr);
-        return UidsType();
+        return {};
       }
 
     }  // End loop on searchTerms

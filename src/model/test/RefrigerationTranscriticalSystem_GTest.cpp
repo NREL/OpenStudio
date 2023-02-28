@@ -70,24 +70,24 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_Remove) {
   RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
   testObject.setRefrigerationGasCooler(gasCooler);
 
-  std::vector<RefrigerationTranscriticalSystem> refrigerationSystems = model.getModelObjects<RefrigerationTranscriticalSystem>();
+  std::vector<RefrigerationTranscriticalSystem> refrigerationSystems = model.getConcreteModelObjects<RefrigerationTranscriticalSystem>();
   EXPECT_EQ(1, refrigerationSystems.size());
 
-  std::vector<ModelObjectList> refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
+  std::vector<ModelObjectList> refrigerationModelObjectLists = model.getConcreteModelObjects<ModelObjectList>();
   EXPECT_EQ(4, refrigerationModelObjectLists.size());
 
-  std::vector<RefrigerationGasCoolerAirCooled> refrigerationGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  std::vector<RefrigerationGasCoolerAirCooled> refrigerationGasCoolers = model.getConcreteModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(1, refrigerationGasCoolers.size());
 
   testObject.remove();
 
-  refrigerationSystems = model.getModelObjects<RefrigerationTranscriticalSystem>();
+  refrigerationSystems = model.getConcreteModelObjects<RefrigerationTranscriticalSystem>();
   EXPECT_EQ(0, refrigerationSystems.size());
 
-  refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
+  refrigerationModelObjectLists = model.getConcreteModelObjects<ModelObjectList>();
   EXPECT_EQ(0, refrigerationModelObjectLists.size());
 
-  refrigerationGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  refrigerationGasCoolers = model.getConcreteModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(0, refrigerationGasCoolers.size());
 }
 
@@ -95,7 +95,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithDefaultDa
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
 
   EXPECT_DOUBLE_EQ(3500000.0, testObjectClone.receiverPressure());
   EXPECT_DOUBLE_EQ(0.4, testObjectClone.subcoolerEffectiveness());
@@ -141,7 +141,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithCustomDat
   std::vector<RefrigerationCompressor> _highPressureCompressors = testObject.highPressureCompressors();
   std::vector<RefrigerationCompressor> _lowPressureCompressors = testObject.lowPressureCompressors();
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
 
   EXPECT_FALSE(testObjectClone.mediumTemperatureSuctionPipingZone());
   EXPECT_FALSE(testObjectClone.lowTemperatureSuctionPipingZone());
@@ -178,11 +178,11 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelsWithDefaultD
   ThermalZone thermalZone(model);
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
 
   Model model2;
 
-  RefrigerationTranscriticalSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
 
   EXPECT_DOUBLE_EQ(3500000.0, testObjectClone2.receiverPressure());
   EXPECT_DOUBLE_EQ(0.4, testObjectClone2.subcoolerEffectiveness());
@@ -230,10 +230,10 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelWithCustomDat
   std::vector<RefrigerationCompressor> _highPressureCompressors = testObject.highPressureCompressors();
   std::vector<RefrigerationCompressor> _lowPressureCompressors = testObject.lowPressureCompressors();
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
 
   Model model2;
-  RefrigerationTranscriticalSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
 
   EXPECT_FALSE(testObjectClone2.mediumTemperatureSuctionPipingZone());
   EXPECT_FALSE(testObjectClone2.lowTemperatureSuctionPipingZone());
@@ -276,19 +276,19 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationGasCoolerAirC
   EXPECT_TRUE(testObject.setRefrigerationGasCooler(gasCooler));
   EXPECT_TRUE(testObject.refrigerationGasCooler());
 
-  std::vector<RefrigerationGasCoolerAirCooled> testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  std::vector<RefrigerationGasCoolerAirCooled> testGasCoolers = model.getConcreteModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(1, testGasCoolers.size());
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
   EXPECT_NE(testObjectClone.refrigerationGasCooler().get().handle(), gasCooler.handle());
 
-  testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  testGasCoolers = model.getConcreteModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(2, testGasCoolers.size());
 
   Model model2;
-  RefrigerationTranscriticalSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
 
-  testGasCoolers = model2.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  testGasCoolers = model2.getConcreteModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(1, testGasCoolers.size());
 
   EXPECT_NE(testObjectClone2.refrigerationGasCooler().get().handle(), gasCooler.handle());
@@ -299,7 +299,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationGasCoolerAirC
   EXPECT_TRUE(testObjectClone.refrigerationGasCooler());
   EXPECT_TRUE(testObjectClone2.refrigerationGasCooler());
 
-  testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  testGasCoolers = model.getConcreteModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(1, testGasCoolers.size());
 }
 
@@ -332,7 +332,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveHighPressureCompress
   testObject.addHighPressureCompressor(testCompressor2);
   testObject.removeHighPressureCompressor(testCompressor1);
 
-  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getConcreteModelObjects<RefrigerationCompressor>();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
 
   std::vector<RefrigerationCompressor> highPressureCompressors = testObject.highPressureCompressors();
@@ -340,7 +340,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveHighPressureCompress
   EXPECT_EQ(testCompressor2.handle(), highPressureCompressors[0].handle());
 
   testObject.removeHighPressureCompressor(testCompressor2);
-  testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  testRefrigerationCompressors = model.getConcreteModelObjects<RefrigerationCompressor>();
   highPressureCompressors = testObject.highPressureCompressors();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
   EXPECT_TRUE(highPressureCompressors.empty());
@@ -356,7 +356,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllHighPressureCompr
   testObject.addHighPressureCompressor(testCompressor2);
   testObject.removeAllHighPressureCompressors();
 
-  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getConcreteModelObjects<RefrigerationCompressor>();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
 
   std::vector<RefrigerationCompressor> highPressureCompressors = testObject.highPressureCompressors();
@@ -393,7 +393,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowPressureCompresso
   testObject.addLowPressureCompressor(testCompressor2);
   testObject.removeLowPressureCompressor(testCompressor1);
 
-  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getConcreteModelObjects<RefrigerationCompressor>();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
 
   std::vector<RefrigerationCompressor> lowPressureCompressors = testObject.lowPressureCompressors();
@@ -401,7 +401,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowPressureCompresso
   EXPECT_EQ(testCompressor2.handle(), lowPressureCompressors[0].handle());
 
   testObject.removeLowPressureCompressor(testCompressor2);
-  testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  testRefrigerationCompressors = model.getConcreteModelObjects<RefrigerationCompressor>();
   lowPressureCompressors = testObject.lowPressureCompressors();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
   EXPECT_TRUE(lowPressureCompressors.empty());
@@ -417,7 +417,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowPressureCompre
   testObject.addLowPressureCompressor(testCompressor2);
   testObject.removeAllLowPressureCompressors();
 
-  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getConcreteModelObjects<RefrigerationCompressor>();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
 
   std::vector<RefrigerationCompressor> lowPressureCompressors = testObject.lowPressureCompressors();
@@ -466,7 +466,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCas
   testObject.addMediumTemperatureCase(case2);
   testObject.removeMediumTemperatureCase(case1);
 
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationCase> mediumTemperatureCases = testObject.mediumTemperatureCases();
@@ -474,7 +474,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCas
   EXPECT_EQ(case2.handle(), mediumTemperatureCases[0].handle());
 
   testObject.removeMediumTemperatureCase(case2);
-  testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   mediumTemperatureCases = testObject.mediumTemperatureCases();
   EXPECT_EQ(2, testRefrigerationCases.size());
   EXPECT_TRUE(mediumTemperatureCases.empty());
@@ -494,7 +494,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperature
   testObject.addMediumTemperatureCase(case2);
   testObject.removeAllMediumTemperatureCases();
 
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationCase> mediumTemperatureCases = testObject.mediumTemperatureCases();
@@ -542,7 +542,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCase) 
   testObject.addLowTemperatureCase(case2);
   testObject.removeLowTemperatureCase(case1);
 
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationCase> lowTemperatureCases = testObject.lowTemperatureCases();
@@ -550,7 +550,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCase) 
   EXPECT_EQ(case2.handle(), lowTemperatureCases[0].handle());
 
   testObject.removeLowTemperatureCase(case2);
-  testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   lowTemperatureCases = testObject.lowTemperatureCases();
   EXPECT_EQ(2, testRefrigerationCases.size());
   EXPECT_TRUE(lowTemperatureCases.empty());
@@ -569,7 +569,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCas
   testObject.addLowTemperatureCase(case2);
   testObject.removeAllLowTemperatureCases();
 
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationCase> lowTemperatureCases = testObject.lowTemperatureCases();
@@ -618,7 +618,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureWal
   testObject.addMediumTemperatureWalkin(walkin2);
   testObject.removeMediumTemperatureWalkin(walkin1);
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
 
   std::vector<RefrigerationWalkIn> mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
@@ -626,7 +626,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureWal
   EXPECT_EQ(walkin2.handle(), mediumTemperatureWalkins[0].handle());
 
   testObject.removeMediumTemperatureWalkin(walkin2);
-  testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
   EXPECT_TRUE(mediumTemperatureWalkins.empty());
@@ -646,7 +646,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperature
   testObject.addMediumTemperatureWalkin(walkin2);
   testObject.removeAllMediumTemperatureWalkins();
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
 
   std::vector<RefrigerationWalkIn> mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
@@ -694,7 +694,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureWalkIn
   testObject.addLowTemperatureWalkin(walkin2);
   testObject.removeLowTemperatureWalkin(walkin1);
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
 
   std::vector<RefrigerationWalkIn> lowTemperatureWalkins = testObject.lowTemperatureWalkins();
@@ -702,7 +702,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureWalkIn
   EXPECT_EQ(walkin2.handle(), lowTemperatureWalkins[0].handle());
 
   testObject.removeLowTemperatureWalkin(walkin2);
-  testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   lowTemperatureWalkins = testObject.lowTemperatureWalkins();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
   EXPECT_TRUE(lowTemperatureWalkins.empty());
@@ -721,7 +721,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureWal
   testObject.addLowTemperatureWalkin(walkin2);
   testObject.removeAllLowTemperatureWalkins();
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
 
   std::vector<RefrigerationWalkIn> lowTemperatureWalkins = testObject.lowTemperatureWalkins();
@@ -773,7 +773,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCas
   testObject.addMediumTemperatureWalkin(walkin2);
   testObject.removeMediumTemperatureWalkin(walkin1);
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
 
   std::vector<RefrigerationWalkIn> mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
@@ -784,7 +784,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCas
   testObject.addMediumTemperatureCase(case2);
   testObject.removeMediumTemperatureCase(case1);
 
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationCase> mediumTemperatureCases = testObject.mediumTemperatureCases();
@@ -798,13 +798,13 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCas
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 
   testObject.removeMediumTemperatureWalkin(walkin2);
-  testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
   EXPECT_TRUE(mediumTemperatureWalkins.empty());
 
   testObject.removeMediumTemperatureCase(case2);
-  testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   mediumTemperatureCases = testObject.mediumTemperatureCases();
   EXPECT_EQ(2, testRefrigerationCases.size());
   EXPECT_TRUE(mediumTemperatureCases.empty());
@@ -841,9 +841,9 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperature
   testObject.removeAllMediumTemperatureCases();
   testObject.removeAllMediumTemperatureWalkins();
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationWalkIn> mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
@@ -900,7 +900,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCaseAn
   testObject.addLowTemperatureWalkin(walkin2);
   testObject.removeLowTemperatureWalkin(walkin1);
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
 
   std::vector<RefrigerationWalkIn> lowTemperatureWalkins = testObject.lowTemperatureWalkins();
@@ -911,7 +911,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCaseAn
   testObject.addLowTemperatureCase(case2);
   testObject.removeLowTemperatureCase(case1);
 
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationCase> lowTemperatureCases = testObject.lowTemperatureCases();
@@ -924,13 +924,13 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCaseAn
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 
   testObject.removeLowTemperatureWalkin(walkin2);
-  testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   lowTemperatureWalkins = testObject.lowTemperatureWalkins();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
   EXPECT_TRUE(lowTemperatureWalkins.empty());
 
   testObject.removeLowTemperatureCase(case2);
-  testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   lowTemperatureCases = testObject.lowTemperatureCases();
   EXPECT_EQ(2, testRefrigerationCases.size());
   EXPECT_TRUE(lowTemperatureCases.empty());
@@ -965,9 +965,9 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCas
   testObject.removeAllLowTemperatureCases();
   testObject.removeAllLowTemperatureWalkins();
 
-  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
-  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
 
   std::vector<RefrigerationWalkIn> lowTemperatureWalkins = testObject.lowTemperatureWalkins();

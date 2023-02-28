@@ -51,7 +51,7 @@ namespace model {
 
       OutputSQLite_Impl(const OutputSQLite_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputSQLite_Impl() {}
+      virtual ~OutputSQLite_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

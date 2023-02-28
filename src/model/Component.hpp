@@ -64,7 +64,12 @@ namespace model {
    *  list in ComponentData must exactly match the contents of idfFile. */
     explicit Component(const openstudio::IdfFile& idfFile);
 
-    virtual ~Component();
+    virtual ~Component() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Component(const Component& other) = default;
+    Component(Component&& other) = default;
+    Component& operator=(const Component&) = default;
+    Component& operator=(Component&&) = default;
 
     //@}
     /** @name Getters */
@@ -93,7 +98,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Component_Impl ImplType;
+    using ImplType = detail::Component_Impl;
 
     friend class openstudio::Workspace;
     friend class openstudio::detail::Workspace_Impl;
@@ -117,10 +122,10 @@ namespace model {
   };
 
   /** \relates Component */
-  typedef boost::optional<Component> OptionalComponent;
+  using OptionalComponent = boost::optional<Component>;
 
   /** \relates Component */
-  typedef std::vector<Component> ComponentVector;
+  using ComponentVector = std::vector<Component>;
 
 }  // namespace model
 }  // namespace openstudio

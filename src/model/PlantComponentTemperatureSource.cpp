@@ -79,7 +79,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_PlantComponent_TemperatureSourceFields::SourceTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("PlantComponentTemperatureSource", "Source Temperature"));
       }
@@ -207,7 +208,7 @@ namespace model {
   }
 
   IddObjectType PlantComponentTemperatureSource::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PlantComponent_TemperatureSource);
+    return {IddObjectType::OS_PlantComponent_TemperatureSource};
   }
 
   std::vector<std::string> PlantComponentTemperatureSource::temperatureSpecificationTypeValues() {

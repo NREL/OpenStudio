@@ -260,12 +260,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel_AirLoopHVAC) {
 
   // Should have one branch only
   ASSERT_EQ(1u, idf_brlist.extensibleGroups().size());
-  WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
 
   // There should be only one equipment on the branch
   ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
-  WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
   EXPECT_EQ("Fan:ComponentModel", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
   EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), fan.nameString());
@@ -572,7 +572,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
     EXPECT_TRUE(reverseTranslator.errors().empty());
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-    std::vector<openstudio::model::FanComponentModel> fans = model.getModelObjects<openstudio::model::FanComponentModel>();
+    std::vector<openstudio::model::FanComponentModel> fans = model.getConcreteModelObjects<openstudio::model::FanComponentModel>();
     ASSERT_EQ(static_cast<unsigned>(1), fans.size());
     FanComponentModel fan = fans[0];
 

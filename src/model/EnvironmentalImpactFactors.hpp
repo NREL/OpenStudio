@@ -50,7 +50,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~EnvironmentalImpactFactors() {}
+    virtual ~EnvironmentalImpactFactors() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnvironmentalImpactFactors(const EnvironmentalImpactFactors& other) = default;
+    EnvironmentalImpactFactors(EnvironmentalImpactFactors&& other) = default;
+    EnvironmentalImpactFactors& operator=(const EnvironmentalImpactFactors&) = default;
+    EnvironmentalImpactFactors& operator=(EnvironmentalImpactFactors&&) = default;
 
     //@}
 
@@ -94,7 +99,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnvironmentalImpactFactors_Impl ImplType;
+    using ImplType = detail::EnvironmentalImpactFactors_Impl;
 
     explicit EnvironmentalImpactFactors(std::shared_ptr<detail::EnvironmentalImpactFactors_Impl> impl);
 
@@ -110,10 +115,10 @@ namespace model {
   };
 
   /** \relates EnvironmentalImpactFactors*/
-  typedef boost::optional<EnvironmentalImpactFactors> OptionalEnvironmentalImpactFactors;
+  using OptionalEnvironmentalImpactFactors = boost::optional<EnvironmentalImpactFactors>;
 
   /** \relates EnvironmentalImpactFactors*/
-  typedef std::vector<EnvironmentalImpactFactors> EnvironmentalImpactFactorsVector;
+  using EnvironmentalImpactFactorsVector = std::vector<EnvironmentalImpactFactors>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -60,7 +60,12 @@ namespace model {
 
     explicit HeatPumpWaterToWaterEquationFitCooling(const Model& model);
 
-    virtual ~HeatPumpWaterToWaterEquationFitCooling() {}
+    virtual ~HeatPumpWaterToWaterEquationFitCooling() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatPumpWaterToWaterEquationFitCooling(const HeatPumpWaterToWaterEquationFitCooling& other) = default;
+    HeatPumpWaterToWaterEquationFitCooling(HeatPumpWaterToWaterEquationFitCooling&& other) = default;
+    HeatPumpWaterToWaterEquationFitCooling& operator=(const HeatPumpWaterToWaterEquationFitCooling&) = default;
+    HeatPumpWaterToWaterEquationFitCooling& operator=(HeatPumpWaterToWaterEquationFitCooling&&) = default;
 
     //@}
 
@@ -178,7 +183,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeatPumpWaterToWaterEquationFitCooling_Impl ImplType;
+    using ImplType = detail::HeatPumpWaterToWaterEquationFitCooling_Impl;
 
     explicit HeatPumpWaterToWaterEquationFitCooling(std::shared_ptr<detail::HeatPumpWaterToWaterEquationFitCooling_Impl> impl);
 
@@ -192,10 +197,10 @@ namespace model {
   };
 
   /** \relates HeatPumpWaterToWaterEquationFitCooling*/
-  typedef boost::optional<HeatPumpWaterToWaterEquationFitCooling> OptionalHeatPumpWaterToWaterEquationFitCooling;
+  using OptionalHeatPumpWaterToWaterEquationFitCooling = boost::optional<HeatPumpWaterToWaterEquationFitCooling>;
 
   /** \relates HeatPumpWaterToWaterEquationFitCooling*/
-  typedef std::vector<HeatPumpWaterToWaterEquationFitCooling> HeatPumpWaterToWaterEquationFitCoolingVector;
+  using HeatPumpWaterToWaterEquationFitCoolingVector = std::vector<HeatPumpWaterToWaterEquationFitCooling>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -122,8 +122,6 @@ IddUnitString::IddUnitString(const std::string& s) : m_original(s), m_converted(
   }
 }
 
-IddUnitString::~IddUnitString() {}
-
 std::string IddUnitString::toStandardUnitString() const {
   return m_converted;
 }

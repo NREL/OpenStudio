@@ -114,9 +114,9 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   EXPECT_EQ(8, bp1.numberOfDays());
   EXPECT_EQ(Date(1, 8, 1999), bp1.endDate());
 
-  EXPECT_EQ(0u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<OutputMeter>().size());
   OutputMeter meter = utilityBill.consumptionMeter();
-  EXPECT_EQ(1u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<OutputMeter>().size());
   EXPECT_EQ("Daily", meter.reportingFrequency());
   ASSERT_TRUE(meter.fuelType());
   EXPECT_EQ(FuelType::Electricity, meter.fuelType()->value());
@@ -127,32 +127,32 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   EXPECT_FALSE(meter.specificInstallLocation());
 
   OutputMeter meter2 = utilityBill.consumptionMeter();
-  EXPECT_EQ(1u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<OutputMeter>().size());
 
   OutputMeter meter3 = utilityBill.consumptionMeter();
-  EXPECT_EQ(1u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<OutputMeter>().size());
 
   OutputMeter meter4 = utilityBill.consumptionMeter();
-  EXPECT_EQ(1u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<OutputMeter>().size());
 
   boost::optional<OutputMeter> meter5 = utilityBill.peakDemandMeter();
   ASSERT_TRUE(meter5);
-  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<OutputMeter>().size());
 
   boost::optional<OutputMeter> meter6 = utilityBill.peakDemandMeter();
   ASSERT_TRUE(meter5);
-  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<OutputMeter>().size());
 
   boost::optional<OutputMeter> meter7 = utilityBill.peakDemandMeter();
   ASSERT_TRUE(meter6);
-  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<OutputMeter>().size());
 
   OutputMeter meter8 = utilityBill.consumptionMeter();
-  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<OutputMeter>().size());
 
   boost::optional<OutputMeter> meter9 = utilityBill.peakDemandMeter();
   ASSERT_TRUE(meter9);
-  EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<OutputMeter>().size());
 }
 
 TEST_F(ModelFixture, UtilityBill_Gas_Issue765) {

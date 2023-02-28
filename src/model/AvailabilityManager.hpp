@@ -48,13 +48,18 @@ namespace model {
    public:
     AvailabilityManager(IddObjectType type, const Model& model);
 
-    virtual ~AvailabilityManager() {}
+    virtual ~AvailabilityManager() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManager(const AvailabilityManager& other) = default;
+    AvailabilityManager(AvailabilityManager&& other) = default;
+    AvailabilityManager& operator=(const AvailabilityManager&) = default;
+    AvailabilityManager& operator=(AvailabilityManager&&) = default;
 
     boost::optional<Loop> loop() const;
 
    protected:
     /// @cond
-    typedef detail::AvailabilityManager_Impl ImplType;
+    using ImplType = detail::AvailabilityManager_Impl;
 
     explicit AvailabilityManager(std::shared_ptr<detail::AvailabilityManager_Impl> impl);
 
@@ -67,9 +72,9 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.AvailabilityManager");
   };
 
-  typedef boost::optional<AvailabilityManager> OptionalAvailabilityManager;
+  using OptionalAvailabilityManager = boost::optional<AvailabilityManager>;
 
-  typedef std::vector<AvailabilityManager> AvailabilityManagerVector;
+  using AvailabilityManagerVector = std::vector<AvailabilityManager>;
 
 }  // namespace model
 }  // namespace openstudio

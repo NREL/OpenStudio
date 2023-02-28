@@ -73,7 +73,12 @@ namespace model {
 
     explicit SubSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~SubSurface() {}
+    virtual ~SubSurface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SubSurface(const SubSurface& other) = default;
+    SubSurface(SubSurface&& other) = default;
+    SubSurface& operator=(const SubSurface&) = default;
+    SubSurface& operator=(SubSurface&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -299,7 +304,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::SubSurface_Impl ImplType;
+    using ImplType = detail::SubSurface_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -319,10 +324,10 @@ namespace model {
                                                          const boost::optional<ConstructionBase>& construction);
 
   /** \relates SubSurface*/
-  typedef boost::optional<SubSurface> OptionalSubSurface;
+  using OptionalSubSurface = boost::optional<SubSurface>;
 
   /** \relates SubSurface*/
-  typedef std::vector<SubSurface> SubSurfaceVector;
+  using SubSurfaceVector = std::vector<SubSurface>;
 
 }  // namespace model
 }  // namespace openstudio

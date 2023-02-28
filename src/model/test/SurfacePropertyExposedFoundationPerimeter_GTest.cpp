@@ -46,17 +46,18 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfacePropertyExposedFoundationPerimeter) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
+  // create a surface object to use
+  Point3dVector points{
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
+
   ASSERT_EXIT(
     {
       // create a model to use
       Model model;
 
-      // create a surface object to use
-      Point3dVector points;
-      points.clear();
-      points.push_back(Point3d(0, 2, 0));
-      points.push_back(Point3d(0, 0, 0));
-      points.push_back(Point3d(1, 0, 0));
       Surface surface(points, model);
 
       exit(0);
@@ -66,12 +67,6 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfacePropertyEx
   // create a model to use
   Model model;
 
-  // create a surface object to use
-  Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
   Surface surface(points, model);
   EXPECT_EQ(1, model.modelObjects().size());
 
@@ -106,10 +101,11 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfacePropertyEx
 TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SetGetFields) {
   Model model;
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
     surface.createSurfacePropertyExposedFoundationPerimeter("ExposedPerimeterFraction", 1);
@@ -135,10 +131,11 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SetGetFields) {
 TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_ParentReset) {
   Model model;
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   auto size = model.modelObjects().size();
   boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
@@ -152,10 +149,11 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_ParentReset) {
 TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_ParentRemove) {
   Model model;
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   auto size = model.modelObjects().size();
   Surface surface(points, model);
   boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
@@ -168,10 +166,11 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_ParentRemove) {
 TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_ChildRemove) {
   Model model;
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   auto size = model.modelObjects().size();
   boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
@@ -186,10 +185,11 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_ChildRemove) {
 TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfaceName) {
   Model model;
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
     surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);

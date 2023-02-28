@@ -53,7 +53,7 @@ namespace model {
 
       SetpointManagerMultiZoneHumidityMaximum_Impl(const SetpointManagerMultiZoneHumidityMaximum_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerMultiZoneHumidityMaximum_Impl() {}
+      virtual ~SetpointManagerMultiZoneHumidityMaximum_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

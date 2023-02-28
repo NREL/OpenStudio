@@ -56,7 +56,7 @@ namespace model {
 
       ElectricEquipmentITEAirCooled_Impl(const ElectricEquipmentITEAirCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricEquipmentITEAirCooled_Impl() {}
+      virtual ~ElectricEquipmentITEAirCooled_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

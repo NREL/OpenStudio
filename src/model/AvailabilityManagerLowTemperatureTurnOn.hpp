@@ -54,7 +54,12 @@ namespace model {
 
     explicit AvailabilityManagerLowTemperatureTurnOn(const Model& model);
 
-    virtual ~AvailabilityManagerLowTemperatureTurnOn() {}
+    virtual ~AvailabilityManagerLowTemperatureTurnOn() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerLowTemperatureTurnOn(const AvailabilityManagerLowTemperatureTurnOn& other) = default;
+    AvailabilityManagerLowTemperatureTurnOn(AvailabilityManagerLowTemperatureTurnOn&& other) = default;
+    AvailabilityManagerLowTemperatureTurnOn& operator=(const AvailabilityManagerLowTemperatureTurnOn&) = default;
+    AvailabilityManagerLowTemperatureTurnOn& operator=(AvailabilityManagerLowTemperatureTurnOn&&) = default;
 
     //@}
 
@@ -84,7 +89,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerLowTemperatureTurnOn_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerLowTemperatureTurnOn_Impl;
 
     explicit AvailabilityManagerLowTemperatureTurnOn(std::shared_ptr<detail::AvailabilityManagerLowTemperatureTurnOn_Impl> impl);
 
@@ -98,10 +103,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerLowTemperatureTurnOn*/
-  typedef boost::optional<AvailabilityManagerLowTemperatureTurnOn> OptionalAvailabilityManagerLowTemperatureTurnOn;
+  using OptionalAvailabilityManagerLowTemperatureTurnOn = boost::optional<AvailabilityManagerLowTemperatureTurnOn>;
 
   /** \relates AvailabilityManagerLowTemperatureTurnOn*/
-  typedef std::vector<AvailabilityManagerLowTemperatureTurnOn> AvailabilityManagerLowTemperatureTurnOnVector;
+  using AvailabilityManagerLowTemperatureTurnOnVector = std::vector<AvailabilityManagerLowTemperatureTurnOn>;
 
 }  // namespace model
 }  // namespace openstudio

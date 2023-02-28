@@ -55,7 +55,7 @@ namespace model {
 
       RefrigerationCondenserAirCooled_Impl(const RefrigerationCondenserAirCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCondenserAirCooled_Impl() {}
+      virtual ~RefrigerationCondenserAirCooled_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -123,7 +123,7 @@ namespace model {
 
       void resetRatedSubcoolingTemperatureDifference();
 
-      bool setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType);
+      bool setCondenserFanSpeedControlType(const std::string& condenserFanSpeedControlType);
 
       void resetCondenserFanSpeedControlType();
 
@@ -139,7 +139,7 @@ namespace model {
 
       void resetAirInletZone();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

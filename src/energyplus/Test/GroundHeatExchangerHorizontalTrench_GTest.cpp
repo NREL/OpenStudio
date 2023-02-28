@@ -77,7 +77,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerHorizontalTrench)
   EXPECT_TRUE(ghx.setPipeSpecificHeat(2200.0));
   EXPECT_TRUE(ghx.setSoilMoistureContentPercent(32.0));
   EXPECT_TRUE(ghx.setSoilMoistureContentPercentatSaturation(53.0));
-  EXPECT_TRUE(ghx.setGroundTemperatureModel("KusudaAchenbach"));
+  EXPECT_FALSE(ghx.setGroundTemperatureModel("KusudaAchenbach"));
   EXPECT_TRUE(ghx.setKusudaAchenbachAverageSurfaceTemperature(16.5));
   EXPECT_TRUE(ghx.setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(13.8));
   EXPECT_TRUE(ghx.setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(18.3));
@@ -127,9 +127,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerHorizontalTrench)
   EXPECT_EQ(IddObjectType{IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach}, kusuda.iddObject().type());
   EXPECT_EQ(0.358, idfObject.getDouble(GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter).get());
 
-  EXPECT_EQ(1.02, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity).get());
-  EXPECT_EQ(970.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity).get());
-  EXPECT_EQ(2430.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat).get());
+  EXPECT_EQ(1.08, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity).get());
+  EXPECT_EQ(962.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity).get());
+  EXPECT_EQ(2576.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat).get());
   EXPECT_EQ(16.5, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature).get());
   EXPECT_EQ(13.8, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature).get());
   EXPECT_EQ(18.3, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature).get());

@@ -50,7 +50,12 @@ namespace model {
     /** Creates new ScheduleConstant in model and sets its value to 0.0. */
     explicit ScheduleConstant(const Model& model);
 
-    virtual ~ScheduleConstant() {}
+    virtual ~ScheduleConstant() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleConstant(const ScheduleConstant& other) = default;
+    ScheduleConstant(ScheduleConstant&& other) = default;
+    ScheduleConstant& operator=(const ScheduleConstant&) = default;
+    ScheduleConstant& operator=(ScheduleConstant&&) = default;
 
     //@}
 
@@ -72,7 +77,7 @@ namespace model {
 
     //@}
    protected:
-    typedef detail::ScheduleConstant_Impl ImplType;
+    using ImplType = detail::ScheduleConstant_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -85,10 +90,10 @@ namespace model {
   };
 
   /** \relates ScheduleConstant */
-  typedef boost::optional<ScheduleConstant> OptionalScheduleConstant;
+  using OptionalScheduleConstant = boost::optional<ScheduleConstant>;
 
   /** \relates ScheduleConstant */
-  typedef std::vector<ScheduleConstant> ScheduleConstantVector;
+  using ScheduleConstantVector = std::vector<ScheduleConstant>;
 
 }  // namespace model
 }  // namespace openstudio

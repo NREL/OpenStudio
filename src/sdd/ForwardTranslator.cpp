@@ -174,7 +174,7 @@ namespace sdd {
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
-  ForwardTranslator::~ForwardTranslator() {}
+  ForwardTranslator::~ForwardTranslator() = default;
 
   bool ForwardTranslator::modelToSDD(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar) {
     m_progressBar = progressBar;
@@ -186,7 +186,7 @@ namespace sdd {
 
     m_logSink.resetStringStream();
 
-    model::Model modelCopy = model.clone().cast<model::Model>();
+    auto modelCopy = model.clone().cast<model::Model>();
 
     // remove unused resource objects
     modelCopy.purgeUnusedResourceObjects();
@@ -219,25 +219,17 @@ namespace sdd {
 
   std::vector<LogMessage> ForwardTranslator::warnings() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() == Warn; });
     return result;
   }
 
   std::vector<LogMessage> ForwardTranslator::errors() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() > Warn; });
     return result;
   }
 
@@ -269,7 +261,7 @@ namespace sdd {
       // todo: check document year
       std::vector<model::ClimateZone> zones = climateZones->getClimateZones("CEC");
       std::string value = zones[0].value();
-      if (zones.size() > 0 && !value.empty()) {
+      if (!zones.empty() && !value.empty()) {
         try {
           int valueNum = boost::lexical_cast<int>(value);
           value = "ClimateZone" + std::to_string(valueNum);

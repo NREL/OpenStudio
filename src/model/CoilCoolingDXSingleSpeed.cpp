@@ -90,9 +90,9 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     ModelObject CoilCoolingDXSingleSpeed_Impl::clone(Model model) const {
-      CoilCoolingDXSingleSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXSingleSpeed>();
+      auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXSingleSpeed>();
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     std::vector<IddObjectType> CoilCoolingDXSingleSpeed_Impl::allowableChildTypes() const {
@@ -163,7 +163,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingDXSingleSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DX_SingleSpeedFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXSingleSpeed", "Availability"));
       }

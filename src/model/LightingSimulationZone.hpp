@@ -57,7 +57,12 @@ namespace model {
 
     explicit LightingSimulationZone(const Model& model);
 
-    virtual ~LightingSimulationZone() {}
+    virtual ~LightingSimulationZone() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LightingSimulationZone(const LightingSimulationZone& other) = default;
+    LightingSimulationZone(LightingSimulationZone&& other) = default;
+    LightingSimulationZone& operator=(const LightingSimulationZone&) = default;
+    LightingSimulationZone& operator=(LightingSimulationZone&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -95,7 +100,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::LightingSimulationZone_Impl ImplType;
+    using ImplType = detail::LightingSimulationZone_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -108,10 +113,10 @@ namespace model {
   };
 
   /** \relates LightingSimulationZone*/
-  typedef boost::optional<LightingSimulationZone> OptionalLightingSimulationZone;
+  using OptionalLightingSimulationZone = boost::optional<LightingSimulationZone>;
 
   /** \relates LightingSimulationZone*/
-  typedef std::vector<LightingSimulationZone> LightingSimulationZoneVector;
+  using LightingSimulationZoneVector = std::vector<LightingSimulationZone>;
 
 }  // namespace model
 }  // namespace openstudio

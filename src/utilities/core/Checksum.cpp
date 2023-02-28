@@ -67,7 +67,7 @@ std::string checksum(std::istream& is) {
     std::streamsize readSize = is.gcount();
     //crc.process_bytes(buffer, readSize);
 
-    size_t stringSize = static_cast<size_t>(readSize);
+    auto stringSize = static_cast<size_t>(readSize);
     std::string str(buffer, stringSize);
     str.erase(std::remove_if(str.begin(), str.end(), openstudio::detail::checksumIgnore), str.end());
     stringSize = str.size();

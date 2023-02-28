@@ -52,7 +52,7 @@ namespace model {
 
       CurveCubic_Impl(const CurveCubic_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveCubic_Impl() {}
+      virtual ~CurveCubic_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

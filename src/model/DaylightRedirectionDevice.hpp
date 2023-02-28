@@ -54,7 +54,12 @@ namespace model {
 
     explicit DaylightRedirectionDevice(const Model& model);
 
-    virtual ~DaylightRedirectionDevice() {}
+    virtual ~DaylightRedirectionDevice() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DaylightRedirectionDevice(const DaylightRedirectionDevice& other) = default;
+    DaylightRedirectionDevice(DaylightRedirectionDevice&& other) = default;
+    DaylightRedirectionDevice& operator=(const DaylightRedirectionDevice&) = default;
+    DaylightRedirectionDevice& operator=(DaylightRedirectionDevice&&) = default;
 
     //@}
 
@@ -85,7 +90,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DaylightRedirectionDevice_Impl ImplType;
+    using ImplType = detail::DaylightRedirectionDevice_Impl;
 
     explicit DaylightRedirectionDevice(std::shared_ptr<detail::DaylightRedirectionDevice_Impl> impl);
 
@@ -99,10 +104,10 @@ namespace model {
   };
 
   /** \relates DaylightRedirectionDevice*/
-  typedef boost::optional<DaylightRedirectionDevice> OptionalDaylightRedirectionDevice;
+  using OptionalDaylightRedirectionDevice = boost::optional<DaylightRedirectionDevice>;
 
   /** \relates DaylightRedirectionDevice*/
-  typedef std::vector<DaylightRedirectionDevice> DaylightRedirectionDeviceVector;
+  using DaylightRedirectionDeviceVector = std::vector<DaylightRedirectionDevice>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -42,6 +42,7 @@
 #include "../core/StringHelpers.hpp"
 
 #include <boost/lexical_cast.hpp>
+#include <memory>
 
 using namespace std;
 using openstudio::istringEqual;  // used for all name comparisons
@@ -56,8 +57,8 @@ namespace detail {
     : m_strictnessLevel(level),
       m_iddFileAndFactoryWrapper(iddFileType),
       m_fastNaming(false),
-      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(
-        new WorkspaceObjectOrder_Impl(HandleVector(), std::bind(&Workspace_Impl::getObject, this, std::placeholders::_1)))) {
+      m_workspaceObjectOrder(std::make_shared<WorkspaceObjectOrder_Impl>(
+        HandleVector(), [this](const Handle& handle) -> boost::optional<WorkspaceObject> { return getObject(handle); })) {
     m_workspaceObjectMap.reserve(1 << 15);
     m_idfReferencesMap.reserve(1 << 15);
   }
@@ -67,19 +68,19 @@ namespace detail {
       m_header(idfFile.header()),
       m_iddFileAndFactoryWrapper(idfFile.iddFileAndFactoryWrapper()),
       m_fastNaming(false),
-      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(
-        new WorkspaceObjectOrder_Impl(HandleVector(), std::bind(&Workspace_Impl::getObject, this, std::placeholders::_1)))) {
+      m_workspaceObjectOrder(std::make_shared<WorkspaceObjectOrder_Impl>(
+        HandleVector(), [this](const Handle& handle) -> boost::optional<WorkspaceObject> { return getObject(handle); })) {
     m_workspaceObjectMap.reserve(1 << 15);
     m_idfReferencesMap.reserve(1 << 15);
   }
 
-  Workspace_Impl::Workspace_Impl(const Workspace_Impl& other, bool keepHandles)
+  Workspace_Impl::Workspace_Impl(const Workspace_Impl& other, bool /*keepHandles*/)
     : m_strictnessLevel(other.m_strictnessLevel),
       m_header(other.m_header),
       m_iddFileAndFactoryWrapper(other.m_iddFileAndFactoryWrapper),
       m_fastNaming(other.fastNaming()),
-      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(
-        new WorkspaceObjectOrder_Impl(std::bind(&Workspace_Impl::getObject, this, std::placeholders::_1)))) {
+      m_workspaceObjectOrder(std::make_shared<WorkspaceObjectOrder_Impl>(
+        HandleVector(), [this](const Handle& handle) -> boost::optional<WorkspaceObject> { return getObject(handle); })) {
     // m_workspaceObjectOrder
     OptionalIddObjectTypeVector iddOrderVector = other.order().iddOrder();
     if (iddOrderVector) {
@@ -93,13 +94,13 @@ namespace detail {
     m_idfReferencesMap.reserve(1 << 15);
   }
 
-  Workspace_Impl::Workspace_Impl(const Workspace_Impl& other, const std::vector<Handle>& hs, bool keepHandles, StrictnessLevel level)
+  Workspace_Impl::Workspace_Impl(const Workspace_Impl& other, const std::vector<Handle>& hs, bool /*keepHandles*/, StrictnessLevel level)
     : m_strictnessLevel(level),
       m_header(),  // subset of original data--discard header
       m_iddFileAndFactoryWrapper(other.m_iddFileAndFactoryWrapper),
       m_fastNaming(other.fastNaming()),
-      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(
-        new WorkspaceObjectOrder_Impl(hs, std::bind(&Workspace_Impl::getObject, this, std::placeholders::_1)))) {
+      m_workspaceObjectOrder(std::make_shared<WorkspaceObjectOrder_Impl>(
+        HandleVector(), [this](const Handle& handle) -> boost::optional<WorkspaceObject> { return getObject(handle); })) {
     // m_workspaceObjectOrder
     OptionalIddObjectTypeVector iddOrderVector = other.order().iddOrder();
     if (iddOrderVector) {
@@ -225,7 +226,7 @@ namespace detail {
   std::vector<WorkspaceObject> Workspace_Impl::objects(bool sorted) const {
     OptionalIddObject versionIdd = m_iddFileAndFactoryWrapper.versionObject();
     if (!versionIdd) {
-      return WorkspaceObjectVector();
+      return {};
     }
 
     if (sorted) {
@@ -360,7 +361,7 @@ namespace detail {
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByType(IddObjectType objectType) const {
     auto loc = m_iddObjectTypeMap.find(objectType);
     if (loc == m_iddObjectTypeMap.end()) {
-      return WorkspaceObjectVector();
+      return {};
     }
     std::vector<WorkspaceObject> result;
     result.reserve(loc->second.size());
@@ -406,7 +407,7 @@ namespace detail {
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByReference(const std::string& referenceName) const {
     auto loc = m_idfReferencesMap.find(referenceName);
     if (loc == m_idfReferencesMap.end()) {
-      return WorkspaceObjectVector();
+      return {};
     }
     std::vector<WorkspaceObject> result;
     result.reserve(loc->second.size());
@@ -426,13 +427,13 @@ namespace detail {
     }
     std::vector<WorkspaceObject> result;
     result.reserve(objectMap.size());
-    for (WorkspaceObjectMap::const_iterator it = objectMap.begin(); it != objectMap.end(); ++it) {
+    for (auto it = objectMap.begin(); it != objectMap.end(); ++it) {
       result.push_back(it->second);
     }
     return result;
   }
 
-  boost::optional<WorkspaceObject> Workspace_Impl::getObjectByNameAndReference(std::string name,
+  boost::optional<WorkspaceObject> Workspace_Impl::getObjectByNameAndReference(const std::string& name,
                                                                                const std::vector<std::string>& referenceNames) const {
     for (const WorkspaceObject& object : getObjectsByReference(referenceNames)) {
       OptionalString candidate = object.name();
@@ -687,7 +688,7 @@ namespace detail {
 
     // assess result and return
     if (objects.size() != 1) {
-      OS_ASSERT(objects.size() == 0);
+      OS_ASSERT(objects.empty());
       return boost::none;
     }
     return objects[0];
@@ -720,13 +721,14 @@ namespace detail {
       WorkspaceObjectVector wsObjects = working.getImpl<detail::Workspace_Impl>()->simpleAddObjects(idfObjects);
       if (wsObjects.size() != idfObjects.size()) {
         LOG(Error, "Unable to add idfObjects to their own Workspace as an intermediate step.");
-        return WorkspaceObjectVector();
+        return {};
       }
       bool changes = resolvePotentialNameConflicts(working);
       checkedForNameConflicts = true;
       if (changes) {
         // merge data and create objects
-        auto it(idfObjects.begin()), itEnd(idfObjects.end());
+        auto it(idfObjects.begin());
+        auto itEnd(idfObjects.end());
         for (const WorkspaceObject& object : wsObjects) {
           OS_ASSERT(it != itEnd);
           IdfObject mergedObject = object.idfObject();
@@ -742,7 +744,8 @@ namespace detail {
 
     // no name conflicts---directly create and add objects
     OS_ASSERT(newObjects.empty());
-    auto it(idfObjects.begin()), itEnd(idfObjects.end());
+    auto it(idfObjects.begin());
+    auto itEnd(idfObjects.end());
     for (; it != itEnd; ++it) {
       newObjects.push_back(this->createObject(*it, keepHandles));
     }
@@ -770,7 +773,7 @@ namespace detail {
     OS_ASSERT(idfObjects.size() == n);
 
     if (idfObjects.empty()) {
-      return WorkspaceObjectVector();
+      return {};
     }
 
     bool keepHandles = idfObjects[0].iddObject().hasHandleField();
@@ -797,7 +800,7 @@ namespace detail {
     WorkspaceObjectVector wsObjects = working.addObjects(idfObjects, false);
     if (wsObjects.size() != idfObjects.size()) {
       LOG(Error, "Unable to add idfObjects to their own Workspace as an intermediate step.");
-      return WorkspaceObjectVector();
+      return {};
     }
     bool changes = resolvePotentialNameConflicts(working, foundObjectIndices);
 
@@ -808,8 +811,8 @@ namespace detail {
                                                // directly added by this method
     i = 0;                                     // step through all of the objects
     auto equivIt = equivalentObjects.begin();
-    UnsignedVector::const_iterator foundIndicesBegin = foundObjectIndices.begin();
-    UnsignedVector::const_iterator foundIndicesEnd = foundObjectIndices.end();
+    auto foundIndicesBegin = foundObjectIndices.begin();
+    auto foundIndicesEnd = foundObjectIndices.end();
     // loop through Workspace versions of idfObjects
     for (const WorkspaceObject& object : wsObjects) {
       if (std::find(foundIndicesBegin, foundIndicesEnd, i) == foundIndicesEnd) {
@@ -839,8 +842,7 @@ namespace detail {
             if (*targetIndexInWorking < nAdd) {
               newObjectsIndexOfTarget = *targetIndexInWorking;
             } else {
-              UnsignedVector::const_iterator targetInNotFoundObjectsIt =
-                std::find(notFoundObjectIndices.begin(), notFoundObjectIndices.end(), *targetIndexInWorking);
+              auto targetInNotFoundObjectsIt = std::find(notFoundObjectIndices.begin(), notFoundObjectIndices.end(), *targetIndexInWorking);
               OS_ASSERT(targetInNotFoundObjectsIt != notFoundObjectIndices.end());
               newObjectsIndexOfTarget = nAdd + static_cast<unsigned>(targetInNotFoundObjectsIt - notFoundObjectIndices.begin());
             }
@@ -849,7 +851,7 @@ namespace detail {
             }
           } else {
             // target has equivalent in this Workspace. make sure pointer is there or add it.
-            unsigned targetIndexInEquivalentObjects = static_cast<unsigned>(targetInFoundObjectsIt - foundIndicesBegin);
+            auto targetIndexInEquivalentObjects = static_cast<unsigned>(targetInFoundObjectsIt - foundIndicesBegin);
             WorkspaceObject equivalentTarget = equivalentObjects[targetIndexInEquivalentObjects];
             UnsignedVector fieldIndicesFoundObjectToFoundTarget = equivIt->getSourceIndices(equivalentTarget.handle());
             for (unsigned index : fieldIndicesObjectToTarget) {
@@ -881,12 +883,12 @@ namespace detail {
         OS_ASSERT(oSource);
         oSource->setPointer(ptr.fieldIndex, Handle());
       }
-      return WorkspaceObjectVector();
+      return {};
     }
 
     // successful, make result vector
     WorkspaceObjectVector result;
-    WorkspaceObjectVector::const_iterator addedIt = addedObjects.begin();
+    auto addedIt = addedObjects.begin();
     equivIt = equivalentObjects.begin();
     OS_ASSERT(addedObjects.size() + equivalentObjects.size() == n);
     for (unsigned i = 0; i < n; ++i) {
@@ -908,7 +910,7 @@ namespace detail {
     return result;
   }
 
-  std::vector<WorkspaceObject> Workspace_Impl::addObjects(const std::vector<WorkspaceObject>& objects, bool checkNames) {
+  std::vector<WorkspaceObject> Workspace_Impl::addObjects(const std::vector<WorkspaceObject>& objects, bool /*checkNames*/) {
     WorkspaceObjectVector result;
     WorkspaceObject_ImplPtrVector newObjects;
     HandleMap oldNewHandleMap;
@@ -988,7 +990,7 @@ namespace detail {
     OS_ASSERT(allObjects.size() == n);
 
     if (allObjects.empty()) {
-      return WorkspaceObjectVector();
+      return {};
     }
 
     // find equivalent objects for objectsToInsert
@@ -1046,7 +1048,7 @@ namespace detail {
     OS_ASSERT(foundObjectIndices.size() + notFoundObjectIndices.size() == nInsert);
 
     if (allObjects.empty()) {
-      return WorkspaceObjectVector();
+      return {};
     }
 
     return addAndInsertObjects(allObjects, foundObjectIndices, notFoundObjectIndices, equivalentObjects);
@@ -1106,7 +1108,7 @@ namespace detail {
             // set pointer(s) to equivalent object
             UnsignedVector fieldIndicesObjectToTarget = object.getSourceIndices(target.handle());
             OS_ASSERT(!fieldIndicesObjectToTarget.empty());
-            unsigned targetIndexInEquivalentObjects = static_cast<unsigned>(targetInFoundObjectsIt - foundIndicesBegin);
+            auto targetIndexInEquivalentObjects = static_cast<unsigned>(targetInFoundObjectsIt - foundIndicesBegin);
             WorkspaceObject equivalentTarget = equivalentObjects[targetIndexInEquivalentObjects];
             for (unsigned index : fieldIndicesObjectToTarget) {
               pointersIntoWorkspace.push_back(UHPointer(j, index, equivalentTarget.handle()));
@@ -1153,7 +1155,7 @@ namespace detail {
             }
           } else {
             // target has equivalent in this Workspace. make sure pointer is there or add it.
-            unsigned targetIndexInEquivalentObjects = static_cast<unsigned>(targetInFoundObjectsIt - foundIndicesBegin);
+            auto targetIndexInEquivalentObjects = static_cast<unsigned>(targetInFoundObjectsIt - foundIndicesBegin);
             WorkspaceObject equivalentTarget = equivalentObjects[targetIndexInEquivalentObjects];
             UnsignedVector fieldIndicesFoundObjectToFoundTarget = equivIt->getSourceIndices(equivalentTarget.handle());
             for (unsigned index : fieldIndicesObjectToTarget) {
@@ -1189,7 +1191,7 @@ namespace detail {
     }
 
     // successful, make result vector
-    WorkspaceObjectVector::const_iterator addedIt = addedObjects.begin();
+    auto addedIt = addedObjects.begin();
     equivIt = equivalentObjects.begin();
     OS_ASSERT(addedObjects.size() + equivalentObjects.size() == unsigned(n));
     for (unsigned i = 0; i < n; ++i) {
@@ -1488,14 +1490,14 @@ namespace detail {
       for (const std::string& referenceName : iddField->properties().references) {
         // see if name is forwarded by any other source objects
         bool found = false;
-        std::vector<UnsignedVector>::const_iterator indIt = sourceIndices.begin();
-        for (WorkspaceObjectVector::const_iterator objIt = sourceObjects.begin(), objItEnd = sourceObjects.end(); objIt != objItEnd;
-             ++objIt, ++indIt) {
+        auto indIt = sourceIndices.begin();
+        for (auto objIt = sourceObjects.begin(), objItEnd = sourceObjects.end(); objIt != objItEnd; ++objIt, ++indIt) {
           for (unsigned index : *indIt) {
             OptionalIddField sourceIddField = (*objIt).iddObject().getField(index);
             OS_ASSERT(sourceIddField);
             StringVector sourceFieldRefs = sourceIddField->properties().references;
-            if (std::find_if(sourceFieldRefs.begin(), sourceFieldRefs.end(), std::bind(istringEqual, std::placeholders::_1, referenceName))
+            if (std::find_if(sourceFieldRefs.cbegin(), sourceFieldRefs.cend(),
+                             [&referenceName](const auto& s) { return istringEqual(s, referenceName); })
                 != sourceFieldRefs.end()) {
               found = true;
               break;
@@ -1597,7 +1599,7 @@ namespace detail {
 
     OptionalIddObject iddObject = getIddObject(iddObjectType);
     if (!iddObject) {
-      return std::string();
+      return {};
     }
     std::string name = iddObjectNameToIdfObjectName(iddObject->name());
     WorkspaceObjectVector objectsInSeries = getObjectsByTypeAndName(iddObjectType, name);
@@ -1973,7 +1975,8 @@ namespace detail {
   bool Workspace_Impl::resolvePotentialNameConflicts(Workspace& other, const std::vector<unsigned>& toIgnore) {
     bool changeMade = false;
 
-    WorkspaceObjectVector objectsToRename, objectsToExamine;
+    WorkspaceObjectVector objectsToRename;
+    WorkspaceObjectVector objectsToExamine;
     std::map<std::string, WorkspaceObjectVector> nameObjectMap;
     if (!toIgnore.empty()) {
       objectsToExamine = other.objects(true);
@@ -2081,7 +2084,8 @@ namespace detail {
 
     bool keepHandles = idfObjects[0].iddObject().hasHandleField();
 
-    auto it(idfObjects.begin()), itEnd(idfObjects.end());
+    auto it(idfObjects.begin());
+    auto itEnd(idfObjects.end());
     for (; it != itEnd; ++it) {
       newObjects.push_back(this->createObject(*it, keepHandles));
     }
@@ -2276,7 +2280,7 @@ namespace detail {
       }
     }
     std::string spacer = std::get<1>(takenSuffix);
-    if (spacer == "") {
+    if (spacer.empty()) {
       spacer = " ";
     }
     return getBaseName(objectName) + spacer + boost::lexical_cast<std::string>(suffix);
@@ -2322,10 +2326,10 @@ namespace detail {
     return result;
   }
 
-  bool Workspace_Impl::potentialNameConflict(std::string& currentName, const IddObject& iddObject) const {
+  bool Workspace_Impl::potentialNameConflict(const std::string& currentName, const IddObject& iddObject) const {
     bool result = false;
     WorkspaceObjectVector candidates = getObjectsByName(currentName);
-    if (candidates.size() == 0) {
+    if (candidates.empty()) {
       return result;
     }
 
@@ -2348,7 +2352,7 @@ namespace detail {
     this->onChange.nano_emit();
   }
 
-  void Workspace_Impl::createAndAddClonedObjects(const std::shared_ptr<detail::Workspace_Impl>& thisImpl,
+  void Workspace_Impl::createAndAddClonedObjects(const std::shared_ptr<detail::Workspace_Impl>& /*thisImpl*/,
                                                  std::shared_ptr<detail::Workspace_Impl> cloneImpl, bool keepHandles) const {
     detail::WorkspaceObject_ImplPtrVector newObjectImplPtrs;
     HandleMap oldNewHandleMap;
@@ -2431,7 +2435,7 @@ Workspace::Workspace(const IdfFile& idfFile, StrictnessLevel level) : m_impl(new
   m_impl->resolvePotentialNameConflicts(copyOfThis);
 }
 
-Workspace::Workspace(const Workspace& other) : m_impl(other.m_impl) {}
+Workspace::Workspace(const Workspace& other) = default;
 
 Workspace Workspace::clone(bool keepHandles) const {
   Workspace result = m_impl->clone(keepHandles);
@@ -2539,7 +2543,7 @@ std::vector<WorkspaceObject> Workspace::getObjectsByReference(const std::vector<
   return m_impl->getObjectsByReference(referenceNames);
 }
 
-boost::optional<WorkspaceObject> Workspace::getObjectByNameAndReference(std::string name, const StringVector& referenceNames) const {
+boost::optional<WorkspaceObject> Workspace::getObjectByNameAndReference(const std::string& name, const StringVector& referenceNames) const {
   return m_impl->getObjectByNameAndReference(name, referenceNames);
 }
 

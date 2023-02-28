@@ -115,7 +115,7 @@ namespace model {
         newCoilSystem.setHeatExchanger(mo);
       }
 
-      return newCoilSystem;
+      return std::move(newCoilSystem);
     }
 
     boost::optional<HVACComponent> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::containingHVACComponent() const {
@@ -275,7 +275,7 @@ namespace model {
   }
 
   IddObjectType CoilSystemCoolingWaterHeatExchangerAssisted::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted);
+    return {IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted};
   }
 
   AirToAirComponent CoilSystemCoolingWaterHeatExchangerAssisted::heatExchanger() const {

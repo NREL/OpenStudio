@@ -51,7 +51,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ConstructionBase() {}
+    virtual ~ConstructionBase() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConstructionBase(const ConstructionBase& other) = default;
+    ConstructionBase(ConstructionBase&& other) = default;
+    ConstructionBase& operator=(const ConstructionBase&) = default;
+    ConstructionBase& operator=(ConstructionBase&&) = default;
 
     //@}
     /** @name Getters */
@@ -141,7 +146,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ConstructionBase_Impl ImplType;
+    using ImplType = detail::ConstructionBase_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -158,10 +163,10 @@ namespace model {
   };
 
   /** \relates ConstructionBase */
-  typedef boost::optional<ConstructionBase> OptionalConstructionBase;
+  using OptionalConstructionBase = boost::optional<ConstructionBase>;
 
   /** \relates ConstructionBase */
-  typedef std::vector<ConstructionBase> ConstructionBaseVector;
+  using ConstructionBaseVector = std::vector<ConstructionBase>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -56,7 +56,12 @@ namespace model {
 
     explicit ElectricLoadCenterTransformer(const Model& model);
 
-    virtual ~ElectricLoadCenterTransformer() {}
+    virtual ~ElectricLoadCenterTransformer() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricLoadCenterTransformer(const ElectricLoadCenterTransformer& other) = default;
+    ElectricLoadCenterTransformer(ElectricLoadCenterTransformer&& other) = default;
+    ElectricLoadCenterTransformer& operator=(const ElectricLoadCenterTransformer&) = default;
+    ElectricLoadCenterTransformer& operator=(ElectricLoadCenterTransformer&&) = default;
 
     //@}
 
@@ -220,7 +225,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterTransformer_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterTransformer_Impl;
 
     explicit ElectricLoadCenterTransformer(std::shared_ptr<detail::ElectricLoadCenterTransformer_Impl> impl);
 
@@ -234,10 +239,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterTransformer*/
-  typedef boost::optional<ElectricLoadCenterTransformer> OptionalElectricLoadCenterTransformer;
+  using OptionalElectricLoadCenterTransformer = boost::optional<ElectricLoadCenterTransformer>;
 
   /** \relates ElectricLoadCenterTransformer*/
-  typedef std::vector<ElectricLoadCenterTransformer> ElectricLoadCenterTransformerVector;
+  using ElectricLoadCenterTransformerVector = std::vector<ElectricLoadCenterTransformer>;
 
 }  // namespace model
 }  // namespace openstudio

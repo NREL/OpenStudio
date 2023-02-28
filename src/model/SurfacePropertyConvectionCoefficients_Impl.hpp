@@ -53,7 +53,7 @@ namespace model {
 
       SurfacePropertyConvectionCoefficients_Impl(const SurfacePropertyConvectionCoefficients_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyConvectionCoefficients_Impl() {}
+      virtual ~SurfacePropertyConvectionCoefficients_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

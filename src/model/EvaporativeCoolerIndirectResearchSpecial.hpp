@@ -55,7 +55,12 @@ namespace model {
 
     explicit EvaporativeCoolerIndirectResearchSpecial(const Model& model);
 
-    virtual ~EvaporativeCoolerIndirectResearchSpecial() {}
+    virtual ~EvaporativeCoolerIndirectResearchSpecial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EvaporativeCoolerIndirectResearchSpecial(const EvaporativeCoolerIndirectResearchSpecial& other) = default;
+    EvaporativeCoolerIndirectResearchSpecial(EvaporativeCoolerIndirectResearchSpecial&& other) = default;
+    EvaporativeCoolerIndirectResearchSpecial& operator=(const EvaporativeCoolerIndirectResearchSpecial&) = default;
+    EvaporativeCoolerIndirectResearchSpecial& operator=(EvaporativeCoolerIndirectResearchSpecial&&) = default;
 
     //@}
 
@@ -202,7 +207,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EvaporativeCoolerIndirectResearchSpecial_Impl ImplType;
+    using ImplType = detail::EvaporativeCoolerIndirectResearchSpecial_Impl;
 
     explicit EvaporativeCoolerIndirectResearchSpecial(std::shared_ptr<detail::EvaporativeCoolerIndirectResearchSpecial_Impl> impl);
 
@@ -216,10 +221,10 @@ namespace model {
   };
 
   /** \relates EvaporativeCoolerIndirectResearchSpecial*/
-  typedef boost::optional<EvaporativeCoolerIndirectResearchSpecial> OptionalEvaporativeCoolerIndirectResearchSpecial;
+  using OptionalEvaporativeCoolerIndirectResearchSpecial = boost::optional<EvaporativeCoolerIndirectResearchSpecial>;
 
   /** \relates EvaporativeCoolerIndirectResearchSpecial*/
-  typedef std::vector<EvaporativeCoolerIndirectResearchSpecial> EvaporativeCoolerIndirectResearchSpecialVector;
+  using EvaporativeCoolerIndirectResearchSpecialVector = std::vector<EvaporativeCoolerIndirectResearchSpecial>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -50,7 +50,7 @@ namespace measure {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ModelMeasure();
+    virtual ~ModelMeasure() = default;
 
     //@}
     /** @name Getters */

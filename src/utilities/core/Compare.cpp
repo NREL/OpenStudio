@@ -37,7 +37,7 @@
 
 namespace openstudio {
 
-IstringFind::IstringFind() {}
+IstringFind::IstringFind() = default;
 
 IstringFind::IstringFind(const std::string& target) {
   addTarget(target);

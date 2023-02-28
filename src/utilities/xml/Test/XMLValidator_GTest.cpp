@@ -184,7 +184,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_schematronToXslt) {
 }
 
 TEST_P(GbXMLValidatorParametrizedFixture, XMLValidator_GBXMLvalidator_XSD) {
-  auto& [filename, n_warnings, n_errors] = GetParam();
+  const auto& [filename, n_warnings, n_errors] = GetParam();
 
   auto xmlValidator = XMLValidator::gbxmlValidator();
   openstudio::path xmlPath = resourcesPath() / openstudio::toPath(filename);

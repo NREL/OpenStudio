@@ -34,7 +34,8 @@ namespace openstudio {
 namespace isomodel {
 
   TimeFrame::TimeFrame() {
-    int i = 0, j = 0;
+    int i = 0;
+    int j = 0;
     for (int I = 1; I <= 12; I++) {
       int dim = monthLength(I);
       for (int J = 1; J <= dim; J++) {

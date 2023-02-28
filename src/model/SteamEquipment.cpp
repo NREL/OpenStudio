@@ -105,7 +105,8 @@ namespace model {
     std::vector<ScheduleTypeKey> SteamEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_SteamEquipmentFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SteamEquipment", "Steam Equipment"));
       }
@@ -121,7 +122,7 @@ namespace model {
       makeUnique();
 
       SteamEquipmentDefinition definition = steamEquipmentDefinition();
-      for (LifeCycleCost cost : definition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : definition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 
@@ -228,7 +229,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool SteamEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool SteamEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_SteamEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -369,7 +370,7 @@ namespace model {
     getImpl<detail::SteamEquipment_Impl>()->resetMultiplier();
   }
 
-  bool SteamEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool SteamEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::SteamEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

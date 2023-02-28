@@ -55,7 +55,12 @@ namespace model {
 
     explicit ZoneHVACHighTemperatureRadiant(const Model& model);
 
-    virtual ~ZoneHVACHighTemperatureRadiant() {}
+    virtual ~ZoneHVACHighTemperatureRadiant() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACHighTemperatureRadiant(const ZoneHVACHighTemperatureRadiant& other) = default;
+    ZoneHVACHighTemperatureRadiant(ZoneHVACHighTemperatureRadiant&& other) = default;
+    ZoneHVACHighTemperatureRadiant& operator=(const ZoneHVACHighTemperatureRadiant&) = default;
+    ZoneHVACHighTemperatureRadiant& operator=(ZoneHVACHighTemperatureRadiant&&) = default;
 
     //@}
 
@@ -105,7 +110,7 @@ namespace model {
 
     void autosizeMaximumPowerInput();
 
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
 
     bool setCombustionEfficiency(double combustionEfficiency);
 
@@ -115,7 +120,7 @@ namespace model {
 
     bool setFractionofInputthatIsLost(double fractionofInputthatIsLost);
 
-    bool setTemperatureControlType(std::string temperatureControlType);
+    bool setTemperatureControlType(const std::string& temperatureControlType);
 
     bool setHeatingThrottlingRange(double heatingThrottlingRange);
 
@@ -140,7 +145,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ZoneHVACHighTemperatureRadiant_Impl ImplType;
+    using ImplType = detail::ZoneHVACHighTemperatureRadiant_Impl;
 
     explicit ZoneHVACHighTemperatureRadiant(std::shared_ptr<detail::ZoneHVACHighTemperatureRadiant_Impl> impl);
 
@@ -154,10 +159,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACHighTemperatureRadiant*/
-  typedef boost::optional<ZoneHVACHighTemperatureRadiant> OptionalZoneHVACHighTemperatureRadiant;
+  using OptionalZoneHVACHighTemperatureRadiant = boost::optional<ZoneHVACHighTemperatureRadiant>;
 
   /** \relates ZoneHVACHighTemperatureRadiant*/
-  typedef std::vector<ZoneHVACHighTemperatureRadiant> ZoneHVACHighTemperatureRadiantVector;
+  using ZoneHVACHighTemperatureRadiantVector = std::vector<ZoneHVACHighTemperatureRadiant>;
 
 }  // namespace model
 }  // namespace openstudio

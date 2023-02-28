@@ -65,7 +65,12 @@ namespace model {
    *  If excludeChildren is true then children of this object do not contribute to the use count.*/
     unsigned nonResourceObjectUseCount(bool excludeChildren = false) const;
 
-    virtual ~ResourceObject() {}
+    virtual ~ResourceObject() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ResourceObject(const ResourceObject& other) = default;
+    ResourceObject(ResourceObject&& other) = default;
+    ResourceObject& operator=(const ResourceObject&) = default;
+    ResourceObject& operator=(ResourceObject&&) = default;
 
    protected:
     /** @name Constructors and Destructors */
@@ -78,7 +83,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::ResourceObject_Impl ImplType;
+    using ImplType = detail::ResourceObject_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -93,10 +98,10 @@ namespace model {
   };
 
   /** \relates ResourceObject */
-  typedef boost::optional<ResourceObject> OptionalResourceObject;
+  using OptionalResourceObject = boost::optional<ResourceObject>;
 
   /** \relates ResourceObject */
-  typedef std::vector<ResourceObject> ResourceObjectVector;
+  using ResourceObjectVector = std::vector<ResourceObject>;
 
   /** Returns all \link ResourceObject ResourceObjects \endlink accessible by recursively calling
  *  .resources() starting from object. Will not return object even if object is a ResourceObject.

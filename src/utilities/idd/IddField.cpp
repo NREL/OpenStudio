@@ -56,7 +56,7 @@ namespace detail {
   // CONSTRUCTORS
 
   /// default constructor for serialization
-  IddField_Impl::IddField_Impl() {}
+  IddField_Impl::IddField_Impl() = default;
 
   IddField_Impl::IddField_Impl(const std::string& name, const std::string& objectName) : m_name(name), m_objectName(objectName) {}
 
@@ -185,7 +185,7 @@ namespace detail {
   // QUERIES
 
   bool IddField_Impl::isNameField() const {
-    return (((properties().references.size() > 0) && (properties().objectLists.size() == 0))
+    return (((!properties().references.empty()) && (properties().objectLists.empty()))
             || (boost::iequals("Name", name()) && ((properties().type == IddFieldType::AlphaType) || (properties().type == IddFieldType::NodeType))));
   }
 
@@ -330,7 +330,7 @@ namespace detail {
     // this function is called very often and has been identified as a bottleneck
     // that is why some of the optimizations below have been applied
 
-    if (text.size() < 1) {
+    if (text.empty()) {
       return;
     }
 

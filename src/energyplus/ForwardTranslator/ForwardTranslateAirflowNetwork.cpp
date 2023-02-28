@@ -659,7 +659,7 @@ namespace energyplus {
 
     std::vector<ViewFactorData> vfs = modelObject.viewFactors();
 
-    if (vfs.size() > 0) {
+    if (!vfs.empty()) {
       m_idfObjects.push_back(idfObject);
 
       idfObject.setString(AirflowNetwork_Distribution_DuctViewFactorsFields::LinkageName, modelObject.linkage().nameString());

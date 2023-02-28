@@ -55,7 +55,12 @@ namespace model {
 
     explicit AvailabilityManagerOptimumStart(const Model& model);
 
-    virtual ~AvailabilityManagerOptimumStart() {}
+    virtual ~AvailabilityManagerOptimumStart() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerOptimumStart(const AvailabilityManagerOptimumStart& other) = default;
+    AvailabilityManagerOptimumStart(AvailabilityManagerOptimumStart&& other) = default;
+    AvailabilityManagerOptimumStart& operator=(const AvailabilityManagerOptimumStart&) = default;
+    AvailabilityManagerOptimumStart& operator=(AvailabilityManagerOptimumStart&&) = default;
 
     //@}
 
@@ -96,7 +101,7 @@ namespace model {
 
     bool setApplicabilitySchedule(Schedule& schedule);
 
-    bool setControlType(std::string controlType);
+    bool setControlType(const std::string& controlType);
 
     bool setControlZone(const ThermalZone& thermalZone);
 
@@ -104,7 +109,7 @@ namespace model {
 
     bool setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime);
 
-    bool setControlAlgorithm(std::string controlAlgorithm);
+    bool setControlAlgorithm(const std::string& controlAlgorithm);
 
     bool setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling);
 
@@ -125,7 +130,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerOptimumStart_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerOptimumStart_Impl;
 
     explicit AvailabilityManagerOptimumStart(std::shared_ptr<detail::AvailabilityManagerOptimumStart_Impl> impl);
 
@@ -139,10 +144,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerOptimumStart*/
-  typedef boost::optional<AvailabilityManagerOptimumStart> OptionalAvailabilityManagerOptimumStart;
+  using OptionalAvailabilityManagerOptimumStart = boost::optional<AvailabilityManagerOptimumStart>;
 
   /** \relates AvailabilityManagerOptimumStart*/
-  typedef std::vector<AvailabilityManagerOptimumStart> AvailabilityManagerOptimumStartVector;
+  using AvailabilityManagerOptimumStartVector = std::vector<AvailabilityManagerOptimumStart>;
 
 }  // namespace model
 }  // namespace openstudio

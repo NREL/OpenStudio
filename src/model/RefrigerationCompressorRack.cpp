@@ -108,7 +108,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationCompressorRack_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_CompressorRackFields::WaterCooledCondenserOutletTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationCompressorRack", "Water Cooled Condenser Outlet Temperature"));
       }
@@ -129,16 +130,16 @@ namespace model {
     }
 
     ModelObject RefrigerationCompressorRack_Impl::clone(Model model) const {
-      RefrigerationCompressorRack modelObjectClone = StraightComponent_Impl::clone(model).cast<RefrigerationCompressorRack>();
+      auto modelObjectClone = StraightComponent_Impl::clone(model).cast<RefrigerationCompressorRack>();
 
       if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
-        ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
+        auto caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationCompressorRack_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
       }
 
       modelObjectClone.resetHeatRejectionZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IddObjectType> RefrigerationCompressorRack_Impl::allowableChildTypes() const {
@@ -349,7 +350,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Refrigeration_CompressorRackFields::HeatRejectionZoneName);
     }
 
-    bool RefrigerationCompressorRack_Impl::setHeatRejectionLocation(std::string heatRejectionLocation) {
+    bool RefrigerationCompressorRack_Impl::setHeatRejectionLocation(const std::string& heatRejectionLocation) {
       bool result = setString(OS_Refrigeration_CompressorRackFields::HeatRejectionLocation, heatRejectionLocation);
       OS_ASSERT(result);
       return result;
@@ -384,13 +385,13 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCompressorRack_Impl::setCondenserType(std::string condenserType) {
+    bool RefrigerationCompressorRack_Impl::setCondenserType(const std::string& condenserType) {
       bool result = setString(OS_Refrigeration_CompressorRackFields::CondenserType, condenserType);
       OS_ASSERT(result);
       return result;
     }
 
-    bool RefrigerationCompressorRack_Impl::setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType) {
+    bool RefrigerationCompressorRack_Impl::setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType) {
       bool result = setString(OS_Refrigeration_CompressorRackFields::WaterCooledLoopFlowType, waterCooledLoopFlowType);
       OS_ASSERT(result);
       return result;
@@ -515,7 +516,7 @@ namespace model {
 
     // }
 
-    bool RefrigerationCompressorRack_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationCompressorRack_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_CompressorRackFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -716,7 +717,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCompressorRack::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_CompressorRack);
+    return {IddObjectType::OS_Refrigeration_CompressorRack};
   }
 
   std::vector<std::string> RefrigerationCompressorRack::condenserTypeValues() {
@@ -839,7 +840,7 @@ namespace model {
     return getImpl<detail::RefrigerationCompressorRack_Impl>()->heatRejectionZone();
   }
 
-  bool RefrigerationCompressorRack::setHeatRejectionLocation(std::string heatRejectionLocation) {
+  bool RefrigerationCompressorRack::setHeatRejectionLocation(const std::string& heatRejectionLocation) {
     return getImpl<detail::RefrigerationCompressorRack_Impl>()->setHeatRejectionLocation(heatRejectionLocation);
   }
 
@@ -863,11 +864,11 @@ namespace model {
     getImpl<detail::RefrigerationCompressorRack_Impl>()->resetCondenserFanPowerFunctionofTemperatureCurve();
   }
 
-  bool RefrigerationCompressorRack::setCondenserType(std::string condenserType) {
+  bool RefrigerationCompressorRack::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::RefrigerationCompressorRack_Impl>()->setCondenserType(condenserType);
   }
 
-  bool RefrigerationCompressorRack::setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType) {
+  bool RefrigerationCompressorRack::setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType) {
     return getImpl<detail::RefrigerationCompressorRack_Impl>()->setWaterCooledLoopFlowType(waterCooledLoopFlowType);
   }
 
@@ -957,7 +958,7 @@ namespace model {
   ///  return getImpl<detail::RefrigerationCompressorRack_Impl>()->resetCondenserAirInletNodeName();
   // }
 
-  bool RefrigerationCompressorRack::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCompressorRack::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationCompressorRack_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

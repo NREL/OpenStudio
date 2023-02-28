@@ -36,6 +36,7 @@
 #include "../utilities/data/CalibrationResult.hpp"
 #include "../utilities/data/EndUses.hpp"
 #include "../utilities/data/DataEnums.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -62,7 +63,7 @@ namespace model {
 
       Facility_Impl(const Facility_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Facility_Impl() {}
+      virtual ~Facility_Impl() = default;
 
       //@}
 
@@ -173,21 +174,141 @@ namespace model {
       boost::optional<double> naturalGasGenerators() const;
       boost::optional<double> naturalGasTotalEndUses() const;
 
-      boost::optional<double> otherFuelHeating() const;
-      boost::optional<double> otherFuelCooling() const;
-      boost::optional<double> otherFuelInteriorLighting() const;
-      boost::optional<double> otherFuelExteriorLighting() const;
-      boost::optional<double> otherFuelInteriorEquipment() const;
-      boost::optional<double> otherFuelExteriorEquipment() const;
-      boost::optional<double> otherFuelFans() const;
-      boost::optional<double> otherFuelPumps() const;
-      boost::optional<double> otherFuelHeatRejection() const;
-      boost::optional<double> otherFuelHumidification() const;
-      boost::optional<double> otherFuelHeatRecovery() const;
-      boost::optional<double> otherFuelWaterSystems() const;
-      boost::optional<double> otherFuelRefrigeration() const;
-      boost::optional<double> otherFuelGenerators() const;
-      boost::optional<double> otherFuelTotalEndUses() const;
+      // gasoline
+      boost::optional<double> gasolineHeating() const;
+      boost::optional<double> gasolineCooling() const;
+      boost::optional<double> gasolineInteriorLighting() const;
+      boost::optional<double> gasolineExteriorLighting() const;
+      boost::optional<double> gasolineInteriorEquipment() const;
+      boost::optional<double> gasolineExteriorEquipment() const;
+      boost::optional<double> gasolineFans() const;
+      boost::optional<double> gasolinePumps() const;
+      boost::optional<double> gasolineHeatRejection() const;
+      boost::optional<double> gasolineHumidification() const;
+      boost::optional<double> gasolineHeatRecovery() const;
+      boost::optional<double> gasolineWaterSystems() const;
+      boost::optional<double> gasolineRefrigeration() const;
+      boost::optional<double> gasolineGenerators() const;
+      boost::optional<double> gasolineTotalEndUses() const;
+
+      // diesel
+      boost::optional<double> dieselHeating() const;
+      boost::optional<double> dieselCooling() const;
+      boost::optional<double> dieselInteriorLighting() const;
+      boost::optional<double> dieselExteriorLighting() const;
+      boost::optional<double> dieselInteriorEquipment() const;
+      boost::optional<double> dieselExteriorEquipment() const;
+      boost::optional<double> dieselFans() const;
+      boost::optional<double> dieselPumps() const;
+      boost::optional<double> dieselHeatRejection() const;
+      boost::optional<double> dieselHumidification() const;
+      boost::optional<double> dieselHeatRecovery() const;
+      boost::optional<double> dieselWaterSystems() const;
+      boost::optional<double> dieselRefrigeration() const;
+      boost::optional<double> dieselGenerators() const;
+      boost::optional<double> dieselTotalEndUses() const;
+
+      // coal
+      boost::optional<double> coalHeating() const;
+      boost::optional<double> coalCooling() const;
+      boost::optional<double> coalInteriorLighting() const;
+      boost::optional<double> coalExteriorLighting() const;
+      boost::optional<double> coalInteriorEquipment() const;
+      boost::optional<double> coalExteriorEquipment() const;
+      boost::optional<double> coalFans() const;
+      boost::optional<double> coalPumps() const;
+      boost::optional<double> coalHeatRejection() const;
+      boost::optional<double> coalHumidification() const;
+      boost::optional<double> coalHeatRecovery() const;
+      boost::optional<double> coalWaterSystems() const;
+      boost::optional<double> coalRefrigeration() const;
+      boost::optional<double> coalGenerators() const;
+      boost::optional<double> coalTotalEndUses() const;
+
+      // Fuel oil No 1
+      boost::optional<double> fuelOilNo1Heating() const;
+      boost::optional<double> fuelOilNo1Cooling() const;
+      boost::optional<double> fuelOilNo1InteriorLighting() const;
+      boost::optional<double> fuelOilNo1ExteriorLighting() const;
+      boost::optional<double> fuelOilNo1InteriorEquipment() const;
+      boost::optional<double> fuelOilNo1ExteriorEquipment() const;
+      boost::optional<double> fuelOilNo1Fans() const;
+      boost::optional<double> fuelOilNo1Pumps() const;
+      boost::optional<double> fuelOilNo1HeatRejection() const;
+      boost::optional<double> fuelOilNo1Humidification() const;
+      boost::optional<double> fuelOilNo1HeatRecovery() const;
+      boost::optional<double> fuelOilNo1WaterSystems() const;
+      boost::optional<double> fuelOilNo1Refrigeration() const;
+      boost::optional<double> fuelOilNo1Generators() const;
+      boost::optional<double> fuelOilNo1TotalEndUses() const;
+
+      // Fuel oil No 2
+      boost::optional<double> fuelOilNo2Heating() const;
+      boost::optional<double> fuelOilNo2Cooling() const;
+      boost::optional<double> fuelOilNo2InteriorLighting() const;
+      boost::optional<double> fuelOilNo2ExteriorLighting() const;
+      boost::optional<double> fuelOilNo2InteriorEquipment() const;
+      boost::optional<double> fuelOilNo2ExteriorEquipment() const;
+      boost::optional<double> fuelOilNo2Fans() const;
+      boost::optional<double> fuelOilNo2Pumps() const;
+      boost::optional<double> fuelOilNo2HeatRejection() const;
+      boost::optional<double> fuelOilNo2Humidification() const;
+      boost::optional<double> fuelOilNo2HeatRecovery() const;
+      boost::optional<double> fuelOilNo2WaterSystems() const;
+      boost::optional<double> fuelOilNo2Refrigeration() const;
+      boost::optional<double> fuelOilNo2Generators() const;
+      boost::optional<double> fuelOilNo2TotalEndUses() const;
+
+      // Propane
+      boost::optional<double> propaneHeating() const;
+      boost::optional<double> propaneCooling() const;
+      boost::optional<double> propaneInteriorLighting() const;
+      boost::optional<double> propaneExteriorLighting() const;
+      boost::optional<double> propaneInteriorEquipment() const;
+      boost::optional<double> propaneExteriorEquipment() const;
+      boost::optional<double> propaneFans() const;
+      boost::optional<double> propanePumps() const;
+      boost::optional<double> propaneHeatRejection() const;
+      boost::optional<double> propaneHumidification() const;
+      boost::optional<double> propaneHeatRecovery() const;
+      boost::optional<double> propaneWaterSystems() const;
+      boost::optional<double> propaneRefrigeration() const;
+      boost::optional<double> propaneGenerators() const;
+      boost::optional<double> propaneTotalEndUses() const;
+
+      // Other Fuel 1
+      boost::optional<double> otherFuel1Heating() const;
+      boost::optional<double> otherFuel1Cooling() const;
+      boost::optional<double> otherFuel1InteriorLighting() const;
+      boost::optional<double> otherFuel1ExteriorLighting() const;
+      boost::optional<double> otherFuel1InteriorEquipment() const;
+      boost::optional<double> otherFuel1ExteriorEquipment() const;
+      boost::optional<double> otherFuel1Fans() const;
+      boost::optional<double> otherFuel1Pumps() const;
+      boost::optional<double> otherFuel1HeatRejection() const;
+      boost::optional<double> otherFuel1Humidification() const;
+      boost::optional<double> otherFuel1HeatRecovery() const;
+      boost::optional<double> otherFuel1WaterSystems() const;
+      boost::optional<double> otherFuel1Refrigeration() const;
+      boost::optional<double> otherFuel1Generators() const;
+      boost::optional<double> otherFuel1TotalEndUses() const;
+
+      // Other Fuel2
+      boost::optional<double> otherFuel2Heating() const;
+      boost::optional<double> otherFuel2Cooling() const;
+      boost::optional<double> otherFuel2InteriorLighting() const;
+      boost::optional<double> otherFuel2ExteriorLighting() const;
+      boost::optional<double> otherFuel2InteriorEquipment() const;
+      boost::optional<double> otherFuel2ExteriorEquipment() const;
+      boost::optional<double> otherFuel2Fans() const;
+      boost::optional<double> otherFuel2Pumps() const;
+      boost::optional<double> otherFuel2HeatRejection() const;
+      boost::optional<double> otherFuel2Humidification() const;
+      boost::optional<double> otherFuel2HeatRecovery() const;
+      boost::optional<double> otherFuel2WaterSystems() const;
+      boost::optional<double> otherFuel2Refrigeration() const;
+      boost::optional<double> otherFuel2Generators() const;
+      boost::optional<double> otherFuel2TotalEndUses() const;
 
       boost::optional<double> districtCoolingHeating() const;
       boost::optional<double> districtCoolingCooling() const;

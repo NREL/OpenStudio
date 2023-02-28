@@ -71,7 +71,12 @@ namespace model {
     explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
                                             const std::string& actuatedComponentControlType, const Space& space);
 
-    virtual ~EnergyManagementSystemActuator() {}
+    virtual ~EnergyManagementSystemActuator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemActuator(const EnergyManagementSystemActuator& other) = default;
+    EnergyManagementSystemActuator(EnergyManagementSystemActuator&& other) = default;
+    EnergyManagementSystemActuator& operator=(const EnergyManagementSystemActuator&) = default;
+    EnergyManagementSystemActuator& operator=(EnergyManagementSystemActuator&&) = default;
 
     //@}
 
@@ -111,7 +116,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemActuator_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemActuator_Impl;
 
     explicit EnergyManagementSystemActuator(std::shared_ptr<detail::EnergyManagementSystemActuator_Impl> impl);
 
@@ -130,10 +135,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemActuator*/
-  typedef boost::optional<EnergyManagementSystemActuator> OptionalEnergyManagementSystemActuator;
+  using OptionalEnergyManagementSystemActuator = boost::optional<EnergyManagementSystemActuator>;
 
   /** \relates EnergyManagementSystemActuator*/
-  typedef std::vector<EnergyManagementSystemActuator> EnergyManagementSystemActuatorVector;
+  using EnergyManagementSystemActuatorVector = std::vector<EnergyManagementSystemActuator>;
 
 }  // namespace model
 }  // namespace openstudio

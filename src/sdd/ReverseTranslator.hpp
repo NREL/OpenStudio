@@ -72,7 +72,7 @@ namespace sdd {
     // If masterAutosize = true the translator will ignore choices in the sdd file and forcibly autosize the entire model.
     ReverseTranslator(bool masterAutosize = false);
 
-    virtual ~ReverseTranslator();
+    ~ReverseTranslator();
 
     boost::optional<openstudio::model::Model> loadModel(const openstudio::path& path, ProgressBar* progressBar = nullptr);
 

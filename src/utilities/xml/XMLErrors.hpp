@@ -33,7 +33,7 @@
 #include "../core/LogMessage.hpp"
 #include <vector>
 
-typedef struct _xmlError xmlError;
+using xmlError = struct _xmlError;
 
 namespace openstudio {
 

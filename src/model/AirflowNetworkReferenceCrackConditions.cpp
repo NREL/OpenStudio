@@ -147,7 +147,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkReferenceCrackConditions::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkReferenceCrackConditions);
+    return {IddObjectType::OS_AirflowNetworkReferenceCrackConditions};
   }
 
   double AirflowNetworkReferenceCrackConditions::temperature() const {

@@ -154,7 +154,7 @@ namespace sdd {
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
-  ReverseTranslator::~ReverseTranslator() {}
+  ReverseTranslator::~ReverseTranslator() = default;
 
   boost::optional<openstudio::model::Model> ReverseTranslator::loadModel(const openstudio::path& path, ProgressBar* progressBar) {
 
@@ -191,25 +191,17 @@ namespace sdd {
 
   std::vector<LogMessage> ReverseTranslator::warnings() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() == Warn; });
     return result;
   }
 
   std::vector<LogMessage> ReverseTranslator::errors() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() > Warn; });
     return result;
   }
 
@@ -273,10 +265,10 @@ namespace sdd {
     // Shading Model
     std::string solDistribution = projectElement.child("SolDistribution").text().as_string();
     if (istringEqual("FullExterior", solDistribution)) {
-      model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+      auto simulationControl = result->getUniqueModelObject<model::SimulationControl>();
       simulationControl.setSolarDistribution("FullExterior");
     } else if (istringEqual("MinimalShadowing", solDistribution)) {
-      model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+      auto simulationControl = result->getUniqueModelObject<model::SimulationControl>();
       simulationControl.setSolarDistribution("MinimalShadowing");
     }
 
@@ -286,7 +278,7 @@ namespace sdd {
       m_autosize = false;
     }
 
-    model::SizingParameters sp = result->getUniqueModelObject<model::SizingParameters>();
+    auto sp = result->getUniqueModelObject<model::SizingParameters>();
     sp.setHeatingSizingFactor(1.0);
     sp.setCoolingSizingFactor(1.0);
 
@@ -509,7 +501,7 @@ namespace sdd {
 
     // translate shadingSurfaces
     std::vector<pugi::xml_node> exteriorShadingElements = makeVectorOfChildren(projectElement, "ExtShdgObj");
-    if (exteriorShadingElements.size() > 0) {
+    if (!exteriorShadingElements.empty()) {
       model::ShadingSurfaceGroup shadingSurfaceGroup(*result);
       shadingSurfaceGroup.setName("Site ShadingGroup");
       shadingSurfaceGroup.setShadingSurfaceType("Site");
@@ -523,7 +515,7 @@ namespace sdd {
       }
     }
 
-    openstudio::model::Facility facility = result->getUniqueModelObject<openstudio::model::Facility>();
+    auto facility = result->getUniqueModelObject<openstudio::model::Facility>();
 
     // translate the building
     pugi::xml_node buildingElement = projectElement.child("Bldg");
@@ -668,7 +660,7 @@ namespace sdd {
     // Give the nodes better names
     // We do this here because the loops need to be completely assembled
     // with their supply AND demand sides.  ie. After zones are attached.
-    std::vector<model::PlantLoop> plantLoops = result->getModelObjects<model::PlantLoop>();
+    std::vector<model::PlantLoop> plantLoops = result->getConcreteModelObjects<model::PlantLoop>();
 
     for (auto plantLoop = plantLoops.begin(); plantLoop != plantLoops.end(); ++plantLoop) {
       std::string plantName = plantLoop->name().get();
@@ -719,7 +711,7 @@ namespace sdd {
       }
     }
 
-    std::vector<model::AirLoopHVAC> airSystems = result->getModelObjects<model::AirLoopHVAC>();
+    std::vector<model::AirLoopHVAC> airSystems = result->getConcreteModelObjects<model::AirLoopHVAC>();
 
     for (auto airSystem = airSystems.begin(); airSystem != airSystems.end(); ++airSystem) {
       std::string systemName = airSystem->name().get();
@@ -811,12 +803,12 @@ namespace sdd {
     pugi::xml_node numTimeStepsPerHrElement = projectElement.child("NumTimeStepsPerHr");
     boost::optional<int> _numTimeStepsPerHr = lexicalCastToInt(numTimeStepsPerHrElement);
     if (_numTimeStepsPerHr) {
-      model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+      auto timestep = result->getUniqueModelObject<model::Timestep>();
       timestep.setNumberOfTimestepsPerHour(_numTimeStepsPerHr.get());
     } else {
       LOG(Warn, "Cannot cast NumTimeStepsPerHr to an integer, NumTimeStepsPerHr: [" << numTimeStepsPerHrElement.text().as_string()
                                                                                     << "]. Defaulting to 4/hr.");
-      model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+      auto timestep = result->getUniqueModelObject<model::Timestep>();
       timestep.setNumberOfTimestepsPerHour(4);
     }
 
@@ -969,7 +961,7 @@ namespace sdd {
     meter.setReportingFrequency("Hourly");
 
     {
-      auto fanZoneExhausts = result->getModelObjects<model::FanZoneExhaust>();
+      auto fanZoneExhausts = result->getConcreteModelObjects<model::FanZoneExhaust>();
       std::vector<std::string> subCategories(fanZoneExhausts.size());
       std::transform(fanZoneExhausts.begin(), fanZoneExhausts.end(), subCategories.begin(),
                      [](const model::FanZoneExhaust& fan) { return fan.endUseSubcategory(); });
@@ -1090,7 +1082,7 @@ namespace sdd {
       model::OutputVariable var("Zone Air Temperature", *result);
       var.setReportingFrequency(interval);
 
-      std::vector<model::ThermalZone> zones = result->getModelObjects<model::ThermalZone>();
+      std::vector<model::ThermalZone> zones = result->getConcreteModelObjects<model::ThermalZone>();
       for (auto it = zones.begin(); it != zones.end(); ++it) {
         if (boost::optional<model::ModelObject> returnAirNode = it->returnAirModelObject()) {
           var = model::OutputVariable("System Node Temperature", *result);
@@ -1239,19 +1231,19 @@ namespace sdd {
 
       // Really need some abstraction so this sillyness isn't required
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
         for (const auto& comp : zonehvac) {
           createOutputForZoneHVAC(comp);
         }
       }
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
         for (const auto& comp : zonehvac) {
           createOutputForZoneHVAC(comp);
         }
       }
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACWaterToAirHeatPump>();
         for (const auto& comp : zonehvac) {
           createOutputForZoneHVAC(comp);
 
@@ -1281,13 +1273,13 @@ namespace sdd {
         }
       }
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACFourPipeFanCoil>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACFourPipeFanCoil>();
         for (const auto& comp : zonehvac) {
           createOutputForZoneHVAC(comp);
         }
       }
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACBaseboardConvectiveElectric>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACBaseboardConvectiveElectric>();
         for (const auto& comp : zonehvac) {
           var = model::OutputVariable("Baseboard Electricity Rate", *result);
           var.setReportingFrequency(interval);
@@ -1349,7 +1341,7 @@ namespace sdd {
       var = model::OutputVariable("Air System Outdoor Air Economizer Status", *result);
       var.setReportingFrequency(interval);
 
-      auto hxs = result->getModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
+      auto hxs = result->getConcreteModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
       for (auto& hx : hxs) {
         var = model::OutputVariable("Heat Exchanger Sensible Heating Rate", *result);
         var.setReportingFrequency(interval);
@@ -1409,7 +1401,7 @@ namespace sdd {
         }
       }
 
-      std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
+      std::vector<model::AirLoopHVAC> airloops = result->getConcreteModelObjects<model::AirLoopHVAC>();
       for (auto& airloop : airloops) {
         var = model::OutputVariable("System Node Temperature", *result);
         var.setReportingFrequency(interval);
@@ -1532,7 +1524,7 @@ namespace sdd {
       var = model::OutputVariable("Plant Supply Side Outlet Temperature", *result);
       var.setReportingFrequency(interval);
 
-      std::vector<model::PlantLoop> plants = result->getModelObjects<model::PlantLoop>();
+      std::vector<model::PlantLoop> plants = result->getConcreteModelObjects<model::PlantLoop>();
       for (auto& plant : plants) {
         var = model::OutputVariable("System Node Mass Flow Rate", *result);
         var.setReportingFrequency(interval);
@@ -1639,7 +1631,7 @@ namespace sdd {
       var.setReportingFrequency(interval);
     }
 
-    model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
+    auto rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
     rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
     rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
 
@@ -1701,7 +1693,7 @@ namespace sdd {
       return boost::none;
     }
 
-    model::SimulationControl simulationControl = model.getUniqueModelObject<model::SimulationControl>();
+    auto simulationControl = model.getUniqueModelObject<model::SimulationControl>();
 
     simulationControl.setMaximumNumberofWarmupDays(50);
 
@@ -1782,7 +1774,7 @@ namespace sdd {
     }
 
     // set lat, lon, elev
-    model::Site site = model.getUniqueModelObject<model::Site>();
+    auto site = model.getUniqueModelObject<model::Site>();
 
     // DLM: what about time zone and terrain?
 
@@ -1809,7 +1801,7 @@ namespace sdd {
     if (wtrMnTempSchRefElement) {
       boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(wtrMnTempSchRefElement.text().as_string());
       if (schedule) {
-        model::SiteWaterMainsTemperature waterMains = model.getUniqueModelObject<model::SiteWaterMainsTemperature>();
+        auto waterMains = model.getUniqueModelObject<model::SiteWaterMainsTemperature>();
         waterMains.setTemperatureSchedule(*schedule);
         return waterMains;
       }
@@ -1921,7 +1913,7 @@ namespace sdd {
       }
     }
 
-    return pugi::xml_node();
+    return {};
   }
 
   boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const pugi::xml_node& fluidSegInRefElement,
@@ -1930,7 +1922,7 @@ namespace sdd {
     auto fluidSysElement = fluidSegmentElement.parent();
     auto fluidSysNameElement = fluidSysElement.child("Name");
 
-    return model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string());
+    return model.getConcreteModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string());
   }
 
   boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(const pugi::xml_node& fluidSegInRefElement,
@@ -1960,7 +1952,8 @@ namespace sdd {
           if ((openstudio::istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY")
                || openstudio::istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY"))
               && openstudio::istringEqual(nameElement.text().as_string(), fluidSegmentName)) {
-            if (boost::optional<model::PlantLoop> loop = model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string())) {
+            if (boost::optional<model::PlantLoop> loop =
+                  model.getConcreteModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string())) {
               return loop;
             } else {
               if (boost::optional<model::ModelObject> mo = translateFluidSys(fluidSysElement, model)) {

@@ -54,7 +54,12 @@ namespace model {
    public:
     explicit WaterUseConnections(const Model& model);
 
-    virtual ~WaterUseConnections() {}
+    virtual ~WaterUseConnections() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterUseConnections(const WaterUseConnections& other) = default;
+    WaterUseConnections(WaterUseConnections&& other) = default;
+    WaterUseConnections& operator=(const WaterUseConnections&) = default;
+    WaterUseConnections& operator=(WaterUseConnections&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -83,11 +88,11 @@ namespace model {
 
     std::string drainWaterHeatExchangerType() const;
 
-    bool setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType);
+    bool setDrainWaterHeatExchangerType(const std::string& drainWaterHeatExchangerType);
 
     std::string drainWaterHeatExchangerDestination() const;
 
-    bool setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination);
+    bool setDrainWaterHeatExchangerDestination(const std::string& drainWaterHeatExchangerDestination);
 
     boost::optional<double> drainWaterHeatExchangerUFactorTimesArea() const;
 
@@ -97,7 +102,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::WaterUseConnections_Impl ImplType;
+    using ImplType = detail::WaterUseConnections_Impl;
 
     explicit WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl);
 
@@ -112,10 +117,10 @@ namespace model {
   };
 
   /** \relates WaterUseConnections*/
-  typedef boost::optional<WaterUseConnections> OptionalWaterUseConnections;
+  using OptionalWaterUseConnections = boost::optional<WaterUseConnections>;
 
   /** \relates WaterUseConnections*/
-  typedef std::vector<WaterUseConnections> WaterUseConnectionsVector;
+  using WaterUseConnectionsVector = std::vector<WaterUseConnections>;
 
 }  // namespace model
 }  // namespace openstudio

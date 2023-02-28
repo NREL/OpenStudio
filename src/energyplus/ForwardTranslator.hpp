@@ -52,6 +52,8 @@ class Transformation;
 namespace model {
 
   class AirConditionerVariableRefrigerantFlow;
+  class AirConditionerVariableRefrigerantFlowFluidTemperatureControl;
+  class AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR;
   class AirflowNetworkSimulationControl;
   class AirflowNetworkZone;
   class AirflowNetworkSurface;
@@ -135,6 +137,7 @@ namespace model {
   class CoilCoolingDXTwoSpeed;
   class CoilCoolingDXTwoStageWithHumidityControlMode;
   class CoilCoolingDXVariableRefrigerantFlow;
+  class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl;
   class CoilCoolingDXVariableSpeed;
   class CoilCoolingWater;
   class CoilCoolingWaterToAirHeatPumpEquationFit;
@@ -143,6 +146,7 @@ namespace model {
   class CoilHeatingDXMultiSpeed;
   class CoilHeatingDXSingleSpeed;
   class CoilHeatingDXVariableRefrigerantFlow;
+  class CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl;
   class CoilHeatingDXVariableSpeed;
   class CoilHeatingElectric;
   class CoilHeatingElectricMultiStage;
@@ -406,6 +410,8 @@ namespace model {
   class SiteGroundTemperatureDeep;
   class SiteGroundTemperatureFCfactorMethod;
   class SiteGroundTemperatureShallow;
+  class SiteGroundTemperatureUndisturbedKusudaAchenbach;
+  class SiteGroundTemperatureUndisturbedXing;
   class SiteWaterMainsTemperature;
   class SizingParameters;
   class SizingPlant;
@@ -602,9 +608,17 @@ namespace energyplus {
     // Pick up the Zone, ZoneList, Space or SpaceList (if allowSpaceType is true) object for a given SpaceLoad (or SpaceLoadInstance)
     IdfObject getSpaceLoadParent(const model::SpaceLoad& sp, bool allowSpaceType = true);
 
+    // NOLINTBEGIN(readability-function-size, bugprone-branch-clone)
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
+    // NOLINTEND(readability-function-size, bugprone-branch-clone)
 
     boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlow(model::AirConditionerVariableRefrigerantFlow& modelObject);
+
+    boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(
+      model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl& modelObject);
+
+    boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(
+      model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR& modelObject);
 
     boost::optional<IdfObject> translateAirflowNetworkSimulationControl(model::AirflowNetworkSimulationControl& modelObject);
 
@@ -787,6 +801,9 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlow(model::CoilCoolingDXVariableRefrigerantFlow& modelObject);
 
+    boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl(
+      model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject);
+
     boost::optional<IdfObject> translateCoilCoolingDXVariableSpeed(model::CoilCoolingDXVariableSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXVariableSpeedWithoutUnitary(model::CoilCoolingDXVariableSpeed& modelObject);
@@ -807,6 +824,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilHeatingDXSingleSpeedWithoutUnitary(model::CoilHeatingDXSingleSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlow(model::CoilHeatingDXVariableRefrigerantFlow& modelObject);
+
+    boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl(
+      model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingDXVariableSpeed(model::CoilHeatingDXVariableSpeed& modelObject);
 
@@ -1380,6 +1400,11 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateSiteGroundTemperatureShallow(model::SiteGroundTemperatureShallow& modelObject);
 
+    boost::optional<IdfObject>
+      translateSiteGroundTemperatureUndisturbedKusudaAchenbach(model::SiteGroundTemperatureUndisturbedKusudaAchenbach& modelObject);
+
+    boost::optional<IdfObject> translateSiteGroundTemperatureUndisturbedXing(model::SiteGroundTemperatureUndisturbedXing& modelObject);
+
     boost::optional<IdfObject> translateSiteWaterMainsTemperature(model::SiteWaterMainsTemperature& modelObject);
 
     boost::optional<IdfObject> translateSizingParameters(model::SizingParameters& modelObject);
@@ -1605,7 +1630,7 @@ namespace energyplus {
 
     void createStandardOutputRequests(const model::Model& model);
 
-    std::string stripOS2(const std::string& s);
+    static std::string stripOS2(const std::string& s);
 
     IdfObject createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject);
 
@@ -1616,11 +1641,11 @@ namespace energyplus {
 
     /** Determines whether or not the HVACComponent is part of a unitary system or on an
    *  AirLoopHVAC */
-    bool isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const;
+    static bool isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent);
 
     /** Looks up in embedded_files to locate the path to IdfFile that is supplied, and returns the
    *  IdfFile if successful. */
-    boost::optional<IdfFile> findIdfFile(const std::string& path);
+    static boost::optional<IdfFile> findIdfFile(const std::string& path);
 
     /** Create a simple Schedule:Compact based on input vectors. The function will consume the vectors in
    *  order, so the times must be in chronological order otherwise E+ will output an error. Summer and
@@ -1654,9 +1679,9 @@ namespace energyplus {
    *  Valid refrigerants are: R11, R12, R22, R123, R134a, R404a, R407a, R410a, NH3, R507a, R744 */
     void createFluidPropertiesMap();
 
-    typedef std::map<const openstudio::Handle, const IdfObject> ModelObjectMap;
+    using ModelObjectMap = std::map<const openstudio::Handle, const IdfObject>;
 
-    typedef std::map<const std::string, const std::string> FluidPropertiesMap;
+    using FluidPropertiesMap = std::map<const std::string, const std::string>;
 
     FluidPropertiesMap m_fluidPropertiesMap;
 

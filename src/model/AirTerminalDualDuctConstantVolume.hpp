@@ -55,7 +55,12 @@ namespace model {
 
     explicit AirTerminalDualDuctConstantVolume(const Model& model);
 
-    virtual ~AirTerminalDualDuctConstantVolume() {}
+    virtual ~AirTerminalDualDuctConstantVolume() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalDualDuctConstantVolume(const AirTerminalDualDuctConstantVolume& other) = default;
+    AirTerminalDualDuctConstantVolume(AirTerminalDualDuctConstantVolume&& other) = default;
+    AirTerminalDualDuctConstantVolume& operator=(const AirTerminalDualDuctConstantVolume&) = default;
+    AirTerminalDualDuctConstantVolume& operator=(AirTerminalDualDuctConstantVolume&&) = default;
 
     //@}
 
@@ -109,7 +114,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalDualDuctConstantVolume_Impl ImplType;
+    using ImplType = detail::AirTerminalDualDuctConstantVolume_Impl;
 
     explicit AirTerminalDualDuctConstantVolume(std::shared_ptr<detail::AirTerminalDualDuctConstantVolume_Impl> impl);
 
@@ -123,10 +128,10 @@ namespace model {
   };
 
   /** \relates AirTerminalDualDuctConstantVolume*/
-  typedef boost::optional<AirTerminalDualDuctConstantVolume> OptionalAirTerminalDualDuctConstantVolume;
+  using OptionalAirTerminalDualDuctConstantVolume = boost::optional<AirTerminalDualDuctConstantVolume>;
 
   /** \relates AirTerminalDualDuctConstantVolume*/
-  typedef std::vector<AirTerminalDualDuctConstantVolume> AirTerminalDualDuctConstantVolumeVector;
+  using AirTerminalDualDuctConstantVolumeVector = std::vector<AirTerminalDualDuctConstantVolume>;
 
 }  // namespace model
 }  // namespace openstudio

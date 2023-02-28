@@ -55,7 +55,7 @@ namespace model {
 
       ControllerMechanicalVentilation_Impl(const ControllerMechanicalVentilation_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ControllerMechanicalVentilation_Impl() {}
+      virtual ~ControllerMechanicalVentilation_Impl() = default;
 
       //@}
 
@@ -92,7 +92,7 @@ namespace model {
 
       void resetDemandControlledVentilation();
 
-      bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
+      bool setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod);
 
       void resetSystemOutdoorAirMethod();
 

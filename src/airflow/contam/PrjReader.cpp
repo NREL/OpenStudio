@@ -44,8 +44,6 @@ namespace contam {
     m_stream.str(string);
   }
 
-  Reader::~Reader() {}
-
   double Reader::readDouble() {
     const auto string = readString();
     try {
@@ -56,8 +54,8 @@ namespace contam {
   }
 
   std::string Reader::readString() {
-    while (1) {
-      while (m_entries.size() == 0) {
+    while (true) {
+      while (m_entries.empty()) {
         std::string input;
         std::getline(m_stream, input);
         LOG(Debug, "Line read: " << input);
@@ -123,7 +121,7 @@ namespace contam {
 
   std::string Reader::readLine() {
     /* Dump any other input */
-    if (m_entries.size()) {
+    if (!m_entries.empty()) {
       m_entries.clear();
     }
     std::string input;
@@ -171,7 +169,7 @@ namespace contam {
 
   std::string Reader::readSection() {
     std::string section;
-    while (1) {
+    while (true) {
       std::string input;
       std::getline(m_stream, input);
       if (!m_stream) {

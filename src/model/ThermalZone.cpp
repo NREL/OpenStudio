@@ -114,10 +114,13 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include <algorithm>
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+
+#include "../utilities/core/ContainersMove.hpp"
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
@@ -158,22 +161,19 @@ namespace model {
       std::vector<ModelObject> result;
 
       // Sizing Zone object
-      SizingZone sizingZone = this->sizingZone();
-      result.push_back(sizingZone);
+      result.emplace_back(this->sizingZone());
 
       // DLM: temporarily add supplyZoneMixing as children so we can see them in IG
       // remove once we have gridview for these
-      for (const auto& mixing : supplyZoneMixing()) {
-        result.push_back(mixing);
-      }
+      openstudio::detail::concat_helper(result, this->supplyZoneMixing());
 
       boost::optional<AirflowNetworkZone> afnz = airflowNetworkZone();
       if (afnz) {
-        result.push_back(afnz.get());
+        result.emplace_back(afnz.get());
       }
 
       if (boost::optional<ZoneHVACEquipmentList> z_eq = this->zoneHVACEquipmentList()) {
-        result.push_back(z_eq.get());
+        result.emplace_back(z_eq.get());
       }
 
       return result;
@@ -188,12 +188,12 @@ namespace model {
     }
 
     std::vector<IddObjectType> ThermalZone_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
       // DLM: this does not seem to agree with implementation of children()
-      result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
-      result.push_back(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
-      result.push_back(IddObjectType::OS_ZoneHVAC_EquipmentList);
-      return result;
+      return {
+        IddObjectType::OS_ThermostatSetpoint_DualSetpoint,
+        IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint,
+        IddObjectType::OS_ZoneHVAC_EquipmentList,
+      };
     }
 
     const std::vector<std::string>& ThermalZone_Impl::outputVariableNames() const {
@@ -447,21 +447,17 @@ namespace model {
       return ThermalZone::iddObjectType();
     }
 
-    std::vector<HVACComponent> ThermalZone_Impl::edges(const boost::optional<HVACComponent>& prev) {
-      std::vector<HVACComponent> edges;
-      auto returncomps = subsetCastVector<HVACComponent>(returnPortList().modelObjects());
-      for (auto& comp : returncomps) {
-        edges.push_back(comp);
-      }
-      return edges;
+    std::vector<HVACComponent> ThermalZone_Impl::edges(const boost::optional<HVACComponent>& /*prev*/) {
+      return subsetCastVector<HVACComponent>(returnPortList().modelObjects());
     }
 
     std::vector<ScheduleTypeKey> ThermalZone_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ThermalZone", "Daylighting Controls Availability"));
+        result.emplace_back("ThermalZone", "Daylighting Controls Availability");
       }
       return result;
     }
@@ -618,7 +614,7 @@ namespace model {
       return result;
     }
 
-    bool ThermalZone_Impl::setZoneInsideConvectionAlgorithm(std::string zoneInsideConvectionAlgorithm) {
+    bool ThermalZone_Impl::setZoneInsideConvectionAlgorithm(const std::string& zoneInsideConvectionAlgorithm) {
       bool result = setString(OS_ThermalZoneFields::ZoneInsideConvectionAlgorithm, zoneInsideConvectionAlgorithm);
       return result;
     }
@@ -638,7 +634,7 @@ namespace model {
       return result;
     }
 
-    bool ThermalZone_Impl::setZoneOutsideConvectionAlgorithm(std::string zoneOutsideConvectionAlgorithm) {
+    bool ThermalZone_Impl::setZoneOutsideConvectionAlgorithm(const std::string& zoneOutsideConvectionAlgorithm) {
       bool result = setString(OS_ThermalZoneFields::ZoneOutsideConvectionAlgorithm, zoneOutsideConvectionAlgorithm);
       return result;
     }
@@ -648,7 +644,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+    bool ThermalZone_Impl::setZoneConditioningEquipmentListName(const std::string& zoneConditioningEquipmentListName) {
       bool result = setString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName, zoneConditioningEquipmentListName);
       OS_ASSERT(result);
       return result;
@@ -1235,8 +1231,10 @@ namespace model {
       double sumOutdoorAirRate = 0.0;
       double sumOutdoorAirForVolume = 0.0;
 
-      // Quick check to see what kind of ventilation methods are used
-      for (Space space : spaces) {
+      // find common variables for the new space
+      for (const Space& space : spaces) {
+
+        // Quick check to see what kind of ventilation methods are used
         if (boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir = space.designSpecificationOutdoorAir()) {
           if (istringEqual("Maximum", designSpecificationOutdoorAir->outdoorAirMethod())) {
             anyMaxOutdoorAirMethod = true;
@@ -1244,10 +1242,6 @@ namespace model {
             anySumOutdoorAirMethod = true;
           }
         }
-      }
-
-      // find common variables for the new space
-      for (Space space : spaces) {
 
         // if all spaces are on the same building story use that, otherwise clear it
         if (space.buildingStory()) {
@@ -1382,8 +1376,8 @@ namespace model {
       // if all spaces share a common space type, ensure that there are no absolute loads
       if (spaceType) {
         for (const auto& child : spaceType->children()) {
-          if (child.optionalCast<SpaceLoad>()) {
-            if (child.cast<SpaceLoad>().isAbsolute()) {
+          if (auto load_ = child.optionalCast<SpaceLoad>()) {
+            if (load_->isAbsolute()) {
               LOG(Warn, "SpaceType '" << spaceType->nameString() << "' contains absolute loads, cannot be shared by combined spaces.")
               spaceType.reset();
               break;
@@ -1413,7 +1407,7 @@ namespace model {
       // make the new space
       Model model = this->model();
       Space newSpace(model);
-      ThermalZone thermalZone = this->getObject<ThermalZone>();
+      auto thermalZone = this->getObject<ThermalZone>();
       newSpace.setThermalZone(thermalZone);
       newSpace.setXOrigin(xOrigin);
       newSpace.setYOrigin(yOrigin);
@@ -1442,7 +1436,7 @@ namespace model {
       Transformation newTransformation = newSpace.transformation();
 
       // set common variables for the new space
-      for (Space space : spaces) {
+      for (Space& space : spaces) {
 
         // shift the geometry
         space.changeTransformation(newTransformation);
@@ -1458,7 +1452,7 @@ namespace model {
 
         // first hard size any space loads, do this before removing surfaces as
         // hard sizing may require space geometry
-        for (ModelObject child : children) {
+        for (ModelObject& child : children) {
           if (auto sp_ = child.optionalCast<SpaceLoad>()) {
             sp_->hardSize();
             sp_->hardApplySchedules();
@@ -1476,7 +1470,7 @@ namespace model {
         }
 
         // now move costs over to the new space
-        for (LifeCycleCost cost : space.lifeCycleCosts()) {
+        for (const LifeCycleCost& cost : space.lifeCycleCosts()) {
           // new costs are in absolute units as space area is changing in the merge
           LifeCycleCost newCost(newSpace);
           newCost.setName(cost.name().get());
@@ -1497,8 +1491,8 @@ namespace model {
           }
         }
 
-        // now move everything over to the new space
-        for (ModelObject child : children) {
+        for (ModelObject& child : children) {
+          // now move everything over to the new space
           child.setParent(newSpace);
         }
 
@@ -1514,15 +1508,14 @@ namespace model {
       std::vector<Surface> surfaces = newSpace.surfaces();
       std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
 
-      for (Surface surface : surfaces) {
+      for (const Surface& surface : surfaces) {
 
         auto it = mergedSurfaces.find(surface);
         if (it != mergedSurfaces.end()) {
           continue;
         }
 
-        boost::optional<Surface> adjacentSurface = surface.adjacentSurface();
-        if (adjacentSurface) {
+        if (boost::optional<Surface> adjacentSurface = surface.adjacentSurface()) {
           boost::optional<Space> adjacentSpace = adjacentSurface->space();
           if (adjacentSpace && (newSpace.handle() == adjacentSpace->handle())) {
 
@@ -1556,17 +1549,15 @@ namespace model {
             interiorPartitionSurface.setName("Merged " + surface.name().get() + " - " + adjacentSurface->name().get());
             interiorPartitionSurface.setInteriorPartitionSurfaceGroup(*interiorPartitionSurfaceGroup);
 
-            boost::optional<ConstructionBase> construction = surface.construction();
-            if (construction) {
+            if (boost::optional<ConstructionBase> construction = surface.construction()) {
               interiorPartitionSurface.setConstruction(*construction);
             }
           }
         }
       }
 
-      for (Surface mergedSurface : mergedSurfaces) {
-        mergedSurface.remove();
-      }
+      // std::set has const keys... so I have to make a copy here (can't take by ref)
+      std::for_each(std::begin(mergedSurfaces), std::end(mergedSurfaces), [](auto s) { s.remove(); });
 
       // if there is a common designSpecificationOutdoorAir
       if (designSpecificationOutdoorAir) {
@@ -1657,7 +1648,7 @@ namespace model {
       // zoneHVACEquipmentList().remove();
 
       // remove ZoneMixing objects
-      for (auto mixing : this->zoneMixing()) {
+      for (auto& mixing : this->zoneMixing()) {
         mixing.remove();
       }
 
@@ -1665,7 +1656,7 @@ namespace model {
     }
 
     void ThermalZone_Impl::disconnect() {
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
       Model _model = this->model();
 
       auto pl = inletPortList();
@@ -1700,7 +1691,7 @@ namespace model {
         }
 
         if (boost::optional<AirLoopHVAC> airLoop = this->airLoopHVAC()) {
-          ThermalZone thisObject = this->getObject<ThermalZone>();
+          auto thisObject = this->getObject<ThermalZone>();
 
           result &= airLoop->removeBranchForZone(thisObject);
         }
@@ -1860,31 +1851,20 @@ namespace model {
     }
 
     SizingZone ThermalZone_Impl::sizingZone() const {
-      boost::optional<SizingZone> sizingZone;
 
-      std::vector<SizingZone> sizingObjects;
+      std::vector<SizingZone> sizingObjects = getObject<ModelObject>().getModelObjectSources<SizingZone>(SizingZone::iddObjectType());
 
-      //sizingObjects = model().getConcreteModelObjects<SizingZone>();
-
-      sizingObjects = getObject<ModelObject>().getModelObjectSources<SizingZone>(SizingZone::iddObjectType());
-
-      for (const auto& sizingObject : sizingObjects) {
-        if (sizingObject.thermalZone().handle() == this->handle()) {
-          sizingZone = sizingObject;
-        }
-      }
-
-      if (sizingZone) {
-        return sizingZone.get();
-      } else {
+      if (sizingObjects.empty()) {
         LOG_AND_THROW("ThermalZone missing Sizing:Zone object");
+      } else {
+        return sizingObjects[0];
       }
     }
 
     bool ThermalZone_Impl::addToNodeImpl(Node& node) {
       Model _model = model();
 
-      ThermalZone thisObject = getObject<ThermalZone>();
+      auto thisObject = getObject<ThermalZone>();
 
       if (node.model() != _model) {
         return false;
@@ -2094,7 +2074,7 @@ namespace model {
       return zoneHVACEquipmentList().loadDistributionScheme();
     }
 
-    bool ThermalZone_Impl::setLoadDistributionScheme(std::string scheme) {
+    bool ThermalZone_Impl::setLoadDistributionScheme(const std::string& scheme) {
       return zoneHVACEquipmentList().setLoadDistributionScheme(scheme);
     }
 
@@ -2174,7 +2154,7 @@ namespace model {
     }
 
     ModelObject ThermalZone_Impl::clone(Model model) const {
-      ThermalZone tz = HVACComponent_Impl::clone(model).cast<ThermalZone>();
+      auto tz = HVACComponent_Impl::clone(model).cast<ThermalZone>();
       // We need this because "connect" is first going to try to disconnect from anything
       // currently attached.  At this point tz is left pointing (through a connection) to the old zone air node,
       // (because of ModelObject::clone behavior) so connecting to the new node will remove the connection joining
@@ -2223,7 +2203,7 @@ namespace model {
         afnzoneClone.setThermalZone(tz);
       }
 
-      return tz;
+      return std::move(tz);
     }
 
     boost::optional<AirLoopHVACSupplyPlenum> ThermalZone_Impl::airLoopHVACSupplyPlenum() const {
@@ -2323,7 +2303,9 @@ namespace model {
         }
       }
 
-      if (!zoneSplitter) result = false;
+      if (!zoneSplitter) {
+        result = false;
+      }
 
       if (result) {
         removeSupplyPlenum();
@@ -2633,7 +2615,7 @@ namespace model {
     }
 
     ZonePropertyUserViewFactorsBySurfaceName ThermalZone_Impl::getZonePropertyUserViewFactorsBySurfaceName() const {
-      ThermalZone thisThermalZone = getObject<ThermalZone>();
+      auto thisThermalZone = getObject<ThermalZone>();
       std::vector<ZonePropertyUserViewFactorsBySurfaceName> zoneProps =
         thisThermalZone.getModelObjectSources<ZonePropertyUserViewFactorsBySurfaceName>(ZonePropertyUserViewFactorsBySurfaceName::iddObjectType());
       if (!zoneProps.empty()) {
@@ -2790,7 +2772,7 @@ namespace model {
     return getImpl<detail::ThermalZone_Impl>()->setZoneInsideConvectionAlgorithm(zoneInsideConvectionAlgorithm);
   }
 
-  bool ThermalZone::setZoneInsideConvectionAlgorithm(std::string zoneInsideConvectionAlgorithm) {
+  bool ThermalZone::setZoneInsideConvectionAlgorithm(const std::string& zoneInsideConvectionAlgorithm) {
     return getImpl<detail::ThermalZone_Impl>()->setZoneInsideConvectionAlgorithm(zoneInsideConvectionAlgorithm);
   }
 
@@ -2802,7 +2784,7 @@ namespace model {
     return getImpl<detail::ThermalZone_Impl>()->setZoneOutsideConvectionAlgorithm(zoneOutsideConvectionAlgorithm);
   }
 
-  bool ThermalZone::setZoneOutsideConvectionAlgorithm(std::string zoneOutsideConvectionAlgorithm) {
+  bool ThermalZone::setZoneOutsideConvectionAlgorithm(const std::string& zoneOutsideConvectionAlgorithm) {
     return getImpl<detail::ThermalZone_Impl>()->setZoneOutsideConvectionAlgorithm(zoneOutsideConvectionAlgorithm);
   }
 
@@ -2810,7 +2792,7 @@ namespace model {
     getImpl<detail::ThermalZone_Impl>()->resetZoneOutsideConvectionAlgorithm();
   }
 
-  bool ThermalZone::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+  bool ThermalZone::setZoneConditioningEquipmentListName(const std::string& zoneConditioningEquipmentListName) {
     return getImpl<detail::ThermalZone_Impl>()->setZoneConditioningEquipmentListName(zoneConditioningEquipmentListName);
   }
 
@@ -3140,7 +3122,7 @@ namespace model {
     return getImpl<detail::ThermalZone_Impl>()->loadDistributionScheme();
   }
 
-  bool ThermalZone::setLoadDistributionScheme(std::string scheme) {
+  bool ThermalZone::setLoadDistributionScheme(const std::string& scheme) {
     return getImpl<detail::ThermalZone_Impl>()->setLoadDistributionScheme(scheme);
   }
 

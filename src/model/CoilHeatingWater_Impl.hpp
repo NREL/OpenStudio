@@ -51,7 +51,7 @@ namespace model {
 
       CoilHeatingWater_Impl(const CoilHeatingWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingWater_Impl();
+      virtual ~CoilHeatingWater_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -111,7 +111,7 @@ namespace model {
 
       std::string performanceInputMethod();
 
-      bool setPerformanceInputMethod(std::string value);
+      bool setPerformanceInputMethod(const std::string& value);
 
       boost::optional<double> ratedCapacity();
 

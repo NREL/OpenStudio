@@ -144,10 +144,14 @@ namespace model {
       boost::optional<HVACComponent> systemStartComponent;
       boost::optional<HVACComponent> systemEndComponent;
 
-      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) return false;
+      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+        return false;
+      }
 
       if (t_airLoop && !t_oaSystem) {
-        if (t_airLoop->demandComponent(node.handle())) return false;
+        if (t_airLoop->demandComponent(node.handle())) {
+          return false;
+        }
 
         systemStartComponent = t_airLoop->supplyInletNode();
         auto nodes = t_airLoop->supplyOutletNodes();
@@ -176,7 +180,9 @@ namespace model {
         }
         removeFromAirLoopHVAC();
       } else if (t_plantLoop) {
-        if (!t_plantLoop->demandComponent(node.handle())) return false;
+        if (!t_plantLoop->demandComponent(node.handle())) {
+          return false;
+        }
 
         systemStartComponent = t_plantLoop->demandInletNode();
         systemEndComponent = t_plantLoop->demandOutletNode();
@@ -203,11 +209,11 @@ namespace model {
         return HVACComponent_Impl::remove();
       }
 
-      return std::vector<IdfObject>();
+      return {};
     }
 
     ModelObject WaterToAirComponent_Impl::clone(Model model) const {
-      WaterToAirComponent mo = HVACComponent_Impl::clone(model).cast<WaterToAirComponent>();
+      auto mo = HVACComponent_Impl::clone(model).cast<WaterToAirComponent>();
 
       mo.setString(mo.airInletPort(), "");
       mo.setString(mo.airOutletPort(), "");
@@ -215,10 +221,10 @@ namespace model {
       mo.setString(mo.waterInletPort(), "");
       mo.setString(mo.waterOutletPort(), "");
 
-      return mo;
+      return std::move(mo);
     }
 
-    bool WaterToAirComponent_Impl::addToSplitter(Splitter& splitter) {
+    bool WaterToAirComponent_Impl::addToSplitter(Splitter& /*splitter*/) {
       //Model _model = splitter.model();
       //WaterToAirComponent thisModelObject = getObject<ModelObject>().optionalCast<WaterToAirComponent>().get();
       //if( splitter.plantLoop() )
@@ -262,7 +268,7 @@ namespace model {
     void WaterToAirComponent_Impl::disconnectWaterSide() {
       Model _model = this->model();
 
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
 
       _model.disconnect(mo, this->waterInletPort());
 
@@ -272,7 +278,7 @@ namespace model {
     void WaterToAirComponent_Impl::disconnectAirSide() {
       Model _model = this->model();
 
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
 
       _model.disconnect(mo, this->airInletPort());
 

@@ -386,7 +386,7 @@ namespace model {
       return result;
     }
 
-    bool ChillerHeaterPerformanceElectricEIR_Impl::setChilledWaterFlowModeType(std::string const& chilledWaterFlowModeType) {
+    bool ChillerHeaterPerformanceElectricEIR_Impl::setChilledWaterFlowModeType(const std::string& chilledWaterFlowModeType) {
       bool result = setString(OS_ChillerHeaterPerformance_Electric_EIRFields::ChilledWaterFlowModeType, chilledWaterFlowModeType);
       return result;
     }
@@ -443,13 +443,13 @@ namespace model {
       return result;
     }
 
-    bool ChillerHeaterPerformanceElectricEIR_Impl::setCondenserType(std::string const& condenserType) {
+    bool ChillerHeaterPerformanceElectricEIR_Impl::setCondenserType(const std::string& condenserType) {
       bool result = setString(OS_ChillerHeaterPerformance_Electric_EIRFields::CondenserType, condenserType);
       return result;
     }
 
     bool ChillerHeaterPerformanceElectricEIR_Impl::setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(
-      std::string const& coolingModeTemperatureCurveCondenserWaterIndependentVariable) {
+      const std::string& coolingModeTemperatureCurveCondenserWaterIndependentVariable) {
       bool result = setString(OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeTemperatureCurveCondenserWaterIndependentVariable,
                               coolingModeTemperatureCurveCondenserWaterIndependentVariable);
       return result;
@@ -481,7 +481,7 @@ namespace model {
     }
 
     bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(
-      std::string const& heatingModeTemperatureCurveCondenserWaterIndependentVariable) {
+      const std::string& heatingModeTemperatureCurveCondenserWaterIndependentVariable) {
       bool result = setString(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeTemperatureCurveCondenserWaterIndependentVariable,
                               heatingModeTemperatureCurveCondenserWaterIndependentVariable);
       return result;
@@ -880,7 +880,7 @@ namespace model {
   }
 
   IddObjectType ChillerHeaterPerformanceElectricEIR::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR);
+    return {IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR};
   }
 
   std::vector<std::string> ChillerHeaterPerformanceElectricEIR::chilledWaterFlowModeTypeValues() {

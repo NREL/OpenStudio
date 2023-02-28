@@ -53,7 +53,7 @@ namespace model {
 
       AvailabilityManagerDifferentialThermostat_Impl(const AvailabilityManagerDifferentialThermostat_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerDifferentialThermostat_Impl() {}
+      virtual ~AvailabilityManagerDifferentialThermostat_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

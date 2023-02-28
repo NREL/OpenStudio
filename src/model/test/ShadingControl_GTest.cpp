@@ -66,11 +66,12 @@ TEST_F(ModelFixture, ShadingControl_Construction) {
   EXPECT_EQ("OnIfHighSolarOnWindow", shadingControl.shadingControlType());
   EXPECT_FALSE(shadingControl.schedule());
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   SubSurface subSurface(vertices, model);
   EXPECT_TRUE(subSurface.setConstruction(construction));
@@ -95,11 +96,12 @@ TEST_F(ModelFixture, ShadingControl_Material) {
   EXPECT_EQ("OnIfHighSolarOnWindow", shadingControl.shadingControlType());
   EXPECT_FALSE(shadingControl.schedule());
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   SubSurface subSurface(vertices, model);
   EXPECT_FALSE(subSurface.shadingControl());
@@ -128,18 +130,20 @@ TEST_F(ModelFixture, ShadingControl_SubSurfaces) {
   Blind blind(model);
   ShadingControl shadingControl(blind);
 
-  std::vector<Point3d> vertices1;
-  vertices1.push_back(Point3d(0, 0, 1));
-  vertices1.push_back(Point3d(0, 0, 0));
-  vertices1.push_back(Point3d(1, 0, 0));
-  vertices1.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices1{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
   SubSurface subSurface1(vertices1, model);
 
-  std::vector<Point3d> vertices2;
-  vertices2.push_back(Point3d(0, 0, 1));
-  vertices2.push_back(Point3d(0, 0, 0));
-  vertices2.push_back(Point3d(1, 0, 0));
-  vertices2.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices2{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
   SubSurface subSurface2(vertices2, model);
 
   EXPECT_EQ(0u, shadingControl.numberofSubSurfaces());
@@ -178,18 +182,20 @@ TEST_F(ModelFixture, ShadingControl_Clone) {
   Blind blind(model);
   ShadingControl shadingControl(blind);
 
-  std::vector<Point3d> vertices1;
-  vertices1.push_back(Point3d(0, 0, 1));
-  vertices1.push_back(Point3d(0, 0, 0));
-  vertices1.push_back(Point3d(1, 0, 0));
-  vertices1.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices1{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
   SubSurface subSurface1(vertices1, model);
 
-  std::vector<Point3d> vertices2;
-  vertices2.push_back(Point3d(0, 0, 1));
-  vertices2.push_back(Point3d(0, 0, 0));
-  vertices2.push_back(Point3d(1, 0, 0));
-  vertices2.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices2{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
   SubSurface subSurface2(vertices2, model);
 
   shadingControl.setSubSurfaces({subSurface1, subSurface2});
@@ -198,7 +204,7 @@ TEST_F(ModelFixture, ShadingControl_Clone) {
   // Clone same model
   {
     // TODO: what is the expected behavior here? Should the clone reference the same subSurfaces as the original?
-    ShadingControl shadingControlClone = shadingControl.clone(model).cast<ShadingControl>();
+    auto shadingControlClone = shadingControl.clone(model).cast<ShadingControl>();
     ASSERT_TRUE(shadingControlClone.shadingMaterial());
     EXPECT_EQ(shadingControl.shadingMaterial()->handle(), shadingControlClone.shadingMaterial()->handle());
     EXPECT_EQ(2u, shadingControl.numberofSubSurfaces());
@@ -213,7 +219,7 @@ TEST_F(ModelFixture, ShadingControl_Clone) {
     Model model2;
 
     // TODO: what is the expected behavior here? It will clone the Construction and ShadingMaterial (ResourceObject...) referenced here, but not the subSurfaces
-    ShadingControl shadingControlClone = shadingControl.clone(model2).cast<ShadingControl>();
+    auto shadingControlClone = shadingControl.clone(model2).cast<ShadingControl>();
     EXPECT_EQ(2u, shadingControl.numberofSubSurfaces());
     EXPECT_EQ(2u, shadingControl.numExtensibleGroups());
     EXPECT_EQ(0u, shadingControlClone.numberofSubSurfaces());

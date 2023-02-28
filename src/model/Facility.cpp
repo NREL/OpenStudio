@@ -58,9 +58,12 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 #include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Optional.hpp"
 #include "../utilities/sql/SqlFile.hpp"
+
+#include <algorithm>
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -90,37 +93,22 @@ namespace model {
     Facility_Impl::Facility_Impl(const Facility_Impl& other, Model_Impl* model, bool keepHandle) : ParentObject_Impl(other, model, keepHandle) {}
 
     boost::optional<ParentObject> Facility_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     std::vector<ModelObject> Facility_Impl::children() const {
       std::vector<ModelObject> result;
-
-      OutputMeterVector meters = this->meters();
-      result.insert(result.end(), meters.begin(), meters.end());
-
       // building
       OptionalBuilding building = this->building();
       if (building) {
         result.push_back(*building);
       }
 
-      ExteriorLightsVector exteriorLights = this->exteriorLights();
-      result.insert(result.end(), exteriorLights.begin(), exteriorLights.end());
-
-      ExteriorFuelEquipmentVector exteriorFuelEquipments = this->exteriorFuelEquipments();
-      result.insert(result.end(), exteriorFuelEquipments.begin(), exteriorFuelEquipments.end());
-
-      ExteriorWaterEquipmentVector exteriorWaterEquipments = this->exteriorWaterEquipments();
-      result.insert(result.end(), exteriorWaterEquipments.begin(), exteriorWaterEquipments.end());
-
-      return result;
+      return concat<ModelObject>(result, this->meters(), this->exteriorLights(), this->exteriorFuelEquipments(), this->exteriorWaterEquipments());
     }
 
     std::vector<IddObjectType> Facility_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_Building);
-      return result;
+      return {IddObjectType::OS_Building};
     }
 
     const std::vector<std::string>& Facility_Impl::outputVariableNames() const {
@@ -138,13 +126,13 @@ namespace model {
 
     /// get meter requests for the facility
     std::vector<OutputMeter> Facility_Impl::meters() const {
-      OutputMeterVector result;
-      OutputMeterVector meters = this->model().getConcreteModelObjects<OutputMeter>();
-      for (const OutputMeter& meter : meters) {
-        if (meter.installLocationType() && (InstallLocationType::Facility == meter.installLocationType().get().value())) {
-          result.push_back(meter);
-        }
-      }
+      auto filterOutMeter = [](const auto& meter) {
+        auto instalLocType_ = meter.installLocationType();
+        return instalLocType_ && (InstallLocationType::Facility != instalLocType_.get().value());
+      };
+
+      OutputMeterVector result = this->model().getConcreteModelObjects<OutputMeter>();
+      result.erase(std::remove_if(result.begin(), result.end(), filterOutMeter), result.end());
       return result;
     }
 
@@ -190,7 +178,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->totalSiteEnergy();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::netSiteEnergy() const {
@@ -198,7 +186,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->netSiteEnergy();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::totalSourceEnergy() const {
@@ -206,7 +194,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->totalSourceEnergy();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::netSourceEnergy() const {
@@ -214,7 +202,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->netSourceEnergy();
       }
-      return OptionalDouble();
+      return {};
     }
 
     // pass in "Electric", "NaturalGas", or "Other"
@@ -223,7 +211,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->annualTotalCost(fuel);
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::annualTotalCostPerBldgArea(const FuelType& fuel) const {
@@ -231,7 +219,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->annualTotalCostPerBldgArea(fuel);
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const {
@@ -240,7 +228,7 @@ namespace model {
         return mySqlFile->annualTotalCostPerNetConditionedBldgArea(fuel);
       }
 
-      return OptionalDouble();
+      return {};
     }
 
     boost::optional<double> Facility_Impl::annualTotalUtilityCost() const {
@@ -248,7 +236,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->annualTotalUtilityCost();
       }
-      return OptionalDouble();
+      return {};
     }
 
     boost::optional<double> Facility_Impl::annualElectricTotalCost() const {
@@ -281,7 +269,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->economicsEnergyCost();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::economicsVirtualRateGas() const {
@@ -304,7 +292,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->getElecOrGasUse(bGetGas);
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::getElecOrGasCost(bool bGetGas) const {
@@ -312,7 +300,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->getElecOrGasCost(bGetGas);
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::gasUse() const {
@@ -361,7 +349,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityCooling() const {
@@ -369,7 +357,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityInteriorLighting() const {
@@ -377,7 +365,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityExteriorLighting() const {
@@ -385,7 +373,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityInteriorEquipment() const {
@@ -393,7 +381,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityExteriorEquipment() const {
@@ -401,7 +389,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityFans() const {
@@ -409,7 +397,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityPumps() const {
@@ -417,7 +405,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityHeatRejection() const {
@@ -425,7 +413,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityHumidification() const {
@@ -433,7 +421,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityHeatRecovery() const {
@@ -441,7 +429,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityWaterSystems() const {
@@ -449,7 +437,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityRefrigeration() const {
@@ -457,7 +445,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityGenerators() const {
@@ -465,7 +453,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityTotalEndUses() const {
@@ -473,7 +461,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasHeating() const {
@@ -481,7 +469,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasCooling() const {
@@ -489,7 +477,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasInteriorLighting() const {
@@ -497,7 +485,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasExteriorLighting() const {
@@ -505,7 +493,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasInteriorEquipment() const {
@@ -513,7 +501,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasExteriorEquipment() const {
@@ -521,7 +509,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasFans() const {
@@ -529,7 +517,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasPumps() const {
@@ -537,7 +525,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasHeatRejection() const {
@@ -545,7 +533,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasHumidification() const {
@@ -553,7 +541,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasHeatRecovery() const {
@@ -561,7 +549,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasWaterSystems() const {
@@ -569,7 +557,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasRefrigeration() const {
@@ -577,7 +565,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasGenerators() const {
@@ -585,7 +573,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasTotalEndUses() const {
@@ -593,127 +581,975 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
-    OptionalDouble Facility_Impl::otherFuelHeating() const {
+    // Gasoline
+    OptionalDouble Facility_Impl::gasolineHeating() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelHeating();
+        return mySqlFile->gasolineHeating();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineCooling() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineCooling();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineInteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineInteriorLighting();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineExteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineExteriorLighting();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineInteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineInteriorEquipment();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineExteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineExteriorEquipment();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineFans() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineFans();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolinePumps() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolinePumps();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineHeatRejection() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineHeatRejection();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineHumidification() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineHumidification();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineHeatRecovery() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineHeatRecovery();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineWaterSystems() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineWaterSystems();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineRefrigeration() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineRefrigeration();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineGenerators() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineGenerators();
+      }
+      return {};
+    }
+
+    OptionalDouble Facility_Impl::gasolineTotalEndUses() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineTotalEndUses();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelCooling() const {
+    // Diesel
+    OptionalDouble Facility_Impl::dieselHeating() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelCooling();
+        return mySqlFile->dieselHeating();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelInteriorLighting() const {
+    OptionalDouble Facility_Impl::dieselCooling() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelInteriorLighting();
+        return mySqlFile->dieselCooling();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelExteriorLighting() const {
+    OptionalDouble Facility_Impl::dieselInteriorLighting() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelExteriorLighting();
+        return mySqlFile->dieselInteriorLighting();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelInteriorEquipment() const {
+    OptionalDouble Facility_Impl::dieselExteriorLighting() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelInteriorEquipment();
+        return mySqlFile->dieselExteriorLighting();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelExteriorEquipment() const {
+    OptionalDouble Facility_Impl::dieselInteriorEquipment() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelExteriorEquipment();
+        return mySqlFile->dieselInteriorEquipment();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelFans() const {
+    OptionalDouble Facility_Impl::dieselExteriorEquipment() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelFans();
+        return mySqlFile->dieselExteriorEquipment();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelPumps() const {
+    OptionalDouble Facility_Impl::dieselFans() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelPumps();
+        return mySqlFile->dieselFans();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelHeatRejection() const {
+    OptionalDouble Facility_Impl::dieselPumps() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelHeatRejection();
+        return mySqlFile->dieselPumps();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelHumidification() const {
+    OptionalDouble Facility_Impl::dieselHeatRejection() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelHumidification();
+        return mySqlFile->dieselHeatRejection();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelHeatRecovery() const {
+    OptionalDouble Facility_Impl::dieselHumidification() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelHeatRecovery();
+        return mySqlFile->dieselHumidification();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelWaterSystems() const {
+    OptionalDouble Facility_Impl::dieselHeatRecovery() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelWaterSystems();
+        return mySqlFile->dieselHeatRecovery();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelRefrigeration() const {
+    OptionalDouble Facility_Impl::dieselWaterSystems() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelRefrigeration();
+        return mySqlFile->dieselWaterSystems();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelGenerators() const {
+    OptionalDouble Facility_Impl::dieselRefrigeration() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelGenerators();
+        return mySqlFile->dieselRefrigeration();
       }
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::otherFuelTotalEndUses() const {
+    OptionalDouble Facility_Impl::dieselGenerators() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
-        return mySqlFile->otherFuelTotalEndUses();
+        return mySqlFile->dieselGenerators();
       }
       return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::dieselTotalEndUses() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->dieselTotalEndUses();
+      }
+      return OptionalDouble();
+    }
+
+    // Coal
+    OptionalDouble Facility_Impl::coalHeating() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalHeating();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalCooling() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalCooling();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalInteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalInteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalExteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalExteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalInteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalInteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalExteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalExteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalFans() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalFans();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalPumps() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalPumps();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalHeatRejection() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalHeatRejection();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalHumidification() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalHumidification();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalHeatRecovery() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalHeatRecovery();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalWaterSystems() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalWaterSystems();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalRefrigeration() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalRefrigeration();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalGenerators() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalGenerators();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::coalTotalEndUses() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->coalTotalEndUses();
+      }
+      return OptionalDouble();
+    }
+
+    // Fuel Oil No 1
+    OptionalDouble Facility_Impl::fuelOilNo1Heating() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1Heating();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1Cooling() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1Cooling();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1InteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1InteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1ExteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1ExteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1InteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1InteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1ExteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1ExteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1Fans() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1Fans();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1Pumps() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1Pumps();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1HeatRejection() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1HeatRejection();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1Humidification() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1Humidification();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1HeatRecovery() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1HeatRecovery();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1WaterSystems() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1WaterSystems();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1Refrigeration() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1Refrigeration();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1Generators() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1Generators();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo1TotalEndUses() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo1TotalEndUses();
+      }
+      return OptionalDouble();
+    }
+
+    // Fuel Oil No 2
+    OptionalDouble Facility_Impl::fuelOilNo2Heating() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2Heating();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2Cooling() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2Cooling();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2InteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2InteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2ExteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2ExteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2InteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2InteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2ExteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2ExteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2Fans() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2Fans();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2Pumps() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2Pumps();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2HeatRejection() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2HeatRejection();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2Humidification() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2Humidification();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2HeatRecovery() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2HeatRecovery();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2WaterSystems() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2WaterSystems();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2Refrigeration() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2Refrigeration();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2Generators() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2Generators();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::fuelOilNo2TotalEndUses() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->fuelOilNo2TotalEndUses();
+      }
+      return OptionalDouble();
+    }
+
+    // Propane
+    OptionalDouble Facility_Impl::propaneHeating() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneHeating();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneCooling() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneCooling();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneInteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneInteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneExteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneExteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneInteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneInteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneExteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneExteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneFans() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneFans();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propanePumps() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propanePumps();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneHeatRejection() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneHeatRejection();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneHumidification() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneHumidification();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneHeatRecovery() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneHeatRecovery();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneWaterSystems() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneWaterSystems();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneRefrigeration() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneRefrigeration();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneGenerators() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneGenerators();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::propaneTotalEndUses() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->propaneTotalEndUses();
+      }
+      return OptionalDouble();
+    }
+
+    // Other Fuel 1
+    OptionalDouble Facility_Impl::otherFuel1Heating() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1Heating();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1Cooling() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1Cooling();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1InteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1InteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1ExteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1ExteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1InteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1InteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1ExteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1ExteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1Fans() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1Fans();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1Pumps() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1Pumps();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1HeatRejection() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1HeatRejection();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1Humidification() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1Humidification();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1HeatRecovery() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1HeatRecovery();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1WaterSystems() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1WaterSystems();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1Refrigeration() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1Refrigeration();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1Generators() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1Generators();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel1TotalEndUses() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel1TotalEndUses();
+      }
+      return OptionalDouble();
+    }
+
+    // Other Fuel 2
+    OptionalDouble Facility_Impl::otherFuel2Heating() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2Heating();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2Cooling() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2Cooling();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2InteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2InteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2ExteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2ExteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2InteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2InteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2ExteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2ExteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2Fans() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2Fans();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2Pumps() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2Pumps();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2HeatRejection() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2HeatRejection();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2Humidification() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2Humidification();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2HeatRecovery() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2HeatRecovery();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2WaterSystems() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2WaterSystems();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2Refrigeration() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2Refrigeration();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2Generators() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2Generators();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::otherFuel2TotalEndUses() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->otherFuel2TotalEndUses();
+      }
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingHeating() const {
@@ -721,7 +1557,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingCooling() const {
@@ -729,7 +1565,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingInteriorLighting() const {
@@ -737,7 +1573,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingExteriorLighting() const {
@@ -745,7 +1581,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingInteriorEquipment() const {
@@ -753,7 +1589,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingExteriorEquipment() const {
@@ -761,7 +1597,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingFans() const {
@@ -769,7 +1605,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingPumps() const {
@@ -777,7 +1613,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingHeatRejection() const {
@@ -785,7 +1621,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingHumidification() const {
@@ -793,7 +1629,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingHeatRecovery() const {
@@ -801,7 +1637,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingWaterSystems() const {
@@ -809,7 +1645,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingRefrigeration() const {
@@ -817,7 +1653,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingGenerators() const {
@@ -825,7 +1661,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingTotalEndUses() const {
@@ -833,7 +1669,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingHeating() const {
@@ -841,7 +1677,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingCooling() const {
@@ -849,7 +1685,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingInteriorLighting() const {
@@ -857,7 +1693,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingExteriorLighting() const {
@@ -865,7 +1701,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingInteriorEquipment() const {
@@ -873,7 +1709,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingExteriorEquipment() const {
@@ -881,7 +1717,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingFans() const {
@@ -889,7 +1725,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingPumps() const {
@@ -897,7 +1733,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingHeatRejection() const {
@@ -905,7 +1741,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingHumidification() const {
@@ -913,7 +1749,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingHeatRecovery() const {
@@ -921,7 +1757,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingWaterSystems() const {
@@ -929,7 +1765,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingRefrigeration() const {
@@ -937,7 +1773,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingGenerators() const {
@@ -945,7 +1781,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingTotalEndUses() const {
@@ -953,7 +1789,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterHeating() const {
@@ -961,7 +1797,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterCooling() const {
@@ -969,7 +1805,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterInteriorLighting() const {
@@ -977,7 +1813,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterExteriorLighting() const {
@@ -985,7 +1821,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterInteriorEquipment() const {
@@ -993,7 +1829,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterExteriorEquipment() const {
@@ -1001,7 +1837,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterFans() const {
@@ -1009,7 +1845,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterPumps() const {
@@ -1017,7 +1853,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterHeatRejection() const {
@@ -1025,7 +1861,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterHumidification() const {
@@ -1033,7 +1869,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterHeatRecovery() const {
@@ -1041,7 +1877,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterWaterSystems() const {
@@ -1049,7 +1885,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterRefrigeration() const {
@@ -1057,7 +1893,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterGenerators() const {
@@ -1065,7 +1901,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterTotalEndUses() const {
@@ -1073,7 +1909,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::hoursHeatingSetpointNotMet() const {
@@ -1081,7 +1917,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->hoursHeatingSetpointNotMet();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::hoursCoolingSetpointNotMet() const {
@@ -1089,7 +1925,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->hoursCoolingSetpointNotMet();
       }
-      return OptionalDouble();
+      return {};
     }
 
     boost::optional<EndUses> Facility_Impl::endUses() const {
@@ -1097,7 +1933,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->endUses();
       }
-      return boost::optional<EndUses>();
+      return {};
     }
 
     boost::optional<CalibrationResult> Facility_Impl::calibrationResult() const {
@@ -1363,64 +2199,492 @@ namespace model {
     return getImpl<detail::Facility_Impl>()->naturalGasTotalEndUses();
   }
 
-  OptionalDouble Facility::otherFuelHeating() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelHeating();
+  // Gasoline
+  OptionalDouble Facility::gasolineHeating() const {
+    return getImpl<detail::Facility_Impl>()->gasolineHeating();
   }
 
-  OptionalDouble Facility::otherFuelCooling() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelCooling();
+  OptionalDouble Facility::gasolineCooling() const {
+    return getImpl<detail::Facility_Impl>()->gasolineCooling();
   }
 
-  OptionalDouble Facility::otherFuelInteriorLighting() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelInteriorLighting();
+  OptionalDouble Facility::gasolineInteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->gasolineInteriorLighting();
   }
 
-  OptionalDouble Facility::otherFuelExteriorLighting() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelExteriorLighting();
+  OptionalDouble Facility::gasolineExteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->gasolineExteriorLighting();
   }
 
-  OptionalDouble Facility::otherFuelInteriorEquipment() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelInteriorEquipment();
+  OptionalDouble Facility::gasolineInteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->gasolineInteriorEquipment();
   }
 
-  OptionalDouble Facility::otherFuelExteriorEquipment() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelExteriorEquipment();
+  OptionalDouble Facility::gasolineExteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->gasolineExteriorEquipment();
   }
 
-  OptionalDouble Facility::otherFuelFans() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelFans();
+  OptionalDouble Facility::gasolineFans() const {
+    return getImpl<detail::Facility_Impl>()->gasolineFans();
   }
 
-  OptionalDouble Facility::otherFuelPumps() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelPumps();
+  OptionalDouble Facility::gasolinePumps() const {
+    return getImpl<detail::Facility_Impl>()->gasolinePumps();
   }
 
-  OptionalDouble Facility::otherFuelHeatRejection() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelHeatRejection();
+  OptionalDouble Facility::gasolineHeatRejection() const {
+    return getImpl<detail::Facility_Impl>()->gasolineHeatRejection();
   }
 
-  OptionalDouble Facility::otherFuelHumidification() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelHumidification();
+  OptionalDouble Facility::gasolineHumidification() const {
+    return getImpl<detail::Facility_Impl>()->gasolineHumidification();
   }
 
-  OptionalDouble Facility::otherFuelHeatRecovery() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelHeatRecovery();
+  OptionalDouble Facility::gasolineHeatRecovery() const {
+    return getImpl<detail::Facility_Impl>()->gasolineHeatRecovery();
   }
 
-  OptionalDouble Facility::otherFuelWaterSystems() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelWaterSystems();
+  OptionalDouble Facility::gasolineWaterSystems() const {
+    return getImpl<detail::Facility_Impl>()->gasolineWaterSystems();
   }
 
-  OptionalDouble Facility::otherFuelRefrigeration() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelRefrigeration();
+  OptionalDouble Facility::gasolineRefrigeration() const {
+    return getImpl<detail::Facility_Impl>()->gasolineRefrigeration();
   }
 
-  OptionalDouble Facility::otherFuelGenerators() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelGenerators();
+  OptionalDouble Facility::gasolineGenerators() const {
+    return getImpl<detail::Facility_Impl>()->gasolineGenerators();
   }
 
-  OptionalDouble Facility::otherFuelTotalEndUses() const {
-    return getImpl<detail::Facility_Impl>()->otherFuelTotalEndUses();
+  OptionalDouble Facility::gasolineTotalEndUses() const {
+    return getImpl<detail::Facility_Impl>()->gasolineTotalEndUses();
+  }
+
+  // Diesel
+  OptionalDouble Facility::dieselHeating() const {
+    return getImpl<detail::Facility_Impl>()->dieselHeating();
+  }
+
+  OptionalDouble Facility::dieselCooling() const {
+    return getImpl<detail::Facility_Impl>()->dieselCooling();
+  }
+
+  OptionalDouble Facility::dieselInteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->dieselInteriorLighting();
+  }
+
+  OptionalDouble Facility::dieselExteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->dieselExteriorLighting();
+  }
+
+  OptionalDouble Facility::dieselInteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->dieselInteriorEquipment();
+  }
+
+  OptionalDouble Facility::dieselExteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->dieselExteriorEquipment();
+  }
+
+  OptionalDouble Facility::dieselFans() const {
+    return getImpl<detail::Facility_Impl>()->dieselFans();
+  }
+
+  OptionalDouble Facility::dieselPumps() const {
+    return getImpl<detail::Facility_Impl>()->dieselPumps();
+  }
+
+  OptionalDouble Facility::dieselHeatRejection() const {
+    return getImpl<detail::Facility_Impl>()->dieselHeatRejection();
+  }
+
+  OptionalDouble Facility::dieselHumidification() const {
+    return getImpl<detail::Facility_Impl>()->dieselHumidification();
+  }
+
+  OptionalDouble Facility::dieselHeatRecovery() const {
+    return getImpl<detail::Facility_Impl>()->dieselHeatRecovery();
+  }
+
+  OptionalDouble Facility::dieselWaterSystems() const {
+    return getImpl<detail::Facility_Impl>()->dieselWaterSystems();
+  }
+
+  OptionalDouble Facility::dieselRefrigeration() const {
+    return getImpl<detail::Facility_Impl>()->dieselRefrigeration();
+  }
+
+  OptionalDouble Facility::dieselGenerators() const {
+    return getImpl<detail::Facility_Impl>()->dieselGenerators();
+  }
+
+  OptionalDouble Facility::dieselTotalEndUses() const {
+    return getImpl<detail::Facility_Impl>()->dieselTotalEndUses();
+  }
+
+  // Coal
+  OptionalDouble Facility::coalHeating() const {
+    return getImpl<detail::Facility_Impl>()->coalHeating();
+  }
+
+  OptionalDouble Facility::coalCooling() const {
+    return getImpl<detail::Facility_Impl>()->coalCooling();
+  }
+
+  OptionalDouble Facility::coalInteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->coalInteriorLighting();
+  }
+
+  OptionalDouble Facility::coalExteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->coalExteriorLighting();
+  }
+
+  OptionalDouble Facility::coalInteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->coalInteriorEquipment();
+  }
+
+  OptionalDouble Facility::coalExteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->coalExteriorEquipment();
+  }
+
+  OptionalDouble Facility::coalFans() const {
+    return getImpl<detail::Facility_Impl>()->coalFans();
+  }
+
+  OptionalDouble Facility::coalPumps() const {
+    return getImpl<detail::Facility_Impl>()->coalPumps();
+  }
+
+  OptionalDouble Facility::coalHeatRejection() const {
+    return getImpl<detail::Facility_Impl>()->coalHeatRejection();
+  }
+
+  OptionalDouble Facility::coalHumidification() const {
+    return getImpl<detail::Facility_Impl>()->coalHumidification();
+  }
+
+  OptionalDouble Facility::coalHeatRecovery() const {
+    return getImpl<detail::Facility_Impl>()->coalHeatRecovery();
+  }
+
+  OptionalDouble Facility::coalWaterSystems() const {
+    return getImpl<detail::Facility_Impl>()->coalWaterSystems();
+  }
+
+  OptionalDouble Facility::coalRefrigeration() const {
+    return getImpl<detail::Facility_Impl>()->coalRefrigeration();
+  }
+
+  OptionalDouble Facility::coalGenerators() const {
+    return getImpl<detail::Facility_Impl>()->coalGenerators();
+  }
+
+  OptionalDouble Facility::coalTotalEndUses() const {
+    return getImpl<detail::Facility_Impl>()->coalTotalEndUses();
+  }
+
+  // Fuel Oil No 1
+  OptionalDouble Facility::fuelOilNo1Heating() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1Heating();
+  }
+
+  OptionalDouble Facility::fuelOilNo1Cooling() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1Cooling();
+  }
+
+  OptionalDouble Facility::fuelOilNo1InteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1InteriorLighting();
+  }
+
+  OptionalDouble Facility::fuelOilNo1ExteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1ExteriorLighting();
+  }
+
+  OptionalDouble Facility::fuelOilNo1InteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1InteriorEquipment();
+  }
+
+  OptionalDouble Facility::fuelOilNo1ExteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1ExteriorEquipment();
+  }
+
+  OptionalDouble Facility::fuelOilNo1Fans() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1Fans();
+  }
+
+  OptionalDouble Facility::fuelOilNo1Pumps() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1Pumps();
+  }
+
+  OptionalDouble Facility::fuelOilNo1HeatRejection() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1HeatRejection();
+  }
+
+  OptionalDouble Facility::fuelOilNo1Humidification() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1Humidification();
+  }
+
+  OptionalDouble Facility::fuelOilNo1HeatRecovery() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1HeatRecovery();
+  }
+
+  OptionalDouble Facility::fuelOilNo1WaterSystems() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1WaterSystems();
+  }
+
+  OptionalDouble Facility::fuelOilNo1Refrigeration() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1Refrigeration();
+  }
+
+  OptionalDouble Facility::fuelOilNo1Generators() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1Generators();
+  }
+
+  OptionalDouble Facility::fuelOilNo1TotalEndUses() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo1TotalEndUses();
+  }
+
+  // Fuel Oil No 2
+  OptionalDouble Facility::fuelOilNo2Heating() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2Heating();
+  }
+
+  OptionalDouble Facility::fuelOilNo2Cooling() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2Cooling();
+  }
+
+  OptionalDouble Facility::fuelOilNo2InteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2InteriorLighting();
+  }
+
+  OptionalDouble Facility::fuelOilNo2ExteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2ExteriorLighting();
+  }
+
+  OptionalDouble Facility::fuelOilNo2InteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2InteriorEquipment();
+  }
+
+  OptionalDouble Facility::fuelOilNo2ExteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2ExteriorEquipment();
+  }
+
+  OptionalDouble Facility::fuelOilNo2Fans() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2Fans();
+  }
+
+  OptionalDouble Facility::fuelOilNo2Pumps() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2Pumps();
+  }
+
+  OptionalDouble Facility::fuelOilNo2HeatRejection() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2HeatRejection();
+  }
+
+  OptionalDouble Facility::fuelOilNo2Humidification() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2Humidification();
+  }
+
+  OptionalDouble Facility::fuelOilNo2HeatRecovery() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2HeatRecovery();
+  }
+
+  OptionalDouble Facility::fuelOilNo2WaterSystems() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2WaterSystems();
+  }
+
+  OptionalDouble Facility::fuelOilNo2Refrigeration() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2Refrigeration();
+  }
+
+  OptionalDouble Facility::fuelOilNo2Generators() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2Generators();
+  }
+
+  OptionalDouble Facility::fuelOilNo2TotalEndUses() const {
+    return getImpl<detail::Facility_Impl>()->fuelOilNo2TotalEndUses();
+  }
+
+  // Propane
+  OptionalDouble Facility::propaneHeating() const {
+    return getImpl<detail::Facility_Impl>()->propaneHeating();
+  }
+
+  OptionalDouble Facility::propaneCooling() const {
+    return getImpl<detail::Facility_Impl>()->propaneCooling();
+  }
+
+  OptionalDouble Facility::propaneInteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->propaneInteriorLighting();
+  }
+
+  OptionalDouble Facility::propaneExteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->propaneExteriorLighting();
+  }
+
+  OptionalDouble Facility::propaneInteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->propaneInteriorEquipment();
+  }
+
+  OptionalDouble Facility::propaneExteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->propaneExteriorEquipment();
+  }
+
+  OptionalDouble Facility::propaneFans() const {
+    return getImpl<detail::Facility_Impl>()->propaneFans();
+  }
+
+  OptionalDouble Facility::propanePumps() const {
+    return getImpl<detail::Facility_Impl>()->propanePumps();
+  }
+
+  OptionalDouble Facility::propaneHeatRejection() const {
+    return getImpl<detail::Facility_Impl>()->propaneHeatRejection();
+  }
+
+  OptionalDouble Facility::propaneHumidification() const {
+    return getImpl<detail::Facility_Impl>()->propaneHumidification();
+  }
+
+  OptionalDouble Facility::propaneHeatRecovery() const {
+    return getImpl<detail::Facility_Impl>()->propaneHeatRecovery();
+  }
+
+  OptionalDouble Facility::propaneWaterSystems() const {
+    return getImpl<detail::Facility_Impl>()->propaneWaterSystems();
+  }
+
+  OptionalDouble Facility::propaneRefrigeration() const {
+    return getImpl<detail::Facility_Impl>()->propaneRefrigeration();
+  }
+
+  OptionalDouble Facility::propaneGenerators() const {
+    return getImpl<detail::Facility_Impl>()->propaneGenerators();
+  }
+
+  OptionalDouble Facility::propaneTotalEndUses() const {
+    return getImpl<detail::Facility_Impl>()->propaneTotalEndUses();
+  }
+
+  // Other Fuel 1
+  OptionalDouble Facility::otherFuel1Heating() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1Heating();
+  }
+
+  OptionalDouble Facility::otherFuel1Cooling() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1Cooling();
+  }
+
+  OptionalDouble Facility::otherFuel1InteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1InteriorLighting();
+  }
+
+  OptionalDouble Facility::otherFuel1ExteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1ExteriorLighting();
+  }
+
+  OptionalDouble Facility::otherFuel1InteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1InteriorEquipment();
+  }
+
+  OptionalDouble Facility::otherFuel1ExteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1ExteriorEquipment();
+  }
+
+  OptionalDouble Facility::otherFuel1Fans() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1Fans();
+  }
+
+  OptionalDouble Facility::otherFuel1Pumps() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1Pumps();
+  }
+
+  OptionalDouble Facility::otherFuel1HeatRejection() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1HeatRejection();
+  }
+
+  OptionalDouble Facility::otherFuel1Humidification() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1Humidification();
+  }
+
+  OptionalDouble Facility::otherFuel1HeatRecovery() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1HeatRecovery();
+  }
+
+  OptionalDouble Facility::otherFuel1WaterSystems() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1WaterSystems();
+  }
+
+  OptionalDouble Facility::otherFuel1Refrigeration() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1Refrigeration();
+  }
+
+  OptionalDouble Facility::otherFuel1Generators() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1Generators();
+  }
+
+  OptionalDouble Facility::otherFuel1TotalEndUses() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel1TotalEndUses();
+  }
+
+  // Other Fuel 2
+  OptionalDouble Facility::otherFuel2Heating() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2Heating();
+  }
+
+  OptionalDouble Facility::otherFuel2Cooling() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2Cooling();
+  }
+
+  OptionalDouble Facility::otherFuel2InteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2InteriorLighting();
+  }
+
+  OptionalDouble Facility::otherFuel2ExteriorLighting() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2ExteriorLighting();
+  }
+
+  OptionalDouble Facility::otherFuel2InteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2InteriorEquipment();
+  }
+
+  OptionalDouble Facility::otherFuel2ExteriorEquipment() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2ExteriorEquipment();
+  }
+
+  OptionalDouble Facility::otherFuel2Fans() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2Fans();
+  }
+
+  OptionalDouble Facility::otherFuel2Pumps() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2Pumps();
+  }
+
+  OptionalDouble Facility::otherFuel2HeatRejection() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2HeatRejection();
+  }
+
+  OptionalDouble Facility::otherFuel2Humidification() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2Humidification();
+  }
+
+  OptionalDouble Facility::otherFuel2HeatRecovery() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2HeatRecovery();
+  }
+
+  OptionalDouble Facility::otherFuel2WaterSystems() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2WaterSystems();
+  }
+
+  OptionalDouble Facility::otherFuel2Refrigeration() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2Refrigeration();
+  }
+
+  OptionalDouble Facility::otherFuel2Generators() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2Generators();
+  }
+
+  OptionalDouble Facility::otherFuel2TotalEndUses() const {
+    return getImpl<detail::Facility_Impl>()->otherFuel2TotalEndUses();
   }
 
   OptionalDouble Facility::districtCoolingHeating() const {
@@ -1648,14 +2912,8 @@ namespace model {
   }
 
   std::vector<FuelType> Facility::fossilFuels() {
-    FuelTypeVector result;
-    result.push_back(FuelType(FuelType::Gas));
-    result.push_back(FuelType(FuelType::Gasoline));
-    result.push_back(FuelType(FuelType::Diesel));
-    result.push_back(FuelType(FuelType::FuelOil_1));
-    result.push_back(FuelType(FuelType::FuelOil_2));
-    result.push_back(FuelType(FuelType::Propane));
-    return result;
+    return FuelTypeVector{FuelType(FuelType::Gas),       FuelType(FuelType::Gasoline),  FuelType(FuelType::Diesel),
+                          FuelType(FuelType::FuelOil_1), FuelType(FuelType::FuelOil_2), FuelType(FuelType::Propane)};
   }
 
   IddObjectType Facility::iddObjectType() {

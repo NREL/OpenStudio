@@ -57,7 +57,12 @@ namespace model {
 
     explicit CoilHeatingDXMultiSpeed(const Model& model);
 
-    virtual ~CoilHeatingDXMultiSpeed() {}
+    virtual ~CoilHeatingDXMultiSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingDXMultiSpeed(const CoilHeatingDXMultiSpeed& other) = default;
+    CoilHeatingDXMultiSpeed(CoilHeatingDXMultiSpeed&& other) = default;
+    CoilHeatingDXMultiSpeed& operator=(const CoilHeatingDXMultiSpeed&) = default;
+    CoilHeatingDXMultiSpeed& operator=(CoilHeatingDXMultiSpeed&&) = default;
 
     //@}
 
@@ -126,9 +131,9 @@ namespace model {
 
     bool setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation);
 
-    bool setDefrostStrategy(std::string defrostStrategy);
+    bool setDefrostStrategy(const std::string& defrostStrategy);
 
-    bool setDefrostControl(std::string defrostControl);
+    bool setDefrostControl(const std::string& defrostControl);
 
     bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
 
@@ -138,7 +143,7 @@ namespace model {
 
     bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
 
     bool setRegionnumberforCalculatingHSPF(int regionnumberforCalculatingHSPF);
 
@@ -208,7 +213,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingDXMultiSpeed_Impl ImplType;
+    using ImplType = detail::CoilHeatingDXMultiSpeed_Impl;
 
     explicit CoilHeatingDXMultiSpeed(std::shared_ptr<detail::CoilHeatingDXMultiSpeed_Impl> impl);
 
@@ -222,10 +227,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingDXMultiSpeed*/
-  typedef boost::optional<CoilHeatingDXMultiSpeed> OptionalCoilHeatingDXMultiSpeed;
+  using OptionalCoilHeatingDXMultiSpeed = boost::optional<CoilHeatingDXMultiSpeed>;
 
   /** \relates CoilHeatingDXMultiSpeed*/
-  typedef std::vector<CoilHeatingDXMultiSpeed> CoilHeatingDXMultiSpeedVector;
+  using CoilHeatingDXMultiSpeedVector = std::vector<CoilHeatingDXMultiSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

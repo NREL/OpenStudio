@@ -154,17 +154,17 @@ TEST_F(ModelFixture, TableLookup_Clone) {
   TableIndependentVariable independentVariable1(m);
   EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable1));
 
-  EXPECT_EQ(1, m.getModelObjects<TableLookup>().size());
-  EXPECT_EQ(1, m.getModelObjects<ModelObjectList>().size());
-  EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<TableLookup>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ModelObjectList>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<TableIndependentVariable>().size());
   EXPECT_EQ(1, tableLookup.independentVariables().size());
 
   // Clone into the same model
   {
     auto tableLookupClone = tableLookup.clone(m).cast<TableLookup>();
-    EXPECT_EQ(2, m.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(2, m.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<TableLookup>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m.getConcreteModelObjects<TableIndependentVariable>().size());
 
     ASSERT_EQ(1, tableLookup.independentVariables().size());
     EXPECT_EQ(independentVariable1, tableLookup.independentVariables().front());
@@ -179,17 +179,17 @@ TEST_F(ModelFixture, TableLookup_Clone) {
     auto tableLookupClone2 = tableLookup.clone(m2).cast<TableLookup>();
 
     // Check original model is unaffected
-    EXPECT_EQ(2, m.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(2, m.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<TableLookup>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m.getConcreteModelObjects<TableIndependentVariable>().size());
 
     ASSERT_EQ(1, tableLookup.independentVariables().size());
     EXPECT_EQ(independentVariable1, tableLookup.independentVariables().front());
 
     // Check that the TableLookup and TableLookupIndependentVariable are carried into new model
-    EXPECT_EQ(1, m2.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(1, m2.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1, m2.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<TableLookup>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<TableIndependentVariable>().size());
 
     ASSERT_EQ(1, tableLookupClone2.independentVariables().size());
     EXPECT_NE(independentVariable1, tableLookupClone2.independentVariables().front());
@@ -198,10 +198,10 @@ TEST_F(ModelFixture, TableLookup_Clone) {
   BoilerHotWater boiler(m);
   EXPECT_TRUE(boiler.setNormalizedBoilerEfficiencyCurve(tableLookup));
   EXPECT_EQ(6, m.numObjects());
-  EXPECT_EQ(2, m.getModelObjects<TableLookup>().size());
-  EXPECT_EQ(2, m.getModelObjects<ModelObjectList>().size());
-  EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
-  EXPECT_EQ(1, m.getModelObjects<BoilerHotWater>().size());
+  EXPECT_EQ(2, m.getConcreteModelObjects<TableLookup>().size());
+  EXPECT_EQ(2, m.getConcreteModelObjects<ModelObjectList>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<TableIndependentVariable>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<BoilerHotWater>().size());
 
   EXPECT_EQ(1, tableLookup.independentVariables().size());
 
@@ -215,19 +215,19 @@ TEST_F(ModelFixture, TableLookup_Clone) {
 
     // Check original model is unaffected
     EXPECT_EQ(6, m.numObjects());
-    EXPECT_EQ(2, m.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(2, m.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1, m.getModelObjects<TableIndependentVariable>().size());
-    EXPECT_EQ(1, m.getModelObjects<BoilerHotWater>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<TableLookup>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m.getConcreteModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(1, m.getConcreteModelObjects<BoilerHotWater>().size());
 
     EXPECT_EQ(1, tableLookup.independentVariables().size());
 
     // Check that the TableLookup and TableLookupIndependentVariable are carried into the new model
     EXPECT_EQ(4, m2.numObjects());
-    EXPECT_EQ(1, m2.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(1, m2.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1, m2.getModelObjects<TableIndependentVariable>().size());
-    EXPECT_EQ(1, m2.getModelObjects<BoilerHotWater>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<TableLookup>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<BoilerHotWater>().size());
 
     ASSERT_EQ(1, tableLookupClone2.independentVariables().size());
     EXPECT_NE(independentVariable1, tableLookupClone2.independentVariables().front());
@@ -245,16 +245,16 @@ TEST_F(ModelFixture, TableLookup_Remove) {
     TableIndependentVariable independentVariable1(m);
     EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable1));
 
-    EXPECT_EQ(1u, m.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(1u, m.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<TableLookup>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<TableIndependentVariable>().size());
     ASSERT_EQ(1u, tableLookup.independentVariables().size());
     EXPECT_EQ(independentVariable1, tableLookup.independentVariables().front());
 
     tableLookup.remove();
-    EXPECT_EQ(0u, m.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(0u, m.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(0u, m.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(0u, m.getConcreteModelObjects<TableLookup>().size());
+    EXPECT_EQ(0u, m.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(0u, m.getConcreteModelObjects<TableIndependentVariable>().size());
   }
 
   {
@@ -269,9 +269,9 @@ TEST_F(ModelFixture, TableLookup_Remove) {
     TableLookup tableLookup2(m);
     EXPECT_TRUE(tableLookup2.addIndependentVariable(independentVariable1));
 
-    EXPECT_EQ(2u, m.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(2u, m.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<TableLookup>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<TableIndependentVariable>().size());
 
     ASSERT_EQ(1u, tableLookup1.independentVariables().size());
     EXPECT_EQ(independentVariable1, tableLookup1.independentVariables().front());
@@ -279,9 +279,9 @@ TEST_F(ModelFixture, TableLookup_Remove) {
     EXPECT_EQ(independentVariable1, tableLookup2.independentVariables().front());
 
     tableLookup1.remove();
-    EXPECT_EQ(1u, m.getModelObjects<TableLookup>().size());
-    EXPECT_EQ(1u, m.getModelObjects<ModelObjectList>().size());
-    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<TableLookup>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<TableIndependentVariable>().size());
 
     ASSERT_EQ(1u, tableLookup2.independentVariables().size());
     EXPECT_EQ(independentVariable1, tableLookup2.independentVariables().front());

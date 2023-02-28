@@ -52,7 +52,12 @@ namespace model {
    public:
     explicit SizingSystem(const Model& model, const AirLoopHVAC& airLoopHVAC);
 
-    virtual ~SizingSystem() {}
+    virtual ~SizingSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SizingSystem(const SizingSystem& other) = default;
+    SizingSystem(SizingSystem&& other) = default;
+    SizingSystem& operator=(const SizingSystem&) = default;
+    SizingSystem& operator=(SizingSystem&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -181,7 +186,7 @@ namespace model {
 
     bool isOccupantDiversityAutosized() const;
 
-    bool setTypeofLoadtoSizeOn(std::string typeofLoadtoSizeOn);
+    bool setTypeofLoadtoSizeOn(const std::string& typeofLoadtoSizeOn);
 
     void resetTypeofLoadtoSizeOn();
 
@@ -209,7 +214,7 @@ namespace model {
 
     bool setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
 
-    bool setSizingOption(std::string sizingOption);
+    bool setSizingOption(const std::string& sizingOption);
 
     void resetSizingOption();
 
@@ -229,7 +234,7 @@ namespace model {
 
     void resetCentralHeatingDesignSupplyAirHumidityRatio();
 
-    bool setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod);
+    bool setCoolingDesignAirFlowMethod(const std::string& coolingDesignAirFlowMethod);
 
     void resetCoolingDesignAirFlowMethod();
 
@@ -237,7 +242,7 @@ namespace model {
 
     void resetCoolingDesignAirFlowRate();
 
-    bool setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod);
+    bool setHeatingDesignAirFlowMethod(const std::string& heatingDesignAirFlowMethod);
 
     void resetHeatingDesignAirFlowMethod();
 
@@ -245,7 +250,7 @@ namespace model {
 
     void resetHeatingDesignAirFlowRate();
 
-    bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
+    bool setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod);
 
     void resetSystemOutdoorAirMethod();
 
@@ -265,7 +270,7 @@ namespace model {
 
     bool setHeatingSupplyAirFlowRatePerUnitHeatingCapacity(double heatingSupplyAirFlowRatePerUnitHeatingCapacity);
 
-    bool setCoolingDesignCapacityMethod(std::string coolingDesignCapacityMethod);
+    bool setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod);
 
     bool setCoolingDesignCapacity(double coolingDesignCapacity);
 
@@ -275,7 +280,7 @@ namespace model {
 
     bool setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity);
 
-    bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+    bool setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod);
 
     bool setHeatingDesignCapacity(double heatingDesignCapacity);
 
@@ -285,7 +290,7 @@ namespace model {
 
     bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-    bool setCentralCoolingCapacityControlMethod(std::string centralCoolingCapacityControlMethod);
+    bool setCentralCoolingCapacityControlMethod(const std::string& centralCoolingCapacityControlMethod);
 
     bool setOccupantDiversity(double occupantDiversity);
 
@@ -308,7 +313,7 @@ namespace model {
 
     bool setAirLoopHVAC(const AirLoopHVAC& airLoopHVAC);
 
-    typedef detail::SizingSystem_Impl ImplType;
+    using ImplType = detail::SizingSystem_Impl;
 
     explicit SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl);
 
@@ -326,10 +331,10 @@ namespace model {
   };
 
   /** \relates SizingSystem*/
-  typedef boost::optional<SizingSystem> OptionalSizingSystem;
+  using OptionalSizingSystem = boost::optional<SizingSystem>;
 
   /** \relates SizingSystem*/
-  typedef std::vector<SizingSystem> SizingSystemVector;
+  using SizingSystemVector = std::vector<SizingSystem>;
 
 }  // namespace model
 

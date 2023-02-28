@@ -80,7 +80,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationWalkInZoneBoundary_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_WalkIn_ZoneBoundaryFields::GlassReachInDoorOpeningScheduleNameFacingZone) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationWalkInZoneBoundary", "Glass Reach In Door Opening  Facing Zone"));
       }
@@ -91,11 +92,11 @@ namespace model {
     }
 
     ModelObject RefrigerationWalkInZoneBoundary_Impl::clone(Model model) const {
-      RefrigerationWalkInZoneBoundary modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkInZoneBoundary>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkInZoneBoundary>();
 
       modelObjectClone.resetThermalZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     boost::optional<ThermalZone> RefrigerationWalkInZoneBoundary_Impl::thermalZone() const {
@@ -309,8 +310,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool
-      RefrigerationWalkInZoneBoundary_Impl::setStockingDoorOpeningProtectionTypeFacingZone(std::string stockingDoorOpeningProtectionTypeFacingZone) {
+    bool RefrigerationWalkInZoneBoundary_Impl::setStockingDoorOpeningProtectionTypeFacingZone(
+      const std::string& stockingDoorOpeningProtectionTypeFacingZone) {
       bool result = setString(OS_Refrigeration_WalkIn_ZoneBoundaryFields::StockingDoorOpeningProtectionTypeFacingZone,
                               stockingDoorOpeningProtectionTypeFacingZone);
       return result;
@@ -338,7 +339,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationWalkInZoneBoundary::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_WalkIn_ZoneBoundary);
+    return {IddObjectType::OS_Refrigeration_WalkIn_ZoneBoundary};
   }
 
   std::vector<std::string> RefrigerationWalkInZoneBoundary::stockingDoorOpeningProtectionTypeFacingZoneValues() {
@@ -510,7 +511,8 @@ namespace model {
     getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->resetStockingDoorOpeningScheduleFacingZone();
   }
 
-  bool RefrigerationWalkInZoneBoundary::setStockingDoorOpeningProtectionTypeFacingZone(std::string stockingDoorOpeningProtectionTypeFacingZone) {
+  bool
+    RefrigerationWalkInZoneBoundary::setStockingDoorOpeningProtectionTypeFacingZone(const std::string& stockingDoorOpeningProtectionTypeFacingZone) {
     return getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setStockingDoorOpeningProtectionTypeFacingZone(
       stockingDoorOpeningProtectionTypeFacingZone);
   }

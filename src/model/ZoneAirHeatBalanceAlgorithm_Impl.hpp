@@ -56,7 +56,7 @@ namespace model {
       ZoneAirHeatBalanceAlgorithm_Impl(const ZoneAirHeatBalanceAlgorithm_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ZoneAirHeatBalanceAlgorithm_Impl() {}
+      virtual ~ZoneAirHeatBalanceAlgorithm_Impl() = default;
 
       //@}
 
@@ -86,7 +86,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setAlgorithm(std::string algorithm);
+      bool setAlgorithm(const std::string& algorithm);
 
       void resetAlgorithm();
 

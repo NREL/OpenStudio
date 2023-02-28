@@ -55,7 +55,12 @@ namespace model {
 
     explicit CoilCoolingDXCurveFitOperatingMode(const Model& model);
 
-    virtual ~CoilCoolingDXCurveFitOperatingMode() {}
+    virtual ~CoilCoolingDXCurveFitOperatingMode() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDXCurveFitOperatingMode(const CoilCoolingDXCurveFitOperatingMode& other) = default;
+    CoilCoolingDXCurveFitOperatingMode(CoilCoolingDXCurveFitOperatingMode&& other) = default;
+    CoilCoolingDXCurveFitOperatingMode& operator=(const CoilCoolingDXCurveFitOperatingMode&) = default;
+    CoilCoolingDXCurveFitOperatingMode& operator=(CoilCoolingDXCurveFitOperatingMode&&) = default;
 
     //@}
 
@@ -201,7 +206,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXCurveFitOperatingMode_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXCurveFitOperatingMode_Impl;
 
     explicit CoilCoolingDXCurveFitOperatingMode(std::shared_ptr<detail::CoilCoolingDXCurveFitOperatingMode_Impl> impl);
 
@@ -215,10 +220,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXCurveFitOperatingMode*/
-  typedef boost::optional<CoilCoolingDXCurveFitOperatingMode> OptionalCoilCoolingDXCurveFitOperatingMode;
+  using OptionalCoilCoolingDXCurveFitOperatingMode = boost::optional<CoilCoolingDXCurveFitOperatingMode>;
 
   /** \relates CoilCoolingDXCurveFitOperatingMode*/
-  typedef std::vector<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitOperatingModeVector;
+  using CoilCoolingDXCurveFitOperatingModeVector = std::vector<CoilCoolingDXCurveFitOperatingMode>;
 
 }  // namespace model
 }  // namespace openstudio

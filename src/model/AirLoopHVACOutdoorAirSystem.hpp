@@ -63,7 +63,12 @@ namespace model {
    */
     explicit AirLoopHVACOutdoorAirSystem(Model& model, const ControllerOutdoorAir& controller);
 
-    virtual ~AirLoopHVACOutdoorAirSystem() {}
+    virtual ~AirLoopHVACOutdoorAirSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& other) = default;
+    AirLoopHVACOutdoorAirSystem(AirLoopHVACOutdoorAirSystem&& other) = default;
+    AirLoopHVACOutdoorAirSystem& operator=(const AirLoopHVACOutdoorAirSystem&) = default;
+    AirLoopHVACOutdoorAirSystem& operator=(AirLoopHVACOutdoorAirSystem&&) = default;
 
     /** Returns the return air port of the outdoor air system. */
     unsigned returnAirPort() const;
@@ -156,7 +161,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::AirLoopHVACOutdoorAirSystem_Impl ImplType;
+    using ImplType = detail::AirLoopHVACOutdoorAirSystem_Impl;
 
     explicit AirLoopHVACOutdoorAirSystem(std::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl);
 
@@ -172,10 +177,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACOutdoorAirSystem */
-  typedef boost::optional<AirLoopHVACOutdoorAirSystem> OptionalAirLoopHVACOutdoorAirSystem;
+  using OptionalAirLoopHVACOutdoorAirSystem = boost::optional<AirLoopHVACOutdoorAirSystem>;
 
   /** \relates AirLoopHVACOutdoorAirSystem */
-  typedef std::vector<AirLoopHVACOutdoorAirSystem> AirLoopHVACOutdoorAirSystemVector;
+  using AirLoopHVACOutdoorAirSystemVector = std::vector<AirLoopHVACOutdoorAirSystem>;
 
 }  // namespace model
 

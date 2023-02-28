@@ -49,7 +49,7 @@ IddFactoryOutFile::IddFactoryOutFile(const std::string& filename, const openstud
   tempFile << outFileHeader << '\n';
 }
 
-std::string IddFactoryOutFile::finalize(const std::string& oldChecksum) {
+std::string IddFactoryOutFile::finalize(const std::string& /*oldChecksum*/) {
   tempFile.close();
   std::string newChecksum = openstudio::checksum(tempPath);
   // ETH@20111122 Always copy for now. CMake/build process can't yet handle "sometimes generated"
@@ -119,7 +119,7 @@ void GenerateIddFactoryOutFiles::loadIddFactoryFileIndex() {
 
 void GenerateIddFactoryOutFiles::writeIddFactoryFileIndex() {
   openstudio::filesystem::ofstream fileIndex(m_fileIndexPath);
-  for (std::map<std::string, std::pair<std::string, bool>>::const_iterator it = checksumMap.begin(), itEnd = checksumMap.end(); it != itEnd; ++it) {
+  for (auto it = checksumMap.begin(), itEnd = checksumMap.end(); it != itEnd; ++it) {
     if (it->second.second) {
       fileIndex << "// " << it->first << "," << it->second.first << '\n';
     }

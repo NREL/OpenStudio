@@ -108,7 +108,8 @@ namespace model {
     std::vector<ScheduleTypeKey> HeatExchangerAirToAirSensibleAndLatent_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_HeatExchanger_AirToAir_SensibleAndLatentFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("HeatExchangerAirToAirSensibleAndLatent", "Availability"));
       }
@@ -357,12 +358,12 @@ namespace model {
                                   supplyAirOutletTemperatureControl);
     }
 
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setHeatExchangerType(std::string heatExchangerType) {
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setHeatExchangerType(const std::string& heatExchangerType) {
       bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::HeatExchangerType, heatExchangerType);
       return result;
     }
 
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setFrostControlType(std::string frostControlType) {
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setFrostControlType(const std::string& frostControlType) {
       bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::FrostControlType, frostControlType);
       return result;
     }
@@ -543,7 +544,7 @@ namespace model {
   }
 
   IddObjectType HeatExchangerAirToAirSensibleAndLatent::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_HeatExchanger_AirToAir_SensibleAndLatent);
+    return {IddObjectType::OS_HeatExchanger_AirToAir_SensibleAndLatent};
   }
 
   std::vector<std::string> HeatExchangerAirToAirSensibleAndLatent::heatExchangerTypeValues() {
@@ -696,11 +697,11 @@ namespace model {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSupplyAirOutletTemperatureControl(supplyAirOutletTemperatureControl);
   }
 
-  bool HeatExchangerAirToAirSensibleAndLatent::setHeatExchangerType(std::string heatExchangerType) {
+  bool HeatExchangerAirToAirSensibleAndLatent::setHeatExchangerType(const std::string& heatExchangerType) {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setHeatExchangerType(heatExchangerType);
   }
 
-  bool HeatExchangerAirToAirSensibleAndLatent::setFrostControlType(std::string frostControlType) {
+  bool HeatExchangerAirToAirSensibleAndLatent::setFrostControlType(const std::string& frostControlType) {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setFrostControlType(frostControlType);
   }
 

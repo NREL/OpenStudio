@@ -74,7 +74,7 @@ TEST_F(ModelFixture, SetpointManagerWarmest_addToNode) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerWarmest> setpointManagerWarmests = m.getModelObjects<SetpointManagerWarmest>();
+  std::vector<SetpointManagerWarmest> setpointManagerWarmests = m.getConcreteModelObjects<SetpointManagerWarmest>();
   EXPECT_EQ(3, setpointManagerWarmests.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode().get());
@@ -84,7 +84,7 @@ TEST_F(ModelFixture, SetpointManagerWarmest_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerWarmests = m.getModelObjects<SetpointManagerWarmest>();
+  setpointManagerWarmests = m.getConcreteModelObjects<SetpointManagerWarmest>();
   EXPECT_EQ(2, setpointManagerWarmests.size());
 }
 
@@ -100,14 +100,14 @@ TEST_F(ModelFixture, SetpointManagerWarmest_remove) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerWarmest> setpointManagerWarmests = m.getModelObjects<SetpointManagerWarmest>();
+  std::vector<SetpointManagerWarmest> setpointManagerWarmests = m.getConcreteModelObjects<SetpointManagerWarmest>();
   EXPECT_EQ(1, setpointManagerWarmests.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerWarmests = m.getModelObjects<SetpointManagerWarmest>();
+  setpointManagerWarmests = m.getConcreteModelObjects<SetpointManagerWarmest>();
   EXPECT_EQ(0, setpointManagerWarmests.size());
 }
 
@@ -122,7 +122,7 @@ TEST_F(ModelFixture, SetpointManagerWarmest_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerWarmest testObjectClone = testObject.clone(m).cast<SetpointManagerWarmest>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerWarmest>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -147,7 +147,7 @@ TEST_F(ModelFixture, SetpointManagerWarmest_customDataClone) {
   testObject.setMaximumSetpointTemperature(999.9);
   testObject.setMinimumSetpointTemperature(999.9);
 
-  SetpointManagerWarmest testObjectClone = testObject.clone(m).cast<SetpointManagerWarmest>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerWarmest>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

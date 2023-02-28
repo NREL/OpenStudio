@@ -147,7 +147,7 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
 
   // find thermostat
   boost::optional<openstudio::model::ThermostatSetpointDualSetpoint> thermostat;
-  for (openstudio::model::ThermostatSetpointDualSetpoint t : model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>()) {
+  for (openstudio::model::ThermostatSetpointDualSetpoint t : model.getConcreteModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>()) {
     thermostat = t;
     break;
   }
@@ -186,18 +186,18 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
 
   // add the air system
   openstudio::model::Loop loop = openstudio::model::addSystemType3(model);
-  openstudio::model::AirLoopHVAC airLoop = loop.cast<openstudio::model::AirLoopHVAC>();
+  auto airLoop = loop.cast<openstudio::model::AirLoopHVAC>();
   airLoop.addBranchForZone(libraryZone);
   airLoop.addBranchForZone(office1Zone);
   airLoop.addBranchForZone(office2Zone);
 
   boost::optional<openstudio::model::SetpointManagerSingleZoneReheat> setpointManager;
-  for (openstudio::model::SetpointManagerSingleZoneReheat t : model.getModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>()) {
+  for (openstudio::model::SetpointManagerSingleZoneReheat t : model.getConcreteModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>()) {
     setpointManager = t;
     break;
   }
   if (!setpointManager) {
-    return boost::optional<openstudio::model::Model>();
+    return {};
   }
   setpointManager->setControlZone(libraryZone);
 
@@ -246,7 +246,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   }
   int index = -1;
   for (unsigned i = 0; i < 2; i++) {
-    for (openstudio::Point3d pt : searchResults[i].vertices()) {
+    for (const openstudio::Point3d& pt : searchResults[i].vertices()) {
       if (pt.x() < 8.1) {
         index = i;
         break;
@@ -358,7 +358,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   searchResults = library->findSurfaces(90.0, 90.0, 90.0, 90.0);
   index = -1;
   for (unsigned i = 0; i < 2; i++) {
-    for (openstudio::Point3d pt : searchResults[i].vertices()) {
+    for (const openstudio::Point3d& pt : searchResults[i].vertices()) {
       if (pt.y() < 0.1) {
         index = i;
         break;

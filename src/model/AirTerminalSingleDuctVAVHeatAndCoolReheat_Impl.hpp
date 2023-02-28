@@ -54,7 +54,7 @@ namespace model {
 
       AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl(const AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl() {}
+      virtual ~AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -122,7 +122,7 @@ namespace model {
 
       bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
 
-      bool setAirOutlet(std::string airOutlet);
+      bool setAirOutlet(const std::string& airOutlet);
 
       bool setConvergenceTolerance(double convergenceTolerance);
 

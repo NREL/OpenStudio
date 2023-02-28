@@ -55,7 +55,12 @@ namespace model {
     AirflowNetworkHorizontalOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double massFlowExponentWhenOpeningisClosed,
                                     double slopingPlaneAngle, double dischargeCoefficient);
 
-    virtual ~AirflowNetworkHorizontalOpening() {}
+    virtual ~AirflowNetworkHorizontalOpening() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkHorizontalOpening(const AirflowNetworkHorizontalOpening& other) = default;
+    AirflowNetworkHorizontalOpening(AirflowNetworkHorizontalOpening&& other) = default;
+    AirflowNetworkHorizontalOpening& operator=(const AirflowNetworkHorizontalOpening&) = default;
+    AirflowNetworkHorizontalOpening& operator=(AirflowNetworkHorizontalOpening&&) = default;
 
     //@}
 
@@ -97,7 +102,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkHorizontalOpening_Impl ImplType;
+    using ImplType = detail::AirflowNetworkHorizontalOpening_Impl;
 
     explicit AirflowNetworkHorizontalOpening(std::shared_ptr<detail::AirflowNetworkHorizontalOpening_Impl> impl);
 
@@ -111,10 +116,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkHorizontalOpening*/
-  typedef boost::optional<AirflowNetworkHorizontalOpening> OptionalAirflowNetworkHorizontalOpening;
+  using OptionalAirflowNetworkHorizontalOpening = boost::optional<AirflowNetworkHorizontalOpening>;
 
   /** \relates AirflowNetworkHorizontalOpening*/
-  typedef std::vector<AirflowNetworkHorizontalOpening> AirflowNetworkHorizontalOpeningVector;
+  using AirflowNetworkHorizontalOpeningVector = std::vector<AirflowNetworkHorizontalOpening>;
 
 }  // namespace model
 }  // namespace openstudio

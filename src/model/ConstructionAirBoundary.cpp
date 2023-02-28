@@ -78,7 +78,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Construction_AirBoundaryFields::SimpleMixingScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ConstructionAirBoundary", "Simple Mixing"));
       }
@@ -168,7 +169,7 @@ namespace model {
   }
 
   IddObjectType ConstructionAirBoundary::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Construction_AirBoundary);
+    return {IddObjectType::OS_Construction_AirBoundary};
   }
 
   std::vector<std::string> ConstructionAirBoundary::solarAndDaylightingMethodValues() {
@@ -227,7 +228,7 @@ namespace model {
     return getImpl<detail::ConstructionAirBoundary_Impl>()->simpleMixingSchedule();
   }
 
-  bool ConstructionAirBoundary::setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod) {
+  bool ConstructionAirBoundary::setSolarAndDaylightingMethod(const std::string& /*solarAndDaylightingMethod*/) {
     LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
     return false;
   }
@@ -236,7 +237,7 @@ namespace model {
     LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
   }
 
-  bool ConstructionAirBoundary::setRadiantExchangeMethod(const std::string& radiantExchangeMethod) {
+  bool ConstructionAirBoundary::setRadiantExchangeMethod(const std::string& /*radiantExchangeMethod*/) {
     LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
     return false;
   }

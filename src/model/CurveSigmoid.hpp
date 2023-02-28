@@ -53,7 +53,12 @@ namespace model {
     /** Initializes \f$c_1 = 0.0,\ c_2 = c_3 = c_4 = c_5 = 1.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
     explicit CurveSigmoid(const Model& model);
 
-    virtual ~CurveSigmoid() {}
+    virtual ~CurveSigmoid() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveSigmoid(const CurveSigmoid& other) = default;
+    CurveSigmoid(CurveSigmoid&& other) = default;
+    CurveSigmoid& operator=(const CurveSigmoid&) = default;
+    CurveSigmoid& operator=(CurveSigmoid&&) = default;
 
     //@}
 
@@ -133,7 +138,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveSigmoid_Impl ImplType;
+    using ImplType = detail::CurveSigmoid_Impl;
 
     explicit CurveSigmoid(std::shared_ptr<detail::CurveSigmoid_Impl> impl);
 
@@ -148,10 +153,10 @@ namespace model {
   };
 
   /** \relates CurveSigmoid*/
-  typedef boost::optional<CurveSigmoid> OptionalCurveSigmoid;
+  using OptionalCurveSigmoid = boost::optional<CurveSigmoid>;
 
   /** \relates CurveSigmoid*/
-  typedef std::vector<CurveSigmoid> CurveSigmoidVector;
+  using CurveSigmoidVector = std::vector<CurveSigmoid>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -51,7 +51,12 @@ namespace model {
   class MODEL_API OutsideSurfaceConvectionAlgorithm : public ModelObject
   {
    public:
-    virtual ~OutsideSurfaceConvectionAlgorithm() {}
+    virtual ~OutsideSurfaceConvectionAlgorithm() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutsideSurfaceConvectionAlgorithm(const OutsideSurfaceConvectionAlgorithm& other) = default;
+    OutsideSurfaceConvectionAlgorithm(OutsideSurfaceConvectionAlgorithm&& other) = default;
+    OutsideSurfaceConvectionAlgorithm& operator=(const OutsideSurfaceConvectionAlgorithm&) = default;
+    OutsideSurfaceConvectionAlgorithm& operator=(OutsideSurfaceConvectionAlgorithm&&) = default;
 
     /** @name Static Methods */
     //@{
@@ -72,7 +77,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setAlgorithm(std::string algorithm);
+    bool setAlgorithm(const std::string& algorithm);
 
     void resetAlgorithm();
 
@@ -88,7 +93,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::OutsideSurfaceConvectionAlgorithm_Impl ImplType;
+    using ImplType = detail::OutsideSurfaceConvectionAlgorithm_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -103,7 +108,7 @@ namespace model {
   };
 
   /** \relates OutsideSurfaceConvectionAlgorithm */
-  typedef boost::optional<OutsideSurfaceConvectionAlgorithm> OptionalOutsideSurfaceConvectionAlgorithm;
+  using OptionalOutsideSurfaceConvectionAlgorithm = boost::optional<OutsideSurfaceConvectionAlgorithm>;
 
 }  // namespace model
 }  // namespace openstudio

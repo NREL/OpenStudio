@@ -49,7 +49,12 @@ namespace model {
    public:
     AirflowNetworkNode(IddObjectType type, const Model& model);
 
-    virtual ~AirflowNetworkNode() {}
+    virtual ~AirflowNetworkNode() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkNode(const AirflowNetworkNode& other) = default;
+    AirflowNetworkNode(AirflowNetworkNode&& other) = default;
+    AirflowNetworkNode& operator=(const AirflowNetworkNode&) = default;
+    AirflowNetworkNode& operator=(AirflowNetworkNode&&) = default;
 
     //std::vector<openstudio::IdfObject> remove();
 
@@ -86,7 +91,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirflowNetworkNode_Impl ImplType;
+    using ImplType = detail::AirflowNetworkNode_Impl;
 
     explicit AirflowNetworkNode(std::shared_ptr<detail::AirflowNetworkNode_Impl> impl);
 
@@ -96,9 +101,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<AirflowNetworkNode> OptionalAirflowNetworkNode;
+  using OptionalAirflowNetworkNode = boost::optional<AirflowNetworkNode>;
 
-  typedef std::vector<AirflowNetworkNode> AirflowNetworkNodeVector;
+  using AirflowNetworkNodeVector = std::vector<AirflowNetworkNode>;
 
 }  // namespace model
 }  // namespace openstudio

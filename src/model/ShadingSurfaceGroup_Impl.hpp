@@ -61,7 +61,7 @@ namespace model {
 
       ShadingSurfaceGroup_Impl(const ShadingSurfaceGroup_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ShadingSurfaceGroup_Impl() {}
+      virtual ~ShadingSurfaceGroup_Impl() = default;
 
       //@}
 
@@ -112,7 +112,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setShadingSurfaceType(std::string shadingSurfaceType);
+      bool setShadingSurfaceType(const std::string& shadingSurfaceType);
 
       virtual bool setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) override;
 

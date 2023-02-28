@@ -113,7 +113,7 @@ namespace model {
       values.push_back(toString(spectralDataField.frontReflectance()));
       values.push_back(toString(spectralDataField.backReflectance()));
 
-      ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
+      auto group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
 
       return (!group.empty());
     }
@@ -154,7 +154,7 @@ namespace model {
   }
 
   IddObjectType MaterialPropertyGlazingSpectralData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_MaterialProperty_GlazingSpectralData);
+    return {IddObjectType::OS_MaterialProperty_GlazingSpectralData};
   }
 
   std::vector<SpectralDataField> MaterialPropertyGlazingSpectralData::spectralDataFields() const {

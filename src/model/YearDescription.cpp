@@ -91,18 +91,17 @@ namespace model {
         result.push_back(*dst);
       }
 
-      for (RunPeriodControlSpecialDays day : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()) {
-        result.push_back(day);
-      }
+      auto specialDays = model.getConcreteModelObjects<RunPeriodControlSpecialDays>();
+      result.insert(result.end(), specialDays.begin(), specialDays.end());
 
       return result;
     }
 
     std::vector<IddObjectType> YearDescription_Impl::allowableChildTypes() const {
-      IddObjectTypeVector result;
-      result.push_back(RunPeriodControlDaylightSavingTime::iddObjectType());
-      result.push_back(RunPeriodControlSpecialDays::iddObjectType());
-      return result;
+      return IddObjectTypeVector{
+        RunPeriodControlDaylightSavingTime::iddObjectType(),
+        RunPeriodControlSpecialDays::iddObjectType(),
+      };
     }
 
     boost::optional<int> YearDescription_Impl::calendarYear() const {
@@ -174,7 +173,7 @@ namespace model {
       updateModelLeapYear(wasLeapYear, isLeapYear);
     }
 
-    bool YearDescription_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+    bool YearDescription_Impl::setDayofWeekforStartDay(const std::string& dayofWeekforStartDay) {
       bool result = false;
       if (!this->calendarYear()) {
         result = setString(OS_YearDescriptionFields::DayofWeekforStartDay, dayofWeekforStartDay);
@@ -259,7 +258,7 @@ namespace model {
         year = this->assumedYear();
       }
 
-      return openstudio::Date(monthOfYear, dayOfMonth, *year);
+      return {monthOfYear, dayOfMonth, *year};
     }
 
     openstudio::Date YearDescription_Impl::makeDate(unsigned monthOfYear, unsigned dayOfMonth) {
@@ -296,32 +295,32 @@ namespace model {
 
       model::Model model = this->model();
       if (wasLeapYear && !isLeapYear) {
-        for (RunPeriod runPeriod : model.getConcreteModelObjects<RunPeriod>()) {
+        for (RunPeriod& runPeriod : model.getConcreteModelObjects<RunPeriod>()) {
           runPeriod.ensureNoLeapDays();
         }
 
-        for (RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime :
+        for (RunPeriodControlDaylightSavingTime& runPeriodControlDaylightSavingTime :
              model.getConcreteModelObjects<RunPeriodControlDaylightSavingTime>()) {
           runPeriodControlDaylightSavingTime.ensureNoLeapDays();
         }
 
-        for (RunPeriodControlSpecialDays runPeriodControlSpecialDays : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()) {
+        for (RunPeriodControlSpecialDays& runPeriodControlSpecialDays : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()) {
           runPeriodControlSpecialDays.ensureNoLeapDays();
         }
 
-        for (SizingPeriod sizingPeriod : model.getModelObjects<SizingPeriod>()) {
+        for (SizingPeriod& sizingPeriod : model.getModelObjects<SizingPeriod>()) {
           sizingPeriod.ensureNoLeapDays();
         }
 
-        for (ScheduleBase scheduleBase : model.getModelObjects<ScheduleBase>()) {
+        for (ScheduleBase& scheduleBase : model.getModelObjects<ScheduleBase>()) {
           scheduleBase.ensureNoLeapDays();
         }
 
-        for (ScheduleRule scheduleRule : model.getModelObjects<ScheduleRule>()) {
+        for (ScheduleRule& scheduleRule : model.getConcreteModelObjects<ScheduleRule>()) {
           scheduleRule.ensureNoLeapDays();
         }
 
-        for (LightingDesignDay lightingDesignDay : model.getConcreteModelObjects<LightingDesignDay>()) {
+        for (LightingDesignDay& lightingDesignDay : model.getConcreteModelObjects<LightingDesignDay>()) {
           lightingDesignDay.ensureNoLeapDays();
         }
       }
@@ -366,7 +365,7 @@ namespace model {
     getImpl<detail::YearDescription_Impl>()->resetCalendarYear();
   }
 
-  bool YearDescription::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+  bool YearDescription::setDayofWeekforStartDay(const std::string& dayofWeekforStartDay) {
     return getImpl<detail::YearDescription_Impl>()->setDayofWeekforStartDay(dayofWeekforStartDay);
   }
 

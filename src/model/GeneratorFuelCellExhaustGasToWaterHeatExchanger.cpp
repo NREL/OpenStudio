@@ -103,7 +103,7 @@ namespace model {
 
       // We call the parent generator's Clone method which will clone both the fuelCell and its children
       if (boost::optional<GeneratorFuelCell> fc = fuelCell()) {
-        GeneratorFuelCell fcClone = fc->clone(model).cast<GeneratorFuelCell>();
+        auto fcClone = fc->clone(model).cast<GeneratorFuelCell>();
 
         // We get the clone of the parent generator's GeneratorFuelCellExhaustGasToWaterHeatExchanger so we can return that
         hxClone = fcClone.heatExchanger();
@@ -140,7 +140,7 @@ namespace model {
       // We use getModelObjectSources to check if more than one
       std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
 
-      if (fcs.size() > 0u) {
+      if (!fcs.empty()) {
         if (fcs.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
         }
@@ -560,7 +560,7 @@ namespace model {
   }
 
   IddObjectType GeneratorFuelCellExhaustGasToWaterHeatExchanger::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger);
+    return {IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger};
   }
 
   std::vector<std::string> GeneratorFuelCellExhaustGasToWaterHeatExchanger::heatExchangerCalculationMethodValues() {

@@ -33,6 +33,8 @@
 
 #include "../math/Permutation.hpp"
 
+#include <iterator>
+
 namespace openstudio {
 
 namespace detail {
@@ -85,9 +87,7 @@ namespace detail {
       return false;
     }
     if (index < m_directOrder->size()) {
-      auto it = m_directOrder->begin();
-      for (unsigned i = 0; i < index; ++i, ++it)
-        ;
+      auto it = std::next(m_directOrder->begin(), index);
       m_directOrder->insert(it, handle);
       return true;
     } else {
@@ -203,14 +203,13 @@ namespace detail {
 
   std::vector<Handle> WorkspaceObjectOrder_Impl::sort(const std::vector<Handle>& handles) const {
     HandleVector result(handles);
-    std::sort(result.begin(), result.end(), std::bind(&WorkspaceObjectOrder_Impl::less_Handle, this, std::placeholders::_1, std::placeholders::_2));
+    std::sort(result.begin(), result.end(), [this](const auto& lhs, const auto& rhs) { return less(lhs, rhs); });
     return result;
   }
 
   std::vector<WorkspaceObject> WorkspaceObjectOrder_Impl::sort(const std::vector<WorkspaceObject>& objects) const {
     WorkspaceObjectVector result(objects);
-    std::sort(result.begin(), result.end(),
-              std::bind(&WorkspaceObjectOrder_Impl::less_WorkspaceObject, this, std::placeholders::_1, std::placeholders::_2));
+    std::sort(result.begin(), result.end(), [this](const auto& lhs, const auto& rhs) { return less(lhs, rhs); });
     return result;
   }
 
@@ -333,20 +332,6 @@ namespace detail {
       }
     }
     return objects;
-  }
-
-  // ETH@20100409 std::bind seems to need non-overloaded functions
-  // These are (ugly) wrappers to accommodate.
-  bool WorkspaceObjectOrder_Impl::less_Handle(const Handle& left, const Handle& right) const {
-    return less(left, right);
-  }
-
-  bool WorkspaceObjectOrder_Impl::less_WorkspaceObject(const WorkspaceObject& left, const WorkspaceObject& right) const {
-    return less(left, right);
-  }
-
-  bool WorkspaceObjectOrder_Impl::less_IddObjectType(IddObjectType left, IddObjectType right) const {
-    return less(left, right);
   }
 
 }  // namespace detail

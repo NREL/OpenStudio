@@ -104,8 +104,11 @@ namespace energyplus {
     }
 
     if (!definition.isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted()) {
-      idfObject.setDouble(LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature,
-                          definition.returnAirFractionCalculatedfromPlenumTemperature());
+      if (definition.returnAirFractionCalculatedfromPlenumTemperature()) {
+        idfObject.setString(LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature, "Yes");
+      } else {
+        idfObject.setString(LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature, "No");
+      }
     }
 
     if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted()) {

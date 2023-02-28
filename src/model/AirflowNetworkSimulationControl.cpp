@@ -86,12 +86,10 @@ namespace model {
                                                                                bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {}
 
-    AirflowNetworkSimulationControl_Impl::~AirflowNetworkSimulationControl_Impl() {}
-
     // return the parent object in the hierarchy
     boost::optional<ParentObject> AirflowNetworkSimulationControl_Impl::parent() const {
       // Simulation is highest level, there is no parent
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy
@@ -178,7 +176,7 @@ namespace model {
       return isEmpty(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl);
     }
 
-    bool AirflowNetworkSimulationControl_Impl::setAirflowNetworkControl(std::string control) {
+    bool AirflowNetworkSimulationControl_Impl::setAirflowNetworkControl(const std::string& control) {
       return setString(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl, control);
     }
 
@@ -195,7 +193,7 @@ namespace model {
       return isEmpty(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType);
     }
 
-    bool AirflowNetworkSimulationControl_Impl::setWindPressureCoefficientType(std::string type) {
+    bool AirflowNetworkSimulationControl_Impl::setWindPressureCoefficientType(const std::string& type) {
       return setString(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType, type);
     }
 
@@ -212,7 +210,7 @@ namespace model {
       return isEmpty(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation);
     }
 
-    bool AirflowNetworkSimulationControl_Impl::setHeightSelectionforLocalWindPressureCalculation(std::string type) {
+    bool AirflowNetworkSimulationControl_Impl::setHeightSelectionforLocalWindPressureCalculation(const std::string& type) {
       return setString(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation, type);
     }
 
@@ -229,7 +227,7 @@ namespace model {
       return isEmpty(OS_AirflowNetworkSimulationControlFields::BuildingType);
     }
 
-    bool AirflowNetworkSimulationControl_Impl::setBuildingType(std::string type) {
+    bool AirflowNetworkSimulationControl_Impl::setBuildingType(const std::string& type) {
       return setString(OS_AirflowNetworkSimulationControlFields::BuildingType, type);
     }
 
@@ -263,7 +261,7 @@ namespace model {
       return isEmpty(OS_AirflowNetworkSimulationControlFields::InitializationType);
     }
 
-    bool AirflowNetworkSimulationControl_Impl::setInitializationType(std::string type) {
+    bool AirflowNetworkSimulationControl_Impl::setInitializationType(const std::string& type) {
       return setString(OS_AirflowNetworkSimulationControlFields::InitializationType, type);
     }
 
@@ -437,7 +435,7 @@ namespace model {
     : ParentObject(impl) {}
 
   IddObjectType AirflowNetworkSimulationControl::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkSimulationControl);
+    return {IddObjectType::OS_AirflowNetworkSimulationControl};
   }
 
   std::vector<std::string> AirflowNetworkSimulationControl::solverValues() {
@@ -540,7 +538,7 @@ namespace model {
     return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isHeightDependenceofExternalNodeTemperatureDefaulted();
   }
 
-  bool AirflowNetworkSimulationControl::setAirflowNetworkControl(std::string airflowNetworkControl) {
+  bool AirflowNetworkSimulationControl::setAirflowNetworkControl(const std::string& airflowNetworkControl) {
     return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setAirflowNetworkControl(airflowNetworkControl);
   }
 
@@ -548,7 +546,7 @@ namespace model {
     getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetAirflowNetworkControl();
   }
 
-  bool AirflowNetworkSimulationControl::setWindPressureCoefficientType(std::string type) {
+  bool AirflowNetworkSimulationControl::setWindPressureCoefficientType(const std::string& type) {
     return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setWindPressureCoefficientType(type);
   }
 
@@ -556,7 +554,7 @@ namespace model {
     getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetWindPressureCoefficientType();
   }
 
-  bool AirflowNetworkSimulationControl::setHeightSelectionforLocalWindPressureCalculation(std::string height) {
+  bool AirflowNetworkSimulationControl::setHeightSelectionforLocalWindPressureCalculation(const std::string& height) {
     return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setHeightSelectionforLocalWindPressureCalculation(height);
   }
 
@@ -564,7 +562,7 @@ namespace model {
     getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetHeightSelectionforLocalWindPressureCalculation();
   }
 
-  bool AirflowNetworkSimulationControl::setBuildingType(std::string type) {
+  bool AirflowNetworkSimulationControl::setBuildingType(const std::string& type) {
     return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setBuildingType(type);
   }
 
@@ -580,7 +578,7 @@ namespace model {
     getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetMaximumNumberofIterations();
   }
 
-  bool AirflowNetworkSimulationControl::setInitializationType(std::string type) {
+  bool AirflowNetworkSimulationControl::setInitializationType(const std::string& type) {
     return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setInitializationType(type);
   }
 

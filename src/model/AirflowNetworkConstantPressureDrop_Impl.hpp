@@ -51,7 +51,7 @@ namespace model {
 
       AirflowNetworkConstantPressureDrop_Impl(const AirflowNetworkConstantPressureDrop_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkConstantPressureDrop_Impl() {}
+      virtual ~AirflowNetworkConstantPressureDrop_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

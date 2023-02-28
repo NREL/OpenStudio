@@ -48,14 +48,19 @@ namespace model {
   class MODEL_API Thermostat : public ModelObject
   {
    public:
-    virtual ~Thermostat() {}
+    virtual ~Thermostat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Thermostat(const Thermostat& other) = default;
+    Thermostat(Thermostat&& other) = default;
+    Thermostat& operator=(const Thermostat&) = default;
+    Thermostat& operator=(Thermostat&&) = default;
 
     boost::optional<ThermalZone> thermalZone() const;
 
    protected:
     Thermostat(IddObjectType type, const Model& model);
 
-    typedef detail::Thermostat_Impl ImplType;
+    using ImplType = detail::Thermostat_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -66,7 +71,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.Thermostat");
   };
 
-  typedef boost::optional<Thermostat> OptionalThermostat;
+  using OptionalThermostat = boost::optional<Thermostat>;
 
 }  // namespace model
 }  // namespace openstudio

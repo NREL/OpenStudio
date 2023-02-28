@@ -122,7 +122,7 @@ TEST_F(ModelFixture, CoilCoolingLowTempRadiantConstFlow_addToNode) {
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
-  CoilCoolingLowTempRadiantConstFlow testObjectClone = testObject.clone(m).cast<CoilCoolingLowTempRadiantConstFlow>();
+  auto testObjectClone = testObject.clone(m).cast<CoilCoolingLowTempRadiantConstFlow>();
   demandOutletNode = plantLoop.demandOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));

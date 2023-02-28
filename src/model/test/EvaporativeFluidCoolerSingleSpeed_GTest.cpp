@@ -116,7 +116,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  EvaporativeFluidCoolerSingleSpeed testObjectClone = testObject.clone(m).cast<EvaporativeFluidCoolerSingleSpeed>();
+  auto testObjectClone = testObject.clone(m).cast<EvaporativeFluidCoolerSingleSpeed>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
@@ -208,7 +208,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CloneOneModelWithDefaultD
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
 
-  EvaporativeFluidCoolerSingleSpeed testObjectClone = testObject.clone(model).cast<EvaporativeFluidCoolerSingleSpeed>();
+  auto testObjectClone = testObject.clone(model).cast<EvaporativeFluidCoolerSingleSpeed>();
 
   EXPECT_TRUE(testObjectClone.isDesignAirFlowRateAutosized());
   EXPECT_TRUE(testObjectClone.isFanPoweratDesignAirFlowRateAutosized());
@@ -240,7 +240,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CloneOneModelWithCustomDa
   testObject.setDesignSprayWaterFlowRate(999.0);
   testObject.setStandardDesignCapacity(1.0);
 
-  EvaporativeFluidCoolerSingleSpeed testObjectClone = testObject.clone(model).cast<EvaporativeFluidCoolerSingleSpeed>();
+  auto testObjectClone = testObject.clone(model).cast<EvaporativeFluidCoolerSingleSpeed>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.designAirFlowRate().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.fanPoweratDesignAirFlowRate().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.designSprayWaterFlowRate());
@@ -252,11 +252,11 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CloneTwoModelsWithDefault
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
 
-  EvaporativeFluidCoolerSingleSpeed testObjectClone = testObject.clone(model).cast<EvaporativeFluidCoolerSingleSpeed>();
+  auto testObjectClone = testObject.clone(model).cast<EvaporativeFluidCoolerSingleSpeed>();
 
   Model model2;
 
-  EvaporativeFluidCoolerSingleSpeed testObjectClone2 = testObject.clone(model2).cast<EvaporativeFluidCoolerSingleSpeed>();
+  auto testObjectClone2 = testObject.clone(model2).cast<EvaporativeFluidCoolerSingleSpeed>();
   EXPECT_TRUE(testObjectClone2.isDesignAirFlowRateAutosized());
   EXPECT_TRUE(testObjectClone2.isFanPoweratDesignAirFlowRateAutosized());
   EXPECT_DOUBLE_EQ(0.03, testObjectClone2.designSprayWaterFlowRate());

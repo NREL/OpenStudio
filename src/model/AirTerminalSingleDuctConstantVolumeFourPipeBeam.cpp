@@ -114,7 +114,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctConstantVolumeFourPipeBeam", "Primary Air Availability"));
       }
@@ -129,7 +130,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::remove() {
       Model _model = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
 
       boost::optional<PlantLoop> loop;
       boost::optional<HVACComponent> _coolingCoil = this->coolingCoil();
@@ -195,20 +196,19 @@ namespace model {
 
     /* Clone this + any cooling and heating coils */
     ModelObject AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::clone(Model model) const {
-      AirTerminalSingleDuctConstantVolumeFourPipeBeam airTerminalCVFourPipeBeamClone =
-        StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+      auto airTerminalCVFourPipeBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
 
       if (boost::optional<HVACComponent> cc = coolingCoil()) {
-        HVACComponent coilCoolingClone = cc->clone(model).cast<HVACComponent>();
+        auto coilCoolingClone = cc->clone(model).cast<HVACComponent>();
         airTerminalCVFourPipeBeamClone.setCoolingCoil(coilCoolingClone);
       }
 
       if (boost::optional<HVACComponent> hc = heatingCoil()) {
-        HVACComponent coilHeatingClone = hc->clone(model).cast<HVACComponent>();
+        auto coilHeatingClone = hc->clone(model).cast<HVACComponent>();
         airTerminalCVFourPipeBeamClone.setHeatingCoil(coilHeatingClone);
       }
 
-      return airTerminalCVFourPipeBeamClone;
+      return std::move(airTerminalCVFourPipeBeamClone);
     }
 
     /* Children are the (optional) subclasses corresponding to the cooling and heating water side */
@@ -258,7 +258,7 @@ namespace model {
                 _model.connect(this->getObject<ModelObject>(), outletPort(), node, node.inletPort());
 
                 if (thermalZone) {
-                  AirTerminalSingleDuctConstantVolumeFourPipeBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+                  auto mo = this->getObject<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
 
                   thermalZone->addEquipment(mo);
                 }
@@ -686,7 +686,7 @@ namespace model {
     OS_ASSERT(ok);
   }
   IddObjectType AirTerminalSingleDuctConstantVolumeFourPipeBeam::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam);
+    return {IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam};
   }
 
   /* Primary Air Availability Schedule */

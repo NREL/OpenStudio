@@ -182,7 +182,7 @@ class UTILITIES_API VersionString
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const VersionString& version);
 
-typedef boost::optional<VersionString> OptionalVersionString;
+using OptionalVersionString = boost::optional<VersionString>;
 
 // sorts WorkspaceObjects by name
 struct UTILITIES_API WorkspaceObjectNameLess
@@ -213,7 +213,9 @@ template <class T>
 bool checkPtrVecEqual(const std::vector<std::shared_ptr<T>>& a, const std::vector<std::shared_ptr<T>>& b) {
   bool result((a.size()) == (b.size()));
   if (result) {
-    typename std::vector<std::shared_ptr<T>>::const_iterator aIt, bIt, aItend;
+    typename std::vector<std::shared_ptr<T>>::const_iterator aIt;
+    typename std::vector<std::shared_ptr<T>>::const_iterator bIt;
+    typename std::vector<std::shared_ptr<T>>::const_iterator aItend;
     for (aIt = a.begin(), bIt = b.begin(), aItend = a.end(); aIt < aItend; ++aIt, ++bIt) {
       if ((*aIt) && (*bIt) && (**aIt == **bIt)) {
       } else {

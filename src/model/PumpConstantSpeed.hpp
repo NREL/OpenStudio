@@ -53,7 +53,12 @@ namespace model {
    public:
     explicit PumpConstantSpeed(const Model& model);
 
-    virtual ~PumpConstantSpeed() {}
+    virtual ~PumpConstantSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PumpConstantSpeed(const PumpConstantSpeed& other) = default;
+    PumpConstantSpeed(PumpConstantSpeed&& other) = default;
+    PumpConstantSpeed& operator=(const PumpConstantSpeed&) = default;
+    PumpConstantSpeed& operator=(PumpConstantSpeed&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -175,7 +180,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::PumpConstantSpeed_Impl ImplType;
+    using ImplType = detail::PumpConstantSpeed_Impl;
 
     explicit PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl);
 
@@ -191,10 +196,10 @@ namespace model {
   };
 
   /** \relates PumpConstantSpeed*/
-  typedef boost::optional<PumpConstantSpeed> OptionalPumpConstantSpeed;
+  using OptionalPumpConstantSpeed = boost::optional<PumpConstantSpeed>;
 
   /** \relates PumpConstantSpeed*/
-  typedef std::vector<PumpConstantSpeed> PumpConstantSpeedVector;
+  using PumpConstantSpeedVector = std::vector<PumpConstantSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

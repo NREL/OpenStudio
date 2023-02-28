@@ -93,7 +93,7 @@ namespace model {
      *  new handle is assigned, and it is placed in model. */
       virtual ModelObject clone(Model model) const;
 
-      virtual ~ModelObject_Impl() {}
+      virtual ~ModelObject_Impl() = default;
 
       /// remove the object from the model, also removes any cost objects associated with this object
       /// return std::vector<IdfObject> containing any removed object(s)
@@ -200,7 +200,7 @@ namespace model {
       //@}
 
       /** Gets the autosized component value from the sql file **/
-      boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
+      boost::optional<double> getAutosizedValue(const std::string& valueName, const std::string& unitString) const;
 
      protected:
       ModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -245,7 +245,7 @@ namespace model {
       boost::optional<std::string> getSpecificKeyValue(OptionalString keyValue) const;
     };
 
-    typedef std::shared_ptr<ModelObject_Impl> ModelObject_ImplPtr;
+    using ModelObject_ImplPtr = std::shared_ptr<ModelObject_Impl>;
 
   }  // namespace detail
 }  // namespace model

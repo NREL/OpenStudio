@@ -61,18 +61,18 @@ TEST_F(ModelFixture, RefrigerationWalkIn_Remove) {
   ScheduleCompact wds(model);
   RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
-  std::vector<RefrigerationWalkIn> refrigerationWalkIn = model.getModelObjects<RefrigerationWalkIn>();
+  std::vector<RefrigerationWalkIn> refrigerationWalkIn = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(1, refrigerationWalkIn.size());
 
-  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getModelObjects<RefrigerationWalkInZoneBoundary>();
+  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getConcreteModelObjects<RefrigerationWalkInZoneBoundary>();
   EXPECT_EQ(1, refrigerationWalkInZoneBoundaries.size());
 
   testObject.remove();
 
-  refrigerationWalkIn = model.getModelObjects<RefrigerationWalkIn>();
+  refrigerationWalkIn = model.getConcreteModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(0, refrigerationWalkIn.size());
 
-  refrigerationWalkInZoneBoundaries = model.getModelObjects<RefrigerationWalkInZoneBoundary>();
+  refrigerationWalkInZoneBoundaries = model.getConcreteModelObjects<RefrigerationWalkInZoneBoundary>();
   EXPECT_EQ(0, refrigerationWalkInZoneBoundaries.size());
 }
 
@@ -81,7 +81,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneOneModelWithDefaultData) {
   ScheduleCompact wds(model);
   RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
-  RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
 
   EXPECT_DOUBLE_EQ(4690.0, testObjectClone.ratedCoilCoolingCapacity());
   EXPECT_DOUBLE_EQ(-2.22, testObjectClone.operatingTemperature());
@@ -101,7 +101,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneOneModelWithDefaultData) {
   EXPECT_EQ(1, testObjectZoneBoundaries.size());
   EXPECT_EQ(1, testObjectCloneZoneBoundaries.size());
 
-  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getModelObjects<RefrigerationWalkInZoneBoundary>();
+  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getConcreteModelObjects<RefrigerationWalkInZoneBoundary>();
   EXPECT_EQ(2, refrigerationWalkInZoneBoundaries.size());
 
   EXPECT_NE(testObjectZoneBoundaries[0], testObjectCloneZoneBoundaries[0]);
@@ -133,7 +133,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneOneModelWithCustomData) {
   testObject.setInsulatedFloorSurfaceArea(999.0);
   testObject.setInsulatedFloorUValue(999.0);
 
-  RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedCoilCoolingCapacity());
   EXPECT_DOUBLE_EQ(-999.0, testObjectClone.operatingTemperature());
   EXPECT_DOUBLE_EQ(-70.0, testObjectClone.ratedCoolingSourceTemperature());
@@ -157,11 +157,11 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneTwoModelsWithDefaultData) {
   ScheduleCompact wds(model);
   RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
-  RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
 
   Model model2;
 
-  RefrigerationWalkIn testObjectClone2 = testObject.clone(model2).cast<RefrigerationWalkIn>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationWalkIn>();
   EXPECT_DOUBLE_EQ(4690.0, testObjectClone2.ratedCoilCoolingCapacity());
   EXPECT_DOUBLE_EQ(-2.22, testObjectClone2.operatingTemperature());
   EXPECT_DOUBLE_EQ(-6.67, testObjectClone2.ratedCoolingSourceTemperature());
@@ -185,10 +185,10 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneTwoModelsWithDefaultData) {
   EXPECT_NE(testObjectZoneBoundaries[0], testObjectCloneZoneBoundaries[0]);
   EXPECT_NE(testObjectZoneBoundaries[0].handle(), testObjectCloneZoneBoundaries[0].handle());
 
-  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getModelObjects<RefrigerationWalkInZoneBoundary>();
+  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getConcreteModelObjects<RefrigerationWalkInZoneBoundary>();
   EXPECT_EQ(2, refrigerationWalkInZoneBoundaries.size());
 
-  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries2 = model2.getModelObjects<RefrigerationWalkInZoneBoundary>();
+  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries2 = model2.getConcreteModelObjects<RefrigerationWalkInZoneBoundary>();
   EXPECT_EQ(1, refrigerationWalkInZoneBoundaries2.size());
 
   EXPECT_NE(testObjectCloneZoneBoundaries2[0].handle(), testObjectCloneZoneBoundaries[0].handle());
@@ -238,7 +238,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_DefrostCycleParameters) {
 
   EXPECT_FALSE(testObject.getImpl<openstudio::model::detail::RefrigerationWalkIn_Impl>()->optionalWalkinDefrostCycleParameters());
 
-  RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
 
   EXPECT_FALSE(testObjectClone.getImpl<openstudio::model::detail::RefrigerationWalkIn_Impl>()->optionalWalkinDefrostCycleParameters());
 

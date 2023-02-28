@@ -53,7 +53,12 @@ namespace model {
    public:
     AirToAirComponent(IddObjectType type, const Model& model);
 
-    virtual ~AirToAirComponent() {}
+    virtual ~AirToAirComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirToAirComponent(const AirToAirComponent& other) = default;
+    AirToAirComponent(AirToAirComponent&& other) = default;
+    AirToAirComponent& operator=(const AirToAirComponent&) = default;
+    AirToAirComponent& operator=(AirToAirComponent&&) = default;
 
     /** Returns the primary air stream inlet port.
    *
@@ -101,7 +106,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirToAirComponent_Impl ImplType;
+    using ImplType = detail::AirToAirComponent_Impl;
 
     explicit AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> impl);
 
@@ -111,7 +116,7 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<AirToAirComponent> OptionalAirToAirComponent;
+  using OptionalAirToAirComponent = boost::optional<AirToAirComponent>;
 
 }  // namespace model
 }  // namespace openstudio

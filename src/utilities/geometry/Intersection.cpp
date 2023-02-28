@@ -32,6 +32,7 @@
 #include "Intersection.hpp"
 #include "../data/Matrix.hpp"
 #include "../core/Assert.hpp"
+#include "../core/ContainersMove.hpp"
 #include "../core/Logger.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
@@ -57,6 +58,7 @@
 #endif
 
 #include <cmath>
+#include <iterator>
 
 using coordinate_type = double;
 using BoostPoint = boost::geometry::model::d2::point_xy<double>;
@@ -127,7 +129,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
 
   // cppcheck-suppress constStatement
   std::vector<BoostPolygon> solution;
-  if (result.size() == 0) {
+  if (result.empty()) {
     // There's no result so return the original polygon
     solution.push_back(polygon);
     return solution;
@@ -136,7 +138,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
     solution.push_back(polygon);
     return solution;
   } else {
-    for (auto boostPolygon : result) {
+    for (auto& boostPolygon : result) {
 
       // The returned points are adjusted to the input polygon (which defines the canonical set)
       for (unsigned i = 0; i < boostPolygon.outer().size(); ++i) {
@@ -168,9 +170,7 @@ BoostPolygon removeSpikes(const BoostPolygon& polygon) {
 std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons) {
   std::vector<BoostPolygon> result;
   for (const BoostPolygon& polygon : polygons) {
-    for (auto p : removeSpikesEx(polygon)) {
-      result.push_back(p);
-    }
+    openstudio::detail::concat_helper(result, removeSpikesEx(polygon));
   }
   return result;
 }
@@ -224,7 +224,8 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
   }
 
   // convert back to BoostPolygon
-  std::list<TPPLPoly>::iterator it, itend;
+  std::list<TPPLPoly>::iterator it;
+  std::list<TPPLPoly>::iterator itend;
   for (it = resultPolys.begin(), itend = resultPolys.end(); it != itend; ++it) {
     BoostPolygon newBoostPolygon;
     //std::cout << "result :";
@@ -409,7 +410,7 @@ std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::
   }
 
   if (result.size() < 3) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   return result;
@@ -441,7 +442,7 @@ std::vector<Point3d> verticesFromBoostRing(const BoostRing& ring, std::vector<Po
   }
 
   if (result.size() < 3) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   return result;
@@ -465,9 +466,12 @@ struct BoostPolygonAreaGreater
 
 // Public functions
 
-IntersectionResult::IntersectionResult(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2,
-                                       const std::vector<std::vector<Point3d>>& newPolygons1, const std::vector<std::vector<Point3d>>& newPolygons2)
-  : m_polygon1(polygon1), m_polygon2(polygon2), m_newPolygons1(newPolygons1), m_newPolygons2(newPolygons2) {}
+IntersectionResult::IntersectionResult(std::vector<Point3d> polygon1, std::vector<Point3d> polygon2, std::vector<std::vector<Point3d>> newPolygons1,
+                                       std::vector<std::vector<Point3d>> newPolygons2)
+  : m_polygon1(std::move(polygon1)),
+    m_polygon2(std::move(polygon2)),
+    m_newPolygons1(std::move(newPolygons1)),
+    m_newPolygons2(std::move(newPolygons2)) {}
 
 std::vector<Point3d> IntersectionResult::polygon1() const {
   return m_polygon1;
@@ -536,7 +540,7 @@ std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double to
   // cppcheck-suppress constStatement
   boost::optional<BoostPolygon> boostPolygon = boostPolygonFromVertices(polygon, allPoints, tol);
   if (!boostPolygon) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   BoostPolygon boostResult = removeSpikes(*boostPolygon);
@@ -556,7 +560,7 @@ bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& 
     return false;
   }
 
-  if (points.size() == 0) {
+  if (points.empty()) {
     return false;
   }
 
@@ -741,10 +745,6 @@ std::vector<std::vector<Point3d>> joinAll(const std::vector<std::vector<Point3d>
 }
 
 boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol) {
-  std::vector<Point3d> resultPolygon1;
-  std::vector<Point3d> resultPolygon2;
-  std::vector<std::vector<Point3d>> newPolygons1;
-  std::vector<std::vector<Point3d>> newPolygons2;
 
   //std::cout << "Initial polygon1 area " << getArea(polygon1).get() << '\n';
   //std::cout << "Initial polygon2 area " << getArea(polygon2).get() << '\n';
@@ -808,10 +808,13 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   };
 
   // intersections are the same
-  resultPolygon1 = intersectionVertices;
-  resultPolygon2 = intersectionVertices;
+  std::vector<Point3d> resultPolygon1 = intersectionVertices;
+  std::vector<Point3d> resultPolygon2 = intersectionVertices;
 
-  // create new polygon for each remaining intersection
+  std::vector<std::vector<Point3d>> newPolygons1;
+  newPolygons1.reserve(intersectionResult.size() - 1);
+
+  // create new polygon for each **remaining** intersection (all but the largest one)
   for (unsigned i = 1; i < intersectionResult.size(); ++i) {
 
     std::vector<Point3d> newPolygon = verticesFromBoostPolygon(intersectionResult[i], allPoints, tol);
@@ -836,9 +839,10 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       continue;
     };
 
-    newPolygons1.push_back(newPolygon);
-    newPolygons2.push_back(newPolygon);
+    newPolygons1.push_back(std::move(newPolygon));
   }
+
+  std::vector<std::vector<Point3d>> newPolygons2 = newPolygons1;
 
   // polygon1 minus polygon2
   std::vector<BoostPolygon> differenceResult1;
@@ -846,12 +850,13 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   differenceResult1 = removeSpikes(differenceResult1);
   differenceResult1 = removeHoles(differenceResult1);
 
+  newPolygons1.reserve(newPolygons1.size() + differenceResult1.size());
+
   // create new polygon for each difference
-  for (unsigned i = 0; i < differenceResult1.size(); ++i) {
+  for (auto& pp : differenceResult1) {
+    std::vector<Point3d> newPolygon1 = verticesFromBoostPolygon(pp, allPoints, tol);
 
-    std::vector<Point3d> newPolygon1 = verticesFromBoostPolygon(differenceResult1[i], allPoints, tol);
-
-    testArea = boost::geometry::area(differenceResult1[i]);
+    testArea = boost::geometry::area(pp);
     if (!testArea || newPolygon1.empty()) {
       LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon1);
       continue;
@@ -861,13 +866,13 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       continue;
     }
     try {
-      has_self_intersections(differenceResult1[i]);
+      has_self_intersections(pp);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
       LOG_FREE(Error, "utilities.geometry.intersect", "Face difference is self intersecting, result will not include this polygon, " << newPolygon1);
       continue;
     }
 
-    newPolygons1.push_back(newPolygon1);
+    newPolygons1.push_back(std::move(newPolygon1));
   }
 
   // polygon2 minus polygon1
@@ -876,12 +881,13 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   differenceResult2 = removeSpikes(differenceResult2);
   differenceResult2 = removeHoles(differenceResult2);
 
+  newPolygons2.reserve(newPolygons2.size() + differenceResult2.size());
+
   // create new polygon for each difference
-  for (unsigned i = 0; i < differenceResult2.size(); ++i) {
+  for (auto& pp : differenceResult2) {
+    std::vector<Point3d> newPolygon2 = verticesFromBoostPolygon(pp, allPoints, tol);
 
-    std::vector<Point3d> newPolygon2 = verticesFromBoostPolygon(differenceResult2[i], allPoints, tol);
-
-    testArea = boost::geometry::area(differenceResult2[i]);
+    testArea = boost::geometry::area(pp);
     if (!testArea || newPolygon2.empty()) {
       LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon2);
       continue;
@@ -891,16 +897,16 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       continue;
     }
     try {
-      has_self_intersections(differenceResult2[i]);
+      has_self_intersections(pp);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
       LOG_FREE(Error, "utilities.geometry.intersect", "Face difference is self intersecting, result will not include this polygon, " << newPolygon2);
       continue;
     }
 
-    newPolygons2.push_back(newPolygon2);
+    newPolygons2.push_back(std::move(newPolygon2));
   }
 
-  IntersectionResult result(resultPolygon1, resultPolygon2, newPolygons1, newPolygons2);
+  IntersectionResult result(std::move(resultPolygon1), std::move(resultPolygon2), std::move(newPolygons1), std::move(newPolygons2));
 
   //std::cout << "Result area1 " << result.area1() << '\n';
   //std::cout << "Result area2 " << result.area2() << '\n';
@@ -924,28 +930,34 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
   std::vector<BoostPolygon> boostPolygons;
   boostPolygons.push_back(*initialBoostPolygon);
 
-  // cppcheck-suppress constStatement
-  std::vector<BoostPolygon> newBoostPolygons;
-  for (const std::vector<Point3d>& hole : holes) {
+  for (const auto& hole : holes) {
     // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostHole = nonIntersectingBoostPolygonFromVertices(hole, allPoints, tol);
     if (!boostHole) {
       return result;
     }
 
+    // cppcheck-suppress constStatement
+    std::vector<BoostPolygon> newBoostPolygons;
+
     for (const BoostPolygon& boostPolygon : boostPolygons) {
       // cppcheck-suppress constStatement
       std::vector<BoostPolygon> diffResult;
       boost::geometry::difference(boostPolygon, *boostHole, diffResult);
-      diffResult = removeSpikes(diffResult);
-      diffResult = removeHoles(diffResult);
-      newBoostPolygons.insert(newBoostPolygons.end(), diffResult.begin(), diffResult.end());
+      newBoostPolygons.reserve(newBoostPolygons.size() + diffResult.size());
+      newBoostPolygons.insert(newBoostPolygons.end(), std::make_move_iterator(diffResult.begin()), std::make_move_iterator(diffResult.end()));
     }
-    boostPolygons.swap(newBoostPolygons);
+    boostPolygons = std::move(newBoostPolygons);
   }
 
+  // Remove the holes and spikes and convert back to our data types
   for (const BoostPolygon& boostPolygon : boostPolygons) {
-    result.push_back(verticesFromBoostPolygon(boostPolygon, allPoints, tol));
+    const BoostPolygon removedSpikes = removeSpikes(boostPolygon);
+    const std::vector<BoostPolygon>& removedHoles = removeHoles(removedSpikes);
+    result.reserve(result.size() + removedHoles.size());
+    for (const BoostPolygon& removedHole : removedHoles) {
+      result.push_back(verticesFromBoostPolygon(removedHole, allPoints, tol));
+    }
   }
 
   return result;
@@ -979,8 +991,7 @@ bool intersects(const std::vector<Point3d>& polygon1, const std::vector<Point3d>
 }
 
 bool within(const Point3d& point1, const std::vector<Point3d>& polygon2, double tol) {
-  std::vector<Point3d> geometry1;
-  geometry1.push_back(point1);
+  std::vector<Point3d> geometry1 = {point1};
   return within(geometry1, polygon2, tol);
 }
 
@@ -1078,7 +1089,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   bool reversed = false;
   boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
   if (!outwardNormal) {
-    return std::vector<Point3d>();
+    return {};
   } else if (outwardNormal->z() > 0) {
     reversed = true;
   }
@@ -1091,7 +1102,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   }
 
   if (!bp) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   boost::geometry::remove_spikes(*bp);
@@ -1299,7 +1310,7 @@ std::vector<Polygon3d> joinAllPolygons(const std::vector<std::vector<Point3d>>& 
   return joinAll(inputPolygons, tol);
 }
 
-std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double tol) {
+std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double /*tol*/) {
 
   std::vector<Polygon3d> result;
 

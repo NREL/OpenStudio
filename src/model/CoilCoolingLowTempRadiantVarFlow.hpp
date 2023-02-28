@@ -56,7 +56,12 @@ namespace model {
 
     explicit CoilCoolingLowTempRadiantVarFlow(const Model& model, Schedule& coolingControlTemperatureSchedule);
 
-    virtual ~CoilCoolingLowTempRadiantVarFlow() {}
+    virtual ~CoilCoolingLowTempRadiantVarFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingLowTempRadiantVarFlow(const CoilCoolingLowTempRadiantVarFlow& other) = default;
+    CoilCoolingLowTempRadiantVarFlow(CoilCoolingLowTempRadiantVarFlow&& other) = default;
+    CoilCoolingLowTempRadiantVarFlow& operator=(const CoilCoolingLowTempRadiantVarFlow&) = default;
+    CoilCoolingLowTempRadiantVarFlow& operator=(CoilCoolingLowTempRadiantVarFlow&&) = default;
 
     //@}
 
@@ -120,7 +125,7 @@ namespace model {
 
     void resetCoolingControlTemperatureSchedule();
 
-    bool setCondensationControlType(std::string condensationControlType);
+    bool setCondensationControlType(const std::string& condensationControlType);
 
     void resetCondensationControlType();
 
@@ -148,7 +153,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingLowTempRadiantVarFlow_Impl ImplType;
+    using ImplType = detail::CoilCoolingLowTempRadiantVarFlow_Impl;
 
     explicit CoilCoolingLowTempRadiantVarFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantVarFlow_Impl> impl);
 
@@ -165,10 +170,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingLowTempRadiantVarFlow*/
-  typedef boost::optional<CoilCoolingLowTempRadiantVarFlow> OptionalCoilCoolingLowTempRadiantVarFlow;
+  using OptionalCoilCoolingLowTempRadiantVarFlow = boost::optional<CoilCoolingLowTempRadiantVarFlow>;
 
   /** \relates CoilCoolingLowTempRadiantVarFlow*/
-  typedef std::vector<CoilCoolingLowTempRadiantVarFlow> CoilCoolingLowTempRadiantVarFlowVector;
+  using CoilCoolingLowTempRadiantVarFlowVector = std::vector<CoilCoolingLowTempRadiantVarFlow>;
 
 }  // namespace model
 }  // namespace openstudio

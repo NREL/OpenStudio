@@ -157,10 +157,10 @@ class UTILITIES_API IddField
 };
 
 /** \relates IddField */
-typedef std::vector<IddField> IddFieldVector;
+using IddFieldVector = std::vector<IddField>;
 
 /** \relates IddField */
-typedef boost::optional<IddField> OptionalIddField;
+using OptionalIddField = boost::optional<IddField>;
 
 /** Returns true if the reference lists of field1 and field2 match exactly (case insensitive).
  *  \relates IddField */

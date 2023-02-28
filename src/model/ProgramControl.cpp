@@ -94,7 +94,7 @@ namespace model {
   }
 
   IddObjectType ProgramControl::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ProgramControl);
+    return {IddObjectType::OS_ProgramControl};
   }
 
   boost::optional<int> ProgramControl::numberofThreadsAllowed() const {

@@ -55,7 +55,7 @@ namespace model {
 
       RefrigerationGasCoolerAirCooled_Impl(const RefrigerationGasCoolerAirCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationGasCoolerAirCooled_Impl() {}
+      virtual ~RefrigerationGasCoolerAirCooled_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -131,7 +131,7 @@ namespace model {
 
       void resetRatedTotalHeatRejectionRateCurve();
 
-      bool setGasCoolerFanSpeedControlType(std::string gasCoolerFanSpeedControlType);
+      bool setGasCoolerFanSpeedControlType(const std::string& gasCoolerFanSpeedControlType);
 
       void resetGasCoolerFanSpeedControlType();
 
@@ -163,7 +163,7 @@ namespace model {
 
       // void resetAirInletNode();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

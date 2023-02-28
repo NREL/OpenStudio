@@ -57,7 +57,7 @@ namespace model {
       FanConstantVolume_Impl(const FanConstantVolume_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~FanConstantVolume_Impl();
+      virtual ~FanConstantVolume_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -115,7 +115,7 @@ namespace model {
       std::string endUseSubcategory() const;
 
       // Set EndUseSubcategory
-      bool setEndUseSubcategory(std::string val);
+      bool setEndUseSubcategory(const std::string& val);
 
       boost::optional<double> maximumFlowRate() const;
 

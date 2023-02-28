@@ -55,7 +55,12 @@ namespace model {
     explicit ExternalInterfaceActuator(const ModelObject& modelObject, const std::string actuatedComponentType,
                                        const std::string actuatedComponentControlType);
 
-    virtual ~ExternalInterfaceActuator() {}
+    virtual ~ExternalInterfaceActuator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterfaceActuator(const ExternalInterfaceActuator& other) = default;
+    ExternalInterfaceActuator(ExternalInterfaceActuator&& other) = default;
+    ExternalInterfaceActuator& operator=(const ExternalInterfaceActuator&) = default;
+    ExternalInterfaceActuator& operator=(ExternalInterfaceActuator&&) = default;
 
     //@}
 
@@ -101,7 +106,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceActuator_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceActuator_Impl;
 
     explicit ExternalInterfaceActuator(std::shared_ptr<detail::ExternalInterfaceActuator_Impl> impl);
 
@@ -115,10 +120,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceActuator*/
-  typedef boost::optional<ExternalInterfaceActuator> OptionalExternalInterfaceActuator;
+  using OptionalExternalInterfaceActuator = boost::optional<ExternalInterfaceActuator>;
 
   /** \relates ExternalInterfaceActuator*/
-  typedef std::vector<ExternalInterfaceActuator> ExternalInterfaceActuatorVector;
+  using ExternalInterfaceActuatorVector = std::vector<ExternalInterfaceActuator>;
 
 }  // namespace model
 }  // namespace openstudio

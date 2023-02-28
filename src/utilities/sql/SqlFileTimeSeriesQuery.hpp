@@ -69,7 +69,7 @@ class UTILITIES_API EnvironmentIdentifier
   boost::optional<std::string> m_name;
 };
 
-typedef boost::optional<openstudio::EnvironmentIdentifier> OptionalEnvironmentIdentifier;
+using OptionalEnvironmentIdentifier = boost::optional<openstudio::EnvironmentIdentifier>;
 
 /** Small class to let users identify a time series by name, or a set of time
  *  series by regex. */
@@ -91,7 +91,7 @@ class UTILITIES_API TimeSeriesIdentifier
   boost::optional<boost::regex> m_re;
 };
 
-typedef boost::optional<openstudio::TimeSeriesIdentifier> OptionalTimeSeriesIdentifier;
+using OptionalTimeSeriesIdentifier = boost::optional<openstudio::TimeSeriesIdentifier>;
 
 /** Small class to let users identify one or more key values by name or regex. */
 class UTILITIES_API KeyValueIdentifier
@@ -116,7 +116,7 @@ class UTILITIES_API KeyValueIdentifier
   REGISTER_LOGGER("openstudio.KeyValueIdentifier");
 };
 
-typedef boost::optional<openstudio::KeyValueIdentifier> OptionalKeyValueIdentifier;
+using OptionalKeyValueIdentifier = boost::optional<openstudio::KeyValueIdentifier>;
 
 /** Class to hold information about one or more SqlFile time series of interest. The query is
  *  limited to one ReportingFrequency so that the resulting TimeSeries.values() Vectors are of the
@@ -205,7 +205,7 @@ class UTILITIES_API SqlFileTimeSeriesQuery
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const SqlFileTimeSeriesQuery& query);
 
-typedef std::vector<SqlFileTimeSeriesQuery> SqlFileTimeSeriesQueryVector;
+using SqlFileTimeSeriesQueryVector = std::vector<SqlFileTimeSeriesQuery>;
 
 /** If all queries have been vetted, returns the set of unique environment names. Otherwise,
  *  returns an empty set. */

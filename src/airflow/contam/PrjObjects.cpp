@@ -63,14 +63,9 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl(nr, flags, ps, pc, pk, pl, relHt, Vol, T0, P0, name, color, u_Ht, u_V, u_T, u_P,
                                                                     cdaxis, cfd, cfdname, X1, Y1, H1, X2, Y2, H2, celldx, axialD, u_aD, u_L))) {}
 
-  Zone::Zone(const Zone& other) : m_impl(other.m_impl) {}
+  Zone::Zone(const Zone& other) = default;
 
-  Zone::~Zone() {}
-
-  Zone& Zone::operator=(const Zone& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  Zone& Zone::operator=(const Zone& other) = default;
 
   bool Zone::operator==(const Zone& other) const {
     return m_impl == other.m_impl;
@@ -418,7 +413,7 @@ namespace contam {
 
   Species::Species() : m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl)) {}
 
-  Species::Species(std::string molwt, std::string Dm, std::string ccdef, std::string Cp, std::string name, std::string desc)
+  Species::Species(std::string molwt, std::string Dm, std::string ccdef, std::string /*Cp*/, std::string name, std::string desc)
     : m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl)) {
     m_impl->setMolwt(molwt);
     m_impl->setDm(Dm);
@@ -427,7 +422,7 @@ namespace contam {
     m_impl->setDesc(desc);
   }
 
-  Species::Species(double molwt, double Dm, double ccdef, double Cp, std::string name, std::string desc)
+  Species::Species(double molwt, double Dm, double ccdef, double /*Cp*/, std::string name, std::string desc)
     : m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl)) {
     m_impl->setMolwt(molwt);
     m_impl->setDm(Dm);
@@ -446,14 +441,9 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::SpeciesImpl>(
       new detail::SpeciesImpl(nr, sflag, ntflag, molwt, mdiam, edens, decay, Dm, ccdef, Cp, ucc, umd, ued, udm, ucp, name, desc))) {}
 
-  Species::Species(const Species& other) : m_impl(other.m_impl) {}
+  Species::Species(const Species& other) = default;
 
-  Species::~Species() {}
-
-  Species& Species::operator=(const Species& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  Species& Species::operator=(const Species& other) = default;
 
   bool Species::operator==(const Species& other) const {
     return m_impl == other.m_impl;
@@ -640,14 +630,9 @@ namespace contam {
   Ahs::Ahs(int nr, int zone_r, int zone_s, int path_r, int path_s, int path_x, std::string name, std::string desc)
     : m_impl(std::shared_ptr<detail::AhsImpl>(new detail::AhsImpl(nr, zone_r, zone_s, path_r, path_s, path_x, name, desc))) {}
 
-  Ahs::Ahs(const Ahs& other) : m_impl(other.m_impl) {}
+  Ahs::Ahs(const Ahs& other) = default;
 
-  Ahs::~Ahs() {}
-
-  Ahs& Ahs::operator=(const Ahs& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  Ahs& Ahs::operator=(const Ahs& other) = default;
 
   bool Ahs::operator==(const Ahs& other) const {
     return m_impl == other.m_impl;
@@ -805,14 +790,9 @@ namespace contam {
                                                                                   wPset, wPmod, wazm, Fahs, Xmax, Xmin, icon, dir, u_Ht, u_XY, u_dP,
                                                                                   u_F, cfd, cfd_name, cfd_ptype, cfd_btype, cfd_capp))) {}
 
-  AirflowPath::AirflowPath(const AirflowPath& other) : m_impl(other.m_impl) {}
+  AirflowPath::AirflowPath(const AirflowPath& other) = default;
 
-  AirflowPath::~AirflowPath() {}
-
-  AirflowPath& AirflowPath::operator=(const AirflowPath& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  AirflowPath& AirflowPath::operator=(const AirflowPath& other) = default;
 
   bool AirflowPath::operator==(const AirflowPath& other) const {
     return m_impl == other.m_impl;
@@ -1232,14 +1212,9 @@ logsave,save,rvals,BldgFlowZ,BldgFlowD,BldgFlowC,cfd_ctype,cfd_convcpl,cfd_var,
 cfd_zref,cfd_imax,cfd_dtcmo);
 }*/
 
-  RunControl::RunControl(const RunControl& other) : m_impl(other.m_impl) {}
+  RunControl::RunControl(const RunControl& other) = default;
 
-  RunControl::~RunControl() {}
-
-  RunControl& RunControl::operator=(const RunControl& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  RunControl& RunControl::operator=(const RunControl& other) = default;
 
   bool RunControl::operator==(const RunControl& other) const {
     return m_impl == other.m_impl;
@@ -2203,14 +2178,9 @@ cfd_zref,cfd_imax,cfd_dtcmo);
   Level::Level(int nr, std::string refht, std::string delht, int u_rfht, int u_dlht, std::string name, std::vector<Icon> icons)
     : m_impl(std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl(nr, refht, delht, u_rfht, u_dlht, name, icons))) {}
 
-  Level::Level(const Level& other) : m_impl(other.m_impl) {}
+  Level::Level(const Level& other) = default;
 
-  Level::~Level() {}
-
-  Level& Level::operator=(const Level& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  Level& Level::operator=(const Level& other) = default;
 
   bool Level::operator==(const Level& other) const {
     return m_impl == other.m_impl;
@@ -2297,14 +2267,9 @@ cfd_zref,cfd_imax,cfd_dtcmo);
   DaySchedule::DaySchedule(int nr, int shape, int utyp, int ucnv, std::string name, std::string desc, std::vector<SchedulePoint> points)
     : m_impl(std::shared_ptr<detail::DayScheduleImpl>(new detail::DayScheduleImpl(nr, shape, utyp, ucnv, name, desc, points))) {}
 
-  DaySchedule::DaySchedule(const DaySchedule& other) : m_impl(other.m_impl) {}
+  DaySchedule::DaySchedule(const DaySchedule& other) = default;
 
-  DaySchedule::~DaySchedule() {}
-
-  DaySchedule& DaySchedule::operator=(const DaySchedule& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  DaySchedule& DaySchedule::operator=(const DaySchedule& other) = default;
 
   bool DaySchedule::operator==(const DaySchedule& other) const {
     return m_impl == other.m_impl;
@@ -2383,14 +2348,9 @@ cfd_zref,cfd_imax,cfd_dtcmo);
   WeekSchedule::WeekSchedule(int nr, int utyp, int ucnv, std::string name, std::string desc, std::vector<int> j)
     : m_impl(std::shared_ptr<detail::WeekScheduleImpl>(new detail::WeekScheduleImpl(nr, utyp, ucnv, name, desc, j))) {}
 
-  WeekSchedule::WeekSchedule(const WeekSchedule& other) : m_impl(other.m_impl) {}
+  WeekSchedule::WeekSchedule(const WeekSchedule& other) = default;
 
-  WeekSchedule::~WeekSchedule() {}
-
-  WeekSchedule& WeekSchedule::operator=(const WeekSchedule& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  WeekSchedule& WeekSchedule::operator=(const WeekSchedule& other) = default;
 
   bool WeekSchedule::operator==(const WeekSchedule& other) const {
     return m_impl == other.m_impl;
@@ -2461,14 +2421,9 @@ cfd_zref,cfd_imax,cfd_dtcmo);
   WindPressureProfile::WindPressureProfile(int nr, int type, std::string name, std::string desc, std::vector<PressureCoefficientPoint> coeffs)
     : m_impl(std::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl(nr, type, name, desc, coeffs))) {}
 
-  WindPressureProfile::WindPressureProfile(const WindPressureProfile& other) : m_impl(other.m_impl) {}
+  WindPressureProfile::WindPressureProfile(const WindPressureProfile& other) = default;
 
-  WindPressureProfile::~WindPressureProfile() {}
-
-  WindPressureProfile& WindPressureProfile::operator=(const WindPressureProfile& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  WindPressureProfile& WindPressureProfile::operator=(const WindPressureProfile& other) = default;
 
   bool WindPressureProfile::operator==(const WindPressureProfile& other) const {
     return m_impl == other.m_impl;
@@ -2533,8 +2488,11 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     ControlNode::Type type[37] = {CT_SNS, CT_SCH, CT_SET, CT_CVF, CT_DVF, CT_LOG, CT_PAS, CT_MOD, CT_HYS, CT_ABS, CT_BIN, CT_DLS, CT_DLX,
                                   CT_INT, CT_RAV, CT_INV, CT_AND, CT_OR,  CT_XOR, CT_ADD, CT_SUB, CT_MUL, CT_DIV, CT_SUM, CT_AVG, CT_MAX,
                                   CT_MIN, CT_LLS, CT_ULS, CT_LBS, CT_UBS, CT_LLC, CT_ULC, CT_PC1, CT_PI1, CT_SUP, CT_SPH};
-    for (int i = 0; i < 37; i++)
-      if (string == tags[i]) return type[i];
+    for (int i = 0; i < 37; i++) {
+      if (string == tags[i]) {
+        return type[i];
+      }
+    }
     return ControlNode::UNKNOWN;
   }
 
@@ -2543,7 +2501,7 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     int nr = input.read<int>();
     std::string dataType = input.readString();
     int seqnr = input.read<int>();
-    unsigned int flags = input.read<unsigned int>();
+    auto flags = input.read<unsigned int>();
     int inreq = input.read<int>();
     int n1 = input.read<int>();
     int n2 = input.read<int>();
@@ -2552,13 +2510,13 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     int kind = convertTag(dataType);
     switch (kind) {
       case ControlNode::CT_CVF: {
-        CvfDat* obj = new CvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
+        auto* obj = new CvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
         obj->readDetails(input);
         out = static_cast<ControlNode*>(obj);
         break;
       }
       case ControlNode::CT_DVF: {
-        DvfDat* obj = new DvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
+        auto* obj = new DvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
         obj->readDetails(input);
         out = static_cast<ControlNode*>(obj);
         break;
@@ -2618,8 +2576,6 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     : m_impl(std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr, seqnr, flags, inreq, n1, n2, name, desc, valuename))) {}
 
   CdvDat::CdvDat(const CdvDat& other) : m_impl(other.m_impl) {}
-
-  CdvDat::~CdvDat() {}
 
   CdvDat& CdvDat::operator=(const CdvDat& other) {
     m_impl = other.m_impl;

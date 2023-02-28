@@ -76,7 +76,7 @@ namespace energyplus {
 
         // get all thermal zones in zone list
         for (const IdfExtensibleGroup& idfGroup : target->extensibleGroups()) {
-          WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+          auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
           OptionalWorkspaceObject owo = workspaceGroup.getTarget(0);
           if (owo) {
             mo = translateAndMapWorkspaceObject(owo.get());
@@ -100,7 +100,7 @@ namespace energyplus {
     }
 
     boost::optional<ModelObject> result;
-    for (ThermalZone thermalZone : thermalZones) {
+    for (const ThermalZone& thermalZone : thermalZones) {
 
       // sizing zone is constructed in thermal zone ctor
       openstudio::model::SizingZone sizingZone = thermalZone.sizingZone();

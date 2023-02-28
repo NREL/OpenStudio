@@ -38,7 +38,7 @@ using namespace openstudio;
 
 void polygonMatches(std::vector<std::vector<Point3d>> expectedPolygons, std::vector<Point3d> polygon) {
   int numMatches = 0;
-  for (std::vector<Point3d> expectedPolygon : expectedPolygons) {
+  for (const std::vector<Point3d>& expectedPolygon : expectedPolygons) {
     if (circularEqual(expectedPolygon, polygon, 0.01)) {
       numMatches += 1;
     }
@@ -65,7 +65,7 @@ void polygonMatches(std::vector<std::vector<Point3d>> expectedPolygons, std::vec
 
 // Try to find index of last vertex after opposite edge is found.
 // Index is calculated relatively from given starting vertex.
-int findSplitIndex(std::shared_ptr<Vertex> vertex, std::vector<std::shared_ptr<Vertex>>& lav, std::shared_ptr<Edge> oppositeEdge) {
+int findSplitIndex(std::shared_ptr<Vertex> /*vertex*/, std::vector<std::shared_ptr<Vertex>>& lav, std::shared_ptr<Edge> oppositeEdge) {
   for (unsigned i = 0; i < lav.size(); i++) {
     std::shared_ptr<Vertex> currentVertex = lav[i];
     if (oppositeEdge == currentVertex->previousEdge || oppositeEdge == Vertex::previous(currentVertex, lav)->nextEdge) {
@@ -324,11 +324,12 @@ TEST_F(GeometryFixture, SkeletonInternal_cutLavPart_2) {
 }
 
 TEST_F(GeometryFixture, SkeletonLevelEvents_pickEvent) {
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(-1, -1, 0));
-  footprint.push_back(Point3d(1, -1, 0));
-  footprint.push_back(Point3d(1, 1, 0));
-  footprint.push_back(Point3d(-1, 1, 0));
+  std::vector<Point3d> footprint{
+    {-1, -1, 0},
+    {1, -1, 0},
+    {1, 1, 0},
+    {-1, 1, 0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, 0.0);
 
@@ -346,13 +347,9 @@ TEST_F(GeometryFixture, SkeletonLevelEvents_pickEvent) {
 }
 
 TEST_F(GeometryFixture, SkeletonLevelEvents_multiEdgeEvent) {
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0, 1, 0));
-  footprint.push_back(Point3d(-1, 0, 0));
-  footprint.push_back(Point3d(0, -1, 0));
-  footprint.push_back(Point3d(5, -2, 0));
-  footprint.push_back(Point3d(7, 0, 0));
-  footprint.push_back(Point3d(5, 2, 0));
+  std::vector<Point3d> footprint{
+    {0, 1, 0}, {-1, 0, 0}, {0, -1, 0}, {5, -2, 0}, {7, 0, 0}, {5, 2, 0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, 0.0);
 
@@ -374,15 +371,9 @@ TEST_F(GeometryFixture, SkeletonLevelEvents_multiEdgeEvent) {
 }
 
 TEST_F(GeometryFixture, SkeletonLevelEvents_cross_T1) {
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(-3.0, -1.0, 0.0));
-  footprint.push_back(Point3d(3.0, -1.0, 0.0));
-  footprint.push_back(Point3d(3.0, 1.0, 0.0));
-  footprint.push_back(Point3d(1.0, 1.0, 0.0));
-  footprint.push_back(Point3d(1.0, 3.0, 0.0));
-  footprint.push_back(Point3d(-1.0, 3.0, 0.0));
-  footprint.push_back(Point3d(-1.0, 1.0, 0.0));
-  footprint.push_back(Point3d(-3.0, 1.0, 0.0));
+  std::vector<Point3d> footprint{
+    {-3.0, -1.0, 0.0}, {3.0, -1.0, 0.0}, {3.0, 1.0, 0.0}, {1.0, 1.0, 0.0}, {1.0, 3.0, 0.0}, {-1.0, 3.0, 0.0}, {-1.0, 1.0, 0.0}, {-3.0, 1.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, 0.0);
 
@@ -405,19 +396,10 @@ TEST_F(GeometryFixture, SkeletonLevelEvents_cross_T1) {
 }
 
 TEST_F(GeometryFixture, SkeletonLevelEvents_cross_X1) {
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(-3.0, -1.0, 0.0));
-  footprint.push_back(Point3d(-1.0, -1.0, 0.0));
-  footprint.push_back(Point3d(-1.0, -3.0, 0.0));
-  footprint.push_back(Point3d(1.0, -3.0, 0.0));
-  footprint.push_back(Point3d(1.0, -1.0, 0.0));
-  footprint.push_back(Point3d(3.0, -1.0, 0.0));
-  footprint.push_back(Point3d(3.0, 1.0, 0.0));
-  footprint.push_back(Point3d(1.0, 1.0, 0.0));
-  footprint.push_back(Point3d(1.0, 3.0, 0.0));
-  footprint.push_back(Point3d(-1.0, 3.0, 0.0));
-  footprint.push_back(Point3d(-1.0, 1.0, 0.0));
-  footprint.push_back(Point3d(-3.0, 1.0, 0.0));
+  std::vector<Point3d> footprint{
+    {-3.0, -1.0, 0.0}, {-1.0, -1.0, 0.0}, {-1.0, -3.0, 0.0}, {1.0, -3.0, 0.0}, {1.0, -1.0, 0.0}, {3.0, -1.0, 0.0},
+    {3.0, 1.0, 0.0},   {1.0, 1.0, 0.0},   {1.0, 3.0, 0.0},   {-1.0, 3.0, 0.0}, {-1.0, 1.0, 0.0}, {-3.0, 1.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, 0.0);
 
@@ -443,13 +425,9 @@ TEST_F(GeometryFixture, SkeletonLevelEvents_cross_X1) {
 }
 
 TEST_F(GeometryFixture, SkeletonLevelEvents_double_split) {
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(-6.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-3.0, -6.0, 0.0));
-  footprint.push_back(Point3d(-1.0, -2.0, 0.0));
-  footprint.push_back(Point3d(1.0, -2.0, 0.0));
-  footprint.push_back(Point3d(3.0, -6.0, 0.0));
-  footprint.push_back(Point3d(6.0, 0.0, 0.0));
+  std::vector<Point3d> footprint{
+    {-6.0, 0.0, 0.0}, {-3.0, -6.0, 0.0}, {-1.0, -2.0, 0.0}, {1.0, -2.0, 0.0}, {3.0, -6.0, 0.0}, {6.0, 0.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, 0.0);
 
@@ -474,14 +452,9 @@ TEST_F(GeometryFixture, SkeletonLevelEvents_double_split) {
 }
 
 TEST_F(GeometryFixture, SkeletonLevelEvents_double_split2) {
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(-6.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-3.0, -6.0, 0.0));
-  footprint.push_back(Point3d(-1.0, -2.0, 0.0));
-  footprint.push_back(Point3d(0.0, -3.0, 0.0));
-  footprint.push_back(Point3d(1.0, -2.0, 0.0));
-  footprint.push_back(Point3d(3.0, -6.0, 0.0));
-  footprint.push_back(Point3d(6.0, 0.0, 0.0));
+  std::vector<Point3d> footprint{
+    {-6.0, 0.0, 0.0}, {-3.0, -6.0, 0.0}, {-1.0, -2.0, 0.0}, {0.0, -3.0, 0.0}, {1.0, -2.0, 0.0}, {3.0, -6.0, 0.0}, {6.0, 0.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, 0.0);
 
@@ -508,20 +481,22 @@ TEST_F(GeometryFixture, SkeletonLevelEvents_double_split2) {
 }
 
 TEST_F(GeometryFixture, RoofSkeletonErrorNotHorizontal) {
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 1.0));
-  footprint.push_back(Point3d(25.0, 25.0, 2.0));
-  footprint.push_back(Point3d(25.0, 5.0, 3.0));
-  footprint.push_back(Point3d(5.0, 5.0, 4.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 1.0},
+    {25.0, 25.0, 2.0},
+    {25.0, 5.0, 3.0},
+    {5.0, 5.0, 4.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, 0);
   EXPECT_EQ(0, roofPolygons.size());
 }
 
 TEST_F(GeometryFixture, RoofSkeletonErrorTooFewPoints) {
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 0.0));
-  footprint.push_back(Point3d(25.0, 25.0, 0.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 0.0},
+    {25.0, 25.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, 0);
   EXPECT_EQ(0, roofPolygons.size());
@@ -530,12 +505,9 @@ TEST_F(GeometryFixture, RoofSkeletonErrorTooFewPoints) {
 TEST_F(GeometryFixture, RoofSkeletonErrorStartEndSame) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 0.0));
-  footprint.push_back(Point3d(25.0, 25.0, 0.0));
-  footprint.push_back(Point3d(25.0, 5.0, 0.0));
-  footprint.push_back(Point3d(5.0, 5.0, 0.0));
-  footprint.push_back(Point3d(5.0, 25.0, 0.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 0.0}, {25.0, 25.0, 0.0}, {25.0, 5.0, 0.0}, {5.0, 5.0, 0.0}, {5.0, 25.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
   EXPECT_EQ(0, roofPolygons.size());
@@ -544,11 +516,12 @@ TEST_F(GeometryFixture, RoofSkeletonErrorStartEndSame) {
 TEST_F(GeometryFixture, RoofSkeletonSquare_6_12) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 0.0));
-  footprint.push_back(Point3d(25.0, 25.0, 0.0));
-  footprint.push_back(Point3d(25.0, 5.0, 0.0));
-  footprint.push_back(Point3d(5.0, 5.0, 0.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 0.0},
+    {25.0, 25.0, 0.0},
+    {25.0, 5.0, 0.0},
+    {5.0, 5.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -568,11 +541,12 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12) {
 TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Gable) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 0.0));
-  footprint.push_back(Point3d(25.0, 25.0, 0.0));
-  footprint.push_back(Point3d(25.0, 5.0, 0.0));
-  footprint.push_back(Point3d(5.0, 5.0, 0.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 0.0},
+    {25.0, 25.0, 0.0},
+    {25.0, 5.0, 0.0},
+    {5.0, 5.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateGableRoof(footprint, pitch);
 
@@ -592,11 +566,12 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Gable) {
 TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_0deg) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 5.0, 8.0));
-  footprint.push_back(Point3d(5.0, 5.0, 8.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 8.0},
+    {25.0, 25.0, 8.0},
+    {25.0, 5.0, 8.0},
+    {5.0, 5.0, 8.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateShedRoof(footprint, pitch, 0.0);
 
@@ -616,11 +591,12 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_0deg) {
 TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_90deg) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 5.0, 8.0));
-  footprint.push_back(Point3d(5.0, 5.0, 8.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 8.0},
+    {25.0, 25.0, 8.0},
+    {25.0, 5.0, 8.0},
+    {5.0, 5.0, 8.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateShedRoof(footprint, pitch, 90.0);
 
@@ -640,11 +616,12 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_90deg) {
 TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_180deg) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 5.0, 8.0));
-  footprint.push_back(Point3d(5.0, 5.0, 8.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 8.0},
+    {25.0, 25.0, 8.0},
+    {25.0, 5.0, 8.0},
+    {5.0, 5.0, 8.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateShedRoof(footprint, pitch, 180.0);
 
@@ -664,11 +641,12 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_180deg) {
 TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_270deg) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 5.0, 8.0));
-  footprint.push_back(Point3d(5.0, 5.0, 8.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 8.0},
+    {25.0, 25.0, 8.0},
+    {25.0, 5.0, 8.0},
+    {5.0, 5.0, 8.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateShedRoof(footprint, pitch, 270.0);
 
@@ -688,11 +666,12 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_270deg) {
 TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_45deg) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 25.0, 8.0));
-  footprint.push_back(Point3d(25.0, 5.0, 8.0));
-  footprint.push_back(Point3d(5.0, 5.0, 8.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 8.0},
+    {25.0, 25.0, 8.0},
+    {25.0, 5.0, 8.0},
+    {5.0, 5.0, 8.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateShedRoof(footprint, pitch, 45.0);
 
@@ -716,11 +695,12 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_6_12_Shed_45deg) {
 TEST_F(GeometryFixture, RoofSkeletonSquare_1_12) {
   double pitch = radToDeg(atan(1.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 0.0));
-  footprint.push_back(Point3d(25.0, 25.0, 0.0));
-  footprint.push_back(Point3d(25.0, 5.0, 0.0));
-  footprint.push_back(Point3d(5.0, 5.0, 0.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 0.0},
+    {25.0, 25.0, 0.0},
+    {25.0, 5.0, 0.0},
+    {5.0, 5.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -740,11 +720,12 @@ TEST_F(GeometryFixture, RoofSkeletonSquare_1_12) {
 TEST_F(GeometryFixture, RoofSkeletonRectangle_3_12) {
   double pitch = radToDeg(atan(3.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(5.0, 25.0, 0.0));
-  footprint.push_back(Point3d(40.0, 25.0, 0.0));
-  footprint.push_back(Point3d(40.0, 5.0, 0.0));
-  footprint.push_back(Point3d(5.0, 5.0, 0.0));
+  std::vector<Point3d> footprint{
+    {5.0, 25.0, 0.0},
+    {40.0, 25.0, 0.0},
+    {40.0, 5.0, 0.0},
+    {5.0, 5.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -764,11 +745,12 @@ TEST_F(GeometryFixture, RoofSkeletonRectangle_3_12) {
 TEST_F(GeometryFixture, RoofSkeletonQuadrilateral_6_12) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(10.0, 10.0, 0.0));
-  footprint.push_back(Point3d(-20.0, 20.0, 0.0));
-  footprint.push_back(Point3d(-30.0, 10.0, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {10.0, 10.0, 0.0},
+    {-20.0, 20.0, 0.0},
+    {-30.0, 10.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -792,11 +774,12 @@ TEST_F(GeometryFixture, RoofSkeletonQuadrilateral_6_12) {
 TEST_F(GeometryFixture, RoofSkeletonQuadrilateral_6_12_Gable) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(10.0, 10.0, 0.0));
-  footprint.push_back(Point3d(-20.0, 20.0, 0.0));
-  footprint.push_back(Point3d(-30.0, 10.0, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {10.0, 10.0, 0.0},
+    {-20.0, 20.0, 0.0},
+    {-30.0, 10.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateGableRoof(footprint, pitch);
 
@@ -818,19 +801,10 @@ TEST_F(GeometryFixture, RoofSkeletonQuadrilateral_6_12_Gable) {
 TEST_F(GeometryFixture, RoofSkeletonHshape_3_12) {
   double pitch = radToDeg(atan(3.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0, 25, 0));
-  footprint.push_back(Point3d(10, 25, 0));
-  footprint.push_back(Point3d(10, 18, 0));
-  footprint.push_back(Point3d(20, 18, 0));
-  footprint.push_back(Point3d(20, 25, 0));
-  footprint.push_back(Point3d(30, 25, 0));
-  footprint.push_back(Point3d(30, 5, 0));
-  footprint.push_back(Point3d(20, 5, 0));
-  footprint.push_back(Point3d(20, 12, 0));
-  footprint.push_back(Point3d(10, 12, 0));
-  footprint.push_back(Point3d(10, 5, 0));
-  footprint.push_back(Point3d(0, 5, 0));
+  std::vector<Point3d> footprint{
+    {0, 25, 0}, {10, 25, 0}, {10, 18, 0}, {20, 18, 0}, {20, 25, 0}, {30, 25, 0},
+    {30, 5, 0}, {20, 5, 0},  {20, 12, 0}, {10, 12, 0}, {10, 5, 0},  {0, 5, 0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -858,19 +832,10 @@ TEST_F(GeometryFixture, RoofSkeletonHshape_3_12) {
 TEST_F(GeometryFixture, RoofSkeletonHshape_3_12_Gable) {
   double pitch = radToDeg(atan(3.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0, 25, 0));
-  footprint.push_back(Point3d(10, 25, 0));
-  footprint.push_back(Point3d(10, 18, 0));
-  footprint.push_back(Point3d(20, 18, 0));
-  footprint.push_back(Point3d(20, 25, 0));
-  footprint.push_back(Point3d(30, 25, 0));
-  footprint.push_back(Point3d(30, 5, 0));
-  footprint.push_back(Point3d(20, 5, 0));
-  footprint.push_back(Point3d(20, 12, 0));
-  footprint.push_back(Point3d(10, 12, 0));
-  footprint.push_back(Point3d(10, 5, 0));
-  footprint.push_back(Point3d(0, 5, 0));
+  std::vector<Point3d> footprint{
+    {0, 25, 0}, {10, 25, 0}, {10, 18, 0}, {20, 18, 0}, {20, 25, 0}, {30, 25, 0},
+    {30, 5, 0}, {20, 5, 0},  {20, 12, 0}, {10, 12, 0}, {10, 5, 0},  {0, 5, 0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateGableRoof(footprint, pitch);
 
@@ -898,19 +863,10 @@ TEST_F(GeometryFixture, RoofSkeletonHshape_3_12_Gable) {
 TEST_F(GeometryFixture, RoofSkeletonHshape_3_12_Shed_0deg) {
   double pitch = radToDeg(atan(3.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0, 25, 0));
-  footprint.push_back(Point3d(10, 25, 0));
-  footprint.push_back(Point3d(10, 18, 0));
-  footprint.push_back(Point3d(20, 18, 0));
-  footprint.push_back(Point3d(20, 25, 0));
-  footprint.push_back(Point3d(30, 25, 0));
-  footprint.push_back(Point3d(30, 5, 0));
-  footprint.push_back(Point3d(20, 5, 0));
-  footprint.push_back(Point3d(20, 12, 0));
-  footprint.push_back(Point3d(10, 12, 0));
-  footprint.push_back(Point3d(10, 5, 0));
-  footprint.push_back(Point3d(0, 5, 0));
+  std::vector<Point3d> footprint{
+    {0, 25, 0}, {10, 25, 0}, {10, 18, 0}, {20, 18, 0}, {20, 25, 0}, {30, 25, 0},
+    {30, 5, 0}, {20, 5, 0},  {20, 12, 0}, {10, 12, 0}, {10, 5, 0},  {0, 5, 0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateShedRoof(footprint, pitch, 0.0);
 
@@ -939,12 +895,9 @@ TEST_F(GeometryFixture, RoofSkeletonHshape_3_12_Shed_0deg) {
 TEST_F(GeometryFixture, RoofSkeletonTest6_9) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(119.0, 158.0, 0.0));
-  footprint.push_back(Point3d(259.0, 159.0, 0.0));
-  footprint.push_back(Point3d(248.0, 63.0, 0.0));
-  footprint.push_back(Point3d(126.0, 60.0, 0.0));
-  footprint.push_back(Point3d(90.0, 106.0, 0.0));
+  std::vector<Point3d> footprint{
+    {119.0, 158.0, 0.0}, {259.0, 159.0, 0.0}, {248.0, 63.0, 0.0}, {126.0, 60.0, 0.0}, {90.0, 106.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -972,12 +925,9 @@ TEST_F(GeometryFixture, RoofSkeletonTest6_9) {
 TEST_F(GeometryFixture, RoofSkeletonTest7) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(0.0, -1.0, 0.0));
-  footprint.push_back(Point3d(1.0, -1.0, 0.0));
-  footprint.push_back(Point3d(1.0, 1.0, 0.0));
-  footprint.push_back(Point3d(-1.0, 1.0, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {1.0, -1.0, 0.0}, {1.0, 1.0, 0.0}, {-1.0, 1.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1002,15 +952,9 @@ TEST_F(GeometryFixture, RoofSkeletonTest7) {
 TEST_F(GeometryFixture, RoofSkeletonTest8) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(-1.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-1.2, -2.0, 0.0));
-  footprint.push_back(Point3d(1.2, -2.0, 0.0));
-  footprint.push_back(Point3d(1.0, 0.5, 0.0));
-  footprint.push_back(Point3d(2.0, -0.2, 0.0));
-  footprint.push_back(Point3d(2.0, 1.0, 0.0));
-  footprint.push_back(Point3d(-2.0, 1.2, 0.0));
-  footprint.push_back(Point3d(-2.0, -0.2, 0.0));
+  std::vector<Point3d> footprint{
+    {-1.0, 0.0, 0.0}, {-1.2, -2.0, 0.0}, {1.2, -2.0, 0.0}, {1.0, 0.5, 0.0}, {2.0, -0.2, 0.0}, {2.0, 1.0, 0.0}, {-2.0, 1.2, 0.0}, {-2.0, -0.2, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1047,23 +991,24 @@ TEST_F(GeometryFixture, RoofSkeletonTest8) {
 TEST_F(GeometryFixture, RoofSkeletonTestB1) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(0.7904833761575505, 8.520486967634694, 0.0));
-  footprint.push_back(Point3d(5.978418789681697, 8.712497973454056, 0.0));
-  footprint.push_back(Point3d(5.95269105167549, -2.6355979260267777, 0.0));
-  footprint.push_back(Point3d(4.566910029680516, -2.6324561649763485, 0.0));
-  footprint.push_back(Point3d(4.5603585630377115, -5.522203838861205, 0.0));
-  footprint.push_back(Point3d(6.043569207647302, -5.525566487736131, 0.0));
-  footprint.push_back(Point3d(6.038049999411376, -7.960001358506733, 0.0));
-  footprint.push_back(Point3d(9.886846028372108, -7.968727126586532, 0.0));
-  footprint.push_back(Point3d(9.902081573281308, -1.248570683335708, 0.0));
-  footprint.push_back(Point3d(13.742215004880482, -1.2572768087753285, 0.0));
-  footprint.push_back(Point3d(13.75400717659087, 3.9440624000165103, 0.0));
-  footprint.push_back(Point3d(9.194585721152315, 3.9543992526769878, 0.0));
-  footprint.push_back(Point3d(5.823717342947504, 17.30434988614582, 0.0));
-  footprint.push_back(Point3d(5.808494957384097, 10.589997844496661, 0.0));
-  footprint.push_back(Point3d(-0.13214359029800526, 10.603466113057067, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {0.7904833761575505, 8.520486967634694, 0.0},
+    {5.978418789681697, 8.712497973454056, 0.0},
+    {5.95269105167549, -2.6355979260267777, 0.0},
+    {4.566910029680516, -2.6324561649763485, 0.0},
+    {4.5603585630377115, -5.522203838861205, 0.0},
+    {6.043569207647302, -5.525566487736131, 0.0},
+    {6.038049999411376, -7.960001358506733, 0.0},
+    {9.886846028372108, -7.968727126586532, 0.0},
+    {9.902081573281308, -1.248570683335708, 0.0},
+    {13.742215004880482, -1.2572768087753285, 0.0},
+    {13.75400717659087, 3.9440624000165103, 0.0},
+    {9.194585721152315, 3.9543992526769878, 0.0},
+    {5.823717342947504, 17.30434988614582, 0.0},
+    {5.808494957384097, 10.589997844496661, 0.0},
+    {-0.13214359029800526, 10.603466113057067, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1132,22 +1077,23 @@ TEST_F(GeometryFixture, RoofSkeletonTestB1) {
 TEST_F(GeometryFixture, RoofSkeletonTestB2) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(0.7904833761549828, 8.520486967607015, 0.0));
-  footprint.push_back(Point3d(5.9784187896622765, 8.712497973425755, 0.0));
-  footprint.push_back(Point3d(5.952691051656153, -2.6355979260182156, 0.0));
-  footprint.push_back(Point3d(4.56691002966568, -2.632456164967797, 0.0));
-  footprint.push_back(Point3d(4.560358563022897, -5.522203838843264, 0.0));
-  footprint.push_back(Point3d(6.0435692076276695, -5.525566487718182, 0.0));
-  footprint.push_back(Point3d(6.038049999391761, -7.960001358480875, 0.0));
-  footprint.push_back(Point3d(9.886846028339992, -7.968727126560646, 0.0));
-  footprint.push_back(Point3d(9.902081573249141, -1.2485706833316517, 0.0));
-  footprint.push_back(Point3d(13.74221500483584, -1.2572768087712447, 0.0));
-  footprint.push_back(Point3d(13.754007176546189, 3.944062400003698, 0.0));
-  footprint.push_back(Point3d(9.194585721122445, 3.9543992526641416, 0.0));
-  footprint.push_back(Point3d(9.840828592998651, 10.391220834155359, 0.0));
-  footprint.push_back(Point3d(-0.24573045314637643, 10.433085818392197, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {0.7904833761549828, 8.520486967607015, 0.0},
+    {5.9784187896622765, 8.712497973425755, 0.0},
+    {5.952691051656153, -2.6355979260182156, 0.0},
+    {4.56691002966568, -2.632456164967797, 0.0},
+    {4.560358563022897, -5.522203838843264, 0.0},
+    {6.0435692076276695, -5.525566487718182, 0.0},
+    {6.038049999391761, -7.960001358480875, 0.0},
+    {9.886846028339992, -7.968727126560646, 0.0},
+    {9.902081573249141, -1.2485706833316517, 0.0},
+    {13.74221500483584, -1.2572768087712447, 0.0},
+    {13.754007176546189, 3.944062400003698, 0.0},
+    {9.194585721122445, 3.9543992526641416, 0.0},
+    {9.840828592998651, 10.391220834155359, 0.0},
+    {-0.24573045314637643, 10.433085818392197, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1213,14 +1159,15 @@ TEST_F(GeometryFixture, RoofSkeletonTestB2) {
 TEST_F(GeometryFixture, RoofSkeletonTestB3) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(0.0853589477356087, -5.32440343246266, 0.0));
-  footprint.push_back(Point3d(3.934154976683839, -5.33312920054243, 0.0));
-  footprint.push_back(Point3d(3.9493905215929885, 1.387027242686564, 0.0));
-  footprint.push_back(Point3d(7.789523953179687, 1.378321117246971, 0.0));
-  footprint.push_back(Point3d(3.2418946694662925, 6.589997178682357, 0.0));
-  footprint.push_back(Point3d(-0.4480081827933864, 6.565094698194268, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {0.0853589477356087, -5.32440343246266, 0.0},
+    {3.934154976683839, -5.33312920054243, 0.0},
+    {3.9493905215929885, 1.387027242686564, 0.0},
+    {7.789523953179687, 1.378321117246971, 0.0},
+    {3.2418946694662925, 6.589997178682357, 0.0},
+    {-0.4480081827933864, 6.565094698194268, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1257,12 +1204,13 @@ TEST_F(GeometryFixture, RoofSkeletonTestB3) {
 TEST_F(GeometryFixture, RoofSkeletonTestB4) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-1.192493260706565, -5.6367673060470285, 0.0));
-  footprint.push_back(Point3d(2.656302768241665, -5.645493074126799, 0.0));
-  footprint.push_back(Point3d(6.511671744737513, 1.0659572436626021, 0.0));
-  footprint.push_back(Point3d(-1.7258603912355601, 6.252730824609899, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {-1.192493260706565, -5.6367673060470285, 0.0},
+    {2.656302768241665, -5.645493074126799, 0.0},
+    {6.511671744737513, 1.0659572436626021, 0.0},
+    {-1.7258603912355601, 6.252730824609899, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1292,12 +1240,13 @@ TEST_F(GeometryFixture, RoofSkeletonTestB4) {
 TEST_F(GeometryFixture, RoofSkeletonTestB5) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-1.192493260706565, -5.6367673060470285, 0.0));
-  footprint.push_back(Point3d(2.656302768241665, -5.645493074126799, 0.0));
-  footprint.push_back(Point3d(7.051209343876594, 2.9401404828825903, 0.0));
-  footprint.push_back(Point3d(-1.7258603912355601, 6.252730824609899, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {-1.192493260706565, -5.6367673060470285, 0.0},
+    {2.656302768241665, -5.645493074126799, 0.0},
+    {7.051209343876594, 2.9401404828825903, 0.0},
+    {-1.7258603912355601, 6.252730824609899, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1327,14 +1276,15 @@ TEST_F(GeometryFixture, RoofSkeletonTestB5) {
 TEST_F(GeometryFixture, RoofSkeletonTestB6) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-1.192493260706565, -5.636767306047028, 0.0));
-  footprint.push_back(Point3d(2.656302768241665, -5.645493074126798, 0.0));
-  footprint.push_back(Point3d(5.716563703938576, 6.120572646649897, 0.0));
-  footprint.push_back(Point3d(-5.985367752852362, 6.423111118668768, 0.0));
-  footprint.push_back(Point3d(-6.297731626436729, -3.6293262553813097, 0.0));
-  footprint.push_back(Point3d(-3.4580600517873807, 1.3968924313579514, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {-1.192493260706565, -5.636767306047028, 0.0},
+    {2.656302768241665, -5.645493074126798, 0.0},
+    {5.716563703938576, 6.120572646649897, 0.0},
+    {-5.985367752852362, 6.423111118668768, 0.0},
+    {-6.297731626436729, -3.6293262553813097, 0.0},
+    {-3.4580600517873807, 1.3968924313579514, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1371,13 +1321,14 @@ TEST_F(GeometryFixture, RoofSkeletonTestB6) {
 TEST_F(GeometryFixture, RoofSkeletonTestB7) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-1.1889778921584675, -7.356451670462243, 0.0));
-  footprint.push_back(Point3d(5.7257149714503175, -12.035132476438635, 0.0));
-  footprint.push_back(Point3d(11.739705976732338, -17.194940549920428, 0.0));
-  footprint.push_back(Point3d(0.8357970425329011, -1.0288592710693223, 0.0));
-  footprint.push_back(Point3d(7.360455718922119, -6.229013606285628, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {-1.1889778921584675, -7.356451670462243, 0.0},
+    {5.7257149714503175, -12.035132476438635, 0.0},
+    {11.739705976732338, -17.194940549920428, 0.0},
+    {0.8357970425329011, -1.0288592710693223, 0.0},
+    {7.360455718922119, -6.229013606285628, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1411,12 +1362,13 @@ TEST_F(GeometryFixture, RoofSkeletonTestB7) {
 TEST_F(GeometryFixture, RoofSkeletonTestB8) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-1.1889778921584675, -7.356451670462243, 0.0));
-  footprint.push_back(Point3d(5.7257149714503175, -12.035132476438635, 0.0));
-  footprint.push_back(Point3d(11.739705976732338, -17.194940549920428, 0.0));
-  footprint.push_back(Point3d(0.8357970425329011, -1.0288592710693223, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {-1.1889778921584675, -7.356451670462243, 0.0},
+    {5.7257149714503175, -12.035132476438635, 0.0},
+    {11.739705976732338, -17.194940549920428, 0.0},
+    {0.8357970425329011, -1.0288592710693223, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1447,15 +1399,10 @@ TEST_F(GeometryFixture, RoofSkeletonTestB8) {
 TEST_F(GeometryFixture, RoofSkeletonTest9) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(77.0, 85.0, 0.0));
-  footprint.push_back(Point3d(198.0, 85.0, 0.0));
-  footprint.push_back(Point3d(196.0, 139.0, 0.0));
-  footprint.push_back(Point3d(150.0, 119.0, 0.0));
-  footprint.push_back(Point3d(157.0, 177.0, 0.0));
-  footprint.push_back(Point3d(112.0, 179.0, 0.0));
-  footprint.push_back(Point3d(125.0, 130.0, 0.0));
-  footprint.push_back(Point3d(68.0, 118.0, 0.0));
+  std::vector<Point3d> footprint{
+    {77.0, 85.0, 0.0},   {198.0, 85.0, 0.0},  {196.0, 139.0, 0.0}, {150.0, 119.0, 0.0},
+    {157.0, 177.0, 0.0}, {112.0, 179.0, 0.0}, {125.0, 130.0, 0.0}, {68.0, 118.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1492,17 +1439,18 @@ TEST_F(GeometryFixture, RoofSkeletonTest9) {
 TEST_F(GeometryFixture, RoofSkeletonTestB10) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(23.542862199718826, -1.0957017437087124, 0.0));
-  footprint.push_back(Point3d(12.89581137652037, 1.5573908447103584, 0.0));
-  footprint.push_back(Point3d(13.68678342709616, 5.195862274901293, 0.0));
-  footprint.push_back(Point3d(30.92997412599037, 6.619611963708646, 0.0));
-  footprint.push_back(Point3d(16.53428280871175, 7.568778425199767, 0.0));
-  footprint.push_back(Point3d(13.05400578686415, 8.676139297892002, 0.0));
-  footprint.push_back(Point3d(-4.188927083681472, 7.336703572978552, 0.0));
-  footprint.push_back(Point3d(10.196014852102863, 4.475707108744242, 0.0));
-  footprint.push_back(Point3d(8.782756714583655, 1.5573908412810287, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {23.542862199718826, -1.0957017437087124, 0.0},
+    {12.89581137652037, 1.5573908447103584, 0.0},
+    {13.68678342709616, 5.195862274901293, 0.0},
+    {30.92997412599037, 6.619611963708646, 0.0},
+    {16.53428280871175, 7.568778425199767, 0.0},
+    {13.05400578686415, 8.676139297892002, 0.0},
+    {-4.188927083681472, 7.336703572978552, 0.0},
+    {10.196014852102863, 4.475707108744242, 0.0},
+    {8.782756714583655, 1.5573908412810287, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1551,23 +1499,24 @@ TEST_F(GeometryFixture, RoofSkeletonTestB10) {
 TEST_F(GeometryFixture, RoofSkeletonTestB11) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-0.2885918221241157, 14.001053106358517, 0.0));
-  footprint.push_back(Point3d(4.899343591400031, 14.19306411217788, 0.0));
-  footprint.push_back(Point3d(4.873615853393824, 2.8449682126970464, 0.0));
-  footprint.push_back(Point3d(3.4878348313988496, 2.8481099737474747, 0.0));
-  footprint.push_back(Point3d(3.4812833647560453, -0.04163770013738066, 0.0));
-  footprint.push_back(Point3d(4.964494009365636, -0.04500034901230876, 0.0));
-  footprint.push_back(Point3d(4.95897480112971, -2.4794352197829106, 0.0));
-  footprint.push_back(Point3d(8.807770830090442, -2.4881609878627096, 0.0));
-  footprint.push_back(Point3d(8.823006374999641, 4.231995455388115, 0.0));
-  footprint.push_back(Point3d(12.663139806598815, 4.223289329948495, 0.0));
-  footprint.push_back(Point3d(12.674931978309203, 9.424628538740333, 0.0));
-  footprint.push_back(Point3d(8.115510522870647, 9.43496539140081, 0.0));
-  footprint.push_back(Point3d(4.744642144665839, 22.784916024869645, 0.0));
-  footprint.push_back(Point3d(4.729419759102431, 16.070563983220485, 0.0));
-  footprint.push_back(Point3d(-1.2112187885796715, 16.08403225178089, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {-0.2885918221241157, 14.001053106358517, 0.0},
+    {4.899343591400031, 14.19306411217788, 0.0},
+    {4.873615853393824, 2.8449682126970464, 0.0},
+    {3.4878348313988496, 2.8481099737474747, 0.0},
+    {3.4812833647560453, -0.04163770013738066, 0.0},
+    {4.964494009365636, -0.04500034901230876, 0.0},
+    {4.95897480112971, -2.4794352197829106, 0.0},
+    {8.807770830090442, -2.4881609878627096, 0.0},
+    {8.823006374999641, 4.231995455388115, 0.0},
+    {12.663139806598815, 4.223289329948495, 0.0},
+    {12.674931978309203, 9.424628538740333, 0.0},
+    {8.115510522870647, 9.43496539140081, 0.0},
+    {4.744642144665839, 22.784916024869645, 0.0},
+    {4.729419759102431, 16.070563983220485, 0.0},
+    {-1.2112187885796715, 16.08403225178089, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1636,15 +1585,11 @@ TEST_F(GeometryFixture, RoofSkeletonTestB11) {
 TEST_F(GeometryFixture, RoofSkeletonTestB11_b) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(4.899343591400031, 14.19306411217788, 0.0));
-  footprint.push_back(Point3d(4.873615853393824, 2.8449682126970464, 0.0));
-  footprint.push_back(Point3d(3.4878348313988496, 2.8481099737474747, 0.0));
-  footprint.push_back(Point3d(3.4812833647560453, -0.04163770013738066, 0.0));
-  footprint.push_back(Point3d(4.964494009365636, -0.04500034901230876, 0.0));
-  footprint.push_back(Point3d(4.95897480112971, -2.4794352197829106, 0.0));
-  footprint.push_back(Point3d(8.807770830090442, -2.4881609878627096, 0.0));
-  footprint.push_back(Point3d(8.823006374999641, 4.231995455388115, 0.0));
+  std::vector<Point3d> footprint{
+    {4.899343591400031, 14.19306411217788, 0.0},     {4.873615853393824, 2.8449682126970464, 0.0},   {3.4878348313988496, 2.8481099737474747, 0.0},
+    {3.4812833647560453, -0.04163770013738066, 0.0}, {4.964494009365636, -0.04500034901230876, 0.0}, {4.95897480112971, -2.4794352197829106, 0.0},
+    {8.807770830090442, -2.4881609878627096, 0.0},   {8.823006374999641, 4.231995455388115, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1684,23 +1629,24 @@ TEST_F(GeometryFixture, RoofSkeletonTestB11_b) {
 TEST_F(GeometryFixture, RoofSkeletonTestB12) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(1.6082838074612242, 15.395815413439262, 0.0));
-  footprint.push_back(Point3d(6.796219518140479, 15.587826427398873, 0.0));
-  footprint.push_back(Point3d(6.7704917786606345, 4.239729879063727, 0.0));
-  footprint.push_back(Point3d(5.384710677004972, 4.2428716408656655, 0.0));
-  footprint.push_back(Point3d(5.37815921027269, 1.3531237986037645, 0.0));
-  footprint.push_back(Point3d(6.861369940123552, 1.3497611512508971, 0.0));
-  footprint.push_back(Point3d(6.855850731428608, -1.084673859531076, 0.0));
-  footprint.push_back(Point3d(10.704646980698193, -1.093399628682226, 0.0));
-  footprint.push_back(Point3d(10.719882526622944, 5.626757200629533, 0.0));
-  footprint.push_back(Point3d(14.560016178034793, 5.6180510758343525, 0.0));
-  footprint.push_back(Point3d(14.571808350563504, 10.819390581977487, 0.0));
-  footprint.push_back(Point3d(10.01238663382704, 10.829727434086928, 0.0));
-  footprint.push_back(Point3d(6.64151806240239, 24.179678832787182, 0.0));
-  footprint.push_back(Point3d(6.626295676252851, 17.465326408838887, 0.0));
-  footprint.push_back(Point3d(0.6856567883022331, 17.478794675312955, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {1.6082838074612242, 15.395815413439262, 0.0},
+    {6.796219518140479, 15.587826427398873, 0.0},
+    {6.7704917786606345, 4.239729879063727, 0.0},
+    {5.384710677004972, 4.2428716408656655, 0.0},
+    {5.37815921027269, 1.3531237986037645, 0.0},
+    {6.861369940123552, 1.3497611512508971, 0.0},
+    {6.855850731428608, -1.084673859531076, 0.0},
+    {10.704646980698193, -1.093399628682226, 0.0},
+    {10.719882526622944, 5.626757200629533, 0.0},
+    {14.560016178034793, 5.6180510758343525, 0.0},
+    {14.571808350563504, 10.819390581977487, 0.0},
+    {10.01238663382704, 10.829727434086928, 0.0},
+    {6.64151806240239, 24.179678832787182, 0.0},
+    {6.626295676252851, 17.465326408838887, 0.0},
+    {0.6856567883022331, 17.478794675312955, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1769,27 +1715,28 @@ TEST_F(GeometryFixture, RoofSkeletonTestB12) {
 TEST_F(GeometryFixture, RoofSkeletonTestB13) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-0.03697835689094475, 17.903291653889664, 0.0));
-  footprint.push_back(Point3d(9.36122931562474, 17.922703185404146, 0.0));
-  footprint.push_back(Point3d(9.399539490923859, -0.6253964219022965, 0.0));
-  footprint.push_back(Point3d(6.897780217346079, -0.6305636811510293, 0.0));
-  footprint.push_back(Point3d(6.907305814387495, -5.242438102429183, 0.0));
-  footprint.push_back(Point3d(9.496043768204736, -5.2367356072030695, 0.0));
-  footprint.push_back(Point3d(9.673537498409361, -7.819464124646299, 0.0));
-  footprint.push_back(Point3d(19.728934851080233, -7.7986952031890375, 0.0));
-  footprint.push_back(Point3d(19.715280237589244, -1.1877328304801722, 0.0));
-  footprint.push_back(Point3d(23.581205989632387, -1.1797479507986637, 0.0));
-  footprint.push_back(Point3d(23.570459756724986, 4.023104657038741, 0.0));
-  footprint.push_back(Point3d(19.065027189523686, 4.01379891209519, 0.0));
-  footprint.push_back(Point3d(19.009685241927738, 30.807932065847332, 0.0));
-  footprint.push_back(Point3d(9.439383865135643, 30.78816508512935, 0.0));
-  footprint.push_back(Point3d(9.453189359125524, 24.10415305431124, 0.0));
-  footprint.push_back(Point3d(-0.01730198014624129, 24.08459222736407, 0.0));
-  footprint.push_back(Point3d(-0.030597953439544412, 30.521916694234474, 0.0));
-  footprint.push_back(Point3d(-10.417861267451112, 30.500462317733504, 0.0));
-  footprint.push_back(Point3d(-10.354819907553885, -0.021387367337700525, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {-0.03697835689094475, 17.903291653889664, 0.0},
+    {9.36122931562474, 17.922703185404146, 0.0},
+    {9.399539490923859, -0.6253964219022965, 0.0},
+    {6.897780217346079, -0.6305636811510293, 0.0},
+    {6.907305814387495, -5.242438102429183, 0.0},
+    {9.496043768204736, -5.2367356072030695, 0.0},
+    {9.673537498409361, -7.819464124646299, 0.0},
+    {19.728934851080233, -7.7986952031890375, 0.0},
+    {19.715280237589244, -1.1877328304801722, 0.0},
+    {23.581205989632387, -1.1797479507986637, 0.0},
+    {23.570459756724986, 4.023104657038741, 0.0},
+    {19.065027189523686, 4.01379891209519, 0.0},
+    {19.009685241927738, 30.807932065847332, 0.0},
+    {9.439383865135643, 30.78816508512935, 0.0},
+    {9.453189359125524, 24.10415305431124, 0.0},
+    {-0.01730198014624129, 24.08459222736407, 0.0},
+    {-0.030597953439544412, 30.521916694234474, 0.0},
+    {-10.417861267451112, 30.500462317733504, 0.0},
+    {-10.354819907553885, -0.021387367337700525, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1872,11 +1819,12 @@ TEST_F(GeometryFixture, RoofSkeletonTestB13) {
 TEST_F(GeometryFixture, RoofSkeletonCircularAddTest) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(50.0, 50.0, 0.0));
-  footprint.push_back(Point3d(100.0, 50.0, 0.0));
-  footprint.push_back(Point3d(100.0, 100.0, 0.0));
-  footprint.push_back(Point3d(50.0, 100.0, 0.0));
+  std::vector<Point3d> footprint{
+    {50.0, 50.0, 0.0},
+    {100.0, 50.0, 0.0},
+    {100.0, 100.0, 0.0},
+    {50.0, 100.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1896,11 +1844,12 @@ TEST_F(GeometryFixture, RoofSkeletonCircularAddTest) {
 TEST_F(GeometryFixture, RoofSkeletonCircularAddTest2) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(50.0, 50.0, 0.0));
-  footprint.push_back(Point3d(150.0, 50.0, 0.0));
-  footprint.push_back(Point3d(150.0, 100.0, 0.0));
-  footprint.push_back(Point3d(50.0, 100.0, 0.0));
+  std::vector<Point3d> footprint{
+    {50.0, 50.0, 0.0},
+    {150.0, 50.0, 0.0},
+    {150.0, 100.0, 0.0},
+    {50.0, 100.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1920,11 +1869,12 @@ TEST_F(GeometryFixture, RoofSkeletonCircularAddTest2) {
 TEST_F(GeometryFixture, RoofSkeletonCircularAddTest2Clockwise) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(50.0, 100.0, 0.0));
-  footprint.push_back(Point3d(150.0, 100.0, 0.0));
-  footprint.push_back(Point3d(150.0, 50.0, 0.0));
-  footprint.push_back(Point3d(50.0, 50.0, 0.0));
+  std::vector<Point3d> footprint{
+    {50.0, 100.0, 0.0},
+    {150.0, 100.0, 0.0},
+    {150.0, 50.0, 0.0},
+    {50.0, 50.0, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -1944,19 +1894,20 @@ TEST_F(GeometryFixture, RoofSkeletonCircularAddTest2Clockwise) {
 TEST_F(GeometryFixture, RoofExtendedSkeleton_2) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(0.8276566632200648, 11.888928006049232, 0.0));
-  footprint.push_back(Point3d(-27.730160414042565, 13.959474241319969, 0.0));
-  footprint.push_back(Point3d(-24.199801903849206, 64.16488993327617, 0.0));
-  footprint.push_back(Point3d(-35.2962607066056, 62.973758421480234, 0.0));
-  footprint.push_back(Point3d(-38.51167022106408, 16.998503173051198, 0.0));
-  footprint.push_back(Point3d(-39.01705349327869, 17.065295035165335, 0.0));
-  footprint.push_back(Point3d(-39.830061365976746, 5.732953688918397, 0.0));
-  footprint.push_back(Point3d(-39.31735369851071, 5.643898052309142, 0.0));
-  footprint.push_back(Point3d(-42.53276321298834, -39.9524008863303, 0.0));
-  footprint.push_back(Point3d(-31.53884594371366, -40.8652136123464, 0.0));
-  footprint.push_back(Point3d(-28.42597796271775, 2.014882080669223, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {0.8276566632200648, 11.888928006049232, 0.0},
+    {-27.730160414042565, 13.959474241319969, 0.0},
+    {-24.199801903849206, 64.16488993327617, 0.0},
+    {-35.2962607066056, 62.973758421480234, 0.0},
+    {-38.51167022106408, 16.998503173051198, 0.0},
+    {-39.01705349327869, 17.065295035165335, 0.0},
+    {-39.830061365976746, 5.732953688918397, 0.0},
+    {-39.31735369851071, 5.643898052309142, 0.0},
+    {-42.53276321298834, -39.9524008863303, 0.0},
+    {-31.53884594371366, -40.8652136123464, 0.0},
+    {-28.42597796271775, 2.014882080669223, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -2011,101 +1962,102 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_2) {
 TEST_F(GeometryFixture, RoofExtendedSkeleton_3) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-0.695841208347133, -9.161985802862006, 0.0));
-  footprint.push_back(Point3d(-9.338921480375689, -8.571967728493888, 0.0));
-  footprint.push_back(Point3d(-17.703665269065453, -7.447593490720266, 0.0));
-  footprint.push_back(Point3d(-17.42532878570745, -3.373126538389357, 0.0));
-  footprint.push_back(Point3d(-34.86530686005406, -2.0261026523114936, 0.0));
-  footprint.push_back(Point3d(-37.17989445833143, -1.81458647758825, 0.0));
-  footprint.push_back(Point3d(-55.19119478795656, -0.5677541139705511, 0.0));
-  footprint.push_back(Point3d(-58.11372786299535, -38.75186865681468, 0.0));
-  footprint.push_back(Point3d(-50.07126842338943, -39.34188353361671, 0.0));
-  footprint.push_back(Point3d(-51.126017202341586, -51.888034167850435, 0.0));
-  footprint.push_back(Point3d(-51.536197283087745, -56.652669598441975, 0.0));
-  footprint.push_back(Point3d(-64.58138877837769, -55.528305063057076, 0.0));
-  footprint.push_back(Point3d(-72.68244537234855, -54.81583632791774, 0.0));
-  footprint.push_back(Point3d(-69.18859004203122, -7.625712198986719, 0.0));
-  footprint.push_back(Point3d(-79.09883377766633, -6.7239861902833695, 0.0));
-  footprint.push_back(Point3d(-78.63738118687476, 1.1689057121689643, 0.0));
-  footprint.push_back(Point3d(-88.04222446591587, 2.070633143170312, 0.0));
-  footprint.push_back(Point3d(-87.65401831812835, 7.380808750431726, 0.0));
-  footprint.push_back(Point3d(-92.65675037390812, 7.748179577427749, 0.0));
-  footprint.push_back(Point3d(-107.56972616530382, 8.816894846881922, 0.0));
-  footprint.push_back(Point3d(-112.57245822106444, 9.184265769474024, 0.0));
-  footprint.push_back(Point3d(-112.96066436885195, 3.77389646371617, 0.0));
-  footprint.push_back(Point3d(-114.92366904082473, 3.8629559986240167, 0.0));
-  footprint.push_back(Point3d(-115.04086334961207, 2.538195570451535, 0.0));
-  footprint.push_back(Point3d(-116.69623296100607, 2.638387525545255, 0.0));
-  footprint.push_back(Point3d(-116.62298651802115, 3.952015535370265, 0.0));
-  footprint.push_back(Point3d(-122.2629626277448, 4.308253694611125, 0.0));
-  footprint.push_back(Point3d(-122.84893417162414, -3.573510226744844, 0.0));
-  footprint.push_back(Point3d(-133.24992907525242, -2.7719754218481114, 0.0));
-  footprint.push_back(Point3d(-136.29698110334067, -45.63166089550802, 0.0));
-  footprint.push_back(Point3d(-136.56066829809785, -49.739493961847415, 0.0));
-  footprint.push_back(Point3d(-136.5972915195616, -49.87308197764537, 0.0));
-  footprint.push_back(Point3d(-144.44198556309482, -49.038156822071414, 0.0));
-  footprint.push_back(Point3d(-154.15446390269554, -47.99171711813307, 0.0));
-  footprint.push_back(Point3d(-152.87997579476948, -31.693949992923137, 0.0));
-  footprint.push_back(Point3d(-148.39729348418453, -32.06131821982851, 0.0));
-  footprint.push_back(Point3d(-145.6944997381005, 6.067179931716822, 0.0));
-  footprint.push_back(Point3d(-183.84124724381752, 8.939351818832364, 0.0));
-  footprint.push_back(Point3d(-184.18550552584088, 4.33051857910408, 0.0));
-  footprint.push_back(Point3d(-188.32392955442162, 4.675624318771895, 0.0));
-  footprint.push_back(Point3d(-199.20835098172356, 5.499425199435763, 0.0));
-  footprint.push_back(Point3d(-201.0981092106731, 5.655279433782141, 0.0));
-  footprint.push_back(Point3d(-201.0981092106731, 5.911325686340149, 0.0));
-  footprint.push_back(Point3d(-200.28507369355776, 14.483315691783218, 0.0));
-  footprint.push_back(Point3d(-199.75037465980046, 23.623075402548864, 0.0));
-  footprint.push_back(Point3d(-195.63392456412095, 23.222306088178982, 0.0));
-  footprint.push_back(Point3d(-192.47700287154572, 67.60768288193731, 0.0));
-  footprint.push_back(Point3d(-193.30468767722357, 67.66334572802566, 0.0));
-  footprint.push_back(Point3d(-193.24609052287775, 68.36469764229747, 0.0));
-  footprint.push_back(Point3d(-193.13622085837167, 68.36469764229747, 0.0));
-  footprint.push_back(Point3d(-192.38178249564044, 80.51034556245332, 0.0));
-  footprint.push_back(Point3d(-192.50630144874737, 80.54374334940206, 0.0));
-  footprint.push_back(Point3d(-192.41108107288036, 81.5902073856052, 0.0));
-  footprint.push_back(Point3d(-191.62734413292836, 81.5456769983088, 0.0));
-  footprint.push_back(Point3d(-188.2946309771817, 125.5975377539537, 0.0));
-  footprint.push_back(Point3d(-192.32318534125633, 125.93151831483829, 0.0));
-  footprint.push_back(Point3d(-190.80698397153176, 143.8217730301796, 0.0));
-  footprint.push_back(Point3d(-173.83578313229629, 142.43018301674232, 0.0));
-  footprint.push_back(Point3d(-173.9456527967258, 138.0550262829267, 0.0));
-  footprint.push_back(Point3d(-107.15954608457682, 132.88945125194346, 0.0));
-  footprint.push_back(Point3d(-106.35383521178105, 132.900583951564, 0.0));
-  footprint.push_back(Point3d(-105.02074994949004, 133.14550334995624, 0.0));
-  footprint.push_back(Point3d(-103.43862678102352, 133.8691289086305, 0.0));
-  footprint.push_back(Point3d(-102.2813329819231, 134.82654132846721, 0.0));
-  footprint.push_back(Point3d(-101.31447993453753, 136.14020049587162, 0.0));
-  footprint.push_back(Point3d(-100.20845864548255, 136.05113884865818, 0.0));
-  footprint.push_back(Point3d(-80.4392436842769, 134.5036929371352, 0.0));
-  footprint.push_back(Point3d(-79.47971528123003, 134.42576401589253, 0.0));
-  footprint.push_back(Point3d(-78.85712051582951, 133.11210525048187, 0.0));
-  footprint.push_back(Point3d(-77.91224140138345, 132.0099680511679, 0.0));
-  footprint.push_back(Point3d(-76.60845471625578, 131.07482150365024, 0.0));
-  footprint.push_back(Point3d(-75.64892631317062, 130.64064637716376, 0.0));
-  footprint.push_back(Point3d(-73.99355670177661, 130.28440014311866, 0.0));
-  footprint.push_back(Point3d(-7.85201868781445, 125.31922063111779, 0.0));
-  footprint.push_back(Point3d(-7.49311111722858, 130.0506135632292, 0.0));
-  footprint.push_back(Point3d(9.60993331941421, 128.65902699125058, 0.0));
-  footprint.push_back(Point3d(9.236376460189206, 123.92763524122142, 0.0));
-  footprint.push_back(Point3d(8.181627681237046, 110.5350351927255, 0.0));
-  footprint.push_back(Point3d(4.255618337310636, 110.85788219852725, 0.0));
-  footprint.push_back(Point3d(0.9448791144652091, 67.1512475606807, 0.0));
-  footprint.push_back(Point3d(1.8091871416834238, 67.01765674256961, 0.0));
-  footprint.push_back(Point3d(1.7579146315805474, 66.12705137122322, 0.0));
-  footprint.push_back(Point3d(1.5674738798274461, 66.1604490693166, 0.0));
-  footprint.push_back(Point3d(0.6592179868259791, 53.858976831483176, 0.0));
-  footprint.push_back(Point3d(0.8936066043815458, 53.88124191758578, 0.0));
-  footprint.push_back(Point3d(0.7690876513129297, 53.05743388498746, 0.0));
-  footprint.push_back(Point3d(-0.1171943088256171, 53.09083150464306, 0.0));
-  footprint.push_back(Point3d(-3.2448174241800416, 9.039543887906007, 0.0));
-  footprint.push_back(Point3d(-0.16846681885186854, 8.816894846881922, 0.0));
-  footprint.push_back(Point3d(-0.14649288598894827, 8.995014077862805, 0.0));
-  footprint.push_back(Point3d(0.6811919197272118, 8.89482200817639, 0.0));
-  footprint.push_back(Point3d(0.6299194096243355, 8.015358375794648, 0.0));
-  footprint.push_back(Point3d(0.4980758122744646, 8.02649082539466, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {-0.695841208347133, -9.161985802862006, 0.0},
+    {-9.338921480375689, -8.571967728493888, 0.0},
+    {-17.703665269065453, -7.447593490720266, 0.0},
+    {-17.42532878570745, -3.373126538389357, 0.0},
+    {-34.86530686005406, -2.0261026523114936, 0.0},
+    {-37.17989445833143, -1.81458647758825, 0.0},
+    {-55.19119478795656, -0.5677541139705511, 0.0},
+    {-58.11372786299535, -38.75186865681468, 0.0},
+    {-50.07126842338943, -39.34188353361671, 0.0},
+    {-51.126017202341586, -51.888034167850435, 0.0},
+    {-51.536197283087745, -56.652669598441975, 0.0},
+    {-64.58138877837769, -55.528305063057076, 0.0},
+    {-72.68244537234855, -54.81583632791774, 0.0},
+    {-69.18859004203122, -7.625712198986719, 0.0},
+    {-79.09883377766633, -6.7239861902833695, 0.0},
+    {-78.63738118687476, 1.1689057121689643, 0.0},
+    {-88.04222446591587, 2.070633143170312, 0.0},
+    {-87.65401831812835, 7.380808750431726, 0.0},
+    {-92.65675037390812, 7.748179577427749, 0.0},
+    {-107.56972616530382, 8.816894846881922, 0.0},
+    {-112.57245822106444, 9.184265769474024, 0.0},
+    {-112.96066436885195, 3.77389646371617, 0.0},
+    {-114.92366904082473, 3.8629559986240167, 0.0},
+    {-115.04086334961207, 2.538195570451535, 0.0},
+    {-116.69623296100607, 2.638387525545255, 0.0},
+    {-116.62298651802115, 3.952015535370265, 0.0},
+    {-122.2629626277448, 4.308253694611125, 0.0},
+    {-122.84893417162414, -3.573510226744844, 0.0},
+    {-133.24992907525242, -2.7719754218481114, 0.0},
+    {-136.29698110334067, -45.63166089550802, 0.0},
+    {-136.56066829809785, -49.739493961847415, 0.0},
+    {-136.5972915195616, -49.87308197764537, 0.0},
+    {-144.44198556309482, -49.038156822071414, 0.0},
+    {-154.15446390269554, -47.99171711813307, 0.0},
+    {-152.87997579476948, -31.693949992923137, 0.0},
+    {-148.39729348418453, -32.06131821982851, 0.0},
+    {-145.6944997381005, 6.067179931716822, 0.0},
+    {-183.84124724381752, 8.939351818832364, 0.0},
+    {-184.18550552584088, 4.33051857910408, 0.0},
+    {-188.32392955442162, 4.675624318771895, 0.0},
+    {-199.20835098172356, 5.499425199435763, 0.0},
+    {-201.0981092106731, 5.655279433782141, 0.0},
+    {-201.0981092106731, 5.911325686340149, 0.0},
+    {-200.28507369355776, 14.483315691783218, 0.0},
+    {-199.75037465980046, 23.623075402548864, 0.0},
+    {-195.63392456412095, 23.222306088178982, 0.0},
+    {-192.47700287154572, 67.60768288193731, 0.0},
+    {-193.30468767722357, 67.66334572802566, 0.0},
+    {-193.24609052287775, 68.36469764229747, 0.0},
+    {-193.13622085837167, 68.36469764229747, 0.0},
+    {-192.38178249564044, 80.51034556245332, 0.0},
+    {-192.50630144874737, 80.54374334940206, 0.0},
+    {-192.41108107288036, 81.5902073856052, 0.0},
+    {-191.62734413292836, 81.5456769983088, 0.0},
+    {-188.2946309771817, 125.5975377539537, 0.0},
+    {-192.32318534125633, 125.93151831483829, 0.0},
+    {-190.80698397153176, 143.8217730301796, 0.0},
+    {-173.83578313229629, 142.43018301674232, 0.0},
+    {-173.9456527967258, 138.0550262829267, 0.0},
+    {-107.15954608457682, 132.88945125194346, 0.0},
+    {-106.35383521178105, 132.900583951564, 0.0},
+    {-105.02074994949004, 133.14550334995624, 0.0},
+    {-103.43862678102352, 133.8691289086305, 0.0},
+    {-102.2813329819231, 134.82654132846721, 0.0},
+    {-101.31447993453753, 136.14020049587162, 0.0},
+    {-100.20845864548255, 136.05113884865818, 0.0},
+    {-80.4392436842769, 134.5036929371352, 0.0},
+    {-79.47971528123003, 134.42576401589253, 0.0},
+    {-78.85712051582951, 133.11210525048187, 0.0},
+    {-77.91224140138345, 132.0099680511679, 0.0},
+    {-76.60845471625578, 131.07482150365024, 0.0},
+    {-75.64892631317062, 130.64064637716376, 0.0},
+    {-73.99355670177661, 130.28440014311866, 0.0},
+    {-7.85201868781445, 125.31922063111779, 0.0},
+    {-7.49311111722858, 130.0506135632292, 0.0},
+    {9.60993331941421, 128.65902699125058, 0.0},
+    {9.236376460189206, 123.92763524122142, 0.0},
+    {8.181627681237046, 110.5350351927255, 0.0},
+    {4.255618337310636, 110.85788219852725, 0.0},
+    {0.9448791144652091, 67.1512475606807, 0.0},
+    {1.8091871416834238, 67.01765674256961, 0.0},
+    {1.7579146315805474, 66.12705137122322, 0.0},
+    {1.5674738798274461, 66.1604490693166, 0.0},
+    {0.6592179868259791, 53.858976831483176, 0.0},
+    {0.8936066043815458, 53.88124191758578, 0.0},
+    {0.7690876513129297, 53.05743388498746, 0.0},
+    {-0.1171943088256171, 53.09083150464306, 0.0},
+    {-3.2448174241800416, 9.039543887906007, 0.0},
+    {-0.16846681885186854, 8.816894846881922, 0.0},
+    {-0.14649288598894827, 8.995014077862805, 0.0},
+    {0.6811919197272118, 8.89482200817639, 0.0},
+    {0.6299194096243355, 8.015358375794648, 0.0},
+    {0.4980758122744646, 8.02649082539466, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -2453,40 +2405,41 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_3) {
 TEST_F(GeometryFixture, RoofExtendedSkeleton_5) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(-0.6958026548881477, -9.161478178076948, 0.0));
-  footprint.push_back(Point3d(-9.338404052373633, -8.571492793979743, 0.0));
-  footprint.push_back(Point3d(-17.70268438790386, -7.447180852769691, 0.0));
-  footprint.push_back(Point3d(-17.424363325929452, -3.372939648486792, 0.0));
-  footprint.push_back(Point3d(-16.142621593290144, 9.773744233129612, 0.0));
-  footprint.push_back(Point3d(-12.810093088301556, 54.43485287683303, 0.0));
-  footprint.push_back(Point3d(-32.90780345674236, 55.90426731787754, 0.0));
-  footprint.push_back(Point3d(-50.625136321556965, 57.284626693320064, 0.0));
-  footprint.push_back(Point3d(-49.63636412778366, 70.36466192934482, 0.0));
-  footprint.push_back(Point3d(-29.34822355908187, 68.67260457721952, 0.0));
-  footprint.push_back(Point3d(-11.997102617897646, 67.4814855658616, 0.0));
-  footprint.push_back(Point3d(-8.642601397542933, 112.13192467030846, 0.0));
-  footprint.push_back(Point3d(-7.851583642466842, 125.31227725183234, 0.0));
-  footprint.push_back(Point3d(-7.492695957349284, 130.04340803855604, 0.0));
-  footprint.push_back(Point3d(9.60940087585437, 128.6518985681851, 0.0));
-  footprint.push_back(Point3d(9.235864713749464, 123.92076896347811, 0.0));
-  footprint.push_back(Point3d(8.181174373724609, 110.5289109392406, 0.0));
-  footprint.push_back(Point3d(4.255382552472042, 110.85174005752916, 0.0));
-  footprint.push_back(Point3d(0.9448267629261693, 67.14752700944396, 0.0));
-  footprint.push_back(Point3d(1.8090869026900336, 67.01394359300451, 0.0));
-  footprint.push_back(Point3d(1.7578172333683781, 66.123387566131, 0.0));
-  footprint.push_back(Point3d(1.567387033088238, 66.15678341380686, 0.0));
-  footprint.push_back(Point3d(0.6591814624963845, 53.8559927457046, 0.0));
-  footprint.push_back(Point3d(0.8935570936236559, 53.87825659819807, 0.0));
-  footprint.push_back(Point3d(0.7690450395950705, 53.05449420912991, 0.0));
-  footprint.push_back(Point3d(-0.11718781561150848, 53.08788997837232, 0.0));
-  footprint.push_back(Point3d(-3.2446376433134674, 9.039043047081556, 0.0));
-  footprint.push_back(Point3d(-0.16845748485657452, 8.816406342048168, 0.0));
-  footprint.push_back(Point3d(-0.14648476947130007, 8.994515704236598, 0.0));
-  footprint.push_back(Point3d(0.6811541779199501, 8.894329185746045, 0.0));
-  footprint.push_back(Point3d(0.6298845085982947, 8.014914280523122, 0.0));
-  footprint.push_back(Point3d(0.49804821611433425, 8.026046113323751, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {-0.6958026548881477, -9.161478178076948, 0.0},
+    {-9.338404052373633, -8.571492793979743, 0.0},
+    {-17.70268438790386, -7.447180852769691, 0.0},
+    {-17.424363325929452, -3.372939648486792, 0.0},
+    {-16.142621593290144, 9.773744233129612, 0.0},
+    {-12.810093088301556, 54.43485287683303, 0.0},
+    {-32.90780345674236, 55.90426731787754, 0.0},
+    {-50.625136321556965, 57.284626693320064, 0.0},
+    {-49.63636412778366, 70.36466192934482, 0.0},
+    {-29.34822355908187, 68.67260457721952, 0.0},
+    {-11.997102617897646, 67.4814855658616, 0.0},
+    {-8.642601397542933, 112.13192467030846, 0.0},
+    {-7.851583642466842, 125.31227725183234, 0.0},
+    {-7.492695957349284, 130.04340803855604, 0.0},
+    {9.60940087585437, 128.6518985681851, 0.0},
+    {9.235864713749464, 123.92076896347811, 0.0},
+    {8.181174373724609, 110.5289109392406, 0.0},
+    {4.255382552472042, 110.85174005752916, 0.0},
+    {0.9448267629261693, 67.14752700944396, 0.0},
+    {1.8090869026900336, 67.01394359300451, 0.0},
+    {1.7578172333683781, 66.123387566131, 0.0},
+    {1.567387033088238, 66.15678341380686, 0.0},
+    {0.6591814624963845, 53.8559927457046, 0.0},
+    {0.8935570936236559, 53.87825659819807, 0.0},
+    {0.7690450395950705, 53.05449420912991, 0.0},
+    {-0.11718781561150848, 53.08788997837232, 0.0},
+    {-3.2446376433134674, 9.039043047081556, 0.0},
+    {-0.16845748485657452, 8.816406342048168, 0.0},
+    {-0.14648476947130007, 8.994515704236598, 0.0},
+    {0.6811541779199501, 8.894329185746045, 0.0},
+    {0.6298845085982947, 8.014914280523122, 0.0},
+    {0.49804821611433425, 8.026046113323751, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -2616,23 +2569,24 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_5) {
 TEST_F(GeometryFixture, RoofExtendedSkeleton_6) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(12.897989139805986, -1.2801851278900926, 0.0));
-  footprint.push_back(Point3d(9.587432018184284, -44.984415761338475, 0.0));
-  footprint.push_back(Point3d(10.45169250570246, -45.11799923152818, 0.0));
-  footprint.push_back(Point3d(10.40042281575131, -46.008555616736736, 0.0));
-  footprint.push_back(Point3d(10.209992538847342, -45.97515975562331, 0.0));
-  footprint.push_back(Point3d(9.301786602818757, -58.27595537322258, 0.0));
-  footprint.push_back(Point3d(9.536162328252283, -58.25369151177075, 0.0));
-  footprint.push_back(Point3d(9.4116502241235, -59.077454232298045, 0.0));
-  footprint.push_back(Point3d(8.525417012321396, -59.044058449618106, 0.0));
-  footprint.push_back(Point3d(5.397965926220366, -103.09292310494317, 0.0));
-  footprint.push_back(Point3d(-7.500023213547323, -102.35822162327173, 0.0));
-  footprint.push_back(Point3d(-4.167493367641692, -57.69709500917689, 0.0));
-  footprint.push_back(Point3d(-41.982551816621694, -54.84732004601991, 0.0));
-  footprint.push_back(Point3d(-40.99377922499388, -41.76727954695175, 0.0));
-  footprint.push_back(Point3d(-3.3545025701129614, -44.650457070545166, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {12.897989139805986, -1.2801851278900926, 0.0},
+    {9.587432018184284, -44.984415761338475, 0.0},
+    {10.45169250570246, -45.11799923152818, 0.0},
+    {10.40042281575131, -46.008555616736736, 0.0},
+    {10.209992538847342, -45.97515975562331, 0.0},
+    {9.301786602818757, -58.27595537322258, 0.0},
+    {9.536162328252283, -58.25369151177075, 0.0},
+    {9.4116502241235, -59.077454232298045, 0.0},
+    {8.525417012321396, -59.044058449618106, 0.0},
+    {5.397965926220366, -103.09292310494317, 0.0},
+    {-7.500023213547323, -102.35822162327173, 0.0},
+    {-4.167493367641692, -57.69709500917689, 0.0},
+    {-41.982551816621694, -54.84732004601991, 0.0},
+    {-40.99377922499388, -41.76727954695175, 0.0},
+    {-3.3545025701129614, -44.650457070545166, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -2699,30 +2653,31 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_6) {
 TEST_F(GeometryFixture, RoofExtendedSkeleton_7) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(0.0, 0.0, 0.0));
-  footprint.push_back(Point3d(3.3325122039160604, 44.660890183765225, 0.0));
-  footprint.push_back(Point3d(-16.76509985651811, 46.13029743716488, 0.0));
-  footprint.push_back(Point3d(-34.48234605694931, 47.51065006057564, 0.0));
-  footprint.push_back(Point3d(-33.493578699757975, 60.59062131557136, 0.0));
-  footprint.push_back(Point3d(-13.205537370552673, 58.89857224014935, 0.0));
-  footprint.push_back(Point3d(4.145498697574807, 57.70745905515341, 0.0));
-  footprint.push_back(Point3d(7.499983509377387, 102.35767975185216, 0.0));
-  footprint.push_back(Point3d(8.29099739518791, 115.53796786164443, 0.0));
-  footprint.push_back(Point3d(8.649883324805351, 120.26907550602861, 0.0));
-  footprint.push_back(Point3d(25.751896503054375, 118.87757284223014, 0.0));
-  footprint.push_back(Point3d(25.378362168102658, 114.14646637985689, 0.0));
-  footprint.push_back(Point3d(24.32367698709856, 100.75467386193046, 0.0));
-  footprint.push_back(Point3d(20.397904368867692, 101.07750140109947, 0.0));
-  footprint.push_back(Point3d(17.08736477291475, 57.37350213229498, 0.0));
-  footprint.push_back(Point3d(17.95162068514772, 57.23991936927919, 0.0));
-  footprint.push_back(Point3d(17.900351266611796, 56.349367698562986, 0.0));
-  footprint.push_back(Point3d(17.709921997821514, 56.38276338288297, 0.0));
-  footprint.push_back(Point3d(16.80172086971976, 44.08203288413275, 0.0));
-  footprint.push_back(Point3d(17.036095354397972, 44.104296627722526, 0.0));
-  footprint.push_back(Point3d(16.91158390942045, 43.2805382680904, 0.0));
-  footprint.push_back(Point3d(16.025355389224362, 43.31393387397731, 0.0));
-  footprint.push_back(Point3d(12.89792085945201, -0.7346975922551309, 0.0));
+  std::vector<Point3d> footprint{
+    {0.0, 0.0, 0.0},
+    {3.3325122039160604, 44.660890183765225, 0.0},
+    {-16.76509985651811, 46.13029743716488, 0.0},
+    {-34.48234605694931, 47.51065006057564, 0.0},
+    {-33.493578699757975, 60.59062131557136, 0.0},
+    {-13.205537370552673, 58.89857224014935, 0.0},
+    {4.145498697574807, 57.70745905515341, 0.0},
+    {7.499983509377387, 102.35767975185216, 0.0},
+    {8.29099739518791, 115.53796786164443, 0.0},
+    {8.649883324805351, 120.26907550602861, 0.0},
+    {25.751896503054375, 118.87757284223014, 0.0},
+    {25.378362168102658, 114.14646637985689, 0.0},
+    {24.32367698709856, 100.75467386193046, 0.0},
+    {20.397904368867692, 101.07750140109947, 0.0},
+    {17.08736477291475, 57.37350213229498, 0.0},
+    {17.95162068514772, 57.23991936927919, 0.0},
+    {17.900351266611796, 56.349367698562986, 0.0},
+    {17.709921997821514, 56.38276338288297, 0.0},
+    {16.80172086971976, 44.08203288413275, 0.0},
+    {17.036095354397972, 44.104296627722526, 0.0},
+    {16.91158390942045, 43.2805382680904, 0.0},
+    {16.025355389224362, 43.31393387397731, 0.0},
+    {12.89792085945201, -0.7346975922551309, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -2816,15 +2771,11 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_7) {
 TEST_F(GeometryFixture, RoofExtendedSkeleton_8) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(-73.99355670177661, 130.28440014311866, 0.0));
-  footprint.push_back(Point3d(-7.85201868781445, 125.31922063111779, 0.0));
-  footprint.push_back(Point3d(-7.49311111722858, 130.0506135632292, 0.0));
-  footprint.push_back(Point3d(9.60993331941421, 128.65902699125058, 0.0));
-  footprint.push_back(Point3d(9.236376460189206, 123.92763524122142, 0.0));
-  footprint.push_back(Point3d(8.181627681237046, 110.5350351927255, 0.0));
-  footprint.push_back(Point3d(4.255618337310636, 110.85788219852725, 0.0));
-  footprint.push_back(Point3d(0.9448791144652091, 67.1512475606807, 0.0));
+  std::vector<Point3d> footprint{
+    {-73.99355670177661, 130.28440014311866, 0.0}, {-7.85201868781445, 125.31922063111779, 0.0}, {-7.49311111722858, 130.0506135632292, 0.0},
+    {9.60993331941421, 128.65902699125058, 0.0},   {9.236376460189206, 123.92763524122142, 0.0}, {8.181627681237046, 110.5350351927255, 0.0},
+    {4.255618337310636, 110.85788219852725, 0.0},  {0.9448791144652091, 67.1512475606807, 0.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 
@@ -2866,15 +2817,11 @@ TEST_F(GeometryFixture, RoofExtendedSkeleton_8) {
 TEST_F(GeometryFixture, RoofExtendedSkeleton_8_Zoffset) {
   double pitch = radToDeg(atan(6.0 / 12.0));
 
-  std::vector<Point3d> footprint;
-  footprint.push_back(Point3d(-73.99355670177661, 130.28440014311866, 8.0));
-  footprint.push_back(Point3d(-7.85201868781445, 125.31922063111779, 8.0));
-  footprint.push_back(Point3d(-7.49311111722858, 130.0506135632292, 8.0));
-  footprint.push_back(Point3d(9.60993331941421, 128.65902699125058, 8.0));
-  footprint.push_back(Point3d(9.236376460189206, 123.92763524122142, 8.0));
-  footprint.push_back(Point3d(8.181627681237046, 110.5350351927255, 8.0));
-  footprint.push_back(Point3d(4.255618337310636, 110.85788219852725, 8.0));
-  footprint.push_back(Point3d(0.9448791144652091, 67.1512475606807, 8.0));
+  std::vector<Point3d> footprint{
+    {-73.99355670177661, 130.28440014311866, 8.0}, {-7.85201868781445, 125.31922063111779, 8.0}, {-7.49311111722858, 130.0506135632292, 8.0},
+    {9.60993331941421, 128.65902699125058, 8.0},   {9.236376460189206, 123.92763524122142, 8.0}, {8.181627681237046, 110.5350351927255, 8.0},
+    {4.255618337310636, 110.85788219852725, 8.0},  {0.9448791144652091, 67.1512475606807, 8.0},
+  };
 
   std::vector<std::vector<Point3d>> roofPolygons = generateHipRoof(footprint, pitch);
 

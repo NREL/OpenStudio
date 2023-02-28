@@ -54,7 +54,12 @@ namespace model {
 
     explicit SetpointManagerScheduledDualSetpoint(const Model& model);
 
-    virtual ~SetpointManagerScheduledDualSetpoint() {}
+    virtual ~SetpointManagerScheduledDualSetpoint() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerScheduledDualSetpoint(const SetpointManagerScheduledDualSetpoint& other) = default;
+    SetpointManagerScheduledDualSetpoint(SetpointManagerScheduledDualSetpoint&& other) = default;
+    SetpointManagerScheduledDualSetpoint& operator=(const SetpointManagerScheduledDualSetpoint&) = default;
+    SetpointManagerScheduledDualSetpoint& operator=(SetpointManagerScheduledDualSetpoint&&) = default;
 
     //@}
 
@@ -94,7 +99,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerScheduledDualSetpoint_Impl ImplType;
+    using ImplType = detail::SetpointManagerScheduledDualSetpoint_Impl;
 
     explicit SetpointManagerScheduledDualSetpoint(std::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl);
 
@@ -108,10 +113,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerScheduledDualSetpoint*/
-  typedef boost::optional<SetpointManagerScheduledDualSetpoint> OptionalSetpointManagerScheduledDualSetpoint;
+  using OptionalSetpointManagerScheduledDualSetpoint = boost::optional<SetpointManagerScheduledDualSetpoint>;
 
   /** \relates SetpointManagerScheduledDualSetpoint*/
-  typedef std::vector<SetpointManagerScheduledDualSetpoint> SetpointManagerScheduledDualSetpointVector;
+  using SetpointManagerScheduledDualSetpointVector = std::vector<SetpointManagerScheduledDualSetpoint>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -120,7 +120,7 @@ namespace energyplus {
            workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingScheduleName))) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject && modelObject->optionalCast<Schedule>()) {
-        Schedule schedule = modelObject->cast<Schedule>();
+        auto schedule = modelObject->cast<Schedule>();
         performance.setEvaporativeCondenserBasinHeaterOperatingSchedule(schedule);
       }
     }

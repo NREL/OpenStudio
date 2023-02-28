@@ -54,7 +54,7 @@ namespace model {
 
       HeatPumpPlantLoopEIRHeating_Impl(const HeatPumpPlantLoopEIRHeating_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HeatPumpPlantLoopEIRHeating_Impl() {}
+      virtual ~HeatPumpPlantLoopEIRHeating_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
