@@ -32,227 +32,205 @@
 #include "../HeatPumpAirToWaterFuelFiredCooling.hpp"
 #include "../HeatPumpAirToWaterFuelFiredCooling_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../OutdoorAirNode.hpp"
-#include "../OutdoorAirNode_Impl.hpp"
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
 
 #include "../HeatPumpAirToWaterFuelFiredHeating.hpp"
 #include "../HeatPumpAirToWaterFuelFiredHeating_Impl.hpp"
 
-#include "../BivariateFunctions.hpp"
-#include "../BivariateFunctions_Impl.hpp"
-
-#include "../BivariateFunctions.hpp"
-#include "../BivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../BivariateFunctions.hpp"
-#include "../BivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveBiquadratic_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../PlantLoop.hpp"
+#include "../PlantLoop_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
+TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_HeatPumpAirToWaterFuelFiredCooling) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT(
+    {
+      Model m;
+      HeatPumpAirToWaterFuelFiredCooling hp(m);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  HeatPumpAirToWaterFuelFiredCooling hp(m);
+
+  EXPECT_FALSE(hp.companionHeatingHeatPump());
+  EXPECT_EQ("NaturalGas", hp.fuelType());
+  EXPECT_EQ("General", hp.endUseSubcategory());
+  EXPECT_TRUE(hp.isEndUseSubcategoryDefaulted());
+  EXPECT_FALSE(hp.nominalCoolingCapacity());
+  EXPECT_FALSE(hp.isNominalCoolingCapacityAutosized());
+  EXPECT_EQ(1.0, hp.nominalCOP());
+  EXPECT_FALSE(hp.designFlowRate());
+  EXPECT_FALSE(hp.isDesignFlowRateAutosized());
+  EXPECT_EQ(7.0, hp.designSupplyTemperature());
+  ASSERT_TRUE(hp.designTemperatureLift());
+  EXPECT_EQ(11.1, hp.designTemperatureLift().get());
+  EXPECT_FALSE(hp.isDesignTemperatureLiftAutosized());
+  EXPECT_EQ(1.0, hp.sizingFactor());
+  EXPECT_EQ("NotModulated", hp.flowMode());
+  EXPECT_EQ("DryBulb", hp.outdoorAirTemperatureCurveInputVariable());
+  EXPECT_EQ("EnteringEvaporator", hp.waterTemperatureCurveInputVariable());
+  boost::optional<Curve> normalizedCapacityFunctionofTemperatureCurve = hp.normalizedCapacityFunctionofTemperatureCurve();
+  EXPECT_TRUE(normalizedCapacityFunctionofTemperatureCurve);
+  boost::optional<Curve> fuelEnergyInputRatioFunctionofTemperatureCurve = hp.fuelEnergyInputRatioFunctionofTemperatureCurve();
+  EXPECT_TRUE(fuelEnergyInputRatioFunctionofTemperatureCurve);
+  boost::optional<Curve> fuelEnergyInputRatioFunctionofPLRCurve = hp.fuelEnergyInputRatioFunctionofPLRCurve();
+  EXPECT_TRUE(fuelEnergyInputRatioFunctionofPLRCurve);
+  EXPECT_EQ(0.1, hp.minimumPartLoadRatio());
+  EXPECT_EQ(1.0, hp.maximumPartLoadRatio());
+  EXPECT_FALSE(hp.cyclingRatioFactorCurve());
+  EXPECT_FALSE(hp.nominalAuxiliaryElectricPower());
+  EXPECT_FALSE(hp.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve());
+  EXPECT_FALSE(hp.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve());
+  EXPECT_EQ(0, hp.standbyElectricPower());
+}
+
 TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
-  HeatPumpAirToWaterFuelFiredCooling heatPumpAirToWaterFuelFiredCooling(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // HeatPumpAirToWaterFuelFiredCooling heatPumpAirToWaterFuelFiredCooling = m.getUniqueModelObject<HeatPumpAirToWaterFuelFiredCooling>();
+  HeatPumpAirToWaterFuelFiredCooling hp(m);
 
-  heatPumpAirToWaterFuelFiredCooling.setName("My HeatPumpAirToWaterFuelFiredCooling");
+  HeatPumpAirToWaterFuelFiredHeating companionHP(m);
+  EXPECT_TRUE(hp.setCompanionHeatingHeatPump(companionHP));
+  EXPECT_TRUE(hp.setFuelType("Propane"));
+  EXPECT_TRUE(hp.setEndUseSubcategory("AnyText"));
+  EXPECT_TRUE(hp.setNominalCoolingCapacity(1.0));
+  EXPECT_TRUE(hp.setNominalCOP(2.0));
+  EXPECT_TRUE(hp.setDesignFlowRate(3.0));
+  EXPECT_TRUE(hp.setDesignSupplyTemperature(4.0));
+  EXPECT_TRUE(hp.setDesignTemperatureLift(5.0));
+  EXPECT_TRUE(hp.setSizingFactor(6.0));
+  EXPECT_TRUE(hp.setFlowMode("ConstantFlow"));
+  EXPECT_TRUE(hp.setOutdoorAirTemperatureCurveInputVariable("WetBulb"));
+  EXPECT_TRUE(hp.setWaterTemperatureCurveInputVariable("LeavingEvaporator"));
+  CurveBiquadratic curve1(m);
+  EXPECT_TRUE(hp.setNormalizedCapacityFunctionofTemperatureCurve(curve1));
+  CurveBiquadratic curve2(m);
+  EXPECT_TRUE(hp.setFuelEnergyInputRatioFunctionofTemperatureCurve(curve2));
+  CurveQuadratic curve3(m);
+  EXPECT_TRUE(hp.setFuelEnergyInputRatioFunctionofPLRCurve(curve3));
+  EXPECT_TRUE(hp.setMinimumPartLoadRatio(0.5));
+  EXPECT_TRUE(hp.setMaximumPartLoadRatio(0.75));
+  CurveQuadratic curve4(m);
+  EXPECT_TRUE(hp.setCyclingRatioFactorCurve(curve4));
+  EXPECT_TRUE(hp.setNominalAuxiliaryElectricPower(12.0));
+  CurveBiquadratic curve5(m);
+  EXPECT_TRUE(hp.setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(curve5));
+  CurveQuadratic curve6(m);
+  EXPECT_TRUE(hp.setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(curve6));
+  EXPECT_TRUE(hp.setStandbyElectricPower(13.0));
 
-  // Water Inlet Node Name: Required Object
-  Connection obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setWaterInletNode(obj));
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.waterInletNode());
+  ASSERT_TRUE(hp.companionHeatingHeatPump());
+  EXPECT_EQ(companionHP.handle(), hp.companionHeatingHeatPump().get().handle());
+  EXPECT_EQ("Propane", hp.fuelType());
+  EXPECT_EQ("AnyText", hp.endUseSubcategory());
+  EXPECT_FALSE(hp.isEndUseSubcategoryDefaulted());
+  ASSERT_TRUE(hp.nominalCoolingCapacity());
+  EXPECT_EQ(1.0, hp.nominalCoolingCapacity().get());
+  EXPECT_FALSE(hp.isNominalCoolingCapacityAutosized());
+  EXPECT_EQ(2.0, hp.nominalCOP());
+  ASSERT_TRUE(hp.designFlowRate());
+  EXPECT_EQ(3.0, hp.designFlowRate().get());
+  EXPECT_FALSE(hp.isDesignFlowRateAutosized());
+  EXPECT_EQ(4.0, hp.designSupplyTemperature());
+  ASSERT_TRUE(hp.designTemperatureLift());
+  EXPECT_EQ(5.0, hp.designTemperatureLift().get());
+  EXPECT_FALSE(hp.isDesignTemperatureLiftAutosized());
+  EXPECT_EQ(6.0, hp.sizingFactor());
+  EXPECT_EQ("ConstantFlow", hp.flowMode());
+  EXPECT_EQ("WetBulb", hp.outdoorAirTemperatureCurveInputVariable());
+  EXPECT_EQ("LeavingEvaporator", hp.waterTemperatureCurveInputVariable());
+  EXPECT_EQ(curve1.handle(), hp.normalizedCapacityFunctionofTemperatureCurve().handle());
+  EXPECT_EQ(curve2.handle(), hp.fuelEnergyInputRatioFunctionofTemperatureCurve().handle());
+  EXPECT_EQ(curve3.handle(), hp.fuelEnergyInputRatioFunctionofPLRCurve().handle());
+  EXPECT_EQ(0.5, hp.minimumPartLoadRatio());
+  EXPECT_EQ(0.75, hp.maximumPartLoadRatio());
+  ASSERT_TRUE(hp.cyclingRatioFactorCurve());
+  EXPECT_EQ(curve4.handle(), hp.cyclingRatioFactorCurve().get().handle());
+  ASSERT_TRUE(hp.nominalAuxiliaryElectricPower());
+  EXPECT_EQ(12.0, hp.nominalAuxiliaryElectricPower().get());
+  ASSERT_TRUE(hp.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve());
+  EXPECT_EQ(curve5.handle(), hp.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve().get().handle());
+  ASSERT_TRUE(hp.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve());
+  EXPECT_EQ(curve6.handle(), hp.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve().get().handle());
+  EXPECT_EQ(13.0, hp.standbyElectricPower());
 
-  // Water Outlet Node Name: Required Object
-  Connection obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setWaterOutletNode(obj));
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.waterOutletNode());
+  hp.autosizeNominalCoolingCapacity();
+  hp.autosizeDesignFlowRate();
+  hp.autosizeDesignTemperatureLift();
 
-  // Air Source Node Name: Optional Object
-  boost::optional<OutdoorAirNode> obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setAirSourceNode(obj));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.airSourceNode());
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.airSourceNode().get());
+  EXPECT_FALSE(hp.nominalCoolingCapacity());
+  EXPECT_TRUE(hp.isNominalCoolingCapacityAutosized());
+  EXPECT_FALSE(hp.designFlowRate());
+  EXPECT_TRUE(hp.isDesignFlowRateAutosized());
+  EXPECT_FALSE(hp.designTemperatureLift());
+  EXPECT_TRUE(hp.isDesignTemperatureLiftAutosized());
 
-  // Companion Heating Heat Pump Name: Optional Object
-  boost::optional<HeatPumpAirToWaterFuelFiredHeating> obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setCompanionHeatingHeatPump(obj));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.companionHeatingHeatPump());
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.companionHeatingHeatPump().get());
+  hp.resetCompanionHeatingHeatPump();
+  hp.resetEndUseSubcategory();
+  hp.resetNominalCoolingCapacity();
+  hp.resetDesignFlowRate();
+  hp.resetCyclingRatioFactorCurve();
+  hp.resetNominalAuxiliaryElectricPower();
+  hp.resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve();
+  hp.resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve();
 
-  // Fuel Type: Required String
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setFuelType("NaturalGas"));
-  EXPECT_EQ("NaturalGas", heatPumpAirToWaterFuelFiredCooling.fuelType());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setFuelType("BADENUM"));
-  EXPECT_EQ("NaturalGas", heatPumpAirToWaterFuelFiredCooling.fuelType());
+  EXPECT_FALSE(hp.companionHeatingHeatPump());
+  EXPECT_EQ("General", hp.endUseSubcategory());
+  EXPECT_TRUE(hp.isEndUseSubcategoryDefaulted());
+  EXPECT_FALSE(hp.nominalCoolingCapacity());
+  EXPECT_FALSE(hp.designFlowRate());
+  EXPECT_FALSE(hp.cyclingRatioFactorCurve());
+  EXPECT_FALSE(hp.nominalAuxiliaryElectricPower());
+  EXPECT_FALSE(hp.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve());
+  EXPECT_FALSE(hp.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve());
+}
 
-  // End-Use Subcategory: Optional String
-  // Default value from IDD
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.isEndUseSubcategoryDefaulted());
-  EXPECT_EQ("General", heatPumpAirToWaterFuelFiredCooling.endUseSubcategory());
-  // Set
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setEndUseSubcategory());
-  EXPECT_EQ(, heatPumpAirToWaterFuelFiredCooling.endUseSubcategory());
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.isEndUseSubcategoryDefaulted());
-  // Reset
-  heatPumpAirToWaterFuelFiredCooling.resetEndUseSubcategory();
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.isEndUseSubcategoryDefaulted());
+TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_addToNode) {
+  Model m;
+  HeatPumpAirToWaterFuelFiredCooling hp(m);
 
-  // Nominal Cooling Capacity: Optional Double
-  // Autosize
-  heatPumpAirToWaterFuelFiredCooling.autosizeNominalCoolingCapacity();
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.isNominalCoolingCapacityAutosized());
-  // Set
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setNominalCoolingCapacity(0.9));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.nominalCoolingCapacity());
-  EXPECT_EQ(0.9, heatPumpAirToWaterFuelFiredCooling.nominalCoolingCapacity().get());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setNominalCoolingCapacity(-10.0));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.nominalCoolingCapacity());
-  EXPECT_EQ(0.9, heatPumpAirToWaterFuelFiredCooling.nominalCoolingCapacity().get());
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.isNominalCoolingCapacityAutosized());
+  AirLoopHVAC airLoop(m);
 
-  // Nominal COP: Required Double
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setNominalCOP(1.0));
-  EXPECT_EQ(1.0, heatPumpAirToWaterFuelFiredCooling.nominalCOP());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setNominalCOP(-10.0));
-  EXPECT_EQ(1.0, heatPumpAirToWaterFuelFiredCooling.nominalCOP());
+  Node supplyOutletNode = airLoop.supplyOutletNode();
 
-  // Design Flow Rate: Optional Double
-  // Autosize
-  heatPumpAirToWaterFuelFiredCooling.autosizeDesignFlowRate();
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.isDesignFlowRateAutosized());
-  // Set
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setDesignFlowRate(1.1));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.designFlowRate());
-  EXPECT_EQ(1.1, heatPumpAirToWaterFuelFiredCooling.designFlowRate().get());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setDesignFlowRate(-10.0));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.designFlowRate());
-  EXPECT_EQ(1.1, heatPumpAirToWaterFuelFiredCooling.designFlowRate().get());
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.isDesignFlowRateAutosized());
+  EXPECT_FALSE(hp.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
-  // Design Supply Temperature: Required Double
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setDesignSupplyTemperature(1.2));
-  EXPECT_EQ(1.2, heatPumpAirToWaterFuelFiredCooling.designSupplyTemperature());
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
-  // Design Temperature Lift: Required Double
-  // Autosize
-  heatPumpAirToWaterFuelFiredCooling.autosizeDesignTemperatureLift();
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.isDesignTemperatureLiftAutosized());
-  // Set
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setDesignTemperatureLift(1.3));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.designTemperatureLift());
-  EXPECT_EQ(1.3, heatPumpAirToWaterFuelFiredCooling.designTemperatureLift().get());
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.isDesignTemperatureLiftAutosized());
+  EXPECT_FALSE(hp.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
 
-  // Sizing Factor: Required Double
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setSizingFactor(2.4));
-  EXPECT_EQ(2.4, heatPumpAirToWaterFuelFiredCooling.sizingFactor());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setSizingFactor(-9.0));
-  EXPECT_EQ(2.4, heatPumpAirToWaterFuelFiredCooling.sizingFactor());
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(hp.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
-  // Flow Mode: Required String
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setFlowMode("NotModulated"));
-  EXPECT_EQ("NotModulated", heatPumpAirToWaterFuelFiredCooling.flowMode());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setFlowMode("BADENUM"));
-  EXPECT_EQ("NotModulated", heatPumpAirToWaterFuelFiredCooling.flowMode());
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(hp.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  // Outdoor Air Temperature Curve Input Variable: Required String
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setOutdoorAirTemperatureCurveInputVariable("DryBulb"));
-  EXPECT_EQ("DryBulb", heatPumpAirToWaterFuelFiredCooling.outdoorAirTemperatureCurveInputVariable());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setOutdoorAirTemperatureCurveInputVariable("BADENUM"));
-  EXPECT_EQ("DryBulb", heatPumpAirToWaterFuelFiredCooling.outdoorAirTemperatureCurveInputVariable());
+  auto hpClone = hp.clone(m).cast<HeatPumpAirToWaterFuelFiredCooling>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
 
-  // Water Temperature Curve Input Variable: Required String
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setWaterTemperatureCurveInputVariable("EnteringEvaporator"));
-  EXPECT_EQ("EnteringEvaporator", heatPumpAirToWaterFuelFiredCooling.waterTemperatureCurveInputVariable());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setWaterTemperatureCurveInputVariable("BADENUM"));
-  EXPECT_EQ("EnteringEvaporator", heatPumpAirToWaterFuelFiredCooling.waterTemperatureCurveInputVariable());
-
-  // Normalized Capacity Function of Temperature Curve Name: Required Object
-  BivariateFunctions obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setNormalizedCapacityFunctionofTemperatureCurve(obj));
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.normalizedCapacityFunctionofTemperatureCurve());
-
-  // Fuel Energy Input Ratio Function of Temperature Curve Name: Required Object
-  BivariateFunctions obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setFuelEnergyInputRatioFunctionofTemperatureCurve(obj));
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.fuelEnergyInputRatioFunctionofTemperatureCurve());
-
-  // Fuel Energy Input Ratio Function of PLR Curve Name: Required Object
-  UnivariateFunctions obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setFuelEnergyInputRatioFunctionofPLRCurve(obj));
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.fuelEnergyInputRatioFunctionofPLRCurve());
-
-  // Minimum Part Load Ratio: Required Double
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setMinimumPartLoadRatio(0.955));
-  EXPECT_EQ(0.955, heatPumpAirToWaterFuelFiredCooling.minimumPartLoadRatio());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setMinimumPartLoadRatio(-10.0));
-  EXPECT_EQ(0.955, heatPumpAirToWaterFuelFiredCooling.minimumPartLoadRatio());
-
-  // Maximum Part Load Ratio: Required Double
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setMaximumPartLoadRatio(0.957));
-  EXPECT_EQ(0.957, heatPumpAirToWaterFuelFiredCooling.maximumPartLoadRatio());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setMaximumPartLoadRatio(-10.0));
-  EXPECT_EQ(0.957, heatPumpAirToWaterFuelFiredCooling.maximumPartLoadRatio());
-
-  // Cycling Ratio Factor Curve Name: Optional Object
-  boost::optional<UnivariateFunctions> obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setCyclingRatioFactorCurve(obj));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.cyclingRatioFactorCurve());
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.cyclingRatioFactorCurve().get());
-
-  // Nominal Auxiliary Electric Power: Optional Double
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setNominalAuxiliaryElectricPower(2.4));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.nominalAuxiliaryElectricPower());
-  EXPECT_EQ(2.4, heatPumpAirToWaterFuelFiredCooling.nominalAuxiliaryElectricPower().get());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setNominalAuxiliaryElectricPower(-10.0));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.nominalAuxiliaryElectricPower());
-  EXPECT_EQ(2.4, heatPumpAirToWaterFuelFiredCooling.nominalAuxiliaryElectricPower().get());
-
-  // Auxiliary Electric Energy Input Ratio Function of Temperature Curve Name: Optional Object
-  boost::optional<BivariateFunctions> obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(obj));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve());
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve().get());
-
-  // Auxiliary Electric Energy Input Ratio Function of PLR Curve Name: Optional Object
-  boost::optional<UnivariateFunctions> obj(m);
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve(obj));
-  ASSERT_TRUE(heatPumpAirToWaterFuelFiredCooling.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve());
-  EXPECT_EQ(obj, heatPumpAirToWaterFuelFiredCooling.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve().get());
-
-  // Standby Electric Power: Required Double
-  EXPECT_TRUE(heatPumpAirToWaterFuelFiredCooling.setStandbyElectricPower(2.7));
-  EXPECT_EQ(2.7, heatPumpAirToWaterFuelFiredCooling.standbyElectricPower());
-  // Bad Value
-  EXPECT_FALSE(heatPumpAirToWaterFuelFiredCooling.setStandbyElectricPower(-10.0));
-  EXPECT_EQ(2.7, heatPumpAirToWaterFuelFiredCooling.standbyElectricPower());
+  EXPECT_TRUE(hpClone.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
 }
