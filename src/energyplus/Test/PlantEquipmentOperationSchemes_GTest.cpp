@@ -62,6 +62,8 @@
 #include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/HeatExchangerFluidToFluid.hpp"
+#include "../../model/HeatPumpAirToWaterFuelFiredHeating.hpp"
+#include "../../model/HeatPumpAirToWaterFuelFiredCooling.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
 #include "../../model/HeatPumpPlantLoopEIRCooling.hpp"
@@ -764,6 +766,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_compo
 
   {
     HeatPumpPlantLoopEIRCooling obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    HeatPumpAirToWaterFuelFiredHeating obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    HeatPumpAirToWaterFuelFiredCooling obj(m);
     EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
   }
 
