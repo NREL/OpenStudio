@@ -89,6 +89,16 @@ namespace model {
       return OS_HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName;
     }
 
+    bool HeatPumpAirToWaterFuelFiredCooling_Impl::addToNode(Node& node) {
+      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+        if (plant->supplyComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
+      return false;
+    }
+
     boost::optional<HeatPumpAirToWaterFuelFiredHeating> HeatPumpAirToWaterFuelFiredCooling_Impl::companionHeatingHeatPump() const {
       return getObject<ModelObject>().getModelObjectTarget<HeatPumpAirToWaterFuelFiredHeating>(
         OS_HeatPump_AirToWater_FuelFired_CoolingFields::CompanionHeatingHeatPumpName);

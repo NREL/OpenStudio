@@ -73,6 +73,8 @@ namespace model {
 
       virtual void applySizingValues() override;
 
+      virtual bool addToNode(Node& node) override;
+
       //@}
       /** @name Getters */
       //@{
