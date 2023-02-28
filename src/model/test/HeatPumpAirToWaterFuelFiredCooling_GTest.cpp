@@ -203,6 +203,44 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_GettersSetters) {
   EXPECT_FALSE(hp.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve());
 }
 
+TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_remove) {
+  Model m;
+  HeatPumpAirToWaterFuelFiredCooling hp(m);
+  auto size = m.modelObjects().size();
+  EXPECT_FALSE(hp.remove().empty());
+  EXPECT_EQ(size - 1, m.modelObjects().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<HeatPumpAirToWaterFuelFiredCooling>().size());
+}
+
+TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_clone) {
+  Model m;
+  CurveBiquadratic curve1(m);
+  CurveBiquadratic curve2(m);
+  CurveQuadratic curve3(m);
+  HeatPumpAirToWaterFuelFiredCooling hp(m, curve1, curve2, curve3);
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CurveBiquadratic>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CurveQuadratic>().size());
+
+  {
+    auto hpClone = hp.clone(m).cast<HeatPumpAirToWaterFuelFiredCooling>();
+    EXPECT_EQ(curve1.handle(), hp.normalizedCapacityFunctionofTemperatureCurve().handle());
+    EXPECT_EQ(curve2.handle(), hp.fuelEnergyInputRatioFunctionofTemperatureCurve().handle());
+    EXPECT_EQ(curve3.handle(), hp.fuelEnergyInputRatioFunctionofPLRCurve().handle());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<CurveQuadratic>().size());
+  }
+
+  {
+    Model m2;
+    auto hpClone2 = hp.clone(m2).cast<HeatPumpAirToWaterFuelFiredCooling>();
+    EXPECT_EQ(curve1.handle(), hp.normalizedCapacityFunctionofTemperatureCurve().handle());
+    EXPECT_EQ(curve2.handle(), hp.fuelEnergyInputRatioFunctionofTemperatureCurve().handle());
+    EXPECT_EQ(curve3.handle(), hp.fuelEnergyInputRatioFunctionofPLRCurve().handle());
+    EXPECT_EQ(2u, m2.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1u, m2.getConcreteModelObjects<CurveQuadratic>().size());
+  }
+}
+
 TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_addToNode) {
   Model m;
   HeatPumpAirToWaterFuelFiredCooling hp(m);
