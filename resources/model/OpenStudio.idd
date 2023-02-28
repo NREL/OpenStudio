@@ -14377,6 +14377,7 @@ OS:HeatPump:AirToWater:FuelFired:Cooling,
        \required-field
        \reference HeatPumpAirToWaterFuelFiredCoolingNames
        \note Name of the fuel fired absorption heat pump system system
+       \reference ConnectionObject
    A3, \field Water Inlet Node Name
        \type object-list
        \required-field
