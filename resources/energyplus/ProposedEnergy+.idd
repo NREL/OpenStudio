@@ -44382,12 +44382,16 @@ HeatPump:PlantLoop:EIR:Heating,
         \note PLR = part load ratio (hot load/steady state capacity)
 
 HeatPump:AirToWater:FuelFired:Heating,
-  \memo The object defines a fuel-fired absorption heat pump based on equation-fit models.
-  \min-fields 31
+       \memo The object defines a fuel-fired absorption heat pump based on equation-fit models.
+       \min-fields 31
   A1 , \field Name
        \required-field
        \reference HeatPumpAirToWaterFuelFiredHeatingNames
        \note Name of the fuel fired absorption heat pump system system
+       \reference-class-name validPlantEquipmentTypes
+       \reference validPlantEquipmentNames
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
   A2 , \field Water Inlet Node Name
        \required-field
        \type node
@@ -44557,12 +44561,16 @@ HeatPump:AirToWater:FuelFired:Heating,
        \note Standby Electric Power in [W]
 
 HeatPump:AirToWater:FuelFired:Cooling,
-  \memo The object defines a fuel-fired absorption heat pump based on equation-fit models.
-  \min-fields 26
+       \memo The object defines a fuel-fired absorption heat pump based on equation-fit models.
+       \min-fields 26
   A1 , \field Name
        \required-field
        \reference HeatPumpAirToWaterFuelFiredCoolingNames
        \note Name of the fuel fired absorption heat pump system system
+       \reference-class-name validPlantEquipmentTypes
+       \reference validPlantEquipmentNames
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
   A2 , \field Water Inlet Node Name
        \required-field
        \type node
