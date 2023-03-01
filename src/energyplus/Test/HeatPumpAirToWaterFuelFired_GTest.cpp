@@ -137,6 +137,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpAirToWaterFuelFired) {
 
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::HeatPump_AirToWater_FuelFired_Heating).size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::HeatPump_AirToWater_FuelFired_Cooling).size());
+  EXPECT_EQ(3u, w.getObjectsByType(IddObjectType::OutdoorAir_Node).size());
   EXPECT_EQ(10u, w.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
   EXPECT_EQ(9u, w.getObjectsByType(IddObjectType::Curve_Quadratic).size());
 
@@ -147,7 +148,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpAirToWaterFuelFired) {
             idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterInletNodeName, false).get());
   EXPECT_EQ(ffhp_htg.outletModelObject().get().nameString(),
             idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterOutletNodeName, false).get());
-  EXPECT_TRUE(idf_ffhp_htg.isEmpty(HeatPump_AirToWater_FuelFired_HeatingFields::AirSourceNodeName));
+  EXPECT_EQ(ffhp_htg.nameString() + " OA Node", idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::AirSourceNodeName, false).get());
   EXPECT_EQ(ffhp_clg.nameString(), idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::CompanionCoolingHeatPumpName, false).get());
   EXPECT_EQ("Propane", idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelType, false).get());
   EXPECT_EQ("AnyText", idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::EndUseSubcategory, false).get());
@@ -193,7 +194,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpAirToWaterFuelFired) {
             idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName, false).get());
   EXPECT_EQ(ffhp_clg.outletModelObject().get().nameString(),
             idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName, false).get());
-  EXPECT_TRUE(idf_ffhp_clg.isEmpty(HeatPump_AirToWater_FuelFired_CoolingFields::AirSourceNodeName));
+  EXPECT_EQ(ffhp_clg.nameString() + " OA Node", idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::AirSourceNodeName, false).get());
   EXPECT_EQ(ffhp_htg.nameString(), idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::CompanionHeatingHeatPumpName, false).get());
   EXPECT_EQ("Propane", idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::FuelType, false).get());
   EXPECT_EQ("AnyText", idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory, false).get());
