@@ -137,12 +137,92 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpAirToWaterFuelFired) {
 
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::HeatPump_AirToWater_FuelFired_Heating).size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::HeatPump_AirToWater_FuelFired_Cooling).size());
+  EXPECT_EQ(10u, w.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
+  EXPECT_EQ(9u, w.getObjectsByType(IddObjectType::Curve_Quadratic).size());
 
   IdfObject idf_ffhp_htg = w.getObjectsByType(IddObjectType::HeatPump_AirToWater_FuelFired_Heating)[0];
 
   EXPECT_EQ(ffhp_htg.nameString(), idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::Name, false).get());
+  EXPECT_EQ(ffhp_htg.inletModelObject().get().nameString(),
+            idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterInletNodeName, false).get());
+  EXPECT_EQ(ffhp_htg.outletModelObject().get().nameString(),
+            idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterOutletNodeName, false).get());
+  EXPECT_TRUE(idf_ffhp_htg.isEmpty(HeatPump_AirToWater_FuelFired_HeatingFields::AirSourceNodeName));
+  EXPECT_EQ(ffhp_clg.nameString(), idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::CompanionCoolingHeatPumpName, false).get());
+  EXPECT_EQ("Propane", idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelType, false).get());
+  EXPECT_EQ("AnyText", idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::EndUseSubcategory, false).get());
+  EXPECT_EQ(1.0, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::NominalHeatingCapacity, false).get());
+  EXPECT_EQ(2.0, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::NominalCOP, false).get());
+  EXPECT_EQ(3.0, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DesignFlowRate, false).get());
+  EXPECT_EQ(4.0, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DesignSupplyTemperature, false).get());
+  EXPECT_EQ(5.0, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DesignTemperatureLift, false).get());
+  EXPECT_EQ(6.0, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::SizingFactor, false).get());
+  EXPECT_EQ("ConstantFlow", idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::FlowMode, false).get());
+  EXPECT_EQ("WetBulb", idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::OutdoorAirTemperatureCurveInputVariable, false).get());
+  EXPECT_EQ("LeavingCondenser", idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::WaterTemperatureCurveInputVariable, false).get());
+  EXPECT_EQ(curve1.nameString(),
+            idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::NormalizedCapacityFunctionofTemperatureCurveName, false).get());
+  EXPECT_EQ(curve2.nameString(),
+            idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName, false).get());
+  EXPECT_EQ(curve3.nameString(),
+            idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioFunctionofPLRCurveName, false).get());
+  EXPECT_EQ(0.5, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::MinimumPartLoadRatio, false).get());
+  EXPECT_EQ(0.75, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::MaximumPartLoadRatio, false).get());
+  EXPECT_EQ("OnDemand", idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::DefrostControlType, false).get());
+  EXPECT_EQ(0.8, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::DefrostOperationTimeFraction, false).get());
+  EXPECT_EQ(curve4.nameString(),
+            idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioDefrostAdjustmentCurveName, false).get());
+  EXPECT_EQ(10.0, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::ResistiveDefrostHeaterCapacity, false).get());
+  EXPECT_EQ(9.9,
+            idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation, false).get());
+  EXPECT_EQ(curve5.nameString(), idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::CyclingRatioFactorCurveName, false).get());
+  EXPECT_EQ(12.0, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::NominalAuxiliaryElectricPower, false).get());
+  EXPECT_EQ(
+    curve6.nameString(),
+    idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName, false)
+      .get());
+  EXPECT_EQ(
+    curve7.nameString(),
+    idf_ffhp_htg.getString(HeatPump_AirToWater_FuelFired_HeatingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName, false).get());
+  EXPECT_EQ(13.0, idf_ffhp_htg.getDouble(HeatPump_AirToWater_FuelFired_HeatingFields::StandbyElectricPower, false).get());
 
   IdfObject idf_ffhp_clg = w.getObjectsByType(IddObjectType::HeatPump_AirToWater_FuelFired_Cooling)[0];
 
   EXPECT_EQ(ffhp_clg.nameString(), idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::Name, false).get());
+  EXPECT_EQ(ffhp_clg.inletModelObject().get().nameString(),
+            idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::WaterInletNodeName, false).get());
+  EXPECT_EQ(ffhp_clg.outletModelObject().get().nameString(),
+            idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName, false).get());
+  EXPECT_TRUE(idf_ffhp_clg.isEmpty(HeatPump_AirToWater_FuelFired_CoolingFields::AirSourceNodeName));
+  EXPECT_EQ(ffhp_htg.nameString(), idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::CompanionHeatingHeatPumpName, false).get());
+  EXPECT_EQ("Propane", idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::FuelType, false).get());
+  EXPECT_EQ("AnyText", idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::EndUseSubcategory, false).get());
+  EXPECT_EQ(1.0, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::NominalCoolingCapacity, false).get());
+  EXPECT_EQ(2.0, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::NominalCOP, false).get());
+  EXPECT_EQ(3.0, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::DesignFlowRate, false).get());
+  EXPECT_EQ(4.0, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::DesignSupplyTemperature, false).get());
+  EXPECT_EQ(5.0, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::DesignTemperatureLift, false).get());
+  EXPECT_EQ(6.0, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::SizingFactor, false).get());
+  EXPECT_EQ("ConstantFlow", idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::FlowMode, false).get());
+  EXPECT_EQ("WetBulb", idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::OutdoorAirTemperatureCurveInputVariable, false).get());
+  EXPECT_EQ("LeavingEvaporator",
+            idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::WaterTemperatureCurveInputVariable, false).get());
+  EXPECT_EQ(curve8.nameString(),
+            idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::NormalizedCapacityFunctionofTemperatureCurveName, false).get());
+  EXPECT_EQ(curve9.nameString(),
+            idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofTemperatureCurveName, false).get());
+  EXPECT_EQ(curve10.nameString(),
+            idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::FuelEnergyInputRatioFunctionofPLRCurveName, false).get());
+  EXPECT_EQ(0.5, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::MinimumPartLoadRatio, false).get());
+  EXPECT_EQ(0.75, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::MaximumPartLoadRatio, false).get());
+  EXPECT_EQ(curve11.nameString(), idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::CyclingRatioFactorCurveName, false).get());
+  EXPECT_EQ(12.0, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, false).get());
+  EXPECT_EQ(
+    curve12.nameString(),
+    idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName, false)
+      .get());
+  EXPECT_EQ(
+    curve13.nameString(),
+    idf_ffhp_clg.getString(HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofPLRCurveName, false).get());
+  EXPECT_EQ(13.0, idf_ffhp_clg.getDouble(HeatPump_AirToWater_FuelFired_CoolingFields::StandbyElectricPower, false).get());
 }
