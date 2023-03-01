@@ -698,7 +698,7 @@ OS:ZoneAirHeatBalanceAlgorithm,
   A1, \field Handle
        \type handle
        \required-field
-  A2; \field Algorithm
+  A2, \field Algorithm
        \note Determines which algorithm will be used to solve the air heat balance
        \type choice
        \default ThirdOrderBackwardDifference
