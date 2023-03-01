@@ -1116,12 +1116,30 @@ namespace model {
         if (std::abs(area1.get() - intersection->area1()) > areaTol) {
           LOG(Error, "Initial area of surface '" << this->nameString() << "' " << area1.get() << " does not equal post intersection area "
                                                  << intersection->area1());
+          if constexpr (extraLogging) {
+            Point3dVectorVector tmp1{faceVertices, otherFaceVertices};
+            LOG(Debug, tmp1);
+            Point3dVectorVector tmp;
+            tmp.push_back(intersection->polygon1());
+            for (auto& x : intersection->newPolygons1())
+              tmp.push_back(x);
+            LOG(Debug, tmp);
+          }
         }
       }
       if (area2) {
         if (std::abs(area2.get() - intersection->area2()) > areaTol) {
           LOG(Error, "Initial area of other surface '" << otherSurface.nameString() << "' " << area2.get()
                                                        << " does not equal post intersection area " << intersection->area2());
+          if constexpr (extraLogging) {
+            Point3dVectorVector tmp1{faceVertices, otherFaceVertices};
+            LOG(Debug, tmp1);
+            Point3dVectorVector tmp;
+            tmp.push_back(intersection->polygon2());
+            for (auto& x : intersection->newPolygons2())
+              tmp.push_back(x);
+            LOG(Debug, tmp);
+          }
         }
       }
 

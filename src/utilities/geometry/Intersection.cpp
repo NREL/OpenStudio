@@ -150,6 +150,9 @@ std::ostream& operator<<(std::ostream& os, const BoostMultiPolygon& boostPolygon
   return os;
 }
 
+// Scale factor for parameters passed to boost
+double scaleBy = 1000.0;
+
 // Cleans a polygon by shrinking and expanding. Can return multiple polygons
 std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
 
@@ -161,9 +164,9 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   constexpr double tol = offsetBy;
   // Sets the limit to how far miters are extended for sharp corners
   constexpr double mitreLimit = 100;
-  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(offsetBy);
-  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-offsetBy);
-  const boost::geometry::strategy::buffer::join_miter join_strategy(mitreLimit);
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(offsetBy * scaleBy);
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-offsetBy * scaleBy);
+  const boost::geometry::strategy::buffer::join_miter join_strategy(mitreLimit * scaleBy);
   const boost::geometry::strategy::buffer::end_flat end_strategy;
   const boost::geometry::strategy::buffer::side_straight side_strategy;
   const boost::geometry::strategy::buffer::point_circle point_strategy;
@@ -195,7 +198,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
 
   // Very small tolerance to remove artifacts from the inflate
   constexpr double tol1 = 0.001;
-  boost::geometry::simplify(resultExpand, result, tol1);
+  boost::geometry::simplify(resultExpand, result, tol1 * scaleBy);
   // cppcheck-suppress knownConditionTrueFalse
   if constexpr (extraLogging) {
     shrinkExpand.push_back(result[0]);
@@ -221,7 +224,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
         for (const auto& oriRing : polygon.outer()) {
           const Point3d p1(oriRing.x(), oriRing.y(), 0);
           // Two points are within tolerance set the result to the original input point
-          if (getDistance(point3d, p1) <= tol) {
+          if (getDistance(point3d, p1) <= tol * scaleBy) {
             cleanedRing.x(oriRing.x());
             cleanedRing.y(oriRing.y());
             break;
@@ -262,6 +265,7 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
   outerPoly.Init(outer.size() - 1);
   outerPoly.SetHole(false);
   //std::cout << "outer :";
+  // Note - no scaling conversion here as this accepts boost data and returns boost data
   for (size_t i = 0; i < outer.size() - 1; ++i) {
     outerPoly[i].x = outer[i].x();
     outerPoly[i].y = outer[i].y();
@@ -280,6 +284,7 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
     innerPoly.Init(inner.size() - 1);
     innerPoly.SetHole(true);
     //std::cout << "inner :";
+    // Note - no scaling conversion here as this accepts boost data and returns boost data
     for (unsigned i = 0; i < inner.size() - 1; ++i) {
       innerPoly[i].x = inner[i].x();
       innerPoly[i].y = inner[i].y();
@@ -346,7 +351,7 @@ boost::tuple<double, double> boostPointFromPoint3d(const Point3d& point3d, std::
   // detailed method, try to combine points within tolerance
   const Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
 
-  return boost::make_tuple(resultPoint.x(), resultPoint.y());
+  return boost::make_tuple(resultPoint.x() * scaleBy, resultPoint.y() * scaleBy);
 }
 
 // convert vertices to a boost polygon, all vertices must lie on z = 0 plane
@@ -459,7 +464,7 @@ std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::
 
   // add point for each vertex except final vertex
   for (unsigned i = 0; i < outer.size() - 1; ++i) {
-    const Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
+    const Point3d point3d(outer[i].x() / scaleBy, outer[i].y() / scaleBy, 0.0);
 
     // try to combine points within tolerance
     Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
@@ -838,9 +843,13 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
 
   BoostMultiPolygon polys;
   if constexpr (extraLogging) {
-    boost::optional<BoostPolygon> poly = boostPolygonFromVertices(polygon2, allPoints, tol);
-    if (poly.has_value()) {
-      polys.push_back(*poly);
+    boost::optional<BoostPolygon> poly1 = boostPolygonFromVertices(polygon1, allPoints, tol);
+    if (poly1.has_value()) {
+      polys.push_back(*poly1);
+    }
+    boost::optional<BoostPolygon> poly2 = boostPolygonFromVertices(polygon2, allPoints, tol);
+    if (poly2.has_value()) {
+      polys.push_back(*poly2);
     }
   }
 
@@ -1309,7 +1318,7 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVecto
 
   Point3dVector points;
   for (unsigned i = 0; i < outer.size() - 1; ++i) {
-    const Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
+    const Point3d point3d(outer[i].x() / scaleBy, outer[i].y() / scaleBy, 0.0);
     Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
     // don't keep repeated vertices
     if ((i > 0) && (points.back() == resultPoint)) {
@@ -1326,7 +1335,7 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVecto
   for (const auto& inner : boostPolygon.inners()) {
     Point3dVector hole;
     for (unsigned i = 0; i < inner.size() - 1; ++i) {
-      Point3d point3d(inner[i].x(), inner[i].y(), 0.0);
+      Point3d point3d(inner[i].x() / scaleBy, inner[i].y() / scaleBy, 0.0);
       const Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
       // don't keep repeated vertices
       if ((i > 0) && (hole.back() == resultPoint)) {
@@ -1474,8 +1483,8 @@ std::vector<Polygon3d> bufferAll(const std::vector<Polygon3d>& polygons, double 
     source.push_back(*boostPolygon);
   }
 
-  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(tol);
-  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-tol);
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(tol * scaleBy);
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-tol * scaleBy);
   const boost::geometry::strategy::buffer::join_miter join_strategy;
   const boost::geometry::strategy::buffer::end_flat end_strategy;
   const boost::geometry::strategy::buffer::side_straight side_strategy;
@@ -1498,7 +1507,6 @@ std::vector<Polygon3d> bufferAll(const std::vector<Polygon3d>& polygons, double 
 }
 
 boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon1, double amount, double tol) {
-
   std::vector<Point3d> allPoints;
   boost::optional<BoostPolygon> boostPolygon1 = nonIntersectingBoostPolygonFromVertices(polygon1, allPoints, tol);
 
@@ -1509,8 +1517,8 @@ boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon
   constexpr double miterLimit = 15;
   //const double buffer_distance = 1.0;
   //const int points_per_circle = 36;
-  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
-  const boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit);
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount * scaleBy);
+  const boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit * scaleBy);
   const boost::geometry::strategy::buffer::end_flat end_strategy;
   const boost::geometry::strategy::buffer::side_straight side_strategy;
   const boost::geometry::strategy::buffer::point_circle point_strategy;
@@ -1542,8 +1550,8 @@ boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std:
   }
 
   constexpr double miterLimit = 15;
-  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
-  const boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit);
+  const boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount * scaleBy);
+  const boost::geometry::strategy::buffer::join_miter join_strategy(miterLimit * scaleBy);
   const boost::geometry::strategy::buffer::end_flat end_strategy;
   const boost::geometry::strategy::buffer::side_straight side_strategy;
   const boost::geometry::strategy::buffer::point_circle point_strategy;
