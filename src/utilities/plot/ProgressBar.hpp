@@ -48,7 +48,7 @@ class UTILITIES_API ProgressBar
 
  public:
   /// virtual destructor
-  virtual ~ProgressBar();
+  virtual ~ProgressBar() = default;
 
   /// get min
   virtual int minimum() const = 0;

@@ -66,7 +66,12 @@ namespace model {
   class MODEL_API SimulationControl : public ParentObject
   {
    public:
-    virtual ~SimulationControl() {}
+    virtual ~SimulationControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SimulationControl(const SimulationControl& other) = default;
+    SimulationControl(SimulationControl&& other) = default;
+    SimulationControl& operator=(const SimulationControl&) = default;
+    SimulationControl& operator=(SimulationControl&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -167,7 +172,7 @@ namespace model {
 
     void resetTemperatureConvergenceToleranceValue();
 
-    bool setSolarDistribution(std::string solarDistribution);
+    bool setSolarDistribution(const std::string& solarDistribution);
 
     void resetSolarDistribution();
 
@@ -255,7 +260,7 @@ namespace model {
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
 
-    typedef detail::SimulationControl_Impl ImplType;
+    using ImplType = detail::SimulationControl_Impl;
 
     explicit SimulationControl(std::shared_ptr<ImplType> impl);
 
@@ -266,7 +271,7 @@ namespace model {
   };
 
   /** \relates SimulationControl */
-  typedef boost::optional<SimulationControl> OptionalSimulationControl;
+  using OptionalSimulationControl = boost::optional<SimulationControl>;
 
 }  // namespace model
 }  // namespace openstudio

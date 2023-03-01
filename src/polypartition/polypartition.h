@@ -24,7 +24,7 @@
 #include <list>
 #include <set>
 
-typedef double tppl_float;
+using tppl_float = double;
 
 #define TPPL_CCW 1
 #define TPPL_CW -1
@@ -67,17 +67,19 @@ struct TPPLPoint
   }
 
   bool operator==(const TPPLPoint& p) const {
-    if ((x == p.x) && (y == p.y))
+    if ((x == p.x) && (y == p.y)) {
       return true;
-    else
+    } else {
       return false;
+    }
   }
 
   bool operator!=(const TPPLPoint& p) const {
-    if ((x == p.x) && (y == p.y))
+    if ((x == p.x) && (y == p.y)) {
       return false;
-    else
+    } else {
       return true;
+    }
   }
 };
 
@@ -164,7 +166,7 @@ class TPPLPoly
 #ifdef TPPL_ALLOCATOR
 typedef std::list<TPPLPoly, TPPL_ALLOCATOR(TPPLPoly)> TPPLPolyList;
 #else
-typedef std::list<TPPLPoly> TPPLPolyList;
+using TPPLPolyList = std::list<TPPLPoly>;
 #endif
 
 class TPPLPartition
@@ -209,7 +211,7 @@ class TPPLPartition
 #ifdef TPPL_ALLOCATOR
   typedef std::list<Diagonal, TPPL_ALLOCATOR(Diagonal)> DiagonalList;
 #else
-  typedef std::list<Diagonal> DiagonalList;
+  using DiagonalList = std::list<Diagonal>;
 #endif
 
   //dynamic programming state for minimum-weight triangulation

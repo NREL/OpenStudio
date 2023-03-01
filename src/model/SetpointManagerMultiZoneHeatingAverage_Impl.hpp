@@ -53,7 +53,7 @@ namespace model {
 
       SetpointManagerMultiZoneHeatingAverage_Impl(const SetpointManagerMultiZoneHeatingAverage_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerMultiZoneHeatingAverage_Impl() {}
+      virtual ~SetpointManagerMultiZoneHeatingAverage_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -115,10 +115,10 @@ namespace model {
     std::vector<HVACComponent> PlantEquipmentOperationRangeBasedScheme_Impl::removeLoadRange(double upperLimit) {
       auto t_extensibleGroups = extensibleGroups();
       if (t_extensibleGroups.size() == 1u) {
-        return std::vector<HVACComponent>();
+        return {};
       }
       if (upperLimit >= maximumUpperLimit()) {
-        return std::vector<HVACComponent>();
+        return {};
       }
 
       for (auto eg = t_extensibleGroups.begin(); eg != t_extensibleGroups.end(); ++eg) {
@@ -143,7 +143,7 @@ namespace model {
         }
       }
 
-      return std::vector<HVACComponent>();
+      return {};
     }
 
     std::vector<double> PlantEquipmentOperationRangeBasedScheme_Impl::loadRangeUpperLimits() const {
@@ -171,7 +171,7 @@ namespace model {
         }
       }
 
-      return std::vector<HVACComponent>();
+      return {};
     }
 
     bool PlantEquipmentOperationRangeBasedScheme_Impl::addEquipment(double upperLimit, const HVACComponent& equipment) {
@@ -317,7 +317,7 @@ namespace model {
         }
       }
 
-      return clone;
+      return std::move(clone);
     }
 
   }  // namespace detail

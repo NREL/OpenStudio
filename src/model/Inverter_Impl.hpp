@@ -52,7 +52,7 @@ namespace model {
 
       Inverter_Impl(const Inverter_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~Inverter_Impl() {}
+      virtual ~Inverter_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

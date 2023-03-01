@@ -76,7 +76,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageCooling_addToNode) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerSingleZoneOneStageCooling> SetpointManagerSingleZoneOneStageCoolings =
-    m.getModelObjects<SetpointManagerSingleZoneOneStageCooling>();
+    m.getConcreteModelObjects<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_EQ(3, SetpointManagerSingleZoneOneStageCoolings.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode().get());
@@ -86,7 +86,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageCooling_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
   EXPECT_EQ(1, _setpointManagers.size());
-  SetpointManagerSingleZoneOneStageCoolings = m.getModelObjects<SetpointManagerSingleZoneOneStageCooling>();
+  SetpointManagerSingleZoneOneStageCoolings = m.getConcreteModelObjects<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_EQ(2, SetpointManagerSingleZoneOneStageCoolings.size());
 }
 
@@ -103,14 +103,14 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageCooling_remove) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerSingleZoneOneStageCooling> SetpointManagerSingleZoneOneStageCoolings =
-    m.getModelObjects<SetpointManagerSingleZoneOneStageCooling>();
+    m.getConcreteModelObjects<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_EQ(1, SetpointManagerSingleZoneOneStageCoolings.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  SetpointManagerSingleZoneOneStageCoolings = m.getModelObjects<SetpointManagerSingleZoneOneStageCooling>();
+  SetpointManagerSingleZoneOneStageCoolings = m.getConcreteModelObjects<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_EQ(0, SetpointManagerSingleZoneOneStageCoolings.size());
 }
 
@@ -125,7 +125,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageCooling_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerSingleZoneOneStageCooling testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneOneStageCooling>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -153,7 +153,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageCooling_cloneTwoAirloop) {
 
   Model m2;
 
-  SetpointManagerSingleZoneOneStageCooling testObjectClone = testObject.clone(m2).cast<SetpointManagerSingleZoneOneStageCooling>();
+  auto testObjectClone = testObject.clone(m2).cast<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.controlZone());
 
@@ -193,7 +193,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageCooling_customDataClone) {
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
   EXPECT_EQ(thermalZone, testObject.controlZone().get());
 
-  SetpointManagerSingleZoneOneStageCooling testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneOneStageCooling>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneOneStageCooling>();
 
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.controlZone());

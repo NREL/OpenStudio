@@ -66,11 +66,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceShelf) {
   Space space(model);
   space.setThermalZone(zone);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 10, 3));
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 3));
+  Point3dVector points{
+    {0, 10, 3},
+    {0, 10, 0},
+    {0, 0, 0},
+    {0, 0, 3},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
   EXPECT_EQ("Wall", surface.surfaceType());
@@ -93,11 +94,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceShelf) {
   EXPECT_TRUE(result[1].daylightingDeviceShelf()->insideShelf());
   EXPECT_FALSE(result[1].daylightingDeviceShelf()->outsideShelf());
 
-  EXPECT_EQ(1u, model.getModelObjects<Surface>().size());
-  EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceShelf>().size());
-  EXPECT_EQ(1u, model.getModelObjects<InteriorPartitionSurface>().size());
-  EXPECT_EQ(1u, model.getModelObjects<ShadingSurface>().size());
-  EXPECT_EQ(0, model.getModelObjects<InternalMass>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DaylightingDeviceShelf>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<InteriorPartitionSurface>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ShadingSurface>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<InternalMass>().size());
 
   {
     ForwardTranslator ft;
@@ -122,11 +123,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceShelf) {
   // remove the shelf, does not remove shelf surfaces
   result[1].daylightingDeviceShelf()->remove();
 
-  EXPECT_EQ(1u, model.getModelObjects<Surface>().size());
-  EXPECT_EQ(0, model.getModelObjects<DaylightingDeviceShelf>().size());
-  EXPECT_EQ(1u, model.getModelObjects<InteriorPartitionSurface>().size());
-  EXPECT_EQ(1u, model.getModelObjects<ShadingSurface>().size());
-  EXPECT_EQ(0, model.getModelObjects<InternalMass>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceShelf>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<InteriorPartitionSurface>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ShadingSurface>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<InternalMass>().size());
 
   {
     ForwardTranslator ft;

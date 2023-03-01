@@ -38,7 +38,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, OutputJSON_GettersSetters) {
 
   Model model;
-  OutputJSON outputJSON = model.getUniqueModelObject<OutputJSON>();
+  auto outputJSON = model.getUniqueModelObject<OutputJSON>();
 
   // Option Type: Required String
   EXPECT_TRUE(outputJSON.setOptionType("TimeSeries"));

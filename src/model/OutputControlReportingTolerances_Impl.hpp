@@ -52,7 +52,7 @@ namespace model {
 
       OutputControlReportingTolerances_Impl(const OutputControlReportingTolerances_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputControlReportingTolerances_Impl() {}
+      virtual ~OutputControlReportingTolerances_Impl() = default;
 
       //@}
 

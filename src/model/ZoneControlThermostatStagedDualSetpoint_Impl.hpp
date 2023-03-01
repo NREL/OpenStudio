@@ -53,7 +53,7 @@ namespace model {
 
       ZoneControlThermostatStagedDualSetpoint_Impl(const ZoneControlThermostatStagedDualSetpoint_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneControlThermostatStagedDualSetpoint_Impl() {}
+      virtual ~ZoneControlThermostatStagedDualSetpoint_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

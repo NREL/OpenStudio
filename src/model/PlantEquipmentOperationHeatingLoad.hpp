@@ -51,7 +51,12 @@ namespace model {
 
     explicit PlantEquipmentOperationHeatingLoad(const Model& model);
 
-    virtual ~PlantEquipmentOperationHeatingLoad() {}
+    virtual ~PlantEquipmentOperationHeatingLoad() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantEquipmentOperationHeatingLoad(const PlantEquipmentOperationHeatingLoad& other) = default;
+    PlantEquipmentOperationHeatingLoad(PlantEquipmentOperationHeatingLoad&& other) = default;
+    PlantEquipmentOperationHeatingLoad& operator=(const PlantEquipmentOperationHeatingLoad&) = default;
+    PlantEquipmentOperationHeatingLoad& operator=(PlantEquipmentOperationHeatingLoad&&) = default;
 
     //@}
 
@@ -59,7 +64,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationHeatingLoad_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationHeatingLoad_Impl;
 
     explicit PlantEquipmentOperationHeatingLoad(std::shared_ptr<detail::PlantEquipmentOperationHeatingLoad_Impl> impl);
 
@@ -73,10 +78,10 @@ namespace model {
   };
 
   /** \relates PlantEquipmentOperationHeatingLoad*/
-  typedef boost::optional<PlantEquipmentOperationHeatingLoad> OptionalPlantEquipmentOperationHeatingLoad;
+  using OptionalPlantEquipmentOperationHeatingLoad = boost::optional<PlantEquipmentOperationHeatingLoad>;
 
   /** \relates PlantEquipmentOperationHeatingLoad*/
-  typedef std::vector<PlantEquipmentOperationHeatingLoad> PlantEquipmentOperationHeatingLoadVector;
+  using PlantEquipmentOperationHeatingLoadVector = std::vector<PlantEquipmentOperationHeatingLoad>;
 
 }  // namespace model
 }  // namespace openstudio

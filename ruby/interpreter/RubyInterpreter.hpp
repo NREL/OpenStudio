@@ -707,7 +707,7 @@ class RubyInterpreter
     registerType<float>("float");
   }
 
-  ~RubyInterpreter() {}
+  ~RubyInterpreter() = default;
 
   /// Register a type along with its vector versions so that it can be used
   /// from within the Ruby wrapper. These are necessary because there's no way to divine

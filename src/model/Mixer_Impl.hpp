@@ -49,7 +49,7 @@ namespace model {
 
       Mixer_Impl(const Mixer_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~Mixer_Impl() {}
+      virtual ~Mixer_Impl() = default;
 
       virtual unsigned outletPort() const = 0;
 

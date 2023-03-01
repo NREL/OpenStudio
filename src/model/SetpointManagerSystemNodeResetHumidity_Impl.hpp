@@ -53,7 +53,7 @@ namespace model {
 
       SetpointManagerSystemNodeResetHumidity_Impl(const SetpointManagerSystemNodeResetHumidity_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerSystemNodeResetHumidity_Impl() {}
+      virtual ~SetpointManagerSystemNodeResetHumidity_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

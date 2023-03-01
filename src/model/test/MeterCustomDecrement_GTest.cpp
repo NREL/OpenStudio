@@ -52,10 +52,10 @@ TEST_F(ModelFixture, MeterCustomDecrement_Remove) {
   Model model;
   MeterCustomDecrement testObject(model, "Electricity:Facility");
 
-  EXPECT_EQ((unsigned)1, model.getModelObjects<MeterCustomDecrement>().size());
+  EXPECT_EQ((unsigned)1, model.getConcreteModelObjects<MeterCustomDecrement>().size());
 
   testObject.remove();
-  EXPECT_EQ((unsigned)0, model.getModelObjects<MeterCustomDecrement>().size());
+  EXPECT_EQ((unsigned)0, model.getConcreteModelObjects<MeterCustomDecrement>().size());
 }
 
 TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups) {

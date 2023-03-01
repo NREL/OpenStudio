@@ -74,8 +74,6 @@ namespace model {
       return result;
     }
 
-    ExternalFile_Impl::~ExternalFile_Impl() {}
-
     IddObjectType ExternalFile_Impl::iddObjectType() const {
       return ExternalFile::iddObjectType();
     }
@@ -285,7 +283,7 @@ namespace model {
   }
 
   IddObjectType ExternalFile::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_External_File);
+    return {IddObjectType::OS_External_File};
   }
 
   std::vector<std::string> ExternalFile::columnSeparatorValues() {

@@ -71,15 +71,15 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACFourPipeFanCoil_Impl::clone(Model model) const {
-      ZoneHVACFourPipeFanCoil fourPipeFanCoilClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACFourPipeFanCoil>();
+      auto fourPipeFanCoilClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACFourPipeFanCoil>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
       auto t_coolingCoil = coolingCoil();
-      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
+      auto coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       fourPipeFanCoilClone.setSupplyAirFan(supplyFanClone);
 
@@ -100,7 +100,7 @@ namespace model {
         }
       }
 
-      return fourPipeFanCoilClone;
+      return std::move(fourPipeFanCoilClone);
     }
 
     std::vector<IdfObject> ZoneHVACFourPipeFanCoil_Impl::remove() {
@@ -141,7 +141,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACFourPipeFanCoil_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_FourPipeFanCoilFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACFourPipeFanCoil", "Availability"));
       }
@@ -348,7 +349,7 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACFourPipeFanCoil_Impl::setCapacityControlMethod(std::string capacityControlMethod) {
+    bool ZoneHVACFourPipeFanCoil_Impl::setCapacityControlMethod(const std::string& capacityControlMethod) {
       bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::CapacityControlMethod, capacityControlMethod);
       return result;
     }
@@ -411,12 +412,12 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+    bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
       bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerObjectType, outdoorAirMixerObjectType);
       return result;
     }
 
-    bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+    bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
       bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerName, outdoorAirMixerName);
       OS_ASSERT(result);
       return result;
@@ -837,7 +838,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACFourPipeFanCoil::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil);
+    return {IddObjectType::OS_ZoneHVAC_FourPipeFanCoil};
   }
 
   std::vector<std::string> ZoneHVACFourPipeFanCoil::capacityControlMethodValues() {
@@ -964,7 +965,7 @@ namespace model {
     return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool ZoneHVACFourPipeFanCoil::setCapacityControlMethod(std::string capacityControlMethod) {
+  bool ZoneHVACFourPipeFanCoil::setCapacityControlMethod(const std::string& capacityControlMethod) {
     return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setCapacityControlMethod(capacityControlMethod);
   }
 
@@ -1008,11 +1009,11 @@ namespace model {
     getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->resetOutdoorAirSchedule();
   }
 
-  bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+  bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
     return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
   }
 
-  bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
     return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
   }
 

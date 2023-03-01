@@ -55,7 +55,12 @@ namespace model {
 
     explicit BoilerHotWater(const Model& model);
 
-    virtual ~BoilerHotWater() {}
+    virtual ~BoilerHotWater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    BoilerHotWater(const BoilerHotWater& other) = default;
+    BoilerHotWater(BoilerHotWater&& other) = default;
+    BoilerHotWater& operator=(const BoilerHotWater&) = default;
+    BoilerHotWater& operator=(BoilerHotWater&&) = default;
 
     //@}
 
@@ -118,7 +123,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
 
     bool setNominalCapacity(double nominalCapacity);
 
@@ -128,7 +133,7 @@ namespace model {
 
     bool setNominalThermalEfficiency(double nominalThermalEfficiency);
 
-    bool setEfficiencyCurveTemperatureEvaluationVariable(std::string efficiencyCurveTemperatureEvaluationVariable);
+    bool setEfficiencyCurveTemperatureEvaluationVariable(const std::string& efficiencyCurveTemperatureEvaluationVariable);
 
     void resetEfficiencyCurveTemperatureEvaluationVariable();
 
@@ -158,7 +163,7 @@ namespace model {
 
     void resetWaterOutletUpperTemperatureLimit();
 
-    bool setBoilerFlowMode(std::string boilerFlowMode);
+    bool setBoilerFlowMode(const std::string& boilerFlowMode);
 
     void resetBoilerFlowMode();
 
@@ -179,7 +184,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::BoilerHotWater_Impl ImplType;
+    using ImplType = detail::BoilerHotWater_Impl;
 
     friend class detail::BoilerHotWater_Impl;
     friend class Model;
@@ -194,10 +199,10 @@ namespace model {
   };
 
   /** \relates BoilerHotWater*/
-  typedef boost::optional<BoilerHotWater> OptionalBoilerHotWater;
+  using OptionalBoilerHotWater = boost::optional<BoilerHotWater>;
 
   /** \relates BoilerHotWater*/
-  typedef std::vector<BoilerHotWater> BoilerHotWaterVector;
+  using BoilerHotWaterVector = std::vector<BoilerHotWater>;
 
 }  // namespace model
 }  // namespace openstudio

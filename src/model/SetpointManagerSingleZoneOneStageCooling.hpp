@@ -55,7 +55,12 @@ namespace model {
 
     explicit SetpointManagerSingleZoneOneStageCooling(const Model& model);
 
-    virtual ~SetpointManagerSingleZoneOneStageCooling() {}
+    virtual ~SetpointManagerSingleZoneOneStageCooling() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerSingleZoneOneStageCooling(const SetpointManagerSingleZoneOneStageCooling& other) = default;
+    SetpointManagerSingleZoneOneStageCooling(SetpointManagerSingleZoneOneStageCooling&& other) = default;
+    SetpointManagerSingleZoneOneStageCooling& operator=(const SetpointManagerSingleZoneOneStageCooling&) = default;
+    SetpointManagerSingleZoneOneStageCooling& operator=(SetpointManagerSingleZoneOneStageCooling&&) = default;
 
     //@}
 
@@ -97,7 +102,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerSingleZoneOneStageCooling_Impl ImplType;
+    using ImplType = detail::SetpointManagerSingleZoneOneStageCooling_Impl;
 
     explicit SetpointManagerSingleZoneOneStageCooling(std::shared_ptr<detail::SetpointManagerSingleZoneOneStageCooling_Impl> impl);
 
@@ -111,10 +116,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerSingleZoneOneStageCooling*/
-  typedef boost::optional<SetpointManagerSingleZoneOneStageCooling> OptionalSetpointManagerSingleZoneOneStageCooling;
+  using OptionalSetpointManagerSingleZoneOneStageCooling = boost::optional<SetpointManagerSingleZoneOneStageCooling>;
 
   /** \relates SetpointManagerSingleZoneOneStageCooling*/
-  typedef std::vector<SetpointManagerSingleZoneOneStageCooling> SetpointManagerSingleZoneOneStageCoolingVector;
+  using SetpointManagerSingleZoneOneStageCoolingVector = std::vector<SetpointManagerSingleZoneOneStageCooling>;
 
 }  // namespace model
 }  // namespace openstudio

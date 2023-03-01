@@ -113,7 +113,7 @@ namespace model {
                 _model.connect(this->getObject<ModelObject>(), outletPort(), node, node.inletPort());
 
                 if (thermalZone) {
-                  AirTerminalSingleDuctInletSideMixer mo = this->getObject<AirTerminalSingleDuctInletSideMixer>();
+                  auto mo = this->getObject<AirTerminalSingleDuctInletSideMixer>();
                   thermalZone->addEquipment(mo);
                 }
 
@@ -129,7 +129,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctInletSideMixer_Impl::remove() {
       Model _model = this->model();
-      AirTerminalSingleDuctInletSideMixer thisObject = this->getObject<AirTerminalSingleDuctInletSideMixer>();
+      auto thisObject = this->getObject<AirTerminalSingleDuctInletSideMixer>();
       boost::optional<ThermalZone> t_thermalZone;
       boost::optional<ZoneHVACComponent> t_zoneComp;
 
@@ -234,7 +234,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalSingleDuctInletSideMixer::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_InletSideMixer);
+    return {IddObjectType::OS_AirTerminal_SingleDuct_InletSideMixer};
   }
 
   std::vector<std::string> AirTerminalSingleDuctInletSideMixer::perPersonVentilationRateModeValues() {

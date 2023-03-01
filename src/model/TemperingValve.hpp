@@ -53,7 +53,12 @@ namespace model {
 
     explicit TemperingValve(const Model& model);
 
-    virtual ~TemperingValve() {}
+    virtual ~TemperingValve() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    TemperingValve(const TemperingValve& other) = default;
+    TemperingValve(TemperingValve&& other) = default;
+    TemperingValve& operator=(const TemperingValve&) = default;
+    TemperingValve& operator=(TemperingValve&&) = default;
 
     //@}
 
@@ -91,7 +96,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::TemperingValve_Impl ImplType;
+    using ImplType = detail::TemperingValve_Impl;
 
     explicit TemperingValve(std::shared_ptr<detail::TemperingValve_Impl> impl);
 
@@ -105,10 +110,10 @@ namespace model {
   };
 
   /** \relates TemperingValve*/
-  typedef boost::optional<TemperingValve> OptionalTemperingValve;
+  using OptionalTemperingValve = boost::optional<TemperingValve>;
 
   /** \relates TemperingValve*/
-  typedef std::vector<TemperingValve> TemperingValveVector;
+  using TemperingValveVector = std::vector<TemperingValve>;
 
 }  // namespace model
 }  // namespace openstudio

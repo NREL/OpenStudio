@@ -165,7 +165,7 @@ namespace model {
         }
       }
 
-      for (IdfExtensibleGroup group : this->extensibleGroups()) {
+      for (const IdfExtensibleGroup& group : this->extensibleGroups()) {
         month = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Month);
         if (month && (month.get() == 2)) {
           day = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Day);
@@ -261,7 +261,7 @@ namespace model {
         temp.push_back(boost::lexical_cast<std::string>(time.minutes()));
         temp.push_back(toString(values[i]));
 
-        ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
+        auto group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
       }
 

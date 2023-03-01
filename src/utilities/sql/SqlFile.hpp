@@ -85,7 +85,7 @@ class UTILITIES_API SqlFile
           const openstudio::Calendar& t_calendar, const bool createIndexes = true);
 
   // virtual destructor
-  virtual ~SqlFile();
+  virtual ~SqlFile() = default;
 
   // Remove indexes that exist, useful for performance reasons.
   void removeIndexes();
@@ -1268,7 +1268,7 @@ class UTILITIES_API SqlFile
 };
 
 /// optional SqlFile
-typedef boost::optional<SqlFile> OptionalSqlFile;
+using OptionalSqlFile = boost::optional<SqlFile>;
 
 }  // namespace openstudio
 

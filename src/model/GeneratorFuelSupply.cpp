@@ -60,7 +60,7 @@
 namespace openstudio {
 namespace model {
 
-  FuelSupplyConstituent::FuelSupplyConstituent(std::string constituentName, double molarFraction)
+  FuelSupplyConstituent::FuelSupplyConstituent(const std::string& constituentName, double molarFraction)
     : m_name(constituentName), m_molarFraction(molarFraction) {
 
     if ((m_molarFraction < 0) || (m_molarFraction > 1)) {
@@ -79,9 +79,10 @@ namespace model {
     return m_molarFraction;
   }
 
-  bool FuelSupplyConstituent::isValid(std::string constituentName) {
+  bool FuelSupplyConstituent::isValid(const std::string& constituentName) {
     std::vector<std::string> validConstituentNames = constituentNameValues();
-    return std::find_if(validConstituentNames.begin(), validConstituentNames.end(), std::bind(istringEqual, constituentName, std::placeholders::_1))
+    return std::find_if(validConstituentNames.begin(), validConstituentNames.end(),
+                        [&constituentName](const auto& s) { return istringEqual(s, constituentName); })
            != validConstituentNames.end();
   }
 
@@ -149,7 +150,7 @@ namespace model {
       // We use getModelObjectSources to check if more than one
       std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
 
-      if (fcs.size() > 0u) {
+      if (!fcs.empty()) {
         if (fcs.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
         }
@@ -161,7 +162,8 @@ namespace model {
     std::vector<ScheduleTypeKey> GeneratorFuelSupply_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("GeneratorFuelSupply", "Fuel Temperature"));
       }
@@ -375,7 +377,7 @@ namespace model {
         result = false;
       } else {
         // Push an extensible group
-        WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+        auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
         bool temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.constituentName());
         bool ok = eg.setDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.molarFraction());
         if (temp && ok) {
@@ -391,7 +393,7 @@ namespace model {
       return result;
     }
 
-    bool GeneratorFuelSupply_Impl::addConstituent(std::string name, double molarFraction) {
+    bool GeneratorFuelSupply_Impl::addConstituent(const std::string& name, double molarFraction) {
       // Make a constituent (which will check for validity), and then call the above function
       FuelSupplyConstituent constituent(name, molarFraction);
       return addConstituent(constituent);
@@ -505,7 +507,7 @@ namespace model {
   }
 
   IddObjectType GeneratorFuelSupply::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_FuelSupply);
+    return {IddObjectType::OS_Generator_FuelSupply};
   }
 
   double GeneratorFuelSupply::sumofConstituentsMolarFractions() const {
@@ -516,7 +518,7 @@ namespace model {
     return getImpl<detail::GeneratorFuelSupply_Impl>()->addConstituent(constituent);
   }
 
-  bool GeneratorFuelSupply::addConstituent(std::string name, double molarFraction) {
+  bool GeneratorFuelSupply::addConstituent(const std::string& name, double molarFraction) {
     return getImpl<detail::GeneratorFuelSupply_Impl>()->addConstituent(name, molarFraction);
   }
 

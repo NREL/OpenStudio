@@ -53,7 +53,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SolarCollectorPerformanceFlatPlate() {}
+    virtual ~SolarCollectorPerformanceFlatPlate() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorPerformanceFlatPlate(const SolarCollectorPerformanceFlatPlate& other) = default;
+    SolarCollectorPerformanceFlatPlate(SolarCollectorPerformanceFlatPlate&& other) = default;
+    SolarCollectorPerformanceFlatPlate& operator=(const SolarCollectorPerformanceFlatPlate&) = default;
+    SolarCollectorPerformanceFlatPlate& operator=(SolarCollectorPerformanceFlatPlate&&) = default;
 
     //@}
 
@@ -125,7 +130,7 @@ namespace model {
     explicit SolarCollectorPerformanceFlatPlate(const Model& model);
 
     /// @cond
-    typedef detail::SolarCollectorPerformanceFlatPlate_Impl ImplType;
+    using ImplType = detail::SolarCollectorPerformanceFlatPlate_Impl;
 
     explicit SolarCollectorPerformanceFlatPlate(std::shared_ptr<detail::SolarCollectorPerformanceFlatPlate_Impl> impl);
 
@@ -141,10 +146,10 @@ namespace model {
   };
 
   /** \relates SolarCollectorPerformanceFlatPlate*/
-  typedef boost::optional<SolarCollectorPerformanceFlatPlate> OptionalSolarCollectorPerformanceFlatPlate;
+  using OptionalSolarCollectorPerformanceFlatPlate = boost::optional<SolarCollectorPerformanceFlatPlate>;
 
   /** \relates SolarCollectorPerformanceFlatPlate*/
-  typedef std::vector<SolarCollectorPerformanceFlatPlate> SolarCollectorPerformanceFlatPlateVector;
+  using SolarCollectorPerformanceFlatPlateVector = std::vector<SolarCollectorPerformanceFlatPlate>;
 
 }  // namespace model
 }  // namespace openstudio

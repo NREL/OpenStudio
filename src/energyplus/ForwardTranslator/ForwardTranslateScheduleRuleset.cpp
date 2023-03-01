@@ -400,7 +400,7 @@ namespace energyplus {
     translateAndMapModelObject(holidaySchedule);
 
     // translate schedule rules, these are returned in order
-    for (ScheduleRule scheduleRule : modelObject.scheduleRules()) {
+    for (const ScheduleRule& scheduleRule : modelObject.scheduleRules()) {
       ScheduleDay daySchedule = scheduleRule.daySchedule();
       translateAndMapModelObject(daySchedule);
     }

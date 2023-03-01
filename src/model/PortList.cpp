@@ -74,7 +74,7 @@ namespace model {
     ThermalZone PortList_Impl::thermalZone() const {
       boost::optional<ThermalZone> result;
 
-      //std::vector<ThermalZone> thermalZones = model().getModelObjects<ThermalZone>();
+      //std::vector<ThermalZone> thermalZones = model().getConcreteModelObjects<ThermalZone>();
 
       //for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
       //     it != thermalZones.end();
@@ -145,10 +145,10 @@ namespace model {
 
     boost::optional<ModelObject> PortList_Impl::lastModelObject() {
       std::vector<ModelObject> objects = modelObjects();
-      if (objects.size() > 0) {
+      if (!objects.empty()) {
         return OptionalModelObject(objects.back());
       } else {
-        return OptionalModelObject();
+        return {};
       }
     }
 
@@ -325,7 +325,7 @@ namespace model {
   }
 
   IddObjectType PortList::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PortList);
+    return {IddObjectType::OS_PortList};
   }
 
   unsigned PortList::port(unsigned portIndex) const {

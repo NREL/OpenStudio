@@ -555,22 +555,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExampleModel_Lights) {
   Model model = exampleModel();
 
-  ASSERT_EQ(1u, model.getModelObjects<SpaceType>().size());
-  SpaceType spaceType = model.getModelObjects<SpaceType>()[0];
+  ASSERT_EQ(1u, model.getConcreteModelObjects<SpaceType>().size());
+  SpaceType spaceType = model.getConcreteModelObjects<SpaceType>()[0];
 
-  ASSERT_EQ(1u, model.getModelObjects<ThermalZone>().size());
-  ThermalZone thermalZone = model.getModelObjects<ThermalZone>()[0];
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ThermalZone>().size());
+  ThermalZone thermalZone = model.getConcreteModelObjects<ThermalZone>()[0];
 
-  EXPECT_EQ(4u, model.getModelObjects<Space>().size());
-  for (const Space& space : model.getModelObjects<Space>()) {
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Space>().size());
+  for (const Space& space : model.getConcreteModelObjects<Space>()) {
     ASSERT_TRUE(space.spaceType());
     EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
     ASSERT_TRUE(space.thermalZone());
     EXPECT_EQ(thermalZone.handle(), space.thermalZone()->handle());
   }
 
-  ASSERT_EQ(1u, model.getModelObjects<Lights>().size());
-  Lights lights = model.getModelObjects<Lights>()[0];
+  ASSERT_EQ(1u, model.getConcreteModelObjects<Lights>().size());
+  Lights lights = model.getConcreteModelObjects<Lights>()[0];
   EXPECT_FALSE(lights.space());
   ASSERT_TRUE(lights.spaceType());
   EXPECT_EQ(spaceType.handle(), lights.spaceType()->handle());
@@ -715,11 +715,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Costs) {
   ThermalZone zone1(model);
   ThermalZone zone2(model);
 
-  std::vector<Point3d> floorPrint;
-  floorPrint.push_back(Point3d(0, 1, 0));
-  floorPrint.push_back(Point3d(1, 1, 0));
-  floorPrint.push_back(Point3d(1, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorPrint{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
   space1->setThermalZone(zone1);

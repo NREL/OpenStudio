@@ -55,7 +55,7 @@ namespace model {
       AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(const AirTerminalSingleDuctConstantVolumeCooledBeam_Impl& other, Model_Impl* model,
                                                          bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam_Impl() {}
+      virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -151,7 +151,7 @@ namespace model {
 
       bool setCoolingCoil(HVACComponent& coilCoolingCooledBeam);
 
-      bool setCooledBeamType(std::string cooledBeamType);
+      bool setCooledBeamType(const std::string& cooledBeamType);
 
       bool setSupplyAirVolumetricFlowRate(boost::optional<double> supplyAirVolumetricFlowRate);
 

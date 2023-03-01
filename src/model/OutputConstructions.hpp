@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~OutputConstructions() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputConstructions(const OutputConstructions& other) = default;
+    OutputConstructions(OutputConstructions&& other) = default;
+    OutputConstructions& operator=(const OutputConstructions&) = default;
+    OutputConstructions& operator=(OutputConstructions&&) = default;
 
     //@}
 

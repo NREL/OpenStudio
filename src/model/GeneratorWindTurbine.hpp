@@ -52,7 +52,12 @@ namespace model {
 
     explicit GeneratorWindTurbine(const Model& model);
 
-    virtual ~GeneratorWindTurbine() {}
+    virtual ~GeneratorWindTurbine() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorWindTurbine(const GeneratorWindTurbine& other) = default;
+    GeneratorWindTurbine(GeneratorWindTurbine&& other) = default;
+    GeneratorWindTurbine& operator=(const GeneratorWindTurbine&) = default;
+    GeneratorWindTurbine& operator=(GeneratorWindTurbine&&) = default;
 
     //@}
 
@@ -115,9 +120,9 @@ namespace model {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setRotorType(std::string rotorType);
+    bool setRotorType(const std::string& rotorType);
 
-    bool setPowerControl(std::string powerControl);
+    bool setPowerControl(const std::string& powerControl);
 
     bool setRatedRotorSpeed(double ratedRotorSpeed);
 
@@ -172,7 +177,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorWindTurbine_Impl ImplType;
+    using ImplType = detail::GeneratorWindTurbine_Impl;
 
     explicit GeneratorWindTurbine(std::shared_ptr<detail::GeneratorWindTurbine_Impl> impl);
 
@@ -186,10 +191,10 @@ namespace model {
   };
 
   /** \relates GeneratorWindTurbine*/
-  typedef boost::optional<GeneratorWindTurbine> OptionalGeneratorWindTurbine;
+  using OptionalGeneratorWindTurbine = boost::optional<GeneratorWindTurbine>;
 
   /** \relates GeneratorWindTurbine*/
-  typedef std::vector<GeneratorWindTurbine> GeneratorWindTurbineVector;
+  using GeneratorWindTurbineVector = std::vector<GeneratorWindTurbine>;
 
 }  // namespace model
 }  // namespace openstudio

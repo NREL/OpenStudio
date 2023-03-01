@@ -51,7 +51,7 @@ namespace isomodel {
    public:
     ForwardTranslator();
 
-    virtual ~ForwardTranslator();
+    virtual ~ForwardTranslator() = default;
 
     /** Translate an OpenStudio Model to an ISO UserModel. */
     // DLM: should this return an optional UserModel?

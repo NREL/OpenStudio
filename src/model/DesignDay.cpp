@@ -774,17 +774,14 @@ namespace model {
     } else if (istringEqual(humidityConditionType, "Enthalpy")) {
       return getImpl<detail::DesignDay_Impl>()->enthalpyAtMaximumDryBulb().get();
     }
-    return false;
+    return 0.0;
   }
 
   bool DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const {
     bool wetBulbOrDewPointAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb);
     bool humidityRatioAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb);
     bool enthalpyAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb);
-    if (wetBulbOrDewPointAtMaximumDryBulb && humidityRatioAtMaximumDryBulb && enthalpyAtMaximumDryBulb) {
-      return true;
-    }
-    return false;
+    return wetBulbOrDewPointAtMaximumDryBulb && humidityRatioAtMaximumDryBulb && enthalpyAtMaximumDryBulb;
   }
 
   double DesignDay::barometricPressure() const {

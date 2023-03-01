@@ -152,7 +152,7 @@ namespace model {
       /** Swaps underlying data between this workspace and other. */
       virtual void swap(Workspace& other) override;
 
-      virtual ~Model_Impl() {}
+      virtual ~Model_Impl() = default;
 
       /** Creates ComponentWatchers for each ComponentData object. Should be called as part of
      *  construction from IdfFile or Workspace. */
@@ -363,7 +363,7 @@ namespace model {
       bool isIsLeapYearDefaulted() const;
       bool setCalendarYear(int calendarYear);
       void resetCalendarYear();
-      bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+      bool setDayofWeekforStartDay(const std::string& dayofWeekforStartDay);
       void resetDayofWeekforStartDay();
       bool setIsLeapYear(bool isLeapYear);
       void resetIsLeapYear();
@@ -575,14 +575,14 @@ namespace model {
       void clearCachedEnvironmentalImpactFactors(const Handle& handle);
       void clearCachedExternalInterface(const Handle& handle);
 
-      typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
-        Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>
-        CopyConstructorFunction;
-      typedef std::map<IddObjectType, CopyConstructorFunction> CopyConstructorMap;
+      using CopyConstructorFunction = std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
+        Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>;
+      using CopyConstructorMap = std::map<IddObjectType, CopyConstructorFunction>;
 
-      typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl*, const IdfObject&, bool)> NewConstructorFunction;
-      typedef std::map<IddObjectType, NewConstructorFunction> NewConstructorMap;
+      using NewConstructorFunction = std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl*, const IdfObject&, bool)>;
+      using NewConstructorMap = std::map<IddObjectType, NewConstructorFunction>;
 
+      // TODO: do we really need a macro and a **static** ModelObjectCreator
       // The purpose of ModelObjectCreator is to support static initialization of two large maps.
       // One is a map from IddObjectType to a function that creates a new ModelObject instance,
       // The other is a map from IddObjectType to a function that creates a copy of an existing

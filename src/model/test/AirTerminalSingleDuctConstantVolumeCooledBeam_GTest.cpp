@@ -59,12 +59,11 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeCooledBeam_Test_Construc
   EXPECT_EQ(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam, cooledBeam.iddObjectType().value());
 
   // Test cloning the Cooled Beam
-  AirTerminalSingleDuctConstantVolumeCooledBeam cloneBeam = cooledBeam.clone(model).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
+  auto cloneBeam = cooledBeam.clone(model).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
   ASSERT_TRUE(cloneBeam.supplyAirVolumetricFlowRate());
   ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate().get(), cloneBeam.supplyAirVolumetricFlowRate().get());
-
   Model model2;
-  AirTerminalSingleDuctConstantVolumeCooledBeam cloneBeam2 = cooledBeam.clone(model2).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
+  auto cloneBeam2 = cooledBeam.clone(model2).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
   ASSERT_TRUE(cloneBeam2.supplyAirVolumetricFlowRate());
   ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate().get(), cloneBeam2.supplyAirVolumetricFlowRate().get());
 
@@ -107,7 +106,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeCooledBeam_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  AirTerminalSingleDuctConstantVolumeCooledBeam testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+  auto testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));

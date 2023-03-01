@@ -61,7 +61,12 @@ namespace model {
    *  model. */
     explicit SetpointManagerFollowOutdoorAirTemperature(const Model& model);
 
-    virtual ~SetpointManagerFollowOutdoorAirTemperature() {}
+    virtual ~SetpointManagerFollowOutdoorAirTemperature() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerFollowOutdoorAirTemperature(const SetpointManagerFollowOutdoorAirTemperature& other) = default;
+    SetpointManagerFollowOutdoorAirTemperature(SetpointManagerFollowOutdoorAirTemperature&& other) = default;
+    SetpointManagerFollowOutdoorAirTemperature& operator=(const SetpointManagerFollowOutdoorAirTemperature&) = default;
+    SetpointManagerFollowOutdoorAirTemperature& operator=(SetpointManagerFollowOutdoorAirTemperature&&) = default;
 
     //@}
 
@@ -107,7 +112,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::SetpointManagerFollowOutdoorAirTemperature_Impl ImplType;
+    using ImplType = detail::SetpointManagerFollowOutdoorAirTemperature_Impl;
 
     explicit SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> impl);
 

@@ -56,7 +56,7 @@ namespace energyplus {
 
     if (boost::optional<std::string> setpointNodeName =
           workspaceObject.getString(SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName)) {
-      boost::optional<Node> setpointNode = m_model.getModelObjectByName<Node>(setpointNodeName.get());
+      boost::optional<Node> setpointNode = m_model.getConcreteModelObjectByName<Node>(setpointNodeName.get());
 
       if (setpointNode) {
         nodeFound = true;
@@ -106,7 +106,7 @@ namespace energyplus {
 
     s = workspaceObject.getString(SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName);
     if (s) {
-      if (boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get())) {
+      if (boost::optional<Node> node = m_model.getConcreteModelObjectByName<Node>(s.get())) {
         mo.addToNode(node.get());
       }
     }

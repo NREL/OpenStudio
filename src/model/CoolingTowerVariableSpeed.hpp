@@ -52,7 +52,12 @@ namespace model {
    public:
     explicit CoolingTowerVariableSpeed(const Model& model);
 
-    virtual ~CoolingTowerVariableSpeed() {}
+    virtual ~CoolingTowerVariableSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoolingTowerVariableSpeed(const CoolingTowerVariableSpeed& other) = default;
+    CoolingTowerVariableSpeed(CoolingTowerVariableSpeed&& other) = default;
+    CoolingTowerVariableSpeed& operator=(const CoolingTowerVariableSpeed&) = default;
+    CoolingTowerVariableSpeed& operator=(CoolingTowerVariableSpeed&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -66,7 +71,7 @@ namespace model {
 
     boost::optional<std::string> modelType() const;
 
-    bool setModelType(std::string modelType);
+    bool setModelType(const std::string& modelType);
 
     void resetModelType();
 
@@ -162,7 +167,7 @@ namespace model {
 
     bool isEvaporationLossModeDefaulted() const;
 
-    bool setEvaporationLossMode(std::string evaporationLossMode);
+    bool setEvaporationLossMode(const std::string& evaporationLossMode);
 
     void resetEvaporationLossMode();
 
@@ -184,7 +189,7 @@ namespace model {
 
     bool isBlowdownCalculationModeDefaulted() const;
 
-    bool setBlowdownCalculationMode(std::string blowdownCalculationMode);
+    bool setBlowdownCalculationMode(const std::string& blowdownCalculationMode);
 
     void resetBlowdownCalculationMode();
 
@@ -210,7 +215,7 @@ namespace model {
 
     bool isCellControlDefaulted() const;
 
-    bool setCellControl(std::string cellControl);
+    bool setCellControl(const std::string& cellControl);
 
     void resetCellControl();
 
@@ -244,7 +249,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::CoolingTowerVariableSpeed_Impl ImplType;
+    using ImplType = detail::CoolingTowerVariableSpeed_Impl;
 
     explicit CoolingTowerVariableSpeed(std::shared_ptr<detail::CoolingTowerVariableSpeed_Impl> impl);
 
@@ -259,10 +264,10 @@ namespace model {
   };
 
   /** \relates CoolingTowerVariableSpeed*/
-  typedef boost::optional<CoolingTowerVariableSpeed> OptionalCoolingTowerVariableSpeed;
+  using OptionalCoolingTowerVariableSpeed = boost::optional<CoolingTowerVariableSpeed>;
 
   /** \relates CoolingTowerVariableSpeed*/
-  typedef std::vector<CoolingTowerVariableSpeed> CoolingTowerVariableSpeedVector;
+  using CoolingTowerVariableSpeedVector = std::vector<CoolingTowerVariableSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

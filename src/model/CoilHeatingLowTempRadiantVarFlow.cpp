@@ -93,10 +93,11 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilHeatingLowTempRadiantVarFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
 
       if (std::find(b, e, OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingControlTemperatureScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("CoilHeatingLowTempRadiantVarFlow", "Heating Control Temperature"));
+        result.emplace_back("CoilHeatingLowTempRadiantVarFlow", "Heating Control Temperature");
       }
       return result;
     }
@@ -283,10 +284,7 @@ namespace model {
     }
 
     bool CoilHeatingLowTempRadiantVarFlow_Impl::setHeatingDesignCapacity(double heatingDesignCapacity) {
-      bool result(false);
-      if (heatingDesignCapacity) {
-        result = setDouble(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, heatingDesignCapacity);
-      }
+      bool result = setDouble(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, heatingDesignCapacity);
       return result;
     }
 
@@ -382,7 +380,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingLowTempRadiantVarFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_VariableFlow);
+    return {IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_VariableFlow};
   }
 
   boost::optional<double> CoilHeatingLowTempRadiantVarFlow::maximumHotWaterFlow() const {

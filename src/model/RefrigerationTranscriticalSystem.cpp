@@ -144,39 +144,39 @@ namespace model {
     }
 
     ModelObject RefrigerationTranscriticalSystem_Impl::clone(Model model) const {
-      RefrigerationTranscriticalSystem modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationTranscriticalSystem>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationTranscriticalSystem>();
 
       if (boost::optional<ModelObjectList> mediumTemperatureCaseAndWalkinList = this->mediumTemperatureRefrigeratedCaseAndWalkInList()) {
-        ModelObjectList caseAndWalkinListClone = mediumTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
+        auto caseAndWalkinListClone = mediumTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setMediumTemperatureRefrigeratedCaseAndWalkInList(
           caseAndWalkinListClone);
       }
 
       if (boost::optional<ModelObjectList> lowTemperatureCaseAndWalkinList = this->lowTemperatureRefrigeratedCaseAndWalkInList()) {
-        ModelObjectList caseAndWalkinListClone = lowTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
+        auto caseAndWalkinListClone = lowTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowTemperatureRefrigeratedCaseAndWalkInList(
           caseAndWalkinListClone);
       }
 
       if (boost::optional<ModelObjectList> highPressureCompressorList = this->highPressureCompressorList()) {
-        ModelObjectList compressorListClone = highPressureCompressorList->clone(model).cast<ModelObjectList>();
+        auto compressorListClone = highPressureCompressorList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setHighPressureCompressorList(compressorListClone);
       }
 
       if (boost::optional<ModelObjectList> lowPressureCompressorList = this->lowPressureCompressorList()) {
-        ModelObjectList compressorListClone = lowPressureCompressorList->clone(model).cast<ModelObjectList>();
+        auto compressorListClone = lowPressureCompressorList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowPressureCompressorList(compressorListClone);
       }
 
       if (boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler = this->refrigerationGasCooler()) {
-        RefrigerationGasCoolerAirCooled refrigerationGasCoolerClone = refrigerationGasCooler->clone(model).cast<RefrigerationGasCoolerAirCooled>();
+        auto refrigerationGasCoolerClone = refrigerationGasCooler->clone(model).cast<RefrigerationGasCoolerAirCooled>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationGasCooler(refrigerationGasCoolerClone);
       }
 
       modelObjectClone.resetMediumTemperatureSuctionPipingZone();
       modelObjectClone.resetLowTemperatureSuctionPipingZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     template <class T>
@@ -503,7 +503,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationTranscriticalSystem_Impl::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
+    bool RefrigerationTranscriticalSystem_Impl::setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType) {
       bool result = setString(OS_Refrigeration_TranscriticalSystemFields::RefrigerationSystemWorkingFluidType, refrigerationSystemWorkingFluidType);
       return result;
     }
@@ -564,7 +564,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationTranscriticalSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationTranscriticalSystem_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_TranscriticalSystemFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -608,7 +608,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationTranscriticalSystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_TranscriticalSystem);
+    return {IddObjectType::OS_Refrigeration_TranscriticalSystem};
   }
 
   std::vector<std::string> RefrigerationTranscriticalSystem::refrigerationSystemWorkingFluidTypeValues() {
@@ -796,7 +796,7 @@ namespace model {
     getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetSubcoolerEffectiveness();
   }
 
-  bool RefrigerationTranscriticalSystem::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
+  bool RefrigerationTranscriticalSystem::setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType) {
     return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationSystemWorkingFluidType(refrigerationSystemWorkingFluidType);
   }
 
@@ -834,7 +834,7 @@ namespace model {
     getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetLowTemperatureSuctionPipingZone();
   }
 
-  bool RefrigerationTranscriticalSystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationTranscriticalSystem::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

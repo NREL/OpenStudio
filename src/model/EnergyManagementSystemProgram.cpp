@@ -135,7 +135,7 @@ namespace model {
         comments = splitString(body_minus_nl.at(i), '!');
 
         //make sure program line exists and insert
-        if (comments.size() > 0) {
+        if (!comments.empty()) {
           //remove leading and trailing whitespaces in program line (comments[0])
           boost::trim(comments[0]);
           //remove ,
@@ -147,7 +147,7 @@ namespace model {
           if (!comments[0].empty()) {
 
             // Push an extensibleGroup object (we only want to that if there is something to put in)
-            WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+            auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
             result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comments[0]);
             if (!result) {
@@ -206,12 +206,12 @@ namespace model {
         line_rn.erase(pos, 1);
       }
       //get extensibleGroup object
-      WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
       //split string on comment character !
       std::vector<std::string> comments = splitString(line_rn, '!');
       //make sure program line exists and insert
-      if (comments.size() > 0) {
+      if (!comments.empty()) {
         //remove whitespace at end of comments[0]
         boost::trim_right(comments[0]);
         //remove whitespace at beginning of comments[0]
@@ -371,7 +371,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemProgram::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Program);
+    return {IddObjectType::OS_EnergyManagementSystem_Program};
   }
 
   std::string EnergyManagementSystemProgram::body() const {

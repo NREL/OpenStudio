@@ -126,13 +126,13 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_GeneratorWindTurbine) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ElectricLoadCenterDistribution> elcds = model.getModelObjects<ElectricLoadCenterDistribution>();
+  std::vector<ElectricLoadCenterDistribution> elcds = model.getConcreteModelObjects<ElectricLoadCenterDistribution>();
   /*   ASSERT_EQ(1u, elcds.size());
   ElectricLoadCenterDistribution elcd = elcds[0];
   EXPECT_EQ("Electric Load Center Distribution 1", elcd.name().get());
   ASSERT_EQ(1u, elcd.generators().size()); */
 
-  std::vector<GeneratorWindTurbine> generators = model.getModelObjects<GeneratorWindTurbine>();
+  std::vector<GeneratorWindTurbine> generators = model.getConcreteModelObjects<GeneratorWindTurbine>();
   ASSERT_EQ(1u, generators.size());
   GeneratorWindTurbine generator = generators[0];
   EXPECT_EQ("Generator Wind Turbine 1", generator.name().get());

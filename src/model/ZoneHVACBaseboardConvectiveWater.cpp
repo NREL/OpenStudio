@@ -70,10 +70,10 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACBaseboardConvectiveWater_Impl::clone(Model model) const {
-      ZoneHVACBaseboardConvectiveWater baseboardConvWaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACBaseboardConvectiveWater>();
+      auto baseboardConvWaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACBaseboardConvectiveWater>();
 
       auto t_heatingCoil = heatingCoil();
-      StraightComponent heatingCoilClone = t_heatingCoil.clone(model).cast<StraightComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<StraightComponent>();
 
       baseboardConvWaterClone.setHeatingCoil(heatingCoilClone);
 
@@ -83,7 +83,7 @@ namespace model {
         }
       }
 
-      return baseboardConvWaterClone;
+      return std::move(baseboardConvWaterClone);
     }
 
     std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove() {
@@ -110,7 +110,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACBaseboardConvectiveWater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_Baseboard_Convective_WaterFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACBaseboardConvectiveWater", "Availability"));
       }
@@ -199,7 +200,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveWater_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -271,7 +272,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACBaseboardConvectiveWater::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
+    return {IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water};
   }
 
   Schedule ZoneHVACBaseboardConvectiveWater::availabilitySchedule() const {

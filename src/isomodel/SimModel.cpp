@@ -149,20 +149,22 @@ namespace isomodel {
   Vector div(const Vector& v1, const double s1) {
     Vector vp = Vector(v1.size());
     for (size_t i = 0; i < v1.size(); i++) {
-      if (s1 == 0)
+      if (s1 == 0) {
         vp[i] = std::numeric_limits<double>::max();
-      else
+      } else {
         vp[i] = v1[i] / s1;
+      }
     }
     return vp;
   }
   Vector div(const double s1, const Vector& v1) {
     Vector vp = Vector(v1.size());
     for (size_t i = 0; i < v1.size(); i++) {
-      if (v1[i] == 0)
+      if (v1[i] == 0) {
         vp[i] = std::numeric_limits<double>::max();
-      else
+      } else {
         vp[i] = s1 / v1[i];
+      }
     }
     return vp;
   }
@@ -171,10 +173,11 @@ namespace isomodel {
     assert(v1.size() == v2.size());
     Vector vp = Vector(v1.size());
     for (size_t i = 0; i < v1.size(); i++) {
-      if (v2[i] == 0)
+      if (v2[i] == 0) {
         vp[i] = std::numeric_limits<double>::max();
-      else
+      } else {
         vp[i] = v1[i] / v2[i];
+      }
     }
     return vp;
   }
@@ -219,7 +222,9 @@ namespace isomodel {
   double maximum(const Vector& v1) {
     double max = -std::numeric_limits<double>::max();
     for (size_t i = 0; i < v1.size(); i++) {
-      if (v1[i] > max) max = v1[i];
+      if (v1[i] > max) {
+        max = v1[i];
+      }
     }
     return max;
   }
@@ -241,7 +246,9 @@ namespace isomodel {
   double minimum(const Vector& v1) {
     double min = std::numeric_limits<double>::max();
     for (size_t i = 0; i < v1.size(); i++) {
-      if (v1[i] < min) min = v1[i];
+      if (v1[i] < min) {
+        min = v1[i];
+      }
     }
     return min;
   }
@@ -784,7 +791,7 @@ v_phi_sol=v_win_phi_sol+v_wall_phi_sol;  % total envelope solar heat gain in W
 v_E_sol= v_phi_sol.* v_Msec_ina_mo(I); % total envelope heat gain in MJ
   */
   }
-  void SimModel::heatGainsAndLosses(double frac_hrs_wk_day, double Q_illum_occ, double Q_illum_unocc, double Q_illum_tot_yr, double& phi_int_avg,
+  void SimModel::heatGainsAndLosses(double frac_hrs_wk_day, double /*Q_illum_occ*/, double Q_illum_unocc, double Q_illum_tot_yr, double& phi_int_avg,
                                     double& phi_plug_avg, double& phi_illum_avg, double& phi_int_wke_nt, double& phi_int_wke_day,
                                     double& phi_int_wk_nt) const {
     double phi_int_occ = pop->heatGainPerPerson() / pop->densityOccupied();
@@ -900,9 +907,10 @@ v_P_tot_wke_nt = (v_W_int_wke_nt+v_W_sol_wke_nt)./v_Msec_wke_nt; % total heat ga
 
   */
   }
-  void SimModel::interiorTemp(const Vector& v_wall_A, const Vector& v_P_tot_wke_day, const Vector& v_P_tot_wk_nt, const Vector& v_P_tot_wke_nt,
-                              const Vector& v_Tdbt_nt, double H_tr, double hoursUnoccupiedPerDay, double hoursOccupiedPerDay, double frac_hrs_wk_day,
-                              double frac_hrs_wk_nt, double frac_hrs_wke_tot, Vector& v_Th_avg, Vector& v_Tc_avg, double& tau) const {
+  void SimModel::interiorTemp(const Vector& v_wall_A, const Vector& /*v_P_tot_wke_day*/, const Vector& v_P_tot_wk_nt,
+                              const Vector& /*v_P_tot_wke_nt*/, const Vector& v_Tdbt_nt, double H_tr, double hoursUnoccupiedPerDay,
+                              double hoursOccupiedPerDay, double frac_hrs_wk_day, double frac_hrs_wk_nt, double frac_hrs_wke_tot, Vector& v_Th_avg,
+                              Vector& v_Tc_avg, double& tau) const {
     //BEM Type
     double T_adj = 0;
     switch (static_cast<int>(building->buildingEnergyManagement())) {
@@ -972,7 +980,8 @@ v_ht_tset_ctrl = ones(12,1).*ht_tset_ctrl;  % create a column vector of the inte
 v_cl_tset_ctrl = ones(12,1).*cl_tset_ctrl;
 */
 
-    double T_ht_ctrl_flag = 1, T_cl_ctrl_flag = 1;
+    double T_ht_ctrl_flag = 1;
+    double T_cl_ctrl_flag = 1;
     double Cm_int = structure->interiorHeatCapacity() * structure->floorArea();  //% set the interior heat capacity
 
     double Cm_env = structure->wallHeatCapacity() * sum(v_wall_A);
@@ -1310,7 +1319,9 @@ tot_env_A=sum(In.wall_area)+sum(In.win_area);
     ///             of the model goes to infinity for the HVAC calculations.
     ///             I'm setting it to non-zero here
     double v_Q75pa = structure->infiltrationRate();
-    if (v_Q75pa == 0) v_Q75pa = 0.00000000001;  // this might be a vestige of the rmeove of the "epsilon" code in the translator
+    if (v_Q75pa == 0) {
+      v_Q75pa = 0.00000000001;  // this might be a vestige of the rmeove of the "epsilon" code in the translator
+    }
 
     double floorArea = structure->floorArea();
     double v_Q4pa = v_Q75pa * tot_env_A / floorArea * (std::pow((4.0 / 75.0), n_p_exp));
@@ -1969,33 +1980,64 @@ end
     double frac_hrs_wke_tot = 0;
 
     //Solor Radiation Breakdown Results
-    Vector v_hrs_sun_down_mo(12), v_Tdbt_nt;
-    Vector frac_Pgh_wk_nt, frac_Pgh_wke_day, frac_Pgh_wke_nt;
+    Vector v_hrs_sun_down_mo(12);
+    Vector v_Tdbt_nt;
+    Vector frac_Pgh_wk_nt;
+    Vector frac_Pgh_wke_day;
+    Vector frac_Pgh_wke_nt;
     //Envelop Calculations Results
-    Vector v_win_A, v_wall_emiss, v_wall_alpha_sc, v_wall_U, v_wall_A;
+    Vector v_win_A;
+    Vector v_wall_emiss;
+    Vector v_wall_alpha_sc;
+    Vector v_wall_U;
+    Vector v_wall_A;
 
-    Vector v_wall_A_sol, v_win_hr, v_wall_R_sc, v_win_A_sol;
+    Vector v_wall_A_sol;
+    Vector v_win_hr;
+    Vector v_wall_R_sc;
+    Vector v_win_A_sol;
 
-    double Q_illum_occ, Q_illum_unocc, Q_illum_tot_yr;
+    double Q_illum_occ;
+    double Q_illum_unocc;
+    double Q_illum_tot_yr;
 
-    double phi_int_avg, phi_plug_avg, phi_illum_avg;
+    double phi_int_avg;
+    double phi_plug_avg;
+    double phi_illum_avg;
 
-    double phi_int_wk_nt, phi_int_wke_day, phi_int_wke_nt;
+    double phi_int_wk_nt;
+    double phi_int_wke_day;
+    double phi_int_wke_nt;
     Vector v_E_sol;
 
     double H_tr;
-    Vector v_P_tot_wke_day, v_P_tot_wk_nt, v_P_tot_wke_nt;
+    Vector v_P_tot_wke_day;
+    Vector v_P_tot_wk_nt;
+    Vector v_P_tot_wke_nt;
 
-    Vector v_Th_avg(12), v_Tc_avg(12);
+    Vector v_Th_avg(12);
+    Vector v_Tc_avg(12);
 
-    double phi_I_tot, tau;
-    Vector v_Hve_ht, v_Hve_cl;
+    double phi_I_tot;
+    double tau;
+    Vector v_Hve_ht;
+    Vector v_Hve_cl;
 
-    double Qneed_ht_yr, Qneed_cl_yr;
-    Vector v_Qneed_ht, v_Qneed_cl;
+    double Qneed_ht_yr;
+    double Qneed_cl_yr;
+    Vector v_Qneed_ht;
+    Vector v_Qneed_cl;
 
-    Vector v_Qelec_ht, v_Qcl_elec_tot, v_Q_illum_tot, v_Q_illum_ext_tot, v_Qfan_tot, v_Q_pump_tot, v_Q_dhw_elec, v_Qgas_ht, v_Qcl_gas_tot,
-      v_Q_dhw_gas;
+    Vector v_Qelec_ht;
+    Vector v_Qcl_elec_tot;
+    Vector v_Q_illum_tot;
+    Vector v_Q_illum_ext_tot;
+    Vector v_Qfan_tot;
+    Vector v_Q_pump_tot;
+    Vector v_Q_dhw_elec;
+    Vector v_Qgas_ht;
+    Vector v_Qcl_gas_tot;
+    Vector v_Q_dhw_gas;
 
     frac_hrs_wk_day = hoursUnoccupiedPerDay = hoursOccupiedPerDay = frac_hrs_wk_nt = frac_hrs_wke_tot = 1;
 

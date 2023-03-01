@@ -174,7 +174,8 @@ const boost::regex& regexCompoundUnit() {
   // ETH@20120320 Somehow a quantity (0.12 kg) is getting by this regex. Now is not a good
   // time to try to fix.
   // JM@2017-12-14: Not fixing now, but this is because all of the groups are optional ("?"), except [a-zA-Z\$]{1,8} (from regexBaseUnit)
-  std::stringstream regexComposer, tempComposer;
+  std::stringstream regexComposer;
+  std::stringstream tempComposer;
   // place atomicUnit*atomicUnit*... in tempComposer
   tempComposer << regexAtomicUnit().str() << "(?:\\*" << regexAtomicUnit().str() << ")*";
   // possibilities: tC.str(), tC.str()/tC.str(), 1/tC.str().
@@ -223,7 +224,8 @@ bool containsScaledUnit(const std::string& s) {
 }
 
 const boost::regex& regexDirectScaledUnit() {
-  std::stringstream regexComposer, tempComposer;
+  std::stringstream regexComposer;
+  std::stringstream tempComposer;
   // place atomicUnit*atomicUnit*... in tempComposer
   tempComposer << regexAtomicUnit().str() << "(?:\\*" << regexAtomicUnit().str() << ")*";
   regexComposer << "((?:" << tempComposer.str() << "|1)/)"

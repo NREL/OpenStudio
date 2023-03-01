@@ -62,8 +62,6 @@ namespace model {
                                                                                bool keepHandles)
       : SetpointManager_Impl(other, model, keepHandles) {}
 
-    SetpointManagerSingleZoneReheat_Impl::~SetpointManagerSingleZoneReheat_Impl() {}
-
     const std::vector<std::string>& SetpointManagerSingleZoneReheat_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       return result;
@@ -80,7 +78,7 @@ namespace model {
           ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
           if (!modelObjectVector.empty()) {
             ModelObject mo = modelObjectVector.front();
-            ThermalZone thermalZone = mo.cast<ThermalZone>();
+            auto thermalZone = mo.cast<ThermalZone>();
             this->setControlZone(thermalZone);
           }
           return true;
@@ -90,9 +88,9 @@ namespace model {
     }
 
     ModelObject SetpointManagerSingleZoneReheat_Impl::clone(Model model) const {
-      SetpointManagerSingleZoneReheat clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneReheat>();
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneReheat>();
       clonedObject.resetControlZone();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerSingleZoneReheat_Impl::controlVariable() const {
@@ -133,13 +131,13 @@ namespace model {
     }
 
     boost::optional<ThermalZone> SetpointManagerSingleZoneReheat_Impl::controlZone() {
-      SetpointManagerSingleZoneReheat thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
+      auto thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
 
       return thisModelObject.getModelObjectTarget<ThermalZone>(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName);
     }
 
     bool SetpointManagerSingleZoneReheat_Impl::setControlZone(ThermalZone& thermalZone) {
-      SetpointManagerSingleZoneReheat thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
+      auto thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
 
       return thisModelObject.setPointer(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName, thermalZone.handle());
     }

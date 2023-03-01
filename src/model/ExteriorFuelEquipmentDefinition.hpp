@@ -53,7 +53,12 @@ namespace model {
     /** Defaults design level to 0.0 W. */
     explicit ExteriorFuelEquipmentDefinition(const Model& model);
 
-    virtual ~ExteriorFuelEquipmentDefinition() {}
+    virtual ~ExteriorFuelEquipmentDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorFuelEquipmentDefinition(const ExteriorFuelEquipmentDefinition& other) = default;
+    ExteriorFuelEquipmentDefinition(ExteriorFuelEquipmentDefinition&& other) = default;
+    ExteriorFuelEquipmentDefinition& operator=(const ExteriorFuelEquipmentDefinition&) = default;
+    ExteriorFuelEquipmentDefinition& operator=(ExteriorFuelEquipmentDefinition&&) = default;
 
     //@}
 
@@ -77,7 +82,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorFuelEquipmentDefinition_Impl ImplType;
+    using ImplType = detail::ExteriorFuelEquipmentDefinition_Impl;
 
     explicit ExteriorFuelEquipmentDefinition(std::shared_ptr<detail::ExteriorFuelEquipmentDefinition_Impl> impl);
 
@@ -91,10 +96,10 @@ namespace model {
   };
 
   /** \relates ExteriorFuelEquipmentDefinition*/
-  typedef boost::optional<ExteriorFuelEquipmentDefinition> OptionalExteriorFuelEquipmentDefinition;
+  using OptionalExteriorFuelEquipmentDefinition = boost::optional<ExteriorFuelEquipmentDefinition>;
 
   /** \relates ExteriorFuelEquipmentDefinition*/
-  typedef std::vector<ExteriorFuelEquipmentDefinition> ExteriorFuelEquipmentDefinitionVector;
+  using ExteriorFuelEquipmentDefinitionVector = std::vector<ExteriorFuelEquipmentDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

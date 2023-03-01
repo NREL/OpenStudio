@@ -56,7 +56,12 @@ namespace model {
     /** Creates a ScheduleCompact with constantValue applied to the entire year, if
    *  scheduleTypeLimits() and the units are compatible. Otherwise creates an empty
    *  ScheduleCompact. */
-    virtual ~ScheduleCompact() {}
+    virtual ~ScheduleCompact() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleCompact(const ScheduleCompact& other) = default;
+    ScheduleCompact(ScheduleCompact&& other) = default;
+    ScheduleCompact& operator=(const ScheduleCompact&) = default;
+    ScheduleCompact& operator=(ScheduleCompact&&) = default;
 
     //@}
 
@@ -86,7 +91,7 @@ namespace model {
 
     //@}
    protected:
-    typedef detail::ScheduleCompact_Impl ImplType;
+    using ImplType = detail::ScheduleCompact_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -99,10 +104,10 @@ namespace model {
   };
 
   /** \relates ScheduleCompact */
-  typedef boost::optional<ScheduleCompact> OptionalScheduleCompact;
+  using OptionalScheduleCompact = boost::optional<ScheduleCompact>;
 
   /** \relates ScheduleCompact */
-  typedef std::vector<ScheduleCompact> ScheduleCompactVector;
+  using ScheduleCompactVector = std::vector<ScheduleCompact>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -148,7 +148,7 @@ class UTILITIES_API Workspace
    *  model::Components). */
   void swap(Workspace& other);
 
-  virtual ~Workspace() {}
+  virtual ~Workspace() = default;
 
   //@}
   /** @name Getters */
@@ -221,7 +221,7 @@ class UTILITIES_API Workspace
   /** Returns the first object found that is in at least one of the reference lists in
    *  referenceNames and named name (case insensitive, but exact match). Does not look for
    *  conflicts. */
-  boost::optional<WorkspaceObject> getObjectByNameAndReference(std::string name, const std::vector<std::string>& referenceNames) const;
+  boost::optional<WorkspaceObject> getObjectByNameAndReference(const std::string& name, const std::vector<std::string>& referenceNames) const;
 
   /** Overloaded functions that take in a std::string instead of an IddObjectType.
    *  They will internally create an IddObjectType (which may throw!) then forward to the overload method that takes IddObjectType
@@ -474,7 +474,7 @@ class UTILITIES_API Workspace
 
   //@}
  protected:
-  typedef detail::Workspace_Impl ImplType;
+  using ImplType = detail::Workspace_Impl;
 
   friend class WorkspaceObject;
   friend class detail::WorkspaceObject_Impl;
@@ -497,10 +497,10 @@ class UTILITIES_API Workspace
 };
 
 /** \relates Workspace */
-typedef boost::optional<Workspace> OptionalWorkspace;
+using OptionalWorkspace = boost::optional<Workspace>;
 
 /** \relates Workspace */
-typedef std::vector<Workspace> WorkspaceVector;
+using WorkspaceVector = std::vector<Workspace>;
 
 /** \relates Workspace */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Workspace& workspace);

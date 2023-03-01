@@ -95,7 +95,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Building2) {
   Building building = model.getUniqueModelObject<Building>();
   building.setName("Building");
   Site site = model.getUniqueModelObject<Site>();
-  SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
+  auto simulationControl = model.getUniqueModelObject<SimulationControl>();
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -126,7 +126,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Building3) {
   Site site = model.getUniqueModelObject<Site>();
   site.setTerrain("Ocean");
 
-  SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
+  auto simulationControl = model.getUniqueModelObject<SimulationControl>();
   simulationControl.setLoadsConvergenceToleranceValue(0.2);
   simulationControl.setTemperatureConvergenceToleranceValue(0.2);
   simulationControl.setSolarDistribution("FullInteriorAndExteriorWithReflections");

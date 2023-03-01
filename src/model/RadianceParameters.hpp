@@ -50,7 +50,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~RadianceParameters() {}
+    virtual ~RadianceParameters() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RadianceParameters(const RadianceParameters& other) = default;
+    RadianceParameters(RadianceParameters&& other) = default;
+    RadianceParameters& operator=(const RadianceParameters&) = default;
+    RadianceParameters& operator=(RadianceParameters&&) = default;
 
     //@}
 
@@ -191,7 +196,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RadianceParameters_Impl ImplType;
+    using ImplType = detail::RadianceParameters_Impl;
 
     explicit RadianceParameters(std::shared_ptr<detail::RadianceParameters_Impl> impl);
 
@@ -207,10 +212,10 @@ namespace model {
   };
 
   /** \relates RadianceParameters*/
-  typedef boost::optional<RadianceParameters> OptionalRadianceParameters;
+  using OptionalRadianceParameters = boost::optional<RadianceParameters>;
 
   /** \relates RadianceParameters*/
-  typedef std::vector<RadianceParameters> RadianceParametersVector;
+  using RadianceParametersVector = std::vector<RadianceParameters>;
 
 }  // namespace model
 }  // namespace openstudio

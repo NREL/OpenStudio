@@ -54,7 +54,12 @@ namespace model {
 
     explicit SetpointManagerSingleZoneHumidityMinimum(const Model& model);
 
-    virtual ~SetpointManagerSingleZoneHumidityMinimum() {}
+    virtual ~SetpointManagerSingleZoneHumidityMinimum() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerSingleZoneHumidityMinimum(const SetpointManagerSingleZoneHumidityMinimum& other) = default;
+    SetpointManagerSingleZoneHumidityMinimum(SetpointManagerSingleZoneHumidityMinimum&& other) = default;
+    SetpointManagerSingleZoneHumidityMinimum& operator=(const SetpointManagerSingleZoneHumidityMinimum&) = default;
+    SetpointManagerSingleZoneHumidityMinimum& operator=(SetpointManagerSingleZoneHumidityMinimum&&) = default;
 
     //@}
 
@@ -88,7 +93,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerSingleZoneHumidityMinimum_Impl ImplType;
+    using ImplType = detail::SetpointManagerSingleZoneHumidityMinimum_Impl;
 
     explicit SetpointManagerSingleZoneHumidityMinimum(std::shared_ptr<detail::SetpointManagerSingleZoneHumidityMinimum_Impl> impl);
 
@@ -102,10 +107,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerSingleZoneHumidityMinimum*/
-  typedef boost::optional<SetpointManagerSingleZoneHumidityMinimum> OptionalSetpointManagerSingleZoneHumidityMinimum;
+  using OptionalSetpointManagerSingleZoneHumidityMinimum = boost::optional<SetpointManagerSingleZoneHumidityMinimum>;
 
   /** \relates SetpointManagerSingleZoneHumidityMinimum*/
-  typedef std::vector<SetpointManagerSingleZoneHumidityMinimum> SetpointManagerSingleZoneHumidityMinimumVector;
+  using SetpointManagerSingleZoneHumidityMinimumVector = std::vector<SetpointManagerSingleZoneHumidityMinimum>;
 
 }  // namespace model
 }  // namespace openstudio

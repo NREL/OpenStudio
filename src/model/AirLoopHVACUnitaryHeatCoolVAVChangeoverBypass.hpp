@@ -56,7 +56,12 @@ namespace model {
     explicit AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(const Model& model, const HVACComponent& fan, const HVACComponent& coolingCoil,
                                                            const HVACComponent& heatingCoil);
 
-    virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass() {}
+    virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(const AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass& other) = default;
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass&& other) = default;
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass& operator=(const AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass&) = default;
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass& operator=(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass&&) = default;
 
     //@}
 
@@ -172,7 +177,7 @@ namespace model {
 
     bool setSupplyAirFan(const HVACComponent& fansCVandOnOff);
 
-    bool setSupplyAirFanPlacement(std::string supplyAirFanPlacement);
+    bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
 
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
@@ -182,13 +187,13 @@ namespace model {
 
     bool setHeatingCoil(const HVACComponent& heatingCoilName);
 
-    bool setPriorityControlMode(std::string priorityControlMode);
+    bool setPriorityControlMode(const std::string& priorityControlMode);
 
     bool setMinimumOutletAirTemperatureDuringCoolingOperation(double minimumOutletAirTemperatureDuringCoolingOperation);
 
     bool setMaximumOutletAirTemperatureDuringHeatingOperation(double maximumOutletAirTemperatureDuringHeatingOperation);
 
-    bool setDehumidificationControlType(std::string dehumidificationControlType);
+    bool setDehumidificationControlType(const std::string& dehumidificationControlType);
 
     bool setMinimumRuntimeBeforeOperatingModeChange(double runtime);
 
@@ -216,7 +221,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl ImplType;
+    using ImplType = detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl;
 
     explicit AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(std::shared_ptr<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl> impl);
 
@@ -230,10 +235,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass*/
-  typedef boost::optional<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> OptionalAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass;
+  using OptionalAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass = boost::optional<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>;
 
   /** \relates AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass*/
-  typedef std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypassVector;
+  using AirLoopHVACUnitaryHeatCoolVAVChangeoverBypassVector = std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>;
 
 }  // namespace model
 }  // namespace openstudio

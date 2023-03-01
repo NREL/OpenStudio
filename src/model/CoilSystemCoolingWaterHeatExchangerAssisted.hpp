@@ -57,7 +57,12 @@ namespace model {
 
     explicit CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger);
 
-    virtual ~CoilSystemCoolingWaterHeatExchangerAssisted() {}
+    virtual ~CoilSystemCoolingWaterHeatExchangerAssisted() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilSystemCoolingWaterHeatExchangerAssisted(const CoilSystemCoolingWaterHeatExchangerAssisted& other) = default;
+    CoilSystemCoolingWaterHeatExchangerAssisted(CoilSystemCoolingWaterHeatExchangerAssisted&& other) = default;
+    CoilSystemCoolingWaterHeatExchangerAssisted& operator=(const CoilSystemCoolingWaterHeatExchangerAssisted&) = default;
+    CoilSystemCoolingWaterHeatExchangerAssisted& operator=(CoilSystemCoolingWaterHeatExchangerAssisted&&) = default;
 
     //@}
 
@@ -85,7 +90,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl ImplType;
+    using ImplType = detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
 
     explicit CoilSystemCoolingWaterHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl> impl);
 
@@ -99,10 +104,10 @@ namespace model {
   };
 
   /** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
-  typedef boost::optional<CoilSystemCoolingWaterHeatExchangerAssisted> OptionalCoilSystemCoolingWaterHeatExchangerAssisted;
+  using OptionalCoilSystemCoolingWaterHeatExchangerAssisted = boost::optional<CoilSystemCoolingWaterHeatExchangerAssisted>;
 
   /** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
-  typedef std::vector<CoilSystemCoolingWaterHeatExchangerAssisted> CoilSystemCoolingWaterHeatExchangerAssistedVector;
+  using CoilSystemCoolingWaterHeatExchangerAssistedVector = std::vector<CoilSystemCoolingWaterHeatExchangerAssisted>;
 
 }  // namespace model
 }  // namespace openstudio

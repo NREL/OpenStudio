@@ -97,11 +97,11 @@ namespace model {
       // Clone all AVMs and populate the clone
       std::vector<AvailabilityManager> avmVector = availabilityManagers();
       for (const AvailabilityManager& avm : avmVector) {
-        AvailabilityManager avmClone = avm.clone(model).cast<AvailabilityManager>();
+        auto avmClone = avm.clone(model).cast<AvailabilityManager>();
         bool ok = avmListClone.addAvailabilityManager(avmClone);
         OS_ASSERT(ok);
       }
-      return avmListClone;
+      return std::move(avmListClone);
     }
 
     unsigned AvailabilityManagerAssignmentList_Impl::availabilityManagerPriority(const AvailabilityManager& avm) const {
@@ -157,7 +157,7 @@ namespace model {
     }
 
     bool AvailabilityManagerAssignmentList_Impl::addAvailabilityManager(const AvailabilityManager& avm) {
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
       bool ok = eg.setPointer(OS_AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName, avm.handle());
 
@@ -176,8 +176,12 @@ namespace model {
 
       OS_ASSERT(std::find(avmVector.begin(), avmVector.end(), avm) != avmVector.end());
 
-      if (priority > avmVector.size()) priority = avmVector.size();
-      if (priority < 1) priority = 1;
+      if (priority > avmVector.size()) {
+        priority = avmVector.size();
+      }
+      if (priority < 1) {
+        priority = 1;
+      }
 
       avmVector.erase(std::find(avmVector.begin(), avmVector.end(), avm));
 
@@ -270,7 +274,7 @@ namespace model {
       // try with getModelObjectSources instead
       std::vector<PlantLoop> plantLoops = getObject<ModelObject>().getModelObjectSources<PlantLoop>(PlantLoop::iddObjectType());
 
-      if (plantLoops.size() > 0u) {
+      if (!plantLoops.empty()) {
         if (plantLoops.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one plantLoop, returning the first");
         }
@@ -311,7 +315,7 @@ namespace model {
       std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils =
         getObject<ModelObject>().getModelObjectSources<ZoneHVACFourPipeFanCoil>(ZoneHVACFourPipeFanCoil::iddObjectType());
 
-      if (zoneHVACFourPipeFanCoils.size() > 0u) {
+      if (!zoneHVACFourPipeFanCoils.empty()) {
         if (zoneHVACFourPipeFanCoils.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one zoneHVACFourPipeFanCoils, returning the first");
         }
@@ -376,7 +380,7 @@ namespace model {
   }
 
   IddObjectType AvailabilityManagerAssignmentList::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AvailabilityManagerAssignmentList);
+    return {IddObjectType::OS_AvailabilityManagerAssignmentList};
   }
 
   std::vector<AvailabilityManager> AvailabilityManagerAssignmentList::availabilityManagers() const {

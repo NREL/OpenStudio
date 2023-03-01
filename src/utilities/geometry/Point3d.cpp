@@ -43,7 +43,7 @@ Point3d::Point3d(double x, double y, double z) : m_storage(3) {
 }
 
 /// copy constructor
-Point3d::Point3d(const Point3d& other) : m_storage(other.m_storage) {}
+Point3d::Point3d(const Point3d& other) = default;
 
 /// get x
 double Point3d::x() const {
@@ -65,7 +65,7 @@ Point3d Point3d::operator+(const Vector3d& vec) const {
   double newX = x() + vec.x();
   double newY = y() + vec.y();
   double newZ = z() + vec.z();
-  return Point3d(newX, newY, newZ);
+  return {newX, newY, newZ};
 }
 
 /// point plus a vector is a new point
@@ -81,7 +81,7 @@ Vector3d Point3d::operator-(const Point3d& other) const {
   double newX = x() - other.x();
   double newY = y() - other.y();
   double newZ = z() - other.z();
-  return Vector3d(newX, newY, newZ);
+  return {newX, newY, newZ};
 }
 
 /// check equality

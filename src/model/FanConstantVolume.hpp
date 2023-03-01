@@ -59,7 +59,12 @@ namespace model {
 
     FanConstantVolume(const Model& model);
 
-    virtual ~FanConstantVolume() {}
+    virtual ~FanConstantVolume() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FanConstantVolume(const FanConstantVolume& other) = default;
+    FanConstantVolume(FanConstantVolume&& other) = default;
+    FanConstantVolume& operator=(const FanConstantVolume&) = default;
+    FanConstantVolume& operator=(FanConstantVolume&&) = default;
 
     //@}
 
@@ -110,7 +115,7 @@ namespace model {
     bool setMotorInAirstreamFraction(double value);
 
     /** Sets the value of the EndUseSubcategory field. **/
-    bool setEndUseSubcategory(std::string value);
+    bool setEndUseSubcategory(const std::string& value);
 
     //@}
 
@@ -134,7 +139,7 @@ namespace model {
     friend class openstudio::IdfObject;
 
     /// @cond
-    typedef detail::FanConstantVolume_Impl ImplType;
+    using ImplType = detail::FanConstantVolume_Impl;
     explicit FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> impl);
 
    private:
@@ -143,10 +148,10 @@ namespace model {
   };
 
   /** \relates FanConstantVolume */
-  typedef boost::optional<FanConstantVolume> OptionalFanConstantVolume;
+  using OptionalFanConstantVolume = boost::optional<FanConstantVolume>;
 
   /** \relates FanConstantVolume */
-  typedef std::vector<FanConstantVolume> FanConstantVolumeVector;
+  using FanConstantVolumeVector = std::vector<FanConstantVolume>;
 
 }  // namespace model
 }  // namespace openstudio

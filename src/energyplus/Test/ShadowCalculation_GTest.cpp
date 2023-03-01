@@ -65,7 +65,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
   Model m;
 
   // Get the unique object
-  ShadowCalculation sc = m.getUniqueModelObject<ShadowCalculation>();
+  auto sc = m.getUniqueModelObject<ShadowCalculation>();
 
   // Check all cases where a single output request is True so we know we assigned the fields correctly
   auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
@@ -189,7 +189,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
 
     // test the first Shading Zone Group
     {
-      WorkspaceExtensibleGroup w_eg_shadingGroup = idf_sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+      auto w_eg_shadingGroup = idf_sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
       boost::optional<WorkspaceObject> _i_sc_shadingGroup =
         w_eg_shadingGroup.getTarget(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName);
       ASSERT_TRUE(_i_sc_shadingGroup);
@@ -202,7 +202,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
 
     // Test the second Shading Zone Group
     {
-      WorkspaceExtensibleGroup w_eg_shadingGroup = idf_sc.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+      auto w_eg_shadingGroup = idf_sc.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
       boost::optional<WorkspaceObject> _i_sc_shadingGroup =
         w_eg_shadingGroup.getTarget(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName);
       ASSERT_TRUE(_i_sc_shadingGroup);
@@ -234,7 +234,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    ShadowCalculation sc = m.getUniqueModelObject<ShadowCalculation>();
+    auto sc = m.getUniqueModelObject<ShadowCalculation>();
 
     EXPECT_TRUE(sc.isShadingCalculationUpdateFrequencyMethodDefaulted());
 
@@ -274,7 +274,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    ShadowCalculation sc = m.getUniqueModelObject<ShadowCalculation>();
+    auto sc = m.getUniqueModelObject<ShadowCalculation>();
     EXPECT_EQ(outputExternal, sc.outputExternalShadingCalculationResults());
     EXPECT_EQ(disableSelfShadingWithin, sc.disableSelfShadingWithinShadingZoneGroups());
     EXPECT_EQ(disableSelfShadingFrom, sc.disableSelfShadingFromShadingZoneGroupstoOtherZones());
@@ -295,7 +295,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    ShadowCalculation sc = m.getUniqueModelObject<ShadowCalculation>();
+    auto sc = m.getUniqueModelObject<ShadowCalculation>();
 
     EXPECT_EQ("PixelCounting", sc.shadingCalculationMethod());
     EXPECT_EQ("Timestep", sc.shadingCalculationUpdateFrequencyMethod());
@@ -326,13 +326,13 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
     ASSERT_TRUE(_i_zoneList1);
     EXPECT_TRUE(_i_zoneList1->setName("ZoneList1 for Zone1 and Zone2"));
 
-    WorkspaceExtensibleGroup eg1 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    auto eg1 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     EXPECT_TRUE(eg1.setPointer(ZoneListExtensibleFields::ZoneName, _i_z1->handle()));
-    WorkspaceExtensibleGroup eg2 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    auto eg2 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     EXPECT_TRUE(eg2.setPointer(ZoneListExtensibleFields::ZoneName, _i_z2->handle()));
 
     // Push an extensible in ShadowCalculation for a new 'Shading Zone Group' and assign that zone List
-    WorkspaceExtensibleGroup s_eg = _i_sc->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    auto s_eg = _i_sc->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     EXPECT_TRUE(s_eg.setPointer(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName, _i_zoneList1->handle()));
   }
 
@@ -343,7 +343,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
     EXPECT_TRUE(_i_z3->setName("Zone3"));
 
     // Push an extensible in ShadowCalculation for a new 'Shading Zone Group' and assign that zone
-    WorkspaceExtensibleGroup s_eg = _i_sc->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    auto s_eg = _i_sc->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     EXPECT_TRUE(s_eg.setPointer(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName, _i_z3->handle()));
   }
 
@@ -351,7 +351,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    ShadowCalculation sc = m.getUniqueModelObject<ShadowCalculation>();
+    auto sc = m.getUniqueModelObject<ShadowCalculation>();
 
     EXPECT_EQ("PixelCounting", sc.shadingCalculationMethod());
     EXPECT_EQ("Timestep", sc.shadingCalculationUpdateFrequencyMethod());
@@ -367,11 +367,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
 
     EXPECT_EQ(3u, m.getConcreteModelObjects<ThermalZone>().size());
 
-    boost::optional<openstudio::model::ThermalZone> _z1 = m.getModelObjectByName<openstudio::model::ThermalZone>("Zone1");
+    boost::optional<openstudio::model::ThermalZone> _z1 = m.getConcreteModelObjectByName<openstudio::model::ThermalZone>("Zone1");
     ASSERT_TRUE(_z1);
-    boost::optional<openstudio::model::ThermalZone> _z2 = m.getModelObjectByName<openstudio::model::ThermalZone>("Zone2");
+    boost::optional<openstudio::model::ThermalZone> _z2 = m.getConcreteModelObjectByName<openstudio::model::ThermalZone>("Zone2");
     ASSERT_TRUE(_z2);
-    boost::optional<openstudio::model::ThermalZone> _z3 = m.getModelObjectByName<openstudio::model::ThermalZone>("Zone3");
+    boost::optional<openstudio::model::ThermalZone> _z3 = m.getConcreteModelObjectByName<openstudio::model::ThermalZone>("Zone3");
     ASSERT_TRUE(_z3);
 
     {

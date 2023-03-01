@@ -118,7 +118,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkSpecifiedFlowRate::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkSpecifiedFlowRate);
+    return {IddObjectType::OS_AirflowNetworkSpecifiedFlowRate};
   }
 
   std::vector<std::string> AirflowNetworkSpecifiedFlowRate::airFlowUnitsValues() {

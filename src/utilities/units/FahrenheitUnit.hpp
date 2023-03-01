@@ -69,7 +69,7 @@ class UTILITIES_API FahrenheitUnit : public TemperatureUnit
    *  \param[in] prettyString optional string to use in place of standardString. */
   FahrenheitUnit(const std::string& scaleAbbreviation, int FExp = 0, const std::string& prettyString = "");
 
-  virtual ~FahrenheitUnit() {}
+  virtual ~FahrenheitUnit() = default;
 
   //@}
   /** @name Mathematical Operators */
@@ -81,7 +81,7 @@ class UTILITIES_API FahrenheitUnit : public TemperatureUnit
   //@}
  protected:
   /// @cond
-  typedef detail::FahrenheitUnit_Impl ImplType;
+  using ImplType = detail::FahrenheitUnit_Impl;
 
   explicit FahrenheitUnit(std::shared_ptr<detail::FahrenheitUnit_Impl> impl);
 
@@ -94,10 +94,10 @@ class UTILITIES_API FahrenheitUnit : public TemperatureUnit
 };
 
 /** \relates FahrenheitUnit*/
-typedef boost::optional<FahrenheitUnit> OptionalFahrenheitUnit;
+using OptionalFahrenheitUnit = boost::optional<FahrenheitUnit>;
 
 /** \relates FahrenheitUnit*/
-typedef std::vector<FahrenheitUnit> FahrenheitUnitVector;
+using FahrenheitUnitVector = std::vector<FahrenheitUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

@@ -52,7 +52,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ScheduleInterval() {}
+    virtual ~ScheduleInterval() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleInterval(const ScheduleInterval& other) = default;
+    ScheduleInterval(ScheduleInterval&& other) = default;
+    ScheduleInterval& operator=(const ScheduleInterval&) = default;
+    ScheduleInterval& operator=(ScheduleInterval&&) = default;
 
     //@}
 
@@ -71,7 +76,7 @@ namespace model {
 
     //@}
    protected:
-    typedef detail::ScheduleInterval_Impl ImplType;
+    using ImplType = detail::ScheduleInterval_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -86,10 +91,10 @@ namespace model {
   };
 
   /** \relates ScheduleInterval */
-  typedef boost::optional<ScheduleInterval> OptionalScheduleInterval;
+  using OptionalScheduleInterval = boost::optional<ScheduleInterval>;
 
   /** \relates ScheduleInterval */
-  typedef std::vector<ScheduleInterval> ScheduleIntervalVector;
+  using ScheduleIntervalVector = std::vector<ScheduleInterval>;
 
 }  // namespace model
 }  // namespace openstudio

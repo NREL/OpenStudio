@@ -60,12 +60,12 @@ TEST_F(ModelFixture, RefrigerationAirChiller_Remove) {
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
 
-  std::vector<RefrigerationAirChiller> refrigerationAirChillers = m.getModelObjects<RefrigerationAirChiller>();
+  std::vector<RefrigerationAirChiller> refrigerationAirChillers = m.getConcreteModelObjects<RefrigerationAirChiller>();
   EXPECT_EQ(1, refrigerationAirChillers.size());
 
   testObject.remove();
 
-  refrigerationAirChillers = m.getModelObjects<RefrigerationAirChiller>();
+  refrigerationAirChillers = m.getConcreteModelObjects<RefrigerationAirChiller>();
   EXPECT_EQ(0, refrigerationAirChillers.size());
 }
 
@@ -74,7 +74,7 @@ TEST_F(ModelFixture, RefrigerationAirChiller_CloneOneModelWithDefaultData) {
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
 
-  RefrigerationAirChiller testObjectClone = testObject.clone(m).cast<RefrigerationAirChiller>();
+  auto testObjectClone = testObject.clone(m).cast<RefrigerationAirChiller>();
 
   EXPECT_EQ("UnitLoadFactorSensibleOnly", testObjectClone.capacityRatingType());
   EXPECT_DOUBLE_EQ(15000.0, testObjectClone.ratedUnitLoadFactor().get());
@@ -119,7 +119,7 @@ TEST_F(ModelFixture, RefrigerationAirChiller_CloneOneModelWithCustomData) {
   testObject.setDefrostPower(999.0);
   testObject.setTemperatureTerminationDefrostFractiontoIce(0.99);
 
-  RefrigerationAirChiller testObjectClone = testObject.clone(m).cast<RefrigerationAirChiller>();
+  auto testObjectClone = testObject.clone(m).cast<RefrigerationAirChiller>();
 
   EXPECT_EQ("EuropeanSC1Standard", testObjectClone.capacityRatingType());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedUnitLoadFactor().get());
@@ -164,11 +164,11 @@ TEST_F(ModelFixture, RefrigerationAirChiller_CloneTwoModelsWithDefaultData) {
   testObject.setDefrostPower(999.0);
   testObject.setTemperatureTerminationDefrostFractiontoIce(0.99);
 
-  RefrigerationAirChiller testObjectClone = testObject.clone(m).cast<RefrigerationAirChiller>();
+  auto testObjectClone = testObject.clone(m).cast<RefrigerationAirChiller>();
 
   Model m2;
 
-  RefrigerationAirChiller testObjectClone2 = testObject.clone(m2).cast<RefrigerationAirChiller>();
+  auto testObjectClone2 = testObject.clone(m2).cast<RefrigerationAirChiller>();
 
   EXPECT_EQ("EuropeanSC1Standard", testObjectClone2.capacityRatingType());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone2.ratedUnitLoadFactor().get());

@@ -207,7 +207,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemSensor::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Sensor);
+    return {IddObjectType::OS_EnergyManagementSystem_Sensor};
   }
 
   std::string EnergyManagementSystemSensor::keyName() const {

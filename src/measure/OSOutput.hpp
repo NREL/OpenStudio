@@ -150,10 +150,10 @@ OPENSTUDIO_ENUM(OSOutputType,
   };
 
   /** \relates OSOutput */
-  typedef boost::optional<OSOutput> OptionalOSOutput;
+  using OptionalOSOutput = boost::optional<OSOutput>;
 
   /** \relates OSOutput */
-  typedef std::vector<OSOutput> OSOutputVector;
+  using OSOutputVector = std::vector<OSOutput>;
 
   /** Prints argument data to ostream for debugging purposes. \relates OSOutput */
   MEASURE_API std::ostream& operator<<(std::ostream& os, const OSOutput& arg);

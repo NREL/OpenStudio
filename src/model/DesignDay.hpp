@@ -324,14 +324,19 @@ namespace model {
 
     //@}
 
-    virtual ~DesignDay() {}
+    virtual ~DesignDay() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DesignDay(const DesignDay& other) = default;
+    DesignDay(DesignDay&& other) = default;
+    DesignDay& operator=(const DesignDay&) = default;
+    DesignDay& operator=(DesignDay&&) = default;
 
    protected:
     friend class Model;
 
     friend class openstudio::IdfObject;
 
-    typedef detail::DesignDay_Impl ImplType;
+    using ImplType = detail::DesignDay_Impl;
 
     // constructor
     explicit DesignDay(std::shared_ptr<detail::DesignDay_Impl> impl);
@@ -341,10 +346,10 @@ namespace model {
   };
 
   /** \relates DesignDay */
-  typedef boost::optional<DesignDay> OptionalDesignDay;
+  using OptionalDesignDay = boost::optional<DesignDay>;
 
   /** \relates DesignDay */
-  typedef std::vector<DesignDay> DesignDayVector;
+  using DesignDayVector = std::vector<DesignDay>;
 
 }  // namespace model
 }  // namespace openstudio

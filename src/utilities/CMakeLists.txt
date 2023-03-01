@@ -20,6 +20,7 @@ set(core_src
   core/CommandLine.cpp
   core/Compare.hpp
   core/Compare.cpp
+  core/ContainersMove.hpp
   core/Containers.hpp
   core/Containers.cpp
   core/Deprecated.hpp
@@ -511,20 +512,19 @@ if(HAVE_UNISTD_H)
 endif()
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib)
-  add_dependencies(${target_name}_tests openstudio_model_resources)
-  add_dependencies(${target_name}_tests openstudio_energyplus_resources)
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib openstudio_model_resources openstudio_energyplus_resources CONAN_PKG::fmt)
 endif()
 
 if(BUILD_BENCHMARK)
 
   set(core_benchmark_src
-    core/test/Checksum_Benchmark.cpp
-    core/test/Zip_Benchmark.cpp
+    core/benchmark/Checksum_Benchmark.cpp
+    core/benchmark/Zip_Benchmark.cpp
   )
   set(${target_name}_benchmark_src
     ${core_benchmark_src}
     ${idf_benchmark_src}
+    ${idd_benchmark_src}
   )
 
   foreach( bench_file ${${target_name}_benchmark_src} )
@@ -546,6 +546,8 @@ if(BUILD_BENCHMARK)
           ${${target_name}_depends}
       )
     endif()
+    set_target_properties(${bench_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/benchmark")
+    add_dependencies(run_benchmarks ${bench_name})
   endforeach()
 
 endif()

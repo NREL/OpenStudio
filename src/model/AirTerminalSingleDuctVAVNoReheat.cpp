@@ -95,7 +95,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalSingleDuctVAVNoReheat_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVNoReheat", "Availability"));
       }
@@ -355,7 +356,7 @@ namespace model {
                 _model.connect(this->getObject<ModelObject>(), outletPort(), node, node.inletPort());
 
                 if (thermalZone) {
-                  AirTerminalSingleDuctVAVNoReheat mo = this->getObject<AirTerminalSingleDuctVAVNoReheat>();
+                  auto mo = this->getObject<AirTerminalSingleDuctVAVNoReheat>();
 
                   thermalZone->addEquipment(mo);
                 }
@@ -372,7 +373,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctVAVNoReheat_Impl::remove() {
       Model _model = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
 
       boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
       boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
@@ -510,7 +511,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalSingleDuctVAVNoReheat::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat);
+    return {IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat};
   }
 
   std::vector<std::string> AirTerminalSingleDuctVAVNoReheat::zoneMinimumAirFlowInputMethodValues() {
@@ -582,7 +583,7 @@ namespace model {
     getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->autosizeMaximumAirFlowRate();
   }
 
-  bool AirTerminalSingleDuctVAVNoReheat::setZoneMinimumAirFlowInputMethod(std::string zoneMinimumAirFlowInputMethod) {
+  bool AirTerminalSingleDuctVAVNoReheat::setZoneMinimumAirFlowInputMethod(const std::string& zoneMinimumAirFlowInputMethod) {
     return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setZoneMinimumAirFlowInputMethod(zoneMinimumAirFlowInputMethod);
   }
 

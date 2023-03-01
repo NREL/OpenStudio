@@ -44,8 +44,6 @@ WorkspaceWatcher::WorkspaceWatcher(const Workspace& workspace) : m_enabled(true)
   wsImpl.get()->detail::Workspace_Impl::removeWorkspaceObject.connect<WorkspaceWatcher, &WorkspaceWatcher::objectRemove>(this);
 }
 
-WorkspaceWatcher::~WorkspaceWatcher() {}
-
 bool WorkspaceWatcher::enabled() const {
   return m_enabled;
 }
@@ -113,7 +111,7 @@ void WorkspaceWatcher::change() {
   }
 }
 
-void WorkspaceWatcher::objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+void WorkspaceWatcher::objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& /*type*/, const openstudio::UUID& /*uuid*/) {
   // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
   // let change() handle m_dirty and onChangeWorkspace();
   m_objectAdded = true;
@@ -125,7 +123,8 @@ void WorkspaceWatcher::objectAdd(const WorkspaceObject& addedObject, const opens
   }
 }
 
-void WorkspaceWatcher::objectRemove(const WorkspaceObject& removedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+void WorkspaceWatcher::objectRemove(const WorkspaceObject& removedObject, const openstudio::IddObjectType& /*type*/,
+                                    const openstudio::UUID& /*uuid*/) {
   // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
   // let change() handle m_dirty and onChangeWorkspace();
   m_objectRemoved = true;

@@ -55,7 +55,7 @@ namespace model {
       EnergyManagementSystemConstructionIndexVariable_Impl(const EnergyManagementSystemConstructionIndexVariable_Impl& other, Model_Impl* model,
                                                            bool keepHandle);
 
-      virtual ~EnergyManagementSystemConstructionIndexVariable_Impl() {}
+      virtual ~EnergyManagementSystemConstructionIndexVariable_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

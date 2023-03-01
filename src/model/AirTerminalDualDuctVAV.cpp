@@ -79,7 +79,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalDualDuctVAV_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_DualDuct_VAVFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalDualDuctVAV", "Availability Schedule"));
       }
@@ -224,13 +225,13 @@ namespace model {
       return std::numeric_limits<unsigned>::max();
     }
 
-    unsigned AirTerminalDualDuctVAV_Impl::newInletPortAfterBranch(unsigned branchIndex) {
+    unsigned AirTerminalDualDuctVAV_Impl::newInletPortAfterBranch(unsigned /*branchIndex*/) {
       LOG(Warn, "newInletPortAfterBranch is not supported for " << briefDescription() << " .");
       LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
       return std::numeric_limits<unsigned>::max();
     }
 
-    void AirTerminalDualDuctVAV_Impl::removePortForBranch(unsigned branchIndex) {
+    void AirTerminalDualDuctVAV_Impl::removePortForBranch(unsigned /*branchIndex*/) {
       LOG(Warn, "removePortForBranch is not supported for " << briefDescription() << " .");
       LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
     }
@@ -271,7 +272,7 @@ namespace model {
       t_clone.setString(OS_AirTerminal_DualDuct_VAVFields::ColdAirInletNode, "");
       t_clone.setString(OS_AirTerminal_DualDuct_VAVFields::AirOutletNode, "");
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     bool AirTerminalDualDuctVAV_Impl::isRemovable() const {
@@ -304,7 +305,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalDualDuctVAV::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_DualDuct_VAV);
+    return {IddObjectType::OS_AirTerminal_DualDuct_VAV};
   }
 
   boost::optional<Schedule> AirTerminalDualDuctVAV::availabilitySchedule() const {

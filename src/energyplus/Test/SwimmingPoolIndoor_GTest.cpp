@@ -65,11 +65,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SwimmingPoolIndoor) {
   // Create a model
   Model m;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, m);
   ASSERT_TRUE(space1);
   auto surfaces = space1->surfaces();

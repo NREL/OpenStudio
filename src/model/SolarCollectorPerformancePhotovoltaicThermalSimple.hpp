@@ -54,7 +54,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SolarCollectorPerformancePhotovoltaicThermalSimple() {}
+    virtual ~SolarCollectorPerformancePhotovoltaicThermalSimple() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorPerformancePhotovoltaicThermalSimple(const SolarCollectorPerformancePhotovoltaicThermalSimple& other) = default;
+    SolarCollectorPerformancePhotovoltaicThermalSimple(SolarCollectorPerformancePhotovoltaicThermalSimple&& other) = default;
+    SolarCollectorPerformancePhotovoltaicThermalSimple& operator=(const SolarCollectorPerformancePhotovoltaicThermalSimple&) = default;
+    SolarCollectorPerformancePhotovoltaicThermalSimple& operator=(SolarCollectorPerformancePhotovoltaicThermalSimple&&) = default;
 
     //@}
 
@@ -102,7 +107,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl ImplType;
+    using ImplType = detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl;
 
     explicit SolarCollectorPerformancePhotovoltaicThermalSimple(const Model& model);
 
@@ -121,10 +126,10 @@ namespace model {
   };
 
   /** \relates SolarCollectorPerformancePhotovoltaicThermalSimple*/
-  typedef boost::optional<SolarCollectorPerformancePhotovoltaicThermalSimple> OptionalSolarCollectorPerformancePhotovoltaicThermalSimple;
+  using OptionalSolarCollectorPerformancePhotovoltaicThermalSimple = boost::optional<SolarCollectorPerformancePhotovoltaicThermalSimple>;
 
   /** \relates SolarCollectorPerformancePhotovoltaicThermalSimple*/
-  typedef std::vector<SolarCollectorPerformancePhotovoltaicThermalSimple> SolarCollectorPerformancePhotovoltaicThermalSimpleVector;
+  using SolarCollectorPerformancePhotovoltaicThermalSimpleVector = std::vector<SolarCollectorPerformancePhotovoltaicThermalSimple>;
 
 }  // namespace model
 }  // namespace openstudio

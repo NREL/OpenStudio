@@ -42,7 +42,7 @@ Vector3d::Vector3d(double x, double y, double z) : m_storage(3) {
 }
 
 /// copy constructor
-Vector3d::Vector3d(const Vector3d& other) : m_storage(other.m_storage) {}
+Vector3d::Vector3d(const Vector3d& other) = default;
 
 /// get x
 double Vector3d::x() const {
@@ -64,7 +64,7 @@ Vector3d Vector3d::operator+(const Vector3d& other) const {
   double newX = x() + other.x();
   double newY = y() + other.y();
   double newZ = z() + other.z();
-  return Vector3d(newX, newY, newZ);
+  return {newX, newY, newZ};
 }
 
 /// addition
@@ -80,7 +80,7 @@ Vector3d Vector3d::operator-(const Vector3d& other) const {
   double newX = x() - other.x();
   double newY = y() - other.y();
   double newZ = z() - other.z();
-  return Vector3d(newX, newY, newZ);
+  return {newX, newY, newZ};
 }
 
 /// subtraction
@@ -122,12 +122,12 @@ std::ostream& operator<<(std::ostream& os, const std::vector<Vector3d>& vecVecto
 
 /// negation
 Vector3d operator-(const Vector3d& vec) {
-  return Vector3d(-vec.x(), -vec.y(), -vec.z());
+  return {-vec.x(), -vec.y(), -vec.z()};
 }
 
 /// multiplication by a scalar
 Vector3d operator*(double mult, const Vector3d& vec) {
-  return Vector3d(mult * vec.x(), mult * vec.y(), mult * vec.z());
+  return {mult * vec.x(), mult * vec.y(), mult * vec.z()};
 }
 
 /// normalize to one
@@ -137,7 +137,7 @@ bool Vector3d::normalize() {
 
 /// get a vector which is the reverse of this
 Vector3d Vector3d::reverseVector() const {
-  return Vector3d(-m_storage[0], -m_storage[1], -m_storage[2]);
+  return {-m_storage[0], -m_storage[1], -m_storage[2]};
 }
 
 /// get length
@@ -161,12 +161,12 @@ bool Vector3d::setLength(double newLength) {
 
 /// orthogonal right
 Vector3d Vector3d::orthogonalRight() const {
-  return Vector3d(m_storage[1], -m_storage[0], m_storage[2]);
+  return {m_storage[1], -m_storage[0], m_storage[2]};
 }
 
 /// orthogonal left
 Vector3d Vector3d::orthogonalLeft() const {
-  return Vector3d(-m_storage[1], m_storage[0], m_storage[2]);
+  return {-m_storage[1], m_storage[0], m_storage[2]};
 }
 
 /// dot product with another Vector3d
@@ -179,7 +179,7 @@ Vector3d Vector3d::cross(const Vector3d& other) const {
   double newX = (y() * other.z() - z() * other.y());
   double newY = (z() * other.x() - x() * other.z());
   double newZ = (x() * other.y() - y() * other.x());
-  return Vector3d(newX, newY, newZ);
+  return {newX, newY, newZ};
 }
 
 /// get the Vector directly

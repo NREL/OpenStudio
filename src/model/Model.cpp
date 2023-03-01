@@ -46,6 +46,7 @@
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 
 #include "../utilities/idd/IddEnums.hpp"
@@ -212,7 +213,7 @@ namespace model {
     Model Model_Impl::model() const {
       // const cast looks pretty bad but is justified here as this operation does not
       // modify the model, this is similar to a copy constructor, don't abuse it though
-      return Model(std::dynamic_pointer_cast<Model_Impl>(std::const_pointer_cast<openstudio::detail::Workspace_Impl>(this->shared_from_this())));
+      return {std::dynamic_pointer_cast<Model_Impl>(std::const_pointer_cast<openstudio::detail::Workspace_Impl>(this->shared_from_this()))};
     }
 
     bool Model_Impl::setIddFile(IddFileType iddFileType) {
@@ -228,7 +229,7 @@ namespace model {
       boost::optional<Building> result = this->model().getOptionalUniqueModelObject<Building>();
       if (result) {
         m_cachedBuilding = result;
-        result->getImpl<Building_Impl>().get()->Building_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedBuilding>(
+        result->getImpl<Building_Impl>()->Building_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedBuilding>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -244,7 +245,6 @@ namespace model {
       if (result) {
         m_cachedFoundationKivaSettings = result;
         result->getImpl<FoundationKivaSettings_Impl>()
-          .get()
           ->FoundationKivaSettings_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedFoundationKivaSettings>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -261,7 +261,6 @@ namespace model {
       if (result) {
         m_cachedOutputControlFiles = result;
         result->getImpl<OutputControlFiles_Impl>()
-          .get()
           ->OutputControlFiles_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputControlFiles>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -278,7 +277,6 @@ namespace model {
       if (result) {
         m_cachedOutputControlReportingTolerances = result;
         result->getImpl<OutputControlReportingTolerances_Impl>()
-          .get()
           ->OutputControlReportingTolerances_Impl::onRemoveFromWorkspace
           .connect<Model_Impl, &Model_Impl::clearCachedOutputControlReportingTolerances>(const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -312,7 +310,6 @@ namespace model {
       if (result) {
         m_cachedOutputDiagnostics = result;
         result->getImpl<OutputDiagnostics_Impl>()
-          .get()
           ->OutputDiagnostics_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputDiagnostics>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -329,7 +326,6 @@ namespace model {
       if (result) {
         m_cachedOutputDebuggingData = result;
         result->getImpl<OutputDebuggingData_Impl>()
-          .get()
           ->OutputDebuggingData_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputDebuggingData>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -345,7 +341,7 @@ namespace model {
       boost::optional<OutputJSON> result = this->model().getOptionalUniqueModelObject<OutputJSON>();
       if (result) {
         m_cachedOutputJSON = result;
-        result->getImpl<OutputJSON_Impl>().get()->OutputJSON_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputJSON>(
+        result->getImpl<OutputJSON_Impl>()->OutputJSON_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputJSON>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -378,7 +374,6 @@ namespace model {
       if (result) {
         m_cachedOutputEnergyManagementSystem = result;
         result->getImpl<OutputEnergyManagementSystem_Impl>()
-          .get()
           ->OutputEnergyManagementSystem_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputEnergyManagementSystem>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -395,7 +390,6 @@ namespace model {
       if (result) {
         m_cachedOutputTableSummaryReports = result;
         result->getImpl<OutputTableSummaryReports_Impl>()
-          .get()
           ->OutputTableSummaryReports_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputTableSummaryReports>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -446,7 +440,6 @@ namespace model {
       if (result) {
         m_cachedPerformancePrecisionTradeoffs = result;
         result->getImpl<PerformancePrecisionTradeoffs_Impl>()
-          .get()
           ->PerformancePrecisionTradeoffs_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedPerformancePrecisionTradeoffs>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -463,7 +456,6 @@ namespace model {
       if (result) {
         m_cachedLifeCycleCostParameters = result;
         result->getImpl<LifeCycleCostParameters_Impl>()
-          .get()
           ->LifeCycleCostParameters_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedLifeCycleCostParameters>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -480,7 +472,6 @@ namespace model {
       if (result) {
         m_cachedSizingParameters = result;
         result->getImpl<SizingParameters_Impl>()
-          .get()
           ->SizingParameters_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSizingParameters>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -497,7 +488,6 @@ namespace model {
       if (result) {
         m_cachedRadianceParameters = result;
         result->getImpl<RadianceParameters_Impl>()
-          .get()
           ->RadianceParameters_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedRadianceParameters>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -513,7 +503,7 @@ namespace model {
       boost::optional<RunPeriod> result = this->model().getOptionalUniqueModelObject<RunPeriod>();
       if (result) {
         m_cachedRunPeriod = result;
-        result->getImpl<RunPeriod_Impl>().get()->RunPeriod_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedRunPeriod>(
+        result->getImpl<RunPeriod_Impl>()->RunPeriod_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedRunPeriod>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -529,7 +519,6 @@ namespace model {
       if (result) {
         m_cachedRunPeriodControlDaylightSavingTime = result;
         result->getImpl<RunPeriodControlDaylightSavingTime_Impl>()
-          .get()
           ->RunPeriodControlDaylightSavingTime_Impl::onRemoveFromWorkspace
           .connect<Model_Impl, &Model_Impl::clearCachedRunPeriodControlDaylightSavingTime>(const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -546,7 +535,6 @@ namespace model {
       if (result) {
         m_cachedYearDescription = result;
         result->getImpl<YearDescription_Impl>()
-          .get()
           ->YearDescription_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedYearDescription>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -562,7 +550,7 @@ namespace model {
       boost::optional<Site> result = this->model().getOptionalUniqueModelObject<Site>();
       if (result) {
         m_cachedSite = result;
-        result->getImpl<Site_Impl>().get()->Site_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSite>(
+        result->getImpl<Site_Impl>()->Site_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSite>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -578,7 +566,6 @@ namespace model {
       if (result) {
         m_cachedSiteGroundReflectance = result;
         result->getImpl<SiteGroundReflectance_Impl>()
-          .get()
           ->SiteGroundReflectance_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSiteGroundReflectance>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -595,7 +582,6 @@ namespace model {
       if (result) {
         m_cachedSiteWaterMainsTemperature = result;
         result->getImpl<SiteWaterMainsTemperature_Impl>()
-          .get()
           ->SiteWaterMainsTemperature_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSiteWaterMainsTemperature>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -613,7 +599,6 @@ namespace model {
       if (result) {
         m_cachedSiteGroundTemperatureBuildingSurface = result;
         result->getImpl<SiteGroundTemperatureBuildingSurface_Impl>()
-          .get()
           ->SiteGroundTemperatureBuildingSurface_Impl::onRemoveFromWorkspace
           .connect<Model_Impl, &Model_Impl::clearCachedSiteGroundTemperatureBuildingSurface>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
@@ -631,7 +616,6 @@ namespace model {
       if (result) {
         m_cachedSiteGroundTemperatureFCfactorMethod = result;
         result->getImpl<SiteGroundTemperatureFCfactorMethod_Impl>()
-          .get()
           ->SiteGroundTemperatureFCfactorMethod_Impl::onRemoveFromWorkspace
           .connect<Model_Impl, &Model_Impl::clearCachedSiteGroundTemperatureFCfactorMethod>(const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -648,7 +632,6 @@ namespace model {
       if (result) {
         m_cachedSiteGroundTemperatureDeep = result;
         result->getImpl<SiteGroundTemperatureDeep_Impl>()
-          .get()
           ->SiteGroundTemperatureDeep_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSiteGroundTemperatureDeep>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -665,7 +648,6 @@ namespace model {
       if (result) {
         m_cachedSiteGroundTemperatureShallow = result;
         result->getImpl<SiteGroundTemperatureShallow_Impl>()
-          .get()
           ->SiteGroundTemperatureShallow_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSiteGroundTemperatureShallow>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -681,7 +663,7 @@ namespace model {
       boost::optional<Facility> result = this->model().getOptionalUniqueModelObject<Facility>();
       if (result) {
         m_cachedFacility = result;
-        result->getImpl<Facility_Impl>().get()->Facility_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedFacility>(
+        result->getImpl<Facility_Impl>()->Facility_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedFacility>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -696,7 +678,7 @@ namespace model {
       boost::optional<WeatherFile> result = this->model().getOptionalUniqueModelObject<WeatherFile>();
       if (result) {
         m_cachedWeatherFile = result;
-        result->getImpl<WeatherFile_Impl>().get()->WeatherFile_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedWeatherFile>(
+        result->getImpl<WeatherFile_Impl>()->WeatherFile_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedWeatherFile>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -712,7 +694,6 @@ namespace model {
       if (result) {
         m_cachedSimulationControl = result;
         result->getImpl<SimulationControl_Impl>()
-          .get()
           ->SimulationControl_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSimulationControl>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -729,7 +710,6 @@ namespace model {
       if (result) {
         m_cachedLightingSimulationControl = result;
         result->getImpl<LightingSimulationControl_Impl>()
-          .get()
           ->LightingSimulationControl_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedLightingSimulationControl>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -746,7 +726,6 @@ namespace model {
       if (result) {
         m_cachedAirflowNetworkSimulationControl = result;
         result->getImpl<AirflowNetworkSimulationControl_Impl>()
-          .get()
           ->AirflowNetworkSimulationControl_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedAirflowNetworkSimulationControl>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -763,7 +742,6 @@ namespace model {
       if (result) {
         m_cachedInsideSurfaceConvectionAlgorithm = result;
         result->getImpl<InsideSurfaceConvectionAlgorithm_Impl>()
-          .get()
           ->InsideSurfaceConvectionAlgorithm_Impl::onRemoveFromWorkspace
           .connect<Model_Impl, &Model_Impl::clearCachedInsideSurfaceConvectionAlgorithm>(const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -780,7 +758,6 @@ namespace model {
       if (result) {
         m_cachedOutsideSurfaceConvectionAlgorithm = result;
         result->getImpl<OutsideSurfaceConvectionAlgorithm_Impl>()
-          .get()
           ->OutsideSurfaceConvectionAlgorithm_Impl::onRemoveFromWorkspace
           .connect<Model_Impl, &Model_Impl::clearCachedOutsideSurfaceConvectionAlgorithm>(const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -797,7 +774,6 @@ namespace model {
       if (result) {
         m_cachedHeatBalanceAlgorithm = result;
         result->getImpl<HeatBalanceAlgorithm_Impl>()
-          .get()
           ->HeatBalanceAlgorithm_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedHeatBalanceAlgorithm>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -814,7 +790,6 @@ namespace model {
       if (result) {
         m_cachedZoneAirContaminantBalance = result;
         result->getImpl<ZoneAirContaminantBalance_Impl>()
-          .get()
           ->ZoneAirContaminantBalance_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedZoneAirContaminantBalance>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -831,7 +806,6 @@ namespace model {
       if (result) {
         m_cachedZoneAirHeatBalanceAlgorithm = result;
         result->getImpl<ZoneAirHeatBalanceAlgorithm_Impl>()
-          .get()
           ->ZoneAirHeatBalanceAlgorithm_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedZoneAirHeatBalanceAlgorithm>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -848,7 +822,6 @@ namespace model {
       if (result) {
         m_cachedZoneAirMassFlowConservation = result;
         result->getImpl<ZoneAirMassFlowConservation_Impl>()
-          .get()
           ->ZoneAirMassFlowConservation_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedZoneAirMassFlowConservation>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -866,7 +839,6 @@ namespace model {
       if (result) {
         m_cachedZoneCapacitanceMultiplierResearchSpecial = result;
         result->getImpl<ZoneCapacitanceMultiplierResearchSpecial_Impl>()
-          .get()
           ->ZoneCapacitanceMultiplierResearchSpecial_Impl::onRemoveFromWorkspace
           .connect<Model_Impl, &Model_Impl::clearCachedZoneCapacitanceMultiplierResearchSpecial>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
@@ -884,7 +856,6 @@ namespace model {
       if (result) {
         m_cachedConvergenceLimits = result;
         result->getImpl<ConvergenceLimits_Impl>()
-          .get()
           ->ConvergenceLimits_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedConvergenceLimits>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -901,7 +872,6 @@ namespace model {
       if (result) {
         m_cachedShadowCalculation = result;
         result->getImpl<ShadowCalculation_Impl>()
-          .get()
           ->ShadowCalculation_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedShadowCalculation>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -917,7 +887,7 @@ namespace model {
       boost::optional<Timestep> result = this->model().getOptionalUniqueModelObject<Timestep>();
       if (result) {
         m_cachedTimestep = result;
-        result->getImpl<Timestep_Impl>().get()->Timestep_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedTimestep>(
+        result->getImpl<Timestep_Impl>()->Timestep_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedTimestep>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -932,10 +902,8 @@ namespace model {
       boost::optional<ClimateZones> result = this->model().getOptionalUniqueModelObject<ClimateZones>();
       if (result) {
         m_cachedClimateZones = result;
-        result->getImpl<ClimateZones_Impl>()
-          .get()
-          ->ClimateZones_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedClimateZones>(
-            const_cast<openstudio::model::detail::Model_Impl*>(this));
+        result->getImpl<ClimateZones_Impl>()->ClimateZones_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedClimateZones>(
+          const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
       return m_cachedClimateZones;
@@ -950,7 +918,6 @@ namespace model {
       if (result) {
         m_cachedEnvironmentalImpactFactors = result;
         result->getImpl<EnvironmentalImpactFactors_Impl>()
-          .get()
           ->EnvironmentalImpactFactors_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedEnvironmentalImpactFactors>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -967,7 +934,6 @@ namespace model {
       if (result) {
         m_cachedExternalInterface = result;
         result->getImpl<ExternalInterface_Impl>()
-          .get()
           ->ExternalInterface_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedExternalInterface>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -1031,7 +997,7 @@ namespace model {
       m_cachedYearDescription->resetCalendarYear();
     }
 
-    bool Model_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+    bool Model_Impl::setDayofWeekforStartDay(const std::string& dayofWeekforStartDay) {
       if (!m_cachedYearDescription) {
         m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
       }
@@ -1146,7 +1112,7 @@ namespace model {
 
       schedule.setValue(0.0);
 
-      return schedule;
+      return std::move(schedule);
     }
 
     std::string Model_Impl::alwaysOffDiscreteScheduleName() const {
@@ -1196,7 +1162,7 @@ namespace model {
 
       schedule.setValue(1.0);
 
-      return schedule;
+      return std::move(schedule);
     }
 
     std::string Model_Impl::alwaysOnDiscreteScheduleName() const {
@@ -1246,7 +1212,7 @@ namespace model {
 
       schedule.setValue(1.0);
 
-      return schedule;
+      return std::move(schedule);
     }
 
     std::string Model_Impl::alwaysOnContinuousScheduleName() const {
@@ -1309,7 +1275,7 @@ namespace model {
       if (m_sqlFile) {
         return boost::optional<openstudio::SqlFile>(*m_sqlFile);
       } else {
-        return boost::optional<openstudio::SqlFile>();
+        return {};
       }
     }
 
@@ -1386,8 +1352,7 @@ namespace model {
       for (ResourceObject& resource : resources) {
         // test for initialized first in case earlier .remove() got this one already
         if ((resource.initialized()) && (resource.nonResourceObjectUseCount(true) == 0)) {
-          IdfObjectVector thisCallRemoved = resource.remove();
-          removedObjects.insert(removedObjects.end(), thisCallRemoved.begin(), thisCallRemoved.end());
+          openstudio::detail::concat_helper(removedObjects, resource.remove());
         }
       }
       return removedObjects;
@@ -1400,8 +1365,7 @@ namespace model {
         if (resource) {
           // test for initialized first in case earlier .remove() got this one already
           if ((resource->initialized()) && (resource->directUseCount(true) == 0)) {
-            IdfObjectVector thisCallRemoved = resource->remove();
-            removedObjects.insert(removedObjects.end(), thisCallRemoved.begin(), thisCallRemoved.end());
+            openstudio::detail::concat_helper(removedObjects, resource->remove());
           }
         }
       }
@@ -1529,8 +1493,7 @@ namespace model {
     void Model_Impl::mf_createComponentWatcher(ComponentData& componentData) {
       try {
         ComponentWatcher watcher(componentData);
-        watcher.getImpl().get()->ComponentWatcher_Impl::obsolete.connect<Model_Impl, &Model_Impl::obsoleteComponentWatcher>(
-          this);  // #HASHTAG Problem?
+        watcher.getImpl()->ComponentWatcher_Impl::obsolete.connect<Model_Impl, &Model_Impl::obsoleteComponentWatcher>(this);  // #HASHTAG Problem?
         m_componentWatchers.push_back(watcher);
       } catch (...) {
         componentData.remove();
@@ -1768,7 +1731,7 @@ namespace model {
     }
 
     void Model_Impl::autosize() {
-      for (auto optModelObj : objects()) {
+      for (auto& optModelObj : objects()) {
         if (auto modelObj = optModelObj.optionalCast<HVACComponent>()) {  // HVACComponent
           modelObj->autosize();
         } else if (auto modelObj = optModelObj.optionalCast<Loop>()) {  // Loop
@@ -1801,11 +1764,10 @@ namespace model {
           modelObj->autosize();
         }
       }
-      return;
     }
 
     void Model_Impl::applySizingValues() {
-      for (auto optModelObj : objects()) {
+      for (auto& optModelObj : objects()) {
         if (auto modelObj = optModelObj.optionalCast<HVACComponent>()) {  // HVACComponent
           modelObj->applySizingValues();
         } else if (auto modelObj = optModelObj.optionalCast<Loop>()) {  // Loop
@@ -1838,7 +1800,6 @@ namespace model {
           modelObj->applySizingValues();
         }
       }
-      return;
     }
 
   }  // namespace detail
@@ -1918,7 +1879,7 @@ namespace model {
     return result;
   }
 
-  Model::Model(std::shared_ptr<detail::Model_Impl> p) : Workspace(std::move(p)) {}
+  Model::Model(std::shared_ptr<detail::Model_Impl> impl) : Workspace(std::move(impl)) {}
 
   boost::optional<Building> Model::building() const {
     return getImpl<detail::Model_Impl>()->building();
@@ -2128,7 +2089,7 @@ namespace model {
     getImpl<detail::Model_Impl>()->resetCalendarYear();
   }
 
-  bool Model::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+  bool Model::setDayofWeekforStartDay(const std::string& dayofWeekforStartDay) {
     return getImpl<detail::Model_Impl>()->setDayofWeekforStartDay(dayofWeekforStartDay);
   }
 
@@ -2229,12 +2190,7 @@ namespace model {
   }
 
   std::vector<ModelObject> Model::modelObjects(bool sorted) const {
-    // can't use resize because ModelObject has no default ctor
-    std::vector<ModelObject> result;
-    for (WorkspaceObject object : this->objects(sorted)) {
-      result.push_back(object.cast<ModelObject>());
-    }
-    return result;
+    return castVector<ModelObject>(this->objects(sorted));
   }
 
   boost::optional<ComponentData> Model::insertComponent(const Component& component) {
@@ -2292,20 +2248,20 @@ namespace model {
     std::vector<Surface> searchResults;
 
     // add Version
-    Version version = model.getUniqueModelObject<Version>();
+    auto version = model.getUniqueModelObject<Version>();
 
     // add SimulationControl
-    SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
+    auto simulationControl = model.getUniqueModelObject<SimulationControl>();
     simulationControl.setDoZoneSizingCalculation(true);
     simulationControl.setDoSystemSizingCalculation(true);
     simulationControl.setRunSimulationforSizingPeriods(false);
     simulationControl.setRunSimulationforWeatherFileRunPeriods(true);
 
     // add Timestep
-    Timestep timestep = model.getUniqueModelObject<Timestep>();
+    auto timestep = model.getUniqueModelObject<Timestep>();
 
     // add RunPeriod
-    RunPeriod runPeriod = model.getUniqueModelObject<RunPeriod>();
+    auto runPeriod = model.getUniqueModelObject<RunPeriod>();
     runPeriod.setBeginMonth(1);
     runPeriod.setBeginDayOfMonth(1);
     runPeriod.setEndMonth(12);
@@ -2318,22 +2274,22 @@ namespace model {
     runPeriod.setNumTimePeriodRepeats(1);
 
     // add SurfaceConvectionAlgorithmInside
-    InsideSurfaceConvectionAlgorithm insideSurfaceConvectionAlgorithm = model.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
+    auto insideSurfaceConvectionAlgorithm = model.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
 
     // add SurfaceConvectionAlgorithmOutside
-    OutsideSurfaceConvectionAlgorithm outsideSurfaceConvectionAlgorithm = model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+    auto outsideSurfaceConvectionAlgorithm = model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
 
     // add HeatBalanceAlgorithm
-    HeatBalanceAlgorithm heatBalanceAlgorithm = model.getUniqueModelObject<HeatBalanceAlgorithm>();
+    auto heatBalanceAlgorithm = model.getUniqueModelObject<HeatBalanceAlgorithm>();
 
     // add ZoneAirHeatBalanceAlgorithm
-    ZoneAirHeatBalanceAlgorithm zoneAirHeatBalanceAlgorithm = model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
+    auto zoneAirHeatBalanceAlgorithm = model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
 
     // add ConvergenceLimits
-    ConvergenceLimits convergenceLimits = model.getUniqueModelObject<ConvergenceLimits>();
+    auto convergenceLimits = model.getUniqueModelObject<ConvergenceLimits>();
 
     // add ShadowCalculation
-    ShadowCalculation shadowCalculation = model.getUniqueModelObject<ShadowCalculation>();
+    auto shadowCalculation = model.getUniqueModelObject<ShadowCalculation>();
 
     // add Site
     Site site = model.getUniqueModelObject<Site>();
@@ -2343,7 +2299,7 @@ namespace model {
     site.setElevation(190.0);
 
     // add SiteGroundTemperatureBuildingSurface
-    SiteGroundTemperatureBuildingSurface groundTemp = model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
+    auto groundTemp = model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
     groundTemp.setJanuaryGroundTemperature(19.527);
     groundTemp.setFebruaryGroundTemperature(19.502);
     groundTemp.setMarchGroundTemperature(19.536);
@@ -2358,7 +2314,7 @@ namespace model {
     groundTemp.setDecemberGroundTemperature(19.633);
 
     // add SiteGroundTemperatureDeep
-    SiteGroundTemperatureDeep groundTempDeep = model.getUniqueModelObject<SiteGroundTemperatureDeep>();
+    auto groundTempDeep = model.getUniqueModelObject<SiteGroundTemperatureDeep>();
     groundTempDeep.setJanuaryDeepGroundTemperature(19.527);
     groundTempDeep.setFebruaryDeepGroundTemperature(19.502);
     groundTempDeep.setMarchDeepGroundTemperature(19.536);
@@ -2373,7 +2329,7 @@ namespace model {
     groundTempDeep.setDecemberDeepGroundTemperature(19.633);
 
     // add SiteWaterMainsTemperature
-    SiteWaterMainsTemperature waterTemp = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+    auto waterTemp = model.getUniqueModelObject<SiteWaterMainsTemperature>();
     waterTemp.setAnnualAverageOutdoorAirTemperature(9.69);
     waterTemp.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(28.10);
 
@@ -2412,12 +2368,12 @@ namespace model {
 
     // add schedules
     addExampleSchedules(model);
-    OS_ASSERT(model.getConcreteModelObjects<DefaultScheduleSet>().size() >= 1);
+    OS_ASSERT(!model.getConcreteModelObjects<DefaultScheduleSet>().empty());
     DefaultScheduleSet defaultScheduleSet = model.getConcreteModelObjects<DefaultScheduleSet>()[0];
 
     // add constructions
     addExampleConstructions(model);
-    OS_ASSERT(model.getConcreteModelObjects<DefaultConstructionSet>().size() >= 1);
+    OS_ASSERT(!model.getConcreteModelObjects<DefaultConstructionSet>().empty());
     DefaultConstructionSet defaultConstructionSet = model.getConcreteModelObjects<DefaultConstructionSet>()[0];
 
     // add a space type
@@ -2442,10 +2398,10 @@ namespace model {
     people.setSpaceType(spaceType);
 
     // create the facility
-    Facility facility = model.getUniqueModelObject<Facility>();
+    auto facility = model.getUniqueModelObject<Facility>();
 
     // create the building
-    Building building = model.getUniqueModelObject<Building>();
+    auto building = model.getUniqueModelObject<Building>();
     building.setSpaceType(spaceType);
     building.setDefaultConstructionSet(defaultConstructionSet);
     building.setDefaultScheduleSet(defaultScheduleSet);
@@ -2492,11 +2448,12 @@ namespace model {
     //           0    ▲    10       20
     //                └─ door+building shading
 
-    std::vector<Point3d> floorPrint;
-    floorPrint.push_back(Point3d(0, 0, 0));
-    floorPrint.push_back(Point3d(0, 10, 0));
-    floorPrint.push_back(Point3d(10, 10, 0));
-    floorPrint.push_back(Point3d(10, 0, 0));
+    std::vector<Point3d> floorPrint{
+      {0, 0, 0},
+      {0, 10, 0},
+      {10, 10, 0},
+      {10, 0, 0},
+    };
 
     // make spaces
     boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
@@ -2504,44 +2461,43 @@ namespace model {
     space1->setThermalZone(thermalZone);
     space1->setBuildingStory(buildingStory);
 
-    ModelObject clone = space1->clone(model);
-    Space space2 = clone.cast<Space>();
+    auto space2 = space1->clone(model).cast<Space>();
     space2.setXOrigin(10);
 
-    clone = space1->clone(model);
-    Space space3 = clone.cast<Space>();
+    auto space3 = space1->clone(model).cast<Space>();
     space3.setYOrigin(10);
 
-    clone = space1->clone(model);
-    Space space4 = clone.cast<Space>();
+    auto space4 = space1->clone(model).cast<Space>();
     space4.setXOrigin(10);
     space4.setYOrigin(10);
 
     // add a door to south wall of space1
-    std::vector<Point3d> doorPoints;
-    doorPoints.push_back(Point3d(2, 0, 2));
-    doorPoints.push_back(Point3d(2, 0, 0));
-    doorPoints.push_back(Point3d(4, 0, 0));
-    doorPoints.push_back(Point3d(4, 0, 2));
+    std::vector<Point3d> doorPoints{
+      {2, 0, 2},
+      {2, 0, 0},
+      {4, 0, 0},
+      {4, 0, 2},
+    };
 
     // find south wall
     searchResults = space1->findSurfaces(180.0, 180.0, 90.0, 90.0);
-    OS_ASSERT(searchResults.size() >= 1);
+    OS_ASSERT(!searchResults.empty());
 
     // add door
     SubSurface door(doorPoints, model);
     door.setSurface(searchResults[0]);
 
     // add a window to east wall of space2
-    std::vector<Point3d> windowPoints;
-    windowPoints.push_back(Point3d(10, 2, 2));
-    windowPoints.push_back(Point3d(10, 2, 1));
-    windowPoints.push_back(Point3d(10, 8, 1));
-    windowPoints.push_back(Point3d(10, 8, 2));
+    std::vector<Point3d> windowPoints{
+      {10, 2, 2},
+      {10, 2, 1},
+      {10, 8, 1},
+      {10, 8, 2},
+    };
 
     // find east wall
     searchResults = space2.findSurfaces(90.0, 90.0, 90.0, 90.0);
-    OS_ASSERT(searchResults.size() >= 1);
+    OS_ASSERT(!searchResults.empty());
 
     // add window
     SubSurface window(windowPoints, model);
@@ -2583,11 +2539,12 @@ namespace model {
     InteriorPartitionSurfaceGroup deskGroup(model);
     deskGroup.setSpace(space2);
 
-    std::vector<Point3d> deskPoints;
-    deskPoints.push_back(Point3d(5, 8, 1));
-    deskPoints.push_back(Point3d(5, 6, 1));
-    deskPoints.push_back(Point3d(8, 6, 1));
-    deskPoints.push_back(Point3d(8, 8, 1));
+    std::vector<Point3d> deskPoints{
+      {5, 8, 1},
+      {5, 6, 1},
+      {8, 6, 1},
+      {8, 8, 1},
+    };
     InteriorPartitionSurface desk(deskPoints, model);
     desk.setInteriorPartitionSurfaceGroup(deskGroup);
 
@@ -2603,11 +2560,12 @@ namespace model {
     ShadingSurfaceGroup canopyGroup(model);
     canopyGroup.setShadingSurfaceType("Building");
 
-    std::vector<Point3d> canopyPoints;
-    canopyPoints.push_back(Point3d(2, 0, 2));
-    canopyPoints.push_back(Point3d(2, -1, 2));
-    canopyPoints.push_back(Point3d(4, -1, 2));
-    canopyPoints.push_back(Point3d(4, 0, 2));
+    std::vector<Point3d> canopyPoints{
+      {2, 0, 2},
+      {2, -1, 2},
+      {4, -1, 2},
+      {4, 0, 2},
+    };
     ShadingSurface canopy(canopyPoints, model);
     canopy.setShadingSurfaceGroup(canopyGroup);
 
@@ -2615,11 +2573,12 @@ namespace model {
     ShadingSurfaceGroup neighboringBuildingGroup(model);
     neighboringBuildingGroup.setShadingSurfaceType("Site");
 
-    std::vector<Point3d> neighboringBuildingPoints;
-    neighboringBuildingPoints.push_back(Point3d(-30, 0, 20));
-    neighboringBuildingPoints.push_back(Point3d(-30, 0, 0));
-    neighboringBuildingPoints.push_back(Point3d(-30, 20, 0));
-    neighboringBuildingPoints.push_back(Point3d(-30, 20, 20));
+    std::vector<Point3d> neighboringBuildingPoints{
+      {-30, 0, 20},
+      {-30, 0, 0},
+      {-30, 20, 0},
+      {-30, 20, 20},
+    };
     ShadingSurface neighboringBuilding(neighboringBuildingPoints, model);
     neighboringBuilding.setShadingSurfaceGroup(neighboringBuildingGroup);
 
@@ -2741,22 +2700,16 @@ namespace model {
     setpointMMA4.addToNode(evapOutletNode);
 
     // add some example variables
-    int i = 1;
     for (const std::string& variableName : thermalZone.outputVariableNames()) {
       OutputVariable(variableName, model);
-      if (++i > 2) {
-        break;
-      }
+      break;
     }
 
     // add some example variables
-    i = 1;
     for (const Surface& surface : model.getConcreteModelObjects<Surface>()) {
       for (const std::string& variableName : surface.outputVariableNames()) {
         OutputVariable(variableName, model);
-        if (++i > 2) {
-          break;
-        }
+        break;
       }
       break;
     }

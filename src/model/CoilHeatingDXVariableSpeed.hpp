@@ -57,7 +57,12 @@ namespace model {
 
     explicit CoilHeatingDXVariableSpeed(const Model& model, const Curve& partLoadFraction);
 
-    virtual ~CoilHeatingDXVariableSpeed() {}
+    virtual ~CoilHeatingDXVariableSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingDXVariableSpeed(const CoilHeatingDXVariableSpeed& other) = default;
+    CoilHeatingDXVariableSpeed(CoilHeatingDXVariableSpeed&& other) = default;
+    CoilHeatingDXVariableSpeed& operator=(const CoilHeatingDXVariableSpeed&) = default;
+    CoilHeatingDXVariableSpeed& operator=(CoilHeatingDXVariableSpeed&&) = default;
 
     //@}
 
@@ -136,9 +141,9 @@ namespace model {
 
     bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-    bool setDefrostStrategy(std::string defrostStrategy);
+    bool setDefrostStrategy(const std::string& defrostStrategy);
 
-    bool setDefrostControl(std::string defrostControl);
+    bool setDefrostControl(const std::string& defrostControl);
 
     bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
 
@@ -167,7 +172,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingDXVariableSpeed_Impl ImplType;
+    using ImplType = detail::CoilHeatingDXVariableSpeed_Impl;
 
     explicit CoilHeatingDXVariableSpeed(std::shared_ptr<detail::CoilHeatingDXVariableSpeed_Impl> impl);
 
@@ -181,10 +186,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingDXVariableSpeed*/
-  typedef boost::optional<CoilHeatingDXVariableSpeed> OptionalCoilHeatingDXVariableSpeed;
+  using OptionalCoilHeatingDXVariableSpeed = boost::optional<CoilHeatingDXVariableSpeed>;
 
   /** \relates CoilHeatingDXVariableSpeed*/
-  typedef std::vector<CoilHeatingDXVariableSpeed> CoilHeatingDXVariableSpeedVector;
+  using CoilHeatingDXVariableSpeedVector = std::vector<CoilHeatingDXVariableSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

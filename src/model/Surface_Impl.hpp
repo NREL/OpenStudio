@@ -50,6 +50,7 @@ namespace model {
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertyConfectionCoefficients;
   class SurfacePropertyLocalEnvironment;
+  class SurfacePropertyExposedFoundationPerimeter;
   class FoundationKiva;
 
   namespace detail {
@@ -68,7 +69,7 @@ namespace model {
 
       Surface_Impl(const Surface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Surface_Impl();
+      virtual ~Surface_Impl() = default;
 
       //@}
 
@@ -159,19 +160,19 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setSurfaceType(std::string surfaceType);
-      bool setSurfaceType(std::string surfaceType, bool driverMethod);
+      bool setSurfaceType(const std::string& surfaceType);
+      bool setSurfaceType(const std::string& surfaceType, bool driverMethod);
 
-      bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition);
-      bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition, bool driverMethod);
+      bool setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition);
+      bool setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition, bool driverMethod);
 
-      bool setSunExposure(std::string sunExposure);
-      bool setSunExposure(std::string sunExposure, bool driverMethod);
+      bool setSunExposure(const std::string& sunExposure);
+      bool setSunExposure(const std::string& sunExposure, bool driverMethod);
 
       void resetSunExposure();
 
-      bool setWindExposure(std::string windExposure);
-      bool setWindExposure(std::string windExposure, bool driverMethod);
+      bool setWindExposure(const std::string& windExposure);
+      bool setWindExposure(const std::string& windExposure, bool driverMethod);
 
       void resetWindExposure();
 
@@ -279,7 +280,7 @@ namespace model {
 
       // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
       boost::optional<SurfacePropertyExposedFoundationPerimeter>
-        createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
+        createSurfacePropertyExposedFoundationPerimeter(const std::string& exposedPerimeterCalculationMethod, double exposedPerimeter);
 
       // returns the surface property exposed foundation perimeter if set
       boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;

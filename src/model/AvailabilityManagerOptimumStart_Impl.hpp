@@ -54,7 +54,7 @@ namespace model {
 
       AvailabilityManagerOptimumStart_Impl(const AvailabilityManagerOptimumStart_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerOptimumStart_Impl() {}
+      virtual ~AvailabilityManagerOptimumStart_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -98,7 +98,7 @@ namespace model {
 
       bool setApplicabilitySchedule(Schedule& schedule);
 
-      bool setControlType(std::string controlType);
+      bool setControlType(const std::string& controlType);
 
       bool setControlZone(const boost::optional<ThermalZone>& thermalZone);
 
@@ -106,7 +106,7 @@ namespace model {
 
       bool setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime);
 
-      bool setControlAlgorithm(std::string controlAlgorithm);
+      bool setControlAlgorithm(const std::string& controlAlgorithm);
 
       bool setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling);
 

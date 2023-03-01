@@ -55,7 +55,7 @@ namespace model {
       ScheduleConstant_Impl(const ScheduleConstant_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ScheduleConstant_Impl() {}
+      virtual ~ScheduleConstant_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

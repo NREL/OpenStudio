@@ -104,7 +104,7 @@ namespace model {
         }
       }
 
-      return pthpClone;
+      return std::move(pthpClone);
     }
 
     const std::vector<std::string>& ZoneHVACPackagedTerminalHeatPump_Impl::outputVariableNames() const {

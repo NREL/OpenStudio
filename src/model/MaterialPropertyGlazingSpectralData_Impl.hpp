@@ -54,7 +54,7 @@ namespace model {
 
       MaterialPropertyGlazingSpectralData_Impl(const MaterialPropertyGlazingSpectralData_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~MaterialPropertyGlazingSpectralData_Impl() {}
+      virtual ~MaterialPropertyGlazingSpectralData_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

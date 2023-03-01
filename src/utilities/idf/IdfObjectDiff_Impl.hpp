@@ -46,7 +46,7 @@ namespace detail {
 
     IdfObjectDiff_Impl(boost::optional<unsigned> index, boost::optional<std::string> oldValue, boost::optional<std::string> newValue);
 
-    virtual ~IdfObjectDiff_Impl();
+    virtual ~IdfObjectDiff_Impl() = default;
 
     /// get the index that changed, uninitialized means no field (e.g. object level comment changed)
     boost::optional<unsigned> index() const;

@@ -51,7 +51,7 @@ namespace model {
 
       ThermostatSetpointDualSetpoint_Impl(const ThermostatSetpointDualSetpoint_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ThermostatSetpointDualSetpoint_Impl() {}
+      virtual ~ThermostatSetpointDualSetpoint_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

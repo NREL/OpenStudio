@@ -113,7 +113,7 @@ TEST_F(ModelFixture, ExteriorFuelEquipment_SettersGetters) {
   EXPECT_EQ("NaturalGas", fuelEq.fuelType());
 
   // Facility
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
   EXPECT_EQ(facility.handle(), fuelEq.facility().handle());
 }
 
@@ -127,14 +127,14 @@ TEST_F(ModelFixture, ExteriorFuelEquipment_RemoveEquipment) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(4u, model.numObjects());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorFuelEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorFuelEquipmentDefinition>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorFuelEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorFuelEquipmentDefinition>().size());
 
     std::vector<IdfObject> removed = fuelEq.remove();
     ASSERT_EQ(1u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_FuelEquipment, removed[0].iddObject().type().value());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorFuelEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorFuelEquipmentDefinition>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorFuelEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorFuelEquipmentDefinition>().size());
     EXPECT_EQ(3u, model.numObjects());
   }
 
@@ -147,14 +147,14 @@ TEST_F(ModelFixture, ExteriorFuelEquipment_RemoveEquipment) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(5u, model.numObjects());
-    EXPECT_EQ(2u, model.getModelObjects<ExteriorFuelEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorFuelEquipmentDefinition>().size());
+    EXPECT_EQ(2u, model.getConcreteModelObjects<ExteriorFuelEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorFuelEquipmentDefinition>().size());
 
     std::vector<IdfObject> removed = fuelEq1.remove();
     ASSERT_EQ(1u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_FuelEquipment, removed[0].iddObject().type().value());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorFuelEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorFuelEquipmentDefinition>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorFuelEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorFuelEquipmentDefinition>().size());
     EXPECT_EQ(4u, model.numObjects());
   }
 }
@@ -169,15 +169,15 @@ TEST_F(ModelFixture, ExteriorFuelEquipment_RemoveDefinition) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(4u, model.numObjects());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorFuelEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorFuelEquipmentDefinition>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorFuelEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorFuelEquipmentDefinition>().size());
 
     std::vector<IdfObject> removed = definition.remove();
     ASSERT_EQ(2u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_FuelEquipment_Definition, removed[0].iddObject().type().value());
     EXPECT_EQ(IddObjectType::OS_Exterior_FuelEquipment, removed[1].iddObject().type().value());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorFuelEquipment>().size());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorFuelEquipmentDefinition>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorFuelEquipment>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorFuelEquipmentDefinition>().size());
     EXPECT_EQ(2u, model.numObjects());
   }
 
@@ -190,15 +190,15 @@ TEST_F(ModelFixture, ExteriorFuelEquipment_RemoveDefinition) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(5u, model.numObjects());
-    EXPECT_EQ(2u, model.getModelObjects<ExteriorFuelEquipment>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorFuelEquipmentDefinition>().size());
+    EXPECT_EQ(2u, model.getConcreteModelObjects<ExteriorFuelEquipment>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorFuelEquipmentDefinition>().size());
     std::vector<IdfObject> removed = definition.remove();
     ASSERT_EQ(3u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_FuelEquipment_Definition, removed[0].iddObject().type().value());
     EXPECT_EQ(IddObjectType::OS_Exterior_FuelEquipment, removed[1].iddObject().type().value());
     EXPECT_EQ(IddObjectType::OS_Exterior_FuelEquipment, removed[2].iddObject().type().value());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorFuelEquipment>().size());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorFuelEquipmentDefinition>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorFuelEquipment>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorFuelEquipmentDefinition>().size());
     EXPECT_EQ(2u, model.numObjects());
   }
 }

@@ -49,7 +49,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputControlFiles() {}
+    virtual ~OutputControlFiles() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputControlFiles(const OutputControlFiles& other) = default;
+    OutputControlFiles(OutputControlFiles&& other) = default;
+    OutputControlFiles& operator=(const OutputControlFiles&) = default;
+    OutputControlFiles& operator=(OutputControlFiles&&) = default;
 
     //@}
 
@@ -189,7 +194,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputControlFiles_Impl ImplType;
+    using ImplType = detail::OutputControlFiles_Impl;
 
     explicit OutputControlFiles(std::shared_ptr<detail::OutputControlFiles_Impl> impl);
 
@@ -205,10 +210,10 @@ namespace model {
   };
 
   /** \relates OutputControlFiles*/
-  typedef boost::optional<OutputControlFiles> OptionalOutputControlFiles;
+  using OptionalOutputControlFiles = boost::optional<OutputControlFiles>;
 
   /** \relates OutputControlFiles*/
-  typedef std::vector<OutputControlFiles> OutputControlFilesVector;
+  using OutputControlFilesVector = std::vector<OutputControlFiles>;
 
 }  // namespace model
 }  // namespace openstudio

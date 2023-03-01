@@ -98,7 +98,7 @@ namespace model {
       return isEmpty(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction);
     }
 
-    bool SurfacePropertyExposedFoundationPerimeter_Impl::setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod) {
+    bool SurfacePropertyExposedFoundationPerimeter_Impl::setExposedPerimeterCalculationMethod(const std::string& exposedPerimeterCalculationMethod) {
       bool result =
         setString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, exposedPerimeterCalculationMethod);
       OS_ASSERT(result);
@@ -166,7 +166,7 @@ namespace model {
   }
 
   IddObjectType SurfacePropertyExposedFoundationPerimeter::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
+    return {IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter};
   }
 
   std::string SurfacePropertyExposedFoundationPerimeter::surfaceName() const {
@@ -189,7 +189,7 @@ namespace model {
     return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->isExposedPerimeterFractionDefaulted();
   }
 
-  bool SurfacePropertyExposedFoundationPerimeter::setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod) {
+  bool SurfacePropertyExposedFoundationPerimeter::setExposedPerimeterCalculationMethod(const std::string& exposedPerimeterCalculationMethod) {
     return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->setExposedPerimeterCalculationMethod(exposedPerimeterCalculationMethod);
   }
 

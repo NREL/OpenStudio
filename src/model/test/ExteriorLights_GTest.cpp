@@ -112,7 +112,7 @@ TEST_F(ModelFixture, ExteriorLights_SettersGetters) {
   EXPECT_EQ("AstronomicalClock", lights.controlOption());
 
   // Facility
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
   EXPECT_EQ(facility.handle(), lights.facility().handle());
 }
 
@@ -126,14 +126,14 @@ TEST_F(ModelFixture, ExteriorLights_RemoveEquipment) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(4u, model.numObjects());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorLights>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorLightsDefinition>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorLights>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorLightsDefinition>().size());
 
     std::vector<IdfObject> removed = lights.remove();
     ASSERT_EQ(1u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_Lights, removed[0].iddObject().type().value());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorLights>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorLightsDefinition>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorLights>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorLightsDefinition>().size());
     EXPECT_EQ(3u, model.numObjects());
   }
 
@@ -146,14 +146,14 @@ TEST_F(ModelFixture, ExteriorLights_RemoveEquipment) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(5u, model.numObjects());
-    EXPECT_EQ(2u, model.getModelObjects<ExteriorLights>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorLightsDefinition>().size());
+    EXPECT_EQ(2u, model.getConcreteModelObjects<ExteriorLights>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorLightsDefinition>().size());
 
     std::vector<IdfObject> removed = lights1.remove();
     ASSERT_EQ(1u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_Lights, removed[0].iddObject().type().value());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorLights>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorLightsDefinition>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorLights>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorLightsDefinition>().size());
     EXPECT_EQ(4u, model.numObjects());
   }
 }
@@ -168,15 +168,15 @@ TEST_F(ModelFixture, ExteriorLights_RemoveDefinition) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(4u, model.numObjects());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorLights>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorLightsDefinition>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorLights>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorLightsDefinition>().size());
 
     std::vector<IdfObject> removed = definition.remove();
     ASSERT_EQ(2u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_Lights_Definition, removed[0].iddObject().type().value());
     EXPECT_EQ(IddObjectType::OS_Exterior_Lights, removed[1].iddObject().type().value());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorLights>().size());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorLightsDefinition>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorLights>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorLightsDefinition>().size());
     EXPECT_EQ(2u, model.numObjects());
   }
 
@@ -189,15 +189,15 @@ TEST_F(ModelFixture, ExteriorLights_RemoveDefinition) {
 
     // This adds the alwaysOnDiscreteSchedule and its scheduletypelimit
     EXPECT_EQ(5u, model.numObjects());
-    EXPECT_EQ(2u, model.getModelObjects<ExteriorLights>().size());
-    EXPECT_EQ(1u, model.getModelObjects<ExteriorLightsDefinition>().size());
+    EXPECT_EQ(2u, model.getConcreteModelObjects<ExteriorLights>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExteriorLightsDefinition>().size());
     std::vector<IdfObject> removed = definition.remove();
     ASSERT_EQ(3u, removed.size());
     EXPECT_EQ(IddObjectType::OS_Exterior_Lights_Definition, removed[0].iddObject().type().value());
     EXPECT_EQ(IddObjectType::OS_Exterior_Lights, removed[1].iddObject().type().value());
     EXPECT_EQ(IddObjectType::OS_Exterior_Lights, removed[2].iddObject().type().value());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorLights>().size());
-    EXPECT_EQ(0u, model.getModelObjects<ExteriorLightsDefinition>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorLights>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExteriorLightsDefinition>().size());
     EXPECT_EQ(2u, model.numObjects());
   }
 }

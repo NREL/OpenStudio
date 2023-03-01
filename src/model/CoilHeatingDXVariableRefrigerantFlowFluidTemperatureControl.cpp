@@ -188,10 +188,7 @@ namespace model {
     }
 
     ModelObject CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::clone(Model model) const {
-      CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl objectClone =
-        HVACComponent_Impl::clone(model).cast<CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl>();
-
-      return objectClone;
+      return HVACComponent_Impl::clone(model);
     }
 
     std::vector<ModelObject> CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl::children() const {

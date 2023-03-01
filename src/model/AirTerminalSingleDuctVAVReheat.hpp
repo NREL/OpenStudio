@@ -54,7 +54,12 @@ namespace model {
    public:
     explicit AirTerminalSingleDuctVAVReheat(const Model& model, Schedule& availabilitySchedule, HVACComponent& coil);
 
-    virtual ~AirTerminalSingleDuctVAVReheat() {}
+    virtual ~AirTerminalSingleDuctVAVReheat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalSingleDuctVAVReheat(const AirTerminalSingleDuctVAVReheat& other) = default;
+    AirTerminalSingleDuctVAVReheat(AirTerminalSingleDuctVAVReheat&& other) = default;
+    AirTerminalSingleDuctVAVReheat& operator=(const AirTerminalSingleDuctVAVReheat&) = default;
+    AirTerminalSingleDuctVAVReheat& operator=(AirTerminalSingleDuctVAVReheat&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -236,7 +241,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirTerminalSingleDuctVAVReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctVAVReheat_Impl;
 
     explicit AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
 
@@ -246,7 +251,7 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<AirTerminalSingleDuctVAVReheat> OptionalAirTerminalSingleDuctVAVReheat;
+  using OptionalAirTerminalSingleDuctVAVReheat = boost::optional<AirTerminalSingleDuctVAVReheat>;
 
 }  // namespace model
 }  // namespace openstudio

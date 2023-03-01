@@ -66,7 +66,7 @@ TEST_F(IdfFixture, IdfExtensibleGroup_Getters) {
   LOG(Debug, "Getting all BuildingSurface:Detailed objects.");
   IddObjectType objType(IddObjectType::BuildingSurface_Detailed);
   WorkspaceObjectVector bldgSurfaces = ws.getObjectsByType(objType);
-  ASSERT_TRUE(bldgSurfaces.size() > 0);
+  ASSERT_TRUE(!bldgSurfaces.empty());
 
   LOG(Debug, "Looping through all BuildingSurface:Detailed objects.");
   for (const WorkspaceObject& surface : bldgSurfaces) {
@@ -110,7 +110,7 @@ TEST_F(IdfFixture, IdfExtensibleGroup_Setters) {
 
   IddObjectType objType(IddObjectType::PlantEquipmentOperation_HeatingLoad);
   WorkspaceObjectVector objs = ws.getObjectsByType(objType);
-  ASSERT_TRUE(objs.size() > 0);
+  ASSERT_TRUE(!objs.empty());
   WorkspaceObject obj = objs[0];
 
   IdfExtensibleGroup eg = obj.getExtensibleGroup(0);
@@ -145,7 +145,7 @@ TEST_F(IdfFixture, IdfExtensibleGroup_Setters) {
 
   objType = IddObjectType(IddObjectType::ZoneHVAC_EquipmentList);
   objs = ws.getObjectsByType(objType);
-  ASSERT_TRUE(objs.size() > 0);
+  ASSERT_TRUE(!objs.empty());
 
   obj = objs[0];
   eg = obj.getExtensibleGroup(0);
@@ -184,7 +184,7 @@ TEST_F(IdfFixture, IdfExtensibleGroup_Queries) {
 
   IddObjectType objType(IddObjectType::AvailabilityManagerAssignmentList);
   WorkspaceObjectVector objs = ws.getObjectsByType(objType);
-  ASSERT_TRUE(objs.size() > 0);
+  ASSERT_TRUE(!objs.empty());
 
   // empty
   IdfExtensibleGroup eg = objs[0].getExtensibleGroup(1);
@@ -238,7 +238,7 @@ TEST_F(IdfFixture, WorkspaceExtensibleGroup_Getters) {
   ASSERT_FALSE(bldgSurfaces.empty());
   IdfExtensibleGroup group = bldgSurfaces[0].getExtensibleGroup(0);
   ASSERT_FALSE(group.empty());
-  WorkspaceExtensibleGroup vertex = group.cast<WorkspaceExtensibleGroup>();
+  auto vertex = group.cast<WorkspaceExtensibleGroup>();
 
   // extensible group with targets
   objType = IddObjectType(IddObjectType::Construction);
@@ -246,7 +246,7 @@ TEST_F(IdfFixture, WorkspaceExtensibleGroup_Getters) {
   ASSERT_FALSE(constructions.empty());
   group = constructions[0].getExtensibleGroup(0);
   ASSERT_FALSE(group.empty());
-  WorkspaceExtensibleGroup layer = group.cast<WorkspaceExtensibleGroup>();
+  auto layer = group.cast<WorkspaceExtensibleGroup>();
 
   // getTarget
   OptionalWorkspaceObject oTarget;
@@ -281,7 +281,7 @@ TEST_F(IdfFixture, WorkspaceExtensibleGroup_Setters) {
   ASSERT_FALSE(bldgSurfaces.empty());
   IdfExtensibleGroup group = bldgSurfaces[0].getExtensibleGroup(0);
   ASSERT_FALSE(group.empty());
-  WorkspaceExtensibleGroup vertex = group.cast<WorkspaceExtensibleGroup>();
+  auto vertex = group.cast<WorkspaceExtensibleGroup>();
 
   // extensible group with targets
   objType = IddObjectType(IddObjectType::Construction);
@@ -289,7 +289,7 @@ TEST_F(IdfFixture, WorkspaceExtensibleGroup_Setters) {
   ASSERT_FALSE(constructions.empty());
   group = constructions[0].getExtensibleGroup(0);
   ASSERT_FALSE(group.empty());
-  WorkspaceExtensibleGroup layer = group.cast<WorkspaceExtensibleGroup>();
+  auto layer = group.cast<WorkspaceExtensibleGroup>();
 
   // setPointer
   bool ok;
@@ -315,7 +315,7 @@ TEST_F(IdfFixture, WorkspaceExtensibleGroup_Queries) {
   ASSERT_FALSE(bldgSurfaces.empty());
   IdfExtensibleGroup group = bldgSurfaces[0].getExtensibleGroup(0);
   ASSERT_FALSE(group.empty());
-  WorkspaceExtensibleGroup vertex = group.cast<WorkspaceExtensibleGroup>();
+  auto vertex = group.cast<WorkspaceExtensibleGroup>();
 
   // extensible group with targets
   objType = IddObjectType(IddObjectType::Construction);
@@ -323,7 +323,7 @@ TEST_F(IdfFixture, WorkspaceExtensibleGroup_Queries) {
   ASSERT_FALSE(constructions.empty());
   group = constructions[0].getExtensibleGroup(0);
   ASSERT_FALSE(group.empty());
-  WorkspaceExtensibleGroup layer = group.cast<WorkspaceExtensibleGroup>();
+  auto layer = group.cast<WorkspaceExtensibleGroup>();
 
   // isSource/canBeSource
   EXPECT_FALSE(vertex.isSource());
@@ -581,14 +581,14 @@ TEST_F(IdfFixture, ExtensibleGroup_Clone) {
   values.push_back("Brick");
   IdfExtensibleGroup layer0 = wsObjects[0].pushExtensibleGroup(values);
   ASSERT_FALSE(layer0.empty());
-  WorkspaceExtensibleGroup wsLayer0 = layer0.cast<WorkspaceExtensibleGroup>();
+  auto wsLayer0 = layer0.cast<WorkspaceExtensibleGroup>();
   OptionalWorkspaceObject oTarget = wsLayer0.getTarget(0);
   ASSERT_TRUE(oTarget);
   EXPECT_TRUE(*oTarget == wsObjects[1]);
 
   IdfExtensibleGroup newLayer = layer0.pushClone();
   ASSERT_FALSE(newLayer.empty());
-  WorkspaceExtensibleGroup wsNewLayer = newLayer.cast<WorkspaceExtensibleGroup>();
+  auto wsNewLayer = newLayer.cast<WorkspaceExtensibleGroup>();
   oTarget = wsNewLayer.getTarget(0);
   ASSERT_TRUE(oTarget);
   EXPECT_TRUE(*oTarget == wsObjects[1]);

@@ -61,7 +61,12 @@ namespace model {
 
     explicit BuildingStory(const Model& model);
 
-    virtual ~BuildingStory() {}
+    virtual ~BuildingStory() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    BuildingStory(const BuildingStory& other) = default;
+    BuildingStory(BuildingStory&& other) = default;
+    BuildingStory& operator=(const BuildingStory&) = default;
+    BuildingStory& operator=(BuildingStory&&) = default;
 
     //@}
 
@@ -135,7 +140,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::BuildingStory_Impl ImplType;
+    using ImplType = detail::BuildingStory_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -148,10 +153,10 @@ namespace model {
   };
 
   /** \relates BuildingStory*/
-  typedef boost::optional<BuildingStory> OptionalBuildingStory;
+  using OptionalBuildingStory = boost::optional<BuildingStory>;
 
   /** \relates BuildingStory*/
-  typedef std::vector<BuildingStory> BuildingStoryVector;
+  using BuildingStoryVector = std::vector<BuildingStory>;
 
 }  // namespace model
 }  // namespace openstudio

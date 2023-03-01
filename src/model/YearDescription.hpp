@@ -55,7 +55,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~YearDescription() {}
+    virtual ~YearDescription() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    YearDescription(const YearDescription& other) = default;
+    YearDescription(YearDescription&& other) = default;
+    YearDescription& operator=(const YearDescription&) = default;
+    YearDescription& operator=(YearDescription&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -87,7 +92,7 @@ namespace model {
 
     void resetCalendarYear();
 
-    bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+    bool setDayofWeekforStartDay(const std::string& dayofWeekforStartDay);
 
     void resetDayofWeekforStartDay();
 
@@ -113,7 +118,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::YearDescription_Impl ImplType;
+    using ImplType = detail::YearDescription_Impl;
 
     friend class Model;
     friend class IdfObject;
@@ -129,10 +134,10 @@ namespace model {
   };
 
   /** \relates YearDescription*/
-  typedef boost::optional<YearDescription> OptionalYearDescription;
+  using OptionalYearDescription = boost::optional<YearDescription>;
 
   /** \relates YearDescription*/
-  typedef std::vector<YearDescription> YearDescriptionVector;
+  using YearDescriptionVector = std::vector<YearDescription>;
 
 }  // namespace model
 }  // namespace openstudio

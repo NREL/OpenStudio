@@ -60,7 +60,7 @@ class UTILITIES_API BCLFileReference
   //@{
 
   /// Virtual destructor
-  virtual ~BCLFileReference();
+  virtual ~BCLFileReference() = default;
 
   //@}
   /** @name Getters */

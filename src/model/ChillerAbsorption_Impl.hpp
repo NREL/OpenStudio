@@ -51,7 +51,7 @@ namespace model {
 
       ChillerAbsorption_Impl(const ChillerAbsorption_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ChillerAbsorption_Impl() {}
+      virtual ~ChillerAbsorption_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -190,9 +190,9 @@ namespace model {
 
       bool setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
 
-      bool setChillerFlowMode(std::string chillerFlowMode);
+      bool setChillerFlowMode(const std::string& chillerFlowMode);
 
-      bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
+      bool setGeneratorHeatSourceType(const std::string& generatorHeatSourceType);
 
       bool setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
 

@@ -99,7 +99,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctConstantVolumeReheat", "Availability"));
       }
@@ -155,7 +156,7 @@ namespace model {
                 _model.connect(this->getObject<ModelObject>(), outletPort(), node, node.inletPort());
 
                 if (thermalZone) {
-                  AirTerminalSingleDuctConstantVolumeReheat mo = this->getObject<AirTerminalSingleDuctConstantVolumeReheat>();
+                  auto mo = this->getObject<AirTerminalSingleDuctConstantVolumeReheat>();
 
                   thermalZone->addEquipment(mo);
                 }
@@ -172,7 +173,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeReheat_Impl::remove() {
       Model _model = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
 
       HVACComponent _reheatCoil = reheatCoil();
 
@@ -238,16 +239,15 @@ namespace model {
     }
 
     ModelObject AirTerminalSingleDuctConstantVolumeReheat_Impl::clone(Model model) const {
-      AirTerminalSingleDuctConstantVolumeReheat modelObjectClone =
-        StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeReheat>();
+      auto modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeReheat>();
 
       HVACComponent coil = this->reheatCoil();
 
-      HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
+      auto coilClone = coil.clone(model).cast<HVACComponent>();
 
       modelObjectClone.setReheatCoil(coilClone);
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     boost::optional<double> AirTerminalSingleDuctConstantVolumeReheat_Impl::maximumAirFlowRate() const {
@@ -553,7 +553,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalSingleDuctConstantVolumeReheat::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat);
+    return {IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat};
   }
 
   Schedule AirTerminalSingleDuctConstantVolumeReheat::availabilitySchedule() const {

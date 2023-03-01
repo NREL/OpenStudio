@@ -109,7 +109,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationWalkIn_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_WalkInFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationWalkIn", "Availability"));
       }
@@ -159,7 +160,7 @@ namespace model {
     }
 
     ModelObject RefrigerationWalkIn_Impl::clone(Model model) const {
-      RefrigerationWalkIn modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkIn>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkIn>();
 
       if (boost::optional<RefrigerationDefrostCycleParameters> walkinDefrostCycleParameters = this->optionalWalkinDefrostCycleParameters()) {
         modelObjectClone.getImpl<RefrigerationWalkIn_Impl>()->setWalkinDefrostCycleParameters(
@@ -170,15 +171,15 @@ namespace model {
 
       std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
       for (const auto& zoneBoundary : zoneBoundaries) {
-        RefrigerationWalkInZoneBoundary zoneBoundaryClone = zoneBoundary.clone(model).cast<RefrigerationWalkInZoneBoundary>();
+        auto zoneBoundaryClone = zoneBoundary.clone(model).cast<RefrigerationWalkInZoneBoundary>();
         modelObjectClone.addZoneBoundary(zoneBoundaryClone);
       }
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     bool RefrigerationWalkIn_Impl::addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary) {
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool temp = eg.setPointer(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary, refrigerationWalkInZoneBoundary.handle());
       if (!temp) {
         getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
@@ -537,8 +538,8 @@ namespace model {
 
     boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
       std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+      auto refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+      for (const RefrigerationSystem& refrigerationSystem : refrigerationSystems) {
         RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
         if (!refrigerationWalkIns.empty()
             && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {
@@ -550,8 +551,8 @@ namespace model {
 
     boost::optional<RefrigerationSecondarySystem> RefrigerationWalkIn_Impl::secondarySystem() const {
       std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
-      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+      auto refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+      for (const RefrigerationSecondarySystem& refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationWalkInVector refrigerationWalkIns = refrigerationSecondarySystem.walkins();
         if (!refrigerationWalkIns.empty()
             && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {
@@ -563,8 +564,8 @@ namespace model {
 
     boost::optional<RefrigerationCompressorRack> RefrigerationWalkIn_Impl::compressorRack() const {
       std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
-      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+      auto refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+      for (const RefrigerationCompressorRack& refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationWalkInVector refrigerationWalkIns = refrigerationCompressorRack.walkins();
         if (!refrigerationWalkIns.empty()
             && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {
@@ -652,7 +653,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationWalkIn_Impl::setDefrostType(std::string defrostType) {
+    bool RefrigerationWalkIn_Impl::setDefrostType(const std::string& defrostType) {
       bool result = setString(OS_Refrigeration_WalkInFields::DefrostType, defrostType);
       return result;
     }
@@ -662,7 +663,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationWalkIn_Impl::setDefrostControlType(std::string defrostControlType) {
+    bool RefrigerationWalkIn_Impl::setDefrostControlType(const std::string& defrostControlType) {
       bool result = setString(OS_Refrigeration_WalkInFields::DefrostControlType, defrostControlType);
       return result;
     }
@@ -1010,7 +1011,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationWalkIn::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_WalkIn);
+    return {IddObjectType::OS_Refrigeration_WalkIn};
   }
 
   std::vector<std::string> RefrigerationWalkIn::defrostTypeValues() {
@@ -1293,7 +1294,7 @@ namespace model {
     getImpl<detail::RefrigerationWalkIn_Impl>()->resetLightingSchedule();
   }
 
-  bool RefrigerationWalkIn::setDefrostType(std::string defrostType) {
+  bool RefrigerationWalkIn::setDefrostType(const std::string& defrostType) {
     return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrostType(defrostType);
   }
 
@@ -1301,7 +1302,7 @@ namespace model {
     getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrostType();
   }
 
-  bool RefrigerationWalkIn::setDefrostControlType(std::string defrostControlType) {
+  bool RefrigerationWalkIn::setDefrostControlType(const std::string& defrostControlType) {
     return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrostControlType(defrostControlType);
   }
 

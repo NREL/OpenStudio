@@ -126,8 +126,15 @@ static double psatp(double T, double psat) {
 //
 static boost::optional<double> solveForWetBulb(double drybulb, double p, double W, double deltaLimit, int itermax) {
   double tstar = drybulb;
-  double Ap, Bp, Cp;
-  double a0, a1, b, c0, c1t, c2;
+  double Ap;
+  double Bp;
+  double Cp;
+  double a0;
+  double a1;
+  double b;
+  double c0;
+  double c1t;
+  double c2;
   int i = 0;
   a0 = 2501;
   a1 = -2.326;
@@ -1587,7 +1594,7 @@ static double stringToDouble(const std::string& string, bool* ok) {
 }
 
 Date EpwDataPoint::date() const {
-  return Date(MonthOfYear(m_month), m_day, m_year);
+  return {MonthOfYear(m_month), static_cast<unsigned int>(m_day), m_year};
 }
 
 void EpwDataPoint::setDate(Date date) {
@@ -1597,7 +1604,7 @@ void EpwDataPoint::setDate(Date date) {
 }
 
 Time EpwDataPoint::time() const {
-  return Time(0, m_hour, m_minute);
+  return {0, m_hour, m_minute};
 }
 
 void EpwDataPoint::setTime(Time time) {
@@ -2624,7 +2631,7 @@ double EpwFile::elevation() const {
 
 Time EpwFile::timeStep() const {
   OS_ASSERT((60 % m_recordsPerHour) == 0);
-  return Time(0, 0, 60 / m_recordsPerHour);
+  return {0, 0, 60 / m_recordsPerHour};
 }
 
 int EpwFile::recordsPerHour() const {
@@ -2652,7 +2659,7 @@ boost::optional<int> EpwFile::endDateActualYear() const {
 }
 
 std::vector<EpwDataPoint> EpwFile::data() {
-  if (m_data.size() == 0) {
+  if (m_data.empty()) {
     if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)) {
       LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
     }
@@ -3626,7 +3633,7 @@ void EpwDesignCondition::setExtremeN50YearsMaxDryBulb(double extremeN50YearsMaxD
 }
 
 std::vector<EpwDesignCondition> EpwFile::designConditions() {
-  if (m_designs.size() == 0) {
+  if (m_designs.empty()) {
     if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)) {
       LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
     }
@@ -3648,7 +3655,7 @@ std::vector<EpwDesignCondition> EpwFile::designConditions() {
 }
 
 boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name) {
-  if (m_data.size() == 0) {
+  if (m_data.empty()) {
     if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)) {
       LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
     }
@@ -3673,7 +3680,7 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name) {
     LOG(Warn, "Unrecognized EPW data field '" << name << "'");
     return boost::none;
   }
-  if (m_data.size() > 0) {
+  if (!m_data.empty()) {
     std::string units = EpwDataPoint::getUnits(id);
     DateTimeVector dates;
     dates.push_back(DateTime());  // Use a placeholder to avoid an insert
@@ -3692,7 +3699,7 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name) {
         values.push_back(value.get());
       }
     }
-    if (values.size()) {
+    if (!values.empty()) {
       DateTime start = dates[1] - Time(0, 0, 0, 3600 / m_recordsPerHour);
       dates[0] = start;  // Overwrite the placeholder
       return boost::optional<TimeSeries>(TimeSeries(dates, openstudio::createVector(values), units));
@@ -3702,7 +3709,7 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name) {
 }
 
 boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string& name) {
-  if (m_data.size() == 0) {
+  if (m_data.empty()) {
     if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)) {
       LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
     }
@@ -3764,7 +3771,7 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string& na
       values.push_back(value.get());
     }
   }
-  if (values.size()) {
+  if (!values.empty()) {
     DateTime start = dates[1] - Time(0, 0, 0, 3600 / m_recordsPerHour);
     dates[0] = start;  // Overwrite the placeholder
     return boost::optional<TimeSeries>(TimeSeries(dates, openstudio::createVector(values), units));
@@ -3773,7 +3780,7 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string& na
 }
 
 bool EpwFile::translateToWth(openstudio::path path, std::string description) {
-  if (m_data.size() == 0) {
+  if (m_data.empty()) {
     if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)) {
       LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
     }
@@ -3796,7 +3803,7 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description) {
     description = "Translated from " + openstudio::toString(this->path());
   }
 
-  if (!data().size()) {
+  if (data().empty()) {
     LOG(Error, "EPW file contains no data to translate");
     return false;
   }
@@ -4100,7 +4107,7 @@ bool EpwFile::parseDesignConditions(const std::string& line) {
   // DESIGN CONDITIONS,1,Climate Design Data 2009 ASHRAE Handbook,,Heating,12,-17.4,-14,-21.5,0.7,-11.7,-18.9,0.9,-6.9,14.1,1.8,12,2.4,3.3,160,Cooling,7,15.2,34.6,15.7,33.2,15.6,31.8,15.4,18.3,27.3,17.6,27,17,26.5,4.2,80,16,14,19.9,15.2,13.2,19.7,14.1,12.3,19.6,58.3,27,55.9,26.9,53.8,26.3,722,Extremes,11.9,10.4,8.8,20.7,-22.7,37.1,2.8,1.3,-24.7,38,-26.3,38.8,-27.9,39.5,-29.9,40.5
   // DESIGN CONDITIONS,Number of Design Conditions,Title of Design Condition,Design Stat,HDB 99.6%,HDB 99%,X WS 1%,X WS 2.5%,X WS 5%,CM WS .4%,CM MDB .4%,CM WS 1%,CM MDB 1%,MWS 99.6%,PWD 99.6%,MWS .4%,PWD .4%,X MnDB Max,X MnDB Min,X StdDB Max,X StdDB Min,Design Stat,CDB .4%,C MWB .4%,CDB 1%,C MWB 1%,CDB 2%,C MWB 2%,E WB .4%,E MDB .4%,E WB 1%,E MDB 1%,E WB 2%,E MDB 2%,DP .4%,HR .4%,MDB .4%,DP 1%,HR 1%,MDB 1%,DP 2%,HR 2%,MDB 2%,DB Range
   // Bail out if the design conditions array already has contents
-  if (m_designs.size() > 0) {
+  if (!m_designs.empty()) {
     return true;
   }
 

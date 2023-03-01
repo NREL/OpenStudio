@@ -85,7 +85,8 @@ namespace model {
       std::sort(fieldIndices.begin(), fieldIndices.end());
       fieldIndices.erase(std::unique(fieldIndices.begin(), fieldIndices.end()), fieldIndices.end());
 
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACEquipmentList", "Sequential Cooling Fraction"));
       }
@@ -102,16 +103,17 @@ namespace model {
       return value.get();
     }
 
-    bool ZoneHVACEquipmentList_Impl::setLoadDistributionScheme(std::string scheme) {
+    bool ZoneHVACEquipmentList_Impl::setLoadDistributionScheme(const std::string& scheme) {
+      auto thisScheme = scheme;
       // Backward compat
-      if (istringEqual(scheme, "Sequential")) {
-        scheme = "SequentialLoad";
-      } else if (istringEqual(scheme, "Uniform")) {
-        scheme = "UniformLoad";
+      if (istringEqual(thisScheme, "Sequential")) {
+        thisScheme = "SequentialLoad";
+      } else if (istringEqual(thisScheme, "Uniform")) {
+        thisScheme = "UniformLoad";
       }
 
       // Reset the Sequential Cooling/Heating fractions if not 'SequentialLoad'
-      if (!istringEqual(scheme, "SequentialLoad")) {
+      if (!istringEqual(thisScheme, "SequentialLoad")) {
         for (IdfExtensibleGroup& eg : extensibleGroups()) {
           eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, "");
           eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, "");
@@ -119,7 +121,7 @@ namespace model {
         }
       }
 
-      return setString(OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme, scheme);
+      return setString(OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme, thisScheme);
     }
 
     bool ZoneHVACEquipmentList_Impl::addEquipment(const ModelObject& equipment) {
@@ -128,7 +130,7 @@ namespace model {
       unsigned heatingCount = this->equipmentInHeatingOrder().size();
       unsigned coolingCount = this->equipmentInCoolingOrder().size();
 
-      ModelExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
 
       bool ok = eg.setPointer(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment, equipment.handle());
 
@@ -279,7 +281,7 @@ namespace model {
 
           OS_ASSERT(wo);
 
-          ModelObject mo = wo->cast<ModelObject>();
+          auto mo = wo->cast<ModelObject>();
 
           equipmentMap.insert(std::make_pair(heatingPriority, mo));
         }
@@ -312,7 +314,7 @@ namespace model {
 
           OS_ASSERT(wo);
 
-          ModelObject mo = wo->cast<ModelObject>();
+          auto mo = wo->cast<ModelObject>();
 
           equipmentMap.insert(std::make_pair(coolingPriority, mo));
         }
@@ -591,7 +593,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACEquipmentList::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_EquipmentList);
+    return {IddObjectType::OS_ZoneHVAC_EquipmentList};
   }
 
   std::string ZoneHVACEquipmentList::loadDistributionScheme() const {
@@ -606,7 +608,7 @@ namespace model {
     return loadDistributionSchemeValues();
   }
 
-  bool ZoneHVACEquipmentList::setLoadDistributionScheme(std::string scheme) {
+  bool ZoneHVACEquipmentList::setLoadDistributionScheme(const std::string& scheme) {
     return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setLoadDistributionScheme(scheme);
   }
 

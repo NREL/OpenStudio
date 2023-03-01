@@ -123,7 +123,7 @@ namespace model {
       return isEmpty(OS_HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue);
     }
 
-    bool HeatBalanceAlgorithm_Impl::setAlgorithm(std::string algorithm) {
+    bool HeatBalanceAlgorithm_Impl::setAlgorithm(const std::string& algorithm) {
       bool result = setString(OS_HeatBalanceAlgorithmFields::Algorithm, algorithm);
       return result;
     }
@@ -174,7 +174,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType HeatBalanceAlgorithm::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_HeatBalanceAlgorithm);
+    return {IddObjectType::OS_HeatBalanceAlgorithm};
   }
 
   std::vector<std::string> HeatBalanceAlgorithm::algorithmValues() {
@@ -213,7 +213,7 @@ namespace model {
     return getImpl<detail::HeatBalanceAlgorithm_Impl>()->isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted();
   }
 
-  bool HeatBalanceAlgorithm::setAlgorithm(std::string algorithm) {
+  bool HeatBalanceAlgorithm::setAlgorithm(const std::string& algorithm) {
     return getImpl<detail::HeatBalanceAlgorithm_Impl>()->setAlgorithm(algorithm);
   }
 

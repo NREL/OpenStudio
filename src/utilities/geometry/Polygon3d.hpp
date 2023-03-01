@@ -67,34 +67,34 @@ class UTILITIES_API Polygon3d
   void addHole(const Point3dVector& hole);
 
   // Calculates the Newell Vector for the polygon
-  Vector3d newellVector();
+  Vector3d newellVector() const;
 
   // Calculates the outward normal of the polygon
-  Vector3d outwardNormal();
+  Vector3d outwardNormal() const;
 
   // Calculates the gross area of the polygon (area excluding holes)
-  double grossArea();
+  double grossArea() const;
 
   // Calculates the net area of the polygon (gross area - area of holes)
-  double netArea();
+  double netArea() const;
 
   // Gets the perimeter of the outer path of the polygon
   double perimeter() const;
 
   // Determines whether the polygon os clockwise (normal down) or anti-clockwise (normal up)
-  bool isClockwise();
+  bool isClockwise() const;
 
   // Calculates the centroid of the polygon
-  Point3d centroid();
+  Point3d centroid() const;
 
   // Point is on the outer path or one of the inner paths
-  bool pointInPolygon(const Point3d& point, double tol = 0.01);
+  bool pointInPolygon(const Point3d& point, double tol = 0.01) const;
 
   // Point inside outer path and not inside a hole
-  bool within(const Point3d& point, double tol = 0.01);
+  bool within(const Point3d& point, double tol = 0.01) const;
 
   // Point is inside the outer path and not inside a hole or on the outer path or one of the inner paths
-  bool inside(const Point3d& point, double tol = 0.01);
+  bool inside(const Point3d& point, double tol = 0.01) const;
 
   // gets the size of the outer path
   size_t getSize() const;

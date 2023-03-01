@@ -53,7 +53,12 @@ namespace model {
 
     explicit CurveQuadLinear(const Model& model);
 
-    virtual ~CurveQuadLinear() {}
+    virtual ~CurveQuadLinear() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveQuadLinear(const CurveQuadLinear& other) = default;
+    CurveQuadLinear(CurveQuadLinear&& other) = default;
+    CurveQuadLinear& operator=(const CurveQuadLinear&) = default;
+    CurveQuadLinear& operator=(CurveQuadLinear&&) = default;
 
     //@}
 
@@ -177,7 +182,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveQuadLinear_Impl ImplType;
+    using ImplType = detail::CurveQuadLinear_Impl;
 
     explicit CurveQuadLinear(std::shared_ptr<detail::CurveQuadLinear_Impl> impl);
 
@@ -191,10 +196,10 @@ namespace model {
   };
 
   /** \relates CurveQuadLinear*/
-  typedef boost::optional<CurveQuadLinear> OptionalCurveQuadLinear;
+  using OptionalCurveQuadLinear = boost::optional<CurveQuadLinear>;
 
   /** \relates CurveQuadLinear*/
-  typedef std::vector<CurveQuadLinear> CurveQuadLinearVector;
+  using CurveQuadLinearVector = std::vector<CurveQuadLinear>;
 
 }  // namespace model
 }  // namespace openstudio

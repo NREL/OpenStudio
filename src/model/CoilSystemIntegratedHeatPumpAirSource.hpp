@@ -61,7 +61,12 @@ namespace model {
                                                    const HVACComponent& scdwhWaterHeatingCoil, const StraightComponent& shdwhHeatingCoil,
                                                    const HVACComponent& shdwhWaterHeatingCoil);
 
-    virtual ~CoilSystemIntegratedHeatPumpAirSource() {}
+    virtual ~CoilSystemIntegratedHeatPumpAirSource() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilSystemIntegratedHeatPumpAirSource(const CoilSystemIntegratedHeatPumpAirSource& other) = default;
+    CoilSystemIntegratedHeatPumpAirSource(CoilSystemIntegratedHeatPumpAirSource&& other) = default;
+    CoilSystemIntegratedHeatPumpAirSource& operator=(const CoilSystemIntegratedHeatPumpAirSource&) = default;
+    CoilSystemIntegratedHeatPumpAirSource& operator=(CoilSystemIntegratedHeatPumpAirSource&&) = default;
 
     //@}
 
@@ -154,7 +159,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilSystemIntegratedHeatPumpAirSource_Impl ImplType;
+    using ImplType = detail::CoilSystemIntegratedHeatPumpAirSource_Impl;
 
     explicit CoilSystemIntegratedHeatPumpAirSource(std::shared_ptr<detail::CoilSystemIntegratedHeatPumpAirSource_Impl> impl);
 
@@ -168,10 +173,10 @@ namespace model {
   };
 
   /** \relates CoilSystemIntegratedHeatPumpAirSource*/
-  typedef boost::optional<CoilSystemIntegratedHeatPumpAirSource> OptionalCoilSystemIntegratedHeatPumpAirSource;
+  using OptionalCoilSystemIntegratedHeatPumpAirSource = boost::optional<CoilSystemIntegratedHeatPumpAirSource>;
 
   /** \relates CoilSystemIntegratedHeatPumpAirSource*/
-  typedef std::vector<CoilSystemIntegratedHeatPumpAirSource> CoilSystemIntegratedHeatPumpAirSourceVector;
+  using CoilSystemIntegratedHeatPumpAirSourceVector = std::vector<CoilSystemIntegratedHeatPumpAirSource>;
 
 }  // namespace model
 }  // namespace openstudio

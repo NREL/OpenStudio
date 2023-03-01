@@ -52,7 +52,7 @@ namespace model {
 
       Blind_Impl(const Blind_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Blind_Impl() {}
+      virtual ~Blind_Impl() = default;
 
       //@}
 

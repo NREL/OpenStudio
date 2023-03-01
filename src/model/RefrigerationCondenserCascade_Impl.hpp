@@ -53,7 +53,7 @@ namespace model {
 
       RefrigerationCondenserCascade_Impl(const RefrigerationCondenserCascade_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCondenserCascade_Impl() {}
+      virtual ~RefrigerationCondenserCascade_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -99,7 +99,7 @@ namespace model {
 
       bool setRatedEffectiveTotalHeatRejectionRate(double ratedEffectiveTotalHeatRejectionRate);
 
-      bool setCondensingTemperatureControlType(std::string condensingTemperatureControlType);
+      bool setCondensingTemperatureControlType(const std::string& condensingTemperatureControlType);
 
       void resetCondensingTemperatureControlType();
 

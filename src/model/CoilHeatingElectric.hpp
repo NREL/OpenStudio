@@ -58,7 +58,12 @@ namespace model {
 
     CoilHeatingElectric(const Model& model);
 
-    virtual ~CoilHeatingElectric() {}
+    virtual ~CoilHeatingElectric() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingElectric(const CoilHeatingElectric& other) = default;
+    CoilHeatingElectric(CoilHeatingElectric&& other) = default;
+    CoilHeatingElectric& operator=(const CoilHeatingElectric&) = default;
+    CoilHeatingElectric& operator=(CoilHeatingElectric&&) = default;
 
     //@}
 
@@ -114,7 +119,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::CoilHeatingElectric_Impl ImplType;
+    using ImplType = detail::CoilHeatingElectric_Impl;
 
     friend class detail::CoilHeatingElectric_Impl;
 
@@ -131,10 +136,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingElectric*/
-  typedef boost::optional<CoilHeatingElectric> OptionalCoilHeatingElectric;
+  using OptionalCoilHeatingElectric = boost::optional<CoilHeatingElectric>;
 
   /** \relates CoilHeatingElectric*/
-  typedef std::vector<CoilHeatingElectric> CoilHeatingElectricVector;
+  using CoilHeatingElectricVector = std::vector<CoilHeatingElectric>;
 
 }  // namespace model
 

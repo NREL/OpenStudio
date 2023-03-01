@@ -52,7 +52,12 @@ namespace model {
     explicit ExternalInterfaceFunctionalMockupUnitExportFromVariable(const Model& model, const std::string& outputVariableIndexKeyName,
                                                                      const std::string& outputVariableName, const std::string& fMUVariableName);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitExportFromVariable() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportFromVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterfaceFunctionalMockupUnitExportFromVariable(const ExternalInterfaceFunctionalMockupUnitExportFromVariable& other) = default;
+    ExternalInterfaceFunctionalMockupUnitExportFromVariable(ExternalInterfaceFunctionalMockupUnitExportFromVariable&& other) = default;
+    ExternalInterfaceFunctionalMockupUnitExportFromVariable& operator=(const ExternalInterfaceFunctionalMockupUnitExportFromVariable&) = default;
+    ExternalInterfaceFunctionalMockupUnitExportFromVariable& operator=(ExternalInterfaceFunctionalMockupUnitExportFromVariable&&) = default;
 
     //@}
 
@@ -84,7 +89,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl;
 
     explicit ExternalInterfaceFunctionalMockupUnitExportFromVariable(
       std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl> impl);
@@ -99,10 +104,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceFunctionalMockupUnitExportFromVariable*/
-  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitExportFromVariable> OptionalExternalInterfaceFunctionalMockupUnitExportFromVariable;
+  using OptionalExternalInterfaceFunctionalMockupUnitExportFromVariable = boost::optional<ExternalInterfaceFunctionalMockupUnitExportFromVariable>;
 
   /** \relates ExternalInterfaceFunctionalMockupUnitExportFromVariable*/
-  typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportFromVariable> ExternalInterfaceFunctionalMockupUnitExportFromVariableVector;
+  using ExternalInterfaceFunctionalMockupUnitExportFromVariableVector = std::vector<ExternalInterfaceFunctionalMockupUnitExportFromVariable>;
 
 }  // namespace model
 }  // namespace openstudio

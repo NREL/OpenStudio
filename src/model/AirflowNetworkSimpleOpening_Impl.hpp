@@ -52,7 +52,7 @@ namespace model {
 
       AirflowNetworkSimpleOpening_Impl(const AirflowNetworkSimpleOpening_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkSimpleOpening_Impl() {}
+      virtual ~AirflowNetworkSimpleOpening_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

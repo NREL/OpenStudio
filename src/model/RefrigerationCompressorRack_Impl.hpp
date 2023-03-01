@@ -59,7 +59,7 @@ namespace model {
 
       RefrigerationCompressorRack_Impl(const RefrigerationCompressorRack_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCompressorRack_Impl() {}
+      virtual ~RefrigerationCompressorRack_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -154,7 +154,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setHeatRejectionLocation(std::string heatRejectionLocation);
+      bool setHeatRejectionLocation(const std::string& heatRejectionLocation);
 
       bool setDesignCompressorRackCOP(double designCompressorRackCOP);
 
@@ -166,9 +166,9 @@ namespace model {
 
       void resetCondenserFanPowerFunctionofTemperatureCurve();
 
-      bool setCondenserType(std::string condenserType);
+      bool setCondenserType(const std::string& condenserType);
 
-      bool setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType);
+      bool setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType);
 
       bool setWaterCooledCondenserOutletTemperatureSchedule(Schedule& schedule);
 
@@ -212,7 +212,7 @@ namespace model {
 
       // void resetCondenserAirInletNodeName();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

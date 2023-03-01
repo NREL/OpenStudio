@@ -447,7 +447,7 @@ namespace detail {
     boost::optional<Attribute> result;
     if (hasValue() && m_valueType == AttributeValueType::AttributeVector) {
       std::vector<Attribute> children = this->valueAsAttributeVector();
-      std::vector<Attribute>::const_iterator it = std::find_if(children.begin(), children.end(), FindChildByName(name));
+      auto it = std::find_if(children.begin(), children.end(), FindChildByName(name));
       if (it != children.end()) {
         result = *it;
       }
@@ -491,15 +491,15 @@ namespace detail {
 
     // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
     // So we don't use it here. Same with std::get, so we use get_if instead
-    if (auto* p = std::get_if<bool>(&m_value)) {
+    if (const auto* p = std::get_if<bool>(&m_value)) {
       ss << std::boolalpha << *p;
-    } else if (auto* p = std::get_if<double>(&m_value)) {
+    } else if (const auto* p = std::get_if<double>(&m_value)) {
       ss << *p;
-    } else if (auto* p = std::get_if<int>(&m_value)) {
+    } else if (const auto* p = std::get_if<int>(&m_value)) {
       ss << *p;
-    } else if (auto* p = std::get_if<unsigned>(&m_value)) {
+    } else if (const auto* p = std::get_if<unsigned>(&m_value)) {
       ss << *p;
-    } else if (auto* p = std::get_if<std::string>(&m_value)) {
+    } else if (const auto* p = std::get_if<std::string>(&m_value)) {
       ss << *p;
     } else if (std::get_if<std::vector<Attribute>>(&m_value)) {
       // Call toXml() and save to the stringstream
@@ -653,17 +653,17 @@ std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attributeVa
 
   // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
   // So we don't use it here. Same with std::get, so we use get_if instead
-  if (auto* p = std::get_if<bool>(&attributeVariant)) {
+  if (const auto* p = std::get_if<bool>(&attributeVariant)) {
     os << std::boolalpha << *p;
-  } else if (auto* p = std::get_if<double>(&attributeVariant)) {
+  } else if (const auto* p = std::get_if<double>(&attributeVariant)) {
     os << *p;
-  } else if (auto* p = std::get_if<int>(&attributeVariant)) {
+  } else if (const auto* p = std::get_if<int>(&attributeVariant)) {
     os << *p;
-  } else if (auto* p = std::get_if<unsigned>(&attributeVariant)) {
+  } else if (const auto* p = std::get_if<unsigned>(&attributeVariant)) {
     os << *p;
-  } else if (auto* p = std::get_if<std::string>(&attributeVariant)) {
+  } else if (const auto* p = std::get_if<std::string>(&attributeVariant)) {
     os << *p;
-  } else if (auto* p = std::get_if<std::vector<Attribute>>(&attributeVariant)) {
+  } else if (const auto* p = std::get_if<std::vector<Attribute>>(&attributeVariant)) {
     // Will end up calling toXml
     for (const Attribute& attr : *p) {
       os << attr << '\n';

@@ -54,7 +54,7 @@ namespace model {
 
       EnergyManagementSystemActuator_Impl(const EnergyManagementSystemActuator_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnergyManagementSystemActuator_Impl() {}
+      virtual ~EnergyManagementSystemActuator_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

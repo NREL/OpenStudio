@@ -54,7 +54,7 @@ namespace model {
 
       SteamEquipment_Impl(const SteamEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SteamEquipment_Impl() {}
+      virtual ~SteamEquipment_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -112,7 +112,7 @@ namespace model {
 
       void resetMultiplier();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

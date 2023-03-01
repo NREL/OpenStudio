@@ -103,7 +103,10 @@ OptionalPoint3d getCentroid(const Point3dVector& points) {
     double cx = 0;
     double cy = 0;
     for (size_t i = 0; i < N; ++i) {
-      double x1, x2, y1, y2;
+      double x1;
+      double x2;
+      double y1;
+      double y2;
       if (i == N - 1) {
         x1 = surfacePoints[i].x();
         x2 = surfacePoints[0].x();
@@ -137,7 +140,7 @@ OptionalPoint3d getCentroid(const Point3dVector& points) {
 Point3dVector reorderULC(const Point3dVector& points) {
   size_t N = points.size();
   if (N < 3) {
-    return Point3dVector();
+    return {};
   }
 
   // transformation to align face
@@ -569,7 +572,8 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
   }
 
   // convert back to vertices
-  std::list<TPPLPoly>::iterator it, itend;
+  std::list<TPPLPoly>::iterator it;
+  std::list<TPPLPoly>::iterator itend;
   //std::cout << "Start" << '\n';
   for (it = resultPolys.begin(), itend = resultPolys.end(); it != itend; ++it) {
 

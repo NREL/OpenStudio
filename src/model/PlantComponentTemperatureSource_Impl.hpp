@@ -53,7 +53,7 @@ namespace model {
 
       PlantComponentTemperatureSource_Impl(const PlantComponentTemperatureSource_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PlantComponentTemperatureSource_Impl() {}
+      virtual ~PlantComponentTemperatureSource_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -73,7 +73,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AirflowNetworkEquivalentDuct() {}
+    virtual ~AirflowNetworkEquivalentDuct() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkEquivalentDuct(const AirflowNetworkEquivalentDuct& other) = default;
+    AirflowNetworkEquivalentDuct(AirflowNetworkEquivalentDuct&& other) = default;
+    AirflowNetworkEquivalentDuct& operator=(const AirflowNetworkEquivalentDuct&) = default;
+    AirflowNetworkEquivalentDuct& operator=(AirflowNetworkEquivalentDuct&&) = default;
 
     //@}
 
@@ -106,7 +111,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkEquivalentDuct_Impl ImplType;
+    using ImplType = detail::AirflowNetworkEquivalentDuct_Impl;
 
     explicit AirflowNetworkEquivalentDuct(std::shared_ptr<detail::AirflowNetworkEquivalentDuct_Impl> impl);
 
@@ -139,10 +144,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkEquivalentDuct*/
-  typedef boost::optional<AirflowNetworkEquivalentDuct> OptionalAirflowNetworkEquivalentDuct;
+  using OptionalAirflowNetworkEquivalentDuct = boost::optional<AirflowNetworkEquivalentDuct>;
 
   /** \relates AirflowNetworkEquivalentDuct*/
-  typedef std::vector<AirflowNetworkEquivalentDuct> AirflowNetworkEquivalentDuctVector;
+  using AirflowNetworkEquivalentDuctVector = std::vector<AirflowNetworkEquivalentDuct>;
 
 }  // namespace model
 }  // namespace openstudio

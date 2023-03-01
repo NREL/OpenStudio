@@ -58,7 +58,12 @@ namespace model {
 
     explicit RefrigerationAirChiller(const Model& model, Schedule& defrostSchedule);
 
-    virtual ~RefrigerationAirChiller() {}
+    virtual ~RefrigerationAirChiller() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationAirChiller(const RefrigerationAirChiller& other) = default;
+    RefrigerationAirChiller(RefrigerationAirChiller&& other) = default;
+    RefrigerationAirChiller& operator=(const RefrigerationAirChiller&) = default;
+    RefrigerationAirChiller& operator=(RefrigerationAirChiller&&) = default;
 
     //@}
 
@@ -174,7 +179,7 @@ namespace model {
 
     void resetAvailabilitySchedule();
 
-    bool setCapacityRatingType(std::string capacityRatingType);
+    bool setCapacityRatingType(const std::string& capacityRatingType);
 
     bool setRatedUnitLoadFactor(double ratedUnitLoadFactor);
 
@@ -205,7 +210,7 @@ namespace model {
 
     void resetRefrigerantCorrectionFactor();
 
-    // bool setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType);
+    // bool setCapacityCorrectionCurveType(const std::string& capacityCorrectionCurveType);
 
     // void resetCapacityCorrectionCurveType();
 
@@ -223,7 +228,7 @@ namespace model {
 
     void resetHeatingPowerSchedule();
 
-    bool setFanSpeedControlType(std::string fanSpeedControlType);
+    bool setFanSpeedControlType(const std::string& fanSpeedControlType);
 
     void resetFanSpeedControlType();
 
@@ -237,11 +242,11 @@ namespace model {
 
     void resetMinimumFanAirFlowRatio();
 
-    bool setDefrostType(std::string defrostType);
+    bool setDefrostType(const std::string& defrostType);
 
     void resetDefrostType();
 
-    bool setDefrostControlType(std::string defrostControlType);
+    bool setDefrostControlType(const std::string& defrostControlType);
 
     void resetDefrostControlType();
 
@@ -259,7 +264,7 @@ namespace model {
 
     void resetTemperatureTerminationDefrostFractiontoIce();
 
-    // bool setVerticalLocation(std::string verticalLocation);
+    // bool setVerticalLocation(const std::string& verticalLocation);
 
     // void resetVerticalLocation();
 
@@ -289,7 +294,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationAirChiller_Impl ImplType;
+    using ImplType = detail::RefrigerationAirChiller_Impl;
 
     explicit RefrigerationAirChiller(std::shared_ptr<detail::RefrigerationAirChiller_Impl> impl);
 
@@ -303,10 +308,10 @@ namespace model {
   };
 
   /** \relates RefrigerationAirChiller*/
-  typedef boost::optional<RefrigerationAirChiller> OptionalRefrigerationAirChiller;
+  using OptionalRefrigerationAirChiller = boost::optional<RefrigerationAirChiller>;
 
   /** \relates RefrigerationAirChiller*/
-  typedef std::vector<RefrigerationAirChiller> RefrigerationAirChillerVector;
+  using RefrigerationAirChillerVector = std::vector<RefrigerationAirChiller>;
 
 }  // namespace model
 }  // namespace openstudio

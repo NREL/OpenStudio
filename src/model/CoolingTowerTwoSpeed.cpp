@@ -107,7 +107,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoolingTowerTwoSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_CoolingTower_TwoSpeedFields::BasinHeaterOperatingScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoolingTowerTwoSpeed", "Basin Heater Operating"));
       }
@@ -1239,7 +1240,7 @@ namespace model {
   }
 
   IddObjectType CoolingTowerTwoSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoolingTower_TwoSpeed);
+    return {IddObjectType::OS_CoolingTower_TwoSpeed};
   }
 
   std::vector<std::string> CoolingTowerTwoSpeed::performanceInputMethodValues() {

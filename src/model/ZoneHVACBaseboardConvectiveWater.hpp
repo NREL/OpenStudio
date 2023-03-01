@@ -56,7 +56,12 @@ namespace model {
 
     ZoneHVACBaseboardConvectiveWater(const Model& model, Schedule& availabilitySchedule, StraightComponent& heatingCoilBaseboard);
 
-    virtual ~ZoneHVACBaseboardConvectiveWater() {}
+    virtual ~ZoneHVACBaseboardConvectiveWater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACBaseboardConvectiveWater(const ZoneHVACBaseboardConvectiveWater& other) = default;
+    ZoneHVACBaseboardConvectiveWater(ZoneHVACBaseboardConvectiveWater&& other) = default;
+    ZoneHVACBaseboardConvectiveWater& operator=(const ZoneHVACBaseboardConvectiveWater&) = default;
+    ZoneHVACBaseboardConvectiveWater& operator=(ZoneHVACBaseboardConvectiveWater&&) = default;
 
     //@}
 
@@ -98,7 +103,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACBaseboardConvectiveWater_Impl ImplType;
+    using ImplType = detail::ZoneHVACBaseboardConvectiveWater_Impl;
 
     explicit ZoneHVACBaseboardConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl);
 
@@ -112,10 +117,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACBaseboardConvectiveWater*/
-  typedef boost::optional<ZoneHVACBaseboardConvectiveWater> OptionalZoneHVACBaseboardConvectiveWater;
+  using OptionalZoneHVACBaseboardConvectiveWater = boost::optional<ZoneHVACBaseboardConvectiveWater>;
 
   /** \relates ZoneHVACBaseboardConvectiveWater*/
-  typedef std::vector<ZoneHVACBaseboardConvectiveWater> ZoneHVACBaseboardConvectiveWaterVector;
+  using ZoneHVACBaseboardConvectiveWaterVector = std::vector<ZoneHVACBaseboardConvectiveWater>;
 
 }  // namespace model
 }  // namespace openstudio

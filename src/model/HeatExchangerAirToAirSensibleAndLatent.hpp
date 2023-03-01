@@ -53,7 +53,12 @@ namespace model {
    public:
     explicit HeatExchangerAirToAirSensibleAndLatent(const Model& model);
 
-    virtual ~HeatExchangerAirToAirSensibleAndLatent() {}
+    virtual ~HeatExchangerAirToAirSensibleAndLatent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatExchangerAirToAirSensibleAndLatent(const HeatExchangerAirToAirSensibleAndLatent& other) = default;
+    HeatExchangerAirToAirSensibleAndLatent(HeatExchangerAirToAirSensibleAndLatent&& other) = default;
+    HeatExchangerAirToAirSensibleAndLatent& operator=(const HeatExchangerAirToAirSensibleAndLatent&) = default;
+    HeatExchangerAirToAirSensibleAndLatent& operator=(HeatExchangerAirToAirSensibleAndLatent&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -115,11 +120,11 @@ namespace model {
 
     std::string heatExchangerType() const;
 
-    bool setHeatExchangerType(std::string heatExchangerType);
+    bool setHeatExchangerType(const std::string& heatExchangerType);
 
     std::string frostControlType() const;
 
-    bool setFrostControlType(std::string frostControlType);
+    bool setFrostControlType(const std::string& frostControlType);
 
     double thresholdTemperature() const;
 
@@ -152,7 +157,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::HeatExchangerAirToAirSensibleAndLatent_Impl ImplType;
+    using ImplType = detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
 
     explicit HeatExchangerAirToAirSensibleAndLatent(std::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl);
 
@@ -168,10 +173,10 @@ namespace model {
   };
 
   /** \relates HeatExchangerAirToAirSensibleAndLatent*/
-  typedef boost::optional<HeatExchangerAirToAirSensibleAndLatent> OptionalHeatExchangerAirToAirSensibleAndLatent;
+  using OptionalHeatExchangerAirToAirSensibleAndLatent = boost::optional<HeatExchangerAirToAirSensibleAndLatent>;
 
   /** \relates HeatExchangerAirToAirSensibleAndLatent*/
-  typedef std::vector<HeatExchangerAirToAirSensibleAndLatent> HeatExchangerAirToAirSensibleAndLatentVector;
+  using HeatExchangerAirToAirSensibleAndLatentVector = std::vector<HeatExchangerAirToAirSensibleAndLatent>;
 
 }  // namespace model
 }  // namespace openstudio

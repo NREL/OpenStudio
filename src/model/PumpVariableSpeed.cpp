@@ -89,7 +89,8 @@ namespace model {
     std::vector<ScheduleTypeKey> PumpVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Pump_VariableSpeedFields::PumpFlowRateScheduleName) != e) {
         result.push_back(ScheduleTypeKey("PumpVariableSpeed", "Pump Flow Rate"));
       }

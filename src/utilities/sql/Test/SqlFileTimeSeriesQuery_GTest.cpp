@@ -83,7 +83,7 @@ void timeSeriesGeneralTests(SqlFile& file, const SqlFileTimeSeriesQueryVector& a
   EXPECT_TRUE(tsNames == tsSetFromFile);
 }
 
-void keyValuesGeneralTests(SqlFile& file, const SqlFileTimeSeriesQueryVector& allQueries) {
+void keyValuesGeneralTests(SqlFile& /*file*/, const SqlFileTimeSeriesQueryVector& allQueries) {
   // key value request should not be explicit in any of allQueries
   for (const SqlFileTimeSeriesQuery& q : allQueries) {
     EXPECT_FALSE(q.keyValues());

@@ -81,7 +81,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ElectricLoadCenterStorageSimple_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ElectricLoadCenterStorageSimple", "Availability"));
       }
@@ -96,7 +97,7 @@ namespace model {
     // boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageSimple_Impl::electricLoadCenterDistribution() const
     // {
     // boost::optional<ElectricLoadCenterDistribution> result;
-    // for (auto list : getObject<ModelObject>().getModelObjectSources<ModelObjectList>(ModelObjectList::iddObjectType())){
+    // for (const auto& list : getObject<ModelObject>().getModelObjectSources<ModelObjectList>(ModelObjectList::iddObjectType())){
     // auto elcds = list.getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
     // if (elcds.empty()){
     // error
@@ -336,7 +337,7 @@ namespace model {
   }
 
   IddObjectType ElectricLoadCenterStorageSimple::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
+    return {IddObjectType::OS_ElectricLoadCenter_Storage_Simple};
   }
 
   // Convenience method to return the electricalLoadCenter on which it's assigned (optional)

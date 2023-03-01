@@ -106,7 +106,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctConstantVolumeCooledBeam", "Availability"));
       }
@@ -164,7 +165,7 @@ namespace model {
                 _model.connect(this->getObject<ModelObject>(), outletPort(), node, node.inletPort());
 
                 if (thermalZone) {
-                  AirTerminalSingleDuctConstantVolumeCooledBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+                  auto mo = this->getObject<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
                   thermalZone->addEquipment(mo);
                 }
@@ -181,7 +182,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::remove() {
       Model _model = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
 
       HVACComponent _coolingCoil = coilCoolingCooledBeam();
 
@@ -236,14 +237,13 @@ namespace model {
     }
 
     ModelObject AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::clone(Model model) const {
-      AirTerminalSingleDuctConstantVolumeCooledBeam airTerminalCVCooledBeamClone =
-        StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+      auto airTerminalCVCooledBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
-      HVACComponent coilCoolingClone = this->coilCoolingCooledBeam().clone(model).cast<HVACComponent>();
+      auto coilCoolingClone = this->coilCoolingCooledBeam().clone(model).cast<HVACComponent>();
 
       airTerminalCVCooledBeamClone.setCoolingCoil(coilCoolingClone);
 
-      return airTerminalCVCooledBeamClone;
+      return std::move(airTerminalCVCooledBeamClone);
     }
 
     std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::children() const {
@@ -374,7 +374,7 @@ namespace model {
       return result;
     }
 
-    bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCooledBeamType(std::string cooledBeamType) {
+    bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCooledBeamType(const std::string& cooledBeamType) {
       bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CooledBeamType, cooledBeamType);
       return result;
     }
@@ -628,7 +628,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
+    return {IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam};
   }
 
   std::vector<std::string> AirTerminalSingleDuctConstantVolumeCooledBeam::cooledBeamTypeValues() {
@@ -728,7 +728,7 @@ namespace model {
     return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool AirTerminalSingleDuctConstantVolumeCooledBeam::setCooledBeamType(std::string cooledBeamType) {
+  bool AirTerminalSingleDuctConstantVolumeCooledBeam::setCooledBeamType(const std::string& cooledBeamType) {
     return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->setCooledBeamType(cooledBeamType);
   }
 

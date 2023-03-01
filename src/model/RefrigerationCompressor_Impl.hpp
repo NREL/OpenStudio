@@ -54,7 +54,7 @@ namespace model {
 
       RefrigerationCompressor_Impl(const RefrigerationCompressor_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCompressor_Impl() {}
+      virtual ~RefrigerationCompressor_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -126,11 +126,11 @@ namespace model {
 
       void resetRatedSubcooling();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 
-      // bool setModeofOperation(std::string modeofOperation);
+      // bool setModeofOperation(const std::string& modeofOperation);
 
       // void resetModeofOperation();
 

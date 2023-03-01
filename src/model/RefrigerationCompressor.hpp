@@ -55,7 +55,12 @@ namespace model {
 
     explicit RefrigerationCompressor(const Model& model);
 
-    virtual ~RefrigerationCompressor() {}
+    virtual ~RefrigerationCompressor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCompressor(const RefrigerationCompressor& other) = default;
+    RefrigerationCompressor(RefrigerationCompressor&& other) = default;
+    RefrigerationCompressor& operator=(const RefrigerationCompressor&) = default;
+    RefrigerationCompressor& operator=(RefrigerationCompressor&&) = default;
 
     //@}
 
@@ -117,11 +122,11 @@ namespace model {
 
     void resetRatedSubcooling();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
-    // bool setModeofOperation(std::string modeofOperation);
+    // bool setModeofOperation(const std::string& modeofOperation);
 
     // void resetModeofOperation();
 
@@ -143,7 +148,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCompressor_Impl ImplType;
+    using ImplType = detail::RefrigerationCompressor_Impl;
 
     explicit RefrigerationCompressor(std::shared_ptr<detail::RefrigerationCompressor_Impl> impl);
 
@@ -157,10 +162,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCompressor*/
-  typedef boost::optional<RefrigerationCompressor> OptionalRefrigerationCompressor;
+  using OptionalRefrigerationCompressor = boost::optional<RefrigerationCompressor>;
 
   /** \relates RefrigerationCompressor*/
-  typedef std::vector<RefrigerationCompressor> RefrigerationCompressorVector;
+  using RefrigerationCompressorVector = std::vector<RefrigerationCompressor>;
 
 }  // namespace model
 }  // namespace openstudio

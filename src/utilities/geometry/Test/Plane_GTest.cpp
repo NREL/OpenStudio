@@ -162,19 +162,21 @@ TEST_F(GeometryFixture, Plane_FromPointsDegenerate) {
   EXPECT_THROW(Plane p(points), openstudio::Exception);
 
   // size 3, all points on a line
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
+  points = {
+    {0, 0, 0},
+    {1, 0, 0},
+    {2, 0, 0},
+  };
   EXPECT_THROW(Plane p(points), openstudio::Exception);
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints1) {
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(0, 1, 0));
+  std::vector<Point3d> points{
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+  };
 
   Plane p1(points);
   Plane p2(Point3d(0, 0, 0), Vector3d(0, 0, 1));
@@ -184,11 +186,12 @@ TEST_F(GeometryFixture, Plane_FromPoints1) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints2) {
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> points{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
 
   Plane p1(points);
   Plane p2(Point3d(0, 1, 0), Vector3d(0, 0, -1));
@@ -198,11 +201,12 @@ TEST_F(GeometryFixture, Plane_FromPoints2) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints3) {
-  std::vector<Point3d> points;
-  points.push_back(Point3d(5, 0, 2));
-  points.push_back(Point3d(5, 0, 0));
-  points.push_back(Point3d(5, 2, 0));
-  points.push_back(Point3d(5, 2, 2));
+  std::vector<Point3d> points{
+    {5, 0, 2},
+    {5, 0, 0},
+    {5, 2, 0},
+    {5, 2, 2},
+  };
 
   Point3d point(5, 0, 2);
   Vector3d normal(1, 0, 0);
@@ -226,11 +230,12 @@ TEST_F(GeometryFixture, Plane_FromPoints3) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints4) {
-  std::vector<Point3d> points;
-  points.push_back(Point3d(5, -2, 4));
-  points.push_back(Point3d(5, -2, 2));
-  points.push_back(Point3d(7, -2, 2));
-  points.push_back(Point3d(7, -2, 4));
+  std::vector<Point3d> points{
+    {5, -2, 4},
+    {5, -2, 2},
+    {7, -2, 2},
+    {7, -2, 4},
+  };
 
   Point3d point(0, -2, 0);
   Vector3d normal(0, -1, 0);
@@ -255,11 +260,12 @@ TEST_F(GeometryFixture, Plane_FromPoints4) {
 
 TEST_F(GeometryFixture, Plane_FromPoints4_Small) {
   // points have area of 1 cm^2
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0.01, 0, 0));
-  points.push_back(Point3d(0.01, 0.01, 0));
-  points.push_back(Point3d(0, 0.01, 0));
+  std::vector<Point3d> points{
+    {0, 0, 0},
+    {0.01, 0, 0},
+    {0.01, 0.01, 0},
+    {0, 0.01, 0},
+  };
 
   Point3d point(10, 10, 0);
   Vector3d normal(0, 0, 1);
@@ -283,17 +289,19 @@ TEST_F(GeometryFixture, Plane_FromPoints4_Small) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints_NotEqual) {
-  std::vector<Point3d> points1;
-  points1.push_back(Point3d(0, 1, 0));
-  points1.push_back(Point3d(0, 0, 0));
-  points1.push_back(Point3d(1, 0, 0));
-  points1.push_back(Point3d(1, 1, 0));
+  std::vector<Point3d> points1{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
-  std::vector<Point3d> points2;
-  points2.push_back(Point3d(0, 1, 2));
-  points2.push_back(Point3d(0, 0, 2));
-  points2.push_back(Point3d(1, 0, 2));
-  points2.push_back(Point3d(1, 1, 2));
+  std::vector<Point3d> points2{
+    {0, 1, 2},
+    {0, 0, 2},
+    {1, 0, 2},
+    {1, 1, 2},
+  };
 
   Plane p1(points1);
   Plane p2(points2);
@@ -305,17 +313,19 @@ TEST_F(GeometryFixture, Plane_FromPoints_NotEqual) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints_Reverse) {
-  std::vector<Point3d> points1;
-  points1.push_back(Point3d(1, 1, 2));
-  points1.push_back(Point3d(1, 0, 2));
-  points1.push_back(Point3d(0, 0, 2));
-  points1.push_back(Point3d(0, 1, 2));
+  std::vector<Point3d> points1{
+    {1, 1, 2},
+    {1, 0, 2},
+    {0, 0, 2},
+    {0, 1, 2},
+  };
 
-  std::vector<Point3d> points2;
-  points2.push_back(Point3d(0, 1, 2));
-  points2.push_back(Point3d(0, 0, 2));
-  points2.push_back(Point3d(1, 0, 2));
-  points2.push_back(Point3d(1, 1, 2));
+  std::vector<Point3d> points2{
+    {0, 1, 2},
+    {0, 0, 2},
+    {1, 0, 2},
+    {1, 1, 2},
+  };
 
   Plane p1(points1);
   Plane p2(points2);
@@ -327,17 +337,19 @@ TEST_F(GeometryFixture, Plane_FromPoints_Reverse) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints_Separated_X) {
-  std::vector<Point3d> points1;
-  points1.push_back(Point3d(10, 0, 1));
-  points1.push_back(Point3d(10, 0, 0));
-  points1.push_back(Point3d(10, 1, 0));
-  points1.push_back(Point3d(10, 1, 1));
+  std::vector<Point3d> points1{
+    {10, 0, 1},
+    {10, 0, 0},
+    {10, 1, 0},
+    {10, 1, 1},
+  };
 
-  std::vector<Point3d> points2;
-  points2.push_back(Point3d(20, 0, 1));
-  points2.push_back(Point3d(20, 0, 0));
-  points2.push_back(Point3d(20, 1, 0));
-  points2.push_back(Point3d(20, 1, 1));
+  std::vector<Point3d> points2{
+    {20, 0, 1},
+    {20, 0, 0},
+    {20, 1, 0},
+    {20, 1, 1},
+  };
 
   Plane p1(points1);
   Plane p2(points2);
@@ -351,17 +363,19 @@ TEST_F(GeometryFixture, Plane_FromPoints_Separated_X) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_X) {
-  std::vector<Point3d> points1;
-  points1.push_back(Point3d(-10, 0, 1));
-  points1.push_back(Point3d(-10, 0, 0));
-  points1.push_back(Point3d(-10, 1, 0));
-  points1.push_back(Point3d(-10, 1, 1));
+  std::vector<Point3d> points1{
+    {-10, 0, 1},
+    {-10, 0, 0},
+    {-10, 1, 0},
+    {-10, 1, 1},
+  };
 
-  std::vector<Point3d> points2;
-  points2.push_back(Point3d(-20, 1, 1));
-  points2.push_back(Point3d(-20, 1, 0));
-  points2.push_back(Point3d(-20, 0, 0));
-  points2.push_back(Point3d(-20, 0, 1));
+  std::vector<Point3d> points2{
+    {-20, 1, 1},
+    {-20, 1, 0},
+    {-20, 0, 0},
+    {-20, 0, 1},
+  };
 
   Plane p1(points1);
   Plane p2(points2);
@@ -375,17 +389,19 @@ TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_X) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints_Separated_Y) {
-  std::vector<Point3d> points1;
-  points1.push_back(Point3d(0, -10, 1));
-  points1.push_back(Point3d(0, -10, 0));
-  points1.push_back(Point3d(1, -10, 0));
-  points1.push_back(Point3d(1, -10, 1));
+  std::vector<Point3d> points1{
+    {0, -10, 1},
+    {0, -10, 0},
+    {1, -10, 0},
+    {1, -10, 1},
+  };
 
-  std::vector<Point3d> points2;
-  points2.push_back(Point3d(0, 10, 1));
-  points2.push_back(Point3d(0, 10, 0));
-  points2.push_back(Point3d(1, 10, 0));
-  points2.push_back(Point3d(1, 10, 1));
+  std::vector<Point3d> points2{
+    {0, 10, 1},
+    {0, 10, 0},
+    {1, 10, 0},
+    {1, 10, 1},
+  };
 
   Plane p1(points1);
   Plane p2(points2);
@@ -399,17 +415,19 @@ TEST_F(GeometryFixture, Plane_FromPoints_Separated_Y) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_Y) {
-  std::vector<Point3d> points1;
-  points1.push_back(Point3d(0, -20, 1));
-  points1.push_back(Point3d(0, -20, 0));
-  points1.push_back(Point3d(1, -20, 0));
-  points1.push_back(Point3d(1, -20, 1));
+  std::vector<Point3d> points1{
+    {0, -20, 1},
+    {0, -20, 0},
+    {1, -20, 0},
+    {1, -20, 1},
+  };
 
-  std::vector<Point3d> points2;
-  points2.push_back(Point3d(1, 20, 1));
-  points2.push_back(Point3d(1, 20, 0));
-  points2.push_back(Point3d(0, 20, 0));
-  points2.push_back(Point3d(0, 20, 1));
+  std::vector<Point3d> points2{
+    {1, 20, 1},
+    {1, 20, 0},
+    {0, 20, 0},
+    {0, 20, 1},
+  };
 
   Plane p1(points1);
   Plane p2(points2);
@@ -423,17 +441,19 @@ TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_Y) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints_Separated_Z) {
-  std::vector<Point3d> points1;
-  points1.push_back(Point3d(0, 1, 10));
-  points1.push_back(Point3d(0, 0, 10));
-  points1.push_back(Point3d(1, 0, 10));
-  points1.push_back(Point3d(1, 1, 10));
+  std::vector<Point3d> points1{
+    {0, 1, 10},
+    {0, 0, 10},
+    {1, 0, 10},
+    {1, 1, 10},
+  };
 
-  std::vector<Point3d> points2;
-  points2.push_back(Point3d(0, 1, -10));
-  points2.push_back(Point3d(0, 0, -10));
-  points2.push_back(Point3d(1, 0, -10));
-  points2.push_back(Point3d(1, 1, -10));
+  std::vector<Point3d> points2{
+    {0, 1, -10},
+    {0, 0, -10},
+    {1, 0, -10},
+    {1, 1, -10},
+  };
 
   Plane p1(points1);
   Plane p2(points2);
@@ -447,17 +467,19 @@ TEST_F(GeometryFixture, Plane_FromPoints_Separated_Z) {
 }
 
 TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_Z) {
-  std::vector<Point3d> points1;
-  points1.push_back(Point3d(0, 1, -10));
-  points1.push_back(Point3d(0, 0, -10));
-  points1.push_back(Point3d(1, 0, -10));
-  points1.push_back(Point3d(1, 1, -10));
+  std::vector<Point3d> points1{
+    {0, 1, -10},
+    {0, 0, -10},
+    {1, 0, -10},
+    {1, 1, -10},
+  };
 
-  std::vector<Point3d> points2;
-  points2.push_back(Point3d(1, 1, -20));
-  points2.push_back(Point3d(1, 0, -20));
-  points2.push_back(Point3d(0, 0, -20));
-  points2.push_back(Point3d(0, 1, -20));
+  std::vector<Point3d> points2{
+    {1, 1, -20},
+    {1, 0, -20},
+    {0, 0, -20},
+    {0, 1, -20},
+  };
 
   Plane p1(points1);
   Plane p2(points2);
@@ -472,18 +494,20 @@ TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_Z) {
 
 TEST_F(GeometryFixture, Plane_FromPoints_ProblemSurface_IntersectModel22) {
   // from Surface 1292
-  std::vector<Point3d> points1;
-  points1.push_back(Point3d(33.5280021336, -29.717998476, 91.44));
-  points1.push_back(Point3d(33.5280021336, -29.717998476, 86.868));
-  points1.push_back(Point3d(33.5280021336, 29.718001524, 86.868));
-  points1.push_back(Point3d(33.5280021336, 29.718001524, 91.44));
+  std::vector<Point3d> points1{
+    {33.5280021336, -29.717998476, 91.44},
+    {33.5280021336, -29.717998476, 86.868},
+    {33.5280021336, 29.718001524, 86.868},
+    {33.5280021336, 29.718001524, 91.44},
+  };
 
   // from Surface 1384
-  std::vector<Point3d> points2;
-  points2.push_back(Point3d(28.9560021336, -25.145998476, 96.012));
-  points2.push_back(Point3d(28.9560021336, -25.145998476, 91.44));
-  points2.push_back(Point3d(28.9560021336, 25.146001524, 91.44));
-  points2.push_back(Point3d(28.9560021336, 25.146001524, 96.012));
+  std::vector<Point3d> points2{
+    {28.9560021336, -25.145998476, 96.012},
+    {28.9560021336, -25.145998476, 91.44},
+    {28.9560021336, 25.146001524, 91.44},
+    {28.9560021336, 25.146001524, 96.012},
+  };
 
   Plane p1(points1);
   Plane p2(points2);
@@ -550,11 +574,12 @@ TEST_F(GeometryFixture, Plane_ProblemSurface1) {
   //  BOOST_UBLAS_CHECK (detail::expression_type_check (prod (triangular_adaptor<const_matrix_type, upper> (m), e), cm2), internal_logic ());
   //#endif
 
-  std::vector<Point3d> points;
-  points.push_back(Point3d(68.534, 44.165, 46.3392));
-  points.push_back(Point3d(68.534, 44.165, 43.5952));
-  points.push_back(Point3d(73.1072, 48.7381, 43.5952));
-  points.push_back(Point3d(73.1072, 48.7381, 46.3392));
+  std::vector<Point3d> points{
+    {68.534, 44.165, 46.3392},
+    {68.534, 44.165, 43.5952},
+    {73.1072, 48.7381, 43.5952},
+    {73.1072, 48.7381, 46.3392},
+  };
 
   std::vector<Point3d> points2 = points;
   points2.pop_back();
@@ -597,11 +622,12 @@ TEST_F(GeometryFixture, Plane_ProblemSurface2) {
   // http://code.google.com/p/cbecc/issues/detail?id=394
 
   {
-    std::vector<Point3d> points;
-    points.push_back(Point3d(88.0317, 363.526, 4.77521));
-    points.push_back(Point3d(88.0317, 363.526, 2.7432));
-    points.push_back(Point3d(88.0317, 362.611, 2.7432));
-    points.push_back(Point3d(88.0317, 362.611, 4.77521));
+    std::vector<Point3d> points{
+      {88.0317, 363.526, 4.77521},
+      {88.0317, 363.526, 2.7432},
+      {88.0317, 362.611, 2.7432},
+      {88.0317, 362.611, 4.77521},
+    };
 
     std::vector<Point3d> points2 = points;
     points2.pop_back();
@@ -630,11 +656,12 @@ TEST_F(GeometryFixture, Plane_ProblemSurface2) {
   }
 
   {
-    std::vector<Point3d> points;
-    points.push_back(Point3d(88.03172639999999700000, 363.52581600000002000000, 4.77521016000000030000));
-    points.push_back(Point3d(88.03172639999999700000, 363.52581600000002000000, 2.74320000000000030000));
-    points.push_back(Point3d(88.03172639999999700000, 362.61141600000002000000, 2.74320000000000030000));
-    points.push_back(Point3d(88.03172639999999700000, 362.61141600000002000000, 4.77521016000000030000));
+    std::vector<Point3d> points{
+      {88.03172639999999700000, 363.52581600000002000000, 4.77521016000000030000},
+      {88.03172639999999700000, 363.52581600000002000000, 2.74320000000000030000},
+      {88.03172639999999700000, 362.61141600000002000000, 2.74320000000000030000},
+      {88.03172639999999700000, 362.61141600000002000000, 4.77521016000000030000},
+    };
 
     std::vector<Point3d> points2 = points;
     points2.pop_back();
@@ -665,11 +692,12 @@ TEST_F(GeometryFixture, Plane_ProblemSurface2) {
   {
     double footToMeter = 0.3048;
 
-    std::vector<Point3d> points;
-    points.push_back(Point3d(footToMeter * 288.818, footToMeter * 1193.02, footToMeter * 18));
-    points.push_back(Point3d(footToMeter * 288.818, footToMeter * 1193.02, footToMeter * 9));
-    points.push_back(Point3d(footToMeter * 288.818, footToMeter * 1188.52, footToMeter * 9));
-    points.push_back(Point3d(footToMeter * 288.818, footToMeter * 1188.52, footToMeter * 18));
+    std::vector<Point3d> points{
+      {footToMeter * 288.818, footToMeter * 1193.02, footToMeter * 18},
+      {footToMeter * 288.818, footToMeter * 1193.02, footToMeter * 9},
+      {footToMeter * 288.818, footToMeter * 1188.52, footToMeter * 9},
+      {footToMeter * 288.818, footToMeter * 1188.52, footToMeter * 18},
+    };
 
     std::vector<Point3d> points2 = points;
     points2.pop_back();

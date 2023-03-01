@@ -60,7 +60,12 @@ namespace model {
     /** Initializes the schedule to value until 24:00. */
     ScheduleDay(const Model& model, double value);
 
-    virtual ~ScheduleDay() {}
+    virtual ~ScheduleDay() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleDay(const ScheduleDay& other) = default;
+    ScheduleDay(ScheduleDay&& other) = default;
+    ScheduleDay& operator=(const ScheduleDay&) = default;
+    ScheduleDay& operator=(ScheduleDay&&) = default;
 
     //@}
 
@@ -110,7 +115,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleDay_Impl ImplType;
+    using ImplType = detail::ScheduleDay_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -125,10 +130,10 @@ namespace model {
   };
 
   /** \relates ScheduleDay*/
-  typedef boost::optional<ScheduleDay> OptionalScheduleDay;
+  using OptionalScheduleDay = boost::optional<ScheduleDay>;
 
   /** \relates ScheduleDay*/
-  typedef std::vector<ScheduleDay> ScheduleDayVector;
+  using ScheduleDayVector = std::vector<ScheduleDay>;
 
 }  // namespace model
 }  // namespace openstudio

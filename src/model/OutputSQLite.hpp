@@ -49,7 +49,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputSQLite() {}
+    virtual ~OutputSQLite() = default;
 
     //@}
 
@@ -81,7 +81,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputSQLite_Impl ImplType;
+    using ImplType = detail::OutputSQLite_Impl;
 
     explicit OutputSQLite(std::shared_ptr<detail::OutputSQLite_Impl> impl);
 
@@ -97,10 +97,10 @@ namespace model {
   };
 
   /** \relates OutputSQLite*/
-  typedef boost::optional<OutputSQLite> OptionalOutputSQLite;
+  using OptionalOutputSQLite = boost::optional<OutputSQLite>;
 
   /** \relates OutputSQLite*/
-  typedef std::vector<OutputSQLite> OutputSQLiteVector;
+  using OutputSQLiteVector = std::vector<OutputSQLite>;
 
 }  // namespace model
 }  // namespace openstudio

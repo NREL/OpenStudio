@@ -134,7 +134,7 @@ TEST_F(ModelFixture, RefrigerationCompressorRack_addToNode) {
   EXPECT_TRUE(rack.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
-  RefrigerationCompressorRack rackClone = rack.clone(model).cast<RefrigerationCompressorRack>();
+  auto rackClone = rack.clone(model).cast<RefrigerationCompressorRack>();
   demandOutletNode = plantLoop.demandOutletNode();
 
   EXPECT_TRUE(rackClone.addToNode(demandOutletNode));
@@ -249,11 +249,11 @@ TEST_F(ModelFixture, RefrigerationCompressorRack_Clone) {
   RefrigerationCompressorRack rack = RefrigerationCompressorRack(model);
   rack.setDesignCompressorRackCOP(3.0);
 
-  RefrigerationCompressorRack rackClone = rack.clone(model).cast<RefrigerationCompressorRack>();
+  auto rackClone = rack.clone(model).cast<RefrigerationCompressorRack>();
   EXPECT_EQ(3.0, rackClone.designCompressorRackCOP());
 
   Model model2;
-  RefrigerationCompressorRack rackClone2 = rack.clone(model2).cast<RefrigerationCompressorRack>();
+  auto rackClone2 = rack.clone(model2).cast<RefrigerationCompressorRack>();
   EXPECT_EQ(3.0, rackClone2.designCompressorRackCOP());
 }
 
@@ -262,24 +262,24 @@ TEST_F(ModelFixture, RefrigerationCompressorRack_Remove) {
   auto size = model.modelObjects().size();
   RefrigerationCompressorRack rack(model);
 
-  std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = model.getModelObjects<RefrigerationCompressorRack>();
+  std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = model.getConcreteModelObjects<RefrigerationCompressorRack>();
   EXPECT_EQ(1, refrigerationCompressorRacks.size());
 
-  std::vector<ModelObjectList> refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
+  std::vector<ModelObjectList> refrigerationModelObjectLists = model.getConcreteModelObjects<ModelObjectList>();
   EXPECT_EQ(1, refrigerationModelObjectLists.size());
 
-  std::vector<CurveQuadratic> refrigerationCurveQuadratics = model.getModelObjects<CurveQuadratic>();
+  std::vector<CurveQuadratic> refrigerationCurveQuadratics = model.getConcreteModelObjects<CurveQuadratic>();
   EXPECT_EQ(1, refrigerationCurveQuadratics.size());
 
   EXPECT_FALSE(rack.remove().empty());
 
-  refrigerationCompressorRacks = model.getModelObjects<RefrigerationCompressorRack>();
+  refrigerationCompressorRacks = model.getConcreteModelObjects<RefrigerationCompressorRack>();
   EXPECT_EQ(0, refrigerationCompressorRacks.size());
 
-  refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
+  refrigerationModelObjectLists = model.getConcreteModelObjects<ModelObjectList>();
   EXPECT_EQ(0, refrigerationModelObjectLists.size());
 
-  refrigerationCurveQuadratics = model.getModelObjects<CurveQuadratic>();
+  refrigerationCurveQuadratics = model.getConcreteModelObjects<CurveQuadratic>();
   EXPECT_EQ(0, refrigerationCurveQuadratics.size());
 
   EXPECT_EQ(size, model.modelObjects().size());

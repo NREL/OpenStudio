@@ -266,7 +266,7 @@ namespace model {
   }
 
   IddObjectType SurfacePropertyConvectionCoefficients::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
+    return {IddObjectType::OS_SurfaceProperty_ConvectionCoefficients};
   }
 
   ModelObject SurfacePropertyConvectionCoefficients::surfaceAsModelObject() const {

@@ -68,7 +68,7 @@ namespace model {
 
       SubSurface_Impl(const SubSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SubSurface_Impl();
+      virtual ~SubSurface_Impl() = default;
 
       //@}
 

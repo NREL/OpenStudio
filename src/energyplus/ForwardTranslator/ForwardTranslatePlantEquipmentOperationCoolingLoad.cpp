@@ -55,7 +55,7 @@ namespace energyplus {
     m_idfObjects.push_back(idfObject);
 
     // Name
-    auto name = modelObject.name().get();
+    auto name = modelObject.nameString();
     idfObject.setName(name);
 
     double lowerLimit = modelObject.minimumLowerLimit();
@@ -73,12 +73,12 @@ namespace energyplus {
         equipmentList.setName(equipmentListName);
         eg.setString(PlantEquipmentOperation_CoolingLoadExtensibleFields::RangeEquipmentListName, equipmentListName);
 
-        for (auto component : equipment) {
+        for (auto& component : equipment) {
           auto eg2 = equipmentList.pushExtensibleGroup();
           auto idf_component = translateAndMapModelObject(component);
           OS_ASSERT(idf_component);
           eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idf_component->iddObject().name());
-          eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName, idf_component->name().get());
+          eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName, idf_component->nameString());
         }
       }
 

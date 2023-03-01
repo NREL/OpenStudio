@@ -47,7 +47,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    ZoneAirHeatBalanceAlgorithm mo = m_model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
+    auto mo = m_model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
 
     boost::optional<std::string> s = workspaceObject.getString(ZoneAirHeatBalanceAlgorithmFields::Algorithm);
     if (s) {

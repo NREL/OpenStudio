@@ -366,13 +366,13 @@ namespace model {
 
     //clone object
     ModelObject GroundHeatExchangerVertical_Impl::clone(Model model) const {
-      GroundHeatExchangerVertical newGroundHeatExchanger = StraightComponent_Impl::clone(model).cast<GroundHeatExchangerVertical>();
+      auto newGroundHeatExchanger = StraightComponent_Impl::clone(model).cast<GroundHeatExchangerVertical>();
 
-      return newGroundHeatExchanger;
+      return std::move(newGroundHeatExchanger);
     }
 
     bool GroundHeatExchangerVertical_Impl::addGFunction(double gFunctionLN, double gFunctionGValue) {
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
       bool temp = eg.setDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionLn_T_Ts_Value, gFunctionLN);
       bool ok = eg.setDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionGValue, gFunctionGValue);
@@ -486,7 +486,7 @@ namespace model {
   }
 
   IddObjectType GroundHeatExchangerVertical::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical);
+    return {IddObjectType::OS_GroundHeatExchanger_Vertical};
   }
 
   bool GroundHeatExchangerVertical::addGFunction(double gFunctionLN, double gFunctionGValue) {

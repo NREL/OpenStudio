@@ -83,7 +83,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctConstantVolumeNoReheat", "Availability"));
       }
@@ -145,7 +146,7 @@ namespace model {
                 _model.connect(this->getObject<ModelObject>(), outletPort(), node, node.inletPort());
 
                 if (thermalZone) {
-                  AirTerminalSingleDuctConstantVolumeNoReheat mo = this->getObject<AirTerminalSingleDuctConstantVolumeNoReheat>();
+                  auto mo = this->getObject<AirTerminalSingleDuctConstantVolumeNoReheat>();
 
                   thermalZone->addEquipment(mo);
                 }
@@ -162,7 +163,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::remove() {
       Model _model = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
 
       boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
       boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());

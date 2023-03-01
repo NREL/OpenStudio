@@ -63,14 +63,14 @@ namespace energyplus {
     // its spaces will end up with a spacetype corresponding to the last Zonelist it found that references it.
     // You'll get a warning that the previous SpaceType was overwritten though
     for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
-      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
       OptionalWorkspaceObject target = workspaceGroup.getTarget(0);
       if (target) {
         OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
         if (modelObject) {
           if (modelObject->optionalCast<Space>()) {
-            Space space = modelObject->cast<Space>();
+            auto space = modelObject->cast<Space>();
 
             if (space.spaceType()) {
               LOG(Warn, "Overriding previously assigned SpaceType for Space '" << space.name().get() << "'");

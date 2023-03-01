@@ -62,7 +62,12 @@ namespace model {
     /** Sets \f$D = 0.05\f$ */
     explicit CurveFunctionalPressureDrop(const Model& model);
 
-    virtual ~CurveFunctionalPressureDrop() {}
+    virtual ~CurveFunctionalPressureDrop() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveFunctionalPressureDrop(const CurveFunctionalPressureDrop& other) = default;
+    CurveFunctionalPressureDrop(CurveFunctionalPressureDrop&& other) = default;
+    CurveFunctionalPressureDrop& operator=(const CurveFunctionalPressureDrop&) = default;
+    CurveFunctionalPressureDrop& operator=(CurveFunctionalPressureDrop&&) = default;
 
     //@}
 
@@ -110,7 +115,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveFunctionalPressureDrop_Impl ImplType;
+    using ImplType = detail::CurveFunctionalPressureDrop_Impl;
 
     explicit CurveFunctionalPressureDrop(std::shared_ptr<detail::CurveFunctionalPressureDrop_Impl> impl);
 
@@ -125,10 +130,10 @@ namespace model {
   };
 
   /** \relates CurveFunctionalPressureDrop*/
-  typedef boost::optional<CurveFunctionalPressureDrop> OptionalCurveFunctionalPressureDrop;
+  using OptionalCurveFunctionalPressureDrop = boost::optional<CurveFunctionalPressureDrop>;
 
   /** \relates CurveFunctionalPressureDrop*/
-  typedef std::vector<CurveFunctionalPressureDrop> CurveFunctionalPressureDropVector;
+  using CurveFunctionalPressureDropVector = std::vector<CurveFunctionalPressureDrop>;
 
 }  // namespace model
 }  // namespace openstudio

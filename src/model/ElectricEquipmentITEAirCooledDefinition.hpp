@@ -61,7 +61,12 @@ namespace model {
     /** Create ElectricEquipmentITEAirCooledDefinition with default curves **/
     explicit ElectricEquipmentITEAirCooledDefinition(const Model& model);
 
-    virtual ~ElectricEquipmentITEAirCooledDefinition() {}
+    virtual ~ElectricEquipmentITEAirCooledDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricEquipmentITEAirCooledDefinition(const ElectricEquipmentITEAirCooledDefinition& other) = default;
+    ElectricEquipmentITEAirCooledDefinition(ElectricEquipmentITEAirCooledDefinition&& other) = default;
+    ElectricEquipmentITEAirCooledDefinition& operator=(const ElectricEquipmentITEAirCooledDefinition&) = default;
+    ElectricEquipmentITEAirCooledDefinition& operator=(ElectricEquipmentITEAirCooledDefinition&&) = default;
 
     //@}
 
@@ -215,7 +220,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricEquipmentITEAirCooledDefinition_Impl ImplType;
+    using ImplType = detail::ElectricEquipmentITEAirCooledDefinition_Impl;
 
     explicit ElectricEquipmentITEAirCooledDefinition(std::shared_ptr<detail::ElectricEquipmentITEAirCooledDefinition_Impl> impl);
 
@@ -228,10 +233,10 @@ namespace model {
   };
 
   /** \relates ElectricEquipmentITEAirCooledDefinition*/
-  typedef boost::optional<ElectricEquipmentITEAirCooledDefinition> OptionalElectricEquipmentITEAirCooledDefinition;
+  using OptionalElectricEquipmentITEAirCooledDefinition = boost::optional<ElectricEquipmentITEAirCooledDefinition>;
 
   /** \relates ElectricEquipmentITEAirCooledDefinition*/
-  typedef std::vector<ElectricEquipmentITEAirCooledDefinition> ElectricEquipmentITEAirCooledDefinitionVector;
+  using ElectricEquipmentITEAirCooledDefinitionVector = std::vector<ElectricEquipmentITEAirCooledDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

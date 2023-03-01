@@ -203,7 +203,7 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalAirConditioner_clone) {
 
       model::Model m2;
 
-      model::ZoneHVACPackagedTerminalAirConditioner ptac2 = ptac.clone(m2).cast<model::ZoneHVACPackagedTerminalAirConditioner>();
+      auto ptac2 = ptac.clone(m2).cast<model::ZoneHVACPackagedTerminalAirConditioner>();
 
       ptac2.availabilitySchedule();
 

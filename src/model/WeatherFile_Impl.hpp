@@ -60,7 +60,7 @@ namespace model {
 
       WeatherFile_Impl(const WeatherFile_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WeatherFile_Impl() {}
+      virtual ~WeatherFile_Impl() = default;
 
       //@}
 
@@ -116,15 +116,15 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setCity(std::string city);
+      bool setCity(const std::string& city);
 
-      bool setStateProvinceRegion(std::string stateProvinceRegion);
+      bool setStateProvinceRegion(const std::string& stateProvinceRegion);
 
-      bool setCountry(std::string country);
+      bool setCountry(const std::string& country);
 
-      bool setDataSource(std::string dataSource);
+      bool setDataSource(const std::string& dataSource);
 
-      bool setWMONumber(std::string wMONumber);
+      bool setWMONumber(const std::string& wMONumber);
 
       bool setLatitude(double latitude);
 
@@ -138,13 +138,13 @@ namespace model {
 
       //bool setUrl(boost::optional<std::string> url);
 
-      //bool setUrl(std::string url);
+      //bool setUrl(const std::string& url);
 
       //void resetUrl();
 
       //bool setChecksum(boost::optional<std::string> checksum);
 
-      //bool setChecksum(std::string checksum);
+      //bool setChecksum(const std::string& checksum);
 
       //void resetChecksum();
 

@@ -56,7 +56,12 @@ namespace model {
    public:
     explicit AirConditionerVariableRefrigerantFlow(const Model& model);
 
-    virtual ~AirConditionerVariableRefrigerantFlow() {}
+    virtual ~AirConditionerVariableRefrigerantFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirConditionerVariableRefrigerantFlow(const AirConditionerVariableRefrigerantFlow& other) = default;
+    AirConditionerVariableRefrigerantFlow(AirConditionerVariableRefrigerantFlow&& other) = default;
+    AirConditionerVariableRefrigerantFlow& operator=(const AirConditionerVariableRefrigerantFlow&) = default;
+    AirConditionerVariableRefrigerantFlow& operator=(AirConditionerVariableRefrigerantFlow&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -226,7 +231,7 @@ namespace model {
 
     std::string heatingPerformanceCurveOutdoorTemperatureType() const;
 
-    bool setHeatingPerformanceCurveOutdoorTemperatureType(std::string heatingPerformanceCurveOutdoorTemperatureType);
+    bool setHeatingPerformanceCurveOutdoorTemperatureType(const std::string& heatingPerformanceCurveOutdoorTemperatureType);
 
     boost::optional<Curve> heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() const;
 
@@ -264,7 +269,7 @@ namespace model {
 
     std::string masterThermostatPriorityControlType() const;
 
-    bool setMasterThermostatPriorityControlType(std::string masterThermostatPriorityControlType);
+    bool setMasterThermostatPriorityControlType(const std::string& masterThermostatPriorityControlType);
 
     boost::optional<Schedule> thermostatPrioritySchedule() const;
 
@@ -326,11 +331,11 @@ namespace model {
 
     std::string defrostStrategy() const;
 
-    bool setDefrostStrategy(std::string defrostStrategy);
+    bool setDefrostStrategy(const std::string& defrostStrategy);
 
     std::string defrostControl() const;
 
-    bool setDefrostControl(std::string defrostControl);
+    bool setDefrostControl(const std::string& defrostControl);
 
     boost::optional<Curve> defrostEnergyInputRatioModifierFunctionofTemperatureCurve() const;
 
@@ -409,7 +414,7 @@ namespace model {
 
     std::string fuelType() const;
 
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
 
     /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Minimum Condenser Inlet Node Temperature in Heat Recovery Mode" **/
     double minimumOutdoorTemperatureinHeatRecoveryMode() const;
@@ -502,7 +507,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::AirConditionerVariableRefrigerantFlow_Impl ImplType;
+    using ImplType = detail::AirConditionerVariableRefrigerantFlow_Impl;
 
     explicit AirConditionerVariableRefrigerantFlow(std::shared_ptr<detail::AirConditionerVariableRefrigerantFlow_Impl> impl);
 
@@ -517,10 +522,10 @@ namespace model {
   };
 
   /** \relates AirConditionerVariableRefrigerantFlow*/
-  typedef boost::optional<AirConditionerVariableRefrigerantFlow> OptionalAirConditionerVariableRefrigerantFlow;
+  using OptionalAirConditionerVariableRefrigerantFlow = boost::optional<AirConditionerVariableRefrigerantFlow>;
 
   /** \relates AirConditionerVariableRefrigerantFlow*/
-  typedef std::vector<AirConditionerVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlowVector;
+  using AirConditionerVariableRefrigerantFlowVector = std::vector<AirConditionerVariableRefrigerantFlow>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -53,7 +53,7 @@ namespace model {
 
       ControllerWaterCoil_Impl(const ControllerWaterCoil_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ControllerWaterCoil_Impl() {}
+      virtual ~ControllerWaterCoil_Impl() = default;
 
       //@}
       virtual const std::vector<std::string>& outputVariableNames() const override;

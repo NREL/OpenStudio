@@ -51,7 +51,7 @@ namespace model {
 
       ChillerElectricReformulatedEIR_Impl(const ChillerElectricReformulatedEIR_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ChillerElectricReformulatedEIR_Impl() {}
+      virtual ~ChillerElectricReformulatedEIR_Impl() = default;
 
       /** @name Virtual Methods */
       //@{
@@ -216,7 +216,7 @@ namespace model {
 
       bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve&);
 
-      bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(std::string electricInputToCoolingOutputRatioFunctionOfPLRType);
+      bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(const std::string& electricInputToCoolingOutputRatioFunctionOfPLRType);
 
       void resetElectricInputToCoolingOutputRatioFunctionOfPLRType();
 
@@ -246,7 +246,7 @@ namespace model {
 
       void resetLeavingChilledWaterLowerTemperatureLimit();
 
-      bool setChillerFlowMode(std::string chillerFlowMode);
+      bool setChillerFlowMode(const std::string& chillerFlowMode);
 
       void resetChillerFlowMode();
 

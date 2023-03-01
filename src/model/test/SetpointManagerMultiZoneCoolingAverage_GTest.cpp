@@ -74,7 +74,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneCoolingAverage_addToNode) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerMultiZoneCoolingAverage> SetpointManagerMultiZoneCoolingAverages =
-    m.getModelObjects<SetpointManagerMultiZoneCoolingAverage>();
+    m.getConcreteModelObjects<SetpointManagerMultiZoneCoolingAverage>();
   EXPECT_EQ(3, SetpointManagerMultiZoneCoolingAverages.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode().get());
@@ -84,7 +84,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneCoolingAverage_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
   EXPECT_EQ(1, _setpointManagers.size());
-  SetpointManagerMultiZoneCoolingAverages = m.getModelObjects<SetpointManagerMultiZoneCoolingAverage>();
+  SetpointManagerMultiZoneCoolingAverages = m.getConcreteModelObjects<SetpointManagerMultiZoneCoolingAverage>();
   EXPECT_EQ(2, SetpointManagerMultiZoneCoolingAverages.size());
 }
 
@@ -101,14 +101,14 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneCoolingAverage_remove) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerMultiZoneCoolingAverage> SetpointManagerMultiZoneCoolingAverages =
-    m.getModelObjects<SetpointManagerMultiZoneCoolingAverage>();
+    m.getConcreteModelObjects<SetpointManagerMultiZoneCoolingAverage>();
   EXPECT_EQ(1, SetpointManagerMultiZoneCoolingAverages.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  SetpointManagerMultiZoneCoolingAverages = m.getModelObjects<SetpointManagerMultiZoneCoolingAverage>();
+  SetpointManagerMultiZoneCoolingAverages = m.getConcreteModelObjects<SetpointManagerMultiZoneCoolingAverage>();
   EXPECT_EQ(0, SetpointManagerMultiZoneCoolingAverages.size());
 }
 
@@ -123,7 +123,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneCoolingAverage_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerMultiZoneCoolingAverage testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneCoolingAverage>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneCoolingAverage>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -148,7 +148,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneCoolingAverage_customDataClone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerMultiZoneCoolingAverage testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneCoolingAverage>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneCoolingAverage>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

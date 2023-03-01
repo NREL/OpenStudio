@@ -32,6 +32,7 @@
 #include "Intersection.hpp"
 #include "../data/Matrix.hpp"
 #include "../core/Assert.hpp"
+#include "../core/ContainersMove.hpp"
 #include "../core/Logger.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
@@ -247,9 +248,7 @@ BoostPolygon removeSpikes(const BoostPolygon& polygon) {
 std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons) {
   std::vector<BoostPolygon> result;
   for (const BoostPolygon& polygon : polygons) {
-    auto v = removeSpikesEx(polygon);
-    result.reserve(result.size() + v.size());
-    result.insert(result.end(), std::make_move_iterator(v.begin()), std::make_move_iterator(v.end()));
+    openstudio::detail::concat_helper(result, removeSpikesEx(polygon));
   }
   return result;
 }

@@ -55,7 +55,12 @@ namespace model {
 
     explicit AirTerminalSingleDuctSeriesPIUReheat(const Model& model, HVACComponent& fan, HVACComponent& reheatCoil);
 
-    virtual ~AirTerminalSingleDuctSeriesPIUReheat() {}
+    virtual ~AirTerminalSingleDuctSeriesPIUReheat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalSingleDuctSeriesPIUReheat(const AirTerminalSingleDuctSeriesPIUReheat& other) = default;
+    AirTerminalSingleDuctSeriesPIUReheat(AirTerminalSingleDuctSeriesPIUReheat&& other) = default;
+    AirTerminalSingleDuctSeriesPIUReheat& operator=(const AirTerminalSingleDuctSeriesPIUReheat&) = default;
+    AirTerminalSingleDuctSeriesPIUReheat& operator=(AirTerminalSingleDuctSeriesPIUReheat&&) = default;
 
     //@}
 
@@ -142,7 +147,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctSeriesPIUReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctSeriesPIUReheat_Impl;
 
     explicit AirTerminalSingleDuctSeriesPIUReheat(std::shared_ptr<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl> impl);
 
@@ -156,10 +161,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctSeriesPIUReheat*/
-  typedef boost::optional<AirTerminalSingleDuctSeriesPIUReheat> OptionalAirTerminalSingleDuctSeriesPIUReheat;
+  using OptionalAirTerminalSingleDuctSeriesPIUReheat = boost::optional<AirTerminalSingleDuctSeriesPIUReheat>;
 
   /** \relates AirTerminalSingleDuctSeriesPIUReheat*/
-  typedef std::vector<AirTerminalSingleDuctSeriesPIUReheat> AirTerminalSingleDuctSeriesPIUReheatVector;
+  using AirTerminalSingleDuctSeriesPIUReheatVector = std::vector<AirTerminalSingleDuctSeriesPIUReheat>;
 
 }  // namespace model
 }  // namespace openstudio

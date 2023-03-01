@@ -64,7 +64,12 @@ namespace model {
                                                               double moistureEquationCoefficientC, double moistureEquationCoefficientD,
                                                               double coatingLayerThickness, double coatingLayerWaterVaporDiffusionResistanceFactor);
 
-    virtual ~MaterialPropertyMoisturePenetrationDepthSettings() {}
+    virtual ~MaterialPropertyMoisturePenetrationDepthSettings() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    MaterialPropertyMoisturePenetrationDepthSettings(const MaterialPropertyMoisturePenetrationDepthSettings& other) = default;
+    MaterialPropertyMoisturePenetrationDepthSettings(MaterialPropertyMoisturePenetrationDepthSettings&& other) = default;
+    MaterialPropertyMoisturePenetrationDepthSettings& operator=(const MaterialPropertyMoisturePenetrationDepthSettings&) = default;
+    MaterialPropertyMoisturePenetrationDepthSettings& operator=(MaterialPropertyMoisturePenetrationDepthSettings&&) = default;
 
     //@}
 
@@ -137,7 +142,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl ImplType;
+    using ImplType = detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl;
 
     explicit MaterialPropertyMoisturePenetrationDepthSettings(std::shared_ptr<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl> impl);
 
@@ -151,10 +156,10 @@ namespace model {
   };
 
   /** \relates MaterialPropertyMoisturePenetrationDepthSettings*/
-  typedef boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> OptionalMaterialPropertyMoisturePenetrationDepthSettings;
+  using OptionalMaterialPropertyMoisturePenetrationDepthSettings = boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>;
 
   /** \relates MaterialPropertyMoisturePenetrationDepthSettings*/
-  typedef std::vector<MaterialPropertyMoisturePenetrationDepthSettings> MaterialPropertyMoisturePenetrationDepthSettingsVector;
+  using MaterialPropertyMoisturePenetrationDepthSettingsVector = std::vector<MaterialPropertyMoisturePenetrationDepthSettings>;
 
 }  // namespace model
 }  // namespace openstudio

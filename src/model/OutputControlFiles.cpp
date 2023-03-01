@@ -309,7 +309,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType OutputControlFiles::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_OutputControl_Files);
+    return {IddObjectType::OS_OutputControl_Files};
   }
 
   bool OutputControlFiles::outputCSV() const {

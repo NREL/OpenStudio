@@ -51,7 +51,7 @@ inline std::string applicationFilePath() {
   char path[PATH_MAX + 1];
   uint32_t size = sizeof(path);
   if (_NSGetExecutablePath(path, &size) == 0) {
-    return std::string(path);
+    return {path};
   }
 #elif defined _WIN32
   TCHAR szPath[MAX_PATH];
@@ -59,7 +59,7 @@ inline std::string applicationFilePath() {
     return std::string(szPath);
   }
 #endif
-  return std::string();
+  return {};
 }
 
 }  // namespace embedded_help

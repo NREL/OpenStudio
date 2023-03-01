@@ -52,7 +52,12 @@ namespace model {
 
     explicit ExternalInterfaceFunctionalMockupUnitImport(const Model& model, const std::string& fmuName);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitImport() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitImport() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterfaceFunctionalMockupUnitImport(const ExternalInterfaceFunctionalMockupUnitImport& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImport(ExternalInterfaceFunctionalMockupUnitImport&& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImport& operator=(const ExternalInterfaceFunctionalMockupUnitImport&) = default;
+    ExternalInterfaceFunctionalMockupUnitImport& operator=(ExternalInterfaceFunctionalMockupUnitImport&&) = default;
 
     //@}
 
@@ -92,7 +97,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceFunctionalMockupUnitImport_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceFunctionalMockupUnitImport_Impl;
 
     explicit ExternalInterfaceFunctionalMockupUnitImport(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl> impl);
 
@@ -106,10 +111,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceFunctionalMockupUnitImport*/
-  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImport> OptionalExternalInterfaceFunctionalMockupUnitImport;
+  using OptionalExternalInterfaceFunctionalMockupUnitImport = boost::optional<ExternalInterfaceFunctionalMockupUnitImport>;
 
   /** \relates ExternalInterfaceFunctionalMockupUnitImport*/
-  typedef std::vector<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfaceFunctionalMockupUnitImportVector;
+  using ExternalInterfaceFunctionalMockupUnitImportVector = std::vector<ExternalInterfaceFunctionalMockupUnitImport>;
 
 }  // namespace model
 }  // namespace openstudio

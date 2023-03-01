@@ -238,7 +238,7 @@ namespace model {
   }
 
   IddObjectType SolarCollectorPerformanceFlatPlate::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SolarCollectorPerformance_FlatPlate);
+    return {IddObjectType::OS_SolarCollectorPerformance_FlatPlate};
   }
 
   std::vector<std::string> SolarCollectorPerformanceFlatPlate::testFluidValues() {

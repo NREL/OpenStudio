@@ -70,7 +70,7 @@ namespace model {
 
       ThermalZone_Impl(const ThermalZone_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ThermalZone_Impl() {}
+      virtual ~ThermalZone_Impl() = default;
 
       //@}
 
@@ -168,17 +168,17 @@ namespace model {
 
       bool setZoneInsideConvectionAlgorithm(boost::optional<std::string> zoneInsideConvectionAlgorithm);
 
-      bool setZoneInsideConvectionAlgorithm(std::string zoneInsideConvectionAlgorithm);
+      bool setZoneInsideConvectionAlgorithm(const std::string& zoneInsideConvectionAlgorithm);
 
       void resetZoneInsideConvectionAlgorithm();
 
       bool setZoneOutsideConvectionAlgorithm(boost::optional<std::string> zoneOutsideConvectionAlgorithm);
 
-      bool setZoneOutsideConvectionAlgorithm(std::string zoneOutsideConvectionAlgorithm);
+      bool setZoneOutsideConvectionAlgorithm(const std::string& zoneOutsideConvectionAlgorithm);
 
       void resetZoneOutsideConvectionAlgorithm();
 
-      bool setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
+      bool setZoneConditioningEquipmentListName(const std::string& zoneConditioningEquipmentListName);
 
       bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint& thermostat);
 
@@ -389,7 +389,7 @@ namespace model {
 
       std::string loadDistributionScheme() const;
 
-      bool setLoadDistributionScheme(std::string scheme);
+      bool setLoadDistributionScheme(const std::string& scheme);
 
       bool setCoolingPriority(const ModelObject& equipment, unsigned priority);
 

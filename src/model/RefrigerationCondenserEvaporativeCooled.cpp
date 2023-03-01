@@ -108,17 +108,18 @@ namespace model {
     }
 
     ModelObject RefrigerationCondenserEvaporativeCooled_Impl::clone(Model model) const {
-      RefrigerationCondenserEvaporativeCooled modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
 
       //modelObjectClone.resetAirInletNode();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<ScheduleTypeKey> RefrigerationCondenserEvaporativeCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeCondenserAvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationCondenserEvaporativeCooled", "Evaporative Condenser Availability"));
       }
@@ -354,7 +355,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCondenserEvaporativeCooled_Impl::setFanSpeedControlType(std::string fanSpeedControlType) {
+    bool RefrigerationCondenserEvaporativeCooled_Impl::setFanSpeedControlType(const std::string& fanSpeedControlType) {
       bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::FanSpeedControlType, fanSpeedControlType);
       return result;
     }
@@ -441,7 +442,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    // bool RefrigerationCondenserEvaporativeCooled_Impl::setAirInletNode(std::string airInletNode) {
+    // bool RefrigerationCondenserEvaporativeCooled_Impl::setAirInletNode(const std::string& airInletNode) {
     //   bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName, airInletNode);
     //   return result;
     // }
@@ -543,7 +544,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCondenserEvaporativeCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationCondenserEvaporativeCooled_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -598,7 +599,7 @@ namespace model {
       std::vector<RefrigerationSystem> systems =
         getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
 
-      if (systems.size() > 0u) {
+      if (!systems.empty()) {
         if (systems.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
         }
@@ -642,7 +643,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCondenserEvaporativeCooled::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled);
+    return {IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled};
   }
 
   std::vector<std::string> RefrigerationCondenserEvaporativeCooled::fanSpeedControlTypeValues() {
@@ -828,7 +829,7 @@ namespace model {
     getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetRatedSubcoolingTemperatureDifference();
   }
 
-  bool RefrigerationCondenserEvaporativeCooled::setFanSpeedControlType(std::string fanSpeedControlType) {
+  bool RefrigerationCondenserEvaporativeCooled::setFanSpeedControlType(const std::string& fanSpeedControlType) {
     return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setFanSpeedControlType(fanSpeedControlType);
   }
 
@@ -896,7 +897,7 @@ namespace model {
     getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetMaximumCapacityFactor();
   }
 
-  // bool RefrigerationCondenserEvaporativeCooled::setAirInletNode(std::string airInletNode) {
+  // bool RefrigerationCondenserEvaporativeCooled::setAirInletNode(const std::string& airInletNode) {
   //   return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setAirInletNode(airInletNode);
   // }
 
@@ -960,7 +961,7 @@ void RefrigerationCondenserEvaporativeCooled::resetEvaporativeWaterSupplyTank() 
     getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetEvaporativeCondenserAvailabilitySchedule();
   }
 
-  bool RefrigerationCondenserEvaporativeCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserEvaporativeCooled::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

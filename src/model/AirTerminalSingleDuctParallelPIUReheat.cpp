@@ -98,7 +98,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalSingleDuctParallelPIUReheat_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctParallelPIUReheat", "Availability"));
       }
@@ -385,7 +386,7 @@ namespace model {
     }
 
     ModelObject AirTerminalSingleDuctParallelPIUReheat_Impl::clone(Model model) const {
-      AirTerminalSingleDuctParallelPIUReheat modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctParallelPIUReheat>();
+      auto modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctParallelPIUReheat>();
 
       modelObjectClone.setString(modelObjectClone.secondaryAirInletPort(), "");
 
@@ -393,7 +394,7 @@ namespace model {
 
       HVACComponent coil = this->reheatCoil();
 
-      HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
+      auto coilClone = coil.clone(model).cast<HVACComponent>();
 
       modelObjectClone.setReheatCoil(coilClone);
 
@@ -401,11 +402,11 @@ namespace model {
 
       HVACComponent fan = this->fan();
 
-      HVACComponent fanClone = fan.clone(model).cast<HVACComponent>();
+      auto fanClone = fan.clone(model).cast<HVACComponent>();
 
       modelObjectClone.setFan(fanClone);
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     bool AirTerminalSingleDuctParallelPIUReheat_Impl::addToNode(Node& node) {
@@ -427,7 +428,7 @@ namespace model {
               if (sourcePort && sourceModelObject) {
                 Node inletNode(_model);
 
-                ModelObject thisObject = getObject<ModelObject>();
+                auto thisObject = getObject<ModelObject>();
 
                 _model.connect(sourceModelObject.get(), sourcePort.get(), inletNode, inletNode.inletPort());
 
@@ -444,7 +445,7 @@ namespace model {
 
                   _model.connect(secondaryInletNode, secondaryInletNode.outletPort(), thisObject, secondaryAirInletPort());
 
-                  ModelObject mo = this->getObject<ModelObject>();
+                  auto mo = this->getObject<ModelObject>();
 
                   thermalZone->addEquipment(mo);
                 }
@@ -466,7 +467,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctParallelPIUReheat_Impl::remove() {
       Model _model = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
 
       HVACComponent _reheatCoil = reheatCoil();
 
@@ -714,7 +715,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalSingleDuctParallelPIUReheat::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat);
+    return {IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat};
   }
 
   boost::optional<double> AirTerminalSingleDuctParallelPIUReheat::maximumPrimaryAirFlowRate() const {

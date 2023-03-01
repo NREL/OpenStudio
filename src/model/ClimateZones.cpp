@@ -75,7 +75,7 @@ namespace model {
       IdfExtensibleGroup eg = getExtensibleGroup(index);
       if (eg.empty()) {
         std::shared_ptr<ClimateZones_Impl> p;
-        return ClimateZone(p, numFields());
+        return {p, numFields()};
       }
       return eg.cast<ClimateZone>();
     }
@@ -137,7 +137,7 @@ namespace model {
                                                                      << " such listings, not 1.");
         return result;
       }
-      if (candidates.size() == 0) {
+      if (candidates.empty()) {
         return appendClimateZone(institution, value);
       }
       bool ok = candidates[0].setValue(value);
@@ -186,7 +186,7 @@ namespace model {
       IdfExtensibleGroup eg = pushExtensibleGroup(values);
       if (eg.empty()) {
         std::shared_ptr<ClimateZones_Impl> p;
-        return ClimateZone(p, numFields());
+        return {p, numFields()};
       }
       return eg.cast<ClimateZone>();
     }

@@ -52,7 +52,12 @@ namespace model {
 
     explicit EnergyManagementSystemProgramCallingManager(const Model& model);
 
-    virtual ~EnergyManagementSystemProgramCallingManager() {}
+    virtual ~EnergyManagementSystemProgramCallingManager() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemProgramCallingManager(const EnergyManagementSystemProgramCallingManager& other) = default;
+    EnergyManagementSystemProgramCallingManager(EnergyManagementSystemProgramCallingManager&& other) = default;
+    EnergyManagementSystemProgramCallingManager& operator=(const EnergyManagementSystemProgramCallingManager&) = default;
+    EnergyManagementSystemProgramCallingManager& operator=(EnergyManagementSystemProgramCallingManager&&) = default;
 
     //@}
 
@@ -92,7 +97,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemProgramCallingManager_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemProgramCallingManager_Impl;
 
     explicit EnergyManagementSystemProgramCallingManager(std::shared_ptr<detail::EnergyManagementSystemProgramCallingManager_Impl> impl);
 
@@ -106,10 +111,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemProgramCallingManager*/
-  typedef boost::optional<EnergyManagementSystemProgramCallingManager> OptionalEnergyManagementSystemProgramCallingManager;
+  using OptionalEnergyManagementSystemProgramCallingManager = boost::optional<EnergyManagementSystemProgramCallingManager>;
 
   /** \relates EnergyManagementSystemProgramCallingManager*/
-  typedef std::vector<EnergyManagementSystemProgramCallingManager> EnergyManagementSystemProgramCallingManagerVector;
+  using EnergyManagementSystemProgramCallingManagerVector = std::vector<EnergyManagementSystemProgramCallingManager>;
 
 }  // namespace model
 }  // namespace openstudio

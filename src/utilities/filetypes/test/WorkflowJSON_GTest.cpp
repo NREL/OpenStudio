@@ -286,7 +286,7 @@ TEST(Filetypes, WorkflowJSON_Min) {
     ASSERT_EQ(3u, workflowSteps.size());
 
     ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
-    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    auto measureStep = workflowSteps[0].cast<MeasureStep>();
     EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
     ASSERT_TRUE(measureStep.getArgument("cost"));
     ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
@@ -341,7 +341,7 @@ TEST(Filetypes, WorkflowJSON_Min) {
     ASSERT_EQ(3u, workflowSteps.size());
 
     ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
-    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    auto measureStep = workflowSteps[0].cast<MeasureStep>();
     EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
     ASSERT_TRUE(measureStep.getArgument("cost"));
     ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
@@ -408,7 +408,7 @@ TEST(Filetypes, WorkflowJSON_Min) {
     ASSERT_EQ(3u, workflowSteps.size());
 
     ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
-    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    auto measureStep = workflowSteps[0].cast<MeasureStep>();
     EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
     ASSERT_TRUE(measureStep.getArgument("cost"));
     ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
@@ -463,7 +463,7 @@ TEST(Filetypes, WorkflowJSON_Min) {
     ASSERT_EQ(3u, workflowSteps.size());
 
     ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
-    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    auto measureStep = workflowSteps[0].cast<MeasureStep>();
     EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
     ASSERT_TRUE(measureStep.getArgument("cost"));
     ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
@@ -556,7 +556,7 @@ TEST(Filetypes, WorkflowJSON_Full) {
     boost::optional<BCLMeasure> measure;
 
     ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
-    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    auto measureStep = workflowSteps[0].cast<MeasureStep>();
     measure = workflow.getBCLMeasure(measureStep);
     ASSERT_TRUE(measure);
     measures.push_back(measure.get());
@@ -628,7 +628,7 @@ TEST(Filetypes, WorkflowJSON_Full) {
     boost::optional<BCLMeasure> measure;
 
     ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
-    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    auto measureStep = workflowSteps[0].cast<MeasureStep>();
     measure = workflow.getBCLMeasure(measureStep);
     ASSERT_TRUE(measure);
     measures.push_back(measure.get());
@@ -685,7 +685,7 @@ TEST(Filetypes, WorkflowJSON_Min_Results) {
     ASSERT_EQ(3u, workflowSteps.size());
 
     ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
-    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    auto measureStep = workflowSteps[0].cast<MeasureStep>();
     EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
     ASSERT_TRUE(measureStep.getArgument("cost"));
     ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
@@ -747,7 +747,7 @@ TEST(Filetypes, WorkflowJSON_Min_Results) {
     ASSERT_EQ(3u, workflowSteps.size());
 
     ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
-    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
+    auto measureStep = workflowSteps[0].cast<MeasureStep>();
     EXPECT_EQ("IncreaseWallRValue", measureStep.measureDirName());
     ASSERT_TRUE(measureStep.getArgument("cost"));
     ASSERT_EQ(VariantType::Double, measureStep.getArgument("cost")->variantType().value());
@@ -809,7 +809,7 @@ TEST(Filetypes, WorkflowStep_EscapeCharacters) {
   boost::optional<WorkflowStep> temp = WorkflowStep::fromString(step.string());
   ASSERT_TRUE(temp);
   ASSERT_TRUE(temp->optionalCast<MeasureStep>());
-  MeasureStep step2 = temp->cast<MeasureStep>();
+  auto step2 = temp->cast<MeasureStep>();
 
   std::cout << step.string() << '\n';
 
@@ -832,7 +832,7 @@ TEST(Filetypes, WorkflowStep_EscapeCharacters2) {
   boost::optional<WorkflowStep> temp = WorkflowStep::fromString(step.string());
   ASSERT_TRUE(temp);
   ASSERT_TRUE(temp->optionalCast<MeasureStep>());
-  MeasureStep step2 = temp->cast<MeasureStep>();
+  auto step2 = temp->cast<MeasureStep>();
 
   std::cout << step.string() << '\n';
 

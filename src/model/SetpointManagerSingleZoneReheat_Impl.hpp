@@ -50,7 +50,7 @@ namespace model {
 
       SetpointManagerSingleZoneReheat_Impl(const SetpointManagerSingleZoneReheat_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~SetpointManagerSingleZoneReheat_Impl();
+      virtual ~SetpointManagerSingleZoneReheat_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

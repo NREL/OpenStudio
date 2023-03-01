@@ -72,7 +72,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVHeatAndCoolReheat) {
     ASSERT_EQ(1u, zone.equipment().size());
 
     ASSERT_EQ(1u, terminal.getImpl<model::detail::HVACComponent_Impl>()->children().size());
-    AirTerminalSingleDuctVAVHeatAndCoolReheat terminal2 = terminal.clone(m).cast<AirTerminalSingleDuctVAVHeatAndCoolReheat>();
+    auto terminal2 = terminal.clone(m).cast<AirTerminalSingleDuctVAVHeatAndCoolReheat>();
     ASSERT_EQ(1u, terminal2.getImpl<model::detail::HVACComponent_Impl>()->children().size());
 
     Model m2;

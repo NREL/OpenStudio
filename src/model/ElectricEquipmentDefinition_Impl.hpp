@@ -54,7 +54,7 @@ namespace model {
 
       ElectricEquipmentDefinition_Impl(const ElectricEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricEquipmentDefinition_Impl() {}
+      virtual ~ElectricEquipmentDefinition_Impl() = default;
 
       //@}
 

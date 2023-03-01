@@ -51,7 +51,7 @@ namespace model {
 
       EnergyManagementSystemGlobalVariable_Impl(const EnergyManagementSystemGlobalVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnergyManagementSystemGlobalVariable_Impl() {}
+      virtual ~EnergyManagementSystemGlobalVariable_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

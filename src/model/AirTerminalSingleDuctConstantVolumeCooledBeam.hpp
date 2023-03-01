@@ -59,7 +59,12 @@ namespace model {
 
     explicit AirTerminalSingleDuctConstantVolumeCooledBeam(const Model& model, Schedule& availabilitySchedule, HVACComponent& coilCoolingCooledBeam);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalSingleDuctConstantVolumeCooledBeam(const AirTerminalSingleDuctConstantVolumeCooledBeam& other) = default;
+    AirTerminalSingleDuctConstantVolumeCooledBeam(AirTerminalSingleDuctConstantVolumeCooledBeam&& other) = default;
+    AirTerminalSingleDuctConstantVolumeCooledBeam& operator=(const AirTerminalSingleDuctConstantVolumeCooledBeam&) = default;
+    AirTerminalSingleDuctConstantVolumeCooledBeam& operator=(AirTerminalSingleDuctConstantVolumeCooledBeam&&) = default;
 
     //@}
 
@@ -122,7 +127,7 @@ namespace model {
 
     bool setCoolingCoil(HVACComponent& coilCoolingCooledBeam);
 
-    bool setCooledBeamType(std::string cooledBeamType);
+    bool setCooledBeamType(const std::string& cooledBeamType);
 
     bool setSupplyAirVolumetricFlowRate(double supplyAirVolumetricFlowRate);
 
@@ -185,7 +190,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl;
 
     explicit AirTerminalSingleDuctConstantVolumeCooledBeam(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl> impl);
 
@@ -199,10 +204,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctConstantVolumeCooledBeam*/
-  typedef boost::optional<AirTerminalSingleDuctConstantVolumeCooledBeam> OptionalAirTerminalSingleDuctConstantVolumeCooledBeam;
+  using OptionalAirTerminalSingleDuctConstantVolumeCooledBeam = boost::optional<AirTerminalSingleDuctConstantVolumeCooledBeam>;
 
   /** \relates AirTerminalSingleDuctConstantVolumeCooledBeam*/
-  typedef std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam> AirTerminalSingleDuctConstantVolumeCooledBeamVector;
+  using AirTerminalSingleDuctConstantVolumeCooledBeamVector = std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -103,7 +103,8 @@ namespace model {
     std::vector<ScheduleTypeKey> Lights_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_LightsFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("Lights", "Lighting"));
       }
@@ -119,7 +120,7 @@ namespace model {
       this->makeUnique();
 
       LightsDefinition lightsDefinition = this->lightsDefinition();
-      for (LifeCycleCost cost : lightsDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : lightsDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 
@@ -208,7 +209,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Lights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool Lights_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_LightsFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -412,7 +413,7 @@ namespace model {
     getImpl<detail::Lights_Impl>()->resetMultiplier();
   }
 
-  bool Lights::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool Lights::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::Lights_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

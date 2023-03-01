@@ -55,7 +55,7 @@ namespace model {
 
       SpaceInfiltrationFlowCoefficient_Impl(const SpaceInfiltrationFlowCoefficient_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SpaceInfiltrationFlowCoefficient_Impl() {}
+      virtual ~SpaceInfiltrationFlowCoefficient_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

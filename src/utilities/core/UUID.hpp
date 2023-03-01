@@ -107,10 +107,10 @@ UTILITIES_API const boost::regex& uuidInString();
 UTILITIES_API std::string createUniqueName(const std::string& prefix);
 
 /// optional UUID
-typedef boost::optional<UUID> OptionalUUID;
+using OptionalUUID = boost::optional<UUID>;
 
 /// vector of UUID
-typedef std::vector<UUID> UUIDVector;
+using UUIDVector = std::vector<UUID>;
 
 }  // namespace openstudio
 

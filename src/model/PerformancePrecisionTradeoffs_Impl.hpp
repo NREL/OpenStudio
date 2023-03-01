@@ -53,7 +53,7 @@ namespace model {
 
       PerformancePrecisionTradeoffs_Impl(const PerformancePrecisionTradeoffs_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PerformancePrecisionTradeoffs_Impl() {}
+      virtual ~PerformancePrecisionTradeoffs_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

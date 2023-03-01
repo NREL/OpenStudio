@@ -138,7 +138,7 @@ TEST_F(ModelFixture, Node_Remove) {
   EXPECT_EQ(3, _setpointManagers.size());
   std::vector<SetpointManager> setpointManagers = m.getModelObjects<SetpointManager>();
   EXPECT_EQ(3, setpointManagers.size());
-  std::vector<Node> nodes = m.getModelObjects<Node>();
+  std::vector<Node> nodes = m.getConcreteModelObjects<Node>();
   EXPECT_EQ(1, nodes.size());
 
   EXPECT_TRUE(_node.isRemovable());
@@ -148,7 +148,7 @@ TEST_F(ModelFixture, Node_Remove) {
   EXPECT_EQ(0, _setpointManagers.size());
   setpointManagers = m.getModelObjects<SetpointManager>();
   EXPECT_EQ(0, setpointManagers.size());
-  nodes = m.getModelObjects<Node>();
+  nodes = m.getConcreteModelObjects<Node>();
   EXPECT_EQ(0, nodes.size());
 }
 
@@ -161,7 +161,7 @@ TEST_F(ModelFixture, Node_SetpointManagerSingleZoneReheat) {
 
   std::vector<SetpointManager> _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  std::vector<SetpointManagerSingleZoneReheat> setpointManagerSingleZoneReheats = m.getModelObjects<SetpointManagerSingleZoneReheat>();
+  std::vector<SetpointManagerSingleZoneReheat> setpointManagerSingleZoneReheats = m.getConcreteModelObjects<SetpointManagerSingleZoneReheat>();
   EXPECT_EQ(0, setpointManagerSingleZoneReheats.size());
 
   SetpointManagerSingleZoneReheat spm(m);
@@ -176,7 +176,7 @@ TEST_F(ModelFixture, Node_SetpointManagerSingleZoneReheat) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerSingleZoneReheats = m.getModelObjects<SetpointManagerSingleZoneReheat>();
+  setpointManagerSingleZoneReheats = m.getConcreteModelObjects<SetpointManagerSingleZoneReheat>();
   EXPECT_EQ(1, setpointManagerSingleZoneReheats.size());
 
   OptionalSetpointManagerSingleZoneReheat nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerSingleZoneReheat>();
@@ -187,7 +187,7 @@ TEST_F(ModelFixture, Node_SetpointManagerSingleZoneReheat) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerSingleZoneReheats = m.getModelObjects<SetpointManagerSingleZoneReheat>();
+  setpointManagerSingleZoneReheats = m.getConcreteModelObjects<SetpointManagerSingleZoneReheat>();
   EXPECT_EQ(0, setpointManagerSingleZoneReheats.size());
 }
 
@@ -205,7 +205,7 @@ TEST_F(ModelFixture, Node_SetpointManagerMixedAir) {
 
   std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  std::vector<SetpointManagerMixedAir> setpointManagerMixedAirs = m.getModelObjects<SetpointManagerMixedAir>();
+  std::vector<SetpointManagerMixedAir> setpointManagerMixedAirs = m.getConcreteModelObjects<SetpointManagerMixedAir>();
   EXPECT_EQ(0, setpointManagerMixedAirs.size());
 
   SetpointManagerMixedAir spm(m);
@@ -224,7 +224,7 @@ TEST_F(ModelFixture, Node_SetpointManagerMixedAir) {
 
   _setpointManagers = node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerMixedAirs = m.getModelObjects<SetpointManagerMixedAir>();
+  setpointManagerMixedAirs = m.getConcreteModelObjects<SetpointManagerMixedAir>();
   EXPECT_EQ(1, setpointManagerMixedAirs.size());
 
   OptionalSetpointManagerMixedAir nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerMixedAir>();
@@ -235,7 +235,7 @@ TEST_F(ModelFixture, Node_SetpointManagerMixedAir) {
 
   _setpointManagers = node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerMixedAirs = m.getModelObjects<SetpointManagerMixedAir>();
+  setpointManagerMixedAirs = m.getConcreteModelObjects<SetpointManagerMixedAir>();
   EXPECT_EQ(0, setpointManagerMixedAirs.size());
 }
 
@@ -248,7 +248,7 @@ TEST_F(ModelFixture, Node_SetpointManagerScheduled) {
 
   std::vector<SetpointManager> _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  std::vector<SetpointManagerScheduled> setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
+  std::vector<SetpointManagerScheduled> setpointManagerScheduleds = m.getConcreteModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(0, setpointManagerScheduleds.size());
 
   SetpointManagerScheduled spm(m, tempSch);
@@ -258,7 +258,7 @@ TEST_F(ModelFixture, Node_SetpointManagerScheduled) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
+  setpointManagerScheduleds = m.getConcreteModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(1, setpointManagerScheduleds.size());
 
   boost::optional<SetpointManagerScheduled> nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerScheduled>();
@@ -269,7 +269,7 @@ TEST_F(ModelFixture, Node_SetpointManagerScheduled) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
+  setpointManagerScheduleds = m.getConcreteModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(0, setpointManagerScheduleds.size());
 }
 
@@ -281,7 +281,7 @@ TEST_F(ModelFixture, Node_SetpointManagerFollowOutdoorAirTemperature) {
   std::vector<SetpointManager> _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
   std::vector<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperatures =
-    m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
+    m.getConcreteModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_EQ(0, setpointManagerFollowOutdoorAirTemperatures.size());
 
   SetpointManagerFollowOutdoorAirTemperature spm(m);
@@ -291,7 +291,7 @@ TEST_F(ModelFixture, Node_SetpointManagerFollowOutdoorAirTemperature) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerFollowOutdoorAirTemperatures = m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
+  setpointManagerFollowOutdoorAirTemperatures = m.getConcreteModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_EQ(1, setpointManagerFollowOutdoorAirTemperatures.size());
 
   boost::optional<SetpointManagerFollowOutdoorAirTemperature> nodeSPM =
@@ -303,7 +303,7 @@ TEST_F(ModelFixture, Node_SetpointManagerFollowOutdoorAirTemperature) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerFollowOutdoorAirTemperatures = m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
+  setpointManagerFollowOutdoorAirTemperatures = m.getConcreteModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_EQ(0, setpointManagerFollowOutdoorAirTemperatures.size());
 }
 
@@ -314,7 +314,7 @@ TEST_F(ModelFixture, Node_SetpointManagerOutdoorAirReset) {
 
   std::vector<SetpointManager> _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  std::vector<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirResets = m.getModelObjects<SetpointManagerOutdoorAirReset>();
+  std::vector<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirResets = m.getConcreteModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(0, setpointManagerOutdoorAirResets.size());
 
   SetpointManagerOutdoorAirReset spm(m);
@@ -324,7 +324,7 @@ TEST_F(ModelFixture, Node_SetpointManagerOutdoorAirReset) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerOutdoorAirResets = m.getModelObjects<SetpointManagerOutdoorAirReset>();
+  setpointManagerOutdoorAirResets = m.getConcreteModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(1, setpointManagerOutdoorAirResets.size());
 
   OptionalSetpointManagerOutdoorAirReset nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerOutdoorAirReset>();
@@ -335,7 +335,7 @@ TEST_F(ModelFixture, Node_SetpointManagerOutdoorAirReset) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerOutdoorAirResets = m.getModelObjects<SetpointManagerOutdoorAirReset>();
+  setpointManagerOutdoorAirResets = m.getConcreteModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(0, setpointManagerOutdoorAirResets.size());
 }
 
@@ -346,7 +346,7 @@ TEST_F(ModelFixture, Node_SetpointManagerWarmest) {
 
   std::vector<SetpointManager> _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  std::vector<SetpointManagerWarmest> setpointManagerWarmests = m.getModelObjects<SetpointManagerWarmest>();
+  std::vector<SetpointManagerWarmest> setpointManagerWarmests = m.getConcreteModelObjects<SetpointManagerWarmest>();
   EXPECT_EQ(0, setpointManagerWarmests.size());
 
   SetpointManagerWarmest spm(m);
@@ -356,7 +356,7 @@ TEST_F(ModelFixture, Node_SetpointManagerWarmest) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerWarmests = m.getModelObjects<SetpointManagerWarmest>();
+  setpointManagerWarmests = m.getConcreteModelObjects<SetpointManagerWarmest>();
   EXPECT_EQ(1, setpointManagerWarmests.size());
 
   OptionalSetpointManagerWarmest nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerWarmest>();
@@ -367,7 +367,7 @@ TEST_F(ModelFixture, Node_SetpointManagerWarmest) {
 
   _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerWarmests = m.getModelObjects<SetpointManagerWarmest>();
+  setpointManagerWarmests = m.getConcreteModelObjects<SetpointManagerWarmest>();
   EXPECT_EQ(0, setpointManagerWarmests.size());
 }
 

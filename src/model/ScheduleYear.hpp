@@ -56,7 +56,12 @@ namespace model {
 
     explicit ScheduleYear(const Model& model);
 
-    virtual ~ScheduleYear() {}
+    virtual ~ScheduleYear() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleYear(const ScheduleYear& other) = default;
+    ScheduleYear(ScheduleYear&& other) = default;
+    ScheduleYear& operator=(const ScheduleYear&) = default;
+    ScheduleYear& operator=(ScheduleYear&&) = default;
 
     //@}
 
@@ -96,7 +101,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleYear_Impl ImplType;
+    using ImplType = detail::ScheduleYear_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -110,10 +115,10 @@ namespace model {
   };
 
   /** \relates ScheduleYear*/
-  typedef boost::optional<ScheduleYear> OptionalScheduleYear;
+  using OptionalScheduleYear = boost::optional<ScheduleYear>;
 
   /** \relates ScheduleYear*/
-  typedef std::vector<ScheduleYear> ScheduleYearVector;
+  using ScheduleYearVector = std::vector<ScheduleYear>;
 
 }  // namespace model
 }  // namespace openstudio

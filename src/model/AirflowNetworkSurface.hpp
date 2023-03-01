@@ -70,7 +70,12 @@ namespace model {
     /** Construct a surface with a model subsurface to be linked to and a leakage component. */
     //AirflowNetworkSurface(const Model& model, const SubSurface &surface, const AirflowNetworkComponent &component);
 
-    virtual ~AirflowNetworkSurface() {}
+    virtual ~AirflowNetworkSurface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkSurface(const AirflowNetworkSurface& other) = default;
+    AirflowNetworkSurface(AirflowNetworkSurface&& other) = default;
+    AirflowNetworkSurface& operator=(const AirflowNetworkSurface&) = default;
+    AirflowNetworkSurface& operator=(AirflowNetworkSurface&&) = default;
 
     //@}
 
@@ -196,7 +201,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkSurface_Impl ImplType;
+    using ImplType = detail::AirflowNetworkSurface_Impl;
 
     explicit AirflowNetworkSurface(std::shared_ptr<detail::AirflowNetworkSurface_Impl> impl);
 
@@ -218,10 +223,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkSurface*/
-  typedef boost::optional<AirflowNetworkSurface> OptionalAirflowNetworkSurface;
+  using OptionalAirflowNetworkSurface = boost::optional<AirflowNetworkSurface>;
 
   /** \relates AirflowNetworkSurface*/
-  typedef std::vector<AirflowNetworkSurface> AirflowNetworkSurfaceVector;
+  using AirflowNetworkSurfaceVector = std::vector<AirflowNetworkSurface>;
 
 }  // namespace model
 }  // namespace openstudio

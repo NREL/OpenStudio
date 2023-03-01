@@ -72,7 +72,12 @@ namespace model {
 
     explicit CoilHeatingGas(const Model& model);
 
-    virtual ~CoilHeatingGas() {}
+    virtual ~CoilHeatingGas() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingGas(const CoilHeatingGas& other) = default;
+    CoilHeatingGas(CoilHeatingGas&& other) = default;
+    CoilHeatingGas& operator=(const CoilHeatingGas&) = default;
+    CoilHeatingGas& operator=(CoilHeatingGas&&) = default;
 
     //@}
 
@@ -154,7 +159,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::CoilHeatingGas_Impl ImplType;
+    using ImplType = detail::CoilHeatingGas_Impl;
 
     explicit CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> impl);
 
@@ -165,10 +170,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingGas */
-  typedef boost::optional<CoilHeatingGas> OptionalCoilHeatingGas;
+  using OptionalCoilHeatingGas = boost::optional<CoilHeatingGas>;
 
   /** \relates CoilHeatingGas */
-  typedef std::vector<CoilHeatingGas> CoilHeatingGasVector;
+  using CoilHeatingGasVector = std::vector<CoilHeatingGas>;
 
 }  // namespace model
 }  // namespace openstudio

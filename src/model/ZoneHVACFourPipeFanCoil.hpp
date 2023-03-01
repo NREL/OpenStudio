@@ -64,7 +64,12 @@ namespace model {
     ZoneHVACFourPipeFanCoil(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& coolingCoil,
                             HVACComponent& heatingCoil);
 
-    virtual ~ZoneHVACFourPipeFanCoil() {}
+    virtual ~ZoneHVACFourPipeFanCoil() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACFourPipeFanCoil(const ZoneHVACFourPipeFanCoil& other) = default;
+    ZoneHVACFourPipeFanCoil(ZoneHVACFourPipeFanCoil&& other) = default;
+    ZoneHVACFourPipeFanCoil& operator=(const ZoneHVACFourPipeFanCoil&) = default;
+    ZoneHVACFourPipeFanCoil& operator=(ZoneHVACFourPipeFanCoil&&) = default;
 
     //@}
 
@@ -149,7 +154,7 @@ namespace model {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setCapacityControlMethod(std::string capacityControlMethod);
+    bool setCapacityControlMethod(const std::string& capacityControlMethod);
 
     bool setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate);
 
@@ -171,9 +176,9 @@ namespace model {
 
     void resetOutdoorAirSchedule();
 
-    bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
+    bool setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType);
 
-    bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
+    bool setOutdoorAirMixerName(const std::string& outdoorAirMixerName);
 
     bool setSupplyAirFan(HVACComponent& fan);
 
@@ -239,7 +244,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACFourPipeFanCoil_Impl ImplType;
+    using ImplType = detail::ZoneHVACFourPipeFanCoil_Impl;
 
     explicit ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl);
 
@@ -254,10 +259,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACFourPipeFanCoil*/
-  typedef boost::optional<ZoneHVACFourPipeFanCoil> OptionalZoneHVACFourPipeFanCoil;
+  using OptionalZoneHVACFourPipeFanCoil = boost::optional<ZoneHVACFourPipeFanCoil>;
 
   /** \relates ZoneHVACFourPipeFanCoil*/
-  typedef std::vector<ZoneHVACFourPipeFanCoil> ZoneHVACFourPipeFanCoilVector;
+  using ZoneHVACFourPipeFanCoilVector = std::vector<ZoneHVACFourPipeFanCoil>;
 
 }  // namespace model
 }  // namespace openstudio

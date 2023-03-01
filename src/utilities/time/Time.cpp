@@ -143,12 +143,12 @@ Time& Time::operator-=(const Time& time) {
 
 /// multiplication operator
 Time Time::operator*(double mult) const {
-  return Time(this->totalDays() * mult);
+  return {this->totalDays() * mult};
 }
 
 /// division operator
 Time Time::operator/(double div) const {
-  return Time(this->totalDays() / div);
+  return {this->totalDays() / div};
 }
 
 /// equality operator

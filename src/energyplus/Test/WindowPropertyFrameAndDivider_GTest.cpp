@@ -70,20 +70,22 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
   Space space(model);
   space.setThermalZone(thermalZone);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 10));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(10, 0, 0));
-  vertices.push_back(Point3d(10, 0, 10));
+  std::vector<Point3d> vertices{
+    {0, 0, 10},
+    {0, 0, 0},
+    {10, 0, 0},
+    {10, 0, 10},
+  };
 
   Surface surface(vertices, model);
   surface.setSpace(space);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
+  vertices = {
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   SubSurface subSurface1(vertices, model);
   subSurface1.setName("No Offset");
@@ -118,7 +120,7 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
 
   EXPECT_EQ(1u, outModel->getConcreteModelObjects<WindowPropertyFrameAndDivider>().size());
 
-  boost::optional<SubSurface> testSubSurface = outModel->getModelObjectByName<SubSurface>("Offset");
+  boost::optional<SubSurface> testSubSurface = outModel->getConcreteModelObjectByName<SubSurface>("Offset");
   ASSERT_TRUE(testSubSurface);
   EXPECT_TRUE(testSubSurface->windowPropertyFrameAndDivider());
   vertices = testSubSurface->vertices();
@@ -127,7 +129,7 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
   EXPECT_DOUBLE_EQ(0.0, vertices[0].y());
   EXPECT_DOUBLE_EQ(1.0, vertices[0].z());
 
-  testSubSurface = outModel->getModelObjectByName<SubSurface>("No Offset");
+  testSubSurface = outModel->getConcreteModelObjectByName<SubSurface>("No Offset");
   ASSERT_TRUE(testSubSurface);
   EXPECT_FALSE(testSubSurface->windowPropertyFrameAndDivider());
   vertices = testSubSurface->vertices();

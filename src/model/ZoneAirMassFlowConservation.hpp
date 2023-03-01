@@ -51,7 +51,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ZoneAirMassFlowConservation() {}
+    virtual ~ZoneAirMassFlowConservation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneAirMassFlowConservation(const ZoneAirMassFlowConservation& other) = default;
+    ZoneAirMassFlowConservation(ZoneAirMassFlowConservation&& other) = default;
+    ZoneAirMassFlowConservation& operator=(const ZoneAirMassFlowConservation&) = default;
+    ZoneAirMassFlowConservation& operator=(ZoneAirMassFlowConservation&&) = default;
 
     //@}
 
@@ -107,7 +112,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneAirMassFlowConservation_Impl ImplType;
+    using ImplType = detail::ZoneAirMassFlowConservation_Impl;
 
     explicit ZoneAirMassFlowConservation(std::shared_ptr<detail::ZoneAirMassFlowConservation_Impl> impl);
 
@@ -123,10 +128,10 @@ namespace model {
   };
 
   /** \relates ZoneAirMassFlowConservation*/
-  typedef boost::optional<ZoneAirMassFlowConservation> OptionalZoneAirMassFlowConservation;
+  using OptionalZoneAirMassFlowConservation = boost::optional<ZoneAirMassFlowConservation>;
 
   /** \relates ZoneAirMassFlowConservation*/
-  typedef std::vector<ZoneAirMassFlowConservation> ZoneAirMassFlowConservationVector;
+  using ZoneAirMassFlowConservationVector = std::vector<ZoneAirMassFlowConservation>;
 
 }  // namespace model
 }  // namespace openstudio

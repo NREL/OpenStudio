@@ -92,7 +92,7 @@ class UTILITIES_API FileReference
                 const std::string& description, const openstudio::path& p, const FileReferenceType& fileType, const DateTime& timestampLast,
                 const std::string& checksumCreate, const std::string& checksumLast);
 
-  virtual ~FileReference() {}
+  virtual ~FileReference() = default;
 
   FileReference clone() const;
 
@@ -162,10 +162,10 @@ class UTILITIES_API FileReference
 };
 
 /** \relates FileReference*/
-typedef boost::optional<FileReference> OptionalFileReference;
+using OptionalFileReference = boost::optional<FileReference>;
 
 /** \relates FileReference*/
-typedef std::vector<FileReference> FileReferenceVector;
+using FileReferenceVector = std::vector<FileReference>;
 
 }  // namespace openstudio
 

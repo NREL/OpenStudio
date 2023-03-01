@@ -664,7 +664,7 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
   for (const auto& finalFaceVertices : allFinalFaceVertices) {
     Point3dVector finalfloorVertices;
     Point3dVector finalRoofCeilingVertices;
-    for (auto& v : finalFaceVertices) {
+    for (const auto& v : finalFaceVertices) {
       Point3d floorVert(v.x(), v.y(), minZ);
       Point3d ceilVert(v.x(), v.y(), maxZ);
       finalfloorVertices.push_back(floorVert);
@@ -685,16 +685,18 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
   std::set<unsigned> mappedWindows;
   std::set<unsigned> mappedDoors;
   for (unsigned i = 1; i <= numPoints; ++i) {
-    Point3dVector wallVertices;
-    wallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), maxZ));
-    wallVertices.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), maxZ));
-    wallVertices.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), minZ));
-    wallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), minZ));
+    Point3dVector wallVertices{
+      {faceVertices[i - 1].x(), faceVertices[i - 1].y(), maxZ},
+      {faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), maxZ},
+      {faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), minZ},
+      {faceVertices[i - 1].x(), faceVertices[i - 1].y(), minZ},
+    };
 
     // find windows that appear on this edge, can't use edge ids after simplify algorithm
-    std::vector<Point3d> testSegment;
-    testSegment.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), 0.0));
-    testSegment.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), 0.0));
+    std::vector<Point3d> testSegment{
+      {faceVertices[i - 1].x(), faceVertices[i - 1].y(), 0.0},
+      {faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), 0.0},
+    };
 
     Vector3d edgeVector = testSegment[1] - testSegment[0];
     edgeVector.setLength(1.0);
@@ -751,11 +753,12 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
               widthVector.setLength(-0.5 * width);
               Point3d window2 = windowCenterVertices[windowIdx] + widthVector;
 
-              Point3dVector windowVertices;
-              windowVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight + height));
-              windowVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight));
-              windowVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight));
-              windowVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight + height));
+              Point3dVector windowVertices{
+                {window1.x(), window1.y(), minZ + sillHeight + height},
+                {window1.x(), window1.y(), minZ + sillHeight},
+                {window2.x(), window2.y(), minZ + sillHeight},
+                {window2.x(), window2.y(), minZ + sillHeight + height},
+              };
 
               size_t parentSubSurfaceIndex = allFinalWindowVertices.size();
               allFinalWindowVertices.push_back(windowVertices);
@@ -771,11 +774,12 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
                   Point3d window3 = window1 + outVector;
                   Point3d window4 = window2 + outVector;
 
-                  Point3dVector shadeVertices;
-                  shadeVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight + height));
-                  shadeVertices.push_back(Point3d(window3.x(), window3.y(), minZ + sillHeight + height));
-                  shadeVertices.push_back(Point3d(window4.x(), window4.y(), minZ + sillHeight + height));
-                  shadeVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight + height));
+                  Point3dVector shadeVertices{
+                    {window1.x(), window1.y(), minZ + sillHeight + height},
+                    {window3.x(), window3.y(), minZ + sillHeight + height},
+                    {window4.x(), window4.y(), minZ + sillHeight + height},
+                    {window2.x(), window2.y(), minZ + sillHeight + height},
+                  };
 
                   allFinalShadeVertices.push_back(shadeVertices);
                   allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
@@ -793,20 +797,22 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
                   Point3d window3 = window1 + outVector;
                   Point3d window4 = window2 + outVector;
 
-                  Point3dVector shadeVertices;
-                  shadeVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight + height));
-                  shadeVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight));
-                  shadeVertices.push_back(Point3d(window3.x(), window3.y(), minZ + sillHeight));
-                  shadeVertices.push_back(Point3d(window3.x(), window3.y(), minZ + sillHeight + height));
+                  Point3dVector shadeVertices{
+                    {window1.x(), window1.y(), minZ + sillHeight + height},
+                    {window1.x(), window1.y(), minZ + sillHeight},
+                    {window3.x(), window3.y(), minZ + sillHeight},
+                    {window3.x(), window3.y(), minZ + sillHeight + height},
+                  };
 
                   allFinalShadeVertices.push_back(shadeVertices);
                   allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
 
-                  shadeVertices.clear();
-                  shadeVertices.push_back(Point3d(window4.x(), window4.y(), minZ + sillHeight + height));
-                  shadeVertices.push_back(Point3d(window4.x(), window4.y(), minZ + sillHeight));
-                  shadeVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight));
-                  shadeVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight + height));
+                  shadeVertices = {
+                    {window4.x(), window4.y(), minZ + sillHeight + height},
+                    {window4.x(), window4.y(), minZ + sillHeight},
+                    {window2.x(), window2.y(), minZ + sillHeight},
+                    {window2.x(), window2.y(), minZ + sillHeight + height},
+                  };
 
                   allFinalShadeVertices.push_back(shadeVertices);
                   allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
@@ -892,11 +898,12 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
             widthVector.setLength(-0.5 * width);
             Point3d doorw2 = doorCenterVertices[doorIdx] + widthVector;
 
-            Point3dVector doorVertices;
-            doorVertices.push_back(Point3d(door1.x(), door1.y(), minZ + height));
-            doorVertices.push_back(Point3d(door1.x(), door1.y(), minZ + 0.0));
-            doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), minZ + 0.0));
-            doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), minZ + height));
+            Point3dVector doorVertices{
+              {door1.x(), door1.y(), minZ + height},
+              {door1.x(), door1.y(), minZ + 0.0},
+              {doorw2.x(), doorw2.y(), minZ + 0.0},
+              {doorw2.x(), doorw2.y(), minZ + height},
+            };
 
             // size_t parentSubSurfaceIndex = allFinalDoorVertices.size();
             allFinalDoorVertices.push_back(doorVertices);
@@ -1866,7 +1873,7 @@ void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, cons
 }
 
 void FloorplanJS::updateObjectReference(Json::Value& value, const std::string& key, const FloorplanObject& objectReference,
-                                        bool removeMissingObjects) {
+                                        bool /*removeMissingObjects*/) {
   std::string searchKey;
   if (key == "thermal_zone_id") {
     searchKey = "thermal_zones";

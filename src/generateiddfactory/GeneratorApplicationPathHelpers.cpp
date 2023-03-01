@@ -41,11 +41,12 @@
 
 namespace openstudio {
 
-typedef boost::filesystem::path path;
+using path = boost::filesystem::path;
 
 openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
   openstudio::path result(outdir);
-  std::stringstream ss, tss;
+  std::stringstream ss;
+  std::stringstream tss;
 
   // turn relative path into absolute path
   result = boost::filesystem::system_complete(result);

@@ -114,7 +114,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirLoopHVAC_UnitarySystemFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirLoopHVACUnitarySystem", "Availability"));
       }
@@ -126,7 +127,7 @@ namespace model {
 
     ModelObject AirLoopHVACUnitarySystem_Impl::clone(Model model) const {
       // Mimic what StraightComponent_Impl::clone would do (we inherit ZoneHVACComponent here...)
-      AirLoopHVACUnitarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitarySystem>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitarySystem>();
       modelObjectClone.setString(modelObjectClone.inletPort(), "");
       modelObjectClone.setString(modelObjectClone.outletPort(), "");
 
@@ -146,7 +147,7 @@ namespace model {
         modelObjectClone.setDesignSpecificationMultispeedObject(designSpec->clone(model).cast<UnitarySystemPerformanceMultispeed>());
       }
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<ModelObject> AirLoopHVACUnitarySystem_Impl::children() const {
@@ -229,10 +230,14 @@ namespace model {
         boost::optional<HVACComponent> systemStartComponent;
         boost::optional<HVACComponent> systemEndComponent;
 
-        if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) return false;
+        if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+          return false;
+        }
 
         if (t_airLoop && !t_oaSystem) {
-          if (t_airLoop->demandComponent(node.handle())) return false;
+          if (t_airLoop->demandComponent(node.handle())) {
+            return false;
+          }
 
           systemStartComponent = t_airLoop->supplyInletNode();
           auto nodes = t_airLoop->supplyOutletNodes();
@@ -597,7 +602,7 @@ namespace model {
         OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setControlType(std::string controlType) {
+    bool AirLoopHVACUnitarySystem_Impl::setControlType(const std::string& controlType) {
       bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, controlType);
       return result;
     }
@@ -623,7 +628,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setDehumidificationControlType(std::string dehumidificationControlType) {
+    bool AirLoopHVACUnitarySystem_Impl::setDehumidificationControlType(const std::string& dehumidificationControlType) {
       bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DehumidificationControlType, dehumidificationControlType);
       return result;
     }
@@ -754,7 +759,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setLatentLoadControl(std::string latentLoadControl) {
+    bool AirLoopHVACUnitarySystem_Impl::setLatentLoadControl(const std::string& latentLoadControl) {
       bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::LatentLoadControl, latentLoadControl);
       return result;
     }
@@ -1361,7 +1366,7 @@ namespace model {
   }
 
   IddObjectType AirLoopHVACUnitarySystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirLoopHVAC_UnitarySystem);
+    return {IddObjectType::OS_AirLoopHVAC_UnitarySystem};
   }
 
   std::vector<std::string> AirLoopHVACUnitarySystem::controlTypeValues() {
@@ -1656,7 +1661,7 @@ namespace model {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSpecificationMultispeedObject();
   }
 
-  bool AirLoopHVACUnitarySystem::setControlType(std::string controlType) {
+  bool AirLoopHVACUnitarySystem::setControlType(const std::string& controlType) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType(controlType);
   }
 
@@ -1672,7 +1677,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetControllingZoneorThermostatLocation();
   }
 
-  bool AirLoopHVACUnitarySystem::setDehumidificationControlType(std::string dehumidificationControlType) {
+  bool AirLoopHVACUnitarySystem::setDehumidificationControlType(const std::string& dehumidificationControlType) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setDehumidificationControlType(dehumidificationControlType);
   }
 
@@ -1696,7 +1701,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetSupplyFan();
   }
 
-  bool AirLoopHVACUnitarySystem::setFanPlacement(std::string fanPlacement) {
+  bool AirLoopHVACUnitarySystem::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setFanPlacement(fanPlacement);
   }
 
@@ -1757,7 +1762,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature();
   }
 
-  bool AirLoopHVACUnitarySystem::setLatentLoadControl(std::string latentLoadControl) {
+  bool AirLoopHVACUnitarySystem::setLatentLoadControl(const std::string& latentLoadControl) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setLatentLoadControl(latentLoadControl);
   }
 
@@ -1773,7 +1778,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetSupplementalHeatingCoil();
   }
 
-  bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodDuringCoolingOperation(std::string supplyAirFlowRateMethodDuringCoolingOperation) {
+  bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodDuringCoolingOperation(
       supplyAirFlowRateMethodDuringCoolingOperation);
   }
@@ -1822,7 +1827,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
   }
 
-  bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodDuringHeatingOperation(std::string supplyAirFlowRateMethodDuringHeatingOperation) {
+  bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodDuringHeatingOperation(
       supplyAirFlowRateMethodDuringHeatingOperation);
   }
@@ -1872,7 +1877,7 @@ namespace model {
   }
 
   bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(
-    std::string supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired) {
+    const std::string& supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(
       supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
   }
@@ -1970,7 +1975,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
   }
 
-  bool AirLoopHVACUnitarySystem::setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName) {
+  bool AirLoopHVACUnitarySystem::setOutdoorDryBulbTemperatureSensorNodeName(const std::string& outdoorDryBulbTemperatureSensorNodeName) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setOutdoorDryBulbTemperatureSensorNodeName(outdoorDryBulbTemperatureSensorNodeName);
   }
 

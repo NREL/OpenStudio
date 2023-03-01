@@ -413,7 +413,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType RadianceParameters::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_RadianceParameters);
+    return {IddObjectType::OS_RadianceParameters};
   }
 
   int RadianceParameters::accumulatedRaysperRecord() const {

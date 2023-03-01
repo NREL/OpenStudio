@@ -72,19 +72,19 @@ namespace energyplus {
 
     // matches[1], warning/error type
     // matches[2], rest of line
-    boost::regex warningOrError("^\\s*\\**\\s+\\*\\*\\s*([[:alpha:]]+)\\s*\\*\\*(.*)$");
+    boost::regex warningOrError(R"(^\s*\**\s+\*\*\s*([[:alpha:]]+)\s*\*\*(.*)$)");
 
     // matches[1], rest of line
-    boost::regex warningOrErrorContinue("^\\s*\\**\\s+\\*\\*\\s*~~~\\s*\\*\\*(.*)$");
+    boost::regex warningOrErrorContinue(R"(^\s*\**\s+\*\*\s*~~~\s*\*\*(.*)$)");
 
     // completed successfully
-    boost::regex completedSuccessful("^\\s*\\*+ EnergyPlus Completed Successfully.*");
+    boost::regex completedSuccessful(R"(^\s*\*+ EnergyPlus Completed Successfully.*)");
 
     // ground temp completed successfully
-    boost::regex groundTempCompletedSuccessful("^\\s*\\*+ GroundTempCalc\\S* Completed Successfully.*");
+    boost::regex groundTempCompletedSuccessful(R"(^\s*\*+ GroundTempCalc\S* Completed Successfully.*)");
 
     // completed unsuccessfully
-    boost::regex completedUnsuccessful("^\\s*\\*+ EnergyPlus Terminated.*");
+    boost::regex completedUnsuccessful(R"(^\s*\*+ EnergyPlus Terminated.*)");
 
     // repeat count
 

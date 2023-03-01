@@ -85,7 +85,8 @@ namespace model {
     std::vector<ScheduleTypeKey> SiteWaterMainsTemperature_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Site_WaterMainsTemperatureFields::TemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SiteWaterMainsTemperature", "Temperature"));
       }
@@ -110,7 +111,7 @@ namespace model {
       return getDouble(OS_Site_WaterMainsTemperatureFields::MaximumDifferenceInMonthlyAverageOutdoorAirTemperatures, true);
     }
 
-    bool SiteWaterMainsTemperature_Impl::setCalculationMethod(std::string calculationMethod) {
+    bool SiteWaterMainsTemperature_Impl::setCalculationMethod(const std::string& calculationMethod) {
       bool result = setString(OS_Site_WaterMainsTemperatureFields::CalculationMethod, calculationMethod);
       return result;
     }
@@ -237,7 +238,7 @@ namespace model {
     return getImpl<detail::SiteWaterMainsTemperature_Impl>()->maximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
   }
 
-  bool SiteWaterMainsTemperature::setCalculationMethod(std::string calculationMethod) {
+  bool SiteWaterMainsTemperature::setCalculationMethod(const std::string& calculationMethod) {
     return getImpl<detail::SiteWaterMainsTemperature_Impl>()->setCalculationMethod(calculationMethod);
   }
 

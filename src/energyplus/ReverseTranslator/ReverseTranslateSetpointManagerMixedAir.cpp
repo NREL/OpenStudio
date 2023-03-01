@@ -51,7 +51,7 @@ namespace energyplus {
     bool nodeFound = false;
 
     if (boost::optional<std::string> setpointNodeName = workspaceObject.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName)) {
-      boost::optional<Node> setpointNode = m_model.getModelObjectByName<Node>(setpointNodeName.get());
+      boost::optional<Node> setpointNode = m_model.getConcreteModelObjectByName<Node>(setpointNodeName.get());
 
       if (setpointNode) {
         nodeFound = true;
@@ -73,7 +73,7 @@ namespace energyplus {
 
     s = workspaceObject.getString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName);
     if (s) {
-      boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+      boost::optional<Node> node = m_model.getConcreteModelObjectByName<Node>(s.get());
 
       if (node) {
         mo.setReferenceSetpointNode(node.get());
@@ -82,7 +82,7 @@ namespace energyplus {
 
     s = workspaceObject.getString(SetpointManager_MixedAirFields::FanInletNodeName);
     if (s) {
-      boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+      boost::optional<Node> node = m_model.getConcreteModelObjectByName<Node>(s.get());
 
       if (node) {
         mo.setFanInletNode(node.get());
@@ -91,7 +91,7 @@ namespace energyplus {
 
     s = workspaceObject.getString(SetpointManager_MixedAirFields::FanOutletNodeName);
     if (s) {
-      boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+      boost::optional<Node> node = m_model.getConcreteModelObjectByName<Node>(s.get());
 
       if (node) {
         mo.setFanOutletNode(node.get());
@@ -100,7 +100,7 @@ namespace energyplus {
 
     s = workspaceObject.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName);
     if (s) {
-      boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+      boost::optional<Node> node = m_model.getConcreteModelObjectByName<Node>(s.get());
 
       if (node) {
         mo.addToNode(node.get());

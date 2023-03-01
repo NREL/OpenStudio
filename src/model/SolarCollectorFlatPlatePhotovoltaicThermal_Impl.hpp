@@ -56,7 +56,7 @@ namespace model {
       SolarCollectorFlatPlatePhotovoltaicThermal_Impl(const SolarCollectorFlatPlatePhotovoltaicThermal_Impl& other, Model_Impl* model,
                                                       bool keepHandle);
 
-      virtual ~SolarCollectorFlatPlatePhotovoltaicThermal_Impl() {}
+      virtual ~SolarCollectorFlatPlatePhotovoltaicThermal_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

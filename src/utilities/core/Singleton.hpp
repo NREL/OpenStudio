@@ -41,7 +41,7 @@ class Singleton
 {
  public:
   Singleton() = delete;
-  typedef T object_type;
+  using object_type = T;
 
   // If, at any point (in user code), Singleton<T>::instance()
   //  is called, then the following function is instantiated.

@@ -154,7 +154,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_addToNode) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirResets = m.getModelObjects<SetpointManagerOutdoorAirReset>();
+  std::vector<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirResets = m.getConcreteModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(3, setpointManagerOutdoorAirResets.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode().get());
@@ -164,7 +164,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerOutdoorAirResets = m.getModelObjects<SetpointManagerOutdoorAirReset>();
+  setpointManagerOutdoorAirResets = m.getConcreteModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(2, setpointManagerOutdoorAirResets.size());
 }
 
@@ -180,14 +180,14 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_remove) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirResets = m.getModelObjects<SetpointManagerOutdoorAirReset>();
+  std::vector<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirResets = m.getConcreteModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(1, setpointManagerOutdoorAirResets.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerOutdoorAirResets = m.getModelObjects<SetpointManagerOutdoorAirReset>();
+  setpointManagerOutdoorAirResets = m.getConcreteModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(0, setpointManagerOutdoorAirResets.size());
 }
 
@@ -202,7 +202,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerOutdoorAirReset testObjectClone = testObject.clone(m).cast<SetpointManagerOutdoorAirReset>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerOutdoorAirReset>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -237,7 +237,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_customDataClone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerOutdoorAirReset testObjectClone = testObject.clone(m).cast<SetpointManagerOutdoorAirReset>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerOutdoorAirReset>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

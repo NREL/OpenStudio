@@ -285,8 +285,8 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToSI(const Quanti
   // Get the base units of original
   std::vector<std::string> baseOfOriginal = original.baseUnits();
   // Loop over base units in original and apply conversions found in m_toSImap
-  std::vector<std::string>::const_iterator it = baseOfOriginal.begin();
-  std::vector<std::string>::const_iterator end = baseOfOriginal.end();
+  auto it = baseOfOriginal.begin();
+  auto end = baseOfOriginal.end();
   while (it != end) {
     int baseExponent = working.baseUnitExponent(*it);
     // apply conversion factor
@@ -311,8 +311,8 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToSI(const Quanti
     // Parse the conversion string in case the original converts to more than one SI base unit
     Unit targetBase = parseUnitString(factor.targetUnit);
     std::vector<std::string> targetStrings = targetBase.baseUnits();
-    std::vector<std::string>::const_iterator targetItr = targetStrings.begin();
-    std::vector<std::string>::const_iterator targetEnd = targetStrings.end();
+    auto targetItr = targetStrings.begin();
+    auto targetEnd = targetStrings.end();
     while (targetItr != targetEnd) {
       int exp = targetBase.baseUnitExponent(*targetItr);
       if (exp != 0) {
@@ -368,8 +368,8 @@ Quantity QuantityConverterSingleton::m_convertFromSI(const Quantity& original, c
     // Parse the conversion string incase the SI unit converts to more than one target base unit
     Unit targetBase = parseUnitString(fromFactor.targetUnit);
     std::vector<std::string> targetStrings = targetBase.baseUnits();
-    std::vector<std::string>::const_iterator targetItr = targetStrings.begin();
-    std::vector<std::string>::const_iterator targetEnd = targetStrings.end();
+    auto targetItr = targetStrings.begin();
+    auto targetEnd = targetStrings.end();
     while (targetItr != targetEnd) {
       int exp = targetBase.baseUnitExponent(*targetItr);
       if (exp != 0) {
@@ -408,8 +408,8 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToTargetFromSI(co
     // Get the base units of targetUnits
     std::vector<std::string> baseOfTarget = targetUnits.baseUnits();
     // Loop over base units in original and apply (inverse of) conversions in m_toSImap
-    std::vector<std::string>::const_iterator it = baseOfTarget.begin();
-    std::vector<std::string>::const_iterator end = baseOfTarget.end();
+    auto it = baseOfTarget.begin();
+    auto end = baseOfTarget.end();
     while (it != end) {
       int baseExponent = targetUnits.baseUnitExponent(*it);
       // apply conversion factor
@@ -436,8 +436,8 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToTargetFromSI(co
       // Parse the conversion string in case the target converts to more than one SI base unit
       Unit sourceBase = parseUnitString(factor.targetUnit);
       std::vector<std::string> sourceStrings = sourceBase.baseUnits();
-      std::vector<std::string>::const_iterator sourceItr = sourceStrings.begin();
-      std::vector<std::string>::const_iterator sourceEnd = sourceStrings.end();
+      auto sourceItr = sourceStrings.begin();
+      auto sourceEnd = sourceStrings.end();
       while (sourceItr != sourceEnd) {
         int exp = sourceBase.baseUnitExponent(*sourceItr);
         if (exp != 0) {

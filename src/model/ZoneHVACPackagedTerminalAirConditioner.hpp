@@ -57,6 +57,11 @@ namespace model {
                                            HVACComponent& heatingCoil, HVACComponent& coolingCoil);
 
     virtual ~ZoneHVACPackagedTerminalAirConditioner() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACPackagedTerminalAirConditioner(const ZoneHVACPackagedTerminalAirConditioner& other) = default;
+    ZoneHVACPackagedTerminalAirConditioner(ZoneHVACPackagedTerminalAirConditioner&& other) = default;
+    ZoneHVACPackagedTerminalAirConditioner& operator=(const ZoneHVACPackagedTerminalAirConditioner&) = default;
+    ZoneHVACPackagedTerminalAirConditioner& operator=(ZoneHVACPackagedTerminalAirConditioner&&) = default;
 
     //@}
 

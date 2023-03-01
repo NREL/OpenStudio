@@ -75,6 +75,9 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
+
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
@@ -97,7 +100,7 @@ namespace model {
     }
 
     boost::optional<ParentObject> Site_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     std::vector<ModelObject> Site_Impl::children() const {
@@ -152,46 +155,42 @@ namespace model {
       }
 
       // sizing periods
-      SizingPeriodVector sizingPeriods = model().getModelObjects<SizingPeriod>();
-      result.insert(result.end(), sizingPeriods.begin(), sizingPeriods.end());
+      openstudio::detail::concat_helper(result, model().getModelObjects<SizingPeriod>());
 
       // lighting design days
-      LightingDesignDayVector lightingDesignDays = model().getConcreteModelObjects<LightingDesignDay>();
-      result.insert(result.end(), lightingDesignDays.begin(), lightingDesignDays.end());
+      openstudio::detail::concat_helper(result, model().getConcreteModelObjects<LightingDesignDay>());
 
       // some SkyTemperatures are children (those that do not explicitly point to something else)
       SkyTemperatureVector skyTemperatures = model().getConcreteModelObjects<SkyTemperature>();
-      ParentObject siteAsParent = getObject<ParentObject>();
-      for (const SkyTemperature& st : skyTemperatures) {
+      auto siteAsParent = getObject<ParentObject>();
+      for (SkyTemperature& st : skyTemperatures) {
         OptionalParentObject opo = st.parent();
         if (opo && (opo.get() == siteAsParent)) {
-          result.push_back(st.cast<ModelObject>());
+          // result.emplace_back(st.cast<ModelObject>());
+          result.emplace_back(std::move(st));
         }
       }
 
       // shading surface groups
-      std::vector<ShadingSurfaceGroup> shadingSurfaceGroups = this->shadingSurfaceGroups();
-      result.insert(result.end(), shadingSurfaceGroups.begin(), shadingSurfaceGroups.end());
+      openstudio::detail::concat_helper(result, this->shadingSurfaceGroups());
 
       return result;
     }
 
     std::vector<IddObjectType> Site_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(ClimateZones::iddObjectType());
-      result.push_back(DesignDay::iddObjectType());
-      result.push_back(SkyTemperature::iddObjectType());
-      result.push_back(WeatherFile::iddObjectType());
-      result.push_back(WeatherFileConditionType::iddObjectType());
-      result.push_back(WeatherFileDays::iddObjectType());
-      result.push_back(SiteGroundReflectance::iddObjectType());
-      result.push_back(SiteGroundTemperatureBuildingSurface::iddObjectType());
-      result.push_back(SiteGroundTemperatureDeep::iddObjectType());
-      result.push_back(SiteGroundTemperatureShallow::iddObjectType());
-      result.push_back(SiteGroundTemperatureFCfactorMethod::iddObjectType());
-      result.push_back(SiteWaterMainsTemperature::iddObjectType());
-      result.push_back(ShadingSurfaceGroup::iddObjectType());
-      return result;
+      return std::vector<IddObjectType>{ClimateZones::iddObjectType(),
+                                        DesignDay::iddObjectType(),
+                                        SkyTemperature::iddObjectType(),
+                                        WeatherFile::iddObjectType(),
+                                        WeatherFileConditionType::iddObjectType(),
+                                        WeatherFileDays::iddObjectType(),
+                                        SiteGroundReflectance::iddObjectType(),
+                                        SiteGroundTemperatureBuildingSurface::iddObjectType(),
+                                        SiteGroundTemperatureDeep::iddObjectType(),
+                                        SiteGroundTemperatureShallow::iddObjectType(),
+                                        SiteGroundTemperatureFCfactorMethod::iddObjectType(),
+                                        SiteWaterMainsTemperature::iddObjectType(),
+                                        ShadingSurfaceGroup::iddObjectType()};
     }
 
     const std::vector<std::string>& Site_Impl::outputVariableNames() const {
@@ -299,7 +298,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Site_Impl::setTerrain(std::string terrain) {
+    bool Site_Impl::setTerrain(const std::string& terrain) {
       bool result = setString(OS_SiteFields::Terrain, terrain);
       return result;
     }
@@ -342,12 +341,10 @@ namespace model {
     }
 
     ShadingSurfaceGroupVector Site_Impl::shadingSurfaceGroups() const {
-      ShadingSurfaceGroupVector result;
-      for (ShadingSurfaceGroup shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()) {
-        if (istringEqual(shadingGroup.shadingSurfaceType(), "Site")) {
-          result.push_back(shadingGroup);
-        }
-      }
+      ShadingSurfaceGroupVector result = this->model().getConcreteModelObjects<ShadingSurfaceGroup>();
+      result.erase(std::remove_if(result.begin(), result.end(),
+                                  [](const auto& shadingGroup) { return !istringEqual(shadingGroup.shadingSurfaceType(), "Site"); }),
+                   result.end());
       return result;
     }
     /*
@@ -481,7 +478,7 @@ namespace model {
     getImpl<detail::Site_Impl>()->resetElevation();
   }
 
-  bool Site::setTerrain(std::string terrain) {
+  bool Site::setTerrain(const std::string& terrain) {
     return getImpl<detail::Site_Impl>()->setTerrain(terrain);
   }
 

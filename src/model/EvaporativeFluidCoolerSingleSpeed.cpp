@@ -108,7 +108,8 @@ namespace model {
     std::vector<ScheduleTypeKey> EvaporativeFluidCoolerSingleSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownMakeupWaterUsageScheduleName) != e) {
         result.push_back(ScheduleTypeKey("EvaporativeFluidCoolerSingleSpeed", "Blowdown Makeup Water Usage"));
       }
@@ -447,7 +448,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool EvaporativeFluidCoolerSingleSpeed_Impl::setCapacityControl(std::string capacityControl) {
+    bool EvaporativeFluidCoolerSingleSpeed_Impl::setCapacityControl(const std::string& capacityControl) {
       bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::CapacityControl, capacityControl);
       return result;
     }
@@ -467,7 +468,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossMode(std::string evaporationLossMode) {
+    bool EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossMode(const std::string& evaporationLossMode) {
       bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossMode, evaporationLossMode);
       return result;
     }
@@ -505,7 +506,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool EvaporativeFluidCoolerSingleSpeed_Impl::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+    bool EvaporativeFluidCoolerSingleSpeed_Impl::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
       bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownCalculationMode, blowdownCalculationMode);
       return result;
     }
@@ -656,7 +657,7 @@ namespace model {
   }
 
   IddObjectType EvaporativeFluidCoolerSingleSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed);
+    return {IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed};
   }
 
   std::vector<std::string> EvaporativeFluidCoolerSingleSpeed::performanceInputMethodValues() {
@@ -882,7 +883,7 @@ namespace model {
     getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetDesignEnteringAirWetbulbTemperature();
   }
 
-  bool EvaporativeFluidCoolerSingleSpeed::setCapacityControl(std::string capacityControl) {
+  bool EvaporativeFluidCoolerSingleSpeed::setCapacityControl(const std::string& capacityControl) {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setCapacityControl(capacityControl);
   }
 
@@ -898,7 +899,7 @@ namespace model {
     getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetSizingFactor();
   }
 
-  bool EvaporativeFluidCoolerSingleSpeed::setEvaporationLossMode(std::string evaporationLossMode) {
+  bool EvaporativeFluidCoolerSingleSpeed::setEvaporationLossMode(const std::string& evaporationLossMode) {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossMode(evaporationLossMode);
   }
 
@@ -922,7 +923,7 @@ namespace model {
     getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetDriftLossPercent();
   }
 
-  bool EvaporativeFluidCoolerSingleSpeed::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+  bool EvaporativeFluidCoolerSingleSpeed::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setBlowdownCalculationMode(blowdownCalculationMode);
   }
 

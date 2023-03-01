@@ -57,7 +57,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputJSON) {
   Model m;
 
   // Get the unique object
-  OutputJSON outputJSON = m.getUniqueModelObject<OutputJSON>();
+  auto outputJSON = m.getUniqueModelObject<OutputJSON>();
 
   // Check all cases where a single output request is True so we know we assigned the fields correctly
   auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
@@ -114,7 +114,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputJSON) {
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    OutputJSON outputJSON = m.getUniqueModelObject<OutputJSON>();
+    auto outputJSON = m.getUniqueModelObject<OutputJSON>();
     EXPECT_EQ(json, outputJSON.outputJSON());
     EXPECT_EQ(cbor, outputJSON.outputCBOR());
     EXPECT_EQ(msgpack, outputJSON.outputMessagePack());

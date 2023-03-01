@@ -56,7 +56,12 @@ namespace model {
 
     explicit FanZoneExhaust(const Model& model);
 
-    virtual ~FanZoneExhaust() {}
+    virtual ~FanZoneExhaust() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FanZoneExhaust(const FanZoneExhaust& other) = default;
+    FanZoneExhaust(FanZoneExhaust&& other) = default;
+    FanZoneExhaust& operator=(const FanZoneExhaust&) = default;
+    FanZoneExhaust& operator=(FanZoneExhaust&&) = default;
 
     //@}
 
@@ -107,13 +112,13 @@ namespace model {
 
     void resetMaximumFlowRate();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     bool setFlowFractionSchedule(Schedule& schedule);
 
     void resetFlowFractionSchedule();
 
-    bool setSystemAvailabilityManagerCouplingMode(std::string systemAvailabilityManagerCouplingMode);
+    bool setSystemAvailabilityManagerCouplingMode(const std::string& systemAvailabilityManagerCouplingMode);
 
     bool setMinimumZoneTemperatureLimitSchedule(Schedule& schedule);
 
@@ -133,7 +138,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FanZoneExhaust_Impl ImplType;
+    using ImplType = detail::FanZoneExhaust_Impl;
 
     explicit FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl);
 
@@ -147,10 +152,10 @@ namespace model {
   };
 
   /** \relates FanZoneExhaust*/
-  typedef boost::optional<FanZoneExhaust> OptionalFanZoneExhaust;
+  using OptionalFanZoneExhaust = boost::optional<FanZoneExhaust>;
 
   /** \relates FanZoneExhaust*/
-  typedef std::vector<FanZoneExhaust> FanZoneExhaustVector;
+  using FanZoneExhaustVector = std::vector<FanZoneExhaust>;
 
 }  // namespace model
 }  // namespace openstudio

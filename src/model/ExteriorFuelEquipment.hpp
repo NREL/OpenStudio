@@ -61,7 +61,12 @@ namespace model {
     /** This constructor requires a user-specified schedule. */
     ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition, Schedule& schedule);
 
-    virtual ~ExteriorFuelEquipment() {}
+    virtual ~ExteriorFuelEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorFuelEquipment(const ExteriorFuelEquipment& other) = default;
+    ExteriorFuelEquipment(ExteriorFuelEquipment&& other) = default;
+    ExteriorFuelEquipment& operator=(const ExteriorFuelEquipment&) = default;
+    ExteriorFuelEquipment& operator=(ExteriorFuelEquipment&&) = default;
 
     //@}
 
@@ -99,13 +104,13 @@ namespace model {
 
     void resetSchedule();
 
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
 
     bool setMultiplier(double multiplier);
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -118,7 +123,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorFuelEquipment_Impl ImplType;
+    using ImplType = detail::ExteriorFuelEquipment_Impl;
 
     explicit ExteriorFuelEquipment(std::shared_ptr<detail::ExteriorFuelEquipment_Impl> impl);
 
@@ -132,10 +137,10 @@ namespace model {
   };
 
   /** \relates ExteriorFuelEquipment*/
-  typedef boost::optional<ExteriorFuelEquipment> OptionalExteriorFuelEquipment;
+  using OptionalExteriorFuelEquipment = boost::optional<ExteriorFuelEquipment>;
 
   /** \relates ExteriorFuelEquipment*/
-  typedef std::vector<ExteriorFuelEquipment> ExteriorFuelEquipmentVector;
+  using ExteriorFuelEquipmentVector = std::vector<ExteriorFuelEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

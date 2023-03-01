@@ -51,7 +51,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AdditionalProperties() {}
+    virtual ~AdditionalProperties() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AdditionalProperties(const AdditionalProperties& other) = default;
+    AdditionalProperties(AdditionalProperties&& other) = default;
+    AdditionalProperties& operator=(const AdditionalProperties&) = default;
+    AdditionalProperties& operator=(AdditionalProperties&&) = default;
 
     //@}
 
@@ -118,7 +123,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::AdditionalProperties_Impl ImplType;
+    using ImplType = detail::AdditionalProperties_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -138,10 +143,10 @@ namespace model {
   };
 
   /** \relates AdditionalProperties */
-  typedef boost::optional<AdditionalProperties> OptionalAdditionalProperties;
+  using OptionalAdditionalProperties = boost::optional<AdditionalProperties>;
 
   /** \relates AdditionalProperties */
-  typedef std::vector<AdditionalProperties> AdditionalPropertiesVector;
+  using AdditionalPropertiesVector = std::vector<AdditionalProperties>;
 
 }  // namespace model
 

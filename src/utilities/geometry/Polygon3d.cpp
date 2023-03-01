@@ -35,7 +35,7 @@
 
 namespace openstudio {
 
-Polygon3d::Polygon3d() {}
+Polygon3d::Polygon3d() = default;
 
 Polygon3d::Polygon3d(const Point3dVector& outerPath) {
   for (const auto& p : outerPath) {
@@ -75,19 +75,19 @@ void Polygon3d::addHole(const Point3dVector& hole) {
   m_innerPaths.emplace_back(hole);
 }
 
-Vector3d Polygon3d::newellVector() {
+Vector3d Polygon3d::newellVector() const {
   if (OptionalVector3d v = openstudio::getNewellVector(m_outerPath)) {
     return v.get();
   }
 
-  return Vector3d();
+  return {};
 }
 
-Vector3d Polygon3d::outwardNormal() {
+Vector3d Polygon3d::outwardNormal() const {
   return openstudio::getOutwardNormal(m_outerPath).get();
 }
 
-double Polygon3d::grossArea() {
+double Polygon3d::grossArea() const {
 
   if (boost::optional<double> area = openstudio::getArea(m_outerPath)) {
     return area.get();
@@ -96,7 +96,7 @@ double Polygon3d::grossArea() {
   return 0;
 }
 
-double Polygon3d::netArea() {
+double Polygon3d::netArea() const {
 
   double netArea = grossArea();
   for (const auto& hole : m_innerPaths) {
@@ -120,7 +120,7 @@ double Polygon3d::perimeter() const {
   return perimeter;
 }
 
-bool Polygon3d::isClockwise() {
+bool Polygon3d::isClockwise() const {
   if (OptionalVector3d normal = getOutwardNormal(m_outerPath)) {
     return normal.get().z() > 0;
   }
@@ -128,15 +128,15 @@ bool Polygon3d::isClockwise() {
   return true;
 }
 
-Point3d Polygon3d::centroid() {
+Point3d Polygon3d::centroid() const {
   if (auto p = openstudio::getCentroid(m_outerPath)) {
     return p.get();
   }
 
-  return Point3d();
+  return {};
 }
 
-bool Polygon3d::pointInPolygon(const Point3d& point, double tol) {
+bool Polygon3d::pointInPolygon(const Point3d& point, double tol) const {
   bool inside = false;
   if (openstudio::pointInPolygon(point, m_outerPath, tol)) {
     inside = true;
@@ -151,7 +151,7 @@ bool Polygon3d::pointInPolygon(const Point3d& point, double tol) {
   return inside;
 }
 
-bool Polygon3d::within(const Point3d& point, double tol) {
+bool Polygon3d::within(const Point3d& point, double tol) const {
   bool inside = false;
   if (openstudio::within(point, m_outerPath, tol)) {
     inside = true;
@@ -165,7 +165,7 @@ bool Polygon3d::within(const Point3d& point, double tol) {
   return inside;
 }
 
-bool Polygon3d::inside(const Point3d& point, double tol) {
+bool Polygon3d::inside(const Point3d& point, double tol) const {
   return pointInPolygon(point, tol) || within(point, tol);
 }
 

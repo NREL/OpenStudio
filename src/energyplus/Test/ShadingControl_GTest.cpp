@@ -89,11 +89,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
   Space space(model);
   space.setThermalZone(thermalZone);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 2, 0));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(2, 0, 0));
-  vertices.push_back(Point3d(2, 2, 0));
+  std::vector<Point3d> vertices{
+    {0, 2, 0},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 2, 0},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
 
@@ -106,11 +107,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
   //  0      1     2
 
   // A
-  vertices.clear();
-  vertices.push_back(Point3d(0, 1, 0));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 1, 0));
+  vertices = {
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   SubSurface subSurfaceA(vertices, model);
   subSurfaceA.setName("SubSurface A");
@@ -118,11 +120,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
   subSurfaceA.assignDefaultSubSurfaceType();
 
   // B
-  vertices.clear();
-  vertices.push_back(Point3d(1, 2, 0));
-  vertices.push_back(Point3d(1, 1, 0));
-  vertices.push_back(Point3d(2, 1, 0));
-  vertices.push_back(Point3d(2, 2, 0));
+  vertices = {
+    {1, 2, 0},
+    {1, 1, 0},
+    {2, 1, 0},
+    {2, 2, 0},
+  };
 
   SubSurface subSurfaceB(vertices, model);
   subSurfaceB.setName("SubSurface B");
@@ -193,11 +196,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
       EXPECT_EQ("Sequential", _wo->getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
       ASSERT_EQ(2u, _wo->extensibleGroups().size());
       {
-        WorkspaceExtensibleGroup w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        auto w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ(subSurfaceA.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
       }
       {
-        WorkspaceExtensibleGroup w_eg = _wo->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+        auto w_eg = _wo->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ(subSurfaceB.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
       }
     }
@@ -227,7 +230,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
       EXPECT_EQ("Group", _wo->getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
       ASSERT_EQ(1u, _wo->extensibleGroups().size());
       {
-        WorkspaceExtensibleGroup w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        auto w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ(subSurfaceA.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
       }
     }
@@ -381,11 +384,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  EXPECT_EQ(1u, model.getModelObjects<Surface>().size());
-  EXPECT_EQ(1u, model.getModelObjects<SubSurface>().size());
-  EXPECT_EQ(1u, model.getModelObjects<ScheduleConstant>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleConstant>().size());
 
-  std::vector<ShadingControl> shadingControls = model.getModelObjects<ShadingControl>();
+  std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
   ASSERT_EQ(1u, shadingControls.size());
   ShadingControl shadingControl = shadingControls[0];
   EXPECT_EQ("InteriorDaylightRedirectionDevice",
@@ -401,7 +404,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls) {
   EXPECT_FALSE(shadingControl.slatAngleSchedule());
   EXPECT_TRUE(shadingControl.isTypeofSlatAngleControlforBlindsDefaulted());
 
-  std::vector<SubSurface> subSurfaces = model.getModelObjects<SubSurface>();
+  std::vector<SubSurface> subSurfaces = model.getConcreteModelObjects<SubSurface>();
   ASSERT_EQ(1u, subSurfaces.size());
   SubSurface subSurface = subSurfaces[0];
   EXPECT_EQ("Sub Surface 1", subSurface.name().get());

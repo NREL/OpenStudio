@@ -60,7 +60,12 @@ namespace model {
     AirLoopHVACUnitaryHeatPumpAirToAir(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyFan, HVACComponent& heatingCoil,
                                        HVACComponent& coolingCoil, HVACComponent& supplementalHeatingCoil);
 
-    virtual ~AirLoopHVACUnitaryHeatPumpAirToAir() {}
+    virtual ~AirLoopHVACUnitaryHeatPumpAirToAir() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACUnitaryHeatPumpAirToAir(const AirLoopHVACUnitaryHeatPumpAirToAir& other) = default;
+    AirLoopHVACUnitaryHeatPumpAirToAir(AirLoopHVACUnitaryHeatPumpAirToAir&& other) = default;
+    AirLoopHVACUnitaryHeatPumpAirToAir& operator=(const AirLoopHVACUnitaryHeatPumpAirToAir&) = default;
+    AirLoopHVACUnitaryHeatPumpAirToAir& operator=(AirLoopHVACUnitaryHeatPumpAirToAir&&) = default;
 
     //@}
 
@@ -161,7 +166,7 @@ namespace model {
 
     void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-    bool setFanPlacement(std::string fanPlacement);
+    bool setFanPlacement(const std::string& fanPlacement);
 
     void resetFanPlacement();
 
@@ -169,7 +174,7 @@ namespace model {
 
     void resetSupplyAirFanOperatingModeSchedule();
 
-    bool setDehumidificationControlType(std::string dehumidificationControlType);
+    bool setDehumidificationControlType(const std::string& dehumidificationControlType);
 
     void resetDehumidificationControlType();
 
@@ -189,7 +194,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl ImplType;
+    using ImplType = detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl;
 
     explicit AirLoopHVACUnitaryHeatPumpAirToAir(std::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl> impl);
 
@@ -204,10 +209,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACUnitaryHeatPumpAirToAir*/
-  typedef boost::optional<AirLoopHVACUnitaryHeatPumpAirToAir> OptionalAirLoopHVACUnitaryHeatPumpAirToAir;
+  using OptionalAirLoopHVACUnitaryHeatPumpAirToAir = boost::optional<AirLoopHVACUnitaryHeatPumpAirToAir>;
 
   /** \relates AirLoopHVACUnitaryHeatPumpAirToAir*/
-  typedef std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> AirLoopHVACUnitaryHeatPumpAirToAirVector;
+  using AirLoopHVACUnitaryHeatPumpAirToAirVector = std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -52,7 +52,12 @@ namespace model {
 
     explicit CoilCoolingWaterPanelRadiant(const Model& model);
 
-    virtual ~CoilCoolingWaterPanelRadiant() {}
+    virtual ~CoilCoolingWaterPanelRadiant() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingWaterPanelRadiant(const CoilCoolingWaterPanelRadiant& other) = default;
+    CoilCoolingWaterPanelRadiant(CoilCoolingWaterPanelRadiant&& other) = default;
+    CoilCoolingWaterPanelRadiant& operator=(const CoilCoolingWaterPanelRadiant&) = default;
+    CoilCoolingWaterPanelRadiant& operator=(CoilCoolingWaterPanelRadiant&&) = default;
 
     //@}
 
@@ -103,7 +108,7 @@ namespace model {
 
     bool setRatedWaterMassFlowRate(double ratedWaterMassFlowRate);
 
-    bool setCoolingDesignCapacityMethod(std::string coolingDesignCapacityMethod);
+    bool setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod);
 
     bool setCoolingDesignCapacity(double coolingDesignCapacity);
 
@@ -117,7 +122,7 @@ namespace model {
 
     void autosizeMaximumChilledWaterFlowRate();
 
-    bool setControlType(std::string controlType);
+    bool setControlType(const std::string& controlType);
 
     bool setCoolingControlThrottlingRange(double coolingControlThrottlingRange);
 
@@ -125,7 +130,7 @@ namespace model {
 
     void resetCoolingControlTemperatureSchedule();
 
-    bool setCondensationControlType(std::string condensationControlType);
+    bool setCondensationControlType(const std::string& condensationControlType);
 
     bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 
@@ -140,7 +145,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingWaterPanelRadiant_Impl ImplType;
+    using ImplType = detail::CoilCoolingWaterPanelRadiant_Impl;
 
     explicit CoilCoolingWaterPanelRadiant(std::shared_ptr<detail::CoilCoolingWaterPanelRadiant_Impl> impl);
 
@@ -154,10 +159,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingWaterPanelRadiant*/
-  typedef boost::optional<CoilCoolingWaterPanelRadiant> OptionalCoilCoolingWaterPanelRadiant;
+  using OptionalCoilCoolingWaterPanelRadiant = boost::optional<CoilCoolingWaterPanelRadiant>;
 
   /** \relates CoilCoolingWaterPanelRadiant*/
-  typedef std::vector<CoilCoolingWaterPanelRadiant> CoilCoolingWaterPanelRadiantVector;
+  using CoilCoolingWaterPanelRadiantVector = std::vector<CoilCoolingWaterPanelRadiant>;
 
 }  // namespace model
 }  // namespace openstudio

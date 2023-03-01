@@ -111,7 +111,7 @@ namespace model {
         newCoilSystem.setHeatExchanger(mo);
       }
 
-      return newCoilSystem;
+      return std::move(newCoilSystem);
     }
 
     boost::optional<HVACComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::containingHVACComponent() const {
@@ -217,7 +217,7 @@ namespace model {
       return OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirOutletNodeName;
     }
 
-    bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::addToNode(Node& node) {
+    bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::addToNode(Node& /*node*/) {
 
       /**
      * Note JM 2019-03-13: At this point in time
@@ -270,7 +270,7 @@ namespace model {
   }
 
   IddObjectType CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted);
+    return {IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted};
   }
 
   AirToAirComponent CoilSystemCoolingDXHeatExchangerAssisted::heatExchanger() const {

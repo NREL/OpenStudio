@@ -249,7 +249,7 @@ std::string fixupEnumerationValue(const Json::Value& schema, const std::string& 
 
 /* Find name of an extensible group and cache it */
 auto getGroupName(std::map<std::pair<std::string, std::string>, std::pair<std::string, bool>>& group_names,
-                  std::map<std::string, std::string>& field_names, const Json::Value& schema, const std::string& type_description,
+                  std::map<std::string, std::string>& /*field_names*/, const Json::Value& schema, const std::string& type_description,
                   const std::string& group_name) -> const auto& {
 
   const auto key = std::pair{type_description, group_name};

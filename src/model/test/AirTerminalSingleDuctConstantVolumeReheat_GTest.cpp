@@ -116,7 +116,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  AirTerminalSingleDuctConstantVolumeReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeReheat>();
+  auto testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeReheat>();
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));
@@ -314,7 +314,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneOneModelWith
   CoilHeatingElectric coil = CoilHeatingElectric(model, schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model, schedule, coil);
 
-  AirTerminalSingleDuctConstantVolumeReheat testObjectClone = testObject.clone(model).cast<AirTerminalSingleDuctConstantVolumeReheat>();
+  auto testObjectClone = testObject.clone(model).cast<AirTerminalSingleDuctConstantVolumeReheat>();
   EXPECT_TRUE(testObjectClone.isMaximumAirFlowRateAutosized());
   EXPECT_TRUE(testObjectClone.isMaximumHotWaterorSteamFlowRateAutosized());
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.minimumHotWaterorSteamFlowRate());
@@ -333,7 +333,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneOneModelWith
   testObject.setConvergenceTolerance(1.0);
   testObject.setMaximumReheatAirTemperature(999.0);
 
-  AirTerminalSingleDuctConstantVolumeReheat testObjectClone = testObject.clone(model).cast<AirTerminalSingleDuctConstantVolumeReheat>();
+  auto testObjectClone = testObject.clone(model).cast<AirTerminalSingleDuctConstantVolumeReheat>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.maximumAirFlowRate().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.maximumHotWaterorSteamFlowRate().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.minimumHotWaterorSteamFlowRate());
@@ -347,11 +347,11 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneTwoModelsWit
   CoilHeatingElectric coil = CoilHeatingElectric(model, schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model, schedule, coil);
 
-  AirTerminalSingleDuctConstantVolumeReheat testObjectClone = testObject.clone(model).cast<AirTerminalSingleDuctConstantVolumeReheat>();
+  auto testObjectClone = testObject.clone(model).cast<AirTerminalSingleDuctConstantVolumeReheat>();
 
   Model model2;
 
-  AirTerminalSingleDuctConstantVolumeReheat testObjectClone2 = testObject.clone(model2).cast<AirTerminalSingleDuctConstantVolumeReheat>();
+  auto testObjectClone2 = testObject.clone(model2).cast<AirTerminalSingleDuctConstantVolumeReheat>();
   EXPECT_TRUE(testObjectClone2.isMaximumAirFlowRateAutosized());
   EXPECT_TRUE(testObjectClone2.isMaximumHotWaterorSteamFlowRateAutosized());
   EXPECT_DOUBLE_EQ(0.0, testObjectClone2.minimumHotWaterorSteamFlowRate());

@@ -57,7 +57,12 @@ namespace model {
 
     explicit RefrigerationCondenserEvaporativeCooled(const Model& model);
 
-    virtual ~RefrigerationCondenserEvaporativeCooled() {}
+    virtual ~RefrigerationCondenserEvaporativeCooled() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCondenserEvaporativeCooled(const RefrigerationCondenserEvaporativeCooled& other) = default;
+    RefrigerationCondenserEvaporativeCooled(RefrigerationCondenserEvaporativeCooled&& other) = default;
+    RefrigerationCondenserEvaporativeCooled& operator=(const RefrigerationCondenserEvaporativeCooled&) = default;
+    RefrigerationCondenserEvaporativeCooled& operator=(RefrigerationCondenserEvaporativeCooled&&) = default;
 
     //@}
 
@@ -160,7 +165,7 @@ namespace model {
 
     void resetRatedSubcoolingTemperatureDifference();
 
-    bool setFanSpeedControlType(std::string fanSpeedControlType);
+    bool setFanSpeedControlType(const std::string& fanSpeedControlType);
 
     void resetFanSpeedControlType();
 
@@ -194,7 +199,7 @@ namespace model {
 
     void resetMaximumCapacityFactor();
 
-    //bool setAirInletNode(std::string airInletNode);
+    //bool setAirInletNode(const std::string& airInletNode);
 
     //void resetAirInletNode();
 
@@ -226,7 +231,7 @@ namespace model {
 
     void resetEvaporativeCondenserAvailabilitySchedule();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -253,7 +258,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCondenserEvaporativeCooled_Impl ImplType;
+    using ImplType = detail::RefrigerationCondenserEvaporativeCooled_Impl;
 
     explicit RefrigerationCondenserEvaporativeCooled(std::shared_ptr<detail::RefrigerationCondenserEvaporativeCooled_Impl> impl);
 
@@ -267,10 +272,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCondenserEvaporativeCooled*/
-  typedef boost::optional<RefrigerationCondenserEvaporativeCooled> OptionalRefrigerationCondenserEvaporativeCooled;
+  using OptionalRefrigerationCondenserEvaporativeCooled = boost::optional<RefrigerationCondenserEvaporativeCooled>;
 
   /** \relates RefrigerationCondenserEvaporativeCooled*/
-  typedef std::vector<RefrigerationCondenserEvaporativeCooled> RefrigerationCondenserEvaporativeCooledVector;
+  using RefrigerationCondenserEvaporativeCooledVector = std::vector<RefrigerationCondenserEvaporativeCooled>;
 
 }  // namespace model
 }  // namespace openstudio

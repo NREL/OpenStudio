@@ -192,8 +192,8 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_GetOrCreateScheduleTypeLimits) {
 
   {
     Model model;
-    for (auto className : ScheduleTypeRegistry::instance().classNames()) {
-      for (auto scheduleType : ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className)) {
+    for (const auto& className : ScheduleTypeRegistry::instance().classNames()) {
+      for (const auto& scheduleType : ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className)) {
         ScheduleTypeLimits limits = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
         ScheduleTypeLimits limits2 = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
 

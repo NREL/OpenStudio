@@ -123,7 +123,7 @@ void addThreeMaterial(std::vector<ThreeMaterial>& materials, std::map<std::strin
 }
 
 std::string getThreeMaterialId(const std::string& materialName, std::map<std::string, std::string>& materialMap) {
-  std::map<std::string, std::string>::const_iterator it = materialMap.find(materialName);
+  auto it = materialMap.find(materialName);
   if (it != materialMap.end()) {
     return it->second;
   }
@@ -256,12 +256,12 @@ Point3dVector fromThreeVector(const std::vector<double>& vertices) {
   return result;
 }
 
-std::vector<double> toThreeMatrix(const Transformation& matrix) {
-  return std::vector<double>();
+std::vector<double> toThreeMatrix(const Transformation& /*matrix*/) {
+  return {};
 }
 
-Transformation toThreeMatrix(const std::vector<double>& matrix) {
-  return Transformation();
+Transformation toThreeMatrix(const std::vector<double>& /*matrix*/) {
+  return {};
 }
 
 ThreeScene::ThreeScene(const ThreeSceneMetadata& metadata, const std::vector<ThreeGeometry>& geometries, const std::vector<ThreeMaterial>& materials,
@@ -1363,7 +1363,7 @@ ThreeBoundingBox::ThreeBoundingBox(double minX, double minY, double minZ, double
     m_lookAtZ(lookAtZ),
     m_lookAtR(lookAtR) {}
 
-ThreeBoundingBox::ThreeBoundingBox(const Json::Value& value)
+ThreeBoundingBox::ThreeBoundingBox(const Json::Value& /*value*/)
   : m_minX(0.0), m_minY(0.0), m_minZ(0.0), m_maxX(0.0), m_maxY(0.0), m_maxZ(0.0), m_lookAtX(0.0), m_lookAtY(0.0), m_lookAtZ(0.0), m_lookAtR(0.0) {}
 
 Json::Value ThreeBoundingBox::toJsonValue() const {

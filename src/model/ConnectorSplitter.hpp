@@ -54,7 +54,12 @@ namespace model {
     /** Constructs a new Splitter object and places it inside the model. */
     explicit ConnectorSplitter(const Model& model);
 
-    virtual ~ConnectorSplitter() {}
+    virtual ~ConnectorSplitter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConnectorSplitter(const ConnectorSplitter& other) = default;
+    ConnectorSplitter(ConnectorSplitter&& other) = default;
+    ConnectorSplitter& operator=(const ConnectorSplitter&) = default;
+    ConnectorSplitter& operator=(ConnectorSplitter&&) = default;
 
     /** Returns the inlet port to the splitter. */
     unsigned inletPort() const override;
@@ -77,7 +82,7 @@ namespace model {
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::ConnectorSplitter_Impl ImplType;
+    using ImplType = detail::ConnectorSplitter_Impl;
 
     friend class Model;
 
@@ -90,7 +95,7 @@ namespace model {
   };
 
   /** \relates ConnectorSplitter */
-  typedef boost::optional<ConnectorSplitter> OptionalConnectorSplitter;
+  using OptionalConnectorSplitter = boost::optional<ConnectorSplitter>;
 
 }  // namespace model
 }  // namespace openstudio

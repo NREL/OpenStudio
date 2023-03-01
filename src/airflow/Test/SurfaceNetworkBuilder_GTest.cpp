@@ -67,25 +67,26 @@ class SurfaceCounter : public openstudio::airflow::SurfaceNetworkBuilder
   int exteriorSubSurface;
 
  protected:
-  virtual bool linkExteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface) override {
+  virtual bool linkExteriorSurface(openstudio::model::ThermalZone /*zone*/, openstudio::model::Space /*space*/,
+                                   openstudio::model::Surface /*surface*/) override {
     exteriorSurface++;
     return true;
   }
-  virtual bool linkExteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
-                                      openstudio::model::SubSurface subSurface) override {
+  virtual bool linkExteriorSubSurface(openstudio::model::ThermalZone /*zone*/, openstudio::model::Space /*space*/,
+                                      openstudio::model::Surface /*surface*/, openstudio::model::SubSurface /*subSurface*/) override {
     exteriorSubSurface++;
     return true;
   }
-  virtual bool linkInteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
-                                   openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace,
-                                   openstudio::model::ThermalZone adjacentZone) override {
+  virtual bool linkInteriorSurface(openstudio::model::ThermalZone /*zone*/, openstudio::model::Space /*space*/,
+                                   openstudio::model::Surface /*surface*/, openstudio::model::Surface /*adjacentSurface*/,
+                                   openstudio::model::Space /*adjacentSpace*/, openstudio::model::ThermalZone /*adjacentZone*/) override {
     interiorSurface++;
     return true;
   }
-  virtual bool linkInteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
-                                      openstudio::model::SubSurface subSurface, openstudio::model::SubSurface adjacentSubSurface,
-                                      openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace,
-                                      openstudio::model::ThermalZone adjacentZone) override {
+  virtual bool linkInteriorSubSurface(openstudio::model::ThermalZone /*zone*/, openstudio::model::Space /*space*/,
+                                      openstudio::model::Surface /*surface*/, openstudio::model::SubSurface /*subSurface*/,
+                                      openstudio::model::SubSurface /*adjacentSubSurface*/, openstudio::model::Surface /*adjacentSurface*/,
+                                      openstudio::model::Space /*adjacentSpace*/, openstudio::model::ThermalZone /*adjacentZone*/) override {
     interiorSubSurface++;
     return true;
   }

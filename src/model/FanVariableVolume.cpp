@@ -86,7 +86,8 @@ namespace model {
     std::vector<ScheduleTypeKey> FanVariableVolume_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Fan_VariableVolumeFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FanVariableVolume", "Availability"));
       }
@@ -257,7 +258,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool FanVariableVolume_Impl::setFanPowerMinimumFlowRateInputMethod(std::string fanPowerMinimumFlowRateInputMethod) {
+    bool FanVariableVolume_Impl::setFanPowerMinimumFlowRateInputMethod(const std::string& fanPowerMinimumFlowRateInputMethod) {
       bool result = setString(OS_Fan_VariableVolumeFields::FanPowerMinimumFlowRateInputMethod, fanPowerMinimumFlowRateInputMethod);
       return result;
     }
@@ -398,7 +399,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool FanVariableVolume_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool FanVariableVolume_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Fan_VariableVolumeFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -756,7 +757,7 @@ namespace model {
     getImpl<detail::FanVariableVolume_Impl>()->autosizeMaximumFlowRate();
   }
 
-  bool FanVariableVolume::setFanPowerMinimumFlowRateInputMethod(std::string fanPowerMinimumFlowRateInputMethod) {
+  bool FanVariableVolume::setFanPowerMinimumFlowRateInputMethod(const std::string& fanPowerMinimumFlowRateInputMethod) {
     return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerMinimumFlowRateInputMethod(fanPowerMinimumFlowRateInputMethod);
   }
 
@@ -836,7 +837,7 @@ namespace model {
     getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient5();
   }
 
-  bool FanVariableVolume::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool FanVariableVolume::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::FanVariableVolume_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

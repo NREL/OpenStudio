@@ -51,7 +51,7 @@ namespace model {
 
       CoilCoolingWater_Impl(const CoilCoolingWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingWater_Impl();
+      virtual ~CoilCoolingWater_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -149,11 +149,11 @@ namespace model {
 
       std::string typeOfAnalysis();
 
-      bool setTypeOfAnalysis(std::string value);
+      bool setTypeOfAnalysis(const std::string& value);
 
       std::string heatExchangerConfiguration();
 
-      bool setHeatExchangerConfiguration(std::string value);
+      bool setHeatExchangerConfiguration(const std::string& value);
 
       AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 

@@ -66,7 +66,12 @@ namespace model {
 
     explicit OutputMeter(const Model& model);
 
-    virtual ~OutputMeter() {}
+    virtual ~OutputMeter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputMeter(const OutputMeter& other) = default;
+    OutputMeter(OutputMeter&& other) = default;
+    OutputMeter& operator=(const OutputMeter&) = default;
+    OutputMeter& operator=(OutputMeter&&) = default;
 
     virtual std::vector<openstudio::IdfObject> remove();
 
@@ -138,8 +143,6 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setName(std::string name);
-
     bool setReportingFrequency(const std::string& reportingFrequency);
 
     void resetReportingFrequency();
@@ -194,7 +197,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::OutputMeter_Impl ImplType;
+    using ImplType = detail::OutputMeter_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -207,10 +210,10 @@ namespace model {
   };
 
   /** \relates OutputMeter*/
-  typedef boost::optional<OutputMeter> OptionalOutputMeter;
+  using OptionalOutputMeter = boost::optional<OutputMeter>;
 
   /** \relates OutputMeter*/
-  typedef std::vector<OutputMeter> OutputMeterVector;
+  using OutputMeterVector = std::vector<OutputMeter>;
 
   /** Predicate for finding \link OutputMeter OutputMeters \endlink with fuelType() ft. \relates OutputMeter */
   MODEL_API bool MeterFuelTypeEquals(const OutputMeter& meter, const FuelType& ft);

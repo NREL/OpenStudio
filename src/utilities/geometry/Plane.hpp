@@ -61,7 +61,7 @@ class UTILITIES_API Plane
   Plane(const std::vector<Point3d>& points);
 
   /// virtual destructor
-  virtual ~Plane();
+  virtual ~Plane() = default;
 
   /// get the outward normal of this plane
   Vector3d outwardNormal() const;
@@ -118,10 +118,10 @@ class UTILITIES_API Plane
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Plane& plane);
 
 /// optional Plane
-typedef boost::optional<Plane> OptionalPlane;
+using OptionalPlane = boost::optional<Plane>;
 
 /// vector of Plane
-typedef std::vector<Plane> PlaneVector;
+using PlaneVector = std::vector<Plane>;
 
 }  // namespace openstudio
 

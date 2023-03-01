@@ -57,12 +57,17 @@ namespace model {
   class MODEL_API GenericModelObject : public ModelObject
   {
    public:
-    virtual ~GenericModelObject() {}
+    virtual ~GenericModelObject() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GenericModelObject(const GenericModelObject& other) = default;
+    GenericModelObject(GenericModelObject&& other) = default;
+    GenericModelObject& operator=(const GenericModelObject&) = default;
+    GenericModelObject& operator=(GenericModelObject&&) = default;
 
    protected:
     /// @cond
 
-    typedef detail::GenericModelObject_Impl ImplType;
+    using ImplType = detail::GenericModelObject_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -77,10 +82,10 @@ namespace model {
   };
 
   // optional GenericModelObject
-  typedef boost::optional<GenericModelObject> OptionalGenericModelObject;
+  using OptionalGenericModelObject = boost::optional<GenericModelObject>;
 
   // vector of GenericModelObject
-  typedef std::vector<GenericModelObject> GenericModelObjectVector;
+  using GenericModelObjectVector = std::vector<GenericModelObject>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -58,7 +58,12 @@ namespace model {
     ZoneHVACWaterToAirHeatPump(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& heatingCoil,
                                HVACComponent& coolingCoil, HVACComponent& supplementalHeatingCoil);
 
-    virtual ~ZoneHVACWaterToAirHeatPump() {}
+    virtual ~ZoneHVACWaterToAirHeatPump() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACWaterToAirHeatPump(const ZoneHVACWaterToAirHeatPump& other) = default;
+    ZoneHVACWaterToAirHeatPump(ZoneHVACWaterToAirHeatPump&& other) = default;
+    ZoneHVACWaterToAirHeatPump& operator=(const ZoneHVACWaterToAirHeatPump&) = default;
+    ZoneHVACWaterToAirHeatPump& operator=(ZoneHVACWaterToAirHeatPump&&) = default;
 
     //@}
 
@@ -251,13 +256,13 @@ namespace model {
     void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
     // DLM: this appears to not be implemented
-    //bool setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
+    //bool setOutdoorDryBulbTemperatureSensorNodeName(const std::string& outdoorDryBulbTemperatureSensorNodeName);
 
-    bool setFanPlacement(std::string fanPlacement);
+    bool setFanPlacement(const std::string& fanPlacement);
 
     void resetFanPlacement();
 
-    bool setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode);
+    bool setHeatPumpCoilWaterFlowMode(const std::string& heatPumpCoilWaterFlowMode);
 
     void resetHeatPumpCoilWaterFlowMode();
 
@@ -286,7 +291,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACWaterToAirHeatPump_Impl ImplType;
+    using ImplType = detail::ZoneHVACWaterToAirHeatPump_Impl;
 
     explicit ZoneHVACWaterToAirHeatPump(std::shared_ptr<detail::ZoneHVACWaterToAirHeatPump_Impl> impl);
 
@@ -300,10 +305,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACWaterToAirHeatPump*/
-  typedef boost::optional<ZoneHVACWaterToAirHeatPump> OptionalZoneHVACWaterToAirHeatPump;
+  using OptionalZoneHVACWaterToAirHeatPump = boost::optional<ZoneHVACWaterToAirHeatPump>;
 
   /** \relates ZoneHVACWaterToAirHeatPump*/
-  typedef std::vector<ZoneHVACWaterToAirHeatPump> ZoneHVACWaterToAirHeatPumpVector;
+  using ZoneHVACWaterToAirHeatPumpVector = std::vector<ZoneHVACWaterToAirHeatPump>;
 
 }  // namespace model
 }  // namespace openstudio

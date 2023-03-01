@@ -74,7 +74,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneControlHumidistat_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneControl_HumidistatFields::HumidifyingRelativeHumiditySetpointScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneControlHumidistat", "Humidifying Relative Humidity Setpoint"));
       }
@@ -136,7 +137,7 @@ namespace model {
   }
 
   IddObjectType ZoneControlHumidistat::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneControl_Humidistat);
+    return {IddObjectType::OS_ZoneControl_Humidistat};
   }
 
   boost::optional<Schedule> ZoneControlHumidistat::humidifyingRelativeHumiditySetpointSchedule() const {

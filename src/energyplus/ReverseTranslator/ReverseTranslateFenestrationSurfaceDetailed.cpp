@@ -117,7 +117,7 @@ namespace energyplus {
 
         OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
         if (modelObject->optionalCast<Space>()) {
-          Space adjacentSpace = modelObject->cast<Space>();
+          auto adjacentSpace = modelObject->cast<Space>();
 
           OptionalSurface surface = subSurface->surface();
           if (surface && surface->space()) {
@@ -130,7 +130,7 @@ namespace energyplus {
                 Transformation transformation = adjacentSpace.transformation().inverse() * surface->space()->transformation();
 
                 // duplicate subsurface in other space
-                SubSurface adjacentSubSurface = subSurface->clone(m_model).cast<SubSurface>();
+                auto adjacentSubSurface = subSurface->clone(m_model).cast<SubSurface>();
                 adjacentSubSurface.setName(subSurface->name().get() + " Reversed");
                 std::reverse(vertices.begin(), vertices.end());
                 adjacentSubSurface.setVertices(transformation * vertices);
@@ -151,7 +151,7 @@ namespace energyplus {
         if (it != m_workspaceToModelMap.end()) {
           if (it->second.optionalCast<SubSurface>()) {
             // this will set other side boundary object on both surfaces
-            SubSurface adjacentSubSurface = it->second.cast<SubSurface>();
+            auto adjacentSubSurface = it->second.cast<SubSurface>();
             subSurface->setAdjacentSubSurface(adjacentSubSurface);
             return subSurface.get();
           }

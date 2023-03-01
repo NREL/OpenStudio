@@ -92,7 +92,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ChillerElectricEIR_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ChillerElectricEIR", "Basin Heater Operating"));
       } else if (std::find(b, e, OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName) != e) {
@@ -460,7 +461,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ChillerElectricEIR_Impl::setCondenserType(std::string condenserType) {
+    bool ChillerElectricEIR_Impl::setCondenserType(const std::string& condenserType) {
       bool ok = false;
       if ((istringEqual("AirCooled", condenserType) || istringEqual("EvaporativelyCooled", condenserType)) && (this->secondaryPlantLoop())) {
         LOG(Warn,
@@ -510,7 +511,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ChillerElectricEIR_Impl::setChillerFlowMode(std::string chillerFlowMode) {
+    bool ChillerElectricEIR_Impl::setChillerFlowMode(const std::string& chillerFlowMode) {
       bool result = false;
       if (istringEqual(chillerFlowMode, "VariableFlow")) {
         // Support legacy key
@@ -588,9 +589,9 @@ namespace model {
     }
 
     ModelObject ChillerElectricEIR_Impl::clone(Model model) const {
-      ChillerElectricEIR chiller = WaterToWaterComponent_Impl::clone(model).cast<ChillerElectricEIR>();
+      auto chiller = WaterToWaterComponent_Impl::clone(model).cast<ChillerElectricEIR>();
 
-      return chiller;
+      return std::move(chiller);
     }
 
     bool ChillerElectricEIR_Impl::setBasinHeaterSchedule(Schedule& schedule) {
@@ -1184,7 +1185,7 @@ namespace model {
     getImpl<detail::ChillerElectricEIR_Impl>()->resetMinimumUnloadingRatio();
   }
 
-  bool ChillerElectricEIR::setCondenserType(std::string condenserType) {
+  bool ChillerElectricEIR::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserType(condenserType);
   }
 
@@ -1218,7 +1219,7 @@ namespace model {
     getImpl<detail::ChillerElectricEIR_Impl>()->resetLeavingChilledWaterLowerTemperatureLimit();
   }
 
-  bool ChillerElectricEIR::setChillerFlowMode(std::string chillerFlowMode) {
+  bool ChillerElectricEIR::setChillerFlowMode(const std::string& chillerFlowMode) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setChillerFlowMode(chillerFlowMode);
   }
 

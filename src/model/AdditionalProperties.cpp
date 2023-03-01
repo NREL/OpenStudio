@@ -84,16 +84,16 @@ namespace model {
 
     boost::optional<ParentObject> AdditionalProperties_Impl::parent() const {
       // DLM: should this return the model object? no because model object is not a parent object.
-      return boost::optional<ParentObject>();
+      return {};
     }
 
-    bool AdditionalProperties_Impl::setParent(ParentObject& newParent) {
+    bool AdditionalProperties_Impl::setParent(ParentObject& /*newParent*/) {
       // DLM: should we allow this? no because model object is not a parent object.
       return false;
     }
 
     std::vector<ResourceObject> AdditionalProperties_Impl::resources() const {
-      return std::vector<ResourceObject>();
+      return {};
     }
 
     std::vector<std::string> AdditionalProperties_Impl::featureNames() const {
@@ -238,7 +238,7 @@ namespace model {
         temp.push_back(name);
         temp.push_back(dataType);
         temp.push_back(value);
-        ModelExtensibleGroup newgroup = pushExtensibleGroup(temp).cast<ModelExtensibleGroup>();
+        auto newgroup = pushExtensibleGroup(temp).cast<ModelExtensibleGroup>();
         return (!newgroup.empty());
       }
     }
@@ -260,7 +260,7 @@ namespace model {
     }
 
     bool AdditionalProperties_Impl::setFeature(const std::string& name, bool value) {
-      std::string strValue(boost::lexical_cast<std::string>(value));
+      auto strValue(boost::lexical_cast<std::string>(value));
       if (value) {
         strValue = "true";
       } else {
@@ -272,7 +272,7 @@ namespace model {
     bool AdditionalProperties_Impl::resetFeature(const std::string& name) {
       unsigned n_groups = numExtensibleGroups();
       for (unsigned i = 0; i < n_groups; ++i) {
-        ModelExtensibleGroup group = getExtensibleGroup(i).cast<ModelExtensibleGroup>();
+        auto group = getExtensibleGroup(i).cast<ModelExtensibleGroup>();
         const boost::optional<std::string> featureName(group.getString(OS_AdditionalPropertiesExtensibleFields::FeatureName));
         OS_ASSERT(featureName);
         if (*featureName == name) {

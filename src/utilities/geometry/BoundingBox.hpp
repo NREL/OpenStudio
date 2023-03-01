@@ -88,10 +88,10 @@ class UTILITIES_API BoundingBox
 };
 
 // optional BoundingBox
-typedef boost::optional<BoundingBox> OptionalBoundingBox;
+using OptionalBoundingBox = boost::optional<BoundingBox>;
 
 // vector of BoundingBox
-typedef std::vector<BoundingBox> BoundingBoxVector;
+using BoundingBoxVector = std::vector<BoundingBox>;
 
 }  // namespace openstudio
 

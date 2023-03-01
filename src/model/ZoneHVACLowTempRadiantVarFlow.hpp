@@ -61,7 +61,12 @@ namespace model {
     // This constructor defaults the availabilitySchedule to alwaysOnDiscrete, and **does not set any heating nor cooling coil**
     explicit ZoneHVACLowTempRadiantVarFlow(const Model& model);
 
-    virtual ~ZoneHVACLowTempRadiantVarFlow() {}
+    virtual ~ZoneHVACLowTempRadiantVarFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACLowTempRadiantVarFlow(const ZoneHVACLowTempRadiantVarFlow& other) = default;
+    ZoneHVACLowTempRadiantVarFlow(ZoneHVACLowTempRadiantVarFlow&& other) = default;
+    ZoneHVACLowTempRadiantVarFlow& operator=(const ZoneHVACLowTempRadiantVarFlow&) = default;
+    ZoneHVACLowTempRadiantVarFlow& operator=(ZoneHVACLowTempRadiantVarFlow&&) = default;
 
     //@}
 
@@ -189,7 +194,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACLowTempRadiantVarFlow_Impl ImplType;
+    using ImplType = detail::ZoneHVACLowTempRadiantVarFlow_Impl;
 
     explicit ZoneHVACLowTempRadiantVarFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantVarFlow_Impl> impl);
 
@@ -203,10 +208,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACLowTempRadiantVarFlow*/
-  typedef boost::optional<ZoneHVACLowTempRadiantVarFlow> OptionalZoneHVACLowTempRadiantVarFlow;
+  using OptionalZoneHVACLowTempRadiantVarFlow = boost::optional<ZoneHVACLowTempRadiantVarFlow>;
 
   /** \relates ZoneHVACLowTempRadiantVarFlow*/
-  typedef std::vector<ZoneHVACLowTempRadiantVarFlow> ZoneHVACLowTempRadiantVarFlowVector;
+  using ZoneHVACLowTempRadiantVarFlowVector = std::vector<ZoneHVACLowTempRadiantVarFlow>;
 
 }  // namespace model
 }  // namespace openstudio

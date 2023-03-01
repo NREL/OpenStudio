@@ -53,7 +53,7 @@ namespace model {
 
       WaterUseConnections_Impl(const WaterUseConnections_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WaterUseConnections_Impl() {}
+      virtual ~WaterUseConnections_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
@@ -87,11 +87,11 @@ namespace model {
 
       std::string drainWaterHeatExchangerType() const;
 
-      bool setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType);
+      bool setDrainWaterHeatExchangerType(const std::string& drainWaterHeatExchangerType);
 
       std::string drainWaterHeatExchangerDestination() const;
 
-      bool setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination);
+      bool setDrainWaterHeatExchangerDestination(const std::string& drainWaterHeatExchangerDestination);
 
       boost::optional<double> drainWaterHeatExchangerUFactorTimesArea() const;
 

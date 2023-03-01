@@ -62,7 +62,7 @@ using namespace openstudio::radiance;
 
 std::string printPaths(const std::vector<path>& paths) {
   std::stringstream result;
-  for (auto path : paths) {
+  for (const auto& path : paths) {
     result << toString(path) << '\n';
   }
   return result.str();
@@ -70,7 +70,7 @@ std::string printPaths(const std::vector<path>& paths) {
 
 std::string printLogMessages(const std::vector<LogMessage>& messages) {
   std::stringstream result;
-  for (auto message : messages) {
+  for (const auto& message : messages) {
     result << message.logMessage() << '\n';
   }
   return result.str();
@@ -82,11 +82,12 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround) {
 
   Space space(model);
 
-  Point3dVector vertices;
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 1, 0));
-  vertices.push_back(Point3d(0, 1, 0));
+  Point3dVector vertices{
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+  };
   Surface surface(vertices, model);
 
   surface.setSpace(space);
@@ -113,11 +114,12 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ) {
 
   Space space(model);
 
-  Point3dVector vertices;
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(0, 0, 1));
+  Point3dVector vertices{
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+    {0, 0, 1},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
 
@@ -143,19 +145,21 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround) {
 
   Space space(model);
 
-  Point3dVector vertices;
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 1, 0));
-  vertices.push_back(Point3d(0, 1, 0));
+  Point3dVector vertices{
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0.25, 0.25, 0));
-  vertices.push_back(Point3d(0.75, 0.25, 0));
-  vertices.push_back(Point3d(0.75, 0.75, 0));
-  vertices.push_back(Point3d(0.25, 0.75, 0));
+  vertices = {
+    {0.25, 0.25, 0},
+    {0.75, 0.25, 0},
+    {0.75, 0.75, 0},
+    {0.25, 0.75, 0},
+  };
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
 
@@ -180,19 +184,21 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ) {
 
   Space space(model);
 
-  Point3dVector vertices;
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(0, 0, 1));
+  Point3dVector vertices{
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+    {0, 0, 1},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0.25, 0, 0.25));
-  vertices.push_back(Point3d(0.75, 0, 0.25));
-  vertices.push_back(Point3d(0.75, 0, 0.75));
-  vertices.push_back(Point3d(0.25, 0, 0.75));
+  vertices = {
+    {0.25, 0, 0.25},
+    {0.75, 0, 0.25},
+    {0.75, 0, 0.75},
+    {0.25, 0, 0.75},
+  };
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
 
@@ -252,7 +258,7 @@ TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl) {
 TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps) {
   Model model = exampleModel();
 
-  for (IlluminanceMap illuminanceMap : model.getModelObjects<IlluminanceMap>()) {
+  for (IlluminanceMap illuminanceMap : model.getConcreteModelObjects<IlluminanceMap>()) {
     illuminanceMap.remove();
   }
 
@@ -271,7 +277,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps) {
 TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls) {
   Model model = exampleModel();
 
-  for (DaylightingControl daylightingControl : model.getModelObjects<DaylightingControl>()) {
+  for (DaylightingControl daylightingControl : model.getConcreteModelObjects<DaylightingControl>()) {
     daylightingControl.remove();
   }
 
@@ -290,7 +296,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls) {
 TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors) {
   Model model = exampleModel();
 
-  for (GlareSensor glareSensor : model.getModelObjects<GlareSensor>()) {
+  for (GlareSensor glareSensor : model.getConcreteModelObjects<GlareSensor>()) {
     glareSensor.remove();
   }
 
@@ -309,7 +315,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors) {
 TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks) {
   Model model = exampleModel();
 
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
     thermalZone.resetSecondaryDaylightingControl();
     thermalZone.resetPrimaryDaylightingControl();
     thermalZone.resetIlluminanceMap();

@@ -56,7 +56,7 @@ namespace model {
 
       AvailabilityManagerHybridVentilation_Impl(const AvailabilityManagerHybridVentilation_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerHybridVentilation_Impl() {}
+      virtual ~AvailabilityManagerHybridVentilation_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

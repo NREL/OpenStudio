@@ -118,10 +118,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ExteriorLights) {
   ReverseTranslator rt;
   Model m = rt.translateWorkspace(workspace);
 
-  ASSERT_EQ(1u, m.getModelObjects<ScheduleConstant>().size());
-  ASSERT_EQ(1u, m.getModelObjects<ExteriorLightsDefinition>().size());
-  ASSERT_EQ(1u, m.getModelObjects<ExteriorLights>().size());
-  ExteriorLights extEq = m.getModelObjects<ExteriorLights>()[0];
+  ASSERT_EQ(1u, m.getConcreteModelObjects<ScheduleConstant>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<ExteriorLightsDefinition>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<ExteriorLights>().size());
+  ExteriorLights extEq = m.getConcreteModelObjects<ExteriorLights>()[0];
 
   EXPECT_EQ("My ExteriorLights", extEq.name().get());
 

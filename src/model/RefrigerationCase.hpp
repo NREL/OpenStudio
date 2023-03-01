@@ -61,7 +61,12 @@ namespace model {
 
     explicit RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule);
 
-    virtual ~RefrigerationCase() {}
+    virtual ~RefrigerationCase() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCase(const RefrigerationCase& other) = default;
+    RefrigerationCase(RefrigerationCase&& other) = default;
+    RefrigerationCase& operator=(const RefrigerationCase&) = default;
+    RefrigerationCase& operator=(RefrigerationCase&&) = default;
 
     //@}
 
@@ -290,7 +295,7 @@ namespace model {
 
     void resetCaseOperatingTemperature();
 
-    bool setLatentCaseCreditCurveType(std::string latentCaseCreditCurveType);
+    bool setLatentCaseCreditCurveType(const std::string& latentCaseCreditCurveType);
 
     void resetLatentCaseCreditCurveType();
 
@@ -328,7 +333,7 @@ namespace model {
 
     void resetMinimumAntiSweatHeaterPowerperUnitLength();
 
-    bool setAntiSweatHeaterControlType(std::string antiSweatHeaterControlType);
+    bool setAntiSweatHeaterControlType(const std::string& antiSweatHeaterControlType);
 
     void resetAntiSweatHeaterControlType();
 
@@ -348,7 +353,7 @@ namespace model {
 
     void resetCaseDefrostPowerperUnitLength();
 
-    bool setCaseDefrostType(std::string caseDefrostType);
+    bool setCaseDefrostType(const std::string& caseDefrostType);
 
     void resetCaseDefrostType();
 
@@ -360,7 +365,7 @@ namespace model {
 
     void resetCaseDefrostDripDownSchedule();
 
-    bool setDefrostEnergyCorrectionCurveType(std::string defrostEnergyCorrectionCurveType);
+    bool setDefrostEnergyCorrectionCurveType(const std::string& defrostEnergyCorrectionCurveType);
 
     void resetDefrostEnergyCorrectionCurveType();
 
@@ -429,7 +434,7 @@ namespace model {
   * from the *perUnitLength methods.  If NumberOfDoors, the values will be used
   * from the *perDoor methods.
   */
-    bool setUnitType(std::string unitType);
+    bool setUnitType(const std::string& unitType);
 
     /** Reset unit type to the default, "UnitLength" **/
     void resetUnitType();
@@ -496,7 +501,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCase_Impl ImplType;
+    using ImplType = detail::RefrigerationCase_Impl;
 
     explicit RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_Impl> impl);
 
@@ -510,10 +515,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCase*/
-  typedef boost::optional<RefrigerationCase> OptionalRefrigerationCase;
+  using OptionalRefrigerationCase = boost::optional<RefrigerationCase>;
 
   /** \relates RefrigerationCase*/
-  typedef std::vector<RefrigerationCase> RefrigerationCaseVector;
+  using RefrigerationCaseVector = std::vector<RefrigerationCase>;
 
 }  // namespace model
 }  // namespace openstudio

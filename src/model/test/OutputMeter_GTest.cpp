@@ -306,7 +306,7 @@ TEST_F(ModelFixture, MeterFromModel) {
 
   HandleVector handles = getHandles(model.addObjects(idfObjects));
   ASSERT_EQ(static_cast<unsigned>(4), handles.size());
-  EXPECT_EQ(static_cast<unsigned>(4), model.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(static_cast<unsigned>(4), model.getConcreteModelObjects<OutputMeter>().size());
 
   //"Output:OutputMeter,Electricity:Facility,monthly;"
   OptionalOutputMeter meter = model.getModelObject<OutputMeter>(handles[0]);

@@ -58,7 +58,7 @@ namespace model {
 
       GlareSensor_Impl(const GlareSensor_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GlareSensor_Impl() {}
+      virtual ~GlareSensor_Impl() = default;
 
       //@}
 

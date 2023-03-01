@@ -54,7 +54,12 @@ namespace model {
 
     explicit HumidifierSteamElectric(const Model& model);
 
-    virtual ~HumidifierSteamElectric() {}
+    virtual ~HumidifierSteamElectric() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HumidifierSteamElectric(const HumidifierSteamElectric& other) = default;
+    HumidifierSteamElectric(HumidifierSteamElectric&& other) = default;
+    HumidifierSteamElectric& operator=(const HumidifierSteamElectric&) = default;
+    HumidifierSteamElectric& operator=(HumidifierSteamElectric&&) = default;
 
     //@}
 
@@ -120,7 +125,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HumidifierSteamElectric_Impl ImplType;
+    using ImplType = detail::HumidifierSteamElectric_Impl;
 
     explicit HumidifierSteamElectric(std::shared_ptr<detail::HumidifierSteamElectric_Impl> impl);
 
@@ -134,10 +139,10 @@ namespace model {
   };
 
   /** \relates HumidifierSteamElectric*/
-  typedef boost::optional<HumidifierSteamElectric> OptionalHumidifierSteamElectric;
+  using OptionalHumidifierSteamElectric = boost::optional<HumidifierSteamElectric>;
 
   /** \relates HumidifierSteamElectric*/
-  typedef std::vector<HumidifierSteamElectric> HumidifierSteamElectricVector;
+  using HumidifierSteamElectricVector = std::vector<HumidifierSteamElectric>;
 
 }  // namespace model
 }  // namespace openstudio

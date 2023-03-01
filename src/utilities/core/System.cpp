@@ -155,8 +155,11 @@ void System::testExceptions3() {
   {
    public:
     MyException() : std::runtime_error("exception") {}
-
-    virtual ~MyException() throw() {}
+    MyException(const MyException&) = default;
+    MyException& operator=(const MyException&) = default;
+    MyException(MyException&&) = default;
+    MyException& operator=(MyException&&) = default;
+    virtual ~MyException() noexcept override = default;
   };
 
   try {
@@ -189,16 +192,22 @@ void System::testExceptions4() {
   {
    public:
     MyException() : std::runtime_error("exception") {}
-
-    virtual ~MyException() throw() {}
+    MyException(const MyException&) = default;
+    MyException& operator=(const MyException&) = default;
+    MyException(MyException&&) = default;
+    MyException& operator=(MyException&&) = default;
+    virtual ~MyException() noexcept override = default;
   };
 
   class MyException2 : public MyException
   {
    public:
-    MyException2() {}
-
-    virtual ~MyException2() throw() {}
+    MyException2() = default;
+    MyException2(const MyException2&) = default;
+    MyException2& operator=(const MyException2&) = default;
+    MyException2(MyException2&&) = default;
+    MyException2& operator=(MyException2&&) = default;
+    virtual ~MyException2() noexcept override = default;
   };
 
   try {
