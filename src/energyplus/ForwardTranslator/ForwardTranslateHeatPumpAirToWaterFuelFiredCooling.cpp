@@ -70,6 +70,14 @@ namespace energyplus {
       idfObject.setString(openstudio::HeatPump_AirToWater_FuelFired_CoolingFields::WaterOutletNodeName, _mo->nameString());
     }
 
+    // Air Source Node Name
+    std::string oaNodeName = modelObject.nameString() + " OA Node";
+    idfObject.setString(HeatPump_AirToWater_FuelFired_CoolingFields::AirSourceNodeName, oaNodeName);
+
+    IdfObject _oaNode(openstudio::IddObjectType::OutdoorAir_Node);
+    _oaNode.setString(0, oaNodeName);
+    m_idfObjects.push_back(_oaNode);
+
     // Companion Heating Heat Pump Name: Optional Object
     if (boost::optional<HeatPumpAirToWaterFuelFiredHeating> _companionHeatingHeatPump = modelObject.companionHeatingHeatPump()) {
       if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_companionHeatingHeatPump.get())) {
