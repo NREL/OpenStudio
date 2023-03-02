@@ -50,5 +50,4 @@ TEST_F(ModelFixture, OutputControlTimestamp_GettersSetters) {
   EXPECT_TRUE(outputControlTimestamp.timestampatBeginningofInterval());
   EXPECT_TRUE(outputControlTimestamp.setTimestampatBeginningofInterval(false));
   EXPECT_FALSE(outputControlTimestamp.timestampatBeginningofInterval());
-
 }

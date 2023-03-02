@@ -36,69 +36,69 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class OutputControlTimestamp_Impl;
+    class OutputControlTimestamp_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** OutputControlTimestamp is a ModelObject that wraps the OpenStudio IDD object 'OS:OutputControl:Timestamp'. */
-class MODEL_API OutputControlTimestamp : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** OutputControlTimestamp is a ModelObject that wraps the OpenStudio IDD object 'OS:OutputControl:Timestamp'. */
+  class MODEL_API OutputControlTimestamp : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OutputControlTimestamp() = default;
+    virtual ~OutputControlTimestamp() = default;
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  bool iso8601Format() const;
+    bool iso8601Format() const;
 
-  bool timestampatBeginningofInterval() const;
+    bool timestampatBeginningofInterval() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setISO8601Format(bool iso8601Format);
+    bool setISO8601Format(bool iso8601Format);
 
-  bool setTimestampatBeginningofInterval(bool timestampatBeginningofInterval);
+    bool setTimestampatBeginningofInterval(bool timestampatBeginningofInterval);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  using ImplType = detail::OutputControlTimestamp_Impl;
+    //@}
+   protected:
+    /// @cond
+    using ImplType = detail::OutputControlTimestamp_Impl;
 
-  explicit OutputControlTimestamp(std::shared_ptr<detail::OutputControlTimestamp_Impl> impl);
+    explicit OutputControlTimestamp(std::shared_ptr<detail::OutputControlTimestamp_Impl> impl);
 
-  friend class detail::OutputControlTimestamp_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit OutputControlTimestamp(Model& model);
+    friend class detail::OutputControlTimestamp_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit OutputControlTimestamp(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.OutputControlTimestamp");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputControlTimestamp");
+  };
 
-/** \relates OutputControlTimestamp*/
-using OptionalOutputControlTimestamp = boost::optional<OutputControlTimestamp>;
+  /** \relates OutputControlTimestamp*/
+  using OptionalOutputControlTimestamp = boost::optional<OutputControlTimestamp>;
 
-/** \relates OutputControlTimestamp*/
-using OutputControlTimestampVector = std::vector<OutputControlTimestamp>;
+  /** \relates OutputControlTimestamp*/
+  using OutputControlTimestampVector = std::vector<OutputControlTimestamp>;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTCONTROLTIMESTAMP_HPP
-
+#endif  // MODEL_OUTPUTCONTROLTIMESTAMP_HPP

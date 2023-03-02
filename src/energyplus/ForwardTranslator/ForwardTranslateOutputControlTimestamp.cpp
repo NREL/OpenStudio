@@ -42,26 +42,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputControlTimestamp( model::OutputControlTimestamp& modelObject ) {
+  boost::optional<IdfObject> ForwardTranslator::translateOutputControlTimestamp(model::OutputControlTimestamp& modelObject) {
 
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::OutputControl_Timestamp, modelObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::OutputControl_Timestamp, modelObject);
 
-  // ISO 8601 Format: Optional Boolean
-  if (modelObject.iso8601Format()) {
-    idfObject.setString(OutputControl_TimestampFields::ISO8601Format, "Yes");
-  } else {
-    idfObject.setString(OutputControl_TimestampFields::ISO8601Format, "No");
-  }
+    // ISO 8601 Format: Optional Boolean
+    if (modelObject.iso8601Format()) {
+      idfObject.setString(OutputControl_TimestampFields::ISO8601Format, "Yes");
+    } else {
+      idfObject.setString(OutputControl_TimestampFields::ISO8601Format, "No");
+    }
 
-  // Timestamp at Beginning of Interval: Optional Boolean
-  if (modelObject.timestampatBeginningofInterval()) {
-    idfObject.setString(OutputControl_TimestampFields::TimestampatBeginningofInterval, "Yes");
-  } else {
-    idfObject.setString(OutputControl_TimestampFields::TimestampatBeginningofInterval, "No");
-  }
+    // Timestamp at Beginning of Interval: Optional Boolean
+    if (modelObject.timestampatBeginningofInterval()) {
+      idfObject.setString(OutputControl_TimestampFields::TimestampatBeginningofInterval, "Yes");
+    } else {
+      idfObject.setString(OutputControl_TimestampFields::TimestampatBeginningofInterval, "No");
+    }
 
-  return idfObject;
-} // End of translate function
+    return idfObject;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

@@ -36,66 +36,60 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** OutputControlTimestamp_Impl is a ModelObject_Impl that is the implementation class for OutputControlTimestamp.*/
-  class MODEL_API OutputControlTimestamp_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** OutputControlTimestamp_Impl is a ModelObject_Impl that is the implementation class for OutputControlTimestamp.*/
+    class MODEL_API OutputControlTimestamp_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    OutputControlTimestamp_Impl(const IdfObject& idfObject,
-                                Model_Impl* model,
-                                bool keepHandle);
+      OutputControlTimestamp_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    OutputControlTimestamp_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      OutputControlTimestamp_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    OutputControlTimestamp_Impl(const OutputControlTimestamp_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      OutputControlTimestamp_Impl(const OutputControlTimestamp_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~OutputControlTimestamp_Impl() {}
+      virtual ~OutputControlTimestamp_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    bool iso8601Format() const;
+      bool iso8601Format() const;
 
-    bool timestampatBeginningofInterval() const;
+      bool timestampatBeginningofInterval() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setISO8601Format(bool iso8601Format);
+      bool setISO8601Format(bool iso8601Format);
 
-    bool setTimestampatBeginningofInterval(bool timestampatBeginningofInterval);
+      bool setTimestampatBeginningofInterval(bool timestampatBeginningofInterval);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.OutputControlTimestamp");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputControlTimestamp");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTCONTROLTIMESTAMP_IMPL_HPP
-
+#endif  // MODEL_OUTPUTCONTROLTIMESTAMP_IMPL_HPP

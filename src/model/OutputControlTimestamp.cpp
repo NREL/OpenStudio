@@ -38,93 +38,81 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  OutputControlTimestamp_Impl::OutputControlTimestamp_Impl(const IdfObject& idfObject,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == OutputControlTimestamp::iddObjectType());
-  }
-
-  OutputControlTimestamp_Impl::OutputControlTimestamp_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == OutputControlTimestamp::iddObjectType());
-  }
-
-  OutputControlTimestamp_Impl::OutputControlTimestamp_Impl(const OutputControlTimestamp_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& OutputControlTimestamp_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    if (result.empty()){
+    OutputControlTimestamp_Impl::OutputControlTimestamp_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == OutputControlTimestamp::iddObjectType());
     }
-    return result;
+
+    OutputControlTimestamp_Impl::OutputControlTimestamp_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                             bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == OutputControlTimestamp::iddObjectType());
+    }
+
+    OutputControlTimestamp_Impl::OutputControlTimestamp_Impl(const OutputControlTimestamp_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& OutputControlTimestamp_Impl::outputVariableNames() const {
+      static std::vector<std::string> result;
+      if (result.empty()) {
+      }
+      return result;
+    }
+
+    IddObjectType OutputControlTimestamp_Impl::iddObjectType() const {
+      return OutputControlTimestamp::iddObjectType();
+    }
+
+    bool OutputControlTimestamp_Impl::iso8601Format() const {
+      return getBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format);
+    }
+
+    bool OutputControlTimestamp_Impl::timestampatBeginningofInterval() const {
+      return getBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval);
+    }
+
+    bool OutputControlTimestamp_Impl::setISO8601Format(bool iso8601Format) {
+      return setBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format);
+    }
+
+    bool OutputControlTimestamp_Impl::setTimestampatBeginningofInterval(bool timestampatBeginningofInterval) {
+      return setBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval);
+    }
+
+  }  // namespace detail
+
+  IddObjectType OutputControlTimestamp::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_OutputControl_Timestamp);
   }
 
-  IddObjectType OutputControlTimestamp_Impl::iddObjectType() const {
-    return OutputControlTimestamp::iddObjectType();
+  bool OutputControlTimestamp::iSO8601Format() const {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->iSO8601Format();
   }
 
-  bool OutputControlTimestamp_Impl::iso8601Format() const {
-    return getBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format);
+  bool OutputControlTimestamp::timestampatBeginningofInterval() const {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->timestampatBeginningofInterval();
   }
 
-  bool OutputControlTimestamp_Impl::timestampatBeginningofInterval() const {
-    return getBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval);
+  bool OutputControlTimestamp::setISO8601Format(bool iSO8601Format) {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->setISO8601Format(iSO8601Format);
   }
 
-  bool OutputControlTimestamp_Impl::setISO8601Format(bool iso8601Format) {
-    return setBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format);
+  bool OutputControlTimestamp::setTimestampatBeginningofInterval(bool timestampatBeginningofInterval) {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->setTimestampatBeginningofInterval(timestampatBeginningofInterval);
   }
 
-  bool OutputControlTimestamp_Impl::setTimestampatBeginningofInterval(bool timestampatBeginningofInterval) {
-    return setBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval);
-  }
-
-} // detail
-
-IddObjectType OutputControlTimestamp::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_OutputControl_Timestamp);
-}
-
-bool OutputControlTimestamp::iSO8601Format() const {
-  return getImpl<detail::OutputControlTimestamp_Impl>()->iSO8601Format();
-}
-
-bool OutputControlTimestamp::timestampatBeginningofInterval() const {
-  return getImpl<detail::OutputControlTimestamp_Impl>()->timestampatBeginningofInterval();
-}
-
-bool OutputControlTimestamp::setISO8601Format(bool iSO8601Format) {
-  return getImpl<detail::OutputControlTimestamp_Impl>()->setISO8601Format(iSO8601Format);
-}
-
-bool OutputControlTimestamp::setTimestampatBeginningofInterval(bool timestampatBeginningofInterval) {
-  return getImpl<detail::OutputControlTimestamp_Impl>()->setTimestampatBeginningofInterval(timestampatBeginningofInterval);
-}
-
-/// @cond
-OutputControlTimestamp::OutputControlTimestamp(std::shared_ptr<detail::OutputControlTimestamp_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-OutputControlTimestamp::OutputControlTimestamp(Model& model) : ModelObject(OutputControlTimestamp::iddObjectType(),model) {
+  /// @cond
+  OutputControlTimestamp::OutputControlTimestamp(std::shared_ptr<detail::OutputControlTimestamp_Impl> impl) : ModelObject(std::move(impl)) {}
+  OutputControlTimestamp::OutputControlTimestamp(Model& model) : ModelObject(OutputControlTimestamp::iddObjectType(), model) {
     // This is a required-field, so pick one...
     // Same defaults as EnergyPlus IDD
     setISO8601Format(false);
     setTimestampatBeginningofInterval(false);
   }
 
-/// @endcond
+  /// @endcond
 
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio
