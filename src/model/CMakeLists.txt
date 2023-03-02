@@ -1063,6 +1063,9 @@ set(${target_name}_src
   OutputControlTableStyle.hpp
   OutputControlTableStyle_Impl.hpp
   OutputControlTableStyle.cpp
+  OutputControlTimestamp.hpp
+  OutputControlTimestamp_Impl.hpp
+  OutputControlTimestamp.cpp
   OutputDebuggingData.hpp
   OutputDebuggingData_Impl.hpp
   OutputDebuggingData.cpp
@@ -2158,6 +2161,7 @@ set(${target_name}_test_src
   test/OutputControlFiles_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
   test/OutputControlTableStyle_GTest.cpp
+  test/OutputControlTimestamp_GTest.cpp
   test/OutputDebuggingData_GTest.cpp
   test/OutputJSON_GTest.cpp
   test/OutputSQLite_GTest.cpp
