@@ -314,7 +314,7 @@ namespace model {
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
-      return m_cachedOutputControlFiles;
+      return m_cachedOutputControlTimestamp;
     }
 
     boost::optional<OutputDiagnostics> Model_Impl::outputDiagnostics() const {
