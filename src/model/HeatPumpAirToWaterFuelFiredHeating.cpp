@@ -71,9 +71,16 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& HeatPumpAirToWaterFuelFiredHeating_Impl::outputVariableNames() const {
-      static std::vector<std::string> result;
-      if (result.empty()) {
-      }
+      static std::vector<std::string> result{"Fuel-fired Absorption HeatPump Load Side Heat Transfer Rate",
+                                             "Fuel-fired Absorption HeatPump Load Side Heat Transfer Energy",
+                                             "Fuel-fired Absorption HeatPump Inlet Temperature",
+                                             "Fuel-fired Absorption HeatPump Outlet Temperature",
+                                             "Fuel-fired Absorption HeatPump Fuel Rate",
+                                             "Fuel-fired Absorption HeatPump Electricity Rate",
+                                             "Fuel-fired Absorption HeatPump Fuel Energy",
+                                             "Fuel-fired Absorption HeatPump Electricity Energy",
+                                             "Fuel-fired Absorption HeatPump Mass Flow Rate",
+                                             "Fuel-fired Absorption HeatPump Volumetric Flow Rate"};
       return result;
     }
 
@@ -134,7 +141,7 @@ namespace model {
     }
 
     boost::optional<double> HeatPumpAirToWaterFuelFiredHeating_Impl::autosizedNominalHeatingCapacity() {
-      return getAutosizedValue("TODO_CHECK_SQL Nominal Heating Capacity", "W");
+      return getAutosizedValue("Design Size Nominal Capacity", "W");
     }
 
     double HeatPumpAirToWaterFuelFiredHeating_Impl::nominalCOP() const {
@@ -157,7 +164,7 @@ namespace model {
     }
 
     boost::optional<double> HeatPumpAirToWaterFuelFiredHeating_Impl::autosizedDesignFlowRate() {
-      return getAutosizedValue("TODO_CHECK_SQL Design Flow Rate", "m3/s");
+      return getAutosizedValue("Design Size Load Side Volume Flow Rate", "m3/s");
     }
 
     double HeatPumpAirToWaterFuelFiredHeating_Impl::designSupplyTemperature() const {
