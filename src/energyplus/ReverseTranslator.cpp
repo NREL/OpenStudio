@@ -744,6 +744,10 @@ namespace energyplus {
         modelObject = translateOutputControlTableStyle(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::OutputControl_Timestamp: {
+        modelObject = translateOutputControlTimestamp(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Output_Schedules: {
         modelObject = translateOutputSchedules(workspaceObject);
         break;

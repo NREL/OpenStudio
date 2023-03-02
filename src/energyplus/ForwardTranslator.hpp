@@ -315,6 +315,7 @@ namespace model {
   class OutputControlFiles;
   class OutputControlReportingTolerances;
   class OutputControlTableStyle;
+  class OutputControlTimestamp;
   class OutputDebuggingData;
   class OutputDiagnostics;
   class OutputJSON;
@@ -1171,6 +1172,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateOutputControlReportingTolerances(model::OutputControlReportingTolerances& modelObject);
 
     boost::optional<IdfObject> translateOutputControlTableStyle(model::OutputControlTableStyle& modelObject);
+
+    boost::optional<IdfObject> translateOutputControlTimestamp(model::OutputControlTimestamp& modelObject);
 
     boost::optional<IdfObject> translateOutputDebuggingData(model::OutputDebuggingData& modelObject);
 
