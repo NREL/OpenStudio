@@ -91,16 +91,16 @@ namespace model {
     return IddObjectType(IddObjectType::OS_OutputControl_Timestamp);
   }
 
-  bool OutputControlTimestamp::iSO8601Format() const {
-    return getImpl<detail::OutputControlTimestamp_Impl>()->iSO8601Format();
+  bool OutputControlTimestamp::iso8601Format() const {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->iso8601Format();
   }
 
   bool OutputControlTimestamp::timestampatBeginningofInterval() const {
     return getImpl<detail::OutputControlTimestamp_Impl>()->timestampatBeginningofInterval();
   }
 
-  bool OutputControlTimestamp::setISO8601Format(bool iSO8601Format) {
-    return getImpl<detail::OutputControlTimestamp_Impl>()->setISO8601Format(iSO8601Format);
+  bool OutputControlTimestamp::setISO8601Format(bool iso8601Format) {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->setISO8601Format(iso8601Format);
   }
 
   bool OutputControlTimestamp::setTimestampatBeginningofInterval(bool timestampatBeginningofInterval) {
