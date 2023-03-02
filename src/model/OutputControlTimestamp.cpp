@@ -30,6 +30,10 @@
 #include "OutputControlTimestamp.hpp"
 #include "OutputControlTimestamp_Impl.hpp"
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_OutputControl_Timestamp_FieldEnums.hxx>
 
@@ -74,11 +78,11 @@ namespace model {
     }
 
     bool OutputControlTimestamp_Impl::setISO8601Format(bool iso8601Format) {
-      return setBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format);
+      return setBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format, iso8601Format);
     }
 
     bool OutputControlTimestamp_Impl::setTimestampatBeginningofInterval(bool timestampatBeginningofInterval) {
-      return setBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval);
+      return setBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval, timestampatBeginningofInterval);
     }
 
   }  // namespace detail
