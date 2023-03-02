@@ -430,7 +430,7 @@ TEST_F(ModelFixture, OutputControlTimestamp_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputControlTimestamp>());
-  OutputControlFiles outputControlTimestamp = model.getUniqueModelObject<OutputControlTimestamp>();
+  OutputControlTimestamp outputControlTimestamp = model.getUniqueModelObject<OutputControlTimestamp>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputControlTimestamp>());
   // We use a comment to see if cloning to another model works
   outputControlTimestamp.setComment("Custom Object");
