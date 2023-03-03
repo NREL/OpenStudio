@@ -151,8 +151,11 @@ std::ostream& operator<<(std::ostream& os, const BoostMultiPolygon& boostPolygon
   return os;
 }
 
-// Scale factor for parameters passed to boost
-double scaleBy = 1000.0;
+// Scale factor for parameters when converting between openstudio and boost data formats to improve the numerical accuracy of the boolean operations.
+// Idea came from this comment in the boostorg/geometry repo: https://github.com/boostorg/geometry/issues/1034#issuecomment-1284180101
+// where the author indicates that scaling the values by 10 improved the result and talks about rounding to an integer grid,
+// so by increasing the range of values we pass to boost we should be improving the resolution of the integer rounding
+static constexpr double scaleBy = 1000.0;
 
 // Cleans a polygon by shrinking and expanding. Can return multiple polygons
 std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
