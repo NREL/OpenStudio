@@ -137,7 +137,8 @@ Install:
 * [Xcode](https://developer.apple.com/support/xcode/)
 * [CMake](https://cmake.org/download/).
 * [QtIFW](https://download.qt.io/official_releases/qt-installer-framework/3.2.2/QtInstallerFramework-mac-x64.dmg)
-* [conan](https://conan.io/) (version 1.28 or newer)  You need to install python (install version 3 or greater) and then in a terminal run `pip install conan` or `sudo pip install conan`, and make sure that your python bin dir is in your path. After that the rest of it should be automatic.
+* [conan](https://conan.io/) (version 1.48 or newer but older than 2.0.0 since [compatitable](https://github.com/conan-io/cmake-conan/blob/develop/README.md?plain=1#L7) issue.)  You need to install python (install version 3.7) and then in a terminal run `pip install conan==1.48.0` to fit [requirement](https://github.com/NREL/OpenStudio/blob/develop/ConanInstall.cmake#L33) or `sudo pip install conan==1.48.0`.
+And make sure that your python bin dir is in your path. After that the rest of it should be automatic.
 
 Clone the OpenStudio repository, launch the CMake GUI, and select the source and build directories.  Configure build options and press generate. After generating, change directories into the build directory and run `make -j$(nproc)`.
 
@@ -145,7 +146,7 @@ Clone the OpenStudio repository, launch the CMake GUI, and select the source and
 `$ cd OpenStudio`  
 `$ mkdir build`  
 `$ cd build `  
-`$ cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DBUILD_TESTING=ON -DBUILD_PACKAGE=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=ON -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../`  
+`$ cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DBUILD_TESTING=ON -DBUILD_PACKAGE=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=ON -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../`  
 `$ make -j <num_of_cores> package`  
 
 
