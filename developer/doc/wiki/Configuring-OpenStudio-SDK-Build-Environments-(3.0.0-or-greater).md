@@ -129,7 +129,9 @@ e.g. That builds all and create a binary .deb installer package
 `$ mkdir build`  
 `$ cd build `  
 `$ cmake -DBUILD_TESTING=ON -DBUILD_PACKAGE=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=ON -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../`  
-`$ make -j <num_of_cores> package `  
+`$ make -j <num_of_cores> package ` 
+or if you want to use all cores to compile:
+`$ cores=$(sysctl -n hw.ncpu); make -j "$cores" package`.
 
 
 ## Mac
