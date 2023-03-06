@@ -332,7 +332,7 @@ class UTILITIES_API FSFiller : public FSBase
   boost::optional<FSSpace> space() const;
   std::vector<double> alphas() const;
   // Calculates and returns the center vertex position of the window or door
-  Point3d centerVertex(double alpha);
+  Point3d centerVertex(double alpha) const;
 
  protected:
   boost::optional<FSEdge> m_edge;

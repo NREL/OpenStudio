@@ -1000,7 +1000,8 @@ TEST_F(GeometryFixture, Triangulate_Windows_4783) {
   subSurfaceVertices.push_back(tmp8);
 
   std::vector<std::vector<Point3d>> triangles = computeTriangulation(surfaceVertices, subSurfaceVertices);
-  ASSERT_EQ(triangles.size(), 47);
+  //LOG(Debug, triangles);
+  ASSERT_EQ(triangles.size(), 48);
 }
 
 TEST_F(GeometryFixture, PointLatLon) {

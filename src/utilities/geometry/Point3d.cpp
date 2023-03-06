@@ -113,4 +113,20 @@ std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVect
   return os;
 }
 
+// Writes a json string representing the vector of point vectors
+// Will deserialize in to a simple class that defines three double properties for X,Y,Z
+std::ostream& operator<<(std::ostream& os, const std::vector<std::vector<Point3d>>& pointVectorVector) {
+  os << "[\n";
+  for (const auto& points : pointVectorVector) {
+    os << "  [";
+    for (const auto& point : points) {
+      os << "\n    " << point << ", ";
+    }
+    os << "\n  ],\n";
+  }
+  os << "]";
+
+  return os;
+}
+
 }  // namespace openstudio

@@ -68,7 +68,15 @@ set(utilities_resources_src
   utilities/Geometry/surface_match_floorplan.json
   utilities/Geometry/threejs.json
   utilities/Geometry/window_floorplan.json
+  utilities/Geometry/issue-4203.json
+  utilities/Geometry/issue-4222.json
+  utilities/Geometry/issue-4237.json
+  utilities/Geometry/issue-4312.json
+  utilities/Geometry/issue-4313.json
   utilities/Geometry/issue-4323.json
+  utilities/Geometry/issue-4488.json
+  utilities/Geometry/issue-4670.json
+  utilities/Geometry/floorplan_mcve.json
   utilities/Geometry/shadingtest.json
   utilities/Geometry/minimal_GLTF_File.gltf
   utilities/Geometry/7-7_Windows_Complete.gltf
