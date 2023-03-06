@@ -207,7 +207,7 @@ int main(int argc, char* argv[]) {
       experimentalApp->add_subcommand("ruby_version", "Returns the Ruby version used by the CLI")->group(versionGroupname)->callback([&rubyEngine]() {
         rubyEngine->exec("puts RUBY_VERSION");
       });
-    [[maybe_unused]] auto* python_versionCommand = experimentalApp->add_subcommand("python_version", "Returns the Ruby version used by the CLI")
+    [[maybe_unused]] auto* python_versionCommand = experimentalApp->add_subcommand("python_version", "Returns the Python version used by the CLI")
                                                      ->group(versionGroupname)
                                                      ->callback([&pythonEngine]() { pythonEngine->exec("import sys; print(sys.version)"); });
 
