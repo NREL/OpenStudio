@@ -73,7 +73,7 @@ namespace model {
       return getBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format);
     }
 
-    bool OutputControlTimestamp_Impl::timestampatBeginningofInterval() const {
+    bool OutputControlTimestamp_Impl::timestampAtBeginningofInterval() const {
       return getBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval);
     }
 
@@ -81,8 +81,8 @@ namespace model {
       return setBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format, iso8601Format);
     }
 
-    bool OutputControlTimestamp_Impl::setTimestampatBeginningofInterval(bool timestampatBeginningofInterval) {
-      return setBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval, timestampatBeginningofInterval);
+    bool OutputControlTimestamp_Impl::setTimestampAtBeginningofInterval(bool timestampAtBeginningofInterval) {
+      return setBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval, timestampAtBeginningofInterval);
     }
 
   }  // namespace detail
@@ -95,16 +95,16 @@ namespace model {
     return getImpl<detail::OutputControlTimestamp_Impl>()->iso8601Format();
   }
 
-  bool OutputControlTimestamp::timestampatBeginningofInterval() const {
-    return getImpl<detail::OutputControlTimestamp_Impl>()->timestampatBeginningofInterval();
+  bool OutputControlTimestamp::timestampAtBeginningofInterval() const {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->timestampAtBeginningofInterval();
   }
 
   bool OutputControlTimestamp::setISO8601Format(bool iso8601Format) {
     return getImpl<detail::OutputControlTimestamp_Impl>()->setISO8601Format(iso8601Format);
   }
 
-  bool OutputControlTimestamp::setTimestampatBeginningofInterval(bool timestampatBeginningofInterval) {
-    return getImpl<detail::OutputControlTimestamp_Impl>()->setTimestampatBeginningofInterval(timestampatBeginningofInterval);
+  bool OutputControlTimestamp::setTimestampatBeginningofInterval(bool timestampAtBeginningofInterval) {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->setTimestampatBeginningofInterval(timestampAtBeginningofInterval);
   }
 
   /// @cond

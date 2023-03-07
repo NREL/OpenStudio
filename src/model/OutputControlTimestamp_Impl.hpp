@@ -51,7 +51,7 @@ namespace model {
 
       OutputControlTimestamp_Impl(const OutputControlTimestamp_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputControlTimestamp_Impl() {}
+      virtual ~OutputControlTimestamp_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -67,7 +67,7 @@ namespace model {
 
       bool iso8601Format() const;
 
-      bool timestampatBeginningofInterval() const;
+      bool timestampAtBeginningofInterval() const;
 
       //@}
       /** @name Setters */
@@ -75,7 +75,7 @@ namespace model {
 
       bool setISO8601Format(bool iso8601Format);
 
-      bool setTimestampatBeginningofInterval(bool timestampatBeginningofInterval);
+      bool setTimestampAtBeginningofInterval(bool timestampAtBeginningofInterval);
 
       //@}
       /** @name Other */

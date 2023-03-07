@@ -55,12 +55,12 @@ namespace energyplus {
       }
     }
 
-    if (boost::optional<std::string> _timestampatBeginningofInterval =
+    if (boost::optional<std::string> _timestampAtBeginningofInterval =
           workspaceObject.getString(OutputControl_TimestampFields::TimestampatBeginningofInterval, true)) {
-      if (istringEqual("Yes", _timestampatBeginningofInterval.get())) {
-        modelObject.setTimestampatBeginningofInterval(true);
+      if (istringEqual("Yes", _timestampAtBeginningofInterval.get())) {
+        modelObject.setTimestampAtBeginningofInterval(true);
       } else {
-        modelObject.setTimestampatBeginningofInterval(false);
+        modelObject.setTimestampAtBeginningofInterval(false);
       }
     }
 

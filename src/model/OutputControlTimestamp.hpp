@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~OutputControlTimestamp() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputControlTimestamp(const OutputControlTimestamp& other) = default;
+    OutputControlTimestamp(OutputControlTimestamp&& other) = default;
+    OutputControlTimestamp& operator=(const OutputControlTimestamp&) = default;
+    OutputControlTimestamp& operator=(OutputControlTimestamp&&) = default;
 
     //@}
 
@@ -60,7 +65,7 @@ namespace model {
 
     bool iso8601Format() const;
 
-    bool timestampatBeginningofInterval() const;
+    bool timestampAtBeginningofInterval() const;
 
     //@}
     /** @name Setters */
@@ -68,7 +73,7 @@ namespace model {
 
     bool setISO8601Format(bool iso8601Format);
 
-    bool setTimestampatBeginningofInterval(bool timestampatBeginningofInterval);
+    bool setTimestampAtBeginningofInterval(bool timestampAtBeginningofInterval);
 
     //@}
     /** @name Other */
