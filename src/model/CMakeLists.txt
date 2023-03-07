@@ -2320,6 +2320,7 @@ set(${target_name}_test_src
   test/WeatherFile_GTest.cpp
   test/WindowPropertyFrameAndDivider_GTest.cpp
   test/YearDescription_GTest.cpp
+  test/ZoneAirHeatBalanceAlgorithm_GTest.cpp
   test/ZoneAirMassFlowConservation_GTest.cpp
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
   test/ZoneControlContaminantController_GTest.cpp
