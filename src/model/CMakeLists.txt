@@ -1495,6 +1495,9 @@ set(${target_name}_src
   SolarCollectorPerformanceIntegralCollectorStorage.hpp
   SolarCollectorPerformanceIntegralCollectorStorage_Impl.hpp
   SolarCollectorPerformanceIntegralCollectorStorage.cpp
+  SolarCollectorPerformancePhotovoltaicThermalBIPVT.hpp
+  SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl.hpp
+  SolarCollectorPerformancePhotovoltaicThermalBIPVT.cpp
   SolarCollectorPerformancePhotovoltaicThermalSimple.hpp
   SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp
   SolarCollectorPerformancePhotovoltaicThermalSimple.cpp

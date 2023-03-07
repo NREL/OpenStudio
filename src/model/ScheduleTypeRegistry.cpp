@@ -390,6 +390,7 @@ namespace model {
       {"SizingZone", "Zone Humidistat Dehumidification Set Point", "zoneHumidistatDehumidificationSetPointSchedule", true, "Percent", 0.0, 100.0},
       {"SizingZone", "Zone Humidistat Humidification Set Point", "zoneHumidistatHumidificationSetPointSchedule", true, "Percent", 0.0, 100.0},
       {"SurfaceControlMovableInsulation", "Resistance Modifier Fraction", "schedule", true, "", 0.0, 1.0},
+      {"SolarCollectorPerformancePhotovoltaicThermalBIPVT", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"SolarCollectorPerformancePhotovoltaicThermalSimple", "Thermal Conversion Efficiency", "thermalConversionEfficiencySchedule", true, "", 0.0,
        1.0},
       {"SurfacePropertyConvectionCoefficients", "Convection Coefficient 1", "convectionCoefficient1Schedule", true, "", 0.1, 1000},
