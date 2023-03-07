@@ -219,9 +219,10 @@ namespace model {
   ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(Model& model) : ModelObject(ZoneAirHeatBalanceAlgorithm::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
 
-    setAlgorithm("ThirdOrderBackwardDifference");
-    setDoSpaceHeatBalanceforSizing(false);
-    setDoSpaceHeatBalanceforSimulation(false);
+    // Leaving the IDD defaults
+    // Algorithm: ThirdOrderBackwardDifference
+    // DoSpaceHeatBalanceforSizing: false
+    // DoSpaceHeatBalanceforSimulation: false
   }
 
   /// @endcond
