@@ -56,7 +56,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneAirHeatBalanceAlgorithm) {
   ZoneAirHeatBalanceAlgorithm zoneAHBA = model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
 
   EXPECT_TRUE(zoneAHBA.setAlgorithm("AnalyticalSolution"));
-  EXPECT_TRUE(zoneAHBA.setDoSpaceHeatBalanceforSizing("Yes"));
+  EXPECT_TRUE(zoneAHBA.setDoSpaceHeatBalanceforSizing("No"));
   EXPECT_TRUE(zoneAHBA.setDoSpaceHeatBalanceforSimulation("Yes"));
 
   ForwardTranslator ft;
@@ -67,7 +67,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneAirHeatBalanceAlgorithm) {
   IdfObject idf_zoneAHBA = workspace.getObjectsByType(IddObjectType::ZoneAirHeatBalanceAlgorithm)[0];
 
   EXPECT_EQ("AnalyticalSolution", idf_zoneAHBA.getString(ZoneAirHeatBalanceAlgorithmFields::Algorithm, false).get());
-  EXPECT_EQ("Yes", idf_zoneAHBA.getString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, false).get());
+  EXPECT_EQ("No", idf_zoneAHBA.getString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, false).get());
   EXPECT_EQ("Yes", idf_zoneAHBA.getString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, false).get());
 }
 
