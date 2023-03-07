@@ -244,7 +244,7 @@ namespace model {
       boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
 
       /** Sets the SurfacePropertyOtherSideCoefficients. */
-      bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+      bool setSurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
 
       /** Resets the SurfacePropertyOtherSideCoefficients. */
       void resetSurfacePropertyOtherSideCoefficients();
@@ -253,7 +253,7 @@ namespace model {
       boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
 
       /** Sets the SurfacePropertyOtherSideConditionsModel. */
-      bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+      bool setSurfacePropertyOtherSideConditionsModel(const SurfacePropertyOtherSideConditionsModel& otherSideModel);
 
       /** Resets the SurfacePropertyOtherSideConditionsModel. */
       void resetSurfacePropertyOtherSideConditionsModel();

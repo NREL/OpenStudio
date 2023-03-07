@@ -931,7 +931,7 @@ namespace model {
       return getObject<Surface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SurfaceFields::OutsideBoundaryConditionObject);
     }
 
-    bool Surface_Impl::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+    bool Surface_Impl::setSurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
       boost::optional<Surface> adjacentSurface = this->adjacentSurface();
       if (adjacentSurface) {
         resetAdjacentSurface();
@@ -972,7 +972,7 @@ namespace model {
       return getObject<Surface>().getModelObjectTarget<SurfacePropertyOtherSideConditionsModel>(OS_SurfaceFields::OutsideBoundaryConditionObject);
     }
 
-    bool Surface_Impl::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+    bool Surface_Impl::setSurfacePropertyOtherSideConditionsModel(const SurfacePropertyOtherSideConditionsModel& otherSideModel) {
       boost::optional<Surface> adjacentSurface = this->adjacentSurface();
       if (adjacentSurface) {
         resetAdjacentSurface();
@@ -2299,7 +2299,7 @@ namespace model {
     return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideCoefficients();
   }
 
-  bool Surface::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+  bool Surface::setSurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
     return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideCoefficients(otherSideCoefficients);
   }
 
@@ -2311,7 +2311,7 @@ namespace model {
     return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideConditionsModel();
   }
 
-  bool Surface::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+  bool Surface::setSurfacePropertyOtherSideConditionsModel(const SurfacePropertyOtherSideConditionsModel& otherSideModel) {
     return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideConditionsModel(otherSideModel);
   }
 
