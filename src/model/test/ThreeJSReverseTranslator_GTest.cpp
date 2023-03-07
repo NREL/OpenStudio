@@ -800,6 +800,10 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Colors) {
   //EXPECT_EQ(255, story->renderingColor()->renderingAlphaValue());
 }
 
+// Modified this tes as now 4 vertices will be returned for both the ceiling of Space 1-1
+// and the floor of Space 2-1. This is a more desirable outcome as Energy+ expects paired
+// surfaces to have the same number of vertices/ (Though energy plus does remove collinear
+// vertices in my tests it only removed one of the two so this model won't simulate)
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) {
 
   ThreeJSReverseTranslator rt;
@@ -870,7 +874,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) 
   ASSERT_TRUE(infos[0].floor);
   EXPECT_EQ(6u, infos[0].floor->vertices().size());
   ASSERT_TRUE(infos[0].ceiling);
-  EXPECT_EQ(6u, infos[0].ceiling->vertices().size());
+  EXPECT_EQ(4u, infos[0].ceiling->vertices().size());
   EXPECT_FALSE(infos[0].floor->adjacentSurface());
   ASSERT_TRUE(infos[0].ceiling->adjacentSurface());
   ASSERT_TRUE(infos[0].ceiling->adjacentSurface()->space());
