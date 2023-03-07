@@ -5130,7 +5130,6 @@ MaterialProperty:VariableAbsorptance,
        \note Regular Material Name to which the additional properties will be added.
        \note this the material name for the basic material properties.
   A3 , \field Control Signal
-       \required-field
        \type choice
        \key SurfaceTemperature
        \key SurfaceReceivedSolarRadiation
