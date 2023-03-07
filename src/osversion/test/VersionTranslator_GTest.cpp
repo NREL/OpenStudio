@@ -2467,13 +2467,13 @@ TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_VRF_Terminal_v340_osc) {
   EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", ocd->primaryComponentObject().iddObject().name());
 }
 
-TEST_F(OSVersionFixture, update_3_5_1_to_3_5_2_GroundHeatExchangerHorizontalTrench) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_5_2/test_vt_GroundHeatExchangerHorizontalTrench.osm");
+TEST_F(OSVersionFixture, update_3_5_1_to_3_6_0_GroundHeatExchangerHorizontalTrench) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_6_0/test_vt_GroundHeatExchangerHorizontalTrench.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_2/test_vt_GroundHeatExchangerHorizontalTrench_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_6_0/test_vt_GroundHeatExchangerHorizontalTrench_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> ghxs = model->getObjectsByType("OS:GroundHeatExchanger:HorizontalTrench");

@@ -257,7 +257,7 @@ namespace osversion {
     std::string update_3_3_0_to_3_4_0(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_4_0);
     std::string update_3_4_0_to_3_5_0(const IdfFile& idf_3_4_0, const IddFileAndFactoryWrapper& idd_3_5_0);
     std::string update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1);
-    std::string update_3_5_1_to_3_5_2(const IdfFile& idf_3_5_1, const IddFileAndFactoryWrapper& idd_3_5_2);
+    std::string update_3_5_1_to_3_6_0(const IdfFile& idf_3_5_1, const IddFileAndFactoryWrapper& idd_3_6_0);
 
     IdfObject updateUrlField_0_7_1_to_0_7_2(const IdfObject& object, unsigned index);
 

@@ -1,0 +1,32 @@
+
+OS:Version,
+  {5e7c2ed2-4803-4a04-a875-cc24fbcff29d}, !- Handle
+  3.5.0,                                  !- Version Identifier
+  rc1;                                    !- Prerelease Identifier
+
+OS:GroundHeatExchanger:HorizontalTrench,
+  {ccc17b25-7c58-4b57-bfd9-e187b869c0c6}, !- Handle
+  Ground Heat Exchanger Horizontal Trench 1, !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  0.004,                                  !- Design Flow Rate {m3/s}
+  75,                                     !- Trench Length in Pipe Axial Direction {m}
+  2,                                      !- Number of Trenches
+  2,                                      !- Horizontal Spacing Between Pipes {m}
+  0.016,                                  !- Pipe Inner Diameter {m}
+  0.02667,                                !- Pipe Outer Diameter {m}
+  1.25,                                   !- Burial Depth {m}
+  1.08,                                   !- Soil Thermal Conductivity {W/m-K}
+  962,                                    !- Soil Density {kg/m3}
+  2576,                                   !- Soil Specific Heat {J/kg-K}
+  0.3895,                                 !- Pipe Thermal Conductivity {W/m-K}
+  641,                                    !- Pipe Density {kg/m3}
+  2405,                                   !- Pipe Specific Heat {J/kg-K}
+  30,                                     !- Soil Moisture Content Percent {percent}
+  50,                                     !- Soil Moisture Content Percent at Saturation {percent}
+  KusudaAchenbach,                        !- Ground Temperature Model
+  15.5,                                   !- Kusuda-Achenbach Average Surface Temperature {C}
+  12.8,                                   !- Kusuda-Achenbach Average Amplitude of Surface Temperature {deltaC}
+  17.3,                                   !- Kusuda-Achenbach Phase Shift of Minimum Surface Temperature {days}
+  0.408;                                  !- Evapotranspiration Ground Cover Parameter
+

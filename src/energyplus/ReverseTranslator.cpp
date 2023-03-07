@@ -1009,8 +1009,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::ZoneAirHeatBalanceAlgorithm: {
-        // DLM: why is this commented out?
-        //modelObject = translateZoneAirHeatBalanceAlgorithm(workspaceObject);
+        modelObject = translateZoneAirHeatBalanceAlgorithm(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::ZoneAirMassFlowConservation: {
