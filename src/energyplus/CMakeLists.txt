@@ -779,6 +779,7 @@ set(${target_name}_test_src
   Test/SiteGroundTemperatureUndisturbedXing_GTest.cpp
   Test/SizingSystem_GTest.cpp
   Test/SizingZone_GTest.cpp
+  Test/SolarCollectorPerformancePhotovoltaicThermalBIPVT_GTest.cpp
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   Test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
