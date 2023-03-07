@@ -32348,6 +32348,7 @@ OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple,
 
 OS:SolarCollectorPerformance:PhotovoltaicThermal:BIPVT,
        \memo Thermal performance parameters for Building-Integrated Photovoltaic-Thermal (BIPVT) solar collector.
+       \min-fields 17
   A1,  \field Handle
        \type handle
        \required-field
