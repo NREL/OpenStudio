@@ -153,11 +153,13 @@ namespace model {
 
       bool result = true;
 
-      LOG(Debug, "Before setVertices have " << numFields() << " fields.");
+      // DA - Removed these because they are of little value for debugging and just create noise in the log file
+      // LOG(Debug, "Before setVertices have " << numFields() << " fields.");
 
       clearExtensibleGroups(false);
 
-      LOG(Debug, "After clearExtensibleGroups in setVertices have " << numFields() << " fields.");
+      // DA - Removed these because they are of little value for debugging and just create noise in the log file
+      // LOG(Debug, "After clearExtensibleGroups in setVertices have " << numFields() << " fields.");
 
       // set the vertices
       // bool nonPlanarPointFound = false;
@@ -187,7 +189,8 @@ namespace model {
         OS_ASSERT(!group.empty());
       }
 
-      LOG(Debug, "After setVertices have " << numFields() << " fields.  Size of vertices is " << vertices.size() << ".");
+      // DA - Removed these because they are of little value for debugging and just create noise in the log file
+      // LOG(Debug, "After setVertices have " << numFields() << " fields.  Size of vertices is " << vertices.size() << ".");
 
       this->emitChangeSignals();
 

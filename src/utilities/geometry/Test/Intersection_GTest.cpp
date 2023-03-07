@@ -2148,7 +2148,7 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 
 /// <summary>
 /// Tests the offset buffer method
-/// Noyte the two tests are taken from
+/// Note the two tests are taken from
 /// https://www.boost.org/doc/libs/1_65_0/libs/geometry/doc/html/geometry/reference/strategies/strategy_buffer_join_miter.html
 /// </summary>
 /// <param name=""></param>
@@ -2156,28 +2156,25 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 TEST_F(GeometryFixture, Offset) {
 
   // A simple rectangle, when offset should produce a polygon with four points
-  Point3dVector poly1{
-    {8, 7, 0},
-    {8, 10, 0},
-    {11, 10, 0},
-    {11, 7, 0},
+  Point3dVector poly1{{8, 7, 0}, {8, 10, 0}, {11, 10, 0}, {11, 7, 0}};
+  Point3dVector poly2{
+    {7.5, 10.5, 0.0},
+    {11.5, 10.5, 0.0},
+    {11.5, 6.5, 0.0},
+    {7.5, 6.5, 0.0},
   };
 
   boost::optional<std::vector<Point3d>> result1 = openstudio::buffer(poly1, 0.5, 0.01);
   ASSERT_TRUE(result1);
+  Point3dVectorVector tmp{poly1, *result1};
+  LOG(Debug, tmp);
+
   ASSERT_EQ(4, result1.get().size());
-  ASSERT_EQ(7.5, result1.get()[0].x());
-  ASSERT_EQ(10.5, result1.get()[0].y());
-  ASSERT_EQ(11.5, result1.get()[1].x());
-  ASSERT_EQ(10.5, result1.get()[1].y());
-  ASSERT_EQ(11.5, result1.get()[2].x());
-  ASSERT_EQ(6.5, result1.get()[2].y());
-  ASSERT_EQ(7.5, result1.get()[3].x());
-  ASSERT_EQ(6.5, result1.get()[3].y());
+  EXPECT_TRUE(circularEqual(poly2, *result1));
 
   // Two shapes, a triangle and a rectangle. when offset will combine into 1 shape
   // with 8 vertices
-  Point3dVector poly2{
+  Point3dVector poly3{
     {5, 5, 0},
     {7, 8, 0},
     {9, 5, 0},
@@ -2185,11 +2182,14 @@ TEST_F(GeometryFixture, Offset) {
 
   std::vector<Point3dVector> polygons;
   polygons.push_back(poly1);
-  polygons.push_back(poly2);
+  polygons.push_back(poly3);
 
   boost::optional<std::vector<Point3dVector>> result3 = openstudio::buffer(polygons, 0.5, 0.01);
   ASSERT_TRUE(result3);
   ASSERT_EQ(1, result3->size());
+  polygons.push_back(result3->begin()[0]);
+  LOG(Debug, polygons);
+
   Point3dVector resultPoly = result3.get().front();
   ASSERT_EQ(8, resultPoly.size());
   boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result3, -0.5, 0.01);
