@@ -36,136 +36,132 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class OSCM;
-class Schedule;
+  // TODO: Check the following class names against object getters and setters.
+  class OSCM;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl is a ModelObject_Impl that is the implementation class for SolarCollectorPerformancePhotovoltaicThermalBIPVT.*/
-  class MODEL_API SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl is a ModelObject_Impl that is the implementation class for SolarCollectorPerformancePhotovoltaicThermalBIPVT.*/
+    class MODEL_API SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl(const IdfObject& idfObject,
-                                                           Model_Impl* model,
-                                                           bool keepHandle);
+      SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle);
+      SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                             bool keepHandle);
 
-    SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl(const SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle);
+      SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl(const SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl& other, Model_Impl* model,
+                                                             bool keepHandle);
 
-    virtual ~SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl() {}
+      virtual ~SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    // TODO: Check return type. From object lists, some candidates are: OSCM.
-    OSCM boundaryConditionsModel() const;
+      // TODO: Check return type. From object lists, some candidates are: OSCM.
+      OSCM boundaryConditionsModel() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    Schedule availabilitySchedule() const;
+      // TODO: Check return type. From object lists, some candidates are: Schedule.
+      Schedule availabilitySchedule() const;
 
-    double effectivePlenumGapThicknessBehindPVModules() const;
+      double effectivePlenumGapThicknessBehindPVModules() const;
 
-    double pVCellNormalTransmittanceAbsorptanceProduct() const;
+      double pVCellNormalTransmittanceAbsorptanceProduct() const;
 
-    double backingMaterialNormalTransmittanceAbsorptanceProduct() const;
+      double backingMaterialNormalTransmittanceAbsorptanceProduct() const;
 
-    double claddingNormalTransmittanceAbsorptanceProduct() const;
+      double claddingNormalTransmittanceAbsorptanceProduct() const;
 
-    double fractionofCollectorGrossAreaCoveredbyPVModule() const;
+      double fractionofCollectorGrossAreaCoveredbyPVModule() const;
 
-    double fractionofPVCellAreatoPVModuleArea() const;
+      double fractionofPVCellAreatoPVModuleArea() const;
 
-    double pVModuleTopThermalResistance() const;
+      double pVModuleTopThermalResistance() const;
 
-    double pVModuleBottomThermalResistance() const;
+      double pVModuleBottomThermalResistance() const;
 
-    double pVModuleFrontLongwaveEmissivity() const;
+      double pVModuleFrontLongwaveEmissivity() const;
 
-    double pVModuleBackLongwaveEmissivity() const;
+      double pVModuleBackLongwaveEmissivity() const;
 
-    double glassThickness() const;
+      double glassThickness() const;
 
-    double glassRefractionIndex() const;
+      double glassRefractionIndex() const;
 
-    double glassExtinctionCoefficient() const;
+      double glassExtinctionCoefficient() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: OSCM.
-    bool setBoundaryConditionsModel(const OSCM& oSCM);
+      // TODO: Check argument type. From object lists, some candidates are: OSCM.
+      bool setBoundaryConditionsModel(const OSCM& oSCM);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
-    bool setAvailabilitySchedule(Schedule& schedule);
+      // TODO: Check argument type. From object lists, some candidates are: Schedule.
+      // Note Schedules are passed by reference, not const reference.
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setEffectivePlenumGapThicknessBehindPVModules(double effectivePlenumGapThicknessBehindPVModules);
+      bool setEffectivePlenumGapThicknessBehindPVModules(double effectivePlenumGapThicknessBehindPVModules);
 
-    bool setPVCellNormalTransmittanceAbsorptanceProduct(double pVCellNormalTransmittanceAbsorptanceProduct);
+      bool setPVCellNormalTransmittanceAbsorptanceProduct(double pVCellNormalTransmittanceAbsorptanceProduct);
 
-    bool setBackingMaterialNormalTransmittanceAbsorptanceProduct(double backingMaterialNormalTransmittanceAbsorptanceProduct);
+      bool setBackingMaterialNormalTransmittanceAbsorptanceProduct(double backingMaterialNormalTransmittanceAbsorptanceProduct);
 
-    bool setCladdingNormalTransmittanceAbsorptanceProduct(double claddingNormalTransmittanceAbsorptanceProduct);
+      bool setCladdingNormalTransmittanceAbsorptanceProduct(double claddingNormalTransmittanceAbsorptanceProduct);
 
-    bool setFractionofCollectorGrossAreaCoveredbyPVModule(double fractionofCollectorGrossAreaCoveredbyPVModule);
+      bool setFractionofCollectorGrossAreaCoveredbyPVModule(double fractionofCollectorGrossAreaCoveredbyPVModule);
 
-    bool setFractionofPVCellAreatoPVModuleArea(double fractionofPVCellAreatoPVModuleArea);
+      bool setFractionofPVCellAreatoPVModuleArea(double fractionofPVCellAreatoPVModuleArea);
 
-    bool setPVModuleTopThermalResistance(double pVModuleTopThermalResistance);
+      bool setPVModuleTopThermalResistance(double pVModuleTopThermalResistance);
 
-    bool setPVModuleBottomThermalResistance(double pVModuleBottomThermalResistance);
+      bool setPVModuleBottomThermalResistance(double pVModuleBottomThermalResistance);
 
-    bool setPVModuleFrontLongwaveEmissivity(double pVModuleFrontLongwaveEmissivity);
+      bool setPVModuleFrontLongwaveEmissivity(double pVModuleFrontLongwaveEmissivity);
 
-    bool setPVModuleBackLongwaveEmissivity(double pVModuleBackLongwaveEmissivity);
+      bool setPVModuleBackLongwaveEmissivity(double pVModuleBackLongwaveEmissivity);
 
-    bool setGlassThickness(double glassThickness);
+      bool setGlassThickness(double glassThickness);
 
-    bool setGlassRefractionIndex(double glassRefractionIndex);
+      bool setGlassRefractionIndex(double glassRefractionIndex);
 
-    bool setGlassExtinctionCoefficient(double glassExtinctionCoefficient);
+      bool setGlassExtinctionCoefficient(double glassExtinctionCoefficient);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SolarCollectorPerformancePhotovoltaicThermalBIPVT");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SolarCollectorPerformancePhotovoltaicThermalBIPVT");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<OSCM> optionalBoundaryConditionsModel() const;
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-  };
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<OSCM> optionalBoundaryConditionsModel() const;
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SOLARCOLLECTORPERFORMANCEPHOTOVOLTAICTHERMALBIPVT_IMPL_HPP
-
+#endif  // MODEL_SOLARCOLLECTORPERFORMANCEPHOTOVOLTAICTHERMALBIPVT_IMPL_HPP

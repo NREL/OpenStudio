@@ -54,12 +54,12 @@ TEST_F(ModelFixture, SolarCollectorPerformancePhotovoltaicThermalBIPVT_GettersSe
   // Boundary Conditions Model Name: Required Object
   OSCM obj(m);
   EXPECT_TRUE(solarCollectorPerformancePhotovoltaicThermalBIPVT.setBoundaryConditionsModel(obj));
-EXPECT_EQ(obj, solarCollectorPerformancePhotovoltaicThermalBIPVT.boundaryConditionsModel());
+  EXPECT_EQ(obj, solarCollectorPerformancePhotovoltaicThermalBIPVT.boundaryConditionsModel());
 
   // Availability Schedule Name: Required Object
   Schedule obj(m);
   EXPECT_TRUE(solarCollectorPerformancePhotovoltaicThermalBIPVT.setAvailabilitySchedule(obj));
-EXPECT_EQ(obj, solarCollectorPerformancePhotovoltaicThermalBIPVT.availabilitySchedule());
+  EXPECT_EQ(obj, solarCollectorPerformancePhotovoltaicThermalBIPVT.availabilitySchedule());
 
   // Effective Plenum Gap Thickness Behind PV Modules: Required Double
   EXPECT_TRUE(solarCollectorPerformancePhotovoltaicThermalBIPVT.setEffectivePlenumGapThicknessBehindPVModules(0.5));
@@ -151,5 +151,4 @@ EXPECT_EQ(obj, solarCollectorPerformancePhotovoltaicThermalBIPVT.availabilitySch
   // Bad Value
   EXPECT_FALSE(solarCollectorPerformancePhotovoltaicThermalBIPVT.setGlassExtinctionCoefficient(-10.0));
   EXPECT_EQ(94.444, solarCollectorPerformancePhotovoltaicThermalBIPVT.glassExtinctionCoefficient());
-
 }
