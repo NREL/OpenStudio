@@ -32365,6 +32365,7 @@ OS:SolarCollectorPerformance:PhotovoltaicThermal:BIPVT,
        \note If this field is blank, the collector is always available.
        \type object-list
        \object-list ScheduleNames
+       \required-field
   N1 , \field Effective Plenum Gap Thickness Behind PV Modules
        \required-field
        \type real
@@ -32372,63 +32373,63 @@ OS:SolarCollectorPerformance:PhotovoltaicThermal:BIPVT,
        \minimum> 0.0
   N2 , \field PV Cell Normal Transmittance-Absorptance Product
        \type real
-       \default 0.957
+       \required-field
        \minimum> 0.0
        \maximum< 1.00
   N3 , \field Backing Material Normal Transmittance-Absorptance Product
        \type real
-       \default 0.87
+       \required-field
        \minimum> 0.0
        \maximum< 1.00
   N4 , \field Cladding Normal Transmittance-Absorptance Product
        \type real
-       \default 0.85
+       \required-field
        \minimum> 0.0
        \maximum< 1.00
   N5 , \field Fraction of Collector Gross Area Covered by PV Module
        \type real
-       \default 0.85
+       \required-field
        \minimum> 0.0
        \maximum< 1.00
   N6 , \field Fraction of PV Cell Area to PV Module Area
        \type real
-       \default 0.9
+       \required-field
        \minimum> 0.0
        \maximum< 1.00
   N7 , \field PV Module Top Thermal Resistance
        \type real
        \units m2-K/W
-       \default 0.0044
+       \required-field
        \minimum> 0.0
   N8 , \field PV Module Bottom Thermal Resistance
        \type real
        \units m2-K/W
-       \default 0.0039
+       \required-field
        \minimum> 0.0
   N9  ,\field PV Module Front Longwave Emissivity
        \type real
-       \default 0.85
+       \required-field
        \minimum> 0.0
        \maximum< 1.00
   N10 ,\field PV Module Back Longwave Emissivity
        \type real
-       \default 0.9
+       \required-field
        \minimum> 0.0
        \maximum< 1.00
   N11 ,\field Glass Thickness
        \type real
-       \default 0.002
+       \required-field
        \units m
        \minimum> 0.0
        \maximum< 0.01
   N12 ,\field Glass Refraction Index
        \type real
-       \default 1.526
+       \required-field
        \minimum> 1.0
        \maximum< 10.00
   N13 ;\field Glass Extinction Coefficient
        \type real
-       \default 4.0
+       \required-field
        \units 1/m
        \minimum> 0.0
        \maximum< 100.00
