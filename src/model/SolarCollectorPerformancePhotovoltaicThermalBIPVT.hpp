@@ -37,8 +37,7 @@ namespace openstudio {
 
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
-  class OSCM;
+  class SurfacePropertyOtherSideConditionsModel;
   class Schedule;
 
   namespace detail {
@@ -57,6 +56,11 @@ namespace model {
     explicit SolarCollectorPerformancePhotovoltaicThermalBIPVT(const Model& model);
 
     virtual ~SolarCollectorPerformancePhotovoltaicThermalBIPVT() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorPerformancePhotovoltaicThermalBIPVT(const SolarCollectorPerformancePhotovoltaicThermalBIPVT& other) = default;
+    SolarCollectorPerformancePhotovoltaicThermalBIPVT(SolarCollectorPerformancePhotovoltaicThermalBIPVT&& other) = default;
+    SolarCollectorPerformancePhotovoltaicThermalBIPVT& operator=(const SolarCollectorPerformancePhotovoltaicThermalBIPVT&) = default;
+    SolarCollectorPerformancePhotovoltaicThermalBIPVT& operator=(SolarCollectorPerformancePhotovoltaicThermalBIPVT&&) = default;
 
     //@}
 
@@ -65,10 +69,8 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: OSCM.
-    OSCM boundaryConditionsModel() const;
+    SurfacePropertyOtherSideConditionsModel boundaryConditionsModel() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule availabilitySchedule() const;
 
     double effectivePlenumGapThicknessBehindPVModules() const;
@@ -101,11 +103,8 @@ namespace model {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: OSCM.
-    bool setBoundaryConditionsModel(const OSCM& oSCM);
+    bool setBoundaryConditionsModel(const SurfacePropertyOtherSideConditionsModel& surfacePropertyOtherSideConditionsModel);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     bool setEffectivePlenumGapThicknessBehindPVModules(double effectivePlenumGapThicknessBehindPVModules);

@@ -106,11 +106,6 @@ namespace model {
   SurfacePropertyOtherSideConditionsModel::SurfacePropertyOtherSideConditionsModel(const Model& model)
     : ResourceObject(SurfacePropertyOtherSideConditionsModel::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::SurfacePropertyOtherSideConditionsModel_Impl>());
-
-    // TODO: Appropriately handle the following required object-list fields.
-    bool ok = true;
-    // ok = setHandle();
-    OS_ASSERT(ok);
   }
 
   IddObjectType SurfacePropertyOtherSideConditionsModel::iddObjectType() {

@@ -30,20 +30,18 @@
 #include "SolarCollectorPerformancePhotovoltaicThermalBIPVT.hpp"
 #include "SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "OSCM.hpp"
-#include "OSCM_Impl.hpp"
+#include "SurfacePropertyOtherSideConditionsModel.hpp"
+#include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "Model.hpp"
+
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVT_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -67,9 +65,7 @@ namespace model {
       : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::outputVariableNames() const {
-      static std::vector<std::string> result;
-      if (result.empty()) {
-      }
+      static const std::vector<std::string> result;
       return result;
     }
 
@@ -78,18 +74,18 @@ namespace model {
     }
 
     std::vector<ScheduleTypeKey> SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
-      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-      if (std::find(b, e, OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("SolarCollectorPerformancePhotovoltaicThermalBIPVT", "Availability"));
+      const UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(),
+                    OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName)
+          != fieldIndices.cend()) {
+        result.emplace_back("SolarCollectorPerformancePhotovoltaicThermalBIPVT", "Availability");
       }
       return result;
     }
 
-    OSCM SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::boundaryConditionsModel() const {
-      boost::optional<OSCM> value = optionalBoundaryConditionsModel();
+    SurfacePropertyOtherSideConditionsModel SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::boundaryConditionsModel() const {
+      boost::optional<SurfacePropertyOtherSideConditionsModel> value = optionalBoundaryConditionsModel();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have an Boundary Conditions Model attached.");
       }
@@ -188,99 +184,104 @@ namespace model {
       return value.get();
     }
 
-    bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setBoundaryConditionsModel(const OSCM& oSCM) {
-      bool result = setPointer(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName, oSCM.handle());
+    bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setBoundaryConditionsModel(
+      const SurfacePropertyOtherSideConditionsModel& surfacePropertyOtherSideConditionsModel) {
+      const bool result = setPointer(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName,
+                                     surfacePropertyOtherSideConditionsModel.handle());
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setAvailabilitySchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName,
-                                "SolarCollectorPerformancePhotovoltaicThermalBIPVT", "Availability", schedule);
+      const bool result = setSchedule(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName,
+                                      "SolarCollectorPerformancePhotovoltaicThermalBIPVT", "Availability", schedule);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setEffectivePlenumGapThicknessBehindPVModules(
       double effectivePlenumGapThicknessBehindPVModules) {
-      bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::EffectivePlenumGapThicknessBehindPVModules,
-                              effectivePlenumGapThicknessBehindPVModules);
+      const bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::EffectivePlenumGapThicknessBehindPVModules,
+                                    effectivePlenumGapThicknessBehindPVModules);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setPVCellNormalTransmittanceAbsorptanceProduct(
       double pVCellNormalTransmittanceAbsorptanceProduct) {
-      bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVCellNormalTransmittanceAbsorptanceProduct,
-                              pVCellNormalTransmittanceAbsorptanceProduct);
+      const bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVCellNormalTransmittanceAbsorptanceProduct,
+                                    pVCellNormalTransmittanceAbsorptanceProduct);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setBackingMaterialNormalTransmittanceAbsorptanceProduct(
       double backingMaterialNormalTransmittanceAbsorptanceProduct) {
-      bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BackingMaterialNormalTransmittanceAbsorptanceProduct,
-                              backingMaterialNormalTransmittanceAbsorptanceProduct);
+      const bool result =
+        setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BackingMaterialNormalTransmittanceAbsorptanceProduct,
+                  backingMaterialNormalTransmittanceAbsorptanceProduct);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setCladdingNormalTransmittanceAbsorptanceProduct(
       double claddingNormalTransmittanceAbsorptanceProduct) {
-      bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::CladdingNormalTransmittanceAbsorptanceProduct,
-                              claddingNormalTransmittanceAbsorptanceProduct);
+      const bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::CladdingNormalTransmittanceAbsorptanceProduct,
+                                    claddingNormalTransmittanceAbsorptanceProduct);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setFractionofCollectorGrossAreaCoveredbyPVModule(
       double fractionofCollectorGrossAreaCoveredbyPVModule) {
-      bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofCollectorGrossAreaCoveredbyPVModule,
-                              fractionofCollectorGrossAreaCoveredbyPVModule);
+      const bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofCollectorGrossAreaCoveredbyPVModule,
+                                    fractionofCollectorGrossAreaCoveredbyPVModule);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setFractionofPVCellAreatoPVModuleArea(double fractionofPVCellAreatoPVModuleArea) {
-      bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofPVCellAreatoPVModuleArea,
-                              fractionofPVCellAreatoPVModuleArea);
+      const bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofPVCellAreatoPVModuleArea,
+                                    fractionofPVCellAreatoPVModuleArea);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setPVModuleTopThermalResistance(double pVModuleTopThermalResistance) {
-      bool result =
+      const bool result =
         setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleTopThermalResistance, pVModuleTopThermalResistance);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setPVModuleBottomThermalResistance(double pVModuleBottomThermalResistance) {
-      bool result =
+      const bool result =
         setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBottomThermalResistance, pVModuleBottomThermalResistance);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setPVModuleFrontLongwaveEmissivity(double pVModuleFrontLongwaveEmissivity) {
-      bool result =
+      const bool result =
         setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleFrontLongwaveEmissivity, pVModuleFrontLongwaveEmissivity);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setPVModuleBackLongwaveEmissivity(double pVModuleBackLongwaveEmissivity) {
-      bool result =
+      const bool result =
         setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBackLongwaveEmissivity, pVModuleBackLongwaveEmissivity);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setGlassThickness(double glassThickness) {
-      bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassThickness, glassThickness);
+      const bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassThickness, glassThickness);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setGlassRefractionIndex(double glassRefractionIndex) {
-      bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassRefractionIndex, glassRefractionIndex);
+      const bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassRefractionIndex, glassRefractionIndex);
       return result;
     }
 
     bool SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::setGlassExtinctionCoefficient(double glassExtinctionCoefficient) {
-      bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassExtinctionCoefficient, glassExtinctionCoefficient);
+      const bool result =
+        setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassExtinctionCoefficient, glassExtinctionCoefficient);
       return result;
     }
 
-    boost::optional<OSCM> SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::optionalBoundaryConditionsModel() const {
-      return getObject<ModelObject>().getModelObjectTarget<OSCM>(
+    boost::optional<SurfacePropertyOtherSideConditionsModel>
+      SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl::optionalBoundaryConditionsModel() const {
+      return getObject<ModelObject>().getModelObjectTarget<SurfacePropertyOtherSideConditionsModel>(
         OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName);
     }
 
@@ -295,47 +296,51 @@ namespace model {
     : ModelObject(SolarCollectorPerformancePhotovoltaicThermalBIPVT::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
-    //     OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName
-    //     OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName
-    bool ok = true;
-    // ok = setBoundaryConditionsModel();
+    SurfacePropertyOtherSideConditionsModel oscm(model);
+    bool ok = setBoundaryConditionsModel(oscm);
     OS_ASSERT(ok);
-    // ok = setAvailabilitySchedule();
+    ok = oscm.setTypeOfModeling("GapConvectionRadiation");  // Explicitly set it, even if it's the default
     OS_ASSERT(ok);
-    // ok = setEffectivePlenumGapThicknessBehindPVModules();
+
+    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    ok = setAvailabilitySchedule(alwaysOn);
     OS_ASSERT(ok);
-    // ok = setPVCellNormalTransmittanceAbsorptanceProduct();
+
+    ok = setEffectivePlenumGapThicknessBehindPVModules(0.1);  // 10cm. Taken from ShopWithBIPVT.idf
     OS_ASSERT(ok);
-    // ok = setBackingMaterialNormalTransmittanceAbsorptanceProduct();
+
+    // IDD Defaults
+    ok = setPVCellNormalTransmittanceAbsorptanceProduct(0.957);
     OS_ASSERT(ok);
-    // ok = setCladdingNormalTransmittanceAbsorptanceProduct();
+    ok = setBackingMaterialNormalTransmittanceAbsorptanceProduct(0.87);
     OS_ASSERT(ok);
-    // ok = setFractionofCollectorGrossAreaCoveredbyPVModule();
+    ok = setCladdingNormalTransmittanceAbsorptanceProduct(0.85);
     OS_ASSERT(ok);
-    // ok = setFractionofPVCellAreatoPVModuleArea();
+    ok = setFractionofCollectorGrossAreaCoveredbyPVModule(0.85);
     OS_ASSERT(ok);
-    // ok = setPVModuleTopThermalResistance();
+    ok = setFractionofPVCellAreatoPVModuleArea(0.9);
     OS_ASSERT(ok);
-    // ok = setPVModuleBottomThermalResistance();
+    ok = setPVModuleTopThermalResistance(0.0044);
     OS_ASSERT(ok);
-    // ok = setPVModuleFrontLongwaveEmissivity();
+    ok = setPVModuleBottomThermalResistance(0.0039);
     OS_ASSERT(ok);
-    // ok = setPVModuleBackLongwaveEmissivity();
+    ok = setPVModuleFrontLongwaveEmissivity(0.85);
     OS_ASSERT(ok);
-    // ok = setGlassThickness();
+    ok = setPVModuleBackLongwaveEmissivity(0.9);
     OS_ASSERT(ok);
-    // ok = setGlassRefractionIndex();
+    ok = setGlassThickness(0.002);
     OS_ASSERT(ok);
-    // ok = setGlassExtinctionCoefficient();
+    ok = setGlassRefractionIndex(1.526);
+    OS_ASSERT(ok);
+    ok = setGlassExtinctionCoefficient(4.0);
     OS_ASSERT(ok);
   }
 
   IddObjectType SolarCollectorPerformancePhotovoltaicThermalBIPVT::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVT);
+    return {IddObjectType::OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVT};
   }
 
-  OSCM SolarCollectorPerformancePhotovoltaicThermalBIPVT::boundaryConditionsModel() const {
+  SurfacePropertyOtherSideConditionsModel SolarCollectorPerformancePhotovoltaicThermalBIPVT::boundaryConditionsModel() const {
     return getImpl<detail::SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl>()->boundaryConditionsModel();
   }
 
@@ -395,8 +400,10 @@ namespace model {
     return getImpl<detail::SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl>()->glassExtinctionCoefficient();
   }
 
-  bool SolarCollectorPerformancePhotovoltaicThermalBIPVT::setBoundaryConditionsModel(const OSCM& oSCM) {
-    return getImpl<detail::SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl>()->setBoundaryConditionsModel(oSCM);
+  bool SolarCollectorPerformancePhotovoltaicThermalBIPVT::setBoundaryConditionsModel(
+    const SurfacePropertyOtherSideConditionsModel& surfacePropertyOtherSideConditionsModel) {
+    return getImpl<detail::SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl>()->setBoundaryConditionsModel(
+      surfacePropertyOtherSideConditionsModel);
   }
 
   bool SolarCollectorPerformancePhotovoltaicThermalBIPVT::setAvailabilitySchedule(Schedule& schedule) {

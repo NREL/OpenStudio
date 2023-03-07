@@ -36,8 +36,7 @@
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
-  class OSCM;
+  class SurfacePropertyOtherSideConditionsModel;
   class Schedule;
 
   namespace detail {
@@ -57,7 +56,7 @@ namespace model {
       SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl(const SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl& other, Model_Impl* model,
                                                              bool keepHandle);
 
-      virtual ~SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl() {}
+      virtual ~SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -73,10 +72,8 @@ namespace model {
       /** @name Getters */
       //@{
 
-      // TODO: Check return type. From object lists, some candidates are: OSCM.
-      OSCM boundaryConditionsModel() const;
+      SurfacePropertyOtherSideConditionsModel boundaryConditionsModel() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       Schedule availabilitySchedule() const;
 
       double effectivePlenumGapThicknessBehindPVModules() const;
@@ -109,11 +106,8 @@ namespace model {
       /** @name Setters */
       //@{
 
-      // TODO: Check argument type. From object lists, some candidates are: OSCM.
-      bool setBoundaryConditionsModel(const OSCM& oSCM);
+      bool setBoundaryConditionsModel(const SurfacePropertyOtherSideConditionsModel& surfacePropertyOtherSideConditionsModel);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setAvailabilitySchedule(Schedule& schedule);
 
       bool setEffectivePlenumGapThicknessBehindPVModules(double effectivePlenumGapThicknessBehindPVModules);
@@ -151,11 +145,8 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.SolarCollectorPerformancePhotovoltaicThermalBIPVT");
 
-      // TODO: Check the return types of these methods.
       // Optional getters for use by methods like children() so can remove() if the constructor fails.
-      // There are other ways for the public versions of these getters to fail--perhaps all required
-      // objects should be returned as boost::optionals
-      boost::optional<OSCM> optionalBoundaryConditionsModel() const;
+      boost::optional<SurfacePropertyOtherSideConditionsModel> optionalBoundaryConditionsModel() const;
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
     };
 
