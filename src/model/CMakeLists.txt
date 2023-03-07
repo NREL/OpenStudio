@@ -2280,6 +2280,7 @@ set(${target_name}_test_src
   test/SolarCollectorFlatPlatePhotovoltaicThermal_GTest.cpp
   test/SolarCollectorFlatPlateWater_GTest.cpp
   test/SolarCollectorIntegralCollectorStorage_GTest.cpp
+  test/SolarCollectorPerformancePhotovoltaicThermalBIPVT_GTest.cpp
   test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
   test/SpaceInfiltrationFlowCoefficient_GTest.cpp

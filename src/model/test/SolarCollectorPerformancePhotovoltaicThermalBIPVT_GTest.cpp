@@ -32,34 +32,32 @@
 #include "../SolarCollectorPerformancePhotovoltaicThermalBIPVT.hpp"
 #include "../SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "../OSCM.hpp"
-#include "../OSCM_Impl.hpp"
-
+#include "../SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../Schedule.hpp"
-#include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, SolarCollectorPerformancePhotovoltaicThermalBIPVT_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
   SolarCollectorPerformancePhotovoltaicThermalBIPVT solarCollectorPerformancePhotovoltaicThermalBIPVT(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // SolarCollectorPerformancePhotovoltaicThermalBIPVT solarCollectorPerformancePhotovoltaicThermalBIPVT = m.getUniqueModelObject<SolarCollectorPerformancePhotovoltaicThermalBIPVT>();
 
   solarCollectorPerformancePhotovoltaicThermalBIPVT.setName("My SolarCollectorPerformancePhotovoltaicThermalBIPVT");
 
   // Boundary Conditions Model Name: Required Object
-  OSCM obj(m);
-  EXPECT_TRUE(solarCollectorPerformancePhotovoltaicThermalBIPVT.setBoundaryConditionsModel(obj));
-  EXPECT_EQ(obj, solarCollectorPerformancePhotovoltaicThermalBIPVT.boundaryConditionsModel());
+  {
+    SurfacePropertyOtherSideConditionsModel oscm(m);
+    EXPECT_TRUE(solarCollectorPerformancePhotovoltaicThermalBIPVT.setBoundaryConditionsModel(oscm));
+    EXPECT_EQ(oscm, solarCollectorPerformancePhotovoltaicThermalBIPVT.boundaryConditionsModel());
+  }
 
   // Availability Schedule Name: Required Object
-  Schedule obj(m);
-  EXPECT_TRUE(solarCollectorPerformancePhotovoltaicThermalBIPVT.setAvailabilitySchedule(obj));
-  EXPECT_EQ(obj, solarCollectorPerformancePhotovoltaicThermalBIPVT.availabilitySchedule());
+  {
+    ScheduleConstant sch(m);
+    EXPECT_TRUE(solarCollectorPerformancePhotovoltaicThermalBIPVT.setAvailabilitySchedule(sch));
+    EXPECT_EQ(sch, solarCollectorPerformancePhotovoltaicThermalBIPVT.availabilitySchedule());
+  }
 
   // Effective Plenum Gap Thickness Behind PV Modules: Required Double
   EXPECT_TRUE(solarCollectorPerformancePhotovoltaicThermalBIPVT.setEffectivePlenumGapThicknessBehindPVModules(0.5));
