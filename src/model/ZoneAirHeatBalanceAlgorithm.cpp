@@ -227,8 +227,8 @@ namespace model {
     OS_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
 
     setAlgorithm("ThirdOrderBackwardDifference");
-    setDoSpaceHeatBalanceforSizing("No");
-    setDoSpaceHeatBalanceforSimulation("No");
+    setDoSpaceHeatBalanceforSizing(false);
+    setDoSpaceHeatBalanceforSimulation(false);
   }
 
   /// @endcond

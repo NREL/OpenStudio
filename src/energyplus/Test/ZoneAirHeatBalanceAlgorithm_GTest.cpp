@@ -56,8 +56,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneAirHeatBalanceAlgorithm) {
   ZoneAirHeatBalanceAlgorithm zoneAHBA = model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
 
   EXPECT_TRUE(zoneAHBA.setAlgorithm("AnalyticalSolution"));
-  EXPECT_TRUE(zoneAHBA.setDoSpaceHeatBalanceforSizing("No"));
-  EXPECT_TRUE(zoneAHBA.setDoSpaceHeatBalanceforSimulation("Yes"));
+  EXPECT_TRUE(zoneAHBA.setDoSpaceHeatBalanceforSizing(false));
+  EXPECT_TRUE(zoneAHBA.setDoSpaceHeatBalanceforSimulation(true));
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
