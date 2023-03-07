@@ -2831,6 +2831,11 @@ namespace energyplus {
         retVal = translateSolarCollectorPerformanceIntegralCollectorStorage(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_SolarCollectorPerformance_PhotovoltaicThermal_BIPVT: {
+        auto mo = modelObject.cast<SolarCollectorPerformancePhotovoltaicThermalBIPVT>();
+        retVal = translateSolarCollectorPerformancePhotovoltaicThermalBIPVT(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_SolarCollectorPerformance_PhotovoltaicThermal_Simple: {
         auto mo = modelObject.cast<SolarCollectorPerformancePhotovoltaicThermalSimple>();
         retVal = translateSolarCollectorPerformancePhotovoltaicThermalSimple(mo);

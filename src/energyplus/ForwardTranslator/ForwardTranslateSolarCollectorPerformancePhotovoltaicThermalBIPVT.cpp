@@ -28,19 +28,13 @@
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
-#include "../../model/Model.hpp"
 
 #include "../../model/SolarCollectorPerformancePhotovoltaicThermalBIPVT.hpp"
-
-// TODO: Check the following class names against object getters and setters.
-#include "../../model/OSCM.hpp"
-#include "../../model/OSCM_Impl.hpp"
-
+#include "../../model/Model.hpp"
+#include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/SolarCollectorPerformance_PhotovoltaicThermal_BIPVT_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -51,97 +45,75 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorPerformancePhotovoltaicThermalBIPVT(
     model::SolarCollectorPerformancePhotovoltaicThermalBIPVT& modelObject) {
-    boost::optional<IdfObject> result;
-    boost::optional<WorkspaceObject> _wo;
-    boost::optional<ModelObject> _mo;
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SolarCollectorPerformance_PhotovoltaicThermal_BIPVT, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::SolarCollectorPerformance_PhotovoltaicThermal_BIPVT );
-    // m_idfObjects.push_back(idfObject);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
-
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
-    // Name
-    if (boost::optional<std::string> moName = modelObject.name()) {
-      idfObject.setName(*moName);
-    }
 
     // Boundary Conditions Model Name: Required Object
-    OSCM boundaryConditionsModel = modelObject.boundaryConditionsModel();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(boundaryConditionsModel)) {
-      idfObject.setString(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName, _owo->nameString());
+    {
+      auto boundaryConditionsModel = modelObject.boundaryConditionsModel();
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(boundaryConditionsModel)) {
+        idfObject.setString(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName, wo_->nameString());
+      }
     }
 
-    // Availability Schedule Name: Optional Object
-    if (boost::optional<Schedule> _availabilitySchedule = modelObject.availabilitySchedule()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_availabilitySchedule.get())) {
-        idfObject.setString(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName, _owo->nameString());
+    // Availability Schedule Name: Optional Object (but required in model)
+    {
+      auto availabilitySchedule = modelObject.availabilitySchedule();
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule)) {
+        idfObject.setString(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName, wo_->nameString());
       }
     }
 
     // Effective Plenum Gap Thickness Behind PV Modules: Required Double
-    double effectivePlenumGapThicknessBehindPVModules = modelObject.effectivePlenumGapThicknessBehindPVModules();
     idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::EffectivePlenumGapThicknessBehindPVModules,
-                        effectivePlenumGapThicknessBehindPVModules);
+                        modelObject.effectivePlenumGapThicknessBehindPVModules());
 
-    // PV Cell Normal Transmittance-Absorptance Product: Optional Double
-    double pVCellNormalTransmittanceAbsorptanceProduct = modelObject.pVCellNormalTransmittanceAbsorptanceProduct();
+    // PV Cell Normal Transmittance-Absorptance Product: Optional Double (but required in model)
     idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVCellNormalTransmittanceAbsorptanceProduct,
-                        pVCellNormalTransmittanceAbsorptanceProduct);
+                        modelObject.pVCellNormalTransmittanceAbsorptanceProduct());
 
-    // Backing Material Normal Transmittance-Absorptance Product: Optional Double
-    double backingMaterialNormalTransmittanceAbsorptanceProduct = modelObject.backingMaterialNormalTransmittanceAbsorptanceProduct();
+    // Backing Material Normal Transmittance-Absorptance Product: Optional Double (but required in model)
     idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BackingMaterialNormalTransmittanceAbsorptanceProduct,
-                        backingMaterialNormalTransmittanceAbsorptanceProduct);
+                        modelObject.backingMaterialNormalTransmittanceAbsorptanceProduct());
 
-    // Cladding Normal Transmittance-Absorptance Product: Optional Double
-    double claddingNormalTransmittanceAbsorptanceProduct = modelObject.claddingNormalTransmittanceAbsorptanceProduct();
+    // Cladding Normal Transmittance-Absorptance Product: Optional Double (but required in model)
     idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::CladdingNormalTransmittanceAbsorptanceProduct,
-                        claddingNormalTransmittanceAbsorptanceProduct);
+                        modelObject.claddingNormalTransmittanceAbsorptanceProduct());
 
-    // Fraction of Collector Gross Area Covered by PV Module: Optional Double
-    double fractionofCollectorGrossAreaCoveredbyPVModule = modelObject.fractionofCollectorGrossAreaCoveredbyPVModule();
+    // Fraction of Collector Gross Area Covered by PV Module: Optional Double (but required in model)
     idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofCollectorGrossAreaCoveredbyPVModule,
-                        fractionofCollectorGrossAreaCoveredbyPVModule);
+                        modelObject.fractionofCollectorGrossAreaCoveredbyPVModule());
 
-    // Fraction of PV Cell Area to PV Module Area: Optional Double
-    double fractionofPVCellAreatoPVModuleArea = modelObject.fractionofPVCellAreatoPVModuleArea();
+    // Fraction of PV Cell Area to PV Module Area: Optional Double (but required in model)
     idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofPVCellAreatoPVModuleArea,
-                        fractionofPVCellAreatoPVModuleArea);
+                        modelObject.fractionofPVCellAreatoPVModuleArea());
 
-    // PV Module Top Thermal Resistance: Optional Double
-    double pVModuleTopThermalResistance = modelObject.pVModuleTopThermalResistance();
-    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleTopThermalResistance, pVModuleTopThermalResistance);
+    // PV Module Top Thermal Resistance: Optional Double (but required in model)
+    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleTopThermalResistance,
+                        modelObject.pVModuleTopThermalResistance());
 
-    // PV Module Bottom Thermal Resistance: Optional Double
-    double pVModuleBottomThermalResistance = modelObject.pVModuleBottomThermalResistance();
-    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBottomThermalResistance, pVModuleBottomThermalResistance);
+    // PV Module Bottom Thermal Resistance: Optional Double (but required in model)
+    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBottomThermalResistance,
+                        modelObject.pVModuleBottomThermalResistance());
 
-    // PV Module Front Longwave Emissivity: Optional Double
-    double pVModuleFrontLongwaveEmissivity = modelObject.pVModuleFrontLongwaveEmissivity();
-    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleFrontLongwaveEmissivity, pVModuleFrontLongwaveEmissivity);
+    // PV Module Front Longwave Emissivity: Optional Double (but required in model)
+    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleFrontLongwaveEmissivity,
+                        modelObject.pVModuleFrontLongwaveEmissivity());
 
-    // PV Module Back Longwave Emissivity: Optional Double
-    double pVModuleBackLongwaveEmissivity = modelObject.pVModuleBackLongwaveEmissivity();
-    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBackLongwaveEmissivity, pVModuleBackLongwaveEmissivity);
+    // PV Module Back Longwave Emissivity: Optional Double (but required in model)
+    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBackLongwaveEmissivity,
+                        modelObject.pVModuleBackLongwaveEmissivity());
 
-    // Glass Thickness: Optional Double
-    double glassThickness = modelObject.glassThickness();
-    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassThickness, glassThickness);
+    // Glass Thickness: Optional Double (but required in model)
+    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassThickness, modelObject.glassThickness());
 
-    // Glass Refraction Index: Optional Double
-    double glassRefractionIndex = modelObject.glassRefractionIndex();
-    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassRefractionIndex, glassRefractionIndex);
+    // Glass Refraction Index: Optional Double (but required in model)
+    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassRefractionIndex, modelObject.glassRefractionIndex());
 
-    // Glass Extinction Coefficient: Optional Double
-    double glassExtinctionCoefficient = modelObject.glassExtinctionCoefficient();
-    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassExtinctionCoefficient, glassExtinctionCoefficient);
+    // Glass Extinction Coefficient: Optional Double (but required in model)
+    idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassExtinctionCoefficient,
+                        modelObject.glassExtinctionCoefficient());
 
     return idfObject;
   }  // End of translate function
