@@ -74,6 +74,9 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 * [#4740](https://github.com/NREL/OpenStudio/pull/4740) - Fix issues around `ScheduleFixedInterval`, with A minor API breaking change: `intervalLength`/`setIntervalLength` now return/accept an `int` rather than a `double` to conform to the IDD type `\integer`
 
+* [#4810](https://github.com/NREL/OpenStudio/pull/4810) - Wrap `SolarCollectorPerformance:PhotovoltaicThermal:BIPVT`
+    * `SolarCollectorFlatPlatePhotovoltaicThermal` has API-breaking changes in the `solarCollectorPerformance` getter due to the addition of this new object: it used to return a `SolarCollectorPerformancePhotovoltaicThermalSimple` (the only performance object at the time), now it's a `ModelObject`.
+
 ## Minor changes and bug fixes
 
 
