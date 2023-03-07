@@ -79,15 +79,12 @@ namespace model {
       //@{
 
       std::string algorithm() const;
-
       bool isAlgorithmDefaulted() const;
 
       bool doSpaceHeatBalanceforSizing() const;
-
       bool isDoSpaceHeatBalanceforSizingDefaulted() const;
 
       bool doSpaceHeatBalanceforSimulation() const;
-
       bool isDoSpaceHeatBalanceforSimulationDefaulted() const;
 
       //@}
@@ -95,15 +92,12 @@ namespace model {
       //@{
 
       bool setAlgorithm(const std::string& algorithm);
-
       void resetAlgorithm();
 
       bool setDoSpaceHeatBalanceforSizing(bool doSpaceHeatBalanceforSizing);
-
       void resetDoSpaceHeatBalanceforSizing();
 
       bool setDoSpaceHeatBalanceforSimulation(bool doSpaceHeatBalanceforSimulation);
-
       void resetDoSpaceHeatBalanceforSimulation();
 
       //@}
@@ -114,8 +108,6 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.ZoneAirHeatBalanceAlgorithm");
-
-      std::vector<std::string> validAlgorithmValues() const;
     };
 
   }  // namespace detail

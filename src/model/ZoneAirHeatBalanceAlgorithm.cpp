@@ -96,9 +96,7 @@ namespace model {
     }
 
     bool ZoneAirHeatBalanceAlgorithm_Impl::doSpaceHeatBalanceforSizing() const {
-      boost::optional<std::string> value = getString(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+      return getBooleanFieldValue(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing);
     }
 
     bool ZoneAirHeatBalanceAlgorithm_Impl::isDoSpaceHeatBalanceforSizingDefaulted() const {
@@ -106,9 +104,7 @@ namespace model {
     }
 
     bool ZoneAirHeatBalanceAlgorithm_Impl::doSpaceHeatBalanceforSimulation() const {
-      boost::optional<std::string> value = getString(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+      return getBooleanFieldValue(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation);
     }
 
     bool ZoneAirHeatBalanceAlgorithm_Impl::isDoSpaceHeatBalanceforSimulationDefaulted() const {
@@ -125,11 +121,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    std::vector<std::string> ZoneAirHeatBalanceAlgorithm_Impl::validAlgorithmValues() const {
-      return ZoneAirHeatBalanceAlgorithm::validAlgorithmValues();
-    }
-
     bool ZoneAirHeatBalanceAlgorithm_Impl::setDoSpaceHeatBalanceforSizing(bool doSpaceHeatBalanceforSizing) {
+      this->getBooleanFieldValue(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing);
       bool result = false;
       if (doSpaceHeatBalanceforSizing) {
         result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, "Yes");
@@ -226,9 +219,10 @@ namespace model {
   ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(Model& model) : ModelObject(ZoneAirHeatBalanceAlgorithm::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
 
-    setAlgorithm("ThirdOrderBackwardDifference");
-    setDoSpaceHeatBalanceforSizing("No");
-    setDoSpaceHeatBalanceforSimulation("No");
+    // Leaving the IDD defaults
+    // Algorithm: ThirdOrderBackwardDifference
+    // DoSpaceHeatBalanceforSizing: false
+    // DoSpaceHeatBalanceforSimulation: false
   }
 
   /// @endcond

@@ -694,7 +694,7 @@ OS:ZoneAirHeatBalanceAlgorithm,
        \memo Controls the zone/space air heat balance.
        \unique-object
        \format singleLine
-       \min-fields 1
+       \min-fields 4
   A1, \field Handle
        \type handle
        \required-field

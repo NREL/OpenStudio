@@ -49,32 +49,24 @@ namespace energyplus {
 
     auto mo = m_model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
 
-    boost::optional<std::string> s;
-
-    s = workspaceObject.getString(ZoneAirHeatBalanceAlgorithmFields::Algorithm);
-    if (s) {
-      mo.setAlgorithm(s.get());
+    if (auto algorithm_ = workspaceObject.getString(ZoneAirHeatBalanceAlgorithmFields::Algorithm, false, true)) {
+      mo.setAlgorithm(algorithm_.get());
     }
 
-    s = workspaceObject.getString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing);
-    if (s) {
-      std::string temp = *s;
-      boost::to_lower(temp);
-      if (temp == "no") {
-        mo.setDoSpaceHeatBalanceforSizing(false);
-      } else {
+    if (auto doSpaceHeatBalanceforSizing_ = workspaceObject.getString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, false, true)) {
+      if (istringEqual("Yes", doSpaceHeatBalanceforSizing_.get())) {
         mo.setDoSpaceHeatBalanceforSizing(true);
+      } else {
+        mo.setDoSpaceHeatBalanceforSizing(false);
       }
     }
 
-    s = workspaceObject.getString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation);
-    if (s) {
-      std::string temp = *s;
-      boost::to_lower(temp);
-      if (temp == "no") {
-        mo.setDoSpaceHeatBalanceforSimulation(false);
-      } else {
+    if (auto doSpaceHeatBalanceforSimulation_ =
+          workspaceObject.getString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, false, true)) {
+      if (istringEqual("Yes", doSpaceHeatBalanceforSimulation_.get())) {
         mo.setDoSpaceHeatBalanceforSimulation(true);
+      } else {
+        mo.setDoSpaceHeatBalanceforSimulation(false);
       }
     }
 
