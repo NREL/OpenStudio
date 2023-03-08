@@ -498,19 +498,19 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       result << "\n" if preamble == ""
 
+      result << "#include \"../utilities/core/Assert.hpp\"\n\n"
+
       if includeIddFactory
         result << "#include <utilities/idd/IddFactory.hxx>\n"
       end
 
       result << "#include <utilities/idd/IddEnums.hxx>\n"
-
       result << "#include <utilities/idd/" << @iddObjectType.valueName << "_FieldEnums.hxx>\n\n"
 
-      if @hasRealFields
-        result << "#include \"../utilities/units/Unit.hpp\"\n\n"
-      end
+      # if @hasRealFields
+      #   result << "#include \"../utilities/units/Unit.hpp\"\n\n"
+      # end
 
-      result << "#include \"../utilities/core/Assert.hpp\"\n\n"
     else
       result = super
     end

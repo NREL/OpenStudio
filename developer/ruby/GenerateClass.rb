@@ -365,7 +365,12 @@ cppPublicClass << methodGenerator.cppPublicClassConstructors
 
 # VIRTUAL DESTRUCTORS
 
-hpp << "  virtual ~" << className << "() = default;\n\n"
+hpp << "  virtual ~" << className << "() = default;\n"
+hpp << "  // Default the copy and move operators because the virtual dtor is explicit\n"
+hpp << "  " << className << "(const " << className << "& other) = default;\n"
+hpp << "  " << className << "(" << className << "&& other) = default;\n"
+hpp << "  " << className << "& operator=(const " << className << "&) = default;\n"
+hpp << "  " << className << "& operator=(" << className << "&&) = default;\n\n"
 hpp << "  //@}\n\n"
 
 if pImpl

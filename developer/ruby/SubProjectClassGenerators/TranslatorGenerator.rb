@@ -153,12 +153,12 @@ class TranslatorGenerator
     result << "{\n"
 
     # High level variables
-    result << "  boost::optional<ModelObject> result;\n"
-    if @hasObjectFields
-      result << "  boost::optional<WorkspaceObject> _wo;\n"
-      result << "  boost::optional<ModelObject> _mo;\n"
-    end
     # No longer used, will use unique variable throughout
+    # result << "  boost::optional<ModelObject> result;\n"
+    # if @hasObjectFields
+    #   result << "  boost::optional<WorkspaceObject> _wo;\n"
+    #   result << "  boost::optional<ModelObject> _mo;\n"
+    # end
     #result << "  boost::optional<double> _d;\n"
     #result << "  boost::optional<int> _i;\n"
     #result << "  boost::optional<std::string> _s;\n"
@@ -169,7 +169,7 @@ class TranslatorGenerator
     result << "  // Instantiate an object of the class to store the values,\n"
     result << "  // but we don't return it until we know it's ok\n"
     result << "  // TODO: check constructor, it might need other objects\n"
-    result << "  openstudio::model::" << @className << " modelObject( m_model );\n\n"
+    result << "  openstudio::model::" << @className << " modelObject(m_model);\n\n"
 
 
     result << "  // TODO: Note JM 2018-10-17\n"
@@ -183,19 +183,19 @@ class TranslatorGenerator
 
       if field.isName?
         result << "  // " << field.name << "\n"
-        result << "  if (boost::optional<std::string> _name = workspaceObject.name()) {\n"
-        result << "    modelObject.setName(_name.get());\n"
+        result << "  if (boost::optional<std::string> name_ = workspaceObject.name()) {\n"
+        result << "    modelObject.setName(name_.get());\n"
         result << "  }\n\n"
 
       elsif field.isObjectList? or field.isNode?
         # Comment
         result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
-        result << "  if ( (_wo = workspaceObject.getTarget(#{field.fieldEnum})) ) {\n"
-        result << "    if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {\n"
+        result << "  if (boost::optional<WorkspaceObject> wo_ = workspaceObject.getTarget(#{field.fieldEnum})) {\n"
+        result << "    if (boost::optional<ModelObject> mo_ = translateAndMapWorkspaceObject(wo_.get())) {\n"
         result << "      // TODO: check return types\n"
-        result << "      if (" << field.getterReturnType(true) << " _"
-        result << field.getterName << " = _mo->optionalCast<" << field.getterReturnType(false) << ">()) {\n"
-        result << "        modelObject." << field.setterName << "(_" << field.getterName << ".get());\n"
+        result << "      if (" << field.getterReturnType(true) << " "
+        result << field.getterName << "_ = mo_->optionalCast<" << field.getterReturnType(false) << ">()) {\n"
+        result << "        modelObject." << field.setterName << "(" << field.getterName << "_.get());\n"
         result << "      } else {\n"
         result << "        LOG(Warn, workspaceObject.briefDescription() << \" has a wrong type for '" << field.name << "'\");\n"
         result << "      }\n"
@@ -203,12 +203,12 @@ class TranslatorGenerator
           result << "    } else {\n"
           result << '      LOG(Error, "For " << workspaceObject.briefDescription()'
           result << " << \", cannot reverse translate required object '" << field.name << "'\");" << "\n"
-          result << "      return result;\n"
+          result << "      return boost::none;\n"
           result << "    }\n"
           result << "  } else {\n"
           result << '    LOG(Error, "For " << workspaceObject.briefDescription()'
           result << " << \", cannot find required object '" << field.name << "'\");" << "\n"
-          result << "    return result;\n"
+          result << "    return boost::none;\n"
           result << "  }\n"
         else
           result << "    }\n"
@@ -218,8 +218,8 @@ class TranslatorGenerator
       elsif field.isBooleanChoice?
         # We have to check is "Yes", in which case we use true
         result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " Boolean\n"
-        result << "  if (" << field.getterReturnType(true) << " _" << field.getterName << " = "<< field.getterAccessor << "(" << field.fieldEnum << ", true)) {\n"
-        result << "    if(istringEqual(\"Yes\", _" << field.getterName << ".get())) {\n"
+        result << "  if (" << field.getterReturnType(true) << " " << field.getterName << "_ = "<< field.getterAccessor << "(" << field.fieldEnum << ", true)) {\n"
+        result << "    if(istringEqual(\"Yes\", " << field.getterName << "_.get())) {\n"
         result << "      modelObject." << field.setterName << "(true);\n"
         result << "    } else {\n"
         result << "      modelObject." << field.setterName << "(false);\n"
@@ -228,7 +228,7 @@ class TranslatorGenerator
           result << "  } else {\n"
           result << '    LOG(Error, "For " << workspaceObject.briefDescription()'
           result << " << \", cannot find required property '" << field.name << "'\");" << "\n"
-          result << "    return result;\n"
+          result << "    return boost::none;\n"
         end
         result << "  }\n\n"
       else
@@ -255,15 +255,15 @@ class TranslatorGenerator
         #result << "  if (" << assignment << " = "<< field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
         #result << "    modelObject." << field.setterName << "(" << assignment << ");\n"
         # Instead, I don't use global optional vars
-        result << "  if (" << field.getterReturnType(true) << " _" << field.getterName << " = " << "workspaceObject." << field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
-        result << "    modelObject." << field.setterName << "(_" << field.getterName << ".get());\n"
+        result << "  if (" << field.getterReturnType(true) << " " << field.getterName << "_ = " << "workspaceObject." << field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
+        result << "    modelObject." << field.setterName << "(" << field.getterName << "_.get());\n"
 
 
         if field.isRequired?
           result << " } else {\n"
           result << '   LOG(Error, "For " << workspaceObject.briefDescription()'
           result << " << \", cannot find required property '" << field.name << "'\");" << "\n"
-          result << "    return result;\n"
+          result << "    return boost::none;\n"
         end
         result << "  }\n\n"
       end
@@ -271,8 +271,7 @@ class TranslatorGenerator
     end # End loop on nonextensibleFields
 
     # Assign result and return
-    result << "  result = modelObject;\n"
-    result << "  return result;\n"
+    result << "  return modelObject;\n"
 
     # Close method
     result << "} // End of translate function\n"
@@ -293,12 +292,12 @@ class TranslatorGenerator
     result << "{\n"
 
     # High level variables
-    result << "  boost::optional<IdfObject> result;\n"
-    if @hasObjectFields
-      result << "  boost::optional<WorkspaceObject> _wo;\n"
-      result << "  boost::optional<ModelObject> _mo;\n"
-    end
     # No longer used, will use unique variable throughout
+    # result << "  boost::optional<IdfObject> result;\n"
+    # if @hasObjectFields
+    #   result << "  boost::optional<WorkspaceObject> _wo;\n"
+    #   result << "  boost::optional<ModelObject> _mo;\n"
+    # end
     #result << "  boost::optional<double> _d;\n"
     #result << "  boost::optional<int> _i;\n"
     #result << "  boost::optional<std::string> _s;\n"
@@ -325,24 +324,22 @@ class TranslatorGenerator
         result << "  // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.\n"
         result << "  // But in some cases, you'll want to handle failure without pushing to the map\n"
         result << "  // Name\n"
-        result << "  if (boost::optional<std::string> moName = modelObject.name()) {\n"
-        result << "    idfObject.setName(*moName);\n"
-        result << "  }\n"
+        result << "  idfObject.setNamemodelObject.nameString());\n"
 
 
       elsif field.isObjectList? or field.isNode?
         # Comment
         result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
         if field.optionalGetter?
-          result << "  if (" << field.getterReturnType() << " _" << field.getterName << " = modelObject."<< field.getterName() << "()) {\n"
-          result << "    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_" << field.getterName << ".get()) )  {\n"
-          result << "      idfObject.setString(" << field.fieldEnum << ", _owo->nameString());\n"
+          result << "  if (" << field.getterReturnType() << " " << field.getterName << "_ = modelObject."<< field.getterName() << "()) {\n"
+          result << "    if ( boost::optional<IdfObject> wo_ = translateAndMapModelObject(" << field.getterName << "_.get()) )  {\n"
+          result << "      idfObject.setString(" << field.fieldEnum << ", wo_->nameString());\n"
           result << "    }\n"
           result << "  }\n"
         else
           result << "  " << field.getterReturnType << " " << field.getterName << " = modelObject." << field.getterName << "();\n"
-          result << "  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(" << field.getterName << ") )  {\n"
-          result << "    idfObject.setString(" << field.fieldEnum << ", _owo->nameString());\n"
+          result << "  if ( boost::optional<IdfObject> wo_ = translateAndMapModelObject(" << field.getterName << ") )  {\n"
+          result << "    idfObject.setString(" << field.fieldEnum << ", wo_->nameString());\n"
           result << "  }\n"
         end
 
@@ -369,8 +366,8 @@ class TranslatorGenerator
         if field.optionalGetter?
           result << prefix << "  // " << field.name << ": " << field.getterReturnType << "\n"
 
-          result << prefix << "  if (" << field.getterReturnType << " _" << field.getterName << " = modelObject." << field.getterName << "()) {\n"
-          result << prefix << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", _" << field.getterName << ".get());\n"
+          result << prefix << "  if (" << field.getterReturnType << " " << field.getterName << "_ = modelObject." << field.getterName << "()) {\n"
+          result << prefix << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", " << field.getterName << "_.get());\n"
           result << prefix << "  }\n"
 
 
