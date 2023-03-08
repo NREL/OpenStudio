@@ -14239,6 +14239,7 @@ OS:HeatPump:AirToWater:FuelFired:Heating,
        \autosizable
        \minimum> 0
        \units W
+       \required-field
        \note Nominal Heating Capacity in [W] (autosizeable)
    N2, \field Nominal COP
        \required-field
@@ -14250,6 +14251,7 @@ OS:HeatPump:AirToWater:FuelFired:Heating,
        \autosizable
        \minimum> 0
        \units m3/s
+       \required-field
        \note Design Flow Rate in m3/s (autosizeable)
    N4, \field Design Supply Temperature
        \required-field
@@ -14349,6 +14351,7 @@ OS:HeatPump:AirToWater:FuelFired:Heating,
    N12,\field Nominal Auxiliary Electric Power
        \units W
        \minimum 0
+       \required-field
        \note Nominal Auxiliary Electric Power in [W]
    A18,\field Auxiliary Electric Energy Input Ratio Function of Temperature Curve Name
        \type object-list
@@ -14421,6 +14424,7 @@ OS:HeatPump:AirToWater:FuelFired:Cooling,
        \autosizable
        \minimum> 0
        \units W
+       \required-field
        \note Nominal Cooling Capacity in [W] (autosizeable)
    N2, \field Nominal COP
        \required-field
@@ -14432,6 +14436,7 @@ OS:HeatPump:AirToWater:FuelFired:Cooling,
        \autosizable
        \minimum> 0
        \units m3/s
+       \required-field
        \note Design Flow Rate in m3/s (autosizeable)
    N4, \field Design Supply Temperature
        \required-field
@@ -14503,6 +14508,7 @@ OS:HeatPump:AirToWater:FuelFired:Cooling,
    N9, \field Nominal Auxiliary Electric Power
        \units W
        \minimum 0
+       \required-field
        \note Nominal Auxiliary Electric Power in [W]
    A16,\field Auxiliary Electric Energy Input Ratio Function of Temperature Curve Name
        \type object-list
