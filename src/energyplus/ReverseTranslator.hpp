@@ -367,13 +367,15 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateSurfacePropertyExposedFoundationPerimeter(const WorkspaceObject& workspaceObject);
 
-    boost::optional<model::ModelObject> translateSurfacePropertyLocalEnvironment(const WorkspaceObject& workspaceObject);
-
-    boost::optional<model::ModelObject> translateSurfacePropertySurroundingSurfaces(const WorkspaceObject& workspaceObject);
-
     boost::optional<model::ModelObject> translateSurfacePropertyGroundSurfaces(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSurfacePropertyIncidentSolarMultiplier(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSurfacePropertyLocalEnvironment(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSurfacePropertyOtherSideConditionsModel(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSurfacePropertySurroundingSurfaces(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSwimmingPoolIndoor(const WorkspaceObject& workspaceObject);
 
