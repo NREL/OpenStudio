@@ -107,15 +107,19 @@ optparse = OptionParser.new do |opts|
   end
 
   opts.on( '-i', '--iddObjectType IDDOBJECTTYPE', String, "IddObjectType to be wrapped by the ModelObject class being generated (ignored if not model sourceDirectory)") do |iddObjectType|
-    options [:iddObjectType] = iddObjectType
+    options[:iddObjectType] = iddObjectType
   end
 
   opts.on( '-r', '--[no-]reverseTanslator', "Autogenerate the ReverseTranslator code for IddObjectType") do |rt|
-    options [:reverseTranslator] = rt
+    options[:reverseTranslator] = rt
   end
 
   opts.on( '-f', '--[no-]forwardTanslator', "Autogenerate the ReverseTranslator code for IddObjectType") do |ft|
-    options [:forwardTranslator] = ft
+    options[:forwardTranslator] = ft
+  end
+
+  opts.on( '--clang-format-exe CLANGFORMAT', "Path to the clang-format executable") do |exe|
+    options[:clangFormatExe] = exe
   end
 
 end
@@ -546,16 +550,24 @@ saveAux = true if (aux.size > originalSize)
 
 # WRITE OUT FILES
 
-File.open((outputDirectory + "/" + className + ".hpp"),"w") do |file|
+files_written = []
+
+hpp_path = outputDirectory + "/" + className + ".hpp"
+files_written.append(hpp_path)
+File.open(hpp_path, "w") do |file|
   file.write(hpp)
 end
 
-File.open((outputDirectory + "/" + className + ".cpp"),"w") do |file|
+cpp_path = outputDirectory + "/" + className + ".cpp"
+files_written.append(cpp_path)
+File.open(cpp_path, "w") do |file|
   file.write(cpp)
 end
 
 if pImpl
-  File.open((outputDirectory + "/" + className + "_Impl.hpp"),"w") do |file|
+  impl_path = outputDirectory + "/" + className + "_Impl.hpp"
+  files_written.append(impl_path)
+  File.open(impl_path,"w") do |file|
     file.write(implHpp)
   end
 end
@@ -563,7 +575,9 @@ end
 if not File.directory?(outputDirectory + "/test")
   Dir.mkdir(outputDirectory + "/test")
 end
-File.open((outputDirectory + "/test/" + className + "_GTest.cpp"),"w") do |file|
+gtest_path = outputDirectory + "/test/" + className + "_GTest.cpp"
+files_written.append(gtest_path)
+File.open(gtest_path,"w") do |file|
   file.write(gtest)
 end
 
@@ -578,9 +592,55 @@ end
 ###############################################################################
 
 if options[:reverseTranslator]
-  reverseTranslate(options)
+  files_written << reverseTranslate(options)
 end
 
 if options [:forwardTranslator]
-  forwardTranslate(options)
+  files_written << forwardTranslate(options)
+end
+
+
+files_written.map!{|f| File.absolute_path(f) }
+puts "Generated the following files"
+puts files_written
+
+# Cross-platform way of finding an executable in the $PATH.
+#
+#   which('ruby') #=> /usr/bin/ruby
+def which(cmd)
+  exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+  ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+    exts.each do |ext|
+      exe = File.join(path, "#{cmd}#{ext}")
+      return exe if File.executable?(exe) && !File.directory?(exe)
+    end
+  end
+  nil
+end
+
+clang_format_exe = nil
+auto_detected = ""
+if options[:clangFormatExe]
+  clang_format_exe = options[:clangFormatExe]
+else
+  clang_format_exe = which('clang-format')
+  if clang_format_exe
+    auto_detected = "auto-detected "
+  end
+end
+if clang_format_exe
+  puts "\nReformatting the files using the #{auto_detected}clang-format at #{clang_format_exe}"
+  require 'open3'
+  root_dir = File.expand_path("../../", File.dirname(__FILE__))
+
+  files_written.each do |file_written|
+    command = "#{clang_format_exe} -style=file -i -fallback-style=none #{file_written}"
+    puts command
+    Open3.popen3(command, chdir: root_dir) do |i, o, e, w|
+      result = w.value.exitstatus
+      if result != 0
+        puts "Failed to reformat #{files_written}"
+      end
+    end
+  end
 end

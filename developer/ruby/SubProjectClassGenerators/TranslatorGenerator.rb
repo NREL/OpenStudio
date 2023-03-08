@@ -445,8 +445,8 @@ class TranslatorGenerator
       file.write(result)
     end
 
-    puts "Saved to #{file_path}"
-
+    # puts "Saved to #{file_path}"
+    return file_path
   end
 
   # Create the file, and save it on disk
@@ -473,6 +473,7 @@ class TranslatorGenerator
       file.write(result)
     end
 
-    puts "Saved to #{file_path}"
+    # puts "Saved to #{file_path}"
+    return file_path
   end
 end
