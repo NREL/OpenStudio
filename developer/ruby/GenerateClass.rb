@@ -94,6 +94,9 @@ end
 options = Hash.new
 optparse = OptionParser.new do |opts|
 
+  opts.banner = 'Usage: openstudio GenerateClass.rb [options]'
+  opts.separator ''
+
   opts.on( '-s', '--sourceDirectory SOURCEDIRECTORY', String, "Directory under src to which this class belongs") do |sourceDirectory|
     options[:sourceDirectory] = sourceDirectory
   end
