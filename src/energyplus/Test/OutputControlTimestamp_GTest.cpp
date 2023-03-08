@@ -66,7 +66,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlTimestamp) {
     bool status[2] = {false};
     status[i] = true;
     EXPECT_TRUE(outputControlTimestamp.setISO8601Format(status[0]));
-    EXPECT_TRUE(outputControlTimestamp.setTimestampAtBeginningofInterval(status[1]));
+    EXPECT_TRUE(outputControlTimestamp.setTimestampAtBeginningOfInterval(status[1]));
 
     Workspace w = ft.translateModel(m);
     WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_Timestamp);
@@ -106,6 +106,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlTimestamp) {
     OutputControlTimestamp outputControlTimestamp = m.getUniqueModelObject<OutputControlTimestamp>();
 
     EXPECT_EQ(status[0], outputControlTimestamp.iso8601Format());
-    EXPECT_EQ(status[1], outputControlTimestamp.timestampAtBeginningofInterval());
+    EXPECT_EQ(status[1], outputControlTimestamp.timestampAtBeginningOfInterval());
   }
 }

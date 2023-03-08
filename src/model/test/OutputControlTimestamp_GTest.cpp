@@ -45,9 +45,9 @@ TEST_F(ModelFixture, OutputControlTimestamp_GettersSetters) {
   EXPECT_TRUE(outputControlTimestamp.setISO8601Format(false));
   EXPECT_FALSE(outputControlTimestamp.iso8601Format());
 
-  EXPECT_FALSE(outputControlTimestamp.timestampAtBeginningofInterval());
-  EXPECT_TRUE(outputControlTimestamp.setTimestampAtBeginningofInterval(true));
-  EXPECT_TRUE(outputControlTimestamp.timestampAtBeginningofInterval());
-  EXPECT_TRUE(outputControlTimestamp.setTimestampAtBeginningofInterval(false));
-  EXPECT_FALSE(outputControlTimestamp.timestampAtBeginningofInterval());
+  EXPECT_FALSE(outputControlTimestamp.timestampAtBeginningOfInterval());
+  EXPECT_TRUE(outputControlTimestamp.setTimestampAtBeginningOfInterval(true));
+  EXPECT_TRUE(outputControlTimestamp.timestampAtBeginningOfInterval());
+  EXPECT_TRUE(outputControlTimestamp.setTimestampAtBeginningOfInterval(false));
+  EXPECT_FALSE(outputControlTimestamp.timestampAtBeginningOfInterval());
 }

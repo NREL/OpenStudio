@@ -58,9 +58,9 @@ namespace energyplus {
     if (boost::optional<std::string> _timestampAtBeginningofInterval =
           workspaceObject.getString(OutputControl_TimestampFields::TimestampatBeginningofInterval, true)) {
       if (istringEqual("Yes", _timestampAtBeginningofInterval.get())) {
-        modelObject.setTimestampAtBeginningofInterval(true);
+        modelObject.setTimestampAtBeginningOfInterval(true);
       } else {
-        modelObject.setTimestampAtBeginningofInterval(false);
+        modelObject.setTimestampAtBeginningOfInterval(false);
       }
     }
 

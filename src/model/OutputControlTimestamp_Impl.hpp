@@ -67,7 +67,7 @@ namespace model {
 
       bool iso8601Format() const;
 
-      bool timestampAtBeginningofInterval() const;
+      bool timestampAtBeginningOfInterval() const;
 
       //@}
       /** @name Setters */
@@ -75,7 +75,7 @@ namespace model {
 
       bool setISO8601Format(bool iso8601Format);
 
-      bool setTimestampAtBeginningofInterval(bool timestampAtBeginningofInterval);
+      bool setTimestampAtBeginningOfInterval(bool timestampAtBeginningOfInterval);
 
       //@}
       /** @name Other */

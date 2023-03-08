@@ -54,7 +54,7 @@ namespace energyplus {
     }
 
     // Timestamp at Beginning of Interval: Optional Boolean
-    if (modelObject.timestampAtBeginningofInterval()) {
+    if (modelObject.timestampAtBeginningOfInterval()) {
       idfObject.setString(OutputControl_TimestampFields::TimestampatBeginningofInterval, "Yes");
     } else {
       idfObject.setString(OutputControl_TimestampFields::TimestampatBeginningofInterval, "No");

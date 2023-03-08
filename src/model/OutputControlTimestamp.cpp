@@ -73,7 +73,7 @@ namespace model {
       return getBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format);
     }
 
-    bool OutputControlTimestamp_Impl::timestampAtBeginningofInterval() const {
+    bool OutputControlTimestamp_Impl::timestampAtBeginningOfInterval() const {
       return getBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval);
     }
 
@@ -81,8 +81,8 @@ namespace model {
       return setBooleanFieldValue(OS_OutputControl_TimestampFields::ISO8601Format, iso8601Format);
     }
 
-    bool OutputControlTimestamp_Impl::setTimestampAtBeginningofInterval(bool timestampAtBeginningofInterval) {
-      return setBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval, timestampAtBeginningofInterval);
+    bool OutputControlTimestamp_Impl::setTimestampAtBeginningOfInterval(bool timestampAtBeginningOfInterval) {
+      return setBooleanFieldValue(OS_OutputControl_TimestampFields::TimestampatBeginningofInterval, timestampAtBeginningOfInterval);
     }
 
   }  // namespace detail
@@ -95,16 +95,16 @@ namespace model {
     return getImpl<detail::OutputControlTimestamp_Impl>()->iso8601Format();
   }
 
-  bool OutputControlTimestamp::timestampAtBeginningofInterval() const {
-    return getImpl<detail::OutputControlTimestamp_Impl>()->timestampAtBeginningofInterval();
+  bool OutputControlTimestamp::timestampAtBeginningOfInterval() const {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->timestampAtBeginningOfInterval();
   }
 
   bool OutputControlTimestamp::setISO8601Format(bool iso8601Format) {
     return getImpl<detail::OutputControlTimestamp_Impl>()->setISO8601Format(iso8601Format);
   }
 
-  bool OutputControlTimestamp::setTimestampatBeginningofInterval(bool timestampAtBeginningofInterval) {
-    return getImpl<detail::OutputControlTimestamp_Impl>()->setTimestampatBeginningofInterval(timestampAtBeginningofInterval);
+  bool OutputControlTimestamp::setTimestampAtBeginningOfInterval(bool timestampAtBeginningOfInterval) {
+    return getImpl<detail::OutputControlTimestamp_Impl>()->setTimestampAtBeginningOfInterval(timestampAtBeginningOfInterval);
   }
 
   /// @cond
@@ -113,7 +113,7 @@ namespace model {
     // This is a required-field, so pick one...
     // Same defaults as EnergyPlus IDD
     setISO8601Format(false);
-    setTimestampatBeginningofInterval(false);
+    setTimestampAtBeginningOfInterval(false);
   }
 
   /// @endcond
