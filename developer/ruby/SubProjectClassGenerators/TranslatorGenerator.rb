@@ -421,6 +421,361 @@ class TranslatorGenerator
     return result
   end
 
+
+  def gtestFtRtIncludes()
+    result = String.new
+
+    result << "#include \"<gtest/gtest.h>\"\n"
+    result << "#include \"EnergyPlusFixture.hpp\"\n\n"
+
+    result << "#include \"ForwardTranslator.hpp\"\n"
+    result << "#include \"ReverseTranslator.hpp\"\n\n"
+
+    result << "#include \"../" << @className << ".hpp\"\n"
+    result << "#include \"../" << @className << "_Impl.hpp\"\n"
+
+    preamble = "// TODO: Check the following class names against object getters and setters.\n"
+
+    # Check for ObjectList fields, to see which we need to include
+    @nonextensibleFields.each { |field|
+      if field.isObjectList?
+        result << preamble
+        result << "#include \"../" << field.objectListClassName << ".hpp\"\n"
+        result << "#include \"../" << field.objectListClassName << "_Impl.hpp\"\n"
+        preamble = ""
+      end
+    }
+
+    result << "\n"
+    result << "#include \"../../utilities/idf/Workspace.hpp\"\n"
+    result << "#include \"../../utilities/idf/IdfObject.hpp\"\n"
+    result << "#include \"../../utilities/idf/WorkspaceObject.hpp\"\n"
+    result << "// E+ FieldEnums\n"
+    result << "#include <utilities/idd/IddEnums.hxx>\n"
+    result << "#include <utilities/idd/IddFactory.hxx>\n"
+    result << "#include <utilities/idd/" << @iddObjectType.valueName << "_FieldEnums.hxx>\n"
+
+    result << "using namespace openstudio::energyplus;\n"
+    result << "using namespace openstudio::model;\n"
+    result << "using namespace openstudio;\n\n"
+
+    return result;
+  end
+
+  def gtestForwardTranslator
+
+    s_setup = String.new
+    s_tests = String.new
+
+    instanceName = OpenStudio::toLowerCamelCase(@className)
+
+    @nonextensibleFields.each_with_index { |field, i|
+      next if field.isHandle?
+
+      if field.isName?
+        s_setup << "  #{instanceName}.setName(\"My #{@className}\");\n"
+
+      elsif field.isObjectList? or field.isNode?
+
+        # Comment
+        s_setup << "  " << field.getterReturnType << " #{field.getterName}(m);\n"
+        s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(#{field.getterName}));\n"
+
+        s_tests << " EXPECT_EQ(#{field.getterName}.nameString(), idfObject.getString(#{field.fieldEnum}).get());\n"
+
+      else
+
+        if field.isBooleanChoice?
+          if field.hasDefault?
+            if field.defaultValue == 'Yes'
+              s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(false));  // Opposite from IDD default\n";
+              s_tests << "  EXPECT_EQ(\"No\", idfObject.getString(#{field.fieldEnum}).get());"
+            else
+              s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(true));   // Opposite from IDD default\n";
+              s_tests << "  EXPECT_EQ(\"Yes\", idfObject.getString(#{field.fieldEnum}).get());"
+            end
+          else
+            s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(true));   // TODO: check this isnt the same as the Ctor\n";
+            s_tests << "  EXPECT_EQ(\"Yes\", idfObject.getString(#{field.fieldEnum}).get());"
+          end
+
+        else
+
+          # Note, assignment isn't used any#{instanceName}re since I no longer use high level
+          # variables
+          isNumber = false;
+
+          if field.isInteger?
+            # assignment = "_i"
+            cat = "Integer"
+            isNumber = true
+          elsif field.isReal?
+            # assignment = "_d"
+            cat = "Double"
+            isNumber = true
+          elsif field.isChoice? or field.isAlpha? or field.isExternalList?
+            # assignment = "_s"
+            cat = "String"
+          else
+            # Not handled...
+            # assignment = "#{field.getterReturnType(true)} #{field.getterName}"
+            cat = "Unsure of Category... TODO: Check!"
+          end
+
+          if isNumber
+            min_bound = field.iddField.properties.minBoundValue
+            max_bound = field.iddField.properties.maxBoundValue
+            # The whole shenanigans with `i` here is to avoid setting every
+            # field to the same numeric value, which wouldn't catch mistakes
+            # such as setting the wrong field (due to copy paste for eg)
+            if field.isInteger?
+              offset = 1
+            else
+              offset = 0.1
+            end
+
+            if (min_bound.is_initialized && max_bound.is_initialized)
+              max = max_bound.get
+              min = min_bound.get
+              # Break it up in 2 + i segments, take the position of the start
+              # of the last segment
+              seg_len = (max - min) / (i+2)
+              good_val = (max - seg_len)
+              bad_val = min_bound.get - 10
+            elsif (min_bound.is_initialized)
+              good_val = (min_bound.get + offset * (i + 1))
+              bad_val = min_bound.get - 10
+            elsif (max_bound.is_initialized)
+              good_val = (max_bound.get - offset * (i + i))
+              bad_val = max_bound.get + 10
+            else
+              good_val = offset * (i + 1)
+              bad_val = nil
+            end
+            if field.isInteger?
+              good_val = good_val.to_i
+              if !bad_val.nil?
+                bad_val = bad_val.to_i
+              end
+            else
+              good_val = good_val.to_f.round(3)
+              if !bad_val.nil?
+                bad_val = bad_val.to_f.round(3)
+              end
+            end
+          elsif field.isChoice?
+            good_val = "\"#{field.choices[0].name}\""
+            bad_val = "\"BADENUM\""
+          end
+
+          if field.canAutosize?
+            s_setup << "  // Autosize\n"
+            s_setup << "  // #{instanceName}." << field.autosizeName << "();\n"
+            s_tests << "  // EXPECT_EQ(\"Autosize\"\, idfObject.getString(#{field.fieldEnum}).get());"
+          elsif field.canAutocalculate?
+            s_setup << "  // Autocalculate\n"
+            s_setup << "  // #{instanceName}." << field.autocalculateName << "();\n"
+            s_tests << "  // EXPECT_EQ(\"Autocalculate\"\, idfObject.getString(#{field.fieldEnum}).get());"
+          end
+
+          s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(#{good_val}));\n";
+          s_tests << "  EXPECT_EQ(#{good_val}, idfObject.get#{cat}(#{field.fieldEnum}).get());"
+
+        end
+
+      end
+
+    }
+
+    result = String.new
+    result << "TEST_F(EnergyPlusFixture, ForwardTranslator_" << @className << ") {\n\n"
+
+    result << "  ForwardTranslator ft;\n\n"
+
+    result << "  Model m;\n"
+    result << "  // TODO: Check regular Ctor arguments\n"
+    result << "  " << @className << " #{instanceName}(m);\n"
+    result << "  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)\n"
+    result << "  // " << @className << " #{instanceName} = m.getUniqueModelObject<" << @className << ">();\n\n"
+
+    result << s_setup
+
+    result << "\n\n"
+    result << "  // TODO: you're responsible for creating all other objects needed so this object actually gets ForwardTranslated\n\n"
+
+    result << "  const Workspace w = ft.translateModel(m);\n"
+    result << "  const auto idfObjs = w.getObjectsByType(IddObjectType::" << @iddObjectType.valueName << ");\n"
+    result << "  ASSERT_EQ(1u, idfObjs.size());\n"
+    result << "\n"
+    result << "  const auto& idfObject = idfObjs.front();\n"
+
+    result << s_tests
+
+    result << "\n"
+
+    result << "}\n"
+
+    return result
+  end
+
+  def gtestReverseTranslator
+
+    s_setup = String.new
+    s_tests = String.new
+
+    # This is too long
+    # instanceName = "wo#{OpenStudio::toLowerCamelCase(@className)}"
+    instanceName = "wo#{@className.gsub(/[^[:upper:]]+/, "")}"
+
+    @nonextensibleFields.each_with_index { |field, i|
+      next if field.isHandle?
+
+      if field.isName?
+        s_setup << "  #{instanceName}.setName(\"My #{@className}\");\n"
+
+      elsif field.isObjectList? or field.isNode?
+
+        # Comment
+        s_setup << "  auto wo#{field.getterName} = w.addObject(IdfObject(IddObjectType::" << field.getterReturnType << ")).get();\n"
+        s_setup << "  wo#{field.getterName}.setName(\"My #{field.getterName}\"));\n"
+        s_setup << "  EXPECT_TRUE(#{instanceName}.setPointer(#{field.fieldEnum}, wo#{field.getterName}.handle()));\n"
+
+        s_tests << "  ASSERT_TRUE(modelObject.#{field.getterName}().optionalCast<#{field.getterReturnType}>());\n"
+        s_tests << " EXPECT_EQ(wo#{field.getterName}.nameString(), modelObject.#{field.getterName}().nameString());\n"
+
+      else
+
+        if field.isBooleanChoice?
+          if field.hasDefault?
+            if field.defaultValue == 'Yes'
+              s_setup << "  EXPECT_TRUE(#{instanceName}.setString(#{field.fieldEnum}, \"No\"));  // Opposite from IDD default\n"
+              s_tests << "  EXPECT_FALSE(modelObject.#{field.getterName}());"
+            else
+              s_setup << "  EXPECT_TRUE(#{instanceName}.setString(#{field.fieldEnum}, \"Yes\"));  // Opposite from IDD default\n"
+              s_tests << "  EXPECT_TRUE(modelObject.#{field.getterName}());"
+
+            end
+          else
+            s_setup << "  EXPECT_TRUE(#{instanceName}.setString(#{field.fieldEnum}, \"Yes\"));  // TODO: check this isnt the same as the Ctor\n";
+            s_tests << "  EXPECT_TRUE(modelObject.#{field.getterName}());"
+          end
+
+        else
+
+          # Note, assignment isn't used any#{instanceName}re since I no longer use high level
+          # variables
+          isNumber = false;
+
+          if field.isInteger?
+            # assignment = "_i"
+            cat = "Integer"
+            isNumber = true
+          elsif field.isReal?
+            # assignment = "_d"
+            cat = "Double"
+            isNumber = true
+          elsif field.isChoice? or field.isAlpha? or field.isExternalList?
+            # assignment = "_s"
+            cat = "String"
+          else
+            # Not handled...
+            # assignment = "#{field.getterReturnType(true)} #{field.getterName}"
+            cat = "Unsure of Category... TODO: Check!"
+          end
+
+          if isNumber
+            min_bound = field.iddField.properties.minBoundValue
+            max_bound = field.iddField.properties.maxBoundValue
+            # The whole shenanigans with `i` here is to avoid setting every
+            # field to the same numeric value, which wouldn't catch mistakes
+            # such as setting the wrong field (due to copy paste for eg)
+            if field.isInteger?
+              offset = 1
+            else
+              offset = 0.1
+            end
+
+            if (min_bound.is_initialized && max_bound.is_initialized)
+              max = max_bound.get
+              min = min_bound.get
+              # Break it up in 2 + i segments, take the position of the start
+              # of the last segment
+              seg_len = (max - min) / (i+2)
+              good_val = (max - seg_len)
+              bad_val = min_bound.get - 10
+            elsif (min_bound.is_initialized)
+              good_val = (min_bound.get + offset * (i + 1))
+              bad_val = min_bound.get - 10
+            elsif (max_bound.is_initialized)
+              good_val = (max_bound.get - offset * (i + i))
+              bad_val = max_bound.get + 10
+            else
+              good_val = offset * (i + 1)
+              bad_val = nil
+            end
+            if field.isInteger?
+              good_val = good_val.to_i
+              if !bad_val.nil?
+                bad_val = bad_val.to_i
+              end
+            else
+              good_val = good_val.to_f.round(3)
+              if !bad_val.nil?
+                bad_val = bad_val.to_f.round(3)
+              end
+            end
+          elsif field.isChoice?
+            good_val = "\"#{field.choices[0].name}\""
+            bad_val = "\"BADENUM\""
+          end
+
+          if field.canAutosize?
+            s_setup << "  // Autosize\n"
+            s_setup << "  // EXPECT_TRUE(#{instanceName}.setString(#{field.fieldEnum}, \"Autosized\"));\n"
+            s_tests << "  // EXPECT_TRUE(modelObject.#{field.isAutosizeName}());\n"
+          elsif field.canAutocalculate?
+            s_setup << "  // Autocalculate\n"
+            s_setup << "  // EXPECT_TRUE(#{instanceName}.setString(#{field.fieldEnum}, \"Autocalculated\"));\n"
+            s_tests << "  // EXPECT_TRUE(modelObject.#{field.isAutosizeName}())\n;"
+          end
+
+          s_setup << "  EXPECT_TRUE(#{instanceName}.set#{cat}(#{field.fieldEnum}, #{good_val}));\n"
+          s_tests << "  EXPECT_EQ(#{good_val}, modelObject.#{field.getterName}());"
+
+        end
+
+      end
+
+    }
+
+    result = String.new
+    result << "TEST_F(EnergyPlusFixture, ReverseTranslator_" << @className << ") {\n\n"
+
+    result << "  ReverseTranslator rt;\n\n"
+
+    result << "  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);\n\n"
+
+    result << "  auto #{instanceName} = w.addObject(IdfObject(IddObjectType::" << @iddObjectType.valueName << ")).get();\n\n"
+
+    result << s_setup
+
+    result << "\n\n"
+    result << "  const Model m = rt.translateWorkspace(w);\n"
+    result << "  const auto modelObjects = m.getConcreteModelObjects<" << @className << ">();\n"
+    result << "  ASSERT_EQ(1u, modelObjects.size());\n"
+    result << "\n"
+    result << "  const auto& modelObject = modelObjects.front();\n"
+
+    result << s_tests
+
+    result << "\n"
+
+    result << "}\n"
+
+    return result
+  end
+
+
   # Create the file, and save it on disk
   # @param None
   # @return [None] creates the file
@@ -468,6 +823,36 @@ class TranslatorGenerator
     # Footer
     result << "\n" << "}  // end namespace energyplus"
     result << "\n" << "}  // end namespace openstudio\n"
+
+    File.open(file_path, "w") do |file|
+      file.write(result)
+    end
+
+    # puts "Saved to #{file_path}"
+    return file_path
+  end
+
+  # Create the file, and save it on disk
+  # @param None
+  # @return [None] creates the file
+  def write_ft_rt_tests(has_ft, has_rt)
+    file_path = File.join(File.dirname(__FILE__), "../../../src/energyplus/Test/#{@className}_GTest.cpp")
+    file_path = File.expand_path(file_path)
+
+    result = String.new
+
+    # Start with the header (copyright)
+    result << fileHeader() << "\n"
+    # Add includes + open namespaces
+    result << gtestFtRtIncludes()
+
+    if has_ft
+      result << gtestForwardTranslator()
+    end
+    if has_rt
+      result << gtestReverseTranslator()
+    end
+
 
     File.open(file_path, "w") do |file|
       file.write(result)

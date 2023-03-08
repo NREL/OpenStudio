@@ -50,20 +50,20 @@ require_relative 'SubProjectClassGenerators/TranslatorGenerator.rb'
 
 # Reverse Translation
 def reverseTranslate(options)
-  if options [:reverseTranslator]
+  if options[:reverseTranslator]
     if options[:iddObjectType]
       # Strip out the "OS:"
       epIddName = options[:iddObjectType].to_s.sub(/^OS:/, '')
       tgen = TranslatorGenerator.new(epIddName)
       tgen.write_reverse_translator
     else
-      raise "WARNING: cannot Forward Translate without iddObjectType"
+      raise "WARNING: cannot Reverse Translate without iddObjectType"
     end
   end
 end
 
 def forwardTranslate(options)
-  if options [:forwardTranslator]
+  if options[:forwardTranslator]
     if options[:iddObjectType]
       # Strip out the "OS:"
       epIddName = options[:iddObjectType].to_s.sub(/^OS:/, '')
@@ -75,6 +75,18 @@ def forwardTranslate(options)
   end
 end
 
+def forwardReverseTranslatorTests(options)
+  if options[:forwardTranslator] || options [:reverseTranslator]
+    if options[:iddObjectType]
+      # Strip out the "OS:"
+      epIddName = options[:iddObjectType].to_s.sub(/^OS:/, '')
+      tgen = TranslatorGenerator.new(epIddName)
+      tgen.write_ft_rt_tests(options[:forwardTranslator], options[:reverseTranslator])
+    else
+      raise "WARNING: cannot Write FT/RT Tests without iddObjectType"
+    end
+  end
+end
 
 # HANDLE INPUT ARGUMENTS
 
@@ -591,14 +603,20 @@ end
 #                       Reverse And Forward Translation                       #
 ###############################################################################
 
+has_ft_or_rt = false
 if options[:reverseTranslator]
+  has_ft_or_rt = true
   files_written << reverseTranslate(options)
 end
 
-if options [:forwardTranslator]
+if options[:forwardTranslator]
+  has_ft_or_rt = true
   files_written << forwardTranslate(options)
 end
 
+if has_ft_or_rt
+  files_written << forwardReverseTranslatorTests(options)
+end
 
 files_written.map!{|f| File.absolute_path(f) }
 puts "Generated the following files"
