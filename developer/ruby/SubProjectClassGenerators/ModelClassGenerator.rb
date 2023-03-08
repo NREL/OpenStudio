@@ -1661,7 +1661,11 @@ class ModelClassGenerator < SubProjectClassGenerator
       result << "// accordingly.\n"
       @nonextensibleFields.each { |field|
         next if not field.isSchedule?
-        result << "    {\"" << @className << "\",\"" << field.scheduleDisplayName << "\",\"" << field.getterName << "\",,,,},\n"
+        if field.scheduleDisplayName.downcase.include?("availability")
+          result << "    {\"" << @className << "\", \"" << field.scheduleDisplayName << "\", \"" << field.getterName << "\", false, \"Availability\", 0.0, 1.0},\n"
+        else
+          result << "    {\"" << @className << "\", \"" << field.scheduleDisplayName << "\", \"" << field.getterName << "\",,,,},\n"
+        end
       }
     end
     return result
