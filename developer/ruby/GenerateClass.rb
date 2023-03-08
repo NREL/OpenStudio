@@ -134,6 +134,17 @@ optparse = OptionParser.new do |opts|
     options[:clangFormatExe] = exe
   end
 
+  opts.on_tail('-h', '--help', 'Print this help') do
+    puts opts.help
+    root_dir = File.expand_path("../../", File.dirname(__FILE__))
+    puts "\nExample Usage:"
+    puts '```'
+    puts "  $ cd developer/ruby"
+    puts '  $ /path/to/build/Products/openstudio GenerateClass.rb -c "SolarCollectorPerformancePhotovoltaicThermalBIPVT" -b "ModelObject"  -i "OS:SolarCollectorPerformance:PhotovoltaicThermal:BIPVT" -s model -o ' + File.join(root_dir, "src/model/") + ' -p -f -r'
+    puts '```'
+    return nil
+  end
+
 end
 
 # parse the input parameters
