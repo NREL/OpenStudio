@@ -275,18 +275,18 @@ cpp << "namespace " << sourceFolders[0] << " {\n\n"
 
 
 if pImpl
-  hpp << "namespace detail {\n\n"
-  hpp << "  class " << className << "_Impl;\n\n"
-  hpp << "} // detail\n\n"
+  hpp << "  namespace detail {\n\n"
+  hpp << "    class " << className << "_Impl;\n\n"
+  hpp << "  }  // namespace detail\n\n"
 
   implHpp << methodGenerator.implHppExternalForwardDeclarations
   implHpp << "namespace openstudio {\n"
   implHpp << methodGenerator.implHppOSForwardDeclarations
   implHpp << "namespace " << sourceFolders[0] << " {\n\n"
   implHpp << methodGenerator.implHppSubProjectForwardDeclarations
-  implHpp << "namespace detail {\n\n"
+  implHpp << "  namespace detail {\n\n"
 
-  cpp << "namespace detail {\n\n"
+  cpp << "  namespace detail {\n\n"
 end
 
 
@@ -300,7 +300,7 @@ cppPublicClass << methodGenerator.cppPublicClassPreClass
 
 # START CLASSES
 
-hpp << "class " << sourceFolders[0].upcase << "_API " << className
+hpp << "  class " << sourceFolders[0].upcase << "_API " << className
 if baseClassName.empty?
   if qobject and not pImpl
     hpp << " : public QObject"
@@ -308,13 +308,13 @@ if baseClassName.empty?
 else
   hpp << " : public " << baseClassName
 end
-hpp << " {\n"
+hpp << "\n  {\n"
 if qobject and not pImpl
   hpp << "  Q_OBJECT;\n"
 end
 
 if pImpl
-  implHpp << "  class " << sourceFolders[0].upcase << "_API " << className << "_Impl"
+  implHpp << "    class " << sourceFolders[0].upcase << "_API " << className << "_Impl"
   if baseClassName.empty?
     implHpp << " : "
     if qobject
@@ -324,8 +324,8 @@ if pImpl
   else
     implHpp << " : public " << baseClassName << "_Impl"
   end
-  implHpp << " {\n"
-  implHpp << "    Q_OBJECT;\n" if qobject
+  implHpp << "\n    {\n"
+  implHpp << "      Q_OBJECT;\n" if qobject
 end
 
 
@@ -337,10 +337,10 @@ implHpp << methodGenerator.implHppQMacros
 
 # PUBLIC TYPEDEFS
 
-hpp << " public:\n"
+hpp << "   public:\n"
 
 if pImpl
-  implHpp << "   public:\n"
+  implHpp << "     public:\n"
 end
 
 hpp << methodGenerator.hppPublicTypedefs
@@ -349,12 +349,12 @@ implHpp << methodGenerator.implHppPublicTypedefs
 
 # CONSTRUCTORS
 
-hpp << "  /** @name Constructors and Destructors */\n"
-hpp << "  //@{\n\n"
+hpp << "    /** @name Constructors and Destructors */\n"
+hpp << "    //@{\n\n"
 
 if pImpl
-  implHpp << "    /** @name Constructors and Destructors */\n"
-  implHpp << "    //@{\n\n"
+  implHpp << "      /** @name Constructors and Destructors */\n"
+  implHpp << "      //@{\n\n"
 end
 
 hpp << methodGenerator.hppConstructors
@@ -365,17 +365,17 @@ cppPublicClass << methodGenerator.cppPublicClassConstructors
 
 # VIRTUAL DESTRUCTORS
 
-hpp << "  virtual ~" << className << "() = default;\n"
-hpp << "  // Default the copy and move operators because the virtual dtor is explicit\n"
-hpp << "  " << className << "(const " << className << "& other) = default;\n"
-hpp << "  " << className << "(" << className << "&& other) = default;\n"
-hpp << "  " << className << "& operator=(const " << className << "&) = default;\n"
-hpp << "  " << className << "& operator=(" << className << "&&) = default;\n\n"
-hpp << "  //@}\n\n"
+hpp << "    virtual ~" << className << "() = default;\n"
+hpp << "    // Default the copy and move operators because the virtual dtor is explicit\n"
+hpp << "    " << className << "(const " << className << "& other) = default;\n"
+hpp << "    " << className << "(" << className << "&& other) = default;\n"
+hpp << "    " << className << "& operator=(const " << className << "&) = default;\n"
+hpp << "    " << className << "& operator=(" << className << "&&) = default;\n\n"
+hpp << "    //@}\n\n"
 
 if pImpl
-  implHpp << "    virtual ~" << className << "_Impl() {}\n\n"
-  implHpp << "    //@}\n"
+  implHpp << "      virtual ~" << className << "_Impl() = default;\n\n"
+  implHpp << "      //@}\n"
 end
 
 
@@ -442,17 +442,17 @@ end
 
 # PROTECTED TYPEDEFS, FRIENDS, CONSTRUCTORS
 
-hpp << " protected:\n"
-hpp << "  /// @cond\n"
+hpp << "   protected:\n"
+hpp << "    /// @cond\n"
 
-cppPublicClass << "/// @cond\n"
+cppPublicClass << "  /// @cond\n"
 
 hpp << methodGenerator.hppProtectedImpl
 hpp << methodGenerator.hppProtectedFriends
 cppPublicClass << methodGenerator.cppPublicClassProtectedImpl
 
 if pImpl
-  implHpp << "   protected:\n"
+  implHpp << "     protected:\n"
 end
 
 
@@ -463,24 +463,24 @@ implHpp << methodGenerator.implHppProtectedMethods
 cpp << methodGenerator.cppProtectedMethods
 cppPublicClass << methodGenerator.cppPublicClassProtectedMethods
 
-hpp << "  /// @endcond\n"
-cppPublicClass << "/// @endcond\n"
+hpp << "    /// @endcond\n"
+cppPublicClass << "  /// @endcond\n"
 
 # PRIVATE DECLARATIONS
 
-hpp << " private:" << "\n"
+hpp << "   private:" << "\n"
 
 if pImpl
-  implHpp << "   private:" << "\n"
+  implHpp << "     private:" << "\n"
 
   if baseClassName.empty?
     hpp << "  std::shared_ptr<detail::" << className << "_Impl> m_impl;\n\n"
   end
 end
 
-hpp << "  REGISTER_LOGGER(\"openstudio." << sourceFolders[0] << "." << className << "\");\n"
+hpp << "    REGISTER_LOGGER(\"openstudio." << sourceFolders[0] << "." << className << "\");\n"
 if pImpl
-  implHpp << "    REGISTER_LOGGER(\"openstudio." << sourceFolders[0] << "." << className << "\");\n"
+  implHpp << "      REGISTER_LOGGER(\"openstudio." << sourceFolders[0] << "." << className << "\");\n"
 end
 
 hpp << methodGenerator.hppPrivateMethods
@@ -490,10 +490,10 @@ cppPublicClass << methodGenerator.cppPublicClassPrivateMethods
 
 # END CLASSES
 
-hpp << "};\n\n"
+hpp << "  };\n\n"
 
 if pImpl
-  implHpp << "  };\n\n"
+  implHpp << "    };\n\n"
 end
 
 
@@ -507,28 +507,28 @@ cppPublicClass << methodGenerator.cppPublicClassPostClass
 
 # END NAMESPACES
 
-hpp << "} // " << sourceFolders[0] << "\n"
-hpp << "} // openstudio" << "\n\n"
+hpp << "}  // namespace " << sourceFolders[0] << "\n"
+hpp << "}  // namespace openstudio" << "\n\n"
 
 if pImpl
-  implHpp << "} // detail\n\n"
-  implHpp << "} // " << sourceFolders[0] << "\n"
-  implHpp << "} // openstudio" << "\n" << "\n"
+  implHpp << "  }  // namespace detail\n\n"
+  implHpp << "}  // namespace " << sourceFolders[0] << "\n"
+  implHpp << "}  // namespace openstudio" << "\n" << "\n"
 
-  cpp << "} // detail" << "\n\n"
+  cpp << "  }  // namespace detail" << "\n\n"
   cpp << cppPublicClass << "\n"
 end
 
-cpp << "} // " << sourceFolders[0] << "\n"
-cpp << "} // openstudio" << "\n" << "\n"
+cpp << "}  // namespace " << sourceFolders[0] << "\n"
+cpp << "}  // namespace openstudio\n"
 
 
 # END INCLUDE GUARDS
 
-hpp << "#endif // " << defineString << "_HPP\n\n"
+hpp << "#endif  // " << defineString << "_HPP\n"
 
 if pImpl
-  implHpp << "#endif // " << defineString << "_IMPL_HPP\n\n"
+  implHpp << "#endif  // " << defineString << "_IMPL_HPP\n"
 end
 
 

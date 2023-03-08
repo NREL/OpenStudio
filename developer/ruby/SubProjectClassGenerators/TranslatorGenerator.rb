@@ -118,7 +118,7 @@ class TranslatorGenerator
     result << objectListIncludes()
 
     result << "#include <utilities/idd/" << @iddObjectType.valueName << "_FieldEnums.hxx>\n"
-    result << "// #include \"../../utilities/idd/IddEnums.hpp\"\n"
+    # result << "// #include \"../../utilities/idd/IddEnums.hpp\"\n"
     result << "#include <utilities/idd/IddEnums.hxx>\n"
 
     result << "\n"
@@ -135,9 +135,8 @@ class TranslatorGenerator
   # @return [String] returns the footer
   def footer()
     result = String.new
-    result << "\n" << "} // end namespace energyplus"
-    result << "\n"
-    result << "\n" << "} // end namespace openstudio"
+    result << "\n" << "}   // end namespace energyplus\n"
+    result << "\n" << "}   // end namespace openstudio"
     return result
   end
 
@@ -149,8 +148,7 @@ class TranslatorGenerator
     result = String.new
 
     # Method name
-    result << "boost::optional<ModelObject> ReverseTranslator::translate" << @className << "( const WorkspaceObject & workspaceObject )\n"
-    result << "{\n"
+    result << "  boost::optional<ModelObject> ReverseTranslator::translate" << @className << "(const WorkspaceObject & workspaceObject) {\n"
 
     # High level variables
     # No longer used, will use unique variable throughout
@@ -166,15 +164,15 @@ class TranslatorGenerator
 
     # Instantiate the model object
     result << "\n"
-    result << "  // Instantiate an object of the class to store the values,\n"
-    result << "  // but we don't return it until we know it's ok\n"
-    result << "  // TODO: check constructor, it might need other objects\n"
-    result << "  openstudio::model::" << @className << " modelObject(m_model);\n\n"
+    result << "    // Instantiate an object of the class to store the values,\n"
+    result << "    // but we don't return it until we know it's ok\n"
+    result << "    // TODO: check constructor, it might need other objects\n"
+    result << "    openstudio::model::" << @className << " modelObject(m_model);\n\n"
 
 
-    result << "  // TODO: Note JM 2018-10-17\n"
-    result << "  // You are responsible for implementing any additional logic based on choice fields, etc.\n"
-    result << "  // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way\n\n"
+    result << "    // TODO: Note JM 2018-10-17\n"
+    result << "    // You are responsible for implementing any additional logic based on choice fields, etc.\n"
+    result << "    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way\n\n"
 
 
     # Ok, we're ready to start dealing with each field!
@@ -182,55 +180,55 @@ class TranslatorGenerator
     @nonextensibleFields.each do |field|
 
       if field.isName?
-        result << "  // " << field.name << "\n"
-        result << "  if (boost::optional<std::string> name_ = workspaceObject.name()) {\n"
-        result << "    modelObject.setName(name_.get());\n"
-        result << "  }\n\n"
+        result << "    // " << field.name << "\n"
+        result << "    if (boost::optional<std::string> name_ = workspaceObject.name()) {\n"
+        result << "      modelObject.setName(name_.get());\n"
+        result << "    }\n\n"
 
       elsif field.isObjectList? or field.isNode?
         # Comment
-        result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
-        result << "  if (boost::optional<WorkspaceObject> wo_ = workspaceObject.getTarget(#{field.fieldEnum})) {\n"
-        result << "    if (boost::optional<ModelObject> mo_ = translateAndMapWorkspaceObject(wo_.get())) {\n"
-        result << "      // TODO: check return types\n"
-        result << "      if (" << field.getterReturnType(true) << " "
+        result << "    // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
+        result << "    if (boost::optional<WorkspaceObject> wo_ = workspaceObject.getTarget(#{field.fieldEnum})) {\n"
+        result << "      if (boost::optional<ModelObject> mo_ = translateAndMapWorkspaceObject(wo_.get())) {\n"
+        result << "        // TODO: check return types\n"
+        result << "        if (" << field.getterReturnType(true) << " "
         result << field.getterName << "_ = mo_->optionalCast<" << field.getterReturnType(false) << ">()) {\n"
-        result << "        modelObject." << field.setterName << "(" << field.getterName << "_.get());\n"
-        result << "      } else {\n"
-        result << "        LOG(Warn, workspaceObject.briefDescription() << \" has a wrong type for '" << field.name << "'\");\n"
-        result << "      }\n"
+        result << "          modelObject." << field.setterName << "(" << field.getterName << "_.get());\n"
+        result << "        } else {\n"
+        result << "          LOG(Warn, workspaceObject.briefDescription() << \" has a wrong type for '" << field.name << "'\");\n"
+        result << "        }\n"
         if field.isRequired?
+          result << "      } else {\n"
+          result << '        LOG(Error, "For " << workspaceObject.briefDescription()'
+          result << " << \", cannot reverse translate required object '" << field.name << "'\");" << "\n"
+          result << "        return boost::none;\n"
+          result << "      }\n"
           result << "    } else {\n"
           result << '      LOG(Error, "For " << workspaceObject.briefDescription()'
-          result << " << \", cannot reverse translate required object '" << field.name << "'\");" << "\n"
+          result << " << \", cannot find required object '" << field.name << "'\");" << "\n"
           result << "      return boost::none;\n"
           result << "    }\n"
-          result << "  } else {\n"
-          result << '    LOG(Error, "For " << workspaceObject.briefDescription()'
-          result << " << \", cannot find required object '" << field.name << "'\");" << "\n"
-          result << "    return boost::none;\n"
-          result << "  }\n"
         else
+          result << "      }\n"
           result << "    }\n"
-          result << "  }\n"
         end
 
       elsif field.isBooleanChoice?
         # We have to check is "Yes", in which case we use true
-        result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " Boolean\n"
-        result << "  if (" << field.getterReturnType(true) << " " << field.getterName << "_ = "<< field.getterAccessor << "(" << field.fieldEnum << ", true)) {\n"
-        result << "    if(istringEqual(\"Yes\", " << field.getterName << "_.get())) {\n"
-        result << "      modelObject." << field.setterName << "(true);\n"
-        result << "    } else {\n"
-        result << "      modelObject." << field.setterName << "(false);\n"
-        result << "    }\n"
+        result << "    // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " Boolean\n"
+        result << "    if (" << field.getterReturnType(true) << " " << field.getterName << "_ = "<< field.getterAccessor << "(" << field.fieldEnum << ", true)) {\n"
+        result << "      if(istringEqual(\"Yes\", " << field.getterName << "_.get())) {\n"
+        result << "        modelObject." << field.setterName << "(true);\n"
+        result << "      } else {\n"
+        result << "        modelObject." << field.setterName << "(false);\n"
+        result << "      }\n"
         if field.isRequired?
-          result << "  } else {\n"
-          result << '    LOG(Error, "For " << workspaceObject.briefDescription()'
+          result << "    } else {\n"
+          result << '      LOG(Error, "For " << workspaceObject.briefDescription()'
           result << " << \", cannot find required property '" << field.name << "'\");" << "\n"
-          result << "    return boost::none;\n"
+          result << "      return boost::none;\n"
         end
-        result << "  }\n\n"
+        result << "    }\n\n"
       else
 
         # Note, assignment isn't used anymore since I no longer use high level
@@ -250,31 +248,31 @@ class TranslatorGenerator
           cat = "Unsure of Category... TODO: Check!"
         end
 
-        result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " " << cat << "\n"
+        result << "    // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " " << cat << "\n"
 
-        #result << "  if (" << assignment << " = "<< field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
-        #result << "    modelObject." << field.setterName << "(" << assignment << ");\n"
+        #result << "    if (" << assignment << " = "<< field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
+        #result << "      modelObject." << field.setterName << "(" << assignment << ");\n"
         # Instead, I don't use global optional vars
-        result << "  if (" << field.getterReturnType(true) << " " << field.getterName << "_ = " << "workspaceObject." << field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
-        result << "    modelObject." << field.setterName << "(" << field.getterName << "_.get());\n"
+        result << "    if (" << field.getterReturnType(true) << " " << field.getterName << "_ = " << "workspaceObject." << field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
+        result << "      modelObject." << field.setterName << "(" << field.getterName << "_.get());\n"
 
 
         if field.isRequired?
-          result << " } else {\n"
-          result << '   LOG(Error, "For " << workspaceObject.briefDescription()'
-          result << " << \", cannot find required property '" << field.name << "'\");" << "\n"
-          result << "    return boost::none;\n"
+          result << "     } else {\n"
+          result << '     LOG(Error, "For " << workspaceObject.briefDescription()'
+          result << "   << \", cannot find required property '" << field.name << "'\");" << "\n"
+          result << "      return boost::none;\n"
         end
-        result << "  }\n\n"
+        result << "    }\n\n"
       end
 
     end # End loop on nonextensibleFields
 
     # Assign result and return
-    result << "  return modelObject;\n"
+    result << "    return modelObject;\n"
 
     # Close method
-    result << "} // End of translate function\n"
+    result << "  }  // End of translate function\n"
 
     return result
   end
@@ -288,8 +286,7 @@ class TranslatorGenerator
     result = String.new
 
     # Method name
-    result << "boost::optional<IdfObject> ForwardTranslator::translate" << @className << "( model::" << @className << "& modelObject )\n"
-    result << "{\n"
+    result << "  boost::optional<IdfObject> ForwardTranslator::translate" << @className << "( model::" << @className << "& modelObject ) {\n"
 
     # High level variables
     # No longer used, will use unique variable throughout
@@ -305,15 +302,15 @@ class TranslatorGenerator
 
     # Instantiate the model object
     result << "\n"
-    result << "  // Instantiate an IdfObject of the class to store the values\n"
-    result << "  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::" << @iddObjectType.valueName << ", modelObject);\n"
-    result << "  // If it doesn't have a name, or if you aren't sure you are going to want to return it\n"
-    result << "  // IdfObject idfObject( openstudio::IddObjectType::" << @iddObjectType.valueName << " );\n"
-    result << "  // m_idfObjects.push_back(idfObject);\n\n"
+    result << "    // Instantiate an IdfObject of the class to store the values\n"
+    result << "    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::" << @iddObjectType.valueName << ", modelObject);\n"
+    result << "    // If it doesn't have a name, or if you aren't sure you are going to want to return it\n"
+    result << "    // IdfObject idfObject(openstudio::IddObjectType::" << @iddObjectType.valueName << ");\n"
+    result << "    // m_idfObjects.push_back(idfObject);\n\n"
 
-    result << "  // TODO: Note JM 2018-10-17\n"
-    result << "  // You are responsible for implementing any additional logic based on choice fields, etc.\n"
-    result << "  // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way\n\n"
+    result << "    // TODO: Note JM 2018-10-17\n"
+    result << "    // You are responsible for implementing any additional logic based on choice fields, etc.\n"
+    result << "    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way\n\n"
 
 
     # Ok, we're ready to start dealing with each field!
@@ -321,26 +318,26 @@ class TranslatorGenerator
     @nonextensibleFields.each do |field|
 
       if field.isName?
-        result << "  // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.\n"
-        result << "  // But in some cases, you'll want to handle failure without pushing to the map\n"
-        result << "  // Name\n"
-        result << "  idfObject.setNamemodelObject.nameString());\n"
+        result << "    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.\n"
+        result << "    // But in some cases, you'll want to handle failure without pushing to the map\n"
+        result << "    // Name\n"
+        result << "    idfObject.setName(modelObject.nameString());\n"
 
 
       elsif field.isObjectList? or field.isNode?
         # Comment
-        result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
+        result << "    // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
         if field.optionalGetter?
-          result << "  if (" << field.getterReturnType() << " " << field.getterName << "_ = modelObject."<< field.getterName() << "()) {\n"
-          result << "    if ( boost::optional<IdfObject> wo_ = translateAndMapModelObject(" << field.getterName << "_.get()) )  {\n"
+          result << "    if (" << field.getterReturnType() << " " << field.getterName << "_ = modelObject."<< field.getterName() << "()) {\n"
+          result << "      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(" << field.getterName << "_.get()))  {\n"
+          result << "        idfObject.setString(" << field.fieldEnum << ", wo_->nameString());\n"
+          result << "      }\n"
+          result << "    }\n"
+        else
+          result << "    " << field.getterReturnType << " " << field.getterName << " = modelObject." << field.getterName << "();\n"
+          result << "    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(" << field.getterName << "))  {\n"
           result << "      idfObject.setString(" << field.fieldEnum << ", wo_->nameString());\n"
           result << "    }\n"
-          result << "  }\n"
-        else
-          result << "  " << field.getterReturnType << " " << field.getterName << " = modelObject." << field.getterName << "();\n"
-          result << "  if ( boost::optional<IdfObject> wo_ = translateAndMapModelObject(" << field.getterName << ") )  {\n"
-          result << "    idfObject.setString(" << field.fieldEnum << ", wo_->nameString());\n"
-          result << "  }\n"
         end
 
       else
@@ -349,35 +346,35 @@ class TranslatorGenerator
 
         # Comment
         if field.canAutosize?
-          result << "  if (modelObject." << field.isAutosizeName << "()) {\n"
-          result << "    idfObject.setString(" << field.fieldEnum << ", \"Autosize\");\n"
-          result << "  } else {\n"
+          result << "    if (modelObject." << field.isAutosizeName << "()) {\n"
+          result << "      idfObject.setString(" << field.fieldEnum << ", \"Autosize\");\n"
+          result << "    } else {\n"
           prefix = "  "
           need_closing = true
         elsif field.canAutocalculate?
-          result << "  if (modelObject." << field.isAutocalculateName << "()) {\n"
-          result << "    idfObject.setString(" << field.fieldEnum << ", \"Autocalculate\");\n"
-          result << "  } else {\n"
+          result << "    if (modelObject." << field.isAutocalculateName << "()) {\n"
+          result << "      idfObject.setString(" << field.fieldEnum << ", \"Autocalculate\");\n"
+          result << "    } else {\n"
           prefix = "  "
           need_closing = true
         end
 
 
         if field.optionalGetter?
-          result << prefix << "  // " << field.name << ": " << field.getterReturnType << "\n"
+          result << prefix << "    // " << field.name << ": " << field.getterReturnType << "\n"
 
-          result << prefix << "  if (" << field.getterReturnType << " " << field.getterName << "_ = modelObject." << field.getterName << "()) {\n"
-          result << prefix << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", " << field.getterName << "_.get());\n"
-          result << prefix << "  }\n"
+          result << prefix << "    if (" << field.getterReturnType << " " << field.getterName << "_ = modelObject." << field.getterName << "()) {\n"
+          result << prefix << "      idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", " << field.getterName << "_.get());\n"
+          result << prefix << "    }\n"
 
 
         elsif field.isBooleanChoice?
-          result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " Boolean\n"
-          result << "  if (modelObject." << field.getterName << "()) {\n"
-          result << "    idfObject.setString(" << field.fieldEnum << ", \"Yes\");\n"
-          result << "  } else {\n"
-          result << "    idfObject.setString(" << field.fieldEnum << ", \"No\");\n"
-          result << "  }\n"
+          result << "    // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " Boolean\n"
+          result << "    if (modelObject." << field.getterName << "()) {\n"
+          result << "      idfObject.setString(" << field.fieldEnum << ", \"Yes\");\n"
+          result << "    } else {\n"
+          result << "      idfObject.setString(" << field.fieldEnum << ", \"No\");\n"
+          result << "    }\n"
         else
 
           # Note, assignment isn't used anymore since I no longer use high level
@@ -397,10 +394,10 @@ class TranslatorGenerator
             cat = "Unsure of Category... TODO: Check!"
           end
 
-          result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " " << cat << "\n"
+          result << "    // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " " << cat << "\n"
 
-          result << "  " << field.getterReturnType << " " << field.getterName << " = modelObject." << field.getterName << "();\n"
-          result << "  idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", " << field.getterName << ");\n\n"
+          result << "    const " << field.getterReturnType << " " << field.getterName << " = modelObject." << field.getterName << "();\n"
+          result << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", " << field.getterName << ");\n\n"
 
         end
 
@@ -415,10 +412,10 @@ class TranslatorGenerator
     end # End loop on nonextensibleFields
 
     # Assign result and return
-    result << "  return idfObject;\n"
+    result << "    return idfObject;\n"
 
     # Close method
-    result << "} // End of translate function\n"
+    result << "  }  // End of translate function\n"
 
 
     return result
@@ -441,8 +438,8 @@ class TranslatorGenerator
     result << generateReverseTranslateFunction()
 
     # Footer
-    result << "\n" << "} // end namespace energyplus"
-    result << "\n" << "} // end namespace openstudio"
+    result << "\n" << "}  // end namespace energyplus"
+    result << "\n" << "}  // end namespace openstudio\n"
 
     File.open(file_path, "w") do |file|
       file.write(result)
@@ -469,8 +466,8 @@ class TranslatorGenerator
     result << generateForwardTranslateFunction()
 
     # Footer
-    result << "\n" << "} // end namespace energyplus"
-    result << "\n" << "} // end namespace openstudio"
+    result << "\n" << "}  // end namespace energyplus"
+    result << "\n" << "}  // end namespace openstudio\n"
 
     File.open(file_path, "w") do |file|
       file.write(result)
