@@ -230,6 +230,9 @@ class UTILITIES_API BCLXML
   bool checkForUpdatesXML();
 
   //@}
+ protected:
+  /** Prints BCLXML to os. \relates BCLXML */
+  UTILITIES_API friend std::ostream& operator<<(std::ostream& os, const BCLXML& bclXML);
 
  private:
   // configure logging
@@ -259,9 +262,6 @@ class UTILITIES_API BCLXML
   std::vector<Attribute> m_attributes;
   std::vector<std::string> m_tags;
 };
-
-/** Prints BCLXML to os. \relates BCLXML */
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const openstudio::BCLXML& bclXML);
 
 }  // namespace openstudio
 
