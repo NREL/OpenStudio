@@ -239,7 +239,6 @@ class UTILITIES_API BCLXML
   std::string computeXMLChecksum() const;
 
   pugi::xml_document toXML() const;
-  friend std::ostream& operator<<(std::ostream& os, const BCLXML& bclXML);
 
   openstudio::path m_path;
   BCLXMLType m_bclXMLType;

@@ -781,10 +781,12 @@ std::string BCLXML::toString() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const BCLXML& bclXML) {
-  const pugi::xml_document doc = bclXML.toXML();
-  if (doc) {
-    doc.save(os, "  ");
-  }
+  // This would save a step (no std::stringstream used), but I don't want toXML public and swig is getting confused with the friend declaration
+  // const pugi::xml_document doc = bclXML.toXML();
+  // if (doc) {
+  //   doc.save(os, "  ");
+  //}
+  os << bclXML.toString();
 
   return os;
 }
