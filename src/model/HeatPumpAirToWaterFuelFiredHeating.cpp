@@ -284,7 +284,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_AirToWater_FuelFired_HeatingFields::CyclingRatioFactorCurveName);
     }
 
-    boost::optional<double> HeatPumpAirToWaterFuelFiredHeating_Impl::nominalAuxiliaryElectricPower() const {
+    double HeatPumpAirToWaterFuelFiredHeating_Impl::nominalAuxiliaryElectricPower() const {
       return getDouble(OS_HeatPump_AirToWater_FuelFired_HeatingFields::NominalAuxiliaryElectricPower, true);
     }
 
@@ -485,11 +485,6 @@ namespace model {
       return result;
     }
 
-    void HeatPumpAirToWaterFuelFiredHeating_Impl::resetNominalAuxiliaryElectricPower() {
-      bool result = setString(OS_HeatPump_AirToWater_FuelFired_HeatingFields::NominalAuxiliaryElectricPower, "");
-      OS_ASSERT(result);
-    }
-
     bool HeatPumpAirToWaterFuelFiredHeating_Impl::setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(
       const Curve& auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve) {
       bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_HeatingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName,
@@ -567,8 +562,10 @@ namespace model {
     bool ok = true;
     ok = setFuelType("NaturalGas");
     OS_ASSERT(ok);
+    autosizeNominalHeatingCapacity();
     ok = setNominalCOP(1.0);
     OS_ASSERT(ok);
+    autosizeDesignFlowRate();
     ok = setDesignSupplyTemperature(60);
     OS_ASSERT(ok);
     ok = setDesignTemperatureLift(11.1);
@@ -635,6 +632,8 @@ namespace model {
     OS_ASSERT(ok);
     ok = setMaximumOutdoorDrybulbTemperatureforDefrostOperation(5);
     OS_ASSERT(ok);
+    ok = setNominalAuxiliaryElectricPower(0);
+    OS_ASSERT(ok);
     ok = setStandbyElectricPower(0);
     OS_ASSERT(ok);
   }
@@ -649,8 +648,10 @@ namespace model {
     bool ok = true;
     ok = setFuelType("NaturalGas");
     OS_ASSERT(ok);
+    autosizeNominalHeatingCapacity();
     ok = setNominalCOP(1.0);
     OS_ASSERT(ok);
+    autosizeDesignFlowRate();
     ok = setDesignSupplyTemperature(60);
     OS_ASSERT(ok);
     ok = setDesignTemperatureLift(11.1);
@@ -696,6 +697,8 @@ namespace model {
     ok = setResistiveDefrostHeaterCapacity(0);
     OS_ASSERT(ok);
     ok = setMaximumOutdoorDrybulbTemperatureforDefrostOperation(5);
+    OS_ASSERT(ok);
+    ok = setNominalAuxiliaryElectricPower(0);
     OS_ASSERT(ok);
     ok = setStandbyElectricPower(0);
     OS_ASSERT(ok);
@@ -848,7 +851,7 @@ namespace model {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredHeating_Impl>()->cyclingRatioFactorCurve();
   }
 
-  boost::optional<double> HeatPumpAirToWaterFuelFiredHeating::nominalAuxiliaryElectricPower() const {
+  double HeatPumpAirToWaterFuelFiredHeating::nominalAuxiliaryElectricPower() const {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredHeating_Impl>()->nominalAuxiliaryElectricPower();
   }
 
@@ -1003,10 +1006,6 @@ namespace model {
 
   bool HeatPumpAirToWaterFuelFiredHeating::setNominalAuxiliaryElectricPower(double nominalAuxiliaryElectricPower) {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredHeating_Impl>()->setNominalAuxiliaryElectricPower(nominalAuxiliaryElectricPower);
-  }
-
-  void HeatPumpAirToWaterFuelFiredHeating::resetNominalAuxiliaryElectricPower() {
-    getImpl<detail::HeatPumpAirToWaterFuelFiredHeating_Impl>()->resetNominalAuxiliaryElectricPower();
   }
 
   bool HeatPumpAirToWaterFuelFiredHeating::setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(

@@ -254,7 +254,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_AirToWater_FuelFired_CoolingFields::CyclingRatioFactorCurveName);
     }
 
-    boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::nominalAuxiliaryElectricPower() const {
+    double HeatPumpAirToWaterFuelFiredCooling_Impl::nominalAuxiliaryElectricPower() const {
       return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, true);
     }
 
@@ -421,11 +421,6 @@ namespace model {
       return result;
     }
 
-    void HeatPumpAirToWaterFuelFiredCooling_Impl::resetNominalAuxiliaryElectricPower() {
-      bool result = setString(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, "");
-      OS_ASSERT(result);
-    }
-
     bool HeatPumpAirToWaterFuelFiredCooling_Impl::setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(
       const Curve& auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve) {
       bool result = setPointer(OS_HeatPump_AirToWater_FuelFired_CoolingFields::AuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurveName,
@@ -503,8 +498,10 @@ namespace model {
     bool ok = true;
     ok = setFuelType("NaturalGas");
     OS_ASSERT(ok);
+    autosizeNominalCoolingCapacity();
     ok = setNominalCOP(1.0);
     OS_ASSERT(ok);
+    autosizeDesignFlowRate();
     ok = setDesignSupplyTemperature(7.0);
     OS_ASSERT(ok);
     ok = setDesignTemperatureLift(11.1);
@@ -563,6 +560,8 @@ namespace model {
     OS_ASSERT(ok);
     ok = setMaximumPartLoadRatio(1.0);
     OS_ASSERT(ok);
+    ok = setNominalAuxiliaryElectricPower(0);
+    OS_ASSERT(ok);
     ok = setStandbyElectricPower(0);
     OS_ASSERT(ok);
   }
@@ -577,8 +576,10 @@ namespace model {
     bool ok = true;
     ok = setFuelType("NaturalGas");
     OS_ASSERT(ok);
+    autosizeNominalCoolingCapacity();
     ok = setNominalCOP(1.0);
     OS_ASSERT(ok);
+    autosizeDesignFlowRate();
     ok = setDesignSupplyTemperature(7.0);
     OS_ASSERT(ok);
     ok = setDesignTemperatureLift(11.1);
@@ -616,6 +617,8 @@ namespace model {
     ok = setMinimumPartLoadRatio(0.1);
     OS_ASSERT(ok);
     ok = setMaximumPartLoadRatio(1.0);
+    OS_ASSERT(ok);
+    ok = setNominalAuxiliaryElectricPower(0);
     OS_ASSERT(ok);
     ok = setStandbyElectricPower(0);
     OS_ASSERT(ok);

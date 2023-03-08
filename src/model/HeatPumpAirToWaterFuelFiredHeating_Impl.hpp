@@ -141,7 +141,7 @@ namespace model {
 
       boost::optional<Curve> cyclingRatioFactorCurve() const;
 
-      boost::optional<double> nominalAuxiliaryElectricPower() const;
+      double nominalAuxiliaryElectricPower() const;
 
       boost::optional<Curve> auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() const;
 
@@ -222,8 +222,6 @@ namespace model {
       void resetCyclingRatioFactorCurve();
 
       bool setNominalAuxiliaryElectricPower(double nominalAuxiliaryElectricPower);
-
-      void resetNominalAuxiliaryElectricPower();
 
       bool setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(const Curve& auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve);
 

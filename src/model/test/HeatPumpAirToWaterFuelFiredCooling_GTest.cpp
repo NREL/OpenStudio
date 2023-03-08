@@ -76,10 +76,10 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_HeatPumpAirToWaterFuelFi
   EXPECT_EQ("General", hp.endUseSubcategory());
   EXPECT_TRUE(hp.isEndUseSubcategoryDefaulted());
   EXPECT_FALSE(hp.nominalCoolingCapacity());
-  EXPECT_FALSE(hp.isNominalCoolingCapacityAutosized());
+  EXPECT_TRUE(hp.isNominalCoolingCapacityAutosized());
   EXPECT_EQ(1.0, hp.nominalCOP());
   EXPECT_FALSE(hp.designFlowRate());
-  EXPECT_FALSE(hp.isDesignFlowRateAutosized());
+  EXPECT_TRUE(hp.isDesignFlowRateAutosized());
   EXPECT_EQ(7.0, hp.designSupplyTemperature());
   ASSERT_TRUE(hp.designTemperatureLift());
   EXPECT_EQ(11.1, hp.designTemperatureLift().get());
@@ -97,7 +97,7 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_HeatPumpAirToWaterFuelFi
   EXPECT_EQ(0.1, hp.minimumPartLoadRatio());
   EXPECT_EQ(1.0, hp.maximumPartLoadRatio());
   EXPECT_FALSE(hp.cyclingRatioFactorCurve());
-  EXPECT_FALSE(hp.nominalAuxiliaryElectricPower());
+  EXPECT_EQ(0, hp.nominalAuxiliaryElectricPower());
   EXPECT_FALSE(hp.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve());
   EXPECT_FALSE(hp.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve());
   EXPECT_EQ(0, hp.standbyElectricPower());
@@ -164,8 +164,7 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_GettersSetters) {
   EXPECT_EQ(0.75, hp.maximumPartLoadRatio());
   ASSERT_TRUE(hp.cyclingRatioFactorCurve());
   EXPECT_EQ(curve4.handle(), hp.cyclingRatioFactorCurve().get().handle());
-  ASSERT_TRUE(hp.nominalAuxiliaryElectricPower());
-  EXPECT_EQ(12.0, hp.nominalAuxiliaryElectricPower().get());
+  EXPECT_EQ(12.0, hp.nominalAuxiliaryElectricPower());
   ASSERT_TRUE(hp.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve());
   EXPECT_EQ(curve5.handle(), hp.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve().get().handle());
   ASSERT_TRUE(hp.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve());
@@ -188,7 +187,6 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_GettersSetters) {
   hp.resetNominalCoolingCapacity();
   hp.resetDesignFlowRate();
   hp.resetCyclingRatioFactorCurve();
-  hp.resetNominalAuxiliaryElectricPower();
   hp.resetAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve();
   hp.resetAuxiliaryElectricEnergyInputRatioFunctionofPLRCurve();
 
@@ -198,7 +196,6 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_GettersSetters) {
   EXPECT_FALSE(hp.nominalCoolingCapacity());
   EXPECT_FALSE(hp.designFlowRate());
   EXPECT_FALSE(hp.cyclingRatioFactorCurve());
-  EXPECT_FALSE(hp.nominalAuxiliaryElectricPower());
   EXPECT_FALSE(hp.auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve());
   EXPECT_FALSE(hp.auxiliaryElectricEnergyInputRatioFunctionofPLRCurve());
 }
