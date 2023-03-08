@@ -878,10 +878,6 @@ namespace model {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setNominalAuxiliaryElectricPower(nominalAuxiliaryElectricPower);
   }
 
-  void HeatPumpAirToWaterFuelFiredCooling::resetNominalAuxiliaryElectricPower() {
-    getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->resetNominalAuxiliaryElectricPower();
-  }
-
   bool HeatPumpAirToWaterFuelFiredCooling::setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(
     const Curve& auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve) {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->setAuxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve(
