@@ -791,10 +791,11 @@ set(${target_name}_test_src
   Test/Surface_GTest.cpp
   Test/SurfaceControlMovableInsulation_GTest.cpp
   Test/SurfacePropertyConvectionCoefficients_GTest.cpp
-  Test/SurfacePropertyLocalEnvironment_GTest.cpp
-  Test/SurfacePropertySurroundingSurfaces_GTest.cpp
   Test/SurfacePropertyGroundSurfaces_GTest.cpp
   Test/SurfacePropertyIncidentSolarMultiplier_GTest.cpp
+  Test/SurfacePropertyLocalEnvironment_GTest.cpp
+  Test/SurfacePropertyOtherSideConditionsModel_GTest.cpp
+  Test/SurfacePropertySurroundingSurfaces_GTest.cpp
   Test/SwimmingPoolIndoor_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/TableLookup_GTest.cpp
