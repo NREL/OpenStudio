@@ -1080,12 +1080,7 @@ class ModelClassGenerator < SubProjectClassGenerator
             result << "        }\n"
             result << "      }\n"
           else
-            result << "      bool result = false;\n"
-            result << "      if (" << field.setterArgumentName << ") {\n"
-            result << "        result = " << field.setterAccessor << "(" << field.fieldEnum << ", \"" << field.booleanChoiceTrue << "\");\n"
-            result << "      } else {\n"
-            result << "        result = " << field.setterAccessor << "(" << field.fieldEnum << ", \"" << field.booleanChoiceFalse << "\");\n"
-            result << "      }\n"
+            result << "      const bool result = setBooleanFieldValue(field.fieldEnum, field.setterArgumentName);\n"
           end
 
         elsif /optional/.match(field.publicClassSetterType)
