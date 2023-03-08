@@ -597,6 +597,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSizingSystem.cpp
   ReverseTranslator/ReverseTranslateSizingZone.cpp
   ReverseTranslator/ReverseTranslateSizingPeriodDesignDay.cpp
+  ReverseTranslator/ReverseTranslateSolarCollectorPerformancePhotovoltaicThermalBIPVT.cpp
   ReverseTranslator/ReverseTranslateSteamEquipment.cpp
   ReverseTranslator/ReverseTranslateSurfaceControlMovableInsulation.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmInside.cpp

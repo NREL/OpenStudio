@@ -880,6 +880,10 @@ namespace energyplus {
         modelObject = translateSizingPeriodDesignDay(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::SolarCollectorPerformance_PhotovoltaicThermal_BIPVT: {
+        // modelObject = translateSolarCollectorPerformancePhotovoltaicThermalBIPVT(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Sizing_System: {
         //modelObject = translateSizingSystem(workspaceObject);
         break;

@@ -31,9 +31,8 @@
 
 #include "../../model/SolarCollectorPerformancePhotovoltaicThermalBIPVT.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "../../model/OSCM.hpp"
-#include "../../model/OSCM_Impl.hpp"
+#include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
+#include "../../model/SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
@@ -48,136 +47,128 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<ModelObject> ReverseTranslator::translateSolarCollectorPerformancePhotovoltaicThermalBIPVT(const WorkspaceObject& workspaceObject) {
-    boost::optional<ModelObject> result;
-    boost::optional<WorkspaceObject> _wo;
-    boost::optional<ModelObject> _mo;
 
-    // Instantiate an object of the class to store the values,
-    // but we don't return it until we know it's ok
-    // TODO: check constructor, it might need other objects
     openstudio::model::SolarCollectorPerformancePhotovoltaicThermalBIPVT modelObject(m_model);
 
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
-
     // Name
-    if (boost::optional<std::string> _name = workspaceObject.name()) {
-      modelObject.setName(_name.get());
+    if (boost::optional<std::string> name_ = workspaceObject.name()) {
+      modelObject.setName(name_.get());
     }
 
     // Boundary Conditions Model Name: Required Object
-    if ((_wo = workspaceObject.getTarget(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
+    if (boost::optional<WorkspaceObject> wo_ =
+          workspaceObject.getTarget(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName)) {
+      if (boost::optional<ModelObject> mo_ = translateAndMapWorkspaceObject(wo_.get())) {
         // TODO: check return types
-        if (boost::optional<OSCM> _boundaryConditionsModel = _mo->optionalCast<OSCM>()) {
-          modelObject.setBoundaryConditionsModel(_boundaryConditionsModel.get());
+        if (boost::optional<SurfacePropertyOtherSideConditionsModel> boundaryConditionsModel_ =
+              mo_->optionalCast<SurfacePropertyOtherSideConditionsModel>()) {
+          modelObject.setBoundaryConditionsModel(boundaryConditionsModel_.get());
         } else {
           LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Boundary Conditions Model Name'");
         }
       } else {
         LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Boundary Conditions Model Name'");
-        return result;
+        return boost::none;
       }
     } else {
       LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Boundary Conditions Model Name'");
-      return result;
+      return boost::none;
     }
     // Availability Schedule Name: Optional Object
-    if ((_wo = workspaceObject.getTarget(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
+    if (boost::optional<WorkspaceObject> wo_ =
+          workspaceObject.getTarget(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName)) {
+      if (boost::optional<ModelObject> mo_ = translateAndMapWorkspaceObject(wo_.get())) {
         // TODO: check return types
-        if (boost::optional<Schedule> _availabilitySchedule = _mo->optionalCast<Schedule>()) {
-          modelObject.setAvailabilitySchedule(_availabilitySchedule.get());
+        if (boost::optional<Schedule> availabilitySchedule_ = mo_->optionalCast<Schedule>()) {
+          modelObject.setAvailabilitySchedule(availabilitySchedule_.get());
         } else {
           LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Availability Schedule Name'");
         }
       }
     }
     // Effective Plenum Gap Thickness Behind PV Modules: Required Double
-    if (boost::optional<double> _effectivePlenumGapThicknessBehindPVModules =
+    if (boost::optional<double> effectivePlenumGapThicknessBehindPVModules_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::EffectivePlenumGapThicknessBehindPVModules)) {
-      modelObject.setEffectivePlenumGapThicknessBehindPVModules(_effectivePlenumGapThicknessBehindPVModules.get());
+      modelObject.setEffectivePlenumGapThicknessBehindPVModules(effectivePlenumGapThicknessBehindPVModules_.get());
     } else {
       LOG(Error,
           "For " << workspaceObject.briefDescription() << ", cannot find required property 'Effective Plenum Gap Thickness Behind PV Modules'");
-      return result;
+      return boost::none;
     }
 
     // PV Cell Normal Transmittance-Absorptance Product: Optional Double
-    if (boost::optional<double> _pVCellNormalTransmittanceAbsorptanceProduct =
+    if (boost::optional<double> pVCellNormalTransmittanceAbsorptanceProduct_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVCellNormalTransmittanceAbsorptanceProduct)) {
-      modelObject.setPVCellNormalTransmittanceAbsorptanceProduct(_pVCellNormalTransmittanceAbsorptanceProduct.get());
+      modelObject.setPVCellNormalTransmittanceAbsorptanceProduct(pVCellNormalTransmittanceAbsorptanceProduct_.get());
     }
 
     // Backing Material Normal Transmittance-Absorptance Product: Optional Double
-    if (boost::optional<double> _backingMaterialNormalTransmittanceAbsorptanceProduct = workspaceObject.getDouble(
+    if (boost::optional<double> backingMaterialNormalTransmittanceAbsorptanceProduct_ = workspaceObject.getDouble(
           SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BackingMaterialNormalTransmittanceAbsorptanceProduct)) {
-      modelObject.setBackingMaterialNormalTransmittanceAbsorptanceProduct(_backingMaterialNormalTransmittanceAbsorptanceProduct.get());
+      modelObject.setBackingMaterialNormalTransmittanceAbsorptanceProduct(backingMaterialNormalTransmittanceAbsorptanceProduct_.get());
     }
 
     // Cladding Normal Transmittance-Absorptance Product: Optional Double
-    if (boost::optional<double> _claddingNormalTransmittanceAbsorptanceProduct =
+    if (boost::optional<double> claddingNormalTransmittanceAbsorptanceProduct_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::CladdingNormalTransmittanceAbsorptanceProduct)) {
-      modelObject.setCladdingNormalTransmittanceAbsorptanceProduct(_claddingNormalTransmittanceAbsorptanceProduct.get());
+      modelObject.setCladdingNormalTransmittanceAbsorptanceProduct(claddingNormalTransmittanceAbsorptanceProduct_.get());
     }
 
     // Fraction of Collector Gross Area Covered by PV Module: Optional Double
-    if (boost::optional<double> _fractionofCollectorGrossAreaCoveredbyPVModule =
+    if (boost::optional<double> fractionofCollectorGrossAreaCoveredbyPVModule_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofCollectorGrossAreaCoveredbyPVModule)) {
-      modelObject.setFractionofCollectorGrossAreaCoveredbyPVModule(_fractionofCollectorGrossAreaCoveredbyPVModule.get());
+      modelObject.setFractionofCollectorGrossAreaCoveredbyPVModule(fractionofCollectorGrossAreaCoveredbyPVModule_.get());
     }
 
     // Fraction of PV Cell Area to PV Module Area: Optional Double
-    if (boost::optional<double> _fractionofPVCellAreatoPVModuleArea =
+    if (boost::optional<double> fractionofPVCellAreatoPVModuleArea_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofPVCellAreatoPVModuleArea)) {
-      modelObject.setFractionofPVCellAreatoPVModuleArea(_fractionofPVCellAreatoPVModuleArea.get());
+      modelObject.setFractionofPVCellAreatoPVModuleArea(fractionofPVCellAreatoPVModuleArea_.get());
     }
 
     // PV Module Top Thermal Resistance: Optional Double
-    if (boost::optional<double> _pVModuleTopThermalResistance =
+    if (boost::optional<double> pVModuleTopThermalResistance_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleTopThermalResistance)) {
-      modelObject.setPVModuleTopThermalResistance(_pVModuleTopThermalResistance.get());
+      modelObject.setPVModuleTopThermalResistance(pVModuleTopThermalResistance_.get());
     }
 
     // PV Module Bottom Thermal Resistance: Optional Double
-    if (boost::optional<double> _pVModuleBottomThermalResistance =
+    if (boost::optional<double> pVModuleBottomThermalResistance_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBottomThermalResistance)) {
-      modelObject.setPVModuleBottomThermalResistance(_pVModuleBottomThermalResistance.get());
+      modelObject.setPVModuleBottomThermalResistance(pVModuleBottomThermalResistance_.get());
     }
 
     // PV Module Front Longwave Emissivity: Optional Double
-    if (boost::optional<double> _pVModuleFrontLongwaveEmissivity =
+    if (boost::optional<double> pVModuleFrontLongwaveEmissivity_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleFrontLongwaveEmissivity)) {
-      modelObject.setPVModuleFrontLongwaveEmissivity(_pVModuleFrontLongwaveEmissivity.get());
+      modelObject.setPVModuleFrontLongwaveEmissivity(pVModuleFrontLongwaveEmissivity_.get());
     }
 
     // PV Module Back Longwave Emissivity: Optional Double
-    if (boost::optional<double> _pVModuleBackLongwaveEmissivity =
+    if (boost::optional<double> pVModuleBackLongwaveEmissivity_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBackLongwaveEmissivity)) {
-      modelObject.setPVModuleBackLongwaveEmissivity(_pVModuleBackLongwaveEmissivity.get());
+      modelObject.setPVModuleBackLongwaveEmissivity(pVModuleBackLongwaveEmissivity_.get());
     }
 
     // Glass Thickness: Optional Double
-    if (boost::optional<double> _glassThickness =
+    if (boost::optional<double> glassThickness_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassThickness)) {
-      modelObject.setGlassThickness(_glassThickness.get());
+      modelObject.setGlassThickness(glassThickness_.get());
     }
 
     // Glass Refraction Index: Optional Double
-    if (boost::optional<double> _glassRefractionIndex =
+    if (boost::optional<double> glassRefractionIndex_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassRefractionIndex)) {
-      modelObject.setGlassRefractionIndex(_glassRefractionIndex.get());
+      modelObject.setGlassRefractionIndex(glassRefractionIndex_.get());
     }
 
     // Glass Extinction Coefficient: Optional Double
-    if (boost::optional<double> _glassExtinctionCoefficient =
+    if (boost::optional<double> glassExtinctionCoefficient_ =
           workspaceObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassExtinctionCoefficient)) {
-      modelObject.setGlassExtinctionCoefficient(_glassExtinctionCoefficient.get());
+      modelObject.setGlassExtinctionCoefficient(glassExtinctionCoefficient_.get());
     }
 
-    result = modelObject;
-    return result;
+    return modelObject;
   }  // End of translate function
 
 }  // end namespace energyplus
