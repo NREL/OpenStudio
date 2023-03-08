@@ -67,10 +67,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-/* Ensures that the nodes that translated correctly
- * that means correct node names in the ChillerElectricASHRAE205 but also
- * on the Branches
- */
 TEST_F(EnergyPlusFixture, ForwardTranslator_SolarCollectorPerformancePhotovoltaicThermalBIPVT) {
 
   ForwardTranslator ft;
