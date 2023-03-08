@@ -297,12 +297,55 @@ namespace model {
     OS_ASSERT(getImpl<detail::SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl>());
 
     SurfacePropertyOtherSideConditionsModel oscm(model);
+    oscm.setName("BIPVT Surface Property Other Side Conditions Model");
     bool ok = setBoundaryConditionsModel(oscm);
     OS_ASSERT(ok);
     ok = oscm.setTypeOfModeling("GapConvectionRadiation");  // Explicitly set it, even if it's the default
     OS_ASSERT(ok);
 
     auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    ok = setAvailabilitySchedule(alwaysOn);
+    OS_ASSERT(ok);
+
+    ok = setEffectivePlenumGapThicknessBehindPVModules(0.1);  // 10cm. Taken from ShopWithBIPVT.idf
+    OS_ASSERT(ok);
+
+    // IDD Defaults
+    ok = setPVCellNormalTransmittanceAbsorptanceProduct(0.957);
+    OS_ASSERT(ok);
+    ok = setBackingMaterialNormalTransmittanceAbsorptanceProduct(0.87);
+    OS_ASSERT(ok);
+    ok = setCladdingNormalTransmittanceAbsorptanceProduct(0.85);
+    OS_ASSERT(ok);
+    ok = setFractionofCollectorGrossAreaCoveredbyPVModule(0.85);
+    OS_ASSERT(ok);
+    ok = setFractionofPVCellAreatoPVModuleArea(0.9);
+    OS_ASSERT(ok);
+    ok = setPVModuleTopThermalResistance(0.0044);
+    OS_ASSERT(ok);
+    ok = setPVModuleBottomThermalResistance(0.0039);
+    OS_ASSERT(ok);
+    ok = setPVModuleFrontLongwaveEmissivity(0.85);
+    OS_ASSERT(ok);
+    ok = setPVModuleBackLongwaveEmissivity(0.9);
+    OS_ASSERT(ok);
+    ok = setGlassThickness(0.002);
+    OS_ASSERT(ok);
+    ok = setGlassRefractionIndex(1.526);
+    OS_ASSERT(ok);
+    ok = setGlassExtinctionCoefficient(4.0);
+    OS_ASSERT(ok);
+  }
+
+  SolarCollectorPerformancePhotovoltaicThermalBIPVT::SolarCollectorPerformancePhotovoltaicThermalBIPVT(
+    const SurfacePropertyOtherSideConditionsModel& oscm)
+    : ModelObject(SolarCollectorPerformancePhotovoltaicThermalBIPVT::iddObjectType(), oscm.model()) {
+    OS_ASSERT(getImpl<detail::SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl>());
+
+    bool ok = setBoundaryConditionsModel(oscm);
+    OS_ASSERT(ok);
+
+    auto alwaysOn = oscm.model().alwaysOnDiscreteSchedule();
     ok = setAvailabilitySchedule(alwaysOn);
     OS_ASSERT(ok);
 
