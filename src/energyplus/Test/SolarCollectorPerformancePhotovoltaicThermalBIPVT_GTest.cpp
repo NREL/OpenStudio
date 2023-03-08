@@ -33,27 +33,26 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/SolarCollectorPerformancePhotovoltaicThermalBIPVT.hpp"
+#include "../../model/SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl.hpp"
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
+#include "../../model/SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/GeneratorPhotovoltaic.hpp"
 #include "../../model/ElectricLoadCenterDistribution.hpp"
 #include "../../model/ElectricLoadCenterInverterSimple.hpp"
-#include "../../model/ShadingSurfaceGroup.hpp"
-#include "../../model/ShadingSurface.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ScheduleConstant.hpp"
+#include "../../model/ScheduleConstant_Impl.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/ThermalZone.hpp"
-#include "../../model/ElectricLoadCenterInverterSimple.hpp"
-#include "../../model/ElectricLoadCenterDistribution.hpp"
+#include "../../model/Model.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
-#include "../../utilities/idf/IdfExtensibleGroup.hpp"
-#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 // E+ FieldEnums
 #include <utilities/idd/IddEnums.hxx>
@@ -125,7 +124,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SolarCollectorPerformancePhotovoltai
   EXPECT_TRUE(performance.setEffectivePlenumGapThicknessBehindPVModules(0.5));
 
   SurfacePropertyOtherSideConditionsModel oscm = performance.boundaryConditionsModel();
-  oscm.setName("BIPV OtherSideConditionsModel");
+  oscm.setName("BIPVT OtherSideConditionsModel");
 
   ScheduleConstant availSch(m);
   availSch.setName("BIPV AvailabilitySchedule");
@@ -144,14 +143,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SolarCollectorPerformancePhotovoltai
   EXPECT_TRUE(performance.setGlassRefractionIndex(1.586));
   EXPECT_TRUE(performance.setGlassExtinctionCoefficient(5.0));
 
-  m.save("TODO_TEMP.osm", true);
   const Workspace w = ft.translateModel(m);
   const auto idfObjs = w.getObjectsByType(IddObjectType::SolarCollectorPerformance_PhotovoltaicThermal_BIPVT);
   ASSERT_EQ(1u, idfObjs.size());
 
   const auto& idfObject = idfObjs.front();
   EXPECT_EQ("BIPVT Perf", idfObject.getString(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::Name).get());
-  EXPECT_EQ("BIPV OtherSideConditionsModel",
+  EXPECT_EQ("BIPVT OtherSideConditionsModel",
             idfObject.getString(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName).get());
   EXPECT_EQ("Always On Discrete", idfObject.getString(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName).get());
   EXPECT_EQ(0.5, idfObject.getDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::EffectivePlenumGapThicknessBehindPVModules).get());
@@ -175,4 +173,66 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SolarCollectorPerformancePhotovoltai
   ASSERT_EQ(1u, pvtObjs.size());
   const auto& pvtObj = pvtObjs.front();
   EXPECT_EQ("BIPVT Perf", pvtObj.getString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName).get());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_SolarCollectorPerformancePhotovoltaicThermalBIPVT) {
+
+  ReverseTranslator rt;
+
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
+
+  auto woPerf = w.addObject(IdfObject(IddObjectType::SolarCollectorPerformance_PhotovoltaicThermal_BIPVT)).get();
+  woPerf.setName("BIPVT Perf");
+
+  auto woBoundaryCond = w.addObject(IdfObject(IddObjectType::SurfaceProperty_OtherSideConditionsModel)).get();
+  woBoundaryCond.setName("BIPVT OtherSideConditionsModel");
+  EXPECT_TRUE(woPerf.setPointer(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BoundaryConditionsModelName, woBoundaryCond.handle()));
+
+  auto woAvailSch = w.addObject(IdfObject(IddObjectType::Schedule_Constant)).get();
+  woAvailSch.setName("BIPVT AvailabilitySchedule");
+  EXPECT_TRUE(woPerf.setPointer(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::AvailabilityScheduleName, woAvailSch.handle()));
+
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::EffectivePlenumGapThicknessBehindPVModules, 0.5));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVCellNormalTransmittanceAbsorptanceProduct, 0.81));
+  EXPECT_TRUE(
+    woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::BackingMaterialNormalTransmittanceAbsorptanceProduct, 0.82));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::CladdingNormalTransmittanceAbsorptanceProduct, 0.83));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofCollectorGrossAreaCoveredbyPVModule, 0.84));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::FractionofPVCellAreatoPVModuleArea, 0.75));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleTopThermalResistance, 0.0054));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBottomThermalResistance, 0.0049));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleFrontLongwaveEmissivity, 0.89));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::PVModuleBackLongwaveEmissivity, 0.92));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassThickness, 0.009));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassRefractionIndex, 1.586));
+  EXPECT_TRUE(woPerf.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_BIPVTFields::GlassExtinctionCoefficient, 5.0));
+
+  const Model m = rt.translateWorkspace(w);
+
+  const auto perfs = m.getConcreteModelObjects<SolarCollectorPerformancePhotovoltaicThermalBIPVT>();
+  ASSERT_EQ(1, perfs.size());
+  const auto& perf = perfs.front();
+
+  EXPECT_EQ("BIPVT Perf", perf.nameString());
+
+  ASSERT_EQ(1, m.getConcreteModelObjects<SurfacePropertyOtherSideConditionsModel>().size());
+  ASSERT_TRUE(perf.boundaryConditionsModel().optionalCast<SurfacePropertyOtherSideConditionsModel>());
+  EXPECT_EQ("BIPVT OtherSideConditionsModel", perf.boundaryConditionsModel().nameString());
+
+  ASSERT_TRUE(perf.availabilitySchedule().optionalCast<ScheduleConstant>());
+  EXPECT_EQ("BIPVT AvailabilitySchedule", perf.availabilitySchedule().nameString());
+
+  EXPECT_EQ(0.5, perf.effectivePlenumGapThicknessBehindPVModules());
+  EXPECT_EQ(0.81, perf.pVCellNormalTransmittanceAbsorptanceProduct());
+  EXPECT_EQ(0.82, perf.backingMaterialNormalTransmittanceAbsorptanceProduct());
+  EXPECT_EQ(0.83, perf.claddingNormalTransmittanceAbsorptanceProduct());
+  EXPECT_EQ(0.84, perf.fractionofCollectorGrossAreaCoveredbyPVModule());
+  EXPECT_EQ(0.75, perf.fractionofPVCellAreatoPVModuleArea());
+  EXPECT_EQ(0.0054, perf.pVModuleTopThermalResistance());
+  EXPECT_EQ(0.0049, perf.pVModuleBottomThermalResistance());
+  EXPECT_EQ(0.89, perf.pVModuleFrontLongwaveEmissivity());
+  EXPECT_EQ(0.92, perf.pVModuleBackLongwaveEmissivity());
+  EXPECT_EQ(0.009, perf.glassThickness());
+  EXPECT_EQ(1.586, perf.glassRefractionIndex());
+  EXPECT_EQ(5.0, perf.glassExtinctionCoefficient());
 }
