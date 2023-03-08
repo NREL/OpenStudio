@@ -62,17 +62,19 @@ namespace energyplus {
         // TODO: check return types
         if (boost::optional<SurfacePropertyOtherSideConditionsModel> boundaryConditionsModel_ =
               mo_->optionalCast<SurfacePropertyOtherSideConditionsModel>()) {
+          // The Ctor creates a BoundaryConditionsModel for us, so we can remove it now that we found the right one
+          auto defaultOSCM = modelObject.boundaryConditionsModel();
           modelObject.setBoundaryConditionsModel(boundaryConditionsModel_.get());
+          defaultOSCM.remove();
         } else {
           LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Boundary Conditions Model Name'");
         }
       } else {
-        LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Boundary Conditions Model Name'");
-        return boost::none;
+        LOG(Error, "For " << workspaceObject.briefDescription()
+                          << ", cannot reverse translate required object 'Boundary Conditions Model Name'. Using defaulted one.");
       }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Boundary Conditions Model Name'");
-      return boost::none;
+      LOG(Warn,
+          "For " << workspaceObject.briefDescription() << ", cannot find required object 'Boundary Conditions Model Name'. Using defaulted one.");
     }
     // Availability Schedule Name: Optional Object
     if (boost::optional<WorkspaceObject> wo_ =
