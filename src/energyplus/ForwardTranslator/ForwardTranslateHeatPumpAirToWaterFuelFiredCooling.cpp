@@ -178,10 +178,9 @@ namespace energyplus {
       }
     }
 
-    // Nominal Auxiliary Electric Power: boost::optional<double>
-    if (boost::optional<double> _nominalAuxiliaryElectricPower = modelObject.nominalAuxiliaryElectricPower()) {
-      idfObject.setDouble(HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, _nominalAuxiliaryElectricPower.get());
-    }
+    // Nominal Auxiliary Electric Power: Optional Double
+    double nominalAuxiliaryElectricPower = modelObject.nominalAuxiliaryElectricPower();
+    idfObject.setDouble(HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, nominalAuxiliaryElectricPower);
 
     // Auxiliary Electric Energy Input Ratio Function of Temperature Curve Name: Optional Object
     if (boost::optional<Curve> _auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve =
