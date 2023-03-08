@@ -255,7 +255,9 @@ namespace model {
     }
 
     double HeatPumpAirToWaterFuelFiredCooling_Impl::nominalAuxiliaryElectricPower() const {
-      return getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, true);
+      boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_CoolingFields::NominalAuxiliaryElectricPower, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<Curve> HeatPumpAirToWaterFuelFiredCooling_Impl::auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() const {
@@ -746,7 +748,7 @@ namespace model {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->cyclingRatioFactorCurve();
   }
 
-  boost::optional<double> HeatPumpAirToWaterFuelFiredCooling::nominalAuxiliaryElectricPower() const {
+  double HeatPumpAirToWaterFuelFiredCooling::nominalAuxiliaryElectricPower() const {
     return getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>()->nominalAuxiliaryElectricPower();
   }
 

@@ -285,7 +285,9 @@ namespace model {
     }
 
     double HeatPumpAirToWaterFuelFiredHeating_Impl::nominalAuxiliaryElectricPower() const {
-      return getDouble(OS_HeatPump_AirToWater_FuelFired_HeatingFields::NominalAuxiliaryElectricPower, true);
+      boost::optional<double> value = getDouble(OS_HeatPump_AirToWater_FuelFired_HeatingFields::NominalAuxiliaryElectricPower, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<Curve> HeatPumpAirToWaterFuelFiredHeating_Impl::auxiliaryElectricEnergyInputRatioFunctionofTemperatureCurve() const {
