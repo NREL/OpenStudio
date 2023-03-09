@@ -111,7 +111,7 @@ class ScriptEngineInstance
   ScriptEngineInstance& operator=(const ScriptEngineInstance&) = delete;
   ScriptEngineInstance& operator=(ScriptEngineInstance&&) = delete;
 
-  void registerInitializationFunction(std::function<void()>& runSetupFun) {
+  void registerInitializationFunction(const std::function<void()>& runSetupFun) {
     m_runSetupFun = runSetupFun;
   }
 
