@@ -295,8 +295,10 @@ class PackageInfo:
 
 class ConanFileUpdater:
     __conan_center_url = "center.conan.io"
+    __nrel_url = "conan.openstudio.net"
     all_remotes_known = None
     conan_center = None
+    nrel = None
 
     @classmethod
     def update_all_remotes_known(cls, force_update: Optional[bool] = False):
@@ -312,12 +314,19 @@ class ConanFileUpdater:
             for remote in cls.all_remotes_known:
                 if cls.__conan_center_url in remote.url:
                     cls.conan_center = remote
+                if cls.__nrel_url in remote.url:
+                    cls.nrel = remote
                 print(remote)
 
             if cls.conan_center is None:
                 raise ValueError(
                     "Could not find any remote for conancenter: "
                     f"{cls.__conan_center_url}"
+                )
+            if cls.nrel is None:
+                raise ValueError(
+                    "Could not find any remote for nrel: "
+                    f"{cls.__nrel_url}"
                 )
 
     def __init__(self, filepath: Path):
@@ -347,6 +356,7 @@ class ConanFileUpdater:
                 # Dynamically add an attribute to track whether
                 # we want to check all remotes or not
                 p.use_all_remotes = False
+                p.single_remote = None
                 packages.append(p)
 
         return packages
@@ -356,6 +366,11 @@ class ConanFileUpdater:
             if p.package == package_name:
                 p.use_all_remotes = True
 
+    def flag_package_to_check_in_single_remotes(self, package_name: str, single_remote: RemoteInfo):
+        for p in self.packages:
+            if p.package == package_name:
+                p.single_remote = single_remote
+
     def force_package_version(self, package_name: str, version_contains: str):
         for p in self.packages:
             if p.package == package_name:
@@ -364,9 +379,13 @@ class ConanFileUpdater:
     def __lookup_package_updates(self):
         self.need_updates = 0
         for package in self.packages:
+            # Default: conan center
             remotes = [self.conan_center]
-            if package.use_all_remotes:
+            if package.single_remote is not None:
+                remotes = [package.single_remote]
+            elif package.use_all_remotes:
                 remotes = self.all_remotes_known
+
             for remote in remotes:
                 if package.check_updates(remotes=remotes):
                     self.need_updates += 1
@@ -409,8 +428,9 @@ if __name__ == "__main__":
 
     conanfileupdater = ConanFileUpdater(filepath=conanfile)
 
-    conanfileupdater.flag_package_to_check_in_all_remotes(
-        package_name="openstudio_ruby"
+    conanfileupdater.flag_package_to_check_in_single_remotes(
+        package_name="openstudio_ruby",
+        single_remote=ConanFileUpdater.nrel,
     )
 
     conanfileupdater.force_package_version(

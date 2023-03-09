@@ -1,4 +1,4 @@
 conan
-packaging
+packaging<=22.0  # Before LegacyVersion was removed
 python-dateutil
 rich
