@@ -2,6 +2,7 @@
 #include "UpdateCommand.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
 #include "../workflow/OSWorkflow.hpp"
+#include "../utilities/core/ASCIIStrings.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../measure/ModelMeasure.hpp"
@@ -15,6 +16,7 @@
 
 #include <fmt/format.h>
 #include <fmt/color.h>
+#include <fmt/ranges.h>  // for std::vector format
 #include <string_view>
 
 #include <CLI/CLI.hpp>
@@ -29,8 +31,10 @@ int main(int argc, char* argv[]) {
 
   int result = 0;
 
-  std::vector<std::string> args(argv, argv + argc);
-  // erase the first element
+  std::vector<std::string> args(argv, std::next(argv, static_cast<std::ptrdiff_t>(argc)));
+  std::for_each(args.begin(), args.end(), [](auto& s) { openstudio::ascii_trim(s); });
+  // erase the first element, which is the name of the program
+  std::string programName = std::move(args.front());
   args.erase(args.begin());
 
   // ScriptEngineInstance will delay load the engines
@@ -39,6 +43,7 @@ int main(int argc, char* argv[]) {
 
   if (!args.empty() && (std::string_view(args[0]) == "labs")) {
     CLI::App app{"openstudio"};
+    app.name(programName);
 
     fmt::print(fmt::fg(fmt::color::red),
                "┌{0:─^{2}}┐\n"
@@ -155,26 +160,32 @@ int main(int argc, char* argv[]) {
     // {
     auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
     openstudio::filesystem::path rubyScriptPath;
-    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
-    std::vector<std::string> executeRubyScriptCommandArgs;
-    execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
-      ->required(false)
-      ->option_text("args");
-    execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs] {
-      openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, executeRubyScriptCommandArgs);
+    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true)->check(CLI::ExistingFile);
+    // We can't do this because that means we can't pass extra arguments
+    // std::vector<std::string> executeRubyScriptCommandArgs;
+    // execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
+    //   ->required(false)
+    //   ->option_text("args");
+    execute_ruby_scriptCommand->allow_extras(true);
+    execute_ruby_scriptCommand->footer("You can pass extra arguments after the ruby file, they will be forwarded.");
+
+    execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &execute_ruby_scriptCommand] {
+      fmt::print("execute_python_scriptCommand->remaining()={}", execute_ruby_scriptCommand->remaining());
+      openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, execute_ruby_scriptCommand->remaining());
     });
     // }
 
     // {
     auto* execute_python_scriptCommand = experimentalApp->add_subcommand("execute_python_script", "Executes a python file");
     openstudio::filesystem::path pythonScriptPath;
-    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true);
-    std::vector<std::string> executePythonScriptCommandArgs;
-    execute_python_scriptCommand->add_option("arguments", executePythonScriptCommandArgs, "Arguments to pass to the python file")
-      ->required(false)
-      ->option_text("args");
-    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs] {
-      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, executePythonScriptCommandArgs);
+    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true)->check(CLI::ExistingFile);
+
+    execute_python_scriptCommand->allow_extras(true);
+    execute_python_scriptCommand->footer("You can pass extra arguments after the python file, they will be forwarded.");
+
+    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &execute_python_scriptCommand] {
+      fmt::print("execute_python_scriptCommand->remaining()={}", execute_python_scriptCommand->remaining());
+      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, execute_python_scriptCommand->remaining());
     });
     // }
 
