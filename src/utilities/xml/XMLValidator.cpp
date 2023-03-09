@@ -505,7 +505,7 @@ XMLValidator XMLValidator::gbxmlValidator() {
   return XMLValidator(tmpDir / "GreenBuildingXML_Ver6.01.xsd");
 }
 
-XMLValidator XMLValidator::bclXMLValidator(BCLXMLType bclXMlType, int schemaVersion) {
+XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMlType, int schemaVersion) {
   const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
   if (tmpDir.empty()) {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
