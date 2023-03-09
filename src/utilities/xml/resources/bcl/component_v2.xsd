@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 sp1 (x64) (http://www.altova.com) by Nicholas Long (National Renewable Energy Laboratory) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation>Component.xsd describes the components that are in the building component library or NREL analysis platform library.</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>Version - 0.9</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>Version - 0.91 - Updated the cost to be more generic</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>Version - 0.92 - Added MasterSpec to the elements</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>Version - 0.93 - Fixed indentifier typo.  Added datatype element to attributes.  Removed "level_" from fidelity level values.  Removed component_update_id and replaced component_version_id with version_id.</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>Version - 0.94 - Made datatype required on attributes and limited the possible options to int, float, and string.  (Solr will break if these are not specified or are specified incorrectly).</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>Version - 0.95 - Removed sourceType and versionType extensions because it was creating problems on the site.</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>Version - 0.96 - Added start and end times for component costs</xs:documentation>
+	</xs:annotation>
+	<xs:element name="component">
+		<xs:annotation>
+			<xs:documentation>root element defining a component</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name">
+					<xs:annotation>
+						<xs:documentation>name of the component as to be displayed</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="uid"/>
+				<xs:element name="version_id">
+					<xs:annotation>
+						<xs:documentation>this is used to signal that a new component is available and should replace previously downloaded components</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="masterguide_csi_values" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>values from the MASTERSPEC</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="masterguide_csi_value" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="description" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>free-form description of the component, will be used for search</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="comment" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>place holder for any comment</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="fidelity_level">
+					<xs:annotation>
+						<xs:documentation>component's level of data abstraction (example:  1-minute data vs. 1-hour data) </xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="1"/>
+							<xs:enumeration value="2"/>
+							<xs:enumeration value="3"/>
+							<xs:enumeration value="4"/>
+							<xs:enumeration value="5"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="provenances">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="provenance" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>provenance is used to enter author information.  The comment field can be used to enter information such as project name.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="author" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>author who uploaded the data, which will be equal to the user account on the bcl site</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="datetime" type="xs:dateTime">
+											<xs:annotation>
+												<xs:documentation>date component was uploaded</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="comment" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="tags">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="tag" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>tag is used to classify the component</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="attributes">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>attribute is a descriptor of the component (includes data quality)</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="name"/>
+										<xs:element name="value" type="xs:string"/>
+										<xs:element name="datatype">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="int"/>
+													<xs:enumeration value="float"/>
+													<xs:enumeration value="string"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="units" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="source">
+					<xs:annotation>
+						<xs:documentation>source of the data (the origin of the component information)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence minOccurs="0">
+							<xs:element name="manufacturer" minOccurs="0"/>
+							<xs:element name="model" minOccurs="0"/>
+							<xs:element name="serial_no" minOccurs="0"/>
+							<xs:element name="year" minOccurs="0"/>
+							<xs:element name="url" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="files">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="file" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="version">
+											<xs:annotation>
+												<xs:documentation>version of files attached to component</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="software_program"/>
+													<xs:element name="identifier"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="filename" type="xs:string"/>
+										<xs:element name="filetype" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>ies, idf, </xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="costs">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="cost" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="instance_name" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>name of cost for reference</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="cost_type">
+											<xs:annotation>
+												<xs:documentation>type of cost, includes low, high, average, estimate, etc</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="low"/>
+													<xs:enumeration value="high"/>
+													<xs:enumeration value="average"/>
+													<xs:enumeration value="estimate"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="category">
+											<xs:annotation>
+												<xs:documentation>ex:  operations and maintenance cost, salvage cost, materials cost, installation cost, upgrade cost, etc.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value" type="xs:float">
+											<xs:annotation>
+												<xs:documentation>cost value based on the supplemntal fields</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="units" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>cost unit. If blank, absolute cost is assumed. ex:  $/ft2, $/person, etc.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="interval" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>number describing the interval on which this cost is incurred.  ex:  1, 6, 12.  Use 0 for onetime costs</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="interval_units" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>interval units. ex:  day, month, year, etc.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="year(s)"/>
+													<xs:enumeration value="month(s)"/>
+													<xs:enumeration value="day(s)"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="year" type="xs:int" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>source year of the costs</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="start_year" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>define when this cost will start to incur. Useful when you may not want maintenance costs to start until n years after construction</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="end_year" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>define whne this cost will stop incurring.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="location" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>the geographic location where the component was costed (i.e. national, colorado, denver, etc).  By default all values should be national averages.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="currency" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>the currency of the cost.  If blank, USD is assumed.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="source" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>origin from which the cost data came</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="reference_component_name" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>display name of reference component prior to retrofit (for marginal costs)</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="reference_component_id" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>ID of reference component prior to retrofit (for marginal costs)</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

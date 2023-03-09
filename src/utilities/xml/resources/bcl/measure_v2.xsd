@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Cynthia McDonald (NREL) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation>Measure.xsd describes the measures that are in the building component library or NREL analysis platform library.</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>Version - 0.1</xs:documentation>
+	</xs:annotation>
+	<xs:element name="measure">
+		<xs:annotation>
+			<xs:documentation>root element defining a measure</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name">
+					<xs:annotation>
+						<xs:documentation>name of the measure</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="uid"/>
+				<xs:element name="version_id">
+					<xs:annotation>
+						<xs:documentation>this is used to signal that a new measure is available and should replace previously downloaded measures</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="description" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>free-form description of the measure, will be used for search</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="modeler_description">
+					<xs:annotation>
+						<xs:documentation>description containing specific details about the script file</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="provenances">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="provenance" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>provenance is used to enter author information.  The comment field can be used to enter information such as project name.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="author" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>author who uploaded the data, which will be equal to the user account on the bcl site</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="datetime" type="xs:dateTime">
+											<xs:annotation>
+												<xs:documentation>date measure was uploaded</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="comment" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="provenance_required">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="true"/>
+										<xs:enumeration value="false"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="tags">
+					<xs:annotation>
+						<xs:documentation>tags are used to classify the measure (using the measures taxonomy)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="tag" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="attributes">
+					<xs:annotation>
+						<xs:documentation>attributes are descriptors of the measure.  Measures will most likely have a measure type attribute (Replacement/Addition/ Removal)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="os_version" minOccurs="0"/>
+							<xs:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="name"/>
+										<xs:element name="value" type="xs:string"/>
+										<xs:element name="datatype"/>
+										<xs:element name="units" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="files">
+					<xs:annotation>
+						<xs:documentation>files lists details on all of the files associated with this measure, including arguments for script files.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="file" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="version">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="software_program"/>
+													<xs:element name="identifier"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="filename" type="xs:string"/>
+										<xs:element name="usage_type">
+											<xs:annotation>
+												<xs:documentation>What type of file?  (scripts, resources, tests)</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="scripts"/>
+													<xs:enumeration value="tests"/>
+													<xs:enumeration value="resources"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="filetype">
+											<xs:annotation>
+												<xs:documentation>extension of the file (osm, rb, etc)</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="resource"/>
+													<xs:enumeration value="test"/>
+													<xs:enumeration value="script"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="checksum" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
