@@ -43,7 +43,7 @@ BCLXML::BCLXML(const BCLXMLType& bclXMLType)
   : m_bclXMLType(bclXMLType),
     m_uid{removeBraces(openstudio::createUUID())},
     m_versionId{removeBraces(openstudio::createUUID())},
-    m_versionModified{DateTime::nowUTC().toISO8601()} {}
+    m_versionModified{DateTime::nowUTC().toXsdDateTime()} {}
 
 BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem::system_complete(xmlPath)) {
   if (!openstudio::filesystem::exists(xmlPath)) {
@@ -796,7 +796,7 @@ void BCLXML::changeUID() {
 
 void BCLXML::incrementVersionId() {
   m_versionId = removeBraces(openstudio::createUUID());
-  m_versionModified = DateTime::nowUTC().toISO8601();
+  m_versionModified = DateTime::nowUTC().toXsdDateTime();
 }
 
 bool BCLXML::checkForUpdatesXML() {
