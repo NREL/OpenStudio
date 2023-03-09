@@ -243,7 +243,8 @@ void OSWorkflow::runEnergyPlus() {
         fmt::print("EnergyPlus {} with ", status);
         fmt::print(fmt::fg(fmt::color::red), "{} Fatal Errors, ", errFile.fatalErrors().size());
         fmt::print(fmt::fg(fmt::color::orange), "{} Severe Errors, ", errFile.severeErrors().size());
-        fmt::print(fmt::fg(fmt::color::yellow), "{} Warnings.\n", errFile.warnings().size());
+        fmt::print(fmt::fg(fmt::color::yellow), "{} Warnings.", errFile.warnings().size());
+        fmt::print("\n");
         if (!errFile.completedSuccessfully()) {
           throw std::runtime_error("EnergyPlus Terminated with a Fatal Error. Check eplusout.err log.");
         }
