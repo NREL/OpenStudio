@@ -188,6 +188,7 @@ set(bcl_src
   bcl/BCL.cpp
   bcl/BCLComponent.hpp
   bcl/BCLComponent.cpp
+  bcl/BCLEnums.hpp
   bcl/BCLFileReference.hpp
   bcl/BCLFileReference.cpp
   bcl/BCLMeasure.hpp
@@ -504,6 +505,7 @@ add_library(openstudio_utilities_minimal
   core/StringStreamLogSink.hpp
   core/StringStreamLogSink_Impl.hpp
   core/StringStreamLogSink.cpp
+  bcl/BCLEnums.hpp
 )
 target_link_libraries(openstudio_utilities_minimal PUBLIC ${${target_name}_depends})
 
