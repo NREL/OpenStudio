@@ -140,6 +140,13 @@ if(BUILD_TESTING)
     PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
   )
 
+  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.omit_execute
+    COMMAND $<TARGET_FILE:openstudio> labs ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb -x "National Renewable Energy Laboratory"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.forward_flags PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
+  )
+
   add_test(NAME OpenStudioCLI.Labs.execute_python_script
     COMMAND $<TARGET_FILE:openstudio> labs execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py OpenStudioLabs "National Renewable Energy Laboratory"
   )
@@ -149,6 +156,13 @@ if(BUILD_TESTING)
 
   add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags
     COMMAND $<TARGET_FILE:openstudio> labs execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py -x "National Renewable Energy Laboratory"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags.omit_execute
+    COMMAND $<TARGET_FILE:openstudio> labs ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py -x "National Renewable Energy Laboratory"
   )
   set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags PROPERTIES
     PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
