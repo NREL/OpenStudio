@@ -1202,4 +1202,8 @@ boost::optional<BCLMeasure> BCLMeasure::clone(const openstudio::path& newDir) co
   return BCLMeasure::load(newDir);
 }
 
+std::string BCLMeasure::xmlString() const {
+  return m_bclXML.toString();
+}
+
 }  // namespace openstudio
