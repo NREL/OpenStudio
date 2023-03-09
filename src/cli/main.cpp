@@ -52,25 +52,13 @@ int main(int argc, char* argv[]) {
 
     // Preprocess the arguments, insert execute_xxx_script if a script is passed but the previous arg isn't the command.
     // So you can ommit "execute_xxx_script" like historical behavior: `openstudio --include INCLUDE_DIR test.rb`
-    {
-      auto it = std::find_if(args.begin(), args.end(), [](const auto& arg) { return arg.ends_with(".rb"); });
+    if (std::none_of(args.begin(), args.end(), [](const auto& arg) { return (arg == "execute_ruby_script") || (arg == "execute_python_script"); })) {
+      auto it = std::find_if(args.begin(), args.end(), [](const auto& arg) { return arg.ends_with(".rb") || arg.ends_with(".py"); });
       if (it != args.end()) {
-        if (it != args.begin()) {
-          auto itPrev = std::prev(it);
-          if (*itPrev != "execute_ruby_script") {
-            args.insert(it, "execute_ruby_script");
-          }
-        }
-      }
-    }
-    {
-      auto it = std::find_if(args.begin(), args.end(), [](const auto& arg) { return arg.ends_with(".py"); });
-      if (it != args.end()) {
-        if (it != args.begin()) {
-          auto itPrev = std::prev(it);
-          if (*itPrev != "execute_python_script") {
-            args.insert(it, "execute_python_script");
-          }
+        if (it->ends_with(".rb")) {
+          args.insert(it, "execute_ruby_script");
+        } else {
+          args.insert(it, "execute_python_script");
         }
       }
     }
