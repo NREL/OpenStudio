@@ -17,9 +17,14 @@
 #include <fmt/format.h>
 #include <fmt/color.h>
 #include <fmt/ranges.h>  // for std::vector format
-#include <string_view>
 
 #include <CLI/CLI.hpp>
+
+#include <algorithm>
+#include <iterator>
+#include <string>
+#include <string_view>
+#include <vector>
 
 int main(int argc, char* argv[]) {
 
@@ -34,7 +39,7 @@ int main(int argc, char* argv[]) {
   std::vector<std::string> args(argv, std::next(argv, static_cast<std::ptrdiff_t>(argc)));
   std::for_each(args.begin(), args.end(), [](auto& s) { openstudio::ascii_trim(s); });
   // erase the first element, which is the name of the program
-  std::string programName = std::move(args.front());
+  const std::string programName = std::move(args.front());
   args.erase(args.begin());
 
   // ScriptEngineInstance will delay load the engines
@@ -44,6 +49,33 @@ int main(int argc, char* argv[]) {
   if (!args.empty() && (std::string_view(args[0]) == "labs")) {
     CLI::App app{"openstudio"};
     app.name(programName);
+
+    // Preprocess the arguments, insert execute_xxx_script if a script is passed but the previous arg isn't the command.
+    // So you can ommit "execute_xxx_script" like historical behavior: `openstudio --include INCLUDE_DIR test.rb`
+    {
+      auto it = std::find_if(args.begin(), args.end(), [](const auto& arg) { return arg.ends_with(".rb"); });
+      if (it != args.end()) {
+        if (it != args.begin()) {
+          auto itPrev = std::prev(it);
+          if (*itPrev != "execute_ruby_script") {
+            args.insert(it, "execute_ruby_script");
+          }
+        }
+      }
+    }
+    {
+      auto it = std::find_if(args.begin(), args.end(), [](const auto& arg) { return arg.ends_with(".py"); });
+      if (it != args.end()) {
+        if (it != args.begin()) {
+          auto itPrev = std::prev(it);
+          if (*itPrev != "execute_python_script") {
+            args.insert(it, "execute_python_script");
+          }
+        }
+      }
+    }
+
+    // fmt::print("args={}\n", args);
 
     fmt::print(fmt::fg(fmt::color::red),
                "┌{0:─^{2}}┐\n"
@@ -170,7 +202,6 @@ int main(int argc, char* argv[]) {
     execute_ruby_scriptCommand->footer("You can pass extra arguments after the ruby file, they will be forwarded.");
 
     execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &execute_ruby_scriptCommand] {
-      fmt::print("execute_python_scriptCommand->remaining()={}", execute_ruby_scriptCommand->remaining());
       openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, execute_ruby_scriptCommand->remaining());
     });
     // }
@@ -184,7 +215,6 @@ int main(int argc, char* argv[]) {
     execute_python_scriptCommand->footer("You can pass extra arguments after the python file, they will be forwarded.");
 
     execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &execute_python_scriptCommand] {
-      fmt::print("execute_python_scriptCommand->remaining()={}", execute_python_scriptCommand->remaining());
       openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, execute_python_scriptCommand->remaining());
     });
     // }
@@ -239,7 +269,17 @@ int main(int argc, char* argv[]) {
 
     // ====================================================================
 
-    CLI11_PARSE(app, argc, argv);
+    // CLI11_PARSE(app, argc, argv);
+    // CLI11_PARSE(app, args);
+    try {
+      // app.parse(argc, argv);
+      // CLI11 when passing argc, argv creates a vector<string> but **in reverse** order:
+      // https://github.com/CLIUtils/CLI11/blob/291c58789c031208f08f4f261a858b5b7083e8e2/include/CLI/impl/App_inl.hpp#L476-L488
+      std::reverse(args.begin(), args.end());
+      app.parse(args);
+    } catch (const CLI::ParseError& e) {
+      return app.exit(e);
+    }
 
     if (*execRubyOption) {
       //  fmt::print("--execute Flag received {} times.\n", execRubyOption->count());
