@@ -33,6 +33,7 @@
 #include "../core/Checksum.hpp"
 #include "../core/FilesystemHelpers.hpp"
 #include "../time/DateTime.hpp"
+#include "../xml/XMLValidator.hpp"
 
 #include <sstream>
 #include <pugixml.hpp>
@@ -89,6 +90,12 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     } catch (const std::exception&) {
       // Yuck
     }
+  }
+
+  // validate the gbxml prior to reverse translation
+  auto bclXMLValidator = XMLValidator::bclXMLValidator(m_bclXMLType, startingVersion.major());
+  if (!bclXMLValidator.validate(xmlPath)) {
+    LOG(Warn, "Failed to validate measure.xml at " << xmlPath);
   }
 
   m_name = decodeString(element.child("name").text().as_string());
