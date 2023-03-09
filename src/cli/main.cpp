@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
     auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
     openstudio::filesystem::path rubyScriptPath;
     execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true)->check(CLI::ExistingFile);
-    // We can't do this because that means we can't pass extra arguments
+    // We can't do this because that means we can't pass extra **flags**
     // std::vector<std::string> executeRubyScriptCommandArgs;
     // execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
     //   ->required(false)
