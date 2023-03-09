@@ -71,6 +71,7 @@ TEST_F(BCLFixture, BCLMeasure) {
     measure->modelerDescription());
 
   EXPECT_EQ(MeasureType::ModelMeasure, measure->measureType().value());
+  EXPECT_EQ(MeasureLanguage::Ruby, measure->measureLanguage().value());
   EXPECT_TRUE(measure->primaryRubyScriptPath());
   EXPECT_EQ("Envelope.Fenestration", measure->taxonomyTag());
 

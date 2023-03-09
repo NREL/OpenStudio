@@ -1074,9 +1074,13 @@ bool BCLMeasure::checkForUpdatesFiles() {
     setMeasureLanguage(MeasureLanguage::Ruby);
     m_bclXML.removeFile(m_directory / "measure.py");
   } else if (hasRuby) {
-    setMeasureLanguage(MeasureLanguage::Ruby);
+    if (measureLanguage() != MeasureLanguage::Ruby) {
+      setMeasureLanguage(MeasureLanguage::Ruby);
+    }
   } else if (hasPython) {
-    setMeasureLanguage(MeasureLanguage::Python);
+    if (measureLanguage() != MeasureLanguage::Python) {
+      setMeasureLanguage(MeasureLanguage::Python);
+    }
   } else {
     LOG_AND_THROW("measure at " << m_directory << " has neither measure.rb nor measure.py");
   }
