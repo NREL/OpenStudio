@@ -184,17 +184,19 @@ double DateTime::utcOffset() const {
 
 /// convert to string
 std::string DateTime::toString() const {
-  boost::posix_time::ptime pt(m_date.impl(), m_time.impl() - boost::posix_time::time_duration(utcOffsetHours(), utcOffsetMinutes(), 0, 0));
+  const boost::posix_time::ptime pt(m_date.impl(), m_time.impl() - boost::posix_time::time_duration(utcOffsetHours(), utcOffsetMinutes(), 0, 0));
   return boost::posix_time::to_simple_string(pt);
 }
 
 std::string DateTime::toISO8601() const {
-  boost::posix_time::ptime pt(m_date.impl(), m_time.impl());
+  // 20160713T160843-06:00
+  // 20160713T160843Z
+  const boost::posix_time::ptime pt(m_date.impl(), m_time.impl());
   std::string result = boost::posix_time::to_iso_string(pt);
   if (m_utcOffset == 0.0) {
     result += "Z";
   } else {
-    Time temp(0, utcOffsetHours(), utcOffsetMinutes(), 0);
+    const Time temp(0, utcOffsetHours(), utcOffsetMinutes(), 0);
     char offset = '+';
     if (temp.totalHours() < 0) {
       offset = '-';
@@ -207,14 +209,22 @@ std::string DateTime::toISO8601() const {
 
 std::string DateTime::toXsdDateTime() const {
   // 2016-07-13T16:08:43-06:00
-  Time temp(0, utcOffsetHours(), utcOffsetMinutes(), 0);
-  char offset = '+';
-  if (temp.totalHours() < 0) {
-    offset = '-';
+  // 2016-07-13T16:08:43Z
+
+  const boost::posix_time::ptime pt(m_date.impl(), m_time.impl());
+  std::string result = boost::posix_time::to_iso_extended_string(pt);
+  if (m_utcOffset == 0.0) {
+    result += "Z";
+  } else {
+    const Time temp(0, utcOffsetHours(), utcOffsetMinutes(), 0);
+    char offset = '+';
+    if (temp.totalHours() < 0) {
+      offset = '-';
+    }
+    result += fmt::format("{}{:02d}{:02d}", offset, std::abs(temp.hours()), std::abs(temp.minutes()));
   }
 
-  return fmt::format("{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}{}{:02d}:{:02d}", m_date.year(), m_date.monthOfYear().value(), m_date.dayOfMonth(),
-                     m_time.hours(), m_time.minutes(), m_time.seconds(), offset, std::abs(temp.hours()), std::abs(temp.minutes()));
+  return result;
 }
 
 std::time_t DateTime::toEpoch() const {
