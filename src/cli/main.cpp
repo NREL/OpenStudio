@@ -80,9 +80,9 @@ int main(int argc, char* argv[]) {
     fmt::print(fmt::fg(fmt::color::red),
                "┌{0:─^{2}}┐\n"
                "│{1: ^{2}}│\n"
-               "└{0:─^{2}}┘\n",
+               "└{0:─^{2}}┘",
                "", "The `labs` command is experimental - Do not use in production", 80);
-    //
+    fmt::print("\n");
     app.get_formatter()->column_width(35);
 
     auto* const experimentalApp = app.add_subcommand("labs");
