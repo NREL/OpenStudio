@@ -37,14 +37,13 @@
 #include "../core/LogMessage.hpp"
 #include "../core/Optional.hpp"
 #include "../core/StringStreamLogSink.hpp"
+#include "../bcl/BCLEnums.hpp"
 
 #include <boost/optional.hpp>
 
 #include <string>
 
 namespace openstudio {
-
-class BCLXMLType;
 
 enum class XMLValidatorType
 {
@@ -78,7 +77,7 @@ class UTILITIES_API XMLValidator
 
   static XMLValidator gbxmlValidator();
 
-  static XMLValidator bclXMLValidator(BCLXMLType bclXMLType, int schemaVersion = 3);
+  static XMLValidator bclXMLValidator(BCLXMLType bclXMLType = BCLXMLType::MeasureXML, int schemaVersion = 3);
 
   //@}
   /** @name Getters */

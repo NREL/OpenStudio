@@ -34,7 +34,7 @@
 
 #include "../core/Filesystem.hpp"
 #include "../core/FilesystemHelpers.hpp"
-#include "../bcl/BCLXML.hpp"
+#include "../bcl/BCLEnums.hpp"
 
 #include <libxml/xmlversion.h>
 #include <libxml/xmlreader.h>

@@ -92,4 +92,3 @@ OPENSTUDIO_ENUM(BCLXMLType,
 }  // namespace openstudio
 
 #endif  // UTILITIES_BCL_BCLENUMS_HPP
-
