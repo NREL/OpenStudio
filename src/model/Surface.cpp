@@ -90,7 +90,8 @@
 
 #include "../utilities/sql/SqlFile.hpp"
 
-#include <numeric>  // std::accumulate
+#include <iterator>  // std::make_move_iterator
+#include <numeric>   // std::accumulate
 
 using boost::to_upper_copy;
 
@@ -1011,15 +1012,14 @@ namespace model {
 
     bool Surface_Impl::intersect(Surface& otherSurface) {
       boost::optional<SurfaceIntersection> intersection = computeIntersection(otherSurface);
-      if (intersection) {
-        return true;
-      }
-      return false;
+      return intersection.has_value();
     }
 
     boost::optional<SurfaceIntersection> Surface_Impl::computeIntersection(Surface& otherSurface) {
       double tol = 0.01;       //  1 cm tolerance
       double areaTol = 0.001;  // 10 cm2 tolerance
+
+      constexpr bool extraLogging = false;
 
       boost::optional<Space> space = this->space();
       boost::optional<Space> otherSpace = otherSurface.space();
@@ -1082,11 +1082,23 @@ namespace model {
       //std::reverse(otherFaceVertices.begin(), otherFaceVertices.end());
 
       //LOG(Info, "Trying intersection of '" << this->name().get() << "' with '" << otherSurface.name().get());
-
+      if constexpr (extraLogging) {
+        Point3dVectorVector tmp{faceVertices, otherFaceVertices};
+        LOG(Debug, tmp);
+      }
       boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, otherFaceVertices, tol);
       if (!intersection) {
         //LOG(Info, "No intersection");
         return boost::none;
+      }
+
+      if constexpr (extraLogging) {
+        Point3dVectorVector tmp;
+        Point3dVectorVector newPolys = intersection->newPolygons2();
+        tmp.reserve(newPolys.size() + 1);
+        tmp.push_back(intersection->polygon2());
+        tmp.insert(tmp.end(), std::make_move_iterator(newPolys.begin()), std::make_move_iterator(newPolys.end()));
+        LOG(Debug, tmp);
       }
 
       // DA - Change tolerance. Current tolerance is 0.0001 which is 1cm2 which is unrealistic
@@ -1098,12 +1110,30 @@ namespace model {
         if (std::abs(area1.get() - intersection->area1()) > areaTol) {
           LOG(Error, "Initial area of surface '" << this->nameString() << "' " << area1.get() << " does not equal post intersection area "
                                                  << intersection->area1());
+          if constexpr (extraLogging) {
+            Point3dVectorVector tmp1{faceVertices, otherFaceVertices};
+            LOG(Debug, tmp1);
+            Point3dVectorVector tmp;
+            tmp.push_back(intersection->polygon1());
+            for (auto& x : intersection->newPolygons1())
+              tmp.push_back(x);
+            LOG(Debug, tmp);
+          }
         }
       }
       if (area2) {
         if (std::abs(area2.get() - intersection->area2()) > areaTol) {
           LOG(Error, "Initial area of other surface '" << otherSurface.nameString() << "' " << area2.get()
                                                        << " does not equal post intersection area " << intersection->area2());
+          if constexpr (extraLogging) {
+            Point3dVectorVector tmp1{faceVertices, otherFaceVertices};
+            LOG(Debug, tmp1);
+            Point3dVectorVector tmp;
+            tmp.push_back(intersection->polygon2());
+            for (auto& x : intersection->newPolygons2())
+              tmp.push_back(x);
+            LOG(Debug, tmp);
+          }
         }
       }
 
@@ -1123,25 +1153,26 @@ namespace model {
 
       std::vector<std::vector<Point3d>> newPolygons1 = intersection->newPolygons1();
       std::vector<std::vector<Point3d>> newPolygons2 = intersection->newPolygons2();
+
+      // modify vertices for surface in this space
+      std::vector<Point3d> newBuildingVertices = faceTransformation * intersection->polygon1();
+      std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
+      std::reverse(newVertices.begin(), newVertices.end());
+      newVertices = reorderULC(newVertices);
+      this->setVertices(newVertices);
+      //this->setAdjacentSurface(otherSurface);
+
+      // modify vertices for surface in other space
+      std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersection->polygon2();
+      std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
+      newOtherVertices = reorderULC(newOtherVertices);
+      otherSurface.setVertices(newOtherVertices);
+      //otherSurface.setAdjacentSurface(surface);
+
       if (newPolygons1.empty() && newPolygons2.empty()) {
         // both surfaces intersect perfectly, no-op
-
       } else {
         // new surfaces are created
-
-        // modify vertices for surface in this space
-        std::vector<Point3d> newBuildingVertices = faceTransformation * intersection->polygon1();
-        std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
-        std::reverse(newVertices.begin(), newVertices.end());
-        newVertices = reorderULC(newVertices);
-        this->setVertices(newVertices);
-
-        // modify vertices for surface in other space
-        std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersection->polygon2();
-        std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
-        newOtherVertices = reorderULC(newOtherVertices);
-        otherSurface.setVertices(newOtherVertices);
-
         // create new surfaces in this space
         for (unsigned i = 0; i < newPolygons1.size(); ++i) {
 
@@ -1938,12 +1969,17 @@ namespace model {
             std::reverse(newFaceVertices.begin(), newFaceVertices.end());
 
             Point3dVector newVertices = transformation * newFaceVertices;
-            SubSurface subSurface(newVertices, model);
-            subSurface.setSurface(surface);
-            if (construction) {
-              subSurface.setConstruction(*construction);
+            try {
+
+              SubSurface subSurface(newVertices, model);
+              subSurface.setSurface(surface);
+              if (construction) {
+                subSurface.setConstruction(*construction);
+              }
+              result.push_back(subSurface);
+            } catch (const std::exception&) {
+              LOG(Error, "Could not create sub-surface.");
             }
-            result.push_back(subSurface);
           }
         }
       }

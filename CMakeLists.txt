@@ -16,7 +16,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.5.2)
+project(OpenStudio VERSION 3.6.0)
 
 include(CMake/compiler_flags.cmake)
 
@@ -189,19 +189,18 @@ if(hasParent)
 endif()
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION_MAJOR 22)
-set(ENERGYPLUS_VERSION_MINOR 2)
+set(ENERGYPLUS_VERSION_MAJOR 23)
+set(ENERGYPLUS_VERSION_MINOR 1)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "aa78da9668")
+set(ENERGYPLUS_BUILD_SHA "ff86a13c18")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v22.2.0-WithIHGFix")
+set(ENERGYPLUS_RELEASE_NAME "v23.1.0-IOFreeze")
 
-# TODO: Temporary change to a fork until a patched release is issued on NREL's
-set(ENERGYPLUS_REPO "jmarrec")
+set(ENERGYPLUS_REPO "NREL")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -604,10 +603,10 @@ endif()
 if(UNIX)
   if(APPLE)
     if (ARCH MATCHES "arm64")
-      set(ENERGYPLUS_EXPECTED_HASH 35ba21891e7059987391f1ab59958025)
+      set(ENERGYPLUS_EXPECTED_HASH 1494609bef92599b4dd266ff859d8304)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH 481fafde9496735d809e810bd95b720f)
+      set(ENERGYPLUS_EXPECTED_HASH 4dafda1a64ac9160f38c7750daceec4b)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
@@ -616,9 +615,9 @@ if(UNIX)
     set(ENERGYPLUS_PLATFORM "Centos7-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH fd2b9e55a15227f872601e9e57ffe819)
+      set(ENERGYPLUS_EXPECTED_HASH fe5a4b8dd60fec342b7ed1f9216b7061)
     else() # 18.04
-      set(ENERGYPLUS_EXPECTED_HASH 05a97ef513fa3f2ac7678bd9eef026db)
+      set(ENERGYPLUS_EXPECTED_HASH fec576b594e24c11f3f83c6c3bb1e897)
     endif()
     set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   endif()
@@ -652,11 +651,11 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 8611314c5056abedca59144627e79078)
+    set(ENERGYPLUS_EXPECTED_HASH 0a6a1100cf7bce4a8dd93a1ec4c8a2bb)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 76afec50c80fc4b53f2f4da572573688)
+    set(ENERGYPLUS_EXPECTED_HASH 0baa693ae4bca138933331632ebaf5e5)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)

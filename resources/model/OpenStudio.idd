@@ -1,4 +1,4 @@
-!IDD_Version 3.5.2
+!IDD_Version 3.6.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.5.2
+       \default 3.6.0
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -691,19 +691,32 @@ OS:ZoneAirContaminantBalance,
        \object-list ScheduleNames
 
 OS:ZoneAirHeatBalanceAlgorithm,
-       \memo Determines which algorithm will be used to solve the zone air heat balance.
+       \memo Controls the zone/space air heat balance.
        \unique-object
        \format singleLine
-       \min-fields 1
+       \min-fields 4
   A1, \field Handle
        \type handle
        \required-field
-  A2; \field Algorithm
+  A2, \field Algorithm
+       \note Determines which algorithm will be used to solve the air heat balance
        \type choice
        \default ThirdOrderBackwardDifference
        \key ThirdOrderBackwardDifference
        \key AnalyticalSolution
        \key EulerMethod
+  A3, \field Do Space Heat Balance for Sizing
+       \note If yes, space heat balance will be calculated and reported during sizing.
+       \type choice
+       \key No
+       \key Yes
+       \default No
+  A4; \field Do Space Heat Balance for Simulation
+       \note If yes, space heat balance will be calculated and reported during simulation.
+       \type choice
+       \key No
+       \key Yes
+       \default No
 
 OS:ZoneAirMassFlowConservation,
        \memo Enforces the zone air mass flow balance by adjusting zone mixing object flow rates.

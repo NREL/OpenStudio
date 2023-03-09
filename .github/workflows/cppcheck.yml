@@ -37,6 +37,7 @@ jobs:
             --suppress=constParameterCallback:src/utilities/idd/benchmark/LoadIdd_Benchmark.cpp \
             --suppress=constParameterCallback:src/utilities/idf/benchmark/IdfObjectParse_Benchmark.cpp \
             --suppress=constParameterCallback:src/utilities/idf/benchmark/LoadIdfFile_Benchmark.cpp \
+            --suppress=constStatement:src/utilities/geometry/Intersection.cpp \
             --inline-suppr \
             --inconclusive \
             --template='[{file}:{line}]:({severity}),[{id}],{message}' \

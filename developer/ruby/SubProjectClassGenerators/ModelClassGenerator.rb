@@ -498,19 +498,19 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       result << "\n" if preamble == ""
 
+      result << "#include \"../utilities/core/Assert.hpp\"\n\n"
+
       if includeIddFactory
         result << "#include <utilities/idd/IddFactory.hxx>\n"
       end
 
       result << "#include <utilities/idd/IddEnums.hxx>\n"
-
       result << "#include <utilities/idd/" << @iddObjectType.valueName << "_FieldEnums.hxx>\n\n"
 
-      if @hasRealFields
-        result << "#include \"../utilities/units/Unit.hpp\"\n\n"
-      end
+      # if @hasRealFields
+      #   result << "#include \"../utilities/units/Unit.hpp\"\n\n"
+      # end
 
-      result << "#include \"../utilities/core/Assert.hpp\"\n\n"
     else
       result = super
     end
@@ -534,11 +534,11 @@ class ModelClassGenerator < SubProjectClassGenerator
   def hppSubProjectForwardDeclarations
     result = String.new
     if @idfObject
-      preamble = "// TODO: Check the following class names against object getters and setters.\n"
+      preamble = "  // TODO: Check the following class names against object getters and setters.\n"
       @nonextensibleFields.each { |field|
         if field.isObjectList?
           result << preamble
-          result << "class " << field.objectListClassName << ";\n"
+          result << "  class " << field.objectListClassName << ";\n"
           preamble = ""
         end
       }
@@ -559,7 +559,7 @@ class ModelClassGenerator < SubProjectClassGenerator
     result = String.new
 
     if @idfObject
-      result << "/** " << className << " is a " << baseClassName
+      result << "  /** " << className << " is a " << baseClassName
       result << " that wraps the OpenStudio IDD object '" << iddObjectType.valueDescription
       result << "'. */\n"
     else
@@ -575,7 +575,7 @@ class ModelClassGenerator < SubProjectClassGenerator
     if @idfObject
 
       if (not @iddObject.properties.unique)
-        result << "  explicit " << className << "(const Model& model);\n\n"
+        result << "    explicit " << className << "(const Model& model);\n\n"
       end
 
     else
@@ -591,7 +591,7 @@ class ModelClassGenerator < SubProjectClassGenerator
     if @idfObject
 
       implConstructorStart = String.new
-      implConstructorStart << "    " << @className << "_Impl("
+      implConstructorStart << "      " << @className << "_Impl("
 
       result << implConstructorStart << "const IdfObject& idfObject,\n"
       result << " " * implConstructorStart.size << "Model_Impl* model,\n"
@@ -619,29 +619,23 @@ class ModelClassGenerator < SubProjectClassGenerator
 
 
       implConstructorStart = String.new
-      implConstructorStart << "  " << @className << "_Impl::" << @className << "_Impl("
+      implConstructorStart << "    " << @className << "_Impl::" << @className << "_Impl("
 
       result << implConstructorStart << "const IdfObject& idfObject,\n"
-      result << " " * implConstructorStart.size << "Model_Impl* model,\n"
-      result << " " * implConstructorStart.size << "bool keepHandle)" << "\n"
-      result << "    : " << @baseClassName << "_Impl(idfObject,model,keepHandle)" << "\n"
-      result << "  {" << "\n"
-      result << "    OS_ASSERT(idfObject.iddObject().type() == " << @className << "::iddObjectType());" << "\n"
-      result << "  }" << "\n"
+      result << " " * implConstructorStart.size << "Model_Impl* model, bool keepHandle)" << "\n"
+      result << "      : " << @baseClassName << "_Impl(idfObject, model, keepHandle) {\n"
+      result << "      OS_ASSERT(idfObject.iddObject().type() == " << @className << "::iddObjectType());" << "\n"
+      result << "    }" << "\n"
       result << "\n"
       result << implConstructorStart << "const openstudio::detail::WorkspaceObject_Impl& other," << "\n"
-      result << " " * implConstructorStart.size << "Model_Impl* model," << "\n"
-      result << " " * implConstructorStart.size << "bool keepHandle)" << "\n"
-      result << "    : " << @baseClassName << "_Impl(other,model,keepHandle)" << "\n"
-      result << "  {" << "\n"
-      result << "    OS_ASSERT(other.iddObject().type() == " << @className << "::iddObjectType());" << "\n"
-      result << "  }" << "\n"
+      result << " " * implConstructorStart.size << "Model_Impl* model, bool keepHandle)" << "\n"
+      result << "      : " << @baseClassName << "_Impl(other, model, keepHandle) {\n"
+      result << "      OS_ASSERT(other.iddObject().type() == " << @className << "::iddObjectType());" << "\n"
+      result << "    }" << "\n"
       result << "\n"
       result << implConstructorStart << "const " << @className << "_Impl& other," << "\n"
-      result << " " * implConstructorStart.size << "Model_Impl* model," << "\n"
-      result << " " * implConstructorStart.size << "bool keepHandle)" << "\n"
-      result << "    : " << @baseClassName << "_Impl(other,model,keepHandle)" << "\n"
-      result << "  {}" << "\n"
+      result << " " * implConstructorStart.size << "Model_Impl* model, bool keepHandle)" << "\n"
+      result << "    : " << @baseClassName << "_Impl(other, model, keepHandle) {}\n"
       result << "\n"
 
     else
@@ -658,33 +652,34 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       if (not iddObject.properties.unique)
 
-        result << @className << "::" << @className << "(const Model& model)\n"
-        result << "  : " << @baseClassName << "(" << @className << "::iddObjectType(),model)\n"
-        result << "{\n"
-        result << "  OS_ASSERT(getImpl<detail::" << @className << "_Impl>());\n\n"
+        result << "  " << @className << "::" << @className << "(const Model& model)\n"
+        result << "    : " << @baseClassName << "(" << @className << "::iddObjectType(), model) {\n"
+        result << "    OS_ASSERT(getImpl<detail::" << @className << "_Impl>());\n\n"
 
-        result << "  // TODO: Appropriately handle the following required object-list fields.\n"
+        result << "    // TODO: consider adding (overloaded or not) explicit ctors taking required objects as argument\n\n"
+
+        result << "    // TODO: Appropriately handle the following required object-list fields.\n"
         @nonextensibleFields.each { |field|
           if field.isRequired? and field.isObjectList?
-            result << "  //     " << field.fieldEnum << "\n"
+            result << "    //     " << field.fieldEnum << "\n"
           end
         }
 
-        preamble = "  bool ok = true;\n"
+        preamble = "    bool ok = true;\n"
         @nonextensibleFields.each { |field|
           if field.isRequired? and not field.isName? and not field.isHandle?
             if field.setCanFail?
               result << preamble
-              result << "  // ok = " << field.setterName << "();\n"
-              result << "  OS_ASSERT(ok);\n"
+              result << "    // ok = " << field.setterName << "();\n"
+              result << "    OS_ASSERT(ok);\n"
               preamble = String.new
             else
-              result << "  // " << field.setterName << "();\n"
+              result << "    // " << field.setterName << "();\n"
             end
           end
         }
 
-        result << "}\n\n"
+        result << "  }\n\n"
 
       end
 
@@ -700,134 +695,18 @@ class ModelClassGenerator < SubProjectClassGenerator
 
     if @idfObject
 
-      result << "  static IddObjectType iddObjectType();\n\n"
+      result << "    static IddObjectType iddObjectType();\n\n"
 
 
       # Static methods that return choice field valid values
       @nonextensibleFields.each { |field|
         if field.isChoice? and not field.isBooleanChoice?
-          result << "  static std::vector<std::string> " << field.getterName << "Values();\n\n"
+          result << "    static std::vector<std::string> " << field.getterName << "Values();\n\n"
         end
       }
 
-      result << "  /** @name Getters */\n"
-      result << "  //@{" << "\n\n"
-
-      # Non-extensible field getters
-      @nonextensibleFields.each { |field|
-
-        # name is in ModelObject
-        next if field.isHandle?
-        next if field.isName?
-
-        if field.isObjectList?
-          result << "  // TODO: Check return type. From object lists, some candidates are: " << field.candidateObjectListClassNames << ".\n"
-        end
-
-        result << "  " << field.getterReturnType << " " << field.getterName << "() const;\n\n"
-
-        if field.hasDefault?
-          result << "  bool " << field.isDefaultName << "() const;\n\n"
-        end
-
-        if field.canAutosize?
-          result << "  bool " << field.isAutosizeName << "() const;\n\n"
-          # Get the autosized value from the sql file
-          result << "  boost::optional <double> " << field.autosizedName << "();\n\n"
-        end
-
-        if field.canAutocalculate?
-          result << "  bool " << field.isAutocalculateName << "() const;\n\n"
-        end
-      }
-
-      # Extensible field getters
-      if (@iddObject.properties.extensible)
-        result << "  // TODO: Handle this object's extensible fields." << "\n"
-        result << "\n"
-      end
-
-      result << "  //@}\n"
-
-      result << "  /** @name Setters */\n"
-      result << "  //@{\n\n"
-
-
-      # Non-extensible field setters
-      @nonextensibleFields.each { |field|
-
-        # name is in ModelObject
-        next if field.isHandle?
-        next if field.isName?
-
-        if field.isObjectList?
-          result << "  // TODO: Check argument type. From object lists, some candidates are: " << field.candidateObjectListClassNames << ".\n"
-          if field.isSchedule?
-            result << "  // Note Schedules are passed by reference, not const reference.\n"
-          end
-        end
-
-        if field.setCanFail?
-          result << "  bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
-        else
-          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
-          result << "  bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
-        end
-
-        if field.hasReset?
-          result << "  void " << field.resetName << "();\n\n"
-        end
-
-        if field.canAutosize?
-          result << "  void " << field.autosizeName << "();\n\n"
-        end
-
-        if field.canAutocalculate?
-          result << "  void " << field.autocalculateName << "();\n\n"
-        end
-
-      }
-
-      # Extensible field setters
-
-      if (@iddObject.properties.extensible)
-        result << "  // TODO: Handle this object's extensible fields.\n\n"
-      end
-
-      result << "  //@}\n"
-
-      result << "  /** @name Other */\n"
-      result << "  //@{\n\n"
-      result << "  //@}\n"
-
-    else
-      result = super
-    end
-
-    return result
-  end
-
-  def implHppPublicMethods()
-    result = String.new
-
-    if @idfObject
-
-      result << "    /** @name Virtual Methods */\n"
-
-
-      result << "    //@{\n\n"
-
-      result << "    virtual const std::vector<std::string>& outputVariableNames() const override;\n\n"
-
-      result << "    virtual IddObjectType iddObjectType() const override;\n\n"
-
-      if @hasScheduleFields
-        result << "    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;\n\n"
-      end
-
-      result << "    //@}\n"
       result << "    /** @name Getters */\n"
-      result << "    //@{\n\n"
+      result << "    //@{" << "\n\n"
 
       # Non-extensible field getters
       @nonextensibleFields.each { |field|
@@ -855,16 +734,15 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.canAutocalculate?
           result << "    bool " << field.isAutocalculateName << "() const;\n\n"
         end
-
       }
 
       # Extensible field getters
       if (@iddObject.properties.extensible)
         result << "    // TODO: Handle this object's extensible fields." << "\n"
-        result << "\n"
+        result << "  \n"
       end
 
-      result << "    //@}" << "\n"
+      result << "    //@}\n"
 
       result << "    /** @name Setters */\n"
       result << "    //@{\n\n"
@@ -880,7 +758,7 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.isObjectList?
           result << "    // TODO: Check argument type. From object lists, some candidates are: " << field.candidateObjectListClassNames << ".\n"
           if field.isSchedule?
-            result << "  // Note Schedules are passed by reference, not const reference.\n"
+            result << "    // Note Schedules are passed by reference, not const reference.\n"
           end
         end
 
@@ -902,15 +780,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.canAutocalculate?
           result << "    void " << field.autocalculateName << "();\n\n"
         end
-      }
 
-      # If there are any autosizeable fields, need to add bulk autosize
-      # and applySizingValues methods.  These methods are assumed
-      # to be overrides from the method declared in HVACComponent.
-      if @autosizedGetterNames.size > 0
-        result << "    virtual void autosize() override;\n\n"
-        result << "    virtual void applySizingValues() override;\n\n"
-      end
+      }
 
       # Extensible field setters
 
@@ -931,39 +802,161 @@ class ModelClassGenerator < SubProjectClassGenerator
     return result
   end
 
+  def implHppPublicMethods()
+    result = String.new
+
+    if @idfObject
+
+      result << "      /** @name Virtual Methods */\n"
+
+
+      result << "      //@{\n\n"
+
+      result << "      virtual const std::vector<std::string>& outputVariableNames() const override;\n\n"
+
+      result << "      virtual IddObjectType iddObjectType() const override;\n\n"
+
+      if @hasScheduleFields
+        result << "      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;\n\n"
+      end
+
+      result << "      //@}\n"
+      result << "      /** @name Getters */\n"
+      result << "      //@{\n\n"
+
+      # Non-extensible field getters
+      @nonextensibleFields.each { |field|
+
+        # name is in ModelObject
+        next if field.isHandle?
+        next if field.isName?
+
+        if field.isObjectList?
+          result << "      // TODO: Check return type. From object lists, some candidates are: " << field.candidateObjectListClassNames << ".\n"
+        end
+
+        result << "      " << field.getterReturnType << " " << field.getterName << "() const;\n\n"
+
+        if field.hasDefault?
+          result << "      bool " << field.isDefaultName << "() const;\n\n"
+        end
+
+        if field.canAutosize?
+          result << "      bool " << field.isAutosizeName << "() const;\n\n"
+          # Get the autosized value from the sql file
+          result << "      boost::optional <double> " << field.autosizedName << "();\n\n"
+        end
+
+        if field.canAutocalculate?
+          result << "      bool " << field.isAutocalculateName << "() const;\n\n"
+        end
+
+      }
+
+      # Extensible field getters
+      if (@iddObject.properties.extensible)
+        result << "      // TODO: Handle this object's extensible fields." << "\n"
+        result << "  \n"
+      end
+
+      result << "      //@}" << "\n"
+
+      result << "      /** @name Setters */\n"
+      result << "      //@{\n\n"
+
+
+      # Non-extensible field setters
+      @nonextensibleFields.each { |field|
+
+        # name is in ModelObject
+        next if field.isHandle?
+        next if field.isName?
+
+        if field.isObjectList?
+          result << "      // TODO: Check argument type. From object lists, some candidates are: " << field.candidateObjectListClassNames << ".\n"
+          if field.isSchedule?
+            result << "    // Note Schedules are passed by reference, not const reference.\n"
+          end
+        end
+
+        if field.setCanFail?
+          result << "      bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
+        else
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "      bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
+        end
+
+        if field.hasReset?
+          result << "      void " << field.resetName << "();\n\n"
+        end
+
+        if field.canAutosize?
+          result << "      void " << field.autosizeName << "();\n\n"
+        end
+
+        if field.canAutocalculate?
+          result << "      void " << field.autocalculateName << "();\n\n"
+        end
+      }
+
+      # If there are any autosizeable fields, need to add bulk autosize
+      # and applySizingValues methods.  These methods are assumed
+      # to be overrides from the method declared in HVACComponent.
+      if @autosizedGetterNames.size > 0
+        result << "      virtual void autosize() override;\n\n"
+        result << "      virtual void applySizingValues() override;\n\n"
+      end
+
+      # Extensible field setters
+
+      if (@iddObject.properties.extensible)
+        result << "      // TODO: Handle this object's extensible fields.\n\n"
+      end
+
+      result << "      //@}\n"
+
+      result << "      /** @name Other */\n"
+      result << "      //@{\n\n"
+      result << "      //@}\n"
+
+    else
+      result = super
+    end
+
+    return result
+  end
+
   def cppPublicMethods()
     result = String.new
 
     if @idfObject
 
-      result << "  const std::vector<std::string>& " << @className << "_Impl::outputVariableNames() const\n"
-      result << "  {\n"
-      result << "    static std::vector<std::string> result;\n"
-      result << "    if (result.empty()){\n"
-      result << "    }\n"
-      result << "    return result;\n"
-      result << "  }\n\n"
+      result << "    const std::vector<std::string>& " << @className << "_Impl::outputVariableNames() const {\n"
+      result << "      static std::vector<std::string> result;\n"
+      result << "      if (result.empty()){\n"
+      result << "      }\n"
+      result << "      return result;\n"
+      result << "    }\n\n"
 
-      result << "  IddObjectType " << @className << "_Impl::iddObjectType() const {\n"
-      result << "    return " << @className << "::iddObjectType();\n"
-      result << "  }\n\n"
+      result << "    IddObjectType " << @className << "_Impl::iddObjectType() const {\n"
+      result << "      return " << @className << "::iddObjectType();\n"
+      result << "    }\n\n"
 
       if @hasScheduleFields
-        result << "  std::vector<ScheduleTypeKey> " << @className << "_Impl::getScheduleTypeKeys(const Schedule& schedule) const\n"
-        result << "  {\n"
-        result << "    // TODO: Check schedule display names.\n"
-        result << "    std::vector<ScheduleTypeKey> result;\n"
-        result << "    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());\n"
-        result << "    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());\n"
+        result << "    std::vector<ScheduleTypeKey> " << @className << "_Impl::getScheduleTypeKeys(const Schedule& schedule) const {\n"
+        result << "      // TODO: Check schedule display names.\n"
+        result << "      std::vector<ScheduleTypeKey> result;\n"
+        result << "      const UnsignedVector fieldIndices = getSourceIndices(schedule.handle());\n"
         @nonextensibleFields.each { |field|
           next if not field.isSchedule?
-          result << "    if (std::find(b,e," << field.fieldEnum << ") != e)\n"
-          result << "    {\n"
-          result << "      result.push_back(ScheduleTypeKey(\"" << @className << "\",\"" << field.scheduleDisplayName << "\"));\n"
-          result << "    }\n"
+          result << "      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(),\n"
+          result << "                    " << field.fieldEnum << ")\n"
+          result << "          != fieldIndices.cend()) {\n"
+          result << "        result.emplace_back(\"" << @className << "\", \"" << field.scheduleDisplayName << "\");\n"
+          result << "      }\n"
         }
-        result << "    return result;\n"
-        result << "  }\n\n"
+        result << "      return result;\n"
+        result << "    }\n\n"
       end
 
       # Non-extensible field getters
@@ -973,89 +966,87 @@ class ModelClassGenerator < SubProjectClassGenerator
         next if field.isHandle?
         next if field.isName?
 
-        result << "  " << field.getterReturnType << " " << @className << "_Impl::" << field.getterName << "() const {\n"
+        result << "    " << field.getterReturnType << " " << @className << "_Impl::" << field.getterName << "() const {\n"
 
         if field.isBooleanChoice?
 
           if field.optionalGetter?
-            result << "    boost::optional<bool> result;\n"
-            result << "    boost::optional<std::string> value = " << field.getterAccessor << "(" << field.fieldEnum << ",true);\n"
-            result << "    if (value){\n"
-            result << "      result = openstudio::istringEqual(value.get(), \"" << field.booleanChoiceTrue << "\");\n"
-            result << "    }\n"
-            result << "    return result;"
+            result << "      boost::optional<bool> result;\n"
+            result << "      boost::optional<std::string> value = " << field.getterAccessor << "(" << field.fieldEnum << ", true);\n"
+            result << "      if (value){\n"
+            result << "         result = openstudio::istringEqual(value.get(), \"" << field.booleanChoiceTrue << "\");\n"
+            result << "      }\n"
+            result << "      return result;"
           else
-            result << "    boost::optional<std::string> value = " << field.getterAccessor << "(" << field.fieldEnum << ",true);\n"
-            result << "    OS_ASSERT(value);\n"
-            result << "    return openstudio::istringEqual(value.get(), \"" << field.booleanChoiceTrue << "\");\n"
+            result << "      return getBooleanFieldValue(" << field.fieldEnum << ");\n"
           end
 
         elsif field.optionalGetter?
 
-          result << "    return " << field.getterAccessor << "(" << field.fieldEnum
+          result << "      return " << field.getterAccessor << "(" << field.fieldEnum
           if not field.isObjectList?
-            result << ",true"
+            result << "  , true"
           end
-          result << ");\n"
+          result << "  );\n"
 
         else
 
           if field.isObjectList?
 
-            result << "    boost::optional<" << field.getterReturnType << "> value = optional" <<
+            result << "      boost::optional<" << field.getterReturnType << "> value = optional" <<
                       OpenStudio::toUpperCamelCase(field.getterName) << "();\n"
-            result << "    if (!value) {\n"
-            result << "      LOG_AND_THROW(briefDescription() << \" does not have an " <<
+            result << "      if (!value) {\n"
+            result << "        LOG_AND_THROW(briefDescription() << \" does not have an " <<
                       OpenStudio::iddObjectNameToIdfObjectName(OpenStudio::toUpperCamelCase(field.getterName)) <<
                       " attached.\");\n"
-            result << "    }\n"
+            result << "      }\n"
 
           else
 
-            result << "    boost::optional<" << field.getterReturnType << "> value = " <<
-                      field.getterAccessor << "(" << field.fieldEnum << ",true);\n"
-            result << "    OS_ASSERT(value);\n"
+            result << "      boost::optional<" << field.getterReturnType << "> value = " <<
+                      field.getterAccessor << "(" << field.fieldEnum << ", true);\n"
+            result << "      OS_ASSERT(value);\n"
 
           end
 
-          result << "    return value.get();\n"
+          result << "      return value.get();\n"
 
         end
 
-        result << "  }\n\n"
+        result << "    }\n\n"
 
         if field.hasDefault?
-          result << "  bool " << @className << "_Impl::" << field.isDefaultName << "() const {\n"
-          result << "    return isEmpty(" << field.fieldEnum << ");\n"
-          result << "  }\n\n"
+          result << "    bool " << @className << "_Impl::" << field.isDefaultName << "() const {\n"
+          result << "      return isEmpty(" << field.fieldEnum << ");\n"
+          result << "    }\n\n"
         end
 
         if field.canAutosize?
-          result << "  bool " << @className << "_Impl::" << field.isAutosizeName << "() const {\n"
-          result << "    bool result = false;\n"
-          result << "    boost::optional<std::string> value = getString(" << field.fieldEnum << ", true);\n"
-          result << "    if (value) {\n"
-          result << "      result = openstudio::istringEqual(value.get(), \"autosize\");\n"
-          result << "    }\n"
-          result << "    return result;\n"
-          result << "  }\n\n"
+          result << "    bool " << @className << "_Impl::" << field.isAutosizeName << "() const {\n"
+          result << "      bool result = false;\n"
+          result << "      boost::optional<std::string> value = getString(" << field.fieldEnum << ", true);\n"
+          result << "      if (value) {\n"
+          result << "        result = openstudio::istringEqual(value.get(), \"autosize\");\n"
+          result << "      }\n"
+          result << "      return result;\n"
+          result << "    }\n\n"
 
           # Get the autosized value from the sql file
-          result << "  boost::optional <double> " << @className << "_Impl::" << field.autosizedName << "() {\n"
-          result << "    return getAutosizedValue(\"TODO_CHECK_SQL #{field.name}\", \"#{field.sqlUnitString}\");\n"
-          result << "  }\n\n"
+          result << "    boost::optional <double> " << @className << "_Impl::" << field.autosizedName << "() {\n"
+          result << "      return getAutosizedValue(\"TODO_CHECK_SQL #{field.name}\", \"#{field.sqlUnitString}\");\n"
+          result << "    }\n\n"
 
         end
 
         if field.canAutocalculate?
-          result << "  bool " << @className << "_Impl::" << field.isAutocalculateName << "() const {\n"
-          result << "    bool result = false;\n"
-          result << "    boost::optional<std::string> value = getString(" << field.fieldEnum << ", true);\n"
-          result << "    if (value) {\n"
-          result << "      result = openstudio::istringEqual(value.get(), \"autocalculate\");\n"
-          result << "    }\n"
-          result << "    return result;\n"
-          result << "  }\n\n"
+          result << "    bool " << @className << "_Impl::" << field.isAutocalculateName << "() const {\n"
+          result << "      bool result = false;\n"
+          result << "      boost::optional<std::string> value = getString(" << field.fieldEnum << ", true);\n"
+          result << "      if (value) {\n"
+          result << "        result = openstudio::istringEqual(value.get(), \"autocalculate\");\n"
+          result << "      }\n"
+          result << "      return result;\n"
+          result << "    }\n\n"
         end
       }
 
@@ -1069,10 +1060,10 @@ class ModelClassGenerator < SubProjectClassGenerator
         next if not field.getterReturnType
 
         if field.setCanFail?
-          result << "  bool "
+          result << "    bool "
         else
           # Note: JM 2018-10-17: even if the setter can't fail, we return bool
-          result << "  bool "
+          result << "    bool "
         end
 
         result << @className << "_Impl::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
@@ -1080,58 +1071,53 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.isBooleanChoice?
 
           if /optional/.match(field.publicClassSetterType)
-            result << "    bool result = false;\n"
-            result << "    if (" << field.setterArgumentName << ") {\n"
-            result << "      if (" << field.setterArgumentName << ".get()) {\n"
-            result << "        result = " << field.setterAccessor << "(" << field.fieldEnum << ", \"" << field.booleanChoiceTrue << "\");\n"
-            result << "      } else {\n"
-            result << "        result = " << field.setterAccessor << "(" << field.fieldEnum << ", \"" << field.booleanChoiceFalse << "\");\n"
+            result << "      bool result = false;\n"
+            result << "      if (" << field.setterArgumentName << ") {\n"
+            result << "        if (" << field.setterArgumentName << ".get()) {\n"
+            result << "          result = " << field.setterAccessor << "(" << field.fieldEnum << ", \"" << field.booleanChoiceTrue << "\");\n"
+            result << "        } else {\n"
+            result << "          result = " << field.setterAccessor << "(" << field.fieldEnum << ", \"" << field.booleanChoiceFalse << "\");\n"
+            result << "        }\n"
             result << "      }\n"
-            result << "    }\n"
           else
-            result << "    bool result = false;\n"
-            result << "    if (" << field.setterArgumentName << ") {\n"
-            result << "      result = " << field.setterAccessor << "(" << field.fieldEnum << ", \"" << field.booleanChoiceTrue << "\");\n"
-            result << "    } else {\n"
-            result << "      result = " << field.setterAccessor << "(" << field.fieldEnum << ", \"" << field.booleanChoiceFalse << "\");\n"
-            result << "    }\n"
+            result << "      const bool result = setBooleanFieldValue(field.fieldEnum, field.setterArgumentName);\n"
           end
 
         elsif /optional/.match(field.publicClassSetterType)
 
           #raise "Schedule setters should not take optionals." if field.isSchedule?
 
-          result << "    bool result(false);\n"
-          result << "    if (" << field.setterArgumentName << ") {\n"
-          result << "      result = " << field.setterAccessor << "(" << field.fieldEnum << ", " << field.setterArgumentName << ".get()"
+          result << "      bool result(false);\n"
+          result << "      if (" << field.setterArgumentName << ") {\n"
+          result << "        result = " << field.setterAccessor << "(" << field.fieldEnum << ", " << field.setterArgumentName << ".get()"
           if field.isObjectList?
             result << ".handle()"
           end
           result << ");\n"
-          result << "    }\n"
+          result << "      }\n"
           if field.hasReset?
-            result << "    else {\n"
-            result << "      " << field.resetName << "();\n"
-            result << "      result = true;\n"
-            result << "    }\n"
+            result << "      else {\n"
+            result << "        " << field.resetName << "();\n"
+            result << "        result = true;\n"
+            result << "      }\n"
           end
 
         else
 
           if field.isSchedule?
             if field.setterName == "setSchedule"
-              result << "    bool result = ModelObject_Impl::setSchedule(" << field.fieldEnum << ",\n"
-              result << "                                                \"" << @className << "\",\n"
-              result << "                                                \"" << field.scheduleDisplayName << "\",\n"
-              result << "                                                " << field.setterArgumentName << ");\n"
+              result << "      const bool result = ModelObject_Impl::setSchedule(" << field.fieldEnum << ",\n"
+              result << "                                                  \"" << @className << "\",\n"
+              result << "                                                  \"" << field.scheduleDisplayName << "\",\n"
+              result << "                                                  " << field.setterArgumentName << ");\n"
             else
-              result << "    bool result = setSchedule(" << field.fieldEnum << ",\n"
-              result << "                              \"" << @className << "\",\n"
-              result << "                              \"" << field.scheduleDisplayName << "\",\n"
-              result << "                              " << field.setterArgumentName << ");\n"
+              result << "      const bool result = setSchedule(" << field.fieldEnum << ",\n"
+              result << "                                \"" << @className << "\",\n"
+              result << "                                \"" << field.scheduleDisplayName << "\",\n"
+              result << "                                " << field.setterArgumentName << ");\n"
             end
           else
-            result << "    bool result = " << field.setterAccessor << "(" << field.fieldEnum << ", " << field.setterArgumentName
+            result << "      const bool result = " << field.setterAccessor << "(" << field.fieldEnum << ", " << field.setterArgumentName
             if field.isObjectList?
               result << ".handle()"
             end
@@ -1141,33 +1127,33 @@ class ModelClassGenerator < SubProjectClassGenerator
         end
 
         if field.setCanFail?
-          result << "    return result;\n"
+          result << "      return result;\n"
         else
-          result << "    OS_ASSERT(result);\n"
-          result << "    return result;\n"
+          result << "      OS_ASSERT(result);\n"
+          result << "      return result;\n"
         end
 
-        result << "  }\n\n"
+        result << "    }\n\n"
 
         if field.hasReset?
-          result << "  void " << @className << "_Impl::" << field.resetName << "() {\n"
-          result << "    bool result = setString(" << field.fieldEnum << ", \"\");\n"
-          result << "    OS_ASSERT(result);\n"
-          result << "  }\n\n"
+          result << "    void " << @className << "_Impl::" << field.resetName << "() {\n"
+          result << "      const bool result = setString(" << field.fieldEnum << ", \"\");\n"
+          result << "      OS_ASSERT(result);\n"
+          result << "    }\n\n"
         end
 
         if field.canAutosize?
-          result << "  void " << @className << "_Impl::" << field.autosizeName << "() {\n"
-          result << "    bool result = setString(" << field.fieldEnum << ", \"autosize\");\n"
-          result << "    OS_ASSERT(result);\n"
-          result << "  }\n\n"
+          result << "    void " << @className << "_Impl::" << field.autosizeName << "() {\n"
+          result << "      const bool result = setString(" << field.fieldEnum << ", \"autosize\");\n"
+          result << "      OS_ASSERT(result);\n"
+          result << "    }\n\n"
         end
 
         if field.canAutocalculate?
-          result << "  void " << @className << "_Impl::" << field.autocalculateName << "() {\n"
-          result << "    bool result = setString(" << field.fieldEnum << ", \"autocalculate\");\n"
-          result << "    OS_ASSERT(result);\n"
-          result << "  }\n\n"
+          result << "    void " << @className << "_Impl::" << field.autocalculateName << "() {\n"
+          result << "      const bool result = setString(" << field.fieldEnum << ", \"autocalculate\");\n"
+          result << "      OS_ASSERT(result);\n"
+          result << "    }\n\n"
         end
 
       }
@@ -1176,23 +1162,21 @@ class ModelClassGenerator < SubProjectClassGenerator
       # and applySizingValues methods
       if @autosizedGetterNames.size > 0
         # autosize()
-        result << "  void " << @className << "_Impl::autosize() {\n"
+        result << "    void " << @className << "_Impl::autosize() {\n"
         @autosizeSetterNames.each do |name|
-          result << "    #{name}();\n"
+          result << "      #{name}();\n"
         end
-        result << "  }\n\n"
+        result << "    }\n\n"
 
         # applySizingValues()
-        result << "  void " << @className << "_Impl::applySizingValues() {\n"
-        result << "    boost::optional<double> val;\n"
+        result << "    void " << @className << "_Impl::applySizingValues() {\n"
         @autosizedGetterNames.each do |name|
           setter_name = name.gsub('autosized','set')
-          result << "    val = #{name}();\n"
-          result << "    if (val) {\n"
-          result << "      #{setter_name}(val.get());\n"
-          result << "    }\n\n"
+          result << "      if (boost::optional<double> val_ = #{name}()) {\n"
+          result << "        #{setter_name}(val.get());\n"
+          result << "      }\n\n"
         end
-        result << "  }\n\n"
+        result << "    }\n\n"
 
       end
 
@@ -1208,17 +1192,17 @@ class ModelClassGenerator < SubProjectClassGenerator
 
     if @idfObject
 
-      result << "IddObjectType " << @className << "::iddObjectType() {\n"
-      result << "  return IddObjectType(IddObjectType::" << @iddObjectType.valueName << ");\n"
-      result << "}\n\n"
+      result << "  IddObjectType " << @className << "::iddObjectType() {\n"
+      result << "    return {IddObjectType::" << @iddObjectType.valueName << "};\n"
+      result << "  }\n\n"
 
       # Static methods that return choice field valid values
       @nonextensibleFields.each { |field|
         if field.isChoice? and not field.isBooleanChoice?
-          result << "std::vector<std::string> " << @className << "::" << field.getterName << "Values() {\n"
-          result << "  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),\n"
+          result << "  std::vector<std::string> " << @className << "::" << field.getterName << "Values() {\n"
+          result << "    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),\n"
           result << "                        " << field.fieldEnum << ");\n"
-          result << "}\n\n"
+          result << "  }\n\n"
         end
       }
 
@@ -1230,20 +1214,20 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         next if not field.getterReturnType
 
-        result << field.getterReturnType << " " << @className << "::" << field.getterName << "() const {\n"
-        result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.getterName << "();\n"
-        result << "}\n\n"
+        result << "  " << field.getterReturnType << " " << @className << "::" << field.getterName << "() const {\n"
+        result << "    return getImpl<detail::" << @className << "_Impl>()->" << field.getterName << "();\n"
+        result << "  }\n\n"
 
         if field.hasDefault?
-          result << "bool " << @className << "::" << field.isDefaultName << "() const {\n"
-          result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.isDefaultName << "();\n"
-          result << "}\n\n"
+          result << "  bool " << @className << "::" << field.isDefaultName << "() const {\n"
+          result << "    return getImpl<detail::" << @className << "_Impl>()->" << field.isDefaultName << "();\n"
+          result << "  }\n\n"
         end
 
         if field.canAutosize?
-          result << "bool " << @className << "::" << field.isAutosizeName << "() const {\n"
-          result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.isAutosizeName << "();\n"
-          result << "}\n\n"
+          result << "  bool " << @className << "::" << field.isAutosizeName << "() const {\n"
+          result << "    return getImpl<detail::" << @className << "_Impl>()->" << field.isAutosizeName << "();\n"
+          result << "  }\n\n"
 
           # Get the autosized value from the sql file
           result << "  boost::optional <double> " << @className << "::" << field.autosizedName << "() {\n"
@@ -1252,9 +1236,9 @@ class ModelClassGenerator < SubProjectClassGenerator
         end
 
         if field.canAutocalculate?
-          result << "bool " << @className << "::" << field.isAutocalculateName << "() const {\n"
-          result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.isAutocalculateName << "();\n"
-          result << "}\n\n"
+          result << "  bool " << @className << "::" << field.isAutocalculateName << "() const {\n"
+          result << "    return getImpl<detail::" << @className << "_Impl>()->" << field.isAutocalculateName << "();\n"
+          result << "  }\n\n"
         end
 
       }
@@ -1267,26 +1251,26 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         next if not field.getterReturnType
 
-        result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
-        result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
-        result << "}\n\n"
+        result << "  bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
+        result << "    return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
+        result << "  }\n\n"
 
         if field.hasReset?
-          result << "void " << @className << "::" << field.resetName << "() {\n"
-          result << "  getImpl<detail::" << @className << "_Impl>()->" << field.resetName << "();\n"
-          result << "}\n\n"
+          result << "  void " << @className << "::" << field.resetName << "() {\n"
+          result << "    getImpl<detail::" << @className << "_Impl>()->" << field.resetName << "();\n"
+          result << "  }\n\n"
         end
 
         if field.canAutosize?
-          result << "void " << @className << "::" << field.autosizeName << "() {\n"
-          result << "  getImpl<detail::" << @className << "_Impl>()->" << field.autosizeName << "();\n"
-          result << "}\n\n"
+          result << "  void " << @className << "::" << field.autosizeName << "() {\n"
+          result << "    getImpl<detail::" << @className << "_Impl>()->" << field.autosizeName << "();\n"
+          result << "  }\n\n"
         end
 
         if field.canAutocalculate?
-          result << "void " << @className << "::" << field.autocalculateName << "() {\n"
-          result << "  getImpl<detail::" << @className << "_Impl>()->" << field.autocalculateName << "();\n"
-          result << "}\n\n"
+          result << "  void " << @className << "::" << field.autocalculateName << "() {\n"
+          result << "    getImpl<detail::" << @className << "_Impl>()->" << field.autocalculateName << "();\n"
+          result << "  }\n\n"
         end
       }
 
@@ -1301,9 +1285,9 @@ class ModelClassGenerator < SubProjectClassGenerator
     result = String.new
 
     if @idfObject
-      result << "  friend class Model;\n"
-      result << "  friend class IdfObject;\n"
-      result << "  friend class openstudio::detail::IdfObject_Impl;\n"
+      result << "    friend class Model;\n"
+      result << "    friend class IdfObject;\n"
+      result << "    friend class openstudio::detail::IdfObject_Impl;\n"
     end
 
     return result
@@ -1315,7 +1299,7 @@ class ModelClassGenerator < SubProjectClassGenerator
     if @idfObject
 
       if (@iddObject.properties.unique)
-        result << "  explicit " << @className << "(Model& model);\n\n"
+        result << "    explicit " << @className << "(Model& model);\n\n"
       end
 
     else
@@ -1355,9 +1339,8 @@ class ModelClassGenerator < SubProjectClassGenerator
     if @idfObject
 
       if (iddObject.properties.unique)
-        result << @className << "::" << @className << "(Model& model)\n"
-        result << "  : " << @baseClassName << "(" << @className << "::iddObjectType(),model)\n"
-        result << "{}\n\n"
+        result << "  " << @className << "::" << @className << "(Model& model)\n"
+        result << "    : " << @baseClassName << "(" << @className << "::iddObjectType(), model) {}\n"
       end
 
     else
@@ -1377,15 +1360,15 @@ class ModelClassGenerator < SubProjectClassGenerator
       @nonextensibleFields.each { |field|
         if field.isObjectList? and (not field.optionalGetter?)
           if not any
-            result << "\n"
-            result << "    // TODO: Check the return types of these methods.\n"
-            result << "    // Optional getters for use by methods like children() so can remove() if the constructor fails.\n"
-            result << "    // There are other ways for the public versions of these getters to fail--perhaps all required\n"
-            result << "    // objects should be returned as boost::optionals\n"
+            result << "  \n"
+            result << "      // TODO: Check the return types of these methods.\n"
+            result << "      // Optional getters for use by methods like children() so can remove() if the constructor fails.\n"
+            result << "      // There are other ways for the public versions of these getters to fail--perhaps all required\n"
+            result << "      // objects should be returned as boost::optionals\n"
             any = true
           end
 
-          result << "    boost::optional<" << field.getterReturnType << "> optional" << OpenStudio::toUpperCamelCase(field.getterName) << "() const;\n"
+          result << "      boost::optional<" << field.getterReturnType << "> optional" << OpenStudio::toUpperCamelCase(field.getterName) << "() const;\n"
 
         end
       }
@@ -1403,9 +1386,9 @@ class ModelClassGenerator < SubProjectClassGenerator
       # Optional getters for required objects
       @nonextensibleFields.each { |field|
         if field.isObjectList? and (not field.optionalGetter?)
-          result << "  boost::optional<" << field.getterReturnType << "> " << @className << "_Impl::optional" << OpenStudio::toUpperCamelCase(field.getterName) << "() const {\n"
-          result << "    return " << field.getterAccessor << "(" << field.fieldEnum << ");\n"
-          result << "  }\n\n"
+          result << "    boost::optional<" << field.getterReturnType << "> " << @className << "_Impl::optional" << OpenStudio::toUpperCamelCase(field.getterName) << "() const {\n"
+          result << "      return " << field.getterAccessor << "(" << field.fieldEnum << ");\n"
+          result << "    }\n\n"
         end
       }
 
@@ -1466,17 +1449,17 @@ class ModelClassGenerator < SubProjectClassGenerator
         result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
 
 
-        result << "  " << field.getterReturnType << " obj(m);\n"
-        result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(obj));\n"
+        result << "  " << field.getterReturnType << " #{field.getterName}(m);\n"
+        result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(#{field.getterName}));\n"
 
         if field.optionalGetter?
 
           result << "  ASSERT_TRUE(#{instanceName}." << field.getterName << "());\n"
-          result << "  EXPECT_EQ(obj, #{instanceName}." << field.getterName << "().get());\n"
+          result << "  EXPECT_EQ(#{field.getterName}, #{instanceName}." << field.getterName << "().get());\n"
 
         else
 
-          result << "EXPECT_EQ(obj, #{instanceName}." << field.getterName << "());\n"
+          result << "  EXPECT_EQ(#{field.getterName}, #{instanceName}." << field.getterName << "());\n"
         end
 
       else
@@ -1673,7 +1656,11 @@ class ModelClassGenerator < SubProjectClassGenerator
       result << "// accordingly.\n"
       @nonextensibleFields.each { |field|
         next if not field.isSchedule?
-        result << "    {\"" << @className << "\",\"" << field.scheduleDisplayName << "\",\"" << field.getterName << "\",,,,},\n"
+        if field.scheduleDisplayName.downcase.include?("availability")
+          result << "    {\"" << @className << "\", \"" << field.scheduleDisplayName << "\", \"" << field.getterName << "\", false, \"Availability\", 0.0, 1.0},\n"
+        else
+          result << "    {\"" << @className << "\", \"" << field.scheduleDisplayName << "\", \"" << field.getterName << "\",,,,},\n"
+        end
       }
     end
     return result

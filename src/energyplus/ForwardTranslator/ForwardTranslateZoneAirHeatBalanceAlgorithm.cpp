@@ -29,8 +29,9 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/ZoneAirHeatBalanceAlgorithm.hpp"
-#include <utilities/idd/ZoneAirHeatBalanceAlgorithm_FieldEnums.hxx>
+
 #include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/ZoneAirHeatBalanceAlgorithm_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -40,13 +41,23 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateZoneAirHeatBalanceAlgorithm(ZoneAirHeatBalanceAlgorithm& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::ZoneAirHeatBalanceAlgorithm);
 
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::ZoneAirHeatBalanceAlgorithm, modelObject);
     idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::Algorithm, modelObject.algorithm());
 
-    m_idfObjects.push_back(idfObject);
+    if (modelObject.doSpaceHeatBalanceforSizing()) {
+      idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, "Yes");
+    } else {
+      idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, "No");
+    }
 
-    return boost::optional<IdfObject>(idfObject);
+    if (modelObject.doSpaceHeatBalanceforSimulation()) {
+      idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, "Yes");
+    } else {
+      idfObject.setString(ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, "No");
+    }
+
+    return idfObject;
   }
 
 }  // namespace energyplus

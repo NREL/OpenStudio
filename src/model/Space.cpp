@@ -2231,18 +2231,20 @@ namespace model {
       Transformation transformation = this->transformation().inverse() * other.transformation();
 
       for (Surface& surface : this->surfaces()) {
-
-        std::vector<Point3d> vertices = removeCollinear(surface.vertices());
-
+        if (surface.adjacentSurface()) {
+          continue;
+        }
+        std::vector<Point3d> vertices = surface.vertices();
         boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
         if (!outwardNormal) {
           continue;
         }
 
         for (Surface& otherSurface : other.surfaces()) {
-
-          std::vector<Point3d> otherVertices = removeCollinear(transformation * otherSurface.vertices());
-
+          if (otherSurface.adjacentSurface()) {
+            continue;
+          }
+          std::vector<Point3d> otherVertices = transformation * otherSurface.vertices();
           boost::optional<Vector3d> otherOutwardNormal = getOutwardNormal(otherVertices);
           if (!otherOutwardNormal) {
             continue;
@@ -2290,6 +2292,10 @@ namespace model {
         return;
       }
 
+      std::string name = nameString();
+      std::string otherName = other.nameString();
+      LOG(Debug, "Intersecting space " << name << " with space " << otherName);
+
       std::vector<Surface> surfaces = this->surfaces();
       std::vector<Surface> otherSurfaces = other.surfaces();
 
@@ -2321,6 +2327,7 @@ namespace model {
 
           for (Surface& otherSurface : otherSurfaces) {
             std::string otherSurfaceHandle = toString(otherSurface.handle());
+
             if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()) {
               hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
               hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface().has_value();

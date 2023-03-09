@@ -533,18 +533,14 @@ namespace model {
           return;
         }
 
-        // We need the face to be oriented anti-clockwise to guarantee that wall
-        // surfaces are generated correctly. If the orientation is reversed then
-        // we will reverse the sense of the edge when extracting vertices
-        bool reversed = outwardNormal->z() < 0;
-
         // Construct the vertices for the lower face
         createFloorSurface(osSpace, faceVertices, minZ, openToBelow);
         createRoofSurface(osSpace, faceVertices, maxZ);
 
-        // Create wall surfaces
-        for (const auto& edgeRef : face->edgeRefs()) {
-          createWallSurfaces(osSpace, fsSpace, edgeRef, minZ, maxZ, reversed, typeOfSpace == SpaceTypeEnum::ABOVEFLOOR);
+        for (unsigned int i = 0; i < faceVertices.size(); i++) {
+          const Point3d& p1 = faceVertices[i];
+          const Point3d& p2 = faceVertices[(i + 1) % faceVertices.size()];
+          createWallSurface(osSpace, fsSpace, p1, p2, minZ, maxZ, typeOfSpace == SpaceTypeEnum::ABOVEFLOOR);
         }
       }
     }
@@ -563,34 +559,17 @@ namespace model {
       }
     }
 
-    // Creates a "Wall" surface and sub-surfaces
-    // TODO: fsSpace unused
-    void FloorspaceReverseTranslator_Impl::createWallSurfaces(Space& osSpace, const FSSpace& fsSpace, const FSEdgeReference& edgeRef, double minZ,
-                                                              double maxZ, bool reversed, bool createSubsurfaces) {
+    void FloorspaceReverseTranslator_Impl::createWallSurface(Space& osSpace, const FSSpace& fsSpace, const Point3d& p1, const Point3d& p2,
+                                                             double minZ, double maxZ, bool createSubsurfaces) {
+      constexpr double tol = 0.001;
+
       Point3dVector wallVertices;
-      const FSVertex& v1 = edgeRef.edge().firstVertex();
-      const FSVertex& v2 = edgeRef.edge().secondVertex();
-
-      // Get the edge order (v1..v2 or v2..v1) and reverse if necessary to ensure
-      // the wall surface is oriented correctly
-      int edgeOrder = edgeRef.edgeOrder();
-      if (edgeOrder == 1 && reversed) {
-        edgeOrder = 0;
-      } else if (edgeOrder == 0 && reversed) {
-        edgeOrder = 1;
-      }
-
-      if (edgeOrder == 1) {
-        wallVertices.push_back(Point3d(v2.x(), v2.y(), maxZ));
-        wallVertices.push_back(Point3d(v1.x(), v1.y(), maxZ));
-        wallVertices.push_back(Point3d(v1.x(), v1.y(), minZ));
-        wallVertices.push_back(Point3d(v2.x(), v2.y(), minZ));
-      } else {
-        wallVertices.push_back(Point3d(v1.x(), v1.y(), maxZ));
-        wallVertices.push_back(Point3d(v2.x(), v2.y(), maxZ));
-        wallVertices.push_back(Point3d(v2.x(), v2.y(), minZ));
-        wallVertices.push_back(Point3d(v1.x(), v1.y(), minZ));
-      }
+      wallVertices.reserve(4);
+      wallVertices.emplace_back(p2.x(), p2.y(), maxZ);
+      wallVertices.emplace_back(p1.x(), p1.y(), maxZ);
+      wallVertices.emplace_back(p1.x(), p1.y(), minZ);
+      wallVertices.emplace_back(p2.x(), p2.y(), minZ);
+      const Point3dVector wallSegment{p1, p2};
 
       Surface surface(wallVertices, m_model);
       surface.setName("Face " + std::to_string(m_nSurfaces++));
@@ -602,15 +581,29 @@ namespace model {
 
           // Create a window subsurface for every window that is on this edge
           for (const auto& window : m_currentFSStory->windows()) {
-            if (window.edge()->id() == edgeRef.edge().id()) {
-              createWindowSubsurface(window, surface, edgeRef, minZ, maxZ);
+            // Get window's x/y position which is the alpha based on its edge
+            // windows can have multiple alphas but we only need one
+            if (window.edge().has_value()) {
+              auto edge = *window.edge();
+              const double alpha = window.alphas()[0];
+              const Point3d pp = window.centerVertex(alpha);
+
+              if (getDistancePointToLineSegment(pp, wallSegment) < tol) {
+                createWindowSubsurface(window, surface, edge, minZ, maxZ);
+              }
             }
           }
 
           // Create a door subsurface for every window that is on this edge
           for (const auto& door : m_currentFSStory->doors()) {
-            if (door.edge()->id() == edgeRef.edge().id()) {
-              createDoorSubsurface(door, surface, edgeRef, minZ);
+            if (door.edge().has_value()) {
+              auto edge = *door.edge();
+              const double alpha = door.alphas()[0];
+              const Point3d pp = door.centerVertex(alpha);
+
+              if (getDistancePointToLineSegment(pp, wallSegment) < tol) {
+                createDoorSubsurface(door, surface, edge, minZ);
+              }
             }
           }
         }
@@ -618,18 +611,17 @@ namespace model {
     }
 
     // Creates one or more window subsurfaces along an edge
-    void FloorspaceReverseTranslator_Impl::createWindowSubsurface(const FSWindow& window, Surface& osSurface, const FSEdgeReference& edgeRef,
-                                                                  double minZ, double maxZ) {
+    void FloorspaceReverseTranslator_Impl::createWindowSubsurface(const FSWindow& window, Surface& osSurface, const FSEdge& edge, double minZ,
+                                                                  double maxZ) {
 
       auto windowDefinition = window.windowDefinition();
       if (!windowDefinition.has_value()) {
         return;
       }
 
-      const auto& edge = edgeRef.edge();
       const auto& vertex1 = edge.firstVertex();
       const auto& vertex2 = edge.secondVertex();
-      Vector3d edgeVector = edgeRef.edge().edgeVector();
+      Vector3d edgeVector = edge.edgeVector();
 
       edgeVector.setLength(1.0);
       Vector3d upVector(0, 0, 1);
@@ -642,7 +634,7 @@ namespace model {
         height = windowDefinition->height();
         width = windowDefinition->width();
       } else if (windowDefinition->windowDefinitionMode() == "Window to Wall Ratio") {
-        double length = edgeRef.edge().edgeVector().length();
+        double length = edge.edgeVector().length();
         width = length - 0.0508;  // Allow for 1" either end of the window
         // Area of the wall * wwr gives area of the window divided by width of the window gives height of the window
         height = (maxZ - minZ) * length * windowDefinition->wwr() / width;
@@ -738,11 +730,11 @@ namespace model {
     }
 
     // Creates a door subsurface along an edge
-    void FloorspaceReverseTranslator_Impl::createDoorSubsurface(const FSDoor& door, Surface& osSurface, const FSEdgeReference& edgeRef, double minZ) {
-      const auto& edge = edgeRef.edge();
+    void FloorspaceReverseTranslator_Impl::createDoorSubsurface(const FSDoor& door, Surface& osSurface, const FSEdge& edge, double minZ) {
+
       const auto& vertex1 = edge.firstVertex();
       const auto& vertex2 = edge.secondVertex();
-      Vector3d edgeVector = edgeRef.edge().edgeVector();
+      Vector3d edgeVector = edge.edgeVector();
 
       edgeVector.setLength(1.0);
       Vector3d upVector(0, 0, 1);
