@@ -44,6 +44,8 @@
 
 namespace openstudio {
 
+class BCLXMLType;
+
 enum class XMLValidatorType
 {
   XSD,
@@ -75,6 +77,8 @@ class UTILITIES_API XMLValidator
   XMLValidator& operator=(XMLValidator&& other) noexcept = default;
 
   static XMLValidator gbxmlValidator();
+
+  static XMLValidator bclXMLValidator(BCLXMLType bclXMLType, int schemaVersion = 3);
 
   //@}
   /** @name Getters */
