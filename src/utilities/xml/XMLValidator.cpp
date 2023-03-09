@@ -32,8 +32,9 @@
 #include "XMLUtils.hpp"
 #include "XMLInitializer.hpp"
 
-#include "utilities/core/Filesystem.hpp"
-#include "utilities/core/FilesystemHelpers.hpp"
+#include "../core/Filesystem.hpp"
+#include "../core/FilesystemHelpers.hpp"
+#include "../bcl/BCLXML.hpp"
 
 #include <libxml/xmlversion.h>
 #include <libxml/xmlreader.h>
@@ -499,9 +500,34 @@ XMLValidator XMLValidator::gbxmlValidator() {
   if (tmpDir.empty()) {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
   }
-  bool quiet = true;
+  const bool quiet = true;
   ::openstudio::embedded_files::extractFile(":/xml/resources/GreenBuildingXML_Ver6.01.xsd", openstudio::toString(tmpDir), quiet);
   return XMLValidator(tmpDir / "GreenBuildingXML_Ver6.01.xsd");
+}
+
+XMLValidator XMLValidator::bclXMLValidator(BCLXMLType bclXMlType, int schemaVersion) {
+  const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
+  if (tmpDir.empty()) {
+    LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
+  }
+
+  if (schemaVersion < 2 || schemaVersion > 3) {
+    LOG_AND_THROW("Unknown schema version " << schemaVersion << ", accepted = [2, 3]");
+  }
+
+  std::string schemaName;
+  if (bclXMlType == BCLXMLType::ComponentXML) {
+    schemaName = "component";
+  } else if (bclXMlType == BCLXMLType::ComponentXML) {
+    schemaName = "measure";
+  } else {
+    LOG_AND_THROW("Unknown BCLXMLType " << bclXMlType.valueName());
+  }
+  schemaName = fmt::format("{}_v{}.xsd", schemaName, schemaVersion);
+
+  const bool quiet = true;
+  ::openstudio::embedded_files::extractFile(fmt::format(":/xml/resources/{}.xsd", schemaName), openstudio::toString(tmpDir), quiet);
+  return XMLValidator(tmpDir / schemaName);
 }
 
 }  // namespace openstudio
