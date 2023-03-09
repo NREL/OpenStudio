@@ -217,6 +217,9 @@ TEST(DateTime, ISO8601Conversions_2) {
   EXPECT_EQ(0, test->time().seconds());
   EXPECT_EQ(1, test->utcOffset());
 
+  EXPECT_EQ("19970716T192000+0100", test->toISO8601());
+  EXPECT_EQ("1997-07-16T19:20:00+01:00", test->toXsdDateTime());
+
   test = DateTime::fromISO8601("19970716T1920+0100");
   ASSERT_TRUE(test);
   EXPECT_EQ(1997, test->date().year());
@@ -236,6 +239,9 @@ TEST(DateTime, ISO8601Conversions_2) {
   EXPECT_EQ(20, test->time().minutes());
   EXPECT_EQ(0, test->time().seconds());
   EXPECT_EQ(0, test->utcOffset());
+
+  EXPECT_EQ("19970716T192000Z", test->toISO8601());
+  EXPECT_EQ("1997-07-16T19:20:00Z", test->toXsdDateTime());
 
   test = DateTime::fromISO8601("19970716T1920");
   ASSERT_TRUE(test);
