@@ -449,6 +449,9 @@ set(${target_name}_src
   CoilSystemIntegratedHeatPumpAirSource.hpp
   CoilSystemIntegratedHeatPumpAirSource_Impl.hpp
   CoilSystemIntegratedHeatPumpAirSource.cpp
+  CoilUserDefined.hpp
+  CoilUserDefined_Impl.hpp
+  CoilUserDefined.cpp
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
@@ -1981,10 +1984,11 @@ set(${target_name}_test_src
   test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
   test/CoilHeatingWaterBaseboardRadiant_GTest.cpp
+  test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
   test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
-  test/CoilPerformanceDXCooling_GTest.cpp
+  test/CoilUserDefined_GTest.cpp
   test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
   test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
   test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_GTest.cpp

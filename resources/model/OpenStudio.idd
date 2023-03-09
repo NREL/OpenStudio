@@ -38539,6 +38539,54 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable,
 
 \group User Defined HVAC and Plant Component Models
 
+OS:Coil:UserDefined,
+       \memo Defines a generic air system component for custom modeling
+       \memo using Energy Management System or External Interface
+       \min-fields 6
+  A1, \field Handle
+       \type handle
+       \required-field        
+  A2, \field Name
+       \required-field
+       \type alpha
+       \reference UserDefinedCoil
+       \reference ConnectionObject
+  A3, \field Overall Model Simulation Program Calling Manager Name
+       \type object-list
+       \object-list ErlProgramCallingManagerNames
+  A4, \field Model Setup and Sizing Program Calling Manager Name
+       \type object-list
+       \object-list ErlProgramCallingManagerNames
+       \required-field
+  N1, \field Number of Air Connections
+       \type integer
+       \minimum 1
+       \maximum 2
+       \required-field
+  A5, \field Air Connection 1 Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+  A6, \field Air Connection 1 Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+  A7, \field Plant Connection is Used
+       \type choice
+       \default True
+       \key True
+       \key False
+  A8, \field Plant Connection Inlet Node Name
+        \type object-list
+        \object-list ConnectionNames
+  A9, \field Plant Connection Outlet Node Name
+        \type object-list
+        \object-list ConnectionNames
+  A10; \field Ambient Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+       \note Used for modeling device losses to surrounding zone
+
 OS:PlantComponent:UserDefined,
       \memo Defines a generic plant component for custom modeling
       \memo using Energy Management System or External Interface
