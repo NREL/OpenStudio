@@ -117,7 +117,7 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 )python",
                        pythonScriptPath.generic_string());
-    fmt::print("{}\n", cmd);
+    // fmt::print("{}\n", cmd);
     pythonEngine->exec(cmd);
   }
 
