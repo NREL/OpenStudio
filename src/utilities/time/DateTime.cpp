@@ -213,8 +213,8 @@ std::string DateTime::toXsdDateTime() const {
     offset = '-';
   }
 
-  return fmt::format("{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}{}{:02d}:{:02d}", 2005, 2, 27, m_time.hours(), m_time.minutes(), m_time.seconds(),
-                     offset, std::abs(temp.hours()), std::abs(temp.minutes()));
+  return fmt::format("{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}{}{:02d}:{:02d}", m_date.year(), m_date.monthOfYear().value(), m_date.dayOfMonth(),
+                     m_time.hours(), m_time.minutes(), m_time.seconds(), offset, std::abs(temp.hours()), std::abs(temp.minutes()));
 }
 
 std::time_t DateTime::toEpoch() const {
