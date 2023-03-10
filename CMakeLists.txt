@@ -249,6 +249,15 @@ elseif(UNIX)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
 
+  find_program(UNAME uname)
+  execute_process(COMMAND ${UNAME} -m
+    OUTPUT_VARIABLE ARCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  if (ARCH STREQUAL "aarch64")
+    set(ARCH "arm64")
+  endif()
+
   # eg: `-Ubuntu18.04`
   set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
 
