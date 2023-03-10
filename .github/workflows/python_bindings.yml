@@ -73,7 +73,7 @@ jobs:
         echo "Enabling conan revisions and setting parallel_download"
         conan config set general.revisions_enabled=True
         conan config set general.parallel_download=8
-        conan remote add --insert 0 --force nrel https://api.bintray.com/conan/commercialbuilding/nrel
+        conan remote add --insert 0 --force nrel https://conan.openstudio.net/artifactory/api/conan/openstudio
 
     - name: Install System dependencies
       shell: bash
