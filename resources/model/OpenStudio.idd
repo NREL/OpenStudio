@@ -38542,7 +38542,7 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable,
 OS:Coil:UserDefined,
        \memo Defines a generic air system component for custom modeling
        \memo using Energy Management System or External Interface
-       \min-fields 6
+       \min-fields 5
   A1, \field Handle
        \type handle
        \required-field        
@@ -38557,7 +38557,6 @@ OS:Coil:UserDefined,
   A4, \field Model Setup and Sizing Program Calling Manager Name
        \type object-list
        \object-list ErlProgramCallingManagerNames
-       \required-field
   N1, \field Number of Air Connections
        \type integer
        \minimum 1
@@ -38582,10 +38581,40 @@ OS:Coil:UserDefined,
   A9, \field Plant Connection Outlet Node Name
         \type object-list
         \object-list ConnectionNames
-  A10; \field Ambient Zone Name
+  A10, \field Ambient Zone Name
        \type object-list
        \object-list ThermalZoneNames
        \note Used for modeling device losses to surrounding zone
+  A11, \field Overall Simulation Program Name
+      \type object-list
+      \object-list ErlProgramNames
+  A12, \field Initialization Simulation Program Name
+      \type object-list
+      \object-list ErlProgramNames
+  A13, \field Air Outlet Temperature Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A14, \field Air Outlet Humidity Ratio Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A15, \field Air Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A16, \field Plant Minimum Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A17, \field Plant Maximum Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A18, \field Plant Design Volume Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A19, \field Plant Outlet Temperature Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A20; \field Plant Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames        
 
 OS:PlantComponent:UserDefined,
       \memo Defines a generic plant component for custom modeling

@@ -32,11 +32,16 @@
 
 #include "ModelAPI.hpp"
 #include "WaterToAirComponent.hpp"
+#include "EnergyManagementSystemProgramCallingManager.hpp"
+#include "EnergyManagementSystemProgram.hpp"
+#include "EnergyManagementSystemActuator.hpp"
 
 namespace openstudio {
 namespace model {
 
 class EnergyManagementSystemProgramCallingManager;
+class EnergyManagementSystemProgram;
+class EnergyManagementSystemActuator;
 class ThermalZone;
 
 namespace detail {
@@ -64,7 +69,27 @@ class MODEL_API CoilUserDefined : public WaterToAirComponent {
 
   boost::optional<EnergyManagementSystemProgramCallingManager> overallModelSimulationProgramCallingManager() const;
 
-  EnergyManagementSystemProgramCallingManager modelSetupandSizingProgramCallingManager() const;
+  boost::optional<EnergyManagementSystemProgramCallingManager> modelSetupandSizingProgramCallingManager() const;
+
+  boost::optional<EnergyManagementSystemProgram> overallSimulationProgram() const;
+
+  boost::optional<EnergyManagementSystemProgram> initializationSimulationProgram() const;
+
+  boost::optional<EnergyManagementSystemActuator> airOutletTemperatureActuator() const;
+
+  boost::optional<EnergyManagementSystemActuator> airOutletHumidityRatioActuator() const;
+
+  boost::optional<EnergyManagementSystemActuator> airMassFlowRateActuator() const;
+
+  boost::optional<EnergyManagementSystemActuator> plantMinimumMassFlowRateActuator() const;
+
+  boost::optional<EnergyManagementSystemActuator> plantMaximumMassFlowRateActuator() const;
+
+  boost::optional<EnergyManagementSystemActuator> plantDesignVolumeFlowRateActuator() const;
+
+  boost::optional<EnergyManagementSystemActuator> plantMassFlowRateActuator() const;
+
+  boost::optional<EnergyManagementSystemActuator> plantOutletTemperatureActuator() const;
 
   bool plantConnectionisUsed() const;
 
@@ -81,12 +106,44 @@ class MODEL_API CoilUserDefined : public WaterToAirComponent {
 
   bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
 
+  void resetModelSetupandSizingProgramCallingManager();
+
+  bool setOverallSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+
+  void resetOverallSimulationProgram();
+
+  bool setInitializationSimulationProgramName(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+
+  void resetInitializationSimulationProgramName();
+
   bool setPlantConnectionisUsed(bool plantConnectionisUsed);
 
   // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setAmbientZone(const ThermalZone& thermalZone);
 
   void resetAmbientZone();
+
+  bool setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+  bool setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+  bool setAirMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+  bool setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+  bool setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+  bool setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+  bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+  bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+  EnergyManagementSystemProgram
+      createInitProgram(const EnergyManagementSystemActuator& aota, const EnergyManagementSystemActuator& aohra,
+          const EnergyManagementSystemActuator& amfra, const EnergyManagementSystemActuator& pminmfra,
+          const EnergyManagementSystemActuator& pmaxmfra, const EnergyManagementSystemActuator& pdvfra,
+          const EnergyManagementSystemActuator& pmmfra, const EnergyManagementSystemActuator& pota, const Model& model);
 
   //@}
   /** @name Other */
