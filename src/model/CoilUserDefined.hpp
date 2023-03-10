@@ -112,9 +112,9 @@ class MODEL_API CoilUserDefined : public WaterToAirComponent {
 
   void resetOverallSimulationProgram();
 
-  bool setInitializationSimulationProgramName(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+  bool setInitializationSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
 
-  void resetInitializationSimulationProgramName();
+  void resetInitializationSimulationProgram();
 
   bool setPlantConnectionisUsed(bool plantConnectionisUsed);
 
@@ -138,12 +138,6 @@ class MODEL_API CoilUserDefined : public WaterToAirComponent {
   bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
   bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
-
-  EnergyManagementSystemProgram
-      createInitProgram(const EnergyManagementSystemActuator& aota, const EnergyManagementSystemActuator& aohra,
-          const EnergyManagementSystemActuator& amfra, const EnergyManagementSystemActuator& pminmfra,
-          const EnergyManagementSystemActuator& pmaxmfra, const EnergyManagementSystemActuator& pdvfra,
-          const EnergyManagementSystemActuator& pmmfra, const EnergyManagementSystemActuator& pota, const Model& model);
 
   //@}
   /** @name Other */
