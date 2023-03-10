@@ -40,8 +40,7 @@ class ScriptEngineInstance;
 
 namespace cli {
 
-  void setupRunOptions(CLI::App* parentApp, ScriptEngineInstance& ruby, ScriptEngineInstance& python, std::function<void()>& runSetupEmbeddedGems,
-                       std::function<void()>& runSetupPythonPath);
+  void setupRunOptions(CLI::App* parentApp, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
   // void setupRunFtOptions(CLI::App* app, FtOptions& ftOptions);
 
 }  // namespace cli

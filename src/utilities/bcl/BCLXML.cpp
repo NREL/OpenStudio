@@ -47,9 +47,9 @@ BCLXML::BCLXML(const BCLXMLType& bclXMLType)
 
 BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem::system_complete(xmlPath)) {
   if (!openstudio::filesystem::exists(xmlPath)) {
-    LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
+    LOG_AND_THROW("'" << openstudio::toString(xmlPath) << "' does not exist");
   } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
-    LOG_AND_THROW("'" << toString(xmlPath) << "' cannot be opened for reading BCL XML data");
+    LOG_AND_THROW("'" << openstudio::toString(xmlPath) << "' cannot be opened for reading BCL XML data");
   }
 
   pugi::xml_document bclXML;
@@ -58,13 +58,13 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
   if (file.is_open()) {
     auto result = bclXML.load(file);
     if (!result) {
-      LOG_AND_THROW("'" << toString(xmlPath) << "' could not be read as XML data");
+      LOG_AND_THROW("'" << openstudio::toString(xmlPath) << "' could not be read as XML data");
     }
 
     file.close();
   } else {
     file.close();
-    LOG_AND_THROW("'" << toString(xmlPath) << "' could not be opened");
+    LOG_AND_THROW("'" << openstudio::toString(xmlPath) << "' could not be opened");
   }
 
   auto element = bclXML.child("component");
@@ -75,7 +75,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     if (element) {
       m_bclXMLType = BCLXMLType::MeasureXML;
     } else {
-      LOG_AND_THROW("'" << toString(xmlPath) << "' is not a correct BCL XML");
+      LOG_AND_THROW("'" << openstudio::toString(xmlPath) << "' is not a correct BCL XML");
     }
   }
 
@@ -98,14 +98,14 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
   m_versionId = element.child("version_id").text().as_string();
 
   if (m_name.empty() || m_uid.empty() || m_versionId.empty()) {
-    LOG_AND_THROW("'" << toString(xmlPath) << "' is not a correct BCL XML");
+    LOG_AND_THROW("'" << openstudio::toString(xmlPath) << "' is not a correct BCL XML");
   }
 
   // added in schema version 3
   // error is only present if something went wrong, so we check if it exists first
   // to avoid always initializing m_error to a string (even if empty)
   // note: decodeString(element.child("error").text().as_string()) would always return a string even if 'error' key didn't exist
-  pugi::xml_node errorElement = element.child("error");
+  const pugi::xml_node errorElement = element.child("error");
   if (errorElement) {
     m_error = errorElement.text().as_string();
   }
@@ -140,7 +140,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     if (subelement) {
       for (auto& arg : subelement.children("argument")) {
         try {
-          m_arguments.push_back(BCLMeasureArgument(arg));
+          m_arguments.emplace_back(arg);
         } catch (const std::exception&) {
           LOG(Error, "Bad argument in BCL XML");
         }
@@ -152,7 +152,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
       for (auto& outputElement : subelement.children("output")) {
         if (outputElement.first_child() != nullptr) {
           try {
-            m_outputs.push_back(BCLMeasureOutput(outputElement));
+            m_outputs.emplace_back(outputElement);
           } catch (const std::exception&) {
             LOG(Error, "Bad output in BCL XML");
           }
@@ -199,10 +199,10 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
             }
           }
         }
-        std::string fileName = fileElement.child("filename").text().as_string();
+        const std::string fileName = fileElement.child("filename").text().as_string();
         //std::string fileType = fileElement.firstChildElement("filetype").firstChild().nodeValue().toStdString();
-        std::string usageType = fileElement.child("usage_type").text().as_string();
-        std::string checkSum = fileElement.child("checksum").text().as_string();
+        const std::string usageType = fileElement.child("usage_type").text().as_string();
+        const std::string checkSum = fileElement.child("checksum").text().as_string();
 
         openstudio::path relativePath;
 
@@ -251,42 +251,29 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
 
         if (datatype == "float") {
           if (units.empty()) {
-            Attribute attr(name, boost::lexical_cast<double>(value));
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, boost::lexical_cast<double>(value));
           } else {
-            Attribute attr(name, boost::lexical_cast<double>(value), units);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, boost::lexical_cast<double>(value), units);
           }
         } else if (datatype == "int") {
           if (units.empty()) {
-            Attribute attr(name, boost::lexical_cast<int>(value));
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, boost::lexical_cast<int>(value));
           } else {
-            Attribute attr(name, boost::lexical_cast<int>(value), units);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, boost::lexical_cast<int>(value), units);
           }
         } else if (datatype == "boolean") {
-          bool temp;
-          if (value == "true") {
-            temp = true;
-          } else {
-            temp = false;
-          }
+          const bool temp = (value == "true");
           if (units.empty()) {
-            Attribute attr(name, temp);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, temp);
           } else {
-            Attribute attr(name, temp, units);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, temp, units);
           }
         } else {
           // Assume string
           if (units.empty()) {
-            Attribute attr(name, value);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, value);
           } else {
-            Attribute attr(name, value, units);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, value, units);
           }
         }
       } else {
@@ -300,7 +287,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     for (auto& tagElement : subelement.children("tag")) {
       auto text = tagElement.text();
       if (!text.empty()) {
-        m_tags.push_back(text.as_string());
+        m_tags.emplace_back(text.as_string());
       }
     }
   }
@@ -492,7 +479,7 @@ void BCLXML::addFile(const BCLFileReference& file) {
 bool BCLXML::hasFile(const openstudio::path& path) const {
   bool result = false;
 
-  openstudio::path test = openstudio::filesystem::system_complete(path);
+  const openstudio::path test = openstudio::filesystem::system_complete(path);
 
   for (const BCLFileReference& file : m_files) {
     if (file.path() == test) {
@@ -507,7 +494,7 @@ bool BCLXML::hasFile(const openstudio::path& path) const {
 bool BCLXML::removeFile(const openstudio::path& path) {
   bool result = false;
 
-  openstudio::path test = openstudio::filesystem::system_complete(path);
+  const openstudio::path test = openstudio::filesystem::system_complete(path);
 
   std::vector<BCLFileReference> newFiles;
   for (const BCLFileReference& file : m_files) {
@@ -518,7 +505,7 @@ bool BCLXML::removeFile(const openstudio::path& path) {
     }
   }
 
-  if (result == true) {
+  if (result) {
     incrementVersionId();
     m_files = newFiles;
   }
@@ -548,7 +535,7 @@ bool BCLXML::removeAttributes(const std::string& name) {
     }
   }
 
-  if (result == true) {
+  if (result) {
     incrementVersionId();
     m_attributes = newAttributes;
   }
@@ -584,12 +571,10 @@ void BCLXML::clearTags() {
   m_tags.clear();
 }
 
-bool BCLXML::save() const {
-  if (m_path.empty()) {
-    return false;
-  }
+pugi::xml_document BCLXML::toXML() const {
 
   pugi::xml_document doc;
+
   //doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
 
   pugi::xml_node docElement;
@@ -598,7 +583,7 @@ bool BCLXML::save() const {
   } else if (m_bclXMLType == BCLXMLType::MeasureXML) {
     docElement = doc.append_child("measure");
   } else {
-    return false;
+    LOG_AND_THROW("Unknown BCLXMLType '" << m_bclXMLType.valueName() << "'.");
   }
 
   auto element = docElement.append_child("schema_version");
@@ -747,6 +732,21 @@ bool BCLXML::save() const {
     file.writeValues(subelement);
   }
 
+  return doc;
+}
+
+bool BCLXML::save() const {
+
+  if (m_path.empty()) {
+    LOG(Warn, "Cannot save, since it has no known path. Use BCLXML::save(const openstudio::path& xmlPath) instead.");
+    return false;
+  }
+
+  const pugi::xml_document doc = toXML();
+  if (!doc) {
+    return false;
+  }
+
   // write to disk
   openstudio::filesystem::ofstream file(m_path);
   if (!file.is_open()) {
@@ -762,6 +762,31 @@ bool BCLXML::saveAs(const openstudio::path& xmlPath) {
   incrementVersionId();
   m_path = openstudio::filesystem::system_complete(xmlPath);
   return save();
+}
+
+std::string BCLXML::toString() const {
+
+  std::string result;
+
+  const pugi::xml_document doc = toXML();
+  if (!doc) {
+    return result;
+  }
+
+  std::stringstream ss;
+  doc.save(ss, "  ");
+  result = ss.str();
+
+  return result;
+}
+
+std::ostream& operator<<(std::ostream& os, const BCLXML& bclXML) {
+  const pugi::xml_document doc = bclXML.toXML();
+  if (doc) {
+    doc.save(os, "  ");
+  }
+
+  return os;
 }
 
 void BCLXML::changeUID() {

@@ -56,23 +56,5 @@ namespace measure {
     return {};
   }
 
-  std::vector<OSArgument> PythonReportingMeasure::arguments(const openstudio::model::Model& model) const {
-    return {};
-  }
-
-  std::vector<OSOutput> PythonReportingMeasure::outputs() const {
-    return {};
-  }
-
-  bool PythonReportingMeasure::run(OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
-    runner.prepareForMeasureRun(*this);
-    return true;
-  }
-
-  std::vector<IdfObject> PythonReportingMeasure::energyPlusOutputRequests(OSRunner& runner,
-                                                                          const std::map<std::string, OSArgument>& user_arguments) const {
-    return {};
-  }
-
 }  // namespace measure
 }  // namespace openstudio

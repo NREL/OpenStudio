@@ -148,6 +148,9 @@ class UTILITIES_API BCLMeasure
 
   std::string xmlChecksum() const;
 
+  // string representation of the underlying BCLXML
+  std::string xmlString() const;
+
   std::string name() const;
 
   std::string displayName() const;

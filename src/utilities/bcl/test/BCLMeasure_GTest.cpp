@@ -71,6 +71,7 @@ TEST_F(BCLFixture, BCLMeasure) {
     measure->modelerDescription());
 
   EXPECT_EQ(MeasureType::ModelMeasure, measure->measureType().value());
+  EXPECT_EQ(MeasureLanguage::Ruby, measure->measureLanguage().value());
   EXPECT_TRUE(measure->primaryRubyScriptPath());
   EXPECT_EQ("Envelope.Fenestration", measure->taxonomyTag());
 
@@ -1126,4 +1127,101 @@ TEST_F(BCLFixture, BCLMeasure_Ctor_PythonReportingMeasure) {
 
     EXPECT_TRUE(std::equal(initialPaths.begin(), initialPaths.end(), expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end()));
   }
+}
+
+TEST_F(BCLFixture, BCLMeasure_CTor_throw_invalid_xml) {
+
+  openstudio::path testDir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing"));
+  openstudio::path srcDir = testDir / toPath("BCLMeasure_CTor_throw_invalid_xml");
+  openstudio::path xmlPath = srcDir / toPath("measure.xml");
+
+  if (exists(srcDir)) {
+    removeDirectory(srcDir);
+  }
+  ASSERT_FALSE(fs::exists(srcDir));
+
+  fs::create_directories(srcDir);
+  ASSERT_TRUE(fs::exists(srcDir));
+
+  BCLXML bclXML(BCLXMLType::MeasureXML);
+  bclXML.setName("Dumb Measure");
+  bclXML.saveAs(xmlPath);
+
+  // Ensure the bclXML is minimally viable (has name for eg)
+  EXPECT_TRUE(BCLXML::load(xmlPath));
+
+  // Missing required "Measure Type"
+  EXPECT_ANY_THROW(BCLMeasure{srcDir});
+  std::string msg = logFile->logMessages().back().logMessage();
+  EXPECT_TRUE(msg.find("is missing the required attribute \"Measure Type\"") != std::string::npos) << msg;
+
+  // Missing a measure.rb/.py
+  bclXML.addAttribute(Attribute("Measure Type", MeasureType(MeasureType::ModelMeasure).valueName()));
+  bclXML.saveAs(xmlPath);
+  EXPECT_ANY_THROW(BCLMeasure{srcDir});
+  msg = logFile->logMessages().back().logMessage();
+  EXPECT_TRUE(msg.find("has neither measure.rb nor measure.py") != std::string::npos) << logFile->logMessages().back().logMessage();
+
+  // Add a measure.rb, all good
+  BCLFileReference rubyFileref(srcDir, "measure.rb", true);
+  rubyFileref.setUsageType("script");
+  bclXML.addFile(rubyFileref);
+  bclXML.saveAs(xmlPath);
+  EXPECT_NO_THROW(BCLMeasure{srcDir});
+
+  // if MeasureLanguage is set, we enforce it matches
+  bclXML.addAttribute(Attribute("Measure Language", MeasureLanguage(MeasureLanguage::Python).valueName()));
+  bclXML.saveAs(xmlPath);
+  EXPECT_ANY_THROW(BCLMeasure{srcDir});
+  msg = logFile->logMessages().back().logMessage();
+  EXPECT_TRUE(msg.find("has a measure.rb; but \"Measure Language\" is not 'Ruby', it's 'Python'") != std::string::npos)
+    << logFile->logMessages().back().logMessage();
+
+  bclXML.removeAttributes("Measure Language");
+  bclXML.addAttribute(Attribute("Measure Language", MeasureLanguage(MeasureLanguage::Ruby).valueName()));
+  bclXML.saveAs(xmlPath);
+  EXPECT_NO_THROW(BCLMeasure{srcDir});
+
+  // We can't have both a measure.rb and measure.py
+  BCLFileReference pythonFileref(srcDir, "measure.py", true);
+  pythonFileref.setUsageType("script");
+  bclXML.addFile(pythonFileref);
+  bclXML.saveAs(xmlPath);
+  EXPECT_ANY_THROW(BCLMeasure{srcDir});
+  msg = logFile->logMessages().back().logMessage();
+  EXPECT_TRUE(msg.find("has both measure.rb and measure.py, and they cannot be used at the same time") != std::string::npos)
+    << logFile->logMessages().back().logMessage();
+
+  // Now I only have measure.py. Enforce Measure Language matches
+  bclXML.removeFile(rubyFileref.path());
+  bclXML.saveAs(xmlPath);
+  EXPECT_ANY_THROW(BCLMeasure{srcDir});
+  msg = logFile->logMessages().back().logMessage();
+  EXPECT_TRUE(msg.find("has a measure.py; but \"Measure Language\" is not 'Python', it's 'Ruby'") != std::string::npos)
+    << logFile->logMessages().back().logMessage();
+
+  bclXML.removeAttributes("Measure Language");
+  bclXML.addAttribute(Attribute("Measure Language", MeasureLanguage(MeasureLanguage::Python).valueName()));
+  bclXML.saveAs(xmlPath);
+  EXPECT_NO_THROW(BCLMeasure{srcDir});
+
+  // Can't have multiple copies of MeasureLanguage
+  bclXML.addAttribute(Attribute("Measure Language", MeasureLanguage(MeasureLanguage::Ruby).valueName()));
+  bclXML.saveAs(xmlPath);
+  EXPECT_ANY_THROW(BCLMeasure{srcDir});
+  msg = logFile->logMessages().back().logMessage();
+  EXPECT_TRUE(msg.find("has multiple copies of required attribute \"Measure Language\"") != std::string::npos)
+    << logFile->logMessages().back().logMessage();
+
+  bclXML.removeAttributes("Measure Language");
+  bclXML.saveAs(xmlPath);
+  EXPECT_NO_THROW(BCLMeasure{srcDir});
+
+  // Can't have a wrong type
+  bclXML.removeAttributes("Measure Type");
+  bclXML.addAttribute(Attribute("Measure Type", 10.0));
+  bclXML.saveAs(xmlPath);
+  EXPECT_ANY_THROW(BCLMeasure{srcDir});
+  msg = logFile->logMessages().back().logMessage();
+  EXPECT_TRUE(msg.find("has wrong type for required attribute \"Measure Type\"") != std::string::npos) << logFile->logMessages().back().logMessage();
 }
