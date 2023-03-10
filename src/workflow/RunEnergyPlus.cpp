@@ -49,8 +49,13 @@ struct PrepareRunDirResults
 
     // TODO: is this really necessary?! the part that copies the idd ini epjson in particular I question
     static constexpr std::array<std::string_view, 3> copyFileExtensions{".idd", ".ini", ".epjson"};
+#if defined _WIN32
+    static const boost::regex energyplusRegex(R"(^energyplus.exe$)");
+    static const boost::regex expandObjectsRegex(R"(^expandobjects.exe$)");
+#else
     static const boost::regex energyplusRegex(R"(^energyplus\d{0,4}$)");
     static const boost::regex expandObjectsRegex(R"(^expandobjects\d{0,4}$)");
+#endif
     boost::smatch matches;
 
     if (energyPlusDirectory.empty()) {
