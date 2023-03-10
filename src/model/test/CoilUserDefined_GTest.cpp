@@ -33,7 +33,8 @@
 #include "../CoilUserDefined.hpp"
 #include "../CoilUserDefined_Impl.hpp"
 #include "../EnergyManagementSystemProgramCallingManager.hpp"
-#include "../Connection.hpp"
+#include "../EnergyManagementSystemProgram.hpp"
+#include "../EnergyManagementSystemActuator.hpp"
 #include "../ThermalZone.hpp"
 
 #include "../../utilities/core/Path.hpp"
@@ -55,4 +56,41 @@ TEST_F(ModelFixture, CoilUserDefined_CoilUserDefined) {
     exit(0);
         },
         ::testing::ExitedWithCode(0), "");
+}
+
+TEST_F(ModelFixture, CoilUserDefined_constructor) {
+    Model m;
+
+    CoilUserDefined b1(m);
+
+    m.save(toPath("./CoilUserDefined_constructor.osm"), true);
+
+    EXPECT_TRUE(b1.airOutletTemperatureActuator());
+    EXPECT_TRUE(b1.airOutletHumidityRatioActuator());
+    EXPECT_TRUE(b1.airMassFlowRateActuator());
+    EXPECT_TRUE(b1.plantMinimumMassFlowRateActuator());
+    EXPECT_TRUE(b1.plantMaximumMassFlowRateActuator());
+    EXPECT_TRUE(b1.plantDesignVolumeFlowRateActuator());
+    EXPECT_TRUE(b1.plantMassFlowRateActuator());
+    EXPECT_TRUE(b1.plantOutletTemperatureActuator());
+
+    //EXPECT_TRUE(b1.designVolumeFlowRateActuator().get().actuatedComponent());
+    //EXPECT_EQ(b1.handle(), b1.designVolumeFlowRateActuator().get().actuatedComponent().get().handle());
+}
+
+TEST_F(ModelFixture, CoilUserDefined_programs) {
+    Model m;
+
+    //PlantLoop plant(m);
+    CoilUserDefined b1(m);
+    EnergyManagementSystemProgramCallingManager mainPCM(m);
+    EnergyManagementSystemProgramCallingManager initPCM(m);
+    EXPECT_TRUE(b1.setOverallModelSimulationProgramCallingManager(mainPCM));
+    EXPECT_EQ(mainPCM, b1.overallModelSimulationProgramCallingManager().get());
+    EXPECT_TRUE(b1.setModelSetupandSizingProgramCallingManager(initPCM));
+    EXPECT_EQ(initPCM, b1.modelSetupandSizingProgramCallingManager().get());
+    b1.resetOverallModelSimulationProgramCallingManager();
+    b1.resetModelSetupandSizingProgramCallingManager();
+    EXPECT_FALSE(b1.overallModelSimulationProgramCallingManager());
+    EXPECT_FALSE(b1.modelSetupandSizingProgramCallingManager());
 }
