@@ -32,11 +32,13 @@
 
 #include "../ForwardTranslator.hpp"
 
+#include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Model.hpp"
 #include "../../model/CoilUserDefined.hpp"
 #include "../../model/CoilUserDefined_Impl.hpp"
 #include "../../model/EnergyManagementSystemProgramCallingManager.hpp"
 #include "../../model/EnergyManagementSystemProgram.hpp"
+#include "../../model/Node.hpp"
 
 #include <utilities/idd/Coil_UserDefined_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -48,21 +50,24 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined) {
   Model model;
 
-  EnergyManagementSystemProgramCallingManager mainPCM(model);
-  EnergyManagementSystemProgramCallingManager initPCM(model);
 
-  CoilUserDefined CoilUserDefined(model);
-  CoilUserDefined.setOverallModelSimulationProgramCallingManager(mainPCM);
-  CoilUserDefined.setModelSetupandSizingProgramCallingManager(initPCM);
+  CoilUserDefined coil(model);
+
+  AirLoopHVAC airLoop(model);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  coil.addToNode(supplyOutletNode);
+
+  PlantLoop plant(model);
+  plant.addDemandBranchForComponent(coil);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
   WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_UserDefined));
   EXPECT_EQ(1u, idfObjs.size());
-  WorkspaceObject coil(idfObjs[0]);
-  //EXPECT_EQ("Propane", coil.getString(Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, false).get());
-  EXPECT_EQ("Energy Management System Program Calling Manager 1", coil.getString(Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, false).get());
+  WorkspaceObject ws_coil(idfObjs[0]);
+  EXPECT_EQ("overallModelSimulationProgramCallingManager", ws_coil.getString(Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, false).get());
   
   std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
   model.save(toPath(file_path), true);

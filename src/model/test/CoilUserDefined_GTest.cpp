@@ -108,9 +108,6 @@ TEST_F(ModelFixture, CoilUserDefined_addToNode) {
     coil.addToNode(supplyOutletNode);
 
     ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
-    //std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
-    //m.save(toPath("./CoilUserDefined_constructor.osm"), true);
-    //m.save(toPath(file_path), true);
 }
 
 // Add CoilUserDefined to AirLoopHVAC and PlantLoop
@@ -191,6 +188,10 @@ TEST_F(ModelFixture, CoilUserDefined_remove4) {
     ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
     ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
     ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
+
+    std::string file_path = "c:\\Temp\\CoilUserDefined.osm";
+    //m.save(toPath("./CoilUserDefined_constructor.osm"), true);
+    m.save(toPath(file_path), true);
 
     plant.removeDemandBranchWithComponent(coil);
     ASSERT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
