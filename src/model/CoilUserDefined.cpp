@@ -198,7 +198,6 @@ namespace detail {
       result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
       result.push_back(IddObjectType::OS_EnergyManagementSystem_Program);
       result.push_back(IddObjectType::OS_EnergyManagementSystem_Actuator);
-      result.push_back(IddObjectType::OS_PlantComponent_UserDefined);
       return result;
   }
 

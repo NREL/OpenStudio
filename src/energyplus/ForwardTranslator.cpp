@@ -1231,6 +1231,11 @@ namespace energyplus {
         retVal = translateCoilSystemIntegratedHeatPumpAirSource(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_UserDefined: {
+          auto coil = modelObject.cast<CoilUserDefined>();
+          retVal = translateCoilUserDefined(coil);
+          break;
+      }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater: {
         auto coil = modelObject.cast<CoilWaterHeatingDesuperheater>();
         retVal = translateCoilWaterHeatingDesuperheater(coil);
@@ -3463,6 +3468,7 @@ namespace energyplus {
       IddObjectType::OS_Coil_Heating_Water,
       IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit,
       IddObjectType::OS_Coil_WaterHeating_Desuperheater,
+      IddObjectType::OS_Coil_UserDefined,
 
       // If using a plantLoop, this will be translated by the PlantLoop. But WaterHeaters can also be used stand-alone, so always translate them
       // We'll check in their FT if the "Peak Use Flow Rate" is actually initialized as it's an indication that the WH was
