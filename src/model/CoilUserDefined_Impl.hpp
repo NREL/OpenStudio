@@ -39,151 +39,145 @@
 namespace openstudio {
 namespace model {
 
-class EnergyManagementSystemProgramCallingManager;
-class EnergyManagementSystemProgram;
-class EnergyManagementSystemActuator;
-class ThermalZone;
+  class EnergyManagementSystemProgramCallingManager;
+  class EnergyManagementSystemProgram;
+  class EnergyManagementSystemActuator;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilUserDefined_Impl is a WaterToAirComponent_Impl that is the implementation class for CoilUserDefined.*/
-  class MODEL_API CoilUserDefined_Impl : public WaterToAirComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilUserDefined_Impl is a WaterToAirComponent_Impl that is the implementation class for CoilUserDefined.*/
+    class MODEL_API CoilUserDefined_Impl : public WaterToAirComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilUserDefined_Impl(const IdfObject& idfObject,
-                         Model_Impl* model,
-                         bool keepHandle);
+      CoilUserDefined_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilUserDefined_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      CoilUserDefined_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilUserDefined_Impl(const CoilUserDefined_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      CoilUserDefined_Impl(const CoilUserDefined_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilUserDefined_Impl() {}
+      virtual ~CoilUserDefined_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual unsigned airInletPort() const override;
+      virtual unsigned airInletPort() const override;
 
-    virtual unsigned airOutletPort() const override;
+      virtual unsigned airOutletPort() const override;
 
-    virtual unsigned waterInletPort() const override;
+      virtual unsigned waterInletPort() const override;
 
-    virtual unsigned waterOutletPort() const override;
+      virtual unsigned waterOutletPort() const override;
 
-    //virtual bool addToNode(Node& node) override;
+      //virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<EnergyManagementSystemProgramCallingManager> overallModelSimulationProgramCallingManager() const;
+      boost::optional<EnergyManagementSystemProgramCallingManager> overallModelSimulationProgramCallingManager() const;
 
-    boost::optional<EnergyManagementSystemProgramCallingManager> modelSetupandSizingProgramCallingManager() const;
+      boost::optional<EnergyManagementSystemProgramCallingManager> modelSetupandSizingProgramCallingManager() const;
 
-    boost::optional<EnergyManagementSystemProgram> overallSimulationProgram() const;
+      boost::optional<EnergyManagementSystemProgram> overallSimulationProgram() const;
 
-    boost::optional<EnergyManagementSystemProgram> initializationSimulationProgram() const;
+      boost::optional<EnergyManagementSystemProgram> initializationSimulationProgram() const;
 
-    boost::optional<EnergyManagementSystemActuator> airOutletTemperatureActuator() const;
+      boost::optional<EnergyManagementSystemActuator> airOutletTemperatureActuator() const;
 
-    boost::optional<EnergyManagementSystemActuator> airOutletHumidityRatioActuator() const;
+      boost::optional<EnergyManagementSystemActuator> airOutletHumidityRatioActuator() const;
 
-    boost::optional<EnergyManagementSystemActuator> airMassFlowRateActuator() const;
+      boost::optional<EnergyManagementSystemActuator> airMassFlowRateActuator() const;
 
-    boost::optional<EnergyManagementSystemActuator> plantMinimumMassFlowRateActuator() const;
+      boost::optional<EnergyManagementSystemActuator> plantMinimumMassFlowRateActuator() const;
 
-    boost::optional<EnergyManagementSystemActuator> plantMaximumMassFlowRateActuator() const;
+      boost::optional<EnergyManagementSystemActuator> plantMaximumMassFlowRateActuator() const;
 
-    boost::optional<EnergyManagementSystemActuator> plantDesignVolumeFlowRateActuator() const;
+      boost::optional<EnergyManagementSystemActuator> plantDesignVolumeFlowRateActuator() const;
 
-    boost::optional<EnergyManagementSystemActuator> plantMassFlowRateActuator() const;
+      boost::optional<EnergyManagementSystemActuator> plantMassFlowRateActuator() const;
 
-    boost::optional<EnergyManagementSystemActuator> plantOutletTemperatureActuator() const;
+      boost::optional<EnergyManagementSystemActuator> plantOutletTemperatureActuator() const;
 
-    bool plantConnectionisUsed() const;
+      bool plantConnectionisUsed() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-    boost::optional<ThermalZone> ambientZone() const;
+      // TODO: Check return type. From object lists, some candidates are: ThermalZone.
+      boost::optional<ThermalZone> ambientZone() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ErlProgram.
-    bool setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
+      // TODO: Check argument type. From object lists, some candidates are: ErlProgram.
+      bool setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
 
-    void resetOverallModelSimulationProgramCallingManager();
+      void resetOverallModelSimulationProgramCallingManager();
 
-    // TODO: Check argument type. From object lists, some candidates are: ErlProgram.
-    bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
+      // TODO: Check argument type. From object lists, some candidates are: ErlProgram.
+      bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
 
-    void resetModelSetupandSizingProgramCallingManager();
+      void resetModelSetupandSizingProgramCallingManager();
 
-    bool setOverallSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+      bool setOverallSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
 
-    void resetOverallSimulationProgram();
+      void resetOverallSimulationProgram();
 
-    bool setInitializationSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+      bool setInitializationSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
 
-    void resetInitializationSimulationProgram();
+      void resetInitializationSimulationProgram();
 
-    bool setPlantConnectionisUsed(bool plantConnectionisUsed);
+      bool setPlantConnectionisUsed(bool plantConnectionisUsed);
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
-    bool setAmbientZone(const ThermalZone& thermalZone);
+      // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
+      bool setAmbientZone(const ThermalZone& thermalZone);
 
-    void resetAmbientZone();
+      void resetAmbientZone();
 
-    bool setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-    bool setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-    bool setAirMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setAirMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-    bool setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-    bool setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-    bool setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-    bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-    bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilUserDefined");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilUserDefined");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILUSERDEFINED_IMPL_HPP
-
+#endif  // MODEL_COILUSERDEFINED_IMPL_HPP

@@ -39,134 +39,134 @@
 namespace openstudio {
 namespace model {
 
-class EnergyManagementSystemProgramCallingManager;
-class EnergyManagementSystemProgram;
-class EnergyManagementSystemActuator;
-class ThermalZone;
+  class EnergyManagementSystemProgramCallingManager;
+  class EnergyManagementSystemProgram;
+  class EnergyManagementSystemActuator;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class CoilUserDefined_Impl;
+    class CoilUserDefined_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilUserDefined is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:Coil:UserDefined'. */
-class MODEL_API CoilUserDefined : public WaterToAirComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilUserDefined is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:Coil:UserDefined'. */
+  class MODEL_API CoilUserDefined : public WaterToAirComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilUserDefined(const Model& model);
+    explicit CoilUserDefined(const Model& model);
 
-  virtual ~CoilUserDefined() = default;
+    virtual ~CoilUserDefined() = default;
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<EnergyManagementSystemProgramCallingManager> overallModelSimulationProgramCallingManager() const;
+    boost::optional<EnergyManagementSystemProgramCallingManager> overallModelSimulationProgramCallingManager() const;
 
-  boost::optional<EnergyManagementSystemProgramCallingManager> modelSetupandSizingProgramCallingManager() const;
+    boost::optional<EnergyManagementSystemProgramCallingManager> modelSetupandSizingProgramCallingManager() const;
 
-  boost::optional<EnergyManagementSystemProgram> overallSimulationProgram() const;
+    boost::optional<EnergyManagementSystemProgram> overallSimulationProgram() const;
 
-  boost::optional<EnergyManagementSystemProgram> initializationSimulationProgram() const;
+    boost::optional<EnergyManagementSystemProgram> initializationSimulationProgram() const;
 
-  boost::optional<EnergyManagementSystemActuator> airOutletTemperatureActuator() const;
+    boost::optional<EnergyManagementSystemActuator> airOutletTemperatureActuator() const;
 
-  boost::optional<EnergyManagementSystemActuator> airOutletHumidityRatioActuator() const;
+    boost::optional<EnergyManagementSystemActuator> airOutletHumidityRatioActuator() const;
 
-  boost::optional<EnergyManagementSystemActuator> airMassFlowRateActuator() const;
+    boost::optional<EnergyManagementSystemActuator> airMassFlowRateActuator() const;
 
-  boost::optional<EnergyManagementSystemActuator> plantMinimumMassFlowRateActuator() const;
+    boost::optional<EnergyManagementSystemActuator> plantMinimumMassFlowRateActuator() const;
 
-  boost::optional<EnergyManagementSystemActuator> plantMaximumMassFlowRateActuator() const;
+    boost::optional<EnergyManagementSystemActuator> plantMaximumMassFlowRateActuator() const;
 
-  boost::optional<EnergyManagementSystemActuator> plantDesignVolumeFlowRateActuator() const;
+    boost::optional<EnergyManagementSystemActuator> plantDesignVolumeFlowRateActuator() const;
 
-  boost::optional<EnergyManagementSystemActuator> plantMassFlowRateActuator() const;
+    boost::optional<EnergyManagementSystemActuator> plantMassFlowRateActuator() const;
 
-  boost::optional<EnergyManagementSystemActuator> plantOutletTemperatureActuator() const;
+    boost::optional<EnergyManagementSystemActuator> plantOutletTemperatureActuator() const;
 
-  bool plantConnectionisUsed() const;
+    bool plantConnectionisUsed() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-  boost::optional<ThermalZone> ambientZone() const;
+    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
+    boost::optional<ThermalZone> ambientZone() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
+    bool setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
 
-  void resetOverallModelSimulationProgramCallingManager();
+    void resetOverallModelSimulationProgramCallingManager();
 
-  bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
+    bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
 
-  void resetModelSetupandSizingProgramCallingManager();
+    void resetModelSetupandSizingProgramCallingManager();
 
-  bool setOverallSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+    bool setOverallSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
 
-  void resetOverallSimulationProgram();
+    void resetOverallSimulationProgram();
 
-  bool setInitializationSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+    bool setInitializationSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
 
-  void resetInitializationSimulationProgram();
+    void resetInitializationSimulationProgram();
 
-  bool setPlantConnectionisUsed(bool plantConnectionisUsed);
+    bool setPlantConnectionisUsed(bool plantConnectionisUsed);
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
-  bool setAmbientZone(const ThermalZone& thermalZone);
+    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
+    bool setAmbientZone(const ThermalZone& thermalZone);
 
-  void resetAmbientZone();
+    void resetAmbientZone();
 
-  bool setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-  bool setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-  bool setAirMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setAirMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-  bool setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-  bool setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-  bool setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-  bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-  bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  using ImplType = detail::CoilUserDefined_Impl;
+    //@}
+   protected:
+    /// @cond
+    using ImplType = detail::CoilUserDefined_Impl;
 
-  explicit CoilUserDefined(std::shared_ptr<detail::CoilUserDefined_Impl> impl);
+    explicit CoilUserDefined(std::shared_ptr<detail::CoilUserDefined_Impl> impl);
 
-  friend class detail::CoilUserDefined_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilUserDefined");
-};
+    friend class detail::CoilUserDefined_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilUserDefined");
+  };
 
-/** \relates CoilUserDefined*/
-using OptionalCoilUserDefined = boost::optional<CoilUserDefined>;
+  /** \relates CoilUserDefined*/
+  using OptionalCoilUserDefined = boost::optional<CoilUserDefined>;
 
-/** \relates CoilUserDefined*/
-using CoilUserDefinedVector = std::vector<CoilUserDefined>;
+  /** \relates CoilUserDefined*/
+  using CoilUserDefinedVector = std::vector<CoilUserDefined>;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILUSERDEFINED_HPP
-
+#endif  // MODEL_COILUSERDEFINED_HPP

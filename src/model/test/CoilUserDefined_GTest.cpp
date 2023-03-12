@@ -49,152 +49,152 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, CoilUserDefined_CoilUserDefined) {
-    ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-    ASSERT_EXIT(
-        {
-            Model m;
-    CoilUserDefined coil_ud(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilUserDefined coil_ud(m);
 
-    exit(0);
-        },
-        ::testing::ExitedWithCode(0), "");
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 TEST_F(ModelFixture, CoilUserDefined_constructor) {
-    Model m;
+  Model m;
 
-    CoilUserDefined b1(m);
+  CoilUserDefined b1(m);
 
-    EXPECT_TRUE(b1.airOutletTemperatureActuator());
-    EXPECT_TRUE(b1.airOutletHumidityRatioActuator());
-    EXPECT_TRUE(b1.airMassFlowRateActuator());
-    EXPECT_TRUE(b1.plantMinimumMassFlowRateActuator());
-    EXPECT_TRUE(b1.plantMaximumMassFlowRateActuator());
-    EXPECT_TRUE(b1.plantDesignVolumeFlowRateActuator());
-    EXPECT_TRUE(b1.plantMassFlowRateActuator());
-    EXPECT_TRUE(b1.plantOutletTemperatureActuator());
+  EXPECT_TRUE(b1.airOutletTemperatureActuator());
+  EXPECT_TRUE(b1.airOutletHumidityRatioActuator());
+  EXPECT_TRUE(b1.airMassFlowRateActuator());
+  EXPECT_TRUE(b1.plantMinimumMassFlowRateActuator());
+  EXPECT_TRUE(b1.plantMaximumMassFlowRateActuator());
+  EXPECT_TRUE(b1.plantDesignVolumeFlowRateActuator());
+  EXPECT_TRUE(b1.plantMassFlowRateActuator());
+  EXPECT_TRUE(b1.plantOutletTemperatureActuator());
 
-    EXPECT_TRUE(b1.airOutletTemperatureActuator().get().actuatedComponent());
-    EXPECT_EQ(b1.handle(), b1.airOutletTemperatureActuator().get().actuatedComponent().get().handle());
+  EXPECT_TRUE(b1.airOutletTemperatureActuator().get().actuatedComponent());
+  EXPECT_EQ(b1.handle(), b1.airOutletTemperatureActuator().get().actuatedComponent().get().handle());
 }
 
 TEST_F(ModelFixture, CoilUserDefined_programs) {
-    Model m;
+  Model m;
 
-    //PlantLoop plant(m);
-    CoilUserDefined b1(m);
-    EnergyManagementSystemProgramCallingManager mainPCM(m);
-    EnergyManagementSystemProgramCallingManager initPCM(m);
-    EXPECT_TRUE(b1.setOverallModelSimulationProgramCallingManager(mainPCM));
-    EXPECT_EQ(mainPCM, b1.overallModelSimulationProgramCallingManager().get());
-    EXPECT_TRUE(b1.setModelSetupandSizingProgramCallingManager(initPCM));
-    EXPECT_EQ(initPCM, b1.modelSetupandSizingProgramCallingManager().get());
-    b1.resetOverallModelSimulationProgramCallingManager();
-    b1.resetModelSetupandSizingProgramCallingManager();
-    EXPECT_FALSE(b1.overallModelSimulationProgramCallingManager());
-    EXPECT_FALSE(b1.modelSetupandSizingProgramCallingManager());
+  //PlantLoop plant(m);
+  CoilUserDefined b1(m);
+  EnergyManagementSystemProgramCallingManager mainPCM(m);
+  EnergyManagementSystemProgramCallingManager initPCM(m);
+  EXPECT_TRUE(b1.setOverallModelSimulationProgramCallingManager(mainPCM));
+  EXPECT_EQ(mainPCM, b1.overallModelSimulationProgramCallingManager().get());
+  EXPECT_TRUE(b1.setModelSetupandSizingProgramCallingManager(initPCM));
+  EXPECT_EQ(initPCM, b1.modelSetupandSizingProgramCallingManager().get());
+  b1.resetOverallModelSimulationProgramCallingManager();
+  b1.resetModelSetupandSizingProgramCallingManager();
+  EXPECT_FALSE(b1.overallModelSimulationProgramCallingManager());
+  EXPECT_FALSE(b1.modelSetupandSizingProgramCallingManager());
 }
 
 TEST_F(ModelFixture, CoilUserDefined_addToNode) {
-    Model m;
+  Model m;
 
-    CoilUserDefined coil(m);
+  CoilUserDefined coil(m);
 
-    model::AirLoopHVAC airLoop(m);
+  model::AirLoopHVAC airLoop(m);
 
-    model::Node supplyOutletNode = airLoop.supplyOutletNode();
+  model::Node supplyOutletNode = airLoop.supplyOutletNode();
 
-    coil.addToNode(supplyOutletNode);
+  coil.addToNode(supplyOutletNode);
 
-    ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
+  ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
 }
 
 // Add CoilUserDefined to AirLoopHVAC and PlantLoop
 // Test CoilUserDefined::remove and make sure that the loops are intact
 TEST_F(ModelFixture, CoilUserDefined_remove) {
-    Model m;
-    CoilUserDefined coil(m);
+  Model m;
+  CoilUserDefined coil(m);
 
-    AirLoopHVAC airLoop(m);
-    Node supplyOutletNode = airLoop.supplyOutletNode();
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
 
-    coil.addToNode(supplyOutletNode);
-    coil.remove();
-    ASSERT_EQ((unsigned)2, airLoop.supplyComponents().size());
+  coil.addToNode(supplyOutletNode);
+  coil.remove();
+  ASSERT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
-    ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
+  ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
 
-    CoilUserDefined coil2(m);
-    coil2.addToNode(supplyOutletNode);
+  CoilUserDefined coil2(m);
+  coil2.addToNode(supplyOutletNode);
 
-    PlantLoop plant(m);
-    plant.addDemandBranchForComponent(coil2);
+  PlantLoop plant(m);
+  plant.addDemandBranchForComponent(coil2);
 
-    ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
-    ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
+  ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
 
-    coil2.remove();
-    ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
+  coil2.remove();
+  ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
 }
 
 // Add ONLY to PlantLoop
 // Test CoilUserDefined::remove and make sure that the plant is intact
 TEST_F(ModelFixture, CoilUserDefined_remove2) {
-    Model m;
-    CoilUserDefined coil(m);
+  Model m;
+  CoilUserDefined coil(m);
 
-    PlantLoop plant(m);
-    plant.addDemandBranchForComponent(coil);
-    ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
-    ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
+  PlantLoop plant(m);
+  plant.addDemandBranchForComponent(coil);
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
+  ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
 
-    coil.remove();
-    ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
+  coil.remove();
+  ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
 }
 
 // Add ONLY to PlantLoop
 // This time use removeDemandBranchWithComponent
 TEST_F(ModelFixture, CoilUserDefined_remove3) {
-    Model m;
-    CoilUserDefined coil(m);
+  Model m;
+  CoilUserDefined coil(m);
 
-    PlantLoop plant(m);
-    plant.addDemandBranchForComponent(coil);
+  PlantLoop plant(m);
+  plant.addDemandBranchForComponent(coil);
 
-    ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
-    ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
+  ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
 
-    plant.removeDemandBranchWithComponent(coil);
-    ASSERT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
-    ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
+  plant.removeDemandBranchWithComponent(coil);
+  ASSERT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
+  ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
 }
 
 // Add CoilUserDefined to AirLoopHVAC and PlantLoop
 // Test PlantLoop::removeDemandBranchWithComponent and make sure that the loops are intact
 // Test that the coil is still in the model and hooked up to AirLoopHVAC
 TEST_F(ModelFixture, CoilUserDefined_remove4) {
-    Model m;
-    CoilUserDefined coil(m);
+  Model m;
+  CoilUserDefined coil(m);
 
-    AirLoopHVAC airLoop(m);
-    Node supplyOutletNode = airLoop.supplyOutletNode();
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
 
-    coil.addToNode(supplyOutletNode);
+  coil.addToNode(supplyOutletNode);
 
-    PlantLoop plant(m);
-    EXPECT_TRUE(plant.addDemandBranchForComponent(coil));
+  PlantLoop plant(m);
+  EXPECT_TRUE(plant.addDemandBranchForComponent(coil));
 
-    ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
-    ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
-    ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
+  ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
+  ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
 
-    std::string file_path = "c:\\Temp\\CoilUserDefined.osm";
-    //m.save(toPath("./CoilUserDefined_constructor.osm"), true);
-    m.save(toPath(file_path), true);
+  std::string file_path = "c:\\Temp\\CoilUserDefined.osm";
+  //m.save(toPath("./CoilUserDefined_constructor.osm"), true);
+  m.save(toPath(file_path), true);
 
-    plant.removeDemandBranchWithComponent(coil);
-    ASSERT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
-    ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
-    ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
+  plant.removeDemandBranchWithComponent(coil);
+  ASSERT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
+  ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
+  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
 }

@@ -59,7 +59,7 @@ namespace energyplus {
     IdfObject idfObject(IddObjectType::Coil_UserDefined);
 
     m_idfObjects.push_back(idfObject);
-    
+
     // Name
     s = modelObject.name();
     if (s) {
@@ -110,19 +110,19 @@ namespace energyplus {
     // OverallModelSimulationProgramCallingManagerName
 
     if (boost::optional<EnergyManagementSystemProgramCallingManager> pcm = modelObject.overallModelSimulationProgramCallingManager()) {
-        idfObject.setString(Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, pcm->name().get());
+      idfObject.setString(Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, pcm->name().get());
     }
 
     // ModelSetupandSizingProgramCallingManagerName
 
     if (boost::optional<EnergyManagementSystemProgramCallingManager> pcm = modelObject.modelSetupandSizingProgramCallingManager()) {
-        idfObject.setString(Coil_UserDefinedFields::ModelSetupandSizingProgramCallingManagerName, pcm->name().get());
+      idfObject.setString(Coil_UserDefinedFields::ModelSetupandSizingProgramCallingManagerName, pcm->name().get());
     }
 
     // AmbientZoneName
 
     if (boost::optional<ThermalZone> tz = modelObject.ambientZone()) {
-        idfObject.setString(Coil_UserDefinedFields::AmbientZoneName, tz->name().get());
+      idfObject.setString(Coil_UserDefinedFields::AmbientZoneName, tz->name().get());
     }
 
     return boost::optional<IdfObject>(idfObject);

@@ -1232,9 +1232,9 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Coil_UserDefined: {
-          auto coil = modelObject.cast<CoilUserDefined>();
-          retVal = translateCoilUserDefined(coil);
-          break;
+        auto coil = modelObject.cast<CoilUserDefined>();
+        retVal = translateCoilUserDefined(coil);
+        break;
       }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater: {
         auto coil = modelObject.cast<CoilWaterHeatingDesuperheater>();
