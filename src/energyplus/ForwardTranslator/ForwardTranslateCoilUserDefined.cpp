@@ -66,11 +66,16 @@ namespace energyplus {
       idfObject.setName(*s);
     }
 
+    //PlantConnectionisUsed default value
+    idfObject.setString(Coil_UserDefinedFields::PlantConnectionisUsed, "No");
+
     // PlantConnectionInletNodeName
 
     if (boost::optional<ModelObject> mo = modelObject.waterInletModelObject()) {
       if (boost::optional<Node> node = mo->optionalCast<Node>()) {
         idfObject.setString(Coil_UserDefinedFields::PlantConnectionInletNodeName, node->name().get());
+        //PlantConnectionisUsed to Yes since Node is connected
+        idfObject.setString(Coil_UserDefinedFields::PlantConnectionisUsed, "Yes");
       }
     }
 

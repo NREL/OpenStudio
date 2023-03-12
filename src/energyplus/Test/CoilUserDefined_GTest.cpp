@@ -42,6 +42,10 @@
 
 #include <utilities/idd/Coil_UserDefined_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_ProgramCallingManager_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_ProgramCallingManager_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
@@ -61,14 +65,46 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined) {
   PlantLoop plant(model);
   plant.addDemandBranchForComponent(coil);
 
+  std::string air_inname = coil.airInletModelObject().get().nameString();
+  std::string air_outname = coil.airOutletModelObject().get().nameString();
+  std::string plant_inname = coil.waterInletModelObject().get().nameString();
+  std::string plant_outname = coil.waterOutletModelObject().get().nameString();
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
-  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_UserDefined));
-  EXPECT_EQ(1u, idfObjs.size());
-  WorkspaceObject ws_coil(idfObjs[0]);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  // check objects and children are translated
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_UserDefined).size());
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
+  EXPECT_EQ(8u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  // check actuators are setup
+  WorkspaceObjectVector actuators = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+  EXPECT_EQ(8u, actuators.size());
+  for (const auto& actuator : actuators) {
+      EXPECT_EQ("Coil User Defined 1", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+      EXPECT_TRUE(actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get() == "Air Connection" || 
+                  actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get() == "Plant Connection");
+  }
+
+  WorkspaceObjectVector idf_coil(workspace.getObjectsByType(IddObjectType::Coil_UserDefined));
+  EXPECT_EQ(1u, idf_coil.size());
+  WorkspaceObject ws_coil(idf_coil[0]);
   EXPECT_EQ("overallModelSimulationProgramCallingManager", ws_coil.getString(Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, false).get());
-  
+  EXPECT_EQ("Yes", ws_coil.getString(Coil_UserDefinedFields::PlantConnectionisUsed, false).get());
+  // check air connections
+  ASSERT_TRUE(ws_coil.getString(Coil_UserDefinedFields::AirConnection1InletNodeName, false));
+  EXPECT_EQ(air_inname, ws_coil.getString(Coil_UserDefinedFields::AirConnection1InletNodeName, false).get());
+  ASSERT_TRUE(ws_coil.getString(Coil_UserDefinedFields::AirConnection1OutletNodeName, false));
+  EXPECT_EQ(air_outname, ws_coil.getString(Coil_UserDefinedFields::AirConnection1OutletNodeName, false).get());
+
+  // check plant connections
+  ASSERT_TRUE(ws_coil.getString(Coil_UserDefinedFields::PlantConnectionInletNodeName, false));
+  EXPECT_EQ(plant_inname, ws_coil.getString(Coil_UserDefinedFields::PlantConnectionInletNodeName, false).get());
+  ASSERT_TRUE(ws_coil.getString(Coil_UserDefinedFields::PlantConnectionOutletNodeName, false));
+  EXPECT_EQ(plant_outname, ws_coil.getString(Coil_UserDefinedFields::PlantConnectionOutletNodeName, false).get());
+
   std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
   model.save(toPath(file_path), true);
   file_path = "c:\\Temp\\CoilUserDefined_constructor.idf";

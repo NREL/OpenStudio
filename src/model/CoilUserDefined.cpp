@@ -350,12 +350,13 @@ namespace detail {
       OS_ASSERT(result);
   }
 
+  //This really shouldnt be avail to the user since its done in the FT -BLB
   bool CoilUserDefined_Impl::setPlantConnectionisUsed(bool plantConnectionisUsed) {
     bool result = false;
     if (plantConnectionisUsed) {
-        result = setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "True");
+        result = setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "Yes");
     } else {
-        result = setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "False");
+        result = setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "No");
     }
     OS_ASSERT(result);
     return result;
@@ -419,7 +420,7 @@ CoilUserDefined::CoilUserDefined(const Model& model)
   OS_ASSERT(getImpl<detail::CoilUserDefined_Impl>());
 
   bool ok = true;
-  //setup required Actuators for Plant Connection 1
+  // setup required Actuators for Plant Connection 1
   EnergyManagementSystemActuator aota(this->cast<ModelObject>(), "Air Connection", "Air Outlet Temperature");
   aota.setName("airOutletTemperature");
   ok = setAirOutletTemperatureActuator(aota);
@@ -453,7 +454,7 @@ CoilUserDefined::CoilUserDefined(const Model& model)
   ok = setPlantOutletTemperatureActuator(pmmfra);
   OS_ASSERT(ok);
 
-  //setup Overall Simulation Program and Manager
+  // setup Overall Simulation Program and Manager
   EnergyManagementSystemProgram mainProgram(model);
   mainProgram.setName("overallSimulationProgram");
 
@@ -462,13 +463,13 @@ CoilUserDefined::CoilUserDefined(const Model& model)
   mainProgramCallingManager.setCallingPoint("UserDefinedComponentModel");
   mainProgramCallingManager.addProgram(mainProgram);
 
-  //add as children so they delete if object gets removed
+  // add as children so they delete if object gets removed
   ok = setOverallModelSimulationProgramCallingManager(mainProgramCallingManager);
   OS_ASSERT(ok);
   ok = setOverallSimulationProgram(mainProgram);
   OS_ASSERT(ok);
 
-  //setup Overall Simulation Program and Manager
+  // setup Overall Simulation Program and Manager
   EnergyManagementSystemProgram initProgram(model);
   initProgram.setName("initializationSimulationProgram");
 
@@ -477,11 +478,14 @@ CoilUserDefined::CoilUserDefined(const Model& model)
   modelSetupandSizingPCM.setCallingPoint("UserDefinedComponentModel");
   modelSetupandSizingPCM.addProgram(initProgram);
 
-  //add as children so they delete if object gets removed
+  // add as children so they delete if object gets removed
   ok = setModelSetupandSizingProgramCallingManager(modelSetupandSizingPCM);
   OS_ASSERT(ok);
   ok = setInitializationSimulationProgram(initProgram);
   OS_ASSERT(ok);
+
+  // set NumberofAirConnections to 1
+  OS_ASSERT(setString(OS_Coil_UserDefinedFields::NumberofAirConnections, "1"));
 }
 
 IddObjectType CoilUserDefined::iddObjectType() {
