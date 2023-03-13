@@ -526,7 +526,7 @@ XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, in
   schemaName = fmt::format("{}_v{}.xsd", schemaName, schemaVersion);
 
   const bool quiet = true;
-  ::openstudio::embedded_files::extractFile(fmt::format(":/xml/resources/{}.xsd", schemaName), openstudio::toString(tmpDir), quiet);
+  ::openstudio::embedded_files::extractFile(fmt::format(":/xml/resources/bcl/{}", schemaName), openstudio::toString(tmpDir), quiet);
   return XMLValidator(tmpDir / schemaName);
 }
 
