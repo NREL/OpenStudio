@@ -85,7 +85,6 @@ namespace cli {
     if (!openstudio::filesystem::is_regular_file(rubyScriptPath)) {
       throw std::runtime_error(fmt::format("Unable to find the file '{}' on the filesystem", rubyScriptPath.string()));
     }
-    rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
 
     std::string cmd = "ARGV.clear\n";
     for (const auto& arg : arguments) {
