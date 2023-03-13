@@ -80,7 +80,7 @@ namespace measure {
     //@}
     //
    protected:
-    ModelMeasure() = default;
+    ModelMeasure();
 
    private:
     REGISTER_LOGGER("openstudio.measure.ModelMeasure");

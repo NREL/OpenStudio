@@ -32,6 +32,12 @@
 namespace openstudio {
 namespace measure {
 
+  OSMeasure::OSMeasure(MeasureType measureType) : m_measureType(measureType) {}
+
+  MeasureType OSMeasure::measureType() const {
+    return m_measureType;
+  }
+
   std::string OSMeasure::name() const {
     return "";
   }

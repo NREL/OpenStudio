@@ -34,6 +34,7 @@
 
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Deprecated.hpp"
+#include "../utilities/bcl/BCLEnums.hpp"
 
 namespace openstudio {
 namespace measure {
@@ -68,6 +69,8 @@ namespace measure {
     /// user facing technical description of this measure, defaults to empty
     virtual std::string modeler_description() const;
 
+    MeasureType measureType() const;
+
     //@}
     /** @name Actions */
     //@{
@@ -81,7 +84,8 @@ namespace measure {
     OS_DEPRECATED virtual bool registerWithApplication() const;
 
    protected:
-    OSMeasure() = default;
+    OSMeasure(MeasureType measureType);
+    MeasureType m_measureType;
 
     //@}
    private:
