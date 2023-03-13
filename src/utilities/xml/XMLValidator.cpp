@@ -505,7 +505,7 @@ XMLValidator XMLValidator::gbxmlValidator() {
   return XMLValidator(tmpDir / "GreenBuildingXML_Ver6.01.xsd");
 }
 
-XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMlType, int schemaVersion) {
+XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, int schemaVersion) {
   const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
   if (tmpDir.empty()) {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
@@ -516,12 +516,12 @@ XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMlType, in
   }
 
   std::string schemaName;
-  if (bclXMlType == BCLXMLType::ComponentXML) {
+  if (bclXMLType == BCLXMLType::ComponentXML) {
     schemaName = "component";
-  } else if (bclXMlType == BCLXMLType::ComponentXML) {
+  } else if (bclXMLType == BCLXMLType::MeasureXML) {
     schemaName = "measure";
   } else {
-    LOG_AND_THROW("Unknown BCLXMLType " << bclXMlType.valueName());
+    LOG_AND_THROW("Unknown BCLXMLType " << bclXMLType.valueName());
   }
   schemaName = fmt::format("{}_v{}.xsd", schemaName, schemaVersion);
 
