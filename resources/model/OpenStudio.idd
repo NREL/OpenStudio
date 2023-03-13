@@ -38572,9 +38572,9 @@ OS:Coil:UserDefined,
        \required-field
   A7, \field Plant Connection is Used
        \type choice
-       \default True
-       \key True
-       \key False
+       \default No
+       \key Yes
+       \key No
   A8, \field Plant Connection Inlet Node Name
         \type object-list
         \object-list ConnectionNames

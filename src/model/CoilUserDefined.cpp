@@ -287,10 +287,15 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::PlantOutletTemperatureActuator);
     }
 
-    bool CoilUserDefined_Impl::plantConnectionisUsed() const {
-      boost::optional<std::string> value = getString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "True");
+    bool CoilUserDefined_Impl::plantConnectionisUsed() {
+      //check if waterInletModelObject() is set, if so then set IDD field to Yes and return true
+      //PlantConnectionisUsed is not used in OSM, it is re-calculated in the FT
+      bool result = false;
+      if (this->waterInletModelObject()) {
+        setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "Yes");
+        result = true;
+      }
+      return result;
     }
 
     boost::optional<ThermalZone> CoilUserDefined_Impl::ambientZone() const {
@@ -471,6 +476,9 @@ namespace model {
 
     // set NumberofAirConnections to 1
     OS_ASSERT(setString(OS_Coil_UserDefinedFields::NumberofAirConnections, "1"));
+
+    // set plantConnectionisUsed to No
+    OS_ASSERT(setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "No"));
   }
 
   IddObjectType CoilUserDefined::iddObjectType() {
@@ -525,7 +533,7 @@ namespace model {
     return getImpl<detail::CoilUserDefined_Impl>()->plantOutletTemperatureActuator();
   }
 
-  bool CoilUserDefined::plantConnectionisUsed() const {
+  bool CoilUserDefined::plantConnectionisUsed() {
     return getImpl<detail::CoilUserDefined_Impl>()->plantConnectionisUsed();
   }
 

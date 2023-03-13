@@ -198,3 +198,33 @@ TEST_F(ModelFixture, CoilUserDefined_remove4) {
   ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
   ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
 }
+
+TEST_F(ModelFixture, CoilUserDefined_otherAPIs) {
+    Model m;
+    CoilUserDefined coil(m);
+
+    AirLoopHVAC airLoop(m);
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+
+    coil.addToNode(supplyOutletNode);
+    ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
+
+    EXPECT_FALSE(coil.plantConnectionisUsed());
+    PlantLoop plant(m);
+    plant.addDemandBranchForComponent(coil);
+
+    EXPECT_TRUE(coil.plantConnectionisUsed());
+    std::string file_path = "c:\\Temp\\CoilUserDefined.osm";
+    //m.save(toPath("./CoilUserDefined_constructor.osm"), true);
+    m.save(toPath(file_path), true);
+
+    ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
+    ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
+
+    EXPECT_FALSE(coil.ambientZone());
+    ThermalZone tz(m);
+    coil.setAmbientZone(tz);
+    EXPECT_EQ(tz.handle(), coil.ambientZone()->handle());
+    coil.resetAmbientZone();
+    EXPECT_FALSE(coil.ambientZone());
+}

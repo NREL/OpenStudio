@@ -92,7 +92,7 @@ namespace model {
 
     boost::optional<EnergyManagementSystemActuator> plantOutletTemperatureActuator() const;
 
-    bool plantConnectionisUsed() const;
+    bool plantConnectionisUsed();
 
     // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> ambientZone() const;
@@ -117,6 +117,7 @@ namespace model {
 
     void resetInitializationSimulationProgram();
 
+    //TODO: this should prob be private
     bool setPlantConnectionisUsed(bool plantConnectionisUsed);
 
     // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
