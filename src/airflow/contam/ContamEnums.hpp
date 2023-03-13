@@ -180,21 +180,6 @@ using OptionalControlNodeType = boost::optional<ControlNodeType>;
 /** \relates ControlNodeType */
 using ControlNodeTypeVector = std::vector<ControlNodeType>;
 
-/** \class TranslationType
- *  \brief Enumeration is used to define what type of ForwardTranslation to use
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
- *  \code
-OPENSTUDIO_ENUM(TranslationType,
-  ((SurfacesOnly))
-  ((SubSurfacesOnly))
-  ((AllSurfaces))
-);  \endcode */
-OPENSTUDIO_ENUM(TranslationType,
-  ((SurfacesOnly))
-  ((SubSurfacesOnly))
-  ((AllSurfaces))
-);
-
   // clang-format on
 
 }  // namespace contam
