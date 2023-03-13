@@ -31,6 +31,7 @@
 #include "BCLFixture.hpp"
 
 #include "../BCLXML.hpp"
+#include "../../xml/XMLValidator.hpp"
 
 using namespace openstudio;
 
@@ -113,14 +114,25 @@ TEST_F(BCLFixture, BCLXML_New) {
   EXPECT_EQ(versionId, bclXML.versionId());
 
   versionId = bclXML.versionId();
-  openstudio::path path = toPath("./measure.xml");
-  EXPECT_TRUE(bclXML.saveAs(path));
+  openstudio::path xmlPath = toPath("./measure.xml");
+  EXPECT_TRUE(bclXML.saveAs(xmlPath));
   EXPECT_NE(versionId, bclXML.versionId());
 
   versionId = bclXML.versionId();
   EXPECT_TRUE(bclXML.save());
   EXPECT_EQ(versionId, bclXML.versionId());
 
-  boost::optional<BCLXML> copy = BCLXML::load(path);
+  boost::optional<BCLXML> copy = BCLXML::load(xmlPath);
   ASSERT_TRUE(copy);
+
+  auto bclXMLValidator = XMLValidator::bclXMLValidator(BCLXMLType::MeasureXML, 3);
+  EXPECT_TRUE(bclXMLValidator.validate(xmlPath));
+  EXPECT_EQ(0, bclXMLValidator.errors().size()) << [&bclXMLValidator]() {
+    std::string s;
+    for (auto& logMessage : bclXMLValidator.errors()) {
+      s += logMessage.logMessage() + "\n";
+    }
+    return s;
+  }();
+  EXPECT_EQ(0, bclXMLValidator.warnings().size());
 }
