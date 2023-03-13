@@ -145,11 +145,6 @@
 									<xs:documentation>maximum value</xs:documentation>
 								</xs:annotation>
 							</xs:element>
-							<xs:element name="model_dependent" type="xs:boolean" default="false">
-								<xs:annotation>
-									<xs:documentation>true if any of this argument's properties depend on the specific model used.  default_value, choice_values, min_value, and max_value will not be populated for dynamic arguments</xs:documentation>
-								</xs:annotation>
-							</xs:element>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -444,11 +439,11 @@
 				<xs:element ref="description"/>
 				<xs:element ref="modeler_description"/>
 				<xs:element ref="arguments"/>
+				<xs:element ref="outputs"/>
 				<xs:element ref="provenances"/>
 				<xs:element ref="tags"/>
 				<xs:element ref="attributes"/>
 				<xs:element ref="files"/>
-				<xs:element ref="outputs"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
