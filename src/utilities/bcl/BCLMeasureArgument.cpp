@@ -36,17 +36,22 @@
 namespace openstudio {
 
 BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node& element) {
+
   // TODO: escape name
   // cppcheck-suppress useInitializationList
   m_name = element.child("name").text().as_string();
 
   m_displayName = element.child("display_name").text().as_string();
 
-  m_description = element.child("description").text().as_string();
+  if (auto subelement = element.child("description")) {
+    m_description = subelement.text().as_string();
+  }
 
   m_type = element.child("type").text().as_string();
 
-  m_units = element.child("units").text().as_string();
+  if (auto subelement = element.child("units")) {
+    m_units = subelement.text().as_string();
+  }
 
   m_required = false;
   std::string test = element.child("required").text().as_string();
@@ -60,12 +65,13 @@ BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node& element) {
     m_modelDependent = true;
   }
 
-  m_defaultValue = element.child("default_value").text().as_string();
+  if (auto subelement = element.child("default_value")) {
+    m_defaultValue = subelement.text().as_string();
+  }
 
-  auto subelement = element.child("choices");
-  if (subelement) {
+  if (auto subelement = element.child("choices")) {
     for (auto& choiceElement : subelement.children("choice")) {
-      std::string choiceValue = choiceElement.child("value").text().as_string();
+      const std::string choiceValue = choiceElement.child("value").text().as_string();
       if (!choiceValue.empty()) {  // Not exactly the same test as before, probably needs a better test and/or error reporting
         m_choiceValues.push_back(choiceValue);
         auto display_name = choiceElement.child("display_name");
@@ -79,9 +85,13 @@ BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node& element) {
     }
   }
 
-  m_minValue = element.child("min_value").text().as_string();
+  if (auto subelement = element.child("min_value")) {
+    m_minValue = subelement.text().as_string();
+  }
 
-  m_maxValue = element.child("max_value").text().as_string();
+  if (auto subelement = element.child("max_value")) {
+    m_maxValue = subelement.text().as_string();
+  }
 }
 
 BCLMeasureArgument::BCLMeasureArgument(const std::string& name, const std::string& displayName, const boost::optional<std::string>& description,
@@ -168,7 +178,7 @@ void BCLMeasureArgument::writeValues(pugi::xml_node& element) const {
   if (m_description) {
     subElement = element.append_child("description");
     text = subElement.text();
-    text.set((*m_description).c_str());
+    text.set(m_description->c_str());
   }
 
   subElement = element.append_child("type");
@@ -178,7 +188,7 @@ void BCLMeasureArgument::writeValues(pugi::xml_node& element) const {
   if (m_units) {
     subElement = element.append_child("units");
     text = subElement.text();
-    text.set((*m_units).c_str());
+    text.set(m_units->c_str());
   }
 
   subElement = element.append_child("required");
@@ -192,10 +202,10 @@ void BCLMeasureArgument::writeValues(pugi::xml_node& element) const {
   if (m_defaultValue) {
     subElement = element.append_child("default_value");
     text = subElement.text();
-    text.set((*m_defaultValue).c_str());
+    text.set(m_defaultValue->c_str());
   }
 
-  unsigned n = m_choiceValues.size();
+  const unsigned n = m_choiceValues.size();
   OS_ASSERT(n == m_choiceDisplayNames.size());
   if (n > 0) {
     auto choicesElement = element.append_child("choices");
@@ -215,13 +225,13 @@ void BCLMeasureArgument::writeValues(pugi::xml_node& element) const {
   if (m_minValue) {
     subElement = element.append_child("min_value");
     text = subElement.text();
-    text.set((*m_minValue).c_str());
+    text.set(m_minValue->c_str());
   }
 
   if (m_maxValue) {
     subElement = element.append_child("max_value");
     text = subElement.text();
-    text.set((*m_maxValue).c_str());
+    text.set(m_maxValue->c_str());
   }
 }
 
