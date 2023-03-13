@@ -235,6 +235,8 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
   this->exec(importCmd);
   // measureScriptObject = pythonEngine->eval(fmt::format("module.{}()", className));
   ScriptObject measureScriptObject = this->eval("measure_typeinfo()");
+  Py_INCREF(std::any_cast<PythonObject>(measureScriptObject.object).obj_);
+
   auto* measurePtr = this->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
 
   ScriptObject measureClassNameObject = this->eval("measure_name");
