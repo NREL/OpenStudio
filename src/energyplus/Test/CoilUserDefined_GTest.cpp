@@ -183,41 +183,41 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_examplemodel) {
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_NoPlant) {
-    // Generate the example Model
-    Model model = openstudio::model::exampleModel();
-    // Get the single thermal Zone in the model
-    AirLoopHVAC airLoop = model.getConcreteModelObjects<AirLoopHVAC>()[0];
-    //OS:Coil:Cooling:DX:SingleSpeed
-    Node supplyOutletNode = airLoop.supplyOutletNode();
+  // Generate the example Model
+  Model model = openstudio::model::exampleModel();
+  // Get the single thermal Zone in the model
+  AirLoopHVAC airLoop = model.getConcreteModelObjects<AirLoopHVAC>()[0];
+  //OS:Coil:Cooling:DX:SingleSpeed
+  Node supplyOutletNode = airLoop.supplyOutletNode();
 
-    // Get the single thermal Zone in the model
-    ThermalZone z = model.getConcreteModelObjects<ThermalZone>()[0];
-    std::string tz_name = z.nameString();
-    CoilUserDefined coil(model);
-    coil.setAmbientZone(z);
-    coil.addToNode(supplyOutletNode);
+  // Get the single thermal Zone in the model
+  ThermalZone z = model.getConcreteModelObjects<ThermalZone>()[0];
+  std::string tz_name = z.nameString();
+  CoilUserDefined coil(model);
+  coil.setAmbientZone(z);
+  coil.addToNode(supplyOutletNode);
 
-    std::string air_inname = coil.airInletModelObject().get().nameString();
-    std::string air_outname = coil.airOutletModelObject().get().nameString();
+  std::string air_inname = coil.airInletModelObject().get().nameString();
+  std::string air_outname = coil.airOutletModelObject().get().nameString();
 
-    ForwardTranslator forwardTranslator;
-    Workspace workspace = forwardTranslator.translateModel(model);
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
 
-    EXPECT_EQ(0u, forwardTranslator.errors().size());
-    // check objects and children are translated
-    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_UserDefined).size());
-    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
-    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
-    EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
-    // check actuators are setup
-    WorkspaceObjectVector actuators = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
-    EXPECT_EQ(3u, actuators.size());
-    for (const auto& actuator : actuators) {
-       EXPECT_EQ("Coil User Defined 1", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
-       EXPECT_TRUE(actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get() == "Air Connection 1");
-    }
-    std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
-    model.save(toPath(file_path), true);
-    file_path = "c:\\Temp\\CoilUserDefined_constructor.idf";
-    workspace.save(toPath(file_path), true);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  // check objects and children are translated
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_UserDefined).size());
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
+  EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  // check actuators are setup
+  WorkspaceObjectVector actuators = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+  EXPECT_EQ(3u, actuators.size());
+  for (const auto& actuator : actuators) {
+    EXPECT_EQ("Coil User Defined 1", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    EXPECT_TRUE(actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get() == "Air Connection 1");
+  }
+  std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
+  model.save(toPath(file_path), true);
+  file_path = "c:\\Temp\\CoilUserDefined_constructor.idf";
+  workspace.save(toPath(file_path), true);
 }
