@@ -70,12 +70,13 @@ namespace energyplus {
     idfObject.setString(Coil_UserDefinedFields::PlantConnectionisUsed, "No");
 
     // PlantConnectionInletNodeName
-
+    bool plantUsed = false;
     if (boost::optional<ModelObject> mo = modelObject.waterInletModelObject()) {
       if (boost::optional<Node> node = mo->optionalCast<Node>()) {
         idfObject.setString(Coil_UserDefinedFields::PlantConnectionInletNodeName, node->name().get());
         //PlantConnectionisUsed to Yes since Node is connected
         idfObject.setString(Coil_UserDefinedFields::PlantConnectionisUsed, "Yes");
+        plantUsed = true;
       }
     }
 
@@ -86,7 +87,14 @@ namespace energyplus {
         idfObject.setString(Coil_UserDefinedFields::PlantConnectionOutletNodeName, node->name().get());
       }
     }
-
+    // remove plant actuators if no plant connections
+    if (!plantUsed) {
+      modelObject.plantMinimumMassFlowRateActuator().get().remove();
+      modelObject.plantMaximumMassFlowRateActuator().get().remove();
+      modelObject.plantDesignVolumeFlowRateActuator().get().remove();
+      modelObject.plantMassFlowRateActuator().get().remove();
+      modelObject.plantOutletTemperatureActuator().get().remove();
+    }
     // AirConnection1InletNodeName
 
     if (boost::optional<ModelObject> mo = modelObject.airInletModelObject()) {
