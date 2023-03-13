@@ -120,7 +120,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
   subelement = element.child("version_modified");
   if (subelement) {
     m_versionModified = subelement.text().as_string();
-    if (!DateTime::fromISO8601(m_versionModified)) {
+    if (!DateTime::fromXsdDateTime(m_versionModified)) {
       // not an allowable date time
       m_versionModified = "";
     }
@@ -345,7 +345,7 @@ std::string BCLXML::versionId() const {
 boost::optional<DateTime> BCLXML::versionModified() const {
   boost::optional<DateTime> result;
   if (!m_versionModified.empty()) {
-    result = DateTime::fromISO8601(m_versionModified);
+    result = DateTime::fromXsdDateTime(m_versionModified);
   }
   return result;
 }
