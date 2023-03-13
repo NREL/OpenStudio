@@ -5,6 +5,7 @@
 %import <utilities/core/CommonImport.i>
 
 %{
+  #include <utilities/bcl/BCLEnums.hpp>
   #include <utilities/bcl/BCL.hpp>
   #include <utilities/bcl/BCLComponent.hpp>
   #include <utilities/bcl/BCLFileReference.hpp>
@@ -88,6 +89,7 @@
 %template(OptionalMeasureType) boost::optional<openstudio::MeasureType>;
 %template(OptionalMeasureLanguage) boost::optional<openstudio::MeasureLanguage>;
 
+%include <utilities/bcl/BCLEnums.hpp>
 %include <utilities/bcl/BCLFileReference.hpp>
 %include <utilities/bcl/BCLComponent.hpp>
 %include <utilities/bcl/BCLMeasureArgument.hpp>
