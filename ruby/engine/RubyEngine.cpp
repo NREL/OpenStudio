@@ -113,6 +113,79 @@ void* RubyEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
   return return_value;
 }
 
+std::pair<std::string, measure::OSMeasure*> RubyEngine::loadMeasureInferClassName(const openstudio::path& measureScriptPath) {
+
+  auto importCmd = fmt::format(R"ruby(
+currentObjects = Hash.new
+ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) do |obj|
+  currentObjects[obj] = true
+end
+
+measurePath = "{}"
+ObjectSpace.garbage_collect
+# This line is REQUIRED or the ObjectSpace order will change when garbage collection runs automatically
+# If ~12 measures are added and garbage collection runs, the following loop to grab the first measure
+# will get the wrong one and return incorrect arguments
+ObjectSpace.garbage_collect
+load measurePath # need load in case have seen this script before
+
+# Make them global, so C++ can grab them
+$measure = nil
+$measure_type = String.new
+$measure_name = String.new
+ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) do |obj|
+  if not currentObjects[obj]
+    if obj.is_a? OpenStudio::Measure::ModelMeasure
+      $measure = obj
+      $measure_type = "ModelMeasure"
+    elsif obj.is_a? OpenStudio::Measure::EnergyPlusMeasure
+      $measure = obj
+      $measure_type = "EnergyPlusMeasure"
+    elsif obj.is_a? OpenStudio::Measure::ReportingMeasure
+      $measure = obj
+      $measure_type = "ReportingMeasure"
+    end
+  end
+end
+
+if not $measure
+  raise "Unable to extract OpenStudio::Measure::OSMeasure object from " +
+       measurePath + ". The script should contain a class that derives " +
+      "from OpenStudio::Measure::OSMeasure and should close with a line stating " +
+      "the class name followed by .new.registerWithApplication."
+end
+
+$measure_name = $measure.class.to_s
+puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
+)ruby",
+                               measureScriptPath.generic_string());
+  // fmt::print("Debug: importCmd=\n{}\n\n", importCmd);
+
+  this->exec(importCmd);
+
+  // fmt::print("Import done\n");
+  // this->exec("puts $measure_type");
+
+  ScriptObject measureScriptObject = this->eval("$measure");
+  auto* measurePtr = this->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
+
+  ScriptObject measureClassNameObject = this->eval("$measure_name");
+  std::string className = *(this->getAs<std::string*>(measureClassNameObject));
+  // fmt::print("className={}\n", className);
+
+  return {className, measurePtr};
+}
+
+measure::OSMeasure* RubyEngine::loadMeasureKnownClassName(const openstudio::path& measureScriptPath, std::string_view className) {
+  auto importCmd = fmt::format("require '{}'", measureScriptPath.generic_string());
+  this->exec(importCmd);
+  ScriptObject measureScriptObject = this->eval(fmt::format("{}.new()", className));
+
+  auto* measurePtr = this->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
+
+  return measurePtr;
+}
+
 }  // namespace openstudio
 
 extern "C"

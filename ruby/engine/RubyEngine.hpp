@@ -10,6 +10,10 @@
 
 namespace openstudio {
 
+namespace measure {
+class OSMeasure;
+}
+
 class RubyEngine final : public ScriptEngine
 {
  public:
@@ -23,6 +27,11 @@ class RubyEngine final : public ScriptEngine
 
   ScriptObject eval(std::string_view sv) override;
   void exec(std::string_view sv) override;
+
+  // Prefer this method, it is faster and less complex than the one where you infer the class name
+  virtual measure::OSMeasure* loadMeasureKnownClassName(const openstudio::path& measureScriptPath, std::string_view className) override;
+
+  virtual std::pair<std::string, measure::OSMeasure*> loadMeasureInferClassName(const openstudio::path& measureScriptPath) override;
 
   virtual void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,
                                  const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,

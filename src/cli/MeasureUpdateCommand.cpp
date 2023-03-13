@@ -147,209 +147,51 @@ namespace cli {
           fmt::format("Unable to locate primary Ruby script path for BCLMeasure '{}' located at '{}'", measure_->name(), directoryPathStr));
       }
 
-      // TODO: Here we need to do two things:
-      // * Find the class name by scanning the measure.rb/.py, then instantiate the measure
-      // * Do the same as in ApplyMeasure and compute the arguments with a dumb model/workspace, or the supplied one (for --compute_arguments)
       ScriptEngineInstance* thisEngine = nullptr;
-      ScriptObject measureScriptObject;
+      if (measure_->measureLanguage() == MeasureLanguage::Ruby) {
+        thisEngine = &rubyEngine;
+      } else if (measure_->measureLanguage() == MeasureLanguage::Python) {
+        thisEngine = &pythonEngine;
+      }
+
+      // std::string className;
       // openstudio::measure::OSMeasure* measurePtr = nullptr;
+      auto [className, osMeasurePtr] = (*thisEngine)->loadMeasureInferClassName(scriptPath_.get());
+      const MeasureType measureType = osMeasurePtr->measureType();
 
-      std::string className;
-      MeasureType measureType;
+      std::string name = osMeasurePtr->name();
+      if (name.empty()) {
+        name = className;
+      }
 
-      std::string name;
-      std::string description;
-      std::string taxonomy;
-      std::string modelerDescription;
-
+      const std::string description = osMeasurePtr->description();
+      const std::string taxonomy = osMeasurePtr->taxonomy();
+      const std::string modelerDescription = osMeasurePtr->modeler_description();
       std::vector<measure::OSArgument> arguments;
       std::vector<measure::OSOutput> outputs;
 
-      if (measure_->measureLanguage() == MeasureLanguage::Ruby) {
-        // same as the beginning of the OSMeasureInfoGetter::infoExtractorRubyFunction
-        auto importCmd = fmt::format(R"ruby(
-currentObjects = Hash.new
-ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) do |obj|
-  currentObjects[obj] = true
-end
+      if (measureType == MeasureType::ModelMeasure) {
+        auto* measurePtr = static_cast<openstudio::measure::ModelMeasure*>(osMeasurePtr);
 
-measurePath = "{}"
-ObjectSpace.garbage_collect
-# This line is REQUIRED or the ObjectSpace order will change when garbage collection runs automatically
-# If ~12 measures are added and garbage collection runs, the following loop to grab the first measure
-# will get the wrong one and return incorrect arguments
-ObjectSpace.garbage_collect
-load measurePath # need load in case have seen this script before
+        openstudio::model::Model model;
+        arguments = measurePtr->arguments(model);
+        outputs = measurePtr->outputs();
 
-# Make them global, so C++ can grab them
-$measure = nil
-$measure_type = String.new
-$measure_name = String.new
-ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) do |obj|
-  if not currentObjects[obj]
-    if obj.is_a? OpenStudio::Measure::ModelMeasure
-      $measure = obj
-      $measure_type = "ModelMeasure"
-    elsif obj.is_a? OpenStudio::Measure::EnergyPlusMeasure
-      $measure = obj
-      $measure_type = "EnergyPlusMeasure"
-    elsif obj.is_a? OpenStudio::Measure::ReportingMeasure
-      $measure = obj
-      $measure_type = "ReportingMeasure"
-    end
-  end
-end
+      } else if (measureType == MeasureType::EnergyPlusMeasure) {
+        auto* measurePtr = static_cast<openstudio::measure::EnergyPlusMeasure*>(osMeasurePtr);
 
-if not $measure
-  raise "Unable to extract OpenStudio::Measure::OSMeasure object from " +
-       measurePath + ". The script should contain a class that derives " +
-      "from OpenStudio::Measure::OSMeasure and should close with a line stating " +
-      "the class name followed by .new.registerWithApplication."
-end
+        openstudio::Workspace workspace(openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus);
+        arguments = measurePtr->arguments(workspace);
+        outputs = measurePtr->outputs();
+      } else if (measureType == MeasureType::ReportingMeasure) {
+        auto* measurePtr = static_cast<openstudio::measure::ReportingMeasure*>(osMeasurePtr);
 
-$measure_name = $measure.class.to_s
-puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
-)ruby",
-                                     scriptPath_->generic_string());
-        fmt::print("Debug: importCmd=\n{}\n\n", importCmd);
-        thisEngine = &rubyEngine;
+        openstudio::model::Model model;
+        arguments = measurePtr->arguments(model);
+        outputs = measurePtr->outputs();
 
-        rubyEngine->exec(importCmd);
-
-        fmt::print("Import done\n");
-        rubyEngine->exec("puts $measure_type");
-
-        // TODO: gotta figure out a way to retrieve a frigging string
-        // ScriptObject measureTypeObject = rubyEngine->eval("measure_type");
-        ScriptObject measureTypeObject = rubyEngine->eval("$measure_type");
-        std::string measureTypeStr = *(rubyEngine->getAs<std::string*>(measureTypeObject));
-        fmt::print("measureTypeStr={}\n", measureTypeStr);
-        measureType = MeasureType(measureTypeStr);
-
-        measureScriptObject = rubyEngine->eval("$measure");
-        ScriptObject measureClassNameObject = rubyEngine->eval("$measure_name");
-        className = *(*thisEngine)->getAs<std::string*>(measureClassNameObject);
-        fmt::print("className={}\n", className);
-
-        if (measureType == MeasureType::ModelMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
-
-          name = measurePtr->name();
-          description = measurePtr->description();
-          taxonomy = measurePtr->taxonomy();
-          modelerDescription = measurePtr->modeler_description();
-
-          openstudio::model::Model model;
-          arguments = measurePtr->arguments(model);
-          outputs = measurePtr->outputs();
-
-        } else if (measureType == MeasureType::EnergyPlusMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
-          name = measurePtr->name();
-          description = measurePtr->description();
-          taxonomy = measurePtr->taxonomy();
-          modelerDescription = measurePtr->modeler_description();
-
-          openstudio::Workspace workspace(openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus);
-          arguments = measurePtr->arguments(workspace);
-          outputs = measurePtr->outputs();
-        } else if (measureType == MeasureType::ReportingMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
-          name = measurePtr->name();
-          description = measurePtr->description();
-          taxonomy = measurePtr->taxonomy();
-          modelerDescription = measurePtr->modeler_description();
-
-          openstudio::model::Model model;
-          arguments = measurePtr->arguments(model);
-          outputs = measurePtr->outputs();
-
-        } else {
-          throw std::runtime_error("Unknown");
-        }
-
-        if (name.empty()) {
-          name = className;
-        }
-
-      } else if (measure_->measureLanguage() == MeasureLanguage::Python) {
-        // TODO: call initialization of the pythonEngine
-        auto importCmd = fmt::format(R"python(
-import importlib.util
-import inspect
-spec = importlib.util.spec_from_file_location(f"throwaway", "{}")
-
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
-class_members = inspect.getmembers(module, lambda x: inspect.isclass(x) and issubclass(x, openstudio.measure.OSMeasure))
-assert len(class_members) == 1
-measure_name, measure_typeinfo = class_members[0]
-print(f"{{measure_name}}, {{measure_typeinfo}}")
-measure_type = None
-if issubclass(measure_typeinfo, openstudio.measure.ModelMeasure):
-    measure_type = "ModelMeasure"
-elif issubclass(measure_typeinfo, openstudio.measure.EnergyPlusMeasure):
-    measure_type = "EnergyPlusMeasure"
-elif issubclass(measure_typeinfo, openstudio.measure.ReportingMeasure):
-    measure_type = "ReportingMeasure"
-print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
-)python",
-                                     scriptPath_->generic_string());
-        pythonEngine->exec(importCmd);
-        thisEngine = &pythonEngine;
-        // measureScriptObject = pythonEngine->eval(fmt::format("module.{}()", className));
-        measureScriptObject = pythonEngine->eval("measure_typeinfo()");
-
-        // TODO: gotta figure out a way to retrieve a frigging string
-        ScriptObject measureTypeObject = pythonEngine->eval("measure_type");
-        std::string measureTypeStr = *(*thisEngine)->getAs<std::string*>(measureTypeObject);
-        measureType = MeasureType(measureTypeStr);
-
-        ScriptObject measureClassNameObject = pythonEngine->eval("measure_name");
-        className = *(*thisEngine)->getAs<std::string*>(measureClassNameObject);
-
-        fmt::print("measureTypeStr={}\n", measureTypeStr);
-
-        if (measureType == MeasureType::ModelMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
-
-          name = measurePtr->name();
-          description = measurePtr->description();
-          taxonomy = measurePtr->taxonomy();
-          modelerDescription = measurePtr->modeler_description();
-
-          openstudio::model::Model model;
-          arguments = measurePtr->arguments(model);
-          outputs = measurePtr->outputs();
-
-        } else if (measureType == MeasureType::EnergyPlusMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
-          name = measurePtr->name();
-          description = measurePtr->description();
-          taxonomy = measurePtr->taxonomy();
-          modelerDescription = measurePtr->modeler_description();
-
-          openstudio::Workspace workspace(openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus);
-          arguments = measurePtr->arguments(workspace);
-          outputs = measurePtr->outputs();
-        } else if (measureType == MeasureType::ReportingMeasure) {
-          auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
-          name = measurePtr->name();
-          description = measurePtr->description();
-          taxonomy = measurePtr->taxonomy();
-          modelerDescription = measurePtr->modeler_description();
-
-          openstudio::model::Model model;
-          arguments = measurePtr->arguments(model);
-          outputs = measurePtr->outputs();
-
-        } else {
-          throw std::runtime_error("Unknown");
-        }
-
-        if (name.empty()) {
-          name = className;
-        }
+      } else {
+        throw std::runtime_error("Unknown");
       }
 
       openstudio::measure::OSMeasureInfo info(measureType, className, name, description, taxonomy, modelerDescription, arguments, outputs);

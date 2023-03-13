@@ -30,6 +30,10 @@ using ScriptEngineFactoryType = openstudio::ScriptEngine*(int, char**);
 
 namespace openstudio {
 
+namespace measure {
+  class OSMeasure;
+}
+
 class ScriptEngine
 {
  public:
@@ -50,6 +54,11 @@ class ScriptEngine
 
   // execute string without expecting a return value
   virtual void exec(std::string_view sv) = 0;
+
+  // Prefer this method, it is faster and less complex than the one where you infer the class name
+  virtual measure::OSMeasure* loadMeasureKnownClassName(const openstudio::path& measureScriptPath, std::string_view className) = 0;
+
+  virtual std::pair<std::string, measure::OSMeasure*> loadMeasureInferClassName(const openstudio::path& measureScriptPath) = 0;
 
   // TODO: this is totally the wrong place to put it, but I'm trying to see if it works
   virtual void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,

@@ -208,6 +208,75 @@ void* PythonEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
 
   return return_value;
 }
+
+std::pair<std::string, measure::OSMeasure*> PythonEngine::loadMeasureInferClassName(const openstudio::path& measureScriptPath) {
+
+  auto importCmd = fmt::format(R"python(
+import importlib.util
+import inspect
+spec = importlib.util.spec_from_file_location(f"throwaway", "{}")
+
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+class_members = inspect.getmembers(module, lambda x: inspect.isclass(x) and issubclass(x, openstudio.measure.OSMeasure))
+assert len(class_members) == 1
+measure_name, measure_typeinfo = class_members[0]
+print(f"{{measure_name}}, {{measure_typeinfo}}")
+measure_type = None
+if issubclass(measure_typeinfo, openstudio.measure.ModelMeasure):
+    measure_type = "ModelMeasure"
+elif issubclass(measure_typeinfo, openstudio.measure.EnergyPlusMeasure):
+    measure_type = "EnergyPlusMeasure"
+elif issubclass(measure_typeinfo, openstudio.measure.ReportingMeasure):
+    measure_type = "ReportingMeasure"
+print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
+)python",
+                               measureScriptPath.generic_string());
+  this->exec(importCmd);
+  // measureScriptObject = pythonEngine->eval(fmt::format("module.{}()", className));
+  ScriptObject measureScriptObject = this->eval("measure_typeinfo()");
+  auto* measurePtr = this->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
+
+  ScriptObject measureClassNameObject = this->eval("measure_name");
+  std::string className = *(this->getAs<std::string*>(measureClassNameObject));
+
+  return {className, measurePtr};
+}
+
+measure::OSMeasure* PythonEngine::loadMeasureKnownClassName(const openstudio::path& measureScriptPath, std::string_view className) {
+
+  // place measureDirPath in sys.path; do from measure import MeasureName
+  // I think this can't work without a "as xxx" otherwise we'll repeatedly try to import a module named 'measure'
+  // pythonEngine->pyimport("measure", openstudio::toString(measureDirPath.get()));
+  //         auto importCmd = fmt::format(R"python(
+  // import sys
+  // sys.path.insert(0, r'{}')
+  // force_reload = 'measure' in sys.modules
+  // import measure
+  // if force_reload:
+  //     # print("force reload measure")
+  //     import importlib
+  //     importlib.reload(measure)
+  // )python",
+  //                                      scriptPath_->parent_path().generic_string());
+  auto importCmd = fmt::format(R"python(
+import importlib.util
+spec = importlib.util.spec_from_file_location('{}', r'{}')
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+)python",
+                               className, measureScriptPath.generic_string());
+  // fmt::print("\nimportCmd:\n{}\n", importCmd);
+  this->exec(importCmd);
+
+  // measureScriptObject = pythonEngine->eval(fmt::format("measure.{}()", className));
+  ScriptObject measureScriptObject = this->eval(fmt::format("module.{}()", className));
+
+  openstudio::measure::OSMeasure* measurePtr = this->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
+
+  return measurePtr;
+}
+
 }  // namespace openstudio
 
 extern "C"
