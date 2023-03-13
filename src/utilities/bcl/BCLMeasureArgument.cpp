@@ -43,15 +43,21 @@ BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node& element) {
 
   m_displayName = element.child("display_name").text().as_string();
 
-  if (auto subelement = element.child("description")) {
-    m_description = subelement.text().as_string();
-  }
+  auto getOptionaString = [&element](const char* name) -> boost::optional<std::string> {
+    if (auto subelement = element.child(name)) {
+      const std::string text = subelement.text().as_string();
+      if (!text.empty()) {
+        return {text};
+      }
+    }
+    return boost::none;
+  };
+
+  m_description = getOptionaString("description");
 
   m_type = element.child("type").text().as_string();
 
-  if (auto subelement = element.child("units")) {
-    m_units = subelement.text().as_string();
-  }
+  m_units = getOptionaString("units");
 
   m_required = false;
   std::string test = element.child("required").text().as_string();
@@ -65,9 +71,7 @@ BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node& element) {
     m_modelDependent = true;
   }
 
-  if (auto subelement = element.child("default_value")) {
-    m_defaultValue = subelement.text().as_string();
-  }
+  m_defaultValue = getOptionaString("default_value");
 
   if (auto subelement = element.child("choices")) {
     for (auto& choiceElement : subelement.children("choice")) {
@@ -79,19 +83,14 @@ BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node& element) {
           // DLM: this is technically an invalid file, attempt to fix it here
           m_choiceDisplayNames.push_back(choiceValue);
         } else {
-          m_choiceDisplayNames.push_back(display_name.text().as_string());
+          m_choiceDisplayNames.emplace_back(display_name.text().as_string());
         }
       }
     }
   }
 
-  if (auto subelement = element.child("min_value")) {
-    m_minValue = subelement.text().as_string();
-  }
-
-  if (auto subelement = element.child("max_value")) {
-    m_maxValue = subelement.text().as_string();
-  }
+  m_minValue = getOptionaString("min_value");
+  m_maxValue = getOptionaString("max_value");
 }
 
 BCLMeasureArgument::BCLMeasureArgument(const std::string& name, const std::string& displayName, const boost::optional<std::string>& description,
