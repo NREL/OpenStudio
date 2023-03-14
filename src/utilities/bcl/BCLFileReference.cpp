@@ -193,6 +193,19 @@ bool BCLFileReference::checkForUpdate() {
   return false;
 }
 
+bool operator==(const BCLFileReference& lhs, const BCLFileReference& rhs) {
+  return lhs.m_path == rhs.m_path;
+}
+
+std::strong_ordering operator<=>(const BCLFileReference& lhs, const BCLFileReference& rhs) {
+  if (lhs.m_path < rhs.m_path) {
+    return std::strong_ordering::less;
+  } else if (lhs.m_path == rhs.m_path) {
+    return std::strong_ordering::equal;
+  }
+  return std::strong_ordering::greater;
+}
+
 std::ostream& operator<<(std::ostream& os, const BCLFileReference& file) {
   pugi::xml_document doc;
   auto element = doc.append_child("File");

@@ -35,8 +35,10 @@
 #include "../time/DateTime.hpp"
 #include "../xml/XMLValidator.hpp"
 
-#include <sstream>
 #include <pugixml.hpp>
+
+#include <algorithm>
+#include <sstream>
 
 namespace openstudio {
 
@@ -734,7 +736,11 @@ pugi::xml_document BCLXML::toXML() const {
 
   // write files
   element = docElement.append_child("files");
-  for (const BCLFileReference& file : m_files) {
+
+  // Fix for #4748 - sort files
+  auto sortedFiles = m_files;
+  std::sort(sortedFiles.begin(), sortedFiles.end());
+  for (const BCLFileReference& file : sortedFiles) {
     auto subelement = element.append_child("file");
     file.writeValues(subelement);
   }
