@@ -177,7 +177,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "cpprestsdk/2.10.18#df2f6ac88e47cadd9c9e8e0971e00d89"
     "websocketpp/0.8.2#3fd704c4c5388d9c08b11af86f79f616"
     "geographiclib/1.52#76536a9315a003ef3511919310b2fe37"
-    "swig/4.0.2#9fcccb1e39eed9acd53a4363d8129be5"
+    "swig/4.1.0#f4419c5ab88f877272cbaa36dd0237ff"
     "tinygltf/2.5.0#c8b2aca9505e86312bb42aa0e1c639ec"
     "cli11/2.3.2#8ccdf14fb1ad53532d498c16ae580b4b"
     ${CONAN_GTEST}
