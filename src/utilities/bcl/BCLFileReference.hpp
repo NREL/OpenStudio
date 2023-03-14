@@ -124,6 +124,9 @@ class UTILITIES_API BCLFileReference
   //@}
 
  protected:
+  // Declaring the equality operator and the spaceship operator (three-way comparison operator) will end up defining all comparison operators
+  // We really need only the operator< for sorting a STL container of BCLFileReference, but might as well be consistent
+  // Comparison is done on m_path. Sorting is useful for BCLXML to avoid reordering of files (see #4748)
   friend bool operator==(const BCLFileReference& lhs, const BCLFileReference& rhs);
   friend std::strong_ordering operator<=>(const BCLFileReference& lhs, const BCLFileReference& rhs);
 
