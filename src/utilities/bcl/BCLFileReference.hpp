@@ -35,6 +35,7 @@
 #include "../core/Compare.hpp"
 #include "../UtilitiesAPI.hpp"
 
+#include <compare>
 #include <vector>
 
 namespace pugi {
@@ -121,6 +122,10 @@ class UTILITIES_API BCLFileReference
   bool checkForUpdate();
 
   //@}
+
+ protected:
+  friend bool operator==(const BCLFileReference& lhs, const BCLFileReference& rhs);
+  friend std::strong_ordering operator<=>(const BCLFileReference& lhs, const BCLFileReference& rhs);
 
  private:
   // configure logging
