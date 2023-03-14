@@ -136,9 +136,6 @@ namespace energyplus {
     return boost::optional<IdfObject>(idfObject);
   }
 
-  //((Name)(Name))
-  //((AvailabilityScheduleName)(Availability Schedule Name))
-
 }  // namespace energyplus
 
 }  // namespace openstudio

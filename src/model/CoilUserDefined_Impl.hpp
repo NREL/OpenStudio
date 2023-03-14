@@ -85,8 +85,6 @@ namespace model {
 
       virtual unsigned waterOutletPort() const override;
 
-      //virtual bool addToNode(Node& node) override;
-
       //@}
       /** @name Getters */
       //@{
@@ -115,21 +113,16 @@ namespace model {
 
       boost::optional<EnergyManagementSystemActuator> plantOutletTemperatureActuator() const;
 
-      bool plantConnectionisUsed();
-
-      // TODO: Check return type. From object lists, some candidates are: ThermalZone.
       boost::optional<ThermalZone> ambientZone() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      // TODO: Check argument type. From object lists, some candidates are: ErlProgram.
       bool setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
 
       void resetOverallModelSimulationProgramCallingManager();
 
-      // TODO: Check argument type. From object lists, some candidates are: ErlProgram.
       bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
 
       void resetModelSetupandSizingProgramCallingManager();
@@ -142,9 +135,6 @@ namespace model {
 
       void resetInitializationSimulationProgram();
 
-      bool setPlantConnectionisUsed(bool plantConnectionisUsed);
-
-      // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
       bool setAmbientZone(const ThermalZone& thermalZone);
 
       void resetAmbientZone();

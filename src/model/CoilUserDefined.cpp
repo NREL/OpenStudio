@@ -85,7 +85,6 @@ namespace model {
       //airOutletTemperatureActuator
       if (boost::optional<EnergyManagementSystemActuator> object = airOutletTemperatureActuator()) {
         auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
-        //DO THIS HERE OR IN THE CoilUserDefined_Impl::airOutletTemperatureActuator() method??
         objectClone.setActuatedComponent(newCoilUserDefined);
         newCoilUserDefined.setAirOutletTemperatureActuator(objectClone);
       }
@@ -161,7 +160,6 @@ namespace model {
       }
       //ambientZone
       if (boost::optional<ThermalZone> object = ambientZone()) {
-        //ThermalZone objectClone = object.get().clone(model).cast<ThermalZone>();
         newCoilUserDefined.setAmbientZone(object.get());
       }
       return std::move(newCoilUserDefined);
@@ -287,17 +285,6 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::PlantOutletTemperatureActuator);
     }
 
-    bool CoilUserDefined_Impl::plantConnectionisUsed() {
-      //check if waterInletModelObject() is set, if so then set IDD field to Yes and return true
-      //PlantConnectionisUsed is not used in OSM, it is re-calculated in the FT
-      bool result = false;
-      if (this->waterInletModelObject()) {
-        setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "Yes");
-        result = true;
-      }
-      return result;
-    }
-
     boost::optional<ThermalZone> CoilUserDefined_Impl::ambientZone() const {
       return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Coil_UserDefinedFields::AmbientZoneName);
     }
@@ -342,18 +329,6 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    //This really shouldnt be avail to the user since its done in the FT -BLB
-    bool CoilUserDefined_Impl::setPlantConnectionisUsed(bool plantConnectionisUsed) {
-      bool result = false;
-      if (plantConnectionisUsed) {
-        result = setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "Yes");
-      } else {
-        result = setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "No");
-      }
-      OS_ASSERT(result);
-      return result;
-    }
-
     bool CoilUserDefined_Impl::setAmbientZone(const ThermalZone& thermalZone) {
       bool result = setPointer(OS_Coil_UserDefinedFields::AmbientZoneName, thermalZone.handle());
       return result;
@@ -395,12 +370,12 @@ namespace model {
     }
 
     bool CoilUserDefined_Impl::setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::PlantOutletTemperatureActuator, energyManagementSystemActuator.handle());
+      bool result = setPointer(OS_Coil_UserDefinedFields::PlantMassFlowRateActuator, energyManagementSystemActuator.handle());
       return result;
     }
 
     bool CoilUserDefined_Impl::setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::PlantMassFlowRateActuator, energyManagementSystemActuator.handle());
+      bool result = setPointer(OS_Coil_UserDefinedFields::PlantOutletTemperatureActuator, energyManagementSystemActuator.handle());
       return result;
     }
 
@@ -410,7 +385,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::CoilUserDefined_Impl>());
 
     bool ok = true;
-    // setup required Actuators for Plant Connection 1
+    // setup required Actuators
     EnergyManagementSystemActuator aota(this->cast<ModelObject>(), "Air Connection 1", "Outlet Temperature");
     aota.setName("airOutletTemperature");
     ok = setAirOutletTemperatureActuator(aota);
@@ -435,11 +410,11 @@ namespace model {
     pdvfra.setName("plantDesignVolumeFlowRate");
     ok = setPlantDesignVolumeFlowRateActuator(pdvfra);
     OS_ASSERT(ok);
-    EnergyManagementSystemActuator pota(this->cast<ModelObject>(), "Plant Connection", "Outlet Temperature");
+    EnergyManagementSystemActuator pota(this->cast<ModelObject>(), "Plant Connection", "Mass Flow Rate");
     pota.setName("plantMassFlowRate");
     ok = setPlantMassFlowRateActuator(pota);
     OS_ASSERT(ok);
-    EnergyManagementSystemActuator pmmfra(this->cast<ModelObject>(), "Plant Connection", "Mass Flow Rate");
+    EnergyManagementSystemActuator pmmfra(this->cast<ModelObject>(), "Plant Connection", "Outlet Temperature");
     pmmfra.setName("plantOutletTemperature");
     ok = setPlantOutletTemperatureActuator(pmmfra);
     OS_ASSERT(ok);
@@ -476,9 +451,6 @@ namespace model {
 
     // set NumberofAirConnections to 1
     OS_ASSERT(setString(OS_Coil_UserDefinedFields::NumberofAirConnections, "1"));
-
-    // set plantConnectionisUsed to No
-    OS_ASSERT(setString(OS_Coil_UserDefinedFields::PlantConnectionisUsed, "No"));
   }
 
   IddObjectType CoilUserDefined::iddObjectType() {
@@ -533,10 +505,6 @@ namespace model {
     return getImpl<detail::CoilUserDefined_Impl>()->plantOutletTemperatureActuator();
   }
 
-  bool CoilUserDefined::plantConnectionisUsed() {
-    return getImpl<detail::CoilUserDefined_Impl>()->plantConnectionisUsed();
-  }
-
   boost::optional<ThermalZone> CoilUserDefined::ambientZone() const {
     return getImpl<detail::CoilUserDefined_Impl>()->ambientZone();
   }
@@ -571,10 +539,6 @@ namespace model {
 
   void CoilUserDefined::resetInitializationSimulationProgram() {
     getImpl<detail::CoilUserDefined_Impl>()->resetInitializationSimulationProgram();
-  }
-
-  bool CoilUserDefined::setPlantConnectionisUsed(bool plantConnectionisUsed) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setPlantConnectionisUsed(plantConnectionisUsed);
   }
 
   bool CoilUserDefined::setAmbientZone(const ThermalZone& thermalZone) {

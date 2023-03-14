@@ -39,6 +39,7 @@
 #include "../../model/CoilUserDefined_Impl.hpp"
 #include "../../model/EnergyManagementSystemProgramCallingManager.hpp"
 #include "../../model/EnergyManagementSystemProgram.hpp"
+#include "../../model/EnergyManagementSystemActuator.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/ThermalZone.hpp"
 
@@ -106,11 +107,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_model) {
   EXPECT_EQ(plant_inname, ws_coil.getString(Coil_UserDefinedFields::PlantConnectionInletNodeName, false).get());
   ASSERT_TRUE(ws_coil.getString(Coil_UserDefinedFields::PlantConnectionOutletNodeName, false));
   EXPECT_EQ(plant_outname, ws_coil.getString(Coil_UserDefinedFields::PlantConnectionOutletNodeName, false).get());
-
-  // std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
-  // model.save(toPath(file_path), true);
-  // file_path = "c:\\Temp\\CoilUserDefined_constructor.idf";
-  // workspace.save(toPath(file_path), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_examplemodel) {
@@ -175,11 +171,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_examplemodel) {
   // check ambient zone
   ASSERT_TRUE(ws_coil.getString(Coil_UserDefinedFields::AmbientZoneName, false));
   EXPECT_EQ(tz_name, ws_coil.getString(Coil_UserDefinedFields::AmbientZoneName, false).get());
-
-  //std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
-  //model.save(toPath(file_path), true);
-  //file_path = "c:\\Temp\\CoilUserDefined_constructor.idf";
-  //workspace.save(toPath(file_path), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_NoPlant) {
@@ -220,4 +211,126 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_NoPlant) {
   model.save(toPath(file_path), true);
   file_path = "c:\\Temp\\CoilUserDefined_constructor.idf";
   workspace.save(toPath(file_path), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_setters) {
+    Model model;
+
+    CoilUserDefined coil(model);
+
+    AirLoopHVAC airLoop(model);
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+
+    coil.addToNode(supplyOutletNode);
+
+    PlantLoop plant(model);
+    plant.addDemandBranchForComponent(coil);
+
+    // make new actuators to test setters and remove the old ones
+    coil.airOutletTemperatureActuator().get().remove();
+    EnergyManagementSystemActuator aota(coil, "Air Connection 1", "Outlet Temperature");
+    aota.setName("airOutletTemperature new");
+    EXPECT_TRUE(coil.setAirOutletTemperatureActuator(aota));    
+
+    coil.airOutletHumidityRatioActuator().get().remove();
+    EnergyManagementSystemActuator aohra(coil, "Air Connection 1", "Outlet Humidity Ratio");
+    aohra.setName("airOutletHumidityRatio new");
+    EXPECT_TRUE(coil.setAirOutletHumidityRatioActuator(aohra));
+
+    coil.airMassFlowRateActuator().get().remove();
+    EnergyManagementSystemActuator amfra(coil, "Air Connection 1", "Mass Flow Rate");
+    amfra.setName("airMassFlowRate new");
+    EXPECT_TRUE(coil.setAirMassFlowRateActuator(amfra));
+
+    coil.plantMinimumMassFlowRateActuator().get().remove();
+    EnergyManagementSystemActuator pminmfra(coil, "Plant Connection", "Minimum Mass Flow Rate");
+    pminmfra.setName("plantMinimumMassFlowRate new");
+    EXPECT_TRUE(coil.setPlantMinimumMassFlowRateActuator(pminmfra));
+
+    coil.plantMaximumMassFlowRateActuator().get().remove();
+    EnergyManagementSystemActuator pmaxmfra(coil, "Plant Connection", "Maximum Mass Flow Rate");
+    pmaxmfra.setName("plantMaximumMassFlowRate new");
+    EXPECT_TRUE(coil.setPlantMaximumMassFlowRateActuator(pmaxmfra));
+
+    coil.plantDesignVolumeFlowRateActuator().get().remove();
+    EnergyManagementSystemActuator pdvfra(coil, "Plant Connection", "Design Volume Flow Rate");
+    pdvfra.setName("plantDesignVolumeFlowRate new");
+    EXPECT_TRUE(coil.setPlantDesignVolumeFlowRateActuator(pdvfra));
+
+    coil.plantMassFlowRateActuator().get().remove();
+    EnergyManagementSystemActuator pota(coil, "Plant Connection", "Mass Flow Rate");
+    pota.setName("plantMassFlowRate new");
+    EXPECT_TRUE(coil.setPlantMassFlowRateActuator(pota));
+
+    coil.plantOutletTemperatureActuator().get().remove();
+    EnergyManagementSystemActuator pmmfra(coil, "Plant Connection", "Outlet Temperature");
+    pmmfra.setName("plantOutletTemperature new");
+    EXPECT_TRUE(coil.setPlantOutletTemperatureActuator(pmmfra));
+
+
+    //use setters for program and programmanager
+    coil.overallModelSimulationProgramCallingManager().get().remove();
+    coil.overallSimulationProgram().get().remove();
+    EnergyManagementSystemProgram overAll(model);
+    overAll.setName("overAllNew");
+    EnergyManagementSystemProgramCallingManager overAllmgr(model);
+    overAllmgr.setName("overAllmgrNew");
+    overAllmgr.addProgram(overAll);
+    EXPECT_TRUE(coil.setOverallModelSimulationProgramCallingManager(overAllmgr));
+    EXPECT_TRUE(coil.setOverallSimulationProgram(overAll));
+
+    coil.modelSetupandSizingProgramCallingManager().get().remove();
+    coil.initializationSimulationProgram().get().remove();
+    EnergyManagementSystemProgram init(model);
+    init.setName("initNew");
+    EnergyManagementSystemProgramCallingManager initmgr(model);
+    initmgr.setName("initmgrNew");
+    initmgr.addProgram(init);
+    EXPECT_TRUE(coil.setModelSetupandSizingProgramCallingManager(initmgr));
+    EXPECT_TRUE(coil.setInitializationSimulationProgram(init));
+
+    ForwardTranslator forwardTranslator;
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(0u, forwardTranslator.errors().size());
+    // check objects and children are translated
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_UserDefined).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Program).size());
+    EXPECT_EQ(8u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+    // check actuators are setup
+    WorkspaceObjectVector actuators = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+    EXPECT_EQ(8u, actuators.size());
+
+    // loop thru the newly set actuators and expect names to be the new ones
+    std::string act_name = "";
+    std::string str1 = "airOutletTemperature_new";
+    std::string str2 = "airOutletHumidityRatio_new";
+    std::string str3 = "airMassFlowRate_new";
+    std::string str4 = "plantMinimumMassFlowRate_new";
+    std::string str5 = "plantMaximumMassFlowRate_new";
+    std::string str6 = "plantDesignVolumeFlowRate_new";
+    std::string str7 = "plantMassFlowRate_new";
+    std::string str8 = "plantOutletTemperature_new";
+
+    for (const auto& actuator : actuators) {
+        EXPECT_EQ("Coil User Defined 1", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+        EXPECT_TRUE(actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get() == "Air Connection 1"
+            || actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get() == "Plant Connection");
+        act_name = actuator.getString(EnergyManagementSystem_ActuatorFields::Name, false).get();
+        EXPECT_TRUE(act_name == str1 || act_name == str2 || act_name == str3 || act_name == str4 || act_name == str5 || act_name == str6 || act_name == str7 || act_name == str8);
+    }
+
+    WorkspaceObjectVector idf_coil(workspace.getObjectsByType(IddObjectType::Coil_UserDefined));
+    EXPECT_EQ(1u, idf_coil.size());
+    WorkspaceObject ws_coil(idf_coil[0]);
+    EXPECT_EQ("overAllmgrNew",
+        ws_coil.getString(Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, false).get());
+    EXPECT_EQ("initmgrNew",
+        ws_coil.getString(Coil_UserDefinedFields::ModelSetupandSizingProgramCallingManagerName, false).get());
+
+     std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
+     model.save(toPath(file_path), true);
+     file_path = "c:\\Temp\\CoilUserDefined_constructor.idf";
+     workspace.save(toPath(file_path), true);
 }
