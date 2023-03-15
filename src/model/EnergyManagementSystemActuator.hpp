@@ -59,20 +59,26 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
+    /** Constructor to use for any actuated component that is not a SpaceLoadInstance */
+    explicit EnergyManagementSystemActuator(const ModelObject& actuatedComponent, const std::string& actuatedComponentType,
                                             const std::string& actuatedComponentControlType);
     /**These constructors below are for SpaceloadInstances that are defined in SpaceTypes that are used in Spaces.
      * Upon translation, the SpaceLoadInstances use ZoneLists which are not avail in OS
      * The ZoneListName is the SpaceType name
      * The Zone's are the Space->ThermalZone names
      * So to attach to a future zone, use the TZ or the Space that the SpaceLoadInstance will operate on **/
-    // TODO: the first parameter should be a SpaceLoadInstance, not a ModelObject
-    explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
-                                            const std::string& actuatedComponentControlType, const ThermalZone& thermalZone);
 
     // TODO: the first parameter should be a SpaceLoadInstance, not a ModelObject
-    explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
+    /** Constructor that will only accept a SpaceLoadInstance as the actuated component. Use this version if do not plan on disabling the Space
+     * Translation in the Forward Translator */
+    explicit EnergyManagementSystemActuator(const ModelObject& actuatedComponent, const std::string& actuatedComponentType,
                                             const std::string& actuatedComponentControlType, const Space& space);
+
+    // TODO: the first parameter should be a SpaceLoadInstance, not a ModelObject
+    /** Constructor that will only accept a SpaceLoadInstance as the actuated component. Use this version if you plan on disabling the Space
+     * Translation in the Forward Translator */
+    explicit EnergyManagementSystemActuator(const ModelObject& actuatedComponent, const std::string& actuatedComponentType,
+                                            const std::string& actuatedComponentControlType, const ThermalZone& thermalZone);
 
     virtual ~EnergyManagementSystemActuator() = default;
     // Default the copy and move operators because the virtual dtor is explicit
@@ -134,7 +140,7 @@ namespace model {
     friend class openstudio::detail::IdfObject_Impl;
 
     // These are for the ReverseTranslator
-    explicit EnergyManagementSystemActuator(const ModelObject& modelObject);
+    explicit EnergyManagementSystemActuator(const ModelObject& actuatedComponent);
 
     explicit EnergyManagementSystemActuator(const Model& model);
 
