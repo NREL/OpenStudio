@@ -156,7 +156,7 @@ namespace model {
           objectClone.erasePrograms();
           objectClone.addProgram(cloneProgram);
         }
-        newCoilUserDefined.setOverallModelSimulationProgramCallingManager(objectClone);
+        newCoilUserDefined.setModelSetupandSizingProgramCallingManager(objectClone);
       }
       //ambientZone
       if (boost::optional<ThermalZone> object = ambientZone()) {

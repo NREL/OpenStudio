@@ -218,3 +218,28 @@ TEST_F(ModelFixture, CoilUserDefined_otherAPIs) {
   coil.resetAmbientZone();
   EXPECT_FALSE(coil.ambientZone());
 }
+
+TEST_F(ModelFixture, CoilUserDefined_clone) {
+    Model m;
+    Model m2;
+
+    CoilUserDefined coil(m);
+    EXPECT_EQ(13u, m.numObjects());
+    EXPECT_EQ(0u, m2.numObjects());
+    auto coil2 = coil.clone(m2).cast<CoilUserDefined>();
+    EXPECT_EQ(13u, m2.numObjects());
+    coil.remove();
+    EXPECT_EQ(0u, m.numObjects());
+    EXPECT_EQ(13u, m2.numObjects());
+    auto cloneCoil = coil2.clone(m2).cast<CoilUserDefined>();
+    EXPECT_EQ(26u, m2.numObjects());
+    EXPECT_NE(coil2.handle(), cloneCoil.handle());
+    EXPECT_NE(coil2.overallModelSimulationProgramCallingManager().get().handle(), cloneCoil.overallModelSimulationProgramCallingManager().get().handle());
+    EXPECT_NE(coil2.modelSetupandSizingProgramCallingManager().get().handle(), cloneCoil.modelSetupandSizingProgramCallingManager().get().handle());
+    EXPECT_NE(coil2.overallSimulationProgram().get().handle(), cloneCoil.overallSimulationProgram().get().handle());
+    EXPECT_NE(coil2.initializationSimulationProgram().get().handle(), cloneCoil.initializationSimulationProgram().get().handle());
+    EXPECT_NE(coil2.airOutletTemperatureActuator().get().handle(), cloneCoil.airOutletTemperatureActuator().get().handle());
+
+    EXPECT_EQ(cloneCoil.handle(), cloneCoil.airOutletTemperatureActuator().get().actuatedComponent().get().handle());
+    EXPECT_EQ(coil2.handle(), coil2.airOutletTemperatureActuator().get().actuatedComponent().get().handle());
+}
