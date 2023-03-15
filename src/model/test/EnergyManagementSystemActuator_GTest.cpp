@@ -216,14 +216,16 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator2) {
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
   EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
   EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
-  EXPECT_EQ(zone2.handle(), lightsActuator2.zoneName().get().handle());
+  ASSERT_TRUE(lightsActuator2.zoneOrSpace());
+  EXPECT_EQ(zone2.handle(), lightsActuator2.zoneOrSpace()->handle());
 
   //create actuator zone3
   EnergyManagementSystemActuator lightsActuator3(lights, lightsComponentType, lightsControlType, zone2);
   EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
   EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
   EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
-  EXPECT_EQ(zone2.handle(), lightsActuator3.zoneName().get().handle());
+  ASSERT_TRUE(lightsActuator3.zoneOrSpace());
+  EXPECT_EQ(zone2.handle(), lightsActuator3.zoneOrSpace()->handle());
 }
 
 TEST_F(ModelFixture, EMSActuator_newEMSActuator3) {
@@ -259,12 +261,13 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator3) {
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
   EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
   EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
-  EXPECT_EQ(space2.thermalZone().get().handle(), lightsActuator2.zoneName().get().handle());
+  ASSERT_TRUE(lightsActuator2.zoneOrSpace());
+  EXPECT_EQ(space2.handle(), lightsActuator2.zoneOrSpace()->handle());
 
   //create actuator zone3
   EnergyManagementSystemActuator lightsActuator3(lights, lightsComponentType, lightsControlType, space3);
   EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
   EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
-  EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
-  EXPECT_EQ(space3.thermalZone().get().handle(), lightsActuator3.zoneName().get().handle());
+  ASSERT_TRUE(lightsActuator3.zoneOrSpace());
+  EXPECT_EQ(space3.handle(), lightsActuator3.zoneOrSpace()->handle());
 }
