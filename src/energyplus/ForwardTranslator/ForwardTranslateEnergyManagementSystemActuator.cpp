@@ -52,9 +52,13 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
 
+#include "../../utilities/core/Compare.hpp"
+
 #include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+
+#include <algorithm>
 
 using namespace openstudio::model;
 
@@ -163,14 +167,15 @@ namespace energyplus {
       std::string zoneOrSpaceName = specificZone_->nameString();
 
       if (!m_forwardTranslatorOptions.excludeSpaceTranslation()) {
-        // We **know** we have at least one
-        zoneOrSpaceName = spaces.front().nameString();
         if (spaces.size() == 1) {
+          zoneOrSpaceName = spaces.front().nameString();
           LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
                                  << "' and specified that it wanted to be attached to the Thermal Zone '" << specificZone_->nameString()
                                  << "' but you have turned on ForwardTranslation's Space Feature. Falling back to using the attached Space '"
                                  << zoneOrSpaceName << "' since there is only 1.");
         } else {  // if (spaces.size() > 1) {
+          std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+          zoneOrSpaceName = spaces.front().nameString();
           // TODO: do we grab the first space or just don't translate it?
           LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
                                   << "' and specified that it wanted to be attached to the Thermal Zone '" << specificZone_->nameString()
@@ -205,14 +210,16 @@ namespace energyplus {
       std::string zoneOrSpaceName;
 
       if (!m_forwardTranslatorOptions.excludeSpaceTranslation()) {
-        zoneOrSpaceName = spaces.front().nameString();
         if (spaces.size() == 1) {
+          zoneOrSpaceName = spaces.front().nameString();
           LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString() << "' attached to the SpaceType '"
                                  << spaceType_->nameString()
                                  << "' but you have turned on ForwardTranslation's Space Feature. Falling back to using the attached Space '"
                                  << zoneOrSpaceName << "' since there is only 1.");
         } else {  // if (spaces.size() > 1) {
           // TODO: do we grab the first space or just don't translate it?
+          std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+          zoneOrSpaceName = spaces.front().nameString();
           LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
                                   << "' attached to the SpaceType '" << spaceType_->nameString()
                                   << "' but you have turned on ForwardTranslation's Space Feature. The Space Type has multiple spaces "
