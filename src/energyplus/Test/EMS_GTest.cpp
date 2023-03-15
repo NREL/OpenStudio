@@ -2326,14 +2326,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
   //EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
   //EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
-  EXPECT_EQ(spaces[1].thermalZone().get().handle(), lightsActuator2.zoneName().get().handle());
+  EXPECT_EQ(spaces[1].thermalZone()->handle(), lightsActuator2.thermalZone()->handle());
 
   //create actuator zone3
   EnergyManagementSystemActuator lightsActuator3(lights[0], lightsComponentType, lightsControlType, thermalZone3);
   //EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
   //EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
   //EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
-  EXPECT_EQ(spaces[2].thermalZone().get().handle(), lightsActuator3.zoneName().get().handle());
+  EXPECT_EQ(spaces[2].thermalZone()->handle(), lightsActuator3.thermalZone()->handle());
 
   //this will create 4 zones in a zonelist
   spaces[0].setThermalZone(thermalZone[0]);
