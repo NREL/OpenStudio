@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace energyplus {
@@ -63,11 +65,12 @@ namespace model {
      * Upon translation, the SpaceLoadInstances use ZoneLists which are not avail in OS
      * The ZoneListName is the SpaceType name
      * The Zone's are the Space->ThermalZone names
-     * So to attach to a future zone, use the TZ or the Space that the SpaceLoadInstance will operate on
-  **/
+     * So to attach to a future zone, use the TZ or the Space that the SpaceLoadInstance will operate on **/
+    // TODO: the first parameter should be a SpaceLoadInstance, not a ModelObject
     explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
                                             const std::string& actuatedComponentControlType, const ThermalZone& thermalZone);
 
+    // TODO: the first parameter should be a SpaceLoadInstance, not a ModelObject
     explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
                                             const std::string& actuatedComponentControlType, const Space& space);
 
@@ -85,13 +88,17 @@ namespace model {
     /** @name Getters */
     //@{
 
-    boost::optional<ModelObject> actuatedComponent() const;
+    boost::optional<ModelObject> actuatedComponent() const;  // TODO: this should NOT be an optional
 
     std::string actuatedComponentControlType() const;
 
     std::string actuatedComponentType() const;
 
-    boost::optional<ModelObject> zoneName() const;
+    OS_DEPRECATED boost::optional<ModelObject> zoneName() const;
+
+    boost::optional<ModelObject> zoneOrSpace() const;
+    boost::optional<ThermalZone> thermalZone() const;
+    boost::optional<Space> space() const;
 
     //@}
     /** @name Setters */
@@ -107,7 +114,8 @@ namespace model {
     //set the ZoneName field to the Space's ThermalZone's name
     bool setSpace(const Space& space);
 
-    void resetZoneName();
+    OS_DEPRECATED void resetZoneName();
+    void resetZoneOrSpace();
 
     //@}
     /** @name Other */
@@ -124,14 +132,16 @@ namespace model {
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
+
+    // These are for the ReverseTranslator
+    explicit EnergyManagementSystemActuator(const ModelObject& modelObject);
+
+    explicit EnergyManagementSystemActuator(const Model& model);
+
     friend class energyplus::ReverseTranslator;
     /// @endcond
    private:
     REGISTER_LOGGER("openstudio.model.EnergyManagementSystemActuator");
-    //These are for the ReveseTranslator
-    explicit EnergyManagementSystemActuator(const ModelObject& modelObject);
-
-    explicit EnergyManagementSystemActuator(const Model& model);
   };
 
   /** \relates EnergyManagementSystemActuator*/
