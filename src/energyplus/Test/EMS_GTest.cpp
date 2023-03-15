@@ -2375,6 +2375,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
                    [](const auto& wo) { return wo.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName).get(); });
     std::sort(actuatedNames.begin(), actuatedNames.end());
 
+    // TODO: hum we end up with two actuators on the same zone, this is problematic... We did issue helpful warnings, and let E+ catch the issue.
+    // Can't always protect the user against themselves
     EXPECT_EQ("Thermal Zone 1 Lights 1", actuatedNames.at(0));
     EXPECT_EQ("Thermal Zone 1 Lights 1", actuatedNames.at(1));
 
@@ -2412,6 +2414,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
                    [](const auto& wo) { return wo.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName).get(); });
     std::sort(actuatedNames.begin(), actuatedNames.end());
 
+    // TODO: hum we end up with two actuators on the same zone, this is problematic... We did issue helpful warnings, and let E+ catch the issue.
+    // Can't always protect the user against themselves
     EXPECT_EQ("Space 1 Lights 1", actuatedNames.at(0));
     EXPECT_EQ("Space 1 Lights 1", actuatedNames.at(1));
   }
