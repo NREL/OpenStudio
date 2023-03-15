@@ -31,7 +31,10 @@
 #include "BCLFixture.hpp"
 
 #include "../BCLXML.hpp"
+#include "../BCLFileReference.hpp"
 #include "../../xml/XMLValidator.hpp"
+
+#include <pugixml.hpp>
 
 using namespace openstudio;
 
@@ -135,4 +138,44 @@ TEST_F(BCLFixture, BCLXML_New) {
     return s;
   }();
   EXPECT_EQ(0, bclXMLValidator.warnings().size());
+}
+
+TEST_F(BCLFixture, BCLXML_sorted_files) {
+
+  BCLXML bclXML(BCLXMLType::MeasureXML);
+
+  const openstudio::path testDir("my_measure");
+
+  const BCLFileReference ref1(testDir, "fileA", true);
+  const BCLFileReference ref2(testDir, "fileC", true);
+  const BCLFileReference ref3(testDir, "fileB", true);
+  const BCLFileReference ref4(testDir, "fileD", true);
+
+  bclXML.addFile(ref1);
+  bclXML.addFile(ref2);
+  bclXML.addFile(ref3);
+  bclXML.addFile(ref4);
+
+  const openstudio::path xmlPath = resourcesPath() / toPath("utilities/BCL/sorted.xml");
+  bclXML.saveAs(xmlPath);
+
+  pugi::xml_document xmlDoc;
+  openstudio::filesystem::ifstream file(xmlPath);
+  ASSERT_TRUE(file.is_open());
+  ASSERT_TRUE(xmlDoc.load(file));
+  auto measureElement = xmlDoc.child("measure");
+  auto xmlFilesElement = measureElement.child("files");
+  std::vector<std::string> savedFiles;
+  for (auto& fileElement : xmlFilesElement.children("file")) {
+    if (!fileElement.first_child().empty()) {
+      // Filename is a relative path, and if usageType is doc/resource/test it omits the subdirectory
+      savedFiles.emplace_back(fileElement.child("filename").text().as_string());
+    }
+  }
+
+  ASSERT_EQ(4, savedFiles.size());
+  EXPECT_EQ("fileA", savedFiles[0]);
+  EXPECT_EQ("fileB", savedFiles[1]);
+  EXPECT_EQ("fileC", savedFiles[2]);
+  EXPECT_EQ("fileD", savedFiles[3]);
 }
