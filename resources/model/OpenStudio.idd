@@ -11835,6 +11835,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \object-list HeatingCoilsElectricMultiStage
        \object-list HeatingCoilsGasMultiStage
        \object-list HeatingCoilsDesuperheater
+       \object-list UserDefinedCoil
        \note Enter the name of the heating coil if included in the unitary system.
   N1,  \field DX Heating Coil Sizing Ratio
        \type real
@@ -11851,6 +11852,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \object-list CoolingCoilsWaterToAirHP
        \object-list CoolingCoilsWaterToAirVSHP
        \object-list CoolingCoilsWater
+       \object-list UserDefinedCoil
        \note Enter the name of the cooling coil if included in the unitary system.
   A14, \field Use DOAS DX Cooling Coil
        \type choice
@@ -38538,6 +38540,85 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable,
        \note Used during the first call of EnergyPlus.
 
 \group User Defined HVAC and Plant Component Models
+
+OS:Coil:UserDefined,
+       \memo Defines a generic air system component for custom modeling
+       \memo using Energy Management System or External Interface
+       \min-fields 5
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference UserDefinedCoil
+       \reference ConnectionObject
+  A3,  \field Overall Model Simulation Program Calling Manager Name
+       \type object-list
+       \object-list ErlProgramCallingManagerNames
+       \required-field
+  A4,  \field Model Setup and Sizing Program Calling Manager Name
+       \type object-list
+       \object-list ErlProgramCallingManagerNames
+       \required-field
+  A5,  \field Air Connection 1 Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+  A6,  \field Air Connection 1 Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+  A8,  \field Plant Connection Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A9,  \field Plant Connection Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A10, \field Ambient Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+       \note Used for modeling device losses to surrounding zone
+  A11, \field Overall Simulation Program Name
+       \type object-list
+       \object-list ErlProgramNames
+       \required-field
+  A12, \field Initialization Simulation Program Name
+       \type object-list
+       \object-list ErlProgramNames
+       \required-field
+  A13, \field Air Outlet Temperature Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+       \required-field
+  A14, \field Air Outlet Humidity Ratio Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+       \required-field
+  A15, \field Air Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+       \required-field
+  A16, \field Plant Minimum Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+       \required-field
+  A17, \field Plant Maximum Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+       \required-field
+  A18, \field Plant Design Volume Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+       \required-field
+  A19, \field Plant Outlet Temperature Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+       \required-field
+  A20; \field Plant Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+       \required-field
 
 OS:PlantComponent:UserDefined,
       \memo Defines a generic plant component for custom modeling
