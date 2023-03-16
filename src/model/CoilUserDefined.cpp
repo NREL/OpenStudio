@@ -41,6 +41,7 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <algorithm>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_UserDefined_FieldEnums.hxx>
 
@@ -373,18 +374,21 @@ namespace model {
     }
 
     void CoilUserDefined_Impl::renameEMSSubComponents() {
-      overallModelSimulationProgramCallingManager().setName(nameString() + " overallModelSimulationProgramCallingManager");
-      modelSetupandSizingProgramCallingManager().setName(nameString() + " modelSetupandSizingProgramCallingManager");
-      overallSimulationProgram().setName(nameString() + " overallSimulationProgram");
-      initializationSimulationProgram().setName(nameString() + " initializationSimulationProgram");
-      airOutletTemperatureActuator().setName(nameString() + " airOutletTemperatureActuator");
-      airOutletHumidityRatioActuator().setName(nameString() + " airOutletHumidityRatioActuator");
-      airMassFlowRateActuator().setName(nameString() + " airMassFlowRateActuator");
-      plantMinimumMassFlowRateActuator().setName(nameString() + " plantMinimumMassFlowRateActuator");
-      plantMaximumMassFlowRateActuator().setName(nameString() + " plantMaximumMassFlowRateActuator");
-      plantDesignVolumeFlowRateActuator().setName(nameString() + " plantDesignVolumeFlowRateActuator");
-      plantMassFlowRateActuator().setName(nameString() + " plantMassFlowRateActuator");
-      plantOutletTemperatureActuator().setName(nameString() + " plantOutletTemperatureActuator");
+      auto newName = nameString();
+      std::replace(newName.begin(), newName.end(), ' ', '_');
+      newName += "_";
+      overallModelSimulationProgramCallingManager().setName(newName + "overallModelSimulationProgramCallingManager");
+      modelSetupandSizingProgramCallingManager().setName(newName + "modelSetupandSizingProgramCallingManager");
+      overallSimulationProgram().setName(newName + "overallSimulationProgram");
+      initializationSimulationProgram().setName(newName + "initializationSimulationProgram");
+      airOutletTemperatureActuator().setName(newName + "airOutletTemperatureActuator");
+      airOutletHumidityRatioActuator().setName(newName + "airOutletHumidityRatioActuator");
+      airMassFlowRateActuator().setName(newName + "airMassFlowRateActuator");
+      plantMinimumMassFlowRateActuator().setName(newName + "plantMinimumMassFlowRateActuator");
+      plantMaximumMassFlowRateActuator().setName(newName + "plantMaximumMassFlowRateActuator");
+      plantDesignVolumeFlowRateActuator().setName(newName + "plantDesignVolumeFlowRateActuator");
+      plantMassFlowRateActuator().setName(newName + "plantMassFlowRateActuator");
+      plantOutletTemperatureActuator().setName(newName + "plantOutletTemperatureActuator");
     }
 
   }  // namespace detail
