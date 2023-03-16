@@ -642,15 +642,18 @@ namespace model {
     }
 
     boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
-      return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W", "COIL:COOLING:DX:VARIABLESPEED");
     }
 
     boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
-      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s", "COIL:COOLING:DX:VARIABLESPEED");
     }
 
     boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
-      return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W", "AS VS COOLING COIL");
     }
 
     void CoilCoolingDXVariableSpeed_Impl::autosize() {

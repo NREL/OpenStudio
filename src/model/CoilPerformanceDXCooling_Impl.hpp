@@ -208,6 +208,8 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.CoilPerformanceDXCooling");
 
+      boost::optional<double> getAutosizedValueCustom(std::string valueName, std::string units) const;
+
       boost::optional<Curve> optionalTotalCoolingCapacityFunctionofTemperatureCurve() const;
       boost::optional<Curve> optionalTotalCoolingCapacityFunctionofFlowFractionCurve() const;
       boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;

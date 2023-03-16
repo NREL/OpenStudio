@@ -173,6 +173,9 @@ namespace model {
 
       boost::optional<double> autosizedDesignOutletAirHumidityRatio() const;
 
+      // Not part of the applySizingValues
+      boost::optional<double> autosizedDesignCoilLoad() const;
+
       virtual void autosize() override;
 
       virtual void applySizingValues() override;

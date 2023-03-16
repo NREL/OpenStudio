@@ -211,7 +211,8 @@ namespace model {
     }
 
     boost::optional<double> ZoneHVACBaseboardConvectiveElectric_Impl::autosizedNominalCapacity() const {
-      return getAutosizedValue("Design Size Heating Design Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Heating Design Capacity", "W", "ZONEHVAC:BASEBOARD:CONVECTIVE:ELECTRIC");
     }
 
     void ZoneHVACBaseboardConvectiveElectric_Impl::autosize() {
