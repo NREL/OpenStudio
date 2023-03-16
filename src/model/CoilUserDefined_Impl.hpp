@@ -76,7 +76,8 @@ namespace model {
 
       // virtual std::vector<openstudio::IdfObject> remove() override;
 
-      // virtual ModelObject clone(Model model) const override;
+      // HVACComponent skips the ParentObject and goes straight to ModelObject so children aren't clone
+      virtual ModelObject clone(Model model) const override;
 
       virtual std::vector<IddObjectType> allowableChildTypes() const override;
 

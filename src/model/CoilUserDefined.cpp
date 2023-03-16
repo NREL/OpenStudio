@@ -38,6 +38,8 @@
 #include "EnergyManagementSystemProgramCallingManager_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -138,6 +140,90 @@ namespace model {
         result.push_back(pota.get());
       }
       return result;
+    }
+
+    ModelObject CoilUserDefined_Impl::clone(Model model) const {
+      auto newCoilUserDefined = ModelObject_Impl::clone(model).cast<CoilUserDefined>();
+      //airOutletTemperatureActuator
+      if (boost::optional<EnergyManagementSystemActuator> object = optionalAirOutletTemperatureActuator()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        objectClone.setActuatedComponent(newCoilUserDefined);
+        newCoilUserDefined.setAirOutletTemperatureActuator(objectClone);
+      }
+      //airOutletHumidityRatioActuator
+      if (boost::optional<EnergyManagementSystemActuator> object = optionalAirOutletHumidityRatioActuator()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        objectClone.setActuatedComponent(newCoilUserDefined);
+        newCoilUserDefined.setAirOutletHumidityRatioActuator(objectClone);
+      }
+      //airMassFlowRateActuator
+      if (boost::optional<EnergyManagementSystemActuator> object = optionalAirMassFlowRateActuator()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        objectClone.setActuatedComponent(newCoilUserDefined);
+        newCoilUserDefined.setAirMassFlowRateActuator(objectClone);
+      }
+      //plantMinimumMassFlowRateActuator
+      if (boost::optional<EnergyManagementSystemActuator> object = optionalPlantMinimumMassFlowRateActuator()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        objectClone.setActuatedComponent(newCoilUserDefined);
+        newCoilUserDefined.setPlantMinimumMassFlowRateActuator(objectClone);
+      }
+      //plantMaximumMassFlowRateActuator
+      if (boost::optional<EnergyManagementSystemActuator> object = optionalPlantMaximumMassFlowRateActuator()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        objectClone.setActuatedComponent(newCoilUserDefined);
+        newCoilUserDefined.setPlantMaximumMassFlowRateActuator(objectClone);
+      }
+      //plantDesignVolumeFlowRateActuator
+      if (boost::optional<EnergyManagementSystemActuator> object = optionalPlantDesignVolumeFlowRateActuator()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        objectClone.setActuatedComponent(newCoilUserDefined);
+        newCoilUserDefined.setPlantDesignVolumeFlowRateActuator(objectClone);
+      }
+      //plantMassFlowRateActuator
+      if (boost::optional<EnergyManagementSystemActuator> object = optionalPlantMassFlowRateActuator()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        objectClone.setActuatedComponent(newCoilUserDefined);
+        newCoilUserDefined.setPlantMassFlowRateActuator(objectClone);
+      }
+      //plantOutletTemperatureActuator
+      if (boost::optional<EnergyManagementSystemActuator> object = optionalPlantOutletTemperatureActuator()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+        objectClone.setActuatedComponent(newCoilUserDefined);
+        newCoilUserDefined.setPlantOutletTemperatureActuator(objectClone);
+      }
+      //overallModelSimulationProgramCallingManager
+      if (boost::optional<EnergyManagementSystemProgramCallingManager> object = optionalOverallModelSimulationProgramCallingManager()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
+        //clone the program referenced in the callingManager
+        if (boost::optional<EnergyManagementSystemProgram> program = optionalOverallSimulationProgram()) {
+          auto cloneProgram = program.get().clone(model).cast<EnergyManagementSystemProgram>();
+          //add cloned program to cloned PCUD
+          newCoilUserDefined.setOverallSimulationProgram(cloneProgram);
+          //add cloned program to cloned programCallingManager
+          objectClone.erasePrograms();
+          objectClone.addProgram(cloneProgram);
+        }
+        newCoilUserDefined.setOverallModelSimulationProgramCallingManager(objectClone);
+      }
+      //modelSetupandSizingProgramCallingManager
+      if (boost::optional<EnergyManagementSystemProgramCallingManager> object = optionalModelSetupandSizingProgramCallingManager()) {
+        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
+        //clone the program referenced in the callingManager
+        if (boost::optional<EnergyManagementSystemProgram> program = optionalInitializationSimulationProgram()) {
+          auto cloneProgram = program.get().clone(model).cast<EnergyManagementSystemProgram>();
+          //add cloned program to cloned PCUD
+          newCoilUserDefined.setInitializationSimulationProgram(cloneProgram);
+          //add cloned program to cloned programCallingManager
+          objectClone.erasePrograms();
+          objectClone.addProgram(cloneProgram);
+        }
+        newCoilUserDefined.setModelSetupandSizingProgramCallingManager(objectClone);
+      }
+      // ambientZone
+      newCoilUserDefined.resetAmbientZone();
+
+      return std::move(newCoilUserDefined);
     }
 
     EnergyManagementSystemProgramCallingManager CoilUserDefined_Impl::overallModelSimulationProgramCallingManager() const {
