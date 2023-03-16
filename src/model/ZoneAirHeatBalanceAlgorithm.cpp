@@ -95,6 +95,22 @@ namespace model {
       return isEmpty(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm);
     }
 
+    bool ZoneAirHeatBalanceAlgorithm_Impl::doSpaceHeatBalanceforSizing() const {
+      return getBooleanFieldValue(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing);
+    }
+
+    bool ZoneAirHeatBalanceAlgorithm_Impl::isDoSpaceHeatBalanceforSizingDefaulted() const {
+      return isEmpty(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing);
+    }
+
+    bool ZoneAirHeatBalanceAlgorithm_Impl::doSpaceHeatBalanceforSimulation() const {
+      return getBooleanFieldValue(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation);
+    }
+
+    bool ZoneAirHeatBalanceAlgorithm_Impl::isDoSpaceHeatBalanceforSimulationDefaulted() const {
+      return isEmpty(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation);
+    }
+
     bool ZoneAirHeatBalanceAlgorithm_Impl::setAlgorithm(const std::string& algorithm) {
       bool result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm, algorithm);
       return result;
@@ -105,8 +121,37 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    std::vector<std::string> ZoneAirHeatBalanceAlgorithm_Impl::validAlgorithmValues() const {
-      return ZoneAirHeatBalanceAlgorithm::validAlgorithmValues();
+    bool ZoneAirHeatBalanceAlgorithm_Impl::setDoSpaceHeatBalanceforSizing(bool doSpaceHeatBalanceforSizing) {
+      this->getBooleanFieldValue(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing);
+      bool result = false;
+      if (doSpaceHeatBalanceforSizing) {
+        result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, "Yes");
+      } else {
+        result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ZoneAirHeatBalanceAlgorithm_Impl::resetDoSpaceHeatBalanceforSizing() {
+      bool result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSizing, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneAirHeatBalanceAlgorithm_Impl::setDoSpaceHeatBalanceforSimulation(bool doSpaceHeatBalanceforSimulation) {
+      bool result = false;
+      if (doSpaceHeatBalanceforSimulation) {
+        result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, "Yes");
+      } else {
+        result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ZoneAirHeatBalanceAlgorithm_Impl::resetDoSpaceHeatBalanceforSimulation() {
+      bool result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::DoSpaceHeatBalanceforSimulation, "");
+      OS_ASSERT(result);
     }
 
   }  // namespace detail
@@ -127,12 +172,44 @@ namespace model {
     return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->isAlgorithmDefaulted();
   }
 
+  bool ZoneAirHeatBalanceAlgorithm::doSpaceHeatBalanceforSizing() const {
+    return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->doSpaceHeatBalanceforSizing();
+  }
+
+  bool ZoneAirHeatBalanceAlgorithm::isDoSpaceHeatBalanceforSizingDefaulted() const {
+    return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->isDoSpaceHeatBalanceforSizingDefaulted();
+  }
+
+  bool ZoneAirHeatBalanceAlgorithm::doSpaceHeatBalanceforSimulation() const {
+    return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->doSpaceHeatBalanceforSimulation();
+  }
+
+  bool ZoneAirHeatBalanceAlgorithm::isDoSpaceHeatBalanceforSimulationDefaulted() const {
+    return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->isDoSpaceHeatBalanceforSimulationDefaulted();
+  }
+
   bool ZoneAirHeatBalanceAlgorithm::setAlgorithm(const std::string& algorithm) {
     return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->setAlgorithm(algorithm);
   }
 
   void ZoneAirHeatBalanceAlgorithm::resetAlgorithm() {
     getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->resetAlgorithm();
+  }
+
+  bool ZoneAirHeatBalanceAlgorithm::setDoSpaceHeatBalanceforSizing(bool doSpaceHeatBalanceforSizing) {
+    return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->setDoSpaceHeatBalanceforSizing(doSpaceHeatBalanceforSizing);
+  }
+
+  void ZoneAirHeatBalanceAlgorithm::resetDoSpaceHeatBalanceforSizing() {
+    getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->resetDoSpaceHeatBalanceforSizing();
+  }
+
+  bool ZoneAirHeatBalanceAlgorithm::setDoSpaceHeatBalanceforSimulation(bool doSpaceHeatBalanceforSimulation) {
+    return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->setDoSpaceHeatBalanceforSimulation(doSpaceHeatBalanceforSimulation);
+  }
+
+  void ZoneAirHeatBalanceAlgorithm::resetDoSpaceHeatBalanceforSimulation() {
+    getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->resetDoSpaceHeatBalanceforSimulation();
   }
 
   /// @cond
@@ -142,7 +219,10 @@ namespace model {
   ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(Model& model) : ModelObject(ZoneAirHeatBalanceAlgorithm::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
 
-    setAlgorithm("ThirdOrderBackwardDifference");
+    // Leaving the IDD defaults
+    // Algorithm: ThirdOrderBackwardDifference
+    // DoSpaceHeatBalanceforSizing: false
+    // DoSpaceHeatBalanceforSimulation: false
   }
 
   /// @endcond

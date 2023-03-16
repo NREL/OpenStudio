@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>python_energyplus_measure_dxf</name>
+  <uid>5a5d3f23-10eb-43ec-b845-176bd294410c</uid>
+  <version_id>80536b82-6922-499d-ab0e-8b8164a6aaa6</version_id>
+  <version_modified>20230103T235847Z</version_modified>
+  <xml_checksum>2E99387F</xml_checksum>
+  <class_name>PythonEnergyplusMeasureDXF</class_name>
+  <display_name>Python EnergyPlusMeasure to produce a DXF</display_name>
+  <description>This is just a sample</description>
+  <modeler_description>it uses python</modeler_description>
+  <arguments>
+    <argument>
+      <name>dxf_type</name>
+      <display_name>DXF Type</display_name>
+      <description>DXF Type for the eplusout.dxf</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <choices>
+        <choice>
+          <value>DXF</value>
+          <display_name>DXF</display_name>
+        </choice>
+        <choice>
+          <value>DXF:WireFrame</value>
+          <display_name>DXF:WireFrame</display_name>
+        </choice>
+      </choices>
+    </argument>
+  </arguments>
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Reporting.QAQC</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>EnergyPlusMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Python</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.5.1</identifier>
+        <min_compatible>3.5.1</min_compatible>
+      </version>
+      <filename>measure.py</filename>
+      <filetype>py</filetype>
+      <usage_type>script</usage_type>
+      <checksum>BDDB2A79</checksum>
+    </file>
+    <file>
+      <filename>LICENSE.md</filename>
+      <filetype>md</filetype>
+      <usage_type>license</usage_type>
+      <checksum>CD7F5672</checksum>
+    </file>
+  </files>
+</measure>

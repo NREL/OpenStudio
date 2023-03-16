@@ -42,9 +42,9 @@ namespace cli {
   struct MeasureUpdateOptions
   {
    public:
-    static void setupMeasureUpdateOptions(CLI::App* parentApp, ScriptEngineInstance& rubyEngine);
+    static void setupMeasureUpdateOptions(CLI::App* parentApp, ScriptEngineInstance& rubyEngine, ScriptEngineInstance& pythonEngine);
 
-    static void execute(MeasureUpdateOptions const& opt, ScriptEngineInstance& rubyEngine);
+    static void execute(MeasureUpdateOptions const& opt, ScriptEngineInstance& rubyEngine, ScriptEngineInstance& pythonEngine);
 
     void debug_print() const;
 

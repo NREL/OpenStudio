@@ -1,4 +1,4 @@
-!IDD_Version 22.2.0
+!IDD_Version 23.1.0
 !IDD_BUILD TBD
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
@@ -404,7 +404,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 22.2
+      \default 23.1
 
 SimulationControl,
       \unique-object
@@ -768,16 +768,29 @@ HeatBalanceSettings:ConductionFiniteDifference,
        \maximum 0.01
 
 ZoneAirHeatBalanceAlgorithm,
-       \memo Determines which algorithm will be used to solve the zone air heat balance.
+       \memo Controls the zone/space air heat balance.
        \unique-object
        \format singleLine
-       \min-fields 1
-  A1 ; \field Algorithm
+       \min-fields 2
+  A1 , \field Algorithm
+       \note Determines which algorithm will be used to solve the air heat balance
        \type choice
        \key ThirdOrderBackwardDifference
        \key AnalyticalSolution
        \key EulerMethod
        \default ThirdOrderBackwardDifference
+  A2 , \field Do Space Heat Balance for Sizing
+       \note If yes, space heat balance will be calculated and reported during sizing.
+       \type choice
+       \key No
+       \key Yes
+       \default No
+  A3 ; \field Do Space Heat Balance for Simulation
+       \note If yes, space heat balance will be calculated and reported during simulation.
+       \type choice
+       \key No
+       \key Yes
+       \default No
 
 ZoneAirContaminantBalance,
        \memo Determines which contaminant concentration will be simulates.

@@ -253,11 +253,15 @@ namespace detail {
 
   std::string ForwardTranslatorOptions_Impl::string() const {
 
+    const Json::Value data = this->json();
+    if (data.isNull()) {
+      return "";
+    }
     // Write to string
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
     wbuilder["indentation"] = "   ";
-    std::string result = Json::writeString(wbuilder, json());
+    std::string result = Json::writeString(wbuilder, data);
 
     return result;
   }

@@ -89,6 +89,9 @@ UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
 /// ostream operator
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
 
+/// ostream operator
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<std::vector<Point3d>>& pointVectorVector);
+
 // optional Point3d
 using OptionalPoint3d = boost::optional<Point3d>;
 
