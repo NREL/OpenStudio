@@ -38554,9 +38554,11 @@ OS:Coil:UserDefined,
   A3,  \field Overall Model Simulation Program Calling Manager Name
        \type object-list
        \object-list ErlProgramCallingManagerNames
+       \required-field
   A4,  \field Model Setup and Sizing Program Calling Manager Name
        \type object-list
        \object-list ErlProgramCallingManagerNames
+       \required-field
   N1,  \field Number of Air Connections
        \type integer
        \minimum 1
@@ -38583,33 +38585,43 @@ OS:Coil:UserDefined,
   A11, \field Overall Simulation Program Name
        \type object-list
        \object-list ErlProgramNames
+       \required-field
   A12, \field Initialization Simulation Program Name
        \type object-list
        \object-list ErlProgramNames
+       \required-field
   A13, \field Air Outlet Temperature Actuator
        \type object-list
        \object-list ErlActuatorNames
+       \required-field
   A14, \field Air Outlet Humidity Ratio Actuator
        \type object-list
        \object-list ErlActuatorNames
+       \required-field
   A15, \field Air Mass Flow Rate Actuator
        \type object-list
        \object-list ErlActuatorNames
+       \required-field
   A16, \field Plant Minimum Mass Flow Rate Actuator
        \type object-list
        \object-list ErlActuatorNames
+       \required-field
   A17, \field Plant Maximum Mass Flow Rate Actuator
        \type object-list
        \object-list ErlActuatorNames
+       \required-field
   A18, \field Plant Design Volume Flow Rate Actuator
        \type object-list
        \object-list ErlActuatorNames
+       \required-field
   A19, \field Plant Outlet Temperature Actuator
        \type object-list
        \object-list ErlActuatorNames
+       \required-field
   A20; \field Plant Mass Flow Rate Actuator
        \type object-list
        \object-list ErlActuatorNames
+       \required-field
 
 OS:PlantComponent:UserDefined,
       \memo Defines a generic plant component for custom modeling
