@@ -206,8 +206,9 @@ void OSWorkflow::run() {
                  "\n"
                  "┌{0:─^{2}}┐\n"
                  "│{1: ^{2}}│\n"
-                 "└{0:─^{2}}┘\n",
+                 "└{0:─^{2}}┘",
                  "", std::string("Starting State ") + message, 80);
+      fmt::print("\n");
     }
     if (m_add_timings) {
       m_timers->newTimer(message);
@@ -217,7 +218,8 @@ void OSWorkflow::run() {
       m_timers->tockCurrentTimer();
     }
     if (m_style_stdout) {
-      fmt::print(fmt::fg(fmt::color::green), "{0:#^80}\n", std::string("Returned from State ") + message);
+      fmt::print(fmt::fg(fmt::color::green), "{0:#^80}", std::string("Returned from State ") + message);
+      fmt::print("\n");
     }
   };
 

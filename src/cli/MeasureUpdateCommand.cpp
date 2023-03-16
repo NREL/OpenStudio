@@ -413,8 +413,6 @@ server.start)ruby",
       if (measure_->measureLanguage() == MeasureLanguage::Ruby) {
         // TODO: need to capture arguments and pass as ARGV
 
-        rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
-
         auto runTestCmd = fmt::format(
           R"ruby(
 # load openstudio_measure_tester gem

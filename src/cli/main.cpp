@@ -2,6 +2,7 @@
 #include "UpdateCommand.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
 #include "../workflow/OSWorkflow.hpp"
+#include "../utilities/core/ASCIIStrings.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../measure/ModelMeasure.hpp"
@@ -15,9 +16,15 @@
 
 #include <fmt/format.h>
 #include <fmt/color.h>
-#include <string_view>
+#include <fmt/ranges.h>  // for std::vector format
 
 #include <CLI/CLI.hpp>
+
+#include <algorithm>
+#include <iterator>
+#include <string>
+#include <string_view>
+#include <vector>
 
 int main(int argc, char* argv[]) {
 
@@ -29,8 +36,10 @@ int main(int argc, char* argv[]) {
 
   int result = 0;
 
-  std::vector<std::string> args(argv, argv + argc);
-  // erase the first element
+  std::vector<std::string> args(argv, std::next(argv, static_cast<std::ptrdiff_t>(argc)));
+  std::for_each(args.begin(), args.end(), [](auto& s) { openstudio::ascii_trim(s); });
+  // erase the first element, which is the name of the program
+  const std::string programName = std::move(args.front());
   args.erase(args.begin());
 
   // ScriptEngineInstance will delay load the engines
@@ -39,13 +48,29 @@ int main(int argc, char* argv[]) {
 
   if (!args.empty() && (std::string_view(args[0]) == "labs")) {
     CLI::App app{"openstudio"};
+    app.name(programName);
+
+    // Preprocess the arguments, insert execute_xxx_script if a script is passed but the previous arg isn't the command.
+    // So you can ommit "execute_xxx_script" like historical behavior: `openstudio --include INCLUDE_DIR test.rb`
+    if (std::none_of(args.begin(), args.end(), [](const auto& arg) { return (arg == "execute_ruby_script") || (arg == "execute_python_script"); })) {
+      auto it = std::find_if(args.begin(), args.end(), [](const auto& arg) { return arg.ends_with(".rb") || arg.ends_with(".py"); });
+      if (it != args.end()) {
+        if (it->ends_with(".rb")) {
+          args.insert(it, "execute_ruby_script");
+        } else {
+          args.insert(it, "execute_python_script");
+        }
+      }
+    }
+
+    // fmt::print("args={}\n", args);
 
     fmt::print(fmt::fg(fmt::color::red),
                "┌{0:─^{2}}┐\n"
                "│{1: ^{2}}│\n"
-               "└{0:─^{2}}┘\n",
+               "└{0:─^{2}}┘",
                "", "The `labs` command is experimental - Do not use in production", 80);
-    //
+    fmt::print("\n");
     app.get_formatter()->column_width(35);
 
     auto* const experimentalApp = app.add_subcommand("labs");
@@ -155,26 +180,30 @@ int main(int argc, char* argv[]) {
     // {
     auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
     openstudio::filesystem::path rubyScriptPath;
-    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
-    std::vector<std::string> executeRubyScriptCommandArgs;
-    execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
-      ->required(false)
-      ->option_text("args");
-    execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs] {
-      openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, executeRubyScriptCommandArgs);
+    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true)->check(CLI::ExistingFile);
+    // We can't do this because that means we can't pass extra **flags**
+    // std::vector<std::string> executeRubyScriptCommandArgs;
+    // execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
+    //   ->required(false)
+    //   ->option_text("args");
+    execute_ruby_scriptCommand->allow_extras(true);
+    execute_ruby_scriptCommand->footer("You can pass extra arguments after the ruby file, they will be forwarded.");
+
+    execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &execute_ruby_scriptCommand] {
+      openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, execute_ruby_scriptCommand->remaining());
     });
     // }
 
     // {
     auto* execute_python_scriptCommand = experimentalApp->add_subcommand("execute_python_script", "Executes a python file");
     openstudio::filesystem::path pythonScriptPath;
-    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true);
-    std::vector<std::string> executePythonScriptCommandArgs;
-    execute_python_scriptCommand->add_option("arguments", executePythonScriptCommandArgs, "Arguments to pass to the python file")
-      ->required(false)
-      ->option_text("args");
-    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs] {
-      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, executePythonScriptCommandArgs);
+    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true)->check(CLI::ExistingFile);
+
+    execute_python_scriptCommand->allow_extras(true);
+    execute_python_scriptCommand->footer("You can pass extra arguments after the python file, they will be forwarded.");
+
+    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &execute_python_scriptCommand] {
+      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, execute_python_scriptCommand->remaining());
     });
     // }
 
@@ -228,7 +257,17 @@ int main(int argc, char* argv[]) {
 
     // ====================================================================
 
-    CLI11_PARSE(app, argc, argv);
+    // CLI11_PARSE(app, argc, argv);
+    // CLI11_PARSE(app, args);
+    try {
+      // app.parse(argc, argv);
+      // CLI11 when passing argc, argv creates a vector<string> but **in reverse** order:
+      // https://github.com/CLIUtils/CLI11/blob/291c58789c031208f08f4f261a858b5b7083e8e2/include/CLI/impl/App_inl.hpp#L476-L488
+      std::reverse(args.begin(), args.end());
+      app.parse(args);
+    } catch (const CLI::ParseError& e) {
+      return app.exit(e);
+    }
 
     if (*execRubyOption) {
       //  fmt::print("--execute Flag received {} times.\n", execRubyOption->count());

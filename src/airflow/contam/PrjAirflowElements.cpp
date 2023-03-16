@@ -35,206 +35,136 @@
 namespace openstudio {
 namespace contam {
 
-  AirflowElement::Type AirflowElement::convertTag(std::string string) {
-    std::string tags[28] = {std::string("plr_orfc"),  std::string("plr_leak1"), std::string("plr_leak2"), std::string("plr_leak3"),
-                            std::string("plr_conn"),  std::string("plr_qcn"),   std::string("plr_fcn"),   std::string("plr_test1"),
-                            std::string("plr_test2"), std::string("plr_crack"), std::string("plr_stair"), std::string("plr_shaft"),
-                            std::string("plr_bdq"),   std::string("plr_bdf"),   std::string("qfr_qab"),   std::string("qfr_fab"),
-                            std::string("qfr_crack"), std::string("qfr_test2"), std::string("dor_door"),  std::string("dor_pl2"),
-                            std::string("fan_cmf"),   std::string("fan_cvf"),   std::string("fan_fan"),   std::string("csf_fsp"),
-                            std::string("csf_qsp"),   std::string("csf_psf"),   std::string("csf_psq"),   std::string("sup_afe")};
-    AirflowElement::Type type[28] = {PL_ORFC,  PL_LEAK1, PL_LEAK2, PL_LEAK3, PL_CONN, PL_QCN,  PL_FCN,    PL_TEST1,  PL_TEST2, PL_CRACK,
-                                     PL_STAIR, PL_SHAFT, PL_BDQ,   PL_BDF,   QFR_QAB, QFR_QAF, QFR_CRACK, QFR_TEST2, DR_DOOR,  DR_PL2,
-                                     FN_CMF,   FN_CVF,   FN_FAN,   CS_FSP,   CS_QSP,  CS_PSF,  CS_PSQ,    AF_SUP};
-    for (int i = 0; i < 28; i++) {
-      if (string == tags[i]) {
-        return type[i];
-      }
+  AirflowElementType AirflowElement::convertTag(const std::string& tag) {
+    try {
+      return {tag};
+    } catch (...) {
+      return AirflowElementType::UNKNOWN;
     }
-    return AirflowElement::UNKNOWN;
   }
 
   AirflowElement* AirflowElement::readElement(Reader& input) {
     AirflowElement* out = nullptr;
-    int nr = input.read<int>();
-    int icon = input.read<int>();
-    std::string dataType = input.readString();
-    std::string name = input.readString();
-    std::string desc = input.readLine();
-    int kind = convertTag(dataType);
-    switch (kind) {
-      case AirflowElement::PL_ORFC: {
-        auto* obj = new PlrOrf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_LEAK1: {
-        auto* obj = new PlrLeak1(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_LEAK2: {
-        auto* obj = new PlrLeak2(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_LEAK3: {
-        auto* obj = new PlrLeak3(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_CONN: {
-        auto* obj = new PlrConn(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_QCN: {
-        auto* obj = new PlrQcn(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_FCN: {
-        auto* obj = new PlrFcn(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_TEST1: {
-        auto* obj = new PlrTest1(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_TEST2: {
-        auto* obj = new PlrTest2(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_CRACK: {
-        auto* obj = new PlrCrack(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_STAIR: {
-        auto* obj = new PlrStair(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_SHAFT: {
-        auto* obj = new PlrShaft(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_BDQ: {
-        auto* obj = new PlrBdq(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_BDF: {
-        auto* obj = new PlrBdf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::QFR_QAB: {
-        auto* obj = new QfrQab(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::QFR_QAF: {
-        auto* obj = new QfrFab(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::QFR_CRACK: {
-        auto* obj = new QfrCrack(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::QFR_TEST2: {
-        auto* obj = new QfrTest2(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::DR_DOOR: {
-        auto* obj = new AfeDor(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::DR_PL2: {
-        auto* obj = new DrPl2(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::FN_CMF: {
-        auto* obj = new AfeCmf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::FN_CVF: {
-        auto* obj = new AfeCvf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::FN_FAN: {
-        auto* obj = new AfeFan(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::CS_FSP: {
-        auto* obj = new AfeFsp(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::CS_QSP: {
-        auto* obj = new AfeQsp(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::CS_PSF: {
-        auto* obj = new AfePsf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::CS_PSQ: {
-        auto* obj = new AfePsq(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::AF_SUP: {
-        auto* obj = new AfeSup(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::UNKNOWN:
-      default:
-        std::string mesg = "Unknown airflow element type '" + dataType + "' at line " + openstudio::toString(input.lineNumber());
-        LOG_FREE_AND_THROW("openstudio.contam.Reader", mesg);
+    const int nr = input.read<int>();
+    const int icon = input.read<int>();
+    const std::string dataType = input.readString();
+    const std::string name = input.readString();
+    const std::string desc = input.readLine();
+    const AirflowElementType kind = convertTag(dataType);
+    if (kind == AirflowElementType::UNKNOWN) {
+      LOG_FREE_AND_THROW("openstudio.contam.Reader", "Unknown airflow element type '" << dataType << "' at line " << input.lineNumber());
+    } else if (kind == AirflowElementType::PL_ORFC) {
+      auto* obj = new PlrOrf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_LEAK1) {
+      auto* obj = new PlrLeak1(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_LEAK2) {
+      auto* obj = new PlrLeak2(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_LEAK3) {
+      auto* obj = new PlrLeak3(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_CONN) {
+      auto* obj = new PlrConn(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_QCN) {
+      auto* obj = new PlrQcn(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_FCN) {
+      auto* obj = new PlrFcn(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_TEST1) {
+      auto* obj = new PlrTest1(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_TEST2) {
+      auto* obj = new PlrTest2(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_CRACK) {
+      auto* obj = new PlrCrack(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_STAIR) {
+      auto* obj = new PlrStair(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_SHAFT) {
+      auto* obj = new PlrShaft(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_BDQ) {
+      auto* obj = new PlrBdq(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_BDF) {
+      auto* obj = new PlrBdf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::QFR_QAB) {
+      auto* obj = new QfrQab(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::QFR_QAF) {
+      auto* obj = new QfrFab(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::QFR_CRACK) {
+      auto* obj = new QfrCrack(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::QFR_TEST2) {
+      auto* obj = new QfrTest2(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::DR_DOOR) {
+      auto* obj = new AfeDor(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::DR_PL2) {
+      auto* obj = new DrPl2(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::FN_CMF) {
+      auto* obj = new AfeCmf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::FN_CVF) {
+      auto* obj = new AfeCvf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::FN_FAN) {
+      auto* obj = new AfeFan(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::CS_FSP) {
+      auto* obj = new AfeFsp(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::CS_QSP) {
+      auto* obj = new AfeQsp(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::CS_PSF) {
+      auto* obj = new AfePsf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::CS_PSQ) {
+      auto* obj = new AfePsq(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::AF_SUP) {
+      auto* obj = new AfeSup(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
     }
     return out;
   }
