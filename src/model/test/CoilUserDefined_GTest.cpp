@@ -39,75 +39,223 @@
 #include "../ThermalZone.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 #include "../../utilities/core/Path.hpp"
-#include "../../utilities/idf/IdfFile.hpp"
-#include "../../utilities/idf/IdfObject.hpp"
 
-//using namespace openstudio::energyplus;
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilUserDefined_CoilUserDefined) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      Model m;
-      CoilUserDefined coil_ud(m);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
-}
-
-TEST_F(ModelFixture, CoilUserDefined_constructor) {
+TEST_F(ModelFixture, CoilUserDefined_GettersSetters) {
   Model m;
 
-  CoilUserDefined b1(m);
+  CoilUserDefined coilUserDefined(m);
+  coilUserDefined.setName("My CoilUserDefined");
 
-  EXPECT_TRUE(b1.airOutletTemperatureActuator());
-  EXPECT_TRUE(b1.airOutletHumidityRatioActuator());
-  EXPECT_TRUE(b1.airMassFlowRateActuator());
-  EXPECT_TRUE(b1.plantMinimumMassFlowRateActuator());
-  EXPECT_TRUE(b1.plantMaximumMassFlowRateActuator());
-  EXPECT_TRUE(b1.plantDesignVolumeFlowRateActuator());
-  EXPECT_TRUE(b1.plantMassFlowRateActuator());
-  EXPECT_TRUE(b1.plantOutletTemperatureActuator());
+  // Convenience method provided
+  coilUserDefined.renameEMSSubComponents();
 
-  EXPECT_TRUE(b1.airOutletTemperatureActuator().get().actuatedComponent());
-  EXPECT_EQ(b1.handle(), b1.airOutletTemperatureActuator().get().actuatedComponent().get().handle());
-}
+  // Test the convenience method + getters
+  EXPECT_EQ("My_CoilUserDefined_overallModelSimulationProgramCallingManager",
+            coilUserDefined.overallModelSimulationProgramCallingManager().nameString());
+  EXPECT_EQ("My_CoilUserDefined_modelSetupandSizingProgramCallingManager", coilUserDefined.modelSetupandSizingProgramCallingManager().nameString());
+  EXPECT_EQ("My_CoilUserDefined_overallSimulationProgram", coilUserDefined.overallSimulationProgram().nameString());
+  EXPECT_EQ("My_CoilUserDefined_initializationSimulationProgram", coilUserDefined.initializationSimulationProgram().nameString());
+  EXPECT_EQ("My_CoilUserDefined_airOutletTemperatureActuator", coilUserDefined.airOutletTemperatureActuator().nameString());
+  EXPECT_EQ("My_CoilUserDefined_airOutletHumidityRatioActuator", coilUserDefined.airOutletHumidityRatioActuator().nameString());
+  EXPECT_EQ("My_CoilUserDefined_airMassFlowRateActuator", coilUserDefined.airMassFlowRateActuator().nameString());
+  EXPECT_EQ("My_CoilUserDefined_plantMinimumMassFlowRateActuator", coilUserDefined.plantMinimumMassFlowRateActuator().nameString());
+  EXPECT_EQ("My_CoilUserDefined_plantMaximumMassFlowRateActuator", coilUserDefined.plantMaximumMassFlowRateActuator().nameString());
+  EXPECT_EQ("My_CoilUserDefined_plantDesignVolumeFlowRateActuator", coilUserDefined.plantDesignVolumeFlowRateActuator().nameString());
+  EXPECT_EQ("My_CoilUserDefined_plantMassFlowRateActuator", coilUserDefined.plantMassFlowRateActuator().nameString());
+  EXPECT_EQ("My_CoilUserDefined_plantOutletTemperatureActuator", coilUserDefined.plantOutletTemperatureActuator().nameString());
 
-TEST_F(ModelFixture, CoilUserDefined_programs) {
-  Model m;
+  // Make sure the actuators are correct
+  ASSERT_TRUE(coilUserDefined.airOutletTemperatureActuator().actuatedComponent());
+  EXPECT_EQ(coilUserDefined, coilUserDefined.airOutletTemperatureActuator().actuatedComponent().get());
+  ASSERT_TRUE(coilUserDefined.airOutletHumidityRatioActuator().actuatedComponent());
+  EXPECT_EQ(coilUserDefined, coilUserDefined.airOutletHumidityRatioActuator().actuatedComponent().get());
+  ASSERT_TRUE(coilUserDefined.airMassFlowRateActuator().actuatedComponent());
+  EXPECT_EQ(coilUserDefined, coilUserDefined.airMassFlowRateActuator().actuatedComponent().get());
+  ASSERT_TRUE(coilUserDefined.plantMinimumMassFlowRateActuator().actuatedComponent());
+  EXPECT_EQ(coilUserDefined, coilUserDefined.plantMinimumMassFlowRateActuator().actuatedComponent().get());
+  ASSERT_TRUE(coilUserDefined.plantMaximumMassFlowRateActuator().actuatedComponent());
+  EXPECT_EQ(coilUserDefined, coilUserDefined.plantMaximumMassFlowRateActuator().actuatedComponent().get());
+  ASSERT_TRUE(coilUserDefined.plantDesignVolumeFlowRateActuator().actuatedComponent());
+  EXPECT_EQ(coilUserDefined, coilUserDefined.plantDesignVolumeFlowRateActuator().actuatedComponent().get());
+  ASSERT_TRUE(coilUserDefined.plantMassFlowRateActuator().actuatedComponent());
+  EXPECT_EQ(coilUserDefined, coilUserDefined.plantMassFlowRateActuator().actuatedComponent().get());
+  ASSERT_TRUE(coilUserDefined.plantOutletTemperatureActuator().actuatedComponent());
+  EXPECT_EQ(coilUserDefined, coilUserDefined.plantOutletTemperatureActuator().actuatedComponent().get());
 
-  //PlantLoop plant(m);
-  CoilUserDefined b1(m);
-  EnergyManagementSystemProgramCallingManager mainPCM(m);
-  EnergyManagementSystemProgramCallingManager initPCM(m);
-  EXPECT_TRUE(b1.setOverallModelSimulationProgramCallingManager(mainPCM));
-  EXPECT_EQ(mainPCM, b1.overallModelSimulationProgramCallingManager().get());
-  EXPECT_TRUE(b1.setModelSetupandSizingProgramCallingManager(initPCM));
-  EXPECT_EQ(initPCM, b1.modelSetupandSizingProgramCallingManager().get());
-  b1.resetOverallModelSimulationProgramCallingManager();
-  b1.resetModelSetupandSizingProgramCallingManager();
-  EXPECT_FALSE(b1.overallModelSimulationProgramCallingManager());
-  EXPECT_FALSE(b1.modelSetupandSizingProgramCallingManager());
+  // Overall Model Simulation Program Calling Manager Name: Required Object
+  EnergyManagementSystemProgramCallingManager overallModelSimulationProgramCallingManager(m);
+  EXPECT_TRUE(coilUserDefined.setOverallModelSimulationProgramCallingManager(overallModelSimulationProgramCallingManager));
+  EXPECT_EQ(overallModelSimulationProgramCallingManager, coilUserDefined.overallModelSimulationProgramCallingManager());
+
+  // Model Setup and Sizing Program Calling Manager Name: Required Object
+  EnergyManagementSystemProgramCallingManager modelSetupandSizingProgramCallingManager(m);
+  EXPECT_TRUE(coilUserDefined.setModelSetupandSizingProgramCallingManager(modelSetupandSizingProgramCallingManager));
+  EXPECT_EQ(modelSetupandSizingProgramCallingManager, coilUserDefined.modelSetupandSizingProgramCallingManager());
+
+  // Ambient Zone Name: Optional Object
+  EXPECT_FALSE(coilUserDefined.ambientZone());
+  ThermalZone ambientZone(m);
+  EXPECT_TRUE(coilUserDefined.setAmbientZone(ambientZone));
+  ASSERT_TRUE(coilUserDefined.ambientZone());
+  EXPECT_EQ(ambientZone, coilUserDefined.ambientZone().get());
+  coilUserDefined.resetAmbientZone();
+  EXPECT_FALSE(coilUserDefined.ambientZone());
+
+  // Overall Simulation Program Name: Required Object
+  EnergyManagementSystemProgram overallSimulationProgram(m);
+  EXPECT_TRUE(coilUserDefined.setOverallSimulationProgram(overallSimulationProgram));
+  EXPECT_EQ(overallSimulationProgram, coilUserDefined.overallSimulationProgram());
+
+  // Initialization Simulation Program Name: Required Object
+  EnergyManagementSystemProgram initializationSimulationProgram(m);
+  EXPECT_TRUE(coilUserDefined.setInitializationSimulationProgram(initializationSimulationProgram));
+  EXPECT_EQ(initializationSimulationProgram, coilUserDefined.initializationSimulationProgram());
+
+  // Air Outlet Temperature Actuator: Required Object
+  EnergyManagementSystemActuator airOutletTemperatureActuator(coilUserDefined, "Air Connection 1", "Outlet Temperature");
+  EXPECT_TRUE(coilUserDefined.setAirOutletTemperatureActuator(airOutletTemperatureActuator));
+  EXPECT_EQ(airOutletTemperatureActuator, coilUserDefined.airOutletTemperatureActuator());
+
+  // Air Outlet Humidity Ratio Actuator: Required Object
+  EnergyManagementSystemActuator airOutletHumidityRatioActuator(coilUserDefined, "Air Connection 1", "Outlet Humidity Ratio");
+  EXPECT_TRUE(coilUserDefined.setAirOutletHumidityRatioActuator(airOutletHumidityRatioActuator));
+  EXPECT_EQ(airOutletHumidityRatioActuator, coilUserDefined.airOutletHumidityRatioActuator());
+
+  // Air Mass Flow Rate Actuator: Required Object
+  EnergyManagementSystemActuator airMassFlowRateActuator(coilUserDefined, "Air Connection 1", "Mass Flow Rate");
+  EXPECT_TRUE(coilUserDefined.setAirMassFlowRateActuator(airMassFlowRateActuator));
+  EXPECT_EQ(airMassFlowRateActuator, coilUserDefined.airMassFlowRateActuator());
+
+  // Plant Minimum Mass Flow Rate Actuator: Required Object
+  EnergyManagementSystemActuator plantMinimumMassFlowRateActuator(coilUserDefined, "Plant Connection", "Minimum Mass Flow Rate");
+  EXPECT_TRUE(coilUserDefined.setPlantMinimumMassFlowRateActuator(plantMinimumMassFlowRateActuator));
+  EXPECT_EQ(plantMinimumMassFlowRateActuator, coilUserDefined.plantMinimumMassFlowRateActuator());
+
+  // Plant Maximum Mass Flow Rate Actuator: Required Object
+  EnergyManagementSystemActuator plantMaximumMassFlowRateActuator(coilUserDefined, "Plant Connection", "Maximum Mass Flow Rate");
+  EXPECT_TRUE(coilUserDefined.setPlantMaximumMassFlowRateActuator(plantMaximumMassFlowRateActuator));
+  EXPECT_EQ(plantMaximumMassFlowRateActuator, coilUserDefined.plantMaximumMassFlowRateActuator());
+
+  // Plant Design Volume Flow Rate Actuator: Required Object
+  EnergyManagementSystemActuator plantDesignVolumeFlowRateActuator(coilUserDefined, "Plant Connection", "Design Volume Flow Rate");
+  EXPECT_TRUE(coilUserDefined.setPlantDesignVolumeFlowRateActuator(plantDesignVolumeFlowRateActuator));
+  EXPECT_EQ(plantDesignVolumeFlowRateActuator, coilUserDefined.plantDesignVolumeFlowRateActuator());
+
+  // Plant Outlet Temperature Actuator: Required Object
+  EnergyManagementSystemActuator plantOutletTemperatureActuator(coilUserDefined, "Plant Connection", "Outlet Temperature");
+  EXPECT_TRUE(coilUserDefined.setPlantOutletTemperatureActuator(plantOutletTemperatureActuator));
+  EXPECT_EQ(plantOutletTemperatureActuator, coilUserDefined.plantOutletTemperatureActuator());
+
+  // Plant Mass Flow Rate Actuator: Required Object
+  EnergyManagementSystemActuator plantMassFlowRateActuator(coilUserDefined, "Plant Connection", "Mass Flow Rate");
+  EXPECT_TRUE(coilUserDefined.setPlantMassFlowRateActuator(plantMassFlowRateActuator));
+  EXPECT_EQ(plantMassFlowRateActuator, coilUserDefined.plantMassFlowRateActuator());
 }
 
 TEST_F(ModelFixture, CoilUserDefined_addToNode) {
+
   Model m;
 
-  CoilUserDefined coil(m);
+  CoilUserDefined coilUserDefined(m);
+  EXPECT_FALSE(coilUserDefined.airLoopHVAC());
+  EXPECT_FALSE(coilUserDefined.airInletModelObject());
+  EXPECT_FALSE(coilUserDefined.airOutletModelObject());
+  EXPECT_FALSE(coilUserDefined.plantLoop());
+  EXPECT_FALSE(coilUserDefined.waterInletModelObject());
+  EXPECT_FALSE(coilUserDefined.waterOutletModelObject());
 
-  model::AirLoopHVAC airLoop(m);
+  {
+    AirLoopHVAC airLoop(m);
 
-  model::Node supplyOutletNode = airLoop.supplyOutletNode();
+    // Accepted on supply
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+    EXPECT_FALSE(coilUserDefined.airLoopHVAC());
+    EXPECT_EQ(2, airLoop.supplyComponents().size());
+    EXPECT_TRUE(coilUserDefined.addToNode(supplyOutletNode));
+    EXPECT_EQ(3, airLoop.supplyComponents().size());
+    ASSERT_TRUE(coilUserDefined.airLoopHVAC());
+    EXPECT_EQ(airLoop, coilUserDefined.airLoopHVAC().get());
+    ASSERT_TRUE(coilUserDefined.airInletModelObject());
+    ASSERT_TRUE(coilUserDefined.airOutletModelObject());
+    EXPECT_EQ(supplyOutletNode, coilUserDefined.airOutletModelObject().get());
+    EXPECT_FALSE(coilUserDefined.plantLoop());
+    EXPECT_FALSE(coilUserDefined.waterInletModelObject());
+    EXPECT_FALSE(coilUserDefined.waterOutletModelObject());
 
-  coil.addToNode(supplyOutletNode);
+    // Rejected on demand
+    Node demandNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+    EXPECT_FALSE(coilUserDefined.addToNode(demandNode));
+    // 5u: inlet splitter node mixer outlet.
+    EXPECT_EQ(5, airLoop.demandComponents().size());
+    EXPECT_EQ(3, airLoop.supplyComponents().size());
+    ASSERT_TRUE(coilUserDefined.airLoopHVAC());
+    EXPECT_EQ(airLoop, coilUserDefined.airLoopHVAC().get());
+    ASSERT_TRUE(coilUserDefined.airInletModelObject());
+    ASSERT_TRUE(coilUserDefined.airOutletModelObject());
+    EXPECT_EQ(supplyOutletNode, coilUserDefined.airOutletModelObject().get());
+    EXPECT_FALSE(coilUserDefined.plantLoop());
+    EXPECT_FALSE(coilUserDefined.waterInletModelObject());
+    EXPECT_FALSE(coilUserDefined.waterOutletModelObject());
 
-  ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
+    // Remove
+    EXPECT_TRUE(coilUserDefined.removeFromAirLoopHVAC());
+    EXPECT_EQ(2, airLoop.supplyComponents().size());
+    EXPECT_FALSE(coilUserDefined.airLoopHVAC());
+    EXPECT_FALSE(coilUserDefined.airInletModelObject());
+    EXPECT_FALSE(coilUserDefined.airOutletModelObject());
+    EXPECT_FALSE(coilUserDefined.plantLoop());
+    EXPECT_FALSE(coilUserDefined.waterInletModelObject());
+    EXPECT_FALSE(coilUserDefined.waterOutletModelObject());
+  }
+
+  {
+    PlantLoop plantLoop(m);
+
+    // Rejected on supply
+    auto supplyOutletNode = plantLoop.supplyOutletNode();
+    EXPECT_EQ(5, plantLoop.supplyComponents().size());
+    EXPECT_EQ(5, plantLoop.demandComponents().size());
+    EXPECT_FALSE(coilUserDefined.addToNode(supplyOutletNode));
+    EXPECT_EQ(5, plantLoop.supplyComponents().size());
+    EXPECT_EQ(5, plantLoop.demandComponents().size());
+    EXPECT_FALSE(coilUserDefined.airLoopHVAC());
+    EXPECT_FALSE(coilUserDefined.airInletModelObject());
+    EXPECT_FALSE(coilUserDefined.airOutletModelObject());
+    EXPECT_FALSE(coilUserDefined.plantLoop());
+    EXPECT_FALSE(coilUserDefined.waterInletModelObject());
+    EXPECT_FALSE(coilUserDefined.waterOutletModelObject());
+
+    // Accepted on demand
+    auto demandOutletNode = plantLoop.demandOutletNode();
+    EXPECT_TRUE(coilUserDefined.addToNode(demandOutletNode));
+    EXPECT_EQ(5, plantLoop.supplyComponents().size());
+    EXPECT_EQ(7, plantLoop.demandComponents().size());
+    EXPECT_FALSE(coilUserDefined.airLoopHVAC());
+    EXPECT_FALSE(coilUserDefined.airInletModelObject());
+    EXPECT_FALSE(coilUserDefined.airOutletModelObject());
+    ASSERT_TRUE(coilUserDefined.plantLoop());
+    EXPECT_EQ(plantLoop, coilUserDefined.plantLoop().get());
+    ASSERT_TRUE(coilUserDefined.waterInletModelObject());
+    ASSERT_TRUE(coilUserDefined.waterOutletModelObject());
+    EXPECT_EQ(demandOutletNode, coilUserDefined.waterOutletModelObject().get());
+
+    // Remove
+    EXPECT_TRUE(coilUserDefined.removeFromPlantLoop());
+    EXPECT_EQ(5, plantLoop.supplyComponents().size());
+    EXPECT_EQ(5, plantLoop.demandComponents().size());
+    EXPECT_FALSE(coilUserDefined.airLoopHVAC());
+    EXPECT_FALSE(coilUserDefined.airInletModelObject());
+    EXPECT_FALSE(coilUserDefined.airOutletModelObject());
+    EXPECT_FALSE(coilUserDefined.plantLoop());
+    EXPECT_FALSE(coilUserDefined.waterInletModelObject());
+    EXPECT_FALSE(coilUserDefined.waterOutletModelObject());
+  }
 }
 
 // Add CoilUserDefined to AirLoopHVAC and PlantLoop
@@ -117,25 +265,33 @@ TEST_F(ModelFixture, CoilUserDefined_remove) {
   CoilUserDefined coil(m);
 
   AirLoopHVAC airLoop(m);
-  Node supplyOutletNode = airLoop.supplyOutletNode();
+  PlantLoop plantLoop(m);
+  EXPECT_EQ(2, airLoop.supplyComponents().size());
+  EXPECT_EQ(5, airLoop.demandComponents().size());
+  EXPECT_EQ(5, plantLoop.supplyComponents().size());
+  EXPECT_EQ(5, plantLoop.demandComponents().size());
 
-  coil.addToNode(supplyOutletNode);
+  Node airSupplyOutletNode = airLoop.supplyOutletNode();
+  coil.addToNode(airSupplyOutletNode);
+  Node waterDemandOutletNode = plantLoop.demandOutletNode();
+  coil.addToNode(waterDemandOutletNode);
+  EXPECT_EQ(3, airLoop.supplyComponents().size());
+  EXPECT_EQ(5, airLoop.demandComponents().size());
+  EXPECT_EQ(5, plantLoop.supplyComponents().size());
+  EXPECT_EQ(7, plantLoop.demandComponents().size());
+
+  EXPECT_EQ(1, airLoop.supplyComponents(CoilUserDefined::iddObjectType()).size());
+  EXPECT_EQ(1, plantLoop.demandComponents(CoilUserDefined::iddObjectType()).size());
+
   coil.remove();
-  ASSERT_EQ((unsigned)2, airLoop.supplyComponents().size());
+  EXPECT_EQ(2, airLoop.supplyComponents().size());
+  EXPECT_EQ(5, airLoop.demandComponents().size());
+  EXPECT_EQ(5, plantLoop.supplyComponents().size());
+  EXPECT_EQ(5, plantLoop.demandComponents().size());
 
-  ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
-
-  CoilUserDefined coil2(m);
-  coil2.addToNode(supplyOutletNode);
-
-  PlantLoop plant(m);
-  plant.addDemandBranchForComponent(coil2);
-
-  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
-  ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
-
-  coil2.remove();
-  ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
+  EXPECT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
+  EXPECT_EQ(0, airLoop.supplyComponents(CoilUserDefined::iddObjectType()).size());
+  EXPECT_EQ(0, plantLoop.demandComponents(CoilUserDefined::iddObjectType()).size());
 }
 
 // Add ONLY to PlantLoop
@@ -146,11 +302,12 @@ TEST_F(ModelFixture, CoilUserDefined_remove2) {
 
   PlantLoop plant(m);
   plant.addDemandBranchForComponent(coil);
-  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
-  ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilUserDefined>().size());
+  EXPECT_EQ(1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
 
   coil.remove();
-  ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
+  EXPECT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
+  EXPECT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
 }
 
 // Add ONLY to PlantLoop
@@ -162,12 +319,12 @@ TEST_F(ModelFixture, CoilUserDefined_remove3) {
   PlantLoop plant(m);
   plant.addDemandBranchForComponent(coil);
 
-  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
-  ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilUserDefined>().size());
+  EXPECT_EQ(1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
 
   plant.removeDemandBranchWithComponent(coil);
-  ASSERT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
-  ASSERT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
+  EXPECT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
+  EXPECT_TRUE(m.getConcreteModelObjects<CoilUserDefined>().empty());
 }
 
 // Add CoilUserDefined to AirLoopHVAC and PlantLoop
@@ -185,62 +342,131 @@ TEST_F(ModelFixture, CoilUserDefined_remove4) {
   PlantLoop plant(m);
   EXPECT_TRUE(plant.addDemandBranchForComponent(coil));
 
-  ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
-  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
-  ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
+  EXPECT_EQ(3, airLoop.supplyComponents().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilUserDefined>().size());
+  EXPECT_EQ(1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
 
   plant.removeDemandBranchWithComponent(coil);
-  ASSERT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
-  ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
-  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
+  EXPECT_TRUE(plant.demandComponents(CoilUserDefined::iddObjectType()).empty());
+  EXPECT_EQ(3, airLoop.supplyComponents().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilUserDefined>().size());
 }
 
-TEST_F(ModelFixture, CoilUserDefined_otherAPIs) {
-  Model m;
-  CoilUserDefined coil(m);
-
-  AirLoopHVAC airLoop(m);
-  Node supplyOutletNode = airLoop.supplyOutletNode();
-
-  coil.addToNode(supplyOutletNode);
-  ASSERT_EQ((unsigned)3, airLoop.supplyComponents().size());
-
-  PlantLoop plant(m);
-  plant.addDemandBranchForComponent(coil);
-
-  ASSERT_EQ((unsigned)1, m.getConcreteModelObjects<CoilUserDefined>().size());
-  ASSERT_EQ((unsigned)1, plant.demandComponents(CoilUserDefined::iddObjectType()).size());
-
-  EXPECT_FALSE(coil.ambientZone());
-  ThermalZone tz(m);
-  coil.setAmbientZone(tz);
-  EXPECT_EQ(tz.handle(), coil.ambientZone()->handle());
-  coil.resetAmbientZone();
-  EXPECT_FALSE(coil.ambientZone());
-}
-
-TEST_F(ModelFixture, CoilUserDefined_clone) {
+TEST_F(ModelFixture, CoilUserDefined_Clone) {
   Model m;
   Model m2;
 
+  // Make a coil and fill out every field
   CoilUserDefined coil(m);
-  EXPECT_EQ(13u, m.numObjects());
-  EXPECT_EQ(0u, m2.numObjects());
-  auto coil2 = coil.clone(m2).cast<CoilUserDefined>();
-  EXPECT_EQ(13u, m2.numObjects());
-  coil.remove();
-  EXPECT_EQ(0u, m.numObjects());
-  EXPECT_EQ(13u, m2.numObjects());
-  auto cloneCoil = coil2.clone(m2).cast<CoilUserDefined>();
-  EXPECT_EQ(26u, m2.numObjects());
-  EXPECT_NE(coil2.handle(), cloneCoil.handle());
-  EXPECT_NE(coil2.overallModelSimulationProgramCallingManager().get().handle(),
-            cloneCoil.overallModelSimulationProgramCallingManager().get().handle());
-  EXPECT_NE(coil2.modelSetupandSizingProgramCallingManager().get().handle(), cloneCoil.modelSetupandSizingProgramCallingManager().get().handle());
-  EXPECT_NE(coil2.overallSimulationProgram().get().handle(), cloneCoil.overallSimulationProgram().get().handle());
-  EXPECT_NE(coil2.initializationSimulationProgram().get().handle(), cloneCoil.initializationSimulationProgram().get().handle());
-  EXPECT_NE(coil2.airOutletTemperatureActuator().get().handle(), cloneCoil.airOutletTemperatureActuator().get().handle());
 
-  EXPECT_EQ(cloneCoil.handle(), cloneCoil.airOutletTemperatureActuator().get().actuatedComponent().get().handle());
-  EXPECT_EQ(coil2.handle(), coil2.airOutletTemperatureActuator().get().actuatedComponent().get().handle());
+  EXPECT_EQ(13, m.numObjects());
+  EXPECT_EQ(0, m2.numObjects());
+  PlantLoop plantLoop(m);
+  AirLoopHVAC airLoop(m);
+  EXPECT_TRUE(plantLoop.addDemandBranchForComponent(coil));
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  EXPECT_TRUE(coil.addToNode(supplyOutletNode));
+  ThermalZone z(m);
+  EXPECT_TRUE(coil.setAmbientZone(z));
+
+  const int numObjects = m.numObjects();
+  EXPECT_EQ(0, m2.numObjects());
+
+  EXPECT_TRUE(coil.airLoopHVAC());
+  EXPECT_TRUE(coil.airInletModelObject());
+  EXPECT_TRUE(coil.airOutletModelObject());
+  EXPECT_TRUE(coil.plantLoop());
+  EXPECT_TRUE(coil.waterInletModelObject());
+  EXPECT_TRUE(coil.waterOutletModelObject());
+
+  {
+    auto clonedCoil = coil.clone(m2).cast<CoilUserDefined>();
+
+    EXPECT_FALSE(clonedCoil.airLoopHVAC());
+    EXPECT_FALSE(clonedCoil.airInletModelObject());
+    EXPECT_FALSE(clonedCoil.airOutletModelObject());
+    EXPECT_FALSE(clonedCoil.plantLoop());
+    EXPECT_FALSE(clonedCoil.waterInletModelObject());
+    EXPECT_FALSE(clonedCoil.waterOutletModelObject());
+
+    EXPECT_EQ(13, m2.numObjects());
+
+    EXPECT_NE(coil.handle(), clonedCoil.handle());
+    EXPECT_NE(coil.overallModelSimulationProgramCallingManager(), clonedCoil.overallModelSimulationProgramCallingManager());
+    EXPECT_NE(coil.modelSetupandSizingProgramCallingManager(), clonedCoil.modelSetupandSizingProgramCallingManager());
+    EXPECT_NE(coil.overallSimulationProgram(), clonedCoil.overallSimulationProgram());
+    EXPECT_NE(coil.initializationSimulationProgram(), clonedCoil.initializationSimulationProgram());
+    EXPECT_NE(coil.airOutletTemperatureActuator(), clonedCoil.airOutletTemperatureActuator());
+    EXPECT_NE(coil.airOutletHumidityRatioActuator(), clonedCoil.airOutletHumidityRatioActuator());
+    EXPECT_NE(coil.airMassFlowRateActuator(), clonedCoil.airMassFlowRateActuator());
+    EXPECT_NE(coil.plantMinimumMassFlowRateActuator(), clonedCoil.plantMinimumMassFlowRateActuator());
+    EXPECT_NE(coil.plantMaximumMassFlowRateActuator(), clonedCoil.plantMaximumMassFlowRateActuator());
+    EXPECT_NE(coil.plantDesignVolumeFlowRateActuator(), clonedCoil.plantDesignVolumeFlowRateActuator());
+    EXPECT_NE(coil.plantMassFlowRateActuator(), clonedCoil.plantMassFlowRateActuator());
+    EXPECT_NE(coil.plantOutletTemperatureActuator(), clonedCoil.plantOutletTemperatureActuator());
+    EXPECT_FALSE(clonedCoil.ambientZone());
+
+    ASSERT_TRUE(clonedCoil.airOutletTemperatureActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.airOutletTemperatureActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.airOutletHumidityRatioActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.airOutletHumidityRatioActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.airMassFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.airMassFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantMinimumMassFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantMinimumMassFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantMaximumMassFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantMaximumMassFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantDesignVolumeFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantDesignVolumeFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantMassFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantMassFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantOutletTemperatureActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantOutletTemperatureActuator().actuatedComponent().get());
+  }
+
+  {
+    // Same model
+    auto clonedCoil = coil.clone(m).cast<CoilUserDefined>();
+
+    EXPECT_FALSE(clonedCoil.airLoopHVAC());
+    EXPECT_FALSE(clonedCoil.airInletModelObject());
+    EXPECT_FALSE(clonedCoil.airOutletModelObject());
+    EXPECT_FALSE(clonedCoil.plantLoop());
+    EXPECT_FALSE(clonedCoil.waterInletModelObject());
+    EXPECT_FALSE(clonedCoil.waterOutletModelObject());
+
+    EXPECT_EQ(numObjects + 13, m.numObjects());
+
+    EXPECT_NE(coil.handle(), clonedCoil.handle());
+    EXPECT_NE(coil.overallModelSimulationProgramCallingManager(), clonedCoil.overallModelSimulationProgramCallingManager());
+    EXPECT_NE(coil.modelSetupandSizingProgramCallingManager(), clonedCoil.modelSetupandSizingProgramCallingManager());
+    EXPECT_NE(coil.overallSimulationProgram(), clonedCoil.overallSimulationProgram());
+    EXPECT_NE(coil.initializationSimulationProgram(), clonedCoil.initializationSimulationProgram());
+    EXPECT_NE(coil.airOutletTemperatureActuator(), clonedCoil.airOutletTemperatureActuator());
+    EXPECT_NE(coil.airOutletHumidityRatioActuator(), clonedCoil.airOutletHumidityRatioActuator());
+    EXPECT_NE(coil.airMassFlowRateActuator(), clonedCoil.airMassFlowRateActuator());
+    EXPECT_NE(coil.plantMinimumMassFlowRateActuator(), clonedCoil.plantMinimumMassFlowRateActuator());
+    EXPECT_NE(coil.plantMaximumMassFlowRateActuator(), clonedCoil.plantMaximumMassFlowRateActuator());
+    EXPECT_NE(coil.plantDesignVolumeFlowRateActuator(), clonedCoil.plantDesignVolumeFlowRateActuator());
+    EXPECT_NE(coil.plantMassFlowRateActuator(), clonedCoil.plantMassFlowRateActuator());
+    EXPECT_NE(coil.plantOutletTemperatureActuator(), clonedCoil.plantOutletTemperatureActuator());
+    EXPECT_FALSE(clonedCoil.ambientZone());
+
+    ASSERT_TRUE(clonedCoil.airOutletTemperatureActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.airOutletTemperatureActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.airOutletHumidityRatioActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.airOutletHumidityRatioActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.airMassFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.airMassFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantMinimumMassFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantMinimumMassFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantMaximumMassFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantMaximumMassFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantDesignVolumeFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantDesignVolumeFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantMassFlowRateActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantMassFlowRateActuator().actuatedComponent().get());
+    ASSERT_TRUE(clonedCoil.plantOutletTemperatureActuator().actuatedComponent());
+    EXPECT_EQ(clonedCoil, clonedCoil.plantOutletTemperatureActuator().actuatedComponent().get());
+  }
 }
