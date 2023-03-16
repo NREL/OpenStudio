@@ -325,7 +325,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_setters) {
 
     auto actuatorName = actuator.getString(EnergyManagementSystem_ActuatorFields::Name, false).get();
 
-    const auto* it = std::find_if(expectedValues.cbegin(), expectedValues.cend(), [&actuatorName](const auto& k) { return k.first == actuatorName; });
+    auto it = std::find_if(expectedValues.cbegin(), expectedValues.cend(), [&actuatorName](const auto& k) { return k.first == actuatorName; });
     ASSERT_FALSE(it == expectedValues.end()) << actuatorName << " not found";
 
     auto actuatedCompType = actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get();
