@@ -114,28 +114,22 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
-#include <algorithm>
-#include <utilities/idd/IddFactory.hxx>
-
-#include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
-
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/core/ContainersMove.hpp"
-
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/Vector3d.hpp"
-
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/math/FloatCompare.hpp"
-
-#include "../utilities/core/Assert.hpp"
-
 #include "../utilities/sql/SqlFile.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
 #include <fmt/format.h>
+
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
@@ -2698,7 +2692,7 @@ SELECT {} FROM ZoneSizes
       auto coolingFlow_ = autosizedCoolingDesignAirFlowRate();
       auto heatingFlow_ = autosizedHeatingDesignAirFlowRate();
       if (coolingFlow_ && heatingFlow_) {
-        return coolingFlow_.get() + heatingFlow_.get();
+        return std::max(coolingFlow_.get(), heatingFlow_.get());
       }
       return boost::none;
     }

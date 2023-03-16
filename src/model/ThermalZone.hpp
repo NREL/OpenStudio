@@ -553,6 +553,7 @@ namespace model {
     boost::optional<double> autosizedCoolingDesignAirFlowRate() const;
     boost::optional<double> autosizedHeatingDesignAirFlowRate() const;
     boost::optional<double> autosizedCoolingDesignLoad() const;
+    // The max of autosizedCoolingDesignAirFlowRate and autosizedHeatingDesignAirFlowRate if both are found
     boost::optional<double> autosizedDesignAirFlowRate() const;
     boost::optional<double> autosizedHeatingDesignLoad() const;
 
