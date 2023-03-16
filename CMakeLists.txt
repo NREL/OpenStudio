@@ -580,6 +580,8 @@ if(MSVC)
   add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
   add_definitions(-D_SILENCE_FPOS_SEEKPOS_DEPRECATION_WARNING)
 
+  add_compile_options(/utf-8)
+
 endif()
 
 ##############################################################################

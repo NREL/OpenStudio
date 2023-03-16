@@ -251,6 +251,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateOutputControlTableStyle(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateOutputControlTimestamp(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateOutputDebuggingData(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateOutputDiagnostics(const WorkspaceObject& workspaceObject);
@@ -294,6 +296,8 @@ namespace energyplus {
     boost::optional<model::ModelObject> translatePhotovoltaicPerformanceSandia(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSolarCollectorPerformancePhotovoltaicThermalBIPVT(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateRefrigerationCase(const WorkspaceObject& workspaceObject);
 
@@ -365,13 +369,15 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateSurfacePropertyExposedFoundationPerimeter(const WorkspaceObject& workspaceObject);
 
-    boost::optional<model::ModelObject> translateSurfacePropertyLocalEnvironment(const WorkspaceObject& workspaceObject);
-
-    boost::optional<model::ModelObject> translateSurfacePropertySurroundingSurfaces(const WorkspaceObject& workspaceObject);
-
     boost::optional<model::ModelObject> translateSurfacePropertyGroundSurfaces(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSurfacePropertyIncidentSolarMultiplier(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSurfacePropertyLocalEnvironment(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSurfacePropertyOtherSideConditionsModel(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSurfacePropertySurroundingSurfaces(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSwimmingPoolIndoor(const WorkspaceObject& workspaceObject);
 

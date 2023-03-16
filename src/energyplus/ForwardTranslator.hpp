@@ -317,6 +317,7 @@ namespace model {
   class OutputControlFiles;
   class OutputControlReportingTolerances;
   class OutputControlTableStyle;
+  class OutputControlTimestamp;
   class OutputDebuggingData;
   class OutputDiagnostics;
   class OutputJSON;
@@ -443,6 +444,7 @@ namespace model {
   class SolarCollectorIntegralCollectorStorage;
   class SolarCollectorPerformanceFlatPlate;
   class SolarCollectorPerformanceIntegralCollectorStorage;
+  class SolarCollectorPerformancePhotovoltaicThermalBIPVT;
   class SolarCollectorPerformancePhotovoltaicThermalSimple;
   class Space;
   class SpaceInfiltrationDesignFlowRate;
@@ -1178,6 +1180,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateOutputControlTableStyle(model::OutputControlTableStyle& modelObject);
 
+    boost::optional<IdfObject> translateOutputControlTimestamp(model::OutputControlTimestamp& modelObject);
+
     boost::optional<IdfObject> translateOutputDebuggingData(model::OutputDebuggingData& modelObject);
 
     boost::optional<IdfObject> translateOutputDiagnostics(model::OutputDiagnostics& modelObject);
@@ -1433,6 +1437,9 @@ namespace energyplus {
 
     boost::optional<IdfObject>
       translateSolarCollectorPerformanceIntegralCollectorStorage(model::SolarCollectorPerformanceIntegralCollectorStorage& modelObject);
+
+    boost::optional<IdfObject>
+      translateSolarCollectorPerformancePhotovoltaicThermalBIPVT(model::SolarCollectorPerformancePhotovoltaicThermalBIPVT& modelObject);
 
     boost::optional<IdfObject>
       translateSolarCollectorPerformancePhotovoltaicThermalSimple(model::SolarCollectorPerformancePhotovoltaicThermalSimple& modelObject);

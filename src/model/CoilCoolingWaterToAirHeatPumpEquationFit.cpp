@@ -439,19 +439,23 @@ namespace model {
       return boost::none;
     }
     boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedAirFlowRate() const {
-      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s", "COIL:COOLING:WATERTOAIRHEATPUMP:EQUATIONFIT");
     }
 
     boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedWaterFlowRate() const {
-      return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s", "COIL:COOLING:WATERTOAIRHEATPUMP:EQUATIONFIT");
     }
 
     boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedTotalCoolingCapacity() const {
-      return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W", "COIL:COOLING:WATERTOAIRHEATPUMP:EQUATIONFIT");
     }
 
     boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedSensibleCoolingCapacity() const {
-      return getAutosizedValue("Design Size Rated Sensible Cooling Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Sensible Cooling Capacity", "W", "COIL:COOLING:WATERTOAIRHEATPUMP:EQUATIONFIT");
     }
 
     void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosize() {

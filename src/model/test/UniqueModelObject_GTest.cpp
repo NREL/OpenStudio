@@ -60,6 +60,8 @@
 #include "../OutputControlReportingTolerances_Impl.hpp"
 #include "../OutputControlTableStyle.hpp"
 #include "../OutputControlTableStyle_Impl.hpp"
+#include "../OutputControlTimestamp.hpp"
+#include "../OutputControlTimestamp_Impl.hpp"
 #include "../OutputDebuggingData.hpp"
 #include "../OutputDebuggingData_Impl.hpp"
 #include "../OutputDiagnostics.hpp"
@@ -420,6 +422,31 @@ TEST_F(ModelFixture, OutputControlTableStyle_UniqueModelObject_Clone) {
   auto outputControlTableStyleClone2 = outputControlTableStyle.clone(model2).cast<OutputControlTableStyle>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlTableStyle>());
   EXPECT_EQ("! Custom Object", outputControlTableStyleClone2.comment());
+}
+
+TEST_F(ModelFixture, OutputControlTimestamp_UniqueModelObject_Clone) {
+  // create a model to use
+  Model model;
+
+  // Get the Unique ModelObject
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputControlTimestamp>());
+  OutputControlTimestamp outputControlTimestamp = model.getUniqueModelObject<OutputControlTimestamp>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputControlTimestamp>());
+  // We use a comment to see if cloning to another model works
+  outputControlTimestamp.setComment("Custom Object");
+
+  // clone it into same model
+  auto outputControlTimestampClone = outputControlTimestamp.clone(model).cast<OutputControlTimestamp>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(outputControlTimestamp, outputControlTimestampClone);
+  EXPECT_EQ("! Custom Object", outputControlTimestampClone.comment());
+
+  // clone it into a different model
+  Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlTimestamp>());
+  auto outputControlTimestampClone2 = outputControlTimestamp.clone(model2).cast<OutputControlTimestamp>();
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlTimestamp>());
+  EXPECT_EQ("! Custom Object", outputControlTimestampClone2.comment());
 }
 
 TEST_F(ModelFixture, OutputDebuggingData_UniqueModelObject_Clone) {

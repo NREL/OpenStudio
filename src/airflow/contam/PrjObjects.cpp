@@ -2481,19 +2481,12 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     m_impl->setCoeffs(coeffs);
   }
 
-  ControlNode::Type ControlNode::convertTag(std::string& string) {
-    std::string tags[37] = {"sns", "sch", "set", "cvf", "dvf", "log", "pas", "mod", "hys", "abs", "bin", "dls", "dlx",
-                            "int", "rav", "inv", "and", "od",  "xor", "add", "sub", "mul", "div", "sum", "avg", "max",
-                            "min", "lls", "uls", "lbs", "ubs", "llc", "ulc", "pc1", "pi1", "sup", "sph"};
-    ControlNode::Type type[37] = {CT_SNS, CT_SCH, CT_SET, CT_CVF, CT_DVF, CT_LOG, CT_PAS, CT_MOD, CT_HYS, CT_ABS, CT_BIN, CT_DLS, CT_DLX,
-                                  CT_INT, CT_RAV, CT_INV, CT_AND, CT_OR,  CT_XOR, CT_ADD, CT_SUB, CT_MUL, CT_DIV, CT_SUM, CT_AVG, CT_MAX,
-                                  CT_MIN, CT_LLS, CT_ULS, CT_LBS, CT_UBS, CT_LLC, CT_ULC, CT_PC1, CT_PI1, CT_SUP, CT_SPH};
-    for (int i = 0; i < 37; i++) {
-      if (string == tags[i]) {
-        return type[i];
-      }
+  ControlNodeType ControlNode::convertTag(const std::string& tag) {
+    try {
+      return {tag};
+    } catch (...) {
+      return ControlNodeType::UNKNOWN;
     }
-    return ControlNode::UNKNOWN;
   }
 
   ControlNode* ControlNode::readElement(Reader& input) {
@@ -2507,63 +2500,22 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     int n2 = input.read<int>();
     std::string name = input.readString();
     std::string desc = input.readLine();
-    int kind = convertTag(dataType);
-    switch (kind) {
-      case ControlNode::CT_CVF: {
-        auto* obj = new CvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
-        obj->readDetails(input);
-        out = static_cast<ControlNode*>(obj);
-        break;
-      }
-      case ControlNode::CT_DVF: {
-        auto* obj = new DvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
-        obj->readDetails(input);
-        out = static_cast<ControlNode*>(obj);
-        break;
-      }
-      case ControlNode::CT_PAS:
-      case ControlNode::CT_ABS:
-      case ControlNode::CT_BIN:
-      case ControlNode::CT_INT:
-      case ControlNode::CT_INV:
-      case ControlNode::CT_AND:
-      case ControlNode::CT_OR:
-      case ControlNode::CT_XOR:
-      case ControlNode::CT_ADD:
-      case ControlNode::CT_SUB:
-      case ControlNode::CT_MUL:
-      case ControlNode::CT_DIV:
-      case ControlNode::CT_LLS:
-      case ControlNode::CT_ULS:
-      case ControlNode::CT_LLC:
-      case ControlNode::CT_ULC:
-      case ControlNode::CT_SPH:
-      case ControlNode::CT_SNS:
-      case ControlNode::CT_SCH:
-      case ControlNode::CT_SET:
-      case ControlNode::CT_LOG:
-      case ControlNode::CT_MOD:
-      case ControlNode::CT_HYS:
-      case ControlNode::CT_DLS:
-      case ControlNode::CT_DLX:
-      case ControlNode::CT_RAV:
-      case ControlNode::CT_SUM:
-      case ControlNode::CT_AVG:
-      case ControlNode::CT_MAX:
-      case ControlNode::CT_MIN:
-      case ControlNode::CT_LBS:
-      case ControlNode::CT_UBS:
-      case ControlNode::CT_PC1:
-      case ControlNode::CT_PI1:
-      case ControlNode::CT_SUP: {
-        std::string mesg = "Control node type '" + dataType + "' is not supported.";
-        LOG_FREE_AND_THROW("openstudio.contam.Reader", mesg);
-      }
-      case ControlNode::UNKNOWN:
-      default:
-        std::string mesg = "Unknown control node type '" + dataType + "' at line " + openstudio::toString(input.lineNumber());
-        LOG_FREE_AND_THROW("openstudio.contam.Reader", mesg);
+
+    const ControlNodeType kind = convertTag(dataType);
+    if (kind == ControlNodeType::UNKNOWN) {
+      LOG_FREE_AND_THROW("openstudio.contam.Reader", "Unknown control node type '" << dataType << "' at line " << input.lineNumber());
+    } else if (kind == ControlNodeType::CT_CVF) {
+      auto* obj = new CvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
+      obj->readDetails(input);
+      out = static_cast<ControlNode*>(obj);
+    } else if (kind == ControlNodeType::CT_DVF) {
+      auto* obj = new DvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
+      obj->readDetails(input);
+      out = static_cast<ControlNode*>(obj);
+    } else {
+      LOG_FREE_AND_THROW("openstudio.contam.Reader", "Control node type '" << dataType << "' is not supported.");
     }
+
     return out;
   }
 

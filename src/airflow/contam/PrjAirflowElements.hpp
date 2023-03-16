@@ -32,6 +32,7 @@
 
 #include "PrjDefines.hpp"
 #include "PrjSubobjects.hpp"
+#include "ContamEnums.hpp"
 #include <string>
 #include <vector>
 
@@ -67,45 +68,12 @@ namespace contam {
   class AIRFLOW_API AirflowElement
   {
    public:
-    /** The Type enumeration is used to identify the various airflow element types. */
-    enum Type
-    {
-      PL_ORFC = 0,
-      PL_LEAK1 = 1,
-      PL_LEAK2 = 2,
-      PL_LEAK3 = 3,
-      PL_CONN = 4,
-      PL_QCN = 5,
-      PL_FCN = 6,
-      PL_TEST1 = 7,
-      PL_TEST2 = 8,
-      PL_CRACK = 9,
-      PL_STAIR = 10,
-      PL_SHAFT = 11,
-      PL_BDQ = 12,
-      PL_BDF = 13,
-      QFR_QAB = 14,
-      QFR_QAF = 15,
-      QFR_CRACK = 16,
-      QFR_TEST2 = 17,
-      DR_DOOR = 18,
-      DR_PL2 = 19,
-      FN_CMF = 20,
-      FN_CVF = 21,
-      FN_FAN = 22,
-      CS_FSP = 23,
-      CS_QSP = 24,
-      CS_PSF = 25,
-      CS_PSQ = 26,
-      AF_SUP = 27,
-      UNKNOWN
-    };
     /** Destroy the object. */
     virtual ~AirflowElement() = default;
     /** Write the object to a string. */
     virtual std::string write() = 0;
     /** Convert an input string into an airflow element type enum. */
-    static Type convertTag(std::string string);
+    static AirflowElementType convertTag(const std::string& tag);
     /** Read an airflow element from a Reader object. */
     static AirflowElement* readElement(Reader& input);
     // virtual void recompute(){}

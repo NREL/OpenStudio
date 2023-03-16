@@ -264,6 +264,12 @@ namespace model {
 
       boost::optional<double> autosizedDesignSupplyAirFlowRate() const;
 
+      // Not part of the applySizingValues
+      boost::optional<double> autosizedSumMinimumHeatingAirFlowRates() const;
+
+      // Not part of the applySizingValues
+      boost::optional<double> autosizedSumAirTerminalMaxAirFlowRate() const;
+
       virtual void autosize() override;
 
       virtual void applySizingValues() override;

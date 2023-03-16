@@ -1975,6 +1975,16 @@ namespace model {
       return getAutosizedValue("Design Supply Air Flow Rate", "m3/s");
     }
 
+    // Not part of the applySizingValues
+    boost::optional<double> AirLoopHVAC_Impl::autosizedSumMinimumHeatingAirFlowRates() const {
+      return getAutosizedValue("Sum of Air Terminal Minimum Heating Flow Rates", "m3/s");
+    }
+
+    // Not part of the applySizingValues
+    boost::optional<double> AirLoopHVAC_Impl::autosizedSumAirTerminalMaxAirFlowRate() const {
+      return getAutosizedValue("Sum of Air Terminal Maximum Flow Rates", "m3/s");
+    }
+
     void AirLoopHVAC_Impl::autosize() {
       autosizeDesignSupplyAirFlowRate();
     }
@@ -2301,6 +2311,14 @@ namespace model {
 
   boost::optional<double> AirLoopHVAC::autosizedDesignSupplyAirFlowRate() const {
     return getImpl<detail::AirLoopHVAC_Impl>()->autosizedDesignSupplyAirFlowRate();
+  }
+
+  boost::optional<double> AirLoopHVAC::autosizedSumMinimumHeatingAirFlowRates() const {
+    return getImpl<detail::AirLoopHVAC_Impl>()->autosizedSumMinimumHeatingAirFlowRates();
+  }
+
+  boost::optional<double> AirLoopHVAC::autosizedSumAirTerminalMaxAirFlowRate() const {
+    return getImpl<detail::AirLoopHVAC_Impl>()->autosizedSumAirTerminalMaxAirFlowRate();
   }
 
   unsigned AirLoopHVAC::availabilityManagerPriority(const AvailabilityManager& availabilityManager) const {

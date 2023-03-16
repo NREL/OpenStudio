@@ -373,6 +373,12 @@ namespace model {
 
     boost::optional<double> autosizedDesignSupplyAirFlowRate() const;
 
+    // Not part of the applySizingValues
+    boost::optional<double> autosizedSumMinimumHeatingAirFlowRates() const;
+
+    // Not part of the applySizingValues
+    boost::optional<double> autosizedSumAirTerminalMaxAirFlowRate() const;
+
    protected:
     friend class Model;
 

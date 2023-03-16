@@ -36,6 +36,7 @@
 #include "OutputControlFiles.hpp"
 #include "OutputControlReportingTolerances.hpp"
 #include "OutputControlTableStyle.hpp"
+#include "OutputControlTimestamp.hpp"
 #include "OutputDiagnostics.hpp"
 #include "OutputDebuggingData.hpp"
 #include "OutputJSON.hpp"
@@ -194,6 +195,10 @@ namespace model {
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTableStyle>(). */
       boost::optional<OutputControlTableStyle> outputControlTableStyle() const;
 
+      /** Get the OutputControlTimestamp object if there is one, this implementation uses a cached reference to the OutputControlTimestamp
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTimestamp>(). */
+      boost::optional<OutputControlTimestamp> outputControlTimestamp() const;
+
       /** Get the OutputDiagnostics object if there is one, this implementation uses a cached reference to the OutputDiagnostics
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDiagnostics>(). */
       boost::optional<OutputDiagnostics> outputDiagnostics() const;
@@ -211,7 +216,7 @@ namespace model {
       boost::optional<OutputSQLite> outputSQLite() const;
 
       /** Get the OutputEnergyManagementSystem object if there is one, this implementation uses a cached reference to the OutputEnergyManagementSystem
-     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputEnergyManagementSystem>(). */
       boost::optional<OutputEnergyManagementSystem> outputEnergyManagementSystem() const;
 
       /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
@@ -485,6 +490,7 @@ namespace model {
       mutable boost::optional<OutputControlFiles> m_cachedOutputControlFiles;
       mutable boost::optional<OutputControlReportingTolerances> m_cachedOutputControlReportingTolerances;
       mutable boost::optional<OutputControlTableStyle> m_cachedOutputControlTableStyle;
+      mutable boost::optional<OutputControlTimestamp> m_cachedOutputControlTimestamp;
       mutable boost::optional<OutputDiagnostics> m_cachedOutputDiagnostics;
       mutable boost::optional<OutputDebuggingData> m_cachedOutputDebuggingData;
       mutable boost::optional<OutputJSON> m_cachedOutputJSON;
@@ -534,6 +540,7 @@ namespace model {
       void clearCachedOutputControlFiles(const Handle& handle);
       void clearCachedOutputControlReportingTolerances(const Handle& handle);
       void clearCachedOutputControlTableStyle(const Handle& handle);
+      void clearCachedOutputControlTimestamp(const Handle& handle);
       void clearCachedOutputDiagnostics(const Handle& handle);
       void clearCachedOutputDebuggingData(const Handle& handle);
       void clearCachedOutputJSON(const Handle& handle);

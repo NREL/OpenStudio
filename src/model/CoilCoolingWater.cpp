@@ -502,6 +502,11 @@ namespace model {
       return getAutosizedValue("Design Size Design Outlet Air Humidity Ratio", "kgWater/kgDryAir");
     }
 
+    boost::optional<double> CoilCoolingWater_Impl::autosizedDesignCoilLoad() const {
+      // EPLUS-SQL-INCONSISTENCY (?)
+      return getAutosizedValueFromInitializationSummary("Design Size Design Coil Load", "W");
+    }
+
     void CoilCoolingWater_Impl::autosize() {
       autosizeDesignWaterFlowRate();
       autosizeDesignAirFlowRate();
@@ -755,6 +760,10 @@ namespace model {
 
   boost::optional<double> CoilCoolingWater::autosizedDesignOutletAirHumidityRatio() const {
     return getImpl<detail::CoilCoolingWater_Impl>()->autosizedDesignOutletAirHumidityRatio();
+  }
+
+  boost::optional<double> CoilCoolingWater::autosizedDesignCoilLoad() const {
+    return getImpl<detail::CoilCoolingWater_Impl>()->autosizedDesignCoilLoad();
   }
 
 }  // namespace model

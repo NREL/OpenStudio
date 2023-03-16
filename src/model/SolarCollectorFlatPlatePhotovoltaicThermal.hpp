@@ -39,6 +39,7 @@ namespace model {
 
   class PlanarSurface;
   class GeneratorPhotovoltaic;
+  class SolarCollectorPerformancePhotovoltaicThermalBIPVT;
   class SolarCollectorPerformancePhotovoltaicThermalSimple;
 
   namespace detail {
@@ -55,6 +56,8 @@ namespace model {
     //@{
 
     explicit SolarCollectorFlatPlatePhotovoltaicThermal(const Model& model);
+    explicit SolarCollectorFlatPlatePhotovoltaicThermal(const SolarCollectorPerformancePhotovoltaicThermalBIPVT& performance);
+    explicit SolarCollectorFlatPlatePhotovoltaicThermal(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance);
 
     virtual ~SolarCollectorFlatPlatePhotovoltaicThermal() = default;
     // Default the copy and move operators because the virtual dtor is explicit
@@ -70,7 +73,7 @@ namespace model {
     /** @name Getters */
     //@{
 
-    SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance() const;
+    ModelObject solarCollectorPerformance() const;
 
     boost::optional<PlanarSurface> surface() const;
 
@@ -84,10 +87,11 @@ namespace model {
     /** @name Setters */
     //@{
 
-    /// Deletes the current parameters and clones the parameters passed in
-    bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
+    /// Deletes the current performance and clones the performance passed in
+    bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalBIPVT& performance);
+    bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance);
 
-    /// Deletes the current parameters and constructs a new default set of parameters
+    /// Deletes the current performance and constructs a new default set of performance
     void resetSolarCollectorPerformance();
 
     bool setSurface(const PlanarSurface& surface);

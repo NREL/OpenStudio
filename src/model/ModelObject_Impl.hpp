@@ -200,7 +200,7 @@ namespace model {
       //@}
 
       /** Gets the autosized component value from the sql file **/
-      boost::optional<double> getAutosizedValue(const std::string& valueName, const std::string& unitString) const;
+      boost::optional<double> getAutosizedValue(const std::string& valueName, const std::string& units, std::string overrideCompType = "") const;
 
      protected:
       ModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -221,10 +221,14 @@ namespace model {
       bool setBooleanFieldValue(unsigned index, const T& value);
 
       /** Sets index to point to schedule if schedule's ScheduleTypeLimits are compatible with the
-     *  ScheduleType in the ScheduleTypeRegistry for (className,scheduleDisplayName), or if
-     *  schedule's ScheduleTypeLimits have not yet been set (in which case the ScheduleTypeRegistry
-     *  is used to retrieve or create an appropriate one). */
+       *  ScheduleType in the ScheduleTypeRegistry for (className,scheduleDisplayName), or if
+       *  schedule's ScheduleTypeLimits have not yet been set (in which case the ScheduleTypeRegistry
+       *  is used to retrieve or create an appropriate one). */
       bool setSchedule(unsigned index, const std::string& className, const std::string& scheduleDisplayName, Schedule& schedule);
+
+      /** For stuff that's plain missing from ComponentSizes table in E+, so getAutosizedValue can't work.
+        * This method is slower as it executes a lot more queries (an average of 10, versus 1 for getAutosizedValue) */
+      boost::optional<double> getAutosizedValueFromInitializationSummary(const std::string& valueName, const std::string& units) const;
 
      private:
       REGISTER_LOGGER("openstudio.model.ModelObject");

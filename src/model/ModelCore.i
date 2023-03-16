@@ -37,6 +37,7 @@
   %ignore openstudio::model::Model::outputControlFiles;
   %ignore openstudio::model::Model::outputControlReportingTolerances;
   %ignore openstudio::model::Model::outputControlTableStyle;
+  %ignore openstudio::model::Model::outputControlTimestamp;
   %ignore openstudio::model::Model::outputDebuggingData;
   %ignore openstudio::model::Model::outputDiagnostics;
   %ignore openstudio::model::Model::outputJSON;

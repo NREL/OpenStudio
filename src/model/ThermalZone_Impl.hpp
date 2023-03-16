@@ -445,6 +445,16 @@ namespace model {
 
       std::vector<AirLoopHVAC> airLoopHVACs() const;
 
+      // SQL Queries
+      boost::optional<double> getAutosizedValueFromZoneSizes(const std::string& columnName, const std::string& loadType) const;
+
+      boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const;
+      boost::optional<double> autosizedCoolingDesignAirFlowRate() const;
+      boost::optional<double> autosizedHeatingDesignAirFlowRate() const;
+      boost::optional<double> autosizedCoolingDesignLoad() const;
+      boost::optional<double> autosizedDesignAirFlowRate() const;
+      boost::optional<double> autosizedHeatingDesignLoad() const;
+
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.ThermalZone");

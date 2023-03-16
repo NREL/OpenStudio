@@ -453,11 +453,13 @@ namespace model {
     }
 
     boost::optional<double> CoilWaterHeatingAirToWaterHeatPump_Impl::autosizedRatedEvaporatorAirFlowRate() const {
-      return getAutosizedValue("Design Size Rated Evaporator Air Flow Rate", "m3/s");
+      // This is an OS naming issue really, not an EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Evaporator Air Flow Rate", "m3/s", "Coil:WaterHeating:AirToWaterHeatPump:Pumped");
     }
 
     boost::optional<double> CoilWaterHeatingAirToWaterHeatPump_Impl::autosizedRatedCondenserWaterFlowRate() const {
-      return getAutosizedValue("Design Size Rated Condenser Water Flow Rate", "m3/s");
+      // This is an OS naming issue really, not an EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Condenser Water Flow Rate", "m3/s", "Coil:WaterHeating:AirToWaterHeatPump:Pumped");
     }
 
     void CoilWaterHeatingAirToWaterHeatPump_Impl::autosize() {

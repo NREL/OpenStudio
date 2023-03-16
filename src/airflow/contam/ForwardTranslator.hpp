@@ -33,6 +33,7 @@
 #include "../AirflowAPI.hpp"
 
 #include "PrjModel.hpp"
+#include "ContamEnums.hpp"
 #include "../SurfaceNetworkBuilder.hpp"
 
 //#include "../model/Model.hpp"
@@ -119,12 +120,6 @@ namespace contam {
   class AIRFLOW_API ForwardTranslator : public airflow::SurfaceNetworkBuilder
   {
    public:
-    enum class TranslationType
-    {
-      SurfacesOnly,
-      SubSurfacesOnly,
-      AllSurfaces
-    };
     /** @name Constructors and Destructors */
     //@{
     /** Construct a new, empty translator. */

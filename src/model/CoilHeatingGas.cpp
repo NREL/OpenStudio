@@ -530,7 +530,7 @@ namespace model {
     }
 
     boost::optional<double> CoilHeatingGas_Impl::autosizedNominalCapacity() const {
-      return getAutosizedValue("Design Size Nominal Capacity", "W");
+      return getAutosizedValue("Design Size Nominal Capacity", "W", "Coil:Heating:Fuel");
     }
 
     void CoilHeatingGas_Impl::autosize() {

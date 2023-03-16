@@ -221,6 +221,9 @@ namespace model {
 
     boost::optional<double> autosizedDesignOutletAirHumidityRatio() const;
 
+    // Not part of the applySizingValues
+    boost::optional<double> autosizedDesignCoilLoad() const;
+
     //@}
    protected:
     friend class Model;

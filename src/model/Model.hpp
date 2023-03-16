@@ -54,6 +54,7 @@ namespace model {
   class OutputControlFiles;
   class OutputControlReportingTolerances;
   class OutputControlTableStyle;
+  class OutputControlTimestamp;
   class OutputDiagnostics;
   class OutputDebuggingData;
   class OutputJSON;
@@ -174,6 +175,10 @@ namespace model {
     /** Get the OutputControlTableStyle object if there is one, this implementation uses a cached reference to the OutputControlTableStyle
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTableStyle>(). */
     boost::optional<OutputControlTableStyle> outputControlTableStyle() const;
+
+    /** Get the OutputControlTimestamp object if there is one, this implementation uses a cached reference to the OutputControlTimestamp
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTimestamp>(). */
+    boost::optional<OutputControlTimestamp> outputControlTimestamp() const;
 
     /** Get the OutputDiagnostics object if there is one, this implementation uses a cached reference to the OutputDiagnostics
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDiagnostics>(). */
@@ -724,6 +729,9 @@ namespace model {
 
   template <>
   MODEL_API OutputControlTableStyle Model::getUniqueModelObject<OutputControlTableStyle>();
+
+  template <>
+  MODEL_API OutputControlTimestamp Model::getUniqueModelObject<OutputControlTimestamp>();
 
   template <>
   MODEL_API OutputDiagnostics Model::getUniqueModelObject<OutputDiagnostics>();

@@ -744,6 +744,10 @@ namespace energyplus {
         modelObject = translateOutputControlTableStyle(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::OutputControl_Timestamp: {
+        modelObject = translateOutputControlTimestamp(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Output_Schedules: {
         modelObject = translateOutputSchedules(workspaceObject);
         break;
@@ -880,6 +884,10 @@ namespace energyplus {
         modelObject = translateSizingPeriodDesignDay(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::SolarCollectorPerformance_PhotovoltaicThermal_BIPVT: {
+        modelObject = translateSolarCollectorPerformancePhotovoltaicThermalBIPVT(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Sizing_System: {
         //modelObject = translateSizingSystem(workspaceObject);
         break;
@@ -908,14 +916,6 @@ namespace energyplus {
         modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
         break;
       }
-      case openstudio::IddObjectType::SurfaceProperty_LocalEnvironment: {
-        modelObject = translateSurfacePropertyLocalEnvironment(workspaceObject);
-        break;
-      }
-      case openstudio::IddObjectType::SurfaceProperty_SurroundingSurfaces: {
-        modelObject = translateSurfacePropertySurroundingSurfaces(workspaceObject);
-        break;
-      }
       case openstudio::IddObjectType::SurfaceProperty_GroundSurfaces: {
         modelObject = translateSurfacePropertyGroundSurfaces(workspaceObject);
         break;
@@ -924,12 +924,22 @@ namespace energyplus {
         modelObject = translateSurfacePropertyIncidentSolarMultiplier(workspaceObject);
         break;
       }
-        //case openstudio::IddObjectType::SwimmingPool_Indoor :
-        //{
-        //modelObject = translateSwimmingPoolIndoor(workspaceObject);
-        //break;
-        //}
-
+      case openstudio::IddObjectType::SurfaceProperty_LocalEnvironment: {
+        modelObject = translateSurfacePropertyLocalEnvironment(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_OtherSideConditionsModel: {
+        modelObject = translateSurfacePropertyOtherSideConditionsModel(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_SurroundingSurfaces: {
+        modelObject = translateSurfacePropertySurroundingSurfaces(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SwimmingPool_Indoor: {
+        // modelObject = translateSwimmingPoolIndoor(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Table_Lookup: {
         modelObject = translateTableLookup(workspaceObject);
         break;
