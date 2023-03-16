@@ -385,10 +385,6 @@ namespace model {
     getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->removeAllAirLoops();
   }
 
-  std::vector<IdfObject> AirLoopHVACDedicatedOutdoorAirSystem::remove() {
-    return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->remove();
-  }
-
   bool AirLoopHVACDedicatedOutdoorAirSystem::addAirLoops(const std::vector<AirLoopHVAC>& airLoopHVACs) {
     return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->addAirLoops(airLoopHVACs);
   }
