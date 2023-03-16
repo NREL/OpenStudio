@@ -52,9 +52,13 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
 
+#include "../../utilities/core/Compare.hpp"
+
 #include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+
+#include <algorithm>
 
 using namespace openstudio::model;
 
@@ -65,113 +69,203 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemActuator(EnergyManagementSystemActuator& modelObject) {
-    boost::optional<std::string> s;
 
-    IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Actuator);
-
-    //Name
-    s = modelObject.name();
-    if (s) {
-      idfObject.setName(*s);
-    }
-    const boost::optional<ModelObject> m_opt = modelObject.actuatedComponent();
-    if (m_opt) {
-      ModelObject m = m_opt.get();
-
-      // Start by dealing with "OS:Site" and "OS:WeatherFile" that are special ones (will not pass the test on `m.name()` below
-      if (m.iddObjectType() == openstudio::IddObjectType::OS_Site || m.iddObjectType() == openstudio::IddObjectType::OS_WeatherFile) {
-        idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, "Environment");
-        idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, "Weather Data");
-        idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-        m_idfObjects.push_back(idfObject);
-        return idfObject;
-      }
-
-      // The component should have a name
-      if (!m.name()) {
-        LOG(Error, "Actuated Component Name for Actuator '" << modelObject.nameString() << "' does not exist, it will not be translated.");
-        return boost::none;
-      }
-
-      // check if actuatedComponent is a SpaceLoad
-      if (auto load = m.optionalCast<model::SpaceLoadInstance>()) {
-        const boost::optional<ModelObject> m_zN = modelObject.zoneName();
-        // if SpaceLoad, check if thermalzone names exist
-        auto space = load->space();
-        auto spaceType = load->spaceType();
-        if (spaceType) {
-          if (m_zN) {
-            //ZoneName object exists so set name to be the concatonation of it plus the spaceloadobject
-            std::string tz_name = m_zN.get().nameString() + " " + m.nameString();
-            idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, tz_name);
-            idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
-            idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-
-            m_idfObjects.push_back(idfObject);
-            return idfObject;
-          }
-          //ZoneName object does not exist so try and translate anyway
-
-          // should not also have a space assigned
-          OS_ASSERT(!space);
-
-          // the load references a space type, this means it will reference a zonelist in EnergyPlus
-          // in EnergyPlus, each load in a zonelist is duplicated into each zone with a new name based on the zone
-          boost::optional<IdfObject> result;
-          for (const auto& space : spaceType->spaces()) {
-            auto tz = space.thermalZone();
-            if (tz) {
-              std::string tz_name = tz.get().nameString() + " " + m.nameString();
-              idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, tz_name);
-              idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
-              idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-              if (!result) {
-                result = idfObject;
-              }
-            } else {
-              LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load.get().name().get()
-                                      << "' which is not associated with a ThermalZone, it will not be translated.");
-            }
-          }
-          //Give WArning that spaceType has multiple spaces
-          if (m_forwardTranslatorOptions.excludeSpaceTranslation() && spaceType->spaces().size() > 1) {
-            LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load.get().name().get()
-                                   << "' attached to SpaceType '" << spaceType.get().nameString()
-                                   << "', with multiple spaces. Check your EMS programs to make sure your actuators are correct.");
-          }
-          // return the first idf object
-          if (result) {
-            m_idfObjects.push_back(result.get());
-          }
-          return result;
-
-        } else if (space) {
-
-          // if load is assigned to a single space instead of a space type then the name will not be changed in EnergyPlus
-          idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
-          idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
-          idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-          m_idfObjects.push_back(idfObject);
-
-          return idfObject;
-        } else {
-          LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load.get().name().get()
-                                  << "' which is not associated with a ThermalZone, it will not be translated.");
-          return boost::none;
-        }
-
-        // Classic case, we just write it
-      } else {
-        idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
-        idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
-        idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-        m_idfObjects.push_back(idfObject);
-        return idfObject;
-      }
-    } else {
+    const boost::optional<ModelObject> actuatedComponent_ = modelObject.actuatedComponent();
+    if (!actuatedComponent_) {
       LOG(Error, "Actuated Component for Actuator " << modelObject.nameString() << " does not exist, it will not be translated.");
       return boost::none;
     }
+
+    // Start by dealing with "OS:Site" and "OS:WeatherFile" that are special ones (will not pass the test on `m.name()` below
+    if (actuatedComponent_->iddObjectType() == openstudio::IddObjectType::OS_Site
+        || actuatedComponent_->iddObjectType() == openstudio::IddObjectType::OS_WeatherFile) {
+      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::EnergyManagementSystem_Actuator, modelObject);
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, "Environment");
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, "Weather Data");
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+      return idfObject;
+    }
+
+    // As this point, it MUST have a name, as we dealt with the special ones already
+    if (!actuatedComponent_->name()) {
+      LOG(Error, "Actuated Component Name for Actuator '" << modelObject.nameString() << "' does not exist, it will not be translated.");
+      return boost::none;
+    }
+
+    // check if actuatedComponent is a SpaceLoad
+    auto load_ = actuatedComponent_->optionalCast<model::SpaceLoadInstance>();
+    if (!load_) {
+      // Classic case, we just write it
+      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::EnergyManagementSystem_Actuator, modelObject);
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, actuatedComponent_->nameString());
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+      return idfObject;
+    }
+
+    // SpaceLoadInstance: check if first if it's assigned to a single space
+    auto space_ = load_->space();
+    if (space_) {
+      // if load is assigned to a single space instead of a space type then the name will not be changed in EnergyPlus
+      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::EnergyManagementSystem_Actuator, modelObject);
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, actuatedComponent_->nameString());
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+      return idfObject;
+    }
+
+    // At this point the SpaceLoadInstance is not assigned to a space, so it's assigned to a SpaceType or nothing
+
+    auto spaceType_ = load_->spaceType();
+    if (!spaceType_) {
+      LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                              << "' which is not associated with a ThermalZone, it will not be translated.");
+      return boost::none;
+    }
+
+    // Deal with the SpaceType case...
+
+    // Case 1: the user correctly assigned a Space or ThermalZone to it
+    if (const boost::optional<Space> specificSpace_ = modelObject.space()) {
+      // Assert the space has a thermalZone attached to it.
+      auto tz_ = specificSpace_->thermalZone();
+      if (!tz_) {
+        LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                                << "' and specified that it wanted to be attached to the Space '" << specificSpace_->nameString()
+                                << "' but the Space has no Thermal Zone, so it will not be translated.");
+        return boost::none;
+      }
+
+      std::string zoneOrSpaceName = specificSpace_->nameString();
+
+      // Try to be helpful in case the user assigned a Space, but the FT doesn't translate spaces
+      if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
+        LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                               << "' and specified that it wanted to be attached to the Space '" << specificSpace_->nameString()
+                               << "' but you have turned off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone '"
+                               << tz_->nameString() << "'.");
+        zoneOrSpaceName = tz_->nameString();
+      }
+
+      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::EnergyManagementSystem_Actuator, modelObject);
+      const std::string spaceLoadNameForEMS = zoneOrSpaceName + " " + actuatedComponent_->nameString();
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, spaceLoadNameForEMS);
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+      return idfObject;
+    }
+
+    if (const boost::optional<ThermalZone> specificZone_ = modelObject.thermalZone()) {
+      auto spaces = specificZone_->spaces();
+      if (spaces.empty()) {
+        LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                                << "' and specified that it wanted to be attached to the ThermalZone '" << specificZone_->nameString()
+                                << "' but the Thermal Zone has no Spaces, so it will not be translated.");
+        return boost::none;
+      }
+
+      std::string zoneOrSpaceName = specificZone_->nameString();
+
+      if (!m_forwardTranslatorOptions.excludeSpaceTranslation()) {
+        if (spaces.size() == 1) {
+          zoneOrSpaceName = spaces.front().nameString();
+          LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                                 << "' and specified that it wanted to be attached to the Thermal Zone '" << specificZone_->nameString()
+                                 << "' but you have turned on ForwardTranslation's Space Feature. Falling back to using the attached Space '"
+                                 << zoneOrSpaceName << "' since there is only 1.");
+        } else {  // if (spaces.size() > 1) {
+          std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+          zoneOrSpaceName = spaces.front().nameString();
+          // TODO: do we grab the first space or just don't translate it?
+          LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                                  << "' and specified that it wanted to be attached to the Thermal Zone '" << specificZone_->nameString()
+                                  << "' but you have turned on ForwardTranslation's Space Feature. Your Thermal Zone has multiple spaces "
+                                     "attached. Falling back to using the first Space '"
+                                  << zoneOrSpaceName << "'.");
+        }
+      }
+
+      // ZoneName object exists so set name to be the concatenation of it plus the spaceloadobject
+      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::EnergyManagementSystem_Actuator, modelObject);
+      const std::string spaceLoadNameForEMS = zoneOrSpaceName + " " + actuatedComponent_->nameString();
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, spaceLoadNameForEMS);
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+      return idfObject;
+    }
+
+    // ZoneName object does not exist so try and translate anyway
+
+    // the load references a space type, this means it will reference a ZoneList (if excludeSpaceTranslation = true) or a SpaceList in EnergyPlus
+    // in EnergyPlus, each load in a ZoneList is duplicated into each zone with a new name based on the zone, same for SpaceList
+    {
+      auto spaces = spaceType_->spaces();
+      if (spaces.empty()) {
+        LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                                << "' and specified that it wanted to be attached to the SpaceType '" << spaceType_->nameString()
+                                << "' but the Space Type has no Spaces, so it will not be translated.");
+        return boost::none;
+      }
+
+      std::string zoneOrSpaceName;
+
+      if (!m_forwardTranslatorOptions.excludeSpaceTranslation()) {
+        if (spaces.size() == 1) {
+          zoneOrSpaceName = spaces.front().nameString();
+          LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString() << "' attached to the SpaceType '"
+                                 << spaceType_->nameString()
+                                 << "' but you have turned on ForwardTranslation's Space Feature. Falling back to using the attached Space '"
+                                 << zoneOrSpaceName << "' since there is only 1.");
+        } else {  // if (spaces.size() > 1) {
+          // TODO: do we grab the first space or just don't translate it?
+          std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+          zoneOrSpaceName = spaces.front().nameString();
+          LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                                  << "' attached to the SpaceType '" << spaceType_->nameString()
+                                  << "' but you have turned on ForwardTranslation's Space Feature. The Space Type has multiple spaces "
+                                     "attached. Falling back to using the first Space '"
+                                  << zoneOrSpaceName << "'.");
+        }
+      } else {
+        // Not translating Spaces
+        std::set<std::string> zoneNames;
+        for (const auto& space : spaceType_->spaces()) {
+          if (auto tz_ = space.thermalZone()) {
+            zoneNames.insert(tz_->nameString());
+          }
+        }
+        if (zoneNames.empty()) {
+          LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                                  << "' attached to the SpaceType '" << spaceType_->nameString()
+                                  << "' but the Space Type has zero spaces attached to any Thermal Zones, so it will not be translated.");
+          return boost::none;
+        }
+        zoneOrSpaceName = *(zoneNames.begin());
+        if (zoneNames.size() == 1) {
+          LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString() << "' attached to the SpaceType '"
+                                 << spaceType_->nameString()
+                                 << "' but you have turned off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone '"
+                                 << zoneOrSpaceName << "' since there is only 1.");
+        } else {  // if (zoneNames.size() > 1) {
+          // TODO: do we grab the first space or just don't translate it?
+          LOG(Error, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load_->nameString()
+                                  << "' attached to the SpaceType '" << spaceType_->nameString()
+                                  << "' but you have turned off ForwardTranslation's Space Feature. "
+                                     "Your SpaceType ends up linked to multiples Thermal Zones. Falling back to using the first Thermal Zone '"
+                                  << zoneOrSpaceName << "'.");
+        }
+      }
+
+      // ZoneName object exists so set name to be the concatenation of it plus the spaceloadobject
+      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::EnergyManagementSystem_Actuator, modelObject);
+      const std::string spaceLoadNameForEMS = zoneOrSpaceName + " " + actuatedComponent_->nameString();
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, spaceLoadNameForEMS);
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+      return idfObject;
+    }
+
+    return boost::none;
   }
 
 }  // namespace energyplus

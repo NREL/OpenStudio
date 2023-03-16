@@ -10,17 +10,37 @@
 #include "../measure/OSRunner.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
-#include "../utilities/filetypes/WorkflowStep.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
-#include "../utilities/idf/Workspace.hpp"
-#include "../utilities/data/Variant.hpp"
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Filesystem.hpp"
+#include "../utilities/core/FileLogSink.hpp"
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/data/Variant.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
+#include "../utilities/idf/Workspace.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
+#include "workflow/Util.hpp"
 
+#include <fmt/color.h>
+#include <fmt/chrono.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+
+#include <array>
+#include <chrono>
+#include <string_view>
 #include <stdexcept>
+
+// TODO: this should really in Variant.hpp, but I'm getting pwned by the fact that ruby defines int128_t as a macro, no time to track it down
+template <>
+struct fmt::formatter<openstudio::Variant> : fmt::ostream_formatter
+{
+};
+
+template <>
+struct fmt::formatter<openstudio::path> : fmt::ostream_formatter
+{
+};
 
 namespace openstudio {
 
@@ -50,11 +70,13 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
     m_add_timings(t_workflowRunOptions.add_timings),
     m_style_stdout(t_workflowRunOptions.style_stdout) {
 
+  if (m_add_timings) {
+    m_timers = std::make_unique<workflow::util::TimerCollection>();
+  }
+
   if (t_workflowRunOptions.runOptions.debug() || (workflowJSON.runOptions() && workflowJSON.runOptions()->debug())) {
-    fmt::print("Original workflowJSON={}\n", workflowJSON.string());
+    LOG(Debug, fmt::format("Original workflowJSON={}\n", workflowJSON.string()));
     t_workflowRunOptions.debug_print();
-    fmt::print("m_no_simulation={}, m_post_process_only={}, m_show_stdout={}, m_add_timings={}, m_style_stdout={}", m_no_simulation,
-               m_post_process_only, m_show_stdout, m_add_timings, m_style_stdout);
   }
   auto runOpt_ = workflowJSON.runOptions();
   if (!runOpt_) {
@@ -73,7 +95,7 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
 }
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
-  fmt::print("Info: Setting argument value '{}' to '{}'\n", argumentName, argumentValue);
+  LOG(Info, "Setting argument value '" << argumentName << "' to '" << argumentValue << "'");
 
   // if (!argumentValue.hasValue()) {
   //   fmt::print("Warn: Value for argument '{}' not set in argument list therefore will use default\n", argumentName);
@@ -104,25 +126,68 @@ void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::
   }
 }
 
+void OSWorkflow::saveOSMToRootDirIfDebug() {
+  if (!workflowJSON.runOptions() || !workflowJSON.runOptions()->debug()) {
+    return;
+  }
+
+  LOG(Info, "Saving OSM to Root Directory");
+  auto savePath = workflowJSON.absoluteRootDir() / "in.osm";
+  detailedTimeBlock("Saving OSM", [this, &savePath]() {
+    // TODO: workflow gem was actually serializating via model.to_s for speed...
+    model.save(savePath, true);
+  });
+  LOG(Info, "Saved OSM as " << savePath);
+}
+
+void OSWorkflow::saveIDFToRootDirIfDebug() {
+  if (!workflowJSON.runOptions() || !workflowJSON.runOptions()->debug()) {
+    return;
+  }
+  LOG(Info, "Saving IDF to Root Directory");
+  auto savePath = workflowJSON.absoluteRootDir() / "in.idf";
+  detailedTimeBlock("Saving IDF To Root Directory (debug)", [this, &savePath]() {
+    // TODO: workflow gem was actually serializating via model.to_s for speed...
+    workspace_->save(savePath, true);
+  });
+  LOG(Info, "Saved IDF as " << savePath);
+}
+
 void OSWorkflow::run() {
-  if (workflowJSON.runOptions()->debug()) {
+
+  if (!m_show_stdout) {
+    openstudio::Logger::instance().standardOutLogger().disable();
+  } else if (workflowJSON.runOptions()->debug()) {
     openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   }
 
-#if USE_RUBY_ENGINE
-  // rubyEngine->exec("puts 'Hello from Ruby'");
-  rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
-  rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
-  rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
-  // -1: gotta init the rest of OpenStudio in ruby, so that Ruleset and co are defined
-  rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
-#endif
-#if USE_PYTHON_ENGINE
-  // pythonEngine->exec("print('Hello from Python')");
-  pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
-  pythonEngine->registerType<openstudio::measure::PythonEnergyPlusMeasure*>("openstudio::measure::PythonEnergyPlusMeasure *");
-  pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
-#endif
+  // Need to recreate the runDir as fast as possible, so I can direct a file log sink there
+  bool hasDeletedRunDir = false;
+  auto runDirPath = workflowJSON.absoluteRunDir();
+  if (!workflowJSON.runOptions()->preserveRunDir()) {
+    // We don't have a run_dir argument anyways
+    if (openstudio::filesystem::is_directory(runDirPath)) {
+      hasDeletedRunDir = true;
+      openstudio::filesystem::remove_all(runDirPath);
+    }
+    openstudio::filesystem::create_directory(runDirPath);
+  }
+  FileLogSink logFile(runDirPath / "run.log");
+  logFile.setLogLevel(Debug);
+
+  if (hasDeletedRunDir) {
+    LOG(Debug, "Removing existing run directory: " << runDirPath);
+  }
+
+  // Communicate that the workflow has been started
+  LOG(Debug, "Registering that the workflow has started with the adapter");
+  {
+    // @output_adapter.communicate_started
+    openstudio::filesystem::ofstream file(runDirPath / "started.job");
+    OS_ASSERT(file.is_open());
+    file << fmt::format("Started Workflow {}\n", std::chrono::system_clock::now());
+    file.close();
+  }
 
   // bool no_simulation = false;
   // bool post_process = false;
@@ -135,269 +200,182 @@ void OSWorkflow::run() {
   //// O. Need to apply measure steps IN ORDER. (eg: OpenStudio Measures before Eplus measures etc)
   //// https://github.com/NREL/OpenStudio-workflow-gem/blob/develop/lib/openstudio/workflow/util/measure.rb
 
-  // 1. Instantiate seed model
-
-  auto runInitialization = [this]() -> openstudio::model::Model {
-    fmt::print("Debug: Finding and loading the seed file\n");
-    auto seedPath_ = workflowJSON.seedFile();
-    if (!seedPath_) {
-      return openstudio::model::Model{};
+  auto timeJob = [this](memJobFunPtr job, const std::string& message) {
+    if (m_style_stdout) {
+      fmt::print(fmt::fg(fmt::color::green),
+                 "\n"
+                 "┌{0:─^{2}}┐\n"
+                 "│{1: ^{2}}│\n"
+                 "└{0:─^{2}}┘\n",
+                 "", std::string("Starting State ") + message, 80);
     }
-
-    auto modelFullPath_ = workflowJSON.findFile(seedPath_.get());
-    if (!modelFullPath_) {
-      throw std::runtime_error(fmt::format("Seed model {} specified in OSW cannot be found", seedPath_.get()));
+    if (m_add_timings) {
+      m_timers->newTimer(message);
     }
-    openstudio::osversion::VersionTranslator vt;
-    auto m_ = vt.loadModel(modelFullPath_.get());
-    if (!m_) {
-      throw std::runtime_error(fmt::format("Failed to load OSM file {}\n", openstudio::toString(seedPath_.get())));
+    (this->*job)();
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
     }
-    return m_.get();
+    if (m_style_stdout) {
+      fmt::print(fmt::fg(fmt::color::green), "{0:#^80}\n", std::string("Returned from State ") + message);
+    }
   };
 
-  model::Model model = runInitialization();
-  boost::optional<openstudio::Workspace> workspace_;
+  struct JobInfo
+  {
+    memJobFunPtr jobFun;
+    bool selected = true;
+  };
 
-  auto runDir = workflowJSON.absoluteRunDir();
-  openstudio::filesystem::remove_all(runDir);
-  openstudio::filesystem::create_directory(runDir);
+  struct JobMap
+  {
+    std::array<std::pair<std::string_view, JobInfo>, 9> data;
 
-  // 2. determine ruby or python
-  // 3. import measure.(py|rb)
-  // 4. instantiate measure
-  // 5. run measure
-
-  // TODO: need to add the ReportingMeasure to the Mix
-  // TODO: need to run the idf through EnergyPlus
-  // TODO: need to create subdirectories for steps
-  // TODO: need to do some cleanup, like removing old sim files, maybe reports, etc
-  // TODO: need to implement some of the options/flags like --postprocess_only
-  // TODO: need to merge workflowJSON flags with flags from command line (eg: FT options)
-  // TODO: need to modify utilities/RunOptions.hpp instead of duplicating some of that work in workflow
-
-  for (const auto stepType : {MeasureType::ModelMeasure, MeasureType::EnergyPlusMeasure}) {
-    if (stepType == MeasureType::EnergyPlusMeasure) {
-      // Save final Model
-      model.save(runDir / "in.osm", true);
-      openstudio::energyplus::ForwardTranslator ft;
-      ft.setForwardTranslatorOptions(workflowJSON.runOptions()->forwardTranslatorOptions());
-      workspace_ = ft.translateModel(model);
+    [[nodiscard]] JobInfo& at(const std::string_view& key) {
+      auto itr = std::find_if(std::begin(data), std::end(data), [&key](const auto& v) { return v.first == key; });
+      if (itr != std::end(data)) {
+        return itr->second;
+      } else {
+        throw std::range_error("Not Found");
+      }
     }
 
-    const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
-    for (const auto& step : modelSteps) {
-      unsigned stepIndex = workflowJSON.currentStepIndex();
-      fmt::print("\n\nRunning step {}\n", stepIndex);
+    // Class methods
+    auto cbegin() const {
+      return data.cbegin();
+    }
+    auto cend() const {
+      return data.cend();
+    }
+    auto begin() const {
+      return cbegin();
+    }
+    auto end() const {
+      return cend();
+    }
+    auto begin() {
+      return data.begin();
+    }
+    auto end() {
+      return data.end();
+    }
+  };
 
-      //  measure_run_dir = File.join(run_dir, "#{step_index.to_s.rjust(3,'0')}_#{measure_dir_name}")
-      //  logger.debug "Creating run directory for measure in #{measure_run_dir}"
-      //  FileUtils.mkdir_p measure_run_dir
-      //  Dir.chdir measure_run_dir
+  // Can't use a regular map, it's not retaining order
+  static constexpr std::array<std::pair<std::string_view, JobInfo>, 9> known_jobs{{
+    {"Initialization", {&OSWorkflow::runInitialization, true}},
+    {"OpenStudioMeasures", {&OSWorkflow::runOpenStudioMeasures, true}},
+    {"Translator", {&OSWorkflow::runTranslator, true}},
+    {"EnergyPlusMeasures", {&OSWorkflow::runEnergyPlusMeasures, true}},
+    {"PreProcess", {&OSWorkflow::runPreProcess, true}},
+    {"EnergyPlus", {&OSWorkflow::runEnergyPlus, true}},
+    {"ReportingMeasures", {&OSWorkflow::runReportingMeasures, true}},
+    {"PostProcess", {&OSWorkflow::runPostProcess, true}},
+    {"Cleanup", {&OSWorkflow::runCleanup, true}},
+  }};
 
-      const auto measureDirName = step.measureDirName();
-      const auto measureDirPath_ = workflowJSON.findMeasure(measureDirName);
-      if (!measureDirPath_) {
-        fmt::print("Could not find measure '{}'\n", measureDirName);
-        continue;
-      }
-      BCLMeasure bclMeasure(measureDirPath_.get());
+  JobMap jobMap{{known_jobs}};
 
-      const auto scriptPath_ = bclMeasure.primaryScriptPath();
-      if (!scriptPath_) {
-        fmt::print("Could not find primaryScriptPath '{}'\n", measureDirName);
-        continue;
-      }
-      fmt::print("Found {} at primaryScriptPath: '{}'\n", measureDirName, openstudio::toString(scriptPath_.get()));
-      const std::string className = bclMeasure.className();
-      const auto measureType = bclMeasure.measureType();
-      const MeasureLanguage measureLanguage = bclMeasure.measureLanguage();
+  if (m_no_simulation) {
+    jobMap.at("Initialization").selected = true;
+    jobMap.at("OpenStudioMeasures").selected = true;
+    jobMap.at("Translator").selected = true;
+    jobMap.at("EnergyPlusMeasures").selected = true;
+    jobMap.at("PreProcess").selected = true;
+    jobMap.at("EnergyPlus").selected = false;
+    jobMap.at("ReportingMeasures").selected = false;
+    jobMap.at("PostProcess").selected = true;
+    jobMap.at("Cleanup").selected = true;
 
-      // TODO: will add a Logger later
-      fmt::print("Class Name: {}\n", className);
-      fmt::print("Measure Script Path: {}\n", openstudio::toString(scriptPath_.get()));
-      fmt::print("Measure Type: {}\n", bclMeasure.measureType().valueName());
-      fmt::print("Measure Language: {}\n", measureLanguage.valueName());
+  } else if (m_post_process_only) {
+    jobMap.at("Initialization").selected = true;
+    jobMap.at("OpenStudioMeasures").selected = false;
+    jobMap.at("Translator").selected = false;
+    jobMap.at("EnergyPlusMeasures").selected = false;
+    jobMap.at("PreProcess").selected = false;
+    jobMap.at("EnergyPlus").selected = false;
+    jobMap.at("ReportingMeasures").selected = true;
+    jobMap.at("PostProcess").selected = true;
+    jobMap.at("Cleanup").selected = true;
 
-      //openstudio::measure::ModelMeasure* modelMeasurePtr = nullptr;
-      // TODO: probably want to do that ultimately, then static_cast appropriately
-      ScriptEngineInstance* thisEngine;
-      ScriptObject measureScriptObject;
-      openstudio::measure::OSMeasure* measurePtr = nullptr;
+    workflowJSON.runOptions()->setPreserveRunDir(true);
+  }
 
-      auto getArguments = [&model, &workspace_, &measureType, &scriptPath_, &step,
-                           &measureLanguage](openstudio::measure::OSMeasure* measurePtr) -> measure::OSArgumentMap {
-        if (!measurePtr) {
-          throw std::runtime_error(fmt::format("Could not load measure at '{}'", openstudio::toString(scriptPath_.get())));
-        }
-        // Initialize arguments which may be model dependent, don't allow arguments method access to real model in case it changes something
-        std::vector<measure::OSArgument> arguments;
+  if (!workflowJSON.runOptions()->cleanup() || workflowJSON.runOptions()->debug()) {
+    jobMap.at("Cleanup").selected = false;
+  }
 
-        fmt::print("measure->name()= '{}'\n", measurePtr->name());
-
-        if (measureType == MeasureType::ModelMeasure) {
-          // For computing arguments
-          auto modelClone = model.clone(true).cast<model::Model>();
-          if (measureLanguage == MeasureLanguage::Ruby) {
-            arguments = static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
-          } else if (measureLanguage == MeasureLanguage::Python) {
-            arguments = static_cast<openstudio::measure::PythonModelMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
-          }
-        } else if (measureType == MeasureType::EnergyPlusMeasure) {
-          auto workspaceClone = workspace_->clone(true).cast<openstudio::Workspace>();
-          if (measureLanguage == MeasureLanguage::Ruby) {
-            arguments = static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->arguments(workspaceClone);  // NOLINT
-          } else if (measureLanguage == MeasureLanguage::Python) {
-            arguments = static_cast<openstudio::measure::PythonEnergyPlusMeasure*>(measurePtr)->arguments(workspaceClone);  // NOLINT
-          }
-        } else if (measureType == MeasureType::ReportingMeasure) {
-          auto modelClone = model.clone(true).cast<model::Model>();
-          if (measureLanguage == MeasureLanguage::Ruby) {
-            arguments = static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
-          } else if (measureLanguage == MeasureLanguage::Python) {
-            arguments = static_cast<openstudio::measure::PythonReportingMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
-          }
-        }
-
-        measure::OSArgumentMap argumentMap;
-        if (!arguments.empty()) {
-          for (const auto& argument : arguments) {
-            fmt::print("Argument: {}\n", argument.name());
-            argumentMap[argument.name()] = argument.clone();
-          }
-
-          //  logger.debug "Iterating over arguments for workflow item '#{measure_dir_name}'"
-          auto stepArgs = step.arguments();
-          fmt::print("Current step has {} arguments\n", stepArgs.size());
-          // handle skip first
-          if (!stepArgs.empty() && stepArgs.contains("__SKIP__")) {
-            // TODO: handling of SKIP is incomplete here, will need to increment the runner and co, and not process the measure
-
-          } else {
-            // TODO: I've copied workflow-gem here, but it's wrong. It's trying to issue a warning if an argument is not set, so it should loop on
-            // argumentMap instead...
-            for (auto const& [argumentName, argumentValue] : stepArgs) {
-              applyArguments(argumentMap, argumentName, argumentValue);
-            }
-          }
-        }
-
-        return argumentMap;
-      };
-
-      if (measureLanguage == MeasureLanguage::Ruby) {
-        // TODO: probably need to do path formatting properly for windows
-#if USE_RUBY_ENGINE
-        auto importCmd = fmt::format("require '{}'", openstudio::toString(scriptPath_.get()));
-        rubyEngine->exec(importCmd);
-        measureScriptObject = rubyEngine->eval(fmt::format("{}.new()", className));
-        thisEngine = &rubyEngine;
-#else
-        throw std::runtime_error("Cannot run a Ruby measure when RubyEngine isn't enabled");
-#endif
-      } else if (measureLanguage == MeasureLanguage::Python) {
-#if USE_PYTHON_ENGINE
-        // place measureDirPath in sys.path; do from measure import MeasureName
-        // I think this can't work without a "as xxx" otherwise we'll repeatedly try to import a module named 'measure'
-        // pythonEngine->pyimport("measure", openstudio::toString(measureDirPath.get()));
-        //         auto importCmd = fmt::format(R"python(
-        // import sys
-        // sys.path.insert(0, r'{}')
-        // force_reload = 'measure' in sys.modules
-        // import measure
-        // if force_reload:
-        //     # print("force reload measure")
-        //     import importlib
-        //     importlib.reload(measure)
-        // )python",
-        //                                      scriptPath_->parent_path().generic_string());
-        auto importCmd = fmt::format(R"python(
-import importlib.util
-spec = importlib.util.spec_from_file_location('{}', r'{}')
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
-)python",
-                                     className, scriptPath_->generic_string());
-        // fmt::print("\nimportCmd:\n{}\n", importCmd);
-        pythonEngine->exec(importCmd);
-        // measureScriptObject = pythonEngine->eval(fmt::format("measure.{}()", className));
-        measureScriptObject = pythonEngine->eval(fmt::format("module.{}()", className));
-
-        thisEngine = &pythonEngine;
-#else
-        throw std::runtime_error("Cannot run a Python measure when PythonEngine isn't enabled");
-#endif
-      }
-
-      // This pointer will only be valid for as long as the above PythonMeasure is in scope
-      // After that, dereferencing the measure pointer will crash the program
-      if (measureType == MeasureType::ModelMeasure) {
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonModelMeasure*>(measureScriptObject);
-        }
-      } else if (measureType == MeasureType::EnergyPlusMeasure) {
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonEnergyPlusMeasure*>(measureScriptObject);
-        }
-      } else if (measureType == MeasureType::ReportingMeasure) {
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonReportingMeasure*>(measureScriptObject);
-        }
-      }
-
-      const auto argmap = getArguments(measurePtr);
-      // There is a bug. I can run one measure but not two. The one measure can be either python or ruby
-      // I think it might have to do with the operations that must be done to the runner to reset state. maybe?
-      if (measureType == MeasureType::ModelMeasure) {
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model, runner, argmap);
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          static_cast<openstudio::measure::PythonModelMeasure*>(measurePtr)->run(model, runner, argmap);
-        }
-      } else if (measureType == MeasureType::EnergyPlusMeasure) {
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          static_cast<openstudio::measure::PythonEnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
-        }
-      } else if (measureType == MeasureType::ReportingMeasure) {
-        if (measureLanguage == MeasureLanguage::Ruby) {
-          static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->run(runner, argmap);
-        } else if (measureLanguage == MeasureLanguage::Python) {
-          static_cast<openstudio::measure::PythonReportingMeasure*>(measurePtr)->run(runner, argmap);
-        }
-      }
-
-      WorkflowStepResult result = runner.result();
-      if (auto stepResult_ = result.stepResult()) {
-        fmt::print("Step Result: {}\n", stepResult_->valueName());
-      }
-      // incrementStep must be called after run
-      runner.incrementStep();
-      if (auto errors = result.stepErrors(); !errors.empty()) {
-        throw std::runtime_error(fmt::format("Measure {} reported an error with [{}]\n", measureDirName, fmt::join(errors, "\n")));
-      }
-
-      if (measureType == MeasureType::ModelMeasure) {
-        if (auto weatherFile_ = model.weatherFile()) {
-          if (auto p_ = weatherFile_->path()) {
-            // Probably a workflowJSON.findFile() call...
-            // m_epwPath_ = p_;
-          } else {
-            fmt::print("Weather file object found in model but no path is given\n");
-          }
-        }
-      }
-    }  // End for (const auto& step : modelSteps)
-  }    // End for StepType
+  for (auto& [jobName, jobInfo] : jobMap) {
+    LOG(Debug, fmt::format("{} - selected = {}\n", jobName, jobInfo.selected));
+    if (jobInfo.selected) {
+      timeJob(jobInfo.jobFun, std::string{jobName});
+    } else {
+      LOG(Info, "Skipping job " << jobName);
+    }
+  }
 
   // Save final IDF
-  workspace_->save(runDir / "in.idf");
+  if (m_add_timings) {
+    m_timers->newTimer("Save IDF");
+  }
+  workspace_->save(runDirPath / "in.idf", true);  // TODO: Is this really necessary? Seems like it's done before already
+  if (m_add_timings) {
+    m_timers->tockCurrentTimer();
+  }
+
+  if (!workflowJSON.runOptions()->fast()) {
+    if (m_add_timings) {
+      m_timers->newTimer("Zip datapoint");
+    }
+    openstudio::workflow::util::zipResults(runDirPath);
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
+    }
+  }
+
+  if (state == State::Errored) {
+    workflowJSON.setCompletedStatus("Fail");
+  } else {
+    // completed status will already be set if workflow was halted
+    if (!workflowJSON.completedStatus()) {
+      workflowJSON.setCompletedStatus("Success");
+    } else if (workflowJSON.completedStatus().get() == "Fail") {
+      state = State::Errored;
+    }
+  }
+
+  if (!workflowJSON.runOptions()->fast()) {
+    // Save workflow
+    if (m_add_timings) {
+      m_timers->newTimer("Save WorkflowJSON out.osw");
+    }
+    workflowJSON.saveAs(workflowJSON.absoluteOutPath());
+    if (workflowJSON.runOptions()->debug()) {
+      fmt::print("workflowJSON={}\n", workflowJSON.string());
+    }
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
+    }
+  }
+
+  if (state == State::Errored) {
+    // TODO: communicate_failure
+    openstudio::filesystem::ofstream file(runDirPath / "failed.job");
+    OS_ASSERT(file.is_open());
+    file << fmt::format("Failed Workflow {}\n", std::chrono::system_clock::now());
+    file.close();
+  } else {
+    // TODO: communicate_complete
+    openstudio::filesystem::ofstream file(runDirPath / "finished.job");
+    OS_ASSERT(file.is_open());
+    file << fmt::format("Finished Workflow {}\n", std::chrono::system_clock::now());
+    file.close();
+  }
+
+  if (m_add_timings) {
+    fmt::print("\nTiming:\n\n{}\n", m_timers->timeReport());
+
+    // TODO: create profile.json in the run folder
+  }
 }
 }  // namespace openstudio

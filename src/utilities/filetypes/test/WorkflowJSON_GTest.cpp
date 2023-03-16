@@ -1170,3 +1170,9 @@ TEST(Filetypes, RunOptions_ForwardTranslate_BackwardCompatibility) {
   EXPECT_EQ("my_ruby_file.rb", workflow2->runOptions()->customOutputAdapter()->customFileName());
   EXPECT_EQ("MyOutputAdapter", workflow2->runOptions()->customOutputAdapter()->className());
 }
+
+TEST(Filetypes, RunOptions_NoFtOptions) {
+  // Test for #4815
+  const RunOptions options;
+  EXPECT_EQ("", options.forwardTranslateOptions());
+}

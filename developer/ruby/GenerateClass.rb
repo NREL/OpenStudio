@@ -50,20 +50,20 @@ require_relative 'SubProjectClassGenerators/TranslatorGenerator.rb'
 
 # Reverse Translation
 def reverseTranslate(options)
-  if options [:reverseTranslator]
+  if options[:reverseTranslator]
     if options[:iddObjectType]
       # Strip out the "OS:"
       epIddName = options[:iddObjectType].to_s.sub(/^OS:/, '')
       tgen = TranslatorGenerator.new(epIddName)
       tgen.write_reverse_translator
     else
-      raise "WARNING: cannot Forward Translate without iddObjectType"
+      raise "WARNING: cannot Reverse Translate without iddObjectType"
     end
   end
 end
 
 def forwardTranslate(options)
-  if options [:forwardTranslator]
+  if options[:forwardTranslator]
     if options[:iddObjectType]
       # Strip out the "OS:"
       epIddName = options[:iddObjectType].to_s.sub(/^OS:/, '')
@@ -75,12 +75,27 @@ def forwardTranslate(options)
   end
 end
 
+def forwardReverseTranslatorTests(options)
+  if options[:forwardTranslator] || options [:reverseTranslator]
+    if options[:iddObjectType]
+      # Strip out the "OS:"
+      epIddName = options[:iddObjectType].to_s.sub(/^OS:/, '')
+      tgen = TranslatorGenerator.new(epIddName)
+      tgen.write_ft_rt_tests(options[:forwardTranslator], options[:reverseTranslator])
+    else
+      raise "WARNING: cannot Write FT/RT Tests without iddObjectType"
+    end
+  end
+end
 
 # HANDLE INPUT ARGUMENTS
 
 # define the input parameters
 options = Hash.new
 optparse = OptionParser.new do |opts|
+
+  opts.banner = 'Usage: openstudio GenerateClass.rb [options]'
+  opts.separator ''
 
   opts.on( '-s', '--sourceDirectory SOURCEDIRECTORY', String, "Directory under src to which this class belongs") do |sourceDirectory|
     options[:sourceDirectory] = sourceDirectory
@@ -107,15 +122,30 @@ optparse = OptionParser.new do |opts|
   end
 
   opts.on( '-i', '--iddObjectType IDDOBJECTTYPE', String, "IddObjectType to be wrapped by the ModelObject class being generated (ignored if not model sourceDirectory)") do |iddObjectType|
-    options [:iddObjectType] = iddObjectType
+    options[:iddObjectType] = iddObjectType
   end
 
   opts.on( '-r', '--[no-]reverseTanslator', "Autogenerate the ReverseTranslator code for IddObjectType") do |rt|
-    options [:reverseTranslator] = rt
+    options[:reverseTranslator] = rt
   end
 
   opts.on( '-f', '--[no-]forwardTanslator', "Autogenerate the ReverseTranslator code for IddObjectType") do |ft|
-    options [:forwardTranslator] = ft
+    options[:forwardTranslator] = ft
+  end
+
+  opts.on( '--clang-format-exe CLANGFORMAT', "Path to the clang-format executable") do |exe|
+    options[:clangFormatExe] = exe
+  end
+
+  opts.on_tail('-h', '--help', 'Print this help') do
+    puts opts.help
+    root_dir = File.expand_path("../../", File.dirname(__FILE__))
+    puts "\nExample Usage:"
+    puts '```'
+    puts "  $ cd developer/ruby"
+    puts '  $ /path/to/build/Products/openstudio GenerateClass.rb -c "SolarCollectorPerformancePhotovoltaicThermalBIPVT" -b "ModelObject"  -i "OS:SolarCollectorPerformance:PhotovoltaicThermal:BIPVT" -s model -o ' + File.join(root_dir, "src/model/") + ' -p -f -r'
+    puts '```'
+    return nil
   end
 
 end
@@ -275,18 +305,18 @@ cpp << "namespace " << sourceFolders[0] << " {\n\n"
 
 
 if pImpl
-  hpp << "namespace detail {\n\n"
-  hpp << "  class " << className << "_Impl;\n\n"
-  hpp << "} // detail\n\n"
+  hpp << "  namespace detail {\n\n"
+  hpp << "    class " << className << "_Impl;\n\n"
+  hpp << "  }  // namespace detail\n\n"
 
   implHpp << methodGenerator.implHppExternalForwardDeclarations
   implHpp << "namespace openstudio {\n"
   implHpp << methodGenerator.implHppOSForwardDeclarations
   implHpp << "namespace " << sourceFolders[0] << " {\n\n"
   implHpp << methodGenerator.implHppSubProjectForwardDeclarations
-  implHpp << "namespace detail {\n\n"
+  implHpp << "  namespace detail {\n\n"
 
-  cpp << "namespace detail {\n\n"
+  cpp << "  namespace detail {\n\n"
 end
 
 
@@ -300,7 +330,7 @@ cppPublicClass << methodGenerator.cppPublicClassPreClass
 
 # START CLASSES
 
-hpp << "class " << sourceFolders[0].upcase << "_API " << className
+hpp << "  class " << sourceFolders[0].upcase << "_API " << className
 if baseClassName.empty?
   if qobject and not pImpl
     hpp << " : public QObject"
@@ -308,13 +338,13 @@ if baseClassName.empty?
 else
   hpp << " : public " << baseClassName
 end
-hpp << " {\n"
+hpp << "\n  {\n"
 if qobject and not pImpl
   hpp << "  Q_OBJECT;\n"
 end
 
 if pImpl
-  implHpp << "  class " << sourceFolders[0].upcase << "_API " << className << "_Impl"
+  implHpp << "    class " << sourceFolders[0].upcase << "_API " << className << "_Impl"
   if baseClassName.empty?
     implHpp << " : "
     if qobject
@@ -324,8 +354,8 @@ if pImpl
   else
     implHpp << " : public " << baseClassName << "_Impl"
   end
-  implHpp << " {\n"
-  implHpp << "    Q_OBJECT;\n" if qobject
+  implHpp << "\n    {\n"
+  implHpp << "      Q_OBJECT;\n" if qobject
 end
 
 
@@ -337,10 +367,10 @@ implHpp << methodGenerator.implHppQMacros
 
 # PUBLIC TYPEDEFS
 
-hpp << " public:\n"
+hpp << "   public:\n"
 
 if pImpl
-  implHpp << "   public:\n"
+  implHpp << "     public:\n"
 end
 
 hpp << methodGenerator.hppPublicTypedefs
@@ -349,12 +379,12 @@ implHpp << methodGenerator.implHppPublicTypedefs
 
 # CONSTRUCTORS
 
-hpp << "  /** @name Constructors and Destructors */\n"
-hpp << "  //@{\n\n"
+hpp << "    /** @name Constructors and Destructors */\n"
+hpp << "    //@{\n\n"
 
 if pImpl
-  implHpp << "    /** @name Constructors and Destructors */\n"
-  implHpp << "    //@{\n\n"
+  implHpp << "      /** @name Constructors and Destructors */\n"
+  implHpp << "      //@{\n\n"
 end
 
 hpp << methodGenerator.hppConstructors
@@ -365,12 +395,17 @@ cppPublicClass << methodGenerator.cppPublicClassConstructors
 
 # VIRTUAL DESTRUCTORS
 
-hpp << "  virtual ~" << className << "() = default;\n\n"
-hpp << "  //@}\n\n"
+hpp << "    virtual ~" << className << "() = default;\n"
+hpp << "    // Default the copy and move operators because the virtual dtor is explicit\n"
+hpp << "    " << className << "(const " << className << "& other) = default;\n"
+hpp << "    " << className << "(" << className << "&& other) = default;\n"
+hpp << "    " << className << "& operator=(const " << className << "&) = default;\n"
+hpp << "    " << className << "& operator=(" << className << "&&) = default;\n\n"
+hpp << "    //@}\n\n"
 
 if pImpl
-  implHpp << "    virtual ~" << className << "_Impl() {}\n\n"
-  implHpp << "    //@}\n"
+  implHpp << "      virtual ~" << className << "_Impl() = default;\n\n"
+  implHpp << "      //@}\n"
 end
 
 
@@ -437,17 +472,17 @@ end
 
 # PROTECTED TYPEDEFS, FRIENDS, CONSTRUCTORS
 
-hpp << " protected:\n"
-hpp << "  /// @cond\n"
+hpp << "   protected:\n"
+hpp << "    /// @cond\n"
 
-cppPublicClass << "/// @cond\n"
+cppPublicClass << "  /// @cond\n"
 
 hpp << methodGenerator.hppProtectedImpl
 hpp << methodGenerator.hppProtectedFriends
 cppPublicClass << methodGenerator.cppPublicClassProtectedImpl
 
 if pImpl
-  implHpp << "   protected:\n"
+  implHpp << "     protected:\n"
 end
 
 
@@ -458,24 +493,24 @@ implHpp << methodGenerator.implHppProtectedMethods
 cpp << methodGenerator.cppProtectedMethods
 cppPublicClass << methodGenerator.cppPublicClassProtectedMethods
 
-hpp << "  /// @endcond\n"
-cppPublicClass << "/// @endcond\n"
+hpp << "    /// @endcond\n"
+cppPublicClass << "  /// @endcond\n"
 
 # PRIVATE DECLARATIONS
 
-hpp << " private:" << "\n"
+hpp << "   private:" << "\n"
 
 if pImpl
-  implHpp << "   private:" << "\n"
+  implHpp << "     private:" << "\n"
 
   if baseClassName.empty?
     hpp << "  std::shared_ptr<detail::" << className << "_Impl> m_impl;\n\n"
   end
 end
 
-hpp << "  REGISTER_LOGGER(\"openstudio." << sourceFolders[0] << "." << className << "\");\n"
+hpp << "    REGISTER_LOGGER(\"openstudio." << sourceFolders[0] << "." << className << "\");\n"
 if pImpl
-  implHpp << "    REGISTER_LOGGER(\"openstudio." << sourceFolders[0] << "." << className << "\");\n"
+  implHpp << "      REGISTER_LOGGER(\"openstudio." << sourceFolders[0] << "." << className << "\");\n"
 end
 
 hpp << methodGenerator.hppPrivateMethods
@@ -485,10 +520,10 @@ cppPublicClass << methodGenerator.cppPublicClassPrivateMethods
 
 # END CLASSES
 
-hpp << "};\n\n"
+hpp << "  };\n\n"
 
 if pImpl
-  implHpp << "  };\n\n"
+  implHpp << "    };\n\n"
 end
 
 
@@ -502,28 +537,28 @@ cppPublicClass << methodGenerator.cppPublicClassPostClass
 
 # END NAMESPACES
 
-hpp << "} // " << sourceFolders[0] << "\n"
-hpp << "} // openstudio" << "\n\n"
+hpp << "}  // namespace " << sourceFolders[0] << "\n"
+hpp << "}  // namespace openstudio" << "\n\n"
 
 if pImpl
-  implHpp << "} // detail\n\n"
-  implHpp << "} // " << sourceFolders[0] << "\n"
-  implHpp << "} // openstudio" << "\n" << "\n"
+  implHpp << "  }  // namespace detail\n\n"
+  implHpp << "}  // namespace " << sourceFolders[0] << "\n"
+  implHpp << "}  // namespace openstudio" << "\n" << "\n"
 
-  cpp << "} // detail" << "\n\n"
+  cpp << "  }  // namespace detail" << "\n\n"
   cpp << cppPublicClass << "\n"
 end
 
-cpp << "} // " << sourceFolders[0] << "\n"
-cpp << "} // openstudio" << "\n" << "\n"
+cpp << "}  // namespace " << sourceFolders[0] << "\n"
+cpp << "}  // namespace openstudio\n"
 
 
 # END INCLUDE GUARDS
 
-hpp << "#endif // " << defineString << "_HPP\n\n"
+hpp << "#endif  // " << defineString << "_HPP\n"
 
 if pImpl
-  implHpp << "#endif // " << defineString << "_IMPL_HPP\n\n"
+  implHpp << "#endif  // " << defineString << "_IMPL_HPP\n"
 end
 
 
@@ -541,16 +576,24 @@ saveAux = true if (aux.size > originalSize)
 
 # WRITE OUT FILES
 
-File.open((outputDirectory + "/" + className + ".hpp"),"w") do |file|
+files_written = []
+
+hpp_path = outputDirectory + "/" + className + ".hpp"
+files_written.append(hpp_path)
+File.open(hpp_path, "w") do |file|
   file.write(hpp)
 end
 
-File.open((outputDirectory + "/" + className + ".cpp"),"w") do |file|
+cpp_path = outputDirectory + "/" + className + ".cpp"
+files_written.append(cpp_path)
+File.open(cpp_path, "w") do |file|
   file.write(cpp)
 end
 
 if pImpl
-  File.open((outputDirectory + "/" + className + "_Impl.hpp"),"w") do |file|
+  impl_path = outputDirectory + "/" + className + "_Impl.hpp"
+  files_written.append(impl_path)
+  File.open(impl_path,"w") do |file|
     file.write(implHpp)
   end
 end
@@ -558,7 +601,9 @@ end
 if not File.directory?(outputDirectory + "/test")
   Dir.mkdir(outputDirectory + "/test")
 end
-File.open((outputDirectory + "/test/" + className + "_GTest.cpp"),"w") do |file|
+gtest_path = outputDirectory + "/test/" + className + "_GTest.cpp"
+files_written.append(gtest_path)
+File.open(gtest_path,"w") do |file|
   file.write(gtest)
 end
 
@@ -572,10 +617,62 @@ end
 #                       Reverse And Forward Translation                       #
 ###############################################################################
 
+has_ft_or_rt = false
 if options[:reverseTranslator]
-  reverseTranslate(options)
+  has_ft_or_rt = true
+  files_written << reverseTranslate(options)
 end
 
-if options [:forwardTranslator]
-  forwardTranslate(options)
+if options[:forwardTranslator]
+  has_ft_or_rt = true
+  files_written << forwardTranslate(options)
+end
+
+if has_ft_or_rt
+  files_written << forwardReverseTranslatorTests(options)
+end
+
+files_written.map!{|f| File.absolute_path(f) }
+puts "Generated the following files"
+puts files_written
+
+# Cross-platform way of finding an executable in the $PATH.
+#
+#   which('ruby') #=> /usr/bin/ruby
+def which(cmd)
+  exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+  ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+    exts.each do |ext|
+      exe = File.join(path, "#{cmd}#{ext}")
+      return exe if File.executable?(exe) && !File.directory?(exe)
+    end
+  end
+  nil
+end
+
+clang_format_exe = nil
+auto_detected = ""
+if options[:clangFormatExe]
+  clang_format_exe = options[:clangFormatExe]
+else
+  clang_format_exe = which('clang-format')
+  if clang_format_exe
+    auto_detected = "auto-detected "
+  end
+end
+if clang_format_exe
+  puts "\nReformatting the files using the #{auto_detected}clang-format at #{clang_format_exe}"
+  require 'open3'
+  root_dir = File.expand_path("../../", File.dirname(__FILE__))
+
+  files_written.each do |file_written|
+    command = "#{clang_format_exe} -style=file -i -fallback-style=none #{file_written}"
+    puts command
+    Open3.popen3(command, chdir: root_dir) do |i, o, e, w|
+      result = w.value.exitstatus
+      if result != 0
+        puts "Failed to reformat #{files_written}"
+      end
+    end
+  end
 end

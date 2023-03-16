@@ -36484,9 +36484,14 @@ OS:EnergyManagementSystem:Actuator,
   A5, \field Actuated Component Control Type
        \required-field
        \type alpha
-  A6; \field Zone Name
+  A6; \field Zone or Space Name
+       \note This field is useful for a SpaceLoadInstance that is assigned to a SpaceType
+       \note because internally E+ will duplicate the instances and you need to access the final name
+       \note If you are using the Space Translation of the ForwardTranslator (which is defaulted on) this should be set to a Space
+       \note If not then use a ThermalZone
        \type object-list
-       \object-list AllObjects
+       \object-list SpaceNames
+       \object-list ThermalZoneNames
 
 OS:EnergyManagementSystem:ProgramCallingManager,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.

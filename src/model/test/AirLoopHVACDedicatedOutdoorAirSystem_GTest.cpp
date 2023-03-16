@@ -40,6 +40,7 @@
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
 #include "../Node.hpp"
+#include "../Node_Impl.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilCoolingDXTwoSpeed.hpp"
 #include "../CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
@@ -62,6 +63,8 @@
 #include "../HumidifierSteamElectric.hpp"
 #include "../HumidifierSteamGas.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../SetpointManagerOutdoorAirReset.hpp"
+#include "../SetpointManagerOutdoorAirReset_Impl.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -270,6 +273,40 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove2) {
   doaSystems = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(0u, doaSystems.size());
   EXPECT_FALSE(oaSystem.airLoopHVACDedicatedOutdoorAirSystem());
+}
+
+TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove3) {
+  Model model;
+  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  EXPECT_EQ(0u, doaSystems.size());
+  std::vector<SetpointManagerOutdoorAirReset> spms = model.getModelObjects<SetpointManagerOutdoorAirReset>();
+
+  ControllerOutdoorAir controller(model);
+  AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+  AirLoopHVAC airLoop(model);
+  AirLoopHVAC airLoop2(model);
+  std::vector<AirLoopHVAC> airLoopHVACs;
+  airLoopHVACs.push_back(airLoop);
+  airLoopHVACs.push_back(airLoop2);
+
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
+  doaSystem.addAirLoops(airLoopHVACs);
+
+  CoilHeatingElectric coil(model);
+  coil.addToNode(oaSystem.outboardOANode().get());
+
+  SetpointManagerOutdoorAirReset spm(model);
+  spm.addToNode(coil.outletModelObject()->optionalCast<Node>().get());
+
+  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  EXPECT_EQ(1u, doaSystems.size());
+
+  // make sure there are no traces of the outdoorAirSystem leftover after DOAS is removed
+  EXPECT_FALSE(doaSystem.remove().empty());
+  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  EXPECT_EQ(0u, doaSystems.size());
+  spms = model.getModelObjects<SetpointManagerOutdoorAirReset>();
+  EXPECT_EQ(0u, spms.size());
 }
 
 TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SupportedComponents) {

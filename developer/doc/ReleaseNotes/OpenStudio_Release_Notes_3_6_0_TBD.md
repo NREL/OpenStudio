@@ -80,6 +80,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 ## Minor changes and bug fixes
 
 
+* [#4828](https://github.com/NREL/OpenStudio/pull/4828) - Fix Space load-based actuator for spaces are named based on thermal zone name
+    * As part of this PR, the optional field at the end `Zone Name` is replaced with `Zone or Space` and some API changes are there around it. The only minor breaking one is that `boost::optional<ModelObject> zoneName()` (deprecated) will now return either a Zone or a Space. Before if you called setSpace it would store the space's ThermalZone, now it stores the Space itself. This is unlikely to affect most users.
 
 **Deprecated methods removed**:
 

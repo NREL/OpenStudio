@@ -271,7 +271,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         # Suppress 'register' storage class specified warnings (coming from Ruby)
         set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-sometimes-uninitialized")
       else()
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-conversion-null -Wno-misleading-indentation")
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-conversion-null -Wno-misleading-indentation -fno-gnu-unique")
       endif()
     endif()
 
@@ -380,7 +380,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         # Undefined suppress needed to avoid linking to Python::Module
         set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-flat_namespace -undefined suppress")
       else()
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-misleading-indentation")
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-misleading-indentation -fno-gnu-unique")
       endif()
     endif()
 

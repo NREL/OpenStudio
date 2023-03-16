@@ -641,6 +641,20 @@ namespace detail {
     return result;
   }
 
+  std::vector<std::pair<unsigned, MeasureStep>> WorkflowJSON_Impl::getMeasureStepsWithIndex(const MeasureType& measureType) const {
+    std::vector<std::pair<unsigned, MeasureStep>> result;
+    size_t n = m_steps.size();
+    OS_ASSERT(m_measureTypes.size() == n);
+    for (size_t i = 0; i < n; ++i) {
+      if (m_steps[i].optionalCast<MeasureStep>()) {
+        if (m_measureTypes[i] == measureType.value()) {
+          result.emplace_back(i, m_steps[i].cast<MeasureStep>());
+        }
+      }
+    }
+    return result;
+  }
+
   bool WorkflowJSON_Impl::setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps) {
 
     // verify steps
@@ -1111,6 +1125,10 @@ void WorkflowJSON::resetWorkflowSteps() {
 
 std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(const MeasureType& measureType) const {
   return getImpl<detail::WorkflowJSON_Impl>()->getMeasureSteps(measureType);
+}
+
+std::vector<std::pair<unsigned, MeasureStep>> WorkflowJSON::getMeasureStepsWithIndex(const MeasureType& measureType) const {
+  return getImpl<detail::WorkflowJSON_Impl>()->getMeasureStepsWithIndex(measureType);
 }
 
 bool WorkflowJSON::setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps) {

@@ -273,6 +273,13 @@ namespace model {
       clearExtensibleGroups();
     }
 
+    std::vector<openstudio::IdfObject> AirLoopHVACDedicatedOutdoorAirSystem_Impl::remove() {
+
+      airLoopHVACOutdoorAirSystem().remove();
+
+      return ModelObject_Impl::remove();
+    }
+
     bool AirLoopHVACDedicatedOutdoorAirSystem_Impl::addAirLoops(const std::vector<AirLoopHVAC>& airLoopHVACs) {
       bool ok = true;
       for (const AirLoopHVAC& airLoopHVAC : airLoopHVACs) {
