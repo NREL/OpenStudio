@@ -59,8 +59,8 @@ namespace model {
       for (const WorkspaceObject& source : sources) {
         if (excludeChildren) {
           // check if this is a child
-          auto it =
-            std::find_if(children.begin(), children.end(), std::bind(handleEquals<ModelObject, Handle>, std::placeholders::_1, source.handle()));
+          auto it = std::find_if(children.cbegin(), children.cend(),
+                                 [h = source.handle()](const ModelObject& mo) { return handleEquals<ModelObject, Handle>(mo, h); });
           if (it == children.end()) {
             // non-Child--count the use
             ++result;
@@ -93,8 +93,8 @@ namespace model {
 
           if (excludeChildren) {
             // check if this is a child
-            auto it =
-              std::find_if(children.begin(), children.end(), std::bind(handleEquals<ModelObject, Handle>, std::placeholders::_1, source.handle()));
+            auto it = std::find_if(children.cbegin(), children.cend(),
+                                   [h = source.handle()](const ModelObject& mo) { return handleEquals<ModelObject, Handle>(mo, h); });
             if (it == children.end()) {
               // non-ResourceObject and non-Child--count the use
               ++result;
@@ -133,7 +133,7 @@ namespace model {
     std::deque<ModelObject> objectQueue;
     objectQueue.push_back(object);
 
-    while (objectQueue.size() > 0) {
+    while (!objectQueue.empty()) {
       ModelObject currentObject(objectQueue[0]);
       objectQueue.pop_front();
       for (const ResourceObject& resource : currentObject.resources()) {
@@ -156,7 +156,7 @@ namespace model {
     std::deque<ModelObject> objectQueue;
     objectQueue.push_back(object);
 
-    while (objectQueue.size() > 0) {
+    while (!objectQueue.empty()) {
       ModelObject currentObject(objectQueue[0]);
       objectQueue.pop_front();
       for (const ResourceObject& resource : currentObject.resources()) {

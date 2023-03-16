@@ -51,7 +51,12 @@ namespace model {
 
     explicit InfraredTransparentMaterial(const Model& model);
 
-    virtual ~InfraredTransparentMaterial() {}
+    virtual ~InfraredTransparentMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    InfraredTransparentMaterial(const InfraredTransparentMaterial& other) = default;
+    InfraredTransparentMaterial(InfraredTransparentMaterial&& other) = default;
+    InfraredTransparentMaterial& operator=(const InfraredTransparentMaterial&) = default;
+    InfraredTransparentMaterial& operator=(InfraredTransparentMaterial&&) = default;
 
     //@}
 
@@ -71,7 +76,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::InfraredTransparentMaterial_Impl ImplType;
+    using ImplType = detail::InfraredTransparentMaterial_Impl;
 
     explicit InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl);
 
@@ -85,10 +90,10 @@ namespace model {
   };
 
   /** \relates InfraredTransparentMaterial*/
-  typedef boost::optional<InfraredTransparentMaterial> OptionalInfraredTransparentMaterial;
+  using OptionalInfraredTransparentMaterial = boost::optional<InfraredTransparentMaterial>;
 
   /** \relates InfraredTransparentMaterial*/
-  typedef std::vector<InfraredTransparentMaterial> InfraredTransparentMaterialVector;
+  using InfraredTransparentMaterialVector = std::vector<InfraredTransparentMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -62,7 +62,12 @@ namespace model {
 
     explicit CoilHeatingDXSingleSpeed(const Model& model);
 
-    virtual ~CoilHeatingDXSingleSpeed() {}
+    virtual ~CoilHeatingDXSingleSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingDXSingleSpeed(const CoilHeatingDXSingleSpeed& other) = default;
+    CoilHeatingDXSingleSpeed(CoilHeatingDXSingleSpeed&& other) = default;
+    CoilHeatingDXSingleSpeed& operator=(const CoilHeatingDXSingleSpeed&) = default;
+    CoilHeatingDXSingleSpeed& operator=(CoilHeatingDXSingleSpeed&&) = default;
 
     //@}
 
@@ -165,11 +170,11 @@ namespace model {
 
     void resetMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
 
-    bool setDefrostStrategy(std::string defrostStrategy);
+    bool setDefrostStrategy(const std::string& defrostStrategy);
 
     void resetDefrostStrategy();
 
-    bool setDefrostControl(std::string defrostControl);
+    bool setDefrostControl(const std::string& defrostControl);
 
     void resetDefrostControl();
 
@@ -235,7 +240,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::CoilHeatingDXSingleSpeed_Impl ImplType;
+    using ImplType = detail::CoilHeatingDXSingleSpeed_Impl;
 
     friend class detail::CoilHeatingDXSingleSpeed_Impl;
 
@@ -250,10 +255,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingDXSingleSpeed*/
-  typedef boost::optional<CoilHeatingDXSingleSpeed> OptionalCoilHeatingDXSingleSpeed;
+  using OptionalCoilHeatingDXSingleSpeed = boost::optional<CoilHeatingDXSingleSpeed>;
 
   /** \relates CoilHeatingDXSingleSpeed*/
-  typedef std::vector<CoilHeatingDXSingleSpeed> CoilHeatingDXSingleSpeedVector;
+  using CoilHeatingDXSingleSpeedVector = std::vector<CoilHeatingDXSingleSpeed>;
 
 }  // namespace model
 

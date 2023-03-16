@@ -531,12 +531,12 @@ TEST_F(ModelFixture, RefrigerationCase_Remove) {
   ScheduleCompact cds(model);
   RefrigerationCase testRefrigerationCase = RefrigerationCase(model, cds);
 
-  std::vector<RefrigerationCase> testAllRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testAllRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(1, testAllRefrigerationCases.size());
 
   testRefrigerationCase.remove();
 
-  testAllRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  testAllRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(0, testAllRefrigerationCases.size());
 }
 
@@ -545,7 +545,7 @@ TEST_F(ModelFixture, RefrigerationCase_CloneOneModelWithDefaultData) {
   ScheduleCompact cds(model);
   RefrigerationCase testObject = RefrigerationCase(model, cds);
 
-  RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
   EXPECT_EQ(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
 
@@ -609,7 +609,7 @@ TEST_F(ModelFixture, RefrigerationCase_CloneOneModelWithCustomData) {
   testObject.setDesignEvaporatorTemperatureorBrineInletTemperature(-1.0);
   testObject.setCaseDefrostType("HotGas");
 
-  RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
   EXPECT_EQ(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
   EXPECT_EQ(latentCaseCreditCurve.handle(), testObjectClone.latentCaseCreditCurve().handle());
@@ -640,19 +640,19 @@ TEST_F(ModelFixture, RefrigerationCase_CloneTwoModelsWithDefaultData) {
   ScheduleCompact cds(model);
   RefrigerationCase testObject = RefrigerationCase(model, cds);
 
-  RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
   Model model2;
 
-  std::vector<CurveCubic> refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> refrigerationCaseCurves2 = model2.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(0, refrigerationCaseCurves2.size());
 
-  RefrigerationCase testObjectClone2 = testObject.clone(model2).cast<RefrigerationCase>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationCase>();
 
-  std::vector<CurveCubic> refrigerationCaseCurves = model.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> refrigerationCaseCurves = model.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(1, refrigerationCaseCurves.size());
 
-  refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
+  refrigerationCaseCurves2 = model2.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(1, refrigerationCaseCurves2.size());
 
   for (auto it = refrigerationCaseCurves.begin(); it != refrigerationCaseCurves.end(); ++it) {
@@ -701,7 +701,7 @@ TEST_F(ModelFixture, RefrigerationCase_DefrostCycleParameters) {
 
   EXPECT_FALSE(testObject.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
 
-  RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
   EXPECT_FALSE(testObject.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
 

@@ -55,7 +55,12 @@ namespace model {
 
     explicit HumidifierSteamGas(const Model& model);
 
-    virtual ~HumidifierSteamGas() {}
+    virtual ~HumidifierSteamGas() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HumidifierSteamGas(const HumidifierSteamGas& other) = default;
+    HumidifierSteamGas(HumidifierSteamGas&& other) = default;
+    HumidifierSteamGas& operator=(const HumidifierSteamGas&) = default;
+    HumidifierSteamGas& operator=(HumidifierSteamGas&&) = default;
 
     //@}
 
@@ -130,7 +135,7 @@ namespace model {
 
     // void resetWaterStorageTank();
 
-    bool setInletWaterTemperatureOption(std::string inletWaterTemperatureOption);
+    bool setInletWaterTemperatureOption(const std::string& inletWaterTemperatureOption);
 
     void resetInletWaterTemperatureOption();
 
@@ -145,7 +150,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HumidifierSteamGas_Impl ImplType;
+    using ImplType = detail::HumidifierSteamGas_Impl;
 
     explicit HumidifierSteamGas(std::shared_ptr<detail::HumidifierSteamGas_Impl> impl);
 
@@ -159,10 +164,10 @@ namespace model {
   };
 
   /** \relates HumidifierSteamGas*/
-  typedef boost::optional<HumidifierSteamGas> OptionalHumidifierSteamGas;
+  using OptionalHumidifierSteamGas = boost::optional<HumidifierSteamGas>;
 
   /** \relates HumidifierSteamGas*/
-  typedef std::vector<HumidifierSteamGas> HumidifierSteamGasVector;
+  using HumidifierSteamGasVector = std::vector<HumidifierSteamGas>;
 
 }  // namespace model
 }  // namespace openstudio

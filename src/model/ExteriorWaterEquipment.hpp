@@ -61,7 +61,12 @@ namespace model {
     /** This constructor requires a user-specified schedule. */
     ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition, Schedule& schedule);
 
-    virtual ~ExteriorWaterEquipment() {}
+    virtual ~ExteriorWaterEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorWaterEquipment(const ExteriorWaterEquipment& other) = default;
+    ExteriorWaterEquipment(ExteriorWaterEquipment&& other) = default;
+    ExteriorWaterEquipment& operator=(const ExteriorWaterEquipment&) = default;
+    ExteriorWaterEquipment& operator=(ExteriorWaterEquipment&&) = default;
 
     //@}
 
@@ -96,7 +101,7 @@ namespace model {
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -109,7 +114,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorWaterEquipment_Impl ImplType;
+    using ImplType = detail::ExteriorWaterEquipment_Impl;
 
     explicit ExteriorWaterEquipment(std::shared_ptr<detail::ExteriorWaterEquipment_Impl> impl);
 
@@ -123,10 +128,10 @@ namespace model {
   };
 
   /** \relates ExteriorWaterEquipment*/
-  typedef boost::optional<ExteriorWaterEquipment> OptionalExteriorWaterEquipment;
+  using OptionalExteriorWaterEquipment = boost::optional<ExteriorWaterEquipment>;
 
   /** \relates ExteriorWaterEquipment*/
-  typedef std::vector<ExteriorWaterEquipment> ExteriorWaterEquipmentVector;
+  using ExteriorWaterEquipmentVector = std::vector<ExteriorWaterEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

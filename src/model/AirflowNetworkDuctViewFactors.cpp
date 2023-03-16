@@ -206,7 +206,7 @@ namespace model {
         LOG(Info, "Did not find the surface!");
         // Didn't find the surface
         std::vector<std::string> values = {toString(surf.handle()), toString(F)};
-        ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
+        auto group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
       } else {
         LOG(Info, "Found the surface!");
@@ -246,7 +246,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkDuctViewFactors::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkDuctViewFactors);
+    return {IddObjectType::OS_AirflowNetworkDuctViewFactors};
   }
 
   AirflowNetworkLinkage AirflowNetworkDuctViewFactors::linkage() const {

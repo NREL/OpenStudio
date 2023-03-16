@@ -126,7 +126,7 @@ class UTILITIES_API BCLMeasure
   //@{
 
   /// Virtual destructor
-  virtual ~BCLMeasure();
+  virtual ~BCLMeasure() = default;
 
   //@}
   /** @name Getters */
@@ -147,6 +147,9 @@ class UTILITIES_API BCLMeasure
   boost::optional<DateTime> versionModified() const;
 
   std::string xmlChecksum() const;
+
+  // string representation of the underlying BCLXML
+  std::string xmlString() const;
 
   std::string name() const;
 
@@ -313,9 +316,9 @@ class UTILITIES_API BCLMeasure
   BCLXML m_bclXML;
 };
 
-typedef boost::optional<BCLMeasure> OptionalBCLMeasure;
+using OptionalBCLMeasure = boost::optional<BCLMeasure>;
 
-typedef std::vector<BCLMeasure> BCLMeasureVector;
+using BCLMeasureVector = std::vector<BCLMeasure>;
 
 }  // namespace openstudio
 

@@ -52,12 +52,12 @@ namespace model {
   class MODEL_API FuelSupplyConstituent
   {
    public:
-    FuelSupplyConstituent(std::string constituentName, double molarFraction);
+    FuelSupplyConstituent(const std::string& constituentName, double molarFraction);
 
     std::string constituentName() const;
     double molarFraction() const;
 
-    static bool isValid(std::string constituentName);
+    static bool isValid(const std::string& constituentName);
     static std::vector<std::string> constituentNameValues();
     static std::vector<std::string> validConstituentNameValues();
 
@@ -81,7 +81,12 @@ namespace model {
 
     explicit GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve);
 
-    virtual ~GeneratorFuelSupply() {}
+    virtual ~GeneratorFuelSupply() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelSupply(const GeneratorFuelSupply& other) = default;
+    GeneratorFuelSupply(GeneratorFuelSupply&& other) = default;
+    GeneratorFuelSupply& operator=(const GeneratorFuelSupply&) = default;
+    GeneratorFuelSupply& operator=(GeneratorFuelSupply&&) = default;
 
     //@}
 
@@ -95,7 +100,7 @@ namespace model {
 
     bool addConstituent(const FuelSupplyConstituent& constituent);
     // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
-    bool addConstituent(std::string name, double molarFraction);
+    bool addConstituent(const std::string& name, double molarFraction);
 
     // TODO: this should return bool (to indicate whether groupIndex is valid...)
     void removeConstituent(int groupIndex);
@@ -189,7 +194,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelSupply_Impl ImplType;
+    using ImplType = detail::GeneratorFuelSupply_Impl;
 
     explicit GeneratorFuelSupply(std::shared_ptr<detail::GeneratorFuelSupply_Impl> impl);
 
@@ -203,10 +208,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelSupply*/
-  typedef boost::optional<GeneratorFuelSupply> OptionalGeneratorFuelSupply;
+  using OptionalGeneratorFuelSupply = boost::optional<GeneratorFuelSupply>;
 
   /** \relates GeneratorFuelSupply*/
-  typedef std::vector<GeneratorFuelSupply> GeneratorFuelSupplyVector;
+  using GeneratorFuelSupplyVector = std::vector<GeneratorFuelSupply>;
 
 }  // namespace model
 }  // namespace openstudio

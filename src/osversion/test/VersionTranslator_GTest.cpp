@@ -193,7 +193,7 @@ void testExampleComponent(int major, int minor) {
         ASSERT_NO_THROW(contents.primaryComponentObject());
         model::ModelObject prime = contents.primaryComponentObject();
         ASSERT_TRUE(prime.optionalCast<model::Construction>());
-        model::Construction construction = prime.cast<model::Construction>();
+        auto construction = prime.cast<model::Construction>();
         EXPECT_FALSE(construction.layers().empty());
         // make sure save and load is ok
         componentPath = it->path() / toPath("example_updated.osc");
@@ -408,7 +408,7 @@ TEST_F(OSVersionFixture,VersionTranslator_0_7_4_NameRefsTranslated) {
   EXPECT_EQ(VersionString("0.7.3"),translator.originalVersion());
 
   // Confirm that expected pointers are still there
-  model::ConstructionVector constructions = model.getModelObjects<model::Construction>();
+  model::ConstructionVector constructions = model.getConcreteModelObjects<model::Construction>();
   EXPECT_FALSE(constructions.empty());
   for (const model::Construction construction : constructions) {
     ASSERT_FALSE(construction.layers().empty());
@@ -1111,7 +1111,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ConstructionWithInternalSource) {
 
   EXPECT_EQ(3u, c.extensibleGroups().size());
   for (const IdfExtensibleGroup& eg : c.extensibleGroups()) {
-    WorkspaceExtensibleGroup w_eg = eg.cast<WorkspaceExtensibleGroup>();
+    auto w_eg = eg.cast<WorkspaceExtensibleGroup>();
     ASSERT_TRUE(w_eg.getTarget(0));
     EXPECT_EQ("OS:Material", w_eg.getTarget(0).get().iddObject().name());
   }
@@ -1268,7 +1268,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   EXPECT_EQ("Sequential", sc.getString(13, false, true).get());
   ASSERT_EQ(1u, sc.numExtensibleGroups());
 
-  WorkspaceExtensibleGroup w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(w_eg.getTarget(0));
   EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
 }
@@ -2467,13 +2467,13 @@ TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_VRF_Terminal_v340_osc) {
   EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", ocd->primaryComponentObject().iddObject().name());
 }
 
-TEST_F(OSVersionFixture, update_3_5_1_to_3_5_2_GroundHeatExchangerHorizontalTrench) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_5_2/test_vt_GroundHeatExchangerHorizontalTrench.osm");
+TEST_F(OSVersionFixture, update_3_5_1_to_3_6_0_GroundHeatExchangerHorizontalTrench) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_6_0/test_vt_GroundHeatExchangerHorizontalTrench.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_2/test_vt_GroundHeatExchangerHorizontalTrench_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_6_0/test_vt_GroundHeatExchangerHorizontalTrench_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> ghxs = model->getObjectsByType("OS:GroundHeatExchanger:HorizontalTrench");

@@ -87,7 +87,7 @@ namespace model {
       }
 
       // Push an extensible group
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool result = eg.setString(OS_Output_Table_SummaryReportsExtensibleFields::ReportName, summaryReport);
       if (result) {
         return true;
@@ -139,7 +139,7 @@ namespace model {
 
     bool OutputTableSummaryReports_Impl::addSummaryReports(const std::vector<std::string>& summaryReports) {
       bool result = true;
-      for (std::string summaryReport : summaryReports) {
+      for (const std::string& summaryReport : summaryReports) {
         result &= addSummaryReport(summaryReport);
       }
       return result;
@@ -165,7 +165,7 @@ namespace model {
 
       boost::optional<std::string> result;
 
-      ModelExtensibleGroup group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
+      auto group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
 
       boost::optional<std::string> _summaryReport = group.getString(OS_Output_Table_SummaryReportsExtensibleFields::ReportName);
 
@@ -179,7 +179,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType OutputTableSummaryReports::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Output_Table_SummaryReports);
+    return {IddObjectType::OS_Output_Table_SummaryReports};
   }
 
   std::vector<std::string> OutputTableSummaryReports::summaryReportValues() {

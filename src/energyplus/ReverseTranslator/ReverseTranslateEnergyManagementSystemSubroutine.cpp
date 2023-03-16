@@ -101,8 +101,10 @@ namespace energyplus {
 
     // Now, we should do the actual name/uid substitution on all lines of the program
 
-    size_t pos, len;
-    std::string newline, uid;
+    size_t pos;
+    size_t len;
+    std::string newline;
+    std::string uid;
 
     unsigned n = workspaceObject.numExtensibleGroups();
     OptionalString line;

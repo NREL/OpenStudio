@@ -54,7 +54,7 @@ namespace model {
 
       ZoneHVACFourPipeFanCoil_Impl(const ZoneHVACFourPipeFanCoil_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACFourPipeFanCoil_Impl() {}
+      virtual ~ZoneHVACFourPipeFanCoil_Impl() = default;
 
       //@}
 
@@ -159,7 +159,7 @@ namespace model {
 
       bool setAvailabilitySchedule(Schedule& schedule);
 
-      bool setCapacityControlMethod(std::string capacityControlMethod);
+      bool setCapacityControlMethod(const std::string& capacityControlMethod);
 
       bool setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate);
 
@@ -181,9 +181,9 @@ namespace model {
 
       void resetOutdoorAirSchedule();
 
-      bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
+      bool setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType);
 
-      bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
+      bool setOutdoorAirMixerName(const std::string& outdoorAirMixerName);
 
       bool setSupplyAirFan(HVACComponent& fan);
 

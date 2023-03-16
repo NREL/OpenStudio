@@ -54,7 +54,12 @@ namespace model {
     /** Construct a constant pressure drop object. */
     AirflowNetworkConstantPressureDrop(const Model& model, double pressureDrop);
 
-    virtual ~AirflowNetworkConstantPressureDrop() {}
+    virtual ~AirflowNetworkConstantPressureDrop() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkConstantPressureDrop(const AirflowNetworkConstantPressureDrop& other) = default;
+    AirflowNetworkConstantPressureDrop(AirflowNetworkConstantPressureDrop&& other) = default;
+    AirflowNetworkConstantPressureDrop& operator=(const AirflowNetworkConstantPressureDrop&) = default;
+    AirflowNetworkConstantPressureDrop& operator=(AirflowNetworkConstantPressureDrop&&) = default;
 
     //@}
 
@@ -78,7 +83,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkConstantPressureDrop_Impl ImplType;
+    using ImplType = detail::AirflowNetworkConstantPressureDrop_Impl;
 
     explicit AirflowNetworkConstantPressureDrop(std::shared_ptr<detail::AirflowNetworkConstantPressureDrop_Impl> impl);
 
@@ -92,10 +97,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkConstantPressureDrop*/
-  typedef boost::optional<AirflowNetworkConstantPressureDrop> OptionalAirflowNetworkConstantPressureDrop;
+  using OptionalAirflowNetworkConstantPressureDrop = boost::optional<AirflowNetworkConstantPressureDrop>;
 
   /** \relates AirflowNetworkConstantPressureDrop*/
-  typedef std::vector<AirflowNetworkConstantPressureDrop> AirflowNetworkConstantPressureDropVector;
+  using AirflowNetworkConstantPressureDropVector = std::vector<AirflowNetworkConstantPressureDrop>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -128,7 +128,7 @@ TEST_F(ModelFixture, CoilCoolingFourPipeBeam_Clone) {
   Model m;
   CoilCoolingFourPipeBeam coil(m);
 
-  CoilCoolingFourPipeBeam coilClone = coil.clone(m).cast<CoilCoolingFourPipeBeam>();
+  auto coilClone = coil.clone(m).cast<CoilCoolingFourPipeBeam>();
 
   // Are curves shared now?
   EXPECT_EQ(coil.beamCoolingCapacityTemperatureDifferenceModificationFactorCurve(),

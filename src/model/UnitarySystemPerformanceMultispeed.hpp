@@ -88,7 +88,12 @@ namespace model {
     //@{
     explicit UnitarySystemPerformanceMultispeed(const Model& model);
 
-    virtual ~UnitarySystemPerformanceMultispeed() {}
+    virtual ~UnitarySystemPerformanceMultispeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    UnitarySystemPerformanceMultispeed(const UnitarySystemPerformanceMultispeed& other) = default;
+    UnitarySystemPerformanceMultispeed(UnitarySystemPerformanceMultispeed&& other) = default;
+    UnitarySystemPerformanceMultispeed& operator=(const UnitarySystemPerformanceMultispeed&) = default;
+    UnitarySystemPerformanceMultispeed& operator=(UnitarySystemPerformanceMultispeed&&) = default;
     //@}
 
     static IddObjectType iddObjectType();
@@ -126,7 +131,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::UnitarySystemPerformanceMultispeed_Impl ImplType;
+    using ImplType = detail::UnitarySystemPerformanceMultispeed_Impl;
 
     explicit UnitarySystemPerformanceMultispeed(std::shared_ptr<detail::UnitarySystemPerformanceMultispeed_Impl> impl);
 
@@ -141,10 +146,10 @@ namespace model {
   };
 
   /** \relates UnitarySystemPerformanceMultispeed */
-  typedef boost::optional<UnitarySystemPerformanceMultispeed> OptionalUnitarySystemPerformanceMultispeed;
+  using OptionalUnitarySystemPerformanceMultispeed = boost::optional<UnitarySystemPerformanceMultispeed>;
 
   /** \relates UnitarySystemPerformanceMultispeed */
-  typedef std::vector<UnitarySystemPerformanceMultispeed> UnitarySystemPerformanceMultispeedVector;
+  using UnitarySystemPerformanceMultispeedVector = std::vector<UnitarySystemPerformanceMultispeed>;
 
 }  // namespace model
 }  // namespace openstudio

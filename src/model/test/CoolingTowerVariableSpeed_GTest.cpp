@@ -152,7 +152,7 @@ TEST_F(ModelFixture, CoolingTowerVariableSpeed_addToNode) {
   EXPECT_FALSE(coolingTowerVariableSpeed.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  CoolingTowerVariableSpeed testObjectClone = coolingTowerVariableSpeed.clone(m).cast<CoolingTowerVariableSpeed>();
+  auto testObjectClone = coolingTowerVariableSpeed.clone(m).cast<CoolingTowerVariableSpeed>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

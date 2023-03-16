@@ -427,7 +427,7 @@ namespace model {
   }
 
   IddObjectType CurveQuadLinear::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Curve_QuadLinear);
+    return {IddObjectType::OS_Curve_QuadLinear};
   }
 
   std::vector<std::string> CurveQuadLinear::inputUnitTypeforwValues() {

@@ -141,7 +141,7 @@ namespace measure {
     return m_lastEpwFilePath;
   }
 
-  bool OSRunner::inSelection(const openstudio::model::ModelObject& modelObject) const {
+  bool OSRunner::inSelection(const openstudio::model::ModelObject& /*modelObject*/) const {
     return true;
   }
 
@@ -248,7 +248,7 @@ namespace measure {
   //  m_currentStep = currentStep;
   //}
 
-  void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
+  void OSRunner::prepareForMeasureRun(const OSMeasure& /*measure*/) {
     if (m_halted) {
       LOG(Error, "Wokflow halted, cannot prepate for measure run");
       return;
@@ -708,7 +708,7 @@ namespace measure {
     }
     registerError(ss.str());
     LOG_AND_THROW(ss.str());
-    return std::string();
+    return {};
   }
 
   boost::optional<std::string> OSRunner::getOptionalStringArgumentValue(const std::string& argument_name,
@@ -743,7 +743,7 @@ namespace measure {
     }
     registerError(ss.str());
     LOG_AND_THROW(ss.str());
-    return openstudio::path();
+    return {};
   }
 
   boost::optional<openstudio::path> OSRunner::getOptionalPathArgumentValue(const std::string& argument_name,

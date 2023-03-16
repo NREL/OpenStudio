@@ -79,7 +79,7 @@ namespace model {
   }
 
   IddObjectType PlantEquipmentOperationOutdoorDryBulb::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulb);
+    return {IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulb};
   }
 
   /// @cond

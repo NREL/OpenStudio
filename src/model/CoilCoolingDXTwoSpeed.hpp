@@ -77,7 +77,12 @@ namespace model {
 
     CoilCoolingDXTwoSpeed(const Model& model);
 
-    virtual ~CoilCoolingDXTwoSpeed() {}
+    virtual ~CoilCoolingDXTwoSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDXTwoSpeed(const CoilCoolingDXTwoSpeed& other) = default;
+    CoilCoolingDXTwoSpeed(CoilCoolingDXTwoSpeed&& other) = default;
+    CoilCoolingDXTwoSpeed& operator=(const CoilCoolingDXTwoSpeed&) = default;
+    CoilCoolingDXTwoSpeed& operator=(CoilCoolingDXTwoSpeed&&) = default;
 
     //@}
 
@@ -347,7 +352,7 @@ namespace model {
     friend class openstudio::IdfObject;
 
     /// @cond
-    typedef detail::CoilCoolingDXTwoSpeed_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXTwoSpeed_Impl;
 
     explicit CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> impl);
 
@@ -357,10 +362,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXTwoSpeed */
-  typedef boost::optional<CoilCoolingDXTwoSpeed> OptionalCoilCoolingDXTwoSpeed;
+  using OptionalCoilCoolingDXTwoSpeed = boost::optional<CoilCoolingDXTwoSpeed>;
 
   /** \relates CoilCoolingDXTwoSpeed */
-  typedef std::vector<CoilCoolingDXTwoSpeed> CoilCoolingDXTwoSpeedVector;
+  using CoilCoolingDXTwoSpeedVector = std::vector<CoilCoolingDXTwoSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

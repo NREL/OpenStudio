@@ -82,7 +82,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_DX_VariableRefrigerantFlowFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("CoilHeatingDXVariableRefrigerantFlow", "Availability Schedule"));
       }
@@ -197,9 +198,9 @@ namespace model {
     }
 
     ModelObject CoilHeatingDXVariableRefrigerantFlow_Impl::clone(Model model) const {
-      CoilHeatingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilHeatingDXVariableRefrigerantFlow>();
+      auto objectClone = HVACComponent_Impl::clone(model).cast<CoilHeatingDXVariableRefrigerantFlow>();
 
-      return objectClone;
+      return std::move(objectClone);
     }
 
     std::vector<ModelObject> CoilHeatingDXVariableRefrigerantFlow_Impl::children() const {
@@ -277,7 +278,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingDXVariableRefrigerantFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow);
+    return {IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow};
   }
 
   Schedule CoilHeatingDXVariableRefrigerantFlow::availabilitySchedule() const {

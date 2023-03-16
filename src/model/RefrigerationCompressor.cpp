@@ -83,9 +83,9 @@ namespace model {
     }
 
     ModelObject RefrigerationCompressor_Impl::clone(Model model) const {
-      RefrigerationCompressor modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressor>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressor>();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IdfObject> RefrigerationCompressor_Impl::remove() {
@@ -266,7 +266,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCompressor_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationCompressor_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_CompressorFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -277,7 +277,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    // bool RefrigerationCompressor_Impl::setModeofOperation(std::string modeofOperation) {
+    // bool RefrigerationCompressor_Impl::setModeofOperation(const std::string& modeofOperation) {
     //  bool result = setString(OS_Refrigeration_CompressorFields::ModeofOperation, modeofOperation);
     //  return result;
     // }
@@ -330,8 +330,8 @@ namespace model {
     boost::optional<RefrigerationSystem> RefrigerationCompressor_Impl::system() const {
       boost::optional<RefrigerationSystem> result;
 
-      RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
-      for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      auto refrigerationCompressor = this->getObject<RefrigerationCompressor>();
+      for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         RefrigerationCompressorVector refrigerationCompressors = refrigerationSystem.compressors();
         if (!refrigerationCompressors.empty()
             && std::find(refrigerationCompressors.begin(), refrigerationCompressors.end(), refrigerationCompressor)
@@ -354,7 +354,7 @@ namespace model {
 
     void RefrigerationCompressor_Impl::removeFromSystem() {
       if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
-        RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
+        auto refrigerationCompressor = this->getObject<RefrigerationCompressor>();
         refrigerationSystem->removeCompressor(refrigerationCompressor);
         refrigerationSystem->removeHighStageCompressor(refrigerationCompressor);
       }
@@ -416,7 +416,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCompressor::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Compressor);
+    return {IddObjectType::OS_Refrigeration_Compressor};
   }
 
   std::vector<std::string> RefrigerationCompressor::modeofOperationValues() {
@@ -511,7 +511,7 @@ namespace model {
     getImpl<detail::RefrigerationCompressor_Impl>()->resetRatedSubcooling();
   }
 
-  bool RefrigerationCompressor::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCompressor::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationCompressor_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 
@@ -519,7 +519,7 @@ namespace model {
     getImpl<detail::RefrigerationCompressor_Impl>()->resetEndUseSubcategory();
   }
 
-  // bool RefrigerationCompressor::setModeofOperation(std::string modeofOperation) {
+  // bool RefrigerationCompressor::setModeofOperation(const std::string& modeofOperation) {
   //   return getImpl<detail::RefrigerationCompressor_Impl>()->setModeofOperation(modeofOperation);
   // }
 

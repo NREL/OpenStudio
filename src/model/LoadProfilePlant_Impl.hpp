@@ -54,7 +54,7 @@ namespace model {
 
       LoadProfilePlant_Impl(const LoadProfilePlant_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~LoadProfilePlant_Impl() {}
+      virtual ~LoadProfilePlant_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

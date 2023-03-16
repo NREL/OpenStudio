@@ -53,7 +53,12 @@ namespace model {
 
     explicit CurveQuintLinear(const Model& model);
 
-    virtual ~CurveQuintLinear() {}
+    virtual ~CurveQuintLinear() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveQuintLinear(const CurveQuintLinear& other) = default;
+    CurveQuintLinear(CurveQuintLinear&& other) = default;
+    CurveQuintLinear& operator=(const CurveQuintLinear&) = default;
+    CurveQuintLinear& operator=(CurveQuintLinear&&) = default;
 
     //@}
 
@@ -199,7 +204,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveQuintLinear_Impl ImplType;
+    using ImplType = detail::CurveQuintLinear_Impl;
 
     explicit CurveQuintLinear(std::shared_ptr<detail::CurveQuintLinear_Impl> impl);
 
@@ -213,10 +218,10 @@ namespace model {
   };
 
   /** \relates CurveQuintLinear*/
-  typedef boost::optional<CurveQuintLinear> OptionalCurveQuintLinear;
+  using OptionalCurveQuintLinear = boost::optional<CurveQuintLinear>;
 
   /** \relates CurveQuintLinear*/
-  typedef std::vector<CurveQuintLinear> CurveQuintLinearVector;
+  using CurveQuintLinearVector = std::vector<CurveQuintLinear>;
 
 }  // namespace model
 }  // namespace openstudio

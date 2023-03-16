@@ -147,7 +147,7 @@ namespace energyplus {
     // check input
     if (workspace.iddFileType() != IddFileType::EnergyPlus) {
       LOG(Error, "Cannot translate Workspace with IddFileType = '" << workspace.iddFileType().valueName() << "'");
-      return Model();
+      return {};
     }
 
     m_model = Model();
@@ -221,7 +221,7 @@ namespace energyplus {
   std::vector<LogMessage> ReverseTranslator::warnings() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() == Warn) {
         result.push_back(logMessage);
       }
@@ -233,7 +233,7 @@ namespace energyplus {
   std::vector<LogMessage> ReverseTranslator::errors() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() > Warn) {
         result.push_back(logMessage);
       }
@@ -744,6 +744,10 @@ namespace energyplus {
         modelObject = translateOutputControlTableStyle(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::OutputControl_Timestamp: {
+        modelObject = translateOutputControlTimestamp(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Output_Schedules: {
         modelObject = translateOutputSchedules(workspaceObject);
         break;
@@ -880,6 +884,10 @@ namespace energyplus {
         modelObject = translateSizingPeriodDesignDay(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::SolarCollectorPerformance_PhotovoltaicThermal_BIPVT: {
+        modelObject = translateSolarCollectorPerformancePhotovoltaicThermalBIPVT(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Sizing_System: {
         //modelObject = translateSizingSystem(workspaceObject);
         break;
@@ -908,14 +916,6 @@ namespace energyplus {
         modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
         break;
       }
-      case openstudio::IddObjectType::SurfaceProperty_LocalEnvironment: {
-        modelObject = translateSurfacePropertyLocalEnvironment(workspaceObject);
-        break;
-      }
-      case openstudio::IddObjectType::SurfaceProperty_SurroundingSurfaces: {
-        modelObject = translateSurfacePropertySurroundingSurfaces(workspaceObject);
-        break;
-      }
       case openstudio::IddObjectType::SurfaceProperty_GroundSurfaces: {
         modelObject = translateSurfacePropertyGroundSurfaces(workspaceObject);
         break;
@@ -924,12 +924,22 @@ namespace energyplus {
         modelObject = translateSurfacePropertyIncidentSolarMultiplier(workspaceObject);
         break;
       }
-        //case openstudio::IddObjectType::SwimmingPool_Indoor :
-        //{
-        //modelObject = translateSwimmingPoolIndoor(workspaceObject);
-        //break;
-        //}
-
+      case openstudio::IddObjectType::SurfaceProperty_LocalEnvironment: {
+        modelObject = translateSurfacePropertyLocalEnvironment(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_OtherSideConditionsModel: {
+        modelObject = translateSurfacePropertyOtherSideConditionsModel(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_SurroundingSurfaces: {
+        modelObject = translateSurfacePropertySurroundingSurfaces(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SwimmingPool_Indoor: {
+        // modelObject = translateSwimmingPoolIndoor(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Table_Lookup: {
         modelObject = translateTableLookup(workspaceObject);
         break;
@@ -1009,8 +1019,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::ZoneAirHeatBalanceAlgorithm: {
-        // DLM: why is this commented out?
-        //modelObject = translateZoneAirHeatBalanceAlgorithm(workspaceObject);
+        modelObject = translateZoneAirHeatBalanceAlgorithm(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::ZoneAirMassFlowConservation: {

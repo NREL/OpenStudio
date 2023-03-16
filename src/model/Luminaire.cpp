@@ -83,7 +83,8 @@ namespace model {
     std::vector<ScheduleTypeKey> Luminaire_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_LuminaireFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("Luminaire", "Luminaire"));
       }
@@ -99,7 +100,7 @@ namespace model {
       this->makeUnique();
 
       LuminaireDefinition definition = this->luminaireDefinition();
-      for (LifeCycleCost cost : definition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : definition.lifeCycleCosts()) {
         // DLM: is this appropriate for a luminaire?
         cost.convertToCostPerEach();
       }
@@ -269,7 +270,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Luminaire_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool Luminaire_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_LuminaireFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -560,7 +561,7 @@ namespace model {
     getImpl<detail::Luminaire_Impl>()->resetMultiplier();
   }
 
-  bool Luminaire::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool Luminaire::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::Luminaire_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

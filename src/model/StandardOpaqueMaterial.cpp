@@ -346,7 +346,7 @@ namespace model {
         double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
         double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
         double coatingLayerWaterVaporDiffusionResistanceFactor) {
-      StandardOpaqueMaterial thisMaterial = getObject<StandardOpaqueMaterial>();
+      auto thisMaterial = getObject<StandardOpaqueMaterial>();
       std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds =
         thisMaterial.getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(
           MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
@@ -383,7 +383,7 @@ namespace model {
     }
 
     boost::optional<MaterialPropertyPhaseChange> StandardOpaqueMaterial_Impl::createMaterialPropertyPhaseChange() {
-      StandardOpaqueMaterial thisMaterial = getObject<StandardOpaqueMaterial>();
+      auto thisMaterial = getObject<StandardOpaqueMaterial>();
       std::vector<MaterialPropertyPhaseChange> phaseChanges =
         thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
       if (!phaseChanges.empty()) {
@@ -396,7 +396,7 @@ namespace model {
 
     boost::optional<MaterialPropertyPhaseChange>
       StandardOpaqueMaterial_Impl::createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {
-      StandardOpaqueMaterial thisMaterial = getObject<StandardOpaqueMaterial>();
+      auto thisMaterial = getObject<StandardOpaqueMaterial>();
       std::vector<MaterialPropertyPhaseChange> phaseChanges =
         thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
       if (!phaseChanges.empty()) {
@@ -428,7 +428,7 @@ namespace model {
     }
 
     boost::optional<MaterialPropertyPhaseChangeHysteresis> StandardOpaqueMaterial_Impl::createMaterialPropertyPhaseChangeHysteresis() {
-      StandardOpaqueMaterial thisMaterial = getObject<StandardOpaqueMaterial>();
+      auto thisMaterial = getObject<StandardOpaqueMaterial>();
       std::vector<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresiss =
         thisMaterial.getModelObjectSources<MaterialPropertyPhaseChangeHysteresis>(MaterialPropertyPhaseChangeHysteresis::iddObjectType());
       if (!phaseChangeHysteresiss.empty()) {
@@ -483,7 +483,7 @@ namespace model {
   }
 
   IddObjectType StandardOpaqueMaterial::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Material);
+    return {IddObjectType::OS_Material};
   }
 
   double StandardOpaqueMaterial::thermalConductivity() const {

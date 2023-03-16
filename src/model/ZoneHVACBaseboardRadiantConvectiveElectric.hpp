@@ -55,7 +55,12 @@ namespace model {
 
     explicit ZoneHVACBaseboardRadiantConvectiveElectric(const Model& model);
 
-    virtual ~ZoneHVACBaseboardRadiantConvectiveElectric() {}
+    virtual ~ZoneHVACBaseboardRadiantConvectiveElectric() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACBaseboardRadiantConvectiveElectric(const ZoneHVACBaseboardRadiantConvectiveElectric& other) = default;
+    ZoneHVACBaseboardRadiantConvectiveElectric(ZoneHVACBaseboardRadiantConvectiveElectric&& other) = default;
+    ZoneHVACBaseboardRadiantConvectiveElectric& operator=(const ZoneHVACBaseboardRadiantConvectiveElectric&) = default;
+    ZoneHVACBaseboardRadiantConvectiveElectric& operator=(ZoneHVACBaseboardRadiantConvectiveElectric&&) = default;
 
     //@}
 
@@ -90,7 +95,7 @@ namespace model {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+    bool setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod);
 
     bool setHeatingDesignCapacity(double heatingDesignCapacity);
 
@@ -129,7 +134,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl ImplType;
+    using ImplType = detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl;
 
     explicit ZoneHVACBaseboardRadiantConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl> impl);
 
@@ -143,10 +148,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACBaseboardRadiantConvectiveElectric*/
-  typedef boost::optional<ZoneHVACBaseboardRadiantConvectiveElectric> OptionalZoneHVACBaseboardRadiantConvectiveElectric;
+  using OptionalZoneHVACBaseboardRadiantConvectiveElectric = boost::optional<ZoneHVACBaseboardRadiantConvectiveElectric>;
 
   /** \relates ZoneHVACBaseboardRadiantConvectiveElectric*/
-  typedef std::vector<ZoneHVACBaseboardRadiantConvectiveElectric> ZoneHVACBaseboardRadiantConvectiveElectricVector;
+  using ZoneHVACBaseboardRadiantConvectiveElectricVector = std::vector<ZoneHVACBaseboardRadiantConvectiveElectric>;
 
 }  // namespace model
 }  // namespace openstudio

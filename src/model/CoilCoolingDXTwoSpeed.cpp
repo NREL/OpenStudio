@@ -75,9 +75,9 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     ModelObject CoilCoolingDXTwoSpeed_Impl::clone(Model model) const {
-      CoilCoolingDXTwoSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoSpeed>();
+      auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoSpeed>();
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     std::vector<IddObjectType> CoilCoolingDXTwoSpeed_Impl::allowableChildTypes() const {
@@ -155,7 +155,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingDXTwoSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DX_TwoSpeedFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXTwoSpeed", "Availability"));
       }
@@ -426,10 +427,11 @@ namespace model {
     }
 
     bool CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserAirFlowRate(OptionalDouble value) {
-      if (value)
+      if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate, *value);
-      else
+      } else {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate, "Autosize");
+      }
     }
 
     bool CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserAirFlowRate(double value) {
@@ -441,10 +443,11 @@ namespace model {
       return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption);
     }
     bool CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(OptionalDouble value) {
-      if (value)
+      if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption, *value);
-      else
+      } else {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
+      }
     }
 
     bool CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value) {
@@ -468,10 +471,11 @@ namespace model {
     }
 
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserAirFlowRate(OptionalDouble value) {
-      if (value)
+      if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate, *value);
-      else
+      } else {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate, "Autosize");
+      }
     }
 
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserAirFlowRate(double value) {
@@ -484,10 +488,11 @@ namespace model {
     }
 
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(OptionalDouble value) {
-      if (value)
+      if (value) {
         return setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption, *value);
-      else
+      } else {
         return setString(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
+      }
     }
 
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value) {

@@ -45,7 +45,7 @@ namespace energyplus {
     boost::optional<ModelObject> result;
 
     // This is a Unique ModelObject
-    openstudio::model::OutputJSON modelObject = m_model.getUniqueModelObject<OutputJSON>();
+    auto modelObject = m_model.getUniqueModelObject<OutputJSON>();
 
     // Option Type: Required String
     if (boost::optional<std::string> _optionType = workspaceObject.getString(Output_JSONFields::OptionType)) {

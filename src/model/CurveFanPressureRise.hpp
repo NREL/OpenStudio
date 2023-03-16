@@ -53,7 +53,12 @@ namespace model {
     /** Sets \f$c_1 = c_2 = c_3 = c_4 = 1.0,\ Q_{fan}\ \text{within}\ [0.0,10.0], P_{sm}\ \text{within}\ [0.0,500.0]\f$ */
     explicit CurveFanPressureRise(const Model& model);
 
-    virtual ~CurveFanPressureRise() {}
+    virtual ~CurveFanPressureRise() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveFanPressureRise(const CurveFanPressureRise& other) = default;
+    CurveFanPressureRise(CurveFanPressureRise&& other) = default;
+    CurveFanPressureRise& operator=(const CurveFanPressureRise&) = default;
+    CurveFanPressureRise& operator=(CurveFanPressureRise&&) = default;
 
     //@}
 
@@ -117,7 +122,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveFanPressureRise_Impl ImplType;
+    using ImplType = detail::CurveFanPressureRise_Impl;
 
     explicit CurveFanPressureRise(std::shared_ptr<detail::CurveFanPressureRise_Impl> impl);
 
@@ -132,10 +137,10 @@ namespace model {
   };
 
   /** \relates CurveFanPressureRise*/
-  typedef boost::optional<CurveFanPressureRise> OptionalCurveFanPressureRise;
+  using OptionalCurveFanPressureRise = boost::optional<CurveFanPressureRise>;
 
   /** \relates CurveFanPressureRise*/
-  typedef std::vector<CurveFanPressureRise> CurveFanPressureRiseVector;
+  using CurveFanPressureRiseVector = std::vector<CurveFanPressureRise>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -108,7 +108,8 @@ namespace model {
     std::vector<ScheduleTypeKey> OutputVariable_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Output_VariableFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("OutputVariable", "Active Hours"));
       }
@@ -250,7 +251,7 @@ namespace model {
 
     std::map<int, std::string> names = openstudio::ReportingFrequency::getNames();
 
-    for (std::map<int, std::string>::const_iterator itr = names.begin(); itr != names.end(); ++itr) {
+    for (auto itr = names.begin(); itr != names.end(); ++itr) {
       retvals.push_back(itr->second);
     }
 

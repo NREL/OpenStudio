@@ -159,7 +159,7 @@ namespace model {
         result = false;
       } else {
         // Push an extensible group
-        WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+        auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
         bool temperature = eg.setDouble(OS_MaterialProperty_PhaseChangeExtensibleFields::Temperature, temperatureEnthalpy.temperature());
         bool enthalpy = eg.setDouble(OS_MaterialProperty_PhaseChangeExtensibleFields::Enthalpy, temperatureEnthalpy.enthalpy());
         if (temperature && enthalpy) {

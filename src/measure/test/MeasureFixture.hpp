@@ -63,7 +63,7 @@ class MeasureFixture : public ::testing::Test
   /// static data
   static boost::optional<openstudio::FileLogSink> logFile;
 
-  virtual ~MeasureFixture() {}
+  virtual ~MeasureFixture() = default;
 };
 
 #endif  // MEASURE_TEST_MEASUREFIXTURE_HPP

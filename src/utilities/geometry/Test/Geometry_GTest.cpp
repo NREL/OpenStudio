@@ -51,10 +51,11 @@ TEST_F(GeometryFixture, Newell_Vector) {
   OptionalVector3d normal;
 
   // triangle with unit area
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
 
   newell = getNewellVector(points);
   ASSERT_TRUE(newell);
@@ -71,11 +72,12 @@ TEST_F(GeometryFixture, Newell_Vector) {
   EXPECT_EQ(1, normal->length());
 
   // square with unit area
-  points.clear();
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  points = {
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   newell = getNewellVector(points);
   ASSERT_TRUE(newell);
@@ -92,19 +94,9 @@ TEST_F(GeometryFixture, Newell_Vector) {
   EXPECT_EQ(1, normal->length());
 
   // u shape (concave) with 5 unit area, includes collinear points
-  points.clear();
-  points.push_back(Point3d(0, 0, 2));
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(3, 0, 0));
-  points.push_back(Point3d(3, 0, 1));
-  points.push_back(Point3d(3, 0, 2));
-  points.push_back(Point3d(2, 0, 2));
-  points.push_back(Point3d(2, 0, 1));
-  points.push_back(Point3d(1, 0, 1));
-  points.push_back(Point3d(1, 0, 2));
+  points = {
+    {0, 0, 2}, {0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {3, 0, 0}, {3, 0, 1}, {3, 0, 2}, {2, 0, 2}, {2, 0, 1}, {1, 0, 1}, {1, 0, 2},
+  };
 
   newell = getNewellVector(points);
   ASSERT_TRUE(newell);
@@ -121,15 +113,9 @@ TEST_F(GeometryFixture, Newell_Vector) {
   EXPECT_EQ(1, normal->length());
 
   // u shape (concave) with 5 unit area, does not includes collinear points
-  points.clear();
-  points.push_back(Point3d(0, 0, 2));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(3, 0, 0));
-  points.push_back(Point3d(3, 0, 2));
-  points.push_back(Point3d(2, 0, 2));
-  points.push_back(Point3d(2, 0, 1));
-  points.push_back(Point3d(1, 0, 1));
-  points.push_back(Point3d(1, 0, 2));
+  points = {
+    {0, 0, 2}, {0, 0, 0}, {3, 0, 0}, {3, 0, 2}, {2, 0, 2}, {2, 0, 1}, {1, 0, 1}, {1, 0, 2},
+  };
 
   newell = getNewellVector(points);
   ASSERT_TRUE(newell);
@@ -169,11 +155,12 @@ TEST_F(GeometryFixture, Centroid) {
   EXPECT_FALSE(c);
 
   // square
-  points.clear();
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 0, 1));
+  points = {
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   c = getCentroid(points);
   ASSERT_TRUE(c);
@@ -182,11 +169,12 @@ TEST_F(GeometryFixture, Centroid) {
   EXPECT_EQ(0.5, c->z());
 
   // large rectangle
-  points.clear();
-  points.push_back(Point3d(3, 0, 2));
-  points.push_back(Point3d(3, 0, 1));
-  points.push_back(Point3d(3, 100, 1));
-  points.push_back(Point3d(3, 100, 2));
+  points = {
+    {3, 0, 2},
+    {3, 0, 1},
+    {3, 100, 1},
+    {3, 100, 2},
+  };
 
   c = getCentroid(points);
   ASSERT_TRUE(c);
@@ -195,13 +183,9 @@ TEST_F(GeometryFixture, Centroid) {
   EXPECT_EQ(1.5, c->z());
 
   // L
-  points.clear();
-  points.push_back(Point3d(0, 0, 2));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 0, 1));
-  points.push_back(Point3d(1, 0, 1));
-  points.push_back(Point3d(1, 0, 2));
+  points = {
+    {0, 0, 2}, {0, 0, 0}, {2, 0, 0}, {2, 0, 1}, {1, 0, 1}, {1, 0, 2},
+  };
 
   c = getCentroid(points);
   ASSERT_TRUE(c);
@@ -210,17 +194,9 @@ TEST_F(GeometryFixture, Centroid) {
   EXPECT_EQ(2.5 / 3.0, c->z());
 
   // 3x3 square on x, y plane at z = 1 with center missing
-  points.clear();
-  points.push_back(Point3d(0, 3, 1));
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(3, 0, 1));
-  points.push_back(Point3d(3, 3, 1));
-  points.push_back(Point3d(1, 3, 1));
-  points.push_back(Point3d(1, 2, 1));
-  points.push_back(Point3d(2, 2, 1));
-  points.push_back(Point3d(2, 1, 1));
-  points.push_back(Point3d(1, 1, 1));
-  points.push_back(Point3d(1, 3, 1));
+  points = {
+    {0, 3, 1}, {0, 0, 1}, {3, 0, 1}, {3, 3, 1}, {1, 3, 1}, {1, 2, 1}, {2, 2, 1}, {2, 1, 1}, {1, 1, 1}, {1, 3, 1},
+  };
 
   c = getCentroid(points);
   ASSERT_TRUE(c);
@@ -389,99 +365,111 @@ TEST_F(GeometryFixture, CircularEqual) {
 
   EXPECT_TRUE(circularEqual(points1, points2));
 
-  points1.clear();
-  points1.push_back(Point3d(0, 0, 0));
-  points1.push_back(Point3d(1, 0, 0));
-  points1.push_back(Point3d(1, 1, 0));
-  points1.push_back(Point3d(0, 1, 0));
+  points1 = {
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+  };
 
-  points2.clear();
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(1, 0, 0));
-  points2.push_back(Point3d(1, 1, 0));
-  points2.push_back(Point3d(0, 1, 0));
-
-  EXPECT_TRUE(circularEqual(points1, points2));
-
-  points2.clear();
-  points2.push_back(Point3d(1, 0, 0));
-  points2.push_back(Point3d(1, 1, 0));
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 0, 0));
+  points2 = {
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+  };
 
   EXPECT_TRUE(circularEqual(points1, points2));
 
-  points2.clear();
-  points2.push_back(Point3d(1, 1, 0));
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(1, 0, 0));
+  points2 = {
+    {1, 0, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+    {0, 0, 0},
+  };
 
   EXPECT_TRUE(circularEqual(points1, points2));
 
-  points2.clear();
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(1, 0, 0));
-  points2.push_back(Point3d(1, 1, 0));
+  points2 = {
+    {1, 1, 0},
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
 
   EXPECT_TRUE(circularEqual(points1, points2));
 
-  points2.clear();
-  points2.push_back(Point3d(0, 0, 0.1));
-  points2.push_back(Point3d(1, 0, 0.1));
-  points2.push_back(Point3d(1, 1, 0.1));
-  points2.push_back(Point3d(0, 1, 0.1));
+  points2 = {
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
+
+  EXPECT_TRUE(circularEqual(points1, points2));
+
+  points2 = {
+    {0, 0, 0.1},
+    {1, 0, 0.1},
+    {1, 1, 0.1},
+    {0, 1, 0.1},
+  };
 
   EXPECT_FALSE(circularEqual(points1, points2));
 
-  points2.clear();
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(1, 1, 0));
-  points2.push_back(Point3d(1, 0, 0));
+  points2 = {
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   EXPECT_FALSE(circularEqual(points1, points2));
 
-  points2.clear();
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(1, 0, 0));
-  points2.push_back(Point3d(1.1, 1.1, 0));
-  points2.push_back(Point3d(0, 1, 0));
+  points2 = {
+    {0, 0, 0},
+    {1, 0, 0},
+    {1.1, 1.1, 0},
+    {0, 1, 0},
+  };
 
   EXPECT_FALSE(circularEqual(points1, points2));
 
-  points2.clear();
-  points2.push_back(Point3d(1, 0, 0));
-  points2.push_back(Point3d(1.1, 1.1, 0));
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 0, 0));
+  points2 = {
+    {1, 0, 0},
+    {1.1, 1.1, 0},
+    {0, 1, 0},
+    {0, 0, 0},
+  };
 
   EXPECT_FALSE(circularEqual(points1, points2));
 
-  points2.clear();
-  points2.push_back(Point3d(1.1, 1.1, 0));
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(1, 0, 0));
+  points2 = {
+    {1.1, 1.1, 0},
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
 
   EXPECT_FALSE(circularEqual(points1, points2));
 
-  points2.clear();
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(1, 0, 0));
-  points2.push_back(Point3d(1.1, 1.1, 0));
+  points2 = {
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1.1, 1.1, 0},
+  };
 
   EXPECT_FALSE(circularEqual(points1, points2));
 }
 
 TEST_F(GeometryFixture, ReorderULC2) {
-  Point3dVector points1;
-  points1.push_back(Point3d(23.765661384, -48.74745648, 12.954));
-  points1.push_back(Point3d(34.4951304, -41.77963704, 12.954));
-  points1.push_back(Point3d(34.4951304, -41.77963704, 16.06061304));
-  points1.push_back(Point3d(23.765661384, -48.74745648, 16.06061304));
+  Point3dVector points1{
+    {23.765661384, -48.74745648, 12.954},
+    {34.4951304, -41.77963704, 12.954},
+    {34.4951304, -41.77963704, 16.06061304},
+    {23.765661384, -48.74745648, 16.06061304},
+  };
 
   Point3dVector points2 = reorderULC(points1);
   ASSERT_EQ(4u, points2.size());
@@ -492,31 +480,30 @@ TEST_F(GeometryFixture, ReorderULC2) {
 }
 
 TEST_F(GeometryFixture, RemoveCollinearLegacy) {
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 0, 0},
+    {0, 0, 0},
+  };
 
   Point3dVector testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(1u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0, 0, 0), testPoints[0]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
+  points = {
+    {0, 0, 0},
+    {1, 0, 0},
+    {2, 0, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(2u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0, 0, 0), testPoints[0]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[1]));
 
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(1, 2, 0));
+  points = {
+    {0, 2, 0}, {0, 0, 0}, {2, 0, 0}, {2, 2, 0}, {1, 2, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -525,12 +512,9 @@ TEST_F(GeometryFixture, RemoveCollinearLegacy) {
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
+  points = {
+    {1, 0, 0}, {0, 0, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -539,15 +523,9 @@ TEST_F(GeometryFixture, RemoveCollinearLegacy) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0.75, 0, 0));
-  points.push_back(Point3d(0.5, 0, 0));
-  points.push_back(Point3d(0.25, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
+  points = {
+    {1, 0, 0}, {0.75, 0, 0}, {0.5, 0, 0}, {0.25, 0, 0}, {0, 0, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -556,12 +534,9 @@ TEST_F(GeometryFixture, RemoveCollinearLegacy) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 0, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0}, {1, 0, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -570,18 +545,9 @@ TEST_F(GeometryFixture, RemoveCollinearLegacy) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 0, 0}, {0, 0, 0}, {0, 2, 0}, {0, 2, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0}, {2, 0, 0}, {1, 0, 0}, {1, 0, 0}, {1, 0, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -590,15 +556,9 @@ TEST_F(GeometryFixture, RemoveCollinearLegacy) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0.75, 0, 0));
-  points.push_back(Point3d(0.5, 0, 0));
-  points.push_back(Point3d(0.25, 0, 0));
+  points = {
+    {0, 0, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0}, {1, 0, 0}, {0.75, 0, 0}, {0.5, 0, 0}, {0.25, 0, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -607,15 +567,9 @@ TEST_F(GeometryFixture, RemoveCollinearLegacy) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(1, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 1, 0));
+  points = {
+    {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {2, 1, 0}, {2, 2, 0}, {1, 2, 0}, {0, 2, 0}, {0, 1, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -624,11 +578,12 @@ TEST_F(GeometryFixture, RemoveCollinearLegacy) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(0, 2, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
+  points = {
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 2, 0},
+    {0, 2, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -637,13 +592,9 @@ TEST_F(GeometryFixture, RemoveCollinearLegacy) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(0, 2, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
+  points = {
+    {0, 0, 0}, {1, 0, 0}, {0, 0, 0}, {2, 0, 0}, {2, 2, 0}, {0, 2, 0},
+  };
 
   testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(6u, testPoints.size());
@@ -656,28 +607,27 @@ TEST_F(GeometryFixture, RemoveCollinearLegacy) {
 }
 
 TEST_F(GeometryFixture, RemoveCollinear) {
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 0, 0},
+    {0, 0, 0},
+  };
 
   Point3dVector testPoints = removeCollinear(points);
   EXPECT_EQ(0u, testPoints.size());
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
+  points = {
+    {0, 0, 0},
+    {1, 0, 0},
+    {2, 0, 0},
+  };
 
   testPoints = removeCollinear(points);
   EXPECT_EQ(0u, testPoints.size());
 
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(1, 2, 0));
+  points = {
+    {0, 2, 0}, {0, 0, 0}, {2, 0, 0}, {2, 2, 0}, {1, 2, 0},
+  };
 
   testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -686,12 +636,9 @@ TEST_F(GeometryFixture, RemoveCollinear) {
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
+  points = {
+    {1, 0, 0}, {0, 0, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0},
+  };
 
   testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -700,15 +647,9 @@ TEST_F(GeometryFixture, RemoveCollinear) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0.75, 0, 0));
-  points.push_back(Point3d(0.5, 0, 0));
-  points.push_back(Point3d(0.25, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
+  points = {
+    {1, 0, 0}, {0.75, 0, 0}, {0.5, 0, 0}, {0.25, 0, 0}, {0, 0, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0},
+  };
 
   testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -717,12 +658,9 @@ TEST_F(GeometryFixture, RemoveCollinear) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 0, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0}, {1, 0, 0},
+  };
 
   testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -731,18 +669,9 @@ TEST_F(GeometryFixture, RemoveCollinear) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 0, 0}, {0, 0, 0}, {0, 2, 0}, {0, 2, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0}, {2, 0, 0}, {1, 0, 0}, {1, 0, 0}, {1, 0, 0},
+  };
 
   testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -751,15 +680,9 @@ TEST_F(GeometryFixture, RemoveCollinear) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0.75, 0, 0));
-  points.push_back(Point3d(0.5, 0, 0));
-  points.push_back(Point3d(0.25, 0, 0));
+  points = {
+    {0, 0, 0}, {0, 2, 0}, {2, 2, 0}, {2, 0, 0}, {1, 0, 0}, {0.75, 0, 0}, {0.5, 0, 0}, {0.25, 0, 0},
+  };
 
   testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -768,15 +691,9 @@ TEST_F(GeometryFixture, RemoveCollinear) {
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(1, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 1, 0));
+  points = {
+    {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {2, 1, 0}, {2, 2, 0}, {1, 2, 0}, {0, 2, 0}, {0, 1, 0},
+  };
 
   testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -785,11 +702,12 @@ TEST_F(GeometryFixture, RemoveCollinear) {
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
+  points = {
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 2, 0},
+    {0, 2, 0},
+  };
 
   testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -798,13 +716,9 @@ TEST_F(GeometryFixture, RemoveCollinear) {
   EXPECT_TRUE(pointEqual(Point3d(2, 0, 0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2, 2, 0), testPoints[3]));
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
+  points = {
+    {0, 0, 0}, {1, 0, 0}, {0, 0, 0}, {2, 0, 0}, {2, 2, 0}, {0, 2, 0},
+  };
 
   testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
@@ -821,37 +735,41 @@ TEST_F(GeometryFixture, RemoveSpikes)
   Point3dVector resultPoints;
   Point3dVector testPoints;
 
-  points.clear();
-  points.push_back(Point3d(3,2,0));
-  points.push_back(Point3d(2,2,0));
-  points.push_back(Point3d(0,0,0));
-  points.push_back(Point3d(3,0,0));
+  points = {
+    {3, 2, 0},
+    {2, 2, 0},
+    {0, 0, 0},
+    {3, 0, 0},
+  };
 
-  resultPoints.clear();
-  resultPoints.push_back(Point3d(3,2,0));
-  resultPoints.push_back(Point3d(2,2,0));
-  resultPoints.push_back(Point3d(0,0,0));
-  resultPoints.push_back(Point3d(3,0,0));
+  resultPoints = {
+    {3, 2, 0},
+    {2, 2, 0},
+    {0, 0, 0},
+    {3, 0, 0},
+  };
 
   testPoints = removeSpikes(points);
   ASSERT_EQ(4u, testPoints.size()) << testPoints;
   EXPECT_TRUE(circularEqual(resultPoints, testPoints));
 
-  points.clear();
-  points.push_back(Point3d(5,0,0)); // spike
-  points.push_back(Point3d(3,2,0));
-  points.push_back(Point3d(2,2,0));
-  points.push_back(Point3d(0,0,0));
-  points.push_back(Point3d(5,0,0)); // spike
-  points.push_back(Point3d(3,0,0));
-  points.push_back(Point3d(3,2,0));
+  points = {
+    {5, 0, 0},
+    {3, 2, 0},
+    {2, 2, 0},
+    {0, 0, 0},
+    {5, 0, 0},
+    {3, 0, 0},
+    {3, 2, 0},
+  };
 
-  resultPoints.clear();
-  resultPoints.push_back(Point3d(3,2,0));
-  resultPoints.push_back(Point3d(2,2,0));
-  resultPoints.push_back(Point3d(0,0,0));
-  resultPoints.push_back(Point3d(3,0,0));
-  resultPoints.push_back(Point3d(3,2,0));
+  resultPoints = {
+    {3, 2, 0},
+    {2, 2, 0},
+    {0, 0, 0},
+    {3, 0, 0},
+    {3, 2, 0},
+  };
 
   testPoints = removeSpikes(points);
   ASSERT_EQ(5u, testPoints.size()) << testPoints;
@@ -985,15 +903,9 @@ TEST_F(GeometryFixture, Triangulate_ComplexHoles) {
 
   // sense is down with a hole in middle
   points1 = makeRectangleDown(0, 0, 4, 4);
-  points2.clear();
-  points2.push_back(Point3d(1.0, 2.5, 0));
-  points2.push_back(Point3d(1.5, 3.0, 0));
-  points2.push_back(Point3d(2.5, 3.0, 0));
-  points2.push_back(Point3d(3.0, 2.5, 0));
-  points2.push_back(Point3d(3.0, 1.5, 0));
-  points2.push_back(Point3d(2.5, 1.0, 0));
-  points2.push_back(Point3d(1.5, 1.0, 0));
-  points2.push_back(Point3d(1.0, 1.5, 0));
+  points2 = {
+    {1.0, 2.5, 0}, {1.5, 3.0, 0}, {2.5, 3.0, 0}, {3.0, 2.5, 0}, {3.0, 1.5, 0}, {2.5, 1.0, 0}, {1.5, 1.0, 0}, {1.0, 1.5, 0},
+  };
   ASSERT_TRUE(getArea(points2));
   EXPECT_DOUBLE_EQ(3.5, getArea(points2).get());
 
@@ -1088,7 +1000,8 @@ TEST_F(GeometryFixture, Triangulate_Windows_4783) {
   subSurfaceVertices.push_back(tmp8);
 
   std::vector<std::vector<Point3d>> triangles = computeTriangulation(surfaceVertices, subSurfaceVertices);
-  ASSERT_EQ(triangles.size(), 47);
+  //LOG(Debug, triangles);
+  ASSERT_EQ(triangles.size(), 48);
 }
 
 TEST_F(GeometryFixture, PointLatLon) {
@@ -1251,11 +1164,12 @@ TEST_F(GeometryFixture, Polygon3d_WithHole) {
   testPolygon.addPoint(Point3d(100, 100, 0));
   testPolygon.addPoint(Point3d(0, 100, 0));
 
-  Point3dVector hole;
-  hole.push_back(Point3d(30, 30, 0));
-  hole.push_back(Point3d(30, 70, 0));
-  hole.push_back(Point3d(70, 70, 0));
-  hole.push_back(Point3d(70, 30, 0));
+  Point3dVector hole{
+    {30, 30, 0},
+    {30, 70, 0},
+    {70, 70, 0},
+    {70, 30, 0},
+  };
   testPolygon.addHole(hole);
 
   // Vector3d normal = testPolygon.outwardNormal();

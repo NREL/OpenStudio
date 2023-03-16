@@ -486,7 +486,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXCurveFitSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed);
+    return {IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed};
   }
 
   double CoilCoolingDXCurveFitSpeed::grossTotalCoolingCapacityFraction() const {

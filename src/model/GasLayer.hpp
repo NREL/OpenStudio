@@ -50,12 +50,17 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~GasLayer() {}
+    virtual ~GasLayer() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GasLayer(const GasLayer& other) = default;
+    GasLayer(GasLayer&& other) = default;
+    GasLayer& operator=(const GasLayer&) = default;
+    GasLayer& operator=(GasLayer&&) = default;
 
     //@}
    protected:
     /// @cond
-    typedef detail::GasLayer_Impl ImplType;
+    using ImplType = detail::GasLayer_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -70,9 +75,9 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.GasLayer");
   };
 
-  typedef boost::optional<GasLayer> OptionalGasLayer;
+  using OptionalGasLayer = boost::optional<GasLayer>;
 
-  typedef std::vector<GasLayer> GasLayerVector;
+  using GasLayerVector = std::vector<GasLayer>;
 
 }  // namespace model
 }  // namespace openstudio

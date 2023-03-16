@@ -137,7 +137,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell) {
   GeneratorFuelCellPowerModule fCPM = fuelcell.powerModule();
   // check default power module curve values
   Curve curve = fCPM.efficiencyCurve();
-  CurveQuadratic curveQ = curve.cast<CurveQuadratic>();
+  auto curveQ = curve.cast<CurveQuadratic>();
   EXPECT_EQ(0.642388, curveQ.coefficient1Constant());
   EXPECT_EQ(-0.0001619, curveQ.coefficient2x());
   EXPECT_EQ(2.26e-008, curveQ.coefficient3xPOW2());

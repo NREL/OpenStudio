@@ -145,7 +145,7 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_Clone) {
   CoilCoolingDXTwoSpeed coil(m, s, ccfot1, ccfof2, eirfot3, eirfof4, plf5, lsccfot6, lseirfot7);
 
   //Clone into the same model
-  CoilCoolingDXTwoSpeed coilClone = coil.clone(m).cast<CoilCoolingDXTwoSpeed>();
+  auto coilClone = coil.clone(m).cast<CoilCoolingDXTwoSpeed>();
 
   ASSERT_EQ(1, coilClone.totalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
   ASSERT_EQ(2, coilClone.totalCoolingCapacityFunctionOfFlowFractionCurve().cast<CurveCubic>().coefficient1Constant());
@@ -157,7 +157,7 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_Clone) {
 
   //Clone into another model
   Model m2;
-  CoilCoolingDXTwoSpeed coilClone2 = coil.clone(m2).cast<CoilCoolingDXTwoSpeed>();
+  auto coilClone2 = coil.clone(m2).cast<CoilCoolingDXTwoSpeed>();
 
   ASSERT_EQ(1, coilClone2.totalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
   ASSERT_EQ(2, coilClone2.totalCoolingCapacityFunctionOfFlowFractionCurve().cast<CurveCubic>().coefficient1Constant());
@@ -432,7 +432,7 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_addToNode) {
     EXPECT_EQ((unsigned)3, outdoorAirSystem.reliefComponents().size());
   }
 
-  CoilCoolingDXTwoSpeed testObjectClone = testObject.clone(m).cast<CoilCoolingDXTwoSpeed>();
+  auto testObjectClone = testObject.clone(m).cast<CoilCoolingDXTwoSpeed>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

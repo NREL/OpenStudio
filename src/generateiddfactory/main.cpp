@@ -41,10 +41,11 @@ int main(int argc, char* argv[]) {
     // set up program options
     std::string outdir;
     boost::program_options::options_description opts("Options", 100);
-    opts.add_options()("help,h", "prints help message")(
-      "outdir,o", boost::program_options::value<std::string>(&outdir)->default_value(std::string(".")), "specify the output directory")(
-      "idd,i", boost::program_options::value<std::vector<std::string>>(),
-      "name,path of an IDD file; ex. EnergyPlus,C:\\EnergyPlus\\Energy+.idd; if no name provided, will use file name");
+    opts.add_options()("help,h",
+                       "prints help message")("outdir,o", boost::program_options::value<std::string>(&outdir)->default_value(std::string(".")),
+                                              "specify the output directory")("idd,i", boost::program_options::value<std::vector<std::string>>(),
+                                                                              "name,path of an IDD file; ex. EnergyPlus,C:\\EnergyPlus\\Energy+.idd; "
+                                                                              "if no name provided, will use file name");
     boost::program_options::positional_options_description posOpts;
     posOpts.add("idd", -1);
 
@@ -54,7 +55,7 @@ int main(int argc, char* argv[]) {
     boost::program_options::notify(vm);
 
     // provide help message
-    if (vm.count("help")) {
+    if (vm.count("help") != 0u) {
       std::cout << opts;
       std::cout << "In addition to an outdir, at least one name,path IDD pair is required." << '\n';
       return 0;

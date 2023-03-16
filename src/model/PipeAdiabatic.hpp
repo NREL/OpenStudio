@@ -56,7 +56,12 @@ namespace model {
    */
     explicit PipeAdiabatic(const Model& model);
 
-    virtual ~PipeAdiabatic() {}
+    virtual ~PipeAdiabatic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PipeAdiabatic(const PipeAdiabatic& other) = default;
+    PipeAdiabatic(PipeAdiabatic&& other) = default;
+    PipeAdiabatic& operator=(const PipeAdiabatic&) = default;
+    PipeAdiabatic& operator=(PipeAdiabatic&&) = default;
 
     unsigned inletPort() const;
 
@@ -71,7 +76,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::PipeAdiabatic_Impl ImplType;
+    using ImplType = detail::PipeAdiabatic_Impl;
 
     explicit PipeAdiabatic(std::shared_ptr<detail::PipeAdiabatic_Impl> impl);
 
@@ -82,10 +87,10 @@ namespace model {
   };
 
   /** \relates PipeAdiabatic */
-  typedef boost::optional<PipeAdiabatic> OptionalPipeAdiabatic;
+  using OptionalPipeAdiabatic = boost::optional<PipeAdiabatic>;
 
   /** \relates PipeAdiabatic */
-  typedef std::vector<PipeAdiabatic> PipeAdiabaticVector;
+  using PipeAdiabaticVector = std::vector<PipeAdiabatic>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -52,12 +52,17 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ModelPartitionMaterial() {}
+    virtual ~ModelPartitionMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ModelPartitionMaterial(const ModelPartitionMaterial& other) = default;
+    ModelPartitionMaterial(ModelPartitionMaterial&& other) = default;
+    ModelPartitionMaterial& operator=(const ModelPartitionMaterial&) = default;
+    ModelPartitionMaterial& operator=(ModelPartitionMaterial&&) = default;
 
     //@}
    protected:
     /// @cond
-    typedef detail::ModelPartitionMaterial_Impl ImplType;
+    using ImplType = detail::ModelPartitionMaterial_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -73,10 +78,10 @@ namespace model {
   };
 
   /** \relates ModelPartitionMaterial */
-  typedef boost::optional<ModelPartitionMaterial> OptionalModelPartitionMaterial;
+  using OptionalModelPartitionMaterial = boost::optional<ModelPartitionMaterial>;
 
   /** \relates ModelPartitionMaterial */
-  typedef std::vector<ModelPartitionMaterial> ModelPartitionMaterialVector;
+  using ModelPartitionMaterialVector = std::vector<ModelPartitionMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

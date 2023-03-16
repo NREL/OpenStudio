@@ -53,7 +53,12 @@ namespace model {
     /** Defaults design level to 0.0 W. */
     explicit ExteriorLightsDefinition(const Model& model);
 
-    virtual ~ExteriorLightsDefinition() {}
+    virtual ~ExteriorLightsDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorLightsDefinition(const ExteriorLightsDefinition& other) = default;
+    ExteriorLightsDefinition(ExteriorLightsDefinition&& other) = default;
+    ExteriorLightsDefinition& operator=(const ExteriorLightsDefinition&) = default;
+    ExteriorLightsDefinition& operator=(ExteriorLightsDefinition&&) = default;
 
     //@}
 
@@ -77,7 +82,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorLightsDefinition_Impl ImplType;
+    using ImplType = detail::ExteriorLightsDefinition_Impl;
 
     explicit ExteriorLightsDefinition(std::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl);
 
@@ -91,10 +96,10 @@ namespace model {
   };
 
   /** \relates ExteriorLightsDefinition*/
-  typedef boost::optional<ExteriorLightsDefinition> OptionalExteriorLightsDefinition;
+  using OptionalExteriorLightsDefinition = boost::optional<ExteriorLightsDefinition>;
 
   /** \relates ExteriorLightsDefinition*/
-  typedef std::vector<ExteriorLightsDefinition> ExteriorLightsDefinitionVector;
+  using ExteriorLightsDefinitionVector = std::vector<ExteriorLightsDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

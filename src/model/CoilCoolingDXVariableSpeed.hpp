@@ -59,7 +59,12 @@ namespace model {
 
     explicit CoilCoolingDXVariableSpeed(const Model& model, const Curve& partLoadFraction);
 
-    virtual ~CoilCoolingDXVariableSpeed() {}
+    virtual ~CoilCoolingDXVariableSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDXVariableSpeed(const CoilCoolingDXVariableSpeed& other) = default;
+    CoilCoolingDXVariableSpeed(CoilCoolingDXVariableSpeed&& other) = default;
+    CoilCoolingDXVariableSpeed& operator=(const CoilCoolingDXVariableSpeed&) = default;
+    CoilCoolingDXVariableSpeed& operator=(CoilCoolingDXVariableSpeed&&) = default;
 
     //@}
 
@@ -131,11 +136,11 @@ namespace model {
 
     bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    // bool setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
+    // bool setCondenserAirInletNodeName(const std::string& condenserAirInletNodeName);
 
     // void resetCondenserAirInletNodeName();
 
-    bool setCondenserType(std::string condenserType);
+    bool setCondenserType(const std::string& condenserType);
 
     bool setEvaporativeCondenserPumpRatedPowerConsumption(double evaporativeCondenserPumpRatedPowerConsumption);
 
@@ -184,7 +189,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXVariableSpeed_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXVariableSpeed_Impl;
 
     explicit CoilCoolingDXVariableSpeed(std::shared_ptr<detail::CoilCoolingDXVariableSpeed_Impl> impl);
 
@@ -198,10 +203,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXVariableSpeed*/
-  typedef boost::optional<CoilCoolingDXVariableSpeed> OptionalCoilCoolingDXVariableSpeed;
+  using OptionalCoilCoolingDXVariableSpeed = boost::optional<CoilCoolingDXVariableSpeed>;
 
   /** \relates CoilCoolingDXVariableSpeed*/
-  typedef std::vector<CoilCoolingDXVariableSpeed> CoilCoolingDXVariableSpeedVector;
+  using CoilCoolingDXVariableSpeedVector = std::vector<CoilCoolingDXVariableSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

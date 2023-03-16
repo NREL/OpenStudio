@@ -728,7 +728,7 @@ namespace measure {
 
   bool OSArgument::setMinValue(int minValue) {
     if (m_type == OSArgumentType::Double) {
-      double test = (double)minValue;
+      auto test = (double)minValue;
       return setMinValue(test);
     } else if (m_type != OSArgumentType::Integer) {
       return false;
@@ -783,7 +783,7 @@ namespace measure {
 
   bool OSArgument::setMaxValue(int maxValue) {
     if (m_type == OSArgumentType::Double) {
-      double test = (double)maxValue;
+      auto test = (double)maxValue;
       return setMaxValue(test);
     } else if (m_type != OSArgumentType::Integer) {
       return false;
@@ -845,7 +845,7 @@ namespace measure {
         result = true;
       } else {
         // can also set using display name
-        StringVector::const_iterator it = std::find(m_choiceDisplayNames.begin(), m_choiceDisplayNames.end(), value);
+        auto it = std::find(m_choiceDisplayNames.begin(), m_choiceDisplayNames.end(), value);
         if (it != m_choiceDisplayNames.end()) {
           int index = int(it - m_choiceDisplayNames.begin());
           if (index < int(m_choices.size())) {
@@ -976,15 +976,15 @@ namespace measure {
 
     // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
     // So we don't use it here. Same with std::get, so we use get_if instead
-    if (auto* p = std::get_if<bool>(&toPrint)) {
+    if (const auto* p = std::get_if<bool>(&toPrint)) {
       ss << std::boolalpha << *p;
-    } else if (auto* p = std::get_if<double>(&toPrint)) {
+    } else if (const auto* p = std::get_if<double>(&toPrint)) {
       ss << *p;
-    } else if (auto* p = std::get_if<int>(&toPrint)) {
+    } else if (const auto* p = std::get_if<int>(&toPrint)) {
       ss << *p;
-    } else if (auto* p = std::get_if<std::string>(&toPrint)) {
+    } else if (const auto* p = std::get_if<std::string>(&toPrint)) {
       ss << *p;
-    } else if (auto* p = std::get_if<openstudio::path>(&toPrint)) {
+    } else if (const auto* p = std::get_if<openstudio::path>(&toPrint)) {
       ss << *p;
     }
 
@@ -1025,7 +1025,8 @@ namespace measure {
     std::sort(intermediate.begin(), intermediate.end(), SecondOfPairLess<std::pair<std::string, std::string>>());
 
     int n = intermediate.size();
-    StringVector choices(n), displayNames(n);
+    StringVector choices(n);
+    StringVector displayNames(n);
     for (int i = 0; i < n; ++i) {
       choices[i] = intermediate[i].first;
       displayNames[i] = intermediate[i].second;
@@ -1046,7 +1047,8 @@ namespace measure {
     std::sort(intermediate.begin(), intermediate.end(), SecondOfPairLess<std::pair<std::string, std::string>>());
 
     int n = intermediate.size();
-    StringVector choices(n), displayNames(n);
+    StringVector choices(n);
+    StringVector displayNames(n);
     for (int i = 0; i < n; ++i) {
       choices[i] = intermediate[i].first;
       displayNames[i] = intermediate[i].second;

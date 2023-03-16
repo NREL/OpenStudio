@@ -100,7 +100,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly) {
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast) {
-      double value = boost::lexical_cast<double>(*field);
+      auto value = boost::lexical_cast<double>(*field);
       hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
@@ -219,7 +219,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast) {
-      double value = boost::lexical_cast<double>(*field);
+      auto value = boost::lexical_cast<double>(*field);
       hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
@@ -529,7 +529,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_20hours) {
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast) {
-      double value = boost::lexical_cast<double>(*field);
+      auto value = boost::lexical_cast<double>(*field);
       hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
@@ -677,7 +677,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleFixedInterval_TwoPo
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast) {
-      double value = boost::lexical_cast<double>(*field);
+      auto value = boost::lexical_cast<double>(*field);
       EXPECT_EQ(1.0, value);
       nextValueShouldBeLast = false;
     }
@@ -812,7 +812,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_Hourly) {
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast) {
-      double value = boost::lexical_cast<double>(*field);
+      auto value = boost::lexical_cast<double>(*field);
       hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
@@ -926,7 +926,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleVariableInterval_Ho
     std::cout << "i=," << i << ", field=" << field << "\n";
 
     if (nextValueShouldBeLast) {
-      double value = boost::lexical_cast<double>(*field);
+      auto value = boost::lexical_cast<double>(*field);
       hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
@@ -1076,7 +1076,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500) {
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast) {
-      double value = boost::lexical_cast<double>(*field);
+      auto value = boost::lexical_cast<double>(*field);
       hitNextValueShouldBeLast = true;
       EXPECT_EQ(500.0, value);
       nextValueShouldBeLast = false;
@@ -1213,7 +1213,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleVariableInterval_50
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast) {
-      double value = boost::lexical_cast<double>(*field);
+      auto value = boost::lexical_cast<double>(*field);
       hitNextValueShouldBeLast = true;
       EXPECT_EQ(500.0, value);
       nextValueShouldBeLast = false;
@@ -1813,7 +1813,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleVariableInterval_Da
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast) {
-      double value = boost::lexical_cast<double>(*field);
+      auto value = boost::lexical_cast<double>(*field);
       hitNextValueShouldBeLast = true;
       EXPECT_EQ(500.0, value);
       nextValueShouldBeLast = false;

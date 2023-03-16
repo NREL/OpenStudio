@@ -117,10 +117,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ExteriorWaterEquipment) {
   ReverseTranslator rt;
   Model m = rt.translateWorkspace(workspace);
 
-  ASSERT_EQ(1u, m.getModelObjects<ScheduleConstant>().size());
-  ASSERT_EQ(1u, m.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
-  ASSERT_EQ(1u, m.getModelObjects<ExteriorWaterEquipment>().size());
-  ExteriorWaterEquipment extEq = m.getModelObjects<ExteriorWaterEquipment>()[0];
+  ASSERT_EQ(1u, m.getConcreteModelObjects<ScheduleConstant>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<ExteriorWaterEquipmentDefinition>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<ExteriorWaterEquipment>().size());
+  ExteriorWaterEquipment extEq = m.getConcreteModelObjects<ExteriorWaterEquipment>()[0];
 
   EXPECT_EQ("My ExteriorWaterEquipment", extEq.name().get());
 

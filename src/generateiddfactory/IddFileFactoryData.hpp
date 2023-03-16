@@ -37,8 +37,8 @@
 
 namespace openstudio {
 
-typedef openstudio::filesystem::path path;
-typedef std::pair<std::string, std::string> StringPair;
+using path = openstudio::filesystem::path;
+using StringPair = std::pair<std::string, std::string>;
 
 class IddFileFactoryData
 {
@@ -58,7 +58,7 @@ class IddFileFactoryData
 
   std::vector<StringPair> objectNames() const;
 
-  typedef std::pair<std::string, std::vector<std::string>> FileNameRemovedObjectsPair;
+  using FileNameRemovedObjectsPair = std::pair<std::string, std::vector<std::string>>;
 
   unsigned numIncludedFiles() const;
 
@@ -77,7 +77,7 @@ class IddFileFactoryData
   static std::string m_readyLineForOutput(const std::string& line);
 };
 
-typedef std::vector<IddFileFactoryData> IddFileFactoryDataVector;
+using IddFileFactoryDataVector = std::vector<IddFileFactoryData>;
 
 }  // namespace openstudio
 

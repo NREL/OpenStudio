@@ -77,7 +77,7 @@ namespace model {
     }
 
     std::vector<double> ScheduleYear_Impl::values() const {
-      return DoubleVector();
+      return {};
     }
 
     bool ScheduleYear_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
@@ -102,7 +102,7 @@ namespace model {
 
       YearDescription yd = this->model().getUniqueModelObject<YearDescription>();
 
-      for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(this->extensibleGroups())) {
+      for (const auto& group : this->extensibleGroups()) {
         OptionalUnsigned month = group.getUnsigned(0, true);
         OptionalUnsigned day = group.getUnsigned(1, true);
 
@@ -193,12 +193,10 @@ namespace model {
           bool doEmit = (i == (N - 1));
 
           // push back just this schedule/date pair
-          std::vector<std::string> groupValues;
-          groupValues.push_back(boost::lexical_cast<std::string>(untilDate.monthOfYear().value()));
-          groupValues.push_back(boost::lexical_cast<std::string>(untilDate.dayOfMonth()));
-          groupValues.push_back(scheduleWeek.name().get());
+          std::vector<std::string> groupValues{boost::lexical_cast<std::string>(untilDate.monthOfYear().value()),
+                                               boost::lexical_cast<std::string>(untilDate.dayOfMonth()), scheduleWeek.name().get()};
 
-          ModelExtensibleGroup group = pushExtensibleGroup(groupValues, doEmit).cast<ModelExtensibleGroup>();
+          auto group = pushExtensibleGroup(groupValues, doEmit);
           OS_ASSERT(!group.empty());
 
           inserted = true;
@@ -209,12 +207,10 @@ namespace model {
           if ((untilDate < dates[i]) && !inserted) {
 
             // push back this schedule/date pair
-            std::vector<std::string> groupValues;
-            groupValues.push_back(boost::lexical_cast<std::string>(untilDate.monthOfYear().value()));
-            groupValues.push_back(boost::lexical_cast<std::string>(untilDate.dayOfMonth()));
-            groupValues.push_back(scheduleWeek.name().get());
+            std::vector<std::string> groupValues{boost::lexical_cast<std::string>(untilDate.monthOfYear().value()),
+                                                 boost::lexical_cast<std::string>(untilDate.dayOfMonth()), scheduleWeek.name().get()};
 
-            ModelExtensibleGroup group = pushExtensibleGroup(groupValues, false).cast<ModelExtensibleGroup>();
+            auto group = pushExtensibleGroup(groupValues, false);
             OS_ASSERT(!group.empty());
 
             inserted = true;
@@ -223,24 +219,20 @@ namespace model {
           bool doEmit = (i == (N - 1)) && inserted;
 
           // insert existing schedule/date pair
-          std::vector<std::string> groupValues;
-          groupValues.push_back(boost::lexical_cast<std::string>(dates[i].monthOfYear().value()));
-          groupValues.push_back(boost::lexical_cast<std::string>(dates[i].dayOfMonth()));
-          groupValues.push_back(scheduleWeeks[i].name().get());
+          std::vector<std::string> groupValues{boost::lexical_cast<std::string>(dates[i].monthOfYear().value()),
+                                               boost::lexical_cast<std::string>(dates[i].dayOfMonth()), scheduleWeeks[i].name().get()};
 
-          ModelExtensibleGroup group = pushExtensibleGroup(groupValues, doEmit).cast<ModelExtensibleGroup>();
+          auto group = pushExtensibleGroup(groupValues, doEmit);
           OS_ASSERT(!group.empty());
         }
       }
 
       if (!inserted) {
         // push back this schedule/date pair
-        std::vector<std::string> groupValues;
-        groupValues.push_back(boost::lexical_cast<std::string>(untilDate.monthOfYear().value()));
-        groupValues.push_back(boost::lexical_cast<std::string>(untilDate.dayOfMonth()));
-        groupValues.push_back(scheduleWeek.name().get());
+        std::vector<std::string> groupValues{boost::lexical_cast<std::string>(untilDate.monthOfYear().value()),
+                                             boost::lexical_cast<std::string>(untilDate.dayOfMonth()), scheduleWeek.name().get()};
 
-        ModelExtensibleGroup group = pushExtensibleGroup(groupValues, true).cast<ModelExtensibleGroup>();
+        auto group = pushExtensibleGroup(groupValues, true);
         OS_ASSERT(!group.empty());
       }
 
@@ -252,7 +244,7 @@ namespace model {
     }
 
     void ScheduleYear_Impl::ensureNoLeapDays() {
-      for (IdfExtensibleGroup group : this->extensibleGroups()) {
+      for (const IdfExtensibleGroup& group : this->extensibleGroups()) {
         boost::optional<int> month;
         boost::optional<int> day;
 

@@ -94,7 +94,7 @@ namespace gbxml {
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
-  ReverseTranslator::~ReverseTranslator() {}
+  ReverseTranslator::~ReverseTranslator() = default;
 
   boost::optional<openstudio::model::Model> ReverseTranslator::loadModel(const openstudio::path& path, ProgressBar* progressBar) {
     m_progressBar = progressBar;
@@ -130,25 +130,17 @@ namespace gbxml {
 
   std::vector<LogMessage> ReverseTranslator::warnings() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() == Warn; });
     return result;
   }
 
   std::vector<LogMessage> ReverseTranslator::errors() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() > Warn; });
     return result;
   }
 
@@ -353,7 +345,7 @@ namespace gbxml {
     double tol = 0.001;
 
     const auto& spaces = model.getConcreteModelObjects<openstudio::model::Space>();
-    for (auto& space : spaces) {
+    for (const auto& space : spaces) {
       std::string spaceName = space.name().value();
 
       const auto& bounds = space.boundingBox();
@@ -416,7 +408,7 @@ namespace gbxml {
   }
 
   boost::optional<model::ModelObject> ReverseTranslator::translateCampus(const pugi::xml_node& element, openstudio::model::Model& model) {
-    openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
+    auto facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
     auto buildingElement = element.child("Building");
     OS_ASSERT(buildingElement.next_sibling("Building").empty());
@@ -631,7 +623,7 @@ namespace gbxml {
         }
       }
 
-      vertices.push_back(openstudio::Point3d(coords[0], coords[1], coords[2]));
+      vertices.emplace_back(coords[0], coords[1], coords[2]);
     }
 
     std::string surfaceType = element.attribute("surfaceType").value();
@@ -667,7 +659,7 @@ namespace gbxml {
         adjacentSpaceElements.push_back(adj);
       }
 
-      if (adjacentSpaceElements.size() == 0) {
+      if (adjacentSpaceElements.empty()) {
         LOG(Warn, "Surface has no adjacent spaces, will not be translated.");
         return boost::none;
       } else if (adjacentSpaceElements.size() == 2) {
@@ -1037,7 +1029,7 @@ namespace gbxml {
         }
       }
 
-      vertices.push_back(openstudio::Point3d(coords[0], coords[1], coords[2]));
+      vertices.emplace_back(coords[0], coords[1], coords[2]);
     }
 
     openstudio::model::SubSurface subSurface(vertices, model);

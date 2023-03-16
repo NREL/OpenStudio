@@ -69,12 +69,12 @@ class UTILITIES_API CelsiusUnit : public TemperatureUnit
    *  \param[in] prettyString optional string to use in place of standardString. */
   CelsiusUnit(const std::string& scaleAbbreviation, int CExp = 0, const std::string& prettyString = "");
 
-  virtual ~CelsiusUnit() {}
+  virtual ~CelsiusUnit() = default;
 
   //@}
  protected:
   /// @cond
-  typedef detail::CelsiusUnit_Impl ImplType;
+  using ImplType = detail::CelsiusUnit_Impl;
 
   explicit CelsiusUnit(std::shared_ptr<detail::CelsiusUnit_Impl> impl);
 
@@ -87,10 +87,10 @@ class UTILITIES_API CelsiusUnit : public TemperatureUnit
 };
 
 /** \relates CelsiusUnit*/
-typedef boost::optional<CelsiusUnit> OptionalCelsiusUnit;
+using OptionalCelsiusUnit = boost::optional<CelsiusUnit>;
 
 /** \relates CelsiusUnit*/
-typedef std::vector<CelsiusUnit> CelsiusUnitVector;
+using CelsiusUnitVector = std::vector<CelsiusUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

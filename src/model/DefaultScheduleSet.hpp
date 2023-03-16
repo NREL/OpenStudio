@@ -75,7 +75,12 @@ namespace model {
 
     explicit DefaultScheduleSet(const Model& model);
 
-    virtual ~DefaultScheduleSet() {}
+    virtual ~DefaultScheduleSet() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DefaultScheduleSet(const DefaultScheduleSet& other) = default;
+    DefaultScheduleSet(DefaultScheduleSet&& other) = default;
+    DefaultScheduleSet& operator=(const DefaultScheduleSet&) = default;
+    DefaultScheduleSet& operator=(DefaultScheduleSet&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -164,7 +169,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::DefaultScheduleSet_Impl ImplType;
+    using ImplType = detail::DefaultScheduleSet_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -177,10 +182,10 @@ namespace model {
   };
 
   /** \relates DefaultScheduleSet*/
-  typedef boost::optional<DefaultScheduleSet> OptionalDefaultScheduleSet;
+  using OptionalDefaultScheduleSet = boost::optional<DefaultScheduleSet>;
 
   /** \relates DefaultScheduleSet*/
-  typedef std::vector<DefaultScheduleSet> DefaultScheduleSetVector;
+  using DefaultScheduleSetVector = std::vector<DefaultScheduleSet>;
 
 }  // namespace model
 }  // namespace openstudio

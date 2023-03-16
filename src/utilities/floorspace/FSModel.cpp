@@ -577,8 +577,6 @@ FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story)
   for (const auto& daylightingControl : root.get("daylighting_controls", Json::arrayValue)) {
     m_daylightingControls.emplace_back(daylightingControl, model, story);
   }
-
-  simplifyFace(story.geometry());
 }
 
 boost::optional<FSThermalZone> FSSpace::thermalZone() const {
@@ -934,7 +932,7 @@ std::vector<double> FSFiller::alphas() const {
   return m_alphas;
 }
 
-Point3d FSFiller::centerVertex(double alpha) {
+Point3d FSFiller::centerVertex(double alpha) const {
   return m_edge->vertex(alpha);
 }
 ///////////////////////////////////////////////////////////////////////////////////

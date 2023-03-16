@@ -49,7 +49,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    RunPeriodControlDaylightSavingTime dst = m_model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+    auto dst = m_model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
 
     OptionalString s = workspaceObject.getString(RunPeriodControl_DaylightSavingTimeFields::StartDate);
     if (s) {

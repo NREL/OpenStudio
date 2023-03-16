@@ -64,7 +64,12 @@ namespace model {
 
     explicit PlantComponentUserDefined(const Model& model);
 
-    virtual ~PlantComponentUserDefined() {}
+    virtual ~PlantComponentUserDefined() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantComponentUserDefined(const PlantComponentUserDefined& other) = default;
+    PlantComponentUserDefined(PlantComponentUserDefined&& other) = default;
+    PlantComponentUserDefined& operator=(const PlantComponentUserDefined&) = default;
+    PlantComponentUserDefined& operator=(PlantComponentUserDefined&&) = default;
 
     //@}
 
@@ -178,7 +183,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PlantComponentUserDefined_Impl ImplType;
+    using ImplType = detail::PlantComponentUserDefined_Impl;
 
     explicit PlantComponentUserDefined(std::shared_ptr<detail::PlantComponentUserDefined_Impl> impl);
 
@@ -192,10 +197,10 @@ namespace model {
   };
 
   /** \relates PlantComponentUserDefined*/
-  typedef boost::optional<PlantComponentUserDefined> OptionalPlantComponentUserDefined;
+  using OptionalPlantComponentUserDefined = boost::optional<PlantComponentUserDefined>;
 
   /** \relates PlantComponentUserDefined*/
-  typedef std::vector<PlantComponentUserDefined> PlantComponentUserDefinedVector;
+  using PlantComponentUserDefinedVector = std::vector<PlantComponentUserDefined>;
 
 }  // namespace model
 }  // namespace openstudio

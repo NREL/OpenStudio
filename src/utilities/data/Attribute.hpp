@@ -58,7 +58,7 @@ namespace detail {
 // TODO: do I really need to add 'unsigned int' as a type, or can I store as int instead (we store AttributeValueType too...)
 // Note JM 2018-11-28:
 // we add std::monostate to allow the variant to be empty basically
-typedef std::variant<std::monostate, bool, double, int, unsigned, std::string, std::vector<Attribute>> OSAttributeVariant;
+using OSAttributeVariant = std::variant<std::monostate, bool, double, int, unsigned int, std::string, std::vector<Attribute>>;
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attributeVariant);
 
@@ -119,10 +119,10 @@ struct UTILITIES_API AttributeDescription
 };
 
 /** \relates AttributeDescription */
-typedef boost::optional<AttributeDescription> OptionalAttributeDescription;
+using OptionalAttributeDescription = boost::optional<AttributeDescription>;
 
 /** \relates AttributeDescription */
-typedef std::vector<AttributeDescription> AttributeDescriptionVector;
+using AttributeDescriptionVector = std::vector<AttributeDescription>;
 
 /** An attribute is a name value pair where the value can be a bool, double, int,
  *   string, or vector of other attributes.  The ability for an attribute value
@@ -134,7 +134,7 @@ typedef std::vector<AttributeDescription> AttributeDescriptionVector;
 class UTILITIES_API Attribute
 {
  public:
-  typedef detail::Attribute_Impl ImplType;
+  using ImplType = detail::Attribute_Impl;
 
   /// constructors
 
@@ -195,7 +195,7 @@ class UTILITIES_API Attribute
             const boost::optional<std::string>& units, const std::string& source = std::string());
 
   // Destructor
-  virtual ~Attribute() {}
+  virtual ~Attribute() = default;
 
   // constructor from xml, throws if required arguments are missing
   explicit Attribute(const pugi::xml_node& element);
@@ -345,10 +345,10 @@ class UTILITIES_API Attribute
 };
 
 /** \relates Attribute */
-typedef boost::optional<Attribute> OptionalAttribute;
+using OptionalAttribute = boost::optional<Attribute>;
 
 /** \relates Attribute */
-typedef std::vector<Attribute> AttributeVector;
+using AttributeVector = std::vector<Attribute>;
 
 /** Prints Attribute XML to os. \relates Attribute */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Attribute& attribute);

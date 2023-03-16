@@ -57,7 +57,7 @@ namespace model {
 
       GeneratorFuelSupply_Impl(const GeneratorFuelSupply_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorFuelSupply_Impl() {}
+      virtual ~GeneratorFuelSupply_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -75,7 +75,7 @@ namespace model {
 
       //extensible fields
       bool addConstituent(const FuelSupplyConstituent& constituent);
-      bool addConstituent(std::string name, double molarFraction);
+      bool addConstituent(const std::string& name, double molarFraction);
 
       bool removeConstituent(unsigned groupIndex);
       void removeAllConstituents();

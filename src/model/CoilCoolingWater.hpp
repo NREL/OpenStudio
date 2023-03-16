@@ -71,7 +71,12 @@ namespace model {
 
     CoilCoolingWater(const Model& model);
 
-    virtual ~CoilCoolingWater() {}
+    virtual ~CoilCoolingWater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingWater(const CoilCoolingWater& other) = default;
+    CoilCoolingWater(CoilCoolingWater&& other) = default;
+    CoilCoolingWater& operator=(const CoilCoolingWater&) = default;
+    CoilCoolingWater& operator=(CoilCoolingWater&&) = default;
 
     //@}
 
@@ -182,7 +187,7 @@ namespace model {
     /** Sets the value of the TypeOfAnalysis field.
    *  Options are SimpleAnalysis and DetailedAnalysis
    */
-    bool setTypeOfAnalysis(std::string value);
+    bool setTypeOfAnalysis(const std::string& value);
 
     /** Returns the value of the HeatExchangerConfiguration field. **/
     std::string heatExchangerConfiguration();
@@ -190,7 +195,7 @@ namespace model {
     /** Sets the value of the HeatExchangerConfiguration field.
    *  Options are CrossFlow and CounterFlow.
    */
-    bool setHeatExchangerConfiguration(std::string value);
+    bool setHeatExchangerConfiguration(const std::string& value);
 
     /** Returns the optional ControllerWaterCoil associated with this coil.
    */
@@ -216,6 +221,9 @@ namespace model {
 
     boost::optional<double> autosizedDesignOutletAirHumidityRatio() const;
 
+    // Not part of the applySizingValues
+    boost::optional<double> autosizedDesignCoilLoad() const;
+
     //@}
    protected:
     friend class Model;
@@ -225,7 +233,7 @@ namespace model {
     friend class openstudio::detail::IdfObject_Impl;
 
     /// @cond
-    typedef detail::CoilCoolingWater_Impl ImplType;
+    using ImplType = detail::CoilCoolingWater_Impl;
 
     explicit CoilCoolingWater(std::shared_ptr<detail::CoilCoolingWater_Impl> impl);
 
@@ -238,7 +246,7 @@ namespace model {
 
   };  // detail
 
-  typedef boost::optional<CoilCoolingWater> OptionalCoilCoolingWater;
+  using OptionalCoilCoolingWater = boost::optional<CoilCoolingWater>;
 
 }  // namespace model
 }  // namespace openstudio

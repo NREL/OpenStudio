@@ -82,7 +82,7 @@ namespace detail {
     IdfObject_Impl(const Handle& handle, const std::string& comment, const IddObject& iddObject, const StringVector& fields,
                    const StringVector& fieldComments);
 
-    virtual ~IdfObject_Impl() {}
+    virtual ~IdfObject_Impl() = default;
 
     //@}
     /** @name Getters */
@@ -419,7 +419,7 @@ namespace detail {
     virtual bool fieldIsNonnullIfRequired(unsigned index) const;
 
    private:
-    IdfObject_Impl() {}
+    IdfObject_Impl() = default;
 
     // CONSTRUCTION HELPERS
 
@@ -466,9 +466,9 @@ namespace detail {
     REGISTER_LOGGER("utilities.idf.IdfObject");
   };
 
-  typedef std::shared_ptr<IdfObject_Impl> IdfObject_ImplPtr;
+  using IdfObject_ImplPtr = std::shared_ptr<IdfObject_Impl>;
 
-  typedef std::vector<IdfObject_ImplPtr> IdfObject_ImplPtrVector;
+  using IdfObject_ImplPtrVector = std::vector<IdfObject_ImplPtr>;
 
 }  // namespace detail
 

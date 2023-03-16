@@ -104,7 +104,7 @@ namespace gbxml {
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
-  ForwardTranslator::~ForwardTranslator() {}
+  ForwardTranslator::~ForwardTranslator() = default;
 
   bool ForwardTranslator::modelToGbXML(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar) {
     m_progressBar = progressBar;
@@ -157,25 +157,17 @@ namespace gbxml {
 
   std::vector<LogMessage> ForwardTranslator::warnings() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() == Warn; });
     return result;
   }
 
   std::vector<LogMessage> ForwardTranslator::errors() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() > Warn; });
     return result;
   }
 
@@ -231,12 +223,8 @@ namespace gbxml {
     std::vector<model::ConstructionBase> constructionBases = model.getModelObjects<model::ConstructionBase>();
 
     // sort by is opaque so we get constructions before window types
-    std::sort(constructionBases.begin(), constructionBases.end(), [](const model::ConstructionBase& a, const model::ConstructionBase& b) {
-      if (a.isOpaque() && !b.isOpaque()) {
-        return true;
-      }
-      return false;
-    });
+    std::sort(constructionBases.begin(), constructionBases.end(),
+              [](const model::ConstructionBase& a, const model::ConstructionBase& b) { return a.isOpaque() && !b.isOpaque(); });
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
       m_progressBar->setMinimum(0);
@@ -1320,12 +1308,12 @@ namespace gbxml {
     boost::optional<double> designCoolT;
     boost::optional<model::Thermostat> thermostat = thermalZone.thermostat();
     if (thermostat && thermostat->optionalCast<model::ThermostatSetpointDualSetpoint>()) {
-      model::ThermostatSetpointDualSetpoint thermostatDualSetpoint = thermostat->cast<model::ThermostatSetpointDualSetpoint>();
+      auto thermostatDualSetpoint = thermostat->cast<model::ThermostatSetpointDualSetpoint>();
 
       boost::optional<model::Schedule> heatingSchedule = thermostatDualSetpoint.heatingSetpointTemperatureSchedule();
       if (heatingSchedule) {
         if (heatingSchedule->optionalCast<model::ScheduleRuleset>()) {
-          model::ScheduleRuleset scheduleRuleset = heatingSchedule->cast<model::ScheduleRuleset>();
+          auto scheduleRuleset = heatingSchedule->cast<model::ScheduleRuleset>();
           model::ScheduleDay winterDesignDaySchedule = scheduleRuleset.winterDesignDaySchedule();
           std::vector<double> values = winterDesignDaySchedule.values();
           if (!values.empty()) {
@@ -1337,7 +1325,7 @@ namespace gbxml {
       boost::optional<model::Schedule> coolingSchedule = thermostatDualSetpoint.coolingSetpointTemperatureSchedule();
       if (coolingSchedule) {
         if (coolingSchedule->optionalCast<model::ScheduleRuleset>()) {
-          model::ScheduleRuleset scheduleRuleset = coolingSchedule->cast<model::ScheduleRuleset>();
+          auto scheduleRuleset = coolingSchedule->cast<model::ScheduleRuleset>();
           model::ScheduleDay summerDesignDaySchedule = scheduleRuleset.summerDesignDaySchedule();
           std::vector<double> values = summerDesignDaySchedule.values();
           if (!values.empty()) {

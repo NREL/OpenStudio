@@ -38,9 +38,7 @@
 namespace openstudio {
 namespace measure {
 
-  EnergyPlusMeasure::~EnergyPlusMeasure() = default;
-
-  std::vector<OSArgument> EnergyPlusMeasure::arguments(const openstudio::Workspace& workspace) const {
+  std::vector<OSArgument> EnergyPlusMeasure::arguments(const openstudio::Workspace& /*workspace*/) const {
     return {};
   }
 
@@ -48,23 +46,8 @@ namespace measure {
     return {};
   }
 
-  bool EnergyPlusMeasure::run(openstudio::Workspace& workspace, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
-    runner.prepareForMeasureRun(*this);
-    return true;
-  }
-
-  PythonEnergyPlusMeasure::~PythonEnergyPlusMeasure() = default;
-
-  std::vector<OSArgument> PythonEnergyPlusMeasure::arguments(const openstudio::Workspace& workspace) const {
-    return {};
-  }
-
-  std::vector<OSOutput> PythonEnergyPlusMeasure::outputs() const {
-    return {};
-  }
-
-  bool PythonEnergyPlusMeasure::run(openstudio::Workspace& workspace, OSRunner& runner,
-                                    const std::map<std::string, OSArgument>& user_arguments) const {
+  bool EnergyPlusMeasure::run(openstudio::Workspace& /*workspace*/, OSRunner& runner,
+                              const std::map<std::string, OSArgument>& /*user_arguments*/) const {
     runner.prepareForMeasureRun(*this);
     return true;
   }

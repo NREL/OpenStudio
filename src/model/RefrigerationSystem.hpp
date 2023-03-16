@@ -62,7 +62,12 @@ namespace model {
 
     explicit RefrigerationSystem(const Model& model);
 
-    virtual ~RefrigerationSystem() {}
+    virtual ~RefrigerationSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationSystem(const RefrigerationSystem& other) = default;
+    RefrigerationSystem(RefrigerationSystem&& other) = default;
+    RefrigerationSystem& operator=(const RefrigerationSystem&) = default;
+    RefrigerationSystem& operator=(RefrigerationSystem&&) = default;
 
     //@}
 
@@ -214,9 +219,9 @@ namespace model {
 
     bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
-    bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
+    bool setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType);
 
-    bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
+    bool setSuctionTemperatureControlType(const std::string& suctionTemperatureControlType);
 
     void resetSuctionTemperatureControlType();
 
@@ -238,11 +243,11 @@ namespace model {
 
     void resetSuctionPipingZone();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
-    bool setIntercoolerType(std::string intercoolerType);
+    bool setIntercoolerType(const std::string& intercoolerType);
 
     void resetIntercoolerType();
 
@@ -257,7 +262,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationSystem_Impl ImplType;
+    using ImplType = detail::RefrigerationSystem_Impl;
 
     explicit RefrigerationSystem(std::shared_ptr<detail::RefrigerationSystem_Impl> impl);
 
@@ -271,10 +276,10 @@ namespace model {
   };
 
   /** \relates RefrigerationSystem*/
-  typedef boost::optional<RefrigerationSystem> OptionalRefrigerationSystem;
+  using OptionalRefrigerationSystem = boost::optional<RefrigerationSystem>;
 
   /** \relates RefrigerationSystem*/
-  typedef std::vector<RefrigerationSystem> RefrigerationSystemVector;
+  using RefrigerationSystemVector = std::vector<RefrigerationSystem>;
 
 }  // namespace model
 }  // namespace openstudio

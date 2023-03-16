@@ -51,7 +51,7 @@ namespace model {
 
       AirflowNetworkLeakageRatio_Impl(const AirflowNetworkLeakageRatio_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkLeakageRatio_Impl() {}
+      virtual ~AirflowNetworkLeakageRatio_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

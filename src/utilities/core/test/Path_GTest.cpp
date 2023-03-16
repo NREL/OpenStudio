@@ -52,7 +52,8 @@ using openstudio::isNetworkPath;
 using openstudio::isNetworkPathAvailable;
 
 void logBeforeAndAfterPathInformation(const std::string& functionName, const path& before, const path& after) {
-  std::stringstream ssb, ssa;
+  std::stringstream ssb;
+  std::stringstream ssa;
 
   printPathInformation(ssb, before);
   printPathInformation(ssa, after);

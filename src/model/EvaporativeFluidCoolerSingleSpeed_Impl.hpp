@@ -54,7 +54,7 @@ namespace model {
 
       EvaporativeFluidCoolerSingleSpeed_Impl(const EvaporativeFluidCoolerSingleSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EvaporativeFluidCoolerSingleSpeed_Impl() {}
+      virtual ~EvaporativeFluidCoolerSingleSpeed_Impl() = default;
 
       //@}
 
@@ -199,7 +199,7 @@ namespace model {
 
       void resetDesignEnteringAirWetbulbTemperature();
 
-      bool setCapacityControl(std::string capacityControl);
+      bool setCapacityControl(const std::string& capacityControl);
 
       void resetCapacityControl();
 
@@ -207,7 +207,7 @@ namespace model {
 
       void resetSizingFactor();
 
-      bool setEvaporationLossMode(std::string evaporationLossMode);
+      bool setEvaporationLossMode(const std::string& evaporationLossMode);
 
       void resetEvaporationLossMode();
 
@@ -219,7 +219,7 @@ namespace model {
 
       void resetDriftLossPercent();
 
-      bool setBlowdownCalculationMode(std::string blowdownCalculationMode);
+      bool setBlowdownCalculationMode(const std::string& blowdownCalculationMode);
 
       void resetBlowdownCalculationMode();
 

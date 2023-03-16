@@ -75,6 +75,7 @@ UNIQUEMODELOBJECT_TEMPLATES(InsideSurfaceConvectionAlgorithm);
 UNIQUEMODELOBJECT_TEMPLATES(OutputControlFiles);
 UNIQUEMODELOBJECT_TEMPLATES(OutputControlReportingTolerances);
 UNIQUEMODELOBJECT_TEMPLATES(OutputControlTableStyle);
+UNIQUEMODELOBJECT_TEMPLATES(OutputControlTimestamp);
 UNIQUEMODELOBJECT_TEMPLATES(OutputDebuggingData);
 UNIQUEMODELOBJECT_TEMPLATES(OutputDiagnostics);
 UNIQUEMODELOBJECT_TEMPLATES(OutputJSON);
@@ -129,6 +130,7 @@ SWIG_UNIQUEMODELOBJECT(InsideSurfaceConvectionAlgorithm);
 SWIG_UNIQUEMODELOBJECT(OutputControlFiles);
 SWIG_UNIQUEMODELOBJECT(OutputControlReportingTolerances);
 SWIG_UNIQUEMODELOBJECT(OutputControlTableStyle);
+SWIG_UNIQUEMODELOBJECT(OutputControlTimestamp);
 SWIG_UNIQUEMODELOBJECT(OutputDebuggingData);
 SWIG_UNIQUEMODELOBJECT(OutputDiagnostics);
 SWIG_UNIQUEMODELOBJECT(OutputJSON);
@@ -212,6 +214,10 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
         boost::optional<OutputControlTableStyle> outputControlTableStyle(const openstudio::model::Model& model) {
           return model.outputControlTableStyle();
+        }
+
+        boost::optional<OutputControlTimestamp> outputControlTimestamp(const openstudio::model::Model& model) {
+          return model.outputControlTimestamp();
         }
 
         boost::optional<OutputDebuggingData> outputDebuggingData(const openstudio::model::Model& model) {
@@ -379,6 +385,10 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
       public OptionalOutputControlTableStyle outputControlTableStyle() {
         return OpenStudio.OpenStudioModelSimulation.outputControlTableStyle(this);
+      }
+
+      public OptionalOutputControlTimestamp outputControlTimestamp() {
+        return OpenStudio.OpenStudioModelSimulation.outputControlTimestamp(this);
       }
 
       public OptionalOutputDebuggingData outputDebuggingData() {

@@ -62,8 +62,6 @@ namespace model {
       const SetpointManagerFollowOutdoorAirTemperature_Impl& other, Model_Impl* model, bool keepHandles)
       : SetpointManager_Impl(other, model, keepHandles) {}
 
-    SetpointManagerFollowOutdoorAirTemperature_Impl::~SetpointManagerFollowOutdoorAirTemperature_Impl() {}
-
     const std::vector<std::string>& SetpointManagerFollowOutdoorAirTemperature_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       return result;
@@ -162,7 +160,7 @@ namespace model {
     : SetpointManager(std::move(p)) {}
 
   IddObjectType SetpointManagerFollowOutdoorAirTemperature::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature);
+    return {IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature};
   }
 
   boost::optional<Node> SetpointManagerFollowOutdoorAirTemperature::setpointNode() const {

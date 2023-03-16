@@ -96,7 +96,7 @@ namespace model {
     }
 
     boost::optional<ParentObject> StraightComponent_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     std::vector<ModelObject> StraightComponent_Impl::children() const {
@@ -109,12 +109,12 @@ namespace model {
     }
 
     void StraightComponent_Impl::disconnect() {
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
       this->model().disconnect(mo, this->inletPort());
       this->model().disconnect(mo, this->outletPort());
     }
 
-    std::vector<HVACComponent> StraightComponent_Impl::edges(const boost::optional<HVACComponent>& prev) {
+    std::vector<HVACComponent> StraightComponent_Impl::edges(const boost::optional<HVACComponent>& /*prev*/) {
       std::vector<HVACComponent> edges;
       if (auto edgeModelObject = outletModelObject()) {
         if (auto edgeObject = edgeModelObject->optionalCast<HVACComponent>()) {
@@ -126,7 +126,7 @@ namespace model {
 
     bool StraightComponent_Impl::addToNode(Node& node) {
       Model _model = node.model();
-      ModelObject thisModelObject = getObject<ModelObject>();
+      auto thisModelObject = getObject<ModelObject>();
       auto t_loop = node.loop();
       auto t_oaSystem = node.airLoopHVACOutdoorAirSystem();
 
@@ -136,7 +136,9 @@ namespace model {
       boost::optional<HVACComponent> systemStartComponent;
       boost::optional<HVACComponent> systemEndComponent;
 
-      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) return false;
+      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+        return false;
+      }
 
       if (t_loop && !t_oaSystem) {
         if (t_loop->supplyComponent(node.handle())) {
@@ -172,12 +174,12 @@ namespace model {
     }
 
     ModelObject StraightComponent_Impl::clone(Model model) const {
-      StraightComponent mo = HVACComponent_Impl::clone(model).cast<StraightComponent>();
+      auto mo = HVACComponent_Impl::clone(model).cast<StraightComponent>();
 
       mo.setString(mo.inletPort(), "");
       mo.setString(mo.outletPort(), "");
 
-      return mo;
+      return std::move(mo);
     }
 
   }  // namespace detail

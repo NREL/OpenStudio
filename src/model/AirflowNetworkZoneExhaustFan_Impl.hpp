@@ -54,7 +54,7 @@ namespace model {
 
       AirflowNetworkZoneExhaustFan_Impl(const AirflowNetworkZoneExhaustFan_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkZoneExhaustFan_Impl() {}
+      virtual ~AirflowNetworkZoneExhaustFan_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

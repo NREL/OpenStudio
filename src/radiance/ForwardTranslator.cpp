@@ -117,7 +117,7 @@ using openstudio::model::OptionalShadingSurfaceGroup;
 using openstudio::model::OptionalInteriorPartitionSurfaceGroup;
 using openstudio::model::OptionalSurface;
 
-typedef openstudio::filesystem::basic_ofstream<char> OFSTREAM;
+using OFSTREAM = openstudio::filesystem::basic_ofstream<char>;
 
 namespace openstudio {
 namespace radiance {
@@ -211,7 +211,7 @@ namespace radiance {
       std::vector<openstudio::model::IlluminanceMap> illuminanceMaps = space.illuminanceMaps();
       std::vector<openstudio::model::GlareSensor> glareSensors = space.glareSensors();
 
-      if (daylightingControls.size() > 0 && illuminanceMaps.size() > 0) {
+      if (!daylightingControls.empty() && !illuminanceMaps.empty()) {
         numSpacesToSimulate += 1;
 
         if (glareSensors.empty()) {
@@ -292,7 +292,7 @@ namespace radiance {
       openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
 
       // get the site
-      openstudio::model::Site site = m_model.getUniqueModelObject<openstudio::model::Site>();
+      auto site = m_model.getUniqueModelObject<openstudio::model::Site>();
 
       // get site and building shading
       LOG(Debug, "Processing site/building shading elements...");
@@ -329,7 +329,7 @@ namespace radiance {
       //    std::string dcmatsString = dcmatsStringin.gsub(',', ' ');
 
       // get Radiance sim settings
-      openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+      auto radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
 
       // write Radiance options to file(s)
 
@@ -451,7 +451,7 @@ namespace radiance {
   std::vector<LogMessage> ForwardTranslator::warnings() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() == Warn) {
         result.push_back(logMessage);
       }
@@ -463,7 +463,7 @@ namespace radiance {
   std::vector<LogMessage> ForwardTranslator::errors() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() > Warn) {
         result.push_back(logMessage);
       }
@@ -587,7 +587,7 @@ namespace radiance {
       transformation = buildingTransformation * spaceTransformation * shadingSurfaceGroupTransformation;
     } else {
       LOG(Error, "Unknown shading surface type for shading surface '" << shadingSurface.name() << "'");
-      return Point3dVector();
+      return {};
     }
 
     // convert vertices to absolute coordinates
@@ -911,7 +911,7 @@ namespace radiance {
                                        + formatString(exteriorVisibleReflectance, 3) + " polygon " + shadingSurface_name + "\n";
           shadingsurface += "0\n0\n" + formatString(polygon.size() * 3) + "\n";
 
-          for (Point3dVector::const_iterator vertex = polygon.begin(); vertex != polygon.end(); ++vertex) {
+          for (auto vertex = polygon.begin(); vertex != polygon.end(); ++vertex) {
             shadingsurface += formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
           }
 
@@ -1451,7 +1451,7 @@ namespace radiance {
               // write the window polygon
               m_radWindowGroups[windowGroup_name] += "glaz_" + rMaterial + "_tn-" + formatString(tn, 3) + " polygon " + subSurface_name + "\n";
               m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n\n";
-              for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin(); vertex != polygon.rend(); ++vertex) {
+              for (auto vertex = polygon.rbegin(); vertex != polygon.rend(); ++vertex) {
                 m_radWindowGroups[windowGroup_name] +=
                   "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
               }
@@ -1507,7 +1507,7 @@ namespace radiance {
               // write the polygon
               m_radWindowGroups[windowGroup_name] += windowGroup_name + " polygon " + subSurface_name + "\n";
               m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n";
-              for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin(); vertex != polygon.rend(); ++vertex)
+              for (auto vertex = polygon.rbegin(); vertex != polygon.rend(); ++vertex)
 
               {
                 m_radWindowGroups[windowGroup_name] +=
@@ -1551,7 +1551,7 @@ namespace radiance {
                   m_radWindowGroupShades[windowGroup_name] +=
                     windowGroup_name + "_SHADE" + " polygon " + windowGroup_name + "_SHADE_" + subSurface_name + "\n";
                   m_radWindowGroupShades[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n";
-                  for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin(); vertex != polygon.rend(); ++vertex)
+                  for (auto vertex = polygon.rbegin(); vertex != polygon.rend(); ++vertex)
 
                   {
 
@@ -1977,7 +1977,7 @@ namespace radiance {
         if (m_radWindowGroups.find(windowGroup_name) != m_radWindowGroups.end()) {
 
           // get the Radiance parameters... so we have them.
-          openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+          auto radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
           if (windowGroup_name != "WG0") {
             if (radianceParameters.skyDiscretizationResolution() == "146") {
               LOG(Info, "writing out window group '" + windowGroup_name + "', using Klems sampling basis.");
@@ -2165,7 +2165,7 @@ namespace radiance {
         if (vltDiff <= 0.01 && vltSpecularDiff <= 0.01 && shadeTypeMatch) {
           // this one works try to get payload
           std::vector<std::string> files = result.files("xml");
-          if (files.size() > 0) {
+          if (!files.empty()) {
             return files[0];
           }
         }
@@ -2196,7 +2196,7 @@ namespace radiance {
           try {
 
             bool hasXML = false;
-            for (BCLFile file : result.files()) {
+            for (const BCLFile& file : result.files()) {
               if (file.filetype() == "xml") {
                 hasXML = true;
               }
@@ -2225,7 +2225,7 @@ namespace radiance {
               boost::optional<BCLComponent> component = bcl.getComponent(result.uid());
               if (component) {
                 std::vector<std::string> files = component->files("xml");
-                if (files.size() > 0) {
+                if (!files.empty()) {
                   return files[0];
                 }
               }
@@ -2247,7 +2247,7 @@ namespace radiance {
   }
 
   openstudio::model::Model modelToRadPreProcess(const openstudio::model::Model& model) {
-    model::Model outmodel = model.clone().cast<model::Model>();
+    auto outmodel = model.clone().cast<model::Model>();
     outmodel.purgeUnusedResourceObjects();
     outmodel.getUniqueModelObject<openstudio::model::Building>();   // implicitly create building object
     outmodel.getUniqueModelObject<openstudio::model::Timestep>();   // implicitly create timestep object
@@ -2358,7 +2358,7 @@ namespace radiance {
     outputVariable.setReportingFrequency("Hourly");
 
     // only report weather periods
-    openstudio::model::SimulationControl simulation_control = outmodel.getUniqueModelObject<openstudio::model::SimulationControl>();
+    auto simulation_control = outmodel.getUniqueModelObject<openstudio::model::SimulationControl>();
     simulation_control.setRunSimulationforSizingPeriods(false);
     simulation_control.setRunSimulationforWeatherFileRunPeriods(true);
     simulation_control.setSolarDistribution("MinimalShadowing");

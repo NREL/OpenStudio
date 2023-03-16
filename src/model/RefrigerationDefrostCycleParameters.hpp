@@ -51,7 +51,12 @@ namespace model {
 
     explicit RefrigerationDefrostCycleParameters(const Model& model);
 
-    virtual ~RefrigerationDefrostCycleParameters() {}
+    virtual ~RefrigerationDefrostCycleParameters() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationDefrostCycleParameters(const RefrigerationDefrostCycleParameters& other) = default;
+    RefrigerationDefrostCycleParameters(RefrigerationDefrostCycleParameters&& other) = default;
+    RefrigerationDefrostCycleParameters& operator=(const RefrigerationDefrostCycleParameters&) = default;
+    RefrigerationDefrostCycleParameters& operator=(RefrigerationDefrostCycleParameters&&) = default;
 
     //@}
 
@@ -71,7 +76,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationDefrostCycleParameters_Impl ImplType;
+    using ImplType = detail::RefrigerationDefrostCycleParameters_Impl;
 
     explicit RefrigerationDefrostCycleParameters(std::shared_ptr<detail::RefrigerationDefrostCycleParameters_Impl> impl);
 
@@ -85,10 +90,10 @@ namespace model {
   };
 
   /** \relates RefrigerationDefrostCycleParameters*/
-  typedef boost::optional<RefrigerationDefrostCycleParameters> OptionalRefrigerationDefrostCycleParameters;
+  using OptionalRefrigerationDefrostCycleParameters = boost::optional<RefrigerationDefrostCycleParameters>;
 
   /** \relates RefrigerationDefrostCycleParameters*/
-  typedef std::vector<RefrigerationDefrostCycleParameters> RefrigerationDefrostCycleParametersVector;
+  using RefrigerationDefrostCycleParametersVector = std::vector<RefrigerationDefrostCycleParameters>;
 
 }  // namespace model
 }  // namespace openstudio

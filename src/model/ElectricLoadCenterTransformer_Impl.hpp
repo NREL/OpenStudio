@@ -55,7 +55,7 @@ namespace model {
 
       ElectricLoadCenterTransformer_Impl(const ElectricLoadCenterTransformer_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricLoadCenterTransformer_Impl() {}
+      virtual ~ElectricLoadCenterTransformer_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

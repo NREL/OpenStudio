@@ -54,7 +54,12 @@ namespace model {
     /** Construct a reference crack conditions object with specified temperature, pressure, and barometric pressure. */
     AirflowNetworkReferenceCrackConditions(const Model& model, double temperature, double barometricPressure, double humidityRatio);
 
-    virtual ~AirflowNetworkReferenceCrackConditions() {}
+    virtual ~AirflowNetworkReferenceCrackConditions() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkReferenceCrackConditions(const AirflowNetworkReferenceCrackConditions& other) = default;
+    AirflowNetworkReferenceCrackConditions(AirflowNetworkReferenceCrackConditions&& other) = default;
+    AirflowNetworkReferenceCrackConditions& operator=(const AirflowNetworkReferenceCrackConditions&) = default;
+    AirflowNetworkReferenceCrackConditions& operator=(AirflowNetworkReferenceCrackConditions&&) = default;
 
     //@}
 
@@ -98,7 +103,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkReferenceCrackConditions_Impl ImplType;
+    using ImplType = detail::AirflowNetworkReferenceCrackConditions_Impl;
 
     explicit AirflowNetworkReferenceCrackConditions(std::shared_ptr<detail::AirflowNetworkReferenceCrackConditions_Impl> impl);
 
@@ -112,10 +117,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkReferenceCrackConditions*/
-  typedef boost::optional<AirflowNetworkReferenceCrackConditions> OptionalAirflowNetworkReferenceCrackConditions;
+  using OptionalAirflowNetworkReferenceCrackConditions = boost::optional<AirflowNetworkReferenceCrackConditions>;
 
   /** \relates AirflowNetworkReferenceCrackConditions*/
-  typedef std::vector<AirflowNetworkReferenceCrackConditions> AirflowNetworkReferenceCrackConditionsVector;
+  using AirflowNetworkReferenceCrackConditionsVector = std::vector<AirflowNetworkReferenceCrackConditions>;
 
 }  // namespace model
 }  // namespace openstudio

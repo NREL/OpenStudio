@@ -56,7 +56,12 @@ namespace model {
 
     explicit CoilWaterHeatingDesuperheater(const Model& model, Schedule& setpointTemperatureSchedule);
 
-    virtual ~CoilWaterHeatingDesuperheater() {}
+    virtual ~CoilWaterHeatingDesuperheater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilWaterHeatingDesuperheater(const CoilWaterHeatingDesuperheater& other) = default;
+    CoilWaterHeatingDesuperheater(CoilWaterHeatingDesuperheater&& other) = default;
+    CoilWaterHeatingDesuperheater& operator=(const CoilWaterHeatingDesuperheater&) = default;
+    CoilWaterHeatingDesuperheater& operator=(CoilWaterHeatingDesuperheater&&) = default;
 
     //@}
 
@@ -194,7 +199,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilWaterHeatingDesuperheater_Impl ImplType;
+    using ImplType = detail::CoilWaterHeatingDesuperheater_Impl;
 
     explicit CoilWaterHeatingDesuperheater(std::shared_ptr<detail::CoilWaterHeatingDesuperheater_Impl> impl);
 
@@ -208,10 +213,10 @@ namespace model {
   };
 
   /** \relates CoilWaterHeatingDesuperheater*/
-  typedef boost::optional<CoilWaterHeatingDesuperheater> OptionalCoilWaterHeatingDesuperheater;
+  using OptionalCoilWaterHeatingDesuperheater = boost::optional<CoilWaterHeatingDesuperheater>;
 
   /** \relates CoilWaterHeatingDesuperheater*/
-  typedef std::vector<CoilWaterHeatingDesuperheater> CoilWaterHeatingDesuperheaterVector;
+  using CoilWaterHeatingDesuperheaterVector = std::vector<CoilWaterHeatingDesuperheater>;
 
 }  // namespace model
 }  // namespace openstudio

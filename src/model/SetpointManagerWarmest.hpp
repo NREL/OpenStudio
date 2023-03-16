@@ -51,7 +51,12 @@ namespace model {
    public:
     explicit SetpointManagerWarmest(const Model& model);
 
-    virtual ~SetpointManagerWarmest() {}
+    virtual ~SetpointManagerWarmest() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerWarmest(const SetpointManagerWarmest& other) = default;
+    SetpointManagerWarmest(SetpointManagerWarmest&& other) = default;
+    SetpointManagerWarmest& operator=(const SetpointManagerWarmest&) = default;
+    SetpointManagerWarmest& operator=(SetpointManagerWarmest&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -79,7 +84,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::SetpointManagerWarmest_Impl ImplType;
+    using ImplType = detail::SetpointManagerWarmest_Impl;
 
     explicit SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl);
 
@@ -94,10 +99,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerWarmest*/
-  typedef boost::optional<SetpointManagerWarmest> OptionalSetpointManagerWarmest;
+  using OptionalSetpointManagerWarmest = boost::optional<SetpointManagerWarmest>;
 
   /** \relates SetpointManagerWarmest*/
-  typedef std::vector<SetpointManagerWarmest> SetpointManagerWarmestVector;
+  using SetpointManagerWarmestVector = std::vector<SetpointManagerWarmest>;
 
 }  // namespace model
 }  // namespace openstudio

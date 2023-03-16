@@ -52,7 +52,7 @@ namespace model {
 
       SolarCollectorPerformanceFlatPlate_Impl(const SolarCollectorPerformanceFlatPlate_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SolarCollectorPerformanceFlatPlate_Impl() {}
+      virtual ~SolarCollectorPerformanceFlatPlate_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -63,7 +63,12 @@ namespace model {
 
     explicit ChillerElectricEIR(const Model& model);
 
-    virtual ~ChillerElectricEIR() {}
+    virtual ~ChillerElectricEIR() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ChillerElectricEIR(const ChillerElectricEIR& other) = default;
+    ChillerElectricEIR(ChillerElectricEIR&& other) = default;
+    ChillerElectricEIR& operator=(const ChillerElectricEIR&) = default;
+    ChillerElectricEIR& operator=(ChillerElectricEIR&&) = default;
 
     //@}
 
@@ -224,7 +229,7 @@ namespace model {
 
     void resetMinimumUnloadingRatio();
 
-    bool setCondenserType(std::string condenserType);
+    bool setCondenserType(const std::string& condenserType);
 
     void resetCondenserType();
 
@@ -240,7 +245,7 @@ namespace model {
 
     void resetLeavingChilledWaterLowerTemperatureLimit();
 
-    bool setChillerFlowMode(std::string chillerFlowMode);
+    bool setChillerFlowMode(const std::string& chillerFlowMode);
 
     void resetChillerFlowMode();
 
@@ -298,7 +303,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ChillerElectricEIR_Impl ImplType;
+    using ImplType = detail::ChillerElectricEIR_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -311,10 +316,10 @@ namespace model {
   };
 
   /** \relates ChillerElectricEIR*/
-  typedef boost::optional<ChillerElectricEIR> OptionalChillerElectricEIR;
+  using OptionalChillerElectricEIR = boost::optional<ChillerElectricEIR>;
 
   /** \relates ChillerElectricEIR*/
-  typedef std::vector<ChillerElectricEIR> ChillerElectricEIRVector;
+  using ChillerElectricEIRVector = std::vector<ChillerElectricEIR>;
 
 }  // namespace model
 

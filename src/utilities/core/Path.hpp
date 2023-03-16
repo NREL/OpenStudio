@@ -67,9 +67,9 @@ UTILITIES_API std::string toSystemFilename(const path& p);
 #endif
 
 /** Optional path*/
-typedef boost::optional<path> OptionalPath;
+using OptionalPath = boost::optional<path>;
 
-typedef std::pair<path, path> PathPair;
+using PathPair = std::pair<path, path>;
 
 /// Return the fully expanded Windows path name ie "c:\Progra~1" into "C:\Program Files"
 //UTILITIES_API QString longPathName(const QString& path);

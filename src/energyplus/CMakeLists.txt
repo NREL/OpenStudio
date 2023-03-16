@@ -255,6 +255,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputControlFiles.cpp
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
   ForwardTranslator/ForwardTranslateOutputControlTableStyle.cpp
+  ForwardTranslator/ForwardTranslateOutputControlTimestamp.cpp
   ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
   ForwardTranslator/ForwardTranslateOutputDebuggingData.cpp
@@ -380,6 +381,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSolarCollectorIntegralCollectorStorage.cpp
   ForwardTranslator/ForwardTranslateSolarCollectorPerformanceFlatPlate.cpp
   ForwardTranslator/ForwardTranslateSolarCollectorPerformanceIntegralCollectorStorage.cpp
+  ForwardTranslator/ForwardTranslateSolarCollectorPerformancePhotovoltaicThermalBIPVT.cpp
   ForwardTranslator/ForwardTranslateSolarCollectorPerformancePhotovoltaicThermalSimple.cpp
   ForwardTranslator/ForwardTranslateSpaceType.cpp
   ForwardTranslator/ForwardTranslateSpaceInfiltrationDesignFlowRate.cpp
@@ -394,12 +396,12 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyExposedFoundationPerimeter.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyGroundSurfaces.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyIncidentSolarMultiplier.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyLocalEnvironment.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertySurroundingSurfaces.cpp
-  ForwardTranslator/ForwardTranslateSurfacePropertyGroundSurfaces.cpp
-  ForwardTranslator/ForwardTranslateSurfacePropertyIncidentSolarMultiplier.cpp
   ForwardTranslator/ForwardTranslateSwimmingPoolIndoor.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
   ForwardTranslator/ForwardTranslateTableLookup.cpp
@@ -545,6 +547,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputControlFiles.cpp
   ReverseTranslator/ReverseTranslateOutputControlReportingTolerances.cpp
   ReverseTranslator/ReverseTranslateOutputControlTableStyle.cpp
+  ReverseTranslator/ReverseTranslateOutputControlTimestamp.cpp
   ReverseTranslator/ReverseTranslateOutputDebuggingData.cpp
   ReverseTranslator/ReverseTranslateOutputDiagnostics.cpp
   ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
@@ -596,15 +599,17 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSizingSystem.cpp
   ReverseTranslator/ReverseTranslateSizingZone.cpp
   ReverseTranslator/ReverseTranslateSizingPeriodDesignDay.cpp
+  ReverseTranslator/ReverseTranslateSolarCollectorPerformancePhotovoltaicThermalBIPVT.cpp
   ReverseTranslator/ReverseTranslateSteamEquipment.cpp
   ReverseTranslator/ReverseTranslateSurfaceControlMovableInsulation.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmInside.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmOutside.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertyExposedFoundationPerimeter.cpp
-  ReverseTranslator/ReverseTranslateSurfacePropertyLocalEnvironment.cpp
-  ReverseTranslator/ReverseTranslateSurfacePropertySurroundingSurfaces.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertyGroundSurfaces.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertyIncidentSolarMultiplier.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertyLocalEnvironment.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertyOtherSideConditionsModel.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertySurroundingSurfaces.cpp
   ReverseTranslator/ReverseTranslateSwimmingPoolIndoor.cpp
   ReverseTranslator/ReverseTranslateTableLookup.cpp
   ReverseTranslator/ReverseTranslateTableIndependentVariable.cpp
@@ -745,6 +750,7 @@ set(${target_name}_test_src
   Test/OutputControlFiles_GTest.cpp
   Test/OutputControlReportingTolerances_GTest.cpp
   Test/OutputControlTableStyle_GTest.cpp
+  Test/OutputControlTimestamp_GTest.cpp
   Test/OutputDebuggingData_GTest.cpp
   Test/OutputDiagnostics_GTest.cpp
   Test/OutputJSON_GTest.cpp
@@ -778,6 +784,7 @@ set(${target_name}_test_src
   Test/SiteGroundTemperatureUndisturbedXing_GTest.cpp
   Test/SizingSystem_GTest.cpp
   Test/SizingZone_GTest.cpp
+  Test/SolarCollectorPerformancePhotovoltaicThermalBIPVT_GTest.cpp
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   Test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
@@ -787,10 +794,11 @@ set(${target_name}_test_src
   Test/Surface_GTest.cpp
   Test/SurfaceControlMovableInsulation_GTest.cpp
   Test/SurfacePropertyConvectionCoefficients_GTest.cpp
-  Test/SurfacePropertyLocalEnvironment_GTest.cpp
-  Test/SurfacePropertySurroundingSurfaces_GTest.cpp
   Test/SurfacePropertyGroundSurfaces_GTest.cpp
   Test/SurfacePropertyIncidentSolarMultiplier_GTest.cpp
+  Test/SurfacePropertyLocalEnvironment_GTest.cpp
+  Test/SurfacePropertyOtherSideConditionsModel_GTest.cpp
+  Test/SurfacePropertySurroundingSurfaces_GTest.cpp
   Test/SwimmingPoolIndoor_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/TableLookup_GTest.cpp
@@ -802,6 +810,7 @@ set(${target_name}_test_src
   Test/WaterHeaterSizing_GTest.cpp
   Test/WaterHeaterStratified_GTest.cpp
   Test/WaterUseConnections_GTest.cpp
+  Test/ZoneAirHeatBalanceAlgorithm_GTest.cpp
   Test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
@@ -883,6 +892,26 @@ if(BUILD_TESTING)
   add_dependencies(${target_name}_tests
     openstudio_energyplus_resources
   )
+
+endif()
+
+if(BUILD_BENCHMARK)
+
+  set(${target_name}_benchmark_src
+    benchmark/ForwardTranslator_Benchmark.cpp
+  )
+
+  foreach( bench_file ${${target_name}_benchmark_src} )
+    get_filename_component(bench_name ${bench_file} NAME_WE)
+    message("bench_name=${bench_name}")
+    add_executable( ${bench_name} ${bench_file} )
+    target_link_libraries(${bench_name}
+      CONAN_PKG::benchmark
+      openstudiolib
+    )
+    set_target_properties(${bench_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/benchmark")
+    add_dependencies(run_benchmarks ${bench_name})
+  endforeach()
 
 endif()
 

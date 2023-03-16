@@ -186,7 +186,7 @@ namespace model {
   }
 
   IddObjectType ExternalInterfaceActuator::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ExternalInterface_Actuator);
+    return {IddObjectType::OS_ExternalInterface_Actuator};
   }
 
   ModelObject ExternalInterfaceActuator::actuatedComponentUnique() const {

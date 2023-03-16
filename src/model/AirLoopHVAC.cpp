@@ -146,7 +146,7 @@ namespace model {
       return AirLoopHVAC::iddObjectType();
     }
 
-    std::vector<ScheduleTypeKey> AirLoopHVAC_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+    std::vector<ScheduleTypeKey> AirLoopHVAC_Impl::getScheduleTypeKeys(const Schedule& /*schedule*/) const {
       std::vector<ScheduleTypeKey> result;
       // UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       // UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -246,7 +246,7 @@ namespace model {
       return idfObjects;
     }
 
-    std::vector<ModelObject> AirLoopHVAC_Impl::components(openstudio::IddObjectType type) {
+    std::vector<ModelObject> AirLoopHVAC_Impl::components(openstudio::IddObjectType type) const {
       std::vector<ModelObject> result;
 
       result = Loop_Impl::components(type);
@@ -350,8 +350,7 @@ namespace model {
       // Dual duct terminals are derived from Mixer
       bool terminalIsDualDuct = airTerminal.optionalCast<Mixer>().has_value();
 
-      // NOT XOR
-      bool result = !(loopIsDualDuct ^ terminalIsDualDuct);
+      bool result = loopIsDualDuct == terminalIsDualDuct;
       if (!result) {
         LOG(Warn, "Cannot assign " << airTerminal.nameString() << " to " << briefDescription() << " since it is of incorrect type, loop is "
                                    << (loopIsDualDuct ? "dual duct." : "single duct."));
@@ -414,10 +413,8 @@ namespace model {
         if (lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction) {
 
           // Safe to directly cast
-          AirTerminalSingleDuctConstantVolumeFourPipeInduction lastAtuFourPipe =
-            lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
-          AirTerminalSingleDuctConstantVolumeFourPipeInduction newAtuFourPipe =
-            airTerminal.cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+          auto lastAtuFourPipe = lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+          auto newAtuFourPipe = airTerminal.cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
 
           // If the original ATU's heating coil has a plant loop, reconnect it here
           if (boost::optional<PlantLoop> _heatingPl = lastAtuFourPipe.heatingCoil().plantLoop()) {
@@ -437,9 +434,8 @@ namespace model {
         } else if (lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam) {
 
           // Safe to directly cast (checked iddObjectType already)
-          AirTerminalSingleDuctConstantVolumeFourPipeBeam lastAtuFourPipeBeam =
-            lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
-          AirTerminalSingleDuctConstantVolumeFourPipeBeam newAtuFourPipeBeam = airTerminal.cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+          auto lastAtuFourPipeBeam = lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+          auto newAtuFourPipeBeam = airTerminal.cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
 
           boost::optional<PlantLoop> _loop;
 
@@ -465,8 +461,8 @@ namespace model {
         } else if (lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam) {
 
           // Safe to directly cast
-          AirTerminalSingleDuctConstantVolumeCooledBeam lastAtuCooledBeam = lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
-          AirTerminalSingleDuctConstantVolumeCooledBeam newAtuCooledBeam = airTerminal.cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+          auto lastAtuCooledBeam = lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+          auto newAtuCooledBeam = airTerminal.cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
           // If the original ATU's coilCoolingCooledBeam has a plant loop, reconnect it here
           if (boost::optional<PlantLoop> _coolingPl = lastAtuCooledBeam.coilCoolingCooledBeam().plantLoop()) {
@@ -662,7 +658,9 @@ namespace model {
 
     AirLoopHVACZoneMixer AirLoopHVAC_Impl::zoneMixer() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<AirLoopHVACZoneMixer>(OS_AirLoopHVACFields::DemandMixerName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
 
       std::vector<AirLoopHVACZoneMixer> mixers = subsetCastVector<AirLoopHVACZoneMixer>(demandComponents(IddObjectType::OS_AirLoopHVAC_ZoneMixer));
       OS_ASSERT(!mixers.empty());
@@ -677,7 +675,9 @@ namespace model {
 
     AirLoopHVACZoneSplitter AirLoopHVAC_Impl::zoneSplitter() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<AirLoopHVACZoneSplitter>(OS_AirLoopHVACFields::DemandSplitterAName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
 
       auto splitters = subsetCastVector<AirLoopHVACZoneSplitter>(
         demandComponents(demandInletNode(), demandOutletNode(), IddObjectType::OS_AirLoopHVAC_ZoneSplitter));
@@ -727,7 +727,7 @@ namespace model {
     }
 
     ModelObject AirLoopHVAC_Impl::clone(Model model) const {
-      AirLoopHVAC airLoopClone = Loop_Impl::clone(model).cast<AirLoopHVAC>();
+      auto airLoopClone = Loop_Impl::clone(model).cast<AirLoopHVAC>();
 
       airLoopClone.setString(supplyInletPort(), "");
       airLoopClone.setString(supplyOutletPortA(), "");
@@ -745,7 +745,7 @@ namespace model {
       }
 
       {
-        AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
+        auto avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
         avmListClone.setName(airLoopClone.name().get() + " AvailabilityManagerAssigmentList");
         airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmListClone.handle());
       }
@@ -868,7 +868,7 @@ namespace model {
         airLoopClone.addBranchForHVACComponent(termclone);
       }
 
-      return airLoopClone;
+      return std::move(airLoopClone);
     }
 
     std::vector<HVACComponent> AirLoopHVAC_Impl::terminals() const {
@@ -897,14 +897,14 @@ namespace model {
 
       auto end = std::remove_if(demandComps.begin(), demandComps.end(), notterminal);
 
-      return std::vector<HVACComponent>(demandComps.begin(), end);
+      return {demandComps.begin(), end};
     }
 
-    std::vector<ModelObject> AirLoopHVAC_Impl::oaComponents(openstudio::IddObjectType type) {
+    std::vector<ModelObject> AirLoopHVAC_Impl::oaComponents(openstudio::IddObjectType /*type*/) const {
       if (airLoopHVACOutdoorAirSystem()) {
         return airLoopHVACOutdoorAirSystem()->components();
       } else {
-        return std::vector<ModelObject>();
+        return {};
       }
     }
 
@@ -912,7 +912,7 @@ namespace model {
       if (airLoopHVACOutdoorAirSystem()) {
         return airLoopHVACOutdoorAirSystem()->outboardOANode();
       } else {
-        return boost::optional<Node>();
+        return {};
       }
     }
 
@@ -920,7 +920,7 @@ namespace model {
       if (airLoopHVACOutdoorAirSystem()) {
         return airLoopHVACOutdoorAirSystem()->outboardReliefNode();
       } else {
-        return boost::optional<Node>();
+        return {};
       }
     }
 
@@ -1331,7 +1331,7 @@ namespace model {
       return result;
     }
 
-    bool AirLoopHVAC_Impl::setNightCycleControlType(std::string const& controlType) {
+    bool AirLoopHVAC_Impl::setNightCycleControlType(const std::string& controlType) {
       auto createNightCycleManager = [&]() {
         boost::optional<AvailabilityManagerNightCycle> result;
         auto t_model = model();
@@ -1571,7 +1571,9 @@ namespace model {
 
     boost::optional<Splitter> AirLoopHVAC_Impl::supplySplitter() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_AirLoopHVACFields::SupplySplitterName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
 
       auto splitters = subsetCastVector<Splitter>(supplyComponents());
       if (!splitters.empty()) {
@@ -1595,7 +1597,9 @@ namespace model {
     bool AirLoopHVAC_Impl::removeSupplySplitter() {
       auto t_supplySplitter = supplySplitter();
 
-      if (!t_supplySplitter) return false;
+      if (!t_supplySplitter) {
+        return false;
+      }
 
       auto _model = model();
 
@@ -1615,9 +1619,9 @@ namespace model {
       OS_ASSERT(splitterOutletNodes.size() == 2u);
 
       auto comps0 = supplyComponents(splitterOutletNodes[0], t_supplyOutletNodes[0]);
-      OS_ASSERT(comps0.size() >= 1u);
+      OS_ASSERT(!comps0.empty());
       auto comps1 = supplyComponents(splitterOutletNodes[1], t_supplyOutletNodes[1]);
-      OS_ASSERT(comps1.size() >= 1u);
+      OS_ASSERT(!comps1.empty());
 
       for (auto it = comps0.begin(); it != comps0.end(); ++it) {
         it->getImpl<detail::HVACComponent_Impl>()->disconnect();
@@ -1661,7 +1665,9 @@ namespace model {
     bool AirLoopHVAC_Impl::removeSupplySplitter(HVACComponent& hvacComponent) {
       auto t_supplySplitter = supplySplitter();
 
-      if (!t_supplySplitter) return false;
+      if (!t_supplySplitter) {
+        return false;
+      }
 
       auto t_supplyOutletNodes = supplyOutletNodes();
       OS_ASSERT(t_supplyOutletNodes.size() == 2u);
@@ -1707,7 +1713,9 @@ namespace model {
         }
       }
 
-      if ((!systemEndComponent) || (!componentOutletPort)) return false;
+      if ((!systemEndComponent) || (!componentOutletPort)) {
+        return false;
+      }
 
       auto result = t_supplySplitter->getImpl<detail::Splitter_Impl>()->removeFromLoop(systemStartComponent, systemEndComponent.get(),
                                                                                        componentInletPort, componentOutletPort.get());
@@ -1737,7 +1745,7 @@ namespace model {
         return subsetCastVector<Node>(splitter->outletModelObjects());
       }
 
-      return std::vector<Node>();
+      return {};
     }
 
     bool AirLoopHVAC_Impl::removeDualDuctTerminalFromAirLoopHVAC(HVACComponent& terminal, const unsigned inletPortA, const unsigned inletPortB,
@@ -1747,7 +1755,9 @@ namespace model {
       auto _model = terminal.model();
 
       auto t_airLoopHVAC = terminal.airLoopHVAC();
-      if (!t_airLoopHVAC) result = false;
+      if (!t_airLoopHVAC) {
+        result = false;
+      }
 
       if (result) {
         auto demandInletNodes = t_airLoopHVAC->demandInletNodes();
@@ -1965,6 +1975,16 @@ namespace model {
       return getAutosizedValue("Design Supply Air Flow Rate", "m3/s");
     }
 
+    // Not part of the applySizingValues
+    boost::optional<double> AirLoopHVAC_Impl::autosizedSumMinimumHeatingAirFlowRates() const {
+      return getAutosizedValue("Sum of Air Terminal Minimum Heating Flow Rates", "m3/s");
+    }
+
+    // Not part of the applySizingValues
+    boost::optional<double> AirLoopHVAC_Impl::autosizedSumAirTerminalMaxAirFlowRate() const {
+      return getAutosizedValue("Sum of Air Terminal Maximum Flow Rates", "m3/s");
+    }
+
     void AirLoopHVAC_Impl::autosize() {
       autosizeDesignSupplyAirFlowRate();
     }
@@ -2116,7 +2136,7 @@ namespace model {
     return getImpl<detail::AirLoopHVAC_Impl>()->clone(model);
   }
 
-  std::vector<ModelObject> AirLoopHVAC::oaComponents(openstudio::IddObjectType type) {
+  std::vector<ModelObject> AirLoopHVAC::oaComponents(openstudio::IddObjectType type) const {
     return getImpl<detail::AirLoopHVAC_Impl>()->oaComponents(type);
   }
 
@@ -2161,7 +2181,7 @@ namespace model {
   }
 
   IddObjectType AirLoopHVAC::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirLoopHVAC);
+    return {IddObjectType::OS_AirLoopHVAC};
   }
 
   bool AirLoopHVAC::addBranchForZone(openstudio::model::ThermalZone& thermalZone) {
@@ -2220,7 +2240,7 @@ namespace model {
     return getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool AirLoopHVAC::setNightCycleControlType(std::string const& controlType) {
+  bool AirLoopHVAC::setNightCycleControlType(const std::string& controlType) {
     return getImpl<detail::AirLoopHVAC_Impl>()->setNightCycleControlType(controlType);
   }
 
@@ -2291,6 +2311,14 @@ namespace model {
 
   boost::optional<double> AirLoopHVAC::autosizedDesignSupplyAirFlowRate() const {
     return getImpl<detail::AirLoopHVAC_Impl>()->autosizedDesignSupplyAirFlowRate();
+  }
+
+  boost::optional<double> AirLoopHVAC::autosizedSumMinimumHeatingAirFlowRates() const {
+    return getImpl<detail::AirLoopHVAC_Impl>()->autosizedSumMinimumHeatingAirFlowRates();
+  }
+
+  boost::optional<double> AirLoopHVAC::autosizedSumAirTerminalMaxAirFlowRate() const {
+    return getImpl<detail::AirLoopHVAC_Impl>()->autosizedSumAirTerminalMaxAirFlowRate();
   }
 
   unsigned AirLoopHVAC::availabilityManagerPriority(const AvailabilityManager& availabilityManager) const {

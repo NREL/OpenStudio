@@ -145,7 +145,7 @@ namespace model {
   }
 
   IddObjectType ExternalInterfaceFunctionalMockupUnitImportToVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable);
+    return {IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable};
   }
 
   ExternalInterfaceFunctionalMockupUnitImport ExternalInterfaceFunctionalMockupUnitImportToVariable::fMUFile() const {

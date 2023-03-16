@@ -148,7 +148,7 @@ namespace model {
 
     bool UnitarySystemPerformanceMultispeed_Impl::addSupplyAirflowRatioField(const SupplyAirflowRatioField& airflowRatio) {
       std::vector<std::string> values = airflowRatio.getHeatingCoolingRatiosAsStrings();
-      ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
+      auto group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
       return (!group.empty());
     }
 
@@ -176,11 +176,11 @@ namespace model {
   }
 
   SupplyAirflowRatioField SupplyAirflowRatioField::fromHeatingRatio(double heatingRatio) {
-    return SupplyAirflowRatioField(true, heatingRatio);
+    return {true, heatingRatio};
   }
 
   SupplyAirflowRatioField SupplyAirflowRatioField::fromCoolingRatio(double coolingRatio) {
-    return SupplyAirflowRatioField(false, coolingRatio);
+    return {false, coolingRatio};
   }
 
   boost::optional<double> SupplyAirflowRatioField::heatingRatio() const {
@@ -220,7 +220,7 @@ namespace model {
   }
 
   IddObjectType UnitarySystemPerformanceMultispeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_UnitarySystemPerformance_Multispeed);
+    return {IddObjectType::OS_UnitarySystemPerformance_Multispeed};
   }
 
   bool UnitarySystemPerformanceMultispeed::singleModeOperation() const {

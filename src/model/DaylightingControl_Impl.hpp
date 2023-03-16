@@ -58,7 +58,7 @@ namespace model {
 
       DaylightingControl_Impl(const DaylightingControl_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DaylightingControl_Impl() {}
+      virtual ~DaylightingControl_Impl() = default;
 
       //@}
 

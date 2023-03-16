@@ -102,7 +102,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_DX_MultiSpeedFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilHeatingDXMultiSpeed", "Availability"));
       }
@@ -268,12 +269,12 @@ namespace model {
       return result;
     }
 
-    bool CoilHeatingDXMultiSpeed_Impl::setDefrostStrategy(std::string defrostStrategy) {
+    bool CoilHeatingDXMultiSpeed_Impl::setDefrostStrategy(const std::string& defrostStrategy) {
       bool result = setString(OS_Coil_Heating_DX_MultiSpeedFields::DefrostStrategy, defrostStrategy);
       return result;
     }
 
-    bool CoilHeatingDXMultiSpeed_Impl::setDefrostControl(std::string defrostControl) {
+    bool CoilHeatingDXMultiSpeed_Impl::setDefrostControl(const std::string& defrostControl) {
       bool result = setString(OS_Coil_Heating_DX_MultiSpeedFields::DefrostControl, defrostControl);
       return result;
     }
@@ -302,7 +303,7 @@ namespace model {
       ;
     }
 
-    bool CoilHeatingDXMultiSpeed_Impl::setFuelType(std::string fuelType) {
+    bool CoilHeatingDXMultiSpeed_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_Coil_Heating_DX_MultiSpeedFields::FuelType, fuelType);
       return result;
     }
@@ -327,7 +328,7 @@ namespace model {
         auto stageClone = stage.clone(model).cast<CoilHeatingDXMultiSpeedStageData>();
         t_clone.addStage(stageClone);
       }
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilHeatingDXMultiSpeed_Impl::children() const {
@@ -577,7 +578,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingDXMultiSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_DX_MultiSpeed);
+    return {IddObjectType::OS_Coil_Heating_DX_MultiSpeed};
   }
 
   std::vector<std::string> CoilHeatingDXMultiSpeed::defrostStrategyValues() {
@@ -698,11 +699,11 @@ namespace model {
       maximumOutdoorDryBulbTemperatureforDefrostOperation);
   }
 
-  bool CoilHeatingDXMultiSpeed::setDefrostStrategy(std::string defrostStrategy) {
+  bool CoilHeatingDXMultiSpeed::setDefrostStrategy(const std::string& defrostStrategy) {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setDefrostStrategy(defrostStrategy);
   }
 
-  bool CoilHeatingDXMultiSpeed::setDefrostControl(std::string defrostControl) {
+  bool CoilHeatingDXMultiSpeed::setDefrostControl(const std::string& defrostControl) {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setDefrostControl(defrostControl);
   }
 
@@ -722,7 +723,7 @@ namespace model {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setApplyPartLoadFractiontoSpeedsGreaterthan1(applyPartLoadFractiontoSpeedsGreaterthan1);
   }
 
-  bool CoilHeatingDXMultiSpeed::setFuelType(std::string fuelType) {
+  bool CoilHeatingDXMultiSpeed::setFuelType(const std::string& fuelType) {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setFuelType(fuelType);
   }
 

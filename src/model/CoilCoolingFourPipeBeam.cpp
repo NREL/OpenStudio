@@ -384,7 +384,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingFourPipeBeam::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_FourPipeBeam);
+    return {IddObjectType::OS_Coil_Cooling_FourPipeBeam};
   }
 
   /* Nodes */

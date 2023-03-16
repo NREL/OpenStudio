@@ -58,7 +58,12 @@ namespace model {
 
     FanVariableVolume(const Model& model);
 
-    virtual ~FanVariableVolume() {}
+    virtual ~FanVariableVolume() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FanVariableVolume(const FanVariableVolume& other) = default;
+    FanVariableVolume(FanVariableVolume&& other) = default;
+    FanVariableVolume& operator=(const FanVariableVolume&) = default;
+    FanVariableVolume& operator=(FanVariableVolume&&) = default;
 
     //@}
 
@@ -138,7 +143,7 @@ namespace model {
 
     void autosizeMaximumFlowRate();
 
-    bool setFanPowerMinimumFlowRateInputMethod(std::string fanPowerMinimumFlowRateInputMethod);
+    bool setFanPowerMinimumFlowRateInputMethod(const std::string& fanPowerMinimumFlowRateInputMethod);
 
     void resetFanPowerMinimumFlowRateInputMethod();
 
@@ -178,7 +183,7 @@ namespace model {
 
     void resetFanPowerCoefficient5();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -189,7 +194,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FanVariableVolume_Impl ImplType;
+    using ImplType = detail::FanVariableVolume_Impl;
 
     friend class detail::FanVariableVolume_Impl;
 
@@ -205,10 +210,10 @@ namespace model {
   };
 
   /** \relates FanVariableVolume*/
-  typedef boost::optional<FanVariableVolume> OptionalFanVariableVolume;
+  using OptionalFanVariableVolume = boost::optional<FanVariableVolume>;
 
   /** \relates FanVariableVolume*/
-  typedef std::vector<FanVariableVolume> FanVariableVolumeVector;
+  using FanVariableVolumeVector = std::vector<FanVariableVolume>;
 
 }  // namespace model
 

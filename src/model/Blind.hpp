@@ -54,7 +54,12 @@ namespace model {
                    double backSideSlatBeamSolarReflectance = 0.5, double frontSideSlatDiffuseSolarReflectance = 0.5,
                    double backSideSlatDiffuseSolarReflectance = 0.5, double slatBeamVisibleTransmittance = 0.0);
 
-    virtual ~Blind() {}
+    virtual ~Blind() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Blind(const Blind& other) = default;
+    Blind(Blind&& other) = default;
+    Blind& operator=(const Blind&) = default;
+    Blind& operator=(Blind&&) = default;
 
     //@}
 
@@ -268,7 +273,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Blind_Impl ImplType;
+    using ImplType = detail::Blind_Impl;
 
     explicit Blind(std::shared_ptr<detail::Blind_Impl> impl);
 
@@ -282,10 +287,10 @@ namespace model {
   };
 
   /** \relates Blind*/
-  typedef boost::optional<Blind> OptionalBlind;
+  using OptionalBlind = boost::optional<Blind>;
 
   /** \relates Blind*/
-  typedef std::vector<Blind> BlindVector;
+  using BlindVector = std::vector<Blind>;
 
 }  // namespace model
 }  // namespace openstudio

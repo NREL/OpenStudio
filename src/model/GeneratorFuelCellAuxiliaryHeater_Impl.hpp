@@ -54,7 +54,7 @@ namespace model {
 
       GeneratorFuelCellAuxiliaryHeater_Impl(const GeneratorFuelCellAuxiliaryHeater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorFuelCellAuxiliaryHeater_Impl() {}
+      virtual ~GeneratorFuelCellAuxiliaryHeater_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

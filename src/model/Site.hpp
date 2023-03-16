@@ -61,7 +61,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Site() {}
+    virtual ~Site() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Site(const Site& other) = default;
+    Site(Site&& other) = default;
+    Site& operator=(const Site&) = default;
+    Site& operator=(Site&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -115,7 +120,7 @@ namespace model {
 
     void resetElevation();
 
-    bool setTerrain(std::string terrain);
+    bool setTerrain(const std::string& terrain);
 
     void resetTerrain();
 
@@ -162,7 +167,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::Site_Impl ImplType;
+    using ImplType = detail::Site_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -177,10 +182,10 @@ namespace model {
   };
 
   /** \relates Site*/
-  typedef boost::optional<Site> OptionalSite;
+  using OptionalSite = boost::optional<Site>;
 
   /** \relates Site*/
-  typedef std::vector<Site> SiteVector;
+  using SiteVector = std::vector<Site>;
 
 }  // namespace model
 }  // namespace openstudio

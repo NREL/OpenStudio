@@ -53,7 +53,12 @@ namespace model {
   class MODEL_API ZoneHVACComponent : public HVACComponent
   {
    public:
-    virtual ~ZoneHVACComponent() {}
+    virtual ~ZoneHVACComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACComponent(const ZoneHVACComponent& other) = default;
+    ZoneHVACComponent(ZoneHVACComponent&& other) = default;
+    ZoneHVACComponent& operator=(const ZoneHVACComponent&) = default;
+    ZoneHVACComponent& operator=(ZoneHVACComponent&&) = default;
 
     /** Returns the inlet port.  For a ZoneHVACComponent this port is typically connected
    *  to a zone exhaust node. **/
@@ -143,7 +148,7 @@ namespace model {
    protected:
     ZoneHVACComponent(IddObjectType type, const Model& model);
 
-    typedef detail::ZoneHVACComponent_Impl ImplType;
+    using ImplType = detail::ZoneHVACComponent_Impl;
 
     friend class Model;
 
@@ -159,7 +164,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.HVACComponent");
   };
 
-  typedef boost::optional<ZoneHVACComponent> OptionalZoneHVACComponent;
+  using OptionalZoneHVACComponent = boost::optional<ZoneHVACComponent>;
 
 }  // namespace model
 

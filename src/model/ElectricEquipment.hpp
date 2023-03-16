@@ -56,7 +56,12 @@ namespace model {
 
     explicit ElectricEquipment(const ElectricEquipmentDefinition& electricEquipmentDefinition);
 
-    virtual ~ElectricEquipment() {}
+    virtual ~ElectricEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricEquipment(const ElectricEquipment& other) = default;
+    ElectricEquipment(ElectricEquipment&& other) = default;
+    ElectricEquipment& operator=(const ElectricEquipment&) = default;
+    ElectricEquipment& operator=(ElectricEquipment&&) = default;
 
     //@}
 
@@ -96,7 +101,7 @@ namespace model {
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -131,7 +136,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricEquipment_Impl ImplType;
+    using ImplType = detail::ElectricEquipment_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -144,10 +149,10 @@ namespace model {
   };
 
   /** \relates ElectricEquipment*/
-  typedef boost::optional<ElectricEquipment> OptionalElectricEquipment;
+  using OptionalElectricEquipment = boost::optional<ElectricEquipment>;
 
   /** \relates ElectricEquipment*/
-  typedef std::vector<ElectricEquipment> ElectricEquipmentVector;
+  using ElectricEquipmentVector = std::vector<ElectricEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

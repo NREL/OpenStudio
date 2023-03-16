@@ -234,7 +234,7 @@ class UTILITIES_API BCL
   //@{
 
   /// Virtual destructor
-  virtual ~BCL();
+  virtual ~BCL() = default;
 
   //@}
   /** @name Inherited members */

@@ -91,12 +91,12 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_Remove) {
   Model model;
   RefrigerationSubcoolerMechanical testObject = RefrigerationSubcoolerMechanical(model);
 
-  std::vector<RefrigerationSubcoolerMechanical> refrigerationMechanicalSubcoolers = model.getModelObjects<RefrigerationSubcoolerMechanical>();
+  std::vector<RefrigerationSubcoolerMechanical> refrigerationMechanicalSubcoolers = model.getConcreteModelObjects<RefrigerationSubcoolerMechanical>();
   EXPECT_EQ(1, refrigerationMechanicalSubcoolers.size());
 
   testObject.remove();
 
-  refrigerationMechanicalSubcoolers = model.getModelObjects<RefrigerationSubcoolerMechanical>();
+  refrigerationMechanicalSubcoolers = model.getConcreteModelObjects<RefrigerationSubcoolerMechanical>();
   EXPECT_EQ(0, refrigerationMechanicalSubcoolers.size());
 }
 
@@ -123,8 +123,7 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithDefaultDa
 
   refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
 
-  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone =
-    refrigerationSubcoolerMechanical.clone(m).cast<RefrigerationSubcoolerMechanical>();
+  auto refrigerationSubcoolerMechanicalClone = refrigerationSubcoolerMechanical.clone(m).cast<RefrigerationSubcoolerMechanical>();
 
   EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
 
@@ -140,8 +139,7 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithCustomDat
   refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
   refrigerationSubcoolerMechanical.setOutletControlTemperature(15.0);
 
-  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone =
-    refrigerationSubcoolerMechanical.clone(m).cast<RefrigerationSubcoolerMechanical>();
+  auto refrigerationSubcoolerMechanicalClone = refrigerationSubcoolerMechanical.clone(m).cast<RefrigerationSubcoolerMechanical>();
 
   EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
 
@@ -157,17 +155,15 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneTwoModelWithDefaultDa
 
   refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
 
-  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone =
-    refrigerationSubcoolerMechanical.clone(model).cast<RefrigerationSubcoolerMechanical>();
+  auto refrigerationSubcoolerMechanicalClone = refrigerationSubcoolerMechanical.clone(model).cast<RefrigerationSubcoolerMechanical>();
 
   Model model2;
-  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone2 =
-    refrigerationSubcoolerMechanical.clone(model2).cast<RefrigerationSubcoolerMechanical>();
+  auto refrigerationSubcoolerMechanicalClone2 = refrigerationSubcoolerMechanical.clone(model2).cast<RefrigerationSubcoolerMechanical>();
 
-  std::vector<RefrigerationSystem> refrigerationSystems = model.getModelObjects<RefrigerationSystem>();
+  std::vector<RefrigerationSystem> refrigerationSystems = model.getConcreteModelObjects<RefrigerationSystem>();
   ASSERT_EQ(1, refrigerationSystems.size());
 
-  refrigerationSystems = model2.getModelObjects<RefrigerationSystem>();
+  refrigerationSystems = model2.getConcreteModelObjects<RefrigerationSystem>();
   ASSERT_EQ(0, refrigerationSystems.size());
 
   EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());

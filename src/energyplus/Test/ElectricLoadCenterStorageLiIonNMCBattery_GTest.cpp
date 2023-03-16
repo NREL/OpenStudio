@@ -125,7 +125,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ElectricLoadCenterStorageLiIonNMCBat
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ElectricLoadCenterStorageLiIonNMCBattery> batteries = model.getModelObjects<ElectricLoadCenterStorageLiIonNMCBattery>();
+  std::vector<ElectricLoadCenterStorageLiIonNMCBattery> batteries = model.getConcreteModelObjects<ElectricLoadCenterStorageLiIonNMCBattery>();
   ASSERT_EQ(1u, batteries.size());
   ElectricLoadCenterStorageLiIonNMCBattery battery = batteries[0];
   EXPECT_EQ("Electric Load Center Storage Li Ion NMC Battery 1", battery.name().get());

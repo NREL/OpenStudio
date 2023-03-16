@@ -40,7 +40,7 @@ class UTILITIES_API IddUnitString
 {
  public:
   explicit IddUnitString(const std::string& s);
-  ~IddUnitString();
+  ~IddUnitString() = default;
 
   std::string toStandardUnitString() const;
 

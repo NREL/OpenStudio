@@ -60,16 +60,16 @@ namespace model {
       return connectedObject(outletPort(branchIndex));
     }
 
-    std::vector<HVACComponent> Splitter_Impl::edges(const boost::optional<HVACComponent>& prev) {
+    std::vector<HVACComponent> Splitter_Impl::edges(const boost::optional<HVACComponent>& /*prev*/) {
       return castVector<HVACComponent>(outletModelObjects());
     }
 
     boost::optional<ModelObject> Splitter_Impl::lastOutletModelObject() const {
       std::vector<ModelObject> objects = outletModelObjects();
-      if (objects.size() > 0) {
+      if (!objects.empty()) {
         return OptionalModelObject(objects.back());
       } else {
-        return OptionalModelObject();
+        return {};
       }
     }
 
@@ -141,7 +141,7 @@ namespace model {
     }
 
     void Splitter_Impl::disconnect() {
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
       auto _model = model();
 
       _model.disconnect(mo, inletPort());

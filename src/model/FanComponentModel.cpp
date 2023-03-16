@@ -106,7 +106,8 @@ namespace model {
     std::vector<ScheduleTypeKey> FanComponentModel_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Fan_ComponentModelFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FanComponentModel", "Availability"));
       }
@@ -142,10 +143,6 @@ namespace model {
       return result;
     }
 
-    boost::optional<double> FanComponentModel_Impl::autosizedMaximumFlowRate() {
-      return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
-    }
-
     boost::optional<double> FanComponentModel_Impl::minimumFlowRate() const {
       return getDouble(OS_Fan_ComponentModelFields::MinimumFlowRate, true);
     }
@@ -157,12 +154,6 @@ namespace model {
         result = openstudio::istringEqual(value.get(), "autosize");
       }
       return result;
-    }
-
-    boost::optional<double> FanComponentModel_Impl::autosizedMinimumFlowRate() {
-      // TODO: SQL doesn't contain it really but if it did, that'd be the name
-      // If includes "Design Size Maximum Flow Rate and "Design Fan Airflow" only
-      return getAutosizedValue("Design Size Minimum Flow Rate", "m3/s");
     }
 
     double FanComponentModel_Impl::fanSizingFactor() const {
@@ -214,10 +205,6 @@ namespace model {
       return result;
     }
 
-    boost::optional<double> FanComponentModel_Impl::autosizedMotorFanPulleyRatio() {
-      return getAutosizedValue("Drive Ratio", "typo_in_energyplus");
-    }
-
     boost::optional<double> FanComponentModel_Impl::beltMaximumTorque() const {
       return getDouble(OS_Fan_ComponentModelFields::BeltMaximumTorque, true);
     }
@@ -229,10 +216,6 @@ namespace model {
         result = openstudio::istringEqual(value.get(), "autosize");
       }
       return result;
-    }
-
-    boost::optional<double> FanComponentModel_Impl::autosizedBeltMaximumTorque() {
-      return getAutosizedValue("Design Belt Output Torque", "Nm");
     }
 
     double FanComponentModel_Impl::beltSizingFactor() const {
@@ -266,10 +249,6 @@ namespace model {
       return result;
     }
 
-    boost::optional<double> FanComponentModel_Impl::autosizedMaximumMotorOutputPower() {
-      return getAutosizedValue("Design Motor Output Power", "W");
-    }
-
     double FanComponentModel_Impl::motorSizingFactor() const {
       boost::optional<double> value = getDouble(OS_Fan_ComponentModelFields::MotorSizingFactor, true);
       OS_ASSERT(value);
@@ -299,10 +278,6 @@ namespace model {
         result = openstudio::istringEqual(value.get(), "autosize");
       }
       return result;
-    }
-
-    boost::optional<double> FanComponentModel_Impl::autosizedMaximumVFDOutputPower() {
-      return getAutosizedValue("Design VFD Output Power", "W");
     }
 
     double FanComponentModel_Impl::vFDSizingFactor() const {
@@ -692,9 +667,35 @@ namespace model {
       return result;
     }
 
+    boost::optional<double> FanComponentModel_Impl::autosizedMaximumFlowRate() {
+      return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> FanComponentModel_Impl::autosizedMinimumFlowRate() {
+      // TODO: SQL doesn't contain it really but if it did, that'd be the name
+      // If includes "Design Size Maximum Flow Rate and "Design Fan Airflow" only
+      return getAutosizedValue("Design Size Minimum Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> FanComponentModel_Impl::autosizedMotorFanPulleyRatio() {
+      return getAutosizedValue("Drive Ratio", "");
+    }
+
+    boost::optional<double> FanComponentModel_Impl::autosizedBeltMaximumTorque() {
+      return getAutosizedValue("Design Belt Output Torque", "Nm");
+    }
+
+    boost::optional<double> FanComponentModel_Impl::autosizedMaximumMotorOutputPower() {
+      return getAutosizedValue("Design Motor Output Power", "W");
+    }
+
+    boost::optional<double> FanComponentModel_Impl::autosizedMaximumVFDOutputPower() {
+      return getAutosizedValue("Design VFD Output Power", "W");
+    }
+
     void FanComponentModel_Impl::autosize() {
-      autosizedMaximumFlowRate();
-      autosizedMinimumFlowRate();
+      autosizeMaximumFlowRate();
+      autosizeMinimumFlowRate();
       autosizeMotorFanPulleyRatio();
       autosizeBeltMaximumTorque();
       autosizeMaximumMotorOutputPower();
@@ -1132,7 +1133,7 @@ namespace model {
   }
 
   IddObjectType FanComponentModel::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Fan_ComponentModel);
+    return {IddObjectType::OS_Fan_ComponentModel};
   }
 
   std::vector<std::string> FanComponentModel::vFDEfficiencyTypeValues() {

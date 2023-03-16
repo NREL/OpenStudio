@@ -317,7 +317,7 @@ namespace model {
       return result;
     }
 
-    bool ScheduleFile_Impl::setTimeSeries(const openstudio::TimeSeries& timeSeries) {
+    bool ScheduleFile_Impl::setTimeSeries(const openstudio::TimeSeries& /*timeSeries*/) {
       /* FIXME!
     // check the interval
     boost::optional<openstudio::Time> intervalTime = timeSeries.intervalLength();
@@ -413,7 +413,7 @@ namespace model {
   }
 
   IddObjectType ScheduleFile::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Schedule_File);
+    return {IddObjectType::OS_Schedule_File};
   }
 
   std::vector<std::string> ScheduleFile::minutesperItemValues() {

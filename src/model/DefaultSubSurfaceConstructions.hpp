@@ -53,7 +53,12 @@ namespace model {
 
     explicit DefaultSubSurfaceConstructions(const Model& model);
 
-    virtual ~DefaultSubSurfaceConstructions() {}
+    virtual ~DefaultSubSurfaceConstructions() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DefaultSubSurfaceConstructions(const DefaultSubSurfaceConstructions& other) = default;
+    DefaultSubSurfaceConstructions(DefaultSubSurfaceConstructions&& other) = default;
+    DefaultSubSurfaceConstructions& operator=(const DefaultSubSurfaceConstructions&) = default;
+    DefaultSubSurfaceConstructions& operator=(DefaultSubSurfaceConstructions&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -124,7 +129,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DefaultSubSurfaceConstructions_Impl ImplType;
+    using ImplType = detail::DefaultSubSurfaceConstructions_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -137,10 +142,10 @@ namespace model {
   };
 
   /** \relates DefaultSubSurfaceConstructions*/
-  typedef boost::optional<DefaultSubSurfaceConstructions> OptionalDefaultSubSurfaceConstructions;
+  using OptionalDefaultSubSurfaceConstructions = boost::optional<DefaultSubSurfaceConstructions>;
 
   /** \relates DefaultSubSurfaceConstructions*/
-  typedef std::vector<DefaultSubSurfaceConstructions> DefaultSubSurfaceConstructionsVector;
+  using DefaultSubSurfaceConstructionsVector = std::vector<DefaultSubSurfaceConstructions>;
 
 }  // namespace model
 }  // namespace openstudio

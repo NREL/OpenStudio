@@ -53,7 +53,7 @@ class UTILITIES_API TemperatureUnit : public Unit
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~TemperatureUnit() {}
+  virtual ~TemperatureUnit() = default;
 
   //@}
   /** @name Mathematical Operators */
@@ -68,7 +68,7 @@ class UTILITIES_API TemperatureUnit : public Unit
   //@}
  protected:
   /// @cond
-  typedef detail::TemperatureUnit_Impl ImplType;
+  using ImplType = detail::TemperatureUnit_Impl;
 
   explicit TemperatureUnit(std::shared_ptr<detail::TemperatureUnit_Impl> impl);
 
@@ -81,10 +81,10 @@ class UTILITIES_API TemperatureUnit : public Unit
 };
 
 /** \relates TemperatureUnit*/
-typedef boost::optional<TemperatureUnit> OptionalTemperatureUnit;
+using OptionalTemperatureUnit = boost::optional<TemperatureUnit>;
 
 /** \relates TemperatureUnit*/
-typedef std::vector<TemperatureUnit> TemperatureUnitVector;
+using TemperatureUnitVector = std::vector<TemperatureUnit>;
 
 }  // namespace openstudio
 

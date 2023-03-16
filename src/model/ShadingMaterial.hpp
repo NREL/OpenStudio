@@ -48,12 +48,17 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ShadingMaterial() {}
+    virtual ~ShadingMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ShadingMaterial(const ShadingMaterial& other) = default;
+    ShadingMaterial(ShadingMaterial&& other) = default;
+    ShadingMaterial& operator=(const ShadingMaterial&) = default;
+    ShadingMaterial& operator=(ShadingMaterial&&) = default;
 
     //@}
    protected:
     /// @cond
-    typedef detail::ShadingMaterial_Impl ImplType;
+    using ImplType = detail::ShadingMaterial_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -69,10 +74,10 @@ namespace model {
   };
 
   /** \relates ShadingMaterial */
-  typedef boost::optional<ShadingMaterial> OptionalShadingMaterial;
+  using OptionalShadingMaterial = boost::optional<ShadingMaterial>;
 
   /** \relates ShadingMaterial */
-  typedef std::vector<ShadingMaterial> ShadingMaterialVector;
+  using ShadingMaterialVector = std::vector<ShadingMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

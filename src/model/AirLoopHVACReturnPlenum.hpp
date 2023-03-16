@@ -50,7 +50,12 @@ namespace model {
    public:
     explicit AirLoopHVACReturnPlenum(const Model& model);
 
-    virtual ~AirLoopHVACReturnPlenum() {}
+    virtual ~AirLoopHVACReturnPlenum() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACReturnPlenum(const AirLoopHVACReturnPlenum& other) = default;
+    AirLoopHVACReturnPlenum(AirLoopHVACReturnPlenum&& other) = default;
+    AirLoopHVACReturnPlenum& operator=(const AirLoopHVACReturnPlenum&) = default;
+    AirLoopHVACReturnPlenum& operator=(AirLoopHVACReturnPlenum&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -80,7 +85,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::AirLoopHVACReturnPlenum_Impl ImplType;
+    using ImplType = detail::AirLoopHVACReturnPlenum_Impl;
 
     explicit AirLoopHVACReturnPlenum(std::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl);
 
@@ -94,10 +99,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACReturnPlenum*/
-  typedef boost::optional<AirLoopHVACReturnPlenum> OptionalAirLoopHVACReturnPlenum;
+  using OptionalAirLoopHVACReturnPlenum = boost::optional<AirLoopHVACReturnPlenum>;
 
   /** \relates AirLoopHVACReturnPlenum*/
-  typedef std::vector<AirLoopHVACReturnPlenum> AirLoopHVACReturnPlenumVector;
+  using AirLoopHVACReturnPlenumVector = std::vector<AirLoopHVACReturnPlenum>;
 
 }  // namespace model
 }  // namespace openstudio

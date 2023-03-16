@@ -48,7 +48,12 @@ namespace model {
   class MODEL_API ParentObject : public ModelObject
   {
    public:
-    virtual ~ParentObject() {}
+    virtual ~ParentObject() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ParentObject(const ParentObject& other) = default;
+    ParentObject(ParentObject&& other) = default;
+    ParentObject& operator=(const ParentObject&) = default;
+    ParentObject& operator=(ParentObject&&) = default;
 
     /** @name Constructors and Destructors */
     //@{
@@ -81,7 +86,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::ParentObject_Impl ImplType;
+    using ImplType = detail::ParentObject_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -97,10 +102,10 @@ namespace model {
   };
 
   // optional ParentObject
-  typedef boost::optional<ParentObject> OptionalParentObject;
+  using OptionalParentObject = boost::optional<ParentObject>;
 
   // vector of ParentObject
-  typedef std::vector<ParentObject> ParentObjectVector;
+  using ParentObjectVector = std::vector<ParentObject>;
 
   /** Returns object and all other objects accessible by calling children() on encountered
  *  \link ParentObject ParentObjects \endlink. LifeCycleCost and AdditionalProperties objects

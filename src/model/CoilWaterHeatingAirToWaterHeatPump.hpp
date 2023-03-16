@@ -62,7 +62,12 @@ namespace model {
                                                 Curve& heatingCOPFunctionofAirFlowFractionCurve, Curve& heatingCOPFunctionofWaterFlowFractionCurve,
                                                 Curve& partLoadFractionCorrelationCurve);
 
-    virtual ~CoilWaterHeatingAirToWaterHeatPump() {}
+    virtual ~CoilWaterHeatingAirToWaterHeatPump() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilWaterHeatingAirToWaterHeatPump(const CoilWaterHeatingAirToWaterHeatPump& other) = default;
+    CoilWaterHeatingAirToWaterHeatPump(CoilWaterHeatingAirToWaterHeatPump&& other) = default;
+    CoilWaterHeatingAirToWaterHeatPump& operator=(const CoilWaterHeatingAirToWaterHeatPump&) = default;
+    CoilWaterHeatingAirToWaterHeatPump& operator=(CoilWaterHeatingAirToWaterHeatPump&&) = default;
 
     //@}
 
@@ -161,7 +166,7 @@ namespace model {
 
     bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
 
-    bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
+    bool setEvaporatorAirTemperatureTypeforCurveObjects(const std::string& evaporatorAirTemperatureTypeforCurveObjects);
 
     bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
@@ -188,7 +193,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilWaterHeatingAirToWaterHeatPump_Impl ImplType;
+    using ImplType = detail::CoilWaterHeatingAirToWaterHeatPump_Impl;
 
     explicit CoilWaterHeatingAirToWaterHeatPump(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPump_Impl> impl);
 
@@ -202,10 +207,10 @@ namespace model {
   };
 
   /** \relates CoilWaterHeatingAirToWaterHeatPump*/
-  typedef boost::optional<CoilWaterHeatingAirToWaterHeatPump> OptionalCoilWaterHeatingAirToWaterHeatPump;
+  using OptionalCoilWaterHeatingAirToWaterHeatPump = boost::optional<CoilWaterHeatingAirToWaterHeatPump>;
 
   /** \relates CoilWaterHeatingAirToWaterHeatPump*/
-  typedef std::vector<CoilWaterHeatingAirToWaterHeatPump> CoilWaterHeatingAirToWaterHeatPumpVector;
+  using CoilWaterHeatingAirToWaterHeatPumpVector = std::vector<CoilWaterHeatingAirToWaterHeatPump>;
 
 }  // namespace model
 }  // namespace openstudio

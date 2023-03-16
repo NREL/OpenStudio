@@ -54,7 +54,7 @@ namespace model {
 
       ThermalStorageChilledWaterStratified_Impl(const ThermalStorageChilledWaterStratified_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ThermalStorageChilledWaterStratified_Impl() {}
+      virtual ~ThermalStorageChilledWaterStratified_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

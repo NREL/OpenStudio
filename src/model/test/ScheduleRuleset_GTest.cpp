@@ -76,17 +76,17 @@ TEST_F(ModelFixture, ScheduleRuleset) {
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
 
   // one default schedule created
-  EXPECT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   // test schedules for copying
   ScheduleDay originalSummerDesign(model);
   ScheduleDay originalWeekend(model);
-  EXPECT_EQ(3u, model.getModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   // setting summer design day makes a copy
   EXPECT_TRUE(schedule.setSummerDesignDaySchedule(originalSummerDesign));
   EXPECT_NE(originalSummerDesign.handle(), schedule.summerDesignDaySchedule().handle());
-  EXPECT_EQ(4u, model.getModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   // test dates
   openstudio::Date jan1 = yd.makeDate(openstudio::MonthOfYear::Jan, 1);
@@ -108,7 +108,7 @@ TEST_F(ModelFixture, ScheduleRuleset) {
   for (int i : activeRuleIndices) {
     EXPECT_EQ(-1, i);
   }
-  for (ScheduleDay daySchedule : daySchedules) {
+  for (const ScheduleDay& daySchedule : daySchedules) {
     EXPECT_EQ(schedule.defaultDaySchedule().handle(), daySchedule.handle());
   }
 
@@ -133,7 +133,7 @@ TEST_F(ModelFixture, ScheduleRuleset) {
   for (int i : activeRuleIndices) {
     EXPECT_EQ(0, i);
   }
-  for (ScheduleDay daySchedule : daySchedules) {
+  for (const ScheduleDay& daySchedule : daySchedules) {
     EXPECT_EQ(scheduleRules[0].daySchedule().handle(), daySchedule.handle());
   }
 
@@ -171,7 +171,7 @@ TEST_F(ModelFixture, ScheduleRuleset) {
     ++doy;
   }
   doy = 1;
-  for (ScheduleDay daySchedule : daySchedules) {
+  for (const ScheduleDay& daySchedule : daySchedules) {
     Date date = yd.makeDate(doy);
     if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday) {
       EXPECT_EQ(weekendRule.daySchedule().handle(), daySchedule.handle());  // weekend rule
@@ -613,7 +613,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone) {
   Model model2;
 
   ModelObject modelObject = schedule.clone(model2);
-  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+  auto schedule2 = modelObject.cast<ScheduleRuleset>();
   ASSERT_EQ(4u, schedule2.scheduleRules().size());
   ASSERT_NO_THROW(schedule2.scheduleRules()[0].daySchedule());
   ASSERT_NO_THROW(schedule2.scheduleRules()[1].daySchedule());
@@ -635,7 +635,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone2) {
   ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   ModelObject modelObject = schedule.clone(model);
-  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+  auto schedule2 = modelObject.cast<ScheduleRuleset>();
 
   ASSERT_EQ(4u, schedule2.scheduleRules().size());
 
@@ -669,7 +669,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone3) {
   ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   ModelObject modelObject = schedule.clone(model);
-  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+  auto schedule2 = modelObject.cast<ScheduleRuleset>();
 
   ASSERT_EQ(4u, schedule2.scheduleRules().size());
 
@@ -714,7 +714,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone4) {
   ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   ModelObject modelObject = schedule.clone(model);
-  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+  auto schedule2 = modelObject.cast<ScheduleRuleset>();
 
   ASSERT_EQ(4u, schedule2.scheduleRules().size());
 

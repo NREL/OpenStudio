@@ -62,7 +62,12 @@ namespace model {
     /** Create CoilCoolingDXMultiSpeedStageData with default curves **/
     explicit CoilCoolingDXMultiSpeedStageData(const Model& model);
 
-    virtual ~CoilCoolingDXMultiSpeedStageData() {}
+    virtual ~CoilCoolingDXMultiSpeedStageData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDXMultiSpeedStageData(const CoilCoolingDXMultiSpeedStageData& other) = default;
+    CoilCoolingDXMultiSpeedStageData(CoilCoolingDXMultiSpeedStageData&& other) = default;
+    CoilCoolingDXMultiSpeedStageData& operator=(const CoilCoolingDXMultiSpeedStageData&) = default;
+    CoilCoolingDXMultiSpeedStageData& operator=(CoilCoolingDXMultiSpeedStageData&&) = default;
 
     //@}
 
@@ -204,7 +209,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXMultiSpeedStageData_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXMultiSpeedStageData_Impl;
 
     explicit CoilCoolingDXMultiSpeedStageData(std::shared_ptr<detail::CoilCoolingDXMultiSpeedStageData_Impl> impl);
 
@@ -222,10 +227,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXMultiSpeedStageData*/
-  typedef boost::optional<CoilCoolingDXMultiSpeedStageData> OptionalCoilCoolingDXMultiSpeedStageData;
+  using OptionalCoilCoolingDXMultiSpeedStageData = boost::optional<CoilCoolingDXMultiSpeedStageData>;
 
   /** \relates CoilCoolingDXMultiSpeedStageData*/
-  typedef std::vector<CoilCoolingDXMultiSpeedStageData> CoilCoolingDXMultiSpeedStageDataVector;
+  using CoilCoolingDXMultiSpeedStageDataVector = std::vector<CoilCoolingDXMultiSpeedStageData>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -321,7 +321,7 @@ namespace model {
   }
 
   IddObjectType WaterHeaterSizing::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WaterHeater_Sizing);
+    return {IddObjectType::OS_WaterHeater_Sizing};
   }
 
   std::vector<std::string> WaterHeaterSizing::designModeValues() {

@@ -57,7 +57,12 @@ namespace model {
    public:
     explicit PortList(const HVACComponent& comp);
 
-    virtual ~PortList() {}
+    virtual ~PortList() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PortList(const PortList& other) = default;
+    PortList(PortList&& other) = default;
+    PortList& operator=(const PortList&) = default;
+    PortList& operator=(PortList&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -122,7 +127,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::PortList_Impl ImplType;
+    using ImplType = detail::PortList_Impl;
 
     explicit PortList(std::shared_ptr<detail::PortList_Impl> impl);
 
@@ -140,10 +145,10 @@ namespace model {
   };
 
   /** \relates PortList*/
-  typedef boost::optional<PortList> OptionalPortList;
+  using OptionalPortList = boost::optional<PortList>;
 
   /** \relates PortList*/
-  typedef std::vector<PortList> PortListVector;
+  using PortListVector = std::vector<PortList>;
 
 }  // namespace model
 }  // namespace openstudio

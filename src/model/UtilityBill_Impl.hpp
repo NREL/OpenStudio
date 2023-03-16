@@ -57,7 +57,7 @@ namespace model {
 
       UtilityBill_Impl(const UtilityBill_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~UtilityBill_Impl() {}
+      virtual ~UtilityBill_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

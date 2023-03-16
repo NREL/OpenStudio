@@ -60,7 +60,7 @@ namespace model {
 
       ElectricLoadCenterDistribution_Impl(const ElectricLoadCenterDistribution_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricLoadCenterDistribution_Impl() {}
+      virtual ~ElectricLoadCenterDistribution_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

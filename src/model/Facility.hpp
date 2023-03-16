@@ -69,7 +69,12 @@ namespace model {
   {
 
    public:
-    virtual ~Facility() {}
+    virtual ~Facility() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Facility(const Facility& other) = default;
+    Facility(Facility&& other) = default;
+    Facility& operator=(const Facility&) = default;
+    Facility& operator=(Facility&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -1007,7 +1012,7 @@ namespace model {
     //@}
 
     /// @cond
-    typedef detail::Facility_Impl ImplType;
+    using ImplType = detail::Facility_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -1020,7 +1025,7 @@ namespace model {
   };
 
   /** \relates Facility*/
-  typedef boost::optional<Facility> OptionalFacility;
+  using OptionalFacility = boost::optional<Facility>;
 
 }  // namespace model
 }  // namespace openstudio

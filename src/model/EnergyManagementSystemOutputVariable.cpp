@@ -427,7 +427,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemOutputVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_OutputVariable);
+    return {IddObjectType::OS_EnergyManagementSystem_OutputVariable};
   }
 
   std::vector<std::string> EnergyManagementSystemOutputVariable::typeOfDataInVariableValues() {

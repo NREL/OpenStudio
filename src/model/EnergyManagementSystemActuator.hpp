@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace energyplus {
@@ -57,21 +59,33 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
+    /** Constructor to use for any actuated component that is not a SpaceLoadInstance */
+    explicit EnergyManagementSystemActuator(const ModelObject& actuatedComponent, const std::string& actuatedComponentType,
                                             const std::string& actuatedComponentControlType);
     /**These constructors below are for SpaceloadInstances that are defined in SpaceTypes that are used in Spaces.
      * Upon translation, the SpaceLoadInstances use ZoneLists which are not avail in OS
      * The ZoneListName is the SpaceType name
      * The Zone's are the Space->ThermalZone names
-     * So to attach to a future zone, use the TZ or the Space that the SpaceLoadInstance will operate on
-  **/
-    explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
-                                            const std::string& actuatedComponentControlType, const ThermalZone& thermalZone);
+     * So to attach to a future zone, use the TZ or the Space that the SpaceLoadInstance will operate on **/
 
-    explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
+    // TODO: the first parameter should be a SpaceLoadInstance, not a ModelObject
+    /** Constructor that will only accept a SpaceLoadInstance as the actuated component. Use this version if do not plan on disabling the Space
+     * Translation in the Forward Translator */
+    explicit EnergyManagementSystemActuator(const ModelObject& actuatedComponent, const std::string& actuatedComponentType,
                                             const std::string& actuatedComponentControlType, const Space& space);
 
-    virtual ~EnergyManagementSystemActuator() {}
+    // TODO: the first parameter should be a SpaceLoadInstance, not a ModelObject
+    /** Constructor that will only accept a SpaceLoadInstance as the actuated component. Use this version if you plan on disabling the Space
+     * Translation in the Forward Translator */
+    explicit EnergyManagementSystemActuator(const ModelObject& actuatedComponent, const std::string& actuatedComponentType,
+                                            const std::string& actuatedComponentControlType, const ThermalZone& thermalZone);
+
+    virtual ~EnergyManagementSystemActuator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemActuator(const EnergyManagementSystemActuator& other) = default;
+    EnergyManagementSystemActuator(EnergyManagementSystemActuator&& other) = default;
+    EnergyManagementSystemActuator& operator=(const EnergyManagementSystemActuator&) = default;
+    EnergyManagementSystemActuator& operator=(EnergyManagementSystemActuator&&) = default;
 
     //@}
 
@@ -80,13 +94,17 @@ namespace model {
     /** @name Getters */
     //@{
 
-    boost::optional<ModelObject> actuatedComponent() const;
+    boost::optional<ModelObject> actuatedComponent() const;  // TODO: this should NOT be an optional
 
     std::string actuatedComponentControlType() const;
 
     std::string actuatedComponentType() const;
 
-    boost::optional<ModelObject> zoneName() const;
+    OS_DEPRECATED boost::optional<ModelObject> zoneName() const;
+
+    boost::optional<ModelObject> zoneOrSpace() const;
+    boost::optional<ThermalZone> thermalZone() const;
+    boost::optional<Space> space() const;
 
     //@}
     /** @name Setters */
@@ -102,7 +120,8 @@ namespace model {
     //set the ZoneName field to the Space's ThermalZone's name
     bool setSpace(const Space& space);
 
-    void resetZoneName();
+    OS_DEPRECATED void resetZoneName();
+    void resetZoneOrSpace();
 
     //@}
     /** @name Other */
@@ -111,7 +130,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemActuator_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemActuator_Impl;
 
     explicit EnergyManagementSystemActuator(std::shared_ptr<detail::EnergyManagementSystemActuator_Impl> impl);
 
@@ -119,21 +138,23 @@ namespace model {
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
+
+    // These are for the ReverseTranslator
+    explicit EnergyManagementSystemActuator(const ModelObject& actuatedComponent);
+
+    explicit EnergyManagementSystemActuator(const Model& model);
+
     friend class energyplus::ReverseTranslator;
     /// @endcond
    private:
     REGISTER_LOGGER("openstudio.model.EnergyManagementSystemActuator");
-    //These are for the ReveseTranslator
-    explicit EnergyManagementSystemActuator(const ModelObject& modelObject);
-
-    explicit EnergyManagementSystemActuator(const Model& model);
   };
 
   /** \relates EnergyManagementSystemActuator*/
-  typedef boost::optional<EnergyManagementSystemActuator> OptionalEnergyManagementSystemActuator;
+  using OptionalEnergyManagementSystemActuator = boost::optional<EnergyManagementSystemActuator>;
 
   /** \relates EnergyManagementSystemActuator*/
-  typedef std::vector<EnergyManagementSystemActuator> EnergyManagementSystemActuatorVector;
+  using EnergyManagementSystemActuatorVector = std::vector<EnergyManagementSystemActuator>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -55,7 +55,7 @@ namespace model {
     std::vector<openstudio::IdfObject> ExteriorLoadDefinition_Impl::remove() {
       std::vector<openstudio::IdfObject> temp1;
       std::vector<ExteriorLoadInstance> instances = this->instances();
-      for (ExteriorLoadInstance instance : instances) {
+      for (ExteriorLoadInstance& instance : instances) {
         std::vector<openstudio::IdfObject> temp2 = instance.remove();
         temp1.insert(temp1.end(), temp2.begin(), temp2.end());
       }

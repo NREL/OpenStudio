@@ -56,7 +56,7 @@
 namespace openstudio {
 namespace model {
 
-  AirSupplyConstituent::AirSupplyConstituent(std::string constituentName, double molarFraction)
+  AirSupplyConstituent::AirSupplyConstituent(const std::string& constituentName, double molarFraction)
     : m_name(constituentName), m_molarFraction(molarFraction) {
 
     if ((m_molarFraction < 0) || (m_molarFraction > 1)) {
@@ -75,9 +75,10 @@ namespace model {
     return m_molarFraction;
   }
 
-  bool AirSupplyConstituent::isValid(std::string constituentName) {
+  bool AirSupplyConstituent::isValid(const std::string& constituentName) {
     std::vector<std::string> validConstituentNames = constituentNameValues();
-    return std::find_if(validConstituentNames.begin(), validConstituentNames.end(), std::bind(istringEqual, constituentName, std::placeholders::_1))
+    return std::find_if(validConstituentNames.begin(), validConstituentNames.end(),
+                        [&constituentName](const auto& s) { return istringEqual(s, constituentName); })
            != validConstituentNames.end();
   }
 
@@ -154,7 +155,7 @@ namespace model {
       // We use getModelObjectSources to check if more than one
       std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
 
-      if (fcs.size() > 0u) {
+      if (!fcs.empty()) {
         if (fcs.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
         }
@@ -344,7 +345,7 @@ namespace model {
         result = false;
       } else {
         // Push an extensible group
-        WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+        auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
         bool temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, constituent.constituentName());
         bool ok = eg.setDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, constituent.molarFraction());
         if (temp && ok) {
@@ -360,7 +361,7 @@ namespace model {
       return result;
     }
 
-    bool GeneratorFuelCellAirSupply_Impl::addConstituent(std::string name, double molarFraction) {
+    bool GeneratorFuelCellAirSupply_Impl::addConstituent(const std::string& name, double molarFraction) {
       // Make a constituent (which will check for validity), and then call the above function
       AirSupplyConstituent constituent(name, molarFraction);
       return addConstituent(constituent);
@@ -565,7 +566,7 @@ namespace model {
   }
 
   IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_FuelCell_AirSupply);
+    return {IddObjectType::OS_Generator_FuelCell_AirSupply};
   }
 
   double GeneratorFuelCellAirSupply::sumofConstituentsMolarFractions() const {
@@ -576,7 +577,7 @@ namespace model {
     return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->addConstituent(constituent);
   }
 
-  bool GeneratorFuelCellAirSupply::addConstituent(std::string name, double molarFraction) {
+  bool GeneratorFuelCellAirSupply::addConstituent(const std::string& name, double molarFraction) {
     return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->addConstituent(name, molarFraction);
   }
 

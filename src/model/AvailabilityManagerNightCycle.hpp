@@ -53,7 +53,12 @@ namespace model {
    public:
     explicit AvailabilityManagerNightCycle(const Model& model);
 
-    virtual ~AvailabilityManagerNightCycle() {}
+    virtual ~AvailabilityManagerNightCycle() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerNightCycle(const AvailabilityManagerNightCycle& other) = default;
+    AvailabilityManagerNightCycle(AvailabilityManagerNightCycle&& other) = default;
+    AvailabilityManagerNightCycle& operator=(const AvailabilityManagerNightCycle&) = default;
+    AvailabilityManagerNightCycle& operator=(AvailabilityManagerNightCycle&&) = default;
 
     static IddObjectType iddObjectType();
 

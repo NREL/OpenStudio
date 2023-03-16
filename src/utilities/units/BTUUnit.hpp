@@ -103,12 +103,12 @@ class UTILITIES_API BTUUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   BTUUnit(const std::string& scaleAbbreviation, const BTUExpnt& exponents = BTUExpnt(), const std::string& prettyString = "");
 
-  virtual ~BTUUnit() {}
+  virtual ~BTUUnit() = default;
 
   //@}
  protected:
   /// @cond
-  typedef detail::BTUUnit_Impl ImplType;
+  using ImplType = detail::BTUUnit_Impl;
 
   explicit BTUUnit(std::shared_ptr<detail::BTUUnit_Impl> impl);
 
@@ -121,10 +121,10 @@ class UTILITIES_API BTUUnit : public Unit
 };
 
 /** \relates BTUUnit*/
-typedef boost::optional<BTUUnit> OptionalBTUUnit;
+using OptionalBTUUnit = boost::optional<BTUUnit>;
 
 /** \relates BTUUnit*/
-typedef std::vector<BTUUnit> BTUUnitVector;
+using BTUUnitVector = std::vector<BTUUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

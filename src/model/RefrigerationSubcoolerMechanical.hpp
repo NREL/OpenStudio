@@ -54,7 +54,12 @@ namespace model {
 
     explicit RefrigerationSubcoolerMechanical(const Model& model);
 
-    virtual ~RefrigerationSubcoolerMechanical() {}
+    virtual ~RefrigerationSubcoolerMechanical() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationSubcoolerMechanical(const RefrigerationSubcoolerMechanical& other) = default;
+    RefrigerationSubcoolerMechanical(RefrigerationSubcoolerMechanical&& other) = default;
+    RefrigerationSubcoolerMechanical& operator=(const RefrigerationSubcoolerMechanical&) = default;
+    RefrigerationSubcoolerMechanical& operator=(RefrigerationSubcoolerMechanical&&) = default;
 
     //@}
 
@@ -91,7 +96,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationSubcoolerMechanical_Impl ImplType;
+    using ImplType = detail::RefrigerationSubcoolerMechanical_Impl;
 
     explicit RefrigerationSubcoolerMechanical(std::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl);
 
@@ -105,10 +110,10 @@ namespace model {
   };
 
   /** \relates RefrigerationSubcoolerMechanical*/
-  typedef boost::optional<RefrigerationSubcoolerMechanical> OptionalRefrigerationSubcoolerMechanical;
+  using OptionalRefrigerationSubcoolerMechanical = boost::optional<RefrigerationSubcoolerMechanical>;
 
   /** \relates RefrigerationSubcoolerMechanical*/
-  typedef std::vector<RefrigerationSubcoolerMechanical> RefrigerationSubcoolerMechanicalVector;
+  using RefrigerationSubcoolerMechanicalVector = std::vector<RefrigerationSubcoolerMechanical>;
 
 }  // namespace model
 }  // namespace openstudio

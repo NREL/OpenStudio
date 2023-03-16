@@ -62,7 +62,12 @@ namespace model {
     // Ctor with hydronicTubingLength autosized
     ZoneHVACLowTempRadiantConstFlow(const Model& model, Schedule& availabilitySchedule, HVACComponent& heatingCoil, HVACComponent& coolingCoil);
 
-    virtual ~ZoneHVACLowTempRadiantConstFlow() {}
+    virtual ~ZoneHVACLowTempRadiantConstFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACLowTempRadiantConstFlow(const ZoneHVACLowTempRadiantConstFlow& other) = default;
+    ZoneHVACLowTempRadiantConstFlow(ZoneHVACLowTempRadiantConstFlow&& other) = default;
+    ZoneHVACLowTempRadiantConstFlow& operator=(const ZoneHVACLowTempRadiantConstFlow&) = default;
+    ZoneHVACLowTempRadiantConstFlow& operator=(ZoneHVACLowTempRadiantConstFlow&&) = default;
 
     //@}
 
@@ -236,7 +241,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACLowTempRadiantConstFlow_Impl ImplType;
+    using ImplType = detail::ZoneHVACLowTempRadiantConstFlow_Impl;
 
     explicit ZoneHVACLowTempRadiantConstFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl);
 
@@ -250,10 +255,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACLowTempRadiantConstFlow*/
-  typedef boost::optional<ZoneHVACLowTempRadiantConstFlow> OptionalZoneHVACLowTempRadiantConstFlow;
+  using OptionalZoneHVACLowTempRadiantConstFlow = boost::optional<ZoneHVACLowTempRadiantConstFlow>;
 
   /** \relates ZoneHVACLowTempRadiantConstFlow*/
-  typedef std::vector<ZoneHVACLowTempRadiantConstFlow> ZoneHVACLowTempRadiantConstFlowVector;
+  using ZoneHVACLowTempRadiantConstFlowVector = std::vector<ZoneHVACLowTempRadiantConstFlow>;
 
 }  // namespace model
 }  // namespace openstudio

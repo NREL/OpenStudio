@@ -136,7 +136,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType SizingParameters::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Sizing_Parameters);
+    return {IddObjectType::OS_Sizing_Parameters};
   }
 
   double SizingParameters::heatingSizingFactor() const {

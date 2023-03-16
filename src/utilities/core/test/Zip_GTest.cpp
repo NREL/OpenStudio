@@ -104,7 +104,7 @@ TEST_F(CoreFixture, Unzip_ExtractAllFilesTest) {
 
   ASSERT_EQ(4u, createdFiles.size());
 
-  for (std::vector<openstudio::path>::const_iterator itr = createdFiles.begin(); itr != createdFiles.end(); ++itr) {
+  for (auto itr = createdFiles.begin(); itr != createdFiles.end(); ++itr) {
     EXPECT_TRUE(openstudio::filesystem::exists(*itr));
   }
 }

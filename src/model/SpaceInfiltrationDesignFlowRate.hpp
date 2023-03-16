@@ -54,7 +54,12 @@ namespace model {
 
     explicit SpaceInfiltrationDesignFlowRate(const Model& model);
 
-    virtual ~SpaceInfiltrationDesignFlowRate() {}
+    virtual ~SpaceInfiltrationDesignFlowRate() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceInfiltrationDesignFlowRate(const SpaceInfiltrationDesignFlowRate& other) = default;
+    SpaceInfiltrationDesignFlowRate(SpaceInfiltrationDesignFlowRate&& other) = default;
+    SpaceInfiltrationDesignFlowRate& operator=(const SpaceInfiltrationDesignFlowRate&) = default;
+    SpaceInfiltrationDesignFlowRate& operator=(SpaceInfiltrationDesignFlowRate&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -172,7 +177,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SpaceInfiltrationDesignFlowRate_Impl ImplType;
+    using ImplType = detail::SpaceInfiltrationDesignFlowRate_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -185,10 +190,10 @@ namespace model {
   };
 
   /** \relates SpaceInfiltrationDesignFlowRate*/
-  typedef boost::optional<SpaceInfiltrationDesignFlowRate> OptionalSpaceInfiltrationDesignFlowRate;
+  using OptionalSpaceInfiltrationDesignFlowRate = boost::optional<SpaceInfiltrationDesignFlowRate>;
 
   /** \relates SpaceInfiltrationDesignFlowRate*/
-  typedef std::vector<SpaceInfiltrationDesignFlowRate> SpaceInfiltrationDesignFlowRateVector;
+  using SpaceInfiltrationDesignFlowRateVector = std::vector<SpaceInfiltrationDesignFlowRate>;
 
 }  // namespace model
 }  // namespace openstudio

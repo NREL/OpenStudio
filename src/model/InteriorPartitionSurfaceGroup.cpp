@@ -126,7 +126,7 @@ namespace model {
 
       Transformation childTransformation = transformation.inverse() * oldTransformation;
 
-      for (InteriorPartitionSurface interiorPartitionSurface : this->interiorPartitionSurfaces()) {
+      for (auto& interiorPartitionSurface : this->interiorPartitionSurfaces()) {
         bool test = interiorPartitionSurface.setVertices(childTransformation * interiorPartitionSurface.vertices());
         if (!test) {
           LOG(Error, "Could not transform vertices for InteriorPartitionSurface '" << interiorPartitionSurface.name().get() << "'.");
@@ -138,7 +138,7 @@ namespace model {
 
     BoundingBox InteriorPartitionSurfaceGroup_Impl::boundingBox() const {
       BoundingBox result;
-      for (InteriorPartitionSurface interiorPartitionSurface : this->interiorPartitionSurfaces()) {
+      for (const auto& interiorPartitionSurface : this->interiorPartitionSurfaces()) {
         result.addPoints(interiorPartitionSurface.vertices());
       }
       return result;

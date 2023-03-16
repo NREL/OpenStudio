@@ -148,7 +148,7 @@ namespace model {
       this->makeUnique();
 
       PeopleDefinition peopleDefinition = this->peopleDefinition();
-      for (LifeCycleCost cost : peopleDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : peopleDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 

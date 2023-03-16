@@ -46,7 +46,7 @@ namespace {
 class Hello
 {
  public:
-  Hello() {}
+  Hello() = default;
   void logDebug() {
     LOG(Debug, "Hello Debug");
   }
@@ -59,7 +59,7 @@ class Hello
 class Goodbye
 {
  public:
-  Goodbye() {}
+  Goodbye() = default;
   void logDebug() {
     LOG(Debug, "Goodbye Debug");
   }

@@ -58,7 +58,7 @@ namespace model {
 
       EnergyManagementSystemSensor_Impl(const EnergyManagementSystemSensor_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnergyManagementSystemSensor_Impl() {}
+      virtual ~EnergyManagementSystemSensor_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

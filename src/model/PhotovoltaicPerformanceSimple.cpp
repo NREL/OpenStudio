@@ -78,7 +78,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_PhotovoltaicPerformance_SimpleFields::EfficiencyScheduleName) != e) {
         result.push_back(ScheduleTypeKey("PhotovoltaicPerformanceSimple", "Efficiency"));
       }
@@ -170,7 +171,7 @@ namespace model {
   }
 
   IddObjectType PhotovoltaicPerformanceSimple::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+    return {IddObjectType::OS_PhotovoltaicPerformance_Simple};
   }
 
   double PhotovoltaicPerformanceSimple::fractionOfSurfaceAreaWithActiveSolarCells() const {

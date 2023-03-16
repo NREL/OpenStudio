@@ -56,7 +56,12 @@ namespace model {
                                        Schedule& coolingLowWaterTemperatureSchedule, Schedule& coolingHighControlTemperatureSchedule,
                                        Schedule& coolingLowControlTemperatureSchedule);
 
-    virtual ~CoilCoolingLowTempRadiantConstFlow() {}
+    virtual ~CoilCoolingLowTempRadiantConstFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingLowTempRadiantConstFlow(const CoilCoolingLowTempRadiantConstFlow& other) = default;
+    CoilCoolingLowTempRadiantConstFlow(CoilCoolingLowTempRadiantConstFlow&& other) = default;
+    CoilCoolingLowTempRadiantConstFlow& operator=(const CoilCoolingLowTempRadiantConstFlow&) = default;
+    CoilCoolingLowTempRadiantConstFlow& operator=(CoilCoolingLowTempRadiantConstFlow&&) = default;
 
     //virtual unsigned inletPort() const;
 
@@ -114,7 +119,7 @@ namespace model {
 
     void resetCoolingLowControlTemperatureSchedule();
 
-    bool setCondensationControlType(std::string condensationControlType);
+    bool setCondensationControlType(const std::string& condensationControlType);
 
     void resetCondensationControlType();
 
@@ -129,7 +134,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingLowTempRadiantConstFlow_Impl ImplType;
+    using ImplType = detail::CoilCoolingLowTempRadiantConstFlow_Impl;
 
     explicit CoilCoolingLowTempRadiantConstFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantConstFlow_Impl> impl);
 
@@ -143,10 +148,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingLowTempRadiantConstFlow*/
-  typedef boost::optional<CoilCoolingLowTempRadiantConstFlow> OptionalCoilCoolingLowTempRadiantConstFlow;
+  using OptionalCoilCoolingLowTempRadiantConstFlow = boost::optional<CoilCoolingLowTempRadiantConstFlow>;
 
   /** \relates CoilCoolingLowTempRadiantConstFlow*/
-  typedef std::vector<CoilCoolingLowTempRadiantConstFlow> CoilCoolingLowTempRadiantConstFlowVector;
+  using CoilCoolingLowTempRadiantConstFlowVector = std::vector<CoilCoolingLowTempRadiantConstFlow>;
 
 }  // namespace model
 }  // namespace openstudio

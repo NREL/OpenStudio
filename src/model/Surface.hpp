@@ -77,7 +77,12 @@ namespace model {
 
     explicit Surface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~Surface() {}
+    virtual ~Surface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Surface(const Surface& other) = default;
+    Surface(Surface&& other) = default;
+    Surface& operator=(const Surface&) = default;
+    Surface& operator=(Surface&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -132,15 +137,15 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setSurfaceType(std::string surfaceType);
+    bool setSurfaceType(const std::string& surfaceType);
 
-    bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition);
+    bool setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition);
 
-    bool setSunExposure(std::string sunExposure);
+    bool setSunExposure(const std::string& sunExposure);
 
     void resetSunExposure();
 
-    bool setWindExposure(std::string windExposure);
+    bool setWindExposure(const std::string& windExposure);
 
     void resetWindExposure();
 
@@ -190,7 +195,7 @@ namespace model {
     boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
 
     /** Sets the SurfacePropertyOtherSideCoefficients. */
-    bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+    bool setSurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
 
     /** Resets the SurfacePropertyOtherSideCoefficients. */
     void resetSurfacePropertyOtherSideCoefficients();
@@ -199,7 +204,7 @@ namespace model {
     boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
 
     /** Sets the SurfacePropertyOtherSideConditionsModel. */
-    bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+    bool setSurfacePropertyOtherSideConditionsModel(const SurfacePropertyOtherSideConditionsModel& otherSideModel);
 
     /** Resets the SurfacePropertyOtherSideConditionsModel. */
     void resetSurfacePropertyOtherSideConditionsModel();
@@ -320,7 +325,7 @@ namespace model {
 
     // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
     boost::optional<SurfacePropertyExposedFoundationPerimeter>
-      createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
+      createSurfacePropertyExposedFoundationPerimeter(const std::string& exposedPerimeterCalculationMethod, double exposedPerimeter);
 
     // returns the surface property exposed foundation perimeter if set
     boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;
@@ -333,7 +338,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::Surface_Impl ImplType;
+    using ImplType = detail::Surface_Impl;
 
     friend class Model;
     friend class openstudio::detail::IdfObject_Impl;
@@ -348,10 +353,10 @@ namespace model {
   };
 
   /** \relates Surface*/
-  typedef boost::optional<Surface> OptionalSurface;
+  using OptionalSurface = boost::optional<Surface>;
 
   /** \relates Surface*/
-  typedef std::vector<Surface> SurfaceVector;
+  using SurfaceVector = std::vector<Surface>;
 
   /** SurfaceIntersection contains detailed information about a surface intersection. */
   class MODEL_API SurfaceIntersection

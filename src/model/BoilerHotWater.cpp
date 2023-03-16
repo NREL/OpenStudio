@@ -227,7 +227,7 @@ namespace model {
       return isEmpty(OS_Boiler_HotWaterFields::SizingFactor);
     }
 
-    bool BoilerHotWater_Impl::setFuelType(std::string fuelType) {
+    bool BoilerHotWater_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_Boiler_HotWaterFields::FuelType, fuelType);
       return result;
     }
@@ -349,7 +349,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool BoilerHotWater_Impl::setBoilerFlowMode(std::string boilerFlowMode) {
+    bool BoilerHotWater_Impl::setBoilerFlowMode(const std::string& boilerFlowMode) {
       bool result = false;
       if (istringEqual(boilerFlowMode, "VariableFlow")) {
         // Support legacy key
@@ -427,9 +427,7 @@ namespace model {
     }
 
     ModelObject BoilerHotWater_Impl::clone(Model model) const {
-      BoilerHotWater newBoiler = StraightComponent_Impl::clone(model).cast<BoilerHotWater>();
-
-      return newBoiler;
+      return StraightComponent_Impl::clone(model);
     }
 
     boost::optional<double> BoilerHotWater_Impl::autosizedNominalCapacity() const {
@@ -586,7 +584,7 @@ namespace model {
     return getImpl<detail::BoilerHotWater_Impl>()->isSizingFactorDefaulted();
   }
 
-  bool BoilerHotWater::setFuelType(std::string fuelType) {
+  bool BoilerHotWater::setFuelType(const std::string& fuelType) {
     return getImpl<detail::BoilerHotWater_Impl>()->setFuelType(fuelType);
   }
 
@@ -606,7 +604,7 @@ namespace model {
     return getImpl<detail::BoilerHotWater_Impl>()->setNominalThermalEfficiency(nominalThermalEfficiency);
   }
 
-  bool BoilerHotWater::setEfficiencyCurveTemperatureEvaluationVariable(std::string efficiencyCurveTemperatureEvaluationVariable) {
+  bool BoilerHotWater::setEfficiencyCurveTemperatureEvaluationVariable(const std::string& efficiencyCurveTemperatureEvaluationVariable) {
     return getImpl<detail::BoilerHotWater_Impl>()->setEfficiencyCurveTemperatureEvaluationVariable(efficiencyCurveTemperatureEvaluationVariable);
   }
 
@@ -666,7 +664,7 @@ namespace model {
     getImpl<detail::BoilerHotWater_Impl>()->resetWaterOutletUpperTemperatureLimit();
   }
 
-  bool BoilerHotWater::setBoilerFlowMode(std::string boilerFlowMode) {
+  bool BoilerHotWater::setBoilerFlowMode(const std::string& boilerFlowMode) {
     return getImpl<detail::BoilerHotWater_Impl>()->setBoilerFlowMode(boilerFlowMode);
   }
 

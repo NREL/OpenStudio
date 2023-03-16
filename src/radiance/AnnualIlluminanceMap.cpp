@@ -48,7 +48,7 @@ namespace openstudio {
 namespace radiance {
 
   /// default constructor
-  AnnualIlluminanceMap::AnnualIlluminanceMap() {}
+  AnnualIlluminanceMap::AnnualIlluminanceMap() = default;
 
   /// constructor with path
   AnnualIlluminanceMap::AnnualIlluminanceMap(const openstudio::path& path) {
@@ -76,7 +76,8 @@ namespace radiance {
     string line;
 
     // lines 1 and 2 are the header lines
-    string line1, line2;
+    string line1;
+    string line2;
 
     // this will contain matches to regular expressions
     smatch matches;
@@ -133,7 +134,7 @@ namespace radiance {
         } else {
 
           MonthOfYear thisMonth = monthOfYear(lexical_cast<unsigned>(lineVector[0]));
-          unsigned day = lexical_cast<unsigned>(lineVector[1]);
+          auto day = lexical_cast<unsigned>(lineVector[1]);
           double fracDays = lexical_cast<double>(lineVector[2]) / 24.0;
 
           // ignore solar angles and global horizontal for now

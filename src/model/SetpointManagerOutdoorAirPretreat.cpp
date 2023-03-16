@@ -243,7 +243,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerOutdoorAirPretreat::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_OutdoorAirPretreat);
+    return {IddObjectType::OS_SetpointManager_OutdoorAirPretreat};
   }
 
   std::vector<std::string> SetpointManagerOutdoorAirPretreat::controlVariableValues() {

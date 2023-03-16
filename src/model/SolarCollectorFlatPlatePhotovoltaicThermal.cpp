@@ -36,6 +36,8 @@
 #include "Surface_Impl.hpp"
 #include "ShadingSurface.hpp"
 #include "ShadingSurface_Impl.hpp"
+#include "SolarCollectorPerformancePhotovoltaicThermalBIPVT.hpp"
+#include "SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl.hpp"
 #include "SolarCollectorPerformancePhotovoltaicThermalSimple.hpp"
 #include "SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp"
 #include "Node.hpp"
@@ -75,21 +77,20 @@ namespace model {
 
     ModelObject SolarCollectorFlatPlatePhotovoltaicThermal_Impl::clone(Model model) const {
 
-      SolarCollectorFlatPlatePhotovoltaicThermal result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
-      SolarCollectorPerformancePhotovoltaicThermalSimple newPerformance =
-        this->solarCollectorPerformance().clone(model).cast<SolarCollectorPerformancePhotovoltaicThermalSimple>();
+      auto result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
+      auto newPerformance = this->solarCollectorPerformance().clone(model).cast<SolarCollectorPerformancePhotovoltaicThermalSimple>();
       result.setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, newPerformance.handle());
 
       boost::optional<GeneratorPhotovoltaic> pv = this->generatorPhotovoltaic();
       if (pv) {
-        GeneratorPhotovoltaic newPV = pv->clone(model).cast<GeneratorPhotovoltaic>();
+        auto newPV = pv->clone(model).cast<GeneratorPhotovoltaic>();
         result.setGeneratorPhotovoltaic(newPV);
       }
 
       // do not want to point to any surface after cloning
       result.resetSurface();
 
-      return result;
+      return std::move(result);
     }
 
     std::vector<IdfObject> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::remove() {
@@ -111,8 +112,7 @@ namespace model {
     std::vector<ModelObject> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::children() const {
       std::vector<ModelObject> result;
 
-      SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance = this->solarCollectorPerformance();
-      result.push_back(solarCollectorPerformance);
+      result.push_back(this->solarCollectorPerformance());
 
       return result;
     }
@@ -146,10 +146,9 @@ namespace model {
       return false;
     }
 
-    SolarCollectorPerformancePhotovoltaicThermalSimple SolarCollectorFlatPlatePhotovoltaicThermal_Impl::solarCollectorPerformance() const {
-      boost::optional<SolarCollectorPerformancePhotovoltaicThermalSimple> value =
-        getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformancePhotovoltaicThermalSimple>(
-          OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName);
+    ModelObject SolarCollectorFlatPlatePhotovoltaicThermal_Impl::solarCollectorPerformance() const {
+      boost::optional<ModelObject> value = getObject<ModelObject>().getModelObjectTarget<ModelObject>(
+        OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName);
       if (!value) {
         // DLM: could default construct one here?
         LOG_AND_THROW(briefDescription() << " does not have an Solar Collector Performance attached.");
@@ -180,14 +179,33 @@ namespace model {
     }
 
     bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSolarCollectorPerformance(
-      const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {
+      const SolarCollectorPerformancePhotovoltaicThermalBIPVT& performance) {
       bool result(false);
-      SolarCollectorPerformancePhotovoltaicThermalSimple current = this->solarCollectorPerformance();
+      auto current = this->solarCollectorPerformance();
       if (current.handle() == performance.handle()) {
         return true;  // no-op
       }
       ModelObject clone = performance.clone(this->model());
-      result = setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformancePhotovoltaicThermalSimple>());
+      result = setSolarCollectorPerformanceNoClone(clone);
+      if (result) {
+        current.remove();
+      } else {
+        result = setSolarCollectorPerformanceNoClone(current);
+        OS_ASSERT(result);
+        return false;
+      }
+      return result;
+    }
+
+    bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSolarCollectorPerformance(
+      const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {
+      bool result(false);
+      auto current = this->solarCollectorPerformance();
+      if (current.handle() == performance.handle()) {
+        return true;  // no-op
+      }
+      ModelObject clone = performance.clone(this->model());
+      result = setSolarCollectorPerformanceNoClone(clone);
       if (result) {
         current.remove();
       } else {
@@ -254,8 +272,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSolarCollectorPerformanceNoClone(
-      const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {
+    bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSolarCollectorPerformanceNoClone(const ModelObject& performance) {
       return setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, performance.handle());
     }
 
@@ -283,16 +300,33 @@ namespace model {
 
     SolarCollectorPerformancePhotovoltaicThermalSimple performance(model);
 
-    bool ok = true;
-    ok = getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSolarCollectorPerformanceNoClone(performance);
+    const bool ok = getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSolarCollectorPerformanceNoClone(performance);
+    OS_ASSERT(ok);
+  }
+
+  SolarCollectorFlatPlatePhotovoltaicThermal::SolarCollectorFlatPlatePhotovoltaicThermal(
+    const SolarCollectorPerformancePhotovoltaicThermalBIPVT& performance)
+    : StraightComponent(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType(), performance.model()) {
+    OS_ASSERT(getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>());
+
+    const bool ok = getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSolarCollectorPerformanceNoClone(performance);
+    OS_ASSERT(ok);
+  }
+
+  SolarCollectorFlatPlatePhotovoltaicThermal::SolarCollectorFlatPlatePhotovoltaicThermal(
+    const SolarCollectorPerformancePhotovoltaicThermalSimple& performance)
+    : StraightComponent(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType(), performance.model()) {
+    OS_ASSERT(getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>());
+
+    const bool ok = getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSolarCollectorPerformanceNoClone(performance);
     OS_ASSERT(ok);
   }
 
   IddObjectType SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal);
+    return {IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal};
   }
 
-  SolarCollectorPerformancePhotovoltaicThermalSimple SolarCollectorFlatPlatePhotovoltaicThermal::solarCollectorPerformance() const {
+  ModelObject SolarCollectorFlatPlatePhotovoltaicThermal::solarCollectorPerformance() const {
     return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->solarCollectorPerformance();
   }
 
@@ -326,6 +360,11 @@ namespace model {
 
   void SolarCollectorFlatPlatePhotovoltaicThermal::resetGeneratorPhotovoltaic() {
     getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->resetGeneratorPhotovoltaic();
+  }
+
+  bool
+    SolarCollectorFlatPlatePhotovoltaicThermal::setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalBIPVT& performance) {
+    return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSolarCollectorPerformance(performance);
   }
 
   bool

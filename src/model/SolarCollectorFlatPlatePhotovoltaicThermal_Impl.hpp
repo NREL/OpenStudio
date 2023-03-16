@@ -36,7 +36,9 @@
 namespace openstudio {
 namespace model {
 
+  class GeneratorPhotovoltaic;
   class PlanarSurface;
+  class SolarCollectorPerformancePhotovoltaicThermalBIPVT;
   class SolarCollectorPerformancePhotovoltaicThermalSimple;
 
   namespace detail {
@@ -56,7 +58,7 @@ namespace model {
       SolarCollectorFlatPlatePhotovoltaicThermal_Impl(const SolarCollectorFlatPlatePhotovoltaicThermal_Impl& other, Model_Impl* model,
                                                       bool keepHandle);
 
-      virtual ~SolarCollectorFlatPlatePhotovoltaicThermal_Impl() {}
+      virtual ~SolarCollectorFlatPlatePhotovoltaicThermal_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -86,7 +88,7 @@ namespace model {
 
       boost::optional<GeneratorPhotovoltaic> generatorPhotovoltaic() const;
 
-      SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance() const;
+      ModelObject solarCollectorPerformance() const;
 
       boost::optional<double> designFlowRate() const;
 
@@ -102,7 +104,8 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
+      bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalBIPVT& performance);
+      bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance);
 
       void resetSolarCollectorPerformance();
 
@@ -129,7 +132,7 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlatePhotovoltaicThermal");
 
-      bool setSolarCollectorPerformanceNoClone(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
+      bool setSolarCollectorPerformanceNoClone(const ModelObject& performance);
 
       friend class openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal;
     };

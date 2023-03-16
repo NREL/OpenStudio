@@ -60,7 +60,12 @@ namespace model {
 
     explicit WaterHeaterMixed(const Model& model);
 
-    virtual ~WaterHeaterMixed() {}
+    virtual ~WaterHeaterMixed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterHeaterMixed(const WaterHeaterMixed& other) = default;
+    WaterHeaterMixed(WaterHeaterMixed&& other) = default;
+    WaterHeaterMixed& operator=(const WaterHeaterMixed&) = default;
+    WaterHeaterMixed& operator=(WaterHeaterMixed&&) = default;
 
     //@}
 
@@ -217,7 +222,7 @@ namespace model {
 
     void resetMaximumTemperatureLimit();
 
-    bool setHeaterControlType(std::string heaterControlType);
+    bool setHeaterControlType(const std::string& heaterControlType);
 
     void resetHeaterControlType();
 
@@ -239,7 +244,7 @@ namespace model {
 
     void resetHeaterIgnitionDelay();
 
-    bool setHeaterFuelType(std::string heaterFuelType);
+    bool setHeaterFuelType(const std::string& heaterFuelType);
 
     bool setHeaterThermalEfficiency(double heaterThermalEfficiency);
 
@@ -253,7 +258,7 @@ namespace model {
 
     void resetOffCycleParasiticFuelConsumptionRate();
 
-    bool setOffCycleParasiticFuelType(std::string offCycleParasiticFuelType);
+    bool setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType);
 
     void resetOffCycleParasiticFuelType();
 
@@ -265,7 +270,7 @@ namespace model {
 
     void resetOnCycleParasiticFuelConsumptionRate();
 
-    bool setOnCycleParasiticFuelType(std::string onCycleParasiticFuelType);
+    bool setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType);
 
     void resetOnCycleParasiticFuelType();
 
@@ -273,7 +278,7 @@ namespace model {
 
     void resetOnCycleParasiticHeatFractiontoTank();
 
-    bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
+    bool setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator);
 
     bool setAmbientTemperatureSchedule(Schedule& ambientTemperatureSchedule);
 
@@ -283,7 +288,7 @@ namespace model {
 
     void resetAmbientTemperatureThermalZone();
 
-    bool setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
+    bool setAmbientTemperatureOutdoorAirNodeName(const std::string& ambientTemperatureOutdoorAirNodeName);
 
     void resetAmbientTemperatureOutdoorAirNodeName();
 
@@ -392,7 +397,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::WaterHeaterMixed_Impl ImplType;
+    using ImplType = detail::WaterHeaterMixed_Impl;
 
     explicit WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl> impl);
 
@@ -408,10 +413,10 @@ namespace model {
   };
 
   /** \relates WaterHeaterMixed*/
-  typedef boost::optional<WaterHeaterMixed> OptionalWaterHeaterMixed;
+  using OptionalWaterHeaterMixed = boost::optional<WaterHeaterMixed>;
 
   /** \relates WaterHeaterMixed*/
-  typedef std::vector<WaterHeaterMixed> WaterHeaterMixedVector;
+  using WaterHeaterMixedVector = std::vector<WaterHeaterMixed>;
 
 }  // namespace model
 }  // namespace openstudio

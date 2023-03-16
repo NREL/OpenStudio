@@ -179,20 +179,31 @@ void* PythonEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
 
   auto val = std::any_cast<PythonObject>(obj.object);
 
-  const auto& type_name = getRegisteredTypeName(ti);
-
   void* return_value = nullptr;
 
-  auto* type = SWIG_Python_TypeQuery(type_name.c_str());
+  if (ti == typeid(std::string*)) {
+    // TODO: this sucks, and probably needs a PyDecref or two
+    Py_ssize_t size = 0;
+    char const* pc = PyUnicode_AsUTF8AndSize(val.obj_, &size);
+    if (pc) {
+      return_value = new std::string(pc, size);
+    } else {
+      throw std::runtime_error("Unable to convert to std::string in SWIG Python");
+    }
+  } else {
+    const auto& type_name = getRegisteredTypeName(ti);
 
-  if (!type) {
-    throw std::runtime_error("Unable to find type in SWIG");
-  }
+    auto* type = SWIG_Python_TypeQuery(type_name.c_str());
 
-  const auto result = SWIG_Python_ConvertPtr(val.obj_, &return_value, type, 0);
+    if (!type) {
+      throw std::runtime_error("Unable to find type in SWIG");
+    }
 
-  if (!SWIG_IsOK(result)) {
-    throw std::runtime_error("Error getting object from SWIG/Python");
+    const auto result = SWIG_Python_ConvertPtr(val.obj_, &return_value, type, 0);
+
+    if (!SWIG_IsOK(result)) {
+      throw std::runtime_error(fmt::format("Error getting object from SWIG/Python of supposed type {}, {}\n", ti.name(), type_name.c_str()));
+    }
   }
 
   return return_value;

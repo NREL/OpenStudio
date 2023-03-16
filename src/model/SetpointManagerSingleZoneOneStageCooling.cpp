@@ -79,7 +79,7 @@ namespace model {
           ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
           if (!modelObjectVector.empty()) {
             ModelObject mo = modelObjectVector.front();
-            ThermalZone thermalZone = mo.cast<ThermalZone>();
+            auto thermalZone = mo.cast<ThermalZone>();
             this->setControlZone(thermalZone);
           }
           return true;
@@ -89,9 +89,9 @@ namespace model {
     }
 
     ModelObject SetpointManagerSingleZoneOneStageCooling_Impl::clone(Model model) const {
-      SetpointManagerSingleZoneOneStageCooling clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneOneStageCooling>();
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneOneStageCooling>();
       clonedObject.resetControlZone();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerSingleZoneOneStageCooling_Impl::controlVariable() const {
@@ -175,7 +175,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerSingleZoneOneStageCooling::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_SingleZone_OneStageCooling);
+    return {IddObjectType::OS_SetpointManager_SingleZone_OneStageCooling};
   }
 
   std::vector<std::string> SetpointManagerSingleZoneOneStageCooling::controlVariableValues() {

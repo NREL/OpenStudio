@@ -104,7 +104,7 @@ namespace model {
       return OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AirOutletNodeName;
     }
 
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::addToNode(Node& node) {
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::addToNode(Node& /*node*/) {
       return false;
     }
 
@@ -161,31 +161,31 @@ namespace model {
     ModelObject CoilSystemIntegratedHeatPumpAirSource_Impl::clone(Model model) const {
       auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemIntegratedHeatPumpAirSource>();
 
-      StraightComponent spaceCoolingCoilClone = this->spaceCoolingCoil().clone(model).cast<StraightComponent>();
+      auto spaceCoolingCoilClone = this->spaceCoolingCoil().clone(model).cast<StraightComponent>();
       newCoilSystem.setSpaceCoolingCoil(spaceCoolingCoilClone);
 
-      StraightComponent spaceHeatingCoilClone = this->spaceHeatingCoil().clone(model).cast<StraightComponent>();
+      auto spaceHeatingCoilClone = this->spaceHeatingCoil().clone(model).cast<StraightComponent>();
       newCoilSystem.setSpaceHeatingCoil(spaceHeatingCoilClone);
 
-      HVACComponent dedicatedWaterHeatingCoilClone = this->dedicatedWaterHeatingCoil().clone(model).cast<HVACComponent>();
+      auto dedicatedWaterHeatingCoilClone = this->dedicatedWaterHeatingCoil().clone(model).cast<HVACComponent>();
       newCoilSystem.setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoilClone);
 
-      HVACComponent scwhCoilClone = this->scwhCoil().clone(model).cast<HVACComponent>();
+      auto scwhCoilClone = this->scwhCoil().clone(model).cast<HVACComponent>();
       newCoilSystem.setSCWHCoil(scwhCoilClone);
 
-      StraightComponent scdwhCoolingCoilClone = this->scdwhCoolingCoil().clone(model).cast<StraightComponent>();
+      auto scdwhCoolingCoilClone = this->scdwhCoolingCoil().clone(model).cast<StraightComponent>();
       newCoilSystem.setSCDWHCoolingCoil(scdwhCoolingCoilClone);
 
-      HVACComponent scdwhWaterHeatingCoilClone = this->scdwhWaterHeatingCoil().clone(model).cast<HVACComponent>();
+      auto scdwhWaterHeatingCoilClone = this->scdwhWaterHeatingCoil().clone(model).cast<HVACComponent>();
       newCoilSystem.setSCDWHWaterHeatingCoil(scdwhWaterHeatingCoilClone);
 
-      StraightComponent shdwhHeatingCoilClone = this->shdwhHeatingCoil().clone(model).cast<StraightComponent>();
+      auto shdwhHeatingCoilClone = this->shdwhHeatingCoil().clone(model).cast<StraightComponent>();
       newCoilSystem.setSHDWHHeatingCoil(shdwhHeatingCoilClone);
 
-      HVACComponent shdwhWaterHeatingCoilClone = this->shdwhWaterHeatingCoil().clone(model).cast<HVACComponent>();
+      auto shdwhWaterHeatingCoilClone = this->shdwhWaterHeatingCoil().clone(model).cast<HVACComponent>();
       newCoilSystem.setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoilClone);
 
-      return newCoilSystem;
+      return std::move(newCoilSystem);
     }
 
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::containingHVACComponent() const {
@@ -588,7 +588,7 @@ namespace model {
   }
 
   IddObjectType CoilSystemIntegratedHeatPumpAirSource::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource);
+    return {IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource};
   }
 
   StraightComponent CoilSystemIntegratedHeatPumpAirSource::spaceCoolingCoil() const {

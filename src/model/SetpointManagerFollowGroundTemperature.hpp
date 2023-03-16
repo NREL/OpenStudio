@@ -54,7 +54,12 @@ namespace model {
 
     explicit SetpointManagerFollowGroundTemperature(const Model& model);
 
-    virtual ~SetpointManagerFollowGroundTemperature() {}
+    virtual ~SetpointManagerFollowGroundTemperature() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerFollowGroundTemperature(const SetpointManagerFollowGroundTemperature& other) = default;
+    SetpointManagerFollowGroundTemperature(SetpointManagerFollowGroundTemperature&& other) = default;
+    SetpointManagerFollowGroundTemperature& operator=(const SetpointManagerFollowGroundTemperature&) = default;
+    SetpointManagerFollowGroundTemperature& operator=(SetpointManagerFollowGroundTemperature&&) = default;
 
     //@}
 
@@ -100,7 +105,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerFollowGroundTemperature_Impl ImplType;
+    using ImplType = detail::SetpointManagerFollowGroundTemperature_Impl;
 
     explicit SetpointManagerFollowGroundTemperature(std::shared_ptr<detail::SetpointManagerFollowGroundTemperature_Impl> impl);
 
@@ -114,10 +119,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerFollowGroundTemperature*/
-  typedef boost::optional<SetpointManagerFollowGroundTemperature> OptionalSetpointManagerFollowGroundTemperature;
+  using OptionalSetpointManagerFollowGroundTemperature = boost::optional<SetpointManagerFollowGroundTemperature>;
 
   /** \relates SetpointManagerFollowGroundTemperature*/
-  typedef std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatureVector;
+  using SetpointManagerFollowGroundTemperatureVector = std::vector<SetpointManagerFollowGroundTemperature>;
 
 }  // namespace model
 }  // namespace openstudio

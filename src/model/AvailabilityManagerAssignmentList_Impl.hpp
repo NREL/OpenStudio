@@ -58,7 +58,7 @@ namespace model {
 
       AvailabilityManagerAssignmentList_Impl(const AvailabilityManagerAssignmentList_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerAssignmentList_Impl() {}
+      virtual ~AvailabilityManagerAssignmentList_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

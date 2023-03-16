@@ -54,7 +54,12 @@ namespace model {
 
     explicit SurfacePropertyOtherSideCoefficients(const Model& model);
 
-    virtual ~SurfacePropertyOtherSideCoefficients() {}
+    virtual ~SurfacePropertyOtherSideCoefficients() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& other) = default;
+    SurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients&& other) = default;
+    SurfacePropertyOtherSideCoefficients& operator=(const SurfacePropertyOtherSideCoefficients&) = default;
+    SurfacePropertyOtherSideCoefficients& operator=(SurfacePropertyOtherSideCoefficients&&) = default;
 
     //@}
 
@@ -174,7 +179,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SurfacePropertyOtherSideCoefficients_Impl ImplType;
+    using ImplType = detail::SurfacePropertyOtherSideCoefficients_Impl;
 
     explicit SurfacePropertyOtherSideCoefficients(std::shared_ptr<detail::SurfacePropertyOtherSideCoefficients_Impl> impl);
 
@@ -188,10 +193,10 @@ namespace model {
   };
 
   /** \relates SurfacePropertyOtherSideCoefficients*/
-  typedef boost::optional<SurfacePropertyOtherSideCoefficients> OptionalSurfacePropertyOtherSideCoefficients;
+  using OptionalSurfacePropertyOtherSideCoefficients = boost::optional<SurfacePropertyOtherSideCoefficients>;
 
   /** \relates SurfacePropertyOtherSideCoefficients*/
-  typedef std::vector<SurfacePropertyOtherSideCoefficients> SurfacePropertyOtherSideCoefficientsVector;
+  using SurfacePropertyOtherSideCoefficientsVector = std::vector<SurfacePropertyOtherSideCoefficients>;
 
 }  // namespace model
 }  // namespace openstudio

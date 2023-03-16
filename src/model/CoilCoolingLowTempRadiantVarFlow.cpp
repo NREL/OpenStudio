@@ -94,9 +94,10 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingLowTempRadiantVarFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("CoilCoolingLowTempRadiantVarFlow", "Cooling Control Temperature Schedule"));
+        result.emplace_back("CoilCoolingLowTempRadiantVarFlow", "Cooling Control Temperature Schedule");
       }
       return result;
     }
@@ -211,7 +212,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingLowTempRadiantVarFlow_Impl::setCondensationControlType(std::string condensationControlType) {
+    bool CoilCoolingLowTempRadiantVarFlow_Impl::setCondensationControlType(const std::string& condensationControlType) {
       bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CondensationControlType, condensationControlType);
       return result;
     }
@@ -322,10 +323,7 @@ namespace model {
     }
 
     bool CoilCoolingLowTempRadiantVarFlow_Impl::setCoolingDesignCapacity(double coolingDesignCapacity) {
-      bool result(false);
-      if (coolingDesignCapacity) {
-        result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, coolingDesignCapacity);
-      }
+      bool result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, coolingDesignCapacity);
       return result;
     }
 
@@ -415,7 +413,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingLowTempRadiantVarFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow);
+    return {IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow};
   }
 
   std::vector<std::string> CoilCoolingLowTempRadiantVarFlow::condensationControlTypeValues() {
@@ -496,7 +494,7 @@ namespace model {
     getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->resetCoolingControlTemperatureSchedule();
   }
 
-  bool CoilCoolingLowTempRadiantVarFlow::setCondensationControlType(std::string condensationControlType) {
+  bool CoilCoolingLowTempRadiantVarFlow::setCondensationControlType(const std::string& condensationControlType) {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCondensationControlType(condensationControlType);
   }
 

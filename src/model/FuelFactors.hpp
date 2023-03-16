@@ -54,7 +54,12 @@ namespace model {
 
     explicit FuelFactors(const Model& model);
 
-    virtual ~FuelFactors() {}
+    virtual ~FuelFactors() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FuelFactors(const FuelFactors& other) = default;
+    FuelFactors(FuelFactors&& other) = default;
+    FuelFactors& operator=(const FuelFactors&) = default;
+    FuelFactors& operator=(FuelFactors&&) = default;
 
     //@}
 
@@ -234,7 +239,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FuelFactors_Impl ImplType;
+    using ImplType = detail::FuelFactors_Impl;
 
     explicit FuelFactors(std::shared_ptr<detail::FuelFactors_Impl> impl);
 
@@ -248,10 +253,10 @@ namespace model {
   };
 
   /** \relates FuelFactors*/
-  typedef boost::optional<FuelFactors> OptionalFuelFactors;
+  using OptionalFuelFactors = boost::optional<FuelFactors>;
 
   /** \relates FuelFactors*/
-  typedef std::vector<FuelFactors> FuelFactorsVector;
+  using FuelFactorsVector = std::vector<FuelFactors>;
 
 }  // namespace model
 }  // namespace openstudio

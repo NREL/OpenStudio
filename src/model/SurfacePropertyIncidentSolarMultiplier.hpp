@@ -56,6 +56,11 @@ namespace model {
     explicit SurfacePropertyIncidentSolarMultiplier(const SubSurface& subSurface);
 
     virtual ~SurfacePropertyIncidentSolarMultiplier() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SurfacePropertyIncidentSolarMultiplier(const SurfacePropertyIncidentSolarMultiplier& other) = default;
+    SurfacePropertyIncidentSolarMultiplier(SurfacePropertyIncidentSolarMultiplier&& other) = default;
+    SurfacePropertyIncidentSolarMultiplier& operator=(const SurfacePropertyIncidentSolarMultiplier&) = default;
+    SurfacePropertyIncidentSolarMultiplier& operator=(SurfacePropertyIncidentSolarMultiplier&&) = default;
 
     //@}
 

@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerSystemNodeResetTemperature(const Model& model);
 
-    virtual ~SetpointManagerSystemNodeResetTemperature() {}
+    virtual ~SetpointManagerSystemNodeResetTemperature() = default;
 
     //@}
 

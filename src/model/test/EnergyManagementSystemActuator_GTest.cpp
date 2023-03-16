@@ -216,14 +216,16 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator2) {
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
   EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
   EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
-  EXPECT_EQ(zone2.handle(), lightsActuator2.zoneName().get().handle());
+  ASSERT_TRUE(lightsActuator2.zoneOrSpace());
+  EXPECT_EQ(zone2.handle(), lightsActuator2.zoneOrSpace()->handle());
 
   //create actuator zone3
   EnergyManagementSystemActuator lightsActuator3(lights, lightsComponentType, lightsControlType, zone2);
   EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
   EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
   EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
-  EXPECT_EQ(zone2.handle(), lightsActuator3.zoneName().get().handle());
+  ASSERT_TRUE(lightsActuator3.zoneOrSpace());
+  EXPECT_EQ(zone2.handle(), lightsActuator3.zoneOrSpace()->handle());
 }
 
 TEST_F(ModelFixture, EMSActuator_newEMSActuator3) {
@@ -259,12 +261,99 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator3) {
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
   EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
   EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
-  EXPECT_EQ(space2.thermalZone().get().handle(), lightsActuator2.zoneName().get().handle());
+  ASSERT_TRUE(lightsActuator2.zoneOrSpace());
+  EXPECT_EQ(space2.handle(), lightsActuator2.zoneOrSpace()->handle());
 
   //create actuator zone3
   EnergyManagementSystemActuator lightsActuator3(lights, lightsComponentType, lightsControlType, space3);
   EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
   EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
-  EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
-  EXPECT_EQ(space3.thermalZone().get().handle(), lightsActuator3.zoneName().get().handle());
+  ASSERT_TRUE(lightsActuator3.zoneOrSpace());
+  EXPECT_EQ(space3.handle(), lightsActuator3.zoneOrSpace()->handle());
+}
+
+TEST_F(ModelFixture, EMSActuator_SpaceLoad_EnforceZoneOrSpace) {
+  //USE spaces in constructor
+  Model model;
+
+  //use spacetype with multiple spaces
+  //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
+  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
+  SpaceType spaceType(model);
+  Space space(model);
+  ThermalZone zone(model);
+  space.setSpaceType(spaceType);
+  space.setThermalZone(zone);
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  //add lights and attach to spaceType
+  LightsDefinition lightsDefinition(model);
+  lightsDefinition.setWattsperSpaceFloorArea(1.0);
+  Lights lights(lightsDefinition);
+  //add lights to spaceType which space2 and space3 use
+  lights.setSpaceType(spaceType);
+
+  ElectricEquipmentDefinition electricEquipmentDefinition(model);
+  ElectricEquipment electricEquipment(electricEquipmentDefinition);
+
+  // actuator settings
+  const std::string lightsComponentType = "Lights";
+  const std::string lightsControlType = "Electricity Rate";
+
+  // If passing a Space or ThermalZone, we throw if the actuated component is not a SpaceLoadInstance
+  EXPECT_ANY_THROW(EnergyManagementSystemActuator(building, lightsComponentType, lightsControlType, space));
+  EXPECT_ANY_THROW(EnergyManagementSystemActuator(building, lightsComponentType, lightsControlType, zone));
+  EXPECT_ANY_THROW(EnergyManagementSystemActuator(lightsDefinition, lightsComponentType, lightsControlType, space));
+  EXPECT_ANY_THROW(EnergyManagementSystemActuator(lightsDefinition, lightsComponentType, lightsControlType, zone));
+
+  {
+    EnergyManagementSystemActuator lightsActuator(lights, lightsComponentType, lightsControlType, space);
+    EXPECT_EQ(lights, lightsActuator.actuatedComponent().get());
+    EXPECT_EQ(lightsControlType, lightsActuator.actuatedComponentControlType());
+    EXPECT_EQ(lightsComponentType, lightsActuator.actuatedComponentType());
+    ASSERT_TRUE(lightsActuator.zoneOrSpace());
+    ASSERT_TRUE(lightsActuator.space());
+    EXPECT_FALSE(lightsActuator.thermalZone());
+    EXPECT_EQ(space.handle(), lightsActuator.zoneOrSpace()->handle());
+    EXPECT_EQ(space.handle(), lightsActuator.space()->handle());
+
+    // Setting to something that is a SpaceLoadInstance doesn't reset the ZoneOrSpace, but any other type does
+    EXPECT_TRUE(lightsActuator.setActuatedComponent(electricEquipment));
+    ASSERT_TRUE(lightsActuator.zoneOrSpace());
+    ASSERT_TRUE(lightsActuator.space());
+    EXPECT_FALSE(lightsActuator.thermalZone());
+    EXPECT_EQ(space.handle(), lightsActuator.zoneOrSpace()->handle());
+    EXPECT_EQ(space.handle(), lightsActuator.space()->handle());
+
+    EXPECT_TRUE(lightsActuator.setActuatedComponent(building));
+    EXPECT_FALSE(lightsActuator.zoneOrSpace());
+    EXPECT_FALSE(lightsActuator.space());
+    EXPECT_FALSE(lightsActuator.thermalZone());
+  }
+
+  {
+    EnergyManagementSystemActuator lightsActuator(lights, lightsComponentType, lightsControlType, zone);
+    EXPECT_EQ(lights, lightsActuator.actuatedComponent().get());
+    EXPECT_EQ(lightsControlType, lightsActuator.actuatedComponentControlType());
+    EXPECT_EQ(lightsComponentType, lightsActuator.actuatedComponentType());
+    ASSERT_TRUE(lightsActuator.zoneOrSpace());
+    EXPECT_FALSE(lightsActuator.space());
+    ASSERT_TRUE(lightsActuator.thermalZone());
+    EXPECT_EQ(zone.handle(), lightsActuator.zoneOrSpace()->handle());
+    EXPECT_EQ(zone.handle(), lightsActuator.thermalZone()->handle());
+
+    // Setting to something that is a SpaceLoadInstance doesn't reset the ZoneOrSpace, but any other type does
+    EXPECT_TRUE(lightsActuator.setActuatedComponent(electricEquipment));
+    ASSERT_TRUE(lightsActuator.zoneOrSpace());
+    EXPECT_FALSE(lightsActuator.space());
+    ASSERT_TRUE(lightsActuator.thermalZone());
+    EXPECT_EQ(zone.handle(), lightsActuator.zoneOrSpace()->handle());
+    EXPECT_EQ(zone.handle(), lightsActuator.thermalZone()->handle());
+
+    EXPECT_TRUE(lightsActuator.setActuatedComponent(building));
+    EXPECT_FALSE(lightsActuator.zoneOrSpace());
+    EXPECT_FALSE(lightsActuator.space());
+    EXPECT_FALSE(lightsActuator.thermalZone());
+  }
 }

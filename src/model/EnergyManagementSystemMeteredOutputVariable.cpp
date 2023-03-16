@@ -464,7 +464,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemMeteredOutputVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_MeteredOutputVariable);
+    return {IddObjectType::OS_EnergyManagementSystem_MeteredOutputVariable};
   }
 
   std::vector<std::string> EnergyManagementSystemMeteredOutputVariable::updateFrequencyValues() {

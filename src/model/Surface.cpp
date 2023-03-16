@@ -90,7 +90,8 @@
 
 #include "../utilities/sql/SqlFile.hpp"
 
-#include <numeric>  // std::accumulate
+#include <iterator>  // std::make_move_iterator
+#include <numeric>   // std::accumulate
 
 using boost::to_upper_copy;
 
@@ -109,8 +110,6 @@ namespace model {
     }
 
     Surface_Impl::Surface_Impl(const Surface_Impl& other, Model_Impl* model, bool keepHandle) : PlanarSurface_Impl(other, model, keepHandle) {}
-
-    Surface_Impl::~Surface_Impl() {}
 
     boost::optional<ParentObject> Surface_Impl::parent() const {
       boost::optional<ParentObject> result;
@@ -155,13 +154,13 @@ namespace model {
 
     ModelObject Surface_Impl::clone(Model model) const {
       ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
-      ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
+      auto newParent = newParentAsModelObject.cast<ParentObject>();
 
-      for (ModelObject child : children()) {
+      for (const ModelObject& child : children()) {
         ModelObject newChild = child.clone(model);
         newChild.setParent(newParent);
-        if (child.optionalCast<SubSurface>()) {
-          newChild.cast<SubSurface>().setSubSurfaceType(child.cast<SubSurface>().subSurfaceType());
+        if (auto ss_ = child.optionalCast<SubSurface>()) {
+          newChild.cast<SubSurface>().setSubSurfaceType(ss_->subSurfaceType());
         }
       }
 
@@ -183,10 +182,7 @@ namespace model {
     }
 
     std::vector<IddObjectType> Surface_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_SubSurface);
-
-      return result;
+      return std::vector<IddObjectType>{IddObjectType::OS_SubSurface};
     }
 
     const std::vector<std::string>& Surface_Impl::outputVariableNames() const {
@@ -417,11 +413,11 @@ namespace model {
       return result;
     }
 
-    bool Surface_Impl::setSurfaceType(std::string surfaceType) {
+    bool Surface_Impl::setSurfaceType(const std::string& surfaceType) {
       return setSurfaceType(surfaceType, true);
     }
 
-    bool Surface_Impl::setSurfaceType(std::string surfaceType, bool driverMethod) {
+    bool Surface_Impl::setSurfaceType(const std::string& surfaceType, bool driverMethod) {
       bool result = setString(OS_SurfaceFields::SurfaceType, surfaceType, true);
       if (driverMethod) {
         this->emitChangeSignals();  // emit signals here
@@ -429,11 +425,11 @@ namespace model {
       return result;
     }
 
-    bool Surface_Impl::setOutsideBoundaryCondition(std::string outsideBoundaryCondition) {
+    bool Surface_Impl::setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition) {
       return setOutsideBoundaryCondition(outsideBoundaryCondition, true);
     }
 
-    bool Surface_Impl::setOutsideBoundaryCondition(std::string outsideBoundaryCondition, bool driverMethod) {
+    bool Surface_Impl::setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition, bool driverMethod) {
       bool result = false;
 
       boost::optional<Surface> adjacentSurface = this->adjacentSurface();
@@ -465,7 +461,7 @@ namespace model {
           if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
             // remove all subsurfaces
             int n_subsurfaces = 0;
-            for (auto subSurface : subSurfaces()) {
+            for (auto& subSurface : subSurfaces()) {
               subSurface.remove();
               ++n_subsurfaces;
             }
@@ -498,11 +494,11 @@ namespace model {
       return result;
     }
 
-    bool Surface_Impl::setSunExposure(std::string sunExposure) {
+    bool Surface_Impl::setSunExposure(const std::string& sunExposure) {
       return setSunExposure(sunExposure, true);
     }
 
-    bool Surface_Impl::setSunExposure(std::string sunExposure, bool driverMethod) {
+    bool Surface_Impl::setSunExposure(const std::string& sunExposure, bool driverMethod) {
       bool result = setString(OS_SurfaceFields::SunExposure, sunExposure, true);
       if (driverMethod) {
         this->emitChangeSignals();  // emit signals here
@@ -515,11 +511,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Surface_Impl::setWindExposure(std::string windExposure) {
+    bool Surface_Impl::setWindExposure(const std::string& windExposure) {
       return setWindExposure(windExposure, true);
     }
 
-    bool Surface_Impl::setWindExposure(std::string windExposure, bool driverMethod) {
+    bool Surface_Impl::setWindExposure(const std::string& windExposure, bool driverMethod) {
       bool result = setString(OS_SurfaceFields::WindExposure, windExposure, true);
       if (driverMethod) {
         this->emitChangeSignals();  // emit signals here
@@ -584,7 +580,7 @@ namespace model {
 
     SubSurfaceVector Surface_Impl::subSurfaces() const {
       SubSurfaceVector result;
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
       WorkspaceObjectVector idfSubSurfaces = object.getSources(IddObjectType(IddObjectType::OS_SubSurface));
       for (const WorkspaceObject& idfSubSurface : idfSubSurfaces) {
         OptionalSubSurface subSurface = this->model().getModelObject<SubSurface>(idfSubSurface.handle());
@@ -772,38 +768,38 @@ namespace model {
       if (test) {
 
         // clean all other surfaces pointing to this (unless it is surface)
-        for (WorkspaceObject wo : this->getSources(IddObjectType::OS_Surface)) {
+        for (const WorkspaceObject& wo : this->getSources(IddObjectType::OS_Surface)) {
           if (wo.handle() == surface.handle()) {
             continue;
           }
 
-          Surface otherSurface = wo.cast<Surface>();
+          auto otherSurface = wo.cast<Surface>();
           test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
           OS_ASSERT(test);
           otherSurface.assignDefaultBoundaryCondition();
           otherSurface.assignDefaultSunExposure();
           otherSurface.assignDefaultWindExposure();
 
-          for (SubSurface subSurface : otherSurface.subSurfaces()) {
+          for (SubSurface& subSurface : otherSurface.subSurfaces()) {
             subSurface.resetAdjacentSubSurface();
           }
         }
 
         if (!isSameSurface) {
           // clean all other surfaces pointing to surface (unless it is this)
-          for (WorkspaceObject wo : surface.getSources(IddObjectType::OS_Surface)) {
+          for (const WorkspaceObject& wo : surface.getSources(IddObjectType::OS_Surface)) {
             if (wo.handle() == this->handle()) {
               continue;
             }
 
-            Surface otherSurface = wo.cast<Surface>();
+            auto otherSurface = wo.cast<Surface>();
             test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
             OS_ASSERT(test);
             otherSurface.assignDefaultBoundaryCondition();
             otherSurface.assignDefaultSunExposure();
             otherSurface.assignDefaultWindExposure();
 
-            for (SubSurface subSurface : otherSurface.subSurfaces()) {
+            for (SubSurface& subSurface : otherSurface.subSurfaces()) {
               subSurface.resetAdjacentSubSurface();
             }
           }
@@ -811,11 +807,11 @@ namespace model {
 
         // this and surface are newly pointing to each other, clean sub surfaces on both
         if (isNewMatch) {
-          for (SubSurface subSurface : this->subSurfaces()) {
+          for (SubSurface& subSurface : this->subSurfaces()) {
             subSurface.resetAdjacentSubSurface();
           }
           if (!isSameSurface) {
-            for (SubSurface subSurface : surface.subSurfaces()) {
+            for (SubSurface& subSurface : surface.subSurfaces()) {
               subSurface.resetAdjacentSubSurface();
             }
           }
@@ -857,28 +853,28 @@ namespace model {
       }
 
       // unset all matched sub surfaces
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         subSurface.resetAdjacentSubSurface();
       }
 
       // clean all other surfaces pointing to this
-      for (WorkspaceObject wo : this->getSources(IddObjectType::OS_Surface)) {
+      for (const WorkspaceObject& wo : this->getSources(IddObjectType::OS_Surface)) {
 
-        Surface otherSurface = wo.cast<Surface>();
+        auto otherSurface = wo.cast<Surface>();
         test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
         OS_ASSERT(test);
         otherSurface.assignDefaultBoundaryCondition();
         otherSurface.assignDefaultSunExposure();
         otherSurface.assignDefaultWindExposure();
 
-        for (SubSurface subSurface : otherSurface.subSurfaces()) {
+        for (SubSurface& subSurface : otherSurface.subSurfaces()) {
           subSurface.resetAdjacentSubSurface();
         }
       }
     }
 
     boost::optional<SurfaceControlMovableInsulation> Surface_Impl::surfaceControlMovableInsulation() const {
-      Surface thisSurface = getObject<Surface>();
+      auto thisSurface = getObject<Surface>();
       std::vector<SurfaceControlMovableInsulation> movableInsulations =
         thisSurface.getModelObjectSources<SurfaceControlMovableInsulation>(SurfaceControlMovableInsulation::iddObjectType());
       if (movableInsulations.empty()) {
@@ -892,16 +888,15 @@ namespace model {
     }
 
     boost::optional<SurfacePropertyConvectionCoefficients> Surface_Impl::surfacePropertyConvectionCoefficients() const {
-      std::vector<SurfacePropertyConvectionCoefficients> allspccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
-      std::vector<SurfacePropertyConvectionCoefficients> spccs;
-      for (auto& spcc : allspccs) {
+      std::vector<SurfacePropertyConvectionCoefficients> spccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+      auto thisHandle = this->handle();
+      auto isNotPointingToMe = [&thisHandle](const auto& spcc) {
         OptionalSurface surface = spcc.surfaceAsSurface();
-        if (surface) {
-          if (surface->handle() == handle()) {
-            spccs.push_back(spcc);
-          }
-        }
-      }
+        return !surface || !(surface->handle() == thisHandle);
+      };
+
+      spccs.erase(std::remove_if(spccs.begin(), spccs.end(), isNotPointingToMe), spccs.end());
+
       if (spccs.empty()) {
         return boost::none;
       } else if (spccs.size() == 1) {
@@ -936,7 +931,7 @@ namespace model {
       return getObject<Surface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SurfaceFields::OutsideBoundaryConditionObject);
     }
 
-    bool Surface_Impl::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+    bool Surface_Impl::setSurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
       boost::optional<Surface> adjacentSurface = this->adjacentSurface();
       if (adjacentSurface) {
         resetAdjacentSurface();
@@ -968,7 +963,7 @@ namespace model {
       }
 
       // reset all sub surfaces
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         subSurface.resetSurfacePropertyOtherSideCoefficients();
       }
     }
@@ -977,7 +972,7 @@ namespace model {
       return getObject<Surface>().getModelObjectTarget<SurfacePropertyOtherSideConditionsModel>(OS_SurfaceFields::OutsideBoundaryConditionObject);
     }
 
-    bool Surface_Impl::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+    bool Surface_Impl::setSurfacePropertyOtherSideConditionsModel(const SurfacePropertyOtherSideConditionsModel& otherSideModel) {
       boost::optional<Surface> adjacentSurface = this->adjacentSurface();
       if (adjacentSurface) {
         resetAdjacentSurface();
@@ -1010,22 +1005,21 @@ namespace model {
       }
 
       // reset all sub surfaces
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         subSurface.resetSurfacePropertyOtherSideConditionsModel();
       }
     }
 
     bool Surface_Impl::intersect(Surface& otherSurface) {
       boost::optional<SurfaceIntersection> intersection = computeIntersection(otherSurface);
-      if (intersection) {
-        return true;
-      }
-      return false;
+      return intersection.has_value();
     }
 
     boost::optional<SurfaceIntersection> Surface_Impl::computeIntersection(Surface& otherSurface) {
       double tol = 0.01;       //  1 cm tolerance
       double areaTol = 0.001;  // 10 cm2 tolerance
+
+      constexpr bool extraLogging = false;
 
       boost::optional<Space> space = this->space();
       boost::optional<Space> otherSpace = otherSurface.space();
@@ -1088,11 +1082,23 @@ namespace model {
       //std::reverse(otherFaceVertices.begin(), otherFaceVertices.end());
 
       //LOG(Info, "Trying intersection of '" << this->name().get() << "' with '" << otherSurface.name().get());
-
+      if constexpr (extraLogging) {
+        Point3dVectorVector tmp{faceVertices, otherFaceVertices};
+        LOG(Debug, tmp);
+      }
       boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, otherFaceVertices, tol);
       if (!intersection) {
         //LOG(Info, "No intersection");
         return boost::none;
+      }
+
+      if constexpr (extraLogging) {
+        Point3dVectorVector tmp;
+        Point3dVectorVector newPolys = intersection->newPolygons2();
+        tmp.reserve(newPolys.size() + 1);
+        tmp.push_back(intersection->polygon2());
+        tmp.insert(tmp.end(), std::make_move_iterator(newPolys.begin()), std::make_move_iterator(newPolys.end()));
+        LOG(Debug, tmp);
       }
 
       // DA - Change tolerance. Current tolerance is 0.0001 which is 1cm2 which is unrealistic
@@ -1104,12 +1110,30 @@ namespace model {
         if (std::abs(area1.get() - intersection->area1()) > areaTol) {
           LOG(Error, "Initial area of surface '" << this->nameString() << "' " << area1.get() << " does not equal post intersection area "
                                                  << intersection->area1());
+          if constexpr (extraLogging) {
+            Point3dVectorVector tmp1{faceVertices, otherFaceVertices};
+            LOG(Debug, tmp1);
+            Point3dVectorVector tmp;
+            tmp.push_back(intersection->polygon1());
+            for (auto& x : intersection->newPolygons1())
+              tmp.push_back(x);
+            LOG(Debug, tmp);
+          }
         }
       }
       if (area2) {
         if (std::abs(area2.get() - intersection->area2()) > areaTol) {
           LOG(Error, "Initial area of other surface '" << otherSurface.nameString() << "' " << area2.get()
                                                        << " does not equal post intersection area " << intersection->area2());
+          if constexpr (extraLogging) {
+            Point3dVectorVector tmp1{faceVertices, otherFaceVertices};
+            LOG(Debug, tmp1);
+            Point3dVectorVector tmp;
+            tmp.push_back(intersection->polygon2());
+            for (auto& x : intersection->newPolygons2())
+              tmp.push_back(x);
+            LOG(Debug, tmp);
+          }
         }
       }
 
@@ -1129,25 +1153,26 @@ namespace model {
 
       std::vector<std::vector<Point3d>> newPolygons1 = intersection->newPolygons1();
       std::vector<std::vector<Point3d>> newPolygons2 = intersection->newPolygons2();
+
+      // modify vertices for surface in this space
+      std::vector<Point3d> newBuildingVertices = faceTransformation * intersection->polygon1();
+      std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
+      std::reverse(newVertices.begin(), newVertices.end());
+      newVertices = reorderULC(newVertices);
+      this->setVertices(newVertices);
+      //this->setAdjacentSurface(otherSurface);
+
+      // modify vertices for surface in other space
+      std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersection->polygon2();
+      std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
+      newOtherVertices = reorderULC(newOtherVertices);
+      otherSurface.setVertices(newOtherVertices);
+      //otherSurface.setAdjacentSurface(surface);
+
       if (newPolygons1.empty() && newPolygons2.empty()) {
         // both surfaces intersect perfectly, no-op
-
       } else {
         // new surfaces are created
-
-        // modify vertices for surface in this space
-        std::vector<Point3d> newBuildingVertices = faceTransformation * intersection->polygon1();
-        std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
-        std::reverse(newVertices.begin(), newVertices.end());
-        newVertices = reorderULC(newVertices);
-        this->setVertices(newVertices);
-
-        // modify vertices for surface in other space
-        std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersection->polygon2();
-        std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
-        newOtherVertices = reorderULC(newOtherVertices);
-        otherSurface.setVertices(newOtherVertices);
-
         // create new surfaces in this space
         for (unsigned i = 0; i < newPolygons1.size(); ++i) {
 
@@ -1224,7 +1249,7 @@ namespace model {
 
       this->setAdjacentSurface(otherSurface);
 
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         vertices = transformation * subSurface.vertices();
         std::reverse(vertices.begin(), vertices.end());
 
@@ -1631,7 +1656,7 @@ namespace model {
       }
 
       // everything ok, remove all windows
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
           subSurface.remove();
         }
@@ -1639,7 +1664,7 @@ namespace model {
 
       // add a new window
       Model model = this->model();
-      Surface thisSurface = this->getObject<Surface>();
+      auto thisSurface = this->getObject<Surface>();
       boost::optional<Space> space = this->space();
 
       boost::optional<SubSurface> viewWindow;
@@ -1797,12 +1822,8 @@ namespace model {
           continue;
         }
 
-        Point3dVector mask;
-        mask.push_back(Point3d(xmax + expand, ymax + expand, 0));
-        mask.push_back(Point3d(xmax + expand, ymin - expand, 0));
-        mask.push_back(Point3d(xmin - expand, ymin - expand, 0));
-        mask.push_back(Point3d(xmin - expand, ymax + expand, 0));
-        masks.push_back(mask);
+        masks.emplace_back(Point3dVector{Point3d(xmax + expand, ymax + expand, 0), Point3d(xmax + expand, ymin - expand, 0),
+                                         Point3d(xmin - expand, ymin - expand, 0), Point3d(xmin - expand, ymax + expand, 0)});
       }
 
       // join masks
@@ -1822,9 +1843,8 @@ namespace model {
           if (intersection) {
             numIntersects += 1;
             tmpFaces.push_back(intersection->polygon1());
-            for (const Point3dVector& tmpFace : intersection->newPolygons1()) {
-              tmpFaces.push_back(tmpFace);
-            }
+            auto thisTmpFaces = intersection->newPolygons1();
+            tmpFaces.insert(tmpFaces.end(), thisTmpFaces.begin(), thisTmpFaces.end());
           } else {
             tmpFaces.push_back(newFace);
           }
@@ -1860,7 +1880,7 @@ namespace model {
           surface = object->optionalCast<Surface>();
           OS_ASSERT(surface);
           // remove cloned sub surfaces
-          for (ModelObject child : surface->children()) {
+          for (ModelObject& child : surface->children()) {
             child.remove();
           }
           result.push_back(*surface);
@@ -1924,7 +1944,7 @@ namespace model {
       std::reverse(insetFaceVertices.begin(), insetFaceVertices.end());
 
       Model model = this->model();
-      Surface surface = getObject<Surface>();
+      auto surface = getObject<Surface>();
       for (const std::vector<Point3d>& face : faces) {
         Point3dVector faceVertices = inverseTransformation * face;
 
@@ -1943,17 +1963,23 @@ namespace model {
             allNewFaceVertices = computeTriangulation(intersectionVertices, holes, tol);
           }
 
+          // TODO: I think the copy makes sense here
           for (Point3dVector newFaceVertices : allNewFaceVertices) {
 
             std::reverse(newFaceVertices.begin(), newFaceVertices.end());
 
             Point3dVector newVertices = transformation * newFaceVertices;
-            SubSurface subSurface(newVertices, model);
-            subSurface.setSurface(surface);
-            if (construction) {
-              subSurface.setConstruction(*construction);
+            try {
+
+              SubSurface subSurface(newVertices, model);
+              subSurface.setSurface(surface);
+              if (construction) {
+                subSurface.setConstruction(*construction);
+              }
+              result.push_back(subSurface);
+            } catch (const std::exception&) {
+              LOG(Error, "Could not create sub-surface.");
             }
-            result.push_back(subSurface);
           }
         }
       }
@@ -2022,8 +2048,8 @@ namespace model {
     }
 
     boost::optional<SurfacePropertyExposedFoundationPerimeter>
-      Surface_Impl::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter) {
-      Surface thisSurface = getObject<Surface>();
+      Surface_Impl::createSurfacePropertyExposedFoundationPerimeter(const std::string& exposedPerimeterCalculationMethod, double exposedPerimeter) {
+      auto thisSurface = getObject<Surface>();
       std::vector<SurfacePropertyExposedFoundationPerimeter> props =
         thisSurface.getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
       if (!props.empty()) {
@@ -2181,15 +2207,15 @@ namespace model {
     return getImpl<detail::Surface_Impl>()->isNumberofVerticesAutocalculated();
   }
 
-  bool Surface::setSurfaceType(std::string surfaceType) {
+  bool Surface::setSurfaceType(const std::string& surfaceType) {
     return getImpl<detail::Surface_Impl>()->setSurfaceType(surfaceType);
   }
 
-  bool Surface::setOutsideBoundaryCondition(std::string outsideBoundaryCondition) {
+  bool Surface::setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition) {
     return getImpl<detail::Surface_Impl>()->setOutsideBoundaryCondition(outsideBoundaryCondition);
   }
 
-  bool Surface::setSunExposure(std::string sunExposure) {
+  bool Surface::setSunExposure(const std::string& sunExposure) {
     return getImpl<detail::Surface_Impl>()->setSunExposure(sunExposure);
   }
 
@@ -2197,7 +2223,7 @@ namespace model {
     getImpl<detail::Surface_Impl>()->resetSunExposure();
   }
 
-  bool Surface::setWindExposure(std::string windExposure) {
+  bool Surface::setWindExposure(const std::string& windExposure) {
     return getImpl<detail::Surface_Impl>()->setWindExposure(windExposure);
   }
 
@@ -2273,7 +2299,7 @@ namespace model {
     return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideCoefficients();
   }
 
-  bool Surface::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+  bool Surface::setSurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
     return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideCoefficients(otherSideCoefficients);
   }
 
@@ -2285,7 +2311,7 @@ namespace model {
     return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideConditionsModel();
   }
 
-  bool Surface::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+  bool Surface::setSurfacePropertyOtherSideConditionsModel(const SurfacePropertyOtherSideConditionsModel& otherSideModel) {
     return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideConditionsModel(otherSideModel);
   }
 
@@ -2385,7 +2411,7 @@ namespace model {
   }
 
   boost::optional<SurfacePropertyExposedFoundationPerimeter>
-    Surface::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter) {
+    Surface::createSurfacePropertyExposedFoundationPerimeter(const std::string& exposedPerimeterCalculationMethod, double exposedPerimeter) {
     return getImpl<detail::Surface_Impl>()->createSurfacePropertyExposedFoundationPerimeter(exposedPerimeterCalculationMethod, exposedPerimeter);
   }
 

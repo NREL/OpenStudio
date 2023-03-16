@@ -56,7 +56,7 @@ namespace model {
       Schedule_Impl(const Schedule_Impl& other, Model_Impl* model, bool keepHandles);
 
       // virtual destructor
-      virtual ~Schedule_Impl() {}
+      virtual ~Schedule_Impl() = default;
 
       //@}
      protected:

@@ -57,7 +57,12 @@ namespace model {
 
     explicit AirTerminalSingleDuctConstantVolumeReheat(const Model& model, Schedule& availabilitySchedule, HVACComponent& coil);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeReheat() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeReheat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalSingleDuctConstantVolumeReheat(const AirTerminalSingleDuctConstantVolumeReheat& other) = default;
+    AirTerminalSingleDuctConstantVolumeReheat(AirTerminalSingleDuctConstantVolumeReheat&& other) = default;
+    AirTerminalSingleDuctConstantVolumeReheat& operator=(const AirTerminalSingleDuctConstantVolumeReheat&) = default;
+    AirTerminalSingleDuctConstantVolumeReheat& operator=(AirTerminalSingleDuctConstantVolumeReheat&&) = default;
 
     //@}
 
@@ -145,7 +150,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctConstantVolumeReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
 
     explicit AirTerminalSingleDuctConstantVolumeReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl> impl);
 
@@ -159,10 +164,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctConstantVolumeReheat*/
-  typedef boost::optional<AirTerminalSingleDuctConstantVolumeReheat> OptionalAirTerminalSingleDuctConstantVolumeReheat;
+  using OptionalAirTerminalSingleDuctConstantVolumeReheat = boost::optional<AirTerminalSingleDuctConstantVolumeReheat>;
 
   /** \relates AirTerminalSingleDuctConstantVolumeReheat*/
-  typedef std::vector<AirTerminalSingleDuctConstantVolumeReheat> AirTerminalSingleDuctConstantVolumeReheatVector;
+  using AirTerminalSingleDuctConstantVolumeReheatVector = std::vector<AirTerminalSingleDuctConstantVolumeReheat>;
 
 }  // namespace model
 }  // namespace openstudio

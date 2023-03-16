@@ -114,7 +114,7 @@ namespace model {
       if (!m_cachedVertices) {
         Point3dVector result;
 
-        for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+        for (const auto& group : extensibleGroups()) {
           OptionalDouble x = group.getDouble(0);
           OptionalDouble y = group.getDouble(1);
           OptionalDouble z = group.getDouble(2);
@@ -153,11 +153,13 @@ namespace model {
 
       bool result = true;
 
-      LOG(Debug, "Before setVertices have " << numFields() << " fields.");
+      // DA - Removed these because they are of little value for debugging and just create noise in the log file
+      // LOG(Debug, "Before setVertices have " << numFields() << " fields.");
 
       clearExtensibleGroups(false);
 
-      LOG(Debug, "After clearExtensibleGroups in setVertices have " << numFields() << " fields.");
+      // DA - Removed these because they are of little value for debugging and just create noise in the log file
+      // LOG(Debug, "After clearExtensibleGroups in setVertices have " << numFields() << " fields.");
 
       // set the vertices
       // bool nonPlanarPointFound = false;
@@ -181,16 +183,14 @@ namespace model {
         //  }
         //}
 
-        std::vector<std::string> values;
-        values.push_back(toString(vertex.x()));
-        values.push_back(toString(vertex.y()));
-        values.push_back(toString(vertex.z()));
+        std::vector<std::string> values{toString(vertex.x()), toString(vertex.y()), toString(vertex.z())};
 
-        ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
+        auto group = pushExtensibleGroup(values, false);
         OS_ASSERT(!group.empty());
       }
 
-      LOG(Debug, "After setVertices have " << numFields() << " fields.  Size of vertices is " << vertices.size() << ".");
+      // DA - Removed these because they are of little value for debugging and just create noise in the log file
+      // LOG(Debug, "After setVertices have " << numFields() << " fields.  Size of vertices is " << vertices.size() << ".");
 
       this->emitChangeSignals();
 
@@ -296,11 +296,11 @@ namespace model {
       return boost::none;
     }
 
-    bool PlanarSurface_Impl::setUFactor(double value) {
+    bool PlanarSurface_Impl::setUFactor(double /*value*/) {
       return false;
     }
 
-    bool PlanarSurface_Impl::setThermalConductance(double value) {
+    bool PlanarSurface_Impl::setThermalConductance(double /*value*/) {
       return false;
     }
 
@@ -509,7 +509,7 @@ namespace model {
 
         std::vector<std::vector<Point3d>> faceTriangulation = computeTriangulation(faceVertices, faceHoles);
 
-        for (std::vector<Point3d> faceTriangle : faceTriangulation) {
+        for (std::vector<Point3d>& faceTriangle : faceTriangulation) {
           std::reverse(faceTriangle.begin(), faceTriangle.end());
           m_cachedTriangulation.push_back(faceTransformation * faceTriangle);
         }
@@ -786,14 +786,14 @@ namespace model {
     Vector3d north(0.0, 1.0, 0.0);
 
     // inputs ok, loop over surfaces
-    for (const PlanarSurface& planarSurface : planarSurfaces) {
+    for (const auto& planarSurface : planarSurfaces) {
 
       // find the transformation to site coordinates
       Transformation siteTransformation;
 
       OptionalPlanarSurfaceGroup group = planarSurface.planarSurfaceGroup();
       if (group) {
-        std::map<PlanarSurfaceGroup, Transformation>::const_iterator it = siteTransformationMap.find(*group);
+        auto it = siteTransformationMap.find(*group);
 
         if (it != siteTransformationMap.end()) {
           siteTransformation = it->second;

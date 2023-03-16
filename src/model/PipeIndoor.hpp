@@ -56,7 +56,12 @@ namespace model {
 
     explicit PipeIndoor(const Model& model);
 
-    virtual ~PipeIndoor() {}
+    virtual ~PipeIndoor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PipeIndoor(const PipeIndoor& other) = default;
+    PipeIndoor(PipeIndoor&& other) = default;
+    PipeIndoor& operator=(const PipeIndoor&) = default;
+    PipeIndoor& operator=(PipeIndoor&&) = default;
 
     //@}
 
@@ -114,7 +119,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PipeIndoor_Impl ImplType;
+    using ImplType = detail::PipeIndoor_Impl;
 
     explicit PipeIndoor(std::shared_ptr<detail::PipeIndoor_Impl> impl);
 
@@ -128,10 +133,10 @@ namespace model {
   };
 
   /** \relates PipeIndoor*/
-  typedef boost::optional<PipeIndoor> OptionalPipeIndoor;
+  using OptionalPipeIndoor = boost::optional<PipeIndoor>;
 
   /** \relates PipeIndoor*/
-  typedef std::vector<PipeIndoor> PipeIndoorVector;
+  using PipeIndoorVector = std::vector<PipeIndoor>;
 
 }  // namespace model
 }  // namespace openstudio

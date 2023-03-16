@@ -57,7 +57,12 @@ namespace model {
 
     explicit ZoneHVACLowTemperatureRadiantElectric(const Model& model, Schedule& availabilitySchedule, Schedule& heatingTemperatureSchedule);
 
-    virtual ~ZoneHVACLowTemperatureRadiantElectric() {}
+    virtual ~ZoneHVACLowTemperatureRadiantElectric() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACLowTemperatureRadiantElectric(const ZoneHVACLowTemperatureRadiantElectric& other) = default;
+    ZoneHVACLowTemperatureRadiantElectric(ZoneHVACLowTemperatureRadiantElectric&& other) = default;
+    ZoneHVACLowTemperatureRadiantElectric& operator=(const ZoneHVACLowTemperatureRadiantElectric&) = default;
+    ZoneHVACLowTemperatureRadiantElectric& operator=(ZoneHVACLowTemperatureRadiantElectric&&) = default;
 
     //@}
 
@@ -137,7 +142,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACLowTemperatureRadiantElectric_Impl ImplType;
+    using ImplType = detail::ZoneHVACLowTemperatureRadiantElectric_Impl;
 
     explicit ZoneHVACLowTemperatureRadiantElectric(std::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl);
 
@@ -151,10 +156,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACLowTemperatureRadiantElectric*/
-  typedef boost::optional<ZoneHVACLowTemperatureRadiantElectric> OptionalZoneHVACLowTemperatureRadiantElectric;
+  using OptionalZoneHVACLowTemperatureRadiantElectric = boost::optional<ZoneHVACLowTemperatureRadiantElectric>;
 
   /** \relates ZoneHVACLowTemperatureRadiantElectric*/
-  typedef std::vector<ZoneHVACLowTemperatureRadiantElectric> ZoneHVACLowTemperatureRadiantElectricVector;
+  using ZoneHVACLowTemperatureRadiantElectricVector = std::vector<ZoneHVACLowTemperatureRadiantElectric>;
 
 }  // namespace model
 }  // namespace openstudio

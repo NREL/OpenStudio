@@ -38,7 +38,6 @@ namespace openstudio {
 ProgressBar::ProgressBar() : m_percentage(0.0) {}
 
 /// virtual destructor
-ProgressBar::~ProgressBar() {}
 
 /// virtual method called every time progressUpdated fires
 void ProgressBar::onPercentageUpdated(double percentage) {}

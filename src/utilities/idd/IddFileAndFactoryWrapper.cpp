@@ -232,7 +232,7 @@ IddFile IddFileAndFactoryWrapper::iddFile() const {
   }
 
   LOG_AND_THROW("Invalid IddFileAndFactoryWrapper has no IddFile set.");
-  return IddFile();
+  return {};
 }
 
 IddFileType IddFileAndFactoryWrapper::iddFileType() const {
@@ -240,7 +240,7 @@ IddFileType IddFileAndFactoryWrapper::iddFileType() const {
     return *m_iddFileType;
   }
   OS_ASSERT(m_iddFile);
-  return IddFileType(IddFileType::UserCustom);
+  return {IddFileType::UserCustom};
 }
 
 // SETTERS

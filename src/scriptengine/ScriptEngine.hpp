@@ -111,7 +111,11 @@ class ScriptEngineInstance
   ScriptEngineInstance& operator=(const ScriptEngineInstance&) = delete;
   ScriptEngineInstance& operator=(ScriptEngineInstance&&) = delete;
 
-  openstudio::ScriptEngine& operator->() {
+  void registerInitializationFunction(const std::function<void()>& runSetupFun) {
+    m_runSetupFun = runSetupFun;
+  }
+
+  ScriptEngine& operator->() {
     if (instance) {
       return *(instance);
     } else {
@@ -124,7 +128,9 @@ class ScriptEngineInstance
       engineLib = std::make_unique<DynamicLibrary>(enginePath);
       const auto factory = engineLib->load_symbol<ScriptEngineFactoryType>("makeScriptEngine");
       instance = std::unique_ptr<ScriptEngine>(factory(args.size(), argv.data()));
-
+      if (m_runSetupFun) {
+        m_runSetupFun();
+      }
       return *instance;
     }
   }
@@ -141,6 +147,7 @@ class ScriptEngineInstance
   std::vector<std::string> args;
   std::unique_ptr<ScriptEngine> instance;
   std::unique_ptr<DynamicLibrary> engineLib;
+  std::function<void()> m_runSetupFun;
 };
 
 }  // namespace openstudio

@@ -129,9 +129,53 @@ if(BUILD_TESTING)
   add_test(NAME OpenStudioCLI.Labs.execute_ruby_script
     COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb OpenStudioLabs "National Renewable Energy Laboratory"
   )
+  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from OpenStudioLabs, at National Renewable Energy Laboratory"
+  )
+
+  # Ensure we don't get these
+  # > eval:1: warning: already initialized constant OpenStudio::Airflow::AirflowElement::DR_DOOR
+  # > eval:1: warning: previous definition of DR_DOOR was here
+  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.no_previous_definition
+    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb OpenStudioLabs "National Renewable Energy Laboratory"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.no_previous_definition PROPERTIES
+    FAIL_REGULAR_EXPRESSION "previous definition of;already initialized constant"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags
+    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb -x "National Renewable Energy Laboratory"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.forward_flags PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.omit_execute
+    COMMAND $<TARGET_FILE:openstudio> labs ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb -x "National Renewable Energy Laboratory"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.forward_flags PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
+  )
 
   add_test(NAME OpenStudioCLI.Labs.execute_python_script
     COMMAND $<TARGET_FILE:openstudio> labs execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py OpenStudioLabs "National Renewable Energy Laboratory"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_python_script PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from OpenStudioLabs, at National Renewable Energy Laboratory"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags
+    COMMAND $<TARGET_FILE:openstudio> labs execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py -x "National Renewable Energy Laboratory"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags.omit_execute
+    COMMAND $<TARGET_FILE:openstudio> labs ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py -x "National Renewable Energy Laboratory"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
   )
 
   add_test(NAME OpenStudioCLI.Labs.Run_RubyOnly

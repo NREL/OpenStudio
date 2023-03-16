@@ -57,7 +57,12 @@ namespace model {
     explicit HeatExchangerDesiccantBalancedFlow(const Model& model,
                                                 const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
 
-    virtual ~HeatExchangerDesiccantBalancedFlow() {}
+    virtual ~HeatExchangerDesiccantBalancedFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatExchangerDesiccantBalancedFlow(const HeatExchangerDesiccantBalancedFlow& other) = default;
+    HeatExchangerDesiccantBalancedFlow(HeatExchangerDesiccantBalancedFlow&& other) = default;
+    HeatExchangerDesiccantBalancedFlow& operator=(const HeatExchangerDesiccantBalancedFlow&) = default;
+    HeatExchangerDesiccantBalancedFlow& operator=(HeatExchangerDesiccantBalancedFlow&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -78,7 +83,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::HeatExchangerDesiccantBalancedFlow_Impl ImplType;
+    using ImplType = detail::HeatExchangerDesiccantBalancedFlow_Impl;
 
     explicit HeatExchangerDesiccantBalancedFlow(std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlow_Impl> impl);
 
@@ -94,10 +99,10 @@ namespace model {
   };
 
   /** \relates HeatExchangerDesiccantBalancedFlow*/
-  typedef boost::optional<HeatExchangerDesiccantBalancedFlow> OptionalHeatExchangerDesiccantBalancedFlow;
+  using OptionalHeatExchangerDesiccantBalancedFlow = boost::optional<HeatExchangerDesiccantBalancedFlow>;
 
   /** \relates HeatExchangerDesiccantBalancedFlow*/
-  typedef std::vector<HeatExchangerDesiccantBalancedFlow> HeatExchangerDesiccantBalancedFlowVector;
+  using HeatExchangerDesiccantBalancedFlowVector = std::vector<HeatExchangerDesiccantBalancedFlow>;
 
 }  // namespace model
 }  // namespace openstudio

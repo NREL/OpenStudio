@@ -148,7 +148,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkCrack::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkCrack);
+    return {IddObjectType::OS_AirflowNetworkCrack};
   }
 
   double AirflowNetworkCrack::airMassFlowCoefficient() const {

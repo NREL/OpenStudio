@@ -62,7 +62,12 @@ namespace model {
     /** This constructor requires a user-specified schedule. */
     ExteriorLights(const ExteriorLightsDefinition& definition, Schedule& schedule);
 
-    virtual ~ExteriorLights() {}
+    virtual ~ExteriorLights() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorLights(const ExteriorLights& other) = default;
+    ExteriorLights(ExteriorLights&& other) = default;
+    ExteriorLights& operator=(const ExteriorLights&) = default;
+    ExteriorLights& operator=(ExteriorLights&&) = default;
 
     //@}
 
@@ -102,7 +107,7 @@ namespace model {
 
     void resetSchedule();
 
-    bool setControlOption(std::string controlOption);
+    bool setControlOption(const std::string& controlOption);
 
     void resetControlOption();
 
@@ -110,7 +115,7 @@ namespace model {
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -123,7 +128,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorLights_Impl ImplType;
+    using ImplType = detail::ExteriorLights_Impl;
 
     explicit ExteriorLights(std::shared_ptr<detail::ExteriorLights_Impl> impl);
 
@@ -137,10 +142,10 @@ namespace model {
   };
 
   /** \relates ExteriorLights*/
-  typedef boost::optional<ExteriorLights> OptionalExteriorLights;
+  using OptionalExteriorLights = boost::optional<ExteriorLights>;
 
   /** \relates ExteriorLights*/
-  typedef std::vector<ExteriorLights> ExteriorLightsVector;
+  using ExteriorLightsVector = std::vector<ExteriorLights>;
 
 }  // namespace model
 }  // namespace openstudio

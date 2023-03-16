@@ -15,6 +15,7 @@
 
 %{
   //#include <airflow/ReverseTranslator.hpp>
+  #include <airflow/contam/ContamEnums.hpp>
   #include <airflow/contam/ForwardTranslator.hpp>
   using namespace openstudio::contam;
   using namespace openstudio;
@@ -45,12 +46,17 @@
 %template(ContamFanDataPointVector) std::vector<openstudio::contam::FanDataPoint>;
 %template(ContamXyDataPointVector) std::vector<openstudio::contam::XyDataPoint>;
 %template(ContamAirflowSubelementDataVector) std::vector<openstudio::contam::AirflowSubelementData>;
+%template(AirflowElementTypeVector) std::vector<openstudio::contam::AirflowElementType>;
+%template(OptionalAirflowElementType) boost::optional<openstudio::contam::AirflowElementType>;
+%template(ControlNodeTypeVector) std::vector<openstudio::contam::ControlNodeType>;
+%template(OptionalControlNodeType) boost::optional<openstudio::contam::ControlNodeType>;
 
 // #ifdef SWIGCSHARP
 //%rename(ContamReverseTranslator) openstudio::contam::ReverseTranslator;
 %rename(ContamForwardTranslator) openstudio::contam::ForwardTranslator;
 // #endif
 
+%include <airflow/contam/ContamEnums.hpp>
 %include <airflow/contam/PrjSubobjects.hpp>
 %include <airflow/contam/PrjObjects.hpp>
 %include <airflow/contam/PrjAirflowElements.hpp>

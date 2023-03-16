@@ -81,7 +81,7 @@ namespace model {
     std::vector<IdfObject> ScheduleDay_Impl::remove() {
       if (OptionalParentObject parent = this->parent()) {
         LOG(Info, "Cannot remove " << briefDescription() << ", because that would invalidate " << parent->briefDescription() << ".");
-        return IdfObjectVector();
+        return {};
       }
       return ParentObject_Impl::remove();
     }
@@ -294,7 +294,7 @@ namespace model {
       }
 
       insertResult = times.insert(untilTime);
-      unsigned index = (unsigned)std::distance<std::set<openstudio::Time>::const_iterator>(times.begin(), insertResult.first);
+      auto index = (unsigned)std::distance<std::set<openstudio::Time>::const_iterator>(times.begin(), insertResult.first);
       OS_ASSERT(index <= numExtensibleGroups());
       bool result(true);
       if (insertResult.second) {

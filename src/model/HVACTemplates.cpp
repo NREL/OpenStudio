@@ -119,31 +119,31 @@ namespace openstudio {
 
 namespace model {
 
-  Schedule makeSchedule(Model& model, std::string name = "Hot_Water_Temperature", double targetTemperature = 67.0) {
+  Schedule makeSchedule(Model& model, const std::string& name = "Hot_Water_Temperature", double targetTemperature = 67.0) {
     //Make a time stamp to use in multiple places
     Time osTime = Time(0, 24, 0, 0);
 
     //Schedule Ruleset
-    ScheduleRuleset TempSchedule = ScheduleRuleset(model);
-    TempSchedule.setName(name);
+    ScheduleRuleset tempSchedule = ScheduleRuleset(model);
+    tempSchedule.setName(name);
 
     //Winter Design Day
-    ScheduleDay TempScheduleWinter = ScheduleDay(model);
-    TempSchedule.setWinterDesignDaySchedule(TempScheduleWinter);
-    TempSchedule.winterDesignDaySchedule().setName(name + "_Winter_Design_Day");
-    TempSchedule.winterDesignDaySchedule().addValue(osTime, targetTemperature);
+    ScheduleDay tempScheduleWinter = ScheduleDay(model);
+    tempSchedule.setWinterDesignDaySchedule(tempScheduleWinter);
+    tempSchedule.winterDesignDaySchedule().setName(name + "_Winter_Design_Day");
+    tempSchedule.winterDesignDaySchedule().addValue(osTime, targetTemperature);
 
     //Summer Design Day
-    ScheduleDay TempScheduleSummer = ScheduleDay(model);
-    TempSchedule.setSummerDesignDaySchedule(TempScheduleSummer);
-    TempSchedule.summerDesignDaySchedule().setName(name + "_Summer_Design_Day");
-    TempSchedule.summerDesignDaySchedule().addValue(osTime, targetTemperature);
+    ScheduleDay tempScheduleSummer = ScheduleDay(model);
+    tempSchedule.setSummerDesignDaySchedule(tempScheduleSummer);
+    tempSchedule.summerDesignDaySchedule().setName(name + "_Summer_Design_Day");
+    tempSchedule.summerDesignDaySchedule().addValue(osTime, targetTemperature);
 
     //All other days
-    TempSchedule.defaultDaySchedule().setName(name + "_Default");
-    TempSchedule.defaultDaySchedule().addValue(osTime, targetTemperature);
+    tempSchedule.defaultDaySchedule().setName(name + "_Default");
+    tempSchedule.defaultDaySchedule().addValue(osTime, targetTemperature);
 
-    return TempSchedule;
+    return std::move(tempSchedule);
   }
 
   Schedule deckTempSchedule(Model& model) {
@@ -175,17 +175,12 @@ namespace model {
   }
 
   void addSystemType1(Model& model, std::vector<ThermalZone> zones) {
-    std::vector<model::ThermalZone> zonesToAddTo;
 
-    for (const auto& zone : zones) {
-      if (zone.model() == model) {
-        zonesToAddTo.push_back(zone);
-      }
-    }
+    zones.erase(std::remove_if(zones.begin(), zones.end(), [&](const auto& zone) { return zone.model() != model; }), zones.end());
 
     // Hot Water Plant
 
-    if (zonesToAddTo.size() > 0) {
+    if (!zones.empty()) {
       PlantLoop hotWaterPlant(model);
       hotWaterPlant.setName("Hot Water Loop");
       SizingPlant sizingPlant = hotWaterPlant.sizingPlant();
@@ -227,7 +222,7 @@ namespace model {
 
       hotWaterSPM.addToNode(hotWaterOutletNode);
 
-      for (auto& zone : zonesToAddTo) {
+      for (auto& zone : zones) {
         model::ZoneHVACPackagedTerminalAirConditioner ptac = addSystemType1(model);
 
         ptac.addToThermalZone(zone);
@@ -291,8 +286,8 @@ namespace model {
     sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
     sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
     sizingSystem.setSizingOption("NonCoincident");
-    sizingSystem.setAllOutdoorAirinCooling("No");
-    sizingSystem.setAllOutdoorAirinHeating("No");
+    sizingSystem.setAllOutdoorAirinCooling(false);
+    sizingSystem.setAllOutdoorAirinHeating(false);
     sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
     sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
     sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
@@ -328,7 +323,7 @@ namespace model {
 
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType4(Model& model) {
@@ -356,8 +351,8 @@ namespace model {
     sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
     sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
     sizingSystem.setSizingOption("NonCoincident");
-    sizingSystem.setAllOutdoorAirinCooling("No");
-    sizingSystem.setAllOutdoorAirinHeating("No");
+    sizingSystem.setAllOutdoorAirinCooling(false);
+    sizingSystem.setAllOutdoorAirinHeating(false);
     sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
     sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
     sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
@@ -395,7 +390,7 @@ namespace model {
     Node node1 = supplyFan.outletModelObject()->cast<Node>();
     setpointMSZR.addToNode(node1);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType5(Model& model) {
@@ -403,11 +398,11 @@ namespace model {
 
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
-    Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _hotWaterSchedule = hotWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _hotWaterSchedule = hotWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
     AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
     airLoopHVAC.setName("Packaged Rooftop VAV with Reheat");
@@ -489,14 +484,14 @@ namespace model {
 
     hotWaterPlant.addDemandBranchForComponent(waterReheatCoil);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType6(Model& model) {
     Model tempModel;
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
-    Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
 
     AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
     airLoopHVAC.setName("Packaged Rooftop VAV with PFP Boxes and Reheat");
@@ -530,7 +525,7 @@ namespace model {
     AirTerminalSingleDuctParallelPIUReheat terminal(model, _alwaysOnSchedule, piuFan, reheatCoil);
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType7(Model& model) {
@@ -538,11 +533,11 @@ namespace model {
 
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
-    Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _hotWaterSchedule = hotWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _hotWaterSchedule = hotWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
     AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
     airLoopHVAC.setName("VAV with Reheat");
@@ -756,16 +751,16 @@ namespace model {
 
     spm.addToNode(condenserSystemSupplyOutletNode);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType8(Model& model) {
     Model tempModel;
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
-    Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
 
     AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
     airLoopHVAC.setName("VAV with PFP Boxes and Reheat");
@@ -832,7 +827,7 @@ namespace model {
     AirTerminalSingleDuctParallelPIUReheat terminal(model, _alwaysOnSchedule, piuFan, reheatCoil);
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType9(Model& model) {
@@ -859,8 +854,8 @@ namespace model {
     sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
     sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
     sizingSystem.setSizingOption("NonCoincident");
-    sizingSystem.setAllOutdoorAirinCooling("No");
-    sizingSystem.setAllOutdoorAirinHeating("No");
+    sizingSystem.setAllOutdoorAirinCooling(false);
+    sizingSystem.setAllOutdoorAirinHeating(false);
     sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
     sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
     sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
@@ -893,7 +888,7 @@ namespace model {
 
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType10(Model& model) {
@@ -920,8 +915,8 @@ namespace model {
     sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
     sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
     sizingSystem.setSizingOption("NonCoincident");
-    sizingSystem.setAllOutdoorAirinCooling("No");
-    sizingSystem.setAllOutdoorAirinHeating("No");
+    sizingSystem.setAllOutdoorAirinCooling(false);
+    sizingSystem.setAllOutdoorAirinHeating(false);
     sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
     sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
     sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
@@ -954,14 +949,14 @@ namespace model {
 
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSHWLoop(Model& model) {
 
     Model tempModel;
     // Make a schedule at 140°F
-    Schedule shwSchedule = makeSchedule(tempModel, "SHW_Temperature_140F", 60).clone(model).cast<Schedule>();
+    auto shwSchedule = makeSchedule(tempModel, "SHW_Temperature_140F", 60).clone(model).cast<Schedule>();
 
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
@@ -1017,7 +1012,7 @@ namespace model {
     wh.setHeaterThermalEfficiency(0.80154340529419);
 
     // Set it to Ambient schedule, at 70°F
-    Schedule ambientSchedule = makeSchedule(tempModel, "Water Heater Ambient Temp Schedule - 70F", 21.11).clone(model).cast<Schedule>();
+    auto ambientSchedule = makeSchedule(tempModel, "Water Heater Ambient Temp Schedule - 70F", 21.11).clone(model).cast<Schedule>();
     wh.setAmbientTemperatureSchedule(ambientSchedule);
     wh.setAmbientTemperatureIndicator("Schedule");
 
@@ -1143,7 +1138,7 @@ namespace model {
  *
  */
 
-    return shwPlant;
+    return std::move(shwPlant);
   }
 
 }  // namespace model

@@ -53,7 +53,7 @@ namespace model {
 
       SetpointManagerSystemNodeResetTemperature_Impl(const SetpointManagerSystemNodeResetTemperature_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerSystemNodeResetTemperature_Impl() {}
+      virtual ~SetpointManagerSystemNodeResetTemperature_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -298,7 +298,7 @@ namespace model {
         newCoil.getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setSpeedDataList(speedDataListClone);
       }
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     std::vector<ModelObject> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::children() const {
@@ -322,7 +322,7 @@ namespace model {
         return WaterToAirComponent_Impl::remove();
       }
 
-      return std::vector<IdfObject>();
+      return {};
     }
 
     boost::optional<HVACComponent> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::containingHVACComponent() const {
@@ -425,16 +425,19 @@ namespace model {
 
     boost::optional<double>
       CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
-      return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W", "COIL:COOLING:WATERTOAIRHEATPUMP:VARIABLESPEEDEQUATIONFIT");
     }
 
     boost::optional<double> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
-      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s", "COIL:COOLING:WATERTOAIRHEATPUMP:VARIABLESPEEDEQUATIONFIT");
     }
 
     boost::optional<double>
       CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const {
-      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s", "COIL:COOLING:WATERTOAIRHEATPUMP:VARIABLESPEEDEQUATIONFIT");
     }
 
     void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosize() {
@@ -519,7 +522,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit);
+    return {IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit};
   }
 
   int CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::nominalSpeedLevel() const {

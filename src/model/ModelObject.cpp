@@ -54,6 +54,7 @@
 #include "OutputVariable_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 #include "../utilities/sql/SqlFileEnums.hpp"
 #include "../utilities/sql/SqlFileTimeSeriesQuery.hpp"
 #include "../utilities/sql/SqlFile.hpp"
@@ -63,6 +64,7 @@
 #include "../utilities/data/TimeSeries.hpp"
 
 #include <boost/algorithm/string.hpp>
+#include <fmt/core.h>
 
 using openstudio::Handle;
 using openstudio::HandleVector;
@@ -97,8 +99,7 @@ namespace model {
       std::vector<IdfObject> removedCosts;
       std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
       for (LifeCycleCost& lifeCycleCost : lifeCycleCosts) {
-        std::vector<IdfObject> tmp = lifeCycleCost.remove();
-        removedCosts.insert(removedCosts.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(removedCosts, lifeCycleCost.remove());
       }
       return removedCosts;
     }
@@ -136,7 +137,7 @@ namespace model {
       std::vector<std::string> variableNames = this->outputVariableNames();
       OptionalString name = this->name();
 
-      for (const OutputVariable& variable : this->model().getConcreteModelObjects<OutputVariable>()) {
+      for (OutputVariable& variable : this->model().getConcreteModelObjects<OutputVariable>()) {
         std::string keyValue = variable.keyValue();
         std::string variableName = variable.variableName();
 
@@ -151,7 +152,7 @@ namespace model {
         }
 
         if (std::find(variableNames.begin(), variableNames.end(), variableName) != variableNames.end()) {
-          variables.push_back(variable);
+          variables.emplace_back(std::move(variable));
         }
       }
       return variables;
@@ -213,26 +214,31 @@ namespace model {
       } else if (keyValue) {
         if (*keyValue == "*") {
           LOG(Error, "Variable specifies '*' for key value and object has no name.");
-          return OptionalString();
+          return {};
         }
       } else if (name) {
         LOG(Warn, "Variable does not specify key value, using object name.");
         keyValue = name;
       } else {
         LOG(Error, "Variable does not specify key value and object has no name.");
-        return OptionalString();
+        return {};
       }
       return keyValue;
     }
 
-    /** Gets the autosized component value from the sql file **/
-    boost::optional<double> ModelObject_Impl::getAutosizedValue(std::string valueName, std::string units) const {
-      boost::optional<double> result;
+    boost::optional<double> ModelObject_Impl::getAutosizedValueFromInitializationSummary(const std::string& valueName,
+                                                                                         const std::string& units) const {
 
       // Get the object name
       if (!name()) {
         LOG(Warn, "This object does not have a name, cannot retrieve the autosized value '" + valueName + "'.");
-        return result;
+        return boost::none;
+      }
+
+      // Check that the model has a sql file
+      if (!model().sqlFile()) {
+        LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
+        return boost::none;
       }
 
       // Get the object name and transform to the way it is recorded
@@ -240,77 +246,9 @@ namespace model {
       std::string sqlName = name().get();
       boost::to_upper(sqlName);
 
-      // Get the object type and transform to the way it is recorded
-      // in the sql file
-      std::string sqlObjectType = iddObject().type().valueDescription();
-      boost::replace_all(sqlObjectType, "OS:", "");
-
-      // Special logic to deal with EnergyPlus inconsistencies
-      if (sqlObjectType == "Coil:Heating:Gas") {
-        sqlObjectType = "Coil:Heating:Fuel";
-      }
-
-      if (sqlObjectType == "CoilPerformance:DX:Cooling") {
-        // Get the parent object
-        boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> parentCoil;
-        auto coilTwoSpdHumCtrls = this->model().getConcreteModelObjects<CoilCoolingDXTwoStageWithHumidityControlMode>();
-        for (const auto& coilInModel : coilTwoSpdHumCtrls) {
-          // Check the coil performance objects in this coil to see if one of them is this object
-          auto coilPerf = coilInModel.normalModeStage1CoilPerformance();
-          if (coilPerf) {
-            if (coilPerf->handle() == this->handle()) {
-              parentCoil = coilInModel;
-              break;
-            }
-          }
-
-          coilPerf = coilInModel.normalModeStage1Plus2CoilPerformance();
-          if (coilPerf) {
-            if (coilPerf->handle() == this->handle()) {
-              parentCoil = coilInModel;
-              break;
-            }
-          }
-
-          coilPerf = coilInModel.dehumidificationMode1Stage1CoilPerformance();
-          if (coilPerf) {
-            if (coilPerf->handle() == this->handle()) {
-              parentCoil = coilInModel;
-              break;
-            }
-          }
-
-          coilPerf = coilInModel.dehumidificationMode1Stage1Plus2CoilPerformance();
-          if (coilPerf) {
-            if (coilPerf->handle() == this->handle()) {
-              parentCoil = coilInModel;
-              break;
-            }
-          }
-        }
-
-        if (!parentCoil) {
-          LOG(Warn, "The CoilPerformance:DX:Cooling object called " + sqlName
-                      + " does not have a parent CoilCoolingDXTwoStageWithHumidityControlMode, cannot retrieve the autosized value.");
-          return result;
-        }
-
-        std::string parSqlName = parentCoil->name().get();
-        boost::to_upper(parSqlName);
-        // Join the parent and child object names, like:
-        // COIL COOLING DX TWO STAGE WITH HUMIDITY CONTROL MODE 1:COIL PERFORMANCE DX COOLING 1
-        sqlName = parSqlName + std::string(":") + sqlName;
-      }
-
-      // Check that the model has a sql file
-      if (!model().sqlFile()) {
-        LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
-        return result;
-      }
-
       // Query the InitializationSummary -> Component Sizing table to get
       // the row names that contains information for this component.
-      std::string rowsQuery = R"(
+      const std::string rowsQuery = R"(
       SELECT RowName FROM TabularDataWithStrings
         WHERE ReportName = 'InitializationSummary'
         AND ReportForString = 'Entire Facility'
@@ -324,35 +262,35 @@ namespace model {
       // Warn if the query failed
       if (!rowNames) {
         LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the InitializationSummary Component Sizing table.");
-        return result;
+        return boost::none;
       }
 
       // Query each row of the InitializationSummary -> Component Sizing table
       // that contains this component to get the desired value.
       std::string valueNameAndUnits = valueName + std::string(" [") + units + std::string("]");
-      if (units == "") {
+      if (units.empty()) {
         valueNameAndUnits = valueName;
       } else if (units == "typo_in_energyplus") {
         valueNameAndUnits = valueName + std::string(" []");
       }
 
-      for (std::string rowName : rowNames.get()) {
-        std::string rowCheckQuery = R"(
+      for (const std::string& rowName : rowNames.get()) {
+        const std::string rowCheckQuery = R"(
         SELECT Value FROM TabularDataWithStrings
           WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'Component Sizing Information'
           AND RowName = ?
           AND Value = ?;)";
-        boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery,
-                                                                                                     // bindArgs
-                                                                                                     rowName, valueNameAndUnits);
+        const boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery,
+                                                                                                           // bindArgs
+                                                                                                           rowName, valueNameAndUnits);
         // Check if the query succeeded
         if (!rowValueName) {
           continue;
         }
         // This is the right row
-        std::string valQuery = R"(
+        const std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
           WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
@@ -362,18 +300,64 @@ namespace model {
         boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery,
                                                                                        // bindArgs
                                                                                        rowName);
-        // Check if the query succeeded
+        // Check if the query succeeded and return if so
         if (val) {
-          result = val.get();
-          break;
+          return val;
         }
       }
 
-      if (!result) {
-        LOG(Debug, "The autosized value query for " + valueNameAndUnits + " of " + sqlName + " returned no value.");
+      LOG(Debug, "The autosized value query for " + valueNameAndUnits + " of " + sqlName + " returned no value.");
+      return boost::none;
+    }
+
+    /** Gets the autosized component value from the sql file **/
+    boost::optional<double> ModelObject_Impl::getAutosizedValue(const std::string& valueName, const std::string& units,
+                                                                std::string overrideCompType) const {
+
+      // Get the object name
+      if (!name()) {
+        LOG(Warn, "This object does not have a name, cannot retrieve the autosized value '" + valueName + "'.");
+        return boost::none;
       }
 
-      return result;
+      // Check that the model has a sql file
+      if (!model().sqlFile()) {
+        LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
+        return boost::none;
+      }
+
+      // Get the object name and transform to the way it is recorded
+      // in the sql file
+      std::string sqlName = name().get();
+      boost::to_upper(sqlName);
+
+      // Get the object type and transform to the way it is recorded in the sql file
+      if (overrideCompType.empty()) {
+        overrideCompType = iddObject().type().valueDescription();
+        boost::replace_all(overrideCompType, "OS:", "");
+      }
+
+      const std::string directQuery = R"sql(
+      SELECT Value FROM ComponentSizes
+        WHERE CompType = ?
+          AND CompName = ?
+          AND Description = ?
+          AND Units = ?;
+    )sql";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(directQuery,
+                                                                                     // bindArgs
+                                                                                     overrideCompType, sqlName, valueName, units);
+      if (!val) {
+        LOG(Debug, fmt::format(R"sql(The direct query failed:
+SELECT Value FROM ComponentSizes
+  WHERE CompType = '{}'
+    AND CompName = '{}'
+    AND Description = '{}'
+    AND Units = '{}';)sql",
+                               overrideCompType, sqlName, valueName, units));
+      }
+
+      return val;
     }
 
     //void ModelObject_Impl::connect(unsigned outletPort, ModelObject target, unsigned inletPort)
@@ -509,7 +493,7 @@ namespace model {
       OptionalWorkspaceObject wo = this->getTarget(port);
       if (wo) {
 
-        Connection connection = wo->cast<Connection>();
+        auto connection = wo->cast<Connection>();
 
         boost::optional<ModelObject> targetObject = connection.targetObject();
         boost::optional<ModelObject> sourceObject = connection.sourceObject();
@@ -522,13 +506,13 @@ namespace model {
           }
         }
       }
-      return boost::optional<ModelObject>();
+      return {};
     }
 
     boost::optional<unsigned> ModelObject_Impl::connectedObjectPort(unsigned port) const {
       OptionalWorkspaceObject wo = this->getTarget(port);
       if (wo) {
-        Connection connection = wo->cast<Connection>();
+        auto connection = wo->cast<Connection>();
 
         if (boost::optional<ModelObject> sourceObject = connection.sourceObject()) {
           if (sourceObject->handle() == this->handle()) {
@@ -541,7 +525,7 @@ namespace model {
           }
         }
       }
-      return boost::optional<unsigned>();
+      return {};
     }
 
     ModelObject ModelObject_Impl::clone(Model model) const {
@@ -599,19 +583,17 @@ namespace model {
       // Not the same model. Resource handling is more complicated.
       result = model.addAndInsertObjects(toAdd, castArray<WorkspaceObject>(getRecursiveResourceSubTrees(getObject<ModelObject>(), true)));
       // Operation should work.
-      OS_ASSERT(result.size() > 0u);
+      OS_ASSERT(!result.empty());
       return result[0].cast<ModelObject>();
     }
 
     /// remove the object from the model, also removes any cost objects associated with this object
     /// return std::vector<IdfObject> containing any removed object(s)
     std::vector<IdfObject> ModelObject_Impl::remove() {
-      std::vector<IdfObject> result;
-      std::vector<IdfObject> removedCosts = this->removeLifeCycleCosts();
-      std::vector<IdfObject> removedProperties = this->removeAdditionalProperties();
-      result = WorkspaceObject_Impl::remove();
-      result.insert(result.end(), removedCosts.begin(), removedCosts.end());
-      result.insert(result.end(), removedProperties.begin(), removedProperties.end());
+      // We need to **guarantee** that WorkspaceObject_Impl::remove() is called last. C++ does not guarantee the order in which function parameters
+      // are evaluated, so I can't pass the three remove to concat<IdfObject>(Args&&...) (on GCC it was calling Workspace_Impl::remove first)
+      auto result = concat<IdfObject>(this->removeLifeCycleCosts(), this->removeAdditionalProperties());
+      openstudio::detail::concat_helper(result, WorkspaceObject_Impl::remove());
       return result;
     }
 
@@ -626,10 +608,10 @@ namespace model {
     }
 
     boost::optional<ParentObject> ModelObject_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
-    bool ModelObject_Impl::setParent(ParentObject& newParent) {
+    bool ModelObject_Impl::setParent(ParentObject& /*newParent*/) {
       return false;
     }
 
@@ -705,16 +687,16 @@ namespace model {
       return false;
     }
 
-    std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      return std::vector<ScheduleTypeKey>();
+    std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& /*schedule*/) const {
+      return {};
     }
 
     std::vector<EMSActuatorNames> ModelObject_Impl::emsActuatorNames() const {
-      return std::vector<EMSActuatorNames>();
+      return {};
     }
 
     std::vector<std::string> ModelObject_Impl::emsInternalVariableNames() const {
-      return std::vector<std::string>();
+      return {};
     }
 
     AdditionalProperties ModelObject_Impl::additionalProperties() const {
@@ -738,18 +720,14 @@ namespace model {
       AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
       for (AdditionalProperties& candidate : candidates) {
         std::vector<IdfObject> tmp = candidate.remove();
-        removed.insert(removed.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(removed, std::move(tmp));
       }
       return removed;
     }
 
     bool ModelObject_Impl::hasAdditionalProperties() const {
-      bool result = false;
       AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
-      if (candidates.size() > 0) {
-        result = true;
-      }
-      return result;
+      return !candidates.empty();
     }
 
     boost::optional<std::string> ModelObject_Impl::cadObjectId() const {
@@ -938,7 +916,7 @@ namespace model {
   ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p) : WorkspaceObject(std::move(p)) {}
 
   /** Gets the autosized component value from the sql file **/
-  boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const {
+  boost::optional<double> ModelObject::getAutosizedValue(const std::string& valueName, const std::string& units) const {
     return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
   }
 

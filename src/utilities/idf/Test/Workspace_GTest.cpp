@@ -90,7 +90,7 @@ TEST_F(IdfFixture, IdfFile_Workspace_DefaultConstructor) {
 }
 
 TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip) {
-  ASSERT_TRUE(epIdfFile.objects().size() > 0);
+  ASSERT_TRUE(!epIdfFile.objects().empty());
   Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
 
   // make sure this also creates an IddFileType::EnergyPlus
@@ -127,7 +127,7 @@ TEST_F(IdfFixture, ObjectGettersAndSetters_StrictnessMinimal) {
   LOG(Info, "There are " << result.size() << " objects in the Workspace.");
   // get matching methods
   result = workspace.getObjectsByName("C5-1");
-  ASSERT_TRUE(result.size() > 0);
+  ASSERT_TRUE(!result.empty());
   EXPECT_EQ(static_cast<unsigned>(1), result.size());
   EXPECT_TRUE(result[0].iddObject().type() == IddObjectType::BuildingSurface_Detailed);
   result = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
@@ -137,7 +137,7 @@ TEST_F(IdfFixture, ObjectGettersAndSetters_StrictnessMinimal) {
 }
 
 TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports) {
-  ASSERT_TRUE(epIdfFile.objects().size() > 0);
+  ASSERT_TRUE(!epIdfFile.objects().empty());
   Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
 
   ValidityReport report = workspace.validityReport(StrictnessLevel::Minimal);
@@ -160,9 +160,9 @@ TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports) 
 }
 
 TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports_2) {
-  ASSERT_TRUE(epIdfFile.objects().size() > 0);
+  ASSERT_TRUE(!epIdfFile.objects().empty());
   Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
-  ASSERT_TRUE(workspace.objects().size() > 0);
+  ASSERT_TRUE(!workspace.objects().empty());
 
   ValidityReport report = workspace.validityReport(StrictnessLevel::Final);
   EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());
@@ -206,7 +206,7 @@ TEST_F(IdfFixture, Workspace_ValidityCheckingAndReports_3) {
 
   // remove the building object
   WorkspaceObjectVector buildingObjects = workspace.getObjectsByType(IddObjectType::Building);
-  ASSERT_TRUE(buildingObjects.size() > 0);
+  ASSERT_TRUE(!buildingObjects.empty());
   EXPECT_EQ(static_cast<unsigned>(1), buildingObjects.size());
   workspace.removeObject(buildingObjects[0].handle());
 
@@ -228,7 +228,7 @@ TEST_F(IdfFixture, Workspace_ValidityCheckingAndReports_3) {
 
 TEST_F(IdfFixture, Workspace_FollowingPointers) {
 
-  ASSERT_TRUE(epIdfFile.objects().size() > 0);
+  ASSERT_TRUE(!epIdfFile.objects().empty());
   Workspace workspace(epIdfFile, StrictnessLevel::Draft);
 
   EXPECT_EQ(epIdfFile.objects().size(), workspace.objects().size());
@@ -252,7 +252,7 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
 
     // check that this light is in the zone's sources
     WorkspaceObjectVector sources = zone->sources();
-    WorkspaceObjectVector::const_iterator it = std::find(sources.begin(), sources.end(), light);
+    auto it = std::find(sources.begin(), sources.end(), light);
     EXPECT_TRUE(it != sources.end());
     if (it == sources.end()) {
       LOG(Warn, "Light object is not a source for its zone. Zone name = " << *(zone->name()) << ", and Zone has " << sources.size() << " sources.");
@@ -298,9 +298,9 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
 TEST_F(IdfFixture, Workspace_Alpha1) {
 
   // Construct workspace
-  ASSERT_TRUE(epIdfFile.objects().size() > 0);
+  ASSERT_TRUE(!epIdfFile.objects().empty());
   Workspace workspace(epIdfFile, StrictnessLevel::Draft);
-  ASSERT_TRUE(workspace.objects().size() > 0);
+  ASSERT_TRUE(!workspace.objects().empty());
 
   // Add Lights schedule to workspace.
   std::stringstream ss;
@@ -345,7 +345,7 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
   }
   idfObjectVector.push_back(schedule);
   std::vector<WorkspaceObject> objects = workspace.addObjects(idfObjectVector);
-  ASSERT_TRUE(objects.size() > 0);
+  ASSERT_TRUE(!objects.empty());
 
   // get zones
   WorkspaceObjectVector zones = workspace.getObjectsByType(IddObjectType::Zone);
@@ -418,8 +418,8 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
 TEST_F(IdfFixture, Workspace_RemoveObject) {
   Workspace workspace(epIdfFile, StrictnessLevel::Draft);
 
-  ASSERT_TRUE(epIdfFile.objects().size() > 0);
-  ASSERT_TRUE(workspace.objects().size() > 0);
+  ASSERT_TRUE(!epIdfFile.objects().empty());
+  ASSERT_TRUE(!workspace.objects().empty());
   EXPECT_EQ(epIdfFile.objects().size(), workspace.objects().size());
 
   // delete object with only one reference
@@ -433,8 +433,8 @@ TEST_F(IdfFixture, Workspace_RemoveObject) {
 TEST_F(IdfFixture, Workspace_RemoveObject2) {
   Workspace workspace(epIdfFile, StrictnessLevel::Draft);
 
-  ASSERT_TRUE(epIdfFile.objects().size() > 0);
-  ASSERT_TRUE(workspace.objects().size() > 0);
+  ASSERT_TRUE(!epIdfFile.objects().empty());
+  ASSERT_TRUE(!workspace.objects().empty());
   EXPECT_EQ(epIdfFile.objects().size(), workspace.objects().size());
 
   // delete object with two references
@@ -509,7 +509,8 @@ TEST_F(IdfFixture, Workspace_SameNameNotReference) {
 TEST_F(IdfFixture, Workspace_Clone) {
   Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
   Workspace clone = workspace.clone();
-  WorkspaceObjectVector wsObjects, cloneObjects;
+  WorkspaceObjectVector wsObjects;
+  WorkspaceObjectVector cloneObjects;
 
   wsObjects = workspace.getObjectsByType(IddObjectType::Building);
   ASSERT_TRUE(wsObjects.size() > static_cast<unsigned>(0));
@@ -521,7 +522,8 @@ TEST_F(IdfFixture, Workspace_Clone) {
   optObject = clone.getObjectByTypeAndName(IddObjectType::Building, "MyNewBuildingName");
   EXPECT_TRUE(optObject);
 
-  HandleVector wsHandles, cloneHandles;
+  HandleVector wsHandles;
+  HandleVector cloneHandles;
   wsHandles = workspace.handles();
   cloneHandles = clone.handles();
   EXPECT_EQ(wsHandles.size(), cloneHandles.size());
@@ -1351,7 +1353,7 @@ TEST_F(IdfFixture, Workspace_AvoidingNameClashes_IdfObjects) {
   EXPECT_EQ(static_cast<unsigned>(2), newObjects[0].numExtensibleGroups());
   eg = newObjects[0].getExtensibleGroup(0);
   ASSERT_FALSE(eg.empty());
-  WorkspaceExtensibleGroup weg = eg.cast<WorkspaceExtensibleGroup>();
+  auto weg = eg.cast<WorkspaceExtensibleGroup>();
   owo = weg.getTarget(0);
   ASSERT_TRUE(owo);
   EXPECT_TRUE(*owo == newObjects[1]);
@@ -1939,7 +1941,8 @@ TEST_F(IdfFixture, Workspace_Signals) {
 }
 
 TEST_F(IdfFixture, Workspace_Swap) {
-  Workspace ws1, ws2;
+  Workspace ws1;
+  Workspace ws2;
   ws1.addObject(IdfObject(IddObjectType::OS_Building));
   ws2.addObject(IdfObject(IddObjectType::OS_Lights_Definition));
 
@@ -2072,7 +2075,7 @@ TEST_F(IdfFixture, Workspace_DuplicateObjectName) {
 // test for #1531 (and #1741)
 TEST_F(IdfFixture, Workspace_getObjects_Type_StringOverload) {
 
-  ASSERT_TRUE(epIdfFile.objects().size() > 0);
+  ASSERT_TRUE(!epIdfFile.objects().empty());
   Workspace workspace(epIdfFile, StrictnessLevel::Draft);
 
   EXPECT_EQ(epIdfFile.objects().size(), workspace.objects().size());

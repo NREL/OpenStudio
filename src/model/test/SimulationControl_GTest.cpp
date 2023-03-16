@@ -41,7 +41,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, SimulationControl_GettersSetters) {
   Model model;
 
-  SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
+  auto simulationControl = model.getUniqueModelObject<SimulationControl>();
 
   // Do Zone Sizing Calculation:  Boolean
   // Check Idd default: false
@@ -215,7 +215,7 @@ TEST_F(ModelFixture, SimulationControl_GettersSetters) {
 TEST_F(ModelFixture, SimulationControl_LifeCycleCost) {
   Model model;
 
-  SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
+  auto simulationControl = model.getUniqueModelObject<SimulationControl>();
 
   // adding this cost (and many others) would be really weird, expect a throw
   EXPECT_THROW(LifeCycleCost cost(simulationControl), openstudio::Exception);

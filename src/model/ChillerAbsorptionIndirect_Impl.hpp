@@ -53,7 +53,7 @@ namespace model {
 
       ChillerAbsorptionIndirect_Impl(const ChillerAbsorptionIndirect_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ChillerAbsorptionIndirect_Impl() {}
+      virtual ~ChillerAbsorptionIndirect_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -194,7 +194,7 @@ namespace model {
 
       void autosizeDesignCondenserWaterFlowRate();
 
-      bool setChillerFlowMode(std::string chillerFlowMode);
+      bool setChillerFlowMode(const std::string& chillerFlowMode);
 
       bool setGeneratorHeatInputFunctionofPartLoadRatioCurve(const Curve& curve);
 
@@ -210,7 +210,7 @@ namespace model {
 
       bool setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(const Curve& curve);
 
-      bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
+      bool setGeneratorHeatSourceType(const std::string& generatorHeatSourceType);
 
       bool setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
 

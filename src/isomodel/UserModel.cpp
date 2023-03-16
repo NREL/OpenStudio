@@ -225,7 +225,9 @@ namespace isomodel {
 
     size_t prev = 0;
     size_t next = 0;
-    if (source.size() == 0) return results;
+    if (source.empty()) {
+      return results;
+    }
 
     while ((next = source.find_first_of(delimiter, prev)) != std::string::npos) {
       if (keepEmpty || (next - prev != 0)) {
@@ -243,13 +245,13 @@ namespace isomodel {
 
   // trim from front
   static inline std::string& ltrim(std::string& s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) { return !std::isspace(c); }));
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) { return std::isspace(c) == 0; }));
     return s;
   }
 
   // trim from back
   static inline std::string& rtrim(std::string& s) {
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](int c) { return !std::isspace(c); }).base(), s.end());
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int c) { return std::isspace(c) == 0; }).base(), s.end());
     return s;
   }
 
@@ -401,11 +403,15 @@ namespace isomodel {
 
   void UserModel::parseLine(const string& line) {
     std::vector<std::string> linesplit = stringSplit(line, '=', true);
-    if (linesplit.size() < 2) return;
+    if (linesplit.size() < 2) {
+      return;
+    }
     for (unsigned int i = 0; i < linesplit.size(); i++) {
       linesplit[i] = trim(linesplit[i]);
     }
-    if (linesplit[0].at(0) == '#') return;
+    if (linesplit[0].at(0) == '#') {
+      return;
+    }
     string attributeName = lcase(linesplit[0]);
 
     const char* attributeValue = linesplit[1].c_str();
@@ -566,7 +572,9 @@ namespace isomodel {
     if (inputFile.is_open()) {
       while (inputFile.good()) {
         getline(inputFile, line);
-        if (line.size() > 0 && line[0] == '#') continue;
+        if (!line.empty() && line[0] == '#') {
+          continue;
+        }
         parseLine(line);
       }
       inputFile.close();
@@ -575,20 +583,21 @@ namespace isomodel {
     }
   }
   int UserModel::weatherState(const std::string& header) {
-    if (header == "solar")
+    if (header == "solar") {
       return 1;
-    else if (header == "hdbt")
+    } else if (header == "hdbt") {
       return 2;
-    else if (header == "hEgh")
+    } else if (header == "hEgh") {
       return 3;
-    else if (header == "mEgh")
+    } else if (header == "mEgh") {
       return 4;
-    else if (header == "mdbt")
+    } else if (header == "mdbt") {
       return 5;
-    else if (header == "mwind")
+    } else if (header == "mwind") {
       return 6;
-    else
+    } else {
       return -1;
+    }
   }
 
   std::shared_ptr<WeatherData> UserModel::loadWeather() {
@@ -602,7 +611,7 @@ namespace isomodel {
       if (!openstudio::filesystem::exists(weatherFilename)) {
         LOG(Error, "Weather File Not Found: " << openstudio::toString(_weatherFilePath));
         _valid = false;
-        return std::shared_ptr<WeatherData>();
+        return {};
       }
     }
     EpwData edata(weatherFilename);

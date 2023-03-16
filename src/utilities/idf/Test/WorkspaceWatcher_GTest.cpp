@@ -46,7 +46,7 @@ TEST_F(IdfFixture, WorkspaceWatcher_ObjectChanges) {
   WorkspaceWatcher watcher(workspace);
 
   WorkspaceObjectVector result = workspace.getObjectsByName("C5-1");
-  ASSERT_TRUE(result.size() > 0);
+  ASSERT_TRUE(!result.empty());
   EXPECT_EQ(static_cast<unsigned>(1), result.size());
   EXPECT_TRUE(result[0].iddObject().type() == IddObjectType::BuildingSurface_Detailed);
   EXPECT_FALSE(watcher.dirty());
@@ -86,7 +86,7 @@ TEST_F(IdfFixture, WorkspaceWatcher_RemoveObjects) {
 
   EXPECT_FALSE(watcher.dirty());
   WorkspaceObjectVector result = workspace.getObjectsByName("C5-1");
-  ASSERT_TRUE(result.size() > 0);
+  ASSERT_TRUE(!result.empty());
   EXPECT_EQ(static_cast<unsigned>(1), result.size());
   workspace.removeObject(result[0].handle());
   EXPECT_TRUE(watcher.dirty());

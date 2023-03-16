@@ -71,7 +71,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractio
   Model model = model::exampleModel();
 
   //loop through all zones and add a radiant system to each one
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
 
     //make an electric radiant unit
     ScheduleConstant availabilitySched(model);
@@ -102,7 +102,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractio
   ConstructionWithInternalSource construction(layers);
 
   //set building's default ceiling construction to internal source construction
-  DefaultConstructionSet defConSet = model.getModelObjects<DefaultConstructionSet>()[0];
+  DefaultConstructionSet defConSet = model.getConcreteModelObjects<DefaultConstructionSet>()[0];
   defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
 
   //translate the model to EnergyPlus
@@ -110,10 +110,10 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractio
   Workspace workspace = trans.translateModel(model);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (const ThermalZone& thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
 
     //get the radiant zone equipment
-    for (ModelObject equipment : thermalZone.equipment()) {
+    for (const ModelObject& equipment : thermalZone.equipment()) {
       if (equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>()) {
         ZoneHVACLowTemperatureRadiantElectric testRad = equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>().get();
         EXPECT_FALSE(testRad.isMaximumElectricalPowertoPanelDefaulted());
@@ -121,7 +121,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractio
         EXPECT_EQ("MeanAirTemperature", testRad.temperatureControlType());
         EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
         EXPECT_EQ(2.0, testRad.heatingThrottlingRange());
-        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
+        for (const IdfExtensibleGroup& extGrp : testRad.extensibleGroups()) {
           EXPECT_EQ(0.25, extGrp.getDouble(1, false).get());
         }
       }
@@ -136,11 +136,12 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Crash_no_constru
   Model m;
 
   // make a space with some surfaces
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
   ASSERT_TRUE(_space1);

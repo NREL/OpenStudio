@@ -131,7 +131,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingDXVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DX_VariableSpeedFields::BasinHeaterOperatingScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXVariableSpeed", "Basin Heater Operating"));
       }
@@ -333,7 +334,7 @@ namespace model {
     //   OS_ASSERT(result);
     // }
 
-    bool CoilCoolingDXVariableSpeed_Impl::setCondenserType(std::string condenserType) {
+    bool CoilCoolingDXVariableSpeed_Impl::setCondenserType(const std::string& condenserType) {
       bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserType, condenserType);
       return result;
     }
@@ -445,7 +446,7 @@ namespace model {
         t_clone.getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
       }
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilCoolingDXVariableSpeed_Impl::children() const {
@@ -641,15 +642,18 @@ namespace model {
     }
 
     boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
-      return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W", "COIL:COOLING:DX:VARIABLESPEED");
     }
 
     boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
-      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s", "COIL:COOLING:DX:VARIABLESPEED");
     }
 
     boost::optional<double> CoilCoolingDXVariableSpeed_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
-      return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W", "AS VS COOLING COIL");
     }
 
     void CoilCoolingDXVariableSpeed_Impl::autosize() {
@@ -764,7 +768,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXVariableSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_VariableSpeed);
+    return {IddObjectType::OS_Coil_Cooling_DX_VariableSpeed};
   }
 
   std::vector<std::string> CoilCoolingDXVariableSpeed::condenserTypeValues() {
@@ -893,7 +897,7 @@ namespace model {
   //   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetCondenserAirInletNodeName();
   // }
 
-  bool CoilCoolingDXVariableSpeed::setCondenserType(std::string condenserType) {
+  bool CoilCoolingDXVariableSpeed::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setCondenserType(condenserType);
   }
 

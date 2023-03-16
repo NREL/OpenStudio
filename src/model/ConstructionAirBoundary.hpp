@@ -56,7 +56,12 @@ namespace model {
 
     explicit ConstructionAirBoundary(const Model& model);
 
-    virtual ~ConstructionAirBoundary() {}
+    virtual ~ConstructionAirBoundary() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConstructionAirBoundary(const ConstructionAirBoundary& other) = default;
+    ConstructionAirBoundary(ConstructionAirBoundary&& other) = default;
+    ConstructionAirBoundary& operator=(const ConstructionAirBoundary&) = default;
+    ConstructionAirBoundary& operator=(ConstructionAirBoundary&&) = default;
 
     //@}
 
@@ -128,7 +133,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ConstructionAirBoundary_Impl ImplType;
+    using ImplType = detail::ConstructionAirBoundary_Impl;
 
     explicit ConstructionAirBoundary(std::shared_ptr<detail::ConstructionAirBoundary_Impl> impl);
 
@@ -142,10 +147,10 @@ namespace model {
   };
 
   /** \relates ConstructionAirBoundary*/
-  typedef boost::optional<ConstructionAirBoundary> OptionalConstructionAirBoundary;
+  using OptionalConstructionAirBoundary = boost::optional<ConstructionAirBoundary>;
 
   /** \relates ConstructionAirBoundary*/
-  typedef std::vector<ConstructionAirBoundary> ConstructionAirBoundaryVector;
+  using ConstructionAirBoundaryVector = std::vector<ConstructionAirBoundary>;
 
 }  // namespace model
 }  // namespace openstudio

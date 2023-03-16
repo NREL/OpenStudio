@@ -56,7 +56,7 @@ namespace model {
       HeatBalanceAlgorithm_Impl(const HeatBalanceAlgorithm_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~HeatBalanceAlgorithm_Impl() {}
+      virtual ~HeatBalanceAlgorithm_Impl() = default;
 
       // return the parent object in the hierarchy
       virtual boost::optional<ParentObject> parent() const override;
@@ -98,7 +98,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setAlgorithm(std::string algorithm);
+      bool setAlgorithm(const std::string& algorithm);
 
       void resetAlgorithm();
 

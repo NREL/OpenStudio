@@ -127,7 +127,7 @@ TEST_F(ModelFixture, DistrictHeating_Clone) {
 
   //clone into the same model
 
-  DistrictHeating districtHeatingClone = districtHeating.clone(m).cast<DistrictHeating>();
+  auto districtHeatingClone = districtHeating.clone(m).cast<DistrictHeating>();
 
   auto capacity = districtHeatingClone.nominalCapacity();
   ASSERT_TRUE(capacity);
@@ -137,7 +137,7 @@ TEST_F(ModelFixture, DistrictHeating_Clone) {
 
   Model m2;
 
-  DistrictHeating districtHeatingClone2 = districtHeating.clone(m2).cast<DistrictHeating>();
+  auto districtHeatingClone2 = districtHeating.clone(m2).cast<DistrictHeating>();
 
   capacity = districtHeatingClone2.nominalCapacity();
   ASSERT_TRUE(capacity);
@@ -169,7 +169,7 @@ TEST_F(ModelFixture, DistrictHeating_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  DistrictHeating testObjectClone = testObject.clone(m).cast<DistrictHeating>();
+  auto testObjectClone = testObject.clone(m).cast<DistrictHeating>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

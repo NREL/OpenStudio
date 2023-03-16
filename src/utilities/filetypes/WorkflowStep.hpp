@@ -51,7 +51,7 @@ class WorkflowStepResult;
 class UTILITIES_API WorkflowStep
 {
  public:
-  virtual ~WorkflowStep();
+  virtual ~WorkflowStep() = default;
 
   /// Construct from JSON formatted string
   static boost::optional<WorkflowStep> fromString(const std::string& s);
@@ -153,7 +153,7 @@ class UTILITIES_API MeasureStep : public WorkflowStep
   bool setMeasureDirName(const std::string& measureDirName);
 
  private:
-  typedef detail::MeasureStep_Impl ImplType;
+  using ImplType = detail::MeasureStep_Impl;
 
   friend class WorkflowStep;
   friend class detail::WorkflowJSON_Impl;

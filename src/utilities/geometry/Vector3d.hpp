@@ -124,10 +124,10 @@ UTILITIES_API Vector3d operator-(const Vector3d& vec);
 UTILITIES_API Vector3d operator*(double mult, const Vector3d& vec);
 
 // optional Vector3d
-typedef boost::optional<Vector3d> OptionalVector3d;
+using OptionalVector3d = boost::optional<Vector3d>;
 
 // vector of Vector3d
-typedef std::vector<Vector3d> Vector3dVector;
+using Vector3dVector = std::vector<Vector3d>;
 
 }  // namespace openstudio
 

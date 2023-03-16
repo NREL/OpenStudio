@@ -102,7 +102,7 @@ namespace model {
   }
 
   IddObjectType PlantEquipmentOperationOutdoorWetBulbDifference::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulbDifference);
+    return {IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulbDifference};
   }
 
   boost::optional<Node> PlantEquipmentOperationOutdoorWetBulbDifference::referenceTemperatureNode() const {

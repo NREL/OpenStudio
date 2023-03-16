@@ -79,11 +79,11 @@ TEST_F(IddFixture, IddFactory_IddFile) {
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType::OpenStudio);
   EXPECT_TRUE(file.objects().size() == objects.size());
   // required objects
-  EXPECT_TRUE(file.requiredObjects().size() > 0);
+  EXPECT_TRUE(!file.requiredObjects().empty());
   EXPECT_TRUE(file.requiredObjects().size() == IddFactory::instance().getRequiredObjects(IddFileType::OpenStudio).size());
   EXPECT_TRUE(file.requiredObjects().size() <= IddFactory::instance().requiredObjects().size());
   // unique objects
-  EXPECT_TRUE(file.uniqueObjects().size() > 0);
+  EXPECT_TRUE(!file.uniqueObjects().empty());
   EXPECT_TRUE(file.uniqueObjects().size() == IddFactory::instance().getUniqueObjects(IddFileType::OpenStudio).size());
   EXPECT_TRUE(file.uniqueObjects().size() <= IddFactory::instance().uniqueObjects().size());
 

@@ -83,7 +83,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Controller_MechanicalVentilationFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("ControllerMechanicalVentilation", "Availability Schedule"));
       }
@@ -166,7 +167,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ControllerMechanicalVentilation_Impl::setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod) {
+    bool ControllerMechanicalVentilation_Impl::setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod) {
       bool result = setString(OS_Controller_MechanicalVentilationFields::SystemOutdoorAirMethod, systemOutdoorAirMethod);
       return result;
     }
@@ -224,7 +225,7 @@ namespace model {
   }
 
   IddObjectType ControllerMechanicalVentilation::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Controller_MechanicalVentilation);
+    return {IddObjectType::OS_Controller_MechanicalVentilation};
   }
 
   std::vector<std::string> ControllerMechanicalVentilation::systemOutdoorAirMethodValues() {
@@ -268,7 +269,7 @@ namespace model {
     getImpl<detail::ControllerMechanicalVentilation_Impl>()->resetDemandControlledVentilation();
   }
 
-  bool ControllerMechanicalVentilation::setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod) {
+  bool ControllerMechanicalVentilation::setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod) {
     return getImpl<detail::ControllerMechanicalVentilation_Impl>()->setSystemOutdoorAirMethod(systemOutdoorAirMethod);
   }
 

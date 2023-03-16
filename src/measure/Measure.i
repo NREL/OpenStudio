@@ -24,18 +24,10 @@
   // Help in overload resolution preferring std::string over char const *
   %ignore openstudio::measure::OSArgument::setValue(char const*);
   %ignore openstudio::measure::OSArgument::setDefaultValue(char const*);
-#elif defined(SWIGRUBY)
-  %ignore openstudio::measure::PythonModelMeasure;
-  %ignore openstudio::measure::PythonEnergyPlusMeasure;
-  %ignore openstudio::measure::PythonReportingMeasure;
 #elif defined(SWIGPYTHON)
   // Avoid triggering a SWIG warning: 'print' is a python keyword
   %rename(toString) openstudio::measure::OSArgument::print;
   %rename(toString) openstudio::measure::OSOutput::print;
-
-  %ignore openstudio::measure::ModelMeasure;
-  %ignore openstudio::measure::EnergyPlusMeasure;
-  %ignore openstudio::measure::ReportingMeasure;
 #endif
 
 %{
@@ -67,19 +59,9 @@
 %template(OptionalOSOutput) boost::optional<openstudio::measure::OSOutput>;
 
 %feature("director") OSMeasure;
-
-#if defined(SWIGPYTHON)
-  %feature("director") PythonModelMeasure;
-  %feature("director") PythonEnergyPlusMeasure;
-  %feature("director") PythonReportingMeasure;
-  %rename (ModelMeasure) openstudio::measure::PythonModelMeasure;
-  %rename (EnergyPlusMeasure) openstudio::measure::PythonEnergyPlusMeasure;
-  %rename (ReportingMeasure) openstudio::measure::PythonReportingMeasure;
-#else
-  %feature("director") ModelMeasure;
-  %feature("director") EnergyPlusMeasure;
-  %feature("director") ReportingMeasure;
-#endif
+%feature("director") ModelMeasure;
+%feature("director") EnergyPlusMeasure;
+%feature("director") ReportingMeasure;
 %feature("director") OSRunner;
 %feature("director") OSArgument;
 

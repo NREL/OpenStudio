@@ -80,7 +80,7 @@ namespace model {
     std::vector<IdfObject> HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::remove() {
       if (!heatExchangerDesiccantBalancedFlows().empty()) {
         LOG(Warn, "Cannot remove object because it is used by at least one heatExchangerDesiccantBalancedFlow as a required field");
-        return std::vector<IdfObject>();
+        return {};
       }
       return ResourceObject_Impl::remove();
     }
@@ -925,7 +925,7 @@ namespace model {
   }
 
   IddObjectType HeatExchangerDesiccantBalancedFlowPerformanceDataType1::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1);
+    return {IddObjectType::OS_HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1};
   }
 
   std::vector<HeatExchangerDesiccantBalancedFlow>

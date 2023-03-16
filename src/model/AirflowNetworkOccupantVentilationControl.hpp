@@ -58,7 +58,12 @@ namespace model {
     /** Construct an occupant ventilation control object with a low temperature curve. */
     AirflowNetworkOccupantVentilationControl(const Model& model, const Curve& curve);
 
-    virtual ~AirflowNetworkOccupantVentilationControl() {}
+    virtual ~AirflowNetworkOccupantVentilationControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& other) = default;
+    AirflowNetworkOccupantVentilationControl(AirflowNetworkOccupantVentilationControl&& other) = default;
+    AirflowNetworkOccupantVentilationControl& operator=(const AirflowNetworkOccupantVentilationControl&) = default;
+    AirflowNetworkOccupantVentilationControl& operator=(AirflowNetworkOccupantVentilationControl&&) = default;
 
     //@}
 
@@ -150,7 +155,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkOccupantVentilationControl_Impl ImplType;
+    using ImplType = detail::AirflowNetworkOccupantVentilationControl_Impl;
 
     explicit AirflowNetworkOccupantVentilationControl(std::shared_ptr<detail::AirflowNetworkOccupantVentilationControl_Impl> impl);
 
@@ -164,10 +169,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkOccupantVentilationControl*/
-  typedef boost::optional<AirflowNetworkOccupantVentilationControl> OptionalAirflowNetworkOccupantVentilationControl;
+  using OptionalAirflowNetworkOccupantVentilationControl = boost::optional<AirflowNetworkOccupantVentilationControl>;
 
   /** \relates AirflowNetworkOccupantVentilationControl*/
-  typedef std::vector<AirflowNetworkOccupantVentilationControl> AirflowNetworkOccupantVentilationControlVector;
+  using AirflowNetworkOccupantVentilationControlVector = std::vector<AirflowNetworkOccupantVentilationControl>;
 
 }  // namespace model
 }  // namespace openstudio

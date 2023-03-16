@@ -87,9 +87,9 @@ namespace energyplus {
 
     TimeSeries timeseries = modelObject.timeSeries();
     // Check that the time series has at least one point
-    if (timeseries.values().size() == 0) {
+    if (timeseries.values().empty()) {
       LOG(Error, "Time series in schedule '" << modelObject.name().get() << "' has no values, schedule will not be translated");
-      return boost::optional<IdfObject>();
+      return {};
     }
     DateTime firstReportDateTime = timeseries.firstReportDateTime();
     Vector daysFromFirst = timeseries.daysFromFirstReport();

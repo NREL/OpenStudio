@@ -114,7 +114,7 @@ namespace model {
         LOG_AND_THROW("Cannot retrieve IdfExtensibleGroup at objectIndex = " << objectIndex);
       }
 
-      ModelExtensibleGroup componentObjectData = eg.cast<ModelExtensibleGroup>();
+      auto componentObjectData = eg.cast<ModelExtensibleGroup>();
       OptionalModelObject omo = componentObjectData.getModelObjectTarget<ModelObject>(OS_ComponentDataExtensibleFields::NameofObject);
       if (!omo) {
         LOG_AND_THROW("Cannot retrieve ModelObject at objectIndex = " << objectIndex);
@@ -135,7 +135,7 @@ namespace model {
       IdfExtensibleGroup eg = pushExtensibleGroup(StringVector());
       bool result = !eg.empty();
       if (result) {
-        ModelExtensibleGroup meg = eg.cast<ModelExtensibleGroup>();
+        auto meg = eg.cast<ModelExtensibleGroup>();
         result = result && meg.setPointer(OS_ComponentDataExtensibleFields::NameofObject, object.handle());
       }
       return result;

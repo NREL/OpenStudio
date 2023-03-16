@@ -57,7 +57,12 @@ namespace model {
 
     explicit ZoneHVACUnitVentilator(const Model& model, const HVACComponent& supplyAirFan);
 
-    virtual ~ZoneHVACUnitVentilator() {}
+    virtual ~ZoneHVACUnitVentilator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACUnitVentilator(const ZoneHVACUnitVentilator& other) = default;
+    ZoneHVACUnitVentilator(ZoneHVACUnitVentilator&& other) = default;
+    ZoneHVACUnitVentilator& operator=(const ZoneHVACUnitVentilator&) = default;
+    ZoneHVACUnitVentilator& operator=(ZoneHVACUnitVentilator&&) = default;
 
     //@}
 
@@ -114,7 +119,7 @@ namespace model {
 
     void autosizeMaximumSupplyAirFlowRate();
 
-    bool setOutdoorAirControlType(std::string outdoorAirControlType);
+    bool setOutdoorAirControlType(const std::string& outdoorAirControlType);
 
     bool setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
 
@@ -167,7 +172,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACUnitVentilator_Impl ImplType;
+    using ImplType = detail::ZoneHVACUnitVentilator_Impl;
 
     explicit ZoneHVACUnitVentilator(std::shared_ptr<detail::ZoneHVACUnitVentilator_Impl> impl);
 
@@ -181,10 +186,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACUnitVentilator*/
-  typedef boost::optional<ZoneHVACUnitVentilator> OptionalZoneHVACUnitVentilator;
+  using OptionalZoneHVACUnitVentilator = boost::optional<ZoneHVACUnitVentilator>;
 
   /** \relates ZoneHVACUnitVentilator*/
-  typedef std::vector<ZoneHVACUnitVentilator> ZoneHVACUnitVentilatorVector;
+  using ZoneHVACUnitVentilatorVector = std::vector<ZoneHVACUnitVentilator>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -46,8 +46,6 @@ namespace detail {
 
   // CONSTRUCTORS
 
-  IddFile_Impl::IddFile_Impl() {}
-
   // GETTERS
 
   std::string IddFile_Impl::version() const {
@@ -71,7 +69,7 @@ namespace detail {
     for (const IddObject& object : objects()) {
       result.insert(object.group());
     }
-    return StringVector(result.begin(), result.end());
+    return {result.begin(), result.end()};
   }
 
   std::vector<IddObject> IddFile_Impl::getObjectsInGroup(const std::string& group) const {
@@ -366,9 +364,26 @@ namespace detail {
 
 // CONSTRUCTORS
 
-IddFile::IddFile() : m_impl(std::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl())) {}
+IddFile::IddFile() : m_impl(std::make_shared<detail::IddFile_Impl>()) {}
 
-IddFile::IddFile(const IddFile& other) : m_impl(other.m_impl) {}
+//
+// IddFile::IddFile(const IddFile& other) : m_impl(other.m_impl) {}
+// IddFile& IddFile::operator=(const IddFile& other) {
+//   m_impl = other.m_impl;
+//   return *this;
+// }
+//
+// IddFile::IddFile(IddFile&& other) noexcept : m_impl(std::move(other.m_impl)) {}
+//
+// IddFile& IddFile::operator=(IddFile&& other) noexcept {
+//   m_impl = std::move(other.m_impl);
+//   return *this;
+// }
+
+// PRIVATE CONSTRUCTOR
+
+IddFile::IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl) noexcept : m_impl(impl) {}
+IddFile::IddFile(std::shared_ptr<detail::IddFile_Impl>&& impl) noexcept : m_impl(std::move(impl)) {}
 
 IddFile IddFile::catchallIddFile() {
   IddFile result;
@@ -518,10 +533,6 @@ void IddFile::setHeader(const std::string& header) {
 void IddFile::addObject(const IddObject& object) {
   m_impl->addObject(object);
 }
-
-// PRIVATE
-
-IddFile::IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl) : m_impl(impl) {}
 
 // NON-MEMBER FUNCTIONS
 

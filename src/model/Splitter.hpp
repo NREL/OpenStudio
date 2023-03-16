@@ -44,7 +44,12 @@ namespace model {
   class MODEL_API Splitter : public HVACComponent
   {
    public:
-    virtual ~Splitter() {}
+    virtual ~Splitter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Splitter(const Splitter& other) = default;
+    Splitter(Splitter&& other) = default;
+    Splitter& operator=(const Splitter&) = default;
+    Splitter& operator=(Splitter&&) = default;
 
     /** Returns the inlet port to the splitter. */
     virtual unsigned inletPort() const;
@@ -102,7 +107,7 @@ namespace model {
    protected:
     Splitter(IddObjectType type, const Model& model);
 
-    typedef detail::Splitter_Impl ImplType;
+    using ImplType = detail::Splitter_Impl;
 
     friend class Model;
 
@@ -114,7 +119,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.Splitter");
   };
 
-  typedef boost::optional<Splitter> OptionalSplitter;
+  using OptionalSplitter = boost::optional<Splitter>;
 
 }  // namespace model
 

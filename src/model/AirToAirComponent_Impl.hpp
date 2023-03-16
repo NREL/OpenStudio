@@ -50,7 +50,7 @@ namespace model {
 
       AirToAirComponent_Impl(const AirToAirComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~AirToAirComponent_Impl() {}
+      virtual ~AirToAirComponent_Impl() = default;
 
       virtual unsigned primaryAirInletPort() const = 0;
 

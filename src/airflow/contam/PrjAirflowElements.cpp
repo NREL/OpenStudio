@@ -35,203 +35,136 @@
 namespace openstudio {
 namespace contam {
 
-  AirflowElement::Type AirflowElement::convertTag(std::string string) {
-    std::string tags[28] = {std::string("plr_orfc"),  std::string("plr_leak1"), std::string("plr_leak2"), std::string("plr_leak3"),
-                            std::string("plr_conn"),  std::string("plr_qcn"),   std::string("plr_fcn"),   std::string("plr_test1"),
-                            std::string("plr_test2"), std::string("plr_crack"), std::string("plr_stair"), std::string("plr_shaft"),
-                            std::string("plr_bdq"),   std::string("plr_bdf"),   std::string("qfr_qab"),   std::string("qfr_fab"),
-                            std::string("qfr_crack"), std::string("qfr_test2"), std::string("dor_door"),  std::string("dor_pl2"),
-                            std::string("fan_cmf"),   std::string("fan_cvf"),   std::string("fan_fan"),   std::string("csf_fsp"),
-                            std::string("csf_qsp"),   std::string("csf_psf"),   std::string("csf_psq"),   std::string("sup_afe")};
-    AirflowElement::Type type[28] = {PL_ORFC,  PL_LEAK1, PL_LEAK2, PL_LEAK3, PL_CONN, PL_QCN,  PL_FCN,    PL_TEST1,  PL_TEST2, PL_CRACK,
-                                     PL_STAIR, PL_SHAFT, PL_BDQ,   PL_BDF,   QFR_QAB, QFR_QAF, QFR_CRACK, QFR_TEST2, DR_DOOR,  DR_PL2,
-                                     FN_CMF,   FN_CVF,   FN_FAN,   CS_FSP,   CS_QSP,  CS_PSF,  CS_PSQ,    AF_SUP};
-    for (int i = 0; i < 28; i++)
-      if (string == tags[i]) return type[i];
-    return AirflowElement::UNKNOWN;
+  AirflowElementType AirflowElement::convertTag(const std::string& tag) {
+    try {
+      return {tag};
+    } catch (...) {
+      return AirflowElementType::UNKNOWN;
+    }
   }
 
   AirflowElement* AirflowElement::readElement(Reader& input) {
     AirflowElement* out = nullptr;
-    int nr = input.read<int>();
-    int icon = input.read<int>();
-    std::string dataType = input.readString();
-    std::string name = input.readString();
-    std::string desc = input.readLine();
-    int kind = convertTag(dataType);
-    switch (kind) {
-      case AirflowElement::PL_ORFC: {
-        PlrOrf* obj = new PlrOrf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_LEAK1: {
-        PlrLeak1* obj = new PlrLeak1(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_LEAK2: {
-        PlrLeak2* obj = new PlrLeak2(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_LEAK3: {
-        PlrLeak3* obj = new PlrLeak3(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_CONN: {
-        PlrConn* obj = new PlrConn(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_QCN: {
-        PlrQcn* obj = new PlrQcn(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_FCN: {
-        PlrFcn* obj = new PlrFcn(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_TEST1: {
-        PlrTest1* obj = new PlrTest1(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_TEST2: {
-        PlrTest2* obj = new PlrTest2(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_CRACK: {
-        PlrCrack* obj = new PlrCrack(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_STAIR: {
-        PlrStair* obj = new PlrStair(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_SHAFT: {
-        PlrShaft* obj = new PlrShaft(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_BDQ: {
-        PlrBdq* obj = new PlrBdq(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::PL_BDF: {
-        PlrBdf* obj = new PlrBdf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::QFR_QAB: {
-        QfrQab* obj = new QfrQab(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::QFR_QAF: {
-        QfrFab* obj = new QfrFab(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::QFR_CRACK: {
-        QfrCrack* obj = new QfrCrack(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::QFR_TEST2: {
-        QfrTest2* obj = new QfrTest2(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::DR_DOOR: {
-        AfeDor* obj = new AfeDor(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::DR_PL2: {
-        DrPl2* obj = new DrPl2(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::FN_CMF: {
-        AfeCmf* obj = new AfeCmf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::FN_CVF: {
-        AfeCvf* obj = new AfeCvf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::FN_FAN: {
-        AfeFan* obj = new AfeFan(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::CS_FSP: {
-        AfeFsp* obj = new AfeFsp(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::CS_QSP: {
-        AfeQsp* obj = new AfeQsp(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::CS_PSF: {
-        AfePsf* obj = new AfePsf(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::CS_PSQ: {
-        AfePsq* obj = new AfePsq(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::AF_SUP: {
-        AfeSup* obj = new AfeSup(nr, icon, name, desc);
-        obj->readDetails(input);
-        out = static_cast<AirflowElement*>(obj);
-        break;
-      }
-      case AirflowElement::UNKNOWN:
-      default:
-        std::string mesg = "Unknown airflow element type '" + dataType + "' at line " + openstudio::toString(input.lineNumber());
-        LOG_FREE_AND_THROW("openstudio.contam.Reader", mesg);
+    const int nr = input.read<int>();
+    const int icon = input.read<int>();
+    const std::string dataType = input.readString();
+    const std::string name = input.readString();
+    const std::string desc = input.readLine();
+    const AirflowElementType kind = convertTag(dataType);
+    if (kind == AirflowElementType::UNKNOWN) {
+      LOG_FREE_AND_THROW("openstudio.contam.Reader", "Unknown airflow element type '" << dataType << "' at line " << input.lineNumber());
+    } else if (kind == AirflowElementType::PL_ORFC) {
+      auto* obj = new PlrOrf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_LEAK1) {
+      auto* obj = new PlrLeak1(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_LEAK2) {
+      auto* obj = new PlrLeak2(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_LEAK3) {
+      auto* obj = new PlrLeak3(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_CONN) {
+      auto* obj = new PlrConn(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_QCN) {
+      auto* obj = new PlrQcn(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_FCN) {
+      auto* obj = new PlrFcn(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_TEST1) {
+      auto* obj = new PlrTest1(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_TEST2) {
+      auto* obj = new PlrTest2(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_CRACK) {
+      auto* obj = new PlrCrack(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_STAIR) {
+      auto* obj = new PlrStair(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_SHAFT) {
+      auto* obj = new PlrShaft(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_BDQ) {
+      auto* obj = new PlrBdq(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::PL_BDF) {
+      auto* obj = new PlrBdf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::QFR_QAB) {
+      auto* obj = new QfrQab(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::QFR_QAF) {
+      auto* obj = new QfrFab(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::QFR_CRACK) {
+      auto* obj = new QfrCrack(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::QFR_TEST2) {
+      auto* obj = new QfrTest2(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::DR_DOOR) {
+      auto* obj = new AfeDor(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::DR_PL2) {
+      auto* obj = new DrPl2(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::FN_CMF) {
+      auto* obj = new AfeCmf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::FN_CVF) {
+      auto* obj = new AfeCvf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::FN_FAN) {
+      auto* obj = new AfeFan(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::CS_FSP) {
+      auto* obj = new AfeFsp(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::CS_QSP) {
+      auto* obj = new AfeQsp(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::CS_PSF) {
+      auto* obj = new AfePsf(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::CS_PSQ) {
+      auto* obj = new AfePsq(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
+    } else if (kind == AirflowElementType::AF_SUP) {
+      auto* obj = new AfeSup(nr, icon, name, desc);
+      obj->readDetails(input);
+      out = static_cast<AirflowElement*>(obj);
     }
     return out;
   }
@@ -250,8 +183,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::PlrOrfImpl>(new detail::PlrOrfImpl(nr, icon, name, desc, lam, turb, expt, area, dia, coef, Re, u_A, u_D))) {}
 
   PlrOrf::PlrOrf(const PlrOrf& other) : m_impl(other.m_impl) {}
-
-  PlrOrf::~PlrOrf() {}
 
   PlrOrf& PlrOrf::operator=(const PlrOrf& other) {
     m_impl = other.m_impl;
@@ -426,8 +357,6 @@ namespace contam {
       new detail::PlrLeakImpl(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP))) {}
 
   PlrLeak::PlrLeak(const PlrLeak& other) : m_impl(other.m_impl) {}
-
-  PlrLeak::~PlrLeak() {}
 
   PlrLeak& PlrLeak::operator=(const PlrLeak& other) {
     m_impl = other.m_impl;
@@ -626,8 +555,6 @@ namespace contam {
                      std::string pres, std::string area1, std::string area2, std::string area3, int u_A1, int u_A2, int u_A3, int u_dP)
     : PlrLeak(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP) {}
 
-  PlrLeak1::~PlrLeak1() {}
-
   PlrLeak2::PlrLeak2() : PlrLeak() {}
 
   PlrLeak2::PlrLeak2(int nr, int icon, std::string name, std::string desc) : PlrLeak(nr, icon, name, desc) {}
@@ -647,8 +574,6 @@ namespace contam {
                      std::string pres, std::string area2)
     : PlrLeak(0, icon, name, desc, lam, turb, expt, coef, pres, "0.0", area2, "0.0", 0, 0, 0, 0) {}
 
-  PlrLeak2::~PlrLeak2() {}
-
   PlrLeak3::PlrLeak3() : PlrLeak() {}
 
   PlrLeak3::PlrLeak3(int nr, int icon, std::string name, std::string desc) : PlrLeak(nr, icon, name, desc) {}
@@ -660,8 +585,6 @@ namespace contam {
   PlrLeak3::PlrLeak3(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string coef,
                      std::string pres, std::string area1, std::string area2, std::string area3, int u_A1, int u_A2, int u_A3, int u_dP)
     : PlrLeak(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP) {}
-
-  PlrLeak3::~PlrLeak3() {}
 
   PlrConn::PlrConn() : m_impl(std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl)) {}
 
@@ -676,8 +599,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl(nr, icon, name, desc, lam, turb, expt, area, coef, u_A))) {}
 
   PlrConn::PlrConn(const PlrConn& other) : m_impl(other.m_impl) {}
-
-  PlrConn::~PlrConn() {}
 
   PlrConn& PlrConn::operator=(const PlrConn& other) {
     m_impl = other.m_impl;
@@ -817,8 +738,6 @@ namespace contam {
 
   PlrGeneral::PlrGeneral(const PlrGeneral& other) : m_impl(other.m_impl) {}
 
-  PlrGeneral::~PlrGeneral() {}
-
   PlrGeneral& PlrGeneral::operator=(const PlrGeneral& other) {
     m_impl = other.m_impl;
     return *this;
@@ -922,8 +841,6 @@ namespace contam {
   PlrQcn::PlrQcn(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt)
     : PlrGeneral(nr, icon, name, desc, lam, turb, expt) {}
 
-  PlrQcn::~PlrQcn() {}
-
   PlrFcn::PlrFcn() : PlrGeneral() {}
 
   PlrFcn::PlrFcn(int nr, int icon, std::string name, std::string desc) : PlrGeneral(nr, icon, name, desc) {}
@@ -933,8 +850,6 @@ namespace contam {
 
   PlrFcn::PlrFcn(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt)
     : PlrGeneral(nr, icon, name, desc, lam, turb, expt) {}
-
-  PlrFcn::~PlrFcn() {}
 
   PlrTest1::PlrTest1() : m_impl(std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl)) {}
 
@@ -957,8 +872,6 @@ namespace contam {
     : PlrTest1(0, icon, name, desc, lam, turb, expt, dP, Flow, 0, 0) {}
 
   PlrTest1::PlrTest1(const PlrTest1& other) : m_impl(other.m_impl) {}
-
-  PlrTest1::~PlrTest1() {}
 
   PlrTest1& PlrTest1::operator=(const PlrTest1& other) {
     m_impl = other.m_impl;
@@ -1109,8 +1022,6 @@ namespace contam {
       new detail::PlrTest2Impl(nr, icon, name, desc, lam, turb, expt, dP1, F1, dP2, F2, u_P1, u_F1, u_P2, u_F2))) {}
 
   PlrTest2::PlrTest2(const PlrTest2& other) : m_impl(other.m_impl) {}
-
-  PlrTest2::~PlrTest2() {}
 
   PlrTest2& PlrTest2::operator=(const PlrTest2& other) {
     m_impl = other.m_impl;
@@ -1300,8 +1211,6 @@ namespace contam {
 
   PlrCrack::PlrCrack(const PlrCrack& other) : m_impl(other.m_impl) {}
 
-  PlrCrack::~PlrCrack() {}
-
   PlrCrack& PlrCrack::operator=(const PlrCrack& other) {
     m_impl = other.m_impl;
     return *this;
@@ -1451,8 +1360,6 @@ namespace contam {
   }
 
   PlrStair::PlrStair(const PlrStair& other) : m_impl(other.m_impl) {}
-
-  PlrStair::~PlrStair() {}
 
   PlrStair& PlrStair::operator=(const PlrStair& other) {
     m_impl = other.m_impl;
@@ -1623,8 +1530,6 @@ namespace contam {
       new detail::PlrShaftImpl(nr, icon, name, desc, lam, turb, expt, Ht, area, perim, rough, u_A, u_D, u_P, u_R))) {}
 
   PlrShaft::PlrShaft(const PlrShaft& other) : m_impl(other.m_impl) {}
-
-  PlrShaft::~PlrShaft() {}
 
   PlrShaft& PlrShaft::operator=(const PlrShaft& other) {
     m_impl = other.m_impl;
@@ -1813,8 +1718,6 @@ namespace contam {
 
   PlrBackDamper::PlrBackDamper(const PlrBackDamper& other) : m_impl(other.m_impl) {}
 
-  PlrBackDamper::~PlrBackDamper() {}
-
   PlrBackDamper& PlrBackDamper::operator=(const PlrBackDamper& other) {
     m_impl = other.m_impl;
     return *this;
@@ -1943,8 +1846,6 @@ namespace contam {
                  std::string xn)
     : PlrBackDamper(nr, icon, name, desc, lam, Cp, xp, Cn, xn) {}
 
-  PlrBdq::~PlrBdq() {}
-
   PlrBdf::PlrBdf() : PlrBackDamper() {}
 
   PlrBdf::PlrBdf(int nr, int icon, std::string name, std::string desc) : PlrBackDamper(nr, icon, name, desc) {}
@@ -1955,8 +1856,6 @@ namespace contam {
   PlrBdf::PlrBdf(int nr, int icon, std::string name, std::string desc, std::string lam, std::string Cp, std::string xp, std::string Cn,
                  std::string xn)
     : PlrBackDamper(nr, icon, name, desc, lam, Cp, xp, Cn, xn) {}
-
-  PlrBdf::~PlrBdf() {}
 
   QfrGeneral::QfrGeneral() : m_impl(std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl)) {}
 
@@ -1970,8 +1869,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl(nr, icon, name, desc, a, b))) {}
 
   QfrGeneral::QfrGeneral(const QfrGeneral& other) : m_impl(other.m_impl) {}
-
-  QfrGeneral::~QfrGeneral() {}
 
   QfrGeneral& QfrGeneral::operator=(const QfrGeneral& other) {
     m_impl = other.m_impl;
@@ -2062,8 +1959,6 @@ namespace contam {
 
   QfrQab::QfrQab(int nr, int icon, std::string name, std::string desc, std::string a, std::string b) : QfrGeneral(nr, icon, name, desc, a, b) {}
 
-  QfrQab::~QfrQab() {}
-
   QfrFab::QfrFab() : QfrGeneral() {}
 
   QfrFab::QfrFab(int nr, int icon, std::string name, std::string desc) : QfrGeneral(nr, icon, name, desc) {}
@@ -2071,8 +1966,6 @@ namespace contam {
   QfrFab::QfrFab(int nr, int icon, std::string name, std::string desc, double a, double b) : QfrGeneral(nr, icon, name, desc, a, b) {}
 
   QfrFab::QfrFab(int nr, int icon, std::string name, std::string desc, std::string a, std::string b) : QfrGeneral(nr, icon, name, desc, a, b) {}
-
-  QfrFab::~QfrFab() {}
 
   QfrCrack::QfrCrack() : m_impl(std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl)) {}
 
@@ -2088,8 +1981,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl(nr, icon, name, desc, a, b, length, width, depth, nB, u_L, u_W, u_D))) {}
 
   QfrCrack::QfrCrack(const QfrCrack& other) : m_impl(other.m_impl) {}
-
-  QfrCrack::~QfrCrack() {}
 
   QfrCrack& QfrCrack::operator=(const QfrCrack& other) {
     m_impl = other.m_impl;
@@ -2254,8 +2145,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl(nr, icon, name, desc, a, b, dP1, F1, dP2, F2, u_P1, u_F1, u_P2, u_F2))) {}
 
   QfrTest2::QfrTest2(const QfrTest2& other) : m_impl(other.m_impl) {}
-
-  QfrTest2::~QfrTest2() {}
 
   QfrTest2& QfrTest2::operator=(const QfrTest2& other) {
     m_impl = other.m_impl;
@@ -2432,8 +2321,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl(nr, icon, name, desc, lam, turb, expt, dTmin, ht, wd, cd, u_T, u_H, u_W))) {}
 
   AfeDor::AfeDor(const AfeDor& other) : m_impl(other.m_impl) {}
-
-  AfeDor::~AfeDor() {}
 
   AfeDor& AfeDor::operator=(const AfeDor& other) {
     m_impl = other.m_impl;
@@ -2615,8 +2502,6 @@ namespace contam {
 
   DrPl2::DrPl2(const DrPl2& other) : m_impl(other.m_impl) {}
 
-  DrPl2::~DrPl2() {}
-
   DrPl2& DrPl2::operator=(const DrPl2& other) {
     m_impl = other.m_impl;
     return *this;
@@ -2787,8 +2672,6 @@ namespace contam {
 
   AfeFlow::AfeFlow(const AfeFlow& other) : m_impl(other.m_impl) {}
 
-  AfeFlow::~AfeFlow() {}
-
   AfeFlow& AfeFlow::operator=(const AfeFlow& other) {
     m_impl = other.m_impl;
     return *this;
@@ -2874,8 +2757,6 @@ namespace contam {
 
   AfeCmf::AfeCmf(int nr, int icon, std::string name, std::string desc, std::string Flow, int u_F) : AfeFlow(nr, icon, name, desc, Flow, u_F) {}
 
-  AfeCmf::~AfeCmf() {}
-
   AfeCvf::AfeCvf() : AfeFlow() {}
 
   AfeCvf::AfeCvf(int nr, int icon, std::string name, std::string desc) : AfeFlow(nr, icon, name, desc) {}
@@ -2883,8 +2764,6 @@ namespace contam {
   AfeCvf::AfeCvf(int nr, int icon, std::string name, std::string desc, double Flow, int u_F) : AfeFlow(nr, icon, name, desc, Flow, u_F) {}
 
   AfeCvf::AfeCvf(int nr, int icon, std::string name, std::string desc, std::string Flow, int u_F) : AfeFlow(nr, icon, name, desc, Flow, u_F) {}
-
-  AfeCvf::~AfeCvf() {}
 
   AfeFan::AfeFan() : m_impl(std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl)) {}
 
@@ -2903,8 +2782,6 @@ namespace contam {
       new detail::AfeFanImpl(nr, icon, name, desc, lam, turb, expt, rdens, fdf, sop, off, fpc, Sarea, u_Sa, data))) {}
 
   AfeFan::AfeFan(const AfeFan& other) : m_impl(other.m_impl) {}
-
-  AfeFan::~AfeFan() {}
 
   AfeFan& AfeFan::operator=(const AfeFan& other) {
     m_impl = other.m_impl;
@@ -3097,8 +2974,6 @@ namespace contam {
 
   AfeCsf::AfeCsf(const AfeCsf& other) : m_impl(other.m_impl) {}
 
-  AfeCsf::~AfeCsf() {}
-
   AfeCsf& AfeCsf::operator=(const AfeCsf& other) {
     m_impl = other.m_impl;
     return *this;
@@ -3187,16 +3062,12 @@ namespace contam {
   AfeFsp::AfeFsp(int nr, int icon, std::string name, std::string desc, int u_x, int u_y, std::vector<XyDataPoint> data)
     : AfeCsf(nr, icon, name, desc, u_x, u_y, data) {}
 
-  AfeFsp::~AfeFsp() {}
-
   AfeQsp::AfeQsp() : AfeCsf() {}
 
   AfeQsp::AfeQsp(int nr, int icon, std::string name, std::string desc) : AfeCsf(nr, icon, name, desc) {}
 
   AfeQsp::AfeQsp(int nr, int icon, std::string name, std::string desc, int u_x, int u_y, std::vector<XyDataPoint> data)
     : AfeCsf(nr, icon, name, desc, u_x, u_y, data) {}
-
-  AfeQsp::~AfeQsp() {}
 
   AfePsf::AfePsf() : AfeCsf() {}
 
@@ -3205,16 +3076,12 @@ namespace contam {
   AfePsf::AfePsf(int nr, int icon, std::string name, std::string desc, int u_x, int u_y, std::vector<XyDataPoint> data)
     : AfeCsf(nr, icon, name, desc, u_x, u_y, data) {}
 
-  AfePsf::~AfePsf() {}
-
   AfePsq::AfePsq() : AfeCsf() {}
 
   AfePsq::AfePsq(int nr, int icon, std::string name, std::string desc) : AfeCsf(nr, icon, name, desc) {}
 
   AfePsq::AfePsq(int nr, int icon, std::string name, std::string desc, int u_x, int u_y, std::vector<XyDataPoint> data)
     : AfeCsf(nr, icon, name, desc, u_x, u_y, data) {}
-
-  AfePsq::~AfePsq() {}
 
   AfeSup::AfeSup() : m_impl(std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl)) {}
 
@@ -3225,8 +3092,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl(nr, icon, name, desc, sched, u_H, subelements))) {}
 
   AfeSup::AfeSup(const AfeSup& other) : m_impl(other.m_impl) {}
-
-  AfeSup::~AfeSup() {}
 
   AfeSup& AfeSup::operator=(const AfeSup& other) {
     m_impl = other.m_impl;

@@ -86,7 +86,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_CoolingPanel_RadiantConvective_WaterFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACCoolingPanelRadiantConvectiveWater", "Availability"));
       }
@@ -102,7 +103,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       auto const thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (auto const& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -179,7 +180,7 @@ namespace model {
         }
       }
 
-      return panelRadConvWaterClone;
+      return std::move(panelRadConvWaterClone);
     }
 
     std::vector<IdfObject> ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::remove() {
@@ -280,7 +281,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACCoolingPanelRadiantConvectiveWater::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_CoolingPanel_RadiantConvective_Water);
+    return {IddObjectType::OS_ZoneHVAC_CoolingPanel_RadiantConvective_Water};
   }
 
   Schedule ZoneHVACCoolingPanelRadiantConvectiveWater::availabilitySchedule() const {

@@ -49,11 +49,12 @@ using namespace openstudio;
 TEST_F(ModelFixture, DaylightingDeviceShelf) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 1, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface window(points, model);
   EXPECT_EQ("FixedWindow", window.subSurfaceType());
 
@@ -89,11 +90,12 @@ TEST_F(ModelFixture, DaylightingDeviceShelf) {
 TEST_F(ModelFixture, DaylightingDeviceShelf_Throw) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 1, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface door(points, model);
   EXPECT_TRUE(door.setSubSurfaceType("Door"));
   EXPECT_EQ("Door", door.subSurfaceType());

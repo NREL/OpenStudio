@@ -32,6 +32,7 @@
 
 #include "PrjDefines.hpp"
 #include "PrjSubobjects.hpp"
+#include "ContamEnums.hpp"
 #include <string>
 #include <vector>
 
@@ -67,45 +68,12 @@ namespace contam {
   class AIRFLOW_API AirflowElement
   {
    public:
-    /** The Type enumeration is used to identify the various airflow element types. */
-    enum Type
-    {
-      PL_ORFC = 0,
-      PL_LEAK1 = 1,
-      PL_LEAK2 = 2,
-      PL_LEAK3 = 3,
-      PL_CONN = 4,
-      PL_QCN = 5,
-      PL_FCN = 6,
-      PL_TEST1 = 7,
-      PL_TEST2 = 8,
-      PL_CRACK = 9,
-      PL_STAIR = 10,
-      PL_SHAFT = 11,
-      PL_BDQ = 12,
-      PL_BDF = 13,
-      QFR_QAB = 14,
-      QFR_QAF = 15,
-      QFR_CRACK = 16,
-      QFR_TEST2 = 17,
-      DR_DOOR = 18,
-      DR_PL2 = 19,
-      FN_CMF = 20,
-      FN_CVF = 21,
-      FN_FAN = 22,
-      CS_FSP = 23,
-      CS_QSP = 24,
-      CS_PSF = 25,
-      CS_PSQ = 26,
-      AF_SUP = 27,
-      UNKNOWN
-    };
     /** Destroy the object. */
-    virtual ~AirflowElement() {}
+    virtual ~AirflowElement() = default;
     /** Write the object to a string. */
     virtual std::string write() = 0;
     /** Convert an input string into an airflow element type enum. */
-    static Type convertTag(std::string string);
+    static AirflowElementType convertTag(const std::string& tag);
     /** Read an airflow element from a Reader object. */
     static AirflowElement* readElement(Reader& input);
     // virtual void recompute(){}
@@ -149,7 +117,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrOrf(const PlrOrf& other);
     /** Destroy the object. */
-    ~PlrOrf();
+    ~PlrOrf() = default;
 
     //@}
     /** @name Operators */
@@ -273,7 +241,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrLeak(const PlrLeak& other);
     /** Destroy the object. */
-    ~PlrLeak();
+    ~PlrLeak() = default;
 
     //@}
     /** @name Operators */
@@ -408,7 +376,7 @@ namespace contam {
     //** Create a new object from another object. */
     //PlrLeak(const PlrLeak &other);
     /** Destroy the object. */
-    ~PlrLeak1();
+    ~PlrLeak1() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -446,7 +414,7 @@ namespace contam {
     //** Create a new object from another object. */
     //PlrLeak(const PlrLeak &other);
     /** Destroy the object. */
-    ~PlrLeak2();
+    ~PlrLeak2() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -479,7 +447,7 @@ namespace contam {
     //** Create a new object from another object. */
     //PlrLeak(const PlrLeak &other);
     /** Destroy the object. */
-    ~PlrLeak3();
+    ~PlrLeak3() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -511,7 +479,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrConn(const PlrConn& other);
     /** Destroy the object. */
-    ~PlrConn();
+    ~PlrConn() = default;
 
     //@}
     /** @name Operators */
@@ -617,7 +585,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrGeneral(const PlrGeneral& other);
     /** Destroy the object. */
-    ~PlrGeneral();
+    ~PlrGeneral() = default;
 
     //@}
     /** @name Operators */
@@ -705,7 +673,7 @@ namespace contam {
     //** Create a new object from another object. */
     //PlrQcn(const PlrQcn &other);
     /** Destroy the object. */
-    ~PlrQcn();
+    ~PlrQcn() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -736,7 +704,7 @@ namespace contam {
     //** Create a new object from another object. */
     //PlrQcn(const PlrQcn &other);
     /** Destroy the object. */
-    ~PlrFcn();
+    ~PlrFcn() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -772,7 +740,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrTest1(const PlrTest1& other);
     /** Destroy the object. */
-    ~PlrTest1();
+    ~PlrTest1() = default;
 
     //@}
     /** @name Operators */
@@ -884,7 +852,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrTest2(const PlrTest2& other);
     /** Destroy the object. */
-    ~PlrTest2();
+    ~PlrTest2() = default;
 
     //@}
     /** @name Operators */
@@ -1016,7 +984,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrCrack(const PlrCrack& other);
     /** Destroy the object. */
-    ~PlrCrack();
+    ~PlrCrack() = default;
 
     //@}
     /** @name Operators */
@@ -1128,7 +1096,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrStair(const PlrStair& other);
     /** Destroy the object. */
-    ~PlrStair();
+    ~PlrStair() = default;
 
     //@}
     /** @name Operators */
@@ -1250,7 +1218,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrShaft(const PlrShaft& other);
     /** Destroy the object. */
-    ~PlrShaft();
+    ~PlrShaft() = default;
 
     //@}
     /** @name Operators */
@@ -1380,7 +1348,7 @@ namespace contam {
     /** Create a new object from another object. */
     PlrBackDamper(const PlrBackDamper& other);
     /** Destroy the object. */
-    ~PlrBackDamper();
+    ~PlrBackDamper() = default;
 
     //@}
     /** @name Operators */
@@ -1478,7 +1446,7 @@ namespace contam {
     /** Create a new object from another object. */
     //PlrBdq(const PlrBdq &other);
     /** Destroy the object. */
-    ~PlrBdq();
+    ~PlrBdq() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -1508,7 +1476,7 @@ namespace contam {
     /** Create a new object from another object. */
     //PlrBdf(const PlrBdf &other);
     /** Destroy the object. */
-    ~PlrBdf();
+    ~PlrBdf() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -1538,7 +1506,7 @@ namespace contam {
     /** Create a new object from another object. */
     QfrGeneral(const QfrGeneral& other);
     /** Destroy the object. */
-    ~QfrGeneral();
+    ~QfrGeneral() = default;
 
     //@}
     /** @name Operators */
@@ -1618,7 +1586,7 @@ namespace contam {
     /** Create a new object from another object. */
     //QfrQab(const QfrQab &other);
     /** Destroy the object. */
-    ~QfrQab();
+    ~QfrQab() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -1649,7 +1617,7 @@ namespace contam {
     /** Create a new object from another object. */
     //QfrFab(const QfrFab &other);
     /** Destroy the object. */
-    ~QfrFab();
+    ~QfrFab() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -1682,7 +1650,7 @@ namespace contam {
     /** Create a new object from another object. */
     QfrCrack(const QfrCrack& other);
     /** Destroy the object. */
-    ~QfrCrack();
+    ~QfrCrack() = default;
 
     //@}
     /** @name Operators */
@@ -1800,7 +1768,7 @@ namespace contam {
     /** Create a new object from another object. */
     QfrTest2(const QfrTest2& other);
     /** Destroy the object. */
-    ~QfrTest2();
+    ~QfrTest2() = default;
 
     //@}
     /** @name Operators */
@@ -1924,7 +1892,7 @@ namespace contam {
     /** Create a new object from another object. */
     AfeDor(const AfeDor& other);
     /** Destroy the object. */
-    ~AfeDor();
+    ~AfeDor() = default;
 
     //@}
     /** @name Operators */
@@ -2050,7 +2018,7 @@ namespace contam {
     /** Create a new object from another object. */
     DrPl2(const DrPl2& other);
     /** Destroy the object. */
-    ~DrPl2();
+    ~DrPl2() = default;
 
     //@}
     /** @name Operators */
@@ -2170,7 +2138,7 @@ namespace contam {
     /** Create a new object from another object. */
     AfeFlow(const AfeFlow& other);
     /** Destroy the object. */
-    ~AfeFlow();
+    ~AfeFlow() = default;
 
     //@}
     /** @name Operators */
@@ -2248,7 +2216,7 @@ namespace contam {
     /** Create a new object from another object. */
     //AfeCmf(const AfeCmf &other);
     /** Destroy the object. */
-    ~AfeCmf();
+    ~AfeCmf() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -2278,7 +2246,7 @@ namespace contam {
     /** Create a new object from another object. */
     //AfeCvf(const AfeCvf &other);
     /** Destroy the object. */
-    ~AfeCvf();
+    ~AfeCvf() = default;
 
     //@}
     /** @name Getters and Setters */
@@ -2311,7 +2279,7 @@ namespace contam {
     /** Create a new object from another object. */
     AfeFan(const AfeFan& other);
     /** Destroy the object. */
-    ~AfeFan();
+    ~AfeFan() = default;
 
     //@}
     /** @name Operators */
@@ -2441,7 +2409,7 @@ namespace contam {
     /** Create a new object from another object. */
     AfeCsf(const AfeCsf& other);
     /** Destroy the object. */
-    ~AfeCsf();
+    ~AfeCsf() = default;
 
     //@}
     /** @name Operators */
@@ -2517,7 +2485,7 @@ namespace contam {
     /** Create a new object from another object. */
     //AfeFsp(const AfeCsf &other);
     /** Destroy the object. */
-    ~AfeFsp();
+    ~AfeFsp() = default;
     //@}
 
     //@}
@@ -2547,7 +2515,7 @@ namespace contam {
     /** Create a new object from another object. */
     //AfeQsp(const AfeCsf &other);
     /** Destroy the object. */
-    ~AfeQsp();
+    ~AfeQsp() = default;
     //@}
 
     //@}
@@ -2577,7 +2545,7 @@ namespace contam {
     /** Create a new object from another object. */
     //AfePsf(const AfePsf &other);
     /** Destroy the object. */
-    ~AfePsf();
+    ~AfePsf() = default;
     //@}
 
     //@}
@@ -2607,7 +2575,7 @@ namespace contam {
     /** Create a new object from another object. */
     //AfePsq(const AfePsq &other);
     /** Destroy the object. */
-    ~AfePsq();
+    ~AfePsq() = default;
     //@}
 
     //@}
@@ -2637,7 +2605,7 @@ namespace contam {
     /** Create a new object from another object. */
     AfeSup(const AfeSup& other);
     /** Destroy the object. */
-    ~AfeSup();
+    ~AfeSup() = default;
 
     //@}
     /** @name Operators */

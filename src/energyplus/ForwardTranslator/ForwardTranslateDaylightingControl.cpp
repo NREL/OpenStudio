@@ -44,7 +44,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateDaylightingControl(model::DaylightingControl& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateDaylightingControl(model::DaylightingControl& /*modelObject*/) {
     // real work is done in translateThermalZone
     return boost::none;
   }

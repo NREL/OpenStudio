@@ -49,7 +49,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~FenestrationMaterial() {}
+    virtual ~FenestrationMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FenestrationMaterial(const FenestrationMaterial& other) = default;
+    FenestrationMaterial(FenestrationMaterial&& other) = default;
+    FenestrationMaterial& operator=(const FenestrationMaterial&) = default;
+    FenestrationMaterial& operator=(FenestrationMaterial&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -116,7 +121,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FenestrationMaterial_Impl ImplType;
+    using ImplType = detail::FenestrationMaterial_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -132,10 +137,10 @@ namespace model {
   };
 
   /** \relates FenestrationMaterial */
-  typedef boost::optional<FenestrationMaterial> OptionalFenestrationMaterial;
+  using OptionalFenestrationMaterial = boost::optional<FenestrationMaterial>;
 
   /** \relates FenestrationMaterial */
-  typedef std::vector<FenestrationMaterial> FenestrationMaterialVector;
+  using FenestrationMaterialVector = std::vector<FenestrationMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

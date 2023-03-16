@@ -49,7 +49,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputJSON() {}
+    virtual ~OutputJSON() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputJSON(const OutputJSON& other) = default;
+    OutputJSON(OutputJSON&& other) = default;
+    OutputJSON& operator=(const OutputJSON&) = default;
+    OutputJSON& operator=(OutputJSON&&) = default;
 
     //@}
 
@@ -87,7 +92,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputJSON_Impl ImplType;
+    using ImplType = detail::OutputJSON_Impl;
 
     explicit OutputJSON(std::shared_ptr<detail::OutputJSON_Impl> impl);
 
@@ -103,10 +108,10 @@ namespace model {
   };
 
   /** \relates OutputJSON*/
-  typedef boost::optional<OutputJSON> OptionalOutputJSON;
+  using OptionalOutputJSON = boost::optional<OutputJSON>;
 
   /** \relates OutputJSON*/
-  typedef std::vector<OutputJSON> OutputJSONVector;
+  using OutputJSONVector = std::vector<OutputJSON>;
 
 }  // namespace model
 }  // namespace openstudio

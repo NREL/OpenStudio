@@ -74,8 +74,6 @@ namespace model {
     CoilCoolingWater_Impl::CoilCoolingWater_Impl(const CoilCoolingWater_Impl& other, Model_Impl* model, bool keepHandle)
       : WaterToAirComponent_Impl(other, model, keepHandle) {}
 
-    CoilCoolingWater_Impl::~CoilCoolingWater_Impl() {}
-
     const std::vector<std::string>& CoilCoolingWater_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{"Cooling Coil Total Cooling Energy",
                                                    "Cooling Coil Sensible Cooling Energy",
@@ -103,7 +101,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingWater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_WaterFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingWater", "Availability"));
       }
@@ -288,7 +287,7 @@ namespace model {
       return getString(openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis, true).get();
     }
 
-    bool CoilCoolingWater_Impl::setTypeOfAnalysis(std::string value) {
+    bool CoilCoolingWater_Impl::setTypeOfAnalysis(const std::string& value) {
       return setString(openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis, value);
       ;
     }
@@ -297,7 +296,7 @@ namespace model {
       return getString(openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, true).get();
     }
 
-    bool CoilCoolingWater_Impl::setHeatExchangerConfiguration(std::string value) {
+    bool CoilCoolingWater_Impl::setHeatExchangerConfiguration(const std::string& value) {
       return setString(openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, value);
       ;
     }
@@ -351,13 +350,11 @@ namespace model {
         return WaterToAirComponent_Impl::remove();
       }
 
-      return std::vector<IdfObject>();
+      return {};
     }
 
     ModelObject CoilCoolingWater_Impl::clone(Model model) const {
-      CoilCoolingWater newCoil = WaterToAirComponent_Impl::clone(model).optionalCast<CoilCoolingWater>().get();
-
-      return newCoil;
+      return WaterToAirComponent_Impl::clone(model);
     }
 
     unsigned CoilCoolingWater_Impl::airInletPort() const {
@@ -503,6 +500,11 @@ namespace model {
 
     boost::optional<double> CoilCoolingWater_Impl::autosizedDesignOutletAirHumidityRatio() const {
       return getAutosizedValue("Design Size Design Outlet Air Humidity Ratio", "kgWater/kgDryAir");
+    }
+
+    boost::optional<double> CoilCoolingWater_Impl::autosizedDesignCoilLoad() const {
+      // EPLUS-SQL-INCONSISTENCY (?)
+      return getAutosizedValueFromInitializationSummary("Design Size Design Coil Load", "W");
     }
 
     void CoilCoolingWater_Impl::autosize() {
@@ -703,7 +705,7 @@ namespace model {
     return getImpl<detail::CoilCoolingWater_Impl>()->typeOfAnalysis();
   }
 
-  bool CoilCoolingWater::setTypeOfAnalysis(std::string value) {
+  bool CoilCoolingWater::setTypeOfAnalysis(const std::string& value) {
     return getImpl<detail::CoilCoolingWater_Impl>()->setTypeOfAnalysis(value);
   }
 
@@ -711,7 +713,7 @@ namespace model {
     return getImpl<detail::CoilCoolingWater_Impl>()->heatExchangerConfiguration();
   }
 
-  bool CoilCoolingWater::setHeatExchangerConfiguration(std::string value) {
+  bool CoilCoolingWater::setHeatExchangerConfiguration(const std::string& value) {
     return getImpl<detail::CoilCoolingWater_Impl>()->setHeatExchangerConfiguration(value);
   }
 
@@ -758,6 +760,10 @@ namespace model {
 
   boost::optional<double> CoilCoolingWater::autosizedDesignOutletAirHumidityRatio() const {
     return getImpl<detail::CoilCoolingWater_Impl>()->autosizedDesignOutletAirHumidityRatio();
+  }
+
+  boost::optional<double> CoilCoolingWater::autosizedDesignCoilLoad() const {
+    return getImpl<detail::CoilCoolingWater_Impl>()->autosizedDesignCoilLoad();
   }
 
 }  // namespace model

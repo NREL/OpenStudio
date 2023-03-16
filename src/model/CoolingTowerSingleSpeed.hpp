@@ -55,7 +55,12 @@ namespace model {
 
     explicit CoolingTowerSingleSpeed(const Model& model);
 
-    virtual ~CoolingTowerSingleSpeed() {}
+    virtual ~CoolingTowerSingleSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoolingTowerSingleSpeed(const CoolingTowerSingleSpeed& other) = default;
+    CoolingTowerSingleSpeed(CoolingTowerSingleSpeed&& other) = default;
+    CoolingTowerSingleSpeed& operator=(const CoolingTowerSingleSpeed&) = default;
+    CoolingTowerSingleSpeed& operator=(CoolingTowerSingleSpeed&&) = default;
 
     //@}
 
@@ -330,7 +335,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoolingTowerSingleSpeed_Impl ImplType;
+    using ImplType = detail::CoolingTowerSingleSpeed_Impl;
 
     explicit CoolingTowerSingleSpeed(std::shared_ptr<detail::CoolingTowerSingleSpeed_Impl> impl);
 
@@ -345,10 +350,10 @@ namespace model {
   };
 
   /** \relates CoolingTowerSingleSpeed*/
-  typedef boost::optional<CoolingTowerSingleSpeed> OptionalCoolingTowerSingleSpeed;
+  using OptionalCoolingTowerSingleSpeed = boost::optional<CoolingTowerSingleSpeed>;
 
   /** \relates CoolingTowerSingleSpeed*/
-  typedef std::vector<CoolingTowerSingleSpeed> CoolingTowerSingleSpeedVector;
+  using CoolingTowerSingleSpeedVector = std::vector<CoolingTowerSingleSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

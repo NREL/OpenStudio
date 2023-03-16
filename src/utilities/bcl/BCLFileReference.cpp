@@ -59,8 +59,6 @@ BCLFileReference::BCLFileReference(const openstudio::path& measureRootDir, const
   }
 }
 
-BCLFileReference::~BCLFileReference() {}
-
 openstudio::path BCLFileReference::path() const {
   return m_path;
 }

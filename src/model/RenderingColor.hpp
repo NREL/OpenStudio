@@ -66,7 +66,12 @@ namespace model {
 
     explicit RenderingColor(const Model& model);
 
-    virtual ~RenderingColor() {}
+    virtual ~RenderingColor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RenderingColor(const RenderingColor& other) = default;
+    RenderingColor(RenderingColor&& other) = default;
+    RenderingColor& operator=(const RenderingColor&) = default;
+    RenderingColor& operator=(RenderingColor&&) = default;
 
     static boost::optional<RenderingColor> fromColorString(const std::string& s, const Model& model);
 
@@ -112,7 +117,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::RenderingColor_Impl ImplType;
+    using ImplType = detail::RenderingColor_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -125,10 +130,10 @@ namespace model {
   };
 
   /** \relates RenderingColor*/
-  typedef boost::optional<RenderingColor> OptionalRenderingColor;
+  using OptionalRenderingColor = boost::optional<RenderingColor>;
 
   /** \relates RenderingColor*/
-  typedef std::vector<RenderingColor> RenderingColorVector;
+  using RenderingColorVector = std::vector<RenderingColor>;
 
 }  // namespace model
 }  // namespace openstudio

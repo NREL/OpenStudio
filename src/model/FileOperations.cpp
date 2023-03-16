@@ -215,7 +215,7 @@ namespace model {
     return result;
   }
 
-  bool updateModelTempDir(openstudio::model::Model& model, const openstudio::path& modelTempDir) {
+  bool updateModelTempDir(openstudio::model::Model& /*model*/, const openstudio::path& modelTempDir) {
     bool modified = false;
 
     // Create folder layout
@@ -291,8 +291,8 @@ namespace model {
     // resulting in a uncertain set of model changes.  With these changes, every model will
     // always have the following objects after opening in the app.
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
-    openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
-    openstudio::model::Site site = model.getUniqueModelObject<openstudio::model::Site>();
+    auto facility = model.getUniqueModelObject<openstudio::model::Facility>();
+    auto site = model.getUniqueModelObject<openstudio::model::Site>();
 
     // from simulation tab
     //model.getUniqueModelObject<openstudio::model::RadianceParameters>();

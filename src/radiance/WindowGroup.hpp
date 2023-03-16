@@ -98,7 +98,7 @@ namespace radiance {
   };
 
   // vector of WindowGroup
-  typedef std::vector<WindowGroup> WindowGroupVector;
+  using WindowGroupVector = std::vector<WindowGroup>;
 
 }  // namespace radiance
 }  // namespace openstudio

@@ -262,7 +262,7 @@ namespace model {
   }
 
   IddObjectType OutputEnvironmentalImpactFactors::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Output_EnvironmentalImpactFactors);
+    return {IddObjectType::OS_Output_EnvironmentalImpactFactors};
   }
 
   std::vector<std::string> OutputEnvironmentalImpactFactors::reportingFrequencyValues() {

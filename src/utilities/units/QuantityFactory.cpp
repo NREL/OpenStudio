@@ -45,7 +45,7 @@ boost::optional<Quantity> QuantityFactorySingleton::createQuantity(const std::st
   OptionalQuantity result;
   StringPair strings = decomposeQuantityString(quantityString);
   try {
-    double value = boost::lexical_cast<double>(strings.first);
+    auto value = boost::lexical_cast<double>(strings.first);
     result = createQuantity(value, strings.second);
   } catch (...) {
     LOG(Error, "Unable to create quantity from string '" << quantityString << "'. Returning 0.0.");
@@ -57,7 +57,7 @@ boost::optional<Quantity> QuantityFactorySingleton::createQuantity(const std::st
   OptionalQuantity result;
   StringPair strings = decomposeQuantityString(quantityString);
   try {
-    double value = boost::lexical_cast<double>(strings.first);
+    auto value = boost::lexical_cast<double>(strings.first);
     result = createQuantity(value, strings.second, system);
   } catch (...) {
     LOG(Error, "Unable to create quantity from string '" << quantityString << "'. Returning 0.0.");

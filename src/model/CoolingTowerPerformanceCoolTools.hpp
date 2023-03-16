@@ -52,7 +52,12 @@ namespace model {
 
     explicit CoolingTowerPerformanceCoolTools(const Model& model);
 
-    virtual ~CoolingTowerPerformanceCoolTools() {}
+    virtual ~CoolingTowerPerformanceCoolTools() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoolingTowerPerformanceCoolTools(const CoolingTowerPerformanceCoolTools& other) = default;
+    CoolingTowerPerformanceCoolTools(CoolingTowerPerformanceCoolTools&& other) = default;
+    CoolingTowerPerformanceCoolTools& operator=(const CoolingTowerPerformanceCoolTools&) = default;
+    CoolingTowerPerformanceCoolTools& operator=(CoolingTowerPerformanceCoolTools&&) = default;
 
     //@}
 
@@ -239,7 +244,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::CoolingTowerPerformanceCoolTools_Impl ImplType;
+    using ImplType = detail::CoolingTowerPerformanceCoolTools_Impl;
 
     explicit CoolingTowerPerformanceCoolTools(std::shared_ptr<detail::CoolingTowerPerformanceCoolTools_Impl> impl);
 
@@ -254,10 +259,10 @@ namespace model {
   };
 
   /** \relates CoolingTowerPerformanceCoolTools*/
-  typedef boost::optional<CoolingTowerPerformanceCoolTools> OptionalCoolingTowerPerformanceCoolTools;
+  using OptionalCoolingTowerPerformanceCoolTools = boost::optional<CoolingTowerPerformanceCoolTools>;
 
   /** \relates CoolingTowerPerformanceCoolTools*/
-  typedef std::vector<CoolingTowerPerformanceCoolTools> CoolingTowerPerformanceCoolToolsVector;
+  using CoolingTowerPerformanceCoolToolsVector = std::vector<CoolingTowerPerformanceCoolTools>;
 
 }  // namespace model
 }  // namespace openstudio

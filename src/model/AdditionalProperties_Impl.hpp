@@ -52,7 +52,7 @@ namespace model {
 
       AdditionalProperties_Impl(const AdditionalProperties_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AdditionalProperties_Impl() {}
+      virtual ~AdditionalProperties_Impl() = default;
 
       //@}
 

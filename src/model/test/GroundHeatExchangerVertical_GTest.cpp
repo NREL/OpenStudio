@@ -96,7 +96,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  GroundHeatExchangerVertical testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
+  auto testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
@@ -167,12 +167,12 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_Clone) {
   testObject.setDesignFlowRate(3.14);
 
   //clone into the same model
-  GroundHeatExchangerVertical testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
+  auto testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
   EXPECT_EQ(3.14, testObjectClone.designFlowRate().get());
 
   //clone into another model
   Model m2;
-  GroundHeatExchangerVertical testObjectClone2 = testObject.clone(m2).cast<GroundHeatExchangerVertical>();
+  auto testObjectClone2 = testObject.clone(m2).cast<GroundHeatExchangerVertical>();
   EXPECT_EQ(3.14, testObjectClone2.designFlowRate().get());
 
   EXPECT_NE(testObjectClone2, testObjectClone);

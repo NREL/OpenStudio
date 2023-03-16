@@ -79,7 +79,9 @@ namespace energyplus {
         temp = airTerminal->outletModelObject();
         if (temp) {
           optS = temp->name().get();
-          if (optS) idfObject.setString(i, *optS);
+          if (optS) {
+            idfObject.setString(i, *optS);
+          }
         }
       } else {
         s = outletModelObject.name().get();

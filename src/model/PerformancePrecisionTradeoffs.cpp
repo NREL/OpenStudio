@@ -209,7 +209,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType PerformancePrecisionTradeoffs::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PerformancePrecisionTradeoffs);
+    return {IddObjectType::OS_PerformancePrecisionTradeoffs};
   }
 
   // Use Coil Direct Solutions

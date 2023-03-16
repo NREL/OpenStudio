@@ -53,7 +53,12 @@ namespace model {
 
     explicit LuminaireDefinition(const Model& model);
 
-    virtual ~LuminaireDefinition() {}
+    virtual ~LuminaireDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LuminaireDefinition(const LuminaireDefinition& other) = default;
+    LuminaireDefinition(LuminaireDefinition&& other) = default;
+    LuminaireDefinition& operator=(const LuminaireDefinition&) = default;
+    LuminaireDefinition& operator=(LuminaireDefinition&&) = default;
 
     //@}
     /** @name Static Methods */
@@ -118,7 +123,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::LuminaireDefinition_Impl ImplType;
+    using ImplType = detail::LuminaireDefinition_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -131,10 +136,10 @@ namespace model {
   };
 
   /** \relates LuminaireDefinition*/
-  typedef boost::optional<LuminaireDefinition> OptionalLuminaireDefinition;
+  using OptionalLuminaireDefinition = boost::optional<LuminaireDefinition>;
 
   /** \relates LuminaireDefinition*/
-  typedef std::vector<LuminaireDefinition> LuminaireDefinitionVector;
+  using LuminaireDefinitionVector = std::vector<LuminaireDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -53,7 +53,12 @@ namespace model {
 
     explicit PlantEquipmentOperationOutdoorDewpointDifference(const Model& model);
 
-    virtual ~PlantEquipmentOperationOutdoorDewpointDifference() {}
+    virtual ~PlantEquipmentOperationOutdoorDewpointDifference() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantEquipmentOperationOutdoorDewpointDifference(const PlantEquipmentOperationOutdoorDewpointDifference& other) = default;
+    PlantEquipmentOperationOutdoorDewpointDifference(PlantEquipmentOperationOutdoorDewpointDifference&& other) = default;
+    PlantEquipmentOperationOutdoorDewpointDifference& operator=(const PlantEquipmentOperationOutdoorDewpointDifference&) = default;
+    PlantEquipmentOperationOutdoorDewpointDifference& operator=(PlantEquipmentOperationOutdoorDewpointDifference&&) = default;
 
     //@}
 
@@ -79,7 +84,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl;
 
     explicit PlantEquipmentOperationOutdoorDewpointDifference(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl> impl);
 
@@ -93,10 +98,10 @@ namespace model {
   };
 
   /** \relates PlantEquipmentOperationOutdoorDewpointDifference*/
-  typedef boost::optional<PlantEquipmentOperationOutdoorDewpointDifference> OptionalPlantEquipmentOperationOutdoorDewpointDifference;
+  using OptionalPlantEquipmentOperationOutdoorDewpointDifference = boost::optional<PlantEquipmentOperationOutdoorDewpointDifference>;
 
   /** \relates PlantEquipmentOperationOutdoorDewpointDifference*/
-  typedef std::vector<PlantEquipmentOperationOutdoorDewpointDifference> PlantEquipmentOperationOutdoorDewpointDifferenceVector;
+  using PlantEquipmentOperationOutdoorDewpointDifferenceVector = std::vector<PlantEquipmentOperationOutdoorDewpointDifference>;
 
 }  // namespace model
 }  // namespace openstudio

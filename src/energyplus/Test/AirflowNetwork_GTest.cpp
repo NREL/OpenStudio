@@ -104,7 +104,7 @@ Model createModelWithSimpleAirLoop() {
   Model m = openstudio::model::exampleModel();
 
   // Remove the existing loop
-  AirLoopHVAC example_loop = m.getModelObjects<AirLoopHVAC>()[0];
+  AirLoopHVAC example_loop = m.getConcreteModelObjects<AirLoopHVAC>()[0];
   example_loop.remove();
 
   AirLoopHVAC a(m);
@@ -131,7 +131,7 @@ Model createModelWithSimpleAirLoop() {
   a.addBranchForHVACComponent(terminal);
 
   // Get the single thermal Zone in the model
-  ThermalZone z = m.getModelObjects<ThermalZone>()[0];
+  ThermalZone z = m.getConcreteModelObjects<ThermalZone>()[0];
 
   a.addBranchForZone(z);
   auto outlet_node = a.supplyOutletNode();
@@ -143,7 +143,7 @@ Model createModelWithSimpleAirLoop() {
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkFanLinkage) {
   Model model;
 
-  AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+  auto control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
 
   Node node0(model);
   //Node node1(model);
@@ -181,7 +181,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct) {
   std::vector<CoilCoolingDXSingleSpeed> coolingCoils = model.getConcreteModelObjects<CoilCoolingDXSingleSpeed>();
   ASSERT_EQ(1, coolingCoils.size());
 
-  AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+  auto control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
 
   AirflowNetworkEquivalentDuct cool = coolingCoils[0].getAirflowNetworkEquivalentDuct(0.1, 0.1);
   ASSERT_TRUE(cool.straightComponent());
@@ -236,15 +236,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     Space space(model);
     space.setThermalZone(thermalZone);
 
-    AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+    auto control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
 
     ForwardTranslator forwardTranslator;
 
-    Point3dVector points;
-    points.push_back(Point3d(0, 1, 0));
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(1, 0, 0));
-    points.push_back(Point3d(1, 1, 0));
+    Point3dVector points{
+      {0, 1, 0},
+      {0, 0, 0},
+      {1, 0, 0},
+      {1, 1, 0},
+    };
     Surface surface(points, model);
     surface.setSpace(space);
 
@@ -281,15 +282,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     Space space(model);
     space.setThermalZone(thermalZone);
 
-    AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+    auto control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
 
     ForwardTranslator forwardTranslator;
 
-    Point3dVector points;
-    points.push_back(Point3d(0, 1, 0));
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(1, 0, 0));
-    points.push_back(Point3d(1, 1, 0));
+    Point3dVector points{
+      {0, 1, 0},
+      {0, 0, 0},
+      {1, 0, 0},
+      {1, 1, 0},
+    };
     Surface surface(points, model);
     surface.setSpace(space);
 
@@ -346,15 +348,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     Space space(model);
     space.setThermalZone(thermalZone);
 
-    AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+    auto control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
 
     ForwardTranslator forwardTranslator;
 
-    Point3dVector points;
-    points.push_back(Point3d(0, 1, 0));
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(1, 0, 0));
-    points.push_back(Point3d(1, 1, 0));
+    Point3dVector points{
+      {0, 1, 0},
+      {0, 0, 0},
+      {1, 0, 0},
+      {1, 1, 0},
+    };
     Surface surface(points, model);
     surface.setSpace(space);
 
@@ -393,15 +396,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     Space space(model);
     space.setThermalZone(thermalZone);
 
-    AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+    auto control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
 
     ForwardTranslator forwardTranslator;
 
-    Point3dVector points;
-    points.push_back(Point3d(0, 1, 0));
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(1, 0, 0));
-    points.push_back(Point3d(1, 1, 0));
+    Point3dVector points{
+      {0, 1, 0},
+      {0, 0, 0},
+      {1, 0, 0},
+      {1, 1, 0},
+    };
     Surface surface(points, model);
     surface.setSpace(space);
 
@@ -438,15 +442,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     Space space(model);
     space.setThermalZone(thermalZone);
 
-    AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+    auto control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
 
     ForwardTranslator forwardTranslator;
 
-    Point3dVector points;
-    points.push_back(Point3d(0, 1, 0));
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(1, 0, 0));
-    points.push_back(Point3d(1, 1, 0));
+    Point3dVector points{
+      {0, 1, 0},
+      {0, 0, 0},
+      {1, 0, 0},
+      {1, 1, 0},
+    };
     Surface surface(points, model);
     surface.setSpace(space);
 

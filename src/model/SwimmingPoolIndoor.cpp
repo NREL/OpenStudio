@@ -103,7 +103,8 @@ namespace model {
     std::vector<ScheduleTypeKey> SwimmingPoolIndoor_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_SwimmingPool_IndoorFields::ActivityFactorScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SwimmingPoolIndoor", "Activity Factor"));
       }
@@ -446,7 +447,7 @@ namespace model {
   }
 
   IddObjectType SwimmingPoolIndoor::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SwimmingPool_Indoor);
+    return {IddObjectType::OS_SwimmingPool_Indoor};
   }
 
   Surface SwimmingPoolIndoor::surface() const {

@@ -66,7 +66,12 @@ namespace model {
                                const Curve& normalizedDimensionlessAirflowCurveNonStallRegion,
                                const Curve& normalizedDimensionlessAirflowCurveStallRegion);
 
-    virtual ~FanComponentModel() {}
+    virtual ~FanComponentModel() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FanComponentModel(const FanComponentModel& other) = default;
+    FanComponentModel(FanComponentModel&& other) = default;
+    FanComponentModel& operator=(const FanComponentModel&) = default;
+    FanComponentModel& operator=(FanComponentModel&&) = default;
 
     //@}
 
@@ -272,7 +277,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FanComponentModel_Impl ImplType;
+    using ImplType = detail::FanComponentModel_Impl;
 
     explicit FanComponentModel(std::shared_ptr<detail::FanComponentModel_Impl> impl);
 
@@ -286,10 +291,10 @@ namespace model {
   };
 
   /** \relates FanComponentModel*/
-  typedef boost::optional<FanComponentModel> OptionalFanComponentModel;
+  using OptionalFanComponentModel = boost::optional<FanComponentModel>;
 
   /** \relates FanComponentModel*/
-  typedef std::vector<FanComponentModel> FanComponentModelVector;
+  using FanComponentModelVector = std::vector<FanComponentModel>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -57,7 +57,7 @@ namespace model {
 
       ZoneHVACLowTempRadiantConstFlow_Impl(const ZoneHVACLowTempRadiantConstFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACLowTempRadiantConstFlow_Impl() {}
+      virtual ~ZoneHVACLowTempRadiantConstFlow_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -336,7 +336,7 @@ namespace model {
   }
 
   IddObjectType GroundHeatExchangerHorizontalTrench::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_GroundHeatExchanger_HorizontalTrench);
+    return {IddObjectType::OS_GroundHeatExchanger_HorizontalTrench};
   }
 
   std::vector<std::string> GroundHeatExchangerHorizontalTrench::groundTemperatureModelValues() {

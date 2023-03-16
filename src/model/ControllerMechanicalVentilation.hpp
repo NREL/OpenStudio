@@ -51,7 +51,12 @@ namespace model {
    public:
     explicit ControllerMechanicalVentilation(const Model& model);
 
-    virtual ~ControllerMechanicalVentilation() {}
+    virtual ~ControllerMechanicalVentilation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ControllerMechanicalVentilation(const ControllerMechanicalVentilation& other) = default;
+    ControllerMechanicalVentilation(ControllerMechanicalVentilation&& other) = default;
+    ControllerMechanicalVentilation& operator=(const ControllerMechanicalVentilation&) = default;
+    ControllerMechanicalVentilation& operator=(ControllerMechanicalVentilation&&) = default;
 
     static IddObjectType iddObjectType();
 
@@ -75,7 +80,7 @@ namespace model {
 
     bool isSystemOutdoorAirMethodDefaulted() const;
 
-    bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
+    bool setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod);
 
     void resetSystemOutdoorAirMethod();
 
@@ -83,7 +88,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ControllerMechanicalVentilation_Impl ImplType;
+    using ImplType = detail::ControllerMechanicalVentilation_Impl;
 
     explicit ControllerMechanicalVentilation(std::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl);
 
@@ -97,10 +102,10 @@ namespace model {
   };
 
   /** \relates ControllerMechanicalVentilation*/
-  typedef boost::optional<ControllerMechanicalVentilation> OptionalControllerMechanicalVentilation;
+  using OptionalControllerMechanicalVentilation = boost::optional<ControllerMechanicalVentilation>;
 
   /** \relates ControllerMechanicalVentilation*/
-  typedef std::vector<ControllerMechanicalVentilation> ControllerMechanicalVentilationVector;
+  using ControllerMechanicalVentilationVector = std::vector<ControllerMechanicalVentilation>;
 
 }  // namespace model
 }  // namespace openstudio

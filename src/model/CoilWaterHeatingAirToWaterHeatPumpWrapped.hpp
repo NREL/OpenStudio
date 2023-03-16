@@ -54,7 +54,12 @@ namespace model {
 
     explicit CoilWaterHeatingAirToWaterHeatPumpWrapped(const Model& model);
 
-    virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped() {}
+    virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilWaterHeatingAirToWaterHeatPumpWrapped(const CoilWaterHeatingAirToWaterHeatPumpWrapped& other) = default;
+    CoilWaterHeatingAirToWaterHeatPumpWrapped(CoilWaterHeatingAirToWaterHeatPumpWrapped&& other) = default;
+    CoilWaterHeatingAirToWaterHeatPumpWrapped& operator=(const CoilWaterHeatingAirToWaterHeatPumpWrapped&) = default;
+    CoilWaterHeatingAirToWaterHeatPumpWrapped& operator=(CoilWaterHeatingAirToWaterHeatPumpWrapped&&) = default;
 
     //@}
 
@@ -144,7 +149,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl ImplType;
+    using ImplType = detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl;
 
     explicit CoilWaterHeatingAirToWaterHeatPumpWrapped(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl> impl);
 
@@ -158,10 +163,10 @@ namespace model {
   };
 
   /** \relates CoilWaterHeatingAirToWaterHeatPumpWrapped*/
-  typedef boost::optional<CoilWaterHeatingAirToWaterHeatPumpWrapped> OptionalCoilWaterHeatingAirToWaterHeatPumpWrapped;
+  using OptionalCoilWaterHeatingAirToWaterHeatPumpWrapped = boost::optional<CoilWaterHeatingAirToWaterHeatPumpWrapped>;
 
   /** \relates CoilWaterHeatingAirToWaterHeatPumpWrapped*/
-  typedef std::vector<CoilWaterHeatingAirToWaterHeatPumpWrapped> CoilWaterHeatingAirToWaterHeatPumpWrappedVector;
+  using CoilWaterHeatingAirToWaterHeatPumpWrappedVector = std::vector<CoilWaterHeatingAirToWaterHeatPumpWrapped>;
 
 }  // namespace model
 }  // namespace openstudio

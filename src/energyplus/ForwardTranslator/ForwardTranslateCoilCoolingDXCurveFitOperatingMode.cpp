@@ -117,7 +117,7 @@ namespace energyplus {
     idfObject.setInt(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber, modelObject.nominalSpeedNumber());
 
     // SpeedxName
-    for (auto speed : modelObject.speeds()) {
+    for (auto& speed : modelObject.speeds()) {
       if (auto _s = translateAndMapModelObject(speed)) {
         auto eg = idfObject.pushExtensibleGroup();
         eg.setString(Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::SpeedName, _s->nameString());
@@ -126,7 +126,7 @@ namespace energyplus {
       }
     }
 
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }  // End of translate function
 
 }  // end namespace energyplus

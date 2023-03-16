@@ -52,7 +52,7 @@ namespace model {
 
       AirGap_Impl(const AirGap_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirGap_Impl() {}
+      virtual ~AirGap_Impl() = default;
 
       //@}
 

@@ -32,6 +32,7 @@
 
 #include "PrjDefines.hpp"
 #include "PrjObjectsImpl.hpp"
+#include "ContamEnums.hpp"
 #include "../AirflowAPI.hpp"
 
 namespace openstudio {
@@ -74,7 +75,7 @@ namespace contam {
     /** Create a new object from another object. */
     Zone(const Zone& other);
     /** Destroy the object. */
-    ~Zone();
+    ~Zone() = default;
 
     //@}
     /** @name Operators */
@@ -293,7 +294,7 @@ namespace contam {
     /** Create a new object from another object. */
     Species(const Species& other);
     /** Destroy the object. */
-    ~Species();
+    ~Species() = default;
 
     //@}
     /** @name Operators */
@@ -422,7 +423,7 @@ namespace contam {
     /** Create a new object from another object. */
     Ahs(const Ahs& other);
     /** Destroy the object. */
-    ~Ahs();
+    ~Ahs() = default;
 
     //@}
     /** @name Operators */
@@ -515,7 +516,7 @@ namespace contam {
     /** Create a new object from another object. */
     AirflowPath(const AirflowPath& other);
     /** Destroy the object. */
-    ~AirflowPath();
+    ~AirflowPath() = default;
 
     //@}
     /** @name Operators */
@@ -763,7 +764,7 @@ namespace contam {
     /** Create a new object from another object. */
     RunControl(const RunControl& other);
     /** Destroy the object. */
-    ~RunControl();
+    ~RunControl() = default;
 
     //@}
     /** @name Operators */
@@ -1280,7 +1281,7 @@ namespace contam {
     /** Create a new object from another object. */
     Level(const Level& other);
     /** Destroy the object. */
-    ~Level();
+    ~Level() = default;
 
     //@}
     /** @name Operators */
@@ -1357,7 +1358,7 @@ namespace contam {
     /** Create a new object from another object. */
     DaySchedule(const DaySchedule& other);
     /** Destroy the object. */
-    ~DaySchedule();
+    ~DaySchedule() = default;
 
     //@}
     /** @name Operators */
@@ -1433,7 +1434,7 @@ namespace contam {
     /** Create a new object from another object. */
     WeekSchedule(const WeekSchedule& other);
     /** Destroy the object. */
-    ~WeekSchedule();
+    ~WeekSchedule() = default;
 
     //@}
     /** @name Operators */
@@ -1504,7 +1505,7 @@ namespace contam {
     /** Create a new object from another object. */
     WindPressureProfile(const WindPressureProfile& other);
     /** Destroy the object. */
-    ~WindPressureProfile();
+    ~WindPressureProfile() = default;
 
     //@}
     /** @name Operators */
@@ -1560,54 +1561,12 @@ namespace contam {
   class AIRFLOW_API ControlNode
   {
    public:
-    /** The Type enumeration is used to identify the various control node types. */
-    enum Type
-    {
-      CT_SNS = 0,
-      CT_SCH = 1,
-      CT_SET = 2,
-      CT_CVF = 3,
-      CT_DVF = 4,
-      CT_LOG = 5,
-      CT_PAS = 6,
-      CT_MOD = 7,
-      CT_HYS = 8,
-      CT_ABS = 9,
-      CT_BIN = 10,
-      CT_DLS = 11,
-      CT_DLX = 12,
-      CT_INT = 13,
-      CT_RAV = 14,
-      CT_INV = 15,
-      CT_AND = 16,
-      CT_OR = 17,
-      CT_XOR = 18,
-      CT_ADD = 19,
-      CT_SUB = 20,
-      CT_MUL = 21,
-      CT_DIV = 22,
-      CT_SUM = 23,
-      CT_AVG = 24,
-      CT_MAX = 25,
-      CT_MIN = 26,
-      CT_LLS = 27,
-      CT_ULS = 28,
-      CT_LBS = 29,
-      CT_UBS = 30,
-      CT_LLC = 31,
-      CT_ULC = 32,
-      CT_PC1 = 33,
-      CT_PI1 = 34,
-      CT_SUP = 35,
-      CT_SPH = 37,
-      UNKNOWN
-    };
     /** Destroy the object. */
-    virtual ~ControlNode() {}
+    virtual ~ControlNode() = default;
     /** Write the object to a string. */
     virtual std::string write() = 0;
     /** Convert an input string into a control node type enum. */
-    static Type convertTag(std::string& string);
+    static ControlNodeType convertTag(const std::string& tag);
     /** Read a control node element from a Reader object. */
     static ControlNode* readElement(Reader& input);
     // virtual void recompute(){}
@@ -1663,7 +1622,7 @@ namespace contam {
     /** Create a new object from another object. */
     CdvDat(const CdvDat& other);
     /** Destroy the object. */
-    ~CdvDat();
+    ~CdvDat() = default;
 
     //@}
     /** @name Operators */

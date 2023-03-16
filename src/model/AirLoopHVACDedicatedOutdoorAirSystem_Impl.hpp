@@ -55,7 +55,7 @@ namespace model {
 
       AirLoopHVACDedicatedOutdoorAirSystem_Impl(const AirLoopHVACDedicatedOutdoorAirSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirLoopHVACDedicatedOutdoorAirSystem_Impl() {}
+      virtual ~AirLoopHVACDedicatedOutdoorAirSystem_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -114,6 +114,8 @@ namespace model {
       bool removeAirLoop(unsigned groupIndex);
 
       void removeAllAirLoops();
+
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
       bool addAirLoops(const std::vector<AirLoopHVAC>& airLoopHVACs);
 

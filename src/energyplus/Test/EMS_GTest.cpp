@@ -155,6 +155,7 @@
 #include "../../utilities/sql/SqlFile.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/core/Compare.hpp"
 
 #include <utilities/idd/OS_EnergyManagementSystem_Sensor_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_Sensor_FieldEnums.hxx>
@@ -195,8 +196,8 @@
 
 #include <resources.hxx>
 
+#include <algorithm>
 #include <sstream>
-
 #include <vector>
 
 using namespace openstudio::energyplus;
@@ -344,10 +345,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit) {
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
     std::vector<openstudio::model::EnergyManagementSystemSensor> emsSensors =
-      model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>();
-    ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>().size());
+      model.getConcreteModelObjects<openstudio::model::EnergyManagementSystemSensor>();
+    ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::EnergyManagementSystemSensor>().size());
 
-    openstudio::model::EnergyManagementSystemSensor emsSensor1 = model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>()[0];
+    openstudio::model::EnergyManagementSystemSensor emsSensor1 = model.getConcreteModelObjects<openstudio::model::EnergyManagementSystemSensor>()[0];
     EXPECT_EQ(_i_emsSensor->nameString(), emsSensor1.nameString());
     EXPECT_EQ("OATdb_Sensor", emsSensor1.nameString());
     boost::optional<openstudio::model::OutputVariable> _outvar = emsSensor1.outputVariable();
@@ -654,9 +655,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
   Building building = model.getUniqueModelObject<Building>();
 
   ThermalZone zone1(model);
-  zone1.setName("Thermal Zone");
+  zone1.setName("Zone1");
 
   Space space(model);
+  space.setName("Space1");
   SpaceType spaceType(model);
   space.setThermalZone(zone1);
   space.setSpaceType(spaceType);
@@ -671,30 +673,63 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
   // add actuator
   std::string ControlType = "NaturalGas Rate";
   std::string ComponentType = "GasEquipment";
-  EnergyManagementSystemActuator fanActuator(gasEquip, ComponentType, ControlType);
+  EnergyManagementSystemActuator gasEquipmentActuator(gasEquip, ComponentType, ControlType);
   std::string actName = "Gas Equip Actuator";
-  fanActuator.setName(actName);
+  gasEquipmentActuator.setName(actName);
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  ForwardTranslator ft;
 
-  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+  // When excluding space translation (historical behavior)
+  {
+    ft.setExcludeSpaceTranslation(true);
 
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
-  EXPECT_EQ("Gas_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
-  //Should have TZ in the name since the load is attached to a spacetype with only 1 space
-  EXPECT_EQ("Thermal Zone Gas Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
-  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
-  EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+    Workspace workspace = ft.translateModel(model);
+    EXPECT_EQ(0, ft.errors().size());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ("Actuator 'Gas_Equip_Actuator' references a SpaceLoad 'Gas Equip' attached to the SpaceType 'Space Type 1' but you have turned off "
+              "ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Zone1' since there is only 1.",
+              ft.warnings().front().logMessage());
+    EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
-  // model.save(toPath("./EMS_example.osm"), true);
-  // workspace.save(toPath("./EMS_example.idf"), true);
+    WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+    EXPECT_EQ("Gas_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+    //Should have TZ in the name since the load is attached to a spacetype with only 1 space
+    EXPECT_EQ("Zone1 Gas Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+    EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+    EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    Workspace workspace = ft.translateModel(model);
+    EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ("Actuator 'Gas_Equip_Actuator' references a SpaceLoad 'Gas Equip' attached to the SpaceType 'Space Type 1' but you have turned on "
+              "ForwardTranslation's Space Feature. Falling back to using the attached Space 'Space1' since there is only 1.",
+              ft.warnings().front().logMessage());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+    WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+    EXPECT_EQ("Gas_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+    //Should have Space in the name since the load is attached to a spacetype with only 1 space
+    EXPECT_EQ("Space1 Gas Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+    EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+    EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+  }
 }
+
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space2_EMS) {
   Model model;
 
@@ -747,9 +782,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType2_EMS) {
   Building building = model.getUniqueModelObject<Building>();
 
   ThermalZone zone1(model);
-  zone1.setName("Thermal Zone");
+  zone1.setName("Zone1");
 
   Space space(model);
+  space.setName("Space1");
   SpaceType spaceType(model);
   space.setThermalZone(zone1);
   space.setSpaceType(spaceType);
@@ -768,26 +804,61 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType2_EMS) {
   std::string actName = "Electric Equip Actuator";
   fanActuator.setName(actName);
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  ForwardTranslator ft;
 
-  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+  // When excluding space translation (historical behavior)
+  {
+    ft.setExcludeSpaceTranslation(true);
 
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
-  EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
-  //Should have TZ in the name since the load is attached to a spacetype with only 1 space
-  EXPECT_EQ("Thermal Zone Electric Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
-  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
-  EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+    Workspace workspace = ft.translateModel(model);
+    EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ("Actuator 'Electric_Equip_Actuator' references a SpaceLoad 'Electric Equip' attached to the SpaceType 'Space Type 1' but you have "
+              "turned off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Zone1' since there is only 1.",
+              ft.warnings().front().logMessage());
 
-  // model.save(toPath("./EMS_example.osm"), true);
-  // workspace.save(toPath("./EMS_example.idf"), true);
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+    WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+    EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+    //Should have TZ in the name since the load is attached to a spacetype with only 1 space
+    EXPECT_EQ("Zone1 Electric Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+    EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+    EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    Workspace workspace = ft.translateModel(model);
+    EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ("Actuator 'Electric_Equip_Actuator' references a SpaceLoad 'Electric Equip' attached to the SpaceType 'Space Type 1' but you have "
+              "turned on ForwardTranslation's Space Feature. Falling back to using the attached Space 'Space1' since there is only 1.",
+              ft.warnings().front().logMessage());
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+    WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+    EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+    //Should have Space in the name since the load is attached to a spacetype with only 1 space
+    EXPECT_EQ("Space1 Electric Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+    EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+    EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+  }
 }
+
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad3_EMS) {
   Model model;
 
@@ -836,10 +907,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceTypes_EMS) {
   SpaceType spaceType(model);
 
   Space space1(model);
+  space1.setName("Space1");
   space1.setThermalZone(zone1);
   space1.setSpaceType(spaceType);
 
   Space space2(model);
+  space2.setName("Space2");
   space2.setThermalZone(zone2);
   space2.setSpaceType(spaceType);
 
@@ -857,29 +930,63 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceTypes_EMS) {
   std::string actName = "Electric Equip Actuator";
   fanActuator.setName(actName);
 
-  ForwardTranslator forwardTranslator;
-  forwardTranslator.setExcludeSpaceTranslation(true);
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //expect a warning since there are 2 spaces with the same spaceType
-  EXPECT_EQ(1u, forwardTranslator.warnings().size());
-  //expect 1 actuator since there are 2 spaces with the same spaceType but only 1 will get translated right now
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  ForwardTranslator ft;
 
-  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+  // When excluding space translation (historical behavior)
+  {
+    ft.setExcludeSpaceTranslation(true);
 
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
-  EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
-  // cannot guarantee the order of which TZ gets translated first
-  //EXPECT_EQ("Thermal Zone 2 Electric Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
-  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
-  EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+    ft.setExcludeSpaceTranslation(true);
+    Workspace workspace = ft.translateModel(model);
+    //expect an error since there are 2 spaces with the same spaceType that resolve to two dfferent zones, so the fallback is less safe than it there
+    // was only one, hence an error not a warning
+    EXPECT_EQ(1, ft.errors().size());
+    EXPECT_EQ("Actuator 'Electric_Equip_Actuator' references a SpaceLoad 'Electric Equip' attached to the SpaceType 'Space Type 1' but you have "
+              "turned off ForwardTranslation's Space Feature. Your SpaceType ends up linked to multiples Thermal Zones. Falling back to using the "
+              "first Thermal Zone 'Thermal Zone 1'.",
+              ft.errors().front().logMessage());
+    EXPECT_EQ(0, ft.warnings().size());
+    //expect 1 actuator since there are 2 zones with the same spaceType but only 1 will get translated right now
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
-  // model.save(toPath("./EMS_multi_spaces_spacetypes.osm"), true);
-  // workspace.save(toPath("./EMS_multi_spaces_spacetypes.idf"), true);
+    WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+    EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+    EXPECT_EQ("Thermal Zone 1 Electric Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+    EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+    EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    Workspace workspace = ft.translateModel(model);
+    //expect an error since there are 2 spaces with the same spaceType that resolve to two dfferent zones
+    EXPECT_EQ(1, ft.errors().size());
+    EXPECT_EQ(
+      "Actuator 'Electric_Equip_Actuator' references a SpaceLoad 'Electric Equip' attached to the SpaceType 'Space Type 1' but you have turned on "
+      "ForwardTranslation's Space Feature. The Space Type has multiple spaces attached. Falling back to using the first Space 'Space1'.",
+      ft.errors().front().logMessage());
+    EXPECT_EQ(0, ft.warnings().size());
+    //expect 1 actuator since there are 2 zones with the same spaceType but only 1 will get translated right now
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+    WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+    EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+    EXPECT_EQ("Space1 Electric Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+    EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+    EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+  }
 }
 
 Model prepareProgram_EMS() {
@@ -1253,7 +1360,7 @@ TEST_F(EnergyPlusFixture, noForwardTranslatorOutput_EMS) {
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorOutput_EMS) {
   Model model;
-  OutputEnergyManagementSystem oEMS = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oEMS = model.getUniqueModelObject<OutputEnergyManagementSystem>();
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -1275,7 +1382,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutput_EMS) {
 TEST_F(EnergyPlusFixture, ReverseTranslatorOutput_EMS) {
 
   Model model;
-  OutputEnergyManagementSystem oEMS = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oEMS = model.getUniqueModelObject<OutputEnergyManagementSystem>();
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -1830,9 +1937,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensorDelete_EMS) {
   std::string key = toString(avm.handle());
   EXPECT_EQ(key, sensor.keyName());
   // 1 sensor in the model
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<EnergyManagementSystemSensor>().size());
   // 1 avm in the model
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -1846,7 +1953,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensorDelete_EMS) {
 
   avm.remove();
   // 0 avm in the model
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
   //sensor still has keyName as avm UUID string (will not FT though eventually)
   EXPECT_EQ(key, sensor.keyName());
 
@@ -1863,15 +1970,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
 
   Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
-  boost::optional<Space> space4 = model.getModelObjectByName<Space>("Space 4");
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getConcreteModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getConcreteModelObjects<ThermalZone>();
+  boost::optional<Space> space4 = model.getConcreteModelObjectByName<Space>("Space 4");
   //this will create 1 zone in a zonelist
 
   //This is the EDD file for the spaceload actuators for this model so far
@@ -1887,32 +1994,64 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   std::string ComponentType = "Lights";
   std::string ControlType = "Electricity Rate";
   EnergyManagementSystemActuator lightsActuator(lights[0], ComponentType, ControlType, space4.get());
-  EXPECT_EQ(space4.get().thermalZone().get().handle(), lightsActuator.zoneName().get().handle());
+  EXPECT_EQ(space4->handle(), lightsActuator.zoneOrSpace()->handle());
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
-  //expect no warning since we are using the zoneName API
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
-                               {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
-                                "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
+  ForwardTranslator ft;
 
-  //expect 1 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  // When excluding space translation (historical behavior)
+  {
+    ft.setExcludeSpaceTranslation(true);
 
-  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+    // We get only a warning, since we can recover from it easily
+    Workspace workspace = ft.translateModel(model);
+    EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ(
+      "Actuator 'Energy_Management_System_Actuator_1' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have turned "
+      "off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Thermal Zone 1' since there is only 1.",
+      ft.warnings().front().logMessage());
 
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
-  EXPECT_EQ("Energy_Management_System_Actuator_1", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
-  EXPECT_EQ("Thermal Zone 1 Lights 1", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
-  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
-  EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+    //expect 1 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
-  //model.save(toPath("./EMS_actuator_exampleModel_lights.osm"), true);
-  //workspace.save(toPath("./EMS_actuator_exampleModel_lights.idf"), true);
+    WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+    EXPECT_EQ("Energy_Management_System_Actuator_1", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+    EXPECT_EQ("Thermal Zone 1 Lights 1", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+    EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+    EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    // No warnings here (from EMS), the space is set
+    Workspace workspace = ft.translateModel(model);
+    EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ("Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior walls between Spaces "
+              "will be merged. Make sure these are correctly Matched!",
+              ft.warnings().front().logMessage());
+
+    //expect 1 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+    WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+    EXPECT_EQ("Energy_Management_System_Actuator_1", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+    EXPECT_EQ("Space 4 Lights 1", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+    EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+    ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+    EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+  }
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   //use spacetype with multiple spaces
@@ -1921,15 +2060,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   //and the zones in the list are the space.thermalzone names
 
   Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
-  boost::optional<Space> space4 = model.getModelObjectByName<Space>("Space 4");
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getConcreteModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getConcreteModelObjects<ThermalZone>();
+  boost::optional<Space> space4 = model.getConcreteModelObjectByName<Space>("Space 4");
+  ASSERT_TRUE(space4);
   //this will create 1 zone in a zonelist
 
   //This is the EDD file for the spaceload actuators for this model so far
@@ -1944,60 +2084,79 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   std::string ComponentType = "ElectricEquipment";
   std::string ControlType = "Electricity Rate";
   //actuator on first electricEquipment object
-  EnergyManagementSystemActuator electricActuator0(electricEquipment[0], ComponentType, ControlType);
-  //actuator on second electricEquipment object
-  EnergyManagementSystemActuator electricActuator1(electricEquipment[1], ComponentType, ControlType);
+  // NOTE: there is electricEquipment on a Space and one on a Space Type. I am VOLUNTARILY not setting the space4 for the Space Type one
+  if (electricEquipment[0].space()) {
+    EnergyManagementSystemActuator electricActuator0(electricEquipment[0], ComponentType, ControlType);
+    EnergyManagementSystemActuator electricActuator1(electricEquipment[1], ComponentType, ControlType);  // , space4.get());
+  } else {
+    // 0 is on a SpaceType, 1 is on a Space
+    EnergyManagementSystemActuator electricActuator0(electricEquipment[0], ComponentType, ControlType);  // , space4.get());
+    EnergyManagementSystemActuator electricActuator1(electricEquipment[1], ComponentType, ControlType);
+  }
 
-  ForwardTranslator forwardTranslator;
+  ForwardTranslator ft;
 
   // When excluding space translation (historical behavior)
   {
-    forwardTranslator.setExcludeSpaceTranslation(true);
-    Workspace workspace = forwardTranslator.translateModel(model);
+    ft.setExcludeSpaceTranslation(true);
 
-    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
-    //expect no warning since we are using the zoneName API
-    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
-    //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
-    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+    Workspace workspace = ft.translateModel(model);
+
+    // We get only a warning, since we can recover from it easily
+    EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ(
+      "Actuator 'Energy_Management_System_Actuator_2' references a SpaceLoad 'Electric Equipment 1' attached to the SpaceType 'Space Type 1' but you "
+      "have turned off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Thermal Zone 1' since there is only 1.",
+      ft.warnings().front().logMessage());
 
     std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
-    OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-    OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-    std::string test0 = "Printer";
-    std::string test1 = "Thermal Zone 1 Electric Equipment 1";
-    //EXPECT_EQ(name0.get(),test0);
-    //EXPECT_EQ(name1.get(), test1);
-    EXPECT_TRUE((name0.get() == test0) || (name0.get() == test1));
-    EXPECT_TRUE((name1.get() == test0) || (name1.get() == test1));
+    //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
+    ASSERT_EQ(2, objects.size());
+
+    std::vector<std::string> actuatedNames;
+    std::transform(objects.cbegin(), objects.cend(), std::back_inserter(actuatedNames),
+                   [](const auto& wo) { return wo.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName).get(); });
+    std::sort(actuatedNames.begin(), actuatedNames.end());
+    EXPECT_EQ("Printer", actuatedNames.at(0));
+    EXPECT_EQ("Thermal Zone 1 Electric Equipment 1", actuatedNames.at(1));
     //model.save(toPath("./EMS_actuator_exampleModel_electric.osm"), true);
     //workspace.save(toPath("./EMS_actuator_exampleModel_electric.idf"), true);
   }
 
   // When including Space translation (new E+ 9.6.0)
   {
-    // TODO:
-    forwardTranslator.setExcludeSpaceTranslation(false);
-    Workspace workspace = forwardTranslator.translateModel(model);
+    ft.setExcludeSpaceTranslation(false);
+    Workspace workspace = ft.translateModel(model);
 
-    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
-    //expect no warning since we are using the zoneName API
-    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
-                                 {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
-                                  "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
+    // NOTE: the space is NOT set on the Space Type one, and it has multiple spaces, so there will be an error. It will end up selecting the Space 1
+    // to set it though (it selects the Space sorted by name, so Space 1)
+    EXPECT_EQ(1u, ft.errors().size());
+    EXPECT_EQ("Actuator 'Energy_Management_System_Actuator_2' references a SpaceLoad 'Electric Equipment 1' attached to the SpaceType 'Space Type 1' "
+              "but you have turned on ForwardTranslation's Space Feature. The Space Type has multiple spaces attached. Falling back to using the "
+              "first Space 'Space 1'.",
+              ft.errors().front().logMessage());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ("Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior walls between Spaces "
+              "will be merged. Make sure these are correctly Matched!",
+              ft.warnings().front().logMessage());
+
     //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
     EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
     std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
-    OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-    OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-    std::string test0 = "Printer";
-    std::string test1 = "Thermal Zone 1 Electric Equipment 1";
+    //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
+    ASSERT_EQ(2, objects.size());
 
-    EXPECT_TRUE((name0.get() == test0) || (name0.get() == test1));
-    EXPECT_TRUE((name1.get() == test0) || (name1.get() == test1));
+    std::vector<std::string> actuatedNames;
+    std::transform(objects.cbegin(), objects.cend(), std::back_inserter(actuatedNames),
+                   [](const auto& wo) { return wo.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName).get(); });
+    std::sort(actuatedNames.begin(), actuatedNames.end());
+    EXPECT_EQ("Printer", actuatedNames.front());
+    EXPECT_EQ("Space 1 Electric Equipment 1", actuatedNames.back());
   }
 }
+
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API_EMS) {
   //use spacetype with multiple spaces
   //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
@@ -2005,23 +2164,24 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API_EMS) {
 
   //Model model;
   Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getConcreteModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getConcreteModelObjects<ThermalZone>();
 
   auto thermalZone2 = thermalZone[0].clone(model).cast<ThermalZone>();
   auto thermalZone3 = thermalZone[0].clone(model).cast<ThermalZone>();
   auto thermalZone4 = thermalZone[0].clone(model).cast<ThermalZone>();
   //this will create 4 zones in a zonelist
-  spaces[0].setThermalZone(thermalZone[0]);
-  spaces[1].setThermalZone(thermalZone2);
-  spaces[2].setThermalZone(thermalZone3);
-  spaces[3].setThermalZone(thermalZone4);
+  spaces[0].setThermalZone(thermalZone[0]);  // Space 1
+  spaces[1].setThermalZone(thermalZone2);    // Space 2
+  spaces[2].setThermalZone(thermalZone3);    // Space 3
+  spaces[3].setThermalZone(thermalZone4);    // Space 4
   //This is the EDD file for the spaceload actuators for this model so far
   /*
 EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 PEOPLE 1, People, Number of People, [each]
@@ -2039,126 +2199,81 @@ EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1
 EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
 */
 
+  // NOTE: here I'm setting one actuator to a Zone and one to a Space
   //actuator settings
   std::string lightsComponentType = "Lights";
   std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
-  EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, spaces[2]);
+  EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, spaces[2].thermalZone().get());
   //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
   //EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
   //EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
-  EXPECT_EQ(spaces[2].thermalZone().get().handle(), lightsActuator2.zoneName().get().handle());
+  EXPECT_EQ(spaces[2].thermalZone()->handle(), lightsActuator2.thermalZone().get().handle());
 
   //create actuator zone3
   EnergyManagementSystemActuator lightsActuator3(lights[0], lightsComponentType, lightsControlType, spaces[3]);
   //EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
   //EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
   //EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
-  EXPECT_EQ(spaces[3].thermalZone().get().handle(), lightsActuator3.zoneName().get().handle());
+  EXPECT_EQ(spaces[3].handle(), lightsActuator3.space().get().handle());
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
-  //expect no warning since we are using the zoneName API
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
+  ForwardTranslator ft;
 
-  //expect 2 actuators
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  // When excluding space translation (historical behavior)
+  {
+    ft.setExcludeSpaceTranslation(true);
 
-  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
-  OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-  OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-  std::string test1 = "Thermal Zone 1 Lights 1";
-  std::string test2 = "Thermal Zone 2 Lights 1";
-  std::string test3 = "Thermal Zone 3 Lights 1";
-  std::string test4 = "Thermal Zone 4 Lights 1";
-  //EXPECT_EQ(name0.get(),test2);
-  //EXPECT_EQ(name1.get(), test1);
-  EXPECT_TRUE((name0.get() == test1) || (name0.get() == test2) || (name0.get() == test3) || (name0.get() == test4));
-  EXPECT_TRUE((name1.get() == test1) || (name1.get() == test2) || (name1.get() == test3) || (name1.get() == test4));
-  //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
-  //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
-}
-TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API2_EMS) {
-  //SAME AS PREVIOUS TEST BUT USE TZ instead of Spaces IN API
-  //use spacetype with multiple spaces
-  //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
-  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
+    Workspace workspace = ft.translateModel(model);
 
-  //Model model;
-  Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
-  oems.setActuatorAvailabilityDictionaryReporting("Verbose");
+    // We get only a warning, since we can recover from it easily
+    EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ(
+      "Actuator 'Energy_Management_System_Actuator_2' references a SpaceLoad 'Lights 1' and specified that it wanted to be attached to the Space "
+      "'Space 4' but you have turned off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Thermal Zone 4'.",
+      ft.warnings().front().logMessage());
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+    //expect 2 actuators
+    ASSERT_EQ(2, objects.size());
 
-  auto thermalZone2 = thermalZone[0].clone(model).cast<ThermalZone>();
-  auto thermalZone3 = thermalZone[0].clone(model).cast<ThermalZone>();
-  auto thermalZone4 = thermalZone[0].clone(model).cast<ThermalZone>();
-  //this will create 4 zones in a zonelist
-  spaces[0].setThermalZone(thermalZone[0]);
-  spaces[1].setThermalZone(thermalZone2);
-  spaces[2].setThermalZone(thermalZone3);
-  spaces[3].setThermalZone(thermalZone4);
-  //This is the EDD file for the spaceload actuators for this model so far
-  /*
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 PEOPLE 1, People, Number of People, [each]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 PEOPLE 1, People, Number of People, [each]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 PEOPLE 1, People, Number of People, [each]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 PEOPLE 1, People, Number of People, [each]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electricity Rate, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electricity Rate, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electricity Rate, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electricity Rate, [W]
-  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electricity Rate, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
-  */
+    std::vector<std::string> actuatedNames;
+    std::transform(objects.cbegin(), objects.cend(), std::back_inserter(actuatedNames),
+                   [](const auto& wo) { return wo.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName).get(); });
+    std::sort(actuatedNames.begin(), actuatedNames.end());
 
-  //actuator settings
-  std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electricity Rate";
-  //create actuator zone2
-  EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, thermalZone2);
-  //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
-  //EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
-  //EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
-  EXPECT_EQ(spaces[1].thermalZone().get().handle(), lightsActuator2.zoneName().get().handle());
+    EXPECT_EQ("Thermal Zone 3 Lights 1", actuatedNames.at(0));
+    EXPECT_EQ("Thermal Zone 4 Lights 1", actuatedNames.at(1));
 
-  //create actuator zone3
-  EnergyManagementSystemActuator lightsActuator3(lights[0], lightsComponentType, lightsControlType, thermalZone3);
-  //EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
-  //EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
-  //EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
-  EXPECT_EQ(spaces[2].thermalZone().get().handle(), lightsActuator3.zoneName().get().handle());
+    //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
+    //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
+  }
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
-  //expect no warning since we are using the zoneName API
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
-  //expect 2 actuators
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  // When including Space translation (new E+ 9.6.0)
+  {
+    ft.setExcludeSpaceTranslation(false);
+    Workspace workspace = ft.translateModel(model);
 
-  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
-  OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-  OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-  std::string test1 = "Thermal Zone 1 Lights 1";
-  std::string test2 = "Thermal Zone 2 Lights 1";
-  std::string test3 = "Thermal Zone 3 Lights 1";
-  std::string test4 = "Thermal Zone 4 Lights 1";
-  //EXPECT_EQ(name0.get(),test2);
-  //EXPECT_EQ(name1.get(), test1);
-  EXPECT_TRUE((name0.get() == test1) || (name0.get() == test2) || (name0.get() == test3) || (name0.get() == test4));
-  EXPECT_TRUE((name1.get() == test1) || (name1.get() == test2) || (name1.get() == test3) || (name1.get() == test4));
-  //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
-  //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
+    // We get only a warning, since we can recover from it easily
+    EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ("Actuator 'Energy_Management_System_Actuator_1' references a SpaceLoad 'Lights 1' and specified that it wanted to be attached to the "
+              "Thermal Zone 'Thermal Zone 3' but you have turned on ForwardTranslation's Space Feature. Falling back to using the attached Space "
+              "'Space 3' since there is only 1.",
+              ft.warnings().front().logMessage());
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+    //expect 2 actuators
+    ASSERT_EQ(2, objects.size());
+
+    std::vector<std::string> actuatedNames;
+    std::transform(objects.cbegin(), objects.cend(), std::back_inserter(actuatedNames),
+                   [](const auto& wo) { return wo.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName).get(); });
+    std::sort(actuatedNames.begin(), actuatedNames.end());
+
+    EXPECT_EQ("Space 3 Lights 1", actuatedNames.at(0));
+    EXPECT_EQ("Space 4 Lights 1", actuatedNames.at(1));
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
@@ -2169,14 +2284,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
 
   //Model model;
   Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getConcreteModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getConcreteModelObjects<ThermalZone>();
 
   auto thermalZone2 = thermalZone[0].clone(model).cast<ThermalZone>();
   auto thermalZone3 = thermalZone[0].clone(model).cast<ThermalZone>();
@@ -2211,14 +2326,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
   //EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
   //EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
-  EXPECT_EQ(spaces[1].thermalZone().get().handle(), lightsActuator2.zoneName().get().handle());
+  EXPECT_EQ(spaces[1].thermalZone()->handle(), lightsActuator2.thermalZone()->handle());
 
   //create actuator zone3
   EnergyManagementSystemActuator lightsActuator3(lights[0], lightsComponentType, lightsControlType, thermalZone3);
   //EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
   //EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
   //EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
-  EXPECT_EQ(spaces[2].thermalZone().get().handle(), lightsActuator3.zoneName().get().handle());
+  EXPECT_EQ(spaces[2].thermalZone()->handle(), lightsActuator3.thermalZone()->handle());
 
   //this will create 4 zones in a zonelist
   spaces[0].setThermalZone(thermalZone[0]);
@@ -2230,32 +2345,80 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   thermalZone3.remove();
   thermalZone4.remove();
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
-  //expect no warning since we are using the zoneName API
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
-                               {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
-                                "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
+  ForwardTranslator ft;
 
-  //expect 2 actuators
-  //ACTUATORS WILL STILL GET TRANSLATED WITH BLANK ZONENAME FIELD
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  // When excluding space translation (historical behavior)
+  {
+    ft.setExcludeSpaceTranslation(true);
 
-  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
-  OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-  OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-  std::string test1 = "Thermal Zone 1 Lights 1";
-  std::string test2 = "Thermal Zone 2 Lights 1";
-  std::string test3 = "Thermal Zone 3 Lights 1";
-  std::string test4 = "Thermal Zone 4 Lights 1";
-  //ONLY 1 TZ in model now so should default back to that
-  EXPECT_EQ(name0.get(), test1);
-  EXPECT_EQ(name1.get(), test1);
-  //EXPECT_TRUE((name0.get() == test1) || (name0.get() == test2) || (name0.get() == test3) || (name0.get() == test4));
-  //EXPECT_TRUE((name1.get() == test1) || (name1.get() == test2) || (name1.get() == test3) || (name1.get() == test4));
-  //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
-  //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
+    Workspace workspace = ft.translateModel(model);
+
+    // We get only a warning, since we can recover from it easily
+    EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(2, ft.warnings().size());
+    EXPECT_EQ(
+      "Actuator 'Energy_Management_System_Actuator_1' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have turned "
+      "off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Thermal Zone 1' since there is only 1.",
+      ft.warnings().front().logMessage());
+    EXPECT_EQ(
+      "Actuator 'Energy_Management_System_Actuator_2' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have turned "
+      "off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Thermal Zone 1' since there is only 1.",
+      ft.warnings().back().logMessage());
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+    //expect 2 actuators
+    //ACTUATORS WILL STILL GET TRANSLATED WITH BLANK ZONENAME FIELD
+    ASSERT_EQ(2, objects.size());
+
+    std::vector<std::string> actuatedNames;
+    std::transform(objects.cbegin(), objects.cend(), std::back_inserter(actuatedNames),
+                   [](const auto& wo) { return wo.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName).get(); });
+    std::sort(actuatedNames.begin(), actuatedNames.end());
+
+    // TODO: hum we end up with two actuators on the same zone, this is problematic... We did issue helpful warnings, and let E+ catch the issue.
+    // Can't always protect the user against themselves
+    EXPECT_EQ("Thermal Zone 1 Lights 1", actuatedNames.at(0));
+    EXPECT_EQ("Thermal Zone 1 Lights 1", actuatedNames.at(1));
+
+    //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
+    //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    ft.setExcludeSpaceTranslation(false);
+    Workspace workspace = ft.translateModel(model);
+
+    // We get only a warning, since we can recover from it easily
+    EXPECT_EQ(2, ft.errors().size());
+    EXPECT_EQ(
+      "Actuator 'Energy_Management_System_Actuator_1' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have turned "
+      "on ForwardTranslation's Space Feature. The Space Type has multiple spaces attached. Falling back to using the first Space 'Space 1'.",
+      ft.errors().front().logMessage());
+    EXPECT_EQ(
+      "Actuator 'Energy_Management_System_Actuator_2' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have turned "
+      "on ForwardTranslation's Space Feature. The Space Type has multiple spaces attached. Falling back to using the first Space 'Space 1'.",
+      ft.errors().back().logMessage());
+    EXPECT_EQ(1, ft.warnings().size());
+    EXPECT_EQ("Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior walls between Spaces "
+              "will be merged. Make sure these are correctly Matched!",
+              ft.warnings().front().logMessage());
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+    //expect 2 actuators
+    //ACTUATORS WILL STILL GET TRANSLATED WITH BLANK ZONENAME FIELD
+    ASSERT_EQ(2, objects.size());
+
+    std::vector<std::string> actuatedNames;
+    std::transform(objects.cbegin(), objects.cend(), std::back_inserter(actuatedNames),
+                   [](const auto& wo) { return wo.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName).get(); });
+    std::sort(actuatedNames.begin(), actuatedNames.end());
+
+    // TODO: hum we end up with two actuators on the same zone, this is problematic... We did issue helpful warnings, and let E+ catch the issue.
+    // Can't always protect the user against themselves
+    EXPECT_EQ("Space 1 Lights 1", actuatedNames.at(0));
+    EXPECT_EQ("Space 1 Lights 1", actuatedNames.at(1));
+  }
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
@@ -2300,13 +2463,13 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
 
-  EXPECT_EQ(2u, model.getModelObjects<EnergyManagementSystemGlobalVariable>().size());
-  EXPECT_EQ(1u, model.getModelObjects<EnergyManagementSystemProgramCallingManager>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<EnergyManagementSystemGlobalVariable>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<EnergyManagementSystemProgramCallingManager>().size());
 
   /**
    * Test the EMS Program
    * */
-  std::vector<EnergyManagementSystemProgram> emsProgs = model.getModelObjects<EnergyManagementSystemProgram>();
+  std::vector<EnergyManagementSystemProgram> emsProgs = model.getConcreteModelObjects<EnergyManagementSystemProgram>();
   ASSERT_EQ(1u, emsProgs.size());
   EnergyManagementSystemProgram emsProg = emsProgs[0];
   EXPECT_EQ(12u, emsProg.lines().size());
@@ -2314,7 +2477,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   // There should be 10 references in total, 4 for Var1 and 5 for Var2, 1 for DummySubRoutine, so only two unique refs (Var1 and Var2)
   EXPECT_EQ(10u, refObjs.size());
 
-  int n1(0), n2(0), n3(0), n0(0);
+  int n1(0);
+  int n2(0);
+  int n3(0);
+  int n0(0);
 
   for (const ModelObject& refObj : refObjs) {
     std::string oname = refObj.name().get();
@@ -2340,7 +2506,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   /**
    * Test the subroutine
    * */
-  std::vector<EnergyManagementSystemSubroutine> emsSubs = model.getModelObjects<EnergyManagementSystemSubroutine>();
+  std::vector<EnergyManagementSystemSubroutine> emsSubs = model.getConcreteModelObjects<EnergyManagementSystemSubroutine>();
   ASSERT_EQ(1u, emsSubs.size());
   EnergyManagementSystemSubroutine emsSub = emsSubs[0];
   EXPECT_EQ(2u, emsSub.lines().size());

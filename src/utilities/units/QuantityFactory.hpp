@@ -74,7 +74,7 @@ class UTILITIES_API QuantityFactorySingleton
   REGISTER_LOGGER("openstudio.units.QuantityFactory");
 };
 
-typedef openstudio::Singleton<QuantityFactorySingleton> QuantityFactory;
+using QuantityFactory = openstudio::Singleton<QuantityFactorySingleton>;
 
 /** Creates a Quantity object from quantityString (a string that matches
  *  openstudio::regexQuantity()). */

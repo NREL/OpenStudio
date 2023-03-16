@@ -51,7 +51,12 @@ namespace model {
     /** TODO default values should be reviewed */
     explicit CFactorUndergroundWallConstruction(const Model& model, double cFactor = 0.1, double height = 0.1);
 
-    virtual ~CFactorUndergroundWallConstruction() {}
+    virtual ~CFactorUndergroundWallConstruction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CFactorUndergroundWallConstruction(const CFactorUndergroundWallConstruction& other) = default;
+    CFactorUndergroundWallConstruction(CFactorUndergroundWallConstruction&& other) = default;
+    CFactorUndergroundWallConstruction& operator=(const CFactorUndergroundWallConstruction&) = default;
+    CFactorUndergroundWallConstruction& operator=(CFactorUndergroundWallConstruction&&) = default;
 
     double cFactor() const;
     bool setCFactor(double cFactor);
@@ -68,7 +73,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CFactorUndergroundWallConstruction_Impl ImplType;
+    using ImplType = detail::CFactorUndergroundWallConstruction_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -82,10 +87,10 @@ namespace model {
   };
 
   /** \relates CFactorUndergroundWallConstruction */
-  typedef boost::optional<CFactorUndergroundWallConstruction> OptionalCFactorUndergroundWallConstruction;
+  using OptionalCFactorUndergroundWallConstruction = boost::optional<CFactorUndergroundWallConstruction>;
 
   /** \relates CFactorUndergroundWallConstruction */
-  typedef std::vector<CFactorUndergroundWallConstruction> CFactorUndergroundWallConstructionVector;
+  using CFactorUndergroundWallConstructionVector = std::vector<CFactorUndergroundWallConstruction>;
 
 }  // namespace model
 }  // namespace openstudio

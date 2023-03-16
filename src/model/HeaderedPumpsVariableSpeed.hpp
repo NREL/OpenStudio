@@ -55,7 +55,12 @@ namespace model {
 
     explicit HeaderedPumpsVariableSpeed(const Model& model);
 
-    virtual ~HeaderedPumpsVariableSpeed() {}
+    virtual ~HeaderedPumpsVariableSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeaderedPumpsVariableSpeed(const HeaderedPumpsVariableSpeed& other) = default;
+    HeaderedPumpsVariableSpeed(HeaderedPumpsVariableSpeed&& other) = default;
+    HeaderedPumpsVariableSpeed& operator=(const HeaderedPumpsVariableSpeed&) = default;
+    HeaderedPumpsVariableSpeed& operator=(HeaderedPumpsVariableSpeed&&) = default;
 
     //@}
 
@@ -180,7 +185,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeaderedPumpsVariableSpeed_Impl ImplType;
+    using ImplType = detail::HeaderedPumpsVariableSpeed_Impl;
 
     explicit HeaderedPumpsVariableSpeed(std::shared_ptr<detail::HeaderedPumpsVariableSpeed_Impl> impl);
 
@@ -194,10 +199,10 @@ namespace model {
   };
 
   /** \relates HeaderedPumpsVariableSpeed*/
-  typedef boost::optional<HeaderedPumpsVariableSpeed> OptionalHeaderedPumpsVariableSpeed;
+  using OptionalHeaderedPumpsVariableSpeed = boost::optional<HeaderedPumpsVariableSpeed>;
 
   /** \relates HeaderedPumpsVariableSpeed*/
-  typedef std::vector<HeaderedPumpsVariableSpeed> HeaderedPumpsVariableSpeedVector;
+  using HeaderedPumpsVariableSpeedVector = std::vector<HeaderedPumpsVariableSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

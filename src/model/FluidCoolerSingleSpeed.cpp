@@ -330,7 +330,7 @@ namespace model {
   }
 
   IddObjectType FluidCoolerSingleSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_FluidCooler_SingleSpeed);
+    return {IddObjectType::OS_FluidCooler_SingleSpeed};
   }
 
   std::vector<std::string> FluidCoolerSingleSpeed::performanceInputMethodValues() {

@@ -82,7 +82,7 @@ namespace model {
       this->makeUnique();
 
       InternalMassDefinition internalMassDefinition = this->internalMassDefinition();
-      for (LifeCycleCost cost : internalMassDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : internalMassDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 
@@ -242,7 +242,7 @@ namespace model {
         coefficientsClone.setSurface(clone);
       }
 
-      return clone;
+      return std::move(clone);
     }
 
   }  // namespace detail

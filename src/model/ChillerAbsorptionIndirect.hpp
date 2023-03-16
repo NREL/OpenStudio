@@ -54,7 +54,12 @@ namespace model {
 
     explicit ChillerAbsorptionIndirect(const Model& model);
 
-    virtual ~ChillerAbsorptionIndirect() {}
+    virtual ~ChillerAbsorptionIndirect() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ChillerAbsorptionIndirect(const ChillerAbsorptionIndirect& other) = default;
+    ChillerAbsorptionIndirect(ChillerAbsorptionIndirect&& other) = default;
+    ChillerAbsorptionIndirect& operator=(const ChillerAbsorptionIndirect&) = default;
+    ChillerAbsorptionIndirect& operator=(ChillerAbsorptionIndirect&&) = default;
 
     //@}
 
@@ -157,7 +162,7 @@ namespace model {
 
     void autosizeDesignCondenserWaterFlowRate();
 
-    bool setChillerFlowMode(std::string chillerFlowMode);
+    bool setChillerFlowMode(const std::string& chillerFlowMode);
 
     bool setGeneratorHeatInputFunctionofPartLoadRatioCurve(const Curve& curve);
 
@@ -174,7 +179,7 @@ namespace model {
     bool setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(const Curve& curve);
 
     // Will not accept "Steam" if chiller is connected to a Generator Loop as we do not support Steam Loops (yet)
-    bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
+    bool setGeneratorHeatSourceType(const std::string& generatorHeatSourceType);
 
     bool setDesignGeneratorFluidFlowRate(double designGeneratorFluidFlowRate);
 
@@ -214,7 +219,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ChillerAbsorptionIndirect_Impl ImplType;
+    using ImplType = detail::ChillerAbsorptionIndirect_Impl;
 
     explicit ChillerAbsorptionIndirect(std::shared_ptr<detail::ChillerAbsorptionIndirect_Impl> impl);
 
@@ -228,10 +233,10 @@ namespace model {
   };
 
   /** \relates ChillerAbsorptionIndirect*/
-  typedef boost::optional<ChillerAbsorptionIndirect> OptionalChillerAbsorptionIndirect;
+  using OptionalChillerAbsorptionIndirect = boost::optional<ChillerAbsorptionIndirect>;
 
   /** \relates ChillerAbsorptionIndirect*/
-  typedef std::vector<ChillerAbsorptionIndirect> ChillerAbsorptionIndirectVector;
+  using ChillerAbsorptionIndirectVector = std::vector<ChillerAbsorptionIndirect>;
 
 }  // namespace model
 }  // namespace openstudio

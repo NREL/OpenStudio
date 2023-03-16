@@ -136,7 +136,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkLeakageRatio::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkLeakageRatio);
+    return {IddObjectType::OS_AirflowNetworkLeakageRatio};
   }
 
   boost::optional<double> AirflowNetworkLeakageRatio::effectiveLeakageRatio() const {

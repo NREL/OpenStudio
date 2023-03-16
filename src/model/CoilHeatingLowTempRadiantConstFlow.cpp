@@ -83,7 +83,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilHeatingLowTempRadiantConstFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_LowTemperatureRadiant_ConstantFlowFields::HeatingHighWaterTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilHeatingLowTempRadiantConstFlow", "Heating High Water Temperature"));
       }
@@ -318,7 +319,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingLowTempRadiantConstFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow);
+    return {IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow};
   }
 
   boost::optional<Schedule> CoilHeatingLowTempRadiantConstFlow::heatingHighWaterTemperatureSchedule() const {

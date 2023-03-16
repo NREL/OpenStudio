@@ -57,7 +57,12 @@ namespace model {
 
     explicit HotWaterEquipment(const HotWaterEquipmentDefinition& hotWaterEquipmentDefinition);
 
-    virtual ~HotWaterEquipment() {}
+    virtual ~HotWaterEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HotWaterEquipment(const HotWaterEquipment& other) = default;
+    HotWaterEquipment(HotWaterEquipment&& other) = default;
+    HotWaterEquipment& operator=(const HotWaterEquipment&) = default;
+    HotWaterEquipment& operator=(HotWaterEquipment&&) = default;
 
     //@}
 
@@ -97,7 +102,7 @@ namespace model {
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -120,7 +125,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HotWaterEquipment_Impl ImplType;
+    using ImplType = detail::HotWaterEquipment_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -133,10 +138,10 @@ namespace model {
   };
 
   /** \relates HotWaterEquipment*/
-  typedef boost::optional<HotWaterEquipment> OptionalHotWaterEquipment;
+  using OptionalHotWaterEquipment = boost::optional<HotWaterEquipment>;
 
   /** \relates HotWaterEquipment*/
-  typedef std::vector<HotWaterEquipment> HotWaterEquipmentVector;
+  using HotWaterEquipmentVector = std::vector<HotWaterEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

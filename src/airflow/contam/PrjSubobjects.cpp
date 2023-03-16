@@ -47,14 +47,9 @@ namespace contam {
     : m_impl(
       std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt, barpres, windspd, winddir, relhum, daytyp, uTa, ubP, uws, uwd))) {}
 
-  WeatherData::WeatherData(const WeatherData& other) : m_impl(other.m_impl) {}
+  WeatherData::WeatherData(const WeatherData& other) = default;
 
-  WeatherData::~WeatherData() {}
-
-  WeatherData& WeatherData::operator=(const WeatherData& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  WeatherData& WeatherData::operator=(const WeatherData& other) = default;
 
   bool WeatherData::operator==(const WeatherData& other) const {
     return m_impl == other.m_impl;
@@ -176,14 +171,9 @@ namespace contam {
 
   Icon::Icon(int icon, int col, int row, int nr) : m_impl(std::shared_ptr<detail::IconImpl>(new detail::IconImpl(icon, col, row, nr))) {}
 
-  Icon::Icon(const Icon& other) : m_impl(other.m_impl) {}
+  Icon::Icon(const Icon& other) = default;
 
-  Icon::~Icon() {}
-
-  Icon& Icon::operator=(const Icon& other) {
-    m_impl = other.m_impl;
-    return *this;
-  }
+  Icon& Icon::operator=(const Icon& other) = default;
 
   bool Icon::operator==(const Icon& other) const {
     return m_impl == other.m_impl;

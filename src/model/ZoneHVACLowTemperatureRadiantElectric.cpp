@@ -74,10 +74,9 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACLowTemperatureRadiantElectric_Impl::clone(Model model) const {
-      ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectricClone =
-        ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTemperatureRadiantElectric>();
+      auto zoneHVACLowTemperatureRadiantElectricClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTemperatureRadiantElectric>();
 
-      return zoneHVACLowTemperatureRadiantElectricClone;
+      return std::move(zoneHVACLowTemperatureRadiantElectricClone);
     }
 
     const std::vector<std::string>& ZoneHVACLowTemperatureRadiantElectric_Impl::outputVariableNames() const {
@@ -93,12 +92,13 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACLowTemperatureRadiantElectric_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ZoneHVACLowTemperatureRadiantElectric", "Availability"));
+        result.emplace_back("ZoneHVACLowTemperatureRadiantElectric", "Availability");
       }
       if (std::find(b, e, OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingSetpointTemperatureScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ZoneHVACLowTemperatureRadiantElectric", "Heating Setpoint Temperature"));
+        result.emplace_back("ZoneHVACLowTemperatureRadiantElectric", "Heating Setpoint Temperature");
       }
       return result;
     }
@@ -339,7 +339,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneHVACLowTemperatureRadiantElectric_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -428,7 +428,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACLowTemperatureRadiantElectric::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+    return {IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric};
   }
 
   std::vector<std::string> ZoneHVACLowTemperatureRadiantElectric::radiantSurfaceTypeValues() {

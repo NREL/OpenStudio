@@ -65,6 +65,7 @@ namespace osversion {
   {
    public:
     RefactoredObjectData(const IdfObject& old, const IdfObject& newObject);
+    RefactoredObjectData(IdfObject&& old, IdfObject&& newObject);
 
     IdfObject oldObject() const;
     IdfObject newObject() const;
@@ -178,7 +179,7 @@ namespace osversion {
    private:
     REGISTER_LOGGER("openstudio.osversion.VersionTranslator");
 
-    typedef boost::function<std::string(VersionTranslator*, const IdfFile&, const IddFileAndFactoryWrapper&)> OSVersionUpdater;
+    using OSVersionUpdater = boost::function<std::string(VersionTranslator*, const IdfFile&, const IddFileAndFactoryWrapper&)>;
     std::map<VersionString, OSVersionUpdater> m_updateMethods;
     std::vector<VersionString> m_startVersions;
 
@@ -256,7 +257,7 @@ namespace osversion {
     std::string update_3_3_0_to_3_4_0(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_4_0);
     std::string update_3_4_0_to_3_5_0(const IdfFile& idf_3_4_0, const IddFileAndFactoryWrapper& idd_3_5_0);
     std::string update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1);
-    std::string update_3_5_1_to_3_5_2(const IdfFile& idf_3_5_1, const IddFileAndFactoryWrapper& idd_3_5_2);
+    std::string update_3_5_1_to_3_6_0(const IdfFile& idf_3_5_1, const IddFileAndFactoryWrapper& idd_3_6_0);
 
     IdfObject updateUrlField_0_7_1_to_0_7_2(const IdfObject& object, unsigned index);
 
@@ -264,7 +265,7 @@ namespace osversion {
     {
       VersionString endVersion;
       InterobjectIssueInformation(const VersionString& t_endVersion) : endVersion(t_endVersion) {}
-      virtual ~InterobjectIssueInformation() {}
+      virtual ~InterobjectIssueInformation() = default;
     };
 
     std::vector<std::shared_ptr<InterobjectIssueInformation>> fixInterobjectIssuesStage1(model::Model& model, const VersionString& startVersion);
@@ -282,7 +283,7 @@ namespace osversion {
       std::set<model::ModelObject> refactoredUsers;
 
       InterobjectIssueInformation_0_8_3_to_0_8_4() : InterobjectIssueInformation(VersionString("0.8.4")) {}
-      virtual ~InterobjectIssueInformation_0_8_3_to_0_8_4() {}
+      virtual ~InterobjectIssueInformation_0_8_3_to_0_8_4() = default;
     };
 
     std::shared_ptr<InterobjectIssueInformation> fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model);

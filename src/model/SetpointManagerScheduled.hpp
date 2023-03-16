@@ -66,7 +66,12 @@ namespace model {
    *  model. */
     SetpointManagerScheduled(const Model& model, const std::string& controlVariable, Schedule& setpointSchedule);
 
-    virtual ~SetpointManagerScheduled() {}
+    virtual ~SetpointManagerScheduled() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerScheduled(const SetpointManagerScheduled& other) = default;
+    SetpointManagerScheduled(SetpointManagerScheduled&& other) = default;
+    SetpointManagerScheduled& operator=(const SetpointManagerScheduled&) = default;
+    SetpointManagerScheduled& operator=(SetpointManagerScheduled&&) = default;
 
     //@}
 
@@ -115,7 +120,7 @@ namespace model {
     friend class detail::SetpointManagerScheduled_Impl;
 
     /// @cond
-    typedef detail::SetpointManagerScheduled_Impl ImplType;
+    using ImplType = detail::SetpointManagerScheduled_Impl;
 
     explicit SetpointManagerScheduled(std::shared_ptr<detail::SetpointManagerScheduled_Impl> impl);
 

@@ -154,11 +154,11 @@ namespace model {
       return MasslessOpaqueMaterial::iddObjectType();
     }
 
-    bool MasslessOpaqueMaterial_Impl::setThickness(double value) {
+    bool MasslessOpaqueMaterial_Impl::setThickness(double /*value*/) {
       return false;
     }
 
-    bool MasslessOpaqueMaterial_Impl::setThermalConductivity(double value) {
+    bool MasslessOpaqueMaterial_Impl::setThermalConductivity(double /*value*/) {
       return false;
     }
 
@@ -166,7 +166,7 @@ namespace model {
       return setThermalResistance(1.0 / value);
     }
 
-    bool MasslessOpaqueMaterial_Impl::setThermalResistivity(double value) {
+    bool MasslessOpaqueMaterial_Impl::setThermalResistivity(double /*value*/) {
       return false;
     }
 
@@ -288,7 +288,7 @@ namespace model {
         double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
         double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
         double coatingLayerWaterVaporDiffusionResistanceFactor) {
-      MasslessOpaqueMaterial thisMaterial = getObject<MasslessOpaqueMaterial>();
+      auto thisMaterial = getObject<MasslessOpaqueMaterial>();
       std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds =
         thisMaterial.getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(
           MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
@@ -325,7 +325,7 @@ namespace model {
     }
 
     boost::optional<MaterialPropertyPhaseChange> MasslessOpaqueMaterial_Impl::createMaterialPropertyPhaseChange() {
-      MasslessOpaqueMaterial thisMaterial = getObject<MasslessOpaqueMaterial>();
+      auto thisMaterial = getObject<MasslessOpaqueMaterial>();
       std::vector<MaterialPropertyPhaseChange> phaseChanges =
         thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
       if (!phaseChanges.empty()) {
@@ -338,7 +338,7 @@ namespace model {
 
     boost::optional<MaterialPropertyPhaseChange>
       MasslessOpaqueMaterial_Impl::createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {
-      MasslessOpaqueMaterial thisMaterial = getObject<MasslessOpaqueMaterial>();
+      auto thisMaterial = getObject<MasslessOpaqueMaterial>();
       std::vector<MaterialPropertyPhaseChange> phaseChanges =
         thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
       if (!phaseChanges.empty()) {
@@ -370,7 +370,7 @@ namespace model {
     }
 
     boost::optional<MaterialPropertyPhaseChangeHysteresis> MasslessOpaqueMaterial_Impl::createMaterialPropertyPhaseChangeHysteresis() {
-      MasslessOpaqueMaterial thisMaterial = getObject<MasslessOpaqueMaterial>();
+      auto thisMaterial = getObject<MasslessOpaqueMaterial>();
       std::vector<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresiss =
         thisMaterial.getModelObjectSources<MaterialPropertyPhaseChangeHysteresis>(MaterialPropertyPhaseChangeHysteresis::iddObjectType());
       if (!phaseChangeHysteresiss.empty()) {
@@ -418,7 +418,7 @@ namespace model {
   }
 
   IddObjectType MasslessOpaqueMaterial::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Material_NoMass);
+    return {IddObjectType::OS_Material_NoMass};
   }
 
   std::vector<std::string> MasslessOpaqueMaterial::roughnessValues() {

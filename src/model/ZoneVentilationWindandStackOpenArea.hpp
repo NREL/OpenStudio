@@ -54,7 +54,12 @@ namespace model {
 
     explicit ZoneVentilationWindandStackOpenArea(const Model& model);
 
-    virtual ~ZoneVentilationWindandStackOpenArea() {}
+    virtual ~ZoneVentilationWindandStackOpenArea() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneVentilationWindandStackOpenArea(const ZoneVentilationWindandStackOpenArea& other) = default;
+    ZoneVentilationWindandStackOpenArea(ZoneVentilationWindandStackOpenArea&& other) = default;
+    ZoneVentilationWindandStackOpenArea& operator=(const ZoneVentilationWindandStackOpenArea&) = default;
+    ZoneVentilationWindandStackOpenArea& operator=(ZoneVentilationWindandStackOpenArea&&) = default;
 
     //@}
 
@@ -151,7 +156,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneVentilationWindandStackOpenArea_Impl ImplType;
+    using ImplType = detail::ZoneVentilationWindandStackOpenArea_Impl;
 
     explicit ZoneVentilationWindandStackOpenArea(std::shared_ptr<detail::ZoneVentilationWindandStackOpenArea_Impl> impl);
 
@@ -165,10 +170,10 @@ namespace model {
   };
 
   /** \relates ZoneVentilationWindandStackOpenArea*/
-  typedef boost::optional<ZoneVentilationWindandStackOpenArea> OptionalZoneVentilationWindandStackOpenArea;
+  using OptionalZoneVentilationWindandStackOpenArea = boost::optional<ZoneVentilationWindandStackOpenArea>;
 
   /** \relates ZoneVentilationWindandStackOpenArea*/
-  typedef std::vector<ZoneVentilationWindandStackOpenArea> ZoneVentilationWindandStackOpenAreaVector;
+  using ZoneVentilationWindandStackOpenAreaVector = std::vector<ZoneVentilationWindandStackOpenArea>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -95,7 +95,8 @@ namespace model {
     std::vector<ScheduleTypeKey> WaterUseConnections_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_WaterUse_ConnectionsFields::HotWaterSupplyTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("WaterUseConnections", "Hot Water Supply Temperature"));
       }
@@ -199,12 +200,12 @@ namespace model {
       std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
       for (const auto& elem : groups) {
-        WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
+        auto group = elem.cast<WorkspaceExtensibleGroup>();
 
         boost::optional<WorkspaceObject> wo = group.getTarget(OS_WaterUse_ConnectionsExtensibleFields::WaterUseEquipmentName);
 
         if (wo) {
-          WaterUseEquipment equipment = wo->cast<WaterUseEquipment>();
+          auto equipment = wo->cast<WaterUseEquipment>();
 
           result.push_back(equipment);
         }
@@ -217,7 +218,7 @@ namespace model {
       bool result = false;
 
       if (waterUseEquipment.model() == model()) {
-        WorkspaceExtensibleGroup group = getObject<WaterUseConnections>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+        auto group = getObject<WaterUseConnections>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
         group.setPointer(OS_WaterUse_ConnectionsExtensibleFields::WaterUseEquipmentName, waterUseEquipment.handle());
 
@@ -261,7 +262,7 @@ namespace model {
       return value.get();
     }
 
-    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType) {
+    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerType(const std::string& drainWaterHeatExchangerType) {
       bool result = setString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerType, drainWaterHeatExchangerType);
       return result;
     }
@@ -272,7 +273,7 @@ namespace model {
       return value.get();
     }
 
-    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination) {
+    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerDestination(const std::string& drainWaterHeatExchangerDestination) {
       bool result = setString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerDestination, drainWaterHeatExchangerDestination);
       return result;
     }
@@ -353,7 +354,7 @@ namespace model {
     return getImpl<detail::WaterUseConnections_Impl>()->drainWaterHeatExchangerType();
   }
 
-  bool WaterUseConnections::setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType) {
+  bool WaterUseConnections::setDrainWaterHeatExchangerType(const std::string& drainWaterHeatExchangerType) {
     return getImpl<detail::WaterUseConnections_Impl>()->setDrainWaterHeatExchangerType(drainWaterHeatExchangerType);
   }
 
@@ -361,7 +362,7 @@ namespace model {
     return getImpl<detail::WaterUseConnections_Impl>()->drainWaterHeatExchangerDestination();
   }
 
-  bool WaterUseConnections::setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination) {
+  bool WaterUseConnections::setDrainWaterHeatExchangerDestination(const std::string& drainWaterHeatExchangerDestination) {
     return getImpl<detail::WaterUseConnections_Impl>()->setDrainWaterHeatExchangerDestination(drainWaterHeatExchangerDestination);
   }
 

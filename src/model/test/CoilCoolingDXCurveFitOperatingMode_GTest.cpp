@@ -187,7 +187,8 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_Speeds) {
   {
     int speedIndex = 6;
     std::vector<CoilCoolingDXCurveFitSpeed> thisSpeeds = operatingMode.speeds();
-    const auto& speedAtIndex = thisSpeeds[speedIndex - 1];
+    // Explicit copy, so we can keep using it after it's been removed
+    const auto speedAtIndex = thisSpeeds[speedIndex - 1];
     EXPECT_TRUE(std::find(thisSpeeds.begin(), thisSpeeds.end(), speedAtIndex) != thisSpeeds.end());
     auto optIndex = operatingMode.speedIndex(speedAtIndex);
     ASSERT_TRUE(optIndex);
@@ -204,7 +205,8 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_Speeds) {
   {
     int speedIndex = 3;
     std::vector<CoilCoolingDXCurveFitSpeed> thisSpeeds = operatingMode.speeds();
-    const auto& speedAtIndex = thisSpeeds[speedIndex - 1];
+    // Explicit copy, so we can keep using it after it's been removed
+    const auto speedAtIndex = thisSpeeds[speedIndex - 1];
     EXPECT_TRUE(std::find(thisSpeeds.begin(), thisSpeeds.end(), speedAtIndex) != thisSpeeds.end());
     auto optIndex = operatingMode.speedIndex(speedAtIndex);
     ASSERT_TRUE(optIndex);

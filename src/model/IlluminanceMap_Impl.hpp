@@ -58,7 +58,7 @@ namespace model {
 
       IlluminanceMap_Impl(const IlluminanceMap_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~IlluminanceMap_Impl() {}
+      virtual ~IlluminanceMap_Impl() = default;
 
       //@}
 

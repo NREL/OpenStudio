@@ -50,7 +50,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputTableSummaryReports() {}
+    virtual ~OutputTableSummaryReports() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputTableSummaryReports(const OutputTableSummaryReports& other) = default;
+    OutputTableSummaryReports(OutputTableSummaryReports&& other) = default;
+    OutputTableSummaryReports& operator=(const OutputTableSummaryReports&) = default;
+    OutputTableSummaryReports& operator=(OutputTableSummaryReports&&) = default;
 
     //@}
 
@@ -95,7 +100,7 @@ namespace model {
     explicit OutputTableSummaryReports(Model& model);
 
     /// @cond
-    typedef detail::OutputTableSummaryReports_Impl ImplType;
+    using ImplType = detail::OutputTableSummaryReports_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -109,10 +114,10 @@ namespace model {
   };
 
   /** \relates OutputTableSummaryReports*/
-  typedef boost::optional<OutputTableSummaryReports> OptionalOutputTableSummaryReports;
+  using OptionalOutputTableSummaryReports = boost::optional<OutputTableSummaryReports>;
 
   /** \relates OutputTableSummaryReports*/
-  typedef std::vector<OutputTableSummaryReports> OutputTableSummaryReportsVector;
+  using OutputTableSummaryReportsVector = std::vector<OutputTableSummaryReports>;
 
 }  // namespace model
 }  // namespace openstudio

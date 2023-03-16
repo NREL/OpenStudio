@@ -165,12 +165,12 @@ TEST_F(ModelFixture, SetpointManagerSystemNodeResetHumidity_remove) {
   EXPECT_TRUE(spm.addToNode(supplyOutlet));
 
   EXPECT_EQ(1, supplyOutlet.setpointManagers().size());
-  EXPECT_EQ(1, m.getModelObjects<SetpointManagerSystemNodeResetHumidity>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<SetpointManagerSystemNodeResetHumidity>().size());
 
   spm.remove();
 
   EXPECT_EQ(0, supplyOutlet.setpointManagers().size());
-  EXPECT_EQ(0, m.getModelObjects<SetpointManagerSystemNodeResetHumidity>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<SetpointManagerSystemNodeResetHumidity>().size());
 }
 
 TEST_F(ModelFixture, SetpointManagerSystemNodeResetHumidity_clone) {

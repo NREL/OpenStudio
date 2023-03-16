@@ -124,7 +124,7 @@ namespace model {
       return setRenderingGreenValue(renderingGreenValue, true);
     }
 
-    bool RenderingColor_Impl::setRenderingGreenValue(int renderingGreenValue, bool driverMethod) {
+    bool RenderingColor_Impl::setRenderingGreenValue(int renderingGreenValue, bool /*driverMethod*/) {
       bool result = setInt(OS_Rendering_ColorFields::RenderingGreenValue, renderingGreenValue);
       return result;
     }

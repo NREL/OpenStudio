@@ -133,11 +133,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
   ss << *model;
   std::string s = ss.str();
 
-  EXPECT_EQ(4u, model->getModelObjects<Space>().size());
-  EXPECT_EQ(24u, model->getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model->getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(24u, model->getConcreteModelObjects<Surface>().size());
 
   unsigned numMatched = 0;
-  for (const auto& surface : model->getModelObjects<Surface>()) {
+  for (const auto& surface : model->getConcreteModelObjects<Surface>()) {
     if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;
@@ -150,11 +150,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
   model::ModelMerger mm;
   mm.mergeModels(newModel, *model, rt.handleMapping());
 
-  EXPECT_EQ(4u, newModel.getModelObjects<Space>().size());
-  EXPECT_EQ(24u, newModel.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, newModel.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(24u, newModel.getConcreteModelObjects<Surface>().size());
 
   numMatched = 0;
-  for (const auto& surface : newModel.getModelObjects<Surface>()) {
+  for (const auto& surface : newModel.getConcreteModelObjects<Surface>()) {
     if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;
@@ -800,6 +800,10 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Colors) {
   //EXPECT_EQ(255, story->renderingColor()->renderingAlphaValue());
 }
 
+// Modified this tes as now 4 vertices will be returned for both the ceiling of Space 1-1
+// and the floor of Space 2-1. This is a more desirable outcome as Energy+ expects paired
+// surfaces to have the same number of vertices/ (Though energy plus does remove collinear
+// vertices in my tests it only removed one of the two so this model won't simulate)
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) {
 
   ThreeJSReverseTranslator rt;
@@ -870,7 +874,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) 
   ASSERT_TRUE(infos[0].floor);
   EXPECT_EQ(6u, infos[0].floor->vertices().size());
   ASSERT_TRUE(infos[0].ceiling);
-  EXPECT_EQ(6u, infos[0].ceiling->vertices().size());
+  EXPECT_EQ(4u, infos[0].ceiling->vertices().size());
   EXPECT_FALSE(infos[0].floor->adjacentSurface());
   ASSERT_TRUE(infos[0].ceiling->adjacentSurface());
   ASSERT_TRUE(infos[0].ceiling->adjacentSurface()->space());
@@ -1194,7 +1198,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166
   // Start with a base model, put some climate zone in there
   // Add a Climate Zone to model1 only
   Model model;
-  ClimateZones czs = model.getUniqueModelObject<ClimateZones>();
+  auto czs = model.getUniqueModelObject<ClimateZones>();
   ClimateZone cz = czs.setClimateZone(ClimateZones::ashraeInstitutionName(), "4A");
   EXPECT_EQ(1, czs.numClimateZones());
   EXPECT_EQ(1, czs.climateZones().size());

@@ -54,7 +54,7 @@ namespace model {
 
       CoilPerformanceDXCooling_Impl(const CoilPerformanceDXCooling_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilPerformanceDXCooling_Impl() {}
+      virtual ~CoilPerformanceDXCooling_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -177,7 +177,7 @@ namespace model {
 
       void resetCondenserAirInletNode();
 
-      bool setCondenserType(std::string condenserType);
+      bool setCondenserType(const std::string& condenserType);
 
       bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
 
@@ -207,6 +207,8 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilPerformanceDXCooling");
+
+      boost::optional<double> getAutosizedValueCustom(std::string valueName, std::string units) const;
 
       boost::optional<Curve> optionalTotalCoolingCapacityFunctionofTemperatureCurve() const;
       boost::optional<Curve> optionalTotalCoolingCapacityFunctionofFlowFractionCurve() const;

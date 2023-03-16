@@ -96,7 +96,7 @@ namespace model {
                              [this](const CoilCoolingDXCurveFitPerformance& perf) { return (perf.baseOperatingMode().handle() == this->handle()); });
       if (it != perfs.end()) {
         LOG(Warn, "Cannot remove object because it is used by at least one CoilCoolingDXCurveFitPerformance as a required field");
-        return std::vector<IdfObject>();
+        return {};
       }
       return ResourceObject_Impl::remove();
     }
@@ -216,7 +216,7 @@ namespace model {
     std::vector<CoilCoolingDXCurveFitSpeed> CoilCoolingDXCurveFitOperatingMode_Impl::speeds() const {
       std::vector<CoilCoolingDXCurveFitSpeed> result;
       auto groups = extensibleGroups();
-      for (auto group : groups) {
+      for (const auto& group : groups) {
         auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::Speed);
         if (target) {
           if (auto speed = target->optionalCast<CoilCoolingDXCurveFitSpeed>()) {
@@ -488,7 +488,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXCurveFitOperatingMode::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_CurveFit_OperatingMode);
+    return {IddObjectType::OS_Coil_Cooling_DX_CurveFit_OperatingMode};
   }
 
   std::vector<std::string> CoilCoolingDXCurveFitOperatingMode::condenserTypeValues() {

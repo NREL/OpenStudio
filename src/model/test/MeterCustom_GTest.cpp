@@ -52,10 +52,10 @@ TEST_F(ModelFixture, MeterCustom_Remove) {
   Model model;
   MeterCustom testObject(model);
 
-  EXPECT_EQ((unsigned)1, model.getModelObjects<MeterCustom>().size());
+  EXPECT_EQ((unsigned)1, model.getConcreteModelObjects<MeterCustom>().size());
 
   testObject.remove();
-  EXPECT_EQ((unsigned)0, model.getModelObjects<MeterCustom>().size());
+  EXPECT_EQ((unsigned)0, model.getConcreteModelObjects<MeterCustom>().size());
 }
 
 TEST_F(ModelFixture, MeterCustom_KeyVarGroups) {

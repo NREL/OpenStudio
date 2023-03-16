@@ -348,15 +348,18 @@ namespace model {
     }
 
     boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedAirFlowRate() const {
-      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s", "COIL:HEATING:WATERTOAIRHEATPUMP:EQUATIONFIT");
     }
 
     boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedWaterFlowRate() const {
-      return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s", "COIL:HEATING:WATERTOAIRHEATPUMP:EQUATIONFIT");
     }
 
     boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedHeatingCapacity() const {
-      return getAutosizedValue("Design Size Rated Heating Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Heating Capacity", "W", "COIL:HEATING:WATERTOAIRHEATPUMP:EQUATIONFIT");
     }
 
     void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosize() {
@@ -442,7 +445,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
+    return {IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit};
   }
 
   boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit::ratedAirFlowRate() const {

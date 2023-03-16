@@ -66,7 +66,12 @@ namespace model {
     /// This constructor is preferred for all configurations other than switchable glazing.
     explicit ShadingControl(const ShadingMaterial& shadingMaterial);
 
-    virtual ~ShadingControl() {}
+    virtual ~ShadingControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ShadingControl(const ShadingControl& other) = default;
+    ShadingControl(ShadingControl&& other) = default;
+    ShadingControl& operator=(const ShadingControl&) = default;
+    ShadingControl& operator=(ShadingControl&&) = default;
 
     //@}
 
@@ -231,7 +236,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ShadingControl_Impl ImplType;
+    using ImplType = detail::ShadingControl_Impl;
 
     explicit ShadingControl(std::shared_ptr<detail::ShadingControl_Impl> impl);
 
@@ -246,10 +251,10 @@ namespace model {
   };
 
   /** \relates ShadingControl*/
-  typedef boost::optional<ShadingControl> OptionalShadingControl;
+  using OptionalShadingControl = boost::optional<ShadingControl>;
 
   /** \relates ShadingControl*/
-  typedef std::vector<ShadingControl> ShadingControlVector;
+  using ShadingControlVector = std::vector<ShadingControl>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -57,7 +57,12 @@ namespace model {
 
     explicit CoilCoolingDXMultiSpeed(const Model& model);
 
-    virtual ~CoilCoolingDXMultiSpeed() {}
+    virtual ~CoilCoolingDXMultiSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDXMultiSpeed(const CoilCoolingDXMultiSpeed& other) = default;
+    CoilCoolingDXMultiSpeed(CoilCoolingDXMultiSpeed&& other) = default;
+    CoilCoolingDXMultiSpeed& operator=(const CoilCoolingDXMultiSpeed&) = default;
+    CoilCoolingDXMultiSpeed& operator=(CoilCoolingDXMultiSpeed&&) = default;
 
     //@}
 
@@ -102,7 +107,7 @@ namespace model {
 
     void resetAvailabilitySchedule();
 
-    bool setCondenserType(std::string condenserType);
+    bool setCondenserType(const std::string& condenserType);
 
     bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
@@ -122,7 +127,7 @@ namespace model {
 
     void resetBasinHeaterOperatingSchedule();
 
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
 
     bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
@@ -190,7 +195,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXMultiSpeed_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXMultiSpeed_Impl;
 
     explicit CoilCoolingDXMultiSpeed(std::shared_ptr<detail::CoilCoolingDXMultiSpeed_Impl> impl);
 
@@ -204,10 +209,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXMultiSpeed*/
-  typedef boost::optional<CoilCoolingDXMultiSpeed> OptionalCoilCoolingDXMultiSpeed;
+  using OptionalCoilCoolingDXMultiSpeed = boost::optional<CoilCoolingDXMultiSpeed>;
 
   /** \relates CoilCoolingDXMultiSpeed*/
-  typedef std::vector<CoilCoolingDXMultiSpeed> CoilCoolingDXMultiSpeedVector;
+  using CoilCoolingDXMultiSpeedVector = std::vector<CoilCoolingDXMultiSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

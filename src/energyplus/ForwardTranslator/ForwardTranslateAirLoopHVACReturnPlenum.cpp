@@ -82,7 +82,7 @@ namespace energyplus {
         m_idfObjects.push_back(nodeList);
         nodeList.setName(s + " Induced Air Node List");
         idfObject.setString(AirLoopHVAC_ReturnPlenumFields::InducedAirOutletNodeorNodeListName, nodeList.name().get());
-        for (std::vector<ModelObject>::const_iterator it = inducedNodes.begin(); it != inducedNodes.end(); ++it) {
+        for (auto it = inducedNodes.begin(); it != inducedNodes.end(); ++it) {
           IdfExtensibleGroup eg = nodeList.pushExtensibleGroup();
           eg.setString(NodeListExtensibleFields::NodeName, it->name().get());
         }

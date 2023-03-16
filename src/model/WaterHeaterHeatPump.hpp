@@ -60,7 +60,12 @@ namespace model {
     explicit WaterHeaterHeatPump(const Model& model, const ModelObject& dxCoil, const HVACComponent& tank, const HVACComponent& fan,
                                  Schedule& compressorSetpointTemperatureSchedule, Schedule& inletAirMixerSchedule);
 
-    virtual ~WaterHeaterHeatPump() {}
+    virtual ~WaterHeaterHeatPump() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterHeaterHeatPump(const WaterHeaterHeatPump& other) = default;
+    WaterHeaterHeatPump(WaterHeaterHeatPump&& other) = default;
+    WaterHeaterHeatPump& operator=(const WaterHeaterHeatPump&) = default;
+    WaterHeaterHeatPump& operator=(WaterHeaterHeatPump&&) = default;
 
     //@}
 
@@ -149,7 +154,7 @@ namespace model {
 
     void autosizeEvaporatorAirFlowRate();
 
-    bool setInletAirConfiguration(std::string inletAirConfiguration);
+    bool setInletAirConfiguration(const std::string& inletAirConfiguration);
 
     bool setInletAirTemperatureSchedule(Schedule& schedule);
 
@@ -167,7 +172,7 @@ namespace model {
 
     bool setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation);
 
-    bool setCompressorLocation(std::string compressorLocation);
+    bool setCompressorLocation(const std::string& compressorLocation);
 
     bool setCompressorAmbientTemperatureSchedule(Schedule& schedule);
 
@@ -175,17 +180,17 @@ namespace model {
 
     bool setFan(const HVACComponent& fan);
 
-    bool setFanPlacement(std::string fanPlacement);
+    bool setFanPlacement(const std::string& fanPlacement);
 
     bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
 
     bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
 
-    bool setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation);
+    bool setParasiticHeatRejectionLocation(const std::string& parasiticHeatRejectionLocation);
 
     bool setInletAirMixerSchedule(Schedule& schedule);
 
-    bool setControlSensorLocationInStratifiedTank(std::string controlSensorLocationInStratifiedTank);
+    bool setControlSensorLocationInStratifiedTank(const std::string& controlSensorLocationInStratifiedTank);
 
     //@}
     /** @name Other */
@@ -198,7 +203,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::WaterHeaterHeatPump_Impl ImplType;
+    using ImplType = detail::WaterHeaterHeatPump_Impl;
 
     explicit WaterHeaterHeatPump(std::shared_ptr<detail::WaterHeaterHeatPump_Impl> impl);
 
@@ -212,10 +217,10 @@ namespace model {
   };
 
   /** \relates WaterHeaterHeatPump*/
-  typedef boost::optional<WaterHeaterHeatPump> OptionalWaterHeaterHeatPump;
+  using OptionalWaterHeaterHeatPump = boost::optional<WaterHeaterHeatPump>;
 
   /** \relates WaterHeaterHeatPump*/
-  typedef std::vector<WaterHeaterHeatPump> WaterHeaterHeatPumpVector;
+  using WaterHeaterHeatPumpVector = std::vector<WaterHeaterHeatPump>;
 
 }  // namespace model
 }  // namespace openstudio

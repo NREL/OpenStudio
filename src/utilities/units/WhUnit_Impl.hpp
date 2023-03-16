@@ -63,7 +63,7 @@ namespace detail {
      *  \param[in] prettyString optional string to use in place of standardString. */
     WhUnit_Impl(const std::string& scaleAbbreviation, const WhExpnt& exponents = WhExpnt(), const std::string& prettyString = "");
 
-    virtual ~WhUnit_Impl() {}
+    virtual ~WhUnit_Impl() = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

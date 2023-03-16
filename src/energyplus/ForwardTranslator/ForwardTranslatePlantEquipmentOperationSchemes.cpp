@@ -237,7 +237,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_ThermalStorage_ChilledWater_Stratified: {
-        ThermalStorageChilledWaterStratified ts = component.cast<ThermalStorageChilledWaterStratified>();
+        auto ts = component.cast<ThermalStorageChilledWaterStratified>();
         result = ts.useSideDesignFlowRate();
         break;
       }
@@ -409,7 +409,7 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_WaterHeater_Mixed: {
         // Need to handle the case where this is used purely as a storage tank
-        WaterHeaterMixed wh = component.cast<WaterHeaterMixed>();
+        auto wh = component.cast<WaterHeaterMixed>();
         if (boost::optional<double> _cap = wh.heaterMaximumCapacity()) {
           if (_cap.get() == 0.0) {
             // Capacity is zero: it's a storage tank!
@@ -448,7 +448,7 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_WaterHeater_Stratified: {
         // Need to handle the case where this is used purely as a storage tank
-        WaterHeaterStratified wh = component.cast<WaterHeaterStratified>();
+        auto wh = component.cast<WaterHeaterStratified>();
 
         if (wh.heater2Capacity() == 0.0) {
           if (boost::optional<double> _cap = wh.heater1Capacity()) {
@@ -545,7 +545,7 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid: {
         // "Smart" defaults instead of ComponentType::BOTH;
-        HeatExchangerFluidToFluid hx = component.cast<HeatExchangerFluidToFluid>();
+        auto hx = component.cast<HeatExchangerFluidToFluid>();
 
         std::string controlType = hx.controlType();
 
@@ -575,7 +575,7 @@ namespace energyplus {
           // For OperationSchemeModulated and OperationSchemeOnOff
 
           // TODO: would need to open a log channel
-          //Log(Debug, "HeatExchangerFluidToFluid '" << hx.name().get() << "' doesn't have a "
+          //Log(Debug, "HeatExchangerFluidToFluid '" << hx.nameString() << "' doesn't have a "
           //"controlType ('" << controlType << "') that allows us to specify whether "
           //"it's heating or cooling, setting to ComponentType::BOTH");
           return ComponentType::BOTH;
@@ -675,7 +675,7 @@ namespace energyplus {
     for (const auto& comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents())) {
       // Special case for CentralHeatPumpSystem. If plantLoop = central_hp.coolingLoop, we add it
       if (comp.iddObject().type().value() == openstudio::IddObjectType::OS_CentralHeatPumpSystem) {
-        CentralHeatPumpSystem central_hp = comp.cast<CentralHeatPumpSystem>();
+        auto central_hp = comp.cast<CentralHeatPumpSystem>();
         if (central_hp.coolingPlantLoop().is_initialized()) {
           if (plantLoop.handle() == central_hp.coolingPlantLoop()->handle()) {
             result.push_back(operationSchemeComponent(comp));
@@ -697,7 +697,7 @@ namespace energyplus {
     for (const auto& comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents())) {
       // Special case for CentralHeatPumpSystem. If plantLoop = central_hp.heatingPlantLoop, we add it
       if (comp.iddObject().type().value() == openstudio::IddObjectType::OS_CentralHeatPumpSystem) {
-        CentralHeatPumpSystem central_hp = comp.cast<CentralHeatPumpSystem>();
+        auto central_hp = comp.cast<CentralHeatPumpSystem>();
         if (central_hp.heatingPlantLoop().is_initialized()) {
           if (plantLoop.handle() == central_hp.heatingPlantLoop()->handle()) {
             result.push_back(operationSchemeComponent(comp));
@@ -729,7 +729,7 @@ namespace energyplus {
     IdfObject operationSchemes(IddObjectType::PlantEquipmentOperationSchemes);
     m_idfObjects.push_back(operationSchemes);
 
-    operationSchemes.setName(plantLoop.name().get() + " Operation Schemes");
+    operationSchemes.setName(plantLoop.nameString() + " Operation Schemes");
 
     auto alwaysOnSchedule = plantLoop.model().alwaysOnDiscreteSchedule();
     auto _alwaysOn = translateAndMapModelObject(alwaysOnSchedule);
@@ -738,23 +738,23 @@ namespace energyplus {
     // Lambda does what the name suggests, create setpoint operation schemes.
     // This is for any component that has a setpoint manager on its outlet node
     auto createSetpointOperationScheme = [&](PlantLoop& plantLoop) {
-      const auto& t_setpointComponents = setpointComponents(plantLoop);
+      auto t_setpointComponents = setpointComponents(plantLoop);
       if (!t_setpointComponents.empty()) {
         IdfObject setpointOperation(IddObjectType::PlantEquipmentOperation_ComponentSetpoint);
-        setpointOperation.setName(plantLoop.name().get() + " Setpoint Operation Scheme");
+        setpointOperation.setName(plantLoop.nameString() + " Setpoint Operation Scheme");
         m_idfObjects.push_back(setpointOperation);
         setpointOperation.clearExtensibleGroups();
 
         IdfExtensibleGroup eg = operationSchemes.pushExtensibleGroup();
         eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType, setpointOperation.iddObject().name());
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, setpointOperation.name().get());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, setpointOperation.nameString());
         if (const auto& schedule = plantLoop.componentSetpointOperationSchemeSchedule()) {
           eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, schedule->nameString());
         } else {
-          eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->name().get());
+          eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->nameString());
         }
 
-        for (auto setpointComponent : t_setpointComponents) {
+        for (auto& setpointComponent : t_setpointComponents) {
           // TODO: @kbenne, Find the right way to deal with this
           // For now, "dirty" (?) fix for Generator:MicroTurbine
 
@@ -771,12 +771,12 @@ namespace energyplus {
 
           IdfExtensibleGroup eg = setpointOperation.pushExtensibleGroup();
           eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentObjectType, _idfObject->iddObject().name());
-          eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentName, _idfObject->name().get());
+          eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentName, _idfObject->nameString());
           if (const auto& t_inletNode = inletNode(plantLoop, setpointComponent)) {
-            eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::DemandCalculationNodeName, t_inletNode->name().get());
+            eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::DemandCalculationNodeName, t_inletNode->nameString());
           }
           if (const auto& t_outletNode = outletNode(plantLoop, setpointComponent)) {
-            eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::SetpointNodeName, t_outletNode->name().get());
+            eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::SetpointNodeName, t_outletNode->nameString());
           }
           if (auto value = flowrate(setpointComponent)) {
             eg.setDouble(PlantEquipmentOperation_ComponentSetpointExtensibleFields::ComponentFlowRate, value.get());
@@ -808,11 +808,11 @@ namespace energyplus {
       OS_ASSERT(_scheme);
       auto eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType, _scheme->iddObject().name());
-      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, _scheme->name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, _scheme->nameString());
       if (const auto& schedule = plantLoop.plantEquipmentOperationCoolingLoadSchedule()) {
         eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, schedule->nameString());
       } else {
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->name().get());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->nameString());
       }
 
       applyDefault = false;
@@ -823,11 +823,11 @@ namespace energyplus {
       OS_ASSERT(_scheme);
       auto eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType, _scheme->iddObject().name());
-      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, _scheme->name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, _scheme->nameString());
       if (const auto& schedule = plantLoop.plantEquipmentOperationHeatingLoadSchedule()) {
         eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, schedule->nameString());
       } else {
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->name().get());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->nameString());
       }
 
       applyDefault = false;
@@ -838,11 +838,11 @@ namespace energyplus {
       OS_ASSERT(_scheme);
       auto eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType, _scheme->iddObject().name());
-      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, _scheme->name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, _scheme->nameString());
       if (const auto& schedule = plantLoop.primaryPlantEquipmentOperationSchemeSchedule()) {
         eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, schedule->nameString());
       } else {
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->name().get());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->nameString());
       }
 
       createSetpointOperationScheme(plantLoop);
@@ -852,93 +852,93 @@ namespace energyplus {
     if (applyDefault) {
       // If we get here then there must not be any operation schemes defined in the model
       // and we should go ahead and create default schemes.
-      const auto& t_heatingComponents = heatingComponents(plantLoop);
+      auto t_heatingComponents = heatingComponents(plantLoop);
       if (!t_heatingComponents.empty()) {
         IdfObject heatingOperation(IddObjectType::PlantEquipmentOperation_HeatingLoad);
-        heatingOperation.setName(plantLoop.name().get() + " Heating Operation Scheme");
+        heatingOperation.setName(plantLoop.nameString() + " Heating Operation Scheme");
         m_idfObjects.push_back(heatingOperation);
         heatingOperation.clearExtensibleGroups();
 
         IdfObject plantEquipmentList(IddObjectType::PlantEquipmentList);
-        plantEquipmentList.setName(plantLoop.name().get() + " Heating Equipment List");
+        plantEquipmentList.setName(plantLoop.nameString() + " Heating Equipment List");
         plantEquipmentList.clearExtensibleGroups();
         m_idfObjects.push_back(plantEquipmentList);
 
         IdfExtensibleGroup eg = heatingOperation.pushExtensibleGroup();
         eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit, 0.0);
         eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit, 1E9);
-        eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName, plantEquipmentList.name().get());
+        eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName, plantEquipmentList.nameString());
 
         eg = operationSchemes.pushExtensibleGroup();
         eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType, heatingOperation.iddObject().name());
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, heatingOperation.name().get());
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->name().get());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, heatingOperation.nameString());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->nameString());
 
-        for (auto heatingComponent : t_heatingComponents) {
-          if (const auto& idfObject = translateAndMapModelObject(heatingComponent)) {
+        for (auto& heatingComponent : t_heatingComponents) {
+          if (auto idfObject_ = translateAndMapModelObject(heatingComponent)) {
             IdfExtensibleGroup eg = plantEquipmentList.pushExtensibleGroup();
-            eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idfObject->iddObject().name());
-            eg.setString(PlantEquipmentListExtensibleFields::EquipmentName, idfObject->name().get());
+            eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idfObject_->iddObject().name());
+            eg.setString(PlantEquipmentListExtensibleFields::EquipmentName, idfObject_->nameString());
           }
         }
       }
 
-      const auto& t_coolingComponents = coolingComponents(plantLoop);
+      auto t_coolingComponents = coolingComponents(plantLoop);
       if (!t_coolingComponents.empty()) {
         IdfObject coolingOperation(IddObjectType::PlantEquipmentOperation_CoolingLoad);
-        coolingOperation.setName(plantLoop.name().get() + " Cooling Operation Scheme");
+        coolingOperation.setName(plantLoop.nameString() + " Cooling Operation Scheme");
         m_idfObjects.push_back(coolingOperation);
         coolingOperation.clearExtensibleGroups();
 
         IdfObject plantEquipmentList(IddObjectType::PlantEquipmentList);
-        plantEquipmentList.setName(plantLoop.name().get() + " Cooling Equipment List");
+        plantEquipmentList.setName(plantLoop.nameString() + " Cooling Equipment List");
         plantEquipmentList.clearExtensibleGroups();
         m_idfObjects.push_back(plantEquipmentList);
 
         IdfExtensibleGroup eg = coolingOperation.pushExtensibleGroup();
         eg.setDouble(PlantEquipmentOperation_CoolingLoadExtensibleFields::LoadRangeLowerLimit, 0.0);
         eg.setDouble(PlantEquipmentOperation_CoolingLoadExtensibleFields::LoadRangeUpperLimit, 1E9);
-        eg.setString(PlantEquipmentOperation_CoolingLoadExtensibleFields::RangeEquipmentListName, plantEquipmentList.name().get());
+        eg.setString(PlantEquipmentOperation_CoolingLoadExtensibleFields::RangeEquipmentListName, plantEquipmentList.nameString());
 
         eg = operationSchemes.pushExtensibleGroup();
         eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType, coolingOperation.iddObject().name());
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, coolingOperation.name().get());
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->name().get());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, coolingOperation.nameString());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->nameString());
 
-        for (auto coolingComponent : t_coolingComponents) {
-          if (const auto& idfObject = translateAndMapModelObject(coolingComponent)) {
+        for (auto& coolingComponent : t_coolingComponents) {
+          if (auto idfObject_ = translateAndMapModelObject(coolingComponent)) {
             IdfExtensibleGroup eg = plantEquipmentList.pushExtensibleGroup();
-            eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idfObject->iddObject().name());
-            eg.setString(PlantEquipmentListExtensibleFields::EquipmentName, idfObject->name().get());
+            eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idfObject_->iddObject().name());
+            eg.setString(PlantEquipmentListExtensibleFields::EquipmentName, idfObject_->nameString());
           }
         }
       }
 
-      const auto& t_uncontrolledComponents = uncontrolledComponents(plantLoop);
+      auto t_uncontrolledComponents = uncontrolledComponents(plantLoop);
       if (!t_uncontrolledComponents.empty()) {
 
         IdfObject uncontrolledOperation(IddObjectType::PlantEquipmentOperation_Uncontrolled);
-        uncontrolledOperation.setName(plantLoop.name().get() + " Uncontrolled Operation Scheme");
+        uncontrolledOperation.setName(plantLoop.nameString() + " Uncontrolled Operation Scheme");
         m_idfObjects.push_back(uncontrolledOperation);
         uncontrolledOperation.clearExtensibleGroups();
 
         IdfObject plantEquipmentList(IddObjectType::PlantEquipmentList);
-        plantEquipmentList.setName(plantLoop.name().get() + " Uncontrolled Equipment List");
+        plantEquipmentList.setName(plantLoop.nameString() + " Uncontrolled Equipment List");
         plantEquipmentList.clearExtensibleGroups();
         m_idfObjects.push_back(plantEquipmentList);
 
-        uncontrolledOperation.setString(PlantEquipmentOperation_UncontrolledFields::EquipmentListName, plantEquipmentList.name().get());
+        uncontrolledOperation.setString(PlantEquipmentOperation_UncontrolledFields::EquipmentListName, plantEquipmentList.nameString());
 
         auto eg = operationSchemes.pushExtensibleGroup();
         eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType, uncontrolledOperation.iddObject().name());
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, uncontrolledOperation.name().get());
-        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->name().get());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName, uncontrolledOperation.nameString());
+        eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName, _alwaysOn->nameString());
 
-        for (auto uncontrolledComponent : t_uncontrolledComponents) {
-          if (const auto& idfObject = translateAndMapModelObject(uncontrolledComponent)) {
+        for (auto& uncontrolledComponent : t_uncontrolledComponents) {
+          if (auto idfObject_ = translateAndMapModelObject(uncontrolledComponent)) {
             IdfExtensibleGroup eg = plantEquipmentList.pushExtensibleGroup();
-            eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idfObject->iddObject().name());
-            eg.setString(PlantEquipmentListExtensibleFields::EquipmentName, idfObject->name().get());
+            eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idfObject_->iddObject().name());
+            eg.setString(PlantEquipmentListExtensibleFields::EquipmentName, idfObject_->nameString());
           }
         }
       }

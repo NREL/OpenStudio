@@ -112,8 +112,6 @@ namespace model {
     SubSurface_Impl::SubSurface_Impl(const SubSurface_Impl& other, Model_Impl* model, bool keepHandle)
       : PlanarSurface_Impl(other, model, keepHandle) {}
 
-    SubSurface_Impl::~SubSurface_Impl() {}
-
     boost::optional<ParentObject> SubSurface_Impl::parent() const {
       return boost::optional<ParentObject>(this->surface());
     }
@@ -176,7 +174,7 @@ namespace model {
         clone.addShadingControl(shadingConrolClone);
       }
 
-      return clone;
+      return std::move(clone);
     }
 
     const std::vector<std::string>& SubSurface_Impl::outputVariableNames() const {
@@ -503,13 +501,13 @@ namespace model {
     }
 
     std::vector<ShadingControl> SubSurface_Impl::shadingControls() const {
-      SubSurface thisSubSurface = getObject<SubSurface>();
+      auto thisSubSurface = getObject<SubSurface>();
 
       std::vector<ShadingControl> shadingControls;
 
       for (const auto& object : getObject<ModelObject>().getModelObjectSources<ShadingControl>()) {
-        ModelObject modelObject = object.cast<ModelObject>();
-        ShadingControl shadingControl = modelObject.cast<ShadingControl>();
+        auto modelObject = object.cast<ModelObject>();
+        auto shadingControl = modelObject.cast<ShadingControl>();
         for (const SubSurface& subSurface : shadingControl.subSurfaces()) {
           if (subSurface.handle() == thisSubSurface.handle()) {
             shadingControls.push_back(shadingControl);
@@ -659,7 +657,7 @@ namespace model {
     bool SubSurface_Impl::addShadingControl(ShadingControl& shadingControl) {
       bool result = false;
       if (allowShadingControl()) {
-        SubSurface thisSubSurface = getObject<SubSurface>();
+        auto thisSubSurface = getObject<SubSurface>();
         result = shadingControl.addSubSurface(thisSubSurface);
       }
       return result;
@@ -667,7 +665,7 @@ namespace model {
 
     bool SubSurface_Impl::addShadingControls(std::vector<ShadingControl>& shadingControls) {
       bool ok = true;
-      SubSurface thisSubSurface = getObject<SubSurface>();
+      auto thisSubSurface = getObject<SubSurface>();
       for (ShadingControl& shadingControl : shadingControls) {
         ok &= shadingControl.addSubSurface(thisSubSurface);
       }
@@ -675,12 +673,12 @@ namespace model {
     }
 
     void SubSurface_Impl::removeShadingControl(ShadingControl& shadingControl) {
-      SubSurface thisSubSurface = getObject<SubSurface>();
+      auto thisSubSurface = getObject<SubSurface>();
       shadingControl.removeSubSurface(thisSubSurface);
     }
 
     void SubSurface_Impl::removeAllShadingControls() {
-      SubSurface thisSubSurface = getObject<SubSurface>();
+      auto thisSubSurface = getObject<SubSurface>();
       for (ShadingControl& shadingControl : shadingControls()) {
         shadingControl.removeSubSurface(thisSubSurface);
       }
@@ -834,23 +832,22 @@ namespace model {
       bool test = setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
       OS_ASSERT(test);
 
-      for (WorkspaceObject wo : this->getSources(IddObjectType::OS_SubSurface)) {
+      for (WorkspaceObject& wo : this->getSources(IddObjectType::OS_SubSurface)) {
         test = wo.setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
         OS_ASSERT(test);
       }
     }
 
     boost::optional<SurfacePropertyConvectionCoefficients> SubSurface_Impl::surfacePropertyConvectionCoefficients() const {
-      std::vector<SurfacePropertyConvectionCoefficients> allspccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
-      std::vector<SurfacePropertyConvectionCoefficients> spccs;
-      for (auto& spcc : allspccs) {
+      std::vector<SurfacePropertyConvectionCoefficients> spccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+      auto thisHandle = this->handle();
+      auto isNotPointingToMe = [&thisHandle](const auto& spcc) {
         OptionalSubSurface surface = spcc.surfaceAsSubSurface();
-        if (surface) {
-          if (surface->handle() == handle()) {
-            spccs.push_back(spcc);
-          }
-        }
-      }
+        return !surface || !(surface->handle() == thisHandle);
+      };
+
+      spccs.erase(std::remove_if(spccs.begin(), spccs.end(), isNotPointingToMe), spccs.end());
+
       if (spccs.empty()) {
         return boost::none;
       } else if (spccs.size() == 1) {
@@ -903,7 +900,7 @@ namespace model {
       return getObject<SubSurface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SubSurfaceFields::OutsideBoundaryConditionObject);
     }
 
-    bool SubSurface_Impl::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+    bool SubSurface_Impl::setSurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
       boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
       if (adjacentSubSurface) {
         resetAdjacentSubSurface();
@@ -929,7 +926,7 @@ namespace model {
         OS_SubSurfaceFields::OutsideBoundaryConditionObject);
     }
 
-    bool SubSurface_Impl::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+    bool SubSurface_Impl::setSurfacePropertyOtherSideConditionsModel(const SurfacePropertyOtherSideConditionsModel& otherSideModel) {
       boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
       if (adjacentSubSurface) {
         resetAdjacentSubSurface();
@@ -1053,11 +1050,12 @@ namespace model {
           return boost::none;
         }
 
-        Point3dVector overhangVertices;
-        overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, 0));
-        overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, 0));
-        overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
-        overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
+        Point3dVector overhangVertices{
+          {xmax + offset, ymax + offset, 0},
+          {xmin - offset, ymax + offset, 0},
+          {xmin - offset, ymax + offset, depth},
+          {xmax + offset, ymax + offset, depth},
+        };
 
         ShadingSurfaceGroup shadingSurfaceGroup(model);
         shadingSurfaceGroup.setName(this->name().get() + " Shading Surfaces");
@@ -1106,11 +1104,12 @@ namespace model {
         double offset = offsetFraction * (ymax - ymin);
         double depth = projectionFactor * (offset + (ymax - ymin));
 
-        Point3dVector overhangVertices;
-        overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, 0));
-        overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, 0));
-        overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
-        overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
+        Point3dVector overhangVertices{
+          {xmax + offset, ymax + offset, 0},
+          {xmin - offset, ymax + offset, 0},
+          {xmin - offset, ymax + offset, depth},
+          {xmax + offset, ymax + offset, depth},
+        };
 
         ShadingSurfaceGroup shadingSurfaceGroup(model);
         shadingSurfaceGroup.setName(this->name().get() + " Shading Surfaces");
@@ -1555,7 +1554,7 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->surfacePropertyOtherSideCoefficients();
   }
 
-  bool SubSurface::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+  bool SubSurface::setSurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
     return getImpl<detail::SubSurface_Impl>()->setSurfacePropertyOtherSideCoefficients(otherSideCoefficients);
   }
 
@@ -1567,7 +1566,7 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->surfacePropertyOtherSideConditionsModel();
   }
 
-  bool SubSurface::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+  bool SubSurface::setSurfacePropertyOtherSideConditionsModel(const SurfacePropertyOtherSideConditionsModel& otherSideModel) {
     return getImpl<detail::SubSurface_Impl>()->setSurfacePropertyOtherSideConditionsModel(otherSideModel);
   }
 
@@ -1638,7 +1637,7 @@ namespace model {
   boost::optional<ShadingControl> SubSurface::shadingControl() const {
     boost::optional<ShadingControl> result;
     auto scs = shadingControls();
-    if (scs.size() >= 1) {
+    if (!scs.empty()) {
       if (scs.size() > 1) {
         LOG(Warn, briefDescription() << " has more than one ShadingControl and you're using a deprecated method. Use shadingControls() instead");
       }
@@ -1700,7 +1699,9 @@ namespace model {
     double divArea = 0;
     if (auto frameAndDivider = windowPropertyFrameAndDivider()) {
       double dividerWidth = frameAndDivider->dividerWidth();
-      if (dividerWidth == 0) return divArea;
+      if (dividerWidth == 0) {
+        return divArea;
+      }
 
       Transformation faceTransform = Transformation::alignFace(this->vertices());
       std::vector<Point3d> faceVertices = faceTransform.inverse() * this->vertices();
@@ -1743,7 +1744,7 @@ namespace model {
         spacePattern.push_back(inverseTransformation * face);
       }
 
-      for (Surface surface : space.surfaces()) {
+      for (Surface& surface : space.surfaces()) {
         if (istringEqual("RoofCeiling", surface.surfaceType()) && istringEqual("Outdoors", surface.outsideBoundaryCondition())) {
 
           Plane surfacePlane = surface.plane();

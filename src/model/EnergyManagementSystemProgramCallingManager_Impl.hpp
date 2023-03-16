@@ -36,6 +36,8 @@
 
 namespace openstudio {
 namespace model {
+  // Forward declaration
+  class EnergyManagementSystemProgram;
 
   namespace detail {
 
@@ -53,7 +55,7 @@ namespace model {
       EnergyManagementSystemProgramCallingManager_Impl(const EnergyManagementSystemProgramCallingManager_Impl& other, Model_Impl* model,
                                                        bool keepHandle);
 
-      virtual ~EnergyManagementSystemProgramCallingManager_Impl() {}
+      virtual ~EnergyManagementSystemProgramCallingManager_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

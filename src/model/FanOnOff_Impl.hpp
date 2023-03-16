@@ -55,7 +55,7 @@ namespace model {
 
       FanOnOff_Impl(const FanOnOff_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FanOnOff_Impl() {}
+      virtual ~FanOnOff_Impl() = default;
 
       //@}
 
@@ -142,7 +142,7 @@ namespace model {
 
       bool isEndUseSubcategoryDefaulted() const;
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 

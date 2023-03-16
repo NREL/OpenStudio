@@ -191,12 +191,12 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_TestClass) {
 // Check that the Base class Loop does have an access to avmList
 TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor) {
   Model m;
-  ASSERT_EQ(0u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(0u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   // Check that there is one avm created when creating a plantLoop
   PlantLoop p(m);
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
-  // AvailabilityManagerAssignmentList p_avmList =  m.getModelObjects<AvailabilityManagerAssignmentList>()[0];
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
+  // AvailabilityManagerAssignmentList p_avmList =  m.getConcreteModelObjects<AvailabilityManagerAssignmentList>()[0];
   AvailabilityManagerAssignmentList p_avmList = p.getImpl<openstudio::model::detail::PlantLoop_Impl>()->availabilityManagerAssignmentList();
   ASSERT_TRUE(p_avmList.loop());
   ASSERT_TRUE(p_avmList.plantLoop());
@@ -204,8 +204,8 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor) {
 
   // Check that there is one avm created when creating a plantLoop
   AirLoopHVAC a(m);
-  ASSERT_EQ(2u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
-  // AvailabilityManagerAssignmentList a_avmList =  m.getModelObjects<AvailabilityManagerAssignmentList>()[1];
+  ASSERT_EQ(2u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
+  // AvailabilityManagerAssignmentList a_avmList =  m.getConcreteModelObjects<AvailabilityManagerAssignmentList>()[1];
   AvailabilityManagerAssignmentList a_avmList = a.getImpl<openstudio::model::detail::AirLoopHVAC_Impl>()->availabilityManagerAssignmentList();
   ASSERT_TRUE(a_avmList.loop());
   ASSERT_TRUE(a_avmList.airLoopHVAC());
@@ -218,7 +218,7 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor) {
 
   // Check that removing a loop, removes the AVMList
   a.remove();
-  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+  ASSERT_EQ(1u, m.getConcreteModelObjects<AvailabilityManagerAssignmentList>().size());
 
   // Test the convenience methods
   ASSERT_EQ(0u, p.availabilityManagers().size());

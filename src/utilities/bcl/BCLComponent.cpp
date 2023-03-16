@@ -57,7 +57,7 @@ BCLComponent::BCLComponent(const openstudio::path& dir) : m_directory(dir) {
   auto files = comp.child("files");
   if (files) {
     for (auto& componentElement : files.children("file")) {
-      if (componentElement.first_child()) {
+      if (componentElement.first_child() != nullptr) {
         m_files.push_back(componentElement.child("filename").text().as_string());
         m_filetypes.push_back(componentElement.child("filetype").text().as_string());
       } else {
@@ -69,7 +69,7 @@ BCLComponent::BCLComponent(const openstudio::path& dir) : m_directory(dir) {
   auto attributes = comp.child("attributes");
   if (attributes) {
     for (auto& componentElement : attributes.children("attribute")) {
-      if (componentElement.first_child()) {
+      if (componentElement.first_child() != nullptr) {
         std::string name = componentElement.child("name").text().as_string();
         std::string value = componentElement.child("value").text().as_string();
         std::string datatype = componentElement.child("datatype").text().as_string();
@@ -131,8 +131,6 @@ BCLComponent::BCLComponent(const openstudio::path& dir) : m_directory(dir) {
     }
   }
 }
-
-BCLComponent::~BCLComponent() {}
 
 std::string BCLComponent::uid() const {
   return m_uid;

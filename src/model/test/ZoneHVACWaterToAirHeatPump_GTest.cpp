@@ -161,10 +161,10 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_SetGetFields) {
   EXPECT_TRUE(testHP.setAvailabilitySchedule(availabilitySched));
   EXPECT_EQ(testHP.availabilitySchedule(), availabilitySched);
 
-  HVACComponent supplyFan1 = supplyFan.cast<HVACComponent>();
-  HVACComponent heatingCoil1 = coilHeatingWaterToAirHP.cast<HVACComponent>();
-  HVACComponent coolingCoil1 = coilCoolingWaterToAirHP.cast<HVACComponent>();
-  HVACComponent supplementalHC1 = supplementalHC.cast<HVACComponent>();
+  auto supplyFan1 = supplyFan.cast<HVACComponent>();
+  auto heatingCoil1 = coilHeatingWaterToAirHP.cast<HVACComponent>();
+  auto coolingCoil1 = coilCoolingWaterToAirHP.cast<HVACComponent>();
+  auto supplementalHC1 = supplementalHC.cast<HVACComponent>();
 
   //test heating coil
   testHP.setHeatingCoil(heatingCoil1);

@@ -98,7 +98,7 @@ TEST_F(ModelFixture, FanVariableVolume_addToNode) {
   }
 
   EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
-  FanVariableVolume testObjectClone = testObject.clone(m).cast<FanVariableVolume>();
+  auto testObjectClone = testObject.clone(m).cast<FanVariableVolume>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

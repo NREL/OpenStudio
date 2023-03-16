@@ -2,6 +2,7 @@ set(target_name openstudio_airflow)
 
 set(${target_name}_src
   AirflowAPI.hpp
+  contam/ContamEnums.hpp
   contam/ForwardTranslator.hpp
   contam/ForwardTranslator.cpp
   contam/PrjReader.hpp

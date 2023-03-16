@@ -147,7 +147,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilHeatingGas_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_GasFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilHeatingGas", "Availability"));
       }
@@ -483,9 +484,9 @@ namespace model {
     }
 
     ModelObject CoilHeatingGas_Impl::clone(Model model) const {
-      CoilHeatingGas newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingGas>();
+      auto newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingGas>();
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     bool CoilHeatingGas_Impl::addToNode(Node& node) {
@@ -529,7 +530,7 @@ namespace model {
     }
 
     boost::optional<double> CoilHeatingGas_Impl::autosizedNominalCapacity() const {
-      return getAutosizedValue("Design Size Nominal Capacity", "W");
+      return getAutosizedValue("Design Size Nominal Capacity", "W", "Coil:Heating:Fuel");
     }
 
     void CoilHeatingGas_Impl::autosize() {

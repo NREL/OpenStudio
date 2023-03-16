@@ -93,7 +93,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingLowTempRadiantConstFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CoolingHighWaterTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingLowTempRadiantConstFlow", "Cooling High Water Temperature"));
       }
@@ -209,7 +210,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingLowTempRadiantConstFlow_Impl::setCondensationControlType(std::string condensationControlType) {
+    bool CoilCoolingLowTempRadiantConstFlow_Impl::setCondensationControlType(const std::string& condensationControlType) {
       bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CondensationControlType, condensationControlType);
       return result;
     }
@@ -368,7 +369,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingLowTempRadiantConstFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow);
+    return {IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow};
   }
 
   std::vector<std::string> CoilCoolingLowTempRadiantConstFlow::condensationControlTypeValues() {
@@ -440,7 +441,7 @@ namespace model {
     getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>()->resetCoolingLowControlTemperatureSchedule();
   }
 
-  bool CoilCoolingLowTempRadiantConstFlow::setCondensationControlType(std::string condensationControlType) {
+  bool CoilCoolingLowTempRadiantConstFlow::setCondensationControlType(const std::string& condensationControlType) {
     return getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>()->setCondensationControlType(condensationControlType);
   }
 

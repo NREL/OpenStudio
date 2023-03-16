@@ -148,7 +148,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ElectricEquipmentITEAirCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ElectricEquipment_ITE_AirCooledFields::DesignPowerInputScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ElectricEquipmentITEAirCooled", "Design Power Input"));
       }
@@ -167,7 +168,7 @@ namespace model {
       this->makeUnique();
 
       ElectricEquipmentITEAirCooledDefinition electricEquipmentITEAirCooledDefinition = this->electricEquipmentITEAirCooledDefinition();
-      for (LifeCycleCost cost : electricEquipmentITEAirCooledDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : electricEquipmentITEAirCooledDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 
@@ -420,7 +421,7 @@ namespace model {
   }
 
   IddObjectType ElectricEquipmentITEAirCooled::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ElectricEquipment_ITE_AirCooled);
+    return {IddObjectType::OS_ElectricEquipment_ITE_AirCooled};
   }
 
   ElectricEquipmentITEAirCooledDefinition ElectricEquipmentITEAirCooled::electricEquipmentITEAirCooledDefinition() const {

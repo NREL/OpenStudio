@@ -112,10 +112,10 @@ namespace model {
   std::map<UUID, UUID> ModelMerger::suggestHandleMapping(const Model& currentModel, const Model& newModel) const {
     std::map<UUID, UUID> result;
 
-    typedef std::set<UUID> HandleSet;
-    typedef std::map<std::string, UUID> StringHandleMap;
-    typedef std::tuple<HandleSet, StringHandleMap, StringHandleMap> ObjectLookup;  // 0 - handle, 1 - CADObjectId, 2 - Name
-    typedef std::map<IddObjectType, ObjectLookup> IddToObjectLookupMap;
+    using HandleSet = std::set<UUID>;
+    using StringHandleMap = std::map<std::string, UUID>;
+    using ObjectLookup = std::tuple<HandleSet, StringHandleMap, StringHandleMap>;  // 0 - handle, 1 - CADObjectId, 2 - Name
+    using IddToObjectLookupMap = std::map<IddObjectType, ObjectLookup>;
 
     IddToObjectLookupMap currentIddToObjectLookupMap;
     for (const auto& iddObjectType : m_iddObjectTypesToMerge) {
@@ -124,7 +124,7 @@ namespace model {
         Handle handle = object.handle();
         std::get<0>(currentLookup).insert(handle);
 
-        ModelObject modelObject = object.cast<ModelObject>();
+        auto modelObject = object.cast<ModelObject>();
         if (modelObject.hasAdditionalProperties()) {
           model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
           if (additionalProperties.hasFeature("CADObjectId")) {
@@ -160,7 +160,7 @@ namespace model {
           }
         }
 
-        ModelObject modelObject = object.cast<ModelObject>();
+        auto modelObject = object.cast<ModelObject>();
         if (modelObject.hasAdditionalProperties()) {
           model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
           if (additionalProperties.hasFeature("CADObjectId")) {
@@ -189,26 +189,14 @@ namespace model {
   }
 
   std::vector<LogMessage> ModelMerger::warnings() const {
-    std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() != Warn; }), result.end());
     return result;
   }
 
   std::vector<LogMessage> ModelMerger::errors() const {
-    std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() <= Warn; }), result.end());
     return result;
   }
 
@@ -317,7 +305,7 @@ namespace model {
     if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newBuilding.defaultConstructionSet()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
       if (currentObject) {
-        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        auto currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
         currentBuilding.setDefaultConstructionSet(currentDefaultConstructionSet);
       } else {
         currentBuilding.resetDefaultConstructionSet();
@@ -375,7 +363,7 @@ namespace model {
     // add new surfaces
     for (const auto& newSurface : newSpace.surfaces()) {
       // DLM: this should probably be moved to a mergeSurface method
-      Surface clone = newSurface.clone(m_currentModel).cast<Surface>();
+      auto clone = newSurface.clone(m_currentModel).cast<Surface>();
       clone.setSpace(currentSpace);
 
       m_newMergedHandles.insert(newSurface.handle());
@@ -402,7 +390,7 @@ namespace model {
         continue;
       }
 
-      ShadingSurfaceGroup clone = newShadingSurfaceGroup.clone(m_currentModel).cast<ShadingSurfaceGroup>();
+      auto clone = newShadingSurfaceGroup.clone(m_currentModel).cast<ShadingSurfaceGroup>();
       clone.setSpace(currentSpace);
 
       m_newMergedHandles.insert(newShadingSurfaceGroup.handle());
@@ -440,7 +428,7 @@ namespace model {
     if (boost::optional<ThermalZone> newThermalZone = newSpace.thermalZone()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newThermalZone);
       if (currentObject) {
-        ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+        auto currentThermalZone = currentObject->cast<ThermalZone>();
         currentSpace.setThermalZone(currentThermalZone);
       } else {
         currentSpace.resetThermalZone();
@@ -453,7 +441,7 @@ namespace model {
     if (boost::optional<SpaceType> newSpaceType = newSpace.spaceType()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newSpaceType);
       if (currentObject) {
-        SpaceType currentSpaceType = currentObject->cast<SpaceType>();
+        auto currentSpaceType = currentObject->cast<SpaceType>();
         currentSpace.setSpaceType(currentSpaceType);
       } else {
         currentSpace.resetSpaceType();
@@ -466,7 +454,7 @@ namespace model {
     if (boost::optional<BuildingStory> newBuildingStory = newSpace.buildingStory()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newBuildingStory);
       if (currentObject) {
-        BuildingStory currentBuildingStory = currentObject->cast<BuildingStory>();
+        auto currentBuildingStory = currentObject->cast<BuildingStory>();
         currentSpace.setBuildingStory(currentBuildingStory);
       } else {
         currentSpace.resetBuildingStory();
@@ -479,7 +467,7 @@ namespace model {
     if (boost::optional<BuildingUnit> newBuildingUnit = newSpace.buildingUnit()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newBuildingUnit);
       if (currentObject) {
-        BuildingUnit currentBuildingUnit = currentObject->cast<BuildingUnit>();
+        auto currentBuildingUnit = currentObject->cast<BuildingUnit>();
         currentSpace.setBuildingUnit(currentBuildingUnit);
       } else {
         currentSpace.resetBuildingUnit();
@@ -492,7 +480,7 @@ namespace model {
     if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpace.defaultConstructionSet()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
       if (currentObject) {
-        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        auto currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
         currentSpace.setDefaultConstructionSet(currentDefaultConstructionSet);
       } else {
         currentSpace.resetDefaultConstructionSet();
@@ -509,7 +497,7 @@ namespace model {
     // add new daylightingControls
     for (const auto& newDaylightingControl : newSpace.daylightingControls()) {
 
-      DaylightingControl clone = newDaylightingControl.clone(m_currentModel).cast<DaylightingControl>();
+      auto clone = newDaylightingControl.clone(m_currentModel).cast<DaylightingControl>();
       clone.setSpace(currentSpace);
 
       m_newMergedHandles.insert(newDaylightingControl.handle());
@@ -524,7 +512,7 @@ namespace model {
         if (primaryDaylightingControl && (primaryDaylightingControl->handle() == newDaylightingControl.handle())) {
           boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
           if (currentObject) {
-            ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+            auto currentThermalZone = currentObject->cast<ThermalZone>();
             currentThermalZone.setPrimaryDaylightingControl(clone);
             currentThermalZone.setFractionofZoneControlledbyPrimaryDaylightingControl(
               newThermalZone.fractionofZoneControlledbyPrimaryDaylightingControl());
@@ -533,7 +521,7 @@ namespace model {
         } else if (secondaryDaylightingControl && (secondaryDaylightingControl->handle() == newDaylightingControl.handle())) {
           boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
           if (currentObject) {
-            ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+            auto currentThermalZone = currentObject->cast<ThermalZone>();
             currentThermalZone.setSecondaryDaylightingControl(clone);
             currentThermalZone.setFractionofZoneControlledbySecondaryDaylightingControl(
               newThermalZone.fractionofZoneControlledbySecondaryDaylightingControl());
@@ -587,7 +575,7 @@ namespace model {
     // add new shading surfaces
     for (const auto& newSurface : newGroup.shadingSurfaces()) {
       // DLM: this should probably be moved to a mergeSurface method
-      ShadingSurface clone = newSurface.clone(m_currentModel).cast<ShadingSurface>();
+      auto clone = newSurface.clone(m_currentModel).cast<ShadingSurface>();
       clone.setShadingSurfaceGroup(currentGroup);
 
       m_newMergedHandles.insert(newSurface.handle());
@@ -667,7 +655,7 @@ namespace model {
     if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpaceType.defaultConstructionSet()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
       if (currentObject) {
-        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        auto currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
         currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet);
       } else {
         // DLM: this is an error
@@ -682,7 +670,7 @@ namespace model {
     if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newSpaceType.defaultScheduleSet()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
       if (currentObject) {
-        DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
+        auto currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
         currentSpaceType.setDefaultScheduleSet(currentDefaultScheduleSet);
       } else {
         // DLM: this is an error
@@ -788,7 +776,7 @@ namespace model {
     if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newBuildingStory.defaultConstructionSet()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
       if (currentObject) {
-        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        auto currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
         currentBuildingStory.setDefaultConstructionSet(currentDefaultConstructionSet);
       } else {
         // DLM: this is an error
@@ -803,7 +791,7 @@ namespace model {
     if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newBuildingStory.defaultScheduleSet()) {
       boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
       if (currentObject) {
-        DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
+        auto currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
         currentBuildingStory.setDefaultScheduleSet(currentDefaultScheduleSet);
       } else {
         // DLM: this is an error
@@ -938,23 +926,23 @@ namespace model {
         mergeSite(currentSite, newSite);
       } break;
       case IddObjectType::OS_Facility: {
-        Facility currentFacility = currentObject->cast<Facility>();
-        Facility newFacility = newObject.cast<Facility>();
+        auto currentFacility = currentObject->cast<Facility>();
+        auto newFacility = newObject.cast<Facility>();
         mergeFacility(currentFacility, newFacility);
       } break;
       case IddObjectType::OS_Building: {
-        Building currentBuilding = currentObject->cast<Building>();
-        Building newBuilding = newObject.cast<Building>();
+        auto currentBuilding = currentObject->cast<Building>();
+        auto newBuilding = newObject.cast<Building>();
         mergeBuilding(currentBuilding, newBuilding);
       } break;
       case IddObjectType::OS_Space: {
-        Space currentSpace = currentObject->cast<Space>();
-        Space newSpace = newObject.cast<Space>();
+        auto currentSpace = currentObject->cast<Space>();
+        auto newSpace = newObject.cast<Space>();
         mergeSpace(currentSpace, newSpace);
       } break;
       case IddObjectType::OS_ShadingSurfaceGroup: {
-        ShadingSurfaceGroup currentGroup = currentObject->cast<ShadingSurfaceGroup>();
-        ShadingSurfaceGroup newGroup = newObject.cast<ShadingSurfaceGroup>();
+        auto currentGroup = currentObject->cast<ShadingSurfaceGroup>();
+        auto newGroup = newObject.cast<ShadingSurfaceGroup>();
 
         // if the new group has a space it will be added under that space
         if (!newGroup.space()) {
@@ -962,28 +950,28 @@ namespace model {
         }
       } break;
       case IddObjectType::OS_ThermalZone: {
-        ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
-        ThermalZone newThermalZone = newObject.cast<ThermalZone>();
+        auto currentThermalZone = currentObject->cast<ThermalZone>();
+        auto newThermalZone = newObject.cast<ThermalZone>();
         mergeThermalZone(currentThermalZone, newThermalZone);
       } break;
       case IddObjectType::OS_SpaceType: {
-        SpaceType currentSpaceType = currentObject->cast<SpaceType>();
-        SpaceType newSpaceType = newObject.cast<SpaceType>();
+        auto currentSpaceType = currentObject->cast<SpaceType>();
+        auto newSpaceType = newObject.cast<SpaceType>();
         mergeSpaceType(currentSpaceType, newSpaceType);
       } break;
       case IddObjectType::OS_BuildingStory: {
-        BuildingStory currentBuildingStory = currentObject->cast<BuildingStory>();
-        BuildingStory newBuildingStory = newObject.cast<BuildingStory>();
+        auto currentBuildingStory = currentObject->cast<BuildingStory>();
+        auto newBuildingStory = newObject.cast<BuildingStory>();
         mergeBuildingStory(currentBuildingStory, newBuildingStory);
       } break;
       case IddObjectType::OS_BuildingUnit: {
-        BuildingUnit currentBuildingUnit = currentObject->cast<BuildingUnit>();
-        BuildingUnit newBuildingUnit = newObject.cast<BuildingUnit>();
+        auto currentBuildingUnit = currentObject->cast<BuildingUnit>();
+        auto newBuildingUnit = newObject.cast<BuildingUnit>();
         mergeBuildingUnit(currentBuildingUnit, newBuildingUnit);
       } break;
       case IddObjectType::OS_DefaultConstructionSet: {
-        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
-        DefaultConstructionSet newDefaultConstructionSet = newObject.cast<DefaultConstructionSet>();
+        auto currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        auto newDefaultConstructionSet = newObject.cast<DefaultConstructionSet>();
         mergeDefaultConstructionSet(currentDefaultConstructionSet, newDefaultConstructionSet);
       } break;
       default:
@@ -1039,7 +1027,7 @@ namespace model {
     return m_iddObjectTypesToMerge;
   }
 
-  bool ModelMerger::setIddObjectTypesToMerge(const std::vector<IddObjectType>& iddObjectTypesToMerge) {
+  bool ModelMerger::setIddObjectTypesToMerge(const std::vector<IddObjectType>& /*iddObjectTypesToMerge*/) {
     LOG(Error, "setIddObjectTypesToMerge is not yet implemented");
     return false;
   }

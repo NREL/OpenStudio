@@ -91,7 +91,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctConstantVolumeFourPipeInduction", "Availability"));
       }
@@ -125,7 +126,7 @@ namespace model {
               if (sourcePort && sourceModelObject) {
                 Node inletNode(_model);
 
-                ModelObject thisObject = getObject<ModelObject>();
+                auto thisObject = getObject<ModelObject>();
 
                 _model.connect(sourceModelObject.get(), sourcePort.get(), inletNode, inletNode.inletPort());
 
@@ -142,7 +143,7 @@ namespace model {
 
                   _model.connect(inducedAirInletNode, inducedAirInletNode.outletPort(), thisObject, inducedAirInletPort());
 
-                  ModelObject mo = this->getObject<ModelObject>();
+                  auto mo = this->getObject<ModelObject>();
 
                   thermalZone->addEquipment(mo);
                 }
@@ -159,7 +160,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::remove() {
       Model _model = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       boost::optional<PlantLoop> loop;
 
       HVACComponent _heatingCoil = heatingCoil();
@@ -228,21 +229,20 @@ namespace model {
     }
 
     ModelObject AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::clone(Model model) const {
-      AirTerminalSingleDuctConstantVolumeFourPipeInduction airTerminalCVFourPipeInductionClone =
-        StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+      auto airTerminalCVFourPipeInductionClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
 
       if (boost::optional<HVACComponent> coolingCoil = this->coolingCoil()) {
-        HVACComponent coilCoolingClone = coolingCoil->clone(model).cast<HVACComponent>();
+        auto coilCoolingClone = coolingCoil->clone(model).cast<HVACComponent>();
         airTerminalCVFourPipeInductionClone.setCoolingCoil(coilCoolingClone);
       }
 
-      HVACComponent coilHeatingClone = this->heatingCoil().clone(model).cast<HVACComponent>();
+      auto coilHeatingClone = this->heatingCoil().clone(model).cast<HVACComponent>();
       airTerminalCVFourPipeInductionClone.setHeatingCoil(coilHeatingClone);
 
       // Reset the inducedAirInletPort (inletPort and outletPort are already handled by the StraightComponent_Impl::clone() method)
       airTerminalCVFourPipeInductionClone.setString(airTerminalCVFourPipeInductionClone.inducedAirInletPort(), "");
 
-      return airTerminalCVFourPipeInductionClone;
+      return std::move(airTerminalCVFourPipeInductionClone);
     }
 
     std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::children() const {
@@ -576,7 +576,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalSingleDuctConstantVolumeFourPipeInduction::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction);
+    return {IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction};
   }
 
   boost::optional<Schedule> AirTerminalSingleDuctConstantVolumeFourPipeInduction::availabilitySchedule() const {

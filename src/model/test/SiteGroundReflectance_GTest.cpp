@@ -40,7 +40,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters) {
   Model m;
 
-  SiteGroundReflectance siteGroundReflectance = m.getUniqueModelObject<SiteGroundReflectance>();
+  auto siteGroundReflectance = m.getUniqueModelObject<SiteGroundReflectance>();
 
   // January Ground Reflectance:  Double
   // Check Idd default: 0.2

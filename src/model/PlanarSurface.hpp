@@ -82,7 +82,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~PlanarSurface() {}
+    virtual ~PlanarSurface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlanarSurface(const PlanarSurface& other) = default;
+    PlanarSurface(PlanarSurface&& other) = default;
+    PlanarSurface& operator=(const PlanarSurface&) = default;
+    PlanarSurface& operator=(PlanarSurface&&) = default;
 
     //@}
     /** @name Getters */
@@ -229,7 +234,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::PlanarSurface_Impl ImplType;
+    using ImplType = detail::PlanarSurface_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -245,10 +250,10 @@ namespace model {
   };
 
   /** \relates PlanarSurface */
-  typedef boost::optional<PlanarSurface> OptionalPlanarSurface;
+  using OptionalPlanarSurface = boost::optional<PlanarSurface>;
 
   /** \relates PlanarSurface */
-  typedef std::vector<PlanarSurface> PlanarSurfaceVector;
+  using PlanarSurfaceVector = std::vector<PlanarSurface>;
 
 }  // namespace model
 }  // namespace openstudio

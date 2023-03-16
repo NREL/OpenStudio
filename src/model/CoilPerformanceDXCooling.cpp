@@ -39,10 +39,17 @@
 #include "CurveQuadratic_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/OS_CoilPerformance_DX_Cooling_FieldEnums.hxx>
+#include "CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
+
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/OS_CoilPerformance_DX_Cooling_FieldEnums.hxx>
+
+#include <fmt/core.h>
 
 namespace openstudio {
 namespace model {
@@ -350,7 +357,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilPerformanceDXCooling_Impl::setCondenserType(std::string condenserType) {
+    bool CoilPerformanceDXCooling_Impl::setCondenserType(const std::string& condenserType) {
       bool result = setString(OS_CoilPerformance_DX_CoolingFields::CondenserType, condenserType);
       return result;
     }
@@ -477,27 +484,78 @@ namespace model {
     ModelObject CoilPerformanceDXCooling_Impl::clone(Model model) const {
       auto newObject = ModelObject_Impl::clone(model).cast<CoilPerformanceDXCooling>();
 
-      return newObject;
+      return std::move(newObject);
+    }
+
+    boost::optional<double> CoilPerformanceDXCooling_Impl::getAutosizedValueCustom(std::string valueName, std::string units) const {
+      // Check that the model has a sql file
+      if (!model().sqlFile()) {
+        LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" << valueName << "'.");
+        return boost::none;
+      }
+
+      auto parentCoils = getObject<CoilPerformanceDXCooling>().getModelObjectSources<CoilCoolingDXTwoStageWithHumidityControlMode>();
+      if (parentCoils.empty()) {
+        LOG(Warn, briefDescription() << " does not have a parent CoilCoolingDXTwoStageWithHumidityControlMode, cannot retrieve the autosized value.");
+        return boost::none;
+      }
+      if (parentCoils.size() > 1) {
+        LOG(Warn, "For " << briefDescription() << ", more than one CoilCoolingDXTwoStageWithHumidityControlMode are using it, returning the first");
+      }
+
+      // Get the object name and transform to the way it is recorded
+      // in the sql file
+      std::string sqlName = name().get();
+      boost::to_upper(sqlName);
+
+      std::string parSqlName = parentCoils.front().nameString();
+      boost::to_upper(parSqlName);
+      // Join the parent and child object names, like:
+      // COIL COOLING DX TWO STAGE WITH HUMIDITY CONTROL MODE 1:COIL PERFORMANCE DX COOLING 1
+      sqlName = parSqlName + std::string(":") + sqlName;
+
+      const std::string sqlObjectType = "Coil:Cooling:DX:TwoStageWithHumidityControlMode";
+
+      const std::string directQuery = R"sql(
+      SELECT Value FROM ComponentSizes
+        WHERE CompType = ?
+          AND CompName = ?
+          AND Description = ?
+          AND Units = ?;
+    )sql";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(directQuery,
+                                                                                     // bindArgs
+                                                                                     sqlObjectType, sqlName, valueName, units);
+      if (!val) {
+        LOG(Debug, fmt::format(R"sql(The direct query failed:
+SELECT Value FROM ComponentSizes
+  WHERE CompType = '{}'
+    AND CompName = '{}'
+    AND Description = '{}'
+    AND Units = '{}';)sql",
+                               sqlObjectType, sqlName, valueName, units));
+      }
+      return val;
     }
 
     boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedGrossRatedTotalCoolingCapacity() const {
-      return getAutosizedValue("Design Size Gross Rated Total Cooling Capacity", "W");
+      return getAutosizedValueCustom("Design Size Gross Rated Total Cooling Capacity", "W");
     }
 
     boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedGrossRatedSensibleHeatRatio() const {
-      return getAutosizedValue("Design Size Gross Rated Sensible Heat Ratio", "");
+      return getAutosizedValueCustom("Design Size Gross Rated Sensible Heat Ratio", "");
     }
 
     boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedRatedAirFlowRate() const {
-      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+      return getAutosizedValueCustom("Design Size Rated Air Flow Rate", "m3/s");
     }
 
     boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
-      return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "m3/s");
+      return getAutosizedValueCustom("Design Size Evaporative Condenser Air Flow Rate", "m3/s");
     }
 
     boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
-      return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
+      return getAutosizedValueCustom("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
     }
 
     void CoilPerformanceDXCooling_Impl::autosize() {
@@ -645,7 +703,7 @@ namespace model {
   }
 
   IddObjectType CoilPerformanceDXCooling::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoilPerformance_DX_Cooling);
+    return {IddObjectType::OS_CoilPerformance_DX_Cooling};
   }
 
   std::vector<std::string> CoilPerformanceDXCooling::condenserTypeValues() {
@@ -834,7 +892,7 @@ namespace model {
     getImpl<detail::CoilPerformanceDXCooling_Impl>()->resetCondenserAirInletNode();
   }
 
-  bool CoilPerformanceDXCooling::setCondenserType(std::string condenserType) {
+  bool CoilPerformanceDXCooling::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::CoilPerformanceDXCooling_Impl>()->setCondenserType(condenserType);
   }
 

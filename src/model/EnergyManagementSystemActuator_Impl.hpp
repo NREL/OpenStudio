@@ -54,7 +54,7 @@ namespace model {
 
       EnergyManagementSystemActuator_Impl(const EnergyManagementSystemActuator_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnergyManagementSystemActuator_Impl() {}
+      virtual ~EnergyManagementSystemActuator_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -74,7 +74,9 @@ namespace model {
 
       std::string actuatedComponentType() const;
 
-      boost::optional<ModelObject> zoneName() const;
+      boost::optional<ModelObject> zoneOrSpace() const;
+      boost::optional<ThermalZone> thermalZone() const;
+      boost::optional<Space> space() const;
 
       //@}
       /** @name Setters */
@@ -87,10 +89,8 @@ namespace model {
       bool setActuatedComponentType(const std::string& actuatedComponentType);
 
       bool setThermalZone(const ThermalZone& thermalZone);
-
       bool setSpace(const Space& space);
-
-      void resetZoneName();
+      void resetZoneOrSpace();
 
       //@}
       /** @name Other */

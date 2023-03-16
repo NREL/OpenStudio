@@ -221,17 +221,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel) {
     ASSERT_EQ(3u, idf_fan.extensibleGroups().size());
     // Get the Central HP one
     {
-      WorkspaceExtensibleGroup w_eg = idf_fan.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+      auto w_eg = idf_fan.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
       EXPECT_EQ(0.25, w_eg.getDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction).get());
       EXPECT_EQ(0.1, w_eg.getDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction).get());
     }
     {
-      WorkspaceExtensibleGroup w_eg = idf_fan.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+      auto w_eg = idf_fan.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
       EXPECT_EQ(0.5, w_eg.getDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction).get());
       EXPECT_EQ(0.3, w_eg.getDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction).get());
     }
     {
-      WorkspaceExtensibleGroup w_eg = idf_fan.extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
+      auto w_eg = idf_fan.extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
       EXPECT_EQ(0.75, w_eg.getDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction).get());
       EXPECT_EQ(0.7, w_eg.getDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction).get());
     }
@@ -268,12 +268,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel_AirLoopHVAC) {
 
   // Should have one branch only
   ASSERT_EQ(1u, idf_brlist.extensibleGroups().size());
-  WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
 
   // There should be only one equipment on the branch
   ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
-  WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
   EXPECT_EQ("Fan:SystemModel", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
   EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), fan.nameString());
@@ -312,15 +312,15 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
   EXPECT_TRUE(_i_fan->setString(Fan_SystemModelFields::EndUseSubcategory, "FanEndUse"));
   EXPECT_TRUE(_i_fan->setInt(Fan_SystemModelFields::NumberofSpeeds, 3));
 
-  WorkspaceExtensibleGroup eg1 = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto eg1 = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(eg1.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 0.33));
   EXPECT_TRUE(eg1.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 0.12));
 
-  WorkspaceExtensibleGroup eg2 = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto eg2 = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(eg2.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 0.66));
   EXPECT_TRUE(eg2.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 0.51));
 
-  WorkspaceExtensibleGroup eg3 = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto eg3 = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(eg3.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 1.0));
   EXPECT_TRUE(eg3.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 1.0));
 
@@ -373,7 +373,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_TRUE(reverseTranslator.errors().empty());
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-    std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
+    std::vector<openstudio::model::FanSystemModel> fans = model.getConcreteModelObjects<openstudio::model::FanSystemModel>();
     ASSERT_EQ(static_cast<unsigned>(1), fans.size());
     FanSystemModel fan = fans[0];
 
@@ -412,7 +412,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_EQ(1.00, speeds[2].electricPowerFraction().get());
   }
 
-  WorkspaceExtensibleGroup invalid_eg = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto invalid_eg = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(invalid_eg.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 1.5));  // Should be [0, 1]
   EXPECT_TRUE(invalid_eg.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 1.0));
 
@@ -423,7 +423,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_EQ(0, reverseTranslator.errors().size());
     EXPECT_EQ(1, reverseTranslator.warnings().size());
 
-    std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
+    std::vector<openstudio::model::FanSystemModel> fans = model.getConcreteModelObjects<openstudio::model::FanSystemModel>();
     ASSERT_EQ(static_cast<unsigned>(1), fans.size());
     FanSystemModel fan = fans[0];
 
@@ -440,7 +440,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_EQ(1, reverseTranslator.errors().size());
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-    std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
+    std::vector<openstudio::model::FanSystemModel> fans = model.getConcreteModelObjects<openstudio::model::FanSystemModel>();
     ASSERT_EQ(static_cast<unsigned>(1), fans.size());
     FanSystemModel fan = fans[0];
 

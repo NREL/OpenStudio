@@ -131,6 +131,8 @@
 #include "../utilities/geometry/Polygon3d.hpp"
 #include "../utilities/geometry/Polyhedron.hpp"
 
+#include "../utilities/core/ContainersMove.hpp"
+
 #include "../utilities/core/Assert.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
@@ -180,113 +182,32 @@ namespace model {
     }
 
     std::vector<ModelObject> Space_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      // shading groups
-      ShadingSurfaceGroupVector shadingSurfaceGroups = this->shadingSurfaceGroups();
-      result.insert(result.end(), shadingSurfaceGroups.begin(), shadingSurfaceGroups.end());
-
-      // interior surface partition groups
-      InteriorPartitionSurfaceGroupVector interiorPartitionSurfaceGroups = this->interiorPartitionSurfaceGroups();
-      result.insert(result.end(), interiorPartitionSurfaceGroups.begin(), interiorPartitionSurfaceGroups.end());
-
-      // surfaces
-      SurfaceVector surfaces = this->surfaces();
-      result.insert(result.end(), surfaces.begin(), surfaces.end());
-
-      // internal mass
-      InternalMassVector internalMass = this->internalMass();
-      result.insert(result.end(), internalMass.begin(), internalMass.end());
-
-      // lights
-      LightsVector lights = this->lights();
-      result.insert(result.end(), lights.begin(), lights.end());
-
-      // luminaires
-      LuminaireVector luminaires = this->luminaires();
-      result.insert(result.end(), luminaires.begin(), luminaires.end());
-
-      // people
-      PeopleVector people = this->people();
-      result.insert(result.end(), people.begin(), people.end());
-
-      // electric equipment
-      ElectricEquipmentVector electricEquipment = this->electricEquipment();
-      result.insert(result.end(), electricEquipment.begin(), electricEquipment.end());
-
-      // IT electric equipment
-      ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = this->electricEquipmentITEAirCooled();
-      result.insert(result.end(), electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end());
-
-      // gas equipment
-      GasEquipmentVector gasEquipment = this->gasEquipment();
-      result.insert(result.end(), gasEquipment.begin(), gasEquipment.end());
-
-      // hot water equipment
-      HotWaterEquipmentVector hotWaterEquipment = this->hotWaterEquipment();
-      result.insert(result.end(), hotWaterEquipment.begin(), hotWaterEquipment.end());
-
-      // steam equipment
-      SteamEquipmentVector steamEquipment = this->steamEquipment();
-      result.insert(result.end(), steamEquipment.begin(), steamEquipment.end());
-
-      // other equipment
-      OtherEquipmentVector otherEquipment = this->otherEquipment();
-      result.insert(result.end(), otherEquipment.begin(), otherEquipment.end());
-
-      // water use equipment
-      WaterUseEquipmentVector waterUseEquipment = this->waterUseEquipment();
-      result.insert(result.end(), waterUseEquipment.begin(), waterUseEquipment.end());
-
-      // daylighting controls
-      DaylightingControlVector daylightingControls = this->daylightingControls();
-      result.insert(result.end(), daylightingControls.begin(), daylightingControls.end());
-
-      //  illuminance map
-      IlluminanceMapVector illuminanceMaps = this->illuminanceMaps();
-      result.insert(result.end(), illuminanceMaps.begin(), illuminanceMaps.end());
-
-      // glare sensor
-      GlareSensorVector glareSensors = this->glareSensors();
-      result.insert(result.end(), glareSensors.begin(), glareSensors.end());
-
-      // SpaceInfiltration_DesignFlowRate
-      SpaceInfiltrationDesignFlowRateVector spaceInfiltrationDesignFlowRates = this->spaceInfiltrationDesignFlowRates();
-      result.insert(result.end(), spaceInfiltrationDesignFlowRates.begin(), spaceInfiltrationDesignFlowRates.end());
-
-      // SpaceInfiltration_EffectiveLeakageArea
-      SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = this->spaceInfiltrationEffectiveLeakageAreas();
-      result.insert(result.end(), spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end());
-
-      // SpaceInfiltration_FlowCoefficient
-      SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = this->spaceInfiltrationFlowCoefficients();
-      result.insert(result.end(), spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end());
-
-      // ZoneMixing
-      auto zoneMixings = this->supplyZoneMixing();
-      result.insert(result.end(), zoneMixings.begin(), zoneMixings.end());
-
-      return result;
+      return concat<ModelObject>(this->shadingSurfaceGroups(), this->interiorPartitionSurfaceGroups(), this->surfaces(), this->internalMass(),
+                                 this->lights(), this->luminaires(), this->people(), this->electricEquipment(), this->electricEquipmentITEAirCooled(),
+                                 this->gasEquipment(), this->hotWaterEquipment(), this->steamEquipment(), this->otherEquipment(),
+                                 this->waterUseEquipment(), this->daylightingControls(), this->illuminanceMaps(), this->glareSensors(),
+                                 this->spaceInfiltrationDesignFlowRates(), this->spaceInfiltrationEffectiveLeakageAreas(),
+                                 this->spaceInfiltrationFlowCoefficients(), this->supplyZoneMixing());
     }
 
     std::vector<IddObjectType> Space_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
-      result.push_back(IddObjectType::OS_InteriorPartitionSurfaceGroup);
-      result.push_back(IddObjectType::OS_Surface);
-      result.push_back(IddObjectType::OS_Lights);
-      result.push_back(IddObjectType::OS_Luminaire);
-      result.push_back(IddObjectType::OS_People);
-      result.push_back(IddObjectType::OS_ElectricEquipment);
-      result.push_back(IddObjectType::OS_ElectricEquipment_ITE_AirCooled);
-      result.push_back(IddObjectType::OS_GasEquipment);
-      result.push_back(IddObjectType::OS_HotWaterEquipment);
-      result.push_back(IddObjectType::OS_Daylighting_Control);
-      result.push_back(IddObjectType::OS_IlluminanceMap);
-      result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
-      result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
-      result.push_back(IddObjectType::OS_SpaceInfiltration_FlowCoefficient);
-      return result;
+      return {
+        IddObjectType::OS_ShadingSurfaceGroup,
+        IddObjectType::OS_InteriorPartitionSurfaceGroup,
+        IddObjectType::OS_Surface,
+        IddObjectType::OS_Lights,
+        IddObjectType::OS_Luminaire,
+        IddObjectType::OS_People,
+        IddObjectType::OS_ElectricEquipment,
+        IddObjectType::OS_ElectricEquipment_ITE_AirCooled,
+        IddObjectType::OS_GasEquipment,
+        IddObjectType::OS_HotWaterEquipment,
+        IddObjectType::OS_Daylighting_Control,
+        IddObjectType::OS_IlluminanceMap,
+        IddObjectType::OS_SpaceInfiltration_DesignFlowRate,
+        IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea,
+        IddObjectType::OS_SpaceInfiltration_FlowCoefficient,
+      };
     }
 
     const std::vector<std::string>& Space_Impl::outputVariableNames() const {
@@ -313,12 +234,12 @@ namespace model {
 
       Transformation childTransformation = transformation.inverse() * oldTransformation;
 
-      for (Surface surface : this->surfaces()) {
+      for (Surface& surface : this->surfaces()) {
         bool test = surface.setVertices(childTransformation * surface.vertices());
         if (!test) {
           LOG(Error, "Could not transform vertices for Surface '" << surface.name().get() << "'.");
         }
-        for (SubSurface subSurface : surface.subSurfaces()) {
+        for (SubSurface& subSurface : surface.subSurfaces()) {
           test = subSurface.setVertices(childTransformation * subSurface.vertices());
           if (!test) {
             LOG(Error, "Could not transform vertices for SubSurface '" << subSurface.name().get() << "'.");
@@ -326,27 +247,27 @@ namespace model {
         }
       }
 
-      for (ShadingSurfaceGroup shadingSurfaceGroup : this->shadingSurfaceGroups()) {
+      for (ShadingSurfaceGroup& shadingSurfaceGroup : this->shadingSurfaceGroups()) {
         bool test = shadingSurfaceGroup.setTransformation(childTransformation * shadingSurfaceGroup.transformation());
         OS_ASSERT(test);
       }
 
-      for (InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
+      for (InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
         bool test = interiorPartitionSurfaceGroup.setTransformation(childTransformation * interiorPartitionSurfaceGroup.transformation());
         OS_ASSERT(test);
       }
 
-      for (Luminaire luminaire : this->luminaires()) {
+      for (Luminaire& luminaire : this->luminaires()) {
         bool test = luminaire.setTransformation(childTransformation * luminaire.transformation());
         OS_ASSERT(test);
       }
 
-      for (DaylightingControl daylightingControl : this->daylightingControls()) {
+      for (DaylightingControl& daylightingControl : this->daylightingControls()) {
         bool test = daylightingControl.setTransformation(childTransformation * daylightingControl.transformation());
         OS_ASSERT(test);
       }
 
-      for (IlluminanceMap illuminanceMap : this->illuminanceMaps()) {
+      for (IlluminanceMap& illuminanceMap : this->illuminanceMaps()) {
         bool test = illuminanceMap.setTransformation(childTransformation * illuminanceMap.transformation());
         OS_ASSERT(test);
       }
@@ -357,31 +278,31 @@ namespace model {
     BoundingBox Space_Impl::boundingBox() const {
       BoundingBox result;
 
-      for (Surface surface : this->surfaces()) {
+      for (Surface& surface : this->surfaces()) {
         result.addPoints(surface.vertices());
       }
 
-      for (ShadingSurfaceGroup shadingSurfaceGroup : this->shadingSurfaceGroups()) {
+      for (ShadingSurfaceGroup& shadingSurfaceGroup : this->shadingSurfaceGroups()) {
         result.addPoints(shadingSurfaceGroup.transformation() * shadingSurfaceGroup.boundingBox().corners());
       }
 
-      for (InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
+      for (InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
         result.addPoints(interiorPartitionSurfaceGroup.transformation() * interiorPartitionSurfaceGroup.boundingBox().corners());
       }
 
-      for (Luminaire luminaire : this->luminaires()) {
+      for (Luminaire& luminaire : this->luminaires()) {
         result.addPoint(luminaire.position());
       }
 
-      for (DaylightingControl daylightingControl : this->daylightingControls()) {
+      for (DaylightingControl& daylightingControl : this->daylightingControls()) {
         result.addPoint(daylightingControl.position());
       }
 
-      for (IlluminanceMap illuminanceMap : this->illuminanceMaps()) {
+      for (IlluminanceMap& illuminanceMap : this->illuminanceMaps()) {
         result.addPoints(illuminanceMap.transformation() * illuminanceMap.corners());
       }
 
-      for (GlareSensor glareSensor : this->glareSensors()) {
+      for (GlareSensor& glareSensor : this->glareSensors()) {
         result.addPoint(glareSensor.position());
       }
 
@@ -2168,7 +2089,7 @@ namespace model {
 
     void Space_Impl::hardApplySpaceType(bool hardSizeLoads) {
       Model model = this->model();
-      Space space = this->getObject<Space>();
+      auto space = this->getObject<Space>();
 
       std::string plenumSpaceTypeName = model.plenumSpaceTypeName();
 
@@ -2182,9 +2103,9 @@ namespace model {
         spaceType->hardApplySpaceLoadSchedules();
 
         // Move space loads from space type to space if there is a space type
-        for (ModelObject child : spaceType->children()) {
-          if (child.optionalCast<SpaceLoad>()) {
-            bool test = child.cast<SpaceLoad>().setSpace(space);
+        for (const ModelObject& child : spaceType->children()) {
+          if (auto load_ = child.optionalCast<SpaceLoad>()) {
+            bool test = load_->setSpace(space);
             OS_ASSERT(test);
           }
         }
@@ -2213,9 +2134,9 @@ namespace model {
 
       // If hard sizing loads, make each space load refer to unique definition and hard size it
       if (hardSizeLoads) {
-        for (ModelObject child : this->children()) {
-          if (child.optionalCast<SpaceLoad>()) {
-            child.cast<SpaceLoad>().hardSize();
+        for (const ModelObject& child : this->children()) {
+          if (auto load_ = child.optionalCast<SpaceLoad>()) {
+            load_->hardSize();
           }
         }
       }
@@ -2227,40 +2148,37 @@ namespace model {
     }
 
     void Space_Impl::hardApplySpaceLoadSchedules() {
-      for (ModelObject child : this->children()) {
-        if (child.optionalCast<SpaceLoad>()) {
-          child.cast<SpaceLoad>().hardApplySchedules();
+      for (const ModelObject& child : this->children()) {
+        if (auto load_ = child.optionalCast<SpaceLoad>()) {
+          load_->hardApplySchedules();
         }
       }
     }
 
     void Space_Impl::hardApplyConstructions() {
 
-      for (ShadingSurfaceGroup shadingSurfaceGroup : this->shadingSurfaceGroups()) {
-        for (ShadingSurface shadingSurface : shadingSurfaceGroup.shadingSurfaces()) {
-          boost::optional<ConstructionBase> construction = shadingSurface.construction();
-          if (construction) {
+      for (const ShadingSurfaceGroup& shadingSurfaceGroup : this->shadingSurfaceGroups()) {
+        for (ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()) {
+          if (boost::optional<ConstructionBase> construction = shadingSurface.construction()) {
             shadingSurface.setConstruction(*construction);
           }
         }
       }
 
-      for (InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
-        for (InteriorPartitionSurface interiorPartitionSurface : interiorPartitionSurfaceGroup.interiorPartitionSurfaces()) {
-          boost::optional<ConstructionBase> construction = interiorPartitionSurface.construction();
-          if (construction) {
+      for (const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
+        for (InteriorPartitionSurface& interiorPartitionSurface : interiorPartitionSurfaceGroup.interiorPartitionSurfaces()) {
+          if (boost::optional<ConstructionBase> construction = interiorPartitionSurface.construction()) {
             interiorPartitionSurface.setConstruction(*construction);
           }
         }
       }
 
-      for (Surface surface : this->surfaces()) {
+      for (Surface& surface : this->surfaces()) {
         boost::optional<ConstructionBase> construction = surface.construction();
         if (construction) {
           surface.setConstruction(*construction);
         } else {
-          boost::optional<Surface> adjacentSurface = surface.adjacentSurface();
-          if (adjacentSurface) {
+          if (boost::optional<Surface> adjacentSurface = surface.adjacentSurface()) {
             construction = adjacentSurface->construction();
             if (construction) {
               surface.setConstruction(*construction);
@@ -2268,13 +2186,12 @@ namespace model {
           }
         }
 
-        for (SubSurface subSurface : surface.subSurfaces()) {
+        for (SubSurface& subSurface : surface.subSurfaces()) {
           boost::optional<ConstructionBase> construction = subSurface.construction();
           if (construction) {
             subSurface.setConstruction(*construction);
           } else {
-            boost::optional<SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
-            if (adjacentSubSurface) {
+            if (boost::optional<SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface()) {
               construction = adjacentSubSurface->construction();
               if (construction) {
                 subSurface.setConstruction(*construction);
@@ -2286,14 +2203,14 @@ namespace model {
     }
 
     void Space_Impl::unmatchSurfaces() {
-      for (Surface surface : this->surfaces()) {
+      for (Surface& surface : this->surfaces()) {
         boost::optional<Surface> adjacentSurface = surface.adjacentSurface();
         if (adjacentSurface) {
           surface.resetAdjacentSurface();
           adjacentSurface->resetAdjacentSurface();
         }
 
-        for (SubSurface subSurface : surface.subSurfaces()) {
+        for (SubSurface& subSurface : surface.subSurfaces()) {
           boost::optional<SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
           if (adjacentSubSurface) {
             subSurface.resetAdjacentSubSurface();
@@ -2313,19 +2230,21 @@ namespace model {
       // transform from other to this coordinates
       Transformation transformation = this->transformation().inverse() * other.transformation();
 
-      for (Surface surface : this->surfaces()) {
-
-        std::vector<Point3d> vertices = removeCollinear(surface.vertices());
-
+      for (Surface& surface : this->surfaces()) {
+        if (surface.adjacentSurface()) {
+          continue;
+        }
+        std::vector<Point3d> vertices = surface.vertices();
         boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
         if (!outwardNormal) {
           continue;
         }
 
-        for (Surface otherSurface : other.surfaces()) {
-
-          std::vector<Point3d> otherVertices = removeCollinear(transformation * otherSurface.vertices());
-
+        for (Surface& otherSurface : other.surfaces()) {
+          if (otherSurface.adjacentSurface()) {
+            continue;
+          }
+          std::vector<Point3d> otherVertices = transformation * otherSurface.vertices();
           boost::optional<Vector3d> otherOutwardNormal = getOutwardNormal(otherVertices);
           if (!otherOutwardNormal) {
             continue;
@@ -2346,11 +2265,11 @@ namespace model {
             otherSurface.setAdjacentSurface(surface);
 
             // once surfaces are matched, check subsurfaces
-            for (SubSurface subSurface : surface.subSurfaces()) {
+            for (SubSurface& subSurface : surface.subSurfaces()) {
 
               vertices = removeCollinear(subSurface.vertices());
 
-              for (SubSurface otherSubSurface : otherSurface.subSurfaces()) {
+              for (SubSurface& otherSubSurface : otherSurface.subSurfaces()) {
 
                 otherVertices = removeCollinear(transformation * otherSubSurface.vertices());
                 std::reverse(otherVertices.begin(), otherVertices.end());
@@ -2373,6 +2292,10 @@ namespace model {
         return;
       }
 
+      std::string name = nameString();
+      std::string otherName = other.nameString();
+      LOG(Debug, "Intersecting space " << name << " with space " << otherName);
+
       std::vector<Surface> surfaces = this->surfaces();
       std::vector<Surface> otherSurfaces = other.surfaces();
 
@@ -2390,7 +2313,7 @@ namespace model {
         std::vector<Surface> newSurfaces;
         std::vector<Surface> newOtherSurfaces;
 
-        for (Surface surface : surfaces) {
+        for (Surface& surface : surfaces) {
           std::string surfaceHandle = toString(surface.handle());
 
           if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()) {
@@ -2402,8 +2325,9 @@ namespace model {
             continue;
           }
 
-          for (Surface otherSurface : otherSurfaces) {
+          for (Surface& otherSurface : otherSurfaces) {
             std::string otherSurfaceHandle = toString(otherSurface.handle());
+
             if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()) {
               hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
               hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface().has_value();
@@ -2426,25 +2350,30 @@ namespace model {
             boost::optional<SurfaceIntersection> intersection = surface.computeIntersection(otherSurface);
             if (intersection) {
               std::vector<Surface> newSurfaces1 = intersection->newSurfaces1();
-              newSurfaces.insert(newSurfaces.end(), newSurfaces1.begin(), newSurfaces1.end());
-
               std::vector<Surface> newSurfaces2 = intersection->newSurfaces2();
-              newOtherSurfaces.insert(newOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
 
               // surfaces involved in this intersection are ineligible to be re-intersected with other surfaces in this intersection
               std::vector<Surface> ineligibleSurfaces;
+              ineligibleSurfaces.reserve(newSurfaces1.size() + 1);
               ineligibleSurfaces.push_back(surface);
               ineligibleSurfaces.insert(ineligibleSurfaces.end(), newSurfaces1.begin(), newSurfaces1.end());
 
               std::vector<Surface> ineligibleOtherSurfaces;
+              ineligibleOtherSurfaces.reserve(newSurfaces2.size() + 1);
               ineligibleOtherSurfaces.push_back(otherSurface);
               ineligibleOtherSurfaces.insert(ineligibleOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
-              for (Surface ineligibleSurface : ineligibleSurfaces) {
-                for (Surface ineligibleOtherSurface : ineligibleOtherSurfaces) {
+              for (Surface& ineligibleSurface : ineligibleSurfaces) {
+                for (Surface& ineligibleOtherSurface : ineligibleOtherSurfaces) {
                   std::string ineligibleIntersectionKey = toString(ineligibleSurface.handle()) + toString(ineligibleOtherSurface.handle());
                   completedIntersections.insert(ineligibleIntersectionKey);
                 }
               }
+
+              newSurfaces.reserve(newSurfaces.size() + newSurfaces1.size());
+              newSurfaces.insert(newSurfaces.end(), std::make_move_iterator(newSurfaces1.begin()), std::make_move_iterator(newSurfaces1.end()));
+              newOtherSurfaces.reserve(newOtherSurfaces.size() + newSurfaces2.size());
+              newOtherSurfaces.insert(newOtherSurfaces.end(), std::make_move_iterator(newSurfaces2.begin()),
+                                      std::make_move_iterator(newSurfaces2.end()));
             }
           }
         }
@@ -2462,18 +2391,19 @@ namespace model {
 
     std::vector<Surface> Space_Impl::findSurfaces(boost::optional<double> minDegreesFromNorth, boost::optional<double> maxDegreesFromNorth,
                                                   boost::optional<double> minDegreesTilt, boost::optional<double> maxDegreesTilt, double tol) {
-      std::vector<Surface> result;
-      std::vector<PlanarSurface> planarSurfaces;
 
-      for (const Surface& surface : this->surfaces()) {
-        planarSurfaces.push_back(surface);
-      }
+      std::vector<PlanarSurface> planarSurfaces;
+      auto thisSurfaces = this->surfaces();
+      planarSurfaces.reserve(thisSurfaces.size());
+      planarSurfaces.insert(planarSurfaces.end(), std::make_move_iterator(thisSurfaces.begin()), std::make_move_iterator(thisSurfaces.end()));
 
       planarSurfaces =
         PlanarSurface::findPlanarSurfaces(planarSurfaces, minDegreesFromNorth, maxDegreesFromNorth, minDegreesTilt, maxDegreesTilt, tol);
 
+      std::vector<Surface> result;
+      result.reserve(planarSurfaces.size());
       for (const PlanarSurface& planarSurface : planarSurfaces) {
-        result.push_back(planarSurface.cast<Surface>());
+        result.emplace_back(planarSurface.cast<Surface>());
       }
 
       return result;
@@ -2734,7 +2664,7 @@ namespace model {
               z = point.z();
             } else if (std::abs(z.get() - point.z()) > tol) {
               LOG(Error, "All floor surfaces must lie on the same x, y plane to compute space floor print");
-              return std::vector<Point3d>();
+              return {};
             }
           }
         }
@@ -2745,7 +2675,7 @@ namespace model {
 
       if (floors.empty()) {
         LOG(Error, "No floor surfaces found to compute space floor print");
-        return std::vector<Point3d>();
+        return {};
 
       } else if (floors.size() == 1) {
         // just return this floors vertices
@@ -2764,10 +2694,10 @@ namespace model {
 
         OS_ASSERT(z);
 
-        typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
-        typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
-        typedef boost::geometry::model::ring<BoostPoint> BoostRing;
-        typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
+        using BoostPoint = boost::geometry::model::d2::point_xy<double>;
+        using BoostPolygon = boost::geometry::model::polygon<BoostPoint>;
+        using BoostRing = boost::geometry::model::ring<BoostPoint>;
+        using BoostMultiPolygon = boost::geometry::model::multi_polygon<BoostPolygon>;
 
         BoostMultiPolygon boostResult;
 
@@ -2790,7 +2720,7 @@ namespace model {
         }
 
         if (boostResult.size() != 1) {
-          return std::vector<Point3d>();
+          return {};
         }
 
         for (const BoostPoint& boostPoint : boostResult[0].outer()) {
@@ -2810,7 +2740,7 @@ namespace model {
 
         // if result is now empty just quit
         if (result.size() < 3) {
-          return std::vector<Point3d>();
+          return {};
         }
 
         Point3d lastOuterVertex = result.back();
@@ -2862,7 +2792,7 @@ namespace model {
 
       // if result is now empty just quit
       if (result.size() < 3) {
-        return std::vector<Point3d>();
+        return {};
       }
 
       return result;
@@ -3001,11 +2931,12 @@ namespace model {
 
     // create each wall
     for (unsigned i = 1; i <= numPoints; ++i) {
-      points.clear();
-      points.push_back(Point3d(floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z + floorHeight));
-      points.push_back(Point3d(floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z));
-      points.push_back(Point3d(floorPrint[i - 1].x(), floorPrint[i - 1].y(), z));
-      points.push_back(Point3d(floorPrint[i - 1].x(), floorPrint[i - 1].y(), z + floorHeight));
+      points = {
+        {floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z + floorHeight},
+        {floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z},
+        {floorPrint[i - 1].x(), floorPrint[i - 1].y(), z},
+        {floorPrint[i - 1].x(), floorPrint[i - 1].y(), z + floorHeight},
+      };
 
       Surface wall(points, model);
       wall.setSpace(space);
@@ -3657,11 +3588,12 @@ namespace model {
         double y2 = std::min(y + desiredHeight, ymax - ySpace / 2.0);
 
         // skylight in grid coordinates
-        std::vector<Point3d> skylight;
-        skylight.push_back(Point3d(x, y, 0));
-        skylight.push_back(Point3d(x2, y, 0));
-        skylight.push_back(Point3d(x2, y2, 0));
-        skylight.push_back(Point3d(x, y2, 0));
+        std::vector<Point3d> skylight{
+          {x, y, 0},
+          {x2, y, 0},
+          {x2, y2, 0},
+          {x, y2, 0},
+        };
 
         // put results into building coordinates
         result.push_back(gridToBuildingTransformation * skylight);

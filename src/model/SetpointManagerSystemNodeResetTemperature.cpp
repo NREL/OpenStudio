@@ -83,7 +83,7 @@ namespace model {
     ModelObject SetpointManagerSystemNodeResetTemperature_Impl::clone(Model model) const {
       auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSystemNodeResetTemperature>();
       clonedObject.resetReferenceNode();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerSystemNodeResetTemperature_Impl::controlVariable() const {

@@ -37,7 +37,7 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, OutputDebuggingData_GettersSetters) {
   Model m;
-  OutputDebuggingData mo = m.getUniqueModelObject<OutputDebuggingData>();
+  auto mo = m.getUniqueModelObject<OutputDebuggingData>();
 
   // Report Debugging Data: Required Boolean
   EXPECT_TRUE(mo.setReportDebuggingData(true));

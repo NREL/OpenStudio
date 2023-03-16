@@ -77,11 +77,12 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_SameSpaceType) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType(model);
   spaceType.setLightingPowerPerFloorArea(1);
@@ -135,11 +136,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_SameSp
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Building_SameSpaceType) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType(model);
   spaceType.setLightingPowerPerFloorArea(1);
@@ -195,11 +197,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Buildi
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_SameSpaceType) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType(model);
   spaceType.setLightingPowerPerFloorArea(1);
@@ -254,11 +257,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_SameSp
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_Building_SameSpaceType) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType(model);
   spaceType.setLightingPowerPerFloorArea(1);
@@ -315,11 +319,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_Buildi
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_DifferentSpaceType) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType1(model);
   spaceType1.setLightingPowerPerFloorArea(1);
@@ -376,11 +381,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Differ
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Building_DifferentSpaceType) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType1(model);
   spaceType1.setLightingPowerPerFloorArea(1);
@@ -443,11 +449,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Buildi
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Building_DifferentSpaceType_2) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType1(model);
   spaceType1.setLightingPowerPerFloorArea(1);
@@ -506,11 +513,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Buildi
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Building_DifferentSpaceType) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType1(model);
   spaceType1.setLightingPowerPerFloorArea(1);
@@ -561,11 +569,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Building_SameSpaceType) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType(model);
   spaceType.setLightingPowerPerFloorArea(1);
@@ -613,11 +622,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Building) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType(model);
   spaceType.setLightingPowerPerFloorArea(1);
@@ -664,11 +674,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_3Zone_2Spaces) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType1(model);
   spaceType1.setLightingPowerPerFloorArea(1);
@@ -740,11 +751,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_3Zone_2Spaces) {
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedules) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   LightsDefinition lightsDef1(model);
   lightsDef1.setLightingLevel(1.0);
@@ -797,9 +809,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedu
   Surface surface2(points, model);
   surface2.setSpace(space2);
 
-  EXPECT_EQ(4u, model.getModelObjects<Lights>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Lights>().size());
 
-  for (const Lights& light : model.getModelObjects<Lights>()) {
+  for (const Lights& light : model.getConcreteModelObjects<Lights>()) {
     EXPECT_TRUE(light.schedule());
   }
 
@@ -839,11 +851,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedu
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSchedules) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   LightsDefinition lightsDef1(model);
   lightsDef1.setLightingLevel(1.0);
@@ -893,9 +906,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSch
   Surface surface2(points, model);
   surface2.setSpace(space2);
 
-  EXPECT_EQ(4u, model.getModelObjects<Lights>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Lights>().size());
 
-  for (const Lights& light : model.getModelObjects<Lights>()) {
+  for (const Lights& light : model.getConcreteModelObjects<Lights>()) {
     EXPECT_TRUE(light.schedule());
   }
 
@@ -941,11 +954,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_Daylighting) {
   Space space1(m);
   space1.setThermalZone(z);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   Surface surface1(points, m);
   surface1.setSpace(space1);
@@ -983,7 +997,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_Daylighting) {
     ASSERT_EQ(2u, idf_d.extensibleGroups().size());
 
     // Check that there is a value for primary, and that it's right
-    WorkspaceExtensibleGroup w_eg = idf_d.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_d.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
     sp = w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
     ASSERT_TRUE(sp);
     ASSERT_EQ(d_pri.illuminanceSetpoint(), sp.get());
@@ -1012,11 +1026,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LoadDistributionScheme) {
   // Create a model with a space and thermalZone
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   SpaceType spaceType(model);
   spaceType.setLightingPowerPerFloorArea(1);

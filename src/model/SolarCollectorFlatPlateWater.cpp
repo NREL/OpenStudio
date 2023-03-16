@@ -74,13 +74,13 @@ namespace model {
 
     ModelObject SolarCollectorFlatPlateWater_Impl::clone(Model model) const {
 
-      SolarCollectorFlatPlateWater result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlateWater>();
+      auto result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlateWater>();
       result.setSolarCollectorPerformance(this->solarCollectorPerformance());
 
       // do not want to point to any surface after cloning
       result.resetSurface();
 
-      return result;
+      return std::move(result);
     }
 
     std::vector<IdfObject> SolarCollectorFlatPlateWater_Impl::remove() {
@@ -212,7 +212,7 @@ namespace model {
   }
 
   IddObjectType SolarCollectorFlatPlateWater::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SolarCollector_FlatPlate_Water);
+    return {IddObjectType::OS_SolarCollector_FlatPlate_Water};
   }
 
   SolarCollectorPerformanceFlatPlate SolarCollectorFlatPlateWater::solarCollectorPerformance() const {

@@ -55,7 +55,12 @@ namespace model {
 
     explicit GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition);
 
-    virtual ~GasEquipment() {}
+    virtual ~GasEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GasEquipment(const GasEquipment& other) = default;
+    GasEquipment(GasEquipment&& other) = default;
+    GasEquipment& operator=(const GasEquipment&) = default;
+    GasEquipment& operator=(GasEquipment&&) = default;
 
     //@}
 
@@ -95,7 +100,7 @@ namespace model {
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -130,7 +135,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GasEquipment_Impl ImplType;
+    using ImplType = detail::GasEquipment_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -143,10 +148,10 @@ namespace model {
   };
 
   /** \relates GasEquipment*/
-  typedef boost::optional<GasEquipment> OptionalGasEquipment;
+  using OptionalGasEquipment = boost::optional<GasEquipment>;
 
   /** \relates GasEquipment*/
-  typedef std::vector<GasEquipment> GasEquipmentVector;
+  using GasEquipmentVector = std::vector<GasEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

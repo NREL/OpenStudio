@@ -51,7 +51,7 @@ namespace model {
 
       EvaporativeCoolerDirectResearchSpecial_Impl(const EvaporativeCoolerDirectResearchSpecial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EvaporativeCoolerDirectResearchSpecial_Impl() {}
+      virtual ~EvaporativeCoolerDirectResearchSpecial_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -48,10 +48,10 @@
 #  pragma warning(pop)
 #endif
 
-typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
-typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
-typedef boost::geometry::model::ring<BoostPoint> BoostRing;
-typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
+using BoostPoint = boost::geometry::model::d2::point_xy<double>;
+using BoostPolygon = boost::geometry::model::polygon<BoostPoint>;
+using BoostRing = boost::geometry::model::ring<BoostPoint>;
+using BoostMultiPolygon = boost::geometry::model::multi_polygon<BoostPolygon>;
 
 using namespace std;
 using namespace boost;
@@ -94,25 +94,28 @@ std::string printPolygon(const BoostPolygon& polygon) {
 }
 
 std::vector<Point3d> makeRectangleUp(double xmin, double ymin, double width, double height) {
-  std::vector<Point3d> result;
-  result.push_back(Point3d(xmin, ymin, 0));
-  result.push_back(Point3d(xmin + width, ymin, 0));
-  result.push_back(Point3d(xmin + width, ymin + height, 0));
-  result.push_back(Point3d(xmin, ymin + height, 0));
+  std::vector<Point3d> result{
+    {xmin, ymin, 0},
+    {xmin + width, ymin, 0},
+    {xmin + width, ymin + height, 0},
+    {xmin, ymin + height, 0},
+  };
   return result;
 }
 
 std::vector<Point3d> makeRectangleDown(double xmin, double ymin, double width, double height) {
-  std::vector<Point3d> result;
-  result.push_back(Point3d(xmin + width, ymin + height, 0));
-  result.push_back(Point3d(xmin + width, ymin, 0));
-  result.push_back(Point3d(xmin, ymin, 0));
-  result.push_back(Point3d(xmin, ymin + height, 0));
+  std::vector<Point3d> result{
+    {xmin + width, ymin + height, 0},
+    {xmin + width, ymin, 0},
+    {xmin, ymin, 0},
+    {xmin, ymin + height, 0},
+  };
   return result;
 }
 
 TEST_F(GeometryFixture, BoostGeometry_Polygon1) {
-  BoostPolygon blue, yellow;
+  BoostPolygon blue;
+  BoostPolygon yellow;
 
   // blue
   boost::geometry::read_wkt("POLYGON((-11.379200508 -12.0396003048 , -11.379200508 12.0395996952 , 3.555999492 12.0395996952 , 3.555999492 "
@@ -347,17 +350,19 @@ TEST_F(GeometryFixture, Intersect_False) {
   EXPECT_FALSE(test);
 
   // sense is down, same points but not on z=0 plane
-  points1.clear();
-  points1.push_back(Point3d(1, 1, 3));
-  points1.push_back(Point3d(1, 0, 3));
-  points1.push_back(Point3d(0, 0, 3));
-  points1.push_back(Point3d(0, 1, 3));
+  points1 = {
+    {1, 1, 3},
+    {1, 0, 3},
+    {0, 0, 3},
+    {0, 1, 3},
+  };
 
-  points2.clear();
-  points2.push_back(Point3d(1, 1, 3));
-  points2.push_back(Point3d(1, 0, 3));
-  points2.push_back(Point3d(0, 0, 3));
-  points2.push_back(Point3d(0, 1, 3));
+  points2 = {
+    {1, 1, 3},
+    {1, 0, 3},
+    {0, 0, 3},
+    {0, 1, 3},
+  };
 
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
@@ -366,17 +371,19 @@ TEST_F(GeometryFixture, Intersect_False) {
   EXPECT_FALSE(test);
 
   // sense is up, same points but not on z=0 plane
-  points1.clear();
-  points1.push_back(Point3d(0, 0, 3));
-  points1.push_back(Point3d(1, 0, 3));
-  points1.push_back(Point3d(1, 1, 3));
-  points1.push_back(Point3d(0, 1, 3));
+  points1 = {
+    {0, 0, 3},
+    {1, 0, 3},
+    {1, 1, 3},
+    {0, 1, 3},
+  };
 
-  points2.clear();
-  points2.push_back(Point3d(0, 0, 3));
-  points2.push_back(Point3d(1, 0, 3));
-  points2.push_back(Point3d(1, 1, 3));
-  points2.push_back(Point3d(0, 1, 3));
+  points2 = {
+    {0, 0, 3},
+    {1, 0, 3},
+    {1, 1, 3},
+    {0, 1, 3},
+  };
 
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
@@ -385,17 +392,19 @@ TEST_F(GeometryFixture, Intersect_False) {
   EXPECT_FALSE(test);
 
   // sense is right, same points but not on z=0 plane
-  points1.clear();
-  points1.push_back(Point3d(0, 0, 0));
-  points1.push_back(Point3d(0, 0, 1));
-  points1.push_back(Point3d(0, 1, 1));
-  points1.push_back(Point3d(0, 1, 0));
+  points1 = {
+    {0, 0, 0},
+    {0, 0, 1},
+    {0, 1, 1},
+    {0, 1, 0},
+  };
 
-  points2.clear();
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 0, 1));
-  points2.push_back(Point3d(0, 1, 1));
-  points2.push_back(Point3d(0, 1, 0));
+  points2 = {
+    {0, 0, 0},
+    {0, 0, 1},
+    {0, 1, 1},
+    {0, 1, 0},
+  };
 
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
@@ -602,17 +611,19 @@ TEST_F(GeometryFixture, Join_False) {
   EXPECT_FALSE(test);
 
   // sense is down, same points but not on z=0 plane
-  points1.clear();
-  points1.push_back(Point3d(1, 1, 3));
-  points1.push_back(Point3d(1, 0, 3));
-  points1.push_back(Point3d(0, 0, 3));
-  points1.push_back(Point3d(0, 1, 3));
+  points1 = {
+    {1, 1, 3},
+    {1, 0, 3},
+    {0, 0, 3},
+    {0, 1, 3},
+  };
 
-  points2.clear();
-  points2.push_back(Point3d(1, 1, 3));
-  points2.push_back(Point3d(1, 0, 3));
-  points2.push_back(Point3d(0, 0, 3));
-  points2.push_back(Point3d(0, 1, 3));
+  points2 = {
+    {1, 1, 3},
+    {1, 0, 3},
+    {0, 0, 3},
+    {0, 1, 3},
+  };
 
   test = join(points1, points2, tol);
   EXPECT_FALSE(test);
@@ -621,17 +632,19 @@ TEST_F(GeometryFixture, Join_False) {
   EXPECT_FALSE(test);
 
   // sense is up, same points but not on z=0 plane
-  points1.clear();
-  points1.push_back(Point3d(0, 0, 3));
-  points1.push_back(Point3d(1, 0, 3));
-  points1.push_back(Point3d(1, 1, 3));
-  points1.push_back(Point3d(0, 1, 3));
+  points1 = {
+    {0, 0, 3},
+    {1, 0, 3},
+    {1, 1, 3},
+    {0, 1, 3},
+  };
 
-  points2.clear();
-  points2.push_back(Point3d(0, 0, 3));
-  points2.push_back(Point3d(1, 0, 3));
-  points2.push_back(Point3d(1, 1, 3));
-  points2.push_back(Point3d(0, 1, 3));
+  points2 = {
+    {0, 0, 3},
+    {1, 0, 3},
+    {1, 1, 3},
+    {0, 1, 3},
+  };
 
   test = join(points1, points2, tol);
   EXPECT_FALSE(test);
@@ -640,17 +653,19 @@ TEST_F(GeometryFixture, Join_False) {
   EXPECT_FALSE(test);
 
   // sense is right, same points but not on z=0 plane
-  points1.clear();
-  points1.push_back(Point3d(0, 0, 0));
-  points1.push_back(Point3d(0, 0, 1));
-  points1.push_back(Point3d(0, 1, 1));
-  points1.push_back(Point3d(0, 1, 0));
+  points1 = {
+    {0, 0, 0},
+    {0, 0, 1},
+    {0, 1, 1},
+    {0, 1, 0},
+  };
 
-  points2.clear();
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 0, 1));
-  points2.push_back(Point3d(0, 1, 1));
-  points2.push_back(Point3d(0, 1, 0));
+  points2 = {
+    {0, 0, 0},
+    {0, 0, 1},
+    {0, 1, 1},
+    {0, 1, 0},
+  };
 
   test = join(points1, points2, tol);
   EXPECT_FALSE(test);
@@ -861,18 +876,16 @@ TEST_F(GeometryFixture, RemoveSpikes_Down) {
   // spike at beginning
   {
     // sense is down
-    points.clear();
-    points.push_back(Point3d(10, 10, 0));  // the spike
-    points.push_back(Point3d(10, 0, 0));
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(0, 5, 0));
-    points.push_back(Point3d(10, 5, 0));
+    points = {
+      {10, 10, 0}, {10, 0, 0}, {0, 0, 0}, {0, 5, 0}, {10, 5, 0},
+    };
 
-    expected.clear();
-    expected.push_back(Point3d(10, 5, 0));
-    expected.push_back(Point3d(10, 0, 0));
-    expected.push_back(Point3d(0, 0, 0));
-    expected.push_back(Point3d(0, 5, 0));
+    expected = {
+      {10, 5, 0},
+      {10, 0, 0},
+      {0, 0, 0},
+      {0, 5, 0},
+    };
 
     result = removeSpikes(points, tol);
     EXPECT_TRUE(circularEqual(expected, result)) << result;
@@ -881,18 +894,16 @@ TEST_F(GeometryFixture, RemoveSpikes_Down) {
   // spike at beginning 2
   {
     // sense is down
-    points.clear();
-    points.push_back(Point3d(10, 5, 0));
-    points.push_back(Point3d(10, 10, 0));  // the spike
-    points.push_back(Point3d(10, 0, 0));
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(0, 5, 0));
+    points = {
+      {10, 5, 0}, {10, 10, 0}, {10, 0, 0}, {0, 0, 0}, {0, 5, 0},
+    };
 
-    expected.clear();
-    expected.push_back(Point3d(10, 5, 0));
-    expected.push_back(Point3d(10, 0, 0));
-    expected.push_back(Point3d(0, 0, 0));
-    expected.push_back(Point3d(0, 5, 0));
+    expected = {
+      {10, 5, 0},
+      {10, 0, 0},
+      {0, 0, 0},
+      {0, 5, 0},
+    };
 
     result = removeSpikes(points, tol);
     EXPECT_TRUE(circularEqual(expected, result)) << result;
@@ -901,18 +912,16 @@ TEST_F(GeometryFixture, RemoveSpikes_Down) {
   // spike in middle
   {
     // sense is down
-    points.clear();
-    points.push_back(Point3d(10, 5, 0));
-    points.push_back(Point3d(10, 0, 0));
-    points.push_back(Point3d(-5, 0, 0));  // the spike
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(0, 5, 0));
+    points = {
+      {10, 5, 0}, {10, 0, 0}, {-5, 0, 0}, {0, 0, 0}, {0, 5, 0},
+    };
 
-    expected.clear();
-    expected.push_back(Point3d(10, 5, 0));
-    expected.push_back(Point3d(10, 0, 0));
-    expected.push_back(Point3d(0, 0, 0));
-    expected.push_back(Point3d(0, 5, 0));
+    expected = {
+      {10, 5, 0},
+      {10, 0, 0},
+      {0, 0, 0},
+      {0, 5, 0},
+    };
 
     result = removeSpikes(points, tol);
     EXPECT_TRUE(circularEqual(expected, result)) << result;
@@ -929,12 +938,9 @@ TEST_F(GeometryFixture, RemoveSpikes_Up) {
   // spike at end
   {
     // sense is up
-    points.clear();
-    points.push_back(Point3d(10, 5, 0));
-    points.push_back(Point3d(0, 5, 0));
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(10, 0, 0));
-    points.push_back(Point3d(10, 10, 0));  // the spike
+    points = {
+      {10, 5, 0}, {0, 5, 0}, {0, 0, 0}, {10, 0, 0}, {10, 10, 0},
+    };
 
     expected.clear();
 
@@ -945,12 +951,9 @@ TEST_F(GeometryFixture, RemoveSpikes_Up) {
   // spike at end 2
   {
     // sense is up
-    points.clear();
-    points.push_back(Point3d(0, 5, 0));
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(10, 0, 0));
-    points.push_back(Point3d(10, 10, 0));  // the spike
-    points.push_back(Point3d(10, 5, 0));
+    points = {
+      {0, 5, 0}, {0, 0, 0}, {10, 0, 0}, {10, 10, 0}, {10, 5, 0},
+    };
 
     expected.clear();
 
@@ -961,12 +964,9 @@ TEST_F(GeometryFixture, RemoveSpikes_Up) {
   // spike in middle
   {
     // sense is up
-    points.clear();
-    points.push_back(Point3d(0, 0, 0));
-    points.push_back(Point3d(10, 0, 0));
-    points.push_back(Point3d(-5, 0, 0));  // the spike
-    points.push_back(Point3d(10, 5, 0));
-    points.push_back(Point3d(0, 5, 0));
+    points = {
+      {0, 0, 0}, {10, 0, 0}, {-5, 0, 0}, {10, 5, 0}, {0, 5, 0},
+    };
 
     expected.clear();
 
@@ -990,7 +990,7 @@ TEST_F(GeometryFixture, Subtract_SamePoints) {
   holes.clear();
   holes.push_back(points2);
   test = subtract(points1, holes, tol);
-  for (auto polygon : test) {
+  for (const auto& polygon : test) {
     std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(0.0, totalArea(test));
@@ -1003,7 +1003,7 @@ TEST_F(GeometryFixture, Subtract_SamePoints) {
   holes.clear();
   holes.push_back(points1);
   test = subtract(points2, holes, tol);
-  for (auto polygon : test) {
+  for (const auto& polygon : test) {
     std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(0.0, totalArea(test));
@@ -1055,7 +1055,7 @@ TEST_F(GeometryFixture, Subtract_Empty_Down) {
 
   test = subtract(points1, holes, tol);
   EXPECT_TRUE(test.size() == 1);
-  for (auto polygon : test) {
+  for (const auto& polygon : test) {
     std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
@@ -1120,7 +1120,7 @@ TEST_F(GeometryFixture, Subtract_Adjacent) {
   holes.push_back(points2);
   test = subtract(points1, holes, tol);
   EXPECT_TRUE(test.size() == 1);
-  for (auto polygon : test) {
+  for (const auto& polygon : test) {
     std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
@@ -1129,7 +1129,7 @@ TEST_F(GeometryFixture, Subtract_Adjacent) {
   holes.push_back(points1);
   test = subtract(points2, holes, tol);
   EXPECT_TRUE(test.size() == 1);
-  for (auto polygon : test) {
+  for (const auto& polygon : test) {
     std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
@@ -1165,7 +1165,7 @@ TEST_F(GeometryFixture, Subtract_Overlap) {
   holes.push_back(points2);
   test = subtract(points1, holes, tol);
   EXPECT_TRUE(test.size() == 1);
-  for (auto polygon : test) {
+  for (const auto& polygon : test) {
     std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
@@ -1181,7 +1181,7 @@ TEST_F(GeometryFixture, Subtract_Overlap) {
   holes.push_back(points1);
   test = subtract(points2, holes, tol);
   EXPECT_TRUE(test.size() == 1);
-  for (auto polygon : test) {
+  for (const auto& polygon : test) {
     std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
@@ -1210,7 +1210,7 @@ TEST_F(GeometryFixture, Subtract_Within_Down) {
   holes.push_back(points2);
   test = subtract(points1, holes, tol);
   EXPECT_TRUE(test.size() > 1);
-  for (auto polygon : test) {
+  for (const auto& polygon : test) {
     std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(8.0, totalArea(test));
@@ -1226,7 +1226,7 @@ TEST_F(GeometryFixture, Subtract_Within_Down) {
   holes.push_back(points1);
   test = subtract(points2, holes, tol);
   EXPECT_TRUE(test.empty());
-  for (auto polygon : test) {
+  for (const auto& polygon : test) {
     std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(0.0, totalArea(test));
@@ -1267,42 +1267,35 @@ TEST_F(GeometryFixture, selfIntersects) {
 
   Point3dVector points;
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  points = {
+    {0, 1, 0},
+    {2, 1, 0},
+    {2, 0, 0},
+    {0, 0, 0},
+  };
   EXPECT_FALSE(selfIntersects(points, tol));
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
+  points = {
+    {0, 1, 0},
+    {2, 1, 0},
+    {0, 0, 0},
+    {2, 0, 0},
+  };
   EXPECT_TRUE(selfIntersects(points, tol));
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 0.2, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  points = {
+    {0, 1, 0}, {1, 0.2, 0}, {2, 1, 0}, {2, 0, 0}, {0, 0, 0},
+  };
   EXPECT_FALSE(selfIntersects(points, tol));
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  points = {
+    {0, 1, 0}, {1, 0, 0}, {2, 1, 0}, {2, 0, 0}, {0, 0, 0},
+  };
   EXPECT_FALSE(selfIntersects(points, tol));
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, -1, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  points = {
+    {0, 1, 0}, {1, -1, 0}, {2, 1, 0}, {2, 0, 0}, {0, 0, 0},
+  };
   EXPECT_TRUE(selfIntersects(points, tol));
 }
 
@@ -1311,68 +1304,15 @@ TEST_F(GeometryFixture, simplify) {
 
   Point3dVector points;
 
-  points.clear();
-  points.push_back(Point3d(158, 168, 0));
-  points.push_back(Point3d(200, 168, 0));
-  points.push_back(Point3d(200, 30, 0));
-  points.push_back(Point3d(158, 30, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
+  points = {
+    {158, 168, 0}, {200, 168, 0}, {200, 30, 0},  {158, 30, 0},  {158, 40, 0},  {158, 70, 0},  {158, 40, 0},  {158, 70, 0},  {158, 98, 0},
+    {158, 70, 0},  {158, 40, 0},  {158, 70, 0},  {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},  {158, 70, 0},
+    {158, 40, 0},  {158, 70, 0},  {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},  {158, 70, 0},  {158, 98, 0},
+    {158, 128, 0}, {158, 98, 0},  {158, 128, 0}, {158, 138, 0}, {158, 128, 0}, {158, 98, 0},  {158, 70, 0},  {158, 40, 0},  {158, 70, 0},
+    {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},
+    {158, 128, 0}, {158, 138, 0}, {158, 128, 0}, {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},  {158, 128, 0},
+    {158, 138, 0}, {158, 128, 0}, {158, 98, 0},  {158, 128, 0}, {158, 138, 0}, {158, 128, 0}, {158, 138, 0},
+  };
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
@@ -1386,16 +1326,9 @@ TEST_F(GeometryFixture, simplify) {
 
   EXPECT_NEAR(*area, *area2, tol * tol);
 
-  Point3dVector expectedPoints;
-  expectedPoints.push_back(Point3d(200, 168, 0));
-  expectedPoints.push_back(Point3d(200, 30, 0));
-  expectedPoints.push_back(Point3d(158, 30, 0));
-  expectedPoints.push_back(Point3d(158, 40, 0));
-  expectedPoints.push_back(Point3d(158, 70, 0));
-  expectedPoints.push_back(Point3d(158, 98, 0));
-  expectedPoints.push_back(Point3d(158, 128, 0));
-  expectedPoints.push_back(Point3d(158, 138, 0));
-  expectedPoints.push_back(Point3d(158, 168, 0));
+  Point3dVector expectedPoints{
+    {200, 168, 0}, {200, 30, 0}, {158, 30, 0}, {158, 40, 0}, {158, 70, 0}, {158, 98, 0}, {158, 128, 0}, {158, 138, 0}, {158, 168, 0},
+  };
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1415,68 +1348,15 @@ TEST_F(GeometryFixture, simplify2) {
 
   Point3dVector points;
 
-  points.clear();
-  points.push_back(Point3d(158, 168, 0));
-  points.push_back(Point3d(200, 168, 0));
-  points.push_back(Point3d(200, 30, 0));
-  points.push_back(Point3d(158, 30, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 138, 0));
+  points = {
+    {158, 168, 0}, {200, 168, 0}, {200, 30, 0},  {158, 30, 0},  {158, 40, 0},  {158, 70, 0},  {158, 40, 0},  {158, 70, 0},  {158, 98, 0},
+    {158, 70, 0},  {158, 40, 0},  {158, 70, 0},  {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},  {158, 70, 0},
+    {158, 40, 0},  {158, 70, 0},  {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},  {158, 70, 0},  {158, 98, 0},
+    {158, 128, 0}, {158, 98, 0},  {158, 128, 0}, {158, 138, 0}, {158, 128, 0}, {158, 98, 0},  {158, 70, 0},  {158, 40, 0},  {158, 70, 0},
+    {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},
+    {158, 128, 0}, {158, 138, 0}, {158, 128, 0}, {158, 98, 0},  {158, 70, 0},  {158, 98, 0},  {158, 128, 0}, {158, 98, 0},  {158, 128, 0},
+    {158, 138, 0}, {158, 128, 0}, {158, 98, 0},  {158, 128, 0}, {158, 138, 0}, {158, 128, 0}, {158, 138, 0},
+  };
   points = reverse(points);
 
   std::cout << points << '\n' << '\n';
@@ -1493,16 +1373,9 @@ TEST_F(GeometryFixture, simplify2) {
 
   EXPECT_NEAR(*area, *area2, tol * tol);
 
-  Point3dVector expectedPoints;
-  expectedPoints.push_back(Point3d(200, 30, 0));
-  expectedPoints.push_back(Point3d(200, 168, 0));
-  expectedPoints.push_back(Point3d(158, 168, 0));
-  expectedPoints.push_back(Point3d(158, 138, 0));
-  expectedPoints.push_back(Point3d(158, 128, 0));
-  expectedPoints.push_back(Point3d(158, 98, 0));
-  expectedPoints.push_back(Point3d(158, 70, 0));
-  expectedPoints.push_back(Point3d(158, 40, 0));
-  expectedPoints.push_back(Point3d(158, 30, 0));
+  Point3dVector expectedPoints{
+    {200, 30, 0}, {200, 168, 0}, {158, 168, 0}, {158, 138, 0}, {158, 128, 0}, {158, 98, 0}, {158, 70, 0}, {158, 40, 0}, {158, 30, 0},
+  };
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1522,27 +1395,10 @@ TEST_F(GeometryFixture, simplify3) {
 
   Point3dVector points;
 
-  points.clear();
-  points.push_back(Point3d(158, 49, 0));
-  points.push_back(Point3d(158, 108, 0));
-  points.push_back(Point3d(158, 89, 0));
-  points.push_back(Point3d(158, 21, 0));
-  points.push_back(Point3d(157, 21, 0));
-  points.push_back(Point3d(144, 21, 0));
-  points.push_back(Point3d(143, 21, 0));
-  points.push_back(Point3d(114, 21, 0));
-  points.push_back(Point3d(113, 21, 0));
-  points.push_back(Point3d(113, 28, 0));
-  points.push_back(Point3d(113, 50, 0));
-  points.push_back(Point3d(113, 70, 0));
-  points.push_back(Point3d(113, 91, 0));
-  points.push_back(Point3d(113, 98, 0));
-  points.push_back(Point3d(113, 119, 0));
-  points.push_back(Point3d(113, 120, 0));
-  points.push_back(Point3d(114, 120, 0));
-  points.push_back(Point3d(143, 120, 0));
-  points.push_back(Point3d(157, 120, 0));
-  points.push_back(Point3d(158, 120, 0));
+  points = {
+    {158, 49, 0}, {158, 108, 0}, {158, 89, 0}, {158, 21, 0}, {157, 21, 0},  {144, 21, 0},  {143, 21, 0},  {114, 21, 0},  {113, 21, 0},  {113, 28, 0},
+    {113, 50, 0}, {113, 70, 0},  {113, 91, 0}, {113, 98, 0}, {113, 119, 0}, {113, 120, 0}, {114, 120, 0}, {143, 120, 0}, {157, 120, 0}, {158, 120, 0},
+  };
 
   std::cout << points << '\n' << '\n';
 
@@ -1558,27 +1414,10 @@ TEST_F(GeometryFixture, simplify3) {
 
   EXPECT_NEAR(*area, *area2, tol * tol);
 
-  Point3dVector expectedPoints;
-  expectedPoints.push_back(Point3d(158, 120, 0));
-  expectedPoints.push_back(Point3d(158, 108, 0));
-  expectedPoints.push_back(Point3d(158, 89, 0));
-  expectedPoints.push_back(Point3d(158, 49, 0));
-  expectedPoints.push_back(Point3d(158, 21, 0));
-  expectedPoints.push_back(Point3d(157, 21, 0));
-  expectedPoints.push_back(Point3d(144, 21, 0));
-  expectedPoints.push_back(Point3d(143, 21, 0));
-  expectedPoints.push_back(Point3d(114, 21, 0));
-  expectedPoints.push_back(Point3d(113, 21, 0));
-  expectedPoints.push_back(Point3d(113, 28, 0));
-  expectedPoints.push_back(Point3d(113, 50, 0));
-  expectedPoints.push_back(Point3d(113, 70, 0));
-  expectedPoints.push_back(Point3d(113, 91, 0));
-  expectedPoints.push_back(Point3d(113, 98, 0));
-  expectedPoints.push_back(Point3d(113, 119, 0));
-  expectedPoints.push_back(Point3d(113, 120, 0));
-  expectedPoints.push_back(Point3d(114, 120, 0));
-  expectedPoints.push_back(Point3d(143, 120, 0));
-  expectedPoints.push_back(Point3d(157, 120, 0));
+  Point3dVector expectedPoints{
+    {158, 120, 0}, {158, 108, 0}, {158, 89, 0}, {158, 49, 0}, {158, 21, 0}, {157, 21, 0},  {144, 21, 0},  {143, 21, 0},  {114, 21, 0},  {113, 21, 0},
+    {113, 28, 0},  {113, 50, 0},  {113, 70, 0}, {113, 91, 0}, {113, 98, 0}, {113, 119, 0}, {113, 120, 0}, {114, 120, 0}, {143, 120, 0}, {157, 120, 0},
+  };
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1597,13 +1436,9 @@ TEST_F(GeometryFixture, simplify4) {
   double tol = 0.01;
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(158, 120, 0));
-  points.push_back(Point3d(158, 49, 0));
-  points.push_back(Point3d(158, 108, 0));
-  points.push_back(Point3d(158, 21, 0));
-  points.push_back(Point3d(113, 21, 0));
-  points.push_back(Point3d(113, 120, 0));
+  points = {
+    {158, 120, 0}, {158, 49, 0}, {158, 108, 0}, {158, 21, 0}, {113, 21, 0}, {113, 120, 0},
+  };
 
   std::cout << points << '\n' << '\n';
 
@@ -1619,13 +1454,9 @@ TEST_F(GeometryFixture, simplify4) {
 
   EXPECT_NEAR(*area, *area2, tol * tol);
 
-  Point3dVector expectedPoints;
-  expectedPoints.push_back(Point3d(158, 120, 0));
-  expectedPoints.push_back(Point3d(158, 108, 0));
-  expectedPoints.push_back(Point3d(158, 49, 0));
-  expectedPoints.push_back(Point3d(158, 21, 0));
-  expectedPoints.push_back(Point3d(113, 21, 0));
-  expectedPoints.push_back(Point3d(113, 120, 0));
+  Point3dVector expectedPoints{
+    {158, 120, 0}, {158, 108, 0}, {158, 49, 0}, {158, 21, 0}, {113, 21, 0}, {113, 120, 0},
+  };
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1646,16 +1477,9 @@ TEST_F(GeometryFixture, simplify5) {
   double tol = 0.01;
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(158, 98, 0));
-  points.push_back(Point3d(158, 138, 0));
-  points.push_back(Point3d(158, 40, 0));
-  points.push_back(Point3d(158, 70, 0));
-  points.push_back(Point3d(158, 128, 0));
-  points.push_back(Point3d(158, 168, 0));
-  points.push_back(Point3d(200, 168, 0));
-  points.push_back(Point3d(200, 30, 0));
-  points.push_back(Point3d(158, 30, 0));
+  points = {
+    {158, 98, 0}, {158, 138, 0}, {158, 40, 0}, {158, 70, 0}, {158, 128, 0}, {158, 168, 0}, {200, 168, 0}, {200, 30, 0}, {158, 30, 0},
+  };
 
   std::cout << points << '\n' << '\n';
 
@@ -1671,16 +1495,9 @@ TEST_F(GeometryFixture, simplify5) {
 
   EXPECT_NEAR(*area, *area2, tol * tol);
 
-  Point3dVector expectedPoints;
-  expectedPoints.push_back(Point3d(200, 168, 0));
-  expectedPoints.push_back(Point3d(200, 30, 0));
-  expectedPoints.push_back(Point3d(158, 30, 0));
-  expectedPoints.push_back(Point3d(158, 40, 0));
-  expectedPoints.push_back(Point3d(158, 70, 0));
-  expectedPoints.push_back(Point3d(158, 98, 0));
-  expectedPoints.push_back(Point3d(158, 128, 0));
-  expectedPoints.push_back(Point3d(158, 138, 0));
-  expectedPoints.push_back(Point3d(158, 168, 0));
+  Point3dVector expectedPoints{
+    {200, 168, 0}, {200, 30, 0}, {158, 30, 0}, {158, 40, 0}, {158, 70, 0}, {158, 98, 0}, {158, 128, 0}, {158, 138, 0}, {158, 168, 0},
+  };
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1710,20 +1527,11 @@ TEST_F(GeometryFixture, simplify6) {
   double tol = 0.01;
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(3.6576, 3.048, 0));
-  points.push_back(Point3d(5.4864, 3.048, 0));
-  points.push_back(Point3d(5.4864, 5.1816, 0));
-  points.push_back(Point3d(5.4864, 11.5824, 0));
-  points.push_back(Point3d(5.4864, 5.1816, 0));
-  points.push_back(Point3d(5.4864, 11.5824, 0));
-  points.push_back(Point3d(5.4864, 17.0688, 0));
-  points.push_back(Point3d(3.6576, 17.0688, 0));
-  points.push_back(Point3d(3.6576, 14.9352, 0));
-  points.push_back(Point3d(3.6576, 11.5824, 0));
-  points.push_back(Point3d(3.6576, 7.0104, 0));
-  points.push_back(Point3d(3.6576, 11.5824, 0));
-  points.push_back(Point3d(3.6576, 7.0104, 0));
+  points = {
+    {3.6576, 3.048, 0},   {5.4864, 3.048, 0},   {5.4864, 5.1816, 0},  {5.4864, 11.5824, 0}, {5.4864, 5.1816, 0},
+    {5.4864, 11.5824, 0}, {5.4864, 17.0688, 0}, {3.6576, 17.0688, 0}, {3.6576, 14.9352, 0}, {3.6576, 11.5824, 0},
+    {3.6576, 7.0104, 0},  {3.6576, 11.5824, 0}, {3.6576, 7.0104, 0},
+  };
 
   std::cout << points << '\n' << '\n';
 
@@ -1739,16 +1547,10 @@ TEST_F(GeometryFixture, simplify6) {
 
   EXPECT_NEAR(*area, *area2, tol * tol);
 
-  Point3dVector expectedPoints;
-  expectedPoints.push_back(Point3d(5.4864, 3.048, 0));
-  expectedPoints.push_back(Point3d(5.4864, 5.1816, 0));
-  expectedPoints.push_back(Point3d(5.4864, 11.5824, 0));
-  expectedPoints.push_back(Point3d(5.4864, 17.0688, 0));
-  expectedPoints.push_back(Point3d(3.6576, 17.0688, 0));
-  expectedPoints.push_back(Point3d(3.6576, 14.9352, 0));
-  expectedPoints.push_back(Point3d(3.6576, 11.5824, 0));
-  expectedPoints.push_back(Point3d(3.6576, 7.0104, 0));
-  expectedPoints.push_back(Point3d(3.6576, 3.048, 0));
+  Point3dVector expectedPoints{
+    {5.4864, 3.048, 0},   {5.4864, 5.1816, 0},  {5.4864, 11.5824, 0}, {5.4864, 17.0688, 0}, {3.6576, 17.0688, 0},
+    {3.6576, 14.9352, 0}, {3.6576, 11.5824, 0}, {3.6576, 7.0104, 0},  {3.6576, 3.048, 0},
+  };
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1778,16 +1580,10 @@ TEST_F(GeometryFixture, simplify7) {
   double tol = 0.01;
 
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(3.6576, 3.048, 0));
-  points.push_back(Point3d(3.6576, 11.5824, 0));
-  points.push_back(Point3d(3.6576, 7.0104, 0));
-  points.push_back(Point3d(3.6576, 14.9352, 0));
-  points.push_back(Point3d(3.6576, 17.0688, 0));
-  points.push_back(Point3d(5.4864, 17.0688, 0));
-  points.push_back(Point3d(5.4864, 5.1816, 0));
-  points.push_back(Point3d(5.4864, 11.5824, 0));
-  points.push_back(Point3d(5.4864, 3.048, 0));
+  points = {
+    {3.6576, 3.048, 0},   {3.6576, 11.5824, 0}, {3.6576, 7.0104, 0},  {3.6576, 14.9352, 0}, {3.6576, 17.0688, 0},
+    {5.4864, 17.0688, 0}, {5.4864, 5.1816, 0},  {5.4864, 11.5824, 0}, {5.4864, 3.048, 0},
+  };
 
   std::cout << points << '\n' << '\n';
 
@@ -1803,16 +1599,10 @@ TEST_F(GeometryFixture, simplify7) {
 
   EXPECT_NEAR(*area, *area2, tol * tol);
 
-  Point3dVector expectedPoints;
-  expectedPoints.push_back(Point3d(5.4864, 17.0688, 0));
-  expectedPoints.push_back(Point3d(5.4864, 11.5824, 0));
-  expectedPoints.push_back(Point3d(5.4864, 5.1816, 0));
-  expectedPoints.push_back(Point3d(5.4864, 3.048, 0));
-  expectedPoints.push_back(Point3d(3.6576, 3.048, 0));
-  expectedPoints.push_back(Point3d(3.6576, 7.0104, 0));
-  expectedPoints.push_back(Point3d(3.6576, 11.5824, 0));
-  expectedPoints.push_back(Point3d(3.6576, 14.9352, 0));
-  expectedPoints.push_back(Point3d(3.6576, 17.0688, 0));
+  Point3dVector expectedPoints{
+    {5.4864, 17.0688, 0}, {5.4864, 11.5824, 0}, {5.4864, 5.1816, 0},  {5.4864, 3.048, 0},   {3.6576, 3.048, 0},
+    {3.6576, 7.0104, 0},  {3.6576, 11.5824, 0}, {3.6576, 14.9352, 0}, {3.6576, 17.0688, 0},
+  };
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1932,11 +1722,12 @@ Polygon3d GetTestPolygon() {
   testPolygon.addPoint(Point3d(30.0, 0, 0));
   testPolygon.addPoint(Point3d(10.0, 0, 0));
 
-  Point3dVector testHole;
-  testHole.push_back(Point3d(30.0, 30.0, 0));
-  testHole.push_back(Point3d(70.0, 30.0, 0));
-  testHole.push_back(Point3d(70.0, 70.0, 0));
-  testHole.push_back(Point3d(30.0, 70.0, 0));
+  Point3dVector testHole{
+    {30.0, 30.0, 0},
+    {70.0, 30.0, 0},
+    {70.0, 70.0, 0},
+    {30.0, 70.0, 0},
+  };
   testPolygon.addHole(testHole);
 
   return testPolygon;
@@ -2018,29 +1809,33 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
 
   std::vector<Point3dVector> polygons;
 
-  Point3dVector poly1;
-  poly1.push_back(Point3d(0, 70, 0));
-  poly1.push_back(Point3d(0, 90, 0));
-  poly1.push_back(Point3d(100, 90, 0));
-  poly1.push_back(Point3d(100, 70, 0));
+  Point3dVector poly1{
+    {0, 70, 0},
+    {0, 90, 0},
+    {100, 90, 0},
+    {100, 70, 0},
+  };
 
-  Point3dVector poly2;
-  poly2.push_back(Point3d(0, 10, 0));
-  poly2.push_back(Point3d(0, 30, 0));
-  poly2.push_back(Point3d(100, 30, 0));
-  poly2.push_back(Point3d(100, 10, 0));
+  Point3dVector poly2{
+    {0, 10, 0},
+    {0, 30, 0},
+    {100, 30, 0},
+    {100, 10, 0},
+  };
 
-  Point3dVector poly3;
-  poly3.push_back(Point3d(10, 0, 0));
-  poly3.push_back(Point3d(10, 100, 0));
-  poly3.push_back(Point3d(30, 100, 0));
-  poly3.push_back(Point3d(30, 0, 0));
+  Point3dVector poly3{
+    {10, 0, 0},
+    {10, 100, 0},
+    {30, 100, 0},
+    {30, 0, 0},
+  };
 
-  Point3dVector poly4;
-  poly4.push_back(Point3d(70, 0, 0));
-  poly4.push_back(Point3d(70, 100, 0));
-  poly4.push_back(Point3d(90, 100, 0));
-  poly4.push_back(Point3d(90, 0, 0));
+  Point3dVector poly4{
+    {70, 0, 0},
+    {70, 100, 0},
+    {90, 100, 0},
+    {90, 0, 0},
+  };
 
   polygons.push_back(poly1);
   polygons.push_back(poly4);
@@ -2183,54 +1978,60 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
 
   // NOTE: LINE is the line being tested to overlap and EDGE on the polygon
   // 1 - line/edge start and end points are the same
-  Point3dVector line;
-  line.push_back(Point3d(158, 98, 0));
-  line.push_back(Point3d(0, 98, 0));
+  Point3dVector line{
+    {158, 98, 0},
+    {0, 98, 0},
+  };
   Point3dVectorVector overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][0], Point3d(158, 98, 0)) < 0.1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][1], Point3d(0, 98, 0)) < 0.1);
 
   // 2 - line/edge partial overlap from the start (line.sp, edge.sp, line.ep, edge.ep)
-  line.clear();
-  line.push_back(Point3d(200, 200, 0));
-  line.push_back(Point3d(250, 200, 0));
+  line = {
+    {200, 200, 0},
+    {250, 200, 0},
+  };
   overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][0], Point3d(220, 200, 0)) < 0.1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][1], Point3d(250, 200, 0)) < 0.1);
 
   // 3 - line/edge partially overlap past the end (edge.sp, line.sp, edge.ep, line.ep)
-  line.clear();
-  line.push_back(Point3d(288, 125, 0));
-  line.push_back(Point3d(288, -25, 0));
+  line = {
+    {288, 125, 0},
+    {288, -25, 0},
+  };
   overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][0], Point3d(288, 125, 0)) < 0.1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][1], Point3d(288, 0, 0)) < 0.1);
 
   // 4 - edge is fully enclosed in line
-  line.clear();
-  line.push_back(Point3d(150, 268, 0));
-  line.push_back(Point3d(250, 268, 0));
+  line = {
+    {150, 268, 0},
+    {250, 268, 0},
+  };
   overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][0], Point3d(158, 268, 0)) < 0.1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][1], Point3d(220, 268, 0)) < 0.1);
 
   // 5 - line is fully enclosed in edge
-  line.clear();
-  line.push_back(Point3d(50, 168, 0));
-  line.push_back(Point3d(100, 168, 0));
+  line = {
+    {50, 168, 0},
+    {100, 168, 0},
+  };
   overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][0], Point3d(50, 168, 0)) < 0.1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][1], Point3d(100, 168, 0)) < 0.1);
 
   // 6 - Line overlaps two edges
-  line.clear();
-  line.push_back(Point3d(158, 25, 0));
-  line.push_back(Point3d(158, 275, 0));
+  line = {
+    {158, 25, 0},
+    {158, 275, 0},
+  };
   overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 2);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][0], Point3d(158, 70, 0)) < 0.1);
@@ -2239,25 +2040,28 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
   ASSERT_TRUE(openstudio::getDistance(overlap[1][1], Point3d(158, 268, 0)) < 0.1);
 
   // 7 - No overlap
-  line.clear();
-  line.push_back(Point3d(50, 50, 0));
-  line.push_back(Point3d(250, 50, 0));
+  line = {
+    {50, 50, 0},
+    {250, 50, 0},
+  };
   overlap = p.overlap(line);
-  ASSERT_TRUE(overlap.size() == 0);
+  ASSERT_TRUE(overlap.empty());
 
   // 8 - No overlap
-  line.clear();
-  line.push_back(Point3d(50, 50, 0));
-  line.push_back(Point3d(250, 250, 0));
+  line = {
+    {50, 50, 0},
+    {250, 250, 0},
+  };
   overlap = p.overlap(line);
-  ASSERT_TRUE(overlap.size() == 0);
+  ASSERT_TRUE(overlap.empty());
 
   // 9 - No overlap (External corner to 90 deg on external edge)
-  line.clear();
-  line.push_back(Point3d(158, 168, 0));
-  line.push_back(Point3d(220, 160, 0));
+  line = {
+    {158, 168, 0},
+    {220, 160, 0},
+  };
   overlap = p.overlap(line);
-  ASSERT_TRUE(overlap.size() == 0);
+  ASSERT_TRUE(overlap.empty());
 }
 
 // core and perimeter with the south perimeter subdivided into 4
@@ -2268,17 +2072,19 @@ TEST_F(GeometryFixture, JoinAll_2527) {
   std::vector<Point3dVector> polygons;
 
   // North
-  std::vector<Point3d> poly1;
-  poly1.push_back(Point3d(40.869, 30439.131, 0));
-  poly1.push_back(Point3d(30439.131, 30439.131, 0));
-  poly1.push_back(Point3d(25867, 25867, 0));
-  poly1.push_back(Point3d(4612, 25867, 0));
+  std::vector<Point3d> poly1{
+    {40.869, 30439.131, 0},
+    {30439.131, 30439.131, 0},
+    {25867, 25867, 0},
+    {4612, 25867, 0},
+  };
   // East
-  std::vector<Point3d> poly2;
-  poly2.push_back(Point3d(30439.131, 30439.131, 0));
-  poly2.push_back(Point3d(30439.131, 40.869, 0));
-  poly2.push_back(Point3d(25867, 4612, 0));
-  poly2.push_back(Point3d(25867, 25867, 0));
+  std::vector<Point3d> poly2{
+    {30439.131, 30439.131, 0},
+    {30439.131, 40.869, 0},
+    {25867, 4612, 0},
+    {25867, 25867, 0},
+  };
   std::vector<Point3d> poly3;
   // West
   poly3.push_back(Point3d(40.869, 40.869, 0));
@@ -2286,36 +2092,42 @@ TEST_F(GeometryFixture, JoinAll_2527) {
   poly3.push_back(Point3d(4612, 25867, 0));
   poly3.push_back(Point3d(4612, 4612, 0));
   // Core
-  std::vector<Point3d> poly4;
-  poly4.push_back(Point3d(25867, 4612, 0));
-  poly4.push_back(Point3d(4612, 4612, 0));
-  poly4.push_back(Point3d(4612, 25867, 0));
-  poly4.push_back(Point3d(25867, 25867, 0));
+  std::vector<Point3d> poly4{
+    {25867, 4612, 0},
+    {4612, 4612, 0},
+    {4612, 25867, 0},
+    {25867, 25867, 0},
+  };
   // divide the bottom poly left to right, tri, quad, quad, tri
-  std::vector<Point3d> poly5;
-  poly5.push_back(Point3d(4612, 4612, 0));
-  poly5.push_back(Point3d(4612, 40.869, 0));
-  poly5.push_back(Point3d(40.869, 40.869, 0));
-  std::vector<Point3d> poly6;
-  poly6.push_back(Point3d(4612, 4612, 0));
-  poly6.push_back(Point3d(4612, 40.869, 0));
-  poly6.push_back(Point3d(15219.565, 40.869, 0));
-  poly6.push_back(Point3d(15219.565, 4612, 0));
-  std::vector<Point3d> poly7;
-  poly7.push_back(Point3d(15219.565, 4612, 0));
-  poly7.push_back(Point3d(15219.565, 40.869, 0));
-  poly7.push_back(Point3d(25867, 40.869, 0));
-  poly7.push_back(Point3d(25867, 4612, 0));
-  std::vector<Point3d> poly8;
-  poly8.push_back(Point3d(25867, 4612, 0));
-  poly8.push_back(Point3d(30439.131, 40.869, 0));
-  poly8.push_back(Point3d(25867, 40.869, 0));
+  std::vector<Point3d> poly5{
+    {4612, 4612, 0},
+    {4612, 40.869, 0},
+    {40.869, 40.869, 0},
+  };
+  std::vector<Point3d> poly6{
+    {4612, 4612, 0},
+    {4612, 40.869, 0},
+    {15219.565, 40.869, 0},
+    {15219.565, 4612, 0},
+  };
+  std::vector<Point3d> poly7{
+    {15219.565, 4612, 0},
+    {15219.565, 40.869, 0},
+    {25867, 40.869, 0},
+    {25867, 4612, 0},
+  };
+  std::vector<Point3d> poly8{
+    {25867, 4612, 0},
+    {30439.131, 40.869, 0},
+    {25867, 40.869, 0},
+  };
 
-  std::vector<Point3d> polyx;
-  polyx.push_back(Point3d(30439.131, 40.869, 0));
-  polyx.push_back(Point3d(40.869, 40.869, 0));
-  polyx.push_back(Point3d(4612, 4612, 0));
-  polyx.push_back(Point3d(25867, 4612, 0));
+  std::vector<Point3d> polyx{
+    {30439.131, 40.869, 0},
+    {40.869, 40.869, 0},
+    {4612, 4612, 0},
+    {25867, 4612, 0},
+  };
 
   polygons.push_back(poly1);
   polygons.push_back(poly2);
@@ -2336,7 +2148,7 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 
 /// <summary>
 /// Tests the offset buffer method
-/// Noyte the two tests are taken from
+/// Note the two tests are taken from
 /// https://www.boost.org/doc/libs/1_65_0/libs/geometry/doc/html/geometry/reference/strategies/strategy_buffer_join_miter.html
 /// </summary>
 /// <param name=""></param>
@@ -2344,38 +2156,40 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 TEST_F(GeometryFixture, Offset) {
 
   // A simple rectangle, when offset should produce a polygon with four points
-  Point3dVector poly1;
-  poly1.push_back(Point3d(8, 7, 0));
-  poly1.push_back(Point3d(8, 10, 0));
-  poly1.push_back(Point3d(11, 10, 0));
-  poly1.push_back(Point3d(11, 7, 0));
+  Point3dVector poly1{{8, 7, 0}, {8, 10, 0}, {11, 10, 0}, {11, 7, 0}};
+  Point3dVector poly2{
+    {7.5, 10.5, 0.0},
+    {11.5, 10.5, 0.0},
+    {11.5, 6.5, 0.0},
+    {7.5, 6.5, 0.0},
+  };
 
   boost::optional<std::vector<Point3d>> result1 = openstudio::buffer(poly1, 0.5, 0.01);
   ASSERT_TRUE(result1);
+  Point3dVectorVector tmp{poly1, *result1};
+  LOG(Debug, tmp);
+
   ASSERT_EQ(4, result1.get().size());
-  ASSERT_EQ(7.5, result1.get()[0].x());
-  ASSERT_EQ(10.5, result1.get()[0].y());
-  ASSERT_EQ(11.5, result1.get()[1].x());
-  ASSERT_EQ(10.5, result1.get()[1].y());
-  ASSERT_EQ(11.5, result1.get()[2].x());
-  ASSERT_EQ(6.5, result1.get()[2].y());
-  ASSERT_EQ(7.5, result1.get()[3].x());
-  ASSERT_EQ(6.5, result1.get()[3].y());
+  EXPECT_TRUE(circularEqual(poly2, *result1));
 
   // Two shapes, a triangle and a rectangle. when offset will combine into 1 shape
   // with 8 vertices
-  Point3dVector poly2;
-  poly2.push_back(Point3d(5, 5, 0));
-  poly2.push_back(Point3d(7, 8, 0));
-  poly2.push_back(Point3d(9, 5, 0));
+  Point3dVector poly3{
+    {5, 5, 0},
+    {7, 8, 0},
+    {9, 5, 0},
+  };
 
   std::vector<Point3dVector> polygons;
   polygons.push_back(poly1);
-  polygons.push_back(poly2);
+  polygons.push_back(poly3);
 
   boost::optional<std::vector<Point3dVector>> result3 = openstudio::buffer(polygons, 0.5, 0.01);
   ASSERT_TRUE(result3);
   ASSERT_EQ(1, result3->size());
+  polygons.push_back(result3->begin()[0]);
+  LOG(Debug, polygons);
+
   Point3dVector resultPoly = result3.get().front();
   ASSERT_EQ(8, resultPoly.size());
   boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result3, -0.5, 0.01);
@@ -2387,59 +2201,68 @@ TEST_F(GeometryFixture, Offset) {
 // Adds 9 squares (3x3) together
 TEST_F(GeometryFixture, Offset1) {
 
-  Point3dVector poly1;
-  poly1.push_back(Point3d(0, 20, 0));
-  poly1.push_back(Point3d(0, 30, 0));
-  poly1.push_back(Point3d(10, 30, 0));
-  poly1.push_back(Point3d(10, 20, 0));
+  Point3dVector poly1{
+    {0, 20, 0},
+    {0, 30, 0},
+    {10, 30, 0},
+    {10, 20, 0},
+  };
 
-  Point3dVector poly2;
-  poly2.push_back(Point3d(10, 20, 0));
-  poly2.push_back(Point3d(10, 30, 0));
-  poly2.push_back(Point3d(20, 30, 0));
-  poly2.push_back(Point3d(20, 20, 0));
+  Point3dVector poly2{
+    {10, 20, 0},
+    {10, 30, 0},
+    {20, 30, 0},
+    {20, 20, 0},
+  };
 
-  Point3dVector poly3;
-  poly3.push_back(Point3d(20, 20, 0));
-  poly3.push_back(Point3d(20, 30, 0));
-  poly3.push_back(Point3d(30, 30, 0));
-  poly3.push_back(Point3d(30, 20, 0));
+  Point3dVector poly3{
+    {20, 20, 0},
+    {20, 30, 0},
+    {30, 30, 0},
+    {30, 20, 0},
+  };
 
-  Point3dVector poly4;
-  poly4.push_back(Point3d(0, 10, 0));
-  poly4.push_back(Point3d(0, 20, 0));
-  poly4.push_back(Point3d(10, 20, 0));
-  poly4.push_back(Point3d(10, 10, 0));
+  Point3dVector poly4{
+    {0, 10, 0},
+    {0, 20, 0},
+    {10, 20, 0},
+    {10, 10, 0},
+  };
 
-  Point3dVector poly5;
-  poly5.push_back(Point3d(10, 10, 0));
-  poly5.push_back(Point3d(10, 20, 0));
-  poly5.push_back(Point3d(20, 20, 0));
-  poly5.push_back(Point3d(20, 10, 0));
+  Point3dVector poly5{
+    {10, 10, 0},
+    {10, 20, 0},
+    {20, 20, 0},
+    {20, 10, 0},
+  };
 
-  Point3dVector poly6;
-  poly6.push_back(Point3d(20, 10, 0));
-  poly6.push_back(Point3d(20, 20, 0));
-  poly6.push_back(Point3d(30, 20, 0));
-  poly6.push_back(Point3d(30, 10, 0));
+  Point3dVector poly6{
+    {20, 10, 0},
+    {20, 20, 0},
+    {30, 20, 0},
+    {30, 10, 0},
+  };
 
-  Point3dVector poly7;
-  poly7.push_back(Point3d(0, 0, 0));
-  poly7.push_back(Point3d(0, 10, 0));
-  poly7.push_back(Point3d(10, 10, 0));
-  poly7.push_back(Point3d(10, 0, 0));
+  Point3dVector poly7{
+    {0, 0, 0},
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+  };
 
-  Point3dVector poly8;
-  poly8.push_back(Point3d(10, 0, 0));
-  poly8.push_back(Point3d(10, 10, 0));
-  poly8.push_back(Point3d(20, 10, 0));
-  poly8.push_back(Point3d(20, 0, 0));
+  Point3dVector poly8{
+    {10, 0, 0},
+    {10, 10, 0},
+    {20, 10, 0},
+    {20, 0, 0},
+  };
 
-  Point3dVector poly9;
-  poly9.push_back(Point3d(20, 0, 0));
-  poly9.push_back(Point3d(20, 10, 0));
-  poly9.push_back(Point3d(30, 10, 0));
-  poly9.push_back(Point3d(30, 0, 0));
+  Point3dVector poly9{
+    {20, 0, 0},
+    {20, 10, 0},
+    {30, 10, 0},
+    {30, 0, 0},
+  };
 
   std::vector<Point3dVector> polygons;
   polygons.push_back(poly1);
@@ -2457,11 +2280,12 @@ TEST_F(GeometryFixture, Offset1) {
   boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result1, -0.5, 0.01);
   ASSERT_EQ(1, result2->size());
 
-  std::vector<Point3d> result;
-  result.push_back(Point3d(0, 30, 0));
-  result.push_back(Point3d(30, 30, 0));
-  result.push_back(Point3d(30, 0, 0));
-  result.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> result{
+    {0, 30, 0},
+    {30, 30, 0},
+    {30, 0, 0},
+    {0, 0, 0},
+  };
   bool b1 = circularEqual(result2->front(), result);
   ASSERT_TRUE(b1);
 }
@@ -2470,39 +2294,44 @@ TEST_F(GeometryFixture, Offset1) {
 TEST_F(GeometryFixture, Offset2) {
 
   // North
-  Point3dVector poly1;
-  poly1.push_back(Point3d(0, 30, 0));
-  poly1.push_back(Point3d(30, 30, 0));
-  poly1.push_back(Point3d(20, 20, 0));
-  poly1.push_back(Point3d(10, 20, 0));
+  Point3dVector poly1{
+    {0, 30, 0},
+    {30, 30, 0},
+    {20, 20, 0},
+    {10, 20, 0},
+  };
 
   // East
-  Point3dVector poly2;
-  poly2.push_back(Point3d(30, 30, 0));
-  poly2.push_back(Point3d(30, 0, 0));
-  poly2.push_back(Point3d(20, 10, 0));
-  poly2.push_back(Point3d(20, 20, 0));
+  Point3dVector poly2{
+    {30, 30, 0},
+    {30, 0, 0},
+    {20, 10, 0},
+    {20, 20, 0},
+  };
 
   // South
-  Point3dVector poly3;
-  poly3.push_back(Point3d(30, 0, 0));
-  poly3.push_back(Point3d(0, 0, 0));
-  poly3.push_back(Point3d(10, 10, 0));
-  poly3.push_back(Point3d(20, 10, 0));
+  Point3dVector poly3{
+    {30, 0, 0},
+    {0, 0, 0},
+    {10, 10, 0},
+    {20, 10, 0},
+  };
 
   // West
-  Point3dVector poly4;
-  poly4.push_back(Point3d(0, 00, 0));
-  poly4.push_back(Point3d(0, 30, 0));
-  poly4.push_back(Point3d(10, 20, 0));
-  poly4.push_back(Point3d(10, 10, 0));
+  Point3dVector poly4{
+    {0, 00, 0},
+    {0, 30, 0},
+    {10, 20, 0},
+    {10, 10, 0},
+  };
 
   // Core
-  Point3dVector poly5;
-  poly5.push_back(Point3d(10, 10, 0));
-  poly5.push_back(Point3d(10, 20, 0));
-  poly5.push_back(Point3d(20, 20, 0));
-  poly5.push_back(Point3d(20, 10, 0));
+  Point3dVector poly5{
+    {10, 10, 0},
+    {10, 20, 0},
+    {20, 20, 0},
+    {20, 10, 0},
+  };
 
   std::vector<Point3dVector> polygons;
   polygons.push_back(poly1);
@@ -2523,11 +2352,12 @@ TEST_F(GeometryFixture, Offset2) {
   boost::optional<std::vector<Point3dVector>> result3 = openstudio::buffer(polygons, 0.5, 0.01);
   boost::optional<std::vector<Point3dVector>> result4 = openstudio::buffer(*result3, -0.5, 0.01);
 
-  Point3dVector testPolygon;
-  testPolygon.push_back(Point3d(0, 0, 0));
-  testPolygon.push_back(Point3d(0, 30, 0));
-  testPolygon.push_back(Point3d(30, 30, 0));
-  testPolygon.push_back(Point3d(30, 0, 0));
+  Point3dVector testPolygon{
+    {0, 0, 0},
+    {0, 30, 0},
+    {30, 30, 0},
+    {30, 0, 0},
+  };
 
   bool b2 = circularEqual(testPolygon, result4->front(), 0.01);
   ASSERT_TRUE(b2);
@@ -2537,16 +2367,18 @@ TEST_F(GeometryFixture, Issue_3982) {
   double tol = 0.1;
 
   // Create a rectangular surface and an overlapping triangular surface and intersect them
-  Point3dVector faceVertices;
-  faceVertices.push_back(Point3d(0, 0, 0));
-  faceVertices.push_back(Point3d(0, 10, 0));
-  faceVertices.push_back(Point3d(50, 10, 0));
-  faceVertices.push_back(Point3d(50, 0, 0));
+  Point3dVector faceVertices{
+    {0, 0, 0},
+    {0, 10, 0},
+    {50, 10, 0},
+    {50, 0, 0},
+  };
 
-  Point3dVector otherFaceVertices;
-  otherFaceVertices.push_back(Point3d(25, 0, 0));
-  otherFaceVertices.push_back(Point3d(37.50, 8, 0));
-  otherFaceVertices.push_back(Point3d(50, 0, 0));
+  Point3dVector otherFaceVertices{
+    {25, 0, 0},
+    {37.50, 8, 0},
+    {50, 0, 0},
+  };
 
   // Returns a concave surface
   boost::optional<IntersectionResult> intersection1 = openstudio::intersect(faceVertices, otherFaceVertices, tol);
@@ -2556,10 +2388,11 @@ TEST_F(GeometryFixture, Issue_3982) {
   ASSERT_EQ(6, intersection1->newPolygons1()[0].size());
   ASSERT_EQ(0, intersection1->newPolygons2().size());
 
-  otherFaceVertices.clear();
-  otherFaceVertices.push_back(Point3d(24, 1, 0));
-  otherFaceVertices.push_back(Point3d(36.50, 8, 0));
-  otherFaceVertices.push_back(Point3d(49, 1, 0));
+  otherFaceVertices = {
+    {24, 1, 0},
+    {36.50, 8, 0},
+    {49, 1, 0},
+  };
 
   // Returns a triangulated hole
   boost::optional<IntersectionResult> intersection2 = openstudio::intersect(faceVertices, otherFaceVertices, tol);

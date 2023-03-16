@@ -374,7 +374,7 @@ namespace model {
   }
 
   IddObjectType HeatPumpWaterToWaterEquationFitHeating::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Heating);
+    return {IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Heating};
   }
 
   boost::optional<double> HeatPumpWaterToWaterEquationFitHeating::referenceLoadSideFlowRate() const {

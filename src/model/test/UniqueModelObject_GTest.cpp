@@ -60,6 +60,8 @@
 #include "../OutputControlReportingTolerances_Impl.hpp"
 #include "../OutputControlTableStyle.hpp"
 #include "../OutputControlTableStyle_Impl.hpp"
+#include "../OutputControlTimestamp.hpp"
+#include "../OutputControlTimestamp_Impl.hpp"
 #include "../OutputDebuggingData.hpp"
 #include "../OutputDebuggingData_Impl.hpp"
 #include "../OutputDiagnostics.hpp"
@@ -128,14 +130,13 @@ TEST_F(ModelFixture, AirflowNetworkSimulationControl_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
-  AirflowNetworkSimulationControl airflowNetworkSimulationControl = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+  auto airflowNetworkSimulationControl = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
   // We use a comment to see if cloning to another model works
   airflowNetworkSimulationControl.setComment("Custom Object");
 
   // clone it into the same model
-  AirflowNetworkSimulationControl airflowNetworkSimulationControlClone =
-    airflowNetworkSimulationControl.clone(model).cast<AirflowNetworkSimulationControl>();
+  auto airflowNetworkSimulationControlClone = airflowNetworkSimulationControl.clone(model).cast<AirflowNetworkSimulationControl>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(airflowNetworkSimulationControl, airflowNetworkSimulationControlClone);
   EXPECT_EQ("! Custom Object", airflowNetworkSimulationControlClone.comment());
@@ -143,8 +144,7 @@ TEST_F(ModelFixture, AirflowNetworkSimulationControl_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
-  AirflowNetworkSimulationControl airflowNetworkSimulationControlClone2 =
-    airflowNetworkSimulationControl.clone(model2).cast<AirflowNetworkSimulationControl>();
+  auto airflowNetworkSimulationControlClone2 = airflowNetworkSimulationControl.clone(model2).cast<AirflowNetworkSimulationControl>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
   EXPECT_EQ("! Custom Object", airflowNetworkSimulationControlClone2.comment());
 }
@@ -161,7 +161,7 @@ TEST_F(ModelFixture, Building_UniqueModelObject_Clone) {
   building.setComment("Custom Object");
 
   // clone it into the same model
-  Building buildingClone = building.clone(model).cast<Building>();
+  auto buildingClone = building.clone(model).cast<Building>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(building, buildingClone);
   EXPECT_EQ("! Custom Object", buildingClone.comment());
@@ -169,7 +169,7 @@ TEST_F(ModelFixture, Building_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<Building>());
-  Building buildingClone2 = building.clone(model2).cast<Building>();
+  auto buildingClone2 = building.clone(model2).cast<Building>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<Building>());
   EXPECT_EQ("! Custom Object", buildingClone2.comment());
 }
@@ -180,13 +180,13 @@ TEST_F(ModelFixture, ClimateZones_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ClimateZones>());
-  ClimateZones climateZones = model.getUniqueModelObject<ClimateZones>();
+  auto climateZones = model.getUniqueModelObject<ClimateZones>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ClimateZones>());
   // We use a comment to see if cloning to another model works
   climateZones.setComment("Custom Object");
 
   // clone it into the same model
-  ClimateZones climateZonesClone = climateZones.clone(model).cast<ClimateZones>();
+  auto climateZonesClone = climateZones.clone(model).cast<ClimateZones>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(climateZones, climateZonesClone);
   EXPECT_EQ("! Custom Object", climateZonesClone.comment());
@@ -194,7 +194,7 @@ TEST_F(ModelFixture, ClimateZones_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ClimateZones>());
-  ClimateZones climateZonesClone2 = climateZones.clone(model2).cast<ClimateZones>();
+  auto climateZonesClone2 = climateZones.clone(model2).cast<ClimateZones>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<ClimateZones>());
   EXPECT_EQ("! Custom Object", climateZonesClone2.comment());
 }
@@ -205,13 +205,13 @@ TEST_F(ModelFixture, ConvergenceLimits_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ConvergenceLimits>());
-  ConvergenceLimits convergenceLimits = model.getUniqueModelObject<ConvergenceLimits>();
+  auto convergenceLimits = model.getUniqueModelObject<ConvergenceLimits>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ConvergenceLimits>());
   // We use a comment to see if cloning to another model works
   convergenceLimits.setComment("Custom Object");
 
   // clone it into the same model
-  ConvergenceLimits convergenceLimitsClone = convergenceLimits.clone(model).cast<ConvergenceLimits>();
+  auto convergenceLimitsClone = convergenceLimits.clone(model).cast<ConvergenceLimits>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(convergenceLimits, convergenceLimitsClone);
   EXPECT_EQ("! Custom Object", convergenceLimitsClone.comment());
@@ -219,7 +219,7 @@ TEST_F(ModelFixture, ConvergenceLimits_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ConvergenceLimits>());
-  ConvergenceLimits convergenceLimitsClone2 = convergenceLimits.clone(model2).cast<ConvergenceLimits>();
+  auto convergenceLimitsClone2 = convergenceLimits.clone(model2).cast<ConvergenceLimits>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<ConvergenceLimits>());
   EXPECT_EQ("! Custom Object", convergenceLimitsClone2.comment());
 }
@@ -230,13 +230,13 @@ TEST_F(ModelFixture, ExternalInterface_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ExternalInterface>());
-  ExternalInterface externalInterface = model.getUniqueModelObject<ExternalInterface>();
+  auto externalInterface = model.getUniqueModelObject<ExternalInterface>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ExternalInterface>());
   // We use a comment to see if cloning to another model works
   externalInterface.setComment("Custom Object");
 
   // clone it into the same model
-  ExternalInterface externalInterfaceClone = externalInterface.clone(model).cast<ExternalInterface>();
+  auto externalInterfaceClone = externalInterface.clone(model).cast<ExternalInterface>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(externalInterface, externalInterfaceClone);
   EXPECT_EQ("! Custom Object", externalInterfaceClone.comment());
@@ -244,7 +244,7 @@ TEST_F(ModelFixture, ExternalInterface_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ExternalInterface>());
-  ExternalInterface externalInterfaceClone2 = externalInterface.clone(model2).cast<ExternalInterface>();
+  auto externalInterfaceClone2 = externalInterface.clone(model2).cast<ExternalInterface>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<ExternalInterface>());
   EXPECT_EQ("! Custom Object", externalInterfaceClone2.comment());
 }
@@ -255,13 +255,13 @@ TEST_F(ModelFixture, Facility_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<Facility>());
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<Facility>());
   // We use a comment to see if cloning to another model works
   facility.setComment("Custom Object");
 
   // clone it into the same model
-  Facility facilityClone = facility.clone(model).cast<Facility>();
+  auto facilityClone = facility.clone(model).cast<Facility>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(facility, facilityClone);
   EXPECT_EQ("! Custom Object", facilityClone.comment());
@@ -269,7 +269,7 @@ TEST_F(ModelFixture, Facility_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<Facility>());
-  Facility facilityClone2 = facility.clone(model2).cast<Facility>();
+  auto facilityClone2 = facility.clone(model2).cast<Facility>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<Facility>());
   EXPECT_EQ("! Custom Object", facilityClone2.comment());
 }
@@ -280,13 +280,13 @@ TEST_F(ModelFixture, HeatBalanceAlgorithm_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<HeatBalanceAlgorithm>());
-  HeatBalanceAlgorithm heatBalanceAlgorithm = model.getUniqueModelObject<HeatBalanceAlgorithm>();
+  auto heatBalanceAlgorithm = model.getUniqueModelObject<HeatBalanceAlgorithm>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<HeatBalanceAlgorithm>());
   // We use a comment to see if cloning to another model works
   heatBalanceAlgorithm.setComment("Custom Object");
 
   // clone it into the same model
-  HeatBalanceAlgorithm heatBalanceAlgorithmClone = heatBalanceAlgorithm.clone(model).cast<HeatBalanceAlgorithm>();
+  auto heatBalanceAlgorithmClone = heatBalanceAlgorithm.clone(model).cast<HeatBalanceAlgorithm>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(heatBalanceAlgorithm, heatBalanceAlgorithmClone);
   EXPECT_EQ("! Custom Object", heatBalanceAlgorithmClone.comment());
@@ -294,7 +294,7 @@ TEST_F(ModelFixture, HeatBalanceAlgorithm_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<HeatBalanceAlgorithm>());
-  HeatBalanceAlgorithm heatBalanceAlgorithmClone2 = heatBalanceAlgorithm.clone(model2).cast<HeatBalanceAlgorithm>();
+  auto heatBalanceAlgorithmClone2 = heatBalanceAlgorithm.clone(model2).cast<HeatBalanceAlgorithm>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<HeatBalanceAlgorithm>());
   EXPECT_EQ("! Custom Object", heatBalanceAlgorithmClone2.comment());
 }
@@ -311,7 +311,7 @@ TEST_F(ModelFixture, LifeCycleCostParameters_UniqueModelObject_Clone) {
   lifeCycleCostParameters.setComment("Custom Object");
 
   // clone it into the same model
-  LifeCycleCostParameters lifeCycleCostParametersClone = lifeCycleCostParameters.clone(model).cast<LifeCycleCostParameters>();
+  auto lifeCycleCostParametersClone = lifeCycleCostParameters.clone(model).cast<LifeCycleCostParameters>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(lifeCycleCostParameters, lifeCycleCostParametersClone);
   EXPECT_EQ("! Custom Object", lifeCycleCostParametersClone.comment());
@@ -319,7 +319,7 @@ TEST_F(ModelFixture, LifeCycleCostParameters_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<LifeCycleCostParameters>());
-  LifeCycleCostParameters lifeCycleCostParametersClone2 = lifeCycleCostParameters.clone(model2).cast<LifeCycleCostParameters>();
+  auto lifeCycleCostParametersClone2 = lifeCycleCostParameters.clone(model2).cast<LifeCycleCostParameters>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<LifeCycleCostParameters>());
   EXPECT_EQ("! Custom Object", lifeCycleCostParametersClone2.comment());
 }
@@ -330,13 +330,13 @@ TEST_F(ModelFixture, LightingSimulationControl_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<LightingSimulationControl>());
-  LightingSimulationControl lightingSimulationControl = model.getUniqueModelObject<LightingSimulationControl>();
+  auto lightingSimulationControl = model.getUniqueModelObject<LightingSimulationControl>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<LightingSimulationControl>());
   // We use a comment to see if cloning to another model works
   lightingSimulationControl.setComment("Custom Object");
 
   // clone it into the same model
-  LightingSimulationControl lightingSimulationControlClone = lightingSimulationControl.clone(model).cast<LightingSimulationControl>();
+  auto lightingSimulationControlClone = lightingSimulationControl.clone(model).cast<LightingSimulationControl>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(lightingSimulationControl, lightingSimulationControlClone);
   EXPECT_EQ("! Custom Object", lightingSimulationControlClone.comment());
@@ -344,7 +344,7 @@ TEST_F(ModelFixture, LightingSimulationControl_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<LightingSimulationControl>());
-  LightingSimulationControl lightingSimulationControlClone2 = lightingSimulationControl.clone(model2).cast<LightingSimulationControl>();
+  auto lightingSimulationControlClone2 = lightingSimulationControl.clone(model2).cast<LightingSimulationControl>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<LightingSimulationControl>());
   EXPECT_EQ("! Custom Object", lightingSimulationControlClone2.comment());
 }
@@ -361,7 +361,7 @@ TEST_F(ModelFixture, OutputControlFiles_UniqueModelObject_Clone) {
   outputControlFiles.setComment("Custom Object");
 
   // clone it into same model
-  OutputControlFiles outputControlFilesClone = outputControlFiles.clone(model).cast<OutputControlFiles>();
+  auto outputControlFilesClone = outputControlFiles.clone(model).cast<OutputControlFiles>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputControlFiles, outputControlFilesClone);
   EXPECT_EQ("! Custom Object", outputControlFilesClone.comment());
@@ -369,7 +369,7 @@ TEST_F(ModelFixture, OutputControlFiles_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlFiles>());
-  OutputControlFiles outputControlFilesClone2 = outputControlFiles.clone(model2).cast<OutputControlFiles>();
+  auto outputControlFilesClone2 = outputControlFiles.clone(model2).cast<OutputControlFiles>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlFiles>());
   EXPECT_EQ("! Custom Object", outputControlFilesClone2.comment());
 }
@@ -380,14 +380,13 @@ TEST_F(ModelFixture, OutputControlReportingTolerances_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
-  OutputControlReportingTolerances outputControlReportingTolerances = model.getUniqueModelObject<OutputControlReportingTolerances>();
+  auto outputControlReportingTolerances = model.getUniqueModelObject<OutputControlReportingTolerances>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
   // We use a comment to see if cloning to another model works
   outputControlReportingTolerances.setComment("Custom Object");
 
   // clone it into the same model
-  OutputControlReportingTolerances outputControlReportingTolerancesClone =
-    outputControlReportingTolerances.clone(model).cast<OutputControlReportingTolerances>();
+  auto outputControlReportingTolerancesClone = outputControlReportingTolerances.clone(model).cast<OutputControlReportingTolerances>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputControlReportingTolerances, outputControlReportingTolerancesClone);
   EXPECT_EQ("! Custom Object", outputControlReportingTolerancesClone.comment());
@@ -395,8 +394,7 @@ TEST_F(ModelFixture, OutputControlReportingTolerances_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
-  OutputControlReportingTolerances outputControlReportingTolerancesClone2 =
-    outputControlReportingTolerances.clone(model2).cast<OutputControlReportingTolerances>();
+  auto outputControlReportingTolerancesClone2 = outputControlReportingTolerances.clone(model2).cast<OutputControlReportingTolerances>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
   EXPECT_EQ("! Custom Object", outputControlReportingTolerancesClone2.comment());
 }
@@ -413,7 +411,7 @@ TEST_F(ModelFixture, OutputControlTableStyle_UniqueModelObject_Clone) {
   outputControlTableStyle.setComment("Custom Object");
 
   // clone it into the same model
-  OutputControlTableStyle outputControlTableStyleClone = outputControlTableStyle.clone(model).cast<OutputControlTableStyle>();
+  auto outputControlTableStyleClone = outputControlTableStyle.clone(model).cast<OutputControlTableStyle>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputControlTableStyle, outputControlTableStyleClone);
   EXPECT_EQ("! Custom Object", outputControlTableStyleClone.comment());
@@ -421,9 +419,34 @@ TEST_F(ModelFixture, OutputControlTableStyle_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlTableStyle>());
-  OutputControlTableStyle outputControlTableStyleClone2 = outputControlTableStyle.clone(model2).cast<OutputControlTableStyle>();
+  auto outputControlTableStyleClone2 = outputControlTableStyle.clone(model2).cast<OutputControlTableStyle>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlTableStyle>());
   EXPECT_EQ("! Custom Object", outputControlTableStyleClone2.comment());
+}
+
+TEST_F(ModelFixture, OutputControlTimestamp_UniqueModelObject_Clone) {
+  // create a model to use
+  Model model;
+
+  // Get the Unique ModelObject
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputControlTimestamp>());
+  OutputControlTimestamp outputControlTimestamp = model.getUniqueModelObject<OutputControlTimestamp>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputControlTimestamp>());
+  // We use a comment to see if cloning to another model works
+  outputControlTimestamp.setComment("Custom Object");
+
+  // clone it into same model
+  auto outputControlTimestampClone = outputControlTimestamp.clone(model).cast<OutputControlTimestamp>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(outputControlTimestamp, outputControlTimestampClone);
+  EXPECT_EQ("! Custom Object", outputControlTimestampClone.comment());
+
+  // clone it into a different model
+  Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlTimestamp>());
+  auto outputControlTimestampClone2 = outputControlTimestamp.clone(model2).cast<OutputControlTimestamp>();
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlTimestamp>());
+  EXPECT_EQ("! Custom Object", outputControlTimestampClone2.comment());
 }
 
 TEST_F(ModelFixture, OutputDebuggingData_UniqueModelObject_Clone) {
@@ -432,13 +455,13 @@ TEST_F(ModelFixture, OutputDebuggingData_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputDebuggingData>());
-  OutputDebuggingData outputDebuggingData = model.getUniqueModelObject<OutputDebuggingData>();
+  auto outputDebuggingData = model.getUniqueModelObject<OutputDebuggingData>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputDebuggingData>());
   // We use a comment to see if cloning to another model works
   outputDebuggingData.setComment("Custom Object");
 
   // clone it into the same model
-  OutputDebuggingData outputDebuggingDataClone = outputDebuggingData.clone(model).cast<OutputDebuggingData>();
+  auto outputDebuggingDataClone = outputDebuggingData.clone(model).cast<OutputDebuggingData>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputDebuggingData, outputDebuggingDataClone);
   EXPECT_EQ("! Custom Object", outputDebuggingDataClone.comment());
@@ -446,7 +469,7 @@ TEST_F(ModelFixture, OutputDebuggingData_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputDebuggingData>());
-  OutputDebuggingData outputDebuggingDataClone2 = outputDebuggingData.clone(model2).cast<OutputDebuggingData>();
+  auto outputDebuggingDataClone2 = outputDebuggingData.clone(model2).cast<OutputDebuggingData>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputDebuggingData>());
   EXPECT_EQ("! Custom Object", outputDebuggingDataClone2.comment());
 }
@@ -457,13 +480,13 @@ TEST_F(ModelFixture, OutputDiagnostics_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputDiagnostics>());
-  OutputDiagnostics outputDiagnostics = model.getUniqueModelObject<OutputDiagnostics>();
+  auto outputDiagnostics = model.getUniqueModelObject<OutputDiagnostics>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputDiagnostics>());
   // We use a comment to see if cloning to another model works
   outputDiagnostics.setComment("Custom Object");
 
   // clone it into the same model
-  OutputDiagnostics outputDiagnosticsClone = outputDiagnostics.clone(model).cast<OutputDiagnostics>();
+  auto outputDiagnosticsClone = outputDiagnostics.clone(model).cast<OutputDiagnostics>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputDiagnostics, outputDiagnosticsClone);
   EXPECT_EQ("! Custom Object", outputDiagnosticsClone.comment());
@@ -471,7 +494,7 @@ TEST_F(ModelFixture, OutputDiagnostics_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputDiagnostics>());
-  OutputDiagnostics outputDiagnosticsClone2 = outputDiagnostics.clone(model2).cast<OutputDiagnostics>();
+  auto outputDiagnosticsClone2 = outputDiagnostics.clone(model2).cast<OutputDiagnostics>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputDiagnostics>());
   EXPECT_EQ("! Custom Object", outputDiagnosticsClone2.comment());
 }
@@ -482,13 +505,13 @@ TEST_F(ModelFixture, OutputEnergyManagementSystem_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputEnergyManagementSystem>());
-  OutputEnergyManagementSystem outputEnergyManagementSystem = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto outputEnergyManagementSystem = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputEnergyManagementSystem>());
   // We use a comment to see if cloning to another model works
   outputEnergyManagementSystem.setComment("Custom Object");
 
   // clone it into the same model
-  OutputEnergyManagementSystem outputEnergyManagementSystemClone = outputEnergyManagementSystem.clone(model).cast<OutputEnergyManagementSystem>();
+  auto outputEnergyManagementSystemClone = outputEnergyManagementSystem.clone(model).cast<OutputEnergyManagementSystem>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputEnergyManagementSystem, outputEnergyManagementSystemClone);
   EXPECT_EQ("! Custom Object", outputEnergyManagementSystemClone.comment());
@@ -496,7 +519,7 @@ TEST_F(ModelFixture, OutputEnergyManagementSystem_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputEnergyManagementSystem>());
-  OutputEnergyManagementSystem outputEnergyManagementSystemClone2 = outputEnergyManagementSystem.clone(model2).cast<OutputEnergyManagementSystem>();
+  auto outputEnergyManagementSystemClone2 = outputEnergyManagementSystem.clone(model2).cast<OutputEnergyManagementSystem>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputEnergyManagementSystem>());
   EXPECT_EQ("! Custom Object", outputEnergyManagementSystemClone2.comment());
 }
@@ -507,13 +530,13 @@ TEST_F(ModelFixture, OutputJSON_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputJSON>());
-  OutputJSON outputJSON = model.getUniqueModelObject<OutputJSON>();
+  auto outputJSON = model.getUniqueModelObject<OutputJSON>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputJSON>());
   // We use a comment to see if cloning to another model works
   outputJSON.setComment("Custom Object");
 
   // clone it into the same model
-  OutputJSON outputJSONClone = outputJSON.clone(model).cast<OutputJSON>();
+  auto outputJSONClone = outputJSON.clone(model).cast<OutputJSON>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputJSON, outputJSONClone);
   EXPECT_EQ("! Custom Object", outputJSONClone.comment());
@@ -521,7 +544,7 @@ TEST_F(ModelFixture, OutputJSON_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputJSON>());
-  OutputJSON outputJSONClone2 = outputJSON.clone(model2).cast<OutputJSON>();
+  auto outputJSONClone2 = outputJSON.clone(model2).cast<OutputJSON>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputJSON>());
   EXPECT_EQ("! Custom Object", outputJSONClone2.comment());
 }
@@ -538,7 +561,7 @@ TEST_F(ModelFixture, OutputSQLite_UniqueModelObject_Clone) {
   outputSQLite.setComment("Custom Object");
 
   // clone it into the same model
-  OutputSQLite outputSQLiteClone = outputSQLite.clone(model).cast<OutputSQLite>();
+  auto outputSQLiteClone = outputSQLite.clone(model).cast<OutputSQLite>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputSQLite, outputSQLiteClone);
   EXPECT_EQ("! Custom Object", outputSQLiteClone.comment());
@@ -546,7 +569,7 @@ TEST_F(ModelFixture, OutputSQLite_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputSQLite>());
-  OutputSQLite outputSQLiteClone2 = outputSQLite.clone(model2).cast<OutputSQLite>();
+  auto outputSQLiteClone2 = outputSQLite.clone(model2).cast<OutputSQLite>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputSQLite>());
   EXPECT_EQ("! Custom Object", outputSQLiteClone2.comment());
 }
@@ -563,7 +586,7 @@ TEST_F(ModelFixture, OutputSchedules_UniqueModelObject_Clone) {
   outputSchedules.setComment("Custom Object");
 
   // clone it into the same model
-  OutputSchedules outputSchedulesClone = outputSchedules.clone(model).cast<OutputSchedules>();
+  auto outputSchedulesClone = outputSchedules.clone(model).cast<OutputSchedules>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputSchedules, outputSchedulesClone);
   EXPECT_EQ("! Custom Object", outputSchedulesClone.comment());
@@ -571,7 +594,7 @@ TEST_F(ModelFixture, OutputSchedules_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputSchedules>());
-  OutputSchedules outputSchedulesClone2 = outputSchedules.clone(model2).cast<OutputSchedules>();
+  auto outputSchedulesClone2 = outputSchedules.clone(model2).cast<OutputSchedules>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputSchedules>());
   EXPECT_EQ("! Custom Object", outputSchedulesClone2.comment());
 }
@@ -588,7 +611,7 @@ TEST_F(ModelFixture, OutputConstructions_UniqueModelObject_Clone) {
   outputConstructions.setComment("Custom Object");
 
   // clone it into the same model
-  OutputConstructions outputConstructionsClone = outputConstructions.clone(model).cast<OutputConstructions>();
+  auto outputConstructionsClone = outputConstructions.clone(model).cast<OutputConstructions>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputConstructions, outputConstructionsClone);
   EXPECT_EQ("! Custom Object", outputConstructionsClone.comment());
@@ -596,7 +619,7 @@ TEST_F(ModelFixture, OutputConstructions_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputConstructions>());
-  OutputConstructions outputConstructionsClone2 = outputConstructions.clone(model2).cast<OutputConstructions>();
+  auto outputConstructionsClone2 = outputConstructions.clone(model2).cast<OutputConstructions>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputConstructions>());
   EXPECT_EQ("! Custom Object", outputConstructionsClone2.comment());
 }
@@ -613,7 +636,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_UniqueModelObject_Clone) {
   performancePrecisionTradeoffs.setComment("Custom Object");
 
   // clone it into the same model
-  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone = performancePrecisionTradeoffs.clone(model).cast<PerformancePrecisionTradeoffs>();
+  auto performancePrecisionTradeoffsClone = performancePrecisionTradeoffs.clone(model).cast<PerformancePrecisionTradeoffs>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(performancePrecisionTradeoffs, performancePrecisionTradeoffsClone);
   EXPECT_EQ("! Custom Object", performancePrecisionTradeoffsClone.comment());
@@ -621,8 +644,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>());
-  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone2 =
-    performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
+  auto performancePrecisionTradeoffsClone2 = performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>());
   EXPECT_EQ("! Custom Object", performancePrecisionTradeoffsClone2.comment());
 }
@@ -633,13 +655,13 @@ TEST_F(ModelFixture, RadianceParameters_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<RadianceParameters>());
-  RadianceParameters radianceParameters = model.getUniqueModelObject<RadianceParameters>();
+  auto radianceParameters = model.getUniqueModelObject<RadianceParameters>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<RadianceParameters>());
   // We use a comment to see if cloning to another model works
   radianceParameters.setComment("Custom Object");
 
   // clone it into the same model
-  RadianceParameters radianceParametersClone = radianceParameters.clone(model).cast<RadianceParameters>();
+  auto radianceParametersClone = radianceParameters.clone(model).cast<RadianceParameters>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(radianceParameters, radianceParametersClone);
   EXPECT_EQ("! Custom Object", radianceParametersClone.comment());
@@ -647,7 +669,7 @@ TEST_F(ModelFixture, RadianceParameters_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<RadianceParameters>());
-  RadianceParameters radianceParametersClone2 = radianceParameters.clone(model2).cast<RadianceParameters>();
+  auto radianceParametersClone2 = radianceParameters.clone(model2).cast<RadianceParameters>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<RadianceParameters>());
   EXPECT_EQ("! Custom Object", radianceParametersClone2.comment());
 }
@@ -664,7 +686,7 @@ TEST_F(ModelFixture, RunPeriod_UniqueModelObject_Clone) {
   runPeriod.setComment("Custom Object");
 
   // clone it into the same model
-  RunPeriod runPeriodClone = runPeriod.clone(model).cast<RunPeriod>();
+  auto runPeriodClone = runPeriod.clone(model).cast<RunPeriod>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(runPeriod, runPeriodClone);
   EXPECT_EQ("! Custom Object", runPeriodClone.comment());
@@ -672,7 +694,7 @@ TEST_F(ModelFixture, RunPeriod_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<RunPeriod>());
-  RunPeriod runPeriodClone2 = runPeriod.clone(model2).cast<RunPeriod>();
+  auto runPeriodClone2 = runPeriod.clone(model2).cast<RunPeriod>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<RunPeriod>());
   EXPECT_EQ("! Custom Object", runPeriodClone2.comment());
 }
@@ -683,14 +705,13 @@ TEST_F(ModelFixture, RunPeriodControlDaylightSavingTime_UniqueModelObject_Clone)
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
-  RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+  auto runPeriodControlDaylightSavingTime = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
   // We use a comment to see if cloning to another model works
   runPeriodControlDaylightSavingTime.setComment("Custom Object");
 
   // clone it into the same model
-  RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTimeClone =
-    runPeriodControlDaylightSavingTime.clone(model).cast<RunPeriodControlDaylightSavingTime>();
+  auto runPeriodControlDaylightSavingTimeClone = runPeriodControlDaylightSavingTime.clone(model).cast<RunPeriodControlDaylightSavingTime>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(runPeriodControlDaylightSavingTime, runPeriodControlDaylightSavingTimeClone);
   EXPECT_EQ("! Custom Object", runPeriodControlDaylightSavingTimeClone.comment());
@@ -698,8 +719,7 @@ TEST_F(ModelFixture, RunPeriodControlDaylightSavingTime_UniqueModelObject_Clone)
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
-  RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTimeClone2 =
-    runPeriodControlDaylightSavingTime.clone(model2).cast<RunPeriodControlDaylightSavingTime>();
+  auto runPeriodControlDaylightSavingTimeClone2 = runPeriodControlDaylightSavingTime.clone(model2).cast<RunPeriodControlDaylightSavingTime>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
   EXPECT_EQ("! Custom Object", runPeriodControlDaylightSavingTimeClone2.comment());
 }
@@ -710,13 +730,13 @@ TEST_F(ModelFixture, ShadowCalculation_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ShadowCalculation>());
-  ShadowCalculation shadowCalculation = model.getUniqueModelObject<ShadowCalculation>();
+  auto shadowCalculation = model.getUniqueModelObject<ShadowCalculation>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ShadowCalculation>());
   // We use a comment to see if cloning to another model works
   shadowCalculation.setComment("Custom Object");
 
   // clone it into the same model
-  ShadowCalculation shadowCalculationClone = shadowCalculation.clone(model).cast<ShadowCalculation>();
+  auto shadowCalculationClone = shadowCalculation.clone(model).cast<ShadowCalculation>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(shadowCalculation, shadowCalculationClone);
   EXPECT_EQ("! Custom Object", shadowCalculationClone.comment());
@@ -724,7 +744,7 @@ TEST_F(ModelFixture, ShadowCalculation_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ShadowCalculation>());
-  ShadowCalculation shadowCalculationClone2 = shadowCalculation.clone(model2).cast<ShadowCalculation>();
+  auto shadowCalculationClone2 = shadowCalculation.clone(model2).cast<ShadowCalculation>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<ShadowCalculation>());
   EXPECT_EQ("! Custom Object", shadowCalculationClone2.comment());
 }
@@ -735,13 +755,13 @@ TEST_F(ModelFixture, SimulationControl_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<SimulationControl>());
-  SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
+  auto simulationControl = model.getUniqueModelObject<SimulationControl>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SimulationControl>());
   // We use a comment to see if cloning to another model works
   simulationControl.setComment("Custom Object");
 
   // clone it into the same model
-  SimulationControl simulationControlClone = simulationControl.clone(model).cast<SimulationControl>();
+  auto simulationControlClone = simulationControl.clone(model).cast<SimulationControl>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(simulationControl, simulationControlClone);
   EXPECT_EQ("! Custom Object", simulationControlClone.comment());
@@ -749,7 +769,7 @@ TEST_F(ModelFixture, SimulationControl_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SimulationControl>());
-  SimulationControl simulationControlClone2 = simulationControl.clone(model2).cast<SimulationControl>();
+  auto simulationControlClone2 = simulationControl.clone(model2).cast<SimulationControl>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SimulationControl>());
   EXPECT_EQ("! Custom Object", simulationControlClone2.comment());
 }
@@ -785,13 +805,13 @@ TEST_F(ModelFixture, SiteGroundReflectance_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<SiteGroundReflectance>());
-  SiteGroundReflectance siteGroundReflectance = model.getUniqueModelObject<SiteGroundReflectance>();
+  auto siteGroundReflectance = model.getUniqueModelObject<SiteGroundReflectance>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteGroundReflectance>());
   // We use a comment to see if cloning to another model works
   siteGroundReflectance.setComment("Custom Object");
 
   // clone it into the same model
-  SiteGroundReflectance siteGroundReflectanceClone = siteGroundReflectance.clone(model).cast<SiteGroundReflectance>();
+  auto siteGroundReflectanceClone = siteGroundReflectance.clone(model).cast<SiteGroundReflectance>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(siteGroundReflectance, siteGroundReflectanceClone);
   EXPECT_EQ("! Custom Object", siteGroundReflectanceClone.comment());
@@ -799,7 +819,7 @@ TEST_F(ModelFixture, SiteGroundReflectance_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SiteGroundReflectance>());
-  SiteGroundReflectance siteGroundReflectanceClone2 = siteGroundReflectance.clone(model2).cast<SiteGroundReflectance>();
+  auto siteGroundReflectanceClone2 = siteGroundReflectance.clone(model2).cast<SiteGroundReflectance>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SiteGroundReflectance>());
   EXPECT_EQ("! Custom Object", siteGroundReflectanceClone2.comment());
 }
@@ -810,14 +830,13 @@ TEST_F(ModelFixture, SiteGroundTemperatureBuildingSurface_UniqueModelObject_Clon
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
-  SiteGroundTemperatureBuildingSurface siteGroundTemperatureBuildingSurface = model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
+  auto siteGroundTemperatureBuildingSurface = model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
   // We use a comment to see if cloning to another model works
   siteGroundTemperatureBuildingSurface.setComment("Custom Object");
 
   // clone it into the same model
-  SiteGroundTemperatureBuildingSurface siteGroundTemperatureBuildingSurfaceClone =
-    siteGroundTemperatureBuildingSurface.clone(model).cast<SiteGroundTemperatureBuildingSurface>();
+  auto siteGroundTemperatureBuildingSurfaceClone = siteGroundTemperatureBuildingSurface.clone(model).cast<SiteGroundTemperatureBuildingSurface>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(siteGroundTemperatureBuildingSurface, siteGroundTemperatureBuildingSurfaceClone);
   EXPECT_EQ("! Custom Object", siteGroundTemperatureBuildingSurfaceClone.comment());
@@ -825,8 +844,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureBuildingSurface_UniqueModelObject_Clon
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
-  SiteGroundTemperatureBuildingSurface siteGroundTemperatureBuildingSurfaceClone2 =
-    siteGroundTemperatureBuildingSurface.clone(model2).cast<SiteGroundTemperatureBuildingSurface>();
+  auto siteGroundTemperatureBuildingSurfaceClone2 = siteGroundTemperatureBuildingSurface.clone(model2).cast<SiteGroundTemperatureBuildingSurface>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
   EXPECT_EQ("! Custom Object", siteGroundTemperatureBuildingSurfaceClone2.comment());
 }
@@ -837,13 +855,13 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<SiteGroundTemperatureDeep>());
-  SiteGroundTemperatureDeep siteGroundTemperatureDeep = model.getUniqueModelObject<SiteGroundTemperatureDeep>();
+  auto siteGroundTemperatureDeep = model.getUniqueModelObject<SiteGroundTemperatureDeep>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteGroundTemperatureDeep>());
   // We use a comment to see if cloning to another model works
   siteGroundTemperatureDeep.setComment("Custom Object");
 
   // clone it into the same model
-  SiteGroundTemperatureDeep siteGroundTemperatureDeepClone = siteGroundTemperatureDeep.clone(model).cast<SiteGroundTemperatureDeep>();
+  auto siteGroundTemperatureDeepClone = siteGroundTemperatureDeep.clone(model).cast<SiteGroundTemperatureDeep>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(siteGroundTemperatureDeep, siteGroundTemperatureDeepClone);
   EXPECT_EQ("! Custom Object", siteGroundTemperatureDeepClone.comment());
@@ -851,7 +869,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureDeep>());
-  SiteGroundTemperatureDeep siteGroundTemperatureDeepClone2 = siteGroundTemperatureDeep.clone(model2).cast<SiteGroundTemperatureDeep>();
+  auto siteGroundTemperatureDeepClone2 = siteGroundTemperatureDeep.clone(model2).cast<SiteGroundTemperatureDeep>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureDeep>());
   EXPECT_EQ("! Custom Object", siteGroundTemperatureDeepClone2.comment());
 }
@@ -862,14 +880,13 @@ TEST_F(ModelFixture, SiteGroundTemperatureFCfactorMethod_UniqueModelObject_Clone
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
-  SiteGroundTemperatureFCfactorMethod siteGroundTemperatureFCfactorMethod = model.getUniqueModelObject<SiteGroundTemperatureFCfactorMethod>();
+  auto siteGroundTemperatureFCfactorMethod = model.getUniqueModelObject<SiteGroundTemperatureFCfactorMethod>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
   // We use a comment to see if cloning to another model works
   siteGroundTemperatureFCfactorMethod.setComment("Custom Object");
 
   // clone it into the same model
-  SiteGroundTemperatureFCfactorMethod siteGroundTemperatureFCfactorMethodClone =
-    siteGroundTemperatureFCfactorMethod.clone(model).cast<SiteGroundTemperatureFCfactorMethod>();
+  auto siteGroundTemperatureFCfactorMethodClone = siteGroundTemperatureFCfactorMethod.clone(model).cast<SiteGroundTemperatureFCfactorMethod>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(siteGroundTemperatureFCfactorMethod, siteGroundTemperatureFCfactorMethodClone);
   EXPECT_EQ("! Custom Object", siteGroundTemperatureFCfactorMethodClone.comment());
@@ -877,8 +894,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureFCfactorMethod_UniqueModelObject_Clone
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
-  SiteGroundTemperatureFCfactorMethod siteGroundTemperatureFCfactorMethodClone2 =
-    siteGroundTemperatureFCfactorMethod.clone(model2).cast<SiteGroundTemperatureFCfactorMethod>();
+  auto siteGroundTemperatureFCfactorMethodClone2 = siteGroundTemperatureFCfactorMethod.clone(model2).cast<SiteGroundTemperatureFCfactorMethod>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
   EXPECT_EQ("! Custom Object", siteGroundTemperatureFCfactorMethodClone2.comment());
 }
@@ -889,13 +905,13 @@ TEST_F(ModelFixture, SiteGroundTemperatureShallow_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<SiteGroundTemperatureShallow>());
-  SiteGroundTemperatureShallow siteGroundTemperatureShallow = model.getUniqueModelObject<SiteGroundTemperatureShallow>();
+  auto siteGroundTemperatureShallow = model.getUniqueModelObject<SiteGroundTemperatureShallow>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteGroundTemperatureShallow>());
   // We use a comment to see if cloning to another model works
   siteGroundTemperatureShallow.setComment("Custom Object");
 
   // clone it into the same model
-  SiteGroundTemperatureShallow siteGroundTemperatureShallowClone = siteGroundTemperatureShallow.clone(model).cast<SiteGroundTemperatureShallow>();
+  auto siteGroundTemperatureShallowClone = siteGroundTemperatureShallow.clone(model).cast<SiteGroundTemperatureShallow>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(siteGroundTemperatureShallow, siteGroundTemperatureShallowClone);
   EXPECT_EQ("! Custom Object", siteGroundTemperatureShallowClone.comment());
@@ -903,7 +919,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureShallow_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureShallow>());
-  SiteGroundTemperatureShallow siteGroundTemperatureShallowClone2 = siteGroundTemperatureShallow.clone(model2).cast<SiteGroundTemperatureShallow>();
+  auto siteGroundTemperatureShallowClone2 = siteGroundTemperatureShallow.clone(model2).cast<SiteGroundTemperatureShallow>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureShallow>());
   EXPECT_EQ("! Custom Object", siteGroundTemperatureShallowClone2.comment());
 }
@@ -914,13 +930,13 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
-  SiteWaterMainsTemperature siteWaterMainsTemperature = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+  auto siteWaterMainsTemperature = model.getUniqueModelObject<SiteWaterMainsTemperature>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
   // We use a comment to see if cloning to another model works
   siteWaterMainsTemperature.setComment("Custom Object");
 
   // clone it into the same model
-  SiteWaterMainsTemperature siteWaterMainsTemperatureClone = siteWaterMainsTemperature.clone(model).cast<SiteWaterMainsTemperature>();
+  auto siteWaterMainsTemperatureClone = siteWaterMainsTemperature.clone(model).cast<SiteWaterMainsTemperature>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(siteWaterMainsTemperature, siteWaterMainsTemperatureClone);
   EXPECT_EQ("! Custom Object", siteWaterMainsTemperatureClone.comment());
@@ -928,7 +944,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
-  SiteWaterMainsTemperature siteWaterMainsTemperatureClone2 = siteWaterMainsTemperature.clone(model2).cast<SiteWaterMainsTemperature>();
+  auto siteWaterMainsTemperatureClone2 = siteWaterMainsTemperature.clone(model2).cast<SiteWaterMainsTemperature>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
   EXPECT_EQ("! Custom Object", siteWaterMainsTemperatureClone2.comment());
 }
@@ -939,13 +955,13 @@ TEST_F(ModelFixture, SizingParameters_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<SizingParameters>());
-  SizingParameters sizingParameters = model.getUniqueModelObject<SizingParameters>();
+  auto sizingParameters = model.getUniqueModelObject<SizingParameters>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SizingParameters>());
   // We use a comment to see if cloning to another model works
   sizingParameters.setComment("Custom Object");
 
   // clone it into the same model
-  SizingParameters sizingParametersClone = sizingParameters.clone(model).cast<SizingParameters>();
+  auto sizingParametersClone = sizingParameters.clone(model).cast<SizingParameters>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(sizingParameters, sizingParametersClone);
   EXPECT_EQ("! Custom Object", sizingParametersClone.comment());
@@ -953,7 +969,7 @@ TEST_F(ModelFixture, SizingParameters_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SizingParameters>());
-  SizingParameters sizingParametersClone2 = sizingParameters.clone(model2).cast<SizingParameters>();
+  auto sizingParametersClone2 = sizingParameters.clone(model2).cast<SizingParameters>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SizingParameters>());
   EXPECT_EQ("! Custom Object", sizingParametersClone2.comment());
 }
@@ -964,13 +980,13 @@ TEST_F(ModelFixture, Timestep_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<Timestep>());
-  Timestep timestep = model.getUniqueModelObject<Timestep>();
+  auto timestep = model.getUniqueModelObject<Timestep>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<Timestep>());
   // We use a comment to see if cloning to another model works
   timestep.setComment("Custom Object");
 
   // clone it into the same model
-  Timestep timestepClone = timestep.clone(model).cast<Timestep>();
+  auto timestepClone = timestep.clone(model).cast<Timestep>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(timestep, timestepClone);
   EXPECT_EQ("! Custom Object", timestepClone.comment());
@@ -978,7 +994,7 @@ TEST_F(ModelFixture, Timestep_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<Timestep>());
-  Timestep timestepClone2 = timestep.clone(model2).cast<Timestep>();
+  auto timestepClone2 = timestep.clone(model2).cast<Timestep>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<Timestep>());
   EXPECT_EQ("! Custom Object", timestepClone2.comment());
 }
@@ -995,7 +1011,7 @@ TEST_F(ModelFixture, WeatherFile_UniqueModelObject_Clone) {
   weatherFile.setComment("Custom Object");
 
   // clone it into the same model
-  WeatherFile weatherFileClone = weatherFile.clone(model).cast<WeatherFile>();
+  auto weatherFileClone = weatherFile.clone(model).cast<WeatherFile>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(weatherFile, weatherFileClone);
   EXPECT_EQ("! Custom Object", weatherFileClone.comment());
@@ -1003,7 +1019,7 @@ TEST_F(ModelFixture, WeatherFile_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<WeatherFile>());
-  WeatherFile weatherFileClone2 = weatherFile.clone(model2).cast<WeatherFile>();
+  auto weatherFileClone2 = weatherFile.clone(model2).cast<WeatherFile>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<WeatherFile>());
   EXPECT_EQ("! Custom Object", weatherFileClone2.comment());
 }
@@ -1045,13 +1061,13 @@ TEST_F(ModelFixture, ZoneAirContaminantBalance_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneAirContaminantBalance>());
-  ZoneAirContaminantBalance zoneAirContaminantBalance = model.getUniqueModelObject<ZoneAirContaminantBalance>();
+  auto zoneAirContaminantBalance = model.getUniqueModelObject<ZoneAirContaminantBalance>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ZoneAirContaminantBalance>());
   // We use a comment to see if cloning to another model works
   zoneAirContaminantBalance.setComment("Custom Object");
 
   // clone it into the same model
-  ZoneAirContaminantBalance zoneAirContaminantBalanceClone = zoneAirContaminantBalance.clone(model).cast<ZoneAirContaminantBalance>();
+  auto zoneAirContaminantBalanceClone = zoneAirContaminantBalance.clone(model).cast<ZoneAirContaminantBalance>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(zoneAirContaminantBalance, zoneAirContaminantBalanceClone);
   EXPECT_EQ("! Custom Object", zoneAirContaminantBalanceClone.comment());
@@ -1059,7 +1075,7 @@ TEST_F(ModelFixture, ZoneAirContaminantBalance_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ZoneAirContaminantBalance>());
-  ZoneAirContaminantBalance zoneAirContaminantBalanceClone2 = zoneAirContaminantBalance.clone(model2).cast<ZoneAirContaminantBalance>();
+  auto zoneAirContaminantBalanceClone2 = zoneAirContaminantBalance.clone(model2).cast<ZoneAirContaminantBalance>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<ZoneAirContaminantBalance>());
   EXPECT_EQ("! Custom Object", zoneAirContaminantBalanceClone2.comment());
 }
@@ -1070,13 +1086,13 @@ TEST_F(ModelFixture, ZoneAirHeatBalanceAlgorithm_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>());
-  ZoneAirHeatBalanceAlgorithm zoneAirHeatBalanceAlgorithm = model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
+  auto zoneAirHeatBalanceAlgorithm = model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>());
   // We use a comment to see if cloning to another model works
   zoneAirHeatBalanceAlgorithm.setComment("Custom Object");
 
   // clone it into the same model
-  ZoneAirHeatBalanceAlgorithm zoneAirHeatBalanceAlgorithmClone = zoneAirHeatBalanceAlgorithm.clone(model).cast<ZoneAirHeatBalanceAlgorithm>();
+  auto zoneAirHeatBalanceAlgorithmClone = zoneAirHeatBalanceAlgorithm.clone(model).cast<ZoneAirHeatBalanceAlgorithm>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(zoneAirHeatBalanceAlgorithm, zoneAirHeatBalanceAlgorithmClone);
   EXPECT_EQ("! Custom Object", zoneAirHeatBalanceAlgorithmClone.comment());
@@ -1084,7 +1100,7 @@ TEST_F(ModelFixture, ZoneAirHeatBalanceAlgorithm_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>());
-  ZoneAirHeatBalanceAlgorithm zoneAirHeatBalanceAlgorithmClone2 = zoneAirHeatBalanceAlgorithm.clone(model2).cast<ZoneAirHeatBalanceAlgorithm>();
+  auto zoneAirHeatBalanceAlgorithmClone2 = zoneAirHeatBalanceAlgorithm.clone(model2).cast<ZoneAirHeatBalanceAlgorithm>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>());
   EXPECT_EQ("! Custom Object", zoneAirHeatBalanceAlgorithmClone2.comment());
 }
@@ -1095,13 +1111,13 @@ TEST_F(ModelFixture, ZoneAirMassFlowConservation_UniqueModelObject_Clone) {
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
-  ZoneAirMassFlowConservation zoneAirMassFlowConservation = model.getUniqueModelObject<ZoneAirMassFlowConservation>();
+  auto zoneAirMassFlowConservation = model.getUniqueModelObject<ZoneAirMassFlowConservation>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
   // We use a comment to see if cloning to another model works
   zoneAirMassFlowConservation.setComment("Custom Object");
 
   // clone it into the same model
-  ZoneAirMassFlowConservation zoneAirMassFlowConservationClone = zoneAirMassFlowConservation.clone(model).cast<ZoneAirMassFlowConservation>();
+  auto zoneAirMassFlowConservationClone = zoneAirMassFlowConservation.clone(model).cast<ZoneAirMassFlowConservation>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(zoneAirMassFlowConservation, zoneAirMassFlowConservationClone);
   EXPECT_EQ("! Custom Object", zoneAirMassFlowConservationClone.comment());
@@ -1109,7 +1125,7 @@ TEST_F(ModelFixture, ZoneAirMassFlowConservation_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
-  ZoneAirMassFlowConservation zoneAirMassFlowConservationClone2 = zoneAirMassFlowConservation.clone(model2).cast<ZoneAirMassFlowConservation>();
+  auto zoneAirMassFlowConservationClone2 = zoneAirMassFlowConservation.clone(model2).cast<ZoneAirMassFlowConservation>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
   EXPECT_EQ("! Custom Object", zoneAirMassFlowConservationClone2.comment());
 }
@@ -1120,14 +1136,13 @@ TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_UniqueModelObject_
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
-  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecial =
-    model.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
+  auto zoneCapacitanceMultiplierResearchSpecial = model.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
   // We use a comment to see if cloning to another model works
   zoneCapacitanceMultiplierResearchSpecial.setComment("Custom Object");
 
   // clone it into the same model
-  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecialClone =
+  auto zoneCapacitanceMultiplierResearchSpecialClone =
     zoneCapacitanceMultiplierResearchSpecial.clone(model).cast<ZoneCapacitanceMultiplierResearchSpecial>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(zoneCapacitanceMultiplierResearchSpecial, zoneCapacitanceMultiplierResearchSpecialClone);
@@ -1136,7 +1151,7 @@ TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_UniqueModelObject_
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
-  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecialClone2 =
+  auto zoneCapacitanceMultiplierResearchSpecialClone2 =
     zoneCapacitanceMultiplierResearchSpecial.clone(model2).cast<ZoneCapacitanceMultiplierResearchSpecial>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
   EXPECT_EQ("! Custom Object", zoneCapacitanceMultiplierResearchSpecialClone2.comment());

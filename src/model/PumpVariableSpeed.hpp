@@ -56,7 +56,12 @@ namespace model {
 
     explicit PumpVariableSpeed(const Model& model);
 
-    virtual ~PumpVariableSpeed() {}
+    virtual ~PumpVariableSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PumpVariableSpeed(const PumpVariableSpeed& other) = default;
+    PumpVariableSpeed(PumpVariableSpeed&& other) = default;
+    PumpVariableSpeed& operator=(const PumpVariableSpeed&) = default;
+    PumpVariableSpeed& operator=(PumpVariableSpeed&&) = default;
 
     //@}
 
@@ -270,7 +275,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PumpVariableSpeed_Impl ImplType;
+    using ImplType = detail::PumpVariableSpeed_Impl;
 
     friend class detail::PumpVariableSpeed_Impl;
     friend class Model;
@@ -285,10 +290,10 @@ namespace model {
   };
 
   /** \relates PumpVariableSpeed*/
-  typedef boost::optional<PumpVariableSpeed> OptionalPumpVariableSpeed;
+  using OptionalPumpVariableSpeed = boost::optional<PumpVariableSpeed>;
 
   /** \relates PumpVariableSpeed*/
-  typedef std::vector<PumpVariableSpeed> PumpVariableSpeedVector;
+  using PumpVariableSpeedVector = std::vector<PumpVariableSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

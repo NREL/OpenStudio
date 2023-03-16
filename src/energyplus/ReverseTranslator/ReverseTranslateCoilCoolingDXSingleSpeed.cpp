@@ -45,7 +45,8 @@ namespace openstudio {
 namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateCoilCoolingDXSingleSpeed(const WorkspaceObject& workspaceObject) {
-    OptionalModelObject result, temp;
+    OptionalModelObject result;
+    OptionalModelObject temp;
     OptionalSchedule schedule;
 
     //get the Schedule

@@ -44,7 +44,12 @@ namespace model {
   class MODEL_API Mixer : public HVACComponent
   {
    public:
-    virtual ~Mixer() {}
+    virtual ~Mixer() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Mixer(const Mixer& other) = default;
+    Mixer(Mixer&& other) = default;
+    Mixer& operator=(const Mixer&) = default;
+    Mixer& operator=(Mixer&&) = default;
 
     /** Returns the outlet port to the zone mixer. */
     virtual unsigned outletPort() const;
@@ -102,7 +107,7 @@ namespace model {
    protected:
     Mixer(IddObjectType type, const Model& model);
 
-    typedef detail::Mixer_Impl ImplType;
+    using ImplType = detail::Mixer_Impl;
 
     friend class Model;
 
@@ -114,7 +119,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.Mixer");
   };
 
-  typedef boost::optional<Mixer> OptionalMixer;
+  using OptionalMixer = boost::optional<Mixer>;
 
 }  // namespace model
 

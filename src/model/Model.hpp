@@ -54,6 +54,7 @@ namespace model {
   class OutputControlFiles;
   class OutputControlReportingTolerances;
   class OutputControlTableStyle;
+  class OutputControlTimestamp;
   class OutputDiagnostics;
   class OutputDebuggingData;
   class OutputJSON;
@@ -138,7 +139,12 @@ namespace model {
    *  Any unwrapped IDD types will be wrapped with GenericModelObject. */
     explicit Model(const openstudio::Workspace& workspace);
 
-    virtual ~Model() {}
+    virtual ~Model() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Model(const Model& other) = default;
+    Model(Model&& other) = default;
+    Model& operator=(const Model&) = default;
+    Model& operator=(Model&&) = default;
 
     //@}
     /** @name Getters */
@@ -169,6 +175,10 @@ namespace model {
     /** Get the OutputControlTableStyle object if there is one, this implementation uses a cached reference to the OutputControlTableStyle
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTableStyle>(). */
     boost::optional<OutputControlTableStyle> outputControlTableStyle() const;
+
+    /** Get the OutputControlTimestamp object if there is one, this implementation uses a cached reference to the OutputControlTimestamp
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTimestamp>(). */
+    boost::optional<OutputControlTimestamp> outputControlTimestamp() const;
 
     /** Get the OutputDiagnostics object if there is one, this implementation uses a cached reference to the OutputDiagnostics
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDiagnostics>(). */
@@ -339,7 +349,7 @@ namespace model {
     bool isIsLeapYearDefaulted() const;
     bool setCalendarYear(int calendarYear);
     void resetCalendarYear();
-    bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+    bool setDayofWeekforStartDay(const std::string& dayofWeekforStartDay);
     void resetDayofWeekforStartDay();
     bool setIsLeapYear(bool isLeapYear);
     void resetIsLeapYear();
@@ -416,7 +426,7 @@ namespace model {
       if (wo) {
         std::shared_ptr<typename T::ImplType> p = wo->getImpl<typename T::ImplType>();
         if (p) {
-          result = T(p);
+          result = T(std::move(p));
         }
       }
       return result;
@@ -434,12 +444,13 @@ namespace model {
    *  eg: getUniqueModelObject<YearDescription>() */
     template <typename T>
     T getUniqueModelObject() {
-      std::vector<WorkspaceObject> objects = this->allObjects();
-      std::shared_ptr<typename T::ImplType> p;
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        p = it->getImpl<typename T::ImplType>();
+      // NOTE: all UniqueModelObjects are Concrete. Call getObjectsByType to avoid returning a huge vector
+      std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
+      // std::vector<WorkspaceObject> objects = this->allObjects();
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
-          return T(p);
+          return T(std::move(p));
         }
       }
       return T(*this);  // make a new T
@@ -454,11 +465,13 @@ namespace model {
     template <typename T>
     boost::optional<T> getOptionalUniqueModelObject() const {
       boost::optional<T> result;
-      std::vector<WorkspaceObject> objects = this->allObjects();
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      // NOTE: all UniqueModelObjects are Concrete. Call getObjectsByType to avoid returning a huge vector
+      std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
+      // std::vector<WorkspaceObject> objects = this->allObjects();
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
-          result = T(p);
+          result = T(std::move(p));
           break;
         }
       }
@@ -477,10 +490,10 @@ namespace model {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->objects(sorted);
       result.reserve(objects.size());
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
-          result.push_back(T(p));
+          result.push_back(T(std::move(p)));
         }
       }
       return result;
@@ -493,10 +506,13 @@ namespace model {
     std::vector<T> getConcreteModelObjects() const {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      result.reserve(objects.size());
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
-          result.push_back(T(p));
+          // emplace_back(std::move(p)) did not work, calling a protected constructor...
+          // the std::allocator for vector can forward to free functions...
+          result.push_back(T(std::move(p)));
         }
       }
       return result;
@@ -515,10 +531,10 @@ namespace model {
       std::vector<T> result;
       result.reserve(handles.size());
       std::vector<WorkspaceObject> objects = this->getObjects(handles);
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
-          result.push_back(T(p));
+          result.push_back(T(std::move(p)));
         }
       }
       return result;
@@ -554,8 +570,9 @@ namespace model {
     std::vector<T> getModelObjectsByName(const std::string& name, bool exactMatch = true) const {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByName(name, exactMatch);
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      result.reserve(objects.size());
+      for (auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(p));
         }
@@ -570,7 +587,7 @@ namespace model {
       if (object) {
         std::shared_ptr<typename T::ImplType> p = object->getImpl<typename T::ImplType>();
         if (p) {
-          result = T(p);
+          result = T(std::move(p));
         }
       }
       return result;
@@ -580,8 +597,9 @@ namespace model {
     std::vector<T> getConcreteModelObjectsByName(const std::string& name) const {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByTypeAndName(T::iddObjectType(), name);
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      result.reserve(objects.size());
+      for (auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(p));
         }
@@ -656,7 +674,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::Model_Impl ImplType;
+    using ImplType = detail::Model_Impl;
 
     friend class openstudio::IdfObject;
     friend class ModelObject;
@@ -676,10 +694,10 @@ namespace model {
   };
 
   /** \relates Model */
-  typedef boost::optional<Model> OptionalModel;
+  using OptionalModel = boost::optional<Model>;
 
   /** \relates Model */
-  typedef std::vector<Model> ModelVector;
+  using ModelVector = std::vector<Model>;
 
   //DLM@20110614: why is this here?  seems like something for the unit tests.
 
@@ -711,6 +729,9 @@ namespace model {
 
   template <>
   MODEL_API OutputControlTableStyle Model::getUniqueModelObject<OutputControlTableStyle>();
+
+  template <>
+  MODEL_API OutputControlTimestamp Model::getUniqueModelObject<OutputControlTimestamp>();
 
   template <>
   MODEL_API OutputDiagnostics Model::getUniqueModelObject<OutputDiagnostics>();

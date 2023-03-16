@@ -187,7 +187,7 @@ class UTILITIES_API Date
   friend class DateTime;
 
   /// impl type is boost::gregorian::date
-  typedef boost::gregorian::date ImplType;
+  using ImplType = boost::gregorian::date;
   //typedef std::shared_ptr<ImplType> ImplPtr;
 
   REGISTER_LOGGER("utilities.time.Date");
@@ -211,7 +211,7 @@ class UTILITIES_API Date
   Date();
 
   /// destructor
-  ~Date() {}
+  ~Date() = default;
 
   /// from impl
   Date(const ImplType& impl);
@@ -318,10 +318,10 @@ class UTILITIES_API Date
 };
 
 /// optional Date
-typedef boost::optional<Date> OptionalDate;
+using OptionalDate = boost::optional<Date>;
 
 /// vector of Date
-typedef std::vector<Date> DateVector;
+using DateVector = std::vector<Date>;
 
 // std::ostream operator<<
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Date& date);

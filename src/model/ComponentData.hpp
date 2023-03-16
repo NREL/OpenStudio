@@ -53,7 +53,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ComponentData() {}
+    virtual ~ComponentData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ComponentData(const ComponentData& other) = default;
+    ComponentData(ComponentData&& other) = default;
+    ComponentData& operator=(const ComponentData&) = default;
+    ComponentData& operator=(ComponentData&&) = default;
 
     //@}
 
@@ -109,7 +114,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ComponentData_Impl ImplType;
+    using ImplType = detail::ComponentData_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -126,10 +131,10 @@ namespace model {
   };
 
   /** \relates ComponentData */
-  typedef boost::optional<ComponentData> OptionalComponentData;
+  using OptionalComponentData = boost::optional<ComponentData>;
 
   /** \relates ComponentData */
-  typedef std::vector<ComponentData> ComponentDataVector;
+  using ComponentDataVector = std::vector<ComponentData>;
 
 }  // namespace model
 }  // namespace openstudio

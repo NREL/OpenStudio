@@ -1,4 +1,4 @@
-!IDD_Version 22.2.0
+!IDD_Version 23.1.0
 !IDD_BUILD TBD
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
@@ -404,7 +404,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 22.2
+      \default 23.1
 
 SimulationControl,
       \unique-object
@@ -768,16 +768,29 @@ HeatBalanceSettings:ConductionFiniteDifference,
        \maximum 0.01
 
 ZoneAirHeatBalanceAlgorithm,
-       \memo Determines which algorithm will be used to solve the zone air heat balance.
+       \memo Controls the zone/space air heat balance.
        \unique-object
        \format singleLine
-       \min-fields 1
-  A1 ; \field Algorithm
+       \min-fields 2
+  A1 , \field Algorithm
+       \note Determines which algorithm will be used to solve the air heat balance
        \type choice
        \key ThirdOrderBackwardDifference
        \key AnalyticalSolution
        \key EulerMethod
        \default ThirdOrderBackwardDifference
+  A2 , \field Do Space Heat Balance for Sizing
+       \note If yes, space heat balance will be calculated and reported during sizing.
+       \type choice
+       \key No
+       \key Yes
+       \default No
+  A3 ; \field Do Space Heat Balance for Simulation
+       \note If yes, space heat balance will be calculated and reported during simulation.
+       \type choice
+       \key No
+       \key Yes
+       \default No
 
 ZoneAirContaminantBalance,
        \memo Determines which contaminant concentration will be simulates.
@@ -5104,6 +5117,36 @@ MaterialProperty:VariableThermalConductivity,
        \required-field
        \note for Temperature-Thermal Conductivity function corresponding to temperature 1
        \units W/m-K
+
+MaterialProperty:VariableAbsorptance,
+  A1 , \field Name
+       \required-field
+       \type alpha
+       \note The name of the dynamic coating material with variable thermal or solar absorptance.
+  A2 , \field Reference Material Name
+       \required-field
+       \type object-list
+       \object-list MaterialName
+       \note Regular Material Name to which the additional properties will be added.
+       \note this the material name for the basic material properties.
+  A3 , \field Control Signal
+       \type choice
+       \key SurfaceTemperature
+       \key SurfaceReceivedSolarRadiation
+       \key SpaceHeatingCoolingMode
+       \key Scheduled
+       \default SurfaceTemperature
+       \note the variable that drives the change in thermal/solar absorptance
+  A4 , \field Thermal Absorptance Function Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the control signal value and the surface thermal absorptance.
+  A5 , \field Thermal Absorptance Schedule Name
+       \note only used when Control Signal = "Scheduled"
+  A6 , \field Solar Absorptance Function Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the control signal value and the surface solar absorptance.
+  A7 ; \field Solar Absorptance Schedule Name
+       \note only used when Control Signal = "Scheduled"
 
 MaterialProperty:HeatAndMoistureTransfer:Settings,
     \memo HeatBalanceAlgorithm = CombinedHeatAndMoistureFiniteElement solution algorithm only.
@@ -41812,6 +41855,88 @@ SolarCollectorPerformance:PhotovoltaicThermal:Simple,
        \minimum> 0.00
        \maximum< 1.00
 
+SolarCollectorPerformance:PhotovoltaicThermal:BIPVT,
+        \memo Thermal performance parameters for Building-Integrated Photovoltaic-Thermal (BIPVT) solar collector.
+  A1 ,  \field Name
+        \reference FlatPlatePVTParameters
+  A2,   \field Boundary Conditions Model Name
+        \required-field
+        \type object-list
+        \object-list OSCMNames
+        \note Enter the name of a SurfaceProperty:OtherSideConditionsModel object
+  A3 ,  \field Availability Schedule Name
+        \note Availability schedule name for this collector. Schedule value > 0 means it is available.
+        \note If this field is blank, the collector is always available.
+        \type object-list
+        \object-list ScheduleNames
+  N1 ,  \field Effective Plenum Gap Thickness Behind PV Modules
+        \required-field
+        \type real
+        \units m
+        \minimum> 0.0
+  N2 ,  \field PV Cell Normal Transmittance-Absorptance Product
+        \type real
+        \default 0.957
+        \minimum> 0.0
+        \maximum< 1.00
+  N3 ,  \field Backing Material Normal Transmittance-Absorptance Product
+        \type real
+        \default 0.87
+        \minimum> 0.0
+        \maximum< 1.00
+  N4 ,  \field Cladding Normal Transmittance-Absorptance Product
+        \type real
+        \default 0.85
+        \minimum> 0.0
+        \maximum< 1.00
+  N5 ,  \field Fraction of Collector Gross Area Covered by PV Module
+        \type real
+        \default 0.85
+        \minimum> 0.0
+        \maximum< 1.00
+  N6 ,  \field Fraction of PV Cell Area to PV Module Area
+        \type real
+        \default 0.9
+        \minimum> 0.0
+        \maximum< 1.00
+  N7 ,  \field PV Module Top Thermal Resistance
+        \type real
+        \units m2-K/W
+        \default 0.0044
+        \minimum> 0.0
+  N8 ,  \field PV Module Bottom Thermal Resistance
+        \type real
+        \units m2-K/W
+        \default 0.0039
+        \minimum> 0.0
+  N9  , \field PV Module Front Longwave Emissivity
+        \type real
+        \default 0.85
+        \minimum> 0.0
+        \maximum< 1.00
+  N10 , \field PV Module Back Longwave Emissivity
+        \type real
+        \default 0.9
+        \minimum> 0.0
+        \maximum< 1.00
+  N11 , \field Glass Thickness
+        \type real
+        \default 0.002
+        \units m
+        \minimum> 0.0
+        \maximum< 0.01
+  N12 , \field Glass Refraction Index
+        \type real
+        \default 1.526
+        \minimum> 1.0
+        \maximum< 10.00
+  N13 ; \field Glass Extinction Coefficient
+        \type real
+        \default 4.0
+        \units 1/m
+        \minimum> 0.0
+        \maximum< 100.00
+
 SolarCollector:IntegralCollectorStorage,
        \memo Glazed solar collector with integral storage unit. Thermal and optical properties are
        \memo taken from the referenced SolarCollectorPerformance:IntegralCollectorStorage object.
@@ -61843,6 +61968,22 @@ OutputControl:Files,
        \key Yes
        \key No
        \default Yes
+
+OutputControl:Timestamp,
+       \memo Control timestamp format, currently applies only to JSON and native CSV (not CSV via ReadVars)
+       \unique-object
+  A1,  \field ISO 8601 Format
+       \note Use the ISO 8601 format YYYY-MM-DDThh:mm:ss
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A2;  \field Timestamp at Beginning of Interval
+       \note Determines where the timestamp is produced, either at the beginning (Yes) or end (No) of the interval
+       \type choice
+       \key Yes
+       \key No
+       \default No
 
 Output:JSON,
        \memo Output from EnergyPlus can be written to JSON format files.

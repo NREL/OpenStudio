@@ -172,14 +172,14 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "jsoncpp/1.9.5#536d080aa154e5853332339bf576747c"
     "minizip/1.2.12#0b5296887a2558500d0323c6c94c8d02" # This depends on zlib, and basically patches it
     "zlib/1.2.12#3b9e037ae1c615d045a06c67d88491ae" # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
-    "fmt/8.1.1#b3e969f8561a85087bd0365c09bbf4fb"
+    "fmt/9.1.0#811e918ca4b4e0b9ddd6d5a2883efa82"
     "sqlite3/3.38.5#010911927ce1889b5cf824f45e7cd3d2"
     "cpprestsdk/2.10.18#df2f6ac88e47cadd9c9e8e0971e00d89"
     "websocketpp/0.8.2#3fd704c4c5388d9c08b11af86f79f616"
     "geographiclib/1.52#76536a9315a003ef3511919310b2fe37"
     "swig/4.0.2#9fcccb1e39eed9acd53a4363d8129be5"
     "tinygltf/2.5.0#c8b2aca9505e86312bb42aa0e1c639ec"
-    "cli11/2.2.0#33cd38722fa134b15ae308dfb4e6c942"
+    "cli11/2.3.2#8ccdf14fb1ad53532d498c16ae580b4b"
     ${CONAN_GTEST}
     ${CONAN_BENCHMARK}
     # Override to avoid dependency mismatches

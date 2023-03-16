@@ -122,7 +122,7 @@ namespace model {
 
       modelObjectClone.resetHeatingSource();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IddObjectType> CoilWaterHeatingDesuperheater_Impl::allowableChildTypes() const {

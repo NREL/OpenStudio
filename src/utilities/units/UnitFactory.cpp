@@ -113,7 +113,7 @@ bool UnitFactorySingleton::registerUnit(CreateUnitCallback createFn, UnitSystem 
   registerEquivalentString(standardString, standardString);
 
   // register prettyString if applicable
-  if (prettyString != "") {
+  if (!prettyString.empty()) {
 
     // get prettyString from standardString
     m_prettyStringLookupMap.insert(PrettyStringLookupMap::value_type(standardString, prettyString));
@@ -154,7 +154,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
   }
 
   std::string resultCacheKey = unitString + " in unit system " + system.valueName();
-  ResultCacheMap::const_iterator findIt = m_resultCacheMap.find(resultCacheKey);
+  auto findIt = m_resultCacheMap.find(resultCacheKey);
   if (findIt != m_resultCacheMap.end()) {
     return findIt->second;
   }
@@ -190,7 +190,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
   std::pair<std::vector<std::string>, std::vector<std::string>> atomicUnits = decomposeCompoundUnitString(wUnitString);
   // loop through numerator
   std::vector<std::string>::const_iterator atomicUnitIter;
-  std::vector<std::string>::const_iterator vectorEnd = atomicUnits.first.end();
+  auto vectorEnd = atomicUnits.first.end();
   std::pair<std::string, int> atomicUnit;
   for (atomicUnitIter = atomicUnits.first.begin(); atomicUnitIter != vectorEnd; ++atomicUnitIter) {
     // decompose into baseUnit and exponent

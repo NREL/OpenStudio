@@ -36,6 +36,7 @@
 #include "OutputControlFiles.hpp"
 #include "OutputControlReportingTolerances.hpp"
 #include "OutputControlTableStyle.hpp"
+#include "OutputControlTimestamp.hpp"
 #include "OutputDiagnostics.hpp"
 #include "OutputDebuggingData.hpp"
 #include "OutputJSON.hpp"
@@ -152,7 +153,7 @@ namespace model {
       /** Swaps underlying data between this workspace and other. */
       virtual void swap(Workspace& other) override;
 
-      virtual ~Model_Impl() {}
+      virtual ~Model_Impl() = default;
 
       /** Creates ComponentWatchers for each ComponentData object. Should be called as part of
      *  construction from IdfFile or Workspace. */
@@ -194,6 +195,10 @@ namespace model {
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTableStyle>(). */
       boost::optional<OutputControlTableStyle> outputControlTableStyle() const;
 
+      /** Get the OutputControlTimestamp object if there is one, this implementation uses a cached reference to the OutputControlTimestamp
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTimestamp>(). */
+      boost::optional<OutputControlTimestamp> outputControlTimestamp() const;
+
       /** Get the OutputDiagnostics object if there is one, this implementation uses a cached reference to the OutputDiagnostics
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDiagnostics>(). */
       boost::optional<OutputDiagnostics> outputDiagnostics() const;
@@ -211,7 +216,7 @@ namespace model {
       boost::optional<OutputSQLite> outputSQLite() const;
 
       /** Get the OutputEnergyManagementSystem object if there is one, this implementation uses a cached reference to the OutputEnergyManagementSystem
-     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputEnergyManagementSystem>(). */
       boost::optional<OutputEnergyManagementSystem> outputEnergyManagementSystem() const;
 
       /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
@@ -363,7 +368,7 @@ namespace model {
       bool isIsLeapYearDefaulted() const;
       bool setCalendarYear(int calendarYear);
       void resetCalendarYear();
-      bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+      bool setDayofWeekforStartDay(const std::string& dayofWeekforStartDay);
       void resetDayofWeekforStartDay();
       bool setIsLeapYear(bool isLeapYear);
       void resetIsLeapYear();
@@ -485,6 +490,7 @@ namespace model {
       mutable boost::optional<OutputControlFiles> m_cachedOutputControlFiles;
       mutable boost::optional<OutputControlReportingTolerances> m_cachedOutputControlReportingTolerances;
       mutable boost::optional<OutputControlTableStyle> m_cachedOutputControlTableStyle;
+      mutable boost::optional<OutputControlTimestamp> m_cachedOutputControlTimestamp;
       mutable boost::optional<OutputDiagnostics> m_cachedOutputDiagnostics;
       mutable boost::optional<OutputDebuggingData> m_cachedOutputDebuggingData;
       mutable boost::optional<OutputJSON> m_cachedOutputJSON;
@@ -534,6 +540,7 @@ namespace model {
       void clearCachedOutputControlFiles(const Handle& handle);
       void clearCachedOutputControlReportingTolerances(const Handle& handle);
       void clearCachedOutputControlTableStyle(const Handle& handle);
+      void clearCachedOutputControlTimestamp(const Handle& handle);
       void clearCachedOutputDiagnostics(const Handle& handle);
       void clearCachedOutputDebuggingData(const Handle& handle);
       void clearCachedOutputJSON(const Handle& handle);
@@ -575,14 +582,14 @@ namespace model {
       void clearCachedEnvironmentalImpactFactors(const Handle& handle);
       void clearCachedExternalInterface(const Handle& handle);
 
-      typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
-        Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>
-        CopyConstructorFunction;
-      typedef std::map<IddObjectType, CopyConstructorFunction> CopyConstructorMap;
+      using CopyConstructorFunction = std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
+        Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>;
+      using CopyConstructorMap = std::map<IddObjectType, CopyConstructorFunction>;
 
-      typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl*, const IdfObject&, bool)> NewConstructorFunction;
-      typedef std::map<IddObjectType, NewConstructorFunction> NewConstructorMap;
+      using NewConstructorFunction = std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl*, const IdfObject&, bool)>;
+      using NewConstructorMap = std::map<IddObjectType, NewConstructorFunction>;
 
+      // TODO: do we really need a macro and a **static** ModelObjectCreator
       // The purpose of ModelObjectCreator is to support static initialization of two large maps.
       // One is a map from IddObjectType to a function that creates a new ModelObject instance,
       // The other is a map from IddObjectType to a function that creates a copy of an existing
