@@ -2673,11 +2673,6 @@ SELECT {} FROM ZoneSizes
     }
 
     // SQL Queries
-    boost::optional<double> ThermalZone_Impl::autosizedMaximumOutdoorAirFlowRate() const {
-      //TODO: I don't think this is available anywhere actually
-      return boost::none;
-    }
-
     boost::optional<double> ThermalZone_Impl::autosizedMinimumOutdoorAirFlowRate() const {
       // The same value is passed for both cooling and heating, so no need to check both
       return getAutosizedValueFromZoneSizes("CalcOutsideAirFlow", "Cooling");
@@ -3339,10 +3334,6 @@ SELECT {} FROM ZoneSizes
   // SQL Queries
   boost::optional<double> ThermalZone::getAutosizedValueFromZoneSizes(const std::string& columnName, const std::string& loadType) const {
     return getImpl<detail::ThermalZone_Impl>()->getAutosizedValueFromZoneSizes(columnName, loadType);
-  }
-
-  boost::optional<double> ThermalZone::autosizedMaximumOutdoorAirFlowRate() const {
-    return getImpl<detail::ThermalZone_Impl>()->autosizedMaximumOutdoorAirFlowRate();
   }
 
   boost::optional<double> ThermalZone::autosizedMinimumOutdoorAirFlowRate() const {

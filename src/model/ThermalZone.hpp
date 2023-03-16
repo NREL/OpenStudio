@@ -549,7 +549,6 @@ namespace model {
     // SQL Queries
     boost::optional<double> getAutosizedValueFromZoneSizes(const std::string& columnName, const std::string& loadType) const;
 
-    boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const;
     boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const;
     boost::optional<double> autosizedCoolingDesignAirFlowRate() const;
     boost::optional<double> autosizedHeatingDesignAirFlowRate() const;
