@@ -216,7 +216,7 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
           return model.outputControlTableStyle();
         }
 
-        boost::optional<OutputControlTimestamp> outputControlFiles(const openstudio::model::Model& model) {
+        boost::optional<OutputControlTimestamp> outputControlTimestamp(const openstudio::model::Model& model) {
           return model.outputControlTimestamp();
         }
 
