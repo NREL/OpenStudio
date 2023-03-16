@@ -51,6 +51,10 @@
 #include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 
+#include <array>
+#include <string_view>
+#include <utility>
+
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
