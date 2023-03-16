@@ -380,7 +380,7 @@ namespace model {
     }
 
     std::vector<FuelType> SwimmingPoolIndoor_Impl::coolingFuelTypes() const {
-      return {FuelType::Electricity};
+      return {};
     }
 
     std::vector<FuelType> SwimmingPoolIndoor_Impl::heatingFuelTypes() const {

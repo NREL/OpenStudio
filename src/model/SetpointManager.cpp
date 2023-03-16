@@ -184,7 +184,7 @@ namespace model {
     }
 
     std::vector<FuelType> SetpointManager_Impl::coolingFuelTypes() const {
-      return {FuelType::Electricity};
+      return {};
     }
 
     std::vector<FuelType> SetpointManager_Impl::heatingFuelTypes() const {
@@ -201,7 +201,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::SetpointManager_Impl>());
   }
 
-  SetpointManager::SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> p) : HVACComponent(std::move(p)) {}
+  SetpointManager::SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> impl) : HVACComponent(std::move(impl)) {}
 
   boost::optional<Node> SetpointManager::setpointNode() const {
     return getImpl<detail::SetpointManager_Impl>()->setpointNode();
