@@ -20,6 +20,7 @@ jobs:
           cppcheck \
             --std=c++17 \
             --enable=warning,style,information \
+            --suppress=toomanyconfigs \
             --suppress=noExplicitConstructor \
             --suppress=useStlAlgorithm \
             --suppress=unmatchedSuppression \

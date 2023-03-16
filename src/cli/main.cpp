@@ -4,6 +4,9 @@
 #include "../workflow/OSWorkflow.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
+#include "../measure/ModelMeasure.hpp"
+#include "../measure/EnergyPlusMeasure.hpp"
+#include "../measure/ReportingMeasure.hpp"
 
 #include "RunCommand.hpp"
 #include "MeasureUpdateCommand.hpp"
@@ -111,10 +114,19 @@ int main(int argc, char* argv[]) {
       ->option_text("WITHOUT_GROUPS")
       ->group(rubySpecificOptionsGroupName);  // ->delimiter(' ');
 
+    // This is a callback that's stored on the ScriptEngineInstance, triggered only the first time. Just need to make sure it doesn't go out of scope
+    // nor its captures
     std::function<void()> runSetupEmbeddedGems = [&rubyEngine, &includeDirs, &gemPathDirs, &gemHomeDir, &bundleGemFilePath, &bundleGemDirPath,
                                                   &bundleWithoutGroups]() {
       rubyEngine->setupEmbeddedGems(includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, bundleWithoutGroups);
+      rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+      rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
+      rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
+      // rubyEngine->registerType<std::string>("std::string");
+      // rubyEngine->registerType<std::string*>("std::string *");
+      rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
     };
+    rubyEngine.registerInitializationFunction(runSetupEmbeddedGems);
 
     // ========================== P Y T H O N    O P T I O N S ==========================
 
@@ -130,41 +142,44 @@ int main(int argc, char* argv[]) {
       ->option_text("DIR")
       ->group(pythonSpecificOptionsGroupName);
 
+    // This is a callback that's stored on the ScriptEngineInstance, triggered only the first time
     std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs, &pythonHomeDir]() {
       pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
+      pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+      pythonEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
+      pythonEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
+      // pythonEngine->registerType<std::string*>("std::string *");
     };
+    pythonEngine.registerInitializationFunction(runSetupPythonPath);
 
-    {
-      auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
-      openstudio::filesystem::path rubyScriptPath;
-      execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
-      std::vector<std::string> executeRubyScriptCommandArgs;
-      execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
-        ->required(false)
-        ->option_text("args");
-      execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs, &runSetupEmbeddedGems] {
-        runSetupEmbeddedGems();
-        openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, executeRubyScriptCommandArgs);
-      });
-    }
+    // {
+    auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
+    openstudio::filesystem::path rubyScriptPath;
+    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
+    std::vector<std::string> executeRubyScriptCommandArgs;
+    execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
+      ->required(false)
+      ->option_text("args");
+    execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs] {
+      openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, executeRubyScriptCommandArgs);
+    });
+    // }
 
-    {
-      auto* execute_python_scriptCommand = experimentalApp->add_subcommand("execute_python_script", "Executes a python file");
-      openstudio::filesystem::path pythonScriptPath;
-      execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true);
-      std::vector<std::string> executePythonScriptCommandArgs;
-      execute_python_scriptCommand->add_option("arguments", executePythonScriptCommandArgs, "Arguments to pass to the python file")
-        ->required(false)
-        ->option_text("args");
-      execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs, &runSetupPythonPath] {
-        runSetupPythonPath();
-        openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, executePythonScriptCommandArgs);
-      });
-    }
+    // {
+    auto* execute_python_scriptCommand = experimentalApp->add_subcommand("execute_python_script", "Executes a python file");
+    openstudio::filesystem::path pythonScriptPath;
+    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true);
+    std::vector<std::string> executePythonScriptCommandArgs;
+    execute_python_scriptCommand->add_option("arguments", executePythonScriptCommandArgs, "Arguments to pass to the python file")
+      ->required(false)
+      ->option_text("args");
+    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs] {
+      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, executePythonScriptCommandArgs);
+    });
+    // }
 
     [[maybe_unused]] auto* gem_listCommand =
-      experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio")->callback([&rubyEngine, &runSetupEmbeddedGems]() {
-        runSetupEmbeddedGems();
+      experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio")->callback([&rubyEngine]() {
         openstudio::cli::executeGemListCommand(rubyEngine);
       });
 
@@ -172,7 +187,7 @@ int main(int argc, char* argv[]) {
     // [[maybe_unused]] auto* list_commandsCommand = experimentalApp->add_subcommand("list_commands", "Lists the entire set of available commands");
 
     // run command
-    openstudio::cli::setupRunOptions(experimentalApp, rubyEngine, pythonEngine, runSetupEmbeddedGems, runSetupPythonPath);
+    openstudio::cli::setupRunOptions(experimentalApp, rubyEngine, pythonEngine);
 
     // update (model) command
     // openstudio::cli::setupUpdateCommand(experimentalApp);
@@ -191,7 +206,7 @@ int main(int argc, char* argv[]) {
       });
     }
 
-    openstudio::cli::MeasureUpdateOptions::setupMeasureUpdateOptions(experimentalApp, rubyEngine);
+    openstudio::cli::MeasureUpdateOptions::setupMeasureUpdateOptions(experimentalApp, rubyEngine, pythonEngine);
 
     // ==========================  V E R S I O N ==========================
     [[maybe_unused]] auto* openstudio_versionCommand =
@@ -217,8 +232,6 @@ int main(int argc, char* argv[]) {
 
     if (*execRubyOption) {
       //  fmt::print("--execute Flag received {} times.\n", execRubyOption->count());
-      runSetupEmbeddedGems();
-      rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
       for (auto& cmd : executeRubyCmds) {
         // fmt::print("{}\n", cmd);
         rubyEngine->exec(cmd);
@@ -226,7 +239,6 @@ int main(int argc, char* argv[]) {
     }
     if (*execPythonOption) {
       // fmt::print("--pyexecute Flag received {} times.\n", execPythonOption->count());
-      runSetupPythonPath();
       for (auto& cmd : executePythonCmds) {
         // fmt::print("{}\n", cmd);
         pythonEngine->exec(cmd);

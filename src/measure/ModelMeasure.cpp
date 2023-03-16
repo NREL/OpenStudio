@@ -49,18 +49,5 @@ namespace measure {
     return true;
   }
 
-  std::vector<OSArgument> PythonModelMeasure::arguments(const openstudio::model::Model& model) const {
-    return {};
-  }
-
-  std::vector<OSOutput> PythonModelMeasure::outputs() const {
-    return {};
-  }
-
-  bool PythonModelMeasure::run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
-    runner.prepareForMeasureRun(*this);
-    return true;
-  }
-
 }  // namespace measure
 }  // namespace openstudio

@@ -98,4 +98,12 @@
 %include <utilities/bcl/RemoteBCL.hpp>
 %include <utilities/bcl/LocalBCL.hpp>
 
+%extend openstudio::BCLXML {
+  std::string __str__() {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+};
+
 #endif // UTILITIES_BCL_LOCALBCL_I

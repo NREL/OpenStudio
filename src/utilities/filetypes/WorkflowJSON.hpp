@@ -232,6 +232,8 @@ class UTILITIES_API WorkflowJSON
   /** Gets measure steps by measure type. */
   std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType) const;
 
+  std::vector<std::pair<unsigned, MeasureStep>> getMeasureStepsWithIndex(const MeasureType& measureType) const;
+
   /** Sets measure steps of a given type. Does not change other measure steps. */
   bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
 
