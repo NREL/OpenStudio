@@ -86,49 +86,6 @@ namespace measure {
     REGISTER_LOGGER("openstudio.measure.ModelMeasure");
   };
 
-  /** PythonModelMeasure is an abstract base class for UserScripts that operate on OpenStudio Models. */
-  class MEASURE_API PythonModelMeasure : public OSMeasure
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
-
-    virtual ~PythonModelMeasure() = default;
-
-    //@}
-    /** @name Getters */
-    //@{
-
-    /** Returns the arguments for this script. In interactive applications, an OSRunner presents
-   *  these arguments to the user to produce an OSArgumentMap of user_arguments that it then passes
-   *  to this script's run method. The same basic steps should happen in applications with non-
-   *  interactive scripts, but in that case an entity other than an OSRunner may be in charge of
-   *  collecting user arguments. The base class implementation returns an empty vector. */
-    virtual std::vector<OSArgument> arguments(const openstudio::model::Model& model) const;
-
-    /** Returns the outputs for this script. The base class implementation returns an empty vector. */
-    virtual std::vector<OSOutput> outputs() const;
-
-    //@}
-    /** @name Actions */
-    //@{
-
-    /** Run the script on the given model with the given runner and user_arguments. The base class
-   *  implementation calls runner.prepareForMeasureRun(*this) and should be called at the
-   *  beginning of derived class implementations of this method. (In C++, that call looks like
-   *  PythonModelMeasure::run(model, runner, user_arguments). In Ruby that call looks like
-   *  super(model, runner, user_arguments). */
-    virtual bool run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const;
-
-    //@}
-    //
-   protected:
-    PythonModelMeasure() = default;
-
-   private:
-    REGISTER_LOGGER("openstudio.measure.ModelMeasure");
-  };
-
 }  // namespace measure
 }  // namespace openstudio
 

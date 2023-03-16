@@ -98,7 +98,7 @@ class SubProjectClassGenerator
   def hppPreClass()
     result = String.new
     if not baseClassName.empty?
-      result << "/** " << className << " is a " << baseClassName << ". */\n"
+      result << "  /** " << className << " is a " << baseClassName << ". */\n"
     end
     return result
   end
@@ -199,9 +199,9 @@ class SubProjectClassGenerator
     result = String.new
 
     if pImpl
-      result << "  using ImplType = detail::" << className << "_Impl;\n\n"
-      result << "  explicit " << className << "(std::shared_ptr<detail::" << className << "_Impl> impl);\n\n"
-      result << "  friend class detail::" << @className << "_Impl;\n"
+      result << "    using ImplType = detail::" << className << "_Impl;\n\n"
+      result << "    explicit " << className << "(std::shared_ptr<detail::" << className << "_Impl> impl);\n\n"
+      result << "    friend class detail::" << @className << "_Impl;\n"
     end
 
     return result
@@ -216,13 +216,13 @@ class SubProjectClassGenerator
     result = String.new
 
     if @pImpl
-      result << className << "::" << className << "(std::shared_ptr<detail::" << className << "_Impl> impl)\n"
+      result << "  " << className << "::" << className << "(\n"
+      result << "    std::shared_ptr<detail::" << className << "_Impl> impl)\n"
       if @baseClassName.empty?
-        result << "  : m_impl(impl)\n"
+        result << "    : m_impl(impl) {}\n"
       else
-        result << "  : " << baseClassName << "(std::move(impl))\n"
+        result << "    : " << baseClassName << "(std::move(impl)) {}\n"
       end
-      result << "{}\n"
     end
 
     return result
@@ -276,10 +276,10 @@ class SubProjectClassGenerator
 
   def hppPostClass()
     result = String.new
-    result << "/** \\relates " << className << "*/\n"
-    result << "using Optional" << className << " = boost::optional<" << className << ">;\n\n"
-    result << "/** \\relates " << className << "*/\n"
-    result << "using " << className << "Vector = std::vector<" << className << ">;\n\n"
+    result << "  /** \\relates " << className << "*/\n"
+    result << "  using Optional" << className << " = boost::optional<" << className << ">;\n\n"
+    result << "  /** \\relates " << className << "*/\n"
+    result << "  using " << className << "Vector = std::vector<" << className << ">;\n\n"
     return result
   end
 

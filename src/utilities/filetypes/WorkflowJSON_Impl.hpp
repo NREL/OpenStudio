@@ -154,6 +154,8 @@ namespace detail {
 
     std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType) const;
 
+    std::vector<std::pair<unsigned, MeasureStep>> getMeasureStepsWithIndex(const MeasureType& measureType) const;
+
     bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
 
     boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step) const;

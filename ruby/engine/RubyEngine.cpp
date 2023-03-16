@@ -87,22 +87,29 @@ void RubyEngine::exec(std::string_view sv) {
 void* RubyEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
   auto val = std::any_cast<VALUE>(obj.object);
 
-  const auto& type_name = getRegisteredTypeName(ti);
-
   void* return_value = nullptr;
 
-  auto* type = SWIG_TypeQuery(type_name.c_str());
+  // TODO: this sucks, and probably needs memory management
+  if (ti == typeid(std::string*)) {
+    char* cstr = StringValuePtr(val);
+    size_t size = RSTRING_LEN(val);  // + 1;  From trial and eror, if I had + 1 I get a string with one two many size
+    return_value = new std::string(cstr, size);
 
-  if (!type) {
-    throw std::runtime_error("Unable to find type in SWIG");
+    // std::string s = rb_string_value_cstr(&val);
+  } else {
+    const auto& type_name = getRegisteredTypeName(ti);
+    auto* type = SWIG_TypeQuery(type_name.c_str());
+
+    if (!type) {
+      throw std::runtime_error("Unable to find type in SWIG");
+    }
+
+    const auto result = SWIG_ConvertPtr(val, &return_value, type, 0);
+
+    if (!SWIG_IsOK(result)) {
+      throw std::runtime_error("Error getting object from SWIG/Ruby");
+    }
   }
-
-  const auto result = SWIG_ConvertPtr(val, &return_value, type, 0);
-
-  if (!SWIG_IsOK(result)) {
-    throw std::runtime_error("Error getting object from SWIG/Ruby");
-  }
-
   return return_value;
 }
 

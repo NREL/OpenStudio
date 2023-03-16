@@ -406,12 +406,34 @@ BCLMeasure::BCLMeasure(const openstudio::path& dir) : m_directory(openstudio::fi
   }
 
   std::vector<Attribute> measureLanguages = m_bclXML.getAttributes("Measure Language");
+  boost::optional<MeasureLanguage> measureLanguage_;
   if (measureLanguages.empty()) {
     // No-op
   } else if (measureLanguages.size() > 1) {
     LOG_AND_THROW("'" << toString(dir) << "' has multiple copies of required attribute \"Measure Language\"");
   } else if (measureLanguages[0].valueType() != AttributeValueType::String) {
     LOG_AND_THROW("'" << toString(dir) << "' has wrong type for required attribute \"Measure Language\"");
+  } else {
+    measureLanguage_ = MeasureLanguage(measureLanguages[0].valueAsString());
+  }
+
+  // Don't allow having both a ruby measure.rb and a python measure.py listed in the same XML
+  const bool hasRuby = m_bclXML.hasFile(m_directory / "measure.rb");
+  const bool hasPython = m_bclXML.hasFile(m_directory / "measure.py");
+  if (hasRuby && hasPython) {
+    LOG_AND_THROW("'" << toString(dir) << "' has both measure.rb and measure.py, and they cannot be used at the same time.");
+  } else if (hasRuby) {
+    if (measureLanguage_ && measureLanguage_.get() != MeasureLanguage::Ruby) {
+      LOG_AND_THROW("'" << toString(dir) << "' has a measure.rb; but \"Measure Language\" is not 'Ruby', it's '" << measureLanguage_->valueName()
+                        << "'.");
+    }
+  } else if (hasPython) {
+    if (measureLanguage_ && measureLanguage_.get() != MeasureLanguage::Python) {
+      LOG_AND_THROW("'" << toString(dir) << "' has a measure.py; but \"Measure Language\" is not 'Python', it's '" << measureLanguage_->valueName()
+                        << "'.");
+    }
+  } else {
+    LOG_AND_THROW("'" << toString(dir) << "' has neither measure.rb nor measure.py");
   }
 
   if (m_bclXML.xmlChecksum().empty()) {
@@ -1044,6 +1066,25 @@ bool BCLMeasure::checkForUpdatesFiles() {
     m_bclXML.addFile(file);
   }
 
+  // Don't allow having both a ruby and a python measure in the same folder
+  bool hasRuby = m_bclXML.hasFile(m_directory / "measure.rb");
+  bool hasPython = m_bclXML.hasFile(m_directory / "measure.py");
+  if (hasRuby && hasPython) {
+    LOG(Warn, "Both measure.rb and measure.py cannot be in the same measure folder. Keeping only the ruby one");
+    setMeasureLanguage(MeasureLanguage::Ruby);
+    m_bclXML.removeFile(m_directory / "measure.py");
+  } else if (hasRuby) {
+    if (measureLanguage() != MeasureLanguage::Ruby) {
+      setMeasureLanguage(MeasureLanguage::Ruby);
+    }
+  } else if (hasPython) {
+    if (measureLanguage() != MeasureLanguage::Python) {
+      setMeasureLanguage(MeasureLanguage::Python);
+    }
+  } else {
+    LOG_AND_THROW("measure at " << m_directory << " has neither measure.rb nor measure.py");
+  }
+
   // increment version if anything changed
   if (result) {
     m_bclXML.incrementVersionId();
@@ -1159,6 +1200,10 @@ boost::optional<BCLMeasure> BCLMeasure::clone(const openstudio::path& newDir) co
   }
 
   return BCLMeasure::load(newDir);
+}
+
+std::string BCLMeasure::xmlString() const {
+  return m_bclXML.toString();
 }
 
 }  // namespace openstudio

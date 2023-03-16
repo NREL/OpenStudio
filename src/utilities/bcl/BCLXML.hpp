@@ -42,6 +42,10 @@
 
 #include <vector>
 
+namespace pugi {
+class xml_document;
+}  // namespace pugi
+
 namespace openstudio {
 
 class BCLComponent;
@@ -207,10 +211,14 @@ class UTILITIES_API BCLXML
   //@{
 
   /// Save the XML back to the original path, always increments version id.
+  /// TODO: does it? it wouldn't be const if it did
   bool save() const;
 
   /// Save the XML to a new path, always increments version id.
   bool saveAs(const openstudio::path& xmlPath);
+
+  /// Returns a string representation of the XML
+  std::string toString() const;
 
   void changeUID();
 
@@ -222,6 +230,9 @@ class UTILITIES_API BCLXML
   bool checkForUpdatesXML();
 
   //@}
+ protected:
+  /** Prints BCLXML to os. \relates BCLXML */
+  UTILITIES_API friend std::ostream& operator<<(std::ostream& os, const BCLXML& bclXML);
 
  private:
   // configure logging
@@ -229,6 +240,8 @@ class UTILITIES_API BCLXML
 
   /// Compute the current xml checksum
   std::string computeXMLChecksum() const;
+
+  pugi::xml_document toXML() const;
 
   openstudio::path m_path;
   BCLXMLType m_bclXMLType;
