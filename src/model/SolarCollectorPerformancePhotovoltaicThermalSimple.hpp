@@ -54,6 +54,8 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
+    explicit SolarCollectorPerformancePhotovoltaicThermalSimple(const Model& model);
+
     virtual ~SolarCollectorPerformancePhotovoltaicThermalSimple() = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SolarCollectorPerformancePhotovoltaicThermalSimple(const SolarCollectorPerformancePhotovoltaicThermalSimple& other) = default;
@@ -108,8 +110,6 @@ namespace model {
    protected:
     /// @cond
     using ImplType = detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl;
-
-    explicit SolarCollectorPerformancePhotovoltaicThermalSimple(const Model& model);
 
     explicit SolarCollectorPerformancePhotovoltaicThermalSimple(
       std::shared_ptr<detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl> impl);

@@ -441,6 +441,7 @@ namespace model {
   class SolarCollectorIntegralCollectorStorage;
   class SolarCollectorPerformanceFlatPlate;
   class SolarCollectorPerformanceIntegralCollectorStorage;
+  class SolarCollectorPerformancePhotovoltaicThermalBIPVT;
   class SolarCollectorPerformancePhotovoltaicThermalSimple;
   class Space;
   class SpaceInfiltrationDesignFlowRate;
@@ -1427,6 +1428,9 @@ namespace energyplus {
 
     boost::optional<IdfObject>
       translateSolarCollectorPerformanceIntegralCollectorStorage(model::SolarCollectorPerformanceIntegralCollectorStorage& modelObject);
+
+    boost::optional<IdfObject>
+      translateSolarCollectorPerformancePhotovoltaicThermalBIPVT(model::SolarCollectorPerformancePhotovoltaicThermalBIPVT& modelObject);
 
     boost::optional<IdfObject>
       translateSolarCollectorPerformancePhotovoltaicThermalSimple(model::SolarCollectorPerformancePhotovoltaicThermalSimple& modelObject);

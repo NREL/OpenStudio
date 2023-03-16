@@ -37,6 +37,7 @@
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
 #include "../../model/SolarCollectorPerformancePhotovoltaicThermalSimple.hpp"
+#include "../../model/SolarCollectorPerformancePhotovoltaicThermalBIPVT.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/SolarCollector_FlatPlate_PhotovoltaicThermal_FieldEnums.hxx>

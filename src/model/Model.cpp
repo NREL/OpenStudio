@@ -4274,6 +4274,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(SolarCollectorIntegralCollectorStorage);
     REGISTER_CONSTRUCTOR(SolarCollectorPerformanceFlatPlate);
     REGISTER_CONSTRUCTOR(SolarCollectorPerformanceIntegralCollectorStorage);
+    REGISTER_CONSTRUCTOR(SolarCollectorPerformancePhotovoltaicThermalBIPVT);
     REGISTER_CONSTRUCTOR(SolarCollectorPerformancePhotovoltaicThermalSimple);
     REGISTER_CONSTRUCTOR(Space);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationDesignFlowRate);
@@ -4840,6 +4841,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SolarCollectorIntegralCollectorStorage);
     REGISTER_COPYCONSTRUCTORS(SolarCollectorPerformanceFlatPlate);
     REGISTER_COPYCONSTRUCTORS(SolarCollectorPerformanceIntegralCollectorStorage);
+    REGISTER_COPYCONSTRUCTORS(SolarCollectorPerformancePhotovoltaicThermalBIPVT);
     REGISTER_COPYCONSTRUCTORS(SolarCollectorPerformancePhotovoltaicThermalSimple);
     REGISTER_COPYCONSTRUCTORS(Space);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationDesignFlowRate);

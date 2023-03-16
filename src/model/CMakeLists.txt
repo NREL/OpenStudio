@@ -1495,6 +1495,9 @@ set(${target_name}_src
   SolarCollectorPerformanceIntegralCollectorStorage.hpp
   SolarCollectorPerformanceIntegralCollectorStorage_Impl.hpp
   SolarCollectorPerformanceIntegralCollectorStorage.cpp
+  SolarCollectorPerformancePhotovoltaicThermalBIPVT.hpp
+  SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl.hpp
+  SolarCollectorPerformancePhotovoltaicThermalBIPVT.cpp
   SolarCollectorPerformancePhotovoltaicThermalSimple.hpp
   SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp
   SolarCollectorPerformancePhotovoltaicThermalSimple.cpp
@@ -2277,6 +2280,7 @@ set(${target_name}_test_src
   test/SolarCollectorFlatPlatePhotovoltaicThermal_GTest.cpp
   test/SolarCollectorFlatPlateWater_GTest.cpp
   test/SolarCollectorIntegralCollectorStorage_GTest.cpp
+  test/SolarCollectorPerformancePhotovoltaicThermalBIPVT_GTest.cpp
   test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
   test/SpaceInfiltrationFlowCoefficient_GTest.cpp
