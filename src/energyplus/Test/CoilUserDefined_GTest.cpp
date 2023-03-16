@@ -42,6 +42,7 @@
 #include "../../model/EnergyManagementSystemActuator.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
 #include <utilities/idd/Coil_UserDefined_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -207,10 +208,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_NoPlant) {
     EXPECT_EQ("Coil User Defined 1", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
     EXPECT_TRUE(actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get() == "Air Connection 1");
   }
-  std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
-  model.save(toPath(file_path), true);
-  file_path = "c:\\Temp\\CoilUserDefined_constructor.idf";
-  workspace.save(toPath(file_path), true);
+  // model.save("CoilUserDefined_constructor.osm", true);
+  // workspace.save("CoilUserDefined_constructor.idf", true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_setters) {
@@ -227,49 +226,49 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_setters) {
   plant.addDemandBranchForComponent(coil);
 
   // make new actuators to test setters and remove the old ones
-  coil.airOutletTemperatureActuator().get().remove();
+  coil.airOutletTemperatureActuator().remove();
   EnergyManagementSystemActuator aota(coil, "Air Connection 1", "Outlet Temperature");
   aota.setName("airOutletTemperature new");
   EXPECT_TRUE(coil.setAirOutletTemperatureActuator(aota));
 
-  coil.airOutletHumidityRatioActuator().get().remove();
+  coil.airOutletHumidityRatioActuator().remove();
   EnergyManagementSystemActuator aohra(coil, "Air Connection 1", "Outlet Humidity Ratio");
   aohra.setName("airOutletHumidityRatio new");
   EXPECT_TRUE(coil.setAirOutletHumidityRatioActuator(aohra));
 
-  coil.airMassFlowRateActuator().get().remove();
+  coil.airMassFlowRateActuator().remove();
   EnergyManagementSystemActuator amfra(coil, "Air Connection 1", "Mass Flow Rate");
   amfra.setName("airMassFlowRate new");
   EXPECT_TRUE(coil.setAirMassFlowRateActuator(amfra));
 
-  coil.plantMinimumMassFlowRateActuator().get().remove();
+  coil.plantMinimumMassFlowRateActuator().remove();
   EnergyManagementSystemActuator pminmfra(coil, "Plant Connection", "Minimum Mass Flow Rate");
   pminmfra.setName("plantMinimumMassFlowRate new");
   EXPECT_TRUE(coil.setPlantMinimumMassFlowRateActuator(pminmfra));
 
-  coil.plantMaximumMassFlowRateActuator().get().remove();
+  coil.plantMaximumMassFlowRateActuator().remove();
   EnergyManagementSystemActuator pmaxmfra(coil, "Plant Connection", "Maximum Mass Flow Rate");
   pmaxmfra.setName("plantMaximumMassFlowRate new");
   EXPECT_TRUE(coil.setPlantMaximumMassFlowRateActuator(pmaxmfra));
 
-  coil.plantDesignVolumeFlowRateActuator().get().remove();
+  coil.plantDesignVolumeFlowRateActuator().remove();
   EnergyManagementSystemActuator pdvfra(coil, "Plant Connection", "Design Volume Flow Rate");
   pdvfra.setName("plantDesignVolumeFlowRate new");
   EXPECT_TRUE(coil.setPlantDesignVolumeFlowRateActuator(pdvfra));
 
-  coil.plantMassFlowRateActuator().get().remove();
+  coil.plantMassFlowRateActuator().remove();
   EnergyManagementSystemActuator pota(coil, "Plant Connection", "Mass Flow Rate");
   pota.setName("plantMassFlowRate new");
   EXPECT_TRUE(coil.setPlantMassFlowRateActuator(pota));
 
-  coil.plantOutletTemperatureActuator().get().remove();
+  coil.plantOutletTemperatureActuator().remove();
   EnergyManagementSystemActuator pmmfra(coil, "Plant Connection", "Outlet Temperature");
   pmmfra.setName("plantOutletTemperature new");
   EXPECT_TRUE(coil.setPlantOutletTemperatureActuator(pmmfra));
 
   //use setters for program and programmanager
-  coil.overallModelSimulationProgramCallingManager().get().remove();
-  coil.overallSimulationProgram().get().remove();
+  coil.overallModelSimulationProgramCallingManager().remove();
+  coil.overallSimulationProgram().remove();
   EnergyManagementSystemProgram overAll(model);
   overAll.setName("overAllNew");
   EnergyManagementSystemProgramCallingManager overAllmgr(model);
@@ -278,8 +277,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_setters) {
   EXPECT_TRUE(coil.setOverallModelSimulationProgramCallingManager(overAllmgr));
   EXPECT_TRUE(coil.setOverallSimulationProgram(overAll));
 
-  coil.modelSetupandSizingProgramCallingManager().get().remove();
-  coil.initializationSimulationProgram().get().remove();
+  coil.modelSetupandSizingProgramCallingManager().remove();
+  coil.initializationSimulationProgram().remove();
   EnergyManagementSystemProgram init(model);
   init.setName("initNew");
   EnergyManagementSystemProgramCallingManager initmgr(model);
@@ -327,8 +326,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_setters) {
   EXPECT_EQ("overAllmgrNew", ws_coil.getString(Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, false).get());
   EXPECT_EQ("initmgrNew", ws_coil.getString(Coil_UserDefinedFields::ModelSetupandSizingProgramCallingManagerName, false).get());
 
-  std::string file_path = "c:\\Temp\\CoilUserDefined_constructor.osm";
-  model.save(toPath(file_path), true);
-  file_path = "c:\\Temp\\CoilUserDefined_constructor.idf";
-  workspace.save(toPath(file_path), true);
+  // model.save("CoilUserDefined_constructor.osm", true);
+  // workspace.save("CoilUserDefined_constructor.idf", true);
 }
