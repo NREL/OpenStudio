@@ -38559,11 +38559,6 @@ OS:Coil:UserDefined,
        \type object-list
        \object-list ErlProgramCallingManagerNames
        \required-field
-  N1,  \field Number of Air Connections
-       \type integer
-       \minimum 1
-       \maximum 2
-       \required-field
   A5,  \field Air Connection 1 Inlet Node Name
        \type object-list
        \object-list ConnectionNames
