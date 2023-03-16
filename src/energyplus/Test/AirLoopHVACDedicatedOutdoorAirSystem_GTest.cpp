@@ -54,8 +54,12 @@
 #include "../../model/CoilCoolingWater_Impl.hpp"
 #include "../../model/CoilCoolingDXTwoSpeed.hpp"
 #include "../../model/CoilCoolingDXTwoSpeed_Impl.hpp"
+#include "../../model/CoilHeatingElectric.hpp"
+#include "../../model/CoilHeatingElectric_Impl.hpp"
 #include "../../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "../../model/SetpointManagerOutdoorAirReset.hpp"
+#include "../../model/SetpointManagerOutdoorAirReset_Impl.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
@@ -79,7 +83,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
 
   AirLoopHVAC airLoop(m);
   airLoop.setName("Air Loop 1");
-
   ControllerOutdoorAir controller1(m);
   AirLoopHVACOutdoorAirSystem oaSystem1(m, controller1);
   oaSystem1.setName("Outdoor Air System 1");
@@ -218,6 +221,49 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
     EXPECT_EQ("Controller:WaterCoil", w_eg.getString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType).get());
     EXPECT_TRUE(w_eg.getString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName));
   }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem_DeleteOAS) {
+  // Test for #4539 - Delete OutdoorAirSystem when deleting AirLoopHVAC:DedicatedOutdoorAirSystem
+
+  Model m;
+
+  AirLoopHVAC airLoop(m);
+  airLoop.setName("Air Loop 1");
+  ControllerOutdoorAir controller1(m);
+  AirLoopHVACOutdoorAirSystem oaSystem1(m, controller1);
+  oaSystem1.setName("Outdoor Air System 1");
+  CoilHeatingElectric coil1(m);
+  coil1.addToNode(oaSystem1.outboardOANode().get());
+
+  ControllerOutdoorAir controller2(m);
+  AirLoopHVACOutdoorAirSystem oaSystem2(m, controller2);
+  oaSystem2.setName("Outdoor Air System 2");
+  CoilHeatingElectric coil2(m);
+  coil2.addToNode(oaSystem2.outboardOANode().get());
+
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem1);
+  doaSystem.setName("Dedicated Outdoor Air System 1");
+  doaSystem.addAirLoop(airLoop);
+
+  SetpointManagerOutdoorAirReset spm1(m);
+  SetpointManagerOutdoorAirReset spm2(m);
+  spm1.addToNode(coil1.outletModelObject()->optionalCast<Node>().get());
+  spm1.addToNode(coil2.outletModelObject()->optionalCast<Node>().get());
+
+  // delete doaSystem and make sure oaSystem2 is deleted (oaSystem1 remains)
+  doaSystem.remove();
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  // assert there is only one setpoint manager left in the model
+  WorkspaceObjectVector idfSTPTs(w.getObjectsByType(IddObjectType::SetpointManager_OutdoorAirReset));
+  ASSERT_EQ(1u, idfSTPTs.size());
+
+  // assert there are no DOAS left
+  WorkspaceObjectVector idfDOASs(w.getObjectsByType(IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem));
+  ASSERT_EQ(0u, idfDOASs.size());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem_CoilCoolingDXTwoSpeed) {
