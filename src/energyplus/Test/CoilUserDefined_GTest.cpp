@@ -300,24 +300,32 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilUserDefined_setters) {
   WorkspaceObjectVector actuators = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
   EXPECT_EQ(8u, actuators.size());
 
-  // loop thru the newly set actuators and expect names to be the new ones
-  std::string act_name = "";
-  std::string str1 = "airOutletTemperature_new";
-  std::string str2 = "airOutletHumidityRatio_new";
-  std::string str3 = "airMassFlowRate_new";
-  std::string str4 = "plantMinimumMassFlowRate_new";
-  std::string str5 = "plantMaximumMassFlowRate_new";
-  std::string str6 = "plantDesignVolumeFlowRate_new";
-  std::string str7 = "plantMassFlowRate_new";
-  std::string str8 = "plantOutletTemperature_new";
+  constexpr std::array<std::pair<std::string_view, std::string_view>, 8> expectedValues{{
+    {"airOutletTemperature_new", "Air Connection 1"},
+    {"airOutletHumidityRatio_new", "Air Connection 1"},
+    {"airMassFlowRate_new", "Air Connection 1"},
+    {"plantMinimumMassFlowRate_new", "Plant Connection"},
+    {"plantMaximumMassFlowRate_new", "Plant Connection"},
+    {"plantDesignVolumeFlowRate_new", "Plant Connection"},
+    {"plantMassFlowRate_new", "Plant Connection"},
+    {"plantOutletTemperature_new", "Plant Connection"},
+  }};
+
+  std::vector<std::string> actuatedNames;
+  std::transform(actuators.cbegin(), actuators.cend(), std::back_inserter(actuatedNames),
+                 [](const auto& wo) { return wo.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName).get(); });
+  std::sort(actuatedNames.begin(), actuatedNames.end());
 
   for (const auto& actuator : actuators) {
     EXPECT_EQ("Coil User Defined 1", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
-    EXPECT_TRUE(actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get() == "Air Connection 1"
-                || actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get() == "Plant Connection");
-    act_name = actuator.getString(EnergyManagementSystem_ActuatorFields::Name, false).get();
-    EXPECT_TRUE(act_name == str1 || act_name == str2 || act_name == str3 || act_name == str4 || act_name == str5 || act_name == str6
-                || act_name == str7 || act_name == str8);
+
+    auto actuatorName = actuator.getString(EnergyManagementSystem_ActuatorFields::Name, false).get();
+
+    const auto* it = std::find_if(expectedValues.cbegin(), expectedValues.cend(), [&actuatorName](const auto& k) { return k.first == actuatorName; });
+    ASSERT_FALSE(it == expectedValues.end()) << actuatorName << " not found";
+
+    auto actuatedCompType = actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get();
+    EXPECT_EQ(it->second, actuatedCompType);
   }
 
   WorkspaceObjectVector idf_coil(workspace.getObjectsByType(IddObjectType::Coil_UserDefined));
