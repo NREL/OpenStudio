@@ -56,7 +56,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateCoilUserDefined(CoilUserDefined& modelObject) {
 
-    if (!modelObject.airInletModelObject()) {
+    if (modelObject.numberofAirConnections() == 0) {
       LOG(Warn, modelObject.briefDescription() << "will not be translated, cannot find air connection.");
       return boost::none;
     }
@@ -109,8 +109,7 @@ namespace energyplus {
     }
 
     // NumberofAirConnections
-    // value is 1 since its a WaterToAirComponent
-    idfObject.setInt(Coil_UserDefinedFields::NumberofAirConnections, 1);
+    idfObject.setInt(Coil_UserDefinedFields::NumberofAirConnections, modelObject.numberofAirConnections());
 
     // OverallModelSimulationProgramCallingManagerName
 
