@@ -61969,6 +61969,22 @@ OutputControl:Files,
        \key No
        \default Yes
 
+OutputControl:Timestamp,
+       \memo Control timestamp format, currently applies only to JSON and native CSV (not CSV via ReadVars)
+       \unique-object
+  A1,  \field ISO 8601 Format
+       \note Use the ISO 8601 format YYYY-MM-DDThh:mm:ss
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A2;  \field Timestamp at Beginning of Interval
+       \note Determines where the timestamp is produced, either at the beginning (Yes) or end (No) of the interval
+       \type choice
+       \key Yes
+       \key No
+       \default No
+
 Output:JSON,
        \memo Output from EnergyPlus can be written to JSON format files.
        \unique-object

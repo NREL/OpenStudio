@@ -2292,6 +2292,11 @@ namespace energyplus {
         retVal = translateOutputControlTableStyle(outputControlTableStyle);
         break;
       }
+      case openstudio::IddObjectType::OS_OutputControl_Timestamp: {
+        auto outputControlTimestamp = modelObject.cast<OutputControlTimestamp>();
+        retVal = translateOutputControlTimestamp(outputControlTimestamp);
+        break;
+      }
       case openstudio::IddObjectType::OS_Output_DebuggingData: {
         auto mo = modelObject.cast<OutputDebuggingData>();
         retVal = translateOutputDebuggingData(mo);
@@ -3339,6 +3344,7 @@ namespace energyplus {
       IddObjectType::OS_OutputControl_Files,
       IddObjectType::OS_OutputControl_ReportingTolerances,
       IddObjectType::OS_OutputControl_Table_Style,
+      IddObjectType::OS_OutputControl_Timestamp,
       IddObjectType::OS_Output_Constructions,
       IddObjectType::OS_Output_DebuggingData,
       IddObjectType::OS_Output_Diagnostics,

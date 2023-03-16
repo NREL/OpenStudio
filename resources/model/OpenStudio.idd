@@ -35778,6 +35778,25 @@ OS:OutputControl:Files,
        \key No
        \required-field
 
+OS:OutputControl:Timestamp,
+       \memo Control timestamp format, currently applies only to JSON and native CSV (not CSV via ReadVars)
+       \unique-object
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field ISO 8601 Format
+       \note Use the ISO 8601 format YYYY-MM-DDThh:mm:ss
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A3;  \field Timestamp at Beginning of Interval
+       \note Determines where the timestamp is produced, either at the beginning (Yes) or end (No) of the interval
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+
 OS:OutputControl:ReportingTolerances,
        \memo Calculations of the time that setpoints are not met use a tolerance of 0.2C.
        \memo This object allows changing the tolerance used to determine when setpoints are being met.
