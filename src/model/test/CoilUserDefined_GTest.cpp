@@ -40,6 +40,7 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACUnitarySystem.hpp"
 
 #include "../../utilities/core/Path.hpp"
 
@@ -173,6 +174,8 @@ TEST_F(ModelFixture, CoilUserDefined_addToNode) {
   {
     AirLoopHVAC airLoop(m);
 
+    EXPECT_EQ(0, coilUserDefined.numberofAirConnections());
+
     // Accepted on supply
     Node supplyOutletNode = airLoop.supplyOutletNode();
     EXPECT_FALSE(coilUserDefined.airLoopHVAC());
@@ -180,6 +183,7 @@ TEST_F(ModelFixture, CoilUserDefined_addToNode) {
     EXPECT_TRUE(coilUserDefined.addToNode(supplyOutletNode));
     EXPECT_EQ(3, airLoop.supplyComponents().size());
     ASSERT_TRUE(coilUserDefined.airLoopHVAC());
+    EXPECT_EQ(1, coilUserDefined.numberofAirConnections());
     EXPECT_EQ(airLoop, coilUserDefined.airLoopHVAC().get());
     ASSERT_TRUE(coilUserDefined.airInletModelObject());
     ASSERT_TRUE(coilUserDefined.airOutletModelObject());
@@ -205,6 +209,7 @@ TEST_F(ModelFixture, CoilUserDefined_addToNode) {
 
     // Remove
     EXPECT_TRUE(coilUserDefined.removeFromAirLoopHVAC());
+    EXPECT_EQ(0, coilUserDefined.numberofAirConnections());
     EXPECT_EQ(2, airLoop.supplyComponents().size());
     EXPECT_FALSE(coilUserDefined.airLoopHVAC());
     EXPECT_FALSE(coilUserDefined.airInletModelObject());
@@ -468,5 +473,46 @@ TEST_F(ModelFixture, CoilUserDefined_Clone) {
     EXPECT_EQ(clonedCoil, clonedCoil.plantMassFlowRateActuator().actuatedComponent().get());
     ASSERT_TRUE(clonedCoil.plantOutletTemperatureActuator().actuatedComponent());
     EXPECT_EQ(clonedCoil, clonedCoil.plantOutletTemperatureActuator().actuatedComponent().get());
+  }
+}
+
+TEST_F(ModelFixture, CoilUserDefined_containingComponent) {
+
+  Model m;
+
+  {
+    CoilUserDefined coil(m);
+    EXPECT_EQ(0, coil.numberofAirConnections());
+
+    AirLoopHVACUnitarySystem unitary(m);
+    EXPECT_TRUE(unitary.setCoolingCoil(coil));
+    EXPECT_EQ(1, coil.numberofAirConnections());
+    boost::optional<HVACComponent> _c = coil.containingHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), unitary.handle());
+  }
+
+  {
+    CoilUserDefined coil(m);
+    EXPECT_EQ(0, coil.numberofAirConnections());
+
+    AirLoopHVACUnitarySystem unitary(m);
+    EXPECT_TRUE(unitary.setHeatingCoil(coil));
+    EXPECT_EQ(1, coil.numberofAirConnections());
+    boost::optional<HVACComponent> _c = coil.containingHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), unitary.handle());
+  }
+
+  {
+    CoilUserDefined coil(m);
+    EXPECT_EQ(0, coil.numberofAirConnections());
+
+    AirLoopHVACUnitarySystem unitary(m);
+    EXPECT_TRUE(unitary.setSupplementalHeatingCoil(coil));
+    EXPECT_EQ(1, coil.numberofAirConnections());
+    boost::optional<HVACComponent> _c = coil.containingHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), unitary.handle());
   }
 }
