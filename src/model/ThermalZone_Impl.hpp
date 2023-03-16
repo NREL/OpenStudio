@@ -451,9 +451,9 @@ namespace model {
       boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const;
       boost::optional<double> autosizedCoolingDesignAirFlowRate() const;
       boost::optional<double> autosizedHeatingDesignAirFlowRate() const;
-      boost::optional<double> coolingDesignLoad() const;
-      boost::optional<double> designAirFlowRate() const;
-      boost::optional<double> heatingDesignLoad() const;
+      boost::optional<double> autosizedCoolingDesignLoad() const;
+      boost::optional<double> autosizedDesignAirFlowRate() const;
+      boost::optional<double> autosizedHeatingDesignLoad() const;
 
      protected:
      private:

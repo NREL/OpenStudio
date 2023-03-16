@@ -2686,15 +2686,15 @@ SELECT {} FROM ZoneSizes
       return getAutosizedValueFromZoneSizes("UserDesFlow", "Heating");
     }
 
-    boost::optional<double> ThermalZone_Impl::coolingDesignLoad() const {
+    boost::optional<double> ThermalZone_Impl::autosizedCoolingDesignLoad() const {
       return getAutosizedValueFromZoneSizes("UserDesLoad", "Cooling");
     }
 
-    boost::optional<double> ThermalZone_Impl::heatingDesignLoad() const {
+    boost::optional<double> ThermalZone_Impl::autosizedHeatingDesignLoad() const {
       return getAutosizedValueFromZoneSizes("UserDesLoad", "Heating");
     }
 
-    boost::optional<double> ThermalZone_Impl::designAirFlowRate() const {
+    boost::optional<double> ThermalZone_Impl::autosizedDesignAirFlowRate() const {
       auto coolingFlow_ = autosizedCoolingDesignAirFlowRate();
       auto heatingFlow_ = autosizedHeatingDesignAirFlowRate();
       if (coolingFlow_ && heatingFlow_) {
@@ -3348,16 +3348,16 @@ SELECT {} FROM ZoneSizes
     return getImpl<detail::ThermalZone_Impl>()->autosizedHeatingDesignAirFlowRate();
   }
 
-  boost::optional<double> ThermalZone::coolingDesignLoad() const {
-    return getImpl<detail::ThermalZone_Impl>()->coolingDesignLoad();
+  boost::optional<double> ThermalZone::autosizedCoolingDesignLoad() const {
+    return getImpl<detail::ThermalZone_Impl>()->autosizedCoolingDesignLoad();
   }
 
-  boost::optional<double> ThermalZone::designAirFlowRate() const {
-    return getImpl<detail::ThermalZone_Impl>()->designAirFlowRate();
+  boost::optional<double> ThermalZone::autosizedDesignAirFlowRate() const {
+    return getImpl<detail::ThermalZone_Impl>()->autosizedDesignAirFlowRate();
   }
 
-  boost::optional<double> ThermalZone::heatingDesignLoad() const {
-    return getImpl<detail::ThermalZone_Impl>()->heatingDesignLoad();
+  boost::optional<double> ThermalZone::autosizedHeatingDesignLoad() const {
+    return getImpl<detail::ThermalZone_Impl>()->autosizedHeatingDesignLoad();
   }
 
 }  // namespace model
