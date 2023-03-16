@@ -29,20 +29,20 @@
 
 #include "CoilUserDefined.hpp"
 #include "CoilUserDefined_Impl.hpp"
-#include "Model.hpp"
-#include "EnergyManagementSystemProgramCallingManager.hpp"
-#include "EnergyManagementSystemProgramCallingManager_Impl.hpp"
-#include "EnergyManagementSystemProgram.hpp"
-#include "EnergyManagementSystemProgram_Impl.hpp"
+
 #include "EnergyManagementSystemActuator.hpp"
 #include "EnergyManagementSystemActuator_Impl.hpp"
+#include "EnergyManagementSystemProgram.hpp"
+#include "EnergyManagementSystemProgram_Impl.hpp"
+#include "EnergyManagementSystemProgramCallingManager.hpp"
+#include "EnergyManagementSystemProgramCallingManager_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_UserDefined_FieldEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -64,105 +64,11 @@ namespace model {
 
     const std::vector<std::string>& CoilUserDefined_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
-      if (result.empty()) {
-      }
       return result;
-    }
-
-    std::vector<openstudio::IdfObject> CoilUserDefined_Impl::remove() {
-      if (isRemovable()) {
-        return WaterToAirComponent_Impl::remove();
-      }
-      return {};
     }
 
     IddObjectType CoilUserDefined_Impl::iddObjectType() const {
       return CoilUserDefined::iddObjectType();
-    }
-
-    ModelObject CoilUserDefined_Impl::clone(Model model) const {
-      auto newCoilUserDefined = ModelObject_Impl::clone(model).cast<CoilUserDefined>();
-      //airOutletTemperatureActuator
-      if (boost::optional<EnergyManagementSystemActuator> object = airOutletTemperatureActuator()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
-        objectClone.setActuatedComponent(newCoilUserDefined);
-        newCoilUserDefined.setAirOutletTemperatureActuator(objectClone);
-      }
-      //airOutletHumidityRatioActuator
-      if (boost::optional<EnergyManagementSystemActuator> object = airOutletHumidityRatioActuator()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
-        objectClone.setActuatedComponent(newCoilUserDefined);
-        newCoilUserDefined.setAirOutletHumidityRatioActuator(objectClone);
-      }
-      //airMassFlowRateActuator
-      if (boost::optional<EnergyManagementSystemActuator> object = airMassFlowRateActuator()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
-        objectClone.setActuatedComponent(newCoilUserDefined);
-        newCoilUserDefined.setAirMassFlowRateActuator(objectClone);
-      }
-      //plantMinimumMassFlowRateActuator
-      if (boost::optional<EnergyManagementSystemActuator> object = plantMinimumMassFlowRateActuator()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
-        objectClone.setActuatedComponent(newCoilUserDefined);
-        newCoilUserDefined.setPlantMinimumMassFlowRateActuator(objectClone);
-      }
-      //plantMaximumMassFlowRateActuator
-      if (boost::optional<EnergyManagementSystemActuator> object = plantMaximumMassFlowRateActuator()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
-        objectClone.setActuatedComponent(newCoilUserDefined);
-        newCoilUserDefined.setPlantMaximumMassFlowRateActuator(objectClone);
-      }
-      //plantDesignVolumeFlowRateActuator
-      if (boost::optional<EnergyManagementSystemActuator> object = plantDesignVolumeFlowRateActuator()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
-        objectClone.setActuatedComponent(newCoilUserDefined);
-        newCoilUserDefined.setPlantDesignVolumeFlowRateActuator(objectClone);
-      }
-      //plantMassFlowRateActuator
-      if (boost::optional<EnergyManagementSystemActuator> object = plantMassFlowRateActuator()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
-        objectClone.setActuatedComponent(newCoilUserDefined);
-        newCoilUserDefined.setPlantMassFlowRateActuator(objectClone);
-      }
-      //plantOutletTemperatureActuator
-      if (boost::optional<EnergyManagementSystemActuator> object = plantOutletTemperatureActuator()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
-        objectClone.setActuatedComponent(newCoilUserDefined);
-        newCoilUserDefined.setPlantOutletTemperatureActuator(objectClone);
-      }
-      //overallModelSimulationProgramCallingManager
-      if (boost::optional<EnergyManagementSystemProgramCallingManager> object = overallModelSimulationProgramCallingManager()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
-        //clone the program referenced in the callingManager
-        if (boost::optional<EnergyManagementSystemProgram> program = overallSimulationProgram()) {
-          auto cloneProgram = program.get().clone(model).cast<EnergyManagementSystemProgram>();
-          //add cloned program to cloned PCUD
-          newCoilUserDefined.setOverallSimulationProgram(cloneProgram);
-          //add cloned program to cloned programCallingManager
-          objectClone.erasePrograms();
-          objectClone.addProgram(cloneProgram);
-        }
-        newCoilUserDefined.setOverallModelSimulationProgramCallingManager(objectClone);
-      }
-      //modelSetupandSizingProgramCallingManager
-      if (boost::optional<EnergyManagementSystemProgramCallingManager> object = modelSetupandSizingProgramCallingManager()) {
-        auto objectClone = object.get().clone(model).cast<EnergyManagementSystemProgramCallingManager>();
-        //clone the program referenced in the callingManager
-        if (boost::optional<EnergyManagementSystemProgram> program = initializationSimulationProgram()) {
-          auto cloneProgram = program.get().clone(model).cast<EnergyManagementSystemProgram>();
-          //add cloned program to cloned PCUD
-          newCoilUserDefined.setInitializationSimulationProgram(cloneProgram);
-          //add cloned program to cloned programCallingManager
-          objectClone.erasePrograms();
-          objectClone.addProgram(cloneProgram);
-        }
-        newCoilUserDefined.setModelSetupandSizingProgramCallingManager(objectClone);
-      }
-      //ambientZone
-      if (boost::optional<ThermalZone> object = ambientZone()) {
-        newCoilUserDefined.setAmbientZone(object.get());
-      }
-      return std::move(newCoilUserDefined);
     }
 
     unsigned CoilUserDefined_Impl::airInletPort() const {
@@ -182,201 +88,303 @@ namespace model {
     }
 
     std::vector<IddObjectType> CoilUserDefined_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
-      result.push_back(IddObjectType::OS_EnergyManagementSystem_Program);
-      result.push_back(IddObjectType::OS_EnergyManagementSystem_Actuator);
-      result.push_back(IddObjectType::OS_Coil_UserDefined);
+      std::vector<IddObjectType> result{
+        IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager,
+        IddObjectType::OS_EnergyManagementSystem_Program,
+        IddObjectType::OS_EnergyManagementSystem_Actuator,
+        IddObjectType::OS_Coil_UserDefined,
+      };
       return result;
     }
 
     // Returns the children object
     std::vector<ModelObject> CoilUserDefined_Impl::children() const {
       std::vector<ModelObject> result;
-      if (boost::optional<EnergyManagementSystemProgramCallingManager> omsmpcm = overallModelSimulationProgramCallingManager()) {
+      if (boost::optional<EnergyManagementSystemProgramCallingManager> omsmpcm = optionalOverallModelSimulationProgramCallingManager()) {
         result.push_back(omsmpcm.get());
       }
-      if (boost::optional<EnergyManagementSystemProgramCallingManager> msspcm = modelSetupandSizingProgramCallingManager()) {
+      if (boost::optional<EnergyManagementSystemProgramCallingManager> msspcm = optionalModelSetupandSizingProgramCallingManager()) {
         result.push_back(msspcm.get());
       }
-      if (boost::optional<EnergyManagementSystemProgram> osp = overallSimulationProgram()) {
+      if (boost::optional<EnergyManagementSystemProgram> osp = optionalOverallSimulationProgram()) {
         result.push_back(osp.get());
       }
-      if (boost::optional<EnergyManagementSystemProgram> isp = initializationSimulationProgram()) {
+      if (boost::optional<EnergyManagementSystemProgram> isp = optionalInitializationSimulationProgram()) {
         result.push_back(isp.get());
       }
-      if (boost::optional<EnergyManagementSystemActuator> aota = airOutletTemperatureActuator()) {
+      if (boost::optional<EnergyManagementSystemActuator> aota = optionalAirOutletTemperatureActuator()) {
         result.push_back(aota.get());
       }
-      if (boost::optional<EnergyManagementSystemActuator> aohra = airOutletHumidityRatioActuator()) {
+      if (boost::optional<EnergyManagementSystemActuator> aohra = optionalAirOutletHumidityRatioActuator()) {
         result.push_back(aohra.get());
       }
-      if (boost::optional<EnergyManagementSystemActuator> amfra = airMassFlowRateActuator()) {
+      if (boost::optional<EnergyManagementSystemActuator> amfra = optionalAirMassFlowRateActuator()) {
         result.push_back(amfra.get());
       }
-      if (boost::optional<EnergyManagementSystemActuator> pminmfra = plantMinimumMassFlowRateActuator()) {
+      if (boost::optional<EnergyManagementSystemActuator> pminmfra = optionalPlantMinimumMassFlowRateActuator()) {
         result.push_back(pminmfra.get());
       }
-      if (boost::optional<EnergyManagementSystemActuator> pmaxmfra = plantMaximumMassFlowRateActuator()) {
+      if (boost::optional<EnergyManagementSystemActuator> pmaxmfra = optionalPlantMaximumMassFlowRateActuator()) {
         result.push_back(pmaxmfra.get());
       }
-      if (boost::optional<EnergyManagementSystemActuator> pdvfra = plantDesignVolumeFlowRateActuator()) {
+      if (boost::optional<EnergyManagementSystemActuator> pdvfra = optionalPlantDesignVolumeFlowRateActuator()) {
         result.push_back(pdvfra.get());
       }
-      if (boost::optional<EnergyManagementSystemActuator> pmmfra = plantMassFlowRateActuator()) {
+      if (boost::optional<EnergyManagementSystemActuator> pmmfra = optionalPlantMassFlowRateActuator()) {
         result.push_back(pmmfra.get());
       }
-      if (boost::optional<EnergyManagementSystemActuator> pota = plantOutletTemperatureActuator()) {
+      if (boost::optional<EnergyManagementSystemActuator> pota = optionalPlantOutletTemperatureActuator()) {
         result.push_back(pota.get());
       }
       return result;
     }
-    boost::optional<EnergyManagementSystemProgramCallingManager> CoilUserDefined_Impl::overallModelSimulationProgramCallingManager() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(
-        OS_Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName);
+
+    EnergyManagementSystemProgramCallingManager CoilUserDefined_Impl::overallModelSimulationProgramCallingManager() const {
+      boost::optional<EnergyManagementSystemProgramCallingManager> value = optionalOverallModelSimulationProgramCallingManager();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Overall Model Simulation Program Calling Manager attached.");
+      }
+      return value.get();
     }
 
-    boost::optional<EnergyManagementSystemProgramCallingManager> CoilUserDefined_Impl::modelSetupandSizingProgramCallingManager() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(
-        OS_Coil_UserDefinedFields::ModelSetupandSizingProgramCallingManagerName);
+    EnergyManagementSystemProgramCallingManager CoilUserDefined_Impl::modelSetupandSizingProgramCallingManager() const {
+      boost::optional<EnergyManagementSystemProgramCallingManager> value = optionalModelSetupandSizingProgramCallingManager();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Model Setupand Sizing Program Calling Manager attached.");
+      }
+      return value.get();
     }
 
-    boost::optional<EnergyManagementSystemProgram> CoilUserDefined_Impl::overallSimulationProgram() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgram>(OS_Coil_UserDefinedFields::OverallSimulationProgramName);
-    }
-
-    boost::optional<EnergyManagementSystemProgram> CoilUserDefined_Impl::initializationSimulationProgram() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgram>(
-        OS_Coil_UserDefinedFields::InitializationSimulationProgramName);
-    }
-
-    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::airOutletTemperatureActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::AirOutletTemperatureActuator);
-    }
-
-    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::airOutletHumidityRatioActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::AirOutletHumidityRatioActuator);
-    }
-
-    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::airMassFlowRateActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::AirMassFlowRateActuator);
-    }
-
-    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::plantMinimumMassFlowRateActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
-        OS_Coil_UserDefinedFields::PlantMinimumMassFlowRateActuator);
-    }
-
-    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::plantMaximumMassFlowRateActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
-        OS_Coil_UserDefinedFields::PlantMaximumMassFlowRateActuator);
-    }
-
-    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::plantDesignVolumeFlowRateActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
-        OS_Coil_UserDefinedFields::PlantDesignVolumeFlowRateActuator);
-    }
-
-    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::plantMassFlowRateActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::PlantMassFlowRateActuator);
-    }
-
-    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::plantOutletTemperatureActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::PlantOutletTemperatureActuator);
+    int CoilUserDefined_Impl::numberofAirConnections() const {
+      if (airLoopHVAC()) {
+        return 1;
+      }
+      return 0;
     }
 
     boost::optional<ThermalZone> CoilUserDefined_Impl::ambientZone() const {
       return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Coil_UserDefinedFields::AmbientZoneName);
     }
 
-    bool CoilUserDefined_Impl::setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, erlProgram.handle());
+    EnergyManagementSystemProgram CoilUserDefined_Impl::overallSimulationProgram() const {
+      boost::optional<EnergyManagementSystemProgram> value = optionalOverallSimulationProgram();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Overall Simulation Program attached.");
+      }
+      return value.get();
+    }
+
+    EnergyManagementSystemProgram CoilUserDefined_Impl::initializationSimulationProgram() const {
+      boost::optional<EnergyManagementSystemProgram> value = optionalInitializationSimulationProgram();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Initialization Simulation Program attached.");
+      }
+      return value.get();
+    }
+
+    EnergyManagementSystemActuator CoilUserDefined_Impl::airOutletTemperatureActuator() const {
+      boost::optional<EnergyManagementSystemActuator> value = optionalAirOutletTemperatureActuator();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Air Outlet Temperature Actuator attached.");
+      }
+      return value.get();
+    }
+
+    EnergyManagementSystemActuator CoilUserDefined_Impl::airOutletHumidityRatioActuator() const {
+      boost::optional<EnergyManagementSystemActuator> value = optionalAirOutletHumidityRatioActuator();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Air Outlet Humidity Ratio Actuator attached.");
+      }
+      return value.get();
+    }
+
+    EnergyManagementSystemActuator CoilUserDefined_Impl::airMassFlowRateActuator() const {
+      boost::optional<EnergyManagementSystemActuator> value = optionalAirMassFlowRateActuator();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Air Mass Flow Rate Actuator attached.");
+      }
+      return value.get();
+    }
+
+    EnergyManagementSystemActuator CoilUserDefined_Impl::plantMinimumMassFlowRateActuator() const {
+      boost::optional<EnergyManagementSystemActuator> value = optionalPlantMinimumMassFlowRateActuator();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Plant Minimum Mass Flow Rate Actuator attached.");
+      }
+      return value.get();
+    }
+
+    EnergyManagementSystemActuator CoilUserDefined_Impl::plantMaximumMassFlowRateActuator() const {
+      boost::optional<EnergyManagementSystemActuator> value = optionalPlantMaximumMassFlowRateActuator();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Plant Maximum Mass Flow Rate Actuator attached.");
+      }
+      return value.get();
+    }
+
+    EnergyManagementSystemActuator CoilUserDefined_Impl::plantDesignVolumeFlowRateActuator() const {
+      boost::optional<EnergyManagementSystemActuator> value = optionalPlantDesignVolumeFlowRateActuator();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Plant Design Volume Flow Rate Actuator attached.");
+      }
+      return value.get();
+    }
+
+    EnergyManagementSystemActuator CoilUserDefined_Impl::plantOutletTemperatureActuator() const {
+      boost::optional<EnergyManagementSystemActuator> value = optionalPlantOutletTemperatureActuator();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Plant Outlet Temperature Actuator attached.");
+      }
+      return value.get();
+    }
+
+    EnergyManagementSystemActuator CoilUserDefined_Impl::plantMassFlowRateActuator() const {
+      boost::optional<EnergyManagementSystemActuator> value = optionalPlantMassFlowRateActuator();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Plant Mass Flow Rate Actuator attached.");
+      }
+      return value.get();
+    }
+
+    bool CoilUserDefined_Impl::setOverallModelSimulationProgramCallingManager(
+      const EnergyManagementSystemProgramCallingManager& emsProgramCallingManager) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, emsProgramCallingManager.handle());
       return result;
     }
 
-    void CoilUserDefined_Impl::resetOverallModelSimulationProgramCallingManager() {
-      bool result = setString(OS_Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName, "");
-      OS_ASSERT(result);
-    }
-
-    bool CoilUserDefined_Impl::setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::ModelSetupandSizingProgramCallingManagerName, erlProgram.handle());
+    bool
+      CoilUserDefined_Impl::setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& emsProgramCallingManager) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::ModelSetupandSizingProgramCallingManagerName, emsProgramCallingManager.handle());
       return result;
-    }
-
-    void CoilUserDefined_Impl::resetModelSetupandSizingProgramCallingManager() {
-      bool result = setString(OS_Coil_UserDefinedFields::ModelSetupandSizingProgramCallingManagerName, "");
-      OS_ASSERT(result);
-    }
-
-    bool CoilUserDefined_Impl::setOverallSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::OverallSimulationProgramName, energyManagementSystemProgram.handle());
-      return result;
-    }
-
-    void CoilUserDefined_Impl::resetOverallSimulationProgram() {
-      bool result = setString(OS_Coil_UserDefinedFields::OverallSimulationProgramName, "");
-      OS_ASSERT(result);
-    }
-
-    bool CoilUserDefined_Impl::setInitializationSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::InitializationSimulationProgramName, energyManagementSystemProgram.handle());
-      return result;
-    }
-
-    void CoilUserDefined_Impl::resetInitializationSimulationProgram() {
-      bool result = setString(OS_Coil_UserDefinedFields::InitializationSimulationProgramName, "");
-      OS_ASSERT(result);
     }
 
     bool CoilUserDefined_Impl::setAmbientZone(const ThermalZone& thermalZone) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::AmbientZoneName, thermalZone.handle());
+      const bool result = setPointer(OS_Coil_UserDefinedFields::AmbientZoneName, thermalZone.handle());
       return result;
     }
 
     void CoilUserDefined_Impl::resetAmbientZone() {
-      bool result = setString(OS_Coil_UserDefinedFields::AmbientZoneName, "");
+      const bool result = setString(OS_Coil_UserDefinedFields::AmbientZoneName, "");
       OS_ASSERT(result);
     }
 
-    bool CoilUserDefined_Impl::setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::AirOutletTemperatureActuator, energyManagementSystemActuator.handle());
+    bool CoilUserDefined_Impl::setOverallSimulationProgram(const EnergyManagementSystemProgram& emsProgram) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::OverallSimulationProgramName, emsProgram.handle());
       return result;
     }
 
-    bool CoilUserDefined_Impl::setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::AirOutletHumidityRatioActuator, energyManagementSystemActuator.handle());
+    bool CoilUserDefined_Impl::setInitializationSimulationProgram(const EnergyManagementSystemProgram& emsProgram) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::InitializationSimulationProgramName, emsProgram.handle());
       return result;
     }
 
-    bool CoilUserDefined_Impl::setAirMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::AirMassFlowRateActuator, energyManagementSystemActuator.handle());
+    bool CoilUserDefined_Impl::setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& emsActuator) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::AirOutletTemperatureActuator, emsActuator.handle());
       return result;
     }
 
-    bool CoilUserDefined_Impl::setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::PlantMinimumMassFlowRateActuator, energyManagementSystemActuator.handle());
+    bool CoilUserDefined_Impl::setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& emsActuator) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::AirOutletHumidityRatioActuator, emsActuator.handle());
       return result;
     }
 
-    bool CoilUserDefined_Impl::setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::PlantMaximumMassFlowRateActuator, energyManagementSystemActuator.handle());
+    bool CoilUserDefined_Impl::setAirMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::AirMassFlowRateActuator, emsActuator.handle());
       return result;
     }
 
-    bool CoilUserDefined_Impl::setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::PlantDesignVolumeFlowRateActuator, energyManagementSystemActuator.handle());
+    bool CoilUserDefined_Impl::setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::PlantMinimumMassFlowRateActuator, emsActuator.handle());
       return result;
     }
 
-    bool CoilUserDefined_Impl::setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::PlantMassFlowRateActuator, energyManagementSystemActuator.handle());
+    bool CoilUserDefined_Impl::setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::PlantMaximumMassFlowRateActuator, emsActuator.handle());
       return result;
     }
 
-    bool CoilUserDefined_Impl::setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-      bool result = setPointer(OS_Coil_UserDefinedFields::PlantOutletTemperatureActuator, energyManagementSystemActuator.handle());
+    bool CoilUserDefined_Impl::setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::PlantDesignVolumeFlowRateActuator, emsActuator.handle());
       return result;
+    }
+
+    bool CoilUserDefined_Impl::setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& emsActuator) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::PlantOutletTemperatureActuator, emsActuator.handle());
+      return result;
+    }
+
+    bool CoilUserDefined_Impl::setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+      const bool result = setPointer(OS_Coil_UserDefinedFields::PlantMassFlowRateActuator, emsActuator.handle());
+      return result;
+    }
+
+    boost::optional<EnergyManagementSystemProgramCallingManager> CoilUserDefined_Impl::optionalOverallModelSimulationProgramCallingManager() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(
+        OS_Coil_UserDefinedFields::OverallModelSimulationProgramCallingManagerName);
+    }
+
+    boost::optional<EnergyManagementSystemProgramCallingManager> CoilUserDefined_Impl::optionalModelSetupandSizingProgramCallingManager() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(
+        OS_Coil_UserDefinedFields::ModelSetupandSizingProgramCallingManagerName);
+    }
+
+    boost::optional<EnergyManagementSystemProgram> CoilUserDefined_Impl::optionalOverallSimulationProgram() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgram>(OS_Coil_UserDefinedFields::OverallSimulationProgramName);
+    }
+
+    boost::optional<EnergyManagementSystemProgram> CoilUserDefined_Impl::optionalInitializationSimulationProgram() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgram>(
+        OS_Coil_UserDefinedFields::InitializationSimulationProgramName);
+    }
+
+    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::optionalAirOutletTemperatureActuator() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::AirOutletTemperatureActuator);
+    }
+
+    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::optionalAirOutletHumidityRatioActuator() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::AirOutletHumidityRatioActuator);
+    }
+
+    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::optionalAirMassFlowRateActuator() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::AirMassFlowRateActuator);
+    }
+
+    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::optionalPlantMinimumMassFlowRateActuator() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_Coil_UserDefinedFields::PlantMinimumMassFlowRateActuator);
+    }
+
+    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::optionalPlantMaximumMassFlowRateActuator() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_Coil_UserDefinedFields::PlantMaximumMassFlowRateActuator);
+    }
+
+    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::optionalPlantDesignVolumeFlowRateActuator() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_Coil_UserDefinedFields::PlantDesignVolumeFlowRateActuator);
+    }
+
+    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::optionalPlantOutletTemperatureActuator() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::PlantOutletTemperatureActuator);
+    }
+
+    boost::optional<EnergyManagementSystemActuator> CoilUserDefined_Impl::optionalPlantMassFlowRateActuator() const {
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_Coil_UserDefinedFields::PlantMassFlowRateActuator);
+    }
+
+    void CoilUserDefined_Impl::renameEMSSubComponents() {
+      overallModelSimulationProgramCallingManager().setName(nameString() + " overallModelSimulationProgramCallingManager");
+      modelSetupandSizingProgramCallingManager().setName(nameString() + " modelSetupandSizingProgramCallingManager");
+      overallSimulationProgram().setName(nameString() + " overallSimulationProgram");
+      initializationSimulationProgram().setName(nameString() + " initializationSimulationProgram");
+      airOutletTemperatureActuator().setName(nameString() + " airOutletTemperatureActuator");
+      airOutletHumidityRatioActuator().setName(nameString() + " airOutletHumidityRatioActuator");
+      airMassFlowRateActuator().setName(nameString() + " airMassFlowRateActuator");
+      plantMinimumMassFlowRateActuator().setName(nameString() + " plantMinimumMassFlowRateActuator");
+      plantMaximumMassFlowRateActuator().setName(nameString() + " plantMaximumMassFlowRateActuator");
+      plantDesignVolumeFlowRateActuator().setName(nameString() + " plantDesignVolumeFlowRateActuator");
+      plantMassFlowRateActuator().setName(nameString() + " plantMassFlowRateActuator");
+      plantOutletTemperatureActuator().setName(nameString() + " plantOutletTemperatureActuator");
     }
 
   }  // namespace detail
@@ -449,96 +457,75 @@ namespace model {
     ok = setInitializationSimulationProgram(initProgram);
     OS_ASSERT(ok);
 
-    // set NumberofAirConnections to 1
-    OS_ASSERT(setString(OS_Coil_UserDefinedFields::NumberofAirConnections, "1"));
+    // getImpl<detail::CoilUserDefined_Impl>()->renameEMSSubComponents();
   }
 
   IddObjectType CoilUserDefined::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_UserDefined);
+    return {IddObjectType::OS_Coil_UserDefined};
   }
 
-  boost::optional<EnergyManagementSystemProgramCallingManager> CoilUserDefined::overallModelSimulationProgramCallingManager() const {
+  EnergyManagementSystemProgramCallingManager CoilUserDefined::overallModelSimulationProgramCallingManager() const {
     return getImpl<detail::CoilUserDefined_Impl>()->overallModelSimulationProgramCallingManager();
   }
 
-  boost::optional<EnergyManagementSystemProgramCallingManager> CoilUserDefined::modelSetupandSizingProgramCallingManager() const {
+  EnergyManagementSystemProgramCallingManager CoilUserDefined::modelSetupandSizingProgramCallingManager() const {
     return getImpl<detail::CoilUserDefined_Impl>()->modelSetupandSizingProgramCallingManager();
   }
 
-  boost::optional<EnergyManagementSystemProgram> CoilUserDefined::overallSimulationProgram() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->overallSimulationProgram();
-  }
-
-  boost::optional<EnergyManagementSystemProgram> CoilUserDefined::initializationSimulationProgram() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->initializationSimulationProgram();
-  }
-
-  boost::optional<EnergyManagementSystemActuator> CoilUserDefined::airOutletTemperatureActuator() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->airOutletTemperatureActuator();
-  }
-
-  boost::optional<EnergyManagementSystemActuator> CoilUserDefined::airOutletHumidityRatioActuator() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->airOutletHumidityRatioActuator();
-  }
-
-  boost::optional<EnergyManagementSystemActuator> CoilUserDefined::airMassFlowRateActuator() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->airMassFlowRateActuator();
-  }
-
-  boost::optional<EnergyManagementSystemActuator> CoilUserDefined::plantMinimumMassFlowRateActuator() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->plantMinimumMassFlowRateActuator();
-  }
-
-  boost::optional<EnergyManagementSystemActuator> CoilUserDefined::plantMaximumMassFlowRateActuator() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->plantMaximumMassFlowRateActuator();
-  }
-
-  boost::optional<EnergyManagementSystemActuator> CoilUserDefined::plantDesignVolumeFlowRateActuator() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->plantDesignVolumeFlowRateActuator();
-  }
-
-  boost::optional<EnergyManagementSystemActuator> CoilUserDefined::plantMassFlowRateActuator() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->plantMassFlowRateActuator();
-  }
-
-  boost::optional<EnergyManagementSystemActuator> CoilUserDefined::plantOutletTemperatureActuator() const {
-    return getImpl<detail::CoilUserDefined_Impl>()->plantOutletTemperatureActuator();
+  int CoilUserDefined::numberofAirConnections() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->numberofAirConnections();
   }
 
   boost::optional<ThermalZone> CoilUserDefined::ambientZone() const {
     return getImpl<detail::CoilUserDefined_Impl>()->ambientZone();
   }
 
-  bool CoilUserDefined::setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgramCallingManager) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setOverallModelSimulationProgramCallingManager(erlProgramCallingManager);
+  EnergyManagementSystemProgram CoilUserDefined::overallSimulationProgram() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->overallSimulationProgram();
   }
 
-  void CoilUserDefined::resetOverallModelSimulationProgramCallingManager() {
-    getImpl<detail::CoilUserDefined_Impl>()->resetOverallModelSimulationProgramCallingManager();
+  EnergyManagementSystemProgram CoilUserDefined::initializationSimulationProgram() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->initializationSimulationProgram();
   }
 
-  bool CoilUserDefined::setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgramCallingManager) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setModelSetupandSizingProgramCallingManager(erlProgramCallingManager);
+  EnergyManagementSystemActuator CoilUserDefined::airOutletTemperatureActuator() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->airOutletTemperatureActuator();
   }
 
-  void CoilUserDefined::resetModelSetupandSizingProgramCallingManager() {
-    getImpl<detail::CoilUserDefined_Impl>()->resetModelSetupandSizingProgramCallingManager();
+  EnergyManagementSystemActuator CoilUserDefined::airOutletHumidityRatioActuator() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->airOutletHumidityRatioActuator();
   }
 
-  bool CoilUserDefined::setOverallSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setOverallSimulationProgram(energyManagementSystemProgram);
+  EnergyManagementSystemActuator CoilUserDefined::airMassFlowRateActuator() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->airMassFlowRateActuator();
   }
 
-  void CoilUserDefined::resetOverallSimulationProgram() {
-    getImpl<detail::CoilUserDefined_Impl>()->resetOverallSimulationProgram();
+  EnergyManagementSystemActuator CoilUserDefined::plantMinimumMassFlowRateActuator() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->plantMinimumMassFlowRateActuator();
   }
 
-  bool CoilUserDefined::setInitializationSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setInitializationSimulationProgram(energyManagementSystemProgram);
+  EnergyManagementSystemActuator CoilUserDefined::plantMaximumMassFlowRateActuator() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->plantMaximumMassFlowRateActuator();
   }
 
-  void CoilUserDefined::resetInitializationSimulationProgram() {
-    getImpl<detail::CoilUserDefined_Impl>()->resetInitializationSimulationProgram();
+  EnergyManagementSystemActuator CoilUserDefined::plantDesignVolumeFlowRateActuator() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->plantDesignVolumeFlowRateActuator();
+  }
+
+  EnergyManagementSystemActuator CoilUserDefined::plantOutletTemperatureActuator() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->plantOutletTemperatureActuator();
+  }
+
+  EnergyManagementSystemActuator CoilUserDefined::plantMassFlowRateActuator() const {
+    return getImpl<detail::CoilUserDefined_Impl>()->plantMassFlowRateActuator();
+  }
+
+  bool CoilUserDefined::setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& emsProgramCallingManager) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setOverallModelSimulationProgramCallingManager(emsProgramCallingManager);
+  }
+
+  bool CoilUserDefined::setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& emsProgramCallingManager) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setModelSetupandSizingProgramCallingManager(emsProgramCallingManager);
   }
 
   bool CoilUserDefined::setAmbientZone(const ThermalZone& thermalZone) {
@@ -549,36 +536,48 @@ namespace model {
     getImpl<detail::CoilUserDefined_Impl>()->resetAmbientZone();
   }
 
-  bool CoilUserDefined::setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setAirOutletTemperatureActuator(energyManagementSystemActuator);
+  bool CoilUserDefined::setOverallSimulationProgram(const EnergyManagementSystemProgram& emsProgram) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setOverallSimulationProgram(emsProgram);
   }
 
-  bool CoilUserDefined::setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setAirOutletHumidityRatioActuator(energyManagementSystemActuator);
+  bool CoilUserDefined::setInitializationSimulationProgram(const EnergyManagementSystemProgram& emsProgram) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setInitializationSimulationProgram(emsProgram);
   }
 
-  bool CoilUserDefined::setAirMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setAirMassFlowRateActuator(energyManagementSystemActuator);
+  bool CoilUserDefined::setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& emsActuator) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setAirOutletTemperatureActuator(emsActuator);
   }
 
-  bool CoilUserDefined::setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setPlantMinimumMassFlowRateActuator(energyManagementSystemActuator);
+  bool CoilUserDefined::setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& emsActuator) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setAirOutletHumidityRatioActuator(emsActuator);
   }
 
-  bool CoilUserDefined::setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setPlantMaximumMassFlowRateActuator(energyManagementSystemActuator);
+  bool CoilUserDefined::setAirMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setAirMassFlowRateActuator(emsActuator);
   }
 
-  bool CoilUserDefined::setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setPlantDesignVolumeFlowRateActuator(energyManagementSystemActuator);
+  bool CoilUserDefined::setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setPlantMinimumMassFlowRateActuator(emsActuator);
   }
 
-  bool CoilUserDefined::setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setPlantMassFlowRateActuator(energyManagementSystemActuator);
+  bool CoilUserDefined::setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setPlantMaximumMassFlowRateActuator(emsActuator);
   }
 
-  bool CoilUserDefined::setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-    return getImpl<detail::CoilUserDefined_Impl>()->setPlantOutletTemperatureActuator(energyManagementSystemActuator);
+  bool CoilUserDefined::setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setPlantDesignVolumeFlowRateActuator(emsActuator);
+  }
+
+  bool CoilUserDefined::setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& emsActuator) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setPlantOutletTemperatureActuator(emsActuator);
+  }
+
+  bool CoilUserDefined::setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator) {
+    return getImpl<detail::CoilUserDefined_Impl>()->setPlantMassFlowRateActuator(emsActuator);
+  }
+
+  void CoilUserDefined::renameEMSSubComponents() {
+    return getImpl<detail::CoilUserDefined_Impl>()->renameEMSSubComponents();
   }
 
   /// @cond

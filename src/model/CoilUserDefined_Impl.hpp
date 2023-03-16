@@ -30,18 +30,15 @@
 #ifndef MODEL_COILUSERDEFINED_IMPL_HPP
 #define MODEL_COILUSERDEFINED_IMPL_HPP
 
-#include "EnergyManagementSystemProgramCallingManager_Impl.hpp"
-#include "EnergyManagementSystemProgram_Impl.hpp"
-#include "EnergyManagementSystemActuator_Impl.hpp"
+#include <model/ModelAPI.hpp>
 #include "WaterToAirComponent_Impl.hpp"
-#include "ThermalZone_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-  class EnergyManagementSystemProgramCallingManager;
-  class EnergyManagementSystemProgram;
   class EnergyManagementSystemActuator;
+  class EnergyManagementSystemProgram;
+  class EnergyManagementSystemProgramCallingManager;
   class ThermalZone;
 
   namespace detail {
@@ -59,23 +56,15 @@ namespace model {
 
       CoilUserDefined_Impl(const CoilUserDefined_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilUserDefined_Impl() {}
+      virtual ~CoilUserDefined_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
       //@{
 
-      virtual std::vector<openstudio::IdfObject> remove() override;
-
-      virtual ModelObject clone(Model model) const override;
-
-      virtual std::vector<IddObjectType> allowableChildTypes() const override;
-
-      virtual std::vector<ModelObject> children() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
-
-      virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual unsigned airInletPort() const override;
 
@@ -85,84 +74,104 @@ namespace model {
 
       virtual unsigned waterOutletPort() const override;
 
+      // virtual std::vector<openstudio::IdfObject> remove() override;
+
+      // virtual ModelObject clone(Model model) const override;
+
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
+
+      virtual std::vector<ModelObject> children() const override;
+
       //@}
       /** @name Getters */
       //@{
 
-      boost::optional<EnergyManagementSystemProgramCallingManager> overallModelSimulationProgramCallingManager() const;
+      EnergyManagementSystemProgramCallingManager overallModelSimulationProgramCallingManager() const;
 
-      boost::optional<EnergyManagementSystemProgramCallingManager> modelSetupandSizingProgramCallingManager() const;
-
-      boost::optional<EnergyManagementSystemProgram> overallSimulationProgram() const;
-
-      boost::optional<EnergyManagementSystemProgram> initializationSimulationProgram() const;
-
-      boost::optional<EnergyManagementSystemActuator> airOutletTemperatureActuator() const;
-
-      boost::optional<EnergyManagementSystemActuator> airOutletHumidityRatioActuator() const;
-
-      boost::optional<EnergyManagementSystemActuator> airMassFlowRateActuator() const;
-
-      boost::optional<EnergyManagementSystemActuator> plantMinimumMassFlowRateActuator() const;
-
-      boost::optional<EnergyManagementSystemActuator> plantMaximumMassFlowRateActuator() const;
-
-      boost::optional<EnergyManagementSystemActuator> plantDesignVolumeFlowRateActuator() const;
-
-      boost::optional<EnergyManagementSystemActuator> plantMassFlowRateActuator() const;
-
-      boost::optional<EnergyManagementSystemActuator> plantOutletTemperatureActuator() const;
+      EnergyManagementSystemProgramCallingManager modelSetupandSizingProgramCallingManager() const;
 
       boost::optional<ThermalZone> ambientZone() const;
+
+      EnergyManagementSystemProgram overallSimulationProgram() const;
+
+      EnergyManagementSystemProgram initializationSimulationProgram() const;
+
+      EnergyManagementSystemActuator airOutletTemperatureActuator() const;
+
+      EnergyManagementSystemActuator airOutletHumidityRatioActuator() const;
+
+      EnergyManagementSystemActuator airMassFlowRateActuator() const;
+
+      EnergyManagementSystemActuator plantMinimumMassFlowRateActuator() const;
+
+      EnergyManagementSystemActuator plantMaximumMassFlowRateActuator() const;
+
+      EnergyManagementSystemActuator plantDesignVolumeFlowRateActuator() const;
+
+      EnergyManagementSystemActuator plantOutletTemperatureActuator() const;
+
+      EnergyManagementSystemActuator plantMassFlowRateActuator() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
+      bool setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& emsProgramCallingManager);
 
-      void resetOverallModelSimulationProgramCallingManager();
-
-      bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
-
-      void resetModelSetupandSizingProgramCallingManager();
-
-      bool setOverallSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
-
-      void resetOverallSimulationProgram();
-
-      bool setInitializationSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
-
-      void resetInitializationSimulationProgram();
+      bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& emsProgramCallingManager);
 
       bool setAmbientZone(const ThermalZone& thermalZone);
 
       void resetAmbientZone();
 
-      bool setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setOverallSimulationProgram(const EnergyManagementSystemProgram& emsProgram);
 
-      bool setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setInitializationSimulationProgram(const EnergyManagementSystemProgram& emsProgram);
 
-      bool setAirMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& emsActuator);
 
-      bool setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& emsActuator);
 
-      bool setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setAirMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
 
-      bool setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
 
-      bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
 
-      bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+      bool setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
+
+      bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& emsActuator);
+
+      bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
 
       //@}
       /** @name Other */
       //@{
 
+      int numberofAirConnections() const;
+
+      void renameEMSSubComponents();
+
       //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilUserDefined");
+
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<EnergyManagementSystemProgramCallingManager> optionalOverallModelSimulationProgramCallingManager() const;
+      boost::optional<EnergyManagementSystemProgramCallingManager> optionalModelSetupandSizingProgramCallingManager() const;
+      boost::optional<EnergyManagementSystemProgram> optionalOverallSimulationProgram() const;
+      boost::optional<EnergyManagementSystemProgram> optionalInitializationSimulationProgram() const;
+      boost::optional<EnergyManagementSystemActuator> optionalAirOutletTemperatureActuator() const;
+      boost::optional<EnergyManagementSystemActuator> optionalAirOutletHumidityRatioActuator() const;
+      boost::optional<EnergyManagementSystemActuator> optionalAirMassFlowRateActuator() const;
+      boost::optional<EnergyManagementSystemActuator> optionalPlantMinimumMassFlowRateActuator() const;
+      boost::optional<EnergyManagementSystemActuator> optionalPlantMaximumMassFlowRateActuator() const;
+      boost::optional<EnergyManagementSystemActuator> optionalPlantDesignVolumeFlowRateActuator() const;
+      boost::optional<EnergyManagementSystemActuator> optionalPlantOutletTemperatureActuator() const;
+      boost::optional<EnergyManagementSystemActuator> optionalPlantMassFlowRateActuator() const;
     };
 
   }  // namespace detail

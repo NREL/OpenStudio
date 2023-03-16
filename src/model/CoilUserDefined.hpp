@@ -30,18 +30,15 @@
 #ifndef MODEL_COILUSERDEFINED_HPP
 #define MODEL_COILUSERDEFINED_HPP
 
-#include "ModelAPI.hpp"
+#include <model/ModelAPI.hpp>
 #include "WaterToAirComponent.hpp"
-#include "EnergyManagementSystemProgramCallingManager.hpp"
-#include "EnergyManagementSystemProgram.hpp"
-#include "EnergyManagementSystemActuator.hpp"
 
 namespace openstudio {
 namespace model {
 
-  class EnergyManagementSystemProgramCallingManager;
-  class EnergyManagementSystemProgram;
   class EnergyManagementSystemActuator;
+  class EnergyManagementSystemProgram;
+  class EnergyManagementSystemProgramCallingManager;
   class ThermalZone;
 
   namespace detail {
@@ -73,75 +70,72 @@ namespace model {
     /** @name Getters */
     //@{
 
-    boost::optional<EnergyManagementSystemProgramCallingManager> overallModelSimulationProgramCallingManager() const;
+    EnergyManagementSystemProgramCallingManager overallModelSimulationProgramCallingManager() const;
 
-    boost::optional<EnergyManagementSystemProgramCallingManager> modelSetupandSizingProgramCallingManager() const;
-
-    boost::optional<EnergyManagementSystemProgram> overallSimulationProgram() const;
-
-    boost::optional<EnergyManagementSystemProgram> initializationSimulationProgram() const;
-
-    boost::optional<EnergyManagementSystemActuator> airOutletTemperatureActuator() const;
-
-    boost::optional<EnergyManagementSystemActuator> airOutletHumidityRatioActuator() const;
-
-    boost::optional<EnergyManagementSystemActuator> airMassFlowRateActuator() const;
-
-    boost::optional<EnergyManagementSystemActuator> plantMinimumMassFlowRateActuator() const;
-
-    boost::optional<EnergyManagementSystemActuator> plantMaximumMassFlowRateActuator() const;
-
-    boost::optional<EnergyManagementSystemActuator> plantDesignVolumeFlowRateActuator() const;
-
-    boost::optional<EnergyManagementSystemActuator> plantMassFlowRateActuator() const;
-
-    boost::optional<EnergyManagementSystemActuator> plantOutletTemperatureActuator() const;
+    EnergyManagementSystemProgramCallingManager modelSetupandSizingProgramCallingManager() const;
 
     boost::optional<ThermalZone> ambientZone() const;
+
+    EnergyManagementSystemProgram overallSimulationProgram() const;
+
+    EnergyManagementSystemProgram initializationSimulationProgram() const;
+
+    EnergyManagementSystemActuator airOutletTemperatureActuator() const;
+
+    EnergyManagementSystemActuator airOutletHumidityRatioActuator() const;
+
+    EnergyManagementSystemActuator airMassFlowRateActuator() const;
+
+    EnergyManagementSystemActuator plantMinimumMassFlowRateActuator() const;
+
+    EnergyManagementSystemActuator plantMaximumMassFlowRateActuator() const;
+
+    EnergyManagementSystemActuator plantDesignVolumeFlowRateActuator() const;
+
+    EnergyManagementSystemActuator plantOutletTemperatureActuator() const;
+
+    EnergyManagementSystemActuator plantMassFlowRateActuator() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
+    bool setOverallModelSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& emsProgramCallingManager);
 
-    void resetOverallModelSimulationProgramCallingManager();
-
-    bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& erlProgram);
-
-    void resetModelSetupandSizingProgramCallingManager();
-
-    bool setOverallSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
-
-    void resetOverallSimulationProgram();
-
-    bool setInitializationSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
-
-    void resetInitializationSimulationProgram();
+    bool setModelSetupandSizingProgramCallingManager(const EnergyManagementSystemProgramCallingManager& emsProgramCallingManager);
 
     bool setAmbientZone(const ThermalZone& thermalZone);
 
     void resetAmbientZone();
 
-    bool setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setOverallSimulationProgram(const EnergyManagementSystemProgram& emsProgram);
 
-    bool setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setInitializationSimulationProgram(const EnergyManagementSystemProgram& emsProgram);
 
-    bool setAirMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setAirOutletTemperatureActuator(const EnergyManagementSystemActuator& emsActuator);
 
-    bool setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setAirOutletHumidityRatioActuator(const EnergyManagementSystemActuator& emsActuator);
 
-    bool setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setAirMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
 
-    bool setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setPlantMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
 
-    bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setPlantMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
 
-    bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+    bool setPlantDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
+
+    bool setPlantOutletTemperatureActuator(const EnergyManagementSystemActuator& emsActuator);
+
+    bool setPlantMassFlowRateActuator(const EnergyManagementSystemActuator& emsActuator);
 
     //@}
     /** @name Other */
     //@{
+
+    int numberofAirConnections() const;
+
+    // Will rename the EMS Program, Program Calling Manager, and Actuators to be nameString() + " xxx"
+    void renameEMSSubComponents();
 
     //@}
    protected:
