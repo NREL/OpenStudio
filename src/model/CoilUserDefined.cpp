@@ -38,6 +38,8 @@
 #include "EnergyManagementSystemProgramCallingManager_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
@@ -68,6 +70,26 @@ namespace model {
     const std::vector<std::string>& CoilUserDefined_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
       return result;
+    }
+
+    boost::optional<HVACComponent> CoilUserDefined_Impl::containingHVACComponent() const {
+      // AirLoopHVACUnitarySystem is the only accepted type, but the coil can be used as any of the three HC, CC or suppHC
+      for (const auto& airLoopHVACUnitarySystem : this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>()) {
+        if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil()) {
+          if (coolingCoil->handle() == this->handle()) {
+            return airLoopHVACUnitarySystem;
+          }
+        } else if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.heatingCoil()) {
+          if (coolingCoil->handle() == this->handle()) {
+            return airLoopHVACUnitarySystem;
+          }
+        } else if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.supplementalHeatingCoil()) {
+          if (coolingCoil->handle() == this->handle()) {
+            return airLoopHVACUnitarySystem;
+          }
+        }
+      }
+      return boost::none;
     }
 
     IddObjectType CoilUserDefined_Impl::iddObjectType() const {
@@ -143,7 +165,7 @@ namespace model {
     }
 
     ModelObject CoilUserDefined_Impl::clone(Model model) const {
-      auto newCoilUserDefined = ModelObject_Impl::clone(model).cast<CoilUserDefined>();
+      auto newCoilUserDefined = ModelObject_Impl::clone(model).cast<CoilUserDefined>();  // NOLINT(bugprone-parent-virtual-call
       //airOutletTemperatureActuator
       if (boost::optional<EnergyManagementSystemActuator> object = optionalAirOutletTemperatureActuator()) {
         auto objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
@@ -243,7 +265,7 @@ namespace model {
     }
 
     int CoilUserDefined_Impl::numberofAirConnections() const {
-      if (airLoopHVAC()) {
+      if (airLoopHVAC() || containingHVACComponent()) {
         return 1;
       }
       return 0;

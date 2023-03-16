@@ -83,6 +83,8 @@ namespace model {
 
       virtual std::vector<ModelObject> children() const override;
 
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
       //@}
       /** @name Getters */
       //@{
