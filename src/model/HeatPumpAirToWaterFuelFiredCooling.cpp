@@ -504,8 +504,7 @@ namespace model {
     : StraightComponent(HeatPumpAirToWaterFuelFiredCooling::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HeatPumpAirToWaterFuelFiredCooling_Impl>());
 
-    bool ok = true;
-    ok = setFuelType("NaturalGas");
+    bool ok = setFuelType("NaturalGas");
     OS_ASSERT(ok);
     autosizeNominalCoolingCapacity();
     ok = setNominalCOP(1.0);
@@ -524,46 +523,57 @@ namespace model {
     ok = setWaterTemperatureCurveInputVariable("EnteringEvaporator");
     OS_ASSERT(ok);
 
-    CurveBiquadratic normalizedCapacityFunctionofTemperatureCurve(model);
-    normalizedCapacityFunctionofTemperatureCurve.setCoefficient1Constant(1);
-    normalizedCapacityFunctionofTemperatureCurve.setCoefficient2x(0);
-    normalizedCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
-    normalizedCapacityFunctionofTemperatureCurve.setCoefficient4y(0);
-    normalizedCapacityFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
-    normalizedCapacityFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
-    normalizedCapacityFunctionofTemperatureCurve.setMinimumValueofx(5);
-    normalizedCapacityFunctionofTemperatureCurve.setMaximumValueofx(10);
-    normalizedCapacityFunctionofTemperatureCurve.setMinimumValueofy(24);
-    normalizedCapacityFunctionofTemperatureCurve.setMaximumValueofy(35);
-    normalizedCapacityFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
-    normalizedCapacityFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
-    ok = setNormalizedCapacityFunctionofTemperatureCurve(normalizedCapacityFunctionofTemperatureCurve);
-    OS_ASSERT(ok);
+    // From PlantLoopHeatPump_Fuel-Fired.idf
 
-    CurveBiquadratic fuelEnergyInputRatioFunctionofTemperatureCurve(model);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient2x(0);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient4y(0);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(5);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(10);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setMinimumValueofy(24);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setMaximumValueofy(35);
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
-    fuelEnergyInputRatioFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
-    ok = setFuelEnergyInputRatioFunctionofTemperatureCurve(fuelEnergyInputRatioFunctionofTemperatureCurve);
-    OS_ASSERT(ok);
+    {
+      CurveBiquadratic normalizedCapacityFunctionofTemperatureCurve(model);
+      normalizedCapacityFunctionofTemperatureCurve.setName("GAHP Cooling CapFT");
+      normalizedCapacityFunctionofTemperatureCurve.setCoefficient1Constant(1);
+      normalizedCapacityFunctionofTemperatureCurve.setCoefficient2x(0);
+      normalizedCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
+      normalizedCapacityFunctionofTemperatureCurve.setCoefficient4y(0);
+      normalizedCapacityFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
+      normalizedCapacityFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
+      normalizedCapacityFunctionofTemperatureCurve.setMinimumValueofx(5);
+      normalizedCapacityFunctionofTemperatureCurve.setMaximumValueofx(10);
+      normalizedCapacityFunctionofTemperatureCurve.setMinimumValueofy(24);
+      normalizedCapacityFunctionofTemperatureCurve.setMaximumValueofy(35);
+      normalizedCapacityFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
+      normalizedCapacityFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
+      ok = setNormalizedCapacityFunctionofTemperatureCurve(normalizedCapacityFunctionofTemperatureCurve);
+      OS_ASSERT(ok);
+    }
 
-    CurveQuadratic fuelEnergyInputRatioFunctionofPLRCurve(model);
-    fuelEnergyInputRatioFunctionofPLRCurve.setCoefficient1Constant(1);
-    fuelEnergyInputRatioFunctionofPLRCurve.setCoefficient2x(0);
-    fuelEnergyInputRatioFunctionofPLRCurve.setCoefficient3xPOW2(0);
-    fuelEnergyInputRatioFunctionofPLRCurve.setMinimumValueofx(0);
-    fuelEnergyInputRatioFunctionofPLRCurve.setMaximumValueofx(1);
-    ok = setFuelEnergyInputRatioFunctionofPLRCurve(fuelEnergyInputRatioFunctionofPLRCurve);
-    OS_ASSERT(ok);
+    {
+      CurveBiquadratic fuelEnergyInputRatioFunctionofTemperatureCurve(model);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setName("GAHP Cooling EIRFT");
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient2x(0);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient4y(0);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(5);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(10);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setMinimumValueofy(24);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setMaximumValueofy(35);
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
+      fuelEnergyInputRatioFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
+      ok = setFuelEnergyInputRatioFunctionofTemperatureCurve(fuelEnergyInputRatioFunctionofTemperatureCurve);
+      OS_ASSERT(ok);
+    }
+
+    {
+      CurveQuadratic fuelEnergyInputRatioFunctionofPLRCurve(model);
+      fuelEnergyInputRatioFunctionofPLRCurve.setName("GAHP Cooling EIRFPLR");
+      fuelEnergyInputRatioFunctionofPLRCurve.setCoefficient1Constant(1);
+      fuelEnergyInputRatioFunctionofPLRCurve.setCoefficient2x(0);
+      fuelEnergyInputRatioFunctionofPLRCurve.setCoefficient3xPOW2(0);
+      fuelEnergyInputRatioFunctionofPLRCurve.setMinimumValueofx(0);
+      fuelEnergyInputRatioFunctionofPLRCurve.setMaximumValueofx(1);
+      ok = setFuelEnergyInputRatioFunctionofPLRCurve(fuelEnergyInputRatioFunctionofPLRCurve);
+      OS_ASSERT(ok);
+    }
 
     ok = setMinimumPartLoadRatio(0.1);
     OS_ASSERT(ok);
@@ -634,7 +644,7 @@ namespace model {
   }
 
   IddObjectType HeatPumpAirToWaterFuelFiredCooling::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_HeatPump_AirToWater_FuelFired_Cooling);
+    return {IddObjectType::OS_HeatPump_AirToWater_FuelFired_Cooling};
   }
 
   std::vector<std::string> HeatPumpAirToWaterFuelFiredCooling::fuelTypeValues() {
