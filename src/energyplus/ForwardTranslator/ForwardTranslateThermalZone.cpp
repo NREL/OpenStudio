@@ -1109,33 +1109,28 @@ namespace energyplus {
         }
 
         if (zvRateForArea > 0) {
-          // TODO: gotta be careful here when taking a reference via emplace_back. If the stored optional<IdfObject> in m_alwaysOnSchedule is not init yet
-          // this->alwaysOnSchedule() will push_back a new IdfObject, and thus the reference &zoneVentilation would be invalided
-          auto alwaysOn = this->alwaysOnSchedule();
           auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
           zoneVentilation.setName(tzName + " Ventilation per Floor Area");
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, tzName);
-          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, alwaysOn.nameString());
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, modelObject.model().alwaysOnDiscreteSchedule().nameString());
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
           zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperFloorArea, zvRateForArea / modelObject.floorArea());
         }
 
         if (zvRate > 0) {
-          auto alwaysOn = this->alwaysOnSchedule();
           auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
           zoneVentilation.setName(tzName + " Ventilation Rate");
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, tzName);
-          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, alwaysOn.nameString());
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, modelObject.model().alwaysOnDiscreteSchedule().nameString());
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Zone");
           zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::DesignFlowRate, zvRate);
         }
 
         if (zvRateForVolume > 0) {
-          auto alwaysOn = this->alwaysOnSchedule();
           auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
           zoneVentilation.setName(tzName + " Ventilation Air Changes per Hour");
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, tzName);
-          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, alwaysOn.nameString());
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, modelObject.model().alwaysOnDiscreteSchedule().nameString());
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
           zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 3600.0 * zvRateForVolume / totVolume);
         }
