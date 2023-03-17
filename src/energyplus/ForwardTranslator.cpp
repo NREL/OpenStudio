@@ -536,6 +536,12 @@ namespace energyplus {
         }
       }
 
+      // NOTE: General note about taking a reference via emplace_back in the FT. It is faster to construct an object in place, but you must be careful
+      // that m_idfObjects is NOT going to be resized while you are using the reference or it would be invalidated
+      // eg:
+      //    auto& objectRef = m_idfObjects.emplace_back(xxxx);
+      //    translateAndMapModelObject(object.child()); // UH OH: THIS IS LIKELY GOING TO RESIZE m_idfObjects and if so &objectRef is now invalid!!
+
       // add a global geometry rules object
       auto& globalGeometryRules = m_idfObjects.emplace_back(openstudio::IddObjectType::GlobalGeometryRules);
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
