@@ -221,7 +221,7 @@ std::string DateTime::toXsdDateTime() const {
     if (temp.totalHours() < 0) {
       offset = '-';
     }
-    result += fmt::format("{}{:02d}{:02d}", offset, std::abs(temp.hours()), std::abs(temp.minutes()));
+    result += fmt::format("{}{:02d}:{:02d}", offset, std::abs(temp.hours()), std::abs(temp.minutes()));
   }
 
   return result;
