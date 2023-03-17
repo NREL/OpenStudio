@@ -33,7 +33,12 @@ __**OpenStudio SDK 3.6.0**__
 
 # Installation Notes
 
-OpenStudio SDK 3.6.0 is supported on 64-bit Windows 7 – 11, OS X 10.15, Ubuntu 18.04, 20.04 and Centos7
+OpenStudio SDK 3.6.0 is supported on:
+
+* 64-bit Windows 7 – 11
+* macOS: 10.15+ x86_64, 12.1+ arm64
+* Ubuntu: 20.04 x86_64, 22.04 x86_64, 22.04 arm64
+* Centos7
 
 OpenStudio SDK 3.6.0 supports [EnergyPlus Release 22.1.0](https://github.com/NREL/EnergyPlus/releases/tag/v22.1.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.6.0.
 
@@ -68,6 +73,7 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 ## New Features, Major Fixes and API-breaking changes
 
+* Support Ubuntu 22.04 and remove 18.04
 * [#4778](https://github.com/NREL/OpenStudio/pull/4778) - Wrap AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl and AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
     * `ZoneHVAC:TerminalUnit:VariableRefrigerantFlow` has API-breaking changes related to setters and getters for its heating and cooling coils. They now use `HVACComponent` instead of the more restrictive `CoilHeatingDXVariableRefrigerantFlow` and `CoilCoolingDXVariableRefrigerantFlow`.
     * `AirConditionerVariableRefrigerantFlow::clone` was changed to stop cloning the child `Curve` objects (20 of them)

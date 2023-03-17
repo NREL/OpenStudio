@@ -159,6 +159,7 @@ namespace model {
   class CoilSystemCoolingDXHeatExchangerAssisted;
   class CoilSystemCoolingWaterHeatExchangerAssisted;
   class CoilSystemIntegratedHeatPumpAirSource;
+  class CoilUserDefined;
   class CoilWaterHeatingDesuperheater;
   class CoilWaterHeatingAirToWaterHeatPump;
   class CoilWaterHeatingAirToWaterHeatPumpVariableSpeed;
@@ -858,6 +859,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilSystemCoolingWaterHeatExchangerAssisted(model::CoilSystemCoolingWaterHeatExchangerAssisted& modelObject);
 
     boost::optional<IdfObject> translateCoilSystemIntegratedHeatPumpAirSource(model::CoilSystemIntegratedHeatPumpAirSource& modelObject);
+
+    boost::optional<IdfObject> translateCoilUserDefined(model::CoilUserDefined& modelObject);
 
     boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater(model::CoilWaterHeatingDesuperheater& modelObject);
 
@@ -1612,14 +1615,6 @@ namespace energyplus {
 
     // translate all airflow network objects if an AFN simulation control exists
     void translateAirflowNetwork(const model::Model& model);
-
-    // returns the always on schedule if found, otherwise creates one and saves for later
-    IdfObject alwaysOnSchedule();
-    boost::optional<IdfObject> m_alwaysOnSchedule;
-
-    // returns the always off schedule if found, otherwise creates one and saves for later
-    IdfObject alwaysOffSchedule();
-    boost::optional<IdfObject> m_alwaysOffSchedule;
 
     // returns the default interior partition surface construction, otherwise creates one and saves for later
     model::ConstructionBase interiorPartitionSurfaceConstruction(model::Model& model);

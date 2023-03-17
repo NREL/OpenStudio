@@ -536,6 +536,12 @@ namespace energyplus {
         }
       }
 
+      // NOTE: General note about taking a reference via emplace_back in the FT. It is faster to construct an object in place, but you must be careful
+      // that m_idfObjects is NOT going to be resized while you are using the reference or it would be invalidated
+      // eg:
+      //    auto& objectRef = m_idfObjects.emplace_back(xxxx);
+      //    translateAndMapModelObject(object.child()); // UH OH: THIS IS LIKELY GOING TO RESIZE m_idfObjects and if so &objectRef is now invalid!!
+
       // add a global geometry rules object
       auto& globalGeometryRules = m_idfObjects.emplace_back(openstudio::IddObjectType::GlobalGeometryRules);
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
@@ -1229,6 +1235,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource: {
         auto mo = modelObject.cast<CoilSystemIntegratedHeatPumpAirSource>();
         retVal = translateCoilSystemIntegratedHeatPumpAirSource(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Coil_UserDefined: {
+        auto coil = modelObject.cast<CoilUserDefined>();
+        retVal = translateCoilUserDefined(coil);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater: {
@@ -3475,6 +3486,7 @@ namespace energyplus {
       IddObjectType::OS_Coil_Heating_Water,
       IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit,
       IddObjectType::OS_Coil_WaterHeating_Desuperheater,
+      // IddObjectType::OS_Coil_UserDefined,
 
       // If using a plantLoop, this will be translated by the PlantLoop. But WaterHeaters can also be used stand-alone, so always translate them
       // We'll check in their FT if the "Peak Use Flow Rate" is actually initialized as it's an indication that the WH was
@@ -3698,20 +3710,7 @@ namespace energyplus {
 
       for (const WorkspaceObject& workspaceObject : objects) {
         auto modelObject = workspaceObject.cast<ModelObject>();
-        boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
-
-        if ((iddObjectType == IddObjectType::OS_Schedule_Compact) || (iddObjectType == IddObjectType::OS_Schedule_Constant)
-            || (iddObjectType == IddObjectType::OS_Schedule_Ruleset) || (iddObjectType == IddObjectType::OS_Schedule_FixedInterval)
-            || (iddObjectType == IddObjectType::OS_Schedule_VariableInterval)) {
-          // This predates Model::alwaysOnDiscreteSchedule, but leaving it in place for now
-          if (istringEqual("Always_On", workspaceObject.name().get())) {
-            m_alwaysOnSchedule = result;
-          }
-
-          if (istringEqual("Always_Off", workspaceObject.name().get())) {
-            m_alwaysOffSchedule = result;
-          }
-        }
+        translateAndMapModelObject(modelObject);
       }
     }
 
@@ -4006,10 +4005,6 @@ namespace energyplus {
 
     m_anyNumberScheduleTypeLimits.reset();
 
-    m_alwaysOnSchedule.reset();
-
-    m_alwaysOffSchedule.reset();
-
     m_interiorPartitionSurfaceConstruction.reset();
 
     m_exteriorSurfaceConstruction.reset();
@@ -4019,34 +4014,6 @@ namespace energyplus {
     m_logSink.setThreadId(std::this_thread::get_id());
 
     m_logSink.resetStringStream();
-  }
-
-  IdfObject ForwardTranslator::alwaysOnSchedule() {
-    if (m_alwaysOnSchedule) {
-      return *m_alwaysOnSchedule;
-    }
-
-    m_alwaysOnSchedule = IdfObject(IddObjectType::Schedule_Constant);
-    m_alwaysOnSchedule->setName("Always_On");
-    m_alwaysOnSchedule->setDouble(2, 1.0);
-
-    m_idfObjects.push_back(*m_alwaysOnSchedule);
-
-    return *m_alwaysOnSchedule;
-  }
-
-  IdfObject ForwardTranslator::alwaysOffSchedule() {
-    if (m_alwaysOffSchedule) {
-      return *m_alwaysOffSchedule;
-    }
-
-    m_alwaysOffSchedule = IdfObject(IddObjectType::Schedule_Constant);
-    m_alwaysOffSchedule->setName("Always_Off");
-    m_alwaysOffSchedule->setDouble(2, 0.0);
-
-    m_idfObjects.push_back(*m_alwaysOffSchedule);
-
-    return *m_alwaysOffSchedule;
   }
 
   model::ConstructionBase ForwardTranslator::interiorPartitionSurfaceConstruction(model::Model& model) {

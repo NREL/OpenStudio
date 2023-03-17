@@ -31,6 +31,7 @@
 
 #include <resources.hxx>
 
+#include <algorithm>
 #include <regex>
 
 using openstudio::FileLogSink;
@@ -81,26 +82,30 @@ void EnergyPlusFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
-::testing::AssertionResult EnergyPlusFixture::checkLogMessages(int size, const std::vector<openstudio::LogMessage>& logMessages,
-                                                               const std::vector<std::string>& exclusions, bool use_regex) {
+::testing::AssertionResult EnergyPlusFixture::checkLogMessagesSizeWithExclusions(int size, const std::vector<openstudio::LogMessage>& logMessages,
+                                                                                 const std::vector<std::string>& exclusions, bool use_regex) {
   std::stringstream ss;
   int filtered_size = 0;
-  for (const auto& logMessage : logMessages) {
-    auto logMessageStr = logMessage.logMessage();
-    bool match_found = false;
+
+  std::vector<std::string> logStrings;
+  std::transform(logMessages.cbegin(), logMessages.cend(), std::back_inserter(logStrings),
+                 [](const auto& logMessage) { return logMessage.logMessage(); });
+
+  for (const auto& logString : logStrings) {
+    bool is_excluded = false;
     for (const std::string& exclusion : exclusions) {
       if (use_regex) {
-        match_found = std::regex_match(logMessageStr, std::regex(exclusion));
+        is_excluded = std::regex_match(logString, std::regex(exclusion));
       } else {
-        match_found = logMessageStr.find(exclusion) != std::string::npos;
+        is_excluded = logString.find(exclusion) != std::string::npos;
       }
-      if (match_found) {
+      if (is_excluded) {
         break;
       }
     }
-    if (!match_found) {
+    if (!is_excluded) {
       ++filtered_size;
-      ss << " * " << filtered_size << ": '" << logMessageStr << "'\n";
+      ss << " * " << filtered_size << ": '" << logString << "'\n";
     }
   }
 
@@ -108,6 +113,41 @@ void EnergyPlusFixture::TearDownTestSuite() {
     return ::testing::AssertionSuccess();
   } else {
     return ::testing::AssertionFailure() << "Expected " << size << " warnings but got " << filtered_size << ":\n" << ss.str();
+  }
+}
+
+::testing::AssertionResult EnergyPlusFixture::checkLogMessagesContain(const std::vector<openstudio::LogMessage>& logMessages,
+                                                                      const std::vector<std::string>& searchStrings, bool use_regex) {
+
+  std::vector<std::string> logStrings;
+  std::transform(logMessages.cbegin(), logMessages.cend(), std::back_inserter(logStrings),
+                 [](const auto& logMessage) { return logMessage.logMessage(); });
+
+  std::stringstream ss;
+  int not_found = 0;
+
+  for (const std::string& searchString : searchStrings) {
+    bool match_found = false;
+    for (const std::string& logString : logStrings) {
+      if (use_regex) {
+        match_found = std::regex_match(logString, std::regex(searchString));
+      } else {
+        match_found = logString.find(searchString) != std::string::npos;
+      }
+      if (match_found) {
+        break;
+      }
+    }
+    if (!match_found) {
+      ++not_found;
+      ss << " * " << not_found << ": '" << searchString << "'\n";
+    }
+  }
+
+  if (not_found == 0) {
+    return ::testing::AssertionSuccess();
+  } else {
+    return ::testing::AssertionFailure() << "Could not find " << not_found << " messages:\n" << ss.str();
   }
 }
 
