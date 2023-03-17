@@ -203,10 +203,17 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_GettersSetters) {
 TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_remove) {
   Model m;
   HeatPumpAirToWaterFuelFiredCooling hp(m);
+
+  HeatPumpAirToWaterFuelFiredHeating companionHP(m);
+  EXPECT_TRUE(hp.setCompanionHeatingHeatPump(companionHP));
+  EXPECT_TRUE(companionHP.setCompanionCoolingHeatPump(hp));
+
   auto size = m.modelObjects().size();
   EXPECT_FALSE(hp.remove().empty());
   EXPECT_EQ(size - 1, m.modelObjects().size());
-  EXPECT_EQ(0u, m.getConcreteModelObjects<HeatPumpAirToWaterFuelFiredCooling>().size());
+  EXPECT_FALSE(companionHP.companionCoolingHeatPump());
+  EXPECT_EQ(0, m.getConcreteModelObjects<HeatPumpAirToWaterFuelFiredCooling>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<HeatPumpAirToWaterFuelFiredHeating>().size());
 }
 
 TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_clone) {
@@ -218,23 +225,44 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_clone) {
   EXPECT_EQ(2u, m.getConcreteModelObjects<CurveBiquadratic>().size());
   EXPECT_EQ(1u, m.getConcreteModelObjects<CurveQuadratic>().size());
 
-  {
-    auto hpClone = hp.clone(m).cast<HeatPumpAirToWaterFuelFiredCooling>();
-    EXPECT_EQ(curve1.handle(), hp.normalizedCapacityFunctionofTemperatureCurve().handle());
-    EXPECT_EQ(curve2.handle(), hp.fuelEnergyInputRatioFunctionofTemperatureCurve().handle());
-    EXPECT_EQ(curve3.handle(), hp.fuelEnergyInputRatioFunctionofPLRCurve().handle());
-    EXPECT_EQ(2u, m.getConcreteModelObjects<CurveBiquadratic>().size());
-    EXPECT_EQ(1u, m.getConcreteModelObjects<CurveQuadratic>().size());
-  }
+  HeatPumpAirToWaterFuelFiredHeating companionHP(m);
+  EXPECT_TRUE(hp.setCompanionHeatingHeatPump(companionHP));
+  EXPECT_TRUE(companionHP.setCompanionCoolingHeatPump(hp));
+
+  EXPECT_EQ(4u, m.getConcreteModelObjects<CurveBiquadratic>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CurveQuadratic>().size());
+
+  PlantLoop p(m);
+  EXPECT_TRUE(p.addSupplyBranchForComponent(hp));
+  EXPECT_TRUE(hp.inletModelObject());
+  EXPECT_TRUE(hp.outletModelObject());
+  EXPECT_TRUE(hp.plantLoop());
 
   {
     Model m2;
-    auto hpClone2 = hp.clone(m2).cast<HeatPumpAirToWaterFuelFiredCooling>();
-    EXPECT_EQ(curve1.handle(), hp.normalizedCapacityFunctionofTemperatureCurve().handle());
-    EXPECT_EQ(curve2.handle(), hp.fuelEnergyInputRatioFunctionofTemperatureCurve().handle());
-    EXPECT_EQ(curve3.handle(), hp.fuelEnergyInputRatioFunctionofPLRCurve().handle());
+    auto hpClone = hp.clone(m2).cast<HeatPumpAirToWaterFuelFiredCooling>();
+    EXPECT_FALSE(hpClone.companionHeatingHeatPump());
+    EXPECT_FALSE(hpClone.inletModelObject());
+    EXPECT_FALSE(hpClone.outletModelObject());
+    EXPECT_FALSE(hpClone.plantLoop());
+    EXPECT_NE(curve1.handle(), hpClone.normalizedCapacityFunctionofTemperatureCurve().handle());
+    EXPECT_NE(curve2.handle(), hpClone.fuelEnergyInputRatioFunctionofTemperatureCurve().handle());
+    EXPECT_NE(curve3.handle(), hpClone.fuelEnergyInputRatioFunctionofPLRCurve().handle());
     EXPECT_EQ(2u, m2.getConcreteModelObjects<CurveBiquadratic>().size());
     EXPECT_EQ(1u, m2.getConcreteModelObjects<CurveQuadratic>().size());
+  }
+
+  {
+    auto hpClone = hp.clone(m).cast<HeatPumpAirToWaterFuelFiredCooling>();
+    EXPECT_FALSE(hpClone.companionHeatingHeatPump());
+    EXPECT_FALSE(hpClone.inletModelObject());
+    EXPECT_FALSE(hpClone.outletModelObject());
+    EXPECT_FALSE(hpClone.plantLoop());
+    EXPECT_EQ(curve1.handle(), hpClone.normalizedCapacityFunctionofTemperatureCurve().handle());
+    EXPECT_EQ(curve2.handle(), hpClone.fuelEnergyInputRatioFunctionofTemperatureCurve().handle());
+    EXPECT_EQ(curve3.handle(), hpClone.fuelEnergyInputRatioFunctionofPLRCurve().handle());
+    EXPECT_EQ(4u, m.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<CurveQuadratic>().size());
   }
 }
 
@@ -247,25 +275,25 @@ TEST_F(ModelFixture, HeatPumpAirToWaterFuelFiredCooling_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(hp.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
+  EXPECT_EQ(2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(hp.addToNode(inletNode));
-  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+  EXPECT_EQ(5, airLoop.demandComponents().size());
 
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(hp.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
+  EXPECT_EQ(7, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(hp.addToNode(demandOutletNode));
-  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+  EXPECT_EQ(5, plantLoop.demandComponents().size());
 
   auto hpClone = hp.clone(m).cast<HeatPumpAirToWaterFuelFiredCooling>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(hpClone.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
+  EXPECT_EQ(9, plantLoop.supplyComponents().size());
 }
