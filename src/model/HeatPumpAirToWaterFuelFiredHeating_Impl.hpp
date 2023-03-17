@@ -78,6 +78,11 @@ namespace model {
       // Resets the Companion Heat Pump
       virtual ModelObject clone(Model model) const override;
 
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
       //@}
       /** @name Getters */
       //@{

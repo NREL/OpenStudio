@@ -771,12 +771,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_compo
 
   {
     HeatPumpAirToWaterFuelFiredHeating obj(m);
-    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+    EXPECT_EQ(openstudio::energyplus::ComponentType::HEATING, openstudio::energyplus::componentType(obj));
   }
 
   {
     HeatPumpAirToWaterFuelFiredCooling obj(m);
-    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+    EXPECT_EQ(openstudio::energyplus::ComponentType::COOLING, openstudio::energyplus::componentType(obj));
   }
 
   {
