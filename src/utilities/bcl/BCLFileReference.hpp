@@ -32,11 +32,7 @@
 
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
-#include "../core/Compare.hpp"
 #include "../UtilitiesAPI.hpp"
-
-#include <compare>
-#include <vector>
 
 namespace pugi {
 class xml_node;
@@ -127,8 +123,15 @@ class UTILITIES_API BCLFileReference
   // Declaring the equality operator and the spaceship operator (three-way comparison operator) will end up defining all comparison operators
   // We really need only the operator< for sorting a STL container of BCLFileReference, but might as well be consistent
   // Comparison is done on m_path. Sorting is useful for BCLXML to avoid reordering of files (see #4748)
-  friend bool operator==(const BCLFileReference& lhs, const BCLFileReference& rhs);
-  friend std::strong_ordering operator<=>(const BCLFileReference& lhs, const BCLFileReference& rhs);
+  // TODO: compiler/SWIG support still seems too sparse (need GCC 10+, Apple Clang 13 at least), let's avoid it for now
+  // friend bool operator==(const BCLFileReference& lhs, const BCLFileReference& rhs);
+  // friend std::strong_ordering operator<=>(const BCLFileReference& lhs, const BCLFileReference& rhs);
+  friend inline bool operator==(const BCLFileReference& lhs, const BCLFileReference& rhs) {
+    return lhs.m_path == rhs.m_path;
+  }
+  friend inline bool operator<(const BCLFileReference& lhs, const BCLFileReference& rhs) {
+    return lhs.m_path < rhs.m_path;
+  }
 
  private:
   // configure logging
@@ -148,6 +151,19 @@ class UTILITIES_API BCLFileReference
 
 /** Prints BCLFileReference to os. \relates BCLFileReference */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const BCLFileReference& file);
+
+inline bool operator!=(const BCLFileReference& lhs, const BCLFileReference& rhs) {
+  return !operator==(lhs, rhs);
+}
+inline bool operator>(const BCLFileReference& lhs, const BCLFileReference& rhs) {
+  return operator<(rhs, lhs);
+}
+inline bool operator<=(const BCLFileReference& lhs, const BCLFileReference& rhs) {
+  return !operator>(lhs, rhs);
+}
+inline bool operator>=(const BCLFileReference& lhs, const BCLFileReference& rhs) {
+  return !operator<(lhs, rhs);
+}
 
 }  // namespace openstudio
 
