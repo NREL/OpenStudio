@@ -75,6 +75,9 @@ namespace model {
 
       virtual bool addToNode(Node& node) override;
 
+      // Resets the Companion Heat Pump
+      virtual ModelObject clone(Model model) const override;
+
       //@}
       /** @name Getters */
       //@{

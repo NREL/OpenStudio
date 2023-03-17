@@ -106,6 +106,12 @@ namespace model {
       return false;
     }
 
+    ModelObject HeatPumpAirToWaterFuelFiredHeating_Impl::clone(Model model) const {
+      auto moClone = StraightComponent_Impl::clone(model);
+      moClone.setString(OS_HeatPump_AirToWater_FuelFired_HeatingFields::CompanionCoolingHeatPumpName, "");
+      return moClone;
+    }
+
     boost::optional<HeatPumpAirToWaterFuelFiredCooling> HeatPumpAirToWaterFuelFiredHeating_Impl::companionCoolingHeatPump() const {
       return getObject<ModelObject>().getModelObjectTarget<HeatPumpAirToWaterFuelFiredCooling>(
         OS_HeatPump_AirToWater_FuelFired_HeatingFields::CompanionCoolingHeatPumpName);
