@@ -103,6 +103,10 @@
 #include "../../model/PlantComponentTemperatureSource_Impl.hpp"
 #include "../../model/PlantComponentUserDefined.hpp"
 #include "../../model/PlantComponentUserDefined_Impl.hpp"
+#include "../../model/HeatPumpAirToWaterFuelFiredHeating.hpp"
+#include "../../model/HeatPumpAirToWaterFuelFiredHeating_Impl.hpp"
+#include "../../model/HeatPumpAirToWaterFuelFiredCooling.hpp"
+#include "../../model/HeatPumpAirToWaterFuelFiredCooling_Impl.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating_Impl.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
@@ -341,6 +345,16 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating: {
         auto mo = component.cast<HeatPumpPlantLoopEIRHeating>();
         result = mo.loadSideReferenceFlowRate();
+        break;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_AirToWater_FuelFired_Heating: {
+        auto mo = component.cast<HeatPumpAirToWaterFuelFiredHeating>();
+        result = mo.designFlowRate();
+        break;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_AirToWater_FuelFired_Cooling: {
+        auto mo = component.cast<HeatPumpAirToWaterFuelFiredCooling>();
+        result = mo.designFlowRate();
         break;
       }
       default: {
@@ -607,6 +621,12 @@ namespace energyplus {
         return ComponentType::HEATING;
       }
       case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Cooling: {
+        return ComponentType::COOLING;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_AirToWater_FuelFired_Heating: {
+        return ComponentType::HEATING;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_AirToWater_FuelFired_Cooling: {
         return ComponentType::COOLING;
       }
       case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery: {

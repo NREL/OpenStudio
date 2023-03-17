@@ -285,6 +285,8 @@ namespace model {
   class HeatExchangerDesiccantBalancedFlow;
   class HeatExchangerDesiccantBalancedFlowPerformanceDataType1;
   class HeatExchangerFluidToFluid;
+  class HeatPumpAirToWaterFuelFiredHeating;
+  class HeatPumpAirToWaterFuelFiredCooling;
   class HeatPumpWaterToWaterEquationFitCooling;
   class HeatPumpWaterToWaterEquationFitHeating;
   class HeatPumpPlantLoopEIRCooling;
@@ -1113,6 +1115,10 @@ namespace energyplus {
       translateHeatExchangerDesiccantBalancedFlowPerformanceDataType1(model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& modelObject);
 
     boost::optional<IdfObject> translateHeatExchangerFluidToFluid(model::HeatExchangerFluidToFluid& modelObject);
+
+    boost::optional<IdfObject> translateHeatPumpAirToWaterFuelFiredHeating(model::HeatPumpAirToWaterFuelFiredHeating& modelObject);
+
+    boost::optional<IdfObject> translateHeatPumpAirToWaterFuelFiredCooling(model::HeatPumpAirToWaterFuelFiredCooling& modelObject);
 
     boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitCooling(model::HeatPumpWaterToWaterEquationFitCooling& modelObject);
 
