@@ -249,6 +249,15 @@ elseif(UNIX)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
 
+  find_program(UNAME uname)
+  execute_process(COMMAND ${UNAME} -m
+    OUTPUT_VARIABLE ARCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  if (ARCH STREQUAL "aarch64")
+    set(ARCH "arm64")
+  endif()
+
   # eg: `-Ubuntu18.04`
   set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
 
@@ -494,7 +503,9 @@ if(UNIX)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
 
   # all warnings
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor -Wno-narrowing")
+  # TODO: temp for gcc-11 which throws narrowing conversions in Path_GTest.cpp due to int codepoints
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-narrowing")
   # Treat all warnings as errors
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   if(APPLE)
@@ -616,12 +627,18 @@ if(UNIX)
     set(ENERGYPLUS_EXPECTED_HASH b331823d01fd06f691df7ab084ba21f6)
     set(ENERGYPLUS_PLATFORM "Centos7-x86_64")
   else()
-    if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
+    if(LSB_RELEASE_VERSION_SHORT MATCHES "22.04")
+      if (ARCH MATCHES "arm64")
+        set(ENERGYPLUS_EXPECTED_HASH 3fad8a0f038961932c3866b491297fca)
+      else()
+        set(ENERGYPLUS_EXPECTED_HASH b45d80bbf7d099d721ef252048cc56d6)
+      endif()
+    elseif(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
       set(ENERGYPLUS_EXPECTED_HASH fe5a4b8dd60fec342b7ed1f9216b7061)
     else() # 18.04
       set(ENERGYPLUS_EXPECTED_HASH fec576b594e24c11f3f83c6c3bb1e897)
     endif()
-    set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
+    set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-${ARCH}")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz")
@@ -1214,7 +1231,7 @@ if(APPLE)
   set(CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/)
 elseif(UNIX)
   # Default method doesn't use IFW but Deb, so this one is probably useless (but harmless)
-  set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
+  set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}-${ARCH}")
   set(CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/)
   # These two will set the .deb install path correctly
   set(CPACK_SET_DESTDIR ON)
