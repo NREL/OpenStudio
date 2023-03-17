@@ -2356,14 +2356,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
     // We get only a warning, since we can recover from it easily
     EXPECT_EQ(0u, ft.errors().size());
     EXPECT_EQ(2, ft.warnings().size());
-    EXPECT_EQ(
-      "Actuator 'Energy_Management_System_Actuator_1' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have turned "
-      "off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Thermal Zone 1' since there is only 1.",
-      ft.warnings().front().logMessage());
-    EXPECT_EQ(
-      "Actuator 'Energy_Management_System_Actuator_2' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have turned "
-      "off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Thermal Zone 1' since there is only 1.",
-      ft.warnings().back().logMessage());
+    EXPECT_TRUE(checkLogMessagesContain(
+      ft.warnings(),
+      {
+        "Actuator 'Energy_Management_System_Actuator_1' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have "
+        "turned off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Thermal Zone 1' since there is only 1.",
+        //
+        "Actuator 'Energy_Management_System_Actuator_2' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have "
+        "turned off ForwardTranslation's Space Feature. Falling back to using the attached ThermalZone 'Thermal Zone 1' since there is only 1.",
+      }));
 
     std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
     //expect 2 actuators
@@ -2391,18 +2392,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
 
     // We get only a warning, since we can recover from it easily
     EXPECT_EQ(2, ft.errors().size());
-    EXPECT_EQ(
-      "Actuator 'Energy_Management_System_Actuator_1' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have turned "
-      "on ForwardTranslation's Space Feature. The Space Type has multiple spaces attached. Falling back to using the first Space 'Space 1'.",
-      ft.errors().front().logMessage());
-    EXPECT_EQ(
-      "Actuator 'Energy_Management_System_Actuator_2' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have turned "
-      "on ForwardTranslation's Space Feature. The Space Type has multiple spaces attached. Falling back to using the first Space 'Space 1'.",
-      ft.errors().back().logMessage());
-    EXPECT_EQ(1, ft.warnings().size());
-    EXPECT_EQ("Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior walls between Spaces "
-              "will be merged. Make sure these are correctly Matched!",
-              ft.warnings().front().logMessage());
+    EXPECT_TRUE(checkLogMessagesContain(
+      ft.errors(),
+      {
+        "Actuator 'Energy_Management_System_Actuator_1' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have "
+        "turned "
+        "on ForwardTranslation's Space Feature. The Space Type has multiple spaces attached. Falling back to using the first Space 'Space 1'.",
+        //
+        "Actuator 'Energy_Management_System_Actuator_2' references a SpaceLoad 'Lights 1' attached to the SpaceType 'Space Type 1' but you have "
+        "turned "
+        "on ForwardTranslation's Space Feature. The Space Type has multiple spaces attached. Falling back to using the first Space 'Space 1'.",
+      }));
+    EXPECT_TRUE(checkLogMessagesSizeWithExclusions(
+      0, ft.warnings(),
+      {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+       "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
 
     std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
     //expect 2 actuators
