@@ -193,6 +193,7 @@ namespace model {
     }
 
     boost::optional<double> HeatPumpAirToWaterFuelFiredCooling_Impl::autosizedDesignTemperatureLift() {
+      // TODO: This entire field is actually never used in E+ as of 23.1.0-IOFreeze
       return getAutosizedValue("TODO_CHECK_SQL Design Temperature Lift", "deltaC");
     }
 
