@@ -41,6 +41,7 @@
 #include "../core/Deprecated.hpp"
 #include "../UtilitiesAPI.hpp"
 
+#include <compare>
 #include <vector>
 
 namespace pugi {
