@@ -2090,8 +2090,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
     EnergyManagementSystemActuator electricActuator1(electricEquipment[1], ComponentType, ControlType);  // , space4.get());
   } else {
     // 0 is on a SpaceType, 1 is on a Space
-    EnergyManagementSystemActuator electricActuator0(electricEquipment[0], ComponentType, ControlType);  // , space4.get());
     EnergyManagementSystemActuator electricActuator1(electricEquipment[1], ComponentType, ControlType);
+    EnergyManagementSystemActuator electricActuator0(electricEquipment[0], ComponentType, ControlType);  // , space4.get());
   }
 
   ForwardTranslator ft;
