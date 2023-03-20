@@ -850,8 +850,6 @@ namespace model {
           result.insert(ft);
         }
       }
-
-      // TODO: is supplemental wanted here?
       if (auto supHC_ = supplementalHeatingCoil()) {
         for (auto ft : supHC_->heatingFuelTypes()) {
           result.insert(ft);
@@ -869,8 +867,6 @@ namespace model {
           result.insert(ft);
         }
       }
-
-      // TODO: is supplemental wanted here?
       if (auto supHC_ = supplementalHeatingCoil()) {
         for (auto ft : supHC_->appGHeatingFuelTypes()) {
           result.insert(ft);

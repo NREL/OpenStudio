@@ -707,7 +707,6 @@ namespace model {
       for (auto ft : heatingCoil().heatingFuelTypes()) {
         result.insert(ft);
       }
-      // TODO: is supplemental needed?
       for (auto ft : supplementalHeatingCoil().heatingFuelTypes()) {
         result.insert(ft);
       }
@@ -719,7 +718,6 @@ namespace model {
       for (auto ft : heatingCoil().appGHeatingFuelTypes()) {
         result.insert(ft);
       }
-      // TODO: is supplemental needed?
       for (auto ft : supplementalHeatingCoil().appGHeatingFuelTypes()) {
         result.insert(ft);
       }
