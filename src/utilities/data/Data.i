@@ -33,6 +33,10 @@
 %template(OptionalEndUseType) boost::optional<openstudio::EndUseType>;
 %template(BuildingSectorVector) std::vector<openstudio::BuildingSector>;
 %template(OptionalBuildingSector) boost::optional<openstudio::BuildingSector>;
+%template(AppGFuelTypeVector) std::vector<openstudio::AppGFuelType>;
+%template(OptionalAppGFuelType) boost::optional<openstudio::AppGFuelType>;
+%template(ComponentTypeVector) std::vector<openstudio::ComponentType>;
+%template(OptionalComponentType) boost::optional<openstudio::ComponentType>;
 
 %include <utilities/data/DataEnums.hpp>
 %include <utilities/data/Attribute.i>

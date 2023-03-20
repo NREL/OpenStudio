@@ -276,6 +276,12 @@ OPENSTUDIO_ENUM(AppGFuelType,
   ((Other))
 );
 
+/** \relates AppGFuelType */
+using OptionalAppGFuelType = boost::optional<AppGFuelType>;
+
+/** \relates AppGFuelType */
+using AppGFuelTypeVector = std::vector<AppGFuelType>;
+
 /** \class ComponentType
  *  \brief What an HVACComponent is meant to do: heating, cooling, both or none
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
@@ -294,6 +300,12 @@ OPENSTUDIO_ENUM(ComponentType,
   ((Both))
   ((None))
 );
+
+/** \relates ComponentType */
+using OptionalComponentType = boost::optional<ComponentType>;
+
+/** \relates ComponentType */
+using ComponentTypeVector = std::vector<ComponentType>;
 
 // clang-format on
 
