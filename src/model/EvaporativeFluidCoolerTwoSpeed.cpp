@@ -842,7 +842,7 @@ namespace model {
     }
 
     std::vector<AppGFuelType> EvaporativeFluidCoolerTwoSpeed_Impl::appGHeatingFuelTypes() const {
-      return {};
+      return {AppGFuelType::Electric};
     }
 
   }  // namespace detail
