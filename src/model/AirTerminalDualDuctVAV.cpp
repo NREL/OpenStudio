@@ -305,7 +305,7 @@ namespace model {
 
     std::vector<FuelType> AirTerminalDualDuctVAV_Impl::coolingFuelTypes() const {
       if (auto a_ = airLoopHVAC()) {
-        return a_->heatingFuelTypes();
+        return a_->coolingFuelTypes();
       }
       return {};
     }
