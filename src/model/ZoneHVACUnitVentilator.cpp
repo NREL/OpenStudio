@@ -526,7 +526,7 @@ namespace model {
     std::vector<FuelType> ZoneHVACUnitVentilator_Impl::heatingFuelTypes() const {
       std::set<FuelType> result;
       if (auto hc_ = heatingCoil()) {
-        for (auto ft : hc_->coolingFuelTypes()) {
+        for (auto ft : hc_->heatingFuelTypes()) {
           result.insert(ft);
         }
       }

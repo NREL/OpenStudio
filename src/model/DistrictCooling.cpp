@@ -140,7 +140,7 @@ namespace model {
     }
 
     std::vector<AppGFuelType> DistrictCooling_Impl::appGHeatingFuelTypes() const {
-      return {AppGFuelType::District};
+      return {};
     }
 
   }  // namespace detail
