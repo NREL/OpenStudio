@@ -373,45 +373,35 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_HeatCoolFuelTypes) {
   ASSERT_EQ(1, p.heatingFuelTypes().size());
   EXPECT_EQ(FuelType(FuelType::Propane), p.heatingFuelTypes().front());
 
-  EXPECT_EQ(ComponentType::Heating, supHC.componentType());
+  EXPECT_EQ(ComponentType(ComponentType::Heating), supHC.componentType());
   EXPECT_EQ(0, supHC.coolingFuelTypes().size());
   ASSERT_EQ(1, supHC.heatingFuelTypes().size());
   EXPECT_EQ(FuelType(FuelType::Propane), supHC.heatingFuelTypes().front());
   ASSERT_EQ(1, supHC.appGHeatingFuelTypes().size());
   EXPECT_EQ(AppGFuelType(AppGFuelType::Fuel), supHC.appGHeatingFuelTypes().front());
 
-  EXPECT_EQ(ComponentType::Cooling, cc.componentType());
+  EXPECT_EQ(ComponentType(ComponentType::Cooling), cc.componentType());
   ASSERT_EQ(1, cc.coolingFuelTypes().size());
   EXPECT_EQ(FuelType(FuelType::Electricity), cc.coolingFuelTypes().front());
   EXPECT_EQ(0, cc.heatingFuelTypes().size());
   EXPECT_EQ(0, cc.appGHeatingFuelTypes().size());
 
-  EXPECT_EQ(ComponentType::Heating, hc.componentType());
+  EXPECT_EQ(ComponentType(ComponentType::Heating), hc.componentType());
   EXPECT_EQ(0, hc.coolingFuelTypes().size());
   ASSERT_EQ(1, hc.heatingFuelTypes().size());
   EXPECT_EQ(FuelType(FuelType::Electricity), hc.heatingFuelTypes().front());
   ASSERT_EQ(1, hc.appGHeatingFuelTypes().size());
   EXPECT_EQ(AppGFuelType(AppGFuelType::HeatPump), hc.appGHeatingFuelTypes().front());
 
-  EXPECT_EQ(ComponentType::Both, pthp.componentType());
-  ASSERT_EQ(1, pthp.coolingFuelTypes().size());
-  EXPECT_EQ(FuelType(FuelType::Electricity), pthp.coolingFuelTypes().front());
-  ASSERT_EQ(2, pthp.heatingFuelTypes().size());
-  EXPECT_EQ(FuelType(FuelType::Electricity), pthp.heatingFuelTypes().front());
-  EXPECT_EQ(FuelType(FuelType::Propane), pthp.heatingFuelTypes().back());
-  ASSERT_EQ(2, pthp.appGHeatingFuelTypes().size());
-  EXPECT_EQ(AppGFuelType(AppGFuelType::Fuel), pthp.appGHeatingFuelTypes().front());
-  EXPECT_EQ(AppGFuelType(AppGFuelType::HeatPump), pthp.appGHeatingFuelTypes().back());
+  EXPECT_EQ(ComponentType(ComponentType::Both), pthp.componentType());
+  testFuelTypeEquality({FuelType::Electricity}, pthp.coolingFuelTypes());
+  testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, pthp.heatingFuelTypes());
+  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, pthp.appGHeatingFuelTypes());
 
   EXPECT_TRUE(pthp.addToThermalZone(z));
 
-  EXPECT_EQ(ComponentType::Both, z.componentType());
-  ASSERT_EQ(1, z.coolingFuelTypes().size());
-  EXPECT_EQ(FuelType(FuelType::Electricity), z.coolingFuelTypes().front());
-  ASSERT_EQ(2, z.heatingFuelTypes().size());
-  EXPECT_EQ(FuelType(FuelType::Electricity), z.heatingFuelTypes().front());
-  EXPECT_EQ(FuelType(FuelType::Propane), z.heatingFuelTypes().back());
-  ASSERT_EQ(2, z.appGHeatingFuelTypes().size());
-  EXPECT_EQ(AppGFuelType(AppGFuelType::Fuel), z.appGHeatingFuelTypes().front());
-  EXPECT_EQ(AppGFuelType(AppGFuelType::HeatPump), z.appGHeatingFuelTypes().back());
+  EXPECT_EQ(ComponentType(ComponentType::Both), z.componentType());
+  testFuelTypeEquality({FuelType::Electricity}, z.coolingFuelTypes());
+  testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, z.heatingFuelTypes());
+  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, z.appGHeatingFuelTypes());
 }

@@ -31,11 +31,15 @@
 
 #include "ModelFixture.hpp"
 
+#include "../AirConditionerVariableRefrigerantFlow.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../AirLoopHVACZoneMixer.hpp"
 #include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../BoilerHotWater.hpp"
+#include "../CoolingTowerSingleSpeed.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilHeatingDXSingleSpeed.hpp"
 #include "../CoilHeatingWater.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveQuadratic.hpp"
@@ -49,6 +53,7 @@
 #include "../Model_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../PlantLoop.hpp"
 #include "../PortList.hpp"
 #include "../PortList_Impl.hpp"
 #include "../ScheduleCompact.hpp"
@@ -72,8 +77,8 @@
 #include "../ZoneControlContaminantController.hpp"
 #include "../ZoneControlContaminantController_Impl.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
-
-#include "../ScheduleConstant.hpp"
+#include "../ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../ZoneHVACUnitHeater.hpp"
 #include "../ZoneHVACUnitHeater_Impl.hpp"
 
@@ -817,4 +822,111 @@ TEST_F(ModelFixture, ThermalZone_DaylightingControlsAvailabilitySchedule) {
 
   z.resetDaylightingControlsAvailabilitySchedule();
   EXPECT_FALSE(z.daylightingControlsAvailabilitySchedule());
+}
+
+TEST_F(ModelFixture, ThermalZone_HeatCoolFuelTypes) {
+
+  Model m;
+
+  FanConstantVolume fan(m);
+  CoilHeatingDXSingleSpeed hc(m);
+  CoilCoolingDXSingleSpeed cc(m);
+  CoilHeatingWater supHC(m);
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+  ZoneHVACPackagedTerminalHeatPump pthp(m, alwaysOn, fan, hc, cc, supHC);
+
+  PlantLoop pthpPlantLoop(m);
+  BoilerHotWater b(m);
+  EXPECT_TRUE(b.setFuelType("Propane"));
+  EXPECT_TRUE(pthpPlantLoop.addSupplyBranchForComponent(b));
+  EXPECT_TRUE(pthpPlantLoop.addDemandBranchForComponent(supHC));
+
+  PlantLoop vrfPlantLoop(m);
+  CoolingTowerSingleSpeed ct(m);
+  AirConditionerVariableRefrigerantFlow vrfSystem(m);
+  EXPECT_TRUE(vrfSystem.setFuelType("NaturalGas"));
+  EXPECT_TRUE(vrfPlantLoop.addSupplyBranchForComponent(ct));
+  EXPECT_TRUE(vrfPlantLoop.addDemandBranchForComponent(vrfSystem));
+  EXPECT_EQ("WaterCooled", vrfSystem.condenserType());
+
+  ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(m, false);
+  EXPECT_TRUE(vrfSystem.addTerminal(vrfTerminal));
+
+  ThermalZone z(m);
+  EXPECT_TRUE(vrfTerminal.addToThermalZone(z));
+  EXPECT_TRUE(pthp.addToThermalZone(z));
+
+  EXPECT_EQ(2, z.equipment().size());
+
+  // VRF Terminal
+  {
+    // VRF PlantLoop: it has only the Cooling tower
+    EXPECT_EQ(ComponentType(ComponentType::Cooling), ct.componentType());
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity}, ct.coolingFuelTypes()));
+    EXPECT_TRUE(testFuelTypeEquality({}, ct.heatingFuelTypes()));
+    EXPECT_TRUE(testAppGFuelTypeEquality({}, ct.appGHeatingFuelTypes()));
+
+    EXPECT_EQ(ComponentType(ComponentType::Cooling), vrfPlantLoop.componentType());
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity}, vrfPlantLoop.coolingFuelTypes()));
+    EXPECT_TRUE(testFuelTypeEquality({}, vrfPlantLoop.heatingFuelTypes()));
+    EXPECT_TRUE(testAppGFuelTypeEquality({}, vrfPlantLoop.appGHeatingFuelTypes()));
+
+    // VRFSystem: this is the fuelType + the PlantLoop if any
+    EXPECT_EQ(ComponentType(ComponentType::Both), vrfSystem.componentType());
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity, FuelType::Gas}, vrfSystem.coolingFuelTypes()));
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Gas}, vrfSystem.heatingFuelTypes()));
+    EXPECT_TRUE(testAppGFuelTypeEquality({AppGFuelType::Fuel}, vrfSystem.appGHeatingFuelTypes()));
+
+    // vrfTerminal should return Electric/HeatPump + whatever its VRFSystem is doing
+    EXPECT_EQ(ComponentType(ComponentType::Both), vrfTerminal.componentType());
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity, FuelType::Gas}, vrfTerminal.coolingFuelTypes()));
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity, FuelType::Gas}, vrfTerminal.heatingFuelTypes()));
+    EXPECT_TRUE(testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, vrfTerminal.appGHeatingFuelTypes()));
+  }
+
+  // PTHP
+  {
+    // Cooling Coil
+    EXPECT_EQ(ComponentType(ComponentType::Cooling), cc.componentType());
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity}, cc.coolingFuelTypes()));
+    EXPECT_TRUE(testFuelTypeEquality({}, cc.heatingFuelTypes()));
+    EXPECT_TRUE(testAppGFuelTypeEquality({}, cc.appGHeatingFuelTypes()));
+
+    // Heating Coil
+    EXPECT_EQ(ComponentType(ComponentType::Heating), hc.componentType());
+    EXPECT_TRUE(testFuelTypeEquality({}, hc.coolingFuelTypes()));
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity}, hc.heatingFuelTypes()));
+    EXPECT_TRUE(testAppGFuelTypeEquality({AppGFuelType::HeatPump}, hc.appGHeatingFuelTypes()));
+
+    // Supplemental Heating Coil: this is a CoilHeatingWater to it grabs the plantloop
+    {
+      // Boiler is Propane
+      EXPECT_EQ(ComponentType(ComponentType::Heating), b.componentType());
+      EXPECT_TRUE(testFuelTypeEquality({}, b.coolingFuelTypes()));
+      EXPECT_TRUE(testFuelTypeEquality({FuelType::Propane}, b.heatingFuelTypes()));
+      EXPECT_TRUE(testAppGFuelTypeEquality({AppGFuelType::Fuel}, b.appGHeatingFuelTypes()));
+
+      EXPECT_EQ(ComponentType(ComponentType::Heating), pthpPlantLoop.componentType());
+      EXPECT_TRUE(testFuelTypeEquality({}, pthpPlantLoop.coolingFuelTypes()));
+      EXPECT_TRUE(testFuelTypeEquality({FuelType::Propane}, pthpPlantLoop.heatingFuelTypes()));
+      EXPECT_TRUE(testAppGFuelTypeEquality({AppGFuelType::Fuel}, pthpPlantLoop.appGHeatingFuelTypes()));
+
+      EXPECT_EQ(ComponentType(ComponentType::Heating), supHC.componentType());
+      EXPECT_TRUE(testFuelTypeEquality({}, supHC.coolingFuelTypes()));
+      EXPECT_TRUE(testFuelTypeEquality({FuelType::Propane}, supHC.heatingFuelTypes()));
+      EXPECT_TRUE(testAppGFuelTypeEquality({AppGFuelType::Fuel}, supHC.appGHeatingFuelTypes()));
+    }
+
+    // PTHP is the sum of Cooling + Heating + supHC coils
+    EXPECT_EQ(ComponentType(ComponentType::Both), pthp.componentType());
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity}, pthp.coolingFuelTypes()));
+    EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, pthp.heatingFuelTypes()));
+    EXPECT_TRUE(testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, pthp.appGHeatingFuelTypes()));
+  }
+
+  // Zone checks the zone equipment
+  EXPECT_EQ(ComponentType(ComponentType::Both), z.componentType());
+  EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity, FuelType::Gas}, z.coolingFuelTypes()));
+  EXPECT_TRUE(testFuelTypeEquality({FuelType::Electricity, FuelType::Gas, FuelType::Propane}, z.heatingFuelTypes()));
+  EXPECT_TRUE(testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, z.appGHeatingFuelTypes()));
 }
