@@ -1457,8 +1457,8 @@ namespace model {
         result.insert(plantFuelTypes.begin(), plantFuelTypes.end());
       }
       if (auto zoneComp_ = containingZoneHVACComponent()) {
-        auto zcFuelTypes = zoneComp_->heatingFuelTypes();
-        result.insert(zcFuelTypes.begin(), zcFuelTypes.end());
+        // The only accepted types are the WaterHeaterHeatPump or WaterHeaterHeatPumpWrappedCondenser so skip the checks
+        result.insert(FuelType::Electricity);
       }
 
       return {result.begin(), result.end()};
@@ -1474,8 +1474,8 @@ namespace model {
         result.insert(plantFuelTypes.begin(), plantFuelTypes.end());
       }
       if (auto zoneComp_ = containingZoneHVACComponent()) {
-        auto zcFuelTypes = zoneComp_->appGHeatingFuelTypes();
-        result.insert(zcFuelTypes.begin(), zcFuelTypes.end());
+        // The only accepted types are the WaterHeaterHeatPump or WaterHeaterHeatPumpWrappedCondenser so skip the checks
+        result.insert(AppGFuelType::HeatPump);
       }
 
       return {result.begin(), result.end()};

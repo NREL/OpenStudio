@@ -546,8 +546,11 @@ namespace model {
       }
     }
 
+    // NOTE: The WaterHeaterHeatPump is listed as a ThermalZone equipment, but it's not a zone load.
+    // So we set everything to None/Empty here. It has a child Tank (WaterHeater:Mixed for eg), which WILL check if it's part of a HPWH
+    // so the PlantLoop's methods are affected accordingly though.
     ComponentType WaterHeaterHeatPump_Impl::componentType() const {
-      return ComponentType::Heating;
+      return ComponentType::None;
     }
 
     std::vector<FuelType> WaterHeaterHeatPump_Impl::coolingFuelTypes() const {
@@ -555,11 +558,11 @@ namespace model {
     }
 
     std::vector<FuelType> WaterHeaterHeatPump_Impl::heatingFuelTypes() const {
-      return {FuelType::Electricity};
+      return {};
     }
 
     std::vector<AppGFuelType> WaterHeaterHeatPump_Impl::appGHeatingFuelTypes() const {
-      return {AppGFuelType::HeatPump};  // TODO: openstudio-standards uses Electric
+      return {};
     }
 
   }  // namespace detail
