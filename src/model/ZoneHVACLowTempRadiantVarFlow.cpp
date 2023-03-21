@@ -578,21 +578,15 @@ namespace model {
     ComponentType ZoneHVACLowTempRadiantVarFlow_Impl::componentType() const {
       const bool has_cooling = heatingCoil().has_value();
       const bool has_heating = coolingCoil().has_value();
-      if (has_cooling && !has_heating) {
-        return ComponentType::Cooling;
 
-        // If source side is purely heating
-      } else if (!has_cooling && has_heating) {
-        return ComponentType::Heating;
-
-        // If there is nothing
-      } else if (!has_cooling && !has_heating) {
-        return ComponentType::None;
-
-        // All other cases: BOTH
-      } else {
+      if (has_cooling && has_heating) {
         return ComponentType::Both;
+      } else if (has_cooling) {
+        return ComponentType::Cooling;
+      } else if (has_heating) {
+        return ComponentType::Heating;
       }
+      return ComponentType::None;
     }
 
     std::vector<FuelType> ZoneHVACLowTempRadiantVarFlow_Impl::coolingFuelTypes() const {

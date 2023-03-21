@@ -630,22 +630,14 @@ namespace model {
         }
       }
 
-      // If source side is purely cooling
-      if (has_cooling && !has_heating) {
-        return ComponentType::Cooling;
-
-        // If source side is purely heating
-      } else if (!has_cooling && has_heating) {
-        return ComponentType::Heating;
-
-        // If there is nothing
-      } else if (!has_cooling && !has_heating) {
-        return ComponentType::None;
-
-        // All other cases: BOTH
-      } else {
+      if (has_cooling && has_heating) {
         return ComponentType::Both;
+      } else if (has_cooling) {
+        return ComponentType::Cooling;
+      } else if (has_heating) {
+        return ComponentType::Heating;
       }
+      return ComponentType::None;
     }
 
     std::vector<FuelType> AirLoopHVACOutdoorAirSystem_Impl::coolingFuelTypes() const {

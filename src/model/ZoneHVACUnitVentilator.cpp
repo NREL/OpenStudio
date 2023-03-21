@@ -496,21 +496,14 @@ namespace model {
       const bool has_cooling = coolingCoil().is_initialized();
       const bool has_heating = heatingCoil().is_initialized();
 
-      if (has_cooling && !has_heating) {
-        return ComponentType::Cooling;
-
-        // If source side is purely heating
-      } else if (!has_cooling && has_heating) {
-        return ComponentType::Heating;
-
-        // If there is nothing
-      } else if (!has_cooling && !has_heating) {
-        return ComponentType::None;
-
-        // All other cases: BOTH
-      } else {
+      if (has_cooling && has_heating) {
         return ComponentType::Both;
+      } else if (has_cooling) {
+        return ComponentType::Cooling;
+      } else if (has_heating) {
+        return ComponentType::Heating;
       }
+      return ComponentType::None;
     }
 
     std::vector<FuelType> ZoneHVACUnitVentilator_Impl::coolingFuelTypes() const {
