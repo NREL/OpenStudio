@@ -42,6 +42,8 @@
 #include "../Schedule.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../WaterHeaterMixed.hpp"
+#include "../WaterHeaterMixed_Impl.hpp"
+#include "../PlantLoop.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -293,4 +295,46 @@ TEST_F(ModelFixture, WaterHeaterHeatPump_InletAirTemperatureforCompressorOperati
   EXPECT_TRUE(hpwh.setMaximumInletAirTemperatureforCompressorOperation(40.0));
   EXPECT_EQ(-10.0, hpwh.minimumInletAirTemperatureforCompressorOperation());
   EXPECT_EQ(40.0, hpwh.maximumInletAirTemperatureforCompressorOperation());
+}
+
+TEST_F(ModelFixture, WaterHeaterHeatPump_HeatCoolFuelTypes) {
+  // Test for #4053
+  Model m;
+  WaterHeaterHeatPump hpwh(m);
+  auto tank = hpwh.tank().cast<WaterHeaterMixed>();
+
+  ThermalZone zone(m);
+  EXPECT_TRUE(hpwh.addToThermalZone(zone));
+
+  PlantLoop plantLoop(m);
+  EXPECT_TRUE(plantLoop.addSupplyBranchForComponent(tank));
+
+  // Tank has no heater capacity, so it should only return the HPWH's
+  EXPECT_TRUE(tank.setHeaterFuelType("NaturalGas"));
+  EXPECT_TRUE(tank.setHeaterMaximumCapacity(0.0));
+  EXPECT_EQ(ComponentType(ComponentType::Heating), tank.componentType());
+  EXPECT_EQ(0, tank.coolingFuelTypes().size());
+  ASSERT_EQ(1, tank.heatingFuelTypes().size());
+  EXPECT_EQ(FuelType(FuelType::Electricity), tank.heatingFuelTypes().front());
+  ASSERT_EQ(1, tank.appGHeatingFuelTypes().size());
+  EXPECT_EQ(AppGFuelType(AppGFuelType::HeatPump), tank.appGHeatingFuelTypes().front());
+
+  // HPWH should not affect the zone
+  EXPECT_EQ(ComponentType(ComponentType::None), zone.componentType());
+  EXPECT_EQ(0, zone.coolingFuelTypes().size());
+  EXPECT_EQ(0, zone.heatingFuelTypes().size());
+  EXPECT_EQ(0, zone.appGHeatingFuelTypes().size());
+  // And that's because we set the HPWH to be none/empty
+  EXPECT_EQ(ComponentType(ComponentType::None), hpwh.componentType());
+  EXPECT_EQ(0, hpwh.coolingFuelTypes().size());
+  EXPECT_EQ(0, hpwh.heatingFuelTypes().size());
+  EXPECT_EQ(0, hpwh.appGHeatingFuelTypes().size());
+
+  // But the tank should affect the plantLoop
+  EXPECT_EQ(ComponentType(ComponentType::Heating), plantLoop.componentType());
+  EXPECT_EQ(0, plantLoop.coolingFuelTypes().size());
+  ASSERT_EQ(1, plantLoop.heatingFuelTypes().size());
+  EXPECT_EQ(FuelType(FuelType::Electricity), plantLoop.heatingFuelTypes().front());
+  ASSERT_EQ(1, plantLoop.appGHeatingFuelTypes().size());
+  EXPECT_EQ(AppGFuelType(AppGFuelType::HeatPump), plantLoop.appGHeatingFuelTypes().front());
 }
