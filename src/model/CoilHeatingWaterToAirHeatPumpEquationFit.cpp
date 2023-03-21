@@ -398,18 +398,22 @@ namespace model {
       std::set<FuelType> result;
       result.insert(FuelType::Electricity);
       if (auto p_ = plantLoop()) {
-        return p_->heatingFuelTypes();
+        for (auto ft : p_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
       }
-      return {};
+      return {result.begin(), result.end()};
     }
 
     std::vector<AppGFuelType> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::appGHeatingFuelTypes() const {
       std::set<AppGFuelType> result;
       result.insert(AppGFuelType::HeatPump);
       if (auto p_ = plantLoop()) {
-        return p_->appGHeatingFuelTypes();
+        for (auto ft : p_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
       }
-      return {};
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

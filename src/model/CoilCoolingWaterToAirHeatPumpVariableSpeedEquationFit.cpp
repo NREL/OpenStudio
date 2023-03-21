@@ -476,7 +476,7 @@ namespace model {
           result.insert(ft);
         }
       }
-      return {};
+      return {result.begin(), result.end()};
     }
 
     std::vector<FuelType> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::heatingFuelTypes() const {

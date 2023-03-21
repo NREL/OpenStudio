@@ -496,9 +496,11 @@ namespace model {
       std::set<FuelType> result;
       result.insert(FuelType::Electricity);
       if (auto p_ = plantLoop()) {
-        return p_->coolingFuelTypes();
+        for (auto ft : p_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
       }
-      return {};
+      return {result.begin(), result.end()};
     }
 
     std::vector<FuelType> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::heatingFuelTypes() const {

@@ -555,11 +555,11 @@ namespace model {
     }
 
     std::vector<FuelType> CoilHeatingGas_Impl::heatingFuelTypes() const {
-      return {FuelType::Gas};
+      return {FuelType(fuelType())};
     }
 
     std::vector<AppGFuelType> CoilHeatingGas_Impl::appGHeatingFuelTypes() const {
-      return {AppGFuelType::Fuel};
+      return {convertFuelTypeToAppG(FuelType(fuelType()))};
     }
 
   }  // namespace detail
