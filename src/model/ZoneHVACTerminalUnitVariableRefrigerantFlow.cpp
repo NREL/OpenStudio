@@ -56,6 +56,12 @@
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
+#include "AirConditionerVariableRefrigerantFlow.hpp"
+#include "AirConditionerVariableRefrigerantFlow_Impl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -810,6 +816,39 @@ namespace model {
       return types;
     }
 
+    boost::optional<HVACComponent> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::vrfSystem() const {
+
+      if (isFluidTemperatureControl()) {
+
+        for (const auto& vrfSys : this->model().getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>()) {
+          for (const auto& term : vrfSys.terminals()) {
+            if (term.handle() == this->handle()) {
+              return vrfSys;
+            }
+          }
+        }
+
+        for (const auto& vrfSys : this->model().getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>()) {
+          for (const auto& term : vrfSys.terminals()) {
+            if (term.handle() == this->handle()) {
+              return vrfSys;
+            }
+          }
+        }
+
+      } else {
+        for (const auto& vrfSys : this->model().getConcreteModelObjects<AirConditionerVariableRefrigerantFlow>()) {
+          for (const auto& term : vrfSys.terminals()) {
+            if (term.handle() == this->handle()) {
+              return vrfSys;
+            }
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
     ComponentType ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::componentType() const {
       const bool has_cooling = coolingCoil().is_initialized();
       const bool has_heating = heatingCoil().is_initialized();
@@ -1350,6 +1389,10 @@ namespace model {
 
   boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
     return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+  }
+
+  boost::optional<HVACComponent> ZoneHVACTerminalUnitVariableRefrigerantFlow::vrfSystem() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->vrfSystem();
   }
 
 }  // namespace model

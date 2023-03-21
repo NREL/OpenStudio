@@ -165,9 +165,6 @@ namespace model {
     // Using a single type of coils is enforced: both must be FluidTemperatureControl or Non-FluidCtrl
     bool setHeatingCoil(const HVACComponent& coil);
 
-    // Returns true if the Cooling and Heating Coils are of the FluidTemperatureControl type
-    bool isFluidTemperatureControl() const;
-
     double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
 
     bool setZoneTerminalUnitOnParasiticElectricEnergyUse(double zoneTerminalUnitOnParasiticElectricEnergyUse);
@@ -222,6 +219,19 @@ namespace model {
     boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
     boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const;
+
+    //@}
+    /** @name Other */
+    //@{
+
+    // Returns true if the Cooling and Heating Coils are of the FluidTemperatureControl type
+    bool isFluidTemperatureControl() const;
+
+    /** Convenience function to return parent VRF System:
+     * - AirConditionerVariableRefrigerantFlow
+     * - AirConditionerVariableRefrigerantFlowFluidTemperatureControl
+     * - AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR */
+    boost::optional<HVACComponent> vrfSystem() const;
 
    protected:
     /// @cond

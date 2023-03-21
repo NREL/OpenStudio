@@ -223,10 +223,6 @@ namespace model {
 
       bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
 
-      //@}
-      /** @name Other */
-      //@{
-
       bool setSupplyAirFan(const HVACComponent& component);
       void resetSupplyAirFan();
 
@@ -234,8 +230,14 @@ namespace model {
 
       bool setHeatingCoil(const HVACComponent& component);
 
+      //@}
+      /** @name Other */
+      //@{
+
       // Returns true if the Cooling and Heating Coils are of the FluidTemperatureControl type
       bool isFluidTemperatureControl() const;
+
+      boost::optional<HVACComponent> vrfSystem() const;
 
       //@}
      protected:
