@@ -239,7 +239,12 @@ TEST_F(ModelFixture, UtilityBill_Electricity_Issue765) {
 TEST_F(ModelFixture, UtilityBill_Coverage) {
   Model model;
 
-  for (FuelType fuelType : FuelType::getValues()) {
+  for (const FuelType fuelType : FuelType::getValues()) {
+
+    if (fuelType == FuelType::Geothermal || fuelType == FuelType::Solar) {
+      EXPECT_ANY_THROW(UtilityBill(fuelType, model));
+      continue;
+    }
 
     UtilityBill utilityBill(fuelType, model);
     EXPECT_EQ(fuelType, utilityBill.fuelType().value());

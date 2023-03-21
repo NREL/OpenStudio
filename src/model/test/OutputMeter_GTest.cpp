@@ -367,52 +367,58 @@ TEST_F(ModelFixture, MeterFromModel) {
 TEST_F(ModelFixture, MeterEnumValues) {
   Model model;
 
-  std::set<int> installLocationTypes = InstallLocationType::getValues();
-  for (int installLocationType : installLocationTypes) {
+  const std::set<int> installLocationTypes = InstallLocationType::getValues();
+  for (const InstallLocationType installLocationType : installLocationTypes) {
     OutputMeter meter(model);
-    EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType(installLocationType))) << InstallLocationType(installLocationType).valueName();
-    ASSERT_TRUE(meter.installLocationType()) << InstallLocationType(installLocationType).valueName();
+    EXPECT_TRUE(meter.setInstallLocationType(installLocationType)) << installLocationType.valueName();
+    ASSERT_TRUE(meter.installLocationType()) << installLocationType.valueName();
     EXPECT_EQ(installLocationType, meter.installLocationType().get().value())
-      << InstallLocationType(installLocationType).valueName() << " != " << meter.installLocationType().get().valueName();
+      << installLocationType.valueName() << " != " << meter.installLocationType().get().valueName();
   }
 
   std::set<int> fuelTypes = FuelType::getValues();
-  for (int fuelType : fuelTypes) {
+  for (const FuelType fuelType : fuelTypes) {
     OutputMeter meter(model);
-    EXPECT_TRUE(meter.setFuelType(FuelType(fuelType))) << FuelType(fuelType).valueName();
-    ASSERT_TRUE(meter.fuelType()) << FuelType(fuelType).valueName();
-    EXPECT_EQ(fuelType, meter.fuelType().get().value()) << FuelType(fuelType).valueName() << " != " << meter.fuelType().get().valueName();
+    if (fuelType == FuelType::Geothermal || fuelType == FuelType::Solar) {
+      EXPECT_ANY_THROW(meter.setFuelType(fuelType));
+      continue;
+    }
+    EXPECT_TRUE(meter.setFuelType(fuelType)) << fuelType.valueName();
+    ASSERT_TRUE(meter.fuelType()) << fuelType.valueName();
+    EXPECT_EQ(fuelType, meter.fuelType().get().value()) << fuelType.valueName() << " != " << meter.fuelType().get().valueName();
   }
 
-  std::set<int> endUseTypes = EndUseType::getValues();
-  for (int endUseType : endUseTypes) {
+  fuelTypes.erase(FuelType::Geothermal);
+  fuelTypes.erase(FuelType::Solar);
+
+  const std::set<int> endUseTypes = EndUseType::getValues();
+  for (const EndUseType endUseType : endUseTypes) {
     OutputMeter meter(model);
-    EXPECT_TRUE(meter.setEndUseType(EndUseType(endUseType))) << EndUseType(endUseType).valueName();
-    ASSERT_TRUE(meter.endUseType()) << EndUseType(endUseType).valueName();
-    EXPECT_EQ(endUseType, meter.endUseType().get().value()) << EndUseType(endUseType).valueName() << " != " << meter.endUseType().get().valueName();
+    EXPECT_TRUE(meter.setEndUseType(endUseType)) << endUseType.valueName();
+    ASSERT_TRUE(meter.endUseType()) << endUseType.valueName();
+    EXPECT_EQ(endUseType, meter.endUseType().get().value()) << endUseType.valueName() << " != " << meter.endUseType().get().valueName();
   }
 
-  for (int installLocationType : installLocationTypes) {
-    for (int fuelType : fuelTypes) {
-      for (int endUseType : endUseTypes) {
+  for (const InstallLocationType installLocationType : installLocationTypes) {
+    for (const FuelType fuelType : fuelTypes) {
+      for (const EndUseType endUseType : endUseTypes) {
         OutputMeter meter(model);
-        EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType(installLocationType))) << InstallLocationType(installLocationType).valueName();
-        EXPECT_TRUE(meter.setFuelType(FuelType(fuelType))) << FuelType(fuelType).valueName();
-        EXPECT_TRUE(meter.setEndUseType(EndUseType(endUseType))) << EndUseType(endUseType).valueName();
+        EXPECT_TRUE(meter.setInstallLocationType(installLocationType)) << installLocationType.valueName();
+        EXPECT_TRUE(meter.setFuelType(fuelType)) << fuelType.valueName();
+        EXPECT_TRUE(meter.setEndUseType(endUseType)) << endUseType.valueName();
 
         // this is a specific case handled by OutputMeter
         if (installLocationType != InstallLocationType::Facility) {
-          ASSERT_TRUE(meter.installLocationType()) << InstallLocationType(installLocationType).valueName();
+          ASSERT_TRUE(meter.installLocationType()) << installLocationType.valueName();
           EXPECT_EQ(installLocationType, meter.installLocationType().get().value())
-            << InstallLocationType(installLocationType).valueName() << " != " << meter.installLocationType().get().valueName();
+            << installLocationType.valueName() << " != " << meter.installLocationType().get().valueName();
         }
 
-        ASSERT_TRUE(meter.fuelType()) << FuelType(fuelType).valueName();
-        EXPECT_EQ(fuelType, meter.fuelType().get().value()) << FuelType(fuelType).valueName() << " != " << meter.fuelType().get().valueName();
+        ASSERT_TRUE(meter.fuelType()) << fuelType.valueName();
+        EXPECT_EQ(fuelType, meter.fuelType().get().value()) << fuelType.valueName() << " != " << meter.fuelType().get().valueName();
 
-        ASSERT_TRUE(meter.endUseType()) << EndUseType(endUseType).valueName();
-        EXPECT_EQ(endUseType, meter.endUseType().get().value())
-          << EndUseType(endUseType).valueName() << " != " << meter.endUseType().get().valueName();
+        ASSERT_TRUE(meter.endUseType()) << endUseType.valueName();
+        EXPECT_EQ(endUseType, meter.endUseType().get().value()) << endUseType.valueName() << " != " << meter.endUseType().get().valueName();
       }
     }
   }

@@ -301,6 +301,11 @@ namespace model {
     }
 
     bool OutputMeter_Impl::setFuelType(FuelType type) {
+
+      if ((type == FuelType::Geothermal) || (type == FuelType::Solar)) {
+        LOG_AND_THROW("OutputMeter cannot be instantiated with a FuelType 'Geothermal' nor 'Solar'.");
+      }
+
       auto object = getObject<ModelObject>();
 
       std::string name = OutputMeter::getName(specificEndUse(), endUseType(), type, installLocationType(), specificInstallLocation());
@@ -445,14 +450,14 @@ namespace model {
       if (!result.empty()) {
         result += ":";
       }
-      result += EndUseType(*endUseType).valueName();
+      result += endUseType->valueName();
     }
     if (fuelType) {
       if (!result.empty()) {
         result += ":";
       }
-      result += FuelType(*fuelType)
-                  .valueDescription();  // same as valueName for all, except for FuelType::Gas where it returns "NaturalGas" which is what we want
+      result +=
+        fuelType->valueDescription();  // same as valueName for all, except for FuelType::Gas where it returns "NaturalGas" which is what we want
     }
     if (installLocationType) {
       // there is a weird corner case to handle 'InteriorLights:Electricity:Facility' -> 'InteriorLights:Electricity'
@@ -461,7 +466,7 @@ namespace model {
         if (!result.empty()) {
           result += ":";
         }
-        result += InstallLocationType(*installLocationType).valueName();
+        result += installLocationType->valueName();
       }
     }
     if (specificInstallLocation && !specificInstallLocation->empty()) {

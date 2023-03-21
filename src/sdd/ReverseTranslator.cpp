@@ -818,8 +818,9 @@ namespace sdd {
 
       if (fuelType == FuelType::Gasoline || fuelType == FuelType::Diesel || fuelType == FuelType::FuelOil_1 || fuelType == FuelType::FuelOil_2
           || fuelType == FuelType::Propane || fuelType == FuelType::Water || fuelType == FuelType::Steam || fuelType == FuelType::OtherFuel_1
-          || fuelType == FuelType::OtherFuel_2 || fuelType == FuelType::EnergyTransfer) {
-        // TODO: why are we ignoring these?! Aside from EnergyTransfer at least
+          || fuelType == FuelType::OtherFuel_2 || fuelType == FuelType::EnergyTransfer || fuelType == FuelType::Geothermal
+          || fuelType == FuelType::Solar) {
+        // TODO: why are we ignoring these?! Aside from EnergyTransfer, Solar and Geothermal at least
         // skip these to avoid E+ warning, EnergyTransfer is internal to the simulation
         continue;
       }
