@@ -72,5 +72,17 @@ void ModelFixture::testBooleanIddField(const openstudio::IddField& iddField, con
   }
 }
 
+bool ModelFixture::testFuelTypeEquality(const std::vector<openstudio::FuelType>& expectedFuelTypes,
+                                        const std::vector<openstudio::FuelType>& actualFuelTypes) {
+  EXPECT_EQ(expectedFuelTypes, actualFuelTypes);
+  return expectedFuelTypes == actualFuelTypes;
+}
+
+bool ModelFixture::testAppGFuelTypeEquality(const std::vector<openstudio::AppGFuelType>& expectedAppGFuelTypes,
+                                            const std::vector<openstudio::AppGFuelType>& actualAppGFuelTypes) {
+  EXPECT_EQ(expectedAppGFuelTypes, actualAppGFuelTypes);
+  return expectedAppGFuelTypes == actualAppGFuelTypes;
+}
+
 double ModelFixture::tol(1.0E-5);
 boost::optional<openstudio::FileLogSink> ModelFixture::logFile;

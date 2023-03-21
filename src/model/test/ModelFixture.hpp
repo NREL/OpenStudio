@@ -40,6 +40,7 @@
 #include "../../utilities/sql/SqlFile.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/FileLogSink.hpp"
+#include "../../utilities/data/DataEnums.hpp"
 
 class ModelFixture : public ::testing::Test
 {
@@ -58,6 +59,11 @@ class ModelFixture : public ::testing::Test
 
   // test that the given iddField is a boolean Yes/No choice field
   void testBooleanIddField(const openstudio::IddField& iddField, const boost::optional<std::string>& defaultValue);
+
+  bool testFuelTypeEquality(const std::vector<openstudio::FuelType>& expectedFuelTypes, const std::vector<openstudio::FuelType>& actualFuelTypes);
+
+  bool testAppGFuelTypeEquality(const std::vector<openstudio::AppGFuelType>& expectedAppGFuelTypes,
+                                const std::vector<openstudio::AppGFuelType>& actualAppGFuelTypes);
 
   // set up logging
   REGISTER_LOGGER("ModelFixture");
