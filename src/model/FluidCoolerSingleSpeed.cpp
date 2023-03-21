@@ -326,7 +326,7 @@ namespace model {
     }
 
     std::vector<AppGFuelType> FluidCoolerSingleSpeed_Impl::appGHeatingFuelTypes() const {
-      return {AppGFuelType::Electric};
+      return {};
     }
 
   }  // namespace detail

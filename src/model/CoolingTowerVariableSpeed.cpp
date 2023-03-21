@@ -762,7 +762,7 @@ namespace model {
     }
 
     std::vector<AppGFuelType> CoolingTowerVariableSpeed_Impl::appGHeatingFuelTypes() const {
-      return {AppGFuelType::Electric};
+      return {};
     }
 
   }  // namespace detail
