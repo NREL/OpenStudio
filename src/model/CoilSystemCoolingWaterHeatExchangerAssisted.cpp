@@ -252,10 +252,7 @@ namespace model {
     }
 
     std::vector<FuelType> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::coolingFuelTypes() const {
-      if (auto p_ = plantLoop()) {
-        return p_->coolingFuelTypes();
-      }
-      return {};
+      return coolingCoil().coolingFuelTypes();
     }
 
     std::vector<FuelType> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::heatingFuelTypes() const {
