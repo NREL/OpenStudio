@@ -877,8 +877,12 @@ namespace model {
           result.insert(ft);
         }
       }
+      if (auto vrfSys_ = vrfSystem()) {
+        for (auto ft : vrfSys_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
 
-      // TODO: check the AirConditionnerVariableRefrigerantFlow ( / FluidCtrl) that serves it too?
       return {result.begin(), result.end()};
     }
 
@@ -894,8 +898,12 @@ namespace model {
           result.insert(ft);
         }
       }
+      if (auto vrfSys_ = vrfSystem()) {
+        for (auto ft : vrfSys_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
 
-      // TODO: check the AirConditionnerVariableRefrigerantFlow ( / FluidCtrl) that serves it too?
       return {result.begin(), result.end()};
     }
 
@@ -911,8 +919,12 @@ namespace model {
           result.insert(ft);
         }
       }
+      if (auto vrfSys_ = vrfSystem()) {
+        for (auto ft : vrfSys_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
 
-      // TODO: check the AirConditionnerVariableRefrigerantFlow ( / FluidCtrl) that serves it too?
       return {result.begin(), result.end()};
     }
 
