@@ -841,7 +841,14 @@ namespace model {
     }
 
     std::vector<FuelType> ChillerElectricASHRAE205_Impl::coolingFuelTypes() const {
-      return {FuelType::Electricity};
+      std::set<FuelType> result;
+      result.insert(FuelType::Electricity);
+      if (auto p_ = condenserWaterLoop()) {
+        for (auto ft : p_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
     std::vector<FuelType> ChillerElectricASHRAE205_Impl::heatingFuelTypes() const {

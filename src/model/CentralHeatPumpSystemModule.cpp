@@ -187,18 +187,16 @@ namespace model {
     // Convenience function to return parent CentralHeatPumpSystem
     boost::optional<CentralHeatPumpSystem> CentralHeatPumpSystemModule_Impl::centralHeatPumpSystem() const {
 
-      boost::optional<CentralHeatPumpSystem> result;
-
       // loop on all CentralHeatPumpSystems in the model
       for (const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>()) {
         // Loop on each CentralHeatPumpSystemModules
         for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules()) {
           if (central_hp_module.handle() == this->handle()) {
-            result = central_hp;
+            return central_hp;
           }
         }
       }
-      return result;
+      return boost::none;
     }
 
   }  // namespace detail
