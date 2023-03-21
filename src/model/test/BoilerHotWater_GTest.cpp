@@ -36,6 +36,7 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../../utilities/data/DataEnums.hpp"
 
 using namespace openstudio::model;
 
@@ -143,4 +144,36 @@ TEST_F(ModelFixture, BoilerHotWater_remove) {
 
   EXPECT_TRUE(n1.handle().isNull());
   EXPECT_TRUE(n2.handle().isNull());
+}
+
+TEST_F(ModelFixture, BoilerHotWater_HeatCoolFuelTypes) {
+
+  using namespace openstudio;
+
+  Model m;
+
+  PlantLoop p(m);
+  BoilerHotWater b(m);
+  p.addSupplyBranchForComponent(b);
+
+  for (auto& fuelTypeString : BoilerHotWater::validFuelTypeValues()) {
+    EXPECT_TRUE(b.setFuelType(fuelTypeString));
+
+    const FuelType fuelType(fuelTypeString);
+    const AppGFuelType appGFuelType = convertFuelTypeToAppG(fuelType);
+
+    EXPECT_EQ(ComponentType(ComponentType::Heating), b.componentType());
+    EXPECT_EQ(0, b.coolingFuelTypes().size());
+    ASSERT_EQ(1, b.heatingFuelTypes().size());
+    EXPECT_EQ(fuelType, b.heatingFuelTypes().front());
+    ASSERT_EQ(1, b.appGHeatingFuelTypes().size());
+    EXPECT_EQ(appGFuelType, b.appGHeatingFuelTypes().front());
+
+    EXPECT_EQ(ComponentType(ComponentType::Heating), p.componentType());
+    EXPECT_EQ(0, p.coolingFuelTypes().size());
+    ASSERT_EQ(1, p.heatingFuelTypes().size());
+    EXPECT_EQ(fuelType, p.heatingFuelTypes().front());
+    ASSERT_EQ(1, p.appGHeatingFuelTypes().size());
+    EXPECT_EQ(appGFuelType, p.appGHeatingFuelTypes().front());
+  }
 }
