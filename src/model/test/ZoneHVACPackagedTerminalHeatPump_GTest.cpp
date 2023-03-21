@@ -354,7 +354,7 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_HeatCoolFuelTypes) {
   ZoneHVACPackagedTerminalHeatPump pthp(m, alwaysOn, fan, hc, cc, supHC);
 
   ThermalZone z(m);
-  EXPECT_EQ(ComponentType::None, z.componentType());
+  EXPECT_EQ(ComponentType(ComponentType::None), z.componentType());
   EXPECT_EQ(0, z.coolingFuelTypes().size());
   EXPECT_EQ(0, z.heatingFuelTypes().size());
   EXPECT_EQ(0, z.appGHeatingFuelTypes().size());
