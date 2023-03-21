@@ -790,27 +790,15 @@ namespace model {
     }
 
     std::vector<FuelType> ZoneHVACFourPipeFanCoil_Impl::coolingFuelTypes() const {
-      std::set<FuelType> result;
-      for (auto ft : coolingCoil().coolingFuelTypes()) {
-        result.insert(ft);
-      }
-      return {result.begin(), result.end()};
+      return coolingCoil().coolingFuelTypes();
     }
 
     std::vector<FuelType> ZoneHVACFourPipeFanCoil_Impl::heatingFuelTypes() const {
-      std::set<FuelType> result;
-      for (auto ft : heatingCoil().heatingFuelTypes()) {
-        result.insert(ft);
-      }
-      return {result.begin(), result.end()};
+      return heatingCoil().heatingFuelTypes();
     }
 
     std::vector<AppGFuelType> ZoneHVACFourPipeFanCoil_Impl::appGHeatingFuelTypes() const {
-      std::set<AppGFuelType> result;
-      for (auto ft : heatingCoil().appGHeatingFuelTypes()) {
-        result.insert(ft);
-      }
-      return {result.begin(), result.end()};
+      return heatingCoil().appGHeatingFuelTypes();
     }
 
   }  // namespace detail

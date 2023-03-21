@@ -268,11 +268,7 @@ namespace model {
     }
 
     std::vector<FuelType> ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::coolingFuelTypes() const {
-      std::set<FuelType> result;
-      for (auto ft : coolingCoil().coolingFuelTypes()) {
-        result.insert(ft);
-      }
-      return {result.begin(), result.end()};
+      return coolingCoil().coolingFuelTypes();
     }
 
     std::vector<FuelType> ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::heatingFuelTypes() const {

@@ -263,19 +263,11 @@ namespace model {
     }
 
     std::vector<FuelType> ZoneHVACBaseboardConvectiveWater_Impl::heatingFuelTypes() const {
-      std::set<FuelType> result;
-      for (auto ft : heatingCoil().heatingFuelTypes()) {
-        result.insert(ft);
-      }
-      return {result.begin(), result.end()};
+      return heatingCoil().heatingFuelTypes();
     }
 
     std::vector<AppGFuelType> ZoneHVACBaseboardConvectiveWater_Impl::appGHeatingFuelTypes() const {
-      std::set<AppGFuelType> result;
-      for (auto ft : heatingCoil().appGHeatingFuelTypes()) {
-        result.insert(ft);
-      }
-      return {result.begin(), result.end()};
+      return heatingCoil().appGHeatingFuelTypes();
     }
 
   }  // namespace detail
