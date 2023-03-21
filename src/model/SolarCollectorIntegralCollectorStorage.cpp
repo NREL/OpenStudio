@@ -222,7 +222,7 @@ namespace model {
     }
 
     std::vector<FuelType> SolarCollectorIntegralCollectorStorage_Impl::heatingFuelTypes() const {
-      return {FuelType::EnergyTransfer};
+      return {FuelType::Solar};
     }
 
     std::vector<AppGFuelType> SolarCollectorIntegralCollectorStorage_Impl::appGHeatingFuelTypes() const {

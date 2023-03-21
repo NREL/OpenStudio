@@ -206,7 +206,7 @@ namespace model {
     }
 
     std::vector<FuelType> SolarCollectorFlatPlateWater_Impl::heatingFuelTypes() const {
-      return {FuelType::EnergyTransfer};
+      return {FuelType::Solar};
     }
 
     std::vector<AppGFuelType> SolarCollectorFlatPlateWater_Impl::appGHeatingFuelTypes() const {

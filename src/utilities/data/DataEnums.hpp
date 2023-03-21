@@ -81,6 +81,8 @@ OPENSTUDIO_ENUM(FuelType,
   ((OtherFuel_1)(OtherFuel1))
   ((OtherFuel_2)(OtherFuel2))
   ((EnergyTransfer))
+  ((Solar))
+  ((Geothermal))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(FuelType,
@@ -99,6 +101,8 @@ OPENSTUDIO_ENUM(FuelType,
   ((OtherFuel_1)(OtherFuel1))
   ((OtherFuel_2)(OtherFuel2))
   ((EnergyTransfer))
+  ((Solar))
+  ((Geothermal))
 );
 
 /** \relates FuelType */
@@ -257,23 +261,23 @@ OPENSTUDIO_ENUM(BuildingSector,
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code
- OPENSTUDIO_ENUM(AppGFuelType,
-  ((Fuel))
-  ((Electric))
+OPENSTUDIO_ENUM(AppGFuelType,
   ((District))
+  ((Electric))
+  ((Fuel))
   ((HeatPump))
+  ((Other))
   ((Solar))
-  ((Mixed))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(AppGFuelType,
-  ((Fuel))
-  ((Electric))
   ((District))
+  ((Electric))
+  ((Fuel))
+  ((Geothermal))
   ((HeatPump))
-  ((Solar))
-  ((Mixed))
   ((Other))
+  ((Solar))
 );
 
 /** \relates AppGFuelType */

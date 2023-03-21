@@ -287,15 +287,15 @@ namespace model {
     }
 
     std::vector<FuelType> GroundHeatExchangerHorizontalTrench_Impl::coolingFuelTypes() const {
-      return {FuelType::EnergyTransfer};
+      return {FuelType::Geothermal};
     }
 
     std::vector<FuelType> GroundHeatExchangerHorizontalTrench_Impl::heatingFuelTypes() const {
-      return {FuelType::EnergyTransfer};
+      return {FuelType::Geothermal};
     }
 
     std::vector<AppGFuelType> GroundHeatExchangerHorizontalTrench_Impl::appGHeatingFuelTypes() const {
-      return {AppGFuelType::Other};
+      return {AppGFuelType::Geothermal};
     }
 
   }  // namespace detail
