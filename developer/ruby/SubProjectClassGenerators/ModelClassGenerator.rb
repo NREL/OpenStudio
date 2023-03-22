@@ -433,6 +433,18 @@ class ModelClassGenerator < SubProjectClassGenerator
     @iddObjectType = iddObjectType
     @hasRealFields = false
     @hasScheduleFields = false
+
+    @derivesHVACComponent = [
+      'AirToAirComponent',
+      'HVACComponent',
+      'Mixer',
+      'SetpointManager',
+      'Splitter',
+      'StraightComponent',
+      'WaterToAirComponent',
+      'WaterToWaterComponent',
+      'ZoneHVACComponent'].include?(baseClassName)
+
     if not @iddObjectType.empty?
       require 'openstudio'
 
@@ -501,7 +513,11 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       result << "\n" if preamble == ""
 
-      result << "#include \"../utilities/core/Assert.hpp\"\n\n"
+      result << "#include \"../utilities/core/Assert.hpp\"\n"
+      if @derivesHVACComponent
+        result << "#include \"../utilities/data/DataEnums.hpp\"\n"
+      end
+      result << "\n"
 
       if includeIddFactory
         result << "#include <utilities/idd/IddFactory.hxx>\n"
@@ -821,6 +837,13 @@ class ModelClassGenerator < SubProjectClassGenerator
         result << "      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;\n\n"
       end
 
+      if @derivesHVACComponent
+        result << "      virtual ComponentType componentType() const override;\n"
+        result << "      virtual std::vector<FuelType> coolingFuelTypes() const override;\n"
+        result << "      virtual std::vector<FuelType> heatingFuelTypes() const override;\n"
+        result << "      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;\n\n"
+      end
+
       result << "      //@}\n"
       result << "      /** @name Getters */\n"
       result << "      //@{\n\n"
@@ -957,6 +980,28 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "      }\n"
         }
         result << "      return result;\n"
+        result << "    }\n\n"
+      end
+
+      if @derivesHVACComponent
+        result << "    ComponentType " << @className << "_Impl::componentType() const {\n"
+        result << "      // TODO\n"
+        result << "      return ComponentType::None;\n"
+        result << "    }\n\n"
+
+        result << "    std::vector<FuelType> " << @className << "_Impl::coolingFuelTypes() const {\n"
+        result << "      // TODO\n"
+        result << "      return {};\n"
+        result << "    }\n\n"
+
+        result << "    std::vector<FuelType> " << @className << "_Impl::heatingFuelTypes() const {\n"
+        result << "      // TODO\n"
+        result << "      return {};\n"
+        result << "    }\n\n"
+
+        result << "    std::vector<AppGFuelType> " << @className << "_Impl::appGHeatingFuelTypes() const {\n\n"
+        result << "      // TODO\n"
+        result << "      return {};\n"
         result << "    }\n\n"
       end
 
@@ -1642,6 +1687,21 @@ class ModelClassGenerator < SubProjectClassGenerator
     }
 
     result << "}\n"
+
+    if @derivesHVACComponent
+      result << "TEST_F(ModelFixture, " << className << "_HeatCoolFuelTypes) {\n"
+      result << "  Model m;\n"
+      result << "  // TODO: Check regular Ctor arguments\n"
+      result << "  " << className << " #{instanceName}(m);\n"
+      result << "  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)\n"
+      result << "  // " << className << " #{instanceName} = m.getUniqueModelObject<" << className << ">();\n\n"
+
+      result << "  EXPECT_EQ(ComponentType(ComponentType::Both), #{instanceName}.componentType());\n"
+      result << "  testFuelTypeEquality({FuelType::Electricity}, #{instanceName}.coolingFuelTypes());\n"
+      result << "  testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, #{instanceName}.heatingFuelTypes());\n"
+      result << "  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, #{instanceName}.appGHeatingFuelTypes());\n"
+      result << "}\n"
+    end
 
     return result
   end
