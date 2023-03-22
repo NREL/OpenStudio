@@ -186,11 +186,31 @@ if(BUILD_TESTING)
     PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
   )
 
+  add_test(NAME OpenStudioCLI.Run_RubyOnly
+    COMMAND $<TARGET_FILE:openstudio> run -w compact_ruby_only.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
+  )
+  set_tests_properties(OpenStudioCLI.Run_RubyOnly PROPERTIES RESOURCE_LOCK "compact_osw")
+
   add_test(NAME OpenStudioCLI.Labs.Run_RubyOnly
     COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
   set_tests_properties(OpenStudioCLI.Labs.Run_RubyOnly PROPERTIES RESOURCE_LOCK "compact_osw")
+
+
+  add_test(NAME OpenStudioCLI.Run_RubyOnly.absolute_path
+    COMMAND $<TARGET_FILE:openstudio> run -w "'${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/compact_ruby_only.osw'"
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
+  )
+  set_tests_properties(OpenStudioCLI.Run_RubyOnly.absolute_path PROPERTIES RESOURCE_LOCK "compact_osw")
+
+  add_test(NAME OpenStudioCLI.Labs.Run_RubyOnly.absolute_path
+    COMMAND $<TARGET_FILE:openstudio> labs run -w "'${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/compact_ruby_only.osw'"
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.Run_RubyOnly.absolute_path PROPERTIES RESOURCE_LOCK "compact_osw")
+
 
   add_test(NAME OpenStudioCLI.Labs.Run_PythonOnly
     COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_only.osw
