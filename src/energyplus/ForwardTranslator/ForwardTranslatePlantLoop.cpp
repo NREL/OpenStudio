@@ -152,7 +152,7 @@ namespace energyplus {
 
   IdfObject ForwardTranslator::populateBranch(IdfObject& branchIdfObject, std::vector<ModelObject>& modelObjects, Loop& loop, bool isSupplyBranch) {
     if (!modelObjects.empty()) {
-      int i = 0;
+      [[maybe_unused]] int i = 0;
 
       boost::optional<Node> prevNode_;
 

@@ -195,15 +195,12 @@ namespace gltf {
         m_thermalZoneName = thermalZone->nameString();
         m_thermalZoneMaterialName = "ThermalZone_" + thermalZone->nameString();
         std::vector<model::AirLoopHVAC> airLoopHVACs = thermalZone->airLoopHVACs();
-        int count = 0;
         for (const auto& airLoopHVAC : thermalZone->airLoopHVACs()) {
           m_airLoopHVACHandles.emplace_back(openstudio::removeBraces(airLoopHVAC.handle()));
 
           m_airLoopHVACNames.emplace_back(airLoopHVAC.nameString());
 
           m_airLoopHVACMaterialNames.emplace_back(getObjectGLTFMaterialName(airLoopHVAC));
-
-          count++;
         }
       }
 

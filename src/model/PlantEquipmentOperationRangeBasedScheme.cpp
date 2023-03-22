@@ -264,7 +264,7 @@ namespace model {
         return false;
       }
 
-      unsigned i = 0;
+      [[maybe_unused]] unsigned i = 0;
       for (auto& eg : extensibleGroups()) {
         const auto& t_upperLimit = eg.getDouble(LOADRANGEFIELDS_UPPERLIMIT);
         OS_ASSERT(t_upperLimit);

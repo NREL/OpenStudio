@@ -3629,9 +3629,6 @@ namespace osversion {
           }
         }
 
-        ss << newObject;
-        m_refactored.emplace_back(std::move(object), std::move(newObject));
-
         iddObject = idd_2_4_2.getObject("OS:AdditionalProperties");
         IdfObject additionalProperties(iddObject.get());
         additionalProperties.setString(0, toString(createUUID()));
@@ -3644,6 +3641,8 @@ namespace osversion {
           }
         }
 
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
         m_new.push_back(additionalProperties);
         ss << additionalProperties;
 
@@ -5022,7 +5021,6 @@ namespace osversion {
         newObject.setDouble(15, -25.0);
 
         ss << newObject;
-        m_refactored.emplace_back(std::move(object), std::move(newObject));
         m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {

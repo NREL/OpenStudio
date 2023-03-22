@@ -176,10 +176,10 @@ bool ImfFile::save(const openstudio::path& p, bool overwrite) {
 bool ImfFile::m_load(std::istream& is) {
 
   // keep track of line number in the Idf
-  int lineNum = 0;
+  [[maybe_unused]] int lineNum = 0;
 
   // number of object in the Idf, 1 is first object
-  int objectNum = 0;
+  [[maybe_unused]] int objectNum = 0;
 
   // temp string to read file
   std::string line;
@@ -191,7 +191,7 @@ bool ImfFile::m_load(std::istream& is) {
   std::string comment;
 
   // keep track of the current section
-  std::string section = "";
+  std::string section;
 
   // get CommentOnly IddObject
   OptionalIddObject commentOnlyIddObject;

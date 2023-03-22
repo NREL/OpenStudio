@@ -523,12 +523,12 @@ bool IdfFile::save(const openstudio::path& p, bool overwrite) {
 
 bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnly) {
 
-  int lineNum = 0;         // Idf line number
-  int objectNum = 0;       // number of objects, first is #1
-  std::string line;        // temp string to help with reading
-  boost::smatch matches;   // matches to regular expressions
-  std::string comment;     // keep running comment
-  bool firstBlock = true;  // to capture first comment block as the header
+  [[maybe_unused]] int lineNum = 0;  // Idf line number
+  int objectNum = 0;                 // number of objects, first is #1
+  std::string line;                  // temp string to help with reading
+  boost::smatch matches;             // matches to regular expressions
+  std::string comment;               // keep running comment
+  bool firstBlock = true;            // to capture first comment block as the header
 
   if (progressBar) {
     is.seekg(0, std::ios_base::end);
