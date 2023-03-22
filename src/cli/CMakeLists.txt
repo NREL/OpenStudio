@@ -114,6 +114,14 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> labs -e "puts(OpenStudio::Model::Model.new())"
   )
 
+  add_test(NAME OpenStudioCLI.ruby_execute_line_no_chop_single_quote
+    COMMAND $<TARGET_FILE:openstudio> -e "puts 'hello world'"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.ruby_execute_line_no_chop_single_quote
+    COMMAND $<TARGET_FILE:openstudio> labs -e "puts 'hello world'"
+  )
+
   add_test(NAME OpenStudioCLI.Labs.ruby_execute_line.embedded_gem
     COMMAND $<TARGET_FILE:openstudio> labs -e "require 'minitest'"
   )
