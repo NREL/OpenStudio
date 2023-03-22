@@ -3233,8 +3233,18 @@ TEST_F(ModelFixture, Issue_4837) {
   model::OptionalModel model = translator.loadModel(modelPath);
   EXPECT_TRUE(model);
 
-  boost::optional<Space> space = model->getConcreteModelObjectByName<Space>("Zone1 Office");
-  ASSERT_TRUE(space);
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Zone1 Office");
+  ASSERT_TRUE(space1);
+  EXPECT_TRUE(space1->isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(1011.0, space1->volume());
 
-  EXPECT_DOUBLE_EQ(1011.0, space->volume());
+  boost::optional<Space> space2 = model->getConcreteModelObjectByName<Space>("Zone2 Fine Storage");
+  ASSERT_TRUE(space2);
+  EXPECT_TRUE(space2->isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(10876.0, space2->volume());
+
+  boost::optional<Space> space3 = model->getConcreteModelObjectByName<Space>("Zone3 Bulk Storage");
+  ASSERT_TRUE(space3);
+  EXPECT_TRUE(space3->isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(27338.0, space3->volume());
 }
