@@ -3235,6 +3235,6 @@ TEST_F(ModelFixture, Issue_4837) {
 
   boost::optional<Space> space = model->getConcreteModelObjectByName<Space>("Zone1 Office");
   ASSERT_TRUE(space);
-  
+
   EXPECT_DOUBLE_EQ(1011.0, space->volume());
 }
