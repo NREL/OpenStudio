@@ -275,8 +275,11 @@ end
 # Method to clean the args. Windows cmd.exe treats single quotes as regular chars so we strip them if found.
 def clean_argv(argv)
   argv.each_index do |i|
-    argv[i] = argv[i].gsub(/^'/, "")
-    argv[i] = argv[i].gsub(/'$/, "")
+    # puts "Argument #{i}=<#{argv[i]}>"
+    if argv[i].start_with?("'") and argv[i].end_with?("'")
+      argv[i] = argv[i][1..-2]
+      # puts " Cleaned #{i}=<#{argv[i]}>"
+    end
   end
   return argv
 end
@@ -639,7 +642,7 @@ def parse_main_args(main_args)
           $logger.info "Bundling without group '#{g}'"
         else
           keep_groups << g
-      end
+        end
       end
 
       $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
@@ -1708,8 +1711,6 @@ class ExecuteRubyScript
     $logger.info "ExecuteRubyScript, sub_argv = #{sub_argv}"
 
     require 'pathname'
-
-    options = {}
 
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio execute_ruby_script file [arguments]'

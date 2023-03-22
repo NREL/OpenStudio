@@ -37,7 +37,16 @@ int main(int argc, char* argv[]) {
   int result = 0;
 
   std::vector<std::string> args(argv, std::next(argv, static_cast<std::ptrdiff_t>(argc)));
-  std::for_each(args.begin(), args.end(), [](auto& s) { openstudio::ascii_trim(s); });
+  // fmt::print("Original arguments: {}\n", args);
+  std::for_each(args.begin(), args.end(), [](auto& s) {
+    openstudio::ascii_trim(s);
+    // Windows cmd.exe treats single quotes as regular chars so we strip them if found (cf #4779 and #4834)
+    if (s.starts_with('\'') && s.ends_with('\'')) {
+      s.erase(std::prev(s.end()));
+      s.erase(s.begin());
+    }
+  });
+  // fmt::print("Cleaned arguments: {}\n", args);
   // erase the first element, which is the name of the program
   const std::string programName = std::move(args.front());
   args.erase(args.begin());
