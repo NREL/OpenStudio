@@ -964,7 +964,7 @@ namespace detail {
     // blank Workspace---directly create and add objects
     OS_ASSERT(newObjects.empty());
     OS_ASSERT(oldNewHandleMap.empty());
-    unsigned i(0);
+    [[maybe_unused]] unsigned i = 0;
     for (const WorkspaceObject& object : objects) {
       newObjects.push_back(this->createObject(object.getImpl<WorkspaceObject_Impl>(), false));
       oldNewHandleMap.insert(HandleMap::value_type(object.handle(), newObjects.back()->handle()));
