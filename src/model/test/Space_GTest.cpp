@@ -3226,4 +3226,15 @@ TEST_F(ModelFixture, Space_Polyhedron_Volume) {
   EXPECT_EQ(volume, s.volume());
 }
 
-//#  endif // SURFACESHATTERING
+TEST_F(ModelFixture, Issue_4837) {
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/test_file.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  EXPECT_TRUE(model);
+
+  boost::optional<Space> space = model->getConcreteModelObjectByName<Space>("Zone1 Office");
+  ASSERT_TRUE(space);
+  
+  EXPECT_DOUBLE_EQ(1011.0, space->volume());
+}
