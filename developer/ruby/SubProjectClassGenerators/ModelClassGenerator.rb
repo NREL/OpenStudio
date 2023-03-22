@@ -451,6 +451,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         @hasScheduleFields = true if modelObjectField.isSchedule?
       }
 
+      @objectListClassNames = @nonextensibleFields.select{|field| field.isObjectList?}.map(&:objectListClassName).uniq
+
       # Determine if the object has any autosizable fields
       @autosizedGetterNames = []
       @autosizeSetterNames = []
@@ -478,19 +480,20 @@ class ModelClassGenerator < SubProjectClassGenerator
       # include object list field classes
       # include IddFactory.hxx if there is a non-boolean choice field
       includeIddFactory = false
-      preamble = "// TODO: Check the following class names against object getters and setters.\n"
       @nonextensibleFields.each { |field|
         if field.isChoice? and not field.isBooleanChoice?
           includeIddFactory = true
         end
-
-        if field.isObjectList?
-          result << preamble
-          result << "#include \"" << field.objectListClassName << ".hpp\"\n"
-          result << "#include \"" << field.objectListClassName << "_Impl.hpp\"\n"
-          preamble = ""
-        end
       }
+
+      preamble = "// TODO: Check the following class names against object getters and setters.\n"
+      @objectListClassNames.each { |className|
+        result << preamble
+        result << "#include \"" << className << ".hpp\"\n"
+        result << "#include \"" << className << "_Impl.hpp\"\n"
+        preamble = ""
+      }
+
       if @hasScheduleFields
         result << "#include \"ScheduleTypeLimits.hpp\"\n"
         result << "#include \"ScheduleTypeRegistry.hpp\"\n"
@@ -535,12 +538,10 @@ class ModelClassGenerator < SubProjectClassGenerator
     result = String.new
     if @idfObject
       preamble = "  // TODO: Check the following class names against object getters and setters.\n"
-      @nonextensibleFields.each { |field|
-        if field.isObjectList?
-          result << preamble
-          result << "  class " << field.objectListClassName << ";\n"
-          preamble = ""
-        end
+      @objectListClassNames.each { |className|
+        result << preamble
+        result << "  class " << className << ";\n"
+        preamble = ""
       }
       result << "\n" if preamble == ""
     end
@@ -1408,15 +1409,12 @@ class ModelClassGenerator < SubProjectClassGenerator
     preamble = "// TODO: Check the following class names against object getters and setters.\n"
 
     # Check for ObjectList fields, to see which we need to include
-    @nonextensibleFields.each { |field|
-      if field.isObjectList?
-        result << preamble
-        result << "#include \"../" << field.objectListClassName << ".hpp\"\n"
-        result << "#include \"../" << field.objectListClassName << "_Impl.hpp\"\n\n"
-        preamble = ""
-      end
+    @objectListClassNames.each { |className|
+      result << preamble
+      result << "#include \"../" << className << ".hpp\"\n"
+      result << "#include \"../" << className << "_Impl.hpp\"\n\n"
+      preamble = ""
     }
-
 
     result << "using namespace openstudio;\n"
     result << "using namespace openstudio::model;\n\n"
