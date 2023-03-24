@@ -109,7 +109,7 @@ class UTILITIES_API Polyhedron
   // Maybe unused
   std::vector<Point3d> uniqueVertices() const;
 
-  static std::vector<Surface3dEdge> edgesNotTwoForEnclosedVolumeTest(const Polyhedron& volumePoly);
+  std::vector<Surface3dEdge> edgesNotTwoForEnclosedVolumeTest() const;
 
   Polyhedron updateZonePolygonsForMissingColinearPoints() const;
 

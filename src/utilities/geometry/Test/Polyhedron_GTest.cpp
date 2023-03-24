@@ -78,14 +78,14 @@ TEST_F(GeometryFixture, Polyhedron_Enclosed) {
     auto uniqVertices = zonePoly.uniqueVertices();
     EXPECT_EQ(10, uniqVertices.size());
 
-    std::vector<Surface3dEdge> edgeNot2orig = Polyhedron::edgesNotTwoForEnclosedVolumeTest(zonePoly);
+    std::vector<Surface3dEdge> edgeNot2orig = zonePoly.edgesNotTwoForEnclosedVolumeTest();
     EXPECT_EQ(6, edgeNot2orig.size());
 
     auto updatedZonePoly = zonePoly.updateZonePolygonsForMissingColinearPoints();
     // We expect the two points from the split south walls to have been added to the roof and floor
     EXPECT_EQ(30, updatedZonePoly.numVertices());
 
-    std::vector<Surface3dEdge> edgeNot2again = Polyhedron::edgesNotTwoForEnclosedVolumeTest(updatedZonePoly);
+    std::vector<Surface3dEdge> edgeNot2again = updatedZonePoly.edgesNotTwoForEnclosedVolumeTest();
     EXPECT_TRUE(edgeNot2again.empty());
   }
 

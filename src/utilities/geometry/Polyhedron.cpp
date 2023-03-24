@@ -119,14 +119,14 @@ std::vector<Point3d> Polyhedron::uniqueVertices() const {
   return uniqVertices;
 }
 
-std::vector<Surface3dEdge> Polyhedron::edgesNotTwoForEnclosedVolumeTest(const Polyhedron& volumePoly) {
+std::vector<Surface3dEdge> Polyhedron::edgesNotTwoForEnclosedVolumeTest() const {
 
   std::vector<Surface3dEdge> uniqueSurface3dEdges;
-  uniqueSurface3dEdges.reserve(volumePoly.numVertices());
+  uniqueSurface3dEdges.reserve(numVertices());
 
   // construct list of unique edges
   int surfNum = 0;
-  for (const auto& surface : volumePoly.m_surfaces) {
+  for (const auto& surface : m_surfaces) {
     LOG(Debug, "Surface: " << surface.name);
     const auto& vertices = surface.vertices;
     for (auto it = vertices.begin(); it != vertices.end(); ++it) {
@@ -222,7 +222,7 @@ VolumeEnclosedReturnType Polyhedron::isEnclosedVolume() const {
 
   VolumeEnclosedReturnType result;
 
-  std::vector<Surface3dEdge> edgeNot2orig = edgesNotTwoForEnclosedVolumeTest(*this);
+  std::vector<Surface3dEdge> edgeNot2orig = this->edgesNotTwoForEnclosedVolumeTest();
   // if all edges had two counts then it is fully enclosed
   if (edgeNot2orig.empty()) {
     result.isEnclosedVolume = true;
@@ -232,7 +232,7 @@ VolumeEnclosedReturnType Polyhedron::isEnclosedVolume() const {
             // consistent with the number of edges found that didn't have a count of two
     Polyhedron updatedZonePoly =
       updateZonePolygonsForMissingColinearPoints();  // this is done after initial test since it is computationally intensive.
-    std::vector<Surface3dEdge> edgeNot2again = edgesNotTwoForEnclosedVolumeTest(updatedZonePoly);
+    std::vector<Surface3dEdge> edgeNot2again = updatedZonePoly.edgesNotTwoForEnclosedVolumeTest();
     if (edgeNot2again.empty()) {
       result.isEnclosedVolume = true;
       return result;
