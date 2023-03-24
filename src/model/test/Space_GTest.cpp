@@ -3356,3 +3356,69 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume) {
   EXPECT_TRUE(space1.isEnclosedVolume());
   EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
 }
+
+TEST_F(ModelFixture, Space_4837_SpaceVolume_NonConvex) {
+
+  Model m;
+
+  //   y (=North)
+  //   ▲
+  //   │                  building height = 2m
+  // 10├────────┼────────┼
+  //   │                 │
+  //   │        |        │
+  //   │ z=0      z=1    │
+  //   │        |        │
+  //   └────────┴────────┴───► x
+  //  0        10       20
+
+  constexpr double width = 10.0;
+  constexpr double heightPart1 = 2.0;
+  constexpr double heightPart2 = 1.0;
+  constexpr double spaceFloorAreaEach = width * width;
+  constexpr double spaceVolumePart1 = (spaceFloorAreaEach * heightPart1);
+  constexpr double spaceVolumePart2 = (spaceFloorAreaEach * heightPart2);
+  constexpr double spaceVolume = spaceVolumePart1 + spaceVolumePart2;
+
+  auto makeFloor = [](double min_x, double max_x, double min_y, double max_y, double z) {
+    // Counterclockwise points, Upper Left Corner convention, except here we want to create a floor
+    // so outward normal must be pointing DOWN, so clockwise order
+    return std::vector<Point3d>{
+      Point3d(max_x, max_y, z),
+      Point3d(max_x, min_y, z),
+      Point3d(min_x, min_y, z),
+      Point3d(min_x, max_y, z),
+    };
+  };
+
+  auto floorSurface1Points = makeFloor(0.0, width, 0.0, width, 0.0);
+  auto space1 = Space::fromFloorPrint(floorSurface1Points, heightPart1, m).get();
+  EXPECT_EQ(spaceFloorAreaEach, space1.floorArea());
+  EXPECT_EQ(spaceVolumePart1, space1.volume());
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+
+  auto floorSurface2Points = makeFloor(width, 2 * width, 0.0, width, 1.0);
+  auto space2 = Space::fromFloorPrint(floorSurface2Points, heightPart2, m).get();
+  EXPECT_EQ(spaceFloorAreaEach, space2.floorArea());
+  EXPECT_EQ(spaceVolumePart2, space2.volume());
+  EXPECT_TRUE(space2.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space2.isEnclosedVolume());
+
+  EXPECT_EQ(12, m.getConcreteModelObjects<Surface>().size());
+  space1.intersectSurfaces(space2);
+  EXPECT_EQ(13, m.getConcreteModelObjects<Surface>().size());
+  space1.matchSurfaces(space2);
+  EXPECT_EQ(13, m.getConcreteModelObjects<Surface>().size());
+
+  ThermalZone z(m);
+  space1.setThermalZone(z);
+  space2.setThermalZone(z);
+  auto mergedSpace = z.combineSpaces().get();
+  EXPECT_EQ(11, m.getConcreteModelObjects<Surface>().size());
+
+  EXPECT_TRUE(mergedSpace.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(mergedSpace.isEnclosedVolume());
+  EXPECT_EQ(2 * spaceFloorAreaEach, mergedSpace.floorArea());
+  EXPECT_EQ(spaceVolume, mergedSpace.volume());
+}
