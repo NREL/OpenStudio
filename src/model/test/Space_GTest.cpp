@@ -3286,3 +3286,73 @@ TEST_F(ModelFixture, Issue_4837) {
     EXPECT_EQ(openstudio::Vector3d(0, -1, 0), newOutNormal);
   }
 }
+
+TEST_F(ModelFixture, Space_4837_SpaceVolume) {
+
+  Model m;
+
+  constexpr double width = 10.0;
+  constexpr double height = 3.6;
+  constexpr double spaceFloorArea = width * width;
+  constexpr double spaceVolume = spaceFloorArea * height;
+
+  //    y (=North)
+  //   ▲
+  //   │
+  // 10o────────o
+  //   │        │
+  //   │        │
+  //   │ Space 1│
+  //   │        │
+  //   o────────o───► x
+  //  0        10
+
+  // Counterclockwise points, Upper Left Corner convention
+  std::vector<Point3d> floorPointsSpace1{
+    {width, width, 0.0},
+    {width, 0.0, 0.0},
+    {0.0, 0.0, 0.0},
+    {0.0, width, 0.0},
+  };
+
+  auto space1 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+
+  // Grab a wall, flip it so it's outward normal points towards the space and not outside
+  auto surfaces = space1.surfaces();
+  auto it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
+  ASSERT_TRUE(it != surfaces.end());
+  auto sfName = it->nameString();
+  auto vertices = it->vertices();
+  std::reverse(vertices.begin(), vertices.end());
+  it->setVertices(vertices);
+  auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+  EXPECT_EQ(1, wrongOrientations.size());
+  EXPECT_EQ(sfName, wrongOrientations.front().nameString());
+  EXPECT_FALSE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_EQ(spaceVolume, space1.volume());  // It falls back to the floor * ceilingHeight and since this is a box, it works...
+  EXPECT_TRUE(space1.fixSurfacesWithIncorrectOrientation());
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+
+  // Flip everything
+  for (auto& sf : surfaces) {
+    auto vertices = sf.vertices();
+    std::reverse(vertices.begin(), vertices.end());
+    sf.setVertices(vertices);
+  }
+
+  wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+  EXPECT_EQ(6, wrongOrientations.size());
+  EXPECT_FALSE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_EQ(spaceVolume, space1.volume());
+  EXPECT_TRUE(space1.fixSurfacesWithIncorrectOrientation());
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+}
