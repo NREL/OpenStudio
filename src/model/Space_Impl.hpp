@@ -508,6 +508,15 @@ namespace model {
       Polyhedron polyhedron() const;
       bool isEnclosedVolume() const;
 
+      // Find all surfaces where the outwardNormal does not point towards the outside of the Space
+      std::vector<Surface> findSurfacesWithIncorrectOrientation() const;
+
+      // Checks the outwardNormal of every surface points towards the outside of the Space
+      bool areAllSurfacesCorrectlyOriented() const;
+
+      // Returns true if the orientation of any surface has been changed
+      bool fixSurfacesWithIncorrectOrientation();
+
       std::vector<ZoneMixing> zoneMixing() const;
       std::vector<ZoneMixing> supplyZoneMixing() const;
       std::vector<ZoneMixing> exhaustZoneMixing() const;

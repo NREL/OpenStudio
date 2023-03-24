@@ -640,6 +640,15 @@ namespace model {
     /** Returns all ZoneMixing objects which exhaust air from this space */
     std::vector<ZoneMixing> exhaustZoneMixing() const;
 
+    // Find all surfaces where the outwardNormal does not point towards the outside of the Space
+    std::vector<Surface> findSurfacesWithIncorrectOrientation() const;
+
+    // Checks the outwardNormal of every surface points towards the outside of the Space
+    bool areAllSurfacesCorrectlyOriented() const;
+
+    // Returns true if the orientation of any surface has been changed
+    bool fixSurfacesWithIncorrectOrientation();
+
     //@}
    protected:
     /// @cond

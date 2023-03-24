@@ -152,6 +152,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iterator>
+
+#include <fmt/core.h>
 
 namespace openstudio {
 namespace model {
@@ -918,25 +921,95 @@ namespace model {
       return result;
     }
 
+    std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientation() const {
+      std::vector<Surface> result;
+
+      auto surfaces = this->surfaces();
+      for (const auto& surface : surfaces) {
+
+        auto normal = surface.outwardNormal();
+        auto this_pt = surface.vertices()[0];
+        bool found = false;
+        for (const auto& anotherSurface : surfaces) {
+          if (surface == anotherSurface) {
+            continue;
+          }
+          for (const auto& another_pt : anotherSurface.vertices()) {
+            const Vector3d v1 = this_pt - another_pt;
+            auto thisdot = normal.dot(v1);
+            if (std::abs(thisdot) > 0.001) {
+              found = true;
+              if (thisdot < 0.0) {
+                result.push_back(surface);
+              }
+              break;
+            }
+          }
+          if (found) {
+            break;
+          }
+        }
+
+        if (!found) {
+          LOG(Error, "Could not find any dot product that isn't zero for Surface " << surface.nameString());
+        }
+      }
+
+      return result;
+    }
+
+    bool Space_Impl::areAllSurfacesCorrectlyOriented() const {
+      auto surfaces = findSurfacesWithIncorrectOrientation();
+      for (const auto& surface : surfaces) {
+        LOG(Error, "In Space " << nameString() << ", Surface " << surface.nameString() << " has an outward normal pointing in the wrong direction.");
+      }
+
+      return surfaces.empty();
+    }
+
+    bool Space_Impl::fixSurfacesWithIncorrectOrientation() {
+
+      auto surfaces = findSurfacesWithIncorrectOrientation();
+      if (surfaces.empty()) {
+        return false;
+      }
+
+      for (auto& surface : surfaces) {
+        auto vertices = surface.vertices();
+
+        LOG(Error, "In Space " << nameString() << ", Surface " << surface.nameString()
+                               << " has an outward normal pointing in the wrong direction. Flipping it.");
+        std::reverse(vertices.begin(), vertices.end());
+        surface.setVertices(openstudio::reorderULC(vertices));
+      }
+      return true;
+    }
+
     double Space_Impl::volume() const {
       boost::optional<double> value = getDouble(OS_SpaceFields::Volume, true);
       if (value) {
         return value.get();
       }
 
-      auto volumePoly = this->polyhedron();
+      if (areAllSurfacesCorrectlyOriented()) {
 
-      auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
-      if (isVolEnclosed) {
-        return volumePoly.calcPolyhedronVolume();
+        auto volumePoly = this->polyhedron();
+
+        auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
+        if (isVolEnclosed) {
+          return volumePoly.calcPolyhedronVolume();
+        }
+
+        LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size()
+                                     << " edges that aren't used exactly twice. "
+                                        "Falling back to ceilingHeight * floorArea. Volume calculation will be potentially inaccurate.");
+
+      } else {
+        LOG(Warn, briefDescription() << " has some Surfaces with incorrection orientation. Call Space::fixSurfacesWithIncorrectOrientation(). "
+                                        "Falling back to ceilingHeight * floorArea. Volume calculation will be potentially inaccurate.");
       }
 
-      LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size()
-                                   << " edges that aren't used exactly twice. Volume calculation will be potentially inaccurate");
-
-      double result = 0;
-
-      result = this->ceilingHeight() * this->floorArea();
+      const double result = this->ceilingHeight() * this->floorArea();
 
       return result;
     }
@@ -2907,7 +2980,14 @@ namespace model {
       }
     }
 
-    boost::optional<Vector3d> outwardNormal = getOutwardNormal(floorPrint);
+    // Enforce the same z
+    std::vector<Point3d> reorderedFloorPrint;
+    reorderedFloorPrint.reserve(floorPrint.size());
+    std::transform(floorPrint.cbegin(), floorPrint.cend(), std::back_inserter(reorderedFloorPrint), [&z](const auto& pt) {
+      return Point3d{pt.x(), pt.y(), z};
+    });
+
+    boost::optional<Vector3d> outwardNormal = getOutwardNormal(reorderedFloorPrint);
     if (!outwardNormal) {
       LOG(Error, "Cannot compute outwardNormal for floorPrint.");
       return boost::none;
@@ -2918,36 +2998,43 @@ namespace model {
       return boost::none;
     }
 
+    reorderedFloorPrint = openstudio::reorderULC(reorderedFloorPrint);
+
     // we are good to go, create the space
     Space space(model);
 
     // create the floor
-    std::vector<Point3d> points;
-    for (const auto& elem : floorPrint) {
-      points.push_back(Point3d(elem.x(), elem.y(), z));
-    }
-    Surface floor(points, model);
+    Surface floor(reorderedFloorPrint, model);
+    floor.setName(fmt::format("{} Floor", space.nameString()));
     floor.setSpace(space);
 
+    double zCeiling = z + floorHeight;
+    std::vector<Point3d> points;
+    points.reserve(4);
     // create each wall
     for (unsigned i = 1; i <= numPoints; ++i) {
+      // Counter clockwise, Upper Left Corner convention
       points = {
-        {floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z + floorHeight},
-        {floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z},
-        {floorPrint[i - 1].x(), floorPrint[i - 1].y(), z},
-        {floorPrint[i - 1].x(), floorPrint[i - 1].y(), z + floorHeight},
+        {reorderedFloorPrint[i - 1].x(), reorderedFloorPrint[i - 1].y(), zCeiling},                  // Upper Left Corner
+        {reorderedFloorPrint[i % numPoints].x(), reorderedFloorPrint[i % numPoints].y(), zCeiling},  // Upper Right Corner
+        {reorderedFloorPrint[i % numPoints].x(), reorderedFloorPrint[i % numPoints].y(), z},         // Lower Right Corner
+        {reorderedFloorPrint[i - 1].x(), reorderedFloorPrint[i - 1].y(), z},                         // Lower Left Corner
       };
 
       Surface wall(points, model);
+      wall.setName(fmt::format("{} Wall", space.nameString()));
+
       wall.setSpace(space);
     }
 
     // create the roofCeiling
-    points.clear();
-    for (auto rit = floorPrint.rbegin(), ritend = floorPrint.rend(); rit != ritend; ++rit) {
-      points.push_back(Point3d(rit->x(), rit->y(), z + floorHeight));
-    }
-    Surface roofCeiling(points, model);
+    std::vector<Point3d> ceilingPoints;
+    ceilingPoints.reserve(reorderedFloorPrint.size());
+    std::transform(reorderedFloorPrint.crbegin(), reorderedFloorPrint.crend(), std::back_inserter(ceilingPoints), [zCeiling](const auto& pt) {
+      return Point3d{pt.x(), pt.y(), zCeiling};
+    });
+    Surface roofCeiling(ceilingPoints, model);
+    roofCeiling.setName(fmt::format("{} RoofCeiling", space.nameString()));
     roofCeiling.setSpace(space);
 
     return space;
@@ -3468,6 +3555,18 @@ namespace model {
 
   std::vector<ZoneMixing> Space::exhaustZoneMixing() const {
     return getImpl<detail::Space_Impl>()->exhaustZoneMixing();
+  }
+
+  std::vector<Surface> Space::findSurfacesWithIncorrectOrientation() const {
+    return getImpl<detail::Space_Impl>()->findSurfacesWithIncorrectOrientation();
+  }
+
+  bool Space::areAllSurfacesCorrectlyOriented() const {
+    return getImpl<detail::Space_Impl>()->areAllSurfacesCorrectlyOriented();
+  }
+
+  bool Space::fixSurfacesWithIncorrectOrientation() {
+    return getImpl<detail::Space_Impl>()->fixSurfacesWithIncorrectOrientation();
   }
 
   /// @cond
