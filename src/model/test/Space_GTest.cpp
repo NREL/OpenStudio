@@ -3227,24 +3227,62 @@ TEST_F(ModelFixture, Space_Polyhedron_Volume) {
 }
 
 TEST_F(ModelFixture, Issue_4837) {
-
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/test_file.osm");
-  model::OptionalModel model = translator.loadModel(modelPath);
-  EXPECT_TRUE(model);
+  openstudio::path modelPath = resourcesPath() / toPath("model/4837_SpaceVolume.osm");
+  model::OptionalModel model_ = translator.loadModel(modelPath);
+  ASSERT_TRUE(model_);
+  Model model = model_.get();
 
-  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Zone1 Office");
-  ASSERT_TRUE(space1);
-  EXPECT_TRUE(space1->isEnclosedVolume());
-  EXPECT_DOUBLE_EQ(1011.0, space1->volume());
+  {
+    auto space = model.getConcreteModelObjectByName<Space>("Zone1 Office").get();
+    EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+    EXPECT_TRUE(space.isEnclosedVolume());
+    EXPECT_NEAR(1010.76, space.volume(), 0.1);
+  }
 
-  boost::optional<Space> space2 = model->getConcreteModelObjectByName<Space>("Zone2 Fine Storage");
-  ASSERT_TRUE(space2);
-  EXPECT_TRUE(space2->isEnclosedVolume());
-  EXPECT_DOUBLE_EQ(10876.0, space2->volume());
+  {
+    auto surface = model.getConcreteModelObjectByName<Surface>("Bulk Storage Front Wall Reversed").get();
+    auto vertices = surface.vertices();
+    auto outNormal = surface.outwardNormal();
+    EXPECT_EQ(openstudio::Vector3d(0, -1, 0), outNormal);
 
-  boost::optional<Space> space3 = model->getConcreteModelObjectByName<Space>("Zone3 Bulk Storage");
-  ASSERT_TRUE(space3);
-  EXPECT_TRUE(space3->isEnclosedVolume());
-  EXPECT_DOUBLE_EQ(27338.0, space3->volume());
+    auto space = model.getConcreteModelObjectByName<Space>("Zone2 Fine Storage").get();
+    auto wrongOrientations = space.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+    EXPECT_EQ("Bulk Storage Front Wall Reversed", wrongOrientations.front().nameString());
+    EXPECT_FALSE(space.areAllSurfacesCorrectlyOriented());
+    EXPECT_TRUE(space.fixSurfacesWithIncorrectOrientation());
+    EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+    EXPECT_TRUE(space.isEnclosedVolume());
+    EXPECT_NEAR(11554.41, space.volume(), 0.1);
+
+    auto newVertices = surface.vertices();
+    EXPECT_NE(vertices, newVertices);
+    auto newOutNormal = surface.outwardNormal();
+    EXPECT_NE(outNormal, newOutNormal);
+    EXPECT_EQ(openstudio::Vector3d(0, 1, 0), newOutNormal);
+  }
+
+  {
+    auto surface = model.getConcreteModelObjectByName<Surface>("Bulk Storage Front Wall").get();
+    auto vertices = surface.vertices();
+    auto outNormal = surface.outwardNormal();
+    EXPECT_EQ(openstudio::Vector3d(0, 1, 0), outNormal);
+
+    auto space = model.getConcreteModelObjectByName<Space>("Zone3 Bulk Storage").get();
+    EXPECT_FALSE(space.areAllSurfacesCorrectlyOriented());
+    auto wrongOrientations = space.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+    EXPECT_EQ(surface.nameString(), wrongOrientations.front().nameString());
+    EXPECT_TRUE(space.fixSurfacesWithIncorrectOrientation());
+    EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+    EXPECT_TRUE(space.isEnclosedVolume());
+    EXPECT_NEAR(27350.0, space.volume(), 0.1);
+
+    auto newVertices = surface.vertices();
+    EXPECT_NE(vertices, newVertices);
+    auto newOutNormal = surface.outwardNormal();
+    EXPECT_NE(outNormal, newOutNormal);
+    EXPECT_EQ(openstudio::Vector3d(0, -1, 0), newOutNormal);
+  }
 }
