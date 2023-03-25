@@ -927,31 +927,34 @@ namespace model {
       auto surfaces = this->surfaces();
       for (const auto& surface : surfaces) {
 
-        auto normal = surface.outwardNormal();
-        auto this_pt = surface.vertices()[0];
+        auto outwardNormal = surface.outwardNormal();
+        auto inwardNormal = outwardNormal.reverseVector();
+        auto centroid = surface.centroid();
         bool found = false;
         for (const auto& anotherSurface : surfaces) {
           if (surface == anotherSurface) {
             continue;
           }
-          for (const auto& another_pt : anotherSurface.vertices()) {
-            const Vector3d v1 = this_pt - another_pt;
-            auto thisdot = normal.dot(v1);
-            if (std::abs(thisdot) > 0.001) {
-              found = true;
-              if (thisdot < 0.0) {
-                result.push_back(surface);
-              }
-              break;
-            }
+          auto anotherPlane = anotherSurface.plane();
+          // If this isn't orthogonal
+          if (std::abs(anotherPlane.outwardNormal().dot(outwardNormal)) < 0.001) {
+            LOG(Debug, "Surface " << surface.nameString() << " is orthogonal to " << anotherSurface.nameString());
+            continue;
           }
-          if (found) {
+          auto projectedCentroid = anotherPlane.project(centroid);
+          auto v = (centroid - projectedCentroid);
+          if (!v.normalize()) {
+            LOG(Debug, "Surface " << surface.nameString() << " is on the same plane as " << anotherSurface.nameString());
+            continue;
+          }
+          if (std::abs(outwardNormal.dot(v) - 1) < 0.001) {
+            LOG(Debug, "Surface " << surface.nameString() << " raycasts to " << anotherSurface.nameString());
+            found = true;
             break;
           }
         }
-
         if (!found) {
-          LOG(Error, "Could not find any dot product that isn't zero for Surface " << surface.nameString());
+          result.push_back(surface);
         }
       }
 
