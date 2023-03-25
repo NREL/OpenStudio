@@ -2957,7 +2957,8 @@ namespace model {
     return result;
   }
 
-  boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPrint, double floorHeight, Model& model) {
+  boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPrint, double floorHeight, Model& model,
+                                               const std::string& spaceName) {
     // check floor height
     if (floorHeight <= 0) {
       LOG(Error, "Cannot create a space with floorHeight " << floorHeight << ".");
@@ -2998,14 +2999,17 @@ namespace model {
       return boost::none;
     }
 
-    reorderedFloorPrint = openstudio::reorderULC(reorderedFloorPrint);
+    // reorderedFloorPrint = openstudio::reorderULC(reorderedFloorPrint);
 
     // we are good to go, create the space
     Space space(model);
 
     // create the floor
     Surface floor(reorderedFloorPrint, model);
-    floor.setName(fmt::format("{} Floor", space.nameString()));
+    if (!spaceName.empty()) {
+      space.setName(spaceName);
+      floor.setName(fmt::format("{} Floor", space.nameString()));
+    }
     floor.setSpace(space);
 
     double zCeiling = z + floorHeight;
@@ -3022,7 +3026,9 @@ namespace model {
       };
 
       Surface wall(points, model);
-      wall.setName(fmt::format("{} Wall", space.nameString()));
+      if (!spaceName.empty()) {
+        wall.setName(fmt::format("{} Wall {}", space.nameString(), i));
+      }
 
       wall.setSpace(space);
     }
@@ -3034,7 +3040,9 @@ namespace model {
       return Point3d{pt.x(), pt.y(), zCeiling};
     });
     Surface roofCeiling(ceilingPoints, model);
-    roofCeiling.setName(fmt::format("{} RoofCeiling", space.nameString()));
+    if (!spaceName.empty()) {
+      roofCeiling.setName(fmt::format("{} RoofCeiling", space.nameString()));
+    }
     roofCeiling.setSpace(space);
 
     return space;

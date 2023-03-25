@@ -103,7 +103,8 @@ namespace model {
     static IddObjectType iddObjectType();
 
     /// Create a space from a floor print and extrude distance.
-    static boost::optional<Space> fromFloorPrint(const std::vector<Point3d>& floorPrint, double floorHeight, Model& model);
+    static boost::optional<Space> fromFloorPrint(const std::vector<Point3d>& floorPrint, double floorHeight, Model& model,
+                                                 const std::string& spaceName = "");
 
     /** @name Getters */
     //@{
