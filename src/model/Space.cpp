@@ -924,33 +924,50 @@ namespace model {
     std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientation() const {
       std::vector<Surface> result;
 
+      const Point3d p0{};
+
       auto surfaces = this->surfaces();
       for (const auto& surface : surfaces) {
 
         auto outwardNormal = surface.outwardNormal();
+        auto surfacePoint = surface.centroid();
         auto inwardNormal = outwardNormal.reverseVector();
-        auto centroid = surface.centroid();
         bool found = false;
         for (const auto& anotherSurface : surfaces) {
           if (surface == anotherSurface) {
             continue;
           }
           auto anotherPlane = anotherSurface.plane();
+          const double vd = anotherPlane.outwardNormal().dot(outwardNormal);
+
+          auto reversedPlane = anotherPlane.reversePlane();
+          const double vd2 = reversedPlane.outwardNormal().dot(inwardNormal);
+
+          OS_ASSERT(vd == vd2);
+
           // If this isn't orthogonal
-          if (std::abs(anotherPlane.outwardNormal().dot(outwardNormal)) < 0.001) {
+          if (std::abs(vd) < 0.001) {
             LOG(Debug, "Surface " << surface.nameString() << " is orthogonal to " << anotherSurface.nameString());
             continue;
           }
-          auto projectedCentroid = anotherPlane.project(centroid);
-          auto v = (centroid - projectedCentroid);
-          if (!v.normalize()) {
-            LOG(Debug, "Surface " << surface.nameString() << " is on the same plane as " << anotherSurface.nameString());
-            continue;
+          if (vd > 0) {
+            LOG(Debug, "Surfaces '" << surface.nameString() << "' and '" << anotherSurface.nameString()
+                                    << "' are seemingly pointing in the opposite outward direction, which is good");
+          } else {
+            LOG(Debug, "Surfaces '" << surface.nameString() << "' and '" << anotherSurface.nameString()
+                                    << "' are seemingly pointing in the same outward direction, potentially one is in the wrong direction.");
           }
-          if (std::abs(outwardNormal.dot(v) - 1) < 0.001) {
-            LOG(Debug, "Surface " << surface.nameString() << " raycasts to " << anotherSurface.nameString());
+
+          const double v0 = anotherPlane.outwardNormal().dot(surfacePoint - p0) + anotherPlane.d();
+          const double v02 = reversedPlane.outwardNormal().reverseVector().dot(surfacePoint - p0) - reversedPlane.d();
+          OS_ASSERT(v0 == v02);
+          const double t = v0 / vd;
+          if (t > 0.0) {
+            LOG(Debug, "Surface '" << surface.nameString() << "' raycasts to " << anotherSurface.nameString());
             found = true;
             break;
+          } else {
+            LOG(Debug, "Surface '" << surface.nameString() << "' does not raycast to " << anotherSurface.nameString());
           }
         }
         if (!found) {
@@ -964,7 +981,8 @@ namespace model {
     bool Space_Impl::areAllSurfacesCorrectlyOriented() const {
       auto surfaces = findSurfacesWithIncorrectOrientation();
       for (const auto& surface : surfaces) {
-        LOG(Error, "In Space " << nameString() << ", Surface " << surface.nameString() << " has an outward normal pointing in the wrong direction.");
+        LOG(Error,
+            "In Space '" << nameString() << "', Surface '" << surface.nameString() << "' has an outward normal pointing in the wrong direction.");
       }
 
       return surfaces.empty();
@@ -980,8 +998,8 @@ namespace model {
       for (auto& surface : surfaces) {
         auto vertices = surface.vertices();
 
-        LOG(Error, "In Space " << nameString() << ", Surface " << surface.nameString()
-                               << " has an outward normal pointing in the wrong direction. Flipping it.");
+        LOG(Error, "In Space '" << nameString() << "', Surface '" << surface.nameString()
+                                << "' has an outward normal pointing in the wrong direction. Flipping it.");
         std::reverse(vertices.begin(), vertices.end());
         surface.setVertices(openstudio::reorderULC(vertices));
       }
