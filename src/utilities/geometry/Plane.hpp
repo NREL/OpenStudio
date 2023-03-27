@@ -44,7 +44,7 @@ class Point3d;
 class Vector3d;
 
 /** Plane defines an infinite plane in 3D space.  The equation of a plane is
-   *  a*x + b*y + c*z = d, any point that satisfies this equation is on the plane.
+   *  a*x + b*y + c*z + d = 0, any point that satisfies this equation is on the plane.
    */
 class UTILITIES_API Plane
 {
