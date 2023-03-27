@@ -3504,4 +3504,19 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_Hshaped) {
     auto wrongOrientations = space.findSurfacesWithIncorrectOrientation();
     EXPECT_EQ(1, wrongOrientations.size());
   }
+
+  // Use the Polyhedron method of checking the surface edges (ensuring they are in REVERSE order)
+  {
+    std::vector<Surface3d> wrongOrientations = space.polyhedron().findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+    EXPECT_EQ(sfName, wrongOrientations.front().name);
+  }
+
+  EXPECT_FALSE(space.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space.isEnclosedVolume());
+  EXPECT_EQ(spaceVolume, space.volume());  // It falls back to the floor * ceilingHeight and since this is a box, it works...
+  EXPECT_TRUE(space.fixSurfacesWithIncorrectOrientation());
+  EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space.volume());
 }

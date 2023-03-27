@@ -37,6 +37,7 @@
 #include <utilities/geometry/Transformation.hpp>
 
 #include <algorithm>
+#include <numeric>
 #include <utility>
 #include <vector>
 
@@ -77,8 +78,16 @@ size_t Surface3dEdge::firstSurfNum() const {
   return m_firstSurfNum;
 }
 
-std::vector<Surface3d> Surface3dEdge::allSurfaces() const {
+const std::vector<Surface3d>& Surface3dEdge::allSurfaces() const {
   return m_allSurfaces;
+}
+
+void Surface3dEdge::markConflictedOrientation() {
+  m_conflictedOrientation = true;
+}
+
+bool Surface3dEdge::hasConflictedOrientation() const {
+  return m_conflictedOrientation;
 }
 
 void Surface3dEdge::appendSurface(Surface3d surface) {
@@ -95,7 +104,22 @@ std::ostream& operator<<(std::ostream& os, const Surface3dEdge& edge) {
   return os;
 }
 
-Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name) : vertices(std::move(t_vertices)), name(std::move(t_name)) {}
+Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name) : vertices(std::move(t_vertices)), name(std::move(t_name)) {
+  for (auto it = vertices.begin(); it != vertices.end(); ++it) {
+
+    auto itnext = std::next(it);
+    if (itnext == std::end(vertices)) {
+      itnext = std::begin(vertices);
+    }
+
+    // Don't care about surfNum
+    edges.emplace_back(*it, *itnext, *this, 0);
+  }
+}
+
+bool Surface3d::operator<(const Surface3d& rhs) const {
+  return this->name < rhs.name;
+}
 
 Polyhedron::Polyhedron(std::vector<Surface3d> surfaces) : m_surfaces(std::move(surfaces)){};
 
@@ -123,7 +147,7 @@ std::vector<Point3d> Polyhedron::uniqueVertices() const {
   return uniqVertices;
 }
 
-std::vector<Surface3dEdge> Polyhedron::edgesNotTwoForEnclosedVolumeTest() const {
+std::vector<Surface3dEdge> Polyhedron::edgesMatches() const {
 
   std::vector<Surface3dEdge> uniqueSurface3dEdges;
   uniqueSurface3dEdges.reserve(numVertices());
@@ -146,6 +170,10 @@ std::vector<Surface3dEdge> Polyhedron::edgesNotTwoForEnclosedVolumeTest() const 
       } else {
         LOG(Debug, "    FOUND: " << thisSurface3dEdge);
         itFound->appendSurface(surface);
+        if (!itFound->reverseEqual(thisSurface3dEdge)) {
+          LOG(Debug, "    Edges are not in reverse orientation for " << thisSurface3dEdge);
+          itFound->markConflictedOrientation();
+        }
       }
     }
     ++surfNum;
@@ -154,6 +182,14 @@ std::vector<Surface3dEdge> Polyhedron::edgesNotTwoForEnclosedVolumeTest() const 
   for (auto& edge : uniqueSurface3dEdges) {
     LOG(Debug, edge);
   }
+
+  return uniqueSurface3dEdges;
+}
+
+std::vector<Surface3dEdge> Polyhedron::edgesNotTwoForEnclosedVolumeTest() const {
+
+  std::vector<Surface3dEdge> uniqueSurface3dEdges = edgesMatches();
+
   // All edges for an enclosed polyhedron should be shared by two (and only two) sides.
   // So if the count is not two for all edges, the polyhedron is not enclosed, so erase all that are 2
   uniqueSurface3dEdges.erase(
@@ -167,7 +203,7 @@ Polyhedron Polyhedron::updateZonePolygonsForMissingColinearPoints() const {
   // Make a copy, we don't want to mutate in place
   Polyhedron updZonePoly(*this);
 
-  std::vector<Point3d> uniqVertices = uniqueVertices();
+  const std::vector<Point3d> uniqVertices = uniqueVertices();
 
   for (auto& surface : updZonePoly.m_surfaces) {
     // for (int iterationLimiter = 0; iterationLimiter < 20; ++iterationLimiter) {  // could probably be while loop but want to make sure it does not get stuck
@@ -226,7 +262,7 @@ VolumeEnclosedReturnType Polyhedron::isEnclosedVolume() const {
 
   VolumeEnclosedReturnType result;
 
-  std::vector<Surface3dEdge> edgeNot2orig = this->edgesNotTwoForEnclosedVolumeTest();
+  const std::vector<Surface3dEdge> edgeNot2orig = this->edgesNotTwoForEnclosedVolumeTest();
   // if all edges had two counts then it is fully enclosed
   if (edgeNot2orig.empty()) {
     result.isEnclosedVolume = true;
@@ -234,9 +270,9 @@ VolumeEnclosedReturnType Polyhedron::isEnclosedVolume() const {
   } else {  // if the count is three or greater it is likely that a vertex that is colinear was counted on the faces on one edge and not
             // on the "other side" of the edge Go through all the points looking for the number that are colinear and see if that is
             // consistent with the number of edges found that didn't have a count of two
-    Polyhedron updatedZonePoly =
+    const Polyhedron updatedZonePoly =
       updateZonePolygonsForMissingColinearPoints();  // this is done after initial test since it is computationally intensive.
-    std::vector<Surface3dEdge> edgeNot2again = updatedZonePoly.edgesNotTwoForEnclosedVolumeTest();
+    const std::vector<Surface3dEdge> edgeNot2again = updatedZonePoly.edgesNotTwoForEnclosedVolumeTest();
     if (edgeNot2again.empty()) {
       result.isEnclosedVolume = true;
       return result;
@@ -249,6 +285,61 @@ VolumeEnclosedReturnType Polyhedron::isEnclosedVolume() const {
   }
 }
 
+std::vector<Surface3d> Polyhedron::findSurfacesWithIncorrectOrientation() const {
+
+  std::vector<Surface3dEdge> uniqueSurface3dEdges = edgesMatches();
+
+  if (std::any_of(uniqueSurface3dEdges.begin(), uniqueSurface3dEdges.end(), [](const auto& edge) { return edge.count() != 2; })) {
+    const Polyhedron updatedZonePoly =
+      updateZonePolygonsForMissingColinearPoints();  // this is done after initial test since it is computationally intensive.
+    uniqueSurface3dEdges = updatedZonePoly.edgesMatches();
+
+    if (std::any_of(uniqueSurface3dEdges.begin(), uniqueSurface3dEdges.end(), [](const auto& edge) { return edge.count() != 2; })) {
+      LOG(Warn, "Can't lookup surfaces with incorrect orientations for a non-enclosed Polyhedron");
+      return {};
+    }
+  }
+
+  // Remove non-conflicted edges
+  uniqueSurface3dEdges.erase(
+    std::remove_if(uniqueSurface3dEdges.begin(), uniqueSurface3dEdges.end(), [](const auto& edge) { return !edge.hasConflictedOrientation(); }),
+    uniqueSurface3dEdges.end());
+  if (uniqueSurface3dEdges.empty()) {
+    return {};
+  }
+
+  std::set<Surface3d> conflictedSurfaces;
+  std::set<std::pair<Surface3d, Surface3d>> conflictedSurfacePairs;
+  for (auto& edge : uniqueSurface3dEdges) {
+    const auto& surfaces = edge.allSurfaces();
+    const auto& sf1 = surfaces.front();
+    const auto& sf2 = surfaces.back();
+    if (sf1 < sf2) {
+      conflictedSurfacePairs.emplace(sf1, sf2);
+    } else {
+      conflictedSurfacePairs.emplace(sf2, sf1);
+    }
+  }
+
+  for (const auto& [sf1, sf2] : conflictedSurfacePairs) {
+    // Count number of conflicted edges...
+    auto c1 = std::accumulate(sf1.edges.cbegin(), sf1.edges.cend(), 0, [&uniqueSurface3dEdges](int count, const auto& edge) {
+      return count + std::count(uniqueSurface3dEdges.cbegin(), uniqueSurface3dEdges.cend(), edge);
+    });
+    auto c2 = std::accumulate(sf2.edges.cbegin(), sf2.edges.cend(), 0, [&uniqueSurface3dEdges](int count, const auto& edge) {
+      return count + std::count(uniqueSurface3dEdges.cbegin(), uniqueSurface3dEdges.cend(), edge);
+    });
+    LOG(Debug, sf1.name << " has " << c1 << " conflicted edges out of " << sf1.edges.size());
+    LOG(Debug, sf2.name << " has " << c2 << " conflicted edges out of " << sf2.edges.size());
+    if (c1 > c2) {
+      conflictedSurfaces.insert(sf1);
+    } else {
+      conflictedSurfaces.insert(sf2);
+    }
+  }
+  return {conflictedSurfaces.begin(), conflictedSurfaces.end()};
+}
+
 // boost::optional<double> Polyhedron::calculatedVolume() const {
 //   auto [isVolEnclosed, edgesNot2] = isEnclosedVolume();
 //   if (isVolEnclosed) {
@@ -259,15 +350,16 @@ VolumeEnclosedReturnType Polyhedron::isEnclosedVolume() const {
 
 double Polyhedron::calcPolyhedronVolume() const {
 
+  const Point3d p0{};
   double volume = 0.0;
   for (const auto& surface : m_surfaces) {
     const std::vector<Point3d>& vertices = surface.vertices;
-    Vector3d p3FaceOrigin = vertices[1] - Point3d{};
+    const Vector3d p3FaceOrigin = vertices[1] - p0;
     boost::optional<Vector3d> newellAreaVector = getNewellVector(vertices);
     if (!newellAreaVector) {
       LOG_AND_THROW("Cannot compute newellAreaVector");
     }
-    double pyramidVolume = newellAreaVector->dot(p3FaceOrigin);
+    const double pyramidVolume = newellAreaVector->dot(p3FaceOrigin);
     volume += pyramidVolume;
   }
   // for (int NFace = 1; NFace <= Poly.NumSurfaceFaces; ++NFace) {
@@ -282,7 +374,7 @@ double Polyhedron::calcDivergenceTheoremVolume() const {
   double volume = 0.0;
   for (const auto& surface : m_surfaces) {
     const std::vector<Point3d>& vertices = surface.vertices;
-    Plane plane(vertices);
+    const Plane plane(vertices);
     boost::optional<double> area = getArea(vertices);
     if (!area) {
       LOG_AND_THROW("Cannot compute area for " << surface.name);

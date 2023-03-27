@@ -43,6 +43,8 @@ namespace model {
   class ThermalZone;
 }  // namespace model
 
+class Surface3dEdge;
+
 // A thin wrapper to improve reporting, by attaching a name to the vertices
 class UTILITIES_API Surface3d
 {
@@ -51,6 +53,10 @@ class UTILITIES_API Surface3d
   Surface3d(std::vector<Point3d> t_vertices, std::string t_name = "None");
   std::vector<Point3d> vertices;
   std::string name;
+  std::vector<Surface3dEdge> edges;
+  // std::vector<bool> conflictedOrientation;
+
+  bool operator<(const Surface3d& rhs) const;
 };
 
 class UTILITIES_API Surface3dEdge
@@ -78,12 +84,16 @@ class UTILITIES_API Surface3dEdge
   // Checks whether a Point: is not almost equal to the start and end points, and that isPointOnLineBetweenPoints(start, end, testVertex) is true
   bool containsPoint(const Point3d& testVertex);
 
-  std::vector<Surface3d> allSurfaces() const;
+  const std::vector<Surface3d>& allSurfaces() const;
+
+  void markConflictedOrientation();
+  bool hasConflictedOrientation() const;
 
  private:
   Point3d m_start;
   Point3d m_end;
   size_t m_firstSurfNum;
+  bool m_conflictedOrientation = false;
   std::vector<Surface3d> m_allSurfaces;
 };
 
@@ -109,10 +119,11 @@ class UTILITIES_API Polyhedron
   // This is done by checking that every edge is used exactly TWICE.
   VolumeEnclosedReturnType isEnclosedVolume() const;
 
-  // Maybe unused
   std::vector<Point3d> uniqueVertices() const;
 
   std::vector<Surface3dEdge> edgesNotTwoForEnclosedVolumeTest() const;
+
+  std::vector<Surface3dEdge> edgesMatches() const;
 
   Polyhedron updateZonePolygonsForMissingColinearPoints() const;
 
@@ -127,6 +138,8 @@ class UTILITIES_API Polyhedron
   double calcPolyhedronVolume() const;
   // Polyhedron MUST be enclosed
   double calcDivergenceTheoremVolume() const;
+
+  std::vector<Surface3d> findSurfacesWithIncorrectOrientation() const;
 
  private:
   REGISTER_LOGGER("utilities.Polyhedron");
