@@ -32,6 +32,8 @@
 
 #include "../UtilitiesAPI.hpp"
 
+#define BOOST_UBLAS_MOVE_SEMANTICS
+
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 
