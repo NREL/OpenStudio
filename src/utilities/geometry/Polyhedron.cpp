@@ -105,6 +105,8 @@ std::ostream& operator<<(std::ostream& os, const Surface3dEdge& edge) {
 }
 
 Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name) : vertices(std::move(t_vertices)), name(std::move(t_name)) {
+  int surfNum = 0;
+
   for (auto it = vertices.begin(); it != vertices.end(); ++it) {
 
     auto itnext = std::next(it);
@@ -112,8 +114,7 @@ Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name) : vert
       itnext = std::begin(vertices);
     }
 
-    // Don't care about surfNum
-    edges.emplace_back(*it, *itnext, *this, 0);
+    edges.emplace_back(*it, *itnext, *this, surfNum++);
   }
 }
 
@@ -153,20 +154,13 @@ std::vector<Surface3dEdge> Polyhedron::edgesMatches() const {
   uniqueSurface3dEdges.reserve(numVertices());
 
   // construct list of unique edges
-  int surfNum = 0;
   for (const auto& surface : m_surfaces) {
     LOG(Debug, "Surface: " << surface.name);
-    const auto& vertices = surface.vertices;
-    for (auto it = vertices.begin(); it != vertices.end(); ++it) {
-      auto itnext = std::next(it);
-      if (itnext == std::end(vertices)) {
-        itnext = std::begin(vertices);
-      }
-      Surface3dEdge thisSurface3dEdge(*it, *itnext, surface, surfNum);
+    for (const Surface3dEdge& thisSurface3dEdge : surface.edges) {
       auto itFound = std::find(uniqueSurface3dEdges.begin(), uniqueSurface3dEdges.end(), thisSurface3dEdge);
       if (itFound == uniqueSurface3dEdges.end()) {
         LOG(Debug, "NOT FOUND: " << thisSurface3dEdge);
-        uniqueSurface3dEdges.emplace_back(std::move(thisSurface3dEdge));
+        uniqueSurface3dEdges.push_back(thisSurface3dEdge);
       } else {
         LOG(Debug, "    FOUND: " << thisSurface3dEdge);
         itFound->appendSurface(surface);
@@ -176,7 +170,6 @@ std::vector<Surface3dEdge> Polyhedron::edgesMatches() const {
         }
       }
     }
-    ++surfNum;
   }
 
   for (auto& edge : uniqueSurface3dEdges) {
@@ -211,6 +204,7 @@ Polyhedron Polyhedron::updateZonePolygonsForMissingColinearPoints() const {
     bool insertedVertext = true;
     while (insertedVertext) {
       insertedVertext = false;
+      // TODO: loop on edges and insert edge too
       auto& vertices = surface.vertices;
       for (auto it = vertices.begin(); it != vertices.end(); ++it) {
 
