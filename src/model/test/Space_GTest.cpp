@@ -64,11 +64,13 @@
 
 #include "../../utilities/core/UUID.hpp"
 
-#include "../../utilities/geometry/Point3d.hpp"
-#include "../../utilities/geometry/Vector3d.hpp"
-#include "../../utilities/geometry/Transformation.hpp"
-#include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/geometry/BoundingBox.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Polyhedron.hpp"
+#include "../../utilities/geometry/Transformation.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
+
 #include "../../utilities/idf/WorkspaceObjectWatcher.hpp"
 #include "../../utilities/core/Compare.hpp"
 #include "../../osversion/VersionTranslator.hpp"
@@ -3437,4 +3439,69 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_NonConvex) {
   EXPECT_TRUE(mergedSpace.isEnclosedVolume());
   EXPECT_EQ(2 * spaceFloorAreaEach, mergedSpace.floorArea());
   EXPECT_EQ(spaceVolume, mergedSpace.volume());
+}
+
+TEST_F(ModelFixture, Space_4837_SpaceVolume_Hshaped) {
+
+  Model m;
+
+  //   ▲ y (=North)
+  //   │    (5)   (8)         building height = 2m
+  //15 o────o    o────o (1)
+  //   │(4) │    │    │
+  //   │    │<---│----│---- Space1 Wall 5
+  //10 │    o────o    │<---- Space1 Wall 1
+  //   │   (6)  (7)   │
+  //   │              │
+  //   │(3)           │ (2)
+  //   o──────────────o───► x
+  //  0     5    10   15
+
+  constexpr double height = 2.0;
+
+  constexpr double width = 15.0;
+  constexpr double spaceFloorAreaOri = width * width;
+
+  constexpr double widthRemoved = 5.0;
+  constexpr double spaceFloorAreaRemoved = widthRemoved * widthRemoved;
+
+  constexpr double spaceFloorArea = spaceFloorAreaOri - spaceFloorAreaRemoved;
+  constexpr double spaceVolume = spaceFloorArea * height;
+
+  EXPECT_EQ(200.0, spaceFloorArea);
+  EXPECT_EQ(400.0, spaceVolume);
+
+  std::vector<Point3d> floorPoints{
+    {15.0, 15.0, 0.0},  //
+    {15.0, 0.00, 0.0},  //
+    {0.00, 0.00, 0.0},  //
+    {0.00, 15.0, 0.0},  //
+    {5.00, 15.0, 0.0},  //
+    {5.00, 10.0, 0.0},  //
+    {10.0, 10.0, 0.0},  //
+    {10.0, 15.0, 0.0},  //
+  };
+  auto space = Space::fromFloorPrint(floorPoints, 2.0, m, "Space1").get();
+  EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space.volume());
+
+  auto surfaces = space.surfaces();
+  const std::string sfName = "Space1 Wall 5";
+
+  auto it = std::find_if(surfaces.begin(), surfaces.end(), [&sfName](const Surface& s) { return s.nameString() == sfName; });
+  ASSERT_TRUE(it != surfaces.end()) << [&surfaces]() {
+    std::vector<std::string> surfaceNames;
+    surfaceNames.reserve(surfaces.size());
+    std::transform(surfaces.cbegin(), surfaces.cend(), std::back_inserter(surfaceNames), [](const auto& sf) { return sf.nameString(); });
+    return fmt::format("surfaceNames={}", surfaceNames);
+  }();
+  auto vertices = it->vertices();
+  std::reverse(vertices.begin(), vertices.end());
+  it->setVertices(vertices);
+
+  {
+    auto wrongOrientations = space.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+  }
 }
