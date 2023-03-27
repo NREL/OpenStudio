@@ -74,7 +74,14 @@
 #include "../../osversion/VersionTranslator.hpp"
 #include "../../utilities/geometry/Intersection.hpp"
 
+#include <algorithm>
 #include <iostream>
+#include <iterator>
+#include <string>
+#include <vector>
+
+#include <fmt/format.h>
+#include <fmt/ranges.h>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -3179,7 +3186,7 @@ TEST_F(ModelFixture, Space_Polyhedron_Volume) {
   // This is a 30x10x0.3 base, with a rectangle triangle on top of 30x10x10
   //                       ▲ z
   //                       │
-  //                      x├─ 10.0
+  //                      x├─ 10.3
   //                    x  │
   //                  x    │
   //                x      │
@@ -3195,7 +3202,7 @@ TEST_F(ModelFixture, Space_Polyhedron_Volume) {
   south2.setName("1-SOUTH-2");
   south2.setSpace(s);
 
-  // Putting extra vertices here on purpose to show that the Space::volume will miscalculate due to averaging foor and ceiling heights
+  // Putting extra vertices here on purpose to show that the Space::volume was miscalculating due to averaging foor and ceiling heights
   Surface roof({{+30.0, +0.0, +10.3}, {+30.0, +10.0, +0.3}, {+0.0, +10.0, +0.3}, {+0.0, +0.0, +10.3}, {+10.0, +0.0, +10.3}, {+20.0, +0.0, +10.3}}, m);
   roof.setName("ROOF");
   roof.setSpace(s);
@@ -3220,9 +3227,18 @@ TEST_F(ModelFixture, Space_Polyhedron_Volume) {
   floor.setName("FLOOR");
   floor.setSpace(s);
 
+  auto wrongOrientations = s.findSurfacesWithIncorrectOrientation();
+  EXPECT_EQ(0, wrongOrientations.size()) << [&wrongOrientations]() {
+    std::vector<std::string> surfaceNames;
+    surfaceNames.reserve(wrongOrientations.size());
+    std::transform(wrongOrientations.cbegin(), wrongOrientations.cend(), std::back_inserter(surfaceNames),
+                   [](const auto& sf) { return sf.nameString(); });
+    return fmt::format("surfaceNames={}", surfaceNames);
+  }();
+  EXPECT_TRUE(s.areAllSurfacesCorrectlyOriented());
   EXPECT_TRUE(s.isEnclosedVolume());
 
-  double volume = 30.0 * 10.0 * 0.3 + 30.0 * 10.0 * 10.0 / 2.0;
+  constexpr double volume = (30.0 * 10.0 * 0.3) + (30.0 * 10.0 * 10.0) / 2.0;
   EXPECT_EQ(volume, s.volume());
 }
 
@@ -3254,7 +3270,7 @@ TEST_F(ModelFixture, Issue_4837) {
     EXPECT_TRUE(space.fixSurfacesWithIncorrectOrientation());
     EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
     EXPECT_TRUE(space.isEnclosedVolume());
-    EXPECT_NEAR(11554.41, space.volume(), 0.1);
+    EXPECT_NEAR(10880.57, space.volume(), 0.1);
 
     auto newVertices = surface.vertices();
     EXPECT_NE(vertices, newVertices);

@@ -930,8 +930,9 @@ namespace model {
       for (const auto& surface : surfaces) {
 
         auto outwardNormal = surface.outwardNormal();
-        auto surfacePoint = surface.centroid();
         auto inwardNormal = outwardNormal.reverseVector();
+
+        auto surfacePoint = surface.centroid();
         bool found = false;
         for (const auto& anotherSurface : surfaces) {
           if (surface == anotherSurface) {
@@ -942,7 +943,6 @@ namespace model {
 
           auto reversedPlane = anotherPlane.reversePlane();
           const double vd2 = reversedPlane.outwardNormal().dot(inwardNormal);
-
           OS_ASSERT(vd == vd2);
 
           // If this isn't orthogonal
@@ -950,16 +950,16 @@ namespace model {
             LOG(Debug, "Surface " << surface.nameString() << " is orthogonal to " << anotherSurface.nameString());
             continue;
           }
-          if (vd > 0) {
+          if (vd < 0) {
             LOG(Debug, "Surfaces '" << surface.nameString() << "' and '" << anotherSurface.nameString()
-                                    << "' are seemingly pointing in the opposite outward direction, which is good");
+                                    << "' are seemingly pointing in the opposite outward direction, which is a good sign.");
           } else {
             LOG(Debug, "Surfaces '" << surface.nameString() << "' and '" << anotherSurface.nameString()
                                     << "' are seemingly pointing in the same outward direction, potentially one is in the wrong direction.");
           }
 
           const double v0 = anotherPlane.outwardNormal().dot(surfacePoint - p0) + anotherPlane.d();
-          const double v02 = reversedPlane.outwardNormal().reverseVector().dot(surfacePoint - p0) - reversedPlane.d();
+          const double v02 = -(reversedPlane.outwardNormal().dot(surfacePoint - p0) + reversedPlane.d());
           OS_ASSERT(v0 == v02);
           const double t = v0 / vd;
           if (t > 0.0) {
