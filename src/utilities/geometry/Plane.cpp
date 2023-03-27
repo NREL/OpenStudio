@@ -341,6 +341,22 @@ double Plane::d() const {
   return m_d;
 }
 
+Point3d Plane::anyPointOnPlane() const {
+
+  if (std::abs(m_d) < 0.0001) {
+    return Point3d(0.0, 0.0, 0.0);
+  }
+  //  a*x + b*y + c*z + d = 0, any point that satisfies this equation is on the plane.
+  if (std::abs(m_a) > 0.0) {
+    return Point3d(-m_d / m_a, 0.0, 0.0);
+  }
+  if (std::abs(m_b) > 0.0) {
+    return Point3d(0.0, -m_d / m_b, 0.0);
+  }
+
+  return Point3d(0.0, 0.0, -m_d / m_c);
+}
+
 std::ostream& operator<<(std::ostream& os, const Plane& plane) {
   os << "[" << plane.a() << ", " << plane.b() << ", " << plane.c() << ", " << plane.d() << "]";
   return os;

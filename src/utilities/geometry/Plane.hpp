@@ -102,6 +102,9 @@ class UTILITIES_API Plane
   /// coefficient d
   double d() const;
 
+  // Returns any Point3d that's on this plane
+  Point3d anyPointOnPlane() const;
+
  private:
   // construct with coefficients
   Plane(double a, double b, double c, double d);
