@@ -58,6 +58,10 @@ bool Surface3dEdge::operator!=(const Surface3dEdge& other) const {
   return !(*this == other);
 }
 
+bool Surface3dEdge::reverseEqual(const Surface3dEdge& other) const {
+  return isAlmostEqual3dPt(m_start, other.m_end) && isAlmostEqual3dPt(m_end, other.m_start);
+}
+
 Point3d Surface3dEdge::start() const {
   return m_start;
 }

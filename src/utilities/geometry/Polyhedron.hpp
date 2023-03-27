@@ -64,6 +64,9 @@ class UTILITIES_API Surface3dEdge
   /// check equality: this uses a tolerance
   bool operator==(const Surface3dEdge& other) const;
 
+  // Asserts that isAlmostEqual3dPt(start, other.end) && isAlmostEqual3dPt(end, other.start)
+  bool reverseEqual(const Surface3dEdge& other) const;
+
   /// check inequality
   bool operator!=(const Surface3dEdge& other) const;
 
