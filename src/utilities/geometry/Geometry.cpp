@@ -65,12 +65,12 @@ boost::optional<double> getArea(const Point3dVector& points) {
 // magnitude is twice the area
 OptionalVector3d getNewellVector(const Point3dVector& points) {
   OptionalVector3d result;
-  size_t N = points.size();
+  const size_t N = points.size();
   if (N >= 3) {
     Vector3d vec;
     for (unsigned i = 1; i < N - 1; ++i) {
-      Vector3d v1 = points[i] - points[0];
-      Vector3d v2 = points[i + 1] - points[0];
+      const Vector3d v1 = points[i] - points[0];
+      const Vector3d v2 = points[i + 1] - points[0];
       vec += v1.cross(v2);
     }
     result = vec;
@@ -95,18 +95,18 @@ OptionalPoint3d getCentroid(const Point3dVector& points) {
 
   if (points.size() >= 3) {
     // convert to face coordinates
-    Transformation alignFace = Transformation::alignFace(points);
+    const Transformation alignFace = Transformation::alignFace(points);
     Point3dVector surfacePoints = alignFace.inverse() * points;
 
-    size_t N = surfacePoints.size();
+    const size_t N = surfacePoints.size();
     double A = 0;
     double cx = 0;
     double cy = 0;
     for (size_t i = 0; i < N; ++i) {
-      double x1;
-      double x2;
-      double y1;
-      double y2;
+      double x1 = 0.0;
+      double x2 = 0.0;
+      double y1 = 0.0;
+      double y2 = 0.0;
       if (i == N - 1) {
         x1 = surfacePoints[i].x();
         x2 = surfacePoints[0].x();
@@ -119,7 +119,7 @@ OptionalPoint3d getCentroid(const Point3dVector& points) {
         y2 = surfacePoints[i + 1].y();
       }
 
-      double dA = (x1 * y2 - x2 * y1);
+      const double dA = (x1 * y2 - x2 * y1);
       A += 0.5 * dA;
       cx += (x1 + x2) * dA;
       cy += (y1 + y2) * dA;
@@ -127,7 +127,7 @@ OptionalPoint3d getCentroid(const Point3dVector& points) {
 
     if (A > 0) {
       // centroid in face coordinates
-      Point3d surfaceCentroid(cx / (6.0 * A), cy / (6.0 * A), 0.0);
+      const Point3d surfaceCentroid(cx / (6.0 * A), cy / (6.0 * A), 0.0);
 
       // centroid
       result = alignFace * surfaceCentroid;
@@ -138,20 +138,20 @@ OptionalPoint3d getCentroid(const Point3dVector& points) {
 
 /// reorder points to upper-left-corner convention
 Point3dVector reorderULC(const Point3dVector& points) {
-  size_t N = points.size();
+  const size_t N = points.size();
   if (N < 3) {
     return {};
   }
 
   // transformation to align face
-  Transformation t = Transformation::alignFace(points);
+  const Transformation t = Transformation::alignFace(points);
   Point3dVector facePoints = t.inverse() * points;
 
   // find ulc index in face coordinates
   double maxY = std::numeric_limits<double>::min();
   double minX = std::numeric_limits<double>::max();
-  unsigned ulcIndex = 0;
-  for (unsigned i = 0; i < N; ++i) {
+  size_t ulcIndex = 0;
+  for (size_t i = 0; i < N; ++i) {
     OS_ASSERT(std::abs(facePoints[i].z()) < 0.001);
     if ((maxY < facePoints[i].y()) || ((maxY < facePoints[i].y() + 0.00001) && (minX > facePoints[i].x()))) {
       ulcIndex = i;
@@ -166,21 +166,19 @@ Point3dVector reorderULC(const Point3dVector& points) {
   }
 
   // create result
-  Point3dVector result;
-  std::copy(points.begin() + ulcIndex, points.end(), std::back_inserter(result));
-  std::copy(points.begin(), points.begin() + ulcIndex, std::back_inserter(result));
-  OS_ASSERT(result.size() == N);
+  Point3dVector result = points;
+  std::rotate(result.begin(), std::next(result.begin(), ulcIndex), result.end());
   return result;
 }
 
 std::vector<Point3d> removeCollinear(const Point3dVector& points, double tol) {
-  Transformation t = Transformation::alignFace(points);
+  const Transformation t = Transformation::alignFace(points);
   std::vector<Point3d> result = t * simplify(t.inverse() * points, true, tol);
   return result;
 }
 
 std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double tol) {
-  size_t N = points.size();
+  const size_t N = points.size();
   if (N < 3) {
     return points;
   }
@@ -190,7 +188,7 @@ std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double t
   result.push_back(lastPoint);
 
   for (unsigned i = 1; i < N; ++i) {
-    Point3d currentPoint = points[i];
+    const Point3d& currentPoint = points[i];
     Point3d nextPoint = points[0];
     if (i < N - 1) {
       nextPoint = points[i + 1];
@@ -203,14 +201,14 @@ std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double t
     if (a.normalize()) {
       if (b.normalize()) {
 
-        Vector3d c = a.cross(b);
+        const Vector3d c = a.cross(b);
         if (c.length() >= tol) {
           // cross product is significant
           result.push_back(currentPoint);
           lastPoint = currentPoint;
         } else {
           // see if dot product is near -1
-          double d = a.dot(b);
+          const double d = a.dot(b);
           if (d <= -1.0 + tol) {
             // this is a line reversal
             result.push_back(currentPoint);
@@ -227,13 +225,13 @@ std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double t
   bool resizeBegin = true;
   while (resizeBegin) {
     resizeBegin = false;
-    unsigned newN = iEnd - iBegin;
+    const unsigned newN = iEnd - iBegin;
     if (newN > 3) {
       Vector3d a = (result[iBegin] - result[iEnd - 1]);
       Vector3d b = (result[iBegin + 1] - result[iBegin]);
       if (a.normalize()) {
         if (b.normalize()) {
-          double d = a.dot(b);
+          const double d = a.dot(b);
           if (d >= 1.0 - tol) {
             iBegin++;
             resizeBegin = true;
@@ -252,13 +250,13 @@ std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double t
   bool resizeEnd = true;
   while (resizeEnd) {
     resizeEnd = false;
-    unsigned newN = iEnd - iBegin;
+    const unsigned newN = iEnd - iBegin;
     if (newN > 3) {
       Vector3d a = (result[iEnd - 1] - result[iEnd - 2]);
       Vector3d b = (result[iBegin] - result[iEnd - 1]);
       if (a.normalize()) {
         if (b.normalize()) {
-          double d = a.dot(b);
+          const double d = a.dot(b);
           if (d >= 1.0 - tol) {
             iEnd--;
             resizeEnd = true;
@@ -279,10 +277,10 @@ std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double t
 }
 
 double getDistanceSquared(const Point3d& point1, const Point3d& point2) {
-  double dx = point1.x() - point2.x();
-  double dy = point1.y() - point2.y();
-  double dz = point1.z() - point2.z();
-  double result = dx * dx + dy * dy + dz * dz;
+  const double dx = point1.x() - point2.x();
+  const double dy = point1.y() - point2.y();
+  const double dz = point1.z() - point2.z();
+  const double result = dx * dx + dy * dy + dz * dz;
   return result;
 }
 
@@ -336,27 +334,27 @@ double getDistancePointToTriangle(const Point3d& point, const std::vector<Point3
 
   //T(s; t) = B+sE0+tE1
 
-  Point3d B = triangle[0];
-  Vector3d E0 = triangle[1] - triangle[0];
-  Vector3d E1 = triangle[2] - triangle[0];
-  Vector3d BminusP = B - point;
+  const Point3d& B = triangle[0];
+  const Vector3d E0 = triangle[1] - triangle[0];
+  const Vector3d E1 = triangle[2] - triangle[0];
+  const Vector3d BminusP = B - point;
 
-  double b = E0.dot(E1);
+  const double b = E0.dot(E1);
 
   if (std::abs(b) > 1.0 - 1.0E-12) {
     // triangle is collinear
     return 0;
   }
 
-  double a = E0.dot(E0);
-  double c = E1.dot(E1);
-  double d = E0.dot(BminusP);
-  double e = E1.dot(BminusP);
-  // double f = BminusP.dot(BminusP); // unused
+  const double a = E0.dot(E0);
+  const double c = E1.dot(E1);
+  const double d = E0.dot(BminusP);
+  const double e = E1.dot(BminusP);
+  // const double f = BminusP.dot(BminusP); // unused
 
-  double det = a * c - b * b;
-  double s = b * e - c * d;
-  double t = b * d - a * e;
+  const double det = a * c - b * b;
+  const double s = b * e - c * d;
+  const double t = b * d - a * e;
 
   Point3d closestPoint;
 
@@ -380,7 +378,7 @@ double getDistancePointToTriangle(const Point3d& point, const std::vector<Point3
       return getDistancePointToLineSegment(point, line);
     } else {
       //region 0, closest point is inside triangle
-      double invDet = 1.0 / det;
+      const double invDet = 1.0 / det;
       closestPoint = B + invDet * s * E0 + invDet * t * E1;
     }
   } else {
@@ -399,7 +397,7 @@ double getDistancePointToTriangle(const Point3d& point, const std::vector<Point3
     }
   }
 
-  Vector3d diff = point - closestPoint;
+  const Vector3d diff = point - closestPoint;
   return diff.length();
 }
 
@@ -412,7 +410,7 @@ double getAngle(const Vector3d& vector1, const Vector3d& vector2) {
 }
 
 bool circularEqual(const Point3dVector& points1, const Point3dVector& points2, double tol) {
-  size_t N = points1.size();
+  const size_t N = points1.size();
   if (N != points2.size()) {
     return false;
   }
@@ -478,7 +476,7 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
   }
 
   // if holes have been triangulated, rejoin them here before subtraction
-  std::vector<std::vector<Point3d>> newHoles = joinAll(holes, tol);
+  const std::vector<std::vector<Point3d>> newHoles = joinAll(holes, tol);
 
   std::vector<Point3d> allPoints;
 
@@ -495,8 +493,8 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
 
   if (!polyPartitionHoles) {
     // use boost to do all the intersections
-    std::vector<std::vector<Point3d>> allFaces = subtract(vertices, newHoles, tol);
-    std::vector<std::vector<Point3d>> noHoles;
+    const std::vector<std::vector<Point3d>> allFaces = subtract(vertices, newHoles, tol);
+    const std::vector<std::vector<Point3d>> noHoles;
     for (const std::vector<Point3d>& face : allFaces) {
       std::vector<std::vector<Point3d>> temp = computeTriangulation(face, noHoles);
       result.insert(result.end(), temp.begin(), temp.end());
@@ -510,17 +508,17 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
   TPPLPoly outerPoly;  // must be counter-clockwise, input vertices are clockwise
   outerPoly.Init(vertices.size());
   outerPoly.SetHole(false);
-  size_t n = vertices.size();
+  const size_t n = vertices.size();
   for (size_t i = 0; i < n; ++i) {
 
     // should all have zero z coordinate now
-    double z = vertices[n - i - 1].z();
+    const double z = vertices[n - i - 1].z();
     if (std::abs(z) > tol) {
       LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
       return result;
     }
 
-    Point3d point = getCombinedPoint(vertices[n - i - 1], allPoints, tol);
+    const Point3d point = getCombinedPoint(vertices[n - i - 1], allPoints, tol);
     outerPoly[i].x = point.x();
     outerPoly[i].y = point.y();
   }
@@ -541,13 +539,13 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
     for (unsigned i = 0; i < holeVertices.size(); ++i) {
 
       // should all have zero z coordinate now
-      double z = holeVertices[i].z();
+      const double z = holeVertices[i].z();
       if (std::abs(z) > tol) {
         LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
         return result;
       }
 
-      Point3d point = getCombinedPoint(holeVertices[i], allPoints, tol);
+      const Point3d point = getCombinedPoint(holeVertices[i], allPoints, tol);
       innerPoly[i].x = point.x();
       innerPoly[i].y = point.y();
     }
@@ -581,8 +579,8 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
 
     std::vector<Point3d> triangle;
     for (long i = 0; i < it->GetNumPoints(); ++i) {
-      TPPLPoint point = it->GetPoint(i);
-      triangle.push_back(Point3d(point.x, point.y, 0));
+      const TPPLPoint point = it->GetPoint(i);
+      triangle.emplace_back(point.x, point.y, 0);
     }
     //std::cout << triangle << '\n';
     result.push_back(triangle);
@@ -614,7 +612,7 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
                                         Point3dVector& daylightingVertices, Point3dVector& exteriorShadingVertices,
                                         Point3dVector& interiorShelfVertices) {
   // check inputs for reasonableness
-  double totalWWR = viewGlassToWallRatio + daylightingGlassToWallRatio;
+  const double totalWWR = viewGlassToWallRatio + daylightingGlassToWallRatio;
   if (totalWWR == 0) {
     // requesting no glass? remove existing windows?
     return false;
@@ -627,18 +625,18 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
     return false;
   }
 
-  Transformation transformation = Transformation::alignFace(surfaceVertices);
-  Point3dVector faceVertices = transformation.inverse() * surfaceVertices;
+  const Transformation transformation = Transformation::alignFace(surfaceVertices);
+  const Point3dVector faceVertices = transformation.inverse() * surfaceVertices;
 
   if (faceVertices.empty()) {
     return false;
   }
 
-  bool doViewGlass = (viewGlassToWallRatio > 0);
-  bool doDaylightGlass = (daylightingGlassToWallRatio > 0);
-  bool doExteriorShading = (doViewGlass && (exteriorShadingProjectionFactor > 0));
-  bool doInteriorShelf = (doDaylightGlass && (interiorShelfProjectionFactor > 0));
-  bool doViewAndDaylightGlass = (doViewGlass && doDaylightGlass);
+  const bool doViewGlass = (viewGlassToWallRatio > 0);
+  const bool doDaylightGlass = (daylightingGlassToWallRatio > 0);
+  const bool doExteriorShading = (doViewGlass && (exteriorShadingProjectionFactor > 0));
+  const bool doInteriorShelf = (doDaylightGlass && (interiorShelfProjectionFactor > 0));
+  const bool doViewAndDaylightGlass = (doViewGlass && doDaylightGlass);
 
   // ignore these user arguments?
   if (!doViewGlass) {
@@ -663,19 +661,19 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
     return false;
   }
 
-  double oneInch = 0.0254;
+  constexpr double oneInch = 0.0254;
 
   // DLM: preserve a 1" gap between window and edge to keep SketchUp happy
-  double minGlassToEdgeDistance = oneInch;
+  constexpr double minGlassToEdgeDistance = oneInch;
   double minViewToDaylightDistance = 0;
   if (doViewAndDaylightGlass) {
     minViewToDaylightDistance = oneInch;
   }
 
   // wall parameters
-  double wallWidth = xmax - xmin;
-  double wallHeight = ymax - ymin;
-  double wallArea = wallWidth * wallHeight;
+  const double wallWidth = xmax - xmin;
+  const double wallHeight = ymax - ymin;
+  const double wallArea = wallWidth * wallHeight;
 
   if (wallWidth < 2 * minGlassToEdgeDistance) {
     LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios",
@@ -695,11 +693,11 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
     return false;
   }
 
-  double maxWindowArea = wallArea - 2 * wallHeight * minGlassToEdgeDistance
-                         - (wallWidth - 2 * minGlassToEdgeDistance) * (2 * minGlassToEdgeDistance + minViewToDaylightDistance);
-  double requestedViewArea = viewGlassToWallRatio * wallArea;
-  double requestedDaylightingArea = daylightingGlassToWallRatio * wallArea;
-  double requestedTotalWindowArea = totalWWR * wallArea;
+  const double maxWindowArea = wallArea - 2 * wallHeight * minGlassToEdgeDistance
+                               - (wallWidth - 2 * minGlassToEdgeDistance) * (2 * minGlassToEdgeDistance + minViewToDaylightDistance);
+  const double requestedViewArea = viewGlassToWallRatio * wallArea;
+  const double requestedDaylightingArea = daylightingGlassToWallRatio * wallArea;
+  const double requestedTotalWindowArea = totalWWR * wallArea;
 
   if (requestedTotalWindowArea > maxWindowArea) {
     LOG_FREE(
@@ -724,9 +722,9 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
   double daylightingMinY = 0;
 
   // initial free parameters
-  double viewWidthInset = minGlassToEdgeDistance;
+  const double viewWidthInset = minGlassToEdgeDistance;
   double viewSillHeight = std::max(desiredViewGlassSillHeight, minGlassToEdgeDistance);
-  double daylightingWidthInset = minGlassToEdgeDistance;
+  const double daylightingWidthInset = minGlassToEdgeDistance;
   double daylightingHeaderHeight = std::max(desiredDaylightingGlassHeaderHeight, minGlassToEdgeDistance);
 
   bool converged = false;
@@ -875,7 +873,7 @@ bool isPointOnLineBetweenPoints(const Point3d& start, const Point3d& end, const 
   // The tolerance has to be low enough. Take for eg a plenum that has an edge that's 30meters long, you risk adding point from the floor to
   // the roof, cf E+ #7383
   // compute the shortest distance from the point to the line first to avoid false positive
-  double distance = getDistancePointToLineSegment(test, {start, end});
+  const double distance = getDistancePointToLineSegment(test, {start, end});
   if (distance < tol) {  // getDistancePointToLineSegment always positive, it's calculated as norml_L2
     return (std::abs((getDistance(start, end) - (getDistance(start, test) + getDistance(test, end)))) < tol);
   }
