@@ -41,9 +41,6 @@ Vector3d::Vector3d(double x, double y, double z) : m_storage(3) {
   m_storage[2] = z;
 }
 
-/// copy constructor
-Vector3d::Vector3d(const Vector3d& other) = default;
-
 /// get x
 double Vector3d::x() const {
   return m_storage[0];

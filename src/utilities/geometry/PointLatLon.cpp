@@ -33,6 +33,7 @@
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/LocalCartesian.hpp>
 #include <GeographicLib/UTMUPS.hpp>
+#include <memory>
 
 namespace openstudio {
 
@@ -51,7 +52,29 @@ PointLatLon::PointLatLon(const PointLatLon& other) : m_storage(other.m_storage) 
   m_localCartesianConverter.reset();
 }
 
-PointLatLon::~PointLatLon() = default;
+PointLatLon::PointLatLon(PointLatLon&& other) noexcept : m_storage(std::move(other.m_storage)) {
+  m_localCartesianConverter.reset();
+}
+
+PointLatLon& PointLatLon::operator=(const openstudio::PointLatLon& other) {
+  if (this == &other) {
+    return *this;
+  }
+  m_storage = other.m_storage;
+  m_localCartesianConverter.reset();
+  return *this;
+}
+
+PointLatLon& PointLatLon::operator=(PointLatLon&& other) noexcept {
+  if (this == &other) {
+    return *this;
+  }
+  m_storage = std::move(other.m_storage);
+  m_localCartesianConverter.reset();
+  return *this;
+}
+
+PointLatLon::~PointLatLon() noexcept = default;
 
 /// get lat
 double PointLatLon::lat() const {
@@ -68,19 +91,13 @@ double PointLatLon::height() const {
   return m_storage[2];
 }
 
-PointLatLon& PointLatLon::operator=(const openstudio::PointLatLon& other) {
-  m_storage = other.m_storage;
-  m_localCartesianConverter.reset();
-  return *this;
-}
-
 /// check equality
 bool PointLatLon::operator==(const PointLatLon& other) const {
   return (m_storage == other.m_storage);
 }
 
 double PointLatLon::operator-(const PointLatLon& other) const {
-  double s12;
+  double s12 = 0.0;
   const GeographicLib::Geodesic& geod = GeographicLib::Geodesic::WGS84();
   geod.Inverse(lat(), lon(), other.lat(), other.lon(), s12);
   return s12;
@@ -88,15 +105,16 @@ double PointLatLon::operator-(const PointLatLon& other) const {
 
 Point3d PointLatLon::toLocalCartesian(const PointLatLon& point) const {
   initLocalCartesianConverter();
-  double x;
-  double y;
-  double z;
+  double x = 0.0;
+  double y = 0.0;
+  double z = 0.0;
   m_localCartesianConverter->Forward(point.lat(), point.lon(), point.height(), x, y, z);
   return {x, y, z};
 }
 
 std::vector<Point3d> PointLatLon::toLocalCartesian(const std::vector<PointLatLon>& points) const {
   std::vector<Point3d> result;
+  result.reserve(points.size());
   for (const auto& point : points) {
     result.push_back(toLocalCartesian(point));
   }
@@ -105,15 +123,16 @@ std::vector<Point3d> PointLatLon::toLocalCartesian(const std::vector<PointLatLon
 
 PointLatLon PointLatLon::fromLocalCartesian(const Point3d& point) const {
   initLocalCartesianConverter();
-  double lat;
-  double lon;
-  double h;
+  double lat = 0.0;
+  double lon = 0.0;
+  double h = 0.0;
   m_localCartesianConverter->Reverse(point.x(), point.y(), point.z(), lat, lon, h);
   return {lat, lon, h};
 }
 
 std::vector<PointLatLon> PointLatLon::fromLocalCartesian(const std::vector<Point3d>& points) const {
   std::vector<PointLatLon> result;
+  result.reserve(points.size());
   for (const auto& point : points) {
     result.push_back(fromLocalCartesian(point));
   }
@@ -125,18 +144,19 @@ int PointLatLon::utmZone() const {
 }
 
 Point3d PointLatLon::toUTM(const PointLatLon& point) const {
-  int zone;
-  bool northp;
-  double x;
-  double y;
-  double gamma;
-  double k;
+  int zone = 0;
+  bool northp = false;
+  double x = 0.0;
+  double y = 0.0;
+  double gamma = 0.0;
+  double k = 0.0;
   GeographicLib::UTMUPS::Forward(point.lat(), point.lon(), zone, northp, x, y, gamma, k, utmZone());
   return {x, y, point.height()};
 }
 
 std::vector<Point3d> PointLatLon::toUTM(const std::vector<PointLatLon>& points) const {
   std::vector<Point3d> result;
+  result.reserve(points.size());
   for (const auto& point : points) {
     result.push_back(toUTM(point));
   }
@@ -144,26 +164,27 @@ std::vector<Point3d> PointLatLon::toUTM(const std::vector<PointLatLon>& points) 
 }
 
 PointLatLon PointLatLon::fromUTM(const Point3d& point) const {
-  int zone;
-  bool northp;
+  int zone = 0;
+  bool northp = false;
   {
-    double x;
-    double y;
-    double gamma;
-    double k;
+    double x = 0.0;
+    double y = 0.0;
+    double gamma = 0.0;
+    double k = 0.0;
     GeographicLib::UTMUPS::Forward(lat(), lon(), zone, northp, x, y, gamma, k);
   }
 
-  double lat;
-  double lon;
-  double gamma;
-  double k;
+  double lat = 0.0;
+  double lon = 0.0;
+  double gamma = 0.0;
+  double k = 0.0;
   GeographicLib::UTMUPS::Reverse(zone, northp, point.x(), point.y(), lat, lon, gamma, k);
   return {lat, lon, point.z()};
 }
 
 std::vector<PointLatLon> PointLatLon::fromUTM(const std::vector<Point3d>& points) const {
   std::vector<PointLatLon> result;
+  result.reserve(points.size());
   for (const auto& point : points) {
     result.push_back(fromUTM(point));
   }
@@ -172,7 +193,7 @@ std::vector<PointLatLon> PointLatLon::fromUTM(const std::vector<Point3d>& points
 
 void PointLatLon::initLocalCartesianConverter() const {
   if (!m_localCartesianConverter) {
-    m_localCartesianConverter = std::unique_ptr<GeographicLib::LocalCartesian>(new GeographicLib::LocalCartesian(lat(), lon(), height()));
+    m_localCartesianConverter = std::make_unique<GeographicLib::LocalCartesian>(lat(), lon(), height());
   }
 }
 
@@ -196,8 +217,8 @@ std::ostream& operator<<(std::ostream& os, const std::vector<PointLatLon>& point
 }
 
 double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2) {
-  PointLatLon p1(lat1, lon1);
-  PointLatLon p2(lat2, lon2);
+  const PointLatLon p1(lat1, lon1);
+  const PointLatLon p2(lat2, lon2);
   return (p1 - p2);
 }
 

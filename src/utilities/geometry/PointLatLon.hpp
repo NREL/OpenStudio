@@ -63,11 +63,12 @@ class UTILITIES_API PointLatLon
   /// constructor with lat, lon, and height
   PointLatLon(double lat, double lon, double height = 0);
 
-  /// copy constructor
+  // Rule of 5/6 because the assignment operators need to reset the LocalCartesian converter and the LocalCartesian converter has a deleted copy
   PointLatLon(const PointLatLon& other);
-
-  /// destructor
-  ~PointLatLon();
+  PointLatLon(PointLatLon&& other) noexcept;
+  PointLatLon& operator=(const PointLatLon& other);
+  PointLatLon& operator=(PointLatLon&& other) noexcept;
+  ~PointLatLon() noexcept;
 
   /// get lat
   double lat() const;
@@ -77,8 +78,6 @@ class UTILITIES_API PointLatLon
 
   /// get height
   double height() const;
-
-  PointLatLon& operator=(const openstudio::PointLatLon& other);
 
   /// check equality
   bool operator==(const PointLatLon& other) const;

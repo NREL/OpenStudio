@@ -54,8 +54,12 @@ class UTILITIES_API EulerAngles
   /// constructor with psi, theta, phi
   EulerAngles(double psi, double theta, double phi);
 
-  /// copy constructor
-  EulerAngles(const EulerAngles& other);
+  // Copy and move operators are implicitly declared (Rule of 1)
+  // EulerAngles(const EulerAngles& other) = default;
+  // EulerAngles(EulerAngles&& other) = default;
+  // EulerAngles& operator=(const EulerAngles&) = default;
+  // EulerAngles& operator=(EulerAngles&&) = default;
+  // ~EulerAngles() noexcept = default;
 
   /// get psi
   double psi() const;

@@ -41,9 +41,6 @@ EulerAngles::EulerAngles(double psi, double theta, double phi) : m_storage(3) {
   m_storage[2] = phi;
 }
 
-/// copy constructor
-EulerAngles::EulerAngles(const EulerAngles& other) = default;
-
 /// get psi
 double EulerAngles::psi() const {
   return m_storage[0];

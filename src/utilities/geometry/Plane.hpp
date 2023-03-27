@@ -49,9 +49,6 @@ class Vector3d;
 class UTILITIES_API Plane
 {
  public:
-  /// copy constructor
-  Plane(const Plane& other);
-
   /// construct with point and outward normal, throws openstudio::Exception if outwardNormal has 0 length.
   Plane(const Point3d& point, const Vector3d& outwardNormal);
 
@@ -60,8 +57,13 @@ class UTILITIES_API Plane
   /// throws openstudio::Exception if cannot compute plane for these points.
   Plane(const std::vector<Point3d>& points);
 
-  /// virtual destructor
-  virtual ~Plane() = default;
+  // Copy and move operators are implicitly declared (Rule of 1)
+  // There's no need to check if the length of the normal is zero since we never allow another plane to not satisfy this condition
+  // Plane(const Plane& other) = default;
+  // Plane(Plane&& other) = default;
+  // Plane& operator=(const Plane&) = default;
+  // Plane& operator=(Plane&&) = default;
+  // ~Plane() noexcept = default;
 
   /// get the outward normal of this plane
   Vector3d outwardNormal() const;

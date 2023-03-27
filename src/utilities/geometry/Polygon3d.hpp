@@ -43,13 +43,20 @@ class UTILITIES_API Polygon3d
 {
  public:
   // Constructs an empty polygon
-  Polygon3d();
+  Polygon3d() = default;
 
   // Construct a polygon with an outer path
   Polygon3d(const Point3dVector& outerPath);
 
   // Constructs a polygon with an outer path and one or more inner paths
   Polygon3d(const Point3dVector& outerPath, const Point3dVectorVector& innerPaths);
+
+  // Copy and move operators are implicitly declared (Rule of 1)
+  // Polygon3d(const Polygon3d& other) = default;
+  // Polygon3d(Polygon3d&& other) = default;
+  // Polygon3d& operator=(const Polygon3d&) = default;
+  // Polygon3d& operator=(Polygon3d&&) = default;
+  // ~Polygon3d() noexcept = default;
 
   // Assigns an outer path for the polygon
   void setOuterPath(const Point3dVector& outerPath);

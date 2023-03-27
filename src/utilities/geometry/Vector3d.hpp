@@ -48,8 +48,12 @@ class UTILITIES_API Vector3d
   /// constructor with x, y, z
   Vector3d(double x, double y, double z);
 
-  /// copy constructor
-  Vector3d(const Vector3d& other);
+  // Copy and move operators are implicitly declared  (Rule of 1)
+  // Vector3d(const Vector3d& other) = default;
+  // Vector3d(Vector3d&& other) = default;
+  // Vector3d& operator=(const Vector3d&) = default;
+  // Vector3d& operator=(Vector3d&&) = default;
+  // ~Vector3d() noexcept = default;
 
   /// get x
   double x() const;

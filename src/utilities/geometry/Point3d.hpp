@@ -51,8 +51,12 @@ class UTILITIES_API Point3d
   /// constructor with x, y, z
   Point3d(double x, double y, double z);
 
-  /// copy constructor
-  Point3d(const Point3d& other);
+  // Copy and move operators are implicitly declared
+  // Point3d(const Point3d& other) = default;
+  // Point3d(Point3d&& other) = default;
+  // Point3d& operator=(const Point3d&) = default;
+  // Point3d& operator=(Point3d&&) = default;
+  // ~Point3d() noexcept = default;
 
   /// get x
   double x() const;

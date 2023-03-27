@@ -49,7 +49,7 @@ class UTILITIES_API BoundingBox
 {
  public:
   /// default constructor creates empty BoundingBox, will not intersect with anything
-  BoundingBox();
+  BoundingBox() = default;
 
   /// add another BoundingBox
   void add(const BoundingBox& other);

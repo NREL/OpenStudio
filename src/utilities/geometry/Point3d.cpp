@@ -42,9 +42,6 @@ Point3d::Point3d(double x, double y, double z) : m_storage(3) {
   m_storage[2] = z;
 }
 
-/// copy constructor
-Point3d::Point3d(const Point3d& other) = default;
-
 /// get x
 double Point3d::x() const {
   return m_storage[0];
