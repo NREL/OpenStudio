@@ -357,7 +357,54 @@ Point3d Plane::anyPointOnPlane() const {
   return Point3d(0.0, 0.0, -m_d / m_c);
 }
 
+boost::optional<Point3d> Plane::rayIntersection(const Point3d& rayOrigin, const Vector3d& rayDirection, bool enforceDirectionOfPlane) const {
+
+  // Any point on plane p = (x, y, z):
+  // a*x + b*y +c*z + d = 0
+  // <=> Pn · p + d = 0, where Pn is the plane outwardNormal (1)
+  //
+  // Any point on a ray, given it's origin r0 (X0, Y0, Z0) and the direction rD (Xd, Yd, Zd), satisfies this equation
+  // r(t) = r0 + t * rD, **with t > 0**  (2)
+  // (t > 0 because, directed ray, otherwise, it's a line)
+  //
+  // If there is an intersection, then this equation must be satisfied:
+  // Pn · r(t) + d = 0
+  // <=> Pn · R0 + t * (Pn·Rd) + d = 0
+  // <=> t = -((Pn · R0) + d) / (Pn · Rd),  **With t > 0**
+
+  const Point3d p0{};
+
+  auto thisOutwardNormal = outwardNormal();
+
+  double vd = thisOutwardNormal.dot(rayDirection);
+
+  if (std::abs(vd) < 0.001) {
+    LOG(Debug, "Plane is orthogonal to Ray, no intersection possible");
+    return {};
+  }
+  if (vd > 0) {
+    if (enforceDirectionOfPlane) {
+      LOG(Debug, "Plane normal and ray are poiting in the same direction...");
+      return {};
+    } else {
+      LOG(Trace, "Plane normal and ray are poiting in the same direction...");
+    }
+  } else {
+    LOG(Trace, "Plane normal and ray are poiting in the opposite direction...");
+  }
+
+  const double v0 = -(thisOutwardNormal.dot(rayOrigin - p0) + m_d);
+  const double t = v0 / vd;
+  LOG(Trace, "vd=" << vd << ", v0=" << v0 << ", t=" << t);
+  if (t > 0.0) {
+    return rayOrigin + t * rayDirection;
+  }
+
+  return {};
+}
+
 std::ostream& operator<<(std::ostream& os, const Plane& plane) {
+  // os << fmt::format("Plane: {:g}x {:+g}y {:+g}z {:+g} = 0", plane.a(), plane.b(), plane.c(), plane.d());
   os << "[" << plane.a() << ", " << plane.b() << ", " << plane.c() << ", " << plane.d() << "]";
   return os;
 }

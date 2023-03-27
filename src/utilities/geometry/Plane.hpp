@@ -105,6 +105,10 @@ class UTILITIES_API Plane
   // Returns any Point3d that's on this plane
   Point3d anyPointOnPlane() const;
 
+  /** Project a directed ray towards a plane and returns the intersection point if any. The RayDirection should be shooting TOWARDS the plane
+    * If enforceDirectionOfPlane is true, the ray direction and the plane outward normal must be facing each other */
+  boost::optional<Point3d> rayIntersection(const Point3d& rayOrigin, const Vector3d& rayDirection, bool enforceDirectionOfPlane = false) const;
+
  private:
   // construct with coefficients
   Plane(double a, double b, double c, double d);
