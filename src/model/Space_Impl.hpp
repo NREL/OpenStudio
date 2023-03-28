@@ -511,6 +511,9 @@ namespace model {
       // Find all surfaces where the outwardNormal does not point towards the outside of the Space
       std::vector<Surface> findSurfacesWithIncorrectOrientation() const;
 
+      std::vector<Surface> findSurfacesWithIncorrectOrientationRaycasting() const;
+      std::vector<Surface> findSurfacesWithIncorrectOrientationPolyhedron(const Polyhedron& volumePoly) const;
+
       // Checks the outwardNormal of every surface points towards the outside of the Space
       bool areAllSurfacesCorrectlyOriented() const;
 

@@ -853,19 +853,22 @@ namespace model {
     }
 
     Polyhedron Space_Impl::polyhedron() const {
+      auto sfs = surfaces();
       std::vector<Surface3d> surface3ds;
-      for (auto& surface : surfaces()) {
-        surface3ds.emplace_back(surface.vertices(), surface.nameString());
+      surface3ds.reserve(sfs.size());
+      for (size_t surfNum = 0; auto& surface : sfs) {
+        surface3ds.emplace_back(surface.vertices(), surface.nameString(), surfNum++);
       }
       return {surface3ds};
     }
 
     bool Space_Impl::isEnclosedVolume() const {
       auto volumePoly = this->polyhedron();
-      auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
+      auto isVolEnclosed = volumePoly.isEnclosedVolume();
       if (!isVolEnclosed) {
+        const auto edgesNot2 = volumePoly.edgesNotTwo();
         LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size() << " edges that aren't used exactly twice");
-        for (const Surface3dEdge& edge : edgesNot2) {
+        for (const auto& edge : edgesNot2) {
           LOG(Debug, edge);
         }
       }
@@ -921,7 +924,7 @@ namespace model {
       return result;
     }
 
-    std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientation() const {
+    std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientationRaycasting() const {
       std::vector<Surface> result;
 
       const Point3d p0{};
@@ -978,6 +981,33 @@ namespace model {
       return result;
     }
 
+    std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientationPolyhedron(const Polyhedron& volumePoly) const {
+      auto sf3ds = volumePoly.findSurfacesWithIncorrectOrientation();
+      if (sf3ds.empty()) {
+        return {};
+      }
+      std::vector<std::string> sfNames;
+      sfNames.reserve(sf3ds.size());
+      std::transform(sf3ds.cbegin(), sf3ds.cend(), std::back_inserter(sfNames), [](const auto& sf3d) { return sf3d.name; });
+      std::vector<Surface> surfaces = this->surfaces();
+      surfaces.erase(std::remove_if(surfaces.begin(), surfaces.end(),
+                                    [&sfNames](const auto& surface) {
+                                      return std::find(sfNames.cbegin(), sfNames.cend(), surface.nameString()) == sfNames.cend();
+                                    }),
+                     surfaces.end());
+      return surfaces;
+    }
+
+    std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientation() const {
+      auto volumePoly = this->polyhedron();
+      if (volumePoly.isEnclosedVolume()) {
+        return findSurfacesWithIncorrectOrientationPolyhedron(volumePoly);
+      }
+      LOG(Warn, "Can't lookup surfaces with incorrect orientations for a non-enclosed Polyhedron, falling back to the Raycasting method. "
+                "This will produce false-negatives for non-convex spaces such as H-shaped spaces.");
+      return findSurfacesWithIncorrectOrientationRaycasting();
+    }
+
     bool Space_Impl::areAllSurfacesCorrectlyOriented() const {
       auto surfaces = findSurfacesWithIncorrectOrientation();
       for (const auto& surface : surfaces) {
@@ -1012,21 +1042,22 @@ namespace model {
         return value.get();
       }
 
-      if (areAllSurfacesCorrectlyOriented()) {
+      auto volumePoly = this->polyhedron();
 
-        auto volumePoly = this->polyhedron();
-
-        auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
-        if (isVolEnclosed) {
-          return volumePoly.calcPolyhedronVolume();
+      if (volumePoly.isEnclosedVolume()) {
+        if (volumePoly.isCompletelyInsideOut()) {
+          const double volume = volumePoly.polyhedronVolume();
+          LOG(Error, briefDescription() << " has all of its Surfaces that are inside-out. Call Space::fixSurfacesWithIncorrectOrientation().");
+          return -volume;
+        } else if (!volumePoly.hasAnySurfaceWithIncorrectOrientation()) {
+          return volumePoly.polyhedronVolume();
+        } else {
+          LOG(Warn, briefDescription() << " has some Surfaces with incorrection orientation. Call Space::fixSurfacesWithIncorrectOrientation(). "
+                                          "Falling back to ceilingHeight * floorArea. Volume calculation will be potentially inaccurate.");
         }
-
-        LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size()
-                                     << " edges that aren't used exactly twice. "
-                                        "Falling back to ceilingHeight * floorArea. Volume calculation will be potentially inaccurate.");
-
       } else {
-        LOG(Warn, briefDescription() << " has some Surfaces with incorrection orientation. Call Space::fixSurfacesWithIncorrectOrientation(). "
+        LOG(Warn, briefDescription() << " is not enclosed, there are " << volumePoly.edgesNotTwo().size()
+                                     << " edges that aren't used exactly twice. "
                                         "Falling back to ceilingHeight * floorArea. Volume calculation will be potentially inaccurate.");
       }
 
@@ -1081,7 +1112,7 @@ namespace model {
 
     double Space_Impl::numberOfPeople() const {
       double result = 0.0;
-      double area = floorArea();
+      const double area = floorArea();
 
       for (const People& person : this->people()) {
         result += person.getNumberOfPeople(area);
