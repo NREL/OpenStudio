@@ -368,11 +368,6 @@ boost::optional<Surface3dEdge> Surface3dEdge::splitEdge(Point3d testVertex) {
 
 std::vector<Surface3d> Polyhedron::findSurfacesWithIncorrectOrientation() const {
 
-  if (!m_isEnclosedVolume) {
-    LOG(Warn, "Can't lookup surfaces with incorrect orientations for a non-enclosed Polyhedron");
-    return {};
-  }
-
   if (!m_hasAnySurfaceWithIncorrectOrientation) {
     return {};
   }
@@ -380,6 +375,11 @@ std::vector<Surface3d> Polyhedron::findSurfacesWithIncorrectOrientation() const 
   if (m_isCompletelyInsideOut) {
     LOG(Error, "It seems that ALL surfaces are reversed");
     return m_surfaces;
+  }
+
+  if (!m_isEnclosedVolume) {
+    LOG(Warn, "Polyhedron is not enclosed. Looking surfaces with incorrect orientations can return false negatives.");
+    //  return {};
   }
 
   std::vector<Surface3dEdge> uniqueSurface3dEdges = uniqueEdges();

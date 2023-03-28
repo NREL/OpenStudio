@@ -3305,7 +3305,7 @@ TEST_F(ModelFixture, Issue_4837) {
   }
 }
 
-TEST_F(ModelFixture, Space_4837_SpaceVolume) {
+TEST_F(ModelFixture, Space_4837_SpaceVolume_BoxEnclosed) {
 
   Model m;
 
@@ -3379,16 +3379,16 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_NonConvex) {
 
   Model m;
 
-  //   y (=North)
-  //   ▲
-  //   │                  building height = 2m
-  // 10├────────┼────────┼
-  //   │                 │
-  //   │        |        │
-  //   │ z=0      z=1    │
-  //   │        |        │
-  //   └────────┴────────┴───► x
-  //  0        10       20
+  //   y (=North)                                  z
+  //   ▲                                           ▲
+  //   │                  building height = 2m    2├─────────────────┐
+  // 10├────────┼────────┼                         │                 │
+  //   │                 │                         │                 │
+  //   │        |        │                        1├        ┌────────┘
+  //   │ z=0      z=1    │                         │        │
+  //   │        |        │                         │        │
+  //   └────────┴────────┴───► x                   └────────┴────────┴───► x
+  //  0        10       20                        0        10       20
 
   constexpr double width = 10.0;
   constexpr double heightPart1 = 2.0;
@@ -3519,4 +3519,54 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_Hshaped) {
   EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
   EXPECT_TRUE(space.isEnclosedVolume());
   EXPECT_DOUBLE_EQ(spaceVolume, space.volume());
+}
+
+TEST_F(ModelFixture, Space_4837_SpaceVolume_NonEnclosed) {
+
+  Model m;
+
+  constexpr double width = 10.0;
+  constexpr double height = 3.6;
+  constexpr double spaceFloorArea = width * width;
+  constexpr double spaceVolume = spaceFloorArea * height;
+
+  //    y (=North)
+  //   ▲
+  //   │
+  // 10o────────o
+  //   │        │
+  //   │        │
+  //   │ Space 1│
+  //   │        │
+  //   o────────o───► x
+  //  0        10
+
+  // Counterclockwise points, Upper Left Corner convention
+  std::vector<Point3d> floorPointsSpace1{
+    {width, width, 0.0},
+    {width, 0.0, 0.0},
+    {0.0, 0.0, 0.0},
+    {0.0, width, 0.0},
+  };
+
+  auto space1 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  EXPECT_EQ(6, space1.surfaces().size());
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+
+  // Grab a wall, delete it
+  auto surfaces = space1.surfaces();
+  auto it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
+  ASSERT_TRUE(it != surfaces.end());
+  it->remove();
+
+  EXPECT_EQ(5, space1.surfaces().size());
+  EXPECT_FALSE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_FALSE(space1.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+
+  auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+  EXPECT_EQ(1, wrongOrientations.size());
+  m.save("Space_4837_SpaceVolume_NonEnclosed.osm", true);
 }

@@ -1000,12 +1000,15 @@ namespace model {
 
     std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientation() const {
       auto volumePoly = this->polyhedron();
-      if (volumePoly.isEnclosedVolume()) {
-        return findSurfacesWithIncorrectOrientationPolyhedron(volumePoly);
-      }
-      LOG(Warn, "Can't lookup surfaces with incorrect orientations for a non-enclosed Polyhedron, falling back to the Raycasting method. "
-                "This will produce false-negatives for non-convex spaces such as H-shaped spaces.");
-      return findSurfacesWithIncorrectOrientationRaycasting();
+      // Actually, its perfectly fine to lookup incorrect orientations even if the polyhedron isn't enclosed...
+      // If a Box space is missing one wall for eg, the opposite wall will be deemed incorrectly oriented if using ray casting.
+      return findSurfacesWithIncorrectOrientationPolyhedron(volumePoly);
+      // if (volumePoly.isEnclosedVolume()) {
+      //   return findSurfacesWithIncorrectOrientationPolyhedron(volumePoly);
+      // }
+      // LOG(Warn, "Can't lookup surfaces with incorrect orientations for a non-enclosed Polyhedron, falling back to the Raycasting method. "
+      //           "This will produce false-negatives for non-convex spaces such as H-shaped spaces.");
+      // return findSurfacesWithIncorrectOrientationRaycasting();
     }
 
     bool Space_Impl::areAllSurfacesCorrectlyOriented() const {
