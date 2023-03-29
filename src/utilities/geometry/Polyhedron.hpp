@@ -82,6 +82,8 @@ class UTILITIES_API Surface3dEdge
 
   void resetEdgeMatching();
 
+  Vector3d asVector() const;
+
   // If it containsPoint the testVertex, Split in place the current edge from [start, vertex] vertex and returns the new next [vertex, end]
   boost::optional<Surface3dEdge> splitEdge(Point3d testVertex);
 
@@ -106,6 +108,9 @@ class UTILITIES_API Surface3d
 
   size_t numConflictedEdges() const;
   double ratioOfConflictedEdges() const;
+
+  // There is no check done whatsoevever to ensure the surface is planar.
+  bool isConvex() const;
 
   void resetEdgeMatching();
 

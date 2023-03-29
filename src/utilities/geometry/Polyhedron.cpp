@@ -29,12 +29,13 @@
 
 #include "Polyhedron.hpp"
 #include "Polygon3d.hpp"
-#include "Vector3d.hpp"
-#include "Point3d.hpp"
+
 #include "Geometry.hpp"
-#include "Plane.hpp"
 #include "Intersection.hpp"
-#include <utilities/geometry/Transformation.hpp>
+#include "Plane.hpp"
+#include "Point3d.hpp"
+#include "Transformation.hpp"
+#include "Vector3d.hpp"
 
 #include <fmt/core.h>
 
@@ -122,6 +123,10 @@ bool Surface3dEdge::containsPoint(const Point3d& testVertex) {
   return !isAlmostEqual3dPt(m_start, testVertex) && !isAlmostEqual3dPt(m_end, testVertex) && isPointOnLineBetweenPoints(m_start, m_end, testVertex);
 }
 
+Vector3d Surface3dEdge::asVector() const {
+  return m_end - m_start;
+}
+
 std::ostream& operator<<(std::ostream& os, const Surface3dEdge& edge) {
   os << "Surface3dEdge: start=" << edge.start() << ", end=" << edge.end() << ", count=" << edge.count()
      << ", firstSurface=" << edge.firstSurfaceName();
@@ -157,6 +162,38 @@ void Surface3d::resetEdgeMatching() {
   for (auto& edge : edges) {
     edge.resetEdgeMatching();
   }
+}
+
+bool Surface3d::isConvex() const {
+
+  // const auto& a = edges.front().start();
+  // const auto& b = edges.front().end();
+  // const auto& c = edges.at(1).end();
+
+  auto ab = edges.front().asVector();
+  auto bc = edges[1].asVector();
+  auto outwardNormal = ab.cross(bc);
+  outwardNormal.normalize();
+
+  for (auto it = std::next(edges.begin()); it != edges.end(); ++it) {
+    auto itnext = std::next(it);
+    if (itnext == std::end(edges)) {
+      itnext = std::begin(edges);
+    }
+    const Point3d& a = it->start();
+    const Point3d& b = it->end();
+    const Point3d& c = itnext->end();
+
+    auto ab = b - a;
+    auto ac = c - a;
+
+    auto triangleNormal = ab.cross(ac);
+    auto d = outwardNormal.dot(triangleNormal);
+    if (d < 0) {
+      return false;
+    }
+  }
+  return true;
 }
 
 Polyhedron::Polyhedron(std::vector<Surface3d> surfaces) : m_surfaces(std::move(surfaces)) {
