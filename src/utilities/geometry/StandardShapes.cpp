@@ -193,4 +193,61 @@ std::vector<Point3d> lShapedPolygon(const Point3d& center, double total_length) 
   };
 }
 
+std::vector<Point3d> squaredPolygon(const Point3d& center, double side_with) {
+
+  //   ▲
+  //   │(1)
+  // L o───────────┐  ▲
+  //   │           │  l2
+  //   │           │  │
+  //   │     x     │  ▼
+  //   │           │
+  //   │(2)        │
+  //   o───────────┴──►
+  //               L
+
+  const double l2 = side_with / 2.0;
+
+  const double x = center.x();
+  const double y = center.y();
+  const double z = center.z();
+
+  // Counter clockwise order
+  return {
+    {x - l2, y + l2, z},  // Point 1 - Upper Left Corner
+    {x - l2, y - l2, z},  // Point 2
+    {x + l2, y - l2, z},  //
+    {x + l2, y + l2, z},  //
+  };
+}
+
+std::vector<Point3d> rectangularPolygon(const Point3d& center, double length_x, double length_y) {
+
+  //   ▲
+  //   │(1)
+  //L_yo───────────┐  ▲
+  //   │           │  ly2
+  //   │           │  │
+  //   │     x     │  ▼
+  //   │           │
+  //   │(2)        │
+  //   o───────────┴──►
+  //               L_x
+
+  const double lx2 = length_x / 2.0;
+  const double ly2 = length_y / 2.0;
+
+  const double x = center.x();
+  const double y = center.y();
+  const double z = center.z();
+
+  // Counter clockwise order
+  return {
+    {x - lx2, y + ly2, z},  // Point 1 - Upper Left Corner
+    {x - lx2, y - ly2, z},  // Point 2
+    {x + lx2, y - ly2, z},  //
+    {x + lx2, y + ly2, z},  //
+  };
+}
+
 }  // namespace openstudio

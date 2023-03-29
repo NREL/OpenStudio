@@ -49,6 +49,10 @@ UTILITIES_API std::vector<Point3d> tShapedPolygon(const Point3d& center, double 
 
 UTILITIES_API std::vector<Point3d> lShapedPolygon(const Point3d& center, double total_length = 10.0);
 
+UTILITIES_API std::vector<Point3d> squaredPolygon(const Point3d& center, double side_with = 10.0);
+
+UTILITIES_API std::vector<Point3d> rectangularPolygon(const Point3d& center, double length_x = 20.0, double length_y = 10.0);
+
 }  // namespace openstudio
 
 #endif  // UTILITIES_GEOMETRY_STANDARDSHAPES_HPP
