@@ -152,6 +152,8 @@ set(geometry_src
   geometry/Polygon3d.cpp
   geometry/Polyhedron.hpp
   geometry/Polyhedron.cpp
+  geometry/StandardShapes.hpp
+  geometry/StandardShapes.cpp
   ../polypartition/polypartition.cpp
 )
 

@@ -35,6 +35,9 @@
 #include "../Polyhedron.hpp"
 #include "../PointLatLon.hpp"
 #include "../Vector3d.hpp"
+#include "../StandardShapes.hpp"
+
+#include <fmt/core.h>
 
 #include <vector>
 
@@ -147,4 +150,44 @@ TEST_F(GeometryFixture, Polyhedron_Titled_Roof) {
   constexpr double volume = 30.0 * 10.0 * 0.3 + 30.0 * 10.0 * 10.0 / 2.0;
   EXPECT_DOUBLE_EQ(volume, zonePoly.polyhedronVolume());
   EXPECT_DOUBLE_EQ(volume, zonePoly.calcDivergenceTheoremVolume());
+}
+
+TEST_F(GeometryFixture, Surface3d_Convexity) {
+  const Point3d p0{};
+  for (size_t i = 3; i <= 16; ++i) {
+    const std::vector<Point3d> points = convexRegularPolygon(p0, i, 1.0);
+    const Surface3d surface(points, fmt::format("Regular {}-sided polygon", i), 0);
+    EXPECT_EQ(i, surface.edges.size());
+    EXPECT_TRUE(surface.isConvex());
+  }
+
+  constexpr double total_length = 10.0;
+
+  {
+    const std::vector<Point3d> points = hShapedPolygon(p0, total_length);
+    const Surface3d surface(points, "hShapedPolygon", 0);
+    EXPECT_EQ(12, surface.edges.size());
+    EXPECT_FALSE(surface.isConvex());
+  }
+
+  {
+    const std::vector<Point3d> points = uShapedPolygon(p0, total_length);
+    const Surface3d surface(points, "uShapedPolygon", 0);
+    EXPECT_EQ(8, surface.edges.size());
+    EXPECT_FALSE(surface.isConvex());
+  }
+
+  {
+    const std::vector<Point3d> points = tShapedPolygon(p0, total_length);
+    const Surface3d surface(points, "tShapedPolygon", 0);
+    EXPECT_EQ(8, surface.edges.size());
+    EXPECT_FALSE(surface.isConvex());
+  }
+
+  {
+    const std::vector<Point3d> points = lShapedPolygon(p0, total_length);
+    const Surface3d surface(points, "lShapedPolygon", 0);
+    EXPECT_EQ(6, surface.edges.size());
+    EXPECT_FALSE(surface.isConvex());
+  }
 }

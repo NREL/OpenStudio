@@ -68,6 +68,7 @@
 #include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
 #include "../../utilities/geometry/Polyhedron.hpp"
+#include "../../utilities/geometry/StandardShapes.hpp"
 #include "../../utilities/geometry/Transformation.hpp"
 #include "../../utilities/geometry/Vector3d.hpp"
 
@@ -3569,4 +3570,81 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_NonEnclosed) {
   auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
   EXPECT_EQ(1, wrongOrientations.size());
   m.save("Space_4837_SpaceVolume_NonEnclosed.osm", true);
+}
+
+TEST_F(ModelFixture, Space_4837_SpaceVolume_Convexity) {
+
+  Model m;
+
+  constexpr double total_length = 10.0;
+
+  int counter = 0;
+
+  const size_t gridsize = 4;
+  const size_t ntot = gridsize * gridsize;
+  const size_t nstandardsShapes = 4;
+
+  auto getPos = [&total_length, &gridsize](size_t i) -> std::pair<double, double> {
+    auto row = i / gridsize;
+    auto col = i % gridsize;
+    return {total_length * 3 * row, total_length * 3 * col};
+  };
+
+  const Point3d p0{};
+  for (size_t i = 3; i < (ntot - nstandardsShapes + 3); ++i) {
+    std::vector<Point3d> points = convexRegularPolygon(p0, i, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m);
+    ASSERT_TRUE(s_);
+    s_->setName(fmt::format("Regular {}-sided polygon", i));
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+  }
+
+  {
+    std::vector<Point3d> points = hShapedPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m);
+    ASSERT_TRUE(s_);
+    s_->setName("hShapedPolygon");
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+  }
+
+  {
+    std::vector<Point3d> points = uShapedPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m);
+    ASSERT_TRUE(s_);
+    s_->setName("uShapedPolygon");
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+  }
+
+  {
+    std::vector<Point3d> points = tShapedPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m);
+    ASSERT_TRUE(s_);
+    s_->setName("tShapedPolygon");
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+  }
+
+  {
+    std::vector<Point3d> points = lShapedPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m);
+    ASSERT_TRUE(s_);
+    s_->setName("lShapedPolygon");
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+  }
+
+  m.save("Test_convexity.osm", true);
 }

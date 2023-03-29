@@ -25,6 +25,7 @@
   #include <utilities/geometry/FloorplanJS.hpp>
   #include <utilities/geometry/RoofGeometry.hpp>
   #include <utilities/geometry/Polyhedron.hpp>
+  #include <utilities/geometry/StandardShapes.hpp>
 
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
@@ -126,6 +127,7 @@
 %include <utilities/geometry/FloorplanJS.hpp>
 %include <utilities/geometry/RoofGeometry.hpp>
 %include <utilities/geometry/Polyhedron.hpp>
+%include <utilities/geometry/StandardShapes.hpp>
 
 %extend openstudio::Vector3d{
   std::string __str__() const {
