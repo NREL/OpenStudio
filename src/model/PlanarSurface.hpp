@@ -223,6 +223,8 @@ namespace model {
     /// Returns any SurfacePropertyConvectionCoefficients associated with this surface, does not return SurfacePropertyConvectionCoefficientsMultipleSurface.
     std::vector<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
+    bool isConvex() const;
+
    protected:
     /** @name Constructors and Destructors */
     //@{
