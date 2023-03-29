@@ -3416,6 +3416,8 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_NonConvex) {
   EXPECT_EQ(spaceVolumePart1, space1.volume());
   EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
   EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_TRUE(space1.isConvex());
+  EXPECT_TRUE(space1.findNonConvexSurfaces().empty());
 
   auto floorSurface2Points = makeFloor(width, 2 * width, 0.0, width, 1.0);
   auto space2 = Space::fromFloorPrint(floorSurface2Points, heightPart2, m).get();
@@ -3423,6 +3425,8 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_NonConvex) {
   EXPECT_EQ(spaceVolumePart2, space2.volume());
   EXPECT_TRUE(space2.areAllSurfacesCorrectlyOriented());
   EXPECT_TRUE(space2.isEnclosedVolume());
+  EXPECT_TRUE(space2.isConvex());
+  EXPECT_TRUE(space2.findNonConvexSurfaces().empty());
 
   EXPECT_EQ(12, m.getConcreteModelObjects<Surface>().size());
   space1.intersectSurfaces(space2);
@@ -3440,6 +3444,9 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_NonConvex) {
   EXPECT_TRUE(mergedSpace.isEnclosedVolume());
   EXPECT_EQ(2 * spaceFloorAreaEach, mergedSpace.floorArea());
   EXPECT_EQ(spaceVolume, mergedSpace.volume());
+  // Space is deemed non convex because it doesn't have a floorPrint, but no surfaces are concave
+  EXPECT_FALSE(mergedSpace.isConvex());
+  EXPECT_TRUE(mergedSpace.findNonConvexSurfaces().empty());
 }
 
 TEST_F(ModelFixture, Space_4837_SpaceVolume_Hshaped) {
@@ -3568,11 +3575,20 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_NonEnclosed) {
   EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
 
   auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+  EXPECT_EQ(0, wrongOrientations.size());
+
+  // Grab a wall, flip it
+  it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
+  auto vertices = it->vertices();
+  std::reverse(vertices.begin(), vertices.end());
+  it->setVertices(vertices);
+  wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
   EXPECT_EQ(1, wrongOrientations.size());
+
   m.save("Space_4837_SpaceVolume_NonEnclosed.osm", true);
 }
 
-TEST_F(ModelFixture, Space_4837_SpaceVolume_Convexity) {
+TEST_F(ModelFixture, Space_Convexity) {
 
   Model m;
 
@@ -3580,11 +3596,11 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_Convexity) {
 
   int counter = 0;
 
-  const size_t gridsize = 4;
-  const size_t ntot = gridsize * gridsize;
-  const size_t nstandardsShapes = 4;
+  constexpr size_t gridsize = 4;
+  constexpr size_t ntot = gridsize * gridsize;
+  constexpr size_t nstandardsShapes = 4;
 
-  auto getPos = [&total_length, &gridsize](size_t i) -> std::pair<double, double> {
+  auto getPos = [](size_t i) -> std::pair<double, double> {
     auto row = i / gridsize;
     auto col = i % gridsize;
     return {total_length * 3 * row, total_length * 3 * col};
@@ -3594,57 +3610,120 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_Convexity) {
   for (size_t i = 3; i < (ntot - nstandardsShapes + 3); ++i) {
     std::vector<Point3d> points = convexRegularPolygon(p0, i, total_length);
     std::reverse(points.begin(), points.end());
-    auto s_ = Space::fromFloorPrint(points, 2, m);
+    auto s_ = Space::fromFloorPrint(points, 2, m, fmt::format("Regular {}-sided polygon", i));
     ASSERT_TRUE(s_);
-    s_->setName(fmt::format("Regular {}-sided polygon", i));
     auto [x, y] = getPos(counter++);
     s_->setXOrigin(x);
     s_->setYOrigin(y);
+    EXPECT_TRUE(s_->isConvex());
+    EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
   }
 
   {
     std::vector<Point3d> points = hShapedPolygon(p0, total_length);
     std::reverse(points.begin(), points.end());
-    auto s_ = Space::fromFloorPrint(points, 2, m);
+    auto s_ = Space::fromFloorPrint(points, 2, m, "hShapedPolygon");
     ASSERT_TRUE(s_);
-    s_->setName("hShapedPolygon");
     auto [x, y] = getPos(counter++);
     s_->setXOrigin(x);
     s_->setYOrigin(y);
+    EXPECT_FALSE(s_->isConvex());
+    // Roof and floor
+    EXPECT_EQ(2, s_->findNonConvexSurfaces().size());
+    EXPECT_EQ("hShapedPolygon Floor", s_->findNonConvexSurfaces().front().nameString());
+    EXPECT_EQ("hShapedPolygon RoofCeiling", s_->findNonConvexSurfaces().back().nameString());
   }
 
   {
-    std::vector<Point3d> points = uShapedPolygon(p0, total_length);
+    std::vector<Point3d> points = hShapedPolygon(p0, total_length);
     std::reverse(points.begin(), points.end());
-    auto s_ = Space::fromFloorPrint(points, 2, m);
+    auto s_ = Space::fromFloorPrint(points, 2, m, "hShapedPolygon");
     ASSERT_TRUE(s_);
-    s_->setName("uShapedPolygon");
     auto [x, y] = getPos(counter++);
     s_->setXOrigin(x);
     s_->setYOrigin(y);
+    EXPECT_FALSE(s_->isConvex());
+    // Roof and floor
+    EXPECT_EQ(2, s_->findNonConvexSurfaces().size());
   }
 
   {
     std::vector<Point3d> points = tShapedPolygon(p0, total_length);
     std::reverse(points.begin(), points.end());
-    auto s_ = Space::fromFloorPrint(points, 2, m);
+    auto s_ = Space::fromFloorPrint(points, 2, m, "tShapedPolygon");
     ASSERT_TRUE(s_);
-    s_->setName("tShapedPolygon");
     auto [x, y] = getPos(counter++);
     s_->setXOrigin(x);
     s_->setYOrigin(y);
+    EXPECT_FALSE(s_->isConvex());
+    // Roof and floor
+    EXPECT_EQ(2, s_->findNonConvexSurfaces().size());
   }
 
   {
     std::vector<Point3d> points = lShapedPolygon(p0, total_length);
     std::reverse(points.begin(), points.end());
-    auto s_ = Space::fromFloorPrint(points, 2, m);
+    auto s_ = Space::fromFloorPrint(points, 2, m, "lShapedPolygon");
     ASSERT_TRUE(s_);
-    s_->setName("lShapedPolygon");
     auto [x, y] = getPos(counter++);
     s_->setXOrigin(x);
     s_->setYOrigin(y);
+    EXPECT_FALSE(s_->isConvex());
+    // Roof and floor
+    EXPECT_EQ(2, s_->findNonConvexSurfaces().size());
   }
 
+  {
+    std::vector<Point3d> points = squaredPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, "squaredPolygon");
+    ASSERT_TRUE(s_);
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+    EXPECT_TRUE(s_->isConvex());
+    EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
+  }
+
+  {
+    std::vector<Point3d> points = rectangularPolygon(p0, total_length * 2, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, "rectangularPolygon");
+    ASSERT_TRUE(s_);
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+    EXPECT_TRUE(s_->isConvex());
+    EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
+  }
+
+  m.versionObject()->setString(1, "3.5.1");
   m.save("Test_convexity.osm", true);
+}
+
+TEST_F(ModelFixture, Space_Convexity_2) {
+
+  Model m;
+  ThermalZone z(m);
+
+  Point3d p0;
+  constexpr double total_length = 10.0;
+
+  for (size_t i = 0; i < 2; ++i) {
+    std::vector<Point3d> points = squaredPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, fmt::format("squaredPolygon{}", i));
+    ASSERT_TRUE(s_);
+    s_->setXOrigin(0.0);
+    s_->setYOrigin(i * total_length);
+    EXPECT_TRUE(s_->isConvex());
+    EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
+    s_->setThermalZone(z);
+  }
+  auto s_ = z.combineSpaces();
+  EXPECT_TRUE(s_);
+  // So, that space has two floor surfaces...
+  EXPECT_TRUE(s_->isConvex());
+  // Roof and floor
+  EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
 }

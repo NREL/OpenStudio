@@ -2926,6 +2926,22 @@ namespace model {
       return result;
     }
 
+    bool Space_Impl::isConvex() const {
+      auto points = floorPrint();
+      if (points.empty()) {
+        LOG(Warn, "Can't compute a floorPrint for " << briefDescription());
+        return false;
+      }
+      Surface3d sf3d(points, fmt::format("{} floorPrint", nameString()), 0);
+      return sf3d.isConvex();
+    }
+
+    std::vector<Surface> Space_Impl::findNonConvexSurfaces() const {
+      auto surfaces = this->surfaces();
+      surfaces.erase(std::remove_if(surfaces.begin(), surfaces.end(), [](const auto& surface) { return surface.isConvex(); }), surfaces.end());
+      return surfaces;
+    }
+
     bool Space_Impl::isPlenum() const {
       bool result = false;
       boost::optional<ThermalZone> thermalZone = this->thermalZone();
@@ -3630,6 +3646,14 @@ namespace model {
 
   bool Space::fixSurfacesWithIncorrectOrientation() {
     return getImpl<detail::Space_Impl>()->fixSurfacesWithIncorrectOrientation();
+  }
+
+  bool Space::isConvex() const {
+    return getImpl<detail::Space_Impl>()->isConvex();
+  }
+
+  std::vector<Surface> Space::findNonConvexSurfaces() const {
+    return getImpl<detail::Space_Impl>()->findNonConvexSurfaces();
   }
 
   /// @cond

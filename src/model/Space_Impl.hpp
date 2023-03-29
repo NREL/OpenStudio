@@ -520,6 +520,16 @@ namespace model {
       // Returns true if the orientation of any surface has been changed
       bool fixSurfacesWithIncorrectOrientation();
 
+      /** This method will check the floorPrint of the space, if that can't be computed, it's not convex. If it can, it checks whether that resulting
+        * Surface3d is convex. Note: having a floorPrint that's convex isn't sufficied to deem a space to be convex, the walls could still be non
+        * convex, but it should suit most typical applications */
+      bool isConvex() const;
+
+      /** Checks if every Surface is convex, returns the Concave ones.
+        * Note: having a non convex surface does not necesarilly mean that the Space is not convex
+        * eg: a box with a wall that is split into two L s would return false, while the Space is actually still convex. */
+      std::vector<Surface> findNonConvexSurfaces() const;
+
       std::vector<ZoneMixing> zoneMixing() const;
       std::vector<ZoneMixing> supplyZoneMixing() const;
       std::vector<ZoneMixing> exhaustZoneMixing() const;
