@@ -174,9 +174,9 @@ bool Surface3d::isConvex() const {
   // const auto& b = edges.front().end();
   // const auto& c = edges.at(1).end();
 
-  auto ab = edges.front().asVector();
-  auto bc = edges[1].asVector();
-  auto outwardNormal = ab.cross(bc);
+  auto ab1 = edges.front().asVector();
+  auto bc1 = edges[1].asVector();
+  auto outwardNormal = ab1.cross(bc1);
   outwardNormal.normalize();
 
   for (auto it = std::next(edges.begin()); it != edges.end(); ++it) {
