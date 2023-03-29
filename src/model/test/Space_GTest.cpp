@@ -3564,28 +3564,37 @@ TEST_F(ModelFixture, Space_4837_SpaceVolume_NonEnclosed) {
   EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
 
   // Grab a wall, delete it
-  auto surfaces = space1.surfaces();
-  auto it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
-  ASSERT_TRUE(it != surfaces.end());
-  it->remove();
+  {
+    auto surfaces = space1.surfaces();
+    auto it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
+    ASSERT_TRUE(it != surfaces.end());
+    it->remove();
 
-  EXPECT_EQ(5, space1.surfaces().size());
-  EXPECT_FALSE(space1.areAllSurfacesCorrectlyOriented());
-  EXPECT_FALSE(space1.isEnclosedVolume());
-  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+    EXPECT_EQ(5, space1.surfaces().size());
+    EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+    EXPECT_FALSE(space1.isEnclosedVolume());
+    EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
 
-  auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
-  EXPECT_EQ(0, wrongOrientations.size());
+    auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(0, wrongOrientations.size());
+  }
 
-  // Grab a wall, flip it
-  it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
-  auto vertices = it->vertices();
-  std::reverse(vertices.begin(), vertices.end());
-  it->setVertices(vertices);
-  wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
-  EXPECT_EQ(1, wrongOrientations.size());
+  {
+    // Grab a wall, flip it
+    auto surfaces = space1.surfaces();
+    auto it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
+    auto vertices = it->vertices();
+    std::reverse(vertices.begin(), vertices.end());
+    it->setVertices(vertices);
 
-  m.save("Space_4837_SpaceVolume_NonEnclosed.osm", true);
+    EXPECT_EQ(5, space1.surfaces().size());
+    EXPECT_FALSE(space1.areAllSurfacesCorrectlyOriented());
+    EXPECT_FALSE(space1.isEnclosedVolume());
+    auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+  }
+
+  // m.save("Space_4837_SpaceVolume_NonEnclosed.osm", true);
 }
 
 TEST_F(ModelFixture, Space_Convexity) {
@@ -3697,8 +3706,7 @@ TEST_F(ModelFixture, Space_Convexity) {
     EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
   }
 
-  m.versionObject()->setString(1, "3.5.1");
-  m.save("Test_convexity.osm", true);
+  // m.save("Test_convexity.osm", true);
 }
 
 TEST_F(ModelFixture, Space_Convexity_2) {
