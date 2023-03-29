@@ -166,6 +166,10 @@ void Surface3d::resetEdgeMatching() {
 
 bool Surface3d::isConvex() const {
 
+  // for each triangle of 3 points, we compute the triangleNormal by taking the cross product of AB x AC.
+  // We then take the dot product with the initial outwardNormal. If the dot product is negative, this means the triangleNomal is pointing in the
+  // opposite direction and we therefore have a non convex surface
+
   // const auto& a = edges.front().start();
   // const auto& b = edges.front().end();
   // const auto& c = edges.at(1).end();
@@ -258,8 +262,12 @@ void Polyhedron::performEdgeMatching() {
         for (Surface3dEdge& edge2 : surface2.edges) {
           if (edge1 == edge2) {
             if (std::find(edge1.allSurfNums().begin(), edge1.allSurfNums().cend(), edge2.firstSurfNum()) == edge1.allSurfNums().end()) {
+              // appendSurface will allow use to check edge.count() later to check if count == 2.
+              // All edges must be count == 2 in an Enclosed Polyhedron
               edge1.appendSurface(surface2);
               edge2.appendSurface(surface1);
+              // In a Polyhedron that has a consistent orientation (typically all faces are in counter clockwise order),
+              // each edge must be matched by an edge in the **opposite** direction. If not, mark conflicted
               if (!edge1.reverseEqual(edge2)) {
                 edge1.markConflictedOrientation();
                 edge2.markConflictedOrientation();
@@ -421,7 +429,7 @@ std::vector<Surface3d> Polyhedron::findSurfacesWithIncorrectOrientation() const 
 
   std::vector<Surface3dEdge> uniqueSurface3dEdges = uniqueEdges();
 
-  // Remove non-conflicted edges
+  // Remove non-conflicted edges (Note: this also removes any edge that doesn't have at least one match... since these can't be conflicted)
   uniqueSurface3dEdges.erase(
     std::remove_if(uniqueSurface3dEdges.begin(), uniqueSurface3dEdges.end(), [](const auto& edge) { return !edge.hasConflictedOrientation(); }),
     uniqueSurface3dEdges.end());

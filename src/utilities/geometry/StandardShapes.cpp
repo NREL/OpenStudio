@@ -32,10 +32,16 @@
 #include "Point3d.hpp"
 #include "Vector3d.hpp"
 
+#include <boost/math/constants/constants.hpp>
+
 #include <cmath>
-#include <numbers>
 #include <stdexcept>
 #include <vector>
+
+// GCC <10 doesn't have numbers..
+// #include <numbers> / PI
+// static constexpr double PI = td::numbers::pi;
+static constexpr double PI = boost::math::constants::pi<double>();
 
 namespace openstudio {
 
@@ -46,7 +52,7 @@ std::vector<Point3d> convexRegularPolygon(const Point3d& center, size_t num_side
 
   std::vector<Point3d> points;
   points.reserve(num_sides);
-  const double angle = 2.0 * std::numbers::pi / num_sides;
+  const double angle = 2.0 * PI / num_sides;
 
   for (size_t i = 0; i < num_sides; i++) {
     double x = center.x() + side_with * std::cos(angle * i);
