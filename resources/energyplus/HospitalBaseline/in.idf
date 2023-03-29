@@ -100,7 +100,7 @@
 ! End SimMetaData
 ! Number of Zones: 130
 
-  Version,22.2;
+  Version,23.1;
 
   Timestep,6;
 
@@ -136,7 +136,8 @@
   HeatBalanceAlgorithm,ConductionTransferFunction,200.0000;
 
   ZoneAirHeatBalanceAlgorithm,
-    AnalyticalSolution;      !- Algorithm
+    AnalyticalSolution,      !- Algorithm
+    No;                      !- Do Space Heat Balance for Sizing
 
   Sizing:Parameters,
     1,                       !- Heating Sizing Factor

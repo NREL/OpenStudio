@@ -67,7 +67,7 @@
 ! ExtWallConstruction=Mass
 ! End SimMetaData
 
-  Version,22.2;
+  Version,23.1;
 
   Timestep,6;
 
@@ -4087,7 +4087,9 @@
     PSZ-AC:1_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:1_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     PSZ-AC:1_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   Curve:Biquadratic,
     PSZ-AC:1_CoolCStandard10Ton_CapFT,  !- Name
@@ -4377,7 +4379,9 @@
     PSZ-AC:2_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:2_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     PSZ-AC:2_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   Curve:Biquadratic,
     PSZ-AC:2_CoolCStandard10Ton_CapFT,  !- Name
@@ -4667,7 +4671,9 @@
     PSZ-AC:3_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:3_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     PSZ-AC:3_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   Curve:Biquadratic,
     PSZ-AC:3_CoolCStandard10Ton_CapFT,  !- Name
@@ -4957,7 +4963,9 @@
     PSZ-AC:4_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:4_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     PSZ-AC:4_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   Curve:Biquadratic,
     PSZ-AC:4_CoolCStandard10Ton_CapFT,  !- Name
@@ -5247,7 +5255,9 @@
     PSZ-AC:5_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:5_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     PSZ-AC:5_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   Curve:Biquadratic,
     PSZ-AC:5_CoolCStandard10Ton_CapFT,  !- Name

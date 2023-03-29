@@ -68,7 +68,7 @@
 ! ***GENERAL SIMULATION PARAMETERS***
 ! Number of Zones: 19
 
-  Version,22.2;
+  Version,23.1;
 
   SimulationControl,
     YES,                     !- Do Zone Sizing Calculation
@@ -227,7 +227,8 @@
   HeatBalanceAlgorithm,ConductionTransferFunction,200.0000;
 
   ZoneAirHeatBalanceAlgorithm,
-    AnalyticalSolution;      !- Algorithm
+    AnalyticalSolution,      !- Algorithm
+    No;                      !- Do Space Heat Balance for Sizing
 
   Sizing:Parameters,
     1.33,                    !- Heating Sizing Factor

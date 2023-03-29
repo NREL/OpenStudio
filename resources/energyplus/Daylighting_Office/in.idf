@@ -140,7 +140,7 @@
 ! schedule types, always on schedule, misc
 ! ***GENERAL SIMULATION PARAMETERS***
 
-  Version,22.2;
+  Version,23.1;
 
   SimulationControl,
     YES,                     !- Do Zone Sizing Calculation
@@ -2354,7 +2354,9 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:2_CoolC DXCoil,   !- Name
@@ -2372,7 +2374,9 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:3_CoolC DXCoil,   !- Name
@@ -2390,7 +2394,9 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:4_CoolC DXCoil,   !- Name
@@ -2408,7 +2414,9 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:5_CoolC DXCoil,   !- Name
@@ -2426,7 +2434,9 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    ,                        !- Nominal Time for Condensate Removal to Begin {s}
+    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
   ZoneHVAC:EquipmentList,
     Core_ZN Equipment,       !- Name
