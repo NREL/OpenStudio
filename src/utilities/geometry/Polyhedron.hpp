@@ -189,6 +189,18 @@ using PolyhedronVector = std::vector<Polyhedron>;
 /// ostream operator
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Surface3dEdge& edge);
 
+// Convenience functions for testing. All them returns point in Counterclockwise order, so if creating a floor, reverse the vertices
+
+UTILITIES_API std::vector<Point3d> convexRegularPolygon(const Point3d& center, size_t num_sides, double side_with = 1.0);
+
+UTILITIES_API std::vector<Point3d> hShapedRegularPolygon(const Point3d& center, double total_length = 10.0);
+
+UTILITIES_API std::vector<Point3d> uShapedRegularPolygon(const Point3d& center, double total_length = 10.0);
+
+UTILITIES_API std::vector<Point3d> tShapedRegularPolygon(const Point3d& center, double total_length = 10.0);
+
+UTILITIES_API std::vector<Point3d> lShapedRegularPolygon(const Point3d& center, double total_length = 10.0);
+
 }  // namespace openstudio
 
 #endif  // UTILITIES_GEOMETRY_POLYHEDRON_HPP
