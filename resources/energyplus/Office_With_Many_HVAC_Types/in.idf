@@ -1,4 +1,4 @@
-  Version,22.2;
+  Version,23.1;
 
   Building,
     Building 1,              !- Name
@@ -332,7 +332,7 @@
     Autosize,                !- Cooling Outdoor Air Flow Rate {m3/s}
     Autosize,                !- Heating Outdoor Air Flow Rate {m3/s}
     Autosize,                !- No Load Outdoor Air Flow Rate {m3/s}
-    Fan:OnOff,      !- Supply Air Fan Object Type
+    Fan:OnOff,               !- Supply Air Fan Object Type
     PTAC Fan,                !- Supply Air Fan Name
     Coil:Heating:Water,      !- Heating Coil Object Type
     PTAC HW Htg Coil,        !- Heating Coil Name
@@ -342,6 +342,7 @@
     Always Off Discrete;     !- Supply Air Fan Operating Mode Schedule Name
 
   Schedule:Constant,Always On Discrete 1,Schedule Type Limits 1,1;
+
   Schedule:Constant,Always Off Discrete,Schedule Type Limits 1,0;
 
   OutdoorAir:Mixer,
@@ -355,35 +356,35 @@
     PTAC DX Clg HW Htg OA Node;  !- Node or NodeList Name 1
 
   Fan:OnOff,
-    PTAC Fan,                               !- Name
-    Always On Discrete 1,                   !- Availability Schedule Name
-    0.7,                                    !- Fan Total Efficiency
-    250,                                    !- Pressure Rise {Pa}
-    Autosize,                               !- Maximum Flow Rate {m3/s}
-    0.9,                                    !- Motor Efficiency
-    1,                                      !- Motor In Airstream Fraction
-    PTAC DX Clg HW Htg Heating Coil Outlet Node, !- Air Inlet Node Name
-    Node 17,                                !- Air Outlet Node Name
-    Fan On Off Power Curve,                 !- Fan Power Ratio Function of Speed Ratio Curve Name
-    Fan On Off Efficiency Curve,            !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
-    General;                                !- End-Use Subcategory
+    PTAC Fan,                !- Name
+    Always On Discrete 1,    !- Availability Schedule Name
+    0.7,                     !- Fan Total Efficiency
+    250,                     !- Pressure Rise {Pa}
+    Autosize,                !- Maximum Flow Rate {m3/s}
+    0.9,                     !- Motor Efficiency
+    1,                       !- Motor In Airstream Fraction
+    PTAC DX Clg HW Htg Heating Coil Outlet Node,  !- Air Inlet Node Name
+    Node 17,                 !- Air Outlet Node Name
+    Fan On Off Power Curve,  !- Fan Power Ratio Function of Speed Ratio Curve Name
+    Fan On Off Efficiency Curve,  !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+    General;                 !- End-Use Subcategory
 
   Curve:Exponent,
-    Fan On Off Power Curve,                 !- Name
-    1,                                      !- Coefficient1 Constant
-    0,                                      !- Coefficient2 Constant
-    0,                                      !- Coefficient3 Constant
-    0,                                      !- Minimum Value of x {BasedOnField A2}
-    1;                                      !- Maximum Value of x {BasedOnField A2}
+    Fan On Off Power Curve,  !- Name
+    1,                       !- Coefficient1 Constant
+    0,                       !- Coefficient2 Constant
+    0,                       !- Coefficient3 Constant
+    0,                       !- Minimum Value of x
+    1;                       !- Maximum Value of x
 
   Curve:Cubic,
-    Fan On Off Efficiency Curve,            !- Name
-    1,                                      !- Coefficient1 Constant
-    0,                                      !- Coefficient2 x
-    0,                                      !- Coefficient3 x**2
-    0,                                      !- Coefficient4 x**3
-    0,                                      !- Minimum Value of x {BasedOnField A2}
-    1;                                      !- Maximum Value of x {BasedOnField A2}
+    Fan On Off Efficiency Curve,  !- Name
+    1,                       !- Coefficient1 Constant
+    0,                       !- Coefficient2 x
+    0,                       !- Coefficient3 x**2
+    0,                       !- Coefficient4 x**3
+    0,                       !- Minimum Value of x
+    1;                       !- Maximum Value of x
 
   Coil:Heating:Water,
     PTAC HW Htg Coil,        !- Name
@@ -755,18 +756,18 @@
     PTHP OA Node;            !- Node or NodeList Name 1
 
   Fan:OnOff,
-    PTHP Fan,                      !- Name
-    Always On Discrete 1,          !- Availability Schedule Name
-    0.7,                           !- Fan Total Efficiency
-    250,                           !- Pressure Rise {Pa}
-    Autosize,                      !- Maximum Flow Rate {m3/s}
-    0.9,                           !- Motor Efficiency
-    1,                             !- Motor In Airstream Fraction
-    PTHP Heating Coil Outlet Node, !- Air Inlet Node Name
-    PTHP Fan Outlet Node,          !- Air Outlet Node Name
-    Fan On Off Power Curve,        !- Fan Power Ratio Function of Speed Ratio Curve Name
-    Fan On Off Efficiency Curve,   !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
-    General;                       !- End-Use Subcategory
+    PTHP Fan,                !- Name
+    Always On Discrete 1,    !- Availability Schedule Name
+    0.7,                     !- Fan Total Efficiency
+    250,                     !- Pressure Rise {Pa}
+    Autosize,                !- Maximum Flow Rate {m3/s}
+    0.9,                     !- Motor Efficiency
+    1,                       !- Motor In Airstream Fraction
+    PTHP Heating Coil Outlet Node,  !- Air Inlet Node Name
+    PTHP Fan Outlet Node,    !- Air Outlet Node Name
+    Fan On Off Power Curve,  !- Fan Power Ratio Function of Speed Ratio Curve Name
+    Fan On Off Efficiency Curve,  !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+    General;                 !- End-Use Subcategory
 
   Coil:Heating:DX:SingleSpeed,
     PTHP 1 Spd DX Htg Coil,  !- Name
@@ -792,7 +793,12 @@
     Resistive,               !- Defrost Strategy
     Timed,                   !- Defrost Control
     0.166667,                !- Defrost Time Period Fraction
-    2000;                    !- Resistive Defrost Heater Capacity {W}
+    2000,                    !- Resistive Defrost Heater Capacity {W}
+    ,                        !- Region number for calculating HSPF
+    ,                        !- Evaporator Air Inlet Node Name
+    ,                        !- Zone Name for Evaporator Placement
+    ,                        !- Secondary Coil Air Flow Rate {m3/s}
+    ;                        !- Secondary Coil Fan Flow Scaling Factor {m3/s}
 
   Curve:Biquadratic,
     OS:Curve:Biquadratic 11, !- Name
@@ -4456,7 +4462,8 @@
     1.15;                    !- Cooling Sizing Factor
 
   ZoneAirHeatBalanceAlgorithm,
-    AnalyticalSolution;      !- Algorithm
+    AnalyticalSolution,      !- Algorithm
+    No;                      !- Do Space Heat Balance for Sizing
 
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
