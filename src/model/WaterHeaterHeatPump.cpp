@@ -52,10 +52,12 @@
 #include "ScheduleRuleset_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_HeatPump_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -542,6 +544,25 @@ namespace model {
       if (val) {
         setEvaporatorAirFlowRate(val.get());
       }
+    }
+
+    // NOTE: The WaterHeaterHeatPump is listed as a ThermalZone equipment, but it's not a zone load.
+    // So we set everything to None/Empty here. It has a child Tank (WaterHeater:Mixed for eg), which WILL check if it's part of a HPWH
+    // so the PlantLoop's methods are affected accordingly though.
+    ComponentType WaterHeaterHeatPump_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> WaterHeaterHeatPump_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> WaterHeaterHeatPump_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> WaterHeaterHeatPump_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

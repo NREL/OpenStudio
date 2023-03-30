@@ -42,12 +42,12 @@
 #include "Node_Impl.hpp"
 #include "PlantLoop.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Chiller_Electric_ReformulatedEIR_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -717,6 +717,29 @@ namespace model {
     void ChillerElectricReformulatedEIR_Impl::resetHeatRecoveryLeavingTemperatureSetpointNode() {
       bool result = setString(OS_Chiller_Electric_ReformulatedEIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName, "");
       OS_ASSERT(result);
+    }
+
+    ComponentType ChillerElectricReformulatedEIR_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> ChillerElectricReformulatedEIR_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      result.insert(FuelType::Electricity);
+      if (auto p_ = condenserWaterLoop()) {
+        for (auto ft : p_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> ChillerElectricReformulatedEIR_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ChillerElectricReformulatedEIR_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

@@ -52,10 +52,11 @@
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_Stratified_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 #include <algorithm>
 
@@ -1367,6 +1368,89 @@ namespace model {
 
     boost::optional<ModelObject> WaterHeaterStratified_Impl::sourceSideOutletModelObject() const {
       return demandOutletModelObject();
+    }
+
+    ComponentType WaterHeaterStratified_Impl::componentType() const {
+
+      if (isHeater1CapacityAutosized() || ((heater1Capacity().get() + heater2Capacity()) > 0.01)) {
+        // If there is a capacity, and it's not zero, it's heating
+        return ComponentType::Heating;
+      }
+
+      // Capacity is zero: it's a storage tank! get the Source loop
+      if (boost::optional<PlantLoop> p_ = secondaryPlantLoop()) {
+        return p_->componentType();
+
+        // We also need to check if the tank isn't attached to a HPWH, in which case we return Heating
+        // There's some magic later that'll put the HPWH itself and not the tank on the PlantEquipmentOperation,
+        // see function operationSchemeComponent()
+      } else if (boost::optional<ZoneHVACComponent> zoneComp_ = containingZoneHVACComponent()) {
+        // We don't have to explicitly check if it's a WaterHeaterHeatPump or WaterHeaterHeatPumpWrappedCondenser since
+        // these are the only two types of zoneHVACComponent that could have a WaterHeater object, but this might change in the future
+        IddObjectType zoneCompIdd = zoneComp_->iddObjectType();
+        if ((zoneCompIdd == openstudio::IddObjectType::OS_WaterHeater_HeatPump)
+            || (zoneCompIdd == openstudio::IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser)) {
+          return ComponentType::Heating;
+        } else {
+          OS_ASSERT(false);
+          return ComponentType::None;
+        }
+      }
+
+      // It isn't connected to a source side, and has zero capacity, and not part of HPWH => it's a buffer tank => NONE
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> WaterHeaterStratified_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+
+      // TODO: only if cap == 0?
+      if (boost::optional<PlantLoop> p_ = secondaryPlantLoop()) {
+        auto plantFuelTypes = p_->coolingFuelTypes();
+        result.insert(plantFuelTypes.begin(), plantFuelTypes.end());
+      }
+
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> WaterHeaterStratified_Impl::heatingFuelTypes() const {
+
+      std::set<FuelType> result;
+
+      if (isHeater1CapacityAutosized() || ((heater1Capacity().get() + heater2Capacity()) > 0.01)) {
+        // If there is a capacity, and it's not zero, it's heating
+        result.insert(FuelType(heaterFuelType()));
+      }
+      if (boost::optional<PlantLoop> p_ = secondaryPlantLoop()) {
+        auto plantFuelTypes = p_->heatingFuelTypes();
+        result.insert(plantFuelTypes.begin(), plantFuelTypes.end());
+      }
+      if (auto zoneComp_ = containingZoneHVACComponent()) {
+        // The only accepted types are the WaterHeaterHeatPump or WaterHeaterHeatPumpWrappedCondenser so skip the checks
+        result.insert(FuelType::Electricity);
+      }
+
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> WaterHeaterStratified_Impl::appGHeatingFuelTypes() const {
+
+      std::set<AppGFuelType> result;
+
+      if (isHeater1CapacityAutosized() || ((heater1Capacity().get() + heater2Capacity()) > 0.01)) {
+        // If there is a capacity, and it's not zero, it's heating
+        result.insert(convertFuelTypeToAppG(FuelType(heaterFuelType())));
+      }
+      if (boost::optional<PlantLoop> p_ = secondaryPlantLoop()) {
+        auto plantFuelTypes = p_->appGHeatingFuelTypes();
+        result.insert(plantFuelTypes.begin(), plantFuelTypes.end());
+      }
+      if (auto zoneComp_ = containingZoneHVACComponent()) {
+        // The only accepted types are the WaterHeaterHeatPump or WaterHeaterHeatPumpWrappedCondenser so skip the checks
+        result.insert(AppGFuelType::HeatPump);
+      }
+
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

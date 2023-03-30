@@ -43,6 +43,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -166,6 +167,22 @@ namespace model {
         return myAFNItems[0];
       }
       return boost::none;
+    }
+
+    ComponentType AirLoopHVACZoneSplitter_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirLoopHVACZoneSplitter_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> AirLoopHVACZoneSplitter_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> AirLoopHVACZoneSplitter_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

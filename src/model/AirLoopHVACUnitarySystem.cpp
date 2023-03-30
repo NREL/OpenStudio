@@ -46,14 +46,12 @@
 #include "UnitarySystemPerformanceMultispeed.hpp"
 #include "UnitarySystemPerformanceMultispeed_Impl.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -1325,6 +1323,62 @@ namespace model {
       std::vector<std::string> types{"Unitary System Control Zone Mass Flow Fraction", "Unitary HVAC Design Heating Capacity",
                                      "Unitary HVAC Design Cooling Capacity"};
       return types;
+    }
+
+    ComponentType AirLoopHVACUnitarySystem_Impl::componentType() const {
+      const bool has_cooling = coolingCoil().is_initialized();
+      const bool has_heating = heatingCoil().is_initialized();
+
+      if (has_cooling && has_heating) {
+        return ComponentType::Both;
+      } else if (has_cooling) {
+        return ComponentType::Cooling;
+      } else if (has_heating) {
+        return ComponentType::Heating;
+      }
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirLoopHVACUnitarySystem_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      if (auto cc_ = coolingCoil()) {
+        for (auto ft : cc_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> AirLoopHVACUnitarySystem_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      if (auto hc_ = heatingCoil()) {
+        for (auto ft : hc_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      if (auto supHC_ = supplementalHeatingCoil()) {
+        for (auto ft : supHC_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> AirLoopHVACUnitarySystem_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      if (auto hc_ = heatingCoil()) {
+        for (auto ft : hc_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      if (auto supHC_ = supplementalHeatingCoil()) {
+        for (auto ft : supHC_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

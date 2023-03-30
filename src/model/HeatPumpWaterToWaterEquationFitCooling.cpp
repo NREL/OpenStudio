@@ -33,12 +33,14 @@
 #include "CurveQuadLinear.hpp"
 #include "CurveQuadLinear_Impl.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/OS_HeatPump_WaterToWater_EquationFit_Cooling_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 #include "HeatPumpWaterToWaterEquationFitHeating.hpp"
 #include "HeatPumpWaterToWaterEquationFitHeating_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_HeatPump_WaterToWater_EquationFit_Cooling_FieldEnums.hxx>
 
 namespace openstudio {
 namespace model {
@@ -304,6 +306,29 @@ namespace model {
       if (val) {
         setRatedCoolingPowerConsumption(val.get());
       }
+    }
+
+    ComponentType HeatPumpWaterToWaterEquationFitCooling_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> HeatPumpWaterToWaterEquationFitCooling_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      result.insert(FuelType::Electricity);
+      if (auto p_ = secondaryPlantLoop()) {
+        for (auto& ft : p_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> HeatPumpWaterToWaterEquationFitCooling_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> HeatPumpWaterToWaterEquationFitCooling_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

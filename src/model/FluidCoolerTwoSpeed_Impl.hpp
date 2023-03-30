@@ -34,6 +34,7 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
 namespace model {
 
   class Node;
@@ -63,13 +64,24 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
-      //@}
-      /** @name Getters */
-      //@{
-
       virtual unsigned inletPort() const override;
 
       virtual unsigned outletPort() const override;
+
+      virtual bool addToNode(Node& node) override;
+
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
+      //@}
+      /** @name Getters */
+      //@{
 
       std::string performanceInputMethod() const;
 
@@ -139,10 +151,6 @@ namespace model {
 
       boost::optional<double> autosizedLowFanSpeedFanPower() const;
 
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
-
       //@}
       /** @name Setters */
       //@{
@@ -204,8 +212,6 @@ namespace model {
       //@}
       /** @name Other */
       //@{
-
-      bool addToNode(Node& node) override;
 
       //@}
      protected:

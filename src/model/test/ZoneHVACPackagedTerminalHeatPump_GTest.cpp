@@ -30,6 +30,9 @@
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 
+#include "../ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+
 #include "../AirLoopHVAC.hpp"
 #include "../Model.hpp"
 #include "../Node.hpp"
@@ -42,6 +45,7 @@
 #include "../FanConstantVolume_Impl.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CoilHeatingElectric_Impl.hpp"
+#include "../CoilHeatingWater.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../CoilCoolingDXVariableSpeed.hpp"
@@ -52,11 +56,12 @@
 #include "../CoilHeatingDXSingleSpeed_Impl.hpp"
 #include "../CoilHeatingDXVariableSpeed.hpp"
 #include "../CoilHeatingDXVariableSpeed_Impl.hpp"
-#include "../ZoneHVACPackagedTerminalHeatPump.hpp"
-#include "../ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../FanOnOff.hpp"
 #include "../FanSystemModel.hpp"
+#include "../ThermalZone.hpp"
+#include "../PlantLoop.hpp"
+#include "../BoilerHotWater.hpp"
 
 #include <utilities/idd/OS_Curve_Biquadratic_FieldEnums.hxx>
 
@@ -333,4 +338,70 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_SupplyAirFanOpSch) {
 
   model::ZoneHVACPackagedTerminalHeatPump pthpOnOff(m, alwaysOn, fanOnOff, heatingCoil, coolingCoil, supplementalHeatingCoil);
   EXPECT_EQ(alwaysOff, pthpOnOff.supplyAirFanOperatingModeSchedule());
+}
+
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_HeatCoolFuelTypes) {
+
+  Model m;
+
+  FanSystemModel fan(m);
+  CoilHeatingDXVariableSpeed hc(m);
+  CoilCoolingDXVariableSpeed cc(m);
+  CoilHeatingWater supHC(m);
+
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+
+  ZoneHVACPackagedTerminalHeatPump pthp(m, alwaysOn, fan, hc, cc, supHC);
+
+  ThermalZone z(m);
+  EXPECT_EQ(ComponentType(ComponentType::None), z.componentType());
+  EXPECT_EQ(0, z.coolingFuelTypes().size());
+  EXPECT_EQ(0, z.heatingFuelTypes().size());
+  EXPECT_EQ(0, z.appGHeatingFuelTypes().size());
+
+  PlantLoop p(m);
+  EXPECT_EQ(0, supHC.heatingFuelTypes().size());
+  EXPECT_EQ(0, p.heatingFuelTypes().size());
+
+  BoilerHotWater b(m);
+  EXPECT_TRUE(p.addSupplyBranchForComponent(b));
+  EXPECT_TRUE(p.addDemandBranchForComponent(supHC));
+
+  EXPECT_TRUE(b.setFuelType("Propane"));
+  ASSERT_EQ(1, b.heatingFuelTypes().size());
+  EXPECT_EQ(FuelType(FuelType::Propane), b.heatingFuelTypes().front());
+  ASSERT_EQ(1, p.heatingFuelTypes().size());
+  EXPECT_EQ(FuelType(FuelType::Propane), p.heatingFuelTypes().front());
+
+  EXPECT_EQ(ComponentType(ComponentType::Heating), supHC.componentType());
+  EXPECT_EQ(0, supHC.coolingFuelTypes().size());
+  ASSERT_EQ(1, supHC.heatingFuelTypes().size());
+  EXPECT_EQ(FuelType(FuelType::Propane), supHC.heatingFuelTypes().front());
+  ASSERT_EQ(1, supHC.appGHeatingFuelTypes().size());
+  EXPECT_EQ(AppGFuelType(AppGFuelType::Fuel), supHC.appGHeatingFuelTypes().front());
+
+  EXPECT_EQ(ComponentType(ComponentType::Cooling), cc.componentType());
+  ASSERT_EQ(1, cc.coolingFuelTypes().size());
+  EXPECT_EQ(FuelType(FuelType::Electricity), cc.coolingFuelTypes().front());
+  EXPECT_EQ(0, cc.heatingFuelTypes().size());
+  EXPECT_EQ(0, cc.appGHeatingFuelTypes().size());
+
+  EXPECT_EQ(ComponentType(ComponentType::Heating), hc.componentType());
+  EXPECT_EQ(0, hc.coolingFuelTypes().size());
+  ASSERT_EQ(1, hc.heatingFuelTypes().size());
+  EXPECT_EQ(FuelType(FuelType::Electricity), hc.heatingFuelTypes().front());
+  ASSERT_EQ(1, hc.appGHeatingFuelTypes().size());
+  EXPECT_EQ(AppGFuelType(AppGFuelType::HeatPump), hc.appGHeatingFuelTypes().front());
+
+  EXPECT_EQ(ComponentType(ComponentType::Both), pthp.componentType());
+  testFuelTypeEquality({FuelType::Electricity}, pthp.coolingFuelTypes());
+  testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, pthp.heatingFuelTypes());
+  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, pthp.appGHeatingFuelTypes());
+
+  EXPECT_TRUE(pthp.addToThermalZone(z));
+
+  EXPECT_EQ(ComponentType(ComponentType::Both), z.componentType());
+  testFuelTypeEquality({FuelType::Electricity}, z.coolingFuelTypes());
+  testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, z.heatingFuelTypes());
+  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, z.appGHeatingFuelTypes());
 }

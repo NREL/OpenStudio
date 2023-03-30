@@ -63,12 +63,12 @@
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -692,6 +692,36 @@ namespace model {
     std::vector<std::string> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types{"Unitary HVAC Design Heating Capacity", "Unitary HVAC Design Cooling Capacity"};
       return types;
+    }
+
+    ComponentType AirLoopHVACUnitaryHeatPumpAirToAir_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::coolingFuelTypes() const {
+      return coolingCoil().coolingFuelTypes();
+    }
+
+    std::vector<FuelType> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : heatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      for (auto ft : supplementalHeatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (auto ft : heatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      for (auto ft : supplementalHeatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

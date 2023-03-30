@@ -60,8 +60,8 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Cooling_DX_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -332,6 +332,22 @@ namespace model {
     //   bool result = setString(OS_Coil_Cooling_DXFields::EvaporativeCondenserSupplyWaterStorageTankName, "");
     //   OS_ASSERT(result);
     // }
+
+    ComponentType CoilCoolingDX_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingDX_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> CoilCoolingDX_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingDX_Impl::appGHeatingFuelTypes() const {
+      return {};
+    }
 
   }  // namespace detail
 

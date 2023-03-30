@@ -41,8 +41,9 @@
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_HeaderedPumps_VariableSpeed_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -414,6 +415,22 @@ namespace model {
 
     bool HeaderedPumpsVariableSpeed_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       return setString(OS_HeaderedPumps_VariableSpeedFields::EndUseSubcategory, endUseSubcategory);
+    }
+
+    ComponentType HeaderedPumpsVariableSpeed_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> HeaderedPumpsVariableSpeed_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> HeaderedPumpsVariableSpeed_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> HeaderedPumpsVariableSpeed_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

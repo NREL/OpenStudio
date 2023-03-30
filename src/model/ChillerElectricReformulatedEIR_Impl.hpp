@@ -33,6 +33,7 @@
 #include "WaterToWaterComponent_Impl.hpp"
 
 namespace openstudio {
+
 namespace model {
 
   class Curve;
@@ -97,6 +98,11 @@ namespace model {
       virtual void autosize() override;
 
       virtual void applySizingValues() override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
 
       //@}
       /** @name Getters */

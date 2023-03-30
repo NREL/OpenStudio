@@ -73,8 +73,8 @@
 #include "AirflowNetworkFan_Impl.hpp"
 #include <utilities/idd/OS_Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -502,6 +502,22 @@ namespace model {
     std::vector<std::string> FanOnOff_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types{"Fan Maximum Mass Flow Rate", "Fan Nominal Pressure Rise", "Fan Nominal Total Efficiency"};
       return types;
+    }
+
+    ComponentType FanOnOff_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> FanOnOff_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> FanOnOff_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> FanOnOff_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

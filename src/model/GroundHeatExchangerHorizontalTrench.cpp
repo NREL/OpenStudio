@@ -35,10 +35,12 @@
 #include "Node_Impl.hpp"
 #include "SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
 #include "SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_GroundHeatExchanger_HorizontalTrench_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -278,6 +280,22 @@ namespace model {
       }
 
       return false;
+    }
+
+    ComponentType GroundHeatExchangerHorizontalTrench_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> GroundHeatExchangerHorizontalTrench_Impl::coolingFuelTypes() const {
+      return {FuelType::Geothermal};
+    }
+
+    std::vector<FuelType> GroundHeatExchangerHorizontalTrench_Impl::heatingFuelTypes() const {
+      return {FuelType::Geothermal};
+    }
+
+    std::vector<AppGFuelType> GroundHeatExchangerHorizontalTrench_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Geothermal};
     }
 
   }  // namespace detail

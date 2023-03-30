@@ -59,6 +59,7 @@
 #include "ScheduleTypeRegistry.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -1179,6 +1180,22 @@ namespace model {
 
     boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedGrossRatedHeatingCapacity() const {
       return getAutosizedValue("Design Size Rated Total Heating Capacity", "W");
+    }
+
+    ComponentType AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::HeatPump};
     }
 
   }  // namespace detail

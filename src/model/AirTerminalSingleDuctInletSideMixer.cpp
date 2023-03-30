@@ -49,6 +49,7 @@
 #include <utilities/idd/OS_AirTerminal_SingleDuct_InletSideMixer_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -218,6 +219,35 @@ namespace model {
     bool AirTerminalSingleDuctInletSideMixer_Impl::setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode) {
       bool result = setString(OS_AirTerminal_SingleDuct_InletSideMixerFields::PerPersonVentilationRateMode, perPersonVentilationRateMode);
       return result;
+    }
+
+    ComponentType AirTerminalSingleDuctInletSideMixer_Impl::componentType() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->componentType();
+      }
+
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctInletSideMixer_Impl::coolingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctInletSideMixer_Impl::heatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->heatingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<AppGFuelType> AirTerminalSingleDuctInletSideMixer_Impl::appGHeatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->appGHeatingFuelTypes();
+      }
+      return {};
     }
 
   }  // namespace detail

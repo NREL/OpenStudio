@@ -34,6 +34,7 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
 namespace model {
 
   class Schedule;
@@ -65,6 +66,18 @@ namespace model {
       virtual IddObjectType iddObjectType() const override;
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+      virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
+
+      virtual bool addToNode(Node& node) override;
+      virtual std::vector<ModelObject> children() const override;
+      virtual ModelObject clone(Model model) const override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
 
       //@}
       /** @name Getters */
@@ -127,13 +140,6 @@ namespace model {
       //@}
       /** @name Other */
       //@{
-
-      virtual unsigned inletPort() const override;
-      virtual unsigned outletPort() const override;
-
-      bool addToNode(Node& node) override;
-      std::vector<ModelObject> children() const override;
-      ModelObject clone(Model model) const override;
 
       //@}
      protected:

@@ -89,6 +89,11 @@ namespace model {
      * If true, addToNode will allow connection on a PlantLoop (supply side, or demand side EXCEPT between splitter and mixer) */
       virtual bool isAllowedOnPlantLoop() const;
 
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
      private:
       /** This is used to set the field SetpointNodeName.
       * Use addToNode to add a setpoint manager to a node. */

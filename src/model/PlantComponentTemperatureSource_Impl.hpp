@@ -34,6 +34,7 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
 namespace model {
 
   class Schedule;
@@ -71,6 +72,19 @@ namespace model {
 
       // virtual bool addToNode(Node & node) override;
 
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
       //@}
       /** @name Getters */
       //@{
@@ -86,14 +100,6 @@ namespace model {
       boost::optional<Schedule> sourceTemperatureSchedule() const;
 
       boost::optional<double> autosizedDesignVolumeFlowRate() const;
-
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
-
-      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
-
-      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
       //@}
       /** @name Setters */

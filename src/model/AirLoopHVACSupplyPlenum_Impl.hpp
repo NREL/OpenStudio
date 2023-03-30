@@ -57,6 +57,11 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
       boost::optional<ThermalZone> thermalZone() const;
 
       bool setThermalZone(const boost::optional<ThermalZone>& thermalZone);

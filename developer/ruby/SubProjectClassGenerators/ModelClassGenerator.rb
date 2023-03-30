@@ -433,6 +433,18 @@ class ModelClassGenerator < SubProjectClassGenerator
     @iddObjectType = iddObjectType
     @hasRealFields = false
     @hasScheduleFields = false
+
+    @derivesHVACComponent = [
+      'AirToAirComponent',
+      'HVACComponent',
+      'Mixer',
+      'SetpointManager',
+      'Splitter',
+      'StraightComponent',
+      'WaterToAirComponent',
+      'WaterToWaterComponent',
+      'ZoneHVACComponent'].include?(baseClassName)
+
     if not @iddObjectType.empty?
       require 'openstudio'
 
@@ -450,6 +462,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         @hasRealFields = true if modelObjectField.isReal?
         @hasScheduleFields = true if modelObjectField.isSchedule?
       }
+
+      @objectListClassNames = @nonextensibleFields.select{|field| field.isObjectList?}.map(&:objectListClassName).uniq
 
       # Determine if the object has any autosizable fields
       @autosizedGetterNames = []
@@ -478,19 +492,20 @@ class ModelClassGenerator < SubProjectClassGenerator
       # include object list field classes
       # include IddFactory.hxx if there is a non-boolean choice field
       includeIddFactory = false
-      preamble = "// TODO: Check the following class names against object getters and setters.\n"
       @nonextensibleFields.each { |field|
         if field.isChoice? and not field.isBooleanChoice?
           includeIddFactory = true
         end
-
-        if field.isObjectList?
-          result << preamble
-          result << "#include \"" << field.objectListClassName << ".hpp\"\n"
-          result << "#include \"" << field.objectListClassName << "_Impl.hpp\"\n"
-          preamble = ""
-        end
       }
+
+      preamble = "// TODO: Check the following class names against object getters and setters.\n"
+      @objectListClassNames.each { |className|
+        result << preamble
+        result << "#include \"" << className << ".hpp\"\n"
+        result << "#include \"" << className << "_Impl.hpp\"\n"
+        preamble = ""
+      }
+
       if @hasScheduleFields
         result << "#include \"ScheduleTypeLimits.hpp\"\n"
         result << "#include \"ScheduleTypeRegistry.hpp\"\n"
@@ -498,7 +513,11 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       result << "\n" if preamble == ""
 
-      result << "#include \"../utilities/core/Assert.hpp\"\n\n"
+      result << "#include \"../utilities/core/Assert.hpp\"\n"
+      if @derivesHVACComponent
+        result << "#include \"../utilities/data/DataEnums.hpp\"\n"
+      end
+      result << "\n"
 
       if includeIddFactory
         result << "#include <utilities/idd/IddFactory.hxx>\n"
@@ -535,12 +554,10 @@ class ModelClassGenerator < SubProjectClassGenerator
     result = String.new
     if @idfObject
       preamble = "  // TODO: Check the following class names against object getters and setters.\n"
-      @nonextensibleFields.each { |field|
-        if field.isObjectList?
-          result << preamble
-          result << "  class " << field.objectListClassName << ";\n"
-          preamble = ""
-        end
+      @objectListClassNames.each { |className|
+        result << preamble
+        result << "  class " << className << ";\n"
+        preamble = ""
       }
       result << "\n" if preamble == ""
     end
@@ -820,6 +837,13 @@ class ModelClassGenerator < SubProjectClassGenerator
         result << "      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;\n\n"
       end
 
+      if @derivesHVACComponent
+        result << "      virtual ComponentType componentType() const override;\n"
+        result << "      virtual std::vector<FuelType> coolingFuelTypes() const override;\n"
+        result << "      virtual std::vector<FuelType> heatingFuelTypes() const override;\n"
+        result << "      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;\n\n"
+      end
+
       result << "      //@}\n"
       result << "      /** @name Getters */\n"
       result << "      //@{\n\n"
@@ -956,6 +980,28 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "      }\n"
         }
         result << "      return result;\n"
+        result << "    }\n\n"
+      end
+
+      if @derivesHVACComponent
+        result << "    ComponentType " << @className << "_Impl::componentType() const {\n"
+        result << "      // TODO\n"
+        result << "      return ComponentType::None;\n"
+        result << "    }\n\n"
+
+        result << "    std::vector<FuelType> " << @className << "_Impl::coolingFuelTypes() const {\n"
+        result << "      // TODO\n"
+        result << "      return {};\n"
+        result << "    }\n\n"
+
+        result << "    std::vector<FuelType> " << @className << "_Impl::heatingFuelTypes() const {\n"
+        result << "      // TODO\n"
+        result << "      return {};\n"
+        result << "    }\n\n"
+
+        result << "    std::vector<AppGFuelType> " << @className << "_Impl::appGHeatingFuelTypes() const {\n\n"
+        result << "      // TODO\n"
+        result << "      return {};\n"
         result << "    }\n\n"
       end
 
@@ -1408,15 +1454,12 @@ class ModelClassGenerator < SubProjectClassGenerator
     preamble = "// TODO: Check the following class names against object getters and setters.\n"
 
     # Check for ObjectList fields, to see which we need to include
-    @nonextensibleFields.each { |field|
-      if field.isObjectList?
-        result << preamble
-        result << "#include \"../" << field.objectListClassName << ".hpp\"\n"
-        result << "#include \"../" << field.objectListClassName << "_Impl.hpp\"\n\n"
-        preamble = ""
-      end
+    @objectListClassNames.each { |className|
+      result << preamble
+      result << "#include \"../" << className << ".hpp\"\n"
+      result << "#include \"../" << className << "_Impl.hpp\"\n\n"
+      preamble = ""
     }
-
 
     result << "using namespace openstudio;\n"
     result << "using namespace openstudio::model;\n\n"
@@ -1644,6 +1687,21 @@ class ModelClassGenerator < SubProjectClassGenerator
     }
 
     result << "}\n"
+
+    if @derivesHVACComponent
+      result << "TEST_F(ModelFixture, " << className << "_HeatCoolFuelTypes) {\n"
+      result << "  Model m;\n"
+      result << "  // TODO: Check regular Ctor arguments\n"
+      result << "  " << className << " #{instanceName}(m);\n"
+      result << "  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)\n"
+      result << "  // " << className << " #{instanceName} = m.getUniqueModelObject<" << className << ">();\n\n"
+
+      result << "  EXPECT_EQ(ComponentType(ComponentType::Both), #{instanceName}.componentType());\n"
+      result << "  testFuelTypeEquality({FuelType::Electricity}, #{instanceName}.coolingFuelTypes());\n"
+      result << "  testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, #{instanceName}.heatingFuelTypes());\n"
+      result << "  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, #{instanceName}.appGHeatingFuelTypes());\n"
+      result << "}\n"
+    end
 
     return result
   end

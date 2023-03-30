@@ -35,6 +35,10 @@
 
 namespace openstudio {
 
+class AppGFuelType;
+class ComponentType;
+class FuelType;
+
 namespace model {
 
   class AirLoopHVAC;
@@ -169,6 +173,12 @@ namespace model {
     void autosize();
 
     void applySizingValues();
+
+    // This is virtual in the Implementation class
+    ComponentType componentType() const;
+    std::vector<FuelType> coolingFuelTypes() const;
+    std::vector<FuelType> heatingFuelTypes() const;
+    std::vector<AppGFuelType> appGHeatingFuelTypes() const;
 
    protected:
     HVACComponent(IddObjectType type, const Model& model);

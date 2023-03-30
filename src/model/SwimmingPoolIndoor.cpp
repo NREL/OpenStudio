@@ -41,16 +41,14 @@
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
 #include "ScheduleRuleset.hpp"
-
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_SwimmingPool_Indoor_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -375,6 +373,22 @@ namespace model {
         result = mo->optionalCast<Node>();
       }
       return result;
+    }
+
+    ComponentType SwimmingPoolIndoor_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> SwimmingPoolIndoor_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> SwimmingPoolIndoor_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> SwimmingPoolIndoor_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

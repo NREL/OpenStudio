@@ -29,14 +29,14 @@
 
 #include "DistrictCooling.hpp"
 #include "DistrictCooling_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 #include <utilities/idd/OS_DistrictCooling_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
-
-#include "Node.hpp"
-#include "Node_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -125,6 +125,22 @@ namespace model {
       if (val) {
         setNominalCapacity(val.get());
       }
+    }
+
+    ComponentType DistrictCooling_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> DistrictCooling_Impl::coolingFuelTypes() const {
+      return {FuelType::DistrictCooling};
+    }
+
+    std::vector<FuelType> DistrictCooling_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> DistrictCooling_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

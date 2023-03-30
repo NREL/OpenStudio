@@ -80,10 +80,13 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow) {
     ThermalZone zone(m);
 
     ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(m);
+    EXPECT_FALSE(vrfTerminal.vrfSystem());
 
     ASSERT_TRUE(vrfTerminal.addToThermalZone(zone));
 
     vrf.addTerminal(vrfTerminal);
+    ASSERT_TRUE(vrfTerminal.vrfSystem());
+    EXPECT_EQ(vrf, vrfTerminal.vrfSystem().get());
   }
 
   ASSERT_EQ(5u, vrf.terminals().size());

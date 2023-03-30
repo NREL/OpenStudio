@@ -70,9 +70,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Fan_ComponentModel_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -758,6 +757,22 @@ namespace model {
 
     boost::optional<Curve> FanComponentModel_Impl::optionalNormalizedDimensionlessAirflowCurveStallRegion() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameStallRegion);
+    }
+
+    ComponentType FanComponentModel_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> FanComponentModel_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> FanComponentModel_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> FanComponentModel_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

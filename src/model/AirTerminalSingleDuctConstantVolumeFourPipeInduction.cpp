@@ -55,6 +55,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -557,6 +558,72 @@ namespace model {
       if (val) {
         setMaximumColdWaterFlowRate(val.get());
       }
+    }
+
+    ComponentType AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::componentType() const {
+      bool has_cooling = coolingCoil().is_initialized();
+      bool has_heating = true;  // HC is not optonal
+      if (auto a_ = airLoopHVAC()) {
+        auto compType = a_->componentType();
+        if (compType == ComponentType::Cooling) {
+          has_cooling = true;
+        } else if (compType == ComponentType::Heating) {
+          has_heating = true;
+        } else if (compType == ComponentType::Both) {
+          has_heating = true;
+          has_cooling = true;
+        }
+      }
+
+      if (has_cooling && has_heating) {
+        return ComponentType::Both;
+      } else if (has_cooling) {
+        return ComponentType::Cooling;
+      } else if (has_heating) {
+        return ComponentType::Heating;
+      }
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      if (auto cc_ = coolingCoil()) {
+        for (auto ft : cc_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      if (auto a_ = airLoopHVAC()) {
+        for (auto ft : a_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : heatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      if (auto a_ = airLoopHVAC()) {
+        for (auto ft : a_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (auto ft : heatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      if (auto a_ = airLoopHVAC()) {
+        for (auto ft : a_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

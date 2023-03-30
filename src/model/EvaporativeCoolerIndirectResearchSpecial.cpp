@@ -39,10 +39,12 @@
 #include "Curve_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_EvaporativeCooler_Indirect_ResearchSpecial_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -528,6 +530,22 @@ namespace model {
       if (val) {
         setPrimaryDesignAirFlowRate(val.get());
       }
+    }
+
+    ComponentType EvaporativeCoolerIndirectResearchSpecial_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> EvaporativeCoolerIndirectResearchSpecial_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> EvaporativeCoolerIndirectResearchSpecial_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> EvaporativeCoolerIndirectResearchSpecial_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

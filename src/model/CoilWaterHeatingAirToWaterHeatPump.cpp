@@ -39,8 +39,8 @@
 #include "CurveQuadratic_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_WaterHeating_AirToWaterHeatPump_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -478,6 +478,22 @@ namespace model {
       if (val) {
         setRatedCondenserWaterFlowRate(val.get());
       }
+    }
+
+    ComponentType CoilWaterHeatingAirToWaterHeatPump_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> CoilWaterHeatingAirToWaterHeatPump_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> CoilWaterHeatingAirToWaterHeatPump_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> CoilWaterHeatingAirToWaterHeatPump_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::HeatPump};  // TODO: openstudio-standards uses Electric
     }
 
   }  // namespace detail

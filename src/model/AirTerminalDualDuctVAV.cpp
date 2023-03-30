@@ -43,8 +43,8 @@
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_AirTerminal_DualDuct_VAV_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -293,6 +293,35 @@ namespace model {
       if (val) {
         setMaximumDamperAirFlowRate(val.get());
       }
+    }
+
+    ComponentType AirTerminalDualDuctVAV_Impl::componentType() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->componentType();
+      }
+
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirTerminalDualDuctVAV_Impl::coolingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> AirTerminalDualDuctVAV_Impl::heatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->heatingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<AppGFuelType> AirTerminalDualDuctVAV_Impl::appGHeatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->appGHeatingFuelTypes();
+      }
+      return {};
     }
 
   }  // namespace detail

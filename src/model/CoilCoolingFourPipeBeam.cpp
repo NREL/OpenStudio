@@ -47,9 +47,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Cooling_FourPipeBeam_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -311,6 +310,25 @@ namespace model {
         }
       }
       return boost::none;
+    }
+
+    ComponentType CoilCoolingFourPipeBeam_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingFourPipeBeam_Impl::coolingFuelTypes() const {
+      if (auto p_ = plantLoop()) {
+        return p_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> CoilCoolingFourPipeBeam_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingFourPipeBeam_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

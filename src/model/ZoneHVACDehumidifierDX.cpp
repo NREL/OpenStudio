@@ -46,6 +46,7 @@
 #include <utilities/idd/OS_ZoneHVAC_Dehumidifier_DX_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -288,6 +289,22 @@ namespace model {
 
     boost::optional<Curve> ZoneHVACDehumidifierDX_Impl::optionalPartLoadFractionCorrelationCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ZoneHVAC_Dehumidifier_DXFields::PartLoadFractionCorrelationCurveName);
+    }
+
+    ComponentType ZoneHVACDehumidifierDX_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> ZoneHVACDehumidifierDX_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ZoneHVACDehumidifierDX_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACDehumidifierDX_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

@@ -46,8 +46,8 @@
 #include <utilities/idd/OS_ZoneHVAC_UnitHeater_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -383,6 +383,22 @@ namespace model {
       if (val) {
         setMaximumHotWaterFlowRate(val.get());
       }
+    }
+
+    ComponentType ZoneHVACUnitHeater_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> ZoneHVACUnitHeater_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ZoneHVACUnitHeater_Impl::heatingFuelTypes() const {
+      return heatingCoil().heatingFuelTypes();
+    }
+
+    std::vector<AppGFuelType> ZoneHVACUnitHeater_Impl::appGHeatingFuelTypes() const {
+      return heatingCoil().appGHeatingFuelTypes();
     }
 
   }  // namespace detail

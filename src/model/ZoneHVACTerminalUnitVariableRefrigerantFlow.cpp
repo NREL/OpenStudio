@@ -56,13 +56,19 @@
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
+#include "AirConditionerVariableRefrigerantFlow.hpp"
+#include "AirConditionerVariableRefrigerantFlow_Impl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 
@@ -810,6 +816,111 @@ namespace model {
       return types;
     }
 
+    boost::optional<HVACComponent> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::vrfSystem() const {
+
+      if (isFluidTemperatureControl()) {
+
+        for (const auto& vrfSys : this->model().getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>()) {
+          for (const auto& term : vrfSys.terminals()) {
+            if (term.handle() == this->handle()) {
+              return vrfSys;
+            }
+          }
+        }
+
+        for (const auto& vrfSys : this->model().getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>()) {
+          for (const auto& term : vrfSys.terminals()) {
+            if (term.handle() == this->handle()) {
+              return vrfSys;
+            }
+          }
+        }
+
+      } else {
+        for (const auto& vrfSys : this->model().getConcreteModelObjects<AirConditionerVariableRefrigerantFlow>()) {
+          for (const auto& term : vrfSys.terminals()) {
+            if (term.handle() == this->handle()) {
+              return vrfSys;
+            }
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
+    ComponentType ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::componentType() const {
+      const bool has_cooling = coolingCoil().is_initialized();
+      const bool has_heating = heatingCoil().is_initialized();
+
+      if (has_cooling && has_heating) {
+        return ComponentType::Both;
+      } else if (has_cooling) {
+        return ComponentType::Cooling;
+      } else if (has_heating) {
+        return ComponentType::Heating;
+      }
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      if (auto cc_ = coolingCoil()) {
+        for (auto ft : cc_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      if (auto vrfSys_ = vrfSystem()) {
+        for (auto ft : vrfSys_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      if (auto hc_ = heatingCoil()) {
+        for (auto ft : hc_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      if (auto supHC_ = supplementalHeatingCoil()) {
+        for (auto ft : supHC_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      if (auto vrfSys_ = vrfSystem()) {
+        for (auto ft : vrfSys_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      if (auto hc_ = heatingCoil()) {
+        for (auto ft : hc_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      if (auto supHC_ = supplementalHeatingCoil()) {
+        for (auto ft : supHC_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      if (auto vrfSys_ = vrfSystem()) {
+        for (auto ft : vrfSys_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+
+      return {result.begin(), result.end()};
+    }
+
   }  // namespace detail
 
   ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, bool isFluidTemperatureControl)
@@ -1283,6 +1394,10 @@ namespace model {
 
   boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
     return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+  }
+
+  boost::optional<HVACComponent> ZoneHVACTerminalUnitVariableRefrigerantFlow::vrfSystem() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->vrfSystem();
   }
 
 }  // namespace model

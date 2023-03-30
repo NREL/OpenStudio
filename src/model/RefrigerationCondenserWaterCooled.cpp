@@ -39,14 +39,12 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "Node.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Condenser_WaterCooled_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -407,6 +405,25 @@ namespace model {
         system = systems[0];
       }
       return system;
+    }
+
+    ComponentType RefrigerationCondenserWaterCooled_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> RefrigerationCondenserWaterCooled_Impl::coolingFuelTypes() const {
+      if (auto p_ = plantLoop()) {
+        return p_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> RefrigerationCondenserWaterCooled_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> RefrigerationCondenserWaterCooled_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

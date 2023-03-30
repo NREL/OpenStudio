@@ -52,9 +52,8 @@
 #include <utilities/idd/OS_Coil_WaterHeating_Desuperheater_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -510,6 +509,22 @@ namespace model {
     //   if (result) addToWaterHeater(waterHeater);
     //   return result;
     // }
+
+    ComponentType CoilWaterHeatingDesuperheater_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> CoilWaterHeatingDesuperheater_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> CoilWaterHeatingDesuperheater_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> CoilWaterHeatingDesuperheater_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::HeatPump};  // TODO: openstudio-standards uses Electric
+    }
 
   }  // namespace detail
 

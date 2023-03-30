@@ -48,8 +48,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AirTerminal_DualDuct_VAV_OutdoorAir_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -285,6 +285,35 @@ namespace model {
       if (val) {
         setMaximumTerminalAirFlowRate(val.get());
       }
+    }
+
+    ComponentType AirTerminalDualDuctVAVOutdoorAir_Impl::componentType() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->componentType();
+      }
+
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirTerminalDualDuctVAVOutdoorAir_Impl::coolingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> AirTerminalDualDuctVAVOutdoorAir_Impl::heatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->heatingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<AppGFuelType> AirTerminalDualDuctVAVOutdoorAir_Impl::appGHeatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->appGHeatingFuelTypes();
+      }
+      return {};
     }
 
   }  // namespace detail

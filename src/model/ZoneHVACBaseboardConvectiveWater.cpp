@@ -48,6 +48,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -251,6 +252,22 @@ namespace model {
     std::vector<std::string> ZoneHVACBaseboardConvectiveWater_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types{"Simple Zone Baseboard Capacity At Low Temperature", "Simple Zone Baseboard Capacity At High Temperature"};
       return types;
+    }
+
+    ComponentType ZoneHVACBaseboardConvectiveWater_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> ZoneHVACBaseboardConvectiveWater_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ZoneHVACBaseboardConvectiveWater_Impl::heatingFuelTypes() const {
+      return heatingCoil().heatingFuelTypes();
+    }
+
+    std::vector<AppGFuelType> ZoneHVACBaseboardConvectiveWater_Impl::appGHeatingFuelTypes() const {
+      return heatingCoil().appGHeatingFuelTypes();
     }
 
   }  // namespace detail

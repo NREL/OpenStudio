@@ -81,11 +81,10 @@ namespace model {
 
       virtual std::vector<ModelObject> children() const override;
 
-      boost::optional<ModelObject> heatRejectionTarget() const;
-
-      bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
-
-      void removeFromHeatRejectionTarget();
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
 
       //@}
       /** @name Getters */
@@ -186,6 +185,12 @@ namespace model {
       //@}
       /** @name Other */
       //@{
+
+      boost::optional<ModelObject> heatRejectionTarget() const;
+
+      bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
+
+      void removeFromHeatRejectionTarget();
 
       //@}
      protected:

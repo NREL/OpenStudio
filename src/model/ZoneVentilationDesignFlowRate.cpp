@@ -40,11 +40,12 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ZoneVentilation_DesignFlowRate_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -530,6 +531,23 @@ namespace model {
       std::vector<std::string> types;
       return types;
     }
+
+    ComponentType ZoneVentilationDesignFlowRate_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> ZoneVentilationDesignFlowRate_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ZoneVentilationDesignFlowRate_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ZoneVentilationDesignFlowRate_Impl::appGHeatingFuelTypes() const {
+      return {};
+    }
+
   }  // namespace detail
 
   ZoneVentilationDesignFlowRate::ZoneVentilationDesignFlowRate(const Model& model)

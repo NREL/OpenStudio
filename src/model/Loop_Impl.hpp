@@ -34,6 +34,10 @@
 
 namespace openstudio {
 
+class AppGFuelType;
+class ComponentType;
+class FuelType;
+
 namespace model {
 
   class Node;
@@ -120,6 +124,11 @@ namespace model {
       virtual void applySizingValues();
 
       virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const = 0;
+
+      virtual ComponentType componentType() const;
+      virtual std::vector<FuelType> coolingFuelTypes() const;
+      virtual std::vector<FuelType> heatingFuelTypes() const;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const;
 
      private:
       REGISTER_LOGGER("openstudio.model.Loop");

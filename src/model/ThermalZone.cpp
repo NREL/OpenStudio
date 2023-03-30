@@ -116,6 +116,7 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/ContainersMove.hpp"
+#include "../utilities/data/DataEnums.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Point3d.hpp"
@@ -2695,6 +2696,61 @@ SELECT {} FROM ZoneSizes
         return std::max(coolingFlow_.get(), heatingFlow_.get());
       }
       return boost::none;
+    }
+
+    ComponentType ThermalZone_Impl::componentType() const {
+      bool has_cooling = false;
+      bool has_heating = false;
+      for (const auto& comp : subsetCastVector<HVACComponent>(equipment())) {
+        auto compType = comp.componentType();
+        if (compType == ComponentType::Cooling) {
+          has_cooling = true;
+        } else if (compType == ComponentType::Heating) {
+          has_heating = true;
+        } else if (compType == ComponentType::Both) {
+          has_cooling = true;
+          has_heating = true;
+        }
+      }
+
+      if (has_cooling && has_heating) {
+        return ComponentType::Both;
+      } else if (has_cooling) {
+        return ComponentType::Cooling;
+      } else if (has_heating) {
+        return ComponentType::Heating;
+      }
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> ThermalZone_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(equipment())) {
+        for (auto& ft : comp.coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> ThermalZone_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(equipment())) {
+        for (auto& ft : comp.heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> ThermalZone_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(equipment())) {
+        for (auto& ft : comp.appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

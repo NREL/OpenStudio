@@ -43,10 +43,12 @@
 #include "CurveQuadraticLinear_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ThermalStorage_Ice_Detailed_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -287,6 +289,22 @@ namespace model {
       result.push_back(chargingCurve());
 
       return result;
+    }
+
+    ComponentType ThermalStorageIceDetailed_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> ThermalStorageIceDetailed_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ThermalStorageIceDetailed_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ThermalStorageIceDetailed_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

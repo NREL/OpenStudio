@@ -40,16 +40,15 @@
 #include "Node_Impl.hpp"
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
-#include "../utilities/time/Time.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/time/Time.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_LoadProfile_Plant_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -166,6 +165,22 @@ namespace model {
     std::vector<std::string> LoadProfilePlant_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types;
       return types;
+    }
+
+    ComponentType LoadProfilePlant_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> LoadProfilePlant_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> LoadProfilePlant_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> LoadProfilePlant_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

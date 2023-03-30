@@ -39,14 +39,15 @@
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
-
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/OS_HeatPump_PlantLoop_EIR_Cooling_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 #include "HeatPumpPlantLoopEIRHeating.hpp"
 #include "HeatPumpPlantLoopEIRHeating_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_HeatPump_PlantLoop_EIR_Cooling_FieldEnums.hxx>
 
 namespace openstudio {
 namespace model {
@@ -357,6 +358,22 @@ namespace model {
       if (val) {
         setReferenceCapacity(val.get());
       }
+    }
+
+    ComponentType HeatPumpPlantLoopEIRCooling_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> HeatPumpPlantLoopEIRCooling_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> HeatPumpPlantLoopEIRCooling_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> HeatPumpPlantLoopEIRCooling_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

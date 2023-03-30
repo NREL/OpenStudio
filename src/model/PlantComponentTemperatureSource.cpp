@@ -35,13 +35,12 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_PlantComponent_TemperatureSource_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -192,6 +191,22 @@ namespace model {
     std::vector<std::string> PlantComponentTemperatureSource_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types;
       return types;
+    }
+
+    ComponentType PlantComponentTemperatureSource_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> PlantComponentTemperatureSource_Impl::coolingFuelTypes() const {
+      return {FuelType::EnergyTransfer};
+    }
+
+    std::vector<FuelType> PlantComponentTemperatureSource_Impl::heatingFuelTypes() const {
+      return {FuelType::EnergyTransfer};
+    }
+
+    std::vector<AppGFuelType> PlantComponentTemperatureSource_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Other};
     }
 
   }  // namespace detail

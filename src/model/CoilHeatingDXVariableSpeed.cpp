@@ -58,8 +58,8 @@
 #include <utilities/idd/OS_Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
@@ -575,6 +575,22 @@ namespace model {
       if (val) {
         setResistiveDefrostHeaterCapacity(val.get());
       }
+    }
+
+    ComponentType CoilHeatingDXVariableSpeed_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> CoilHeatingDXVariableSpeed_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> CoilHeatingDXVariableSpeed_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<AppGFuelType> CoilHeatingDXVariableSpeed_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::HeatPump};
     }
 
   }  // namespace detail

@@ -36,9 +36,11 @@
 #include "PlantLoop.hpp"
 #include "Splitter.hpp"
 #include "Mixer.hpp"
-#include <algorithm>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <algorithm>
 
 namespace openstudio {
 
@@ -177,13 +179,29 @@ namespace model {
       return boost::none;
     }
 
+    ComponentType SetpointManager_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> SetpointManager_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> SetpointManager_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> SetpointManager_Impl::appGHeatingFuelTypes() const {
+      return {};
+    }
+
   }  // namespace detail
 
   SetpointManager::SetpointManager(IddObjectType type, const Model& model) : HVACComponent(type, model) {
     OS_ASSERT(getImpl<detail::SetpointManager_Impl>());
   }
 
-  SetpointManager::SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> p) : HVACComponent(std::move(p)) {}
+  SetpointManager::SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> impl) : HVACComponent(std::move(impl)) {}
 
   boost::optional<Node> SetpointManager::setpointNode() const {
     return getImpl<detail::SetpointManager_Impl>()->setpointNode();

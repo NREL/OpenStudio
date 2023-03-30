@@ -33,12 +33,12 @@
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_FluidCooler_SingleSpeed_FieldEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/units/Unit.hpp"
 
 namespace openstudio {
 namespace model {
@@ -311,6 +311,22 @@ namespace model {
       if (val) {
         setDesignAirFlowRateFanPower(val.get());
       }
+    }
+
+    ComponentType FluidCoolerSingleSpeed_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> FluidCoolerSingleSpeed_Impl::coolingFuelTypes() const {
+      return {FuelType::Electricity};
+    }
+
+    std::vector<FuelType> FluidCoolerSingleSpeed_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> FluidCoolerSingleSpeed_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

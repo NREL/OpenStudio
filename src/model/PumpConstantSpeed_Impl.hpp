@@ -55,11 +55,38 @@ namespace model {
 
       virtual ~PumpConstantSpeed_Impl() = default;
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
+      //
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+      virtual unsigned inletPort() const override;
+
+      virtual unsigned outletPort() const override;
+
+      virtual bool addToNode(Node& node) override;
+
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
+      //@}
+      /** @name Getters */
+      //@{
 
       boost::optional<double> ratedFlowRate() const;
 
@@ -98,6 +125,16 @@ namespace model {
       boost::optional<double> skinLossRadiativeFraction() const;
 
       std::string endUseSubcategory() const;
+
+      std::string designPowerSizingMethod() const;
+
+      double designElectricPowerPerUnitFlowRate() const;
+
+      double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+      //@}
+      /** @name Setters */
+      //@{
 
       bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
 
@@ -151,38 +188,23 @@ namespace model {
 
       void resetSkinLossRadiativeFraction();
 
-      virtual unsigned inletPort() const override;
+      bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
 
-      virtual unsigned outletPort() const override;
+      bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
 
-      bool addToNode(Node& node) override;
+      bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+      //@}
+      /** @name Other */
+      //@{
 
       boost::optional<double> autosizedRatedFlowRate() const;
 
       boost::optional<double> autosizedRatedPowerConsumption() const;
 
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
-
-      std::string designPowerSizingMethod() const;
-
-      bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
-
-      double designElectricPowerPerUnitFlowRate() const;
-
-      bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
-
-      double designShaftPowerPerUnitFlowRatePerUnitHead() const;
-
-      bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
-
-      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
-
-      virtual std::vector<std::string> emsInternalVariableNames() const override;
-
-      bool setEndUseSubcategory(const std::string& endUseSubcategory);
-
+      //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.PumpConstantSpeed");

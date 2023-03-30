@@ -48,6 +48,7 @@
 #include <utilities/idd/OS_ZoneHVAC_EnergyRecoveryVentilator_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -361,6 +362,22 @@ namespace model {
       if (val) {
         setExhaustAirFlowRate(val.get());
       }
+    }
+
+    ComponentType ZoneHVACEnergyRecoveryVentilator_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> ZoneHVACEnergyRecoveryVentilator_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ZoneHVACEnergyRecoveryVentilator_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACEnergyRecoveryVentilator_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

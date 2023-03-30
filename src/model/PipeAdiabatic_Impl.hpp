@@ -62,7 +62,12 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
-      bool addToNode(Node& node) override;
+      virtual bool addToNode(Node& node) override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
 
      private:
       REGISTER_LOGGER("openstudio.model.PipeAdiabatic");

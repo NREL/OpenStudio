@@ -46,6 +46,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -678,6 +679,34 @@ namespace model {
       if (val) {
         setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
       }
+    }
+
+    ComponentType ZoneHVACPackagedTerminalAirConditioner_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> ZoneHVACPackagedTerminalAirConditioner_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : coolingCoil().coolingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> ZoneHVACPackagedTerminalAirConditioner_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : heatingCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> ZoneHVACPackagedTerminalAirConditioner_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (auto ft : heatingCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

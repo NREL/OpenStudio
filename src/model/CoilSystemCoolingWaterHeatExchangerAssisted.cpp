@@ -61,6 +61,7 @@
 #include <utilities/idd/OS_CoilSystem_Cooling_Water_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -245,6 +246,23 @@ namespace model {
 
       return result;
     }
+
+    ComponentType CoilSystemCoolingWaterHeatExchangerAssisted_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::coolingFuelTypes() const {
+      return coolingCoil().coolingFuelTypes();
+    }
+
+    std::vector<FuelType> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::appGHeatingFuelTypes() const {
+      return {};
+    }
+
   }  // namespace detail
 
   CoilSystemCoolingWaterHeatExchangerAssisted::CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model)

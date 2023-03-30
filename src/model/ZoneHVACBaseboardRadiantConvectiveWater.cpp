@@ -49,6 +49,7 @@
 #include <utilities/idd/OS_ZoneHVAC_Baseboard_RadiantConvective_Water_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -258,6 +259,23 @@ namespace model {
       std::vector<std::string> types{"Simple Zone Baseboard Capacity At Low Temperature", "Simple Zone Baseboard Capacity At High Temperature"};
       return types;
     }
+
+    ComponentType ZoneHVACBaseboardRadiantConvectiveWater_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> ZoneHVACBaseboardRadiantConvectiveWater_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ZoneHVACBaseboardRadiantConvectiveWater_Impl::heatingFuelTypes() const {
+      return heatingCoil().heatingFuelTypes();
+    }
+
+    std::vector<AppGFuelType> ZoneHVACBaseboardRadiantConvectiveWater_Impl::appGHeatingFuelTypes() const {
+      return heatingCoil().appGHeatingFuelTypes();
+    }
+
   }  // namespace detail
 
   ZoneHVACBaseboardRadiantConvectiveWater::ZoneHVACBaseboardRadiantConvectiveWater(const Model& model)

@@ -41,12 +41,13 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
-#include <utilities/idd/IddFactory.hxx>
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -501,6 +502,22 @@ namespace model {
       if (val) {
         setNominalSupplyAirFlowRate(val.get());
       }
+    }
+
+    ComponentType HeatExchangerAirToAirSensibleAndLatent_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> HeatExchangerAirToAirSensibleAndLatent_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> HeatExchangerAirToAirSensibleAndLatent_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> HeatExchangerAirToAirSensibleAndLatent_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

@@ -31,11 +31,13 @@
 #include "ControllerWaterCoil_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include <utilities/idd/IddFactory.hxx>
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Controller_WaterCoil_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -251,6 +253,22 @@ namespace model {
       if (val) {
         setMaximumActuatedFlow(val.get());
       }
+    }
+
+    ComponentType ControllerWaterCoil_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> ControllerWaterCoil_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> ControllerWaterCoil_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ControllerWaterCoil_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

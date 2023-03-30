@@ -52,6 +52,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 
@@ -699,6 +700,51 @@ namespace model {
       if (val) {
         setMaximumFlowFractionDuringReheat(val.get());
       }
+    }
+
+    ComponentType AirTerminalSingleDuctVAVReheat_Impl::componentType() const {
+      ComponentType loopType = ComponentType::None;
+      if (auto a_ = airLoopHVAC()) {
+        loopType = a_->componentType();
+      }
+      if ((loopType == ComponentType::Both) or (loopType == ComponentType::Cooling)) {
+        return ComponentType::Both;
+      }
+
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctVAVReheat_Impl::coolingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctVAVReheat_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : reheatCoil().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      if (auto a_ = airLoopHVAC()) {
+        for (auto ft : a_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> AirTerminalSingleDuctVAVReheat_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (auto ft : reheatCoil().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      if (auto a_ = airLoopHVAC()) {
+        for (auto ft : a_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

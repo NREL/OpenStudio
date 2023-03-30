@@ -73,6 +73,7 @@
 #include <utilities/idd/IddFactory.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -543,6 +544,22 @@ namespace model {
       if (val) {
         setNominalCapacity(val.get());
       }
+    }
+
+    ComponentType CoilHeatingGas_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> CoilHeatingGas_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> CoilHeatingGas_Impl::heatingFuelTypes() const {
+      return {FuelType(fuelType())};
+    }
+
+    std::vector<AppGFuelType> CoilHeatingGas_Impl::appGHeatingFuelTypes() const {
+      return {convertFuelTypeToAppG(FuelType(fuelType()))};
     }
 
   }  // namespace detail

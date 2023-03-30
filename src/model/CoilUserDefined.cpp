@@ -44,10 +44,12 @@
 #include "Model_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
-#include <algorithm>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_UserDefined_FieldEnums.hxx>
+
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
@@ -497,6 +499,22 @@ namespace model {
       plantDesignVolumeFlowRateActuator().setName(newName + "plantDesignVolumeFlowRateActuator");
       plantMassFlowRateActuator().setName(newName + "plantMassFlowRateActuator");
       plantOutletTemperatureActuator().setName(newName + "plantOutletTemperatureActuator");
+    }
+
+    ComponentType CoilUserDefined_Impl::componentType() const {
+      return ComponentType::Both;  // TODO: Really not sure how to determine this...
+    }
+
+    std::vector<FuelType> CoilUserDefined_Impl::coolingFuelTypes() const {
+      return {};  // TODO: Really not sure how to determine this...
+    }
+
+    std::vector<FuelType> CoilUserDefined_Impl::heatingFuelTypes() const {
+      return {};  // TODO: Really not sure how to determine this...
+    }
+
+    std::vector<AppGFuelType> CoilUserDefined_Impl::appGHeatingFuelTypes() const {
+      return {};  // TODO: Really not sure how to determine this...
     }
 
   }  // namespace detail

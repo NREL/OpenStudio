@@ -81,6 +81,8 @@ OPENSTUDIO_ENUM(FuelType,
   ((OtherFuel_1)(OtherFuel1))
   ((OtherFuel_2)(OtherFuel2))
   ((EnergyTransfer))
+  ((Solar))
+  ((Geothermal))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(FuelType,
@@ -99,6 +101,8 @@ OPENSTUDIO_ENUM(FuelType,
   ((OtherFuel_1)(OtherFuel1))
   ((OtherFuel_2)(OtherFuel2))
   ((EnergyTransfer))
+  ((Solar))
+  ((Geothermal))
 );
 
 /** \relates FuelType */
@@ -249,7 +253,83 @@ OPENSTUDIO_ENUM(BuildingSector,
   ((Residential))
 );
 
+
+
+
+/** \class AppGFuelType
+ *  \brief heat for coil for Appendix G system type selections
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+OPENSTUDIO_ENUM(AppGFuelType,
+  ((District))
+  ((Electric))
+  ((Fuel))
+  ((HeatPump))
+  ((Other))
+  ((Solar))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(AppGFuelType,
+  ((District))
+  ((Electric))
+  ((Fuel))
+  ((Geothermal))
+  ((HeatPump))
+  ((Other))
+  ((Solar))
+);
+
+/** \relates AppGFuelType */
+using OptionalAppGFuelType = boost::optional<AppGFuelType>;
+
+/** \relates AppGFuelType */
+using AppGFuelTypeVector = std::vector<AppGFuelType>;
+
+/** \class ComponentType
+ *  \brief What an HVACComponent is meant to do: heating, cooling, both or none
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+ OPENSTUDIO_ENUM(ComponentType,
+  ((Heating))
+  ((Cooling))
+  ((Both))
+  ((None))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(ComponentType,
+  ((Heating))
+  ((Cooling))
+  ((Both))
+  ((None))
+);
+
+/** \relates ComponentType */
+using OptionalComponentType = boost::optional<ComponentType>;
+
+/** \relates ComponentType */
+using ComponentTypeVector = std::vector<ComponentType>;
+
 // clang-format on
+
+inline UTILITIES_API AppGFuelType convertFuelTypeToAppG(FuelType fuelType) {
+
+  if (fuelType == FuelType::Electricity) {
+    return AppGFuelType::Electric;
+  } else if ((fuelType == FuelType::Gas) || (fuelType == FuelType::Gasoline) || (fuelType == FuelType::Diesel) || (fuelType == FuelType::Coal)
+             || (fuelType == FuelType::FuelOil_1) || (fuelType == FuelType::FuelOil_2) || (fuelType == FuelType::Propane)
+             || (fuelType == FuelType::Steam) || (fuelType == FuelType::OtherFuel_1) || (fuelType == FuelType::OtherFuel_2)) {
+    return AppGFuelType::Fuel;
+  } else if ((fuelType == FuelType::DistrictCooling) || (fuelType == FuelType::DistrictHeating)) {
+    return AppGFuelType::District;
+  }
+
+  // (fuelType == FuelType::Water)
+  // (fuelType == FuelType::EnergyTransfer)
+
+  return AppGFuelType::Other;
+}
 
 }  // namespace openstudio
 

@@ -67,6 +67,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 
@@ -450,6 +451,22 @@ namespace model {
     std::vector<std::string> FanConstantVolume_Impl::emsInternalVariableNames() const {
       std::vector<std::string> types{"Fan Maximum Mass Flow Rate", "Fan Nominal Pressure Rise", "Fan Nominal Total Efficiency"};
       return types;
+    }
+
+    ComponentType FanConstantVolume_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> FanConstantVolume_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> FanConstantVolume_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> FanConstantVolume_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

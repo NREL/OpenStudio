@@ -42,13 +42,12 @@
 #include "HeatPumpAirToWaterFuelFiredCooling.hpp"
 #include "HeatPumpAirToWaterFuelFiredCooling_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_HeatPump_AirToWater_FuelFired_Heating_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -560,6 +559,22 @@ namespace model {
     boost::optional<Curve> HeatPumpAirToWaterFuelFiredHeating_Impl::optionalFuelEnergyInputRatioFunctionofPLRCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_HeatPump_AirToWater_FuelFired_HeatingFields::FuelEnergyInputRatioFunctionofPLRCurveName);
+    }
+
+    ComponentType HeatPumpAirToWaterFuelFiredHeating_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> HeatPumpAirToWaterFuelFiredHeating_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> HeatPumpAirToWaterFuelFiredHeating_Impl::heatingFuelTypes() const {
+      return {FuelType(fuelType())};
+    }
+
+    std::vector<AppGFuelType> HeatPumpAirToWaterFuelFiredHeating_Impl::appGHeatingFuelTypes() const {
+      return {convertFuelTypeToAppG(FuelType(fuelType()))};
     }
 
   }  // namespace detail

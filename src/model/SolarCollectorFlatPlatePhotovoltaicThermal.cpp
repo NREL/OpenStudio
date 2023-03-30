@@ -47,12 +47,11 @@
 #include "Model.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_SolarCollector_FlatPlate_PhotovoltaicThermal_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -290,6 +289,22 @@ namespace model {
       if (val) {
         setDesignFlowRate(val.get());
       }
+    }
+
+    ComponentType SolarCollectorFlatPlatePhotovoltaicThermal_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::heatingFuelTypes() const {
+      return {FuelType::Solar};
+    }
+
+    std::vector<AppGFuelType> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Solar};
     }
 
   }  // namespace detail

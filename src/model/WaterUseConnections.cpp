@@ -42,11 +42,12 @@
 #include "PlantLoop_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/OS_WaterUse_Connections_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
 
@@ -290,6 +291,22 @@ namespace model {
     void WaterUseConnections_Impl::resetDrainWaterHeatExchangerUFactorTimesArea() {
       bool result = setString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, "");
       OS_ASSERT(result);
+    }
+
+    ComponentType WaterUseConnections_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> WaterUseConnections_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> WaterUseConnections_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> WaterUseConnections_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

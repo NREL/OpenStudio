@@ -55,6 +55,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -553,6 +554,25 @@ namespace model {
       if (val) {
         setDesignOutletAirHumidityRatio(val.get());
       }
+    }
+
+    ComponentType CoilCoolingWater_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingWater_Impl::coolingFuelTypes() const {
+      if (auto p_ = plantLoop()) {
+        return p_->coolingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<FuelType> CoilCoolingWater_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingWater_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

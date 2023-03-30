@@ -31,12 +31,13 @@
 #include "BoilerSteam_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include <utilities/idd/IddFactory.hxx>
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Boiler_Steam_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -400,6 +401,22 @@ namespace model {
 
     bool BoilerSteam_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       return setString(OS_Boiler_SteamFields::EndUseSubcategory, endUseSubcategory);
+    }
+
+    ComponentType BoilerSteam_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> BoilerSteam_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> BoilerSteam_Impl::heatingFuelTypes() const {
+      return {FuelType(fuelType())};
+    }
+
+    std::vector<AppGFuelType> BoilerSteam_Impl::appGHeatingFuelTypes() const {
+      return {convertFuelTypeToAppG(FuelType(fuelType()))};
     }
 
   }  // namespace detail

@@ -56,6 +56,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 
@@ -383,6 +384,61 @@ namespace model {
     // no autosized fields
     void Loop_Impl::applySizingValues() {}
 
+    ComponentType Loop_Impl::componentType() const {
+      bool has_cooling = false;
+      bool has_heating = false;
+      for (const auto& comp : subsetCastVector<HVACComponent>(supplyComponents())) {
+        auto compType = comp.componentType();
+        if (compType == ComponentType::Cooling) {
+          has_cooling = true;
+        } else if (compType == ComponentType::Heating) {
+          has_heating = true;
+        } else if (compType == ComponentType::Both) {
+          has_cooling = true;
+          has_heating = true;
+        }
+      }
+
+      if (has_cooling && has_heating) {
+        return ComponentType::Both;
+      } else if (has_cooling) {
+        return ComponentType::Cooling;
+      } else if (has_heating) {
+        return ComponentType::Heating;
+      }
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> Loop_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(supplyComponents())) {
+        for (auto& ft : comp.coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> Loop_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(supplyComponents())) {
+        for (auto& ft : comp.heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> Loop_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      for (const auto& comp : subsetCastVector<HVACComponent>(supplyComponents())) {
+        for (auto& ft : comp.appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
   }  // namespace detail
 
   Loop::Loop(IddObjectType type, const Model& model) : ParentObject(type, model) {
@@ -489,6 +545,22 @@ namespace model {
 
   void Loop::applySizingValues() {
     return getImpl<detail::Loop_Impl>()->applySizingValues();
+  }
+
+  ComponentType Loop::componentType() const {
+    return getImpl<detail::Loop_Impl>()->componentType();
+  }
+
+  std::vector<FuelType> Loop::coolingFuelTypes() const {
+    return getImpl<detail::Loop_Impl>()->coolingFuelTypes();
+  }
+
+  std::vector<FuelType> Loop::heatingFuelTypes() const {
+    return getImpl<detail::Loop_Impl>()->heatingFuelTypes();
+  }
+
+  std::vector<AppGFuelType> Loop::appGHeatingFuelTypes() const {
+    return getImpl<detail::Loop_Impl>()->appGHeatingFuelTypes();
   }
 
 }  // namespace model

@@ -58,8 +58,8 @@
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -607,6 +607,45 @@ namespace model {
       if (val) {
         setCoefficientofInductionKin(val.get());
       }
+    }
+
+    ComponentType AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::componentType() const {
+      ComponentType loopType = ComponentType::None;
+      if (auto a_ = airLoopHVAC()) {
+        loopType = a_->componentType();
+      }
+      if ((loopType == ComponentType::Both) or (loopType == ComponentType::Heating)) {
+        return ComponentType::Both;
+      }
+
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      for (auto ft : coilCoolingCooledBeam().coolingFuelTypes()) {
+        result.insert(ft);
+      }
+      if (auto a_ = airLoopHVAC()) {
+        for (auto ft : a_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::heatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->heatingFuelTypes();
+      }
+      return {};
+    }
+
+    std::vector<AppGFuelType> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::appGHeatingFuelTypes() const {
+      if (auto a_ = airLoopHVAC()) {
+        return a_->appGHeatingFuelTypes();
+      }
+      return {};
     }
 
   }  // namespace detail

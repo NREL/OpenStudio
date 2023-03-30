@@ -45,6 +45,9 @@
 #include "Node_Impl.hpp"
 #include "AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
+
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_AirLoopHVAC_SupplyPlenum_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -273,6 +276,22 @@ namespace model {
       }
 
       return Splitter_Impl::remove();
+    }
+
+    ComponentType AirLoopHVACSupplyPlenum_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> AirLoopHVACSupplyPlenum_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> AirLoopHVACSupplyPlenum_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> AirLoopHVACSupplyPlenum_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

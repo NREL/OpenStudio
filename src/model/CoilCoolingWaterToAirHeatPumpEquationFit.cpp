@@ -47,9 +47,9 @@
 #include <utilities/idd/OS_Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -486,6 +486,29 @@ namespace model {
       if (val) {
         setRatedSensibleCoolingCapacity(val.get());
       }
+    }
+
+    ComponentType CoilCoolingWaterToAirHeatPumpEquationFit_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      result.insert(FuelType::Electricity);
+      if (auto p_ = plantLoop()) {
+        for (auto ft : p_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

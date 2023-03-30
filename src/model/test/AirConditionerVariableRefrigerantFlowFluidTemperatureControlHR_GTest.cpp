@@ -390,12 +390,21 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   ZoneHVACTerminalUnitVariableRefrigerantFlow term3(model, coolingCoil3, heatingCoil3, fan3);
 
   EXPECT_EQ(0u, vrf.terminals().size());
+  EXPECT_FALSE(term1.vrfSystem());
+  EXPECT_FALSE(term2.vrfSystem());
+  EXPECT_FALSE(term3.vrfSystem());
 
   EXPECT_TRUE(vrf.addTerminal(term1));
   EXPECT_TRUE(vrf.addTerminal(term2));
   EXPECT_TRUE(vrf.addTerminal(term3));
 
   EXPECT_EQ(3u, vrf.terminals().size());
+  ASSERT_TRUE(term1.vrfSystem());
+  EXPECT_EQ(vrf, term1.vrfSystem().get());
+  ASSERT_TRUE(term2.vrfSystem());
+  EXPECT_EQ(vrf, term2.vrfSystem().get());
+  ASSERT_TRUE(term3.vrfSystem());
+  EXPECT_EQ(vrf, term3.vrfSystem().get());
 
   vrf.removeTerminal(term2);
 
@@ -403,9 +412,18 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
   EXPECT_EQ(term1, vrf.terminals()[0]);
   EXPECT_EQ(term3, vrf.terminals()[1]);
 
+  ASSERT_TRUE(term1.vrfSystem());
+  EXPECT_EQ(vrf, term1.vrfSystem().get());
+  EXPECT_FALSE(term2.vrfSystem());
+  ASSERT_TRUE(term3.vrfSystem());
+  EXPECT_EQ(vrf, term3.vrfSystem().get());
+
   vrf.removeAllTerminals();
 
   EXPECT_EQ(0u, vrf.terminals().size());
+  EXPECT_FALSE(term1.vrfSystem());
+  EXPECT_FALSE(term2.vrfSystem());
+  EXPECT_FALSE(term3.vrfSystem());
 }
 
 TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Clone) {

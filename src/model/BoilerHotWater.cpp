@@ -36,12 +36,12 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Boiler_HotWater_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -464,6 +464,22 @@ namespace model {
 
     bool BoilerHotWater_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       return setString(OS_Boiler_HotWaterFields::EndUseSubcategory, endUseSubcategory);
+    }
+
+    ComponentType BoilerHotWater_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> BoilerHotWater_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> BoilerHotWater_Impl::heatingFuelTypes() const {
+      return {FuelType(fuelType())};
+    }
+
+    std::vector<AppGFuelType> BoilerHotWater_Impl::appGHeatingFuelTypes() const {
+      return {convertFuelTypeToAppG(FuelType(fuelType()))};
     }
 
   }  // namespace detail

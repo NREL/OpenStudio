@@ -41,9 +41,12 @@
 #include "HeaderedPumpsConstantSpeed_Impl.hpp"
 #include "HeaderedPumpsVariableSpeed.hpp"
 #include "HeaderedPumpsVariableSpeed_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_TemperingValve_FieldEnums.hxx>
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -204,6 +207,22 @@ namespace model {
       }
 
       return StraightComponent_Impl::addToNode(node);
+    }
+
+    ComponentType TemperingValve_Impl::componentType() const {
+      return ComponentType::None;
+    }
+
+    std::vector<FuelType> TemperingValve_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> TemperingValve_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> TemperingValve_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

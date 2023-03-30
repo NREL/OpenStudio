@@ -35,10 +35,11 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_Humidifier_Steam_Electric_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -256,6 +257,22 @@ namespace model {
       if (val) {
         setRatedPower(val.get());
       }
+    }
+
+    ComponentType HumidifierSteamElectric_Impl::componentType() const {
+      return ComponentType::Heating;  // TODO: is that right?
+    }
+
+    std::vector<FuelType> HumidifierSteamElectric_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> HumidifierSteamElectric_Impl::heatingFuelTypes() const {
+      return {FuelType::Electricity};  // TODO: is that right?
+    }
+
+    std::vector<AppGFuelType> HumidifierSteamElectric_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Electric};  // TODO: is that right?
     }
 
   }  // namespace detail

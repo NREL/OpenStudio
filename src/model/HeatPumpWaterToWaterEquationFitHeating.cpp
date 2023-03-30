@@ -33,12 +33,14 @@
 #include "CurveQuadLinear.hpp"
 #include "CurveQuadLinear_Impl.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/OS_HeatPump_WaterToWater_EquationFit_Heating_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 #include "HeatPumpWaterToWaterEquationFitCooling.hpp"
 #include "HeatPumpWaterToWaterEquationFitCooling_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_HeatPump_WaterToWater_EquationFit_Heating_FieldEnums.hxx>
 
 namespace openstudio {
 namespace model {
@@ -314,6 +316,36 @@ namespace model {
       if (val) {
         setRatedHeatingPowerConsumption(val.get());
       }
+    }
+
+    ComponentType HeatPumpWaterToWaterEquationFitHeating_Impl::componentType() const {
+      return ComponentType::Heating;
+    }
+
+    std::vector<FuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::coolingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<FuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      result.insert(FuelType::Electricity);
+      if (auto p_ = secondaryPlantLoop()) {
+        for (auto& ft : p_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> HeatPumpWaterToWaterEquationFitHeating_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      result.insert(AppGFuelType::HeatPump);  // TODO: is that right?
+      if (auto p_ = secondaryPlantLoop()) {
+        for (auto& ft : p_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

@@ -34,6 +34,7 @@
 #include "WaterToWaterComponent_Impl.hpp"
 
 namespace openstudio {
+
 namespace model {
 
   class Schedule;
@@ -90,6 +91,11 @@ namespace model {
 
       /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = Heating Loop) */
       virtual bool addToTertiaryNode(Node& node) override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
 
       //@}
       /** @name Getters */

@@ -59,6 +59,11 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
       std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       boost::optional<Schedule> hotWaterSupplyTemperatureSchedule() const;

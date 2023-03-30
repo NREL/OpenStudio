@@ -46,11 +46,12 @@
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_PlantComponent_UserDefined_FieldEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -520,6 +521,23 @@ namespace model {
       simProgram.addLine(line);
       return simProgram;
     }
+
+    ComponentType PlantComponentUserDefined_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> PlantComponentUserDefined_Impl::coolingFuelTypes() const {
+      return {FuelType::OtherFuel_1};
+    }
+
+    std::vector<FuelType> PlantComponentUserDefined_Impl::heatingFuelTypes() const {
+      return {FuelType::OtherFuel_1};
+    }
+
+    std::vector<AppGFuelType> PlantComponentUserDefined_Impl::appGHeatingFuelTypes() const {
+      return {AppGFuelType::Other};
+    }
+
   }  // namespace detail
 
   PlantComponentUserDefined::PlantComponentUserDefined(const Model& model) : StraightComponent(PlantComponentUserDefined::iddObjectType(), model) {

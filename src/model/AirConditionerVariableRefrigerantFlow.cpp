@@ -53,13 +53,14 @@
 #include "PlantLoop_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
-#include <utilities/idd/IddFactory.hxx>
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/core/Containers.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirConditioner_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 
@@ -1800,6 +1801,48 @@ namespace model {
       // Don't Switch the condenser type to "AirCooled"
       // this->setCondenserType("AirCooled");
       return ok;
+    }
+
+    ComponentType AirConditionerVariableRefrigerantFlow_Impl::componentType() const {
+      return ComponentType::Both;
+    }
+
+    std::vector<FuelType> AirConditionerVariableRefrigerantFlow_Impl::coolingFuelTypes() const {
+      std::set<FuelType> result;
+      result.insert(FuelType(fuelType()));
+      if (auto p_ = plantLoop()) {
+        for (auto ft : p_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<FuelType> AirConditionerVariableRefrigerantFlow_Impl::heatingFuelTypes() const {
+      std::set<FuelType> result;
+      result.insert(FuelType(fuelType()));
+      if (auto p_ = plantLoop()) {
+        for (auto ft : p_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
+    }
+
+    std::vector<AppGFuelType> AirConditionerVariableRefrigerantFlow_Impl::appGHeatingFuelTypes() const {
+      std::set<AppGFuelType> result;
+      auto fType = FuelType(fuelType());
+      if (fType == FuelType::Electricity) {
+        result.insert(AppGFuelType::HeatPump);
+      } else {
+        result.insert(convertFuelTypeToAppG(fType));
+      }
+      if (auto p_ = plantLoop()) {
+        for (auto ft : p_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
   }  // namespace detail

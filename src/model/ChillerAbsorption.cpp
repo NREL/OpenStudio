@@ -33,10 +33,12 @@
 #include "ChillerAbsorption_Impl.hpp"
 #include "Node.hpp"
 #include "PlantLoop.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Chiller_Absorption_FieldEnums.hxx>
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -536,6 +538,25 @@ namespace model {
       if (val) {
         setDesignGeneratorFluidFlowRate(val.get());
       }
+    }
+
+    ComponentType ChillerAbsorption_Impl::componentType() const {
+      return ComponentType::Cooling;
+    }
+
+    std::vector<FuelType> ChillerAbsorption_Impl::coolingFuelTypes() const {
+      if (auto generatorLoop_ = generatorLoop()) {
+        return generatorLoop_->heatingFuelTypes();  // This is done on purpose. We use heat to produce chilled water here!
+      }
+      return {};
+    }
+
+    std::vector<FuelType> ChillerAbsorption_Impl::heatingFuelTypes() const {
+      return {};
+    }
+
+    std::vector<AppGFuelType> ChillerAbsorption_Impl::appGHeatingFuelTypes() const {
+      return {};
     }
 
   }  // namespace detail

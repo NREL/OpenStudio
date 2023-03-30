@@ -49,6 +49,7 @@
 #include "Model_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+// #include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -464,6 +465,22 @@ namespace model {
       return {};
     }
 
+    // ComponentType HVACComponent_Impl::componentType() const {
+    //   return ComponentType::None;
+    // }
+
+    // std::vector<FuelType> HVACComponent_Impl::coolingFuelTypes() const {
+    //   return {};
+    // }
+
+    // std::vector<FuelType> HVACComponent_Impl::heatingFuelTypes() const {
+    //   return {};
+    // }
+
+    // std::vector<AppGFuelType> HVACComponent_Impl::appGHeatingFuelTypes() const {
+    //   return {};
+    // }
+
   }  // namespace detail
 
   HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p) : ParentObject(std::move(p)) {}
@@ -530,6 +547,22 @@ namespace model {
 
   void HVACComponent::applySizingValues() {
     return getImpl<detail::HVACComponent_Impl>()->applySizingValues();
+  }
+
+  ComponentType HVACComponent::componentType() const {
+    return getImpl<detail::HVACComponent_Impl>()->componentType();
+  }
+
+  std::vector<FuelType> HVACComponent::coolingFuelTypes() const {
+    return getImpl<detail::HVACComponent_Impl>()->coolingFuelTypes();
+  }
+
+  std::vector<FuelType> HVACComponent::heatingFuelTypes() const {
+    return getImpl<detail::HVACComponent_Impl>()->heatingFuelTypes();
+  }
+
+  std::vector<AppGFuelType> HVACComponent::appGHeatingFuelTypes() const {
+    return getImpl<detail::HVACComponent_Impl>()->appGHeatingFuelTypes();
   }
 
 }  // namespace model

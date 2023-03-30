@@ -34,6 +34,11 @@
 #include "ParentObject.hpp"
 
 namespace openstudio {
+
+class AppGFuelType;
+class ComponentType;
+class FuelType;
+
 namespace model {
 
   namespace detail {
@@ -218,6 +223,11 @@ waterCoolingCoil.addToSplitter( plantLoop.demandSplitter() );
     void autosize();
 
     void applySizingValues();
+
+    ComponentType componentType() const;
+    std::vector<FuelType> coolingFuelTypes() const;
+    std::vector<FuelType> heatingFuelTypes() const;
+    std::vector<AppGFuelType> appGHeatingFuelTypes() const;
 
    protected:
     friend class Model;

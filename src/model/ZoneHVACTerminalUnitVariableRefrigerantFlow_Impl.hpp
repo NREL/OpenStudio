@@ -88,6 +88,11 @@ namespace model {
 
       virtual std::vector<ModelObject> children() const override;
 
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
       //@}
       /** @name Getters */
       //@{
@@ -218,10 +223,6 @@ namespace model {
 
       bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
 
-      //@}
-      /** @name Other */
-      //@{
-
       bool setSupplyAirFan(const HVACComponent& component);
       void resetSupplyAirFan();
 
@@ -229,8 +230,14 @@ namespace model {
 
       bool setHeatingCoil(const HVACComponent& component);
 
+      //@}
+      /** @name Other */
+      //@{
+
       // Returns true if the Cooling and Heating Coils are of the FluidTemperatureControl type
       bool isFluidTemperatureControl() const;
+
+      boost::optional<HVACComponent> vrfSystem() const;
 
       //@}
      protected:

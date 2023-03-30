@@ -34,6 +34,7 @@
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
+
 namespace model {
 
   namespace detail {
@@ -67,6 +68,15 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      virtual ComponentType componentType() const override;
+      virtual std::vector<FuelType> coolingFuelTypes() const override;
+      virtual std::vector<FuelType> heatingFuelTypes() const override;
+      virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
+
       //@}
       /** @name Getters */
       //@{
@@ -76,10 +86,6 @@ namespace model {
       bool isNominalCapacityAutosized() const;
 
       boost::optional<double> autosizedNominalCapacity() const;
-
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
 
       //@}
       /** @name Setters */
