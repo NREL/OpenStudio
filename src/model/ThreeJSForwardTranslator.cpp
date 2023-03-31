@@ -207,6 +207,8 @@ namespace model {
     userData.setName(name);
     userData.setCoincidentWithOutsideObject(false);
 
+    userData.setConvex(planarSurface.isConvex());
+
     if (surface) {
       std::string surfaceType = surface->surfaceType();
       userData.setSurfaceType(surfaceType);
@@ -223,6 +225,15 @@ namespace model {
 
       // set boundary conditions before calling getBoundaryMaterialName
       userData.setBoundaryMaterialName(getBoundaryMaterialName(userData));
+
+      if (space) {
+        auto sfs = space->findSurfacesWithIncorrectOrientation();
+        if (std::find(sfs.cbegin(), sfs.cend(), planarSurface) != sfs.cend()) {
+          userData.setCorrectlyOriented(false);
+        }
+        userData.setSpaceConvex(space->isConvex());
+        userData.setSpaceEnclosed(space->isEnclosedVolume());
+      }
     }
 
     if (shadingSurface) {

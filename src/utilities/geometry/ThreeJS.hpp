@@ -316,6 +316,19 @@ class UTILITIES_API ThreeUserData
   //void setBelowFloorPlenum(bool v);
   //void setAboveCeilingPlenum(bool v);
 
+  // This Surface is convex
+  bool convex() const;
+  void setConvex(bool b);
+  // The Space it belongs to is convex
+  bool spaceConvex() const;
+  void setSpaceConvex(bool b);
+  // The Space it belongs to is enclosed
+  bool spaceEnclosed() const;
+  void setSpaceEnclosed(bool b);
+  // Given the space it belongs to, it is correctly oriented (or not)
+  bool correctlyOriented() const;
+  void setCorrectlyOriented(bool b);
+
  private:
   friend class ThreeSceneChild;
   ThreeUserData(const Json::Value& value);
@@ -366,6 +379,10 @@ class UTILITIES_API ThreeUserData
   std::vector<std::string> m_airLoopHVACMaterialNames;
   //bool m_belowFloorPlenum;
   //bool m_aboveCeilingPlenum;
+  bool m_convex = true;
+  bool m_spaceConvex = true;
+  bool m_spaceEnclosed = true;
+  bool m_correctlyOriented = true;
 };
 
 /// ThreeSceneChild is a child object of a ThreeSceneObject
