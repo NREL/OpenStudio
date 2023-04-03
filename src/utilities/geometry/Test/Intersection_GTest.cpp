@@ -31,6 +31,8 @@
 #include "GeometryFixture.hpp"
 
 #include "../Intersection.hpp"
+
+#include "../Geometry.hpp"
 #include "../PointLatLon.hpp"
 #include "../Vector3d.hpp"
 
@@ -2676,4 +2678,16 @@ TEST_F(GeometryFixture, Intersection_Stability) {
 
   auto combinedPolygons = openstudio::joinAll(toplit_polygons, tol);
   EXPECT_TRUE(sink.logMessages().empty());
+  ASSERT_EQ(1, combinedPolygons.size());
+  auto& polygon = combinedPolygons.front();
+  std::vector<Point3d> expectedPolygon{
+    {27.21, 55.3207, 0.0},
+    {27.21, -3.3207, 0},
+    {-3.21, -3.3207, 0},
+    {-3.21, 55.3207, 0},
+  };
+  EXPECT_EQ(4, polygon.size());
+  for (size_t i = 0; const auto& pt : polygon) {
+    EXPECT_TRUE(openstudio::isAlmostEqual3dPt(expectedPolygon[i++], pt, 0.001));
+  }
 }
