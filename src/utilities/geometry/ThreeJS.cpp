@@ -720,10 +720,6 @@ ThreeUserData::ThreeUserData(const Json::Value& value) {
   assertType(value, "airLoopHVACMaterialNames", Json::arrayValue);
   //assertType(value, "belowFloorPlenum", Json::booleanValue);
   //assertType(value, "aboveCeilingPlenum", Json::booleanValue);
-  assertType(value, "convex", Json::booleanValue);
-  assertType(value, "spaceConvex", Json::booleanValue);
-  assertType(value, "spaceEnclosed", Json::booleanValue);
-  assertType(value, "correctlyOriented", Json::booleanValue);
 
   m_handle = value.get("handle", "").asString();
   m_name = value.get("name", "").asString();
@@ -776,10 +772,19 @@ ThreeUserData::ThreeUserData(const Json::Value& value) {
   }
   //m_belowFloorPlenum = value.get("belowFloorPlenum", "").asBool();
   //m_aboveCeilingPlenum = value.get("aboveCeilingPlenum", "").asBool();
-  m_convex = value.get("convex", true).asBool();
-  m_spaceConvex = value.get("spaceConvex", true).asBool();
-  m_spaceEnclosed = value.get("spaceEnclosed", true).asBool();
-  m_correctlyOriented = value.get("correctlyOriented", true).asBool();
+  if (checkKey(value, "convex") || checkKey(value, "spaceConvex") || checkKey(value, "spaceEnclosed") || checkKey(value, "correctlyOriented")) {
+    m_includeGeometryDiagnostics = true;
+
+    assertType(value, "convex", Json::booleanValue);
+    assertType(value, "spaceConvex", Json::booleanValue);
+    assertType(value, "spaceEnclosed", Json::booleanValue);
+    assertType(value, "correctlyOriented", Json::booleanValue);
+
+    m_convex = value.get("convex", true).asBool();
+    m_spaceConvex = value.get("spaceConvex", true).asBool();
+    m_spaceEnclosed = value.get("spaceEnclosed", true).asBool();
+    m_correctlyOriented = value.get("correctlyOriented", true).asBool();
+  }
 }
 
 Json::Value ThreeUserData::toJsonValue() const {
@@ -823,10 +828,13 @@ Json::Value ThreeUserData::toJsonValue() const {
   result["windExposure"] = m_windExposure;
   result["illuminanceSetpoint"] = m_illuminanceSetpoint;
   result["airWall"] = m_airWall;
-  result["convex"] = m_convex;
-  result["spaceConvex"] = m_spaceConvex;
-  result["spaceEnclosed"] = m_spaceEnclosed;
-  result["correctlyOriented"] = m_correctlyOriented;
+
+  if (m_includeGeometryDiagnostics) {
+    result["convex"] = m_convex;
+    result["spaceConvex"] = m_spaceConvex;
+    result["spaceEnclosed"] = m_spaceEnclosed;
+    result["correctlyOriented"] = m_correctlyOriented;
+  }
 
   Json::Value airLoopHVACNames(Json::arrayValue);
   for (const auto& airLoopName : m_airLoopHVACNames) {
@@ -1218,6 +1226,14 @@ void ThreeUserData::addAirLoopHVACMaterialName(const std::string& s) {
 //    m_belowFloorPlenum = false;
 //  }
 //}
+
+bool ThreeUserData::includeGeometryDiagnostics() const {
+  return m_includeGeometryDiagnostics;
+}
+
+void ThreeUserData::setIncludeGeometryDiagnostics(bool includeGeometryDiagnostics) {
+  m_includeGeometryDiagnostics = includeGeometryDiagnostics;
+}
 
 bool ThreeUserData::convex() const {
   return m_convex;

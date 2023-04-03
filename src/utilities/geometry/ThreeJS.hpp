@@ -316,6 +316,9 @@ class UTILITIES_API ThreeUserData
   //void setBelowFloorPlenum(bool v);
   //void setAboveCeilingPlenum(bool v);
 
+  // If set to false, the 4 diags below aren't used
+  bool includeGeometryDiagnostics() const;
+  void setIncludeGeometryDiagnostics(bool includeGeometryDiagnostics);
   // This Surface is convex
   bool convex() const;
   void setConvex(bool b);
@@ -379,6 +382,7 @@ class UTILITIES_API ThreeUserData
   std::vector<std::string> m_airLoopHVACMaterialNames;
   //bool m_belowFloorPlenum;
   //bool m_aboveCeilingPlenum;
+  bool m_includeGeometryDiagnostics = false;
   bool m_convex = true;
   bool m_spaceConvex = true;
   bool m_spaceEnclosed = true;

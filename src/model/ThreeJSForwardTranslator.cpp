@@ -193,7 +193,7 @@ namespace model {
     return result;
   }
 
-  void updateUserData(ThreeUserData& userData, const PlanarSurface& planarSurface) {
+  void updateUserData(ThreeUserData& userData, const PlanarSurface& planarSurface, bool includeGeometryDiagnostics) {
     std::string name = planarSurface.nameString();
     boost::optional<Surface> surface = planarSurface.optionalCast<Surface>();
     boost::optional<ShadingSurface> shadingSurface = planarSurface.optionalCast<ShadingSurface>();
@@ -207,7 +207,10 @@ namespace model {
     userData.setName(name);
     userData.setCoincidentWithOutsideObject(false);
 
-    userData.setConvex(planarSurface.isConvex());
+    if (includeGeometryDiagnostics) {
+      userData.setIncludeGeometryDiagnostics(true);
+      userData.setConvex(planarSurface.isConvex());
+    }
 
     if (surface) {
       std::string surfaceType = surface->surfaceType();
@@ -226,7 +229,7 @@ namespace model {
       // set boundary conditions before calling getBoundaryMaterialName
       userData.setBoundaryMaterialName(getBoundaryMaterialName(userData));
 
-      if (space) {
+      if (includeGeometryDiagnostics && space) {
         auto sfs = space->findSurfacesWithIncorrectOrientation();
         if (std::find(sfs.cbegin(), sfs.cend(), planarSurface) != sfs.cend()) {
           userData.setCorrectlyOriented(false);
@@ -334,7 +337,7 @@ namespace model {
   }
 
   void makeGeometries(const PlanarSurface& planarSurface, std::vector<ThreeGeometry>& geometries, std::vector<ThreeUserData>& userDatas,
-                      bool triangulateSurfaces) {
+                      bool triangulateSurfaces, bool includeGeometryDiagnostics) {
     std::string name = planarSurface.nameString();
     boost::optional<Surface> surface = planarSurface.optionalCast<Surface>();
     boost::optional<PlanarSurfaceGroup> planarSurfaceGroup = planarSurface.planarSurfaceGroup();
@@ -408,7 +411,7 @@ namespace model {
     geometries.push_back(geometry);
 
     ThreeUserData userData;
-    updateUserData(userData, planarSurface);
+    updateUserData(userData, planarSurface, includeGeometryDiagnostics);
 
     // check if the adjacent surface is truly adjacent
     // this controls display only, not energy model
@@ -438,6 +441,14 @@ namespace model {
     m_logSink.setLogLevel(Warn);
     //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSForwardTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
+  }
+
+  bool ThreeJSForwardTranslator::includeGeometryDiagnostics() const {
+    return m_includeGeometryDiagnostics;
+  }
+
+  void ThreeJSForwardTranslator::setIncludeGeometryDiagnostics(bool includeGeometryDiagnostics) {
+    m_includeGeometryDiagnostics = includeGeometryDiagnostics;
   }
 
   std::vector<LogMessage> ThreeJSForwardTranslator::warnings() const {
@@ -497,7 +508,7 @@ namespace model {
     for (const auto& planarSurface : planarSurfaces) {
       std::vector<ThreeGeometry> geometries;
       std::vector<ThreeUserData> userDatas;
-      makeGeometries(planarSurface, geometries, userDatas, triangulateSurfaces);
+      makeGeometries(planarSurface, geometries, userDatas, triangulateSurfaces, m_includeGeometryDiagnostics);
       OS_ASSERT(geometries.size() == userDatas.size());
 
       size_t n = geometries.size();
