@@ -57,6 +57,7 @@
 #  pragma warning(pop)
 #endif
 
+#include <algorithm>
 #include <cmath>
 #include <iterator>
 
@@ -784,7 +785,9 @@ std::vector<std::vector<Point3d>> joinAll(const std::vector<std::vector<Point3d>
   const std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
   for (const std::vector<unsigned>& component : connectedComponents) {
     std::vector<unsigned> orderedComponent(component);
-    std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
+    // #4831 - Use a stable_sort to produce consistent results between Windows and Unix in case you have polygons with the same area
+    std::stable_sort(orderedComponent.begin(), orderedComponent.end(),
+                     [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
 
     std::vector<Point3d> points;
     std::set<unsigned> joinedComponents;
@@ -1437,7 +1440,9 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double /*
   for (const std::vector<unsigned>& component : connectedComponents) {
 
     std::vector<unsigned> orderedComponent(component);
-    std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
+    // #4831 - Use a stable_sort to produce consistent results between Windows and Unix in case you have polygons with the same area
+    std::stable_sort(orderedComponent.begin(), orderedComponent.end(),
+                     [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
 
     Polygon3d polygon;
     std::set<unsigned> joinedComponents;
