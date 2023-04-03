@@ -92,10 +92,50 @@ TEST_F(ModelFixture, ThreeJSForwardTranslator_7_7_Windows_Complete) {
   for (const auto& warn : ft.warnings()) {
     EXPECT_TRUE(false) << "Warning:" << warn.logMessage();
   }
-  std::string json = scene.toJSON();
+  std::string json = scene.toJSON(true);
   EXPECT_TRUE(ThreeScene::load(json));
 
   out = resourcesPath() / toPath("model/M7-7_Windows_Complete.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+}
+
+TEST_F(ModelFixture, ThreeJSForwardTranslator_7_7_Windows_Complete_GeometryDiagnostics) {
+  ThreeJSForwardTranslator ft;
+  ft.setIncludeGeometryDiagnostics(true);
+
+  openstudio::path out;
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelpath = resourcesPath() / toPath("model/7-7_Windows_Complete.osm");
+  model::OptionalModel model = translator.loadModel(modelpath);
+  ThreeScene scene = ft.modelToThreeJS(model.get(), true);
+  // Ensure we get no errors or warnings, generally speaking.
+  EXPECT_EQ(0, ft.errors().size());
+  auto warnings = ft.warnings();
+  warnings.erase(std::remove_if(warnings.begin(), warnings.end(),
+                                [](auto& warn) {
+                                  return ((warn.logMessage().find("Polyhedron is not enclosed") != std::string::npos)
+                                          || (warn.logMessage().find("edges that aren't used exactly twice") != std::string::npos)
+                                          || (warn.logMessage().find("Can't compute a floorPrint") != std::string::npos));
+                                }),
+                 warnings.end());
+  EXPECT_EQ(0, warnings.size());
+
+  for (const auto& error : ft.errors()) {
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : warnings) {
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  std::string json = scene.toJSON(true);
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  out = resourcesPath() / toPath("model/M7-7_Windows_Complete_geometryDiags.json");
   openstudio::filesystem::ofstream file1(out);
   ASSERT_TRUE(file1.is_open());
   file1 << json;
@@ -117,9 +157,48 @@ TEST_F(ModelFixture, ThreeJSForwardTranslator_RefBldgOutPatientNew2004_Chicago) 
   for (const auto& warning : ft.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
-  std::string json = scene.toJSON();
+  std::string json = scene.toJSON(true);
   EXPECT_TRUE(ThreeScene::load(json));
   out = resourcesPath() / toPath("model/MSample_DOE-RefBldgOutPatientNew2004_Chicago.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+}
+
+TEST_F(ModelFixture, ThreeJSForwardTranslator_RefBldgOutPatientNew2004_Chicago_GeometryDiagnostics) {
+  ThreeJSForwardTranslator ft;
+  ft.setIncludeGeometryDiagnostics(true);
+
+  openstudio::path out;
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgOutPatientNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  ThreeScene scene = ft.modelToThreeJS(model.get(), true);
+  // Ensure we get no errors or warnings, generally speaking.
+  EXPECT_EQ(0, ft.errors().size());
+  auto warnings = ft.warnings();
+  warnings.erase(std::remove_if(warnings.begin(), warnings.end(),
+                                [](auto& warn) {
+                                  return ((warn.logMessage().find("Polyhedron is not enclosed") != std::string::npos)
+                                          // || (warn.logMessage().find("edges that aren't used exactly twice") != std::string::npos)
+                                          // || (warn.logMessage().find("Can't compute a floorPrint") != std::string::npos)
+                                  );
+                                }),
+                 warnings.end());
+  EXPECT_EQ(0, warnings.size());
+
+  for (const auto& error : ft.errors()) {
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : warnings) {
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  std::string json = scene.toJSON(true);
+  EXPECT_TRUE(ThreeScene::load(json));
+  out = resourcesPath() / toPath("model/MSample_DOE-RefBldgOutPatientNew2004_Chicago_geometryDiags.json");
   openstudio::filesystem::ofstream file1(out);
   ASSERT_TRUE(file1.is_open());
   file1 << json;
