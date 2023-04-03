@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
+#include "Surface.hpp"
 
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
