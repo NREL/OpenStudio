@@ -863,6 +863,9 @@ namespace model {
     }
 
     bool Space_Impl::isEnclosedVolume() const {
+      if (m_cachedIsEnclosed.has_value()) {
+        return m_cachedIsEnclosed.get();
+      }
       auto volumePoly = this->polyhedron();
       auto isVolEnclosed = volumePoly.isEnclosedVolume();
       if (!isVolEnclosed) {
@@ -999,6 +1002,9 @@ namespace model {
     }
 
     std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientation() const {
+      if (m_cachedNonConvexSurfaces.has_value()) {
+        return m_cachedNonConvexSurfaces.get();
+      }
       auto volumePoly = this->polyhedron();
       // Actually, its perfectly fine to lookup incorrect orientations even if the polyhedron isn't enclosed...
       // If a Box space is missing one wall for eg, the opposite wall will be deemed incorrectly oriented if using ray casting.
@@ -2927,6 +2933,9 @@ namespace model {
     }
 
     bool Space_Impl::isConvex() const {
+      if (m_cachedIsConvex.has_value()) {
+        return m_cachedIsConvex.get();
+      }
       auto points = floorPrint();
       if (points.empty()) {
         LOG(Warn, "Can't compute a floorPrint for " << briefDescription());
@@ -2940,6 +2949,21 @@ namespace model {
       auto surfaces = this->surfaces();
       surfaces.erase(std::remove_if(surfaces.begin(), surfaces.end(), [](const auto& surface) { return surface.isConvex(); }), surfaces.end());
       return surfaces;
+    }
+
+    void Space_Impl::cacheGeometryDiagnostics() {
+      m_cachedIsConvex = isConvex();
+      auto volumePoly = this->polyhedron();
+      m_cachedIsEnclosed = volumePoly.isEnclosedVolume();
+      // Actually, its perfectly fine to lookup incorrect orientations even if the polyhedron isn't enclosed...
+      // If a Box space is missing one wall for eg, the opposite wall will be deemed incorrectly oriented if using ray casting.
+      m_cachedNonConvexSurfaces = findSurfacesWithIncorrectOrientationPolyhedron(volumePoly);
+    }
+
+    void Space_Impl::resetCachedGeometryDiagnostics() {
+      m_cachedNonConvexSurfaces.reset();
+      m_cachedIsConvex.reset();
+      m_cachedIsEnclosed.reset();
     }
 
     bool Space_Impl::isPlenum() const {
@@ -3655,6 +3679,15 @@ namespace model {
   std::vector<Surface> Space::findNonConvexSurfaces() const {
     return getImpl<detail::Space_Impl>()->findNonConvexSurfaces();
   }
+
+  /// @cond
+  void Space::cacheGeometryDiagnostics() {
+    getImpl<detail::Space_Impl>()->cacheGeometryDiagnostics();
+  }
+  void Space::resetCachedGeometryDiagnostics() {
+    getImpl<detail::Space_Impl>()->resetCachedGeometryDiagnostics();
+  }
+  /// @endcond
 
   /// @cond
   Space::Space(std::shared_ptr<detail::Space_Impl> impl) : PlanarSurfaceGroup(std::move(impl)) {}

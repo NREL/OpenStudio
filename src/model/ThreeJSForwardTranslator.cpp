@@ -504,6 +504,14 @@ namespace model {
     std::vector<PlanarSurface>::size_type N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size()
                                               + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + airLoopHVACs.size() + 1;
 
+    std::vector<Space> spaces;
+    if (m_includeGeometryDiagnostics) {
+      spaces = model.getConcreteModelObjects<Space>();
+      for (auto& space : spaces) {
+        space.cacheGeometryDiagnostics();
+      }
+    }
+
     // loop over all surfaces
     for (const auto& planarSurface : planarSurfaces) {
       std::vector<ThreeGeometry> geometries;
@@ -526,6 +534,12 @@ namespace model {
 
       n += 1;
       updatePercentage(100.0 * n / N);
+    }
+
+    if (m_includeGeometryDiagnostics) {
+      for (auto& space : spaces) {
+        space.resetCachedGeometryDiagnostics();
+      }
     }
 
     ThreeSceneObject sceneObject(toThreeUUID(toString(openstudio::createUUID())), sceneChildren);

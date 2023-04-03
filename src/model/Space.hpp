@@ -660,6 +660,11 @@ namespace model {
         * eg: a box with a wall that is split into two L s would return false, while the Space is actually still convex. */
     std::vector<Surface> findNonConvexSurfaces() const;
 
+    /// @cond
+    void cacheGeometryDiagnostics();
+    void resetCachedGeometryDiagnostics();
+    /// @endcond
+
     //@}
    protected:
     /// @cond
