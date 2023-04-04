@@ -12,7 +12,7 @@ require 'json'
 require 'pathname'
 
 verbose = false
-$doclean = true
+$clean_unused_keys = true
 
 default_dir = Pathname.new("/home/julien/Software/Others/openstudio_gems/openstudio-standards/lib/openstudio-standards/standards/")
 
@@ -39,7 +39,7 @@ def verify_proper_keys_present(json_keys, json_name)
   end
 end
 
-def sort_and_remove_unused_keys(cleaned_data, json_name)
+def sort_and_remove_unused_keys(cleaned_data, json_name, clean_unused_keys)
   if json_name == 'space_types'
     cleaned_data[json_name] = cleaned_data[json_name].sort_by{|x| [x['template'],x['building_type'], x['space_type']]}
   elsif json_name == 'materials'
@@ -48,7 +48,7 @@ def sort_and_remove_unused_keys(cleaned_data, json_name)
     raise "Unknown json_name=#{json_name}"
   end
 
-  if $doclean
+  if clean_unused_keys
     puts "Cleaning the unused keys for reduced size"
     cleaned_data[json_name].each { |e| e.delete_if{|k| !$json_info[json_name].include?(k)} }
   end
@@ -212,14 +212,8 @@ end;
 
 puts "\nFinal: #{cleaned_data[json_name].size} Space Types\n"
 
-save_path = "OpenStudio_Standards_#{json_name}_merged_temp.json"
-File.open(save_path,"w") do |f|
-  f.write(JSON.pretty_generate(cleaned_data))
-end
-
-
 # Sort and remove unused keys
-sort_and_remove_unused_keys(cleaned_data, json_name)
+sort_and_remove_unused_keys(cleaned_data, json_name, $clean_unused_keys)
 
 save_path = "OpenStudio_Standards_#{json_name}_merged.json"
 File.open(save_path,"w") do |f|
@@ -367,7 +361,7 @@ puts "\nFinal: #{cleaned_data[json_name].size} Materials\n"
 save_path = "OpenStudio_Standards_#{json_name}_merged.json"
 
 # Sort
-sort_and_remove_unused_keys(cleaned_data, json_name)
+sort_and_remove_unused_keys(cleaned_data, json_name, $clean_unused_keys)
 
 File.open(save_path,"w") do |f|
   f.write(JSON.pretty_generate(cleaned_data))
