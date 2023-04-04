@@ -237,6 +237,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
 
     struct Expected
     {
+      Expected(bool t_isSupply, std::string t_plantName, std::string t_inletNodeName, std::string t_outletNodeName)
+        : isSupply(t_isSupply),
+          plantName(std::move(t_plantName)),
+          inletNodeName(std::move(t_inletNodeName)),
+          outletNodeName(std::move(t_outletNodeName)) {}
       bool isSupply = true;
       std::string plantName;
       std::string inletNodeName;

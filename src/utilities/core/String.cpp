@@ -31,7 +31,12 @@
 
 #include "Logger.hpp"
 
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <codecvt>
+
 #include <iomanip>
 
 namespace openstudio {
@@ -112,5 +117,9 @@ std::string toString(const std::wstring& utf16_string) {
   return convert.to_bytes(u16string);
 #endif
 }
+
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
 
 }  // namespace openstudio
