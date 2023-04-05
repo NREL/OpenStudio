@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     command.append(str(args.logger_file))
     print(f"Running: {' '.join(command)}")
-    r = subprocess.check_output(command).decode()
+    r = subprocess.check_output(command, encoding='utf-8')
     lines = r.splitlines()
     for i, line in enumerate(lines):
         print(i, line)
