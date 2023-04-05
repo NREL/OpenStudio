@@ -206,8 +206,9 @@ TEST_F(BCLFixture, RemoteBCLTest2) {
 
   RemoteBCL remoteBCL;
 
-  // get all constructions, via empty first arg and tid
-  std::vector<BCLSearchResult> responses = remoteBCL.searchComponentLibrary("", 127);
+  // get all constructions, via non-empty first arg and tid. As of 2023-04-05, some new constructions such as
+  // 'Generic-Casement-Fiberglass-DoubleLowE-Air-AlumSpacer-1' are missing the "OpenStudio Type" because these are IDF constructions
+  std::vector<BCLSearchResult> responses = remoteBCL.searchComponentLibrary("Dbl", 127);
   ASSERT_GT(responses.size(), 0u);
 
   bool success = remoteBCL.downloadComponent(responses[0].uid());
@@ -269,7 +270,7 @@ TEST_F(BCLFixture, RemoteBCLTest2) {
       break;
     }
   }
-  ASSERT_FALSE(openstudioType.empty());
+  ASSERT_FALSE(openstudioType.empty()) << "Failed for Component.name='" << component->name() << "', uid='" << component->uid() << "' ";
 
   // load the component
   std::vector<std::string> oscFiles = component->files("osc");
