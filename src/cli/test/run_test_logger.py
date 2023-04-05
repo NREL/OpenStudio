@@ -38,8 +38,6 @@ if __name__ == "__main__":
     print(f"Running: {' '.join(command)}")
     r = subprocess.check_output(command, encoding='utf-8')
     lines = r.splitlines()
-    for i, line in enumerate(lines):
-        print(i, line)
 
     # Pop the labs box
     i_warn = 0
@@ -48,6 +46,9 @@ if __name__ == "__main__":
             i_warn = i
             break
     lines = lines[:(i_warn - 1)] + lines[(i_warn + 2):]
+
+    for i, line in enumerate(lines):
+        print(i, line)
 
     if (n := len(lines)) != 3:
         raise IOError(f"Expected 3 lines, got {n}")
