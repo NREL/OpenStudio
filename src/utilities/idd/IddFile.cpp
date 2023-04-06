@@ -211,7 +211,7 @@ namespace detail {
     int lineNum = 0;
 
     // number of object in the idd, 1 is first object
-    int objectNum = 0;
+    [[maybe_unused]] int objectNum = 0;
 
     // stream for header
     std::stringstream header;
@@ -219,7 +219,7 @@ namespace detail {
     // have we read the entire header yet
     bool headerClosed = false;
 
-    std::string currentGroup = "";
+    std::string currentGroup;
 
     // fake a comment only object and put it in the object list and object map
     OptionalIddObject commentOnlyObject =
