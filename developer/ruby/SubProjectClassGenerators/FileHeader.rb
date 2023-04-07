@@ -3,7 +3,7 @@ def fileHeader
   fileHeader = String.new
 
   fileHeader << "/***********************************************************************************************************************\n"
-  fileHeader << "*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.\n"
+  fileHeader << "*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.\n"
   fileHeader << "*\n"
   fileHeader << "*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the\n"
   fileHeader << "*  following conditions are met:\n"
