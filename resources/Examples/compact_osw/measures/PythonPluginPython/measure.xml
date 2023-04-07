@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>python_plugin_python</name>
+  <uid>42a4a936-5f9a-48fd-9157-e4981b9a9dca</uid>
+  <version_id>1eb1e662-31e0-466a-9f4b-6157483ea168</version_id>
+  <version_modified>20230407T213019Z</version_modified>
+  <xml_checksum>33A29C78</xml_checksum>
+  <class_name>PythonPluginPython</class_name>
+  <display_name>Increase R-value of Insulation for Roofs by a Specified Percentage.</display_name>
+  <description>DESCRIPTION_TEXT</description>
+  <modeler_description>MODELER_DESCRIPTION_TEXT</modeler_description>
+  <arguments>
+    <argument>
+      <name>r_value</name>
+      <display_name>Percentage Increase of R-value for Roof Insulation.</display_name>
+      <type>Double</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>30</default_value>
+    </argument>
+  </arguments>
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Opaque</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Python</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.4.1</identifier>
+        <min_compatible>3.4.1</min_compatible>
+      </version>
+      <filename>measure.py</filename>
+      <filetype>py</filetype>
+      <usage_type>script</usage_type>
+      <checksum>BC248E86</checksum>
+    </file>
+  </files>
+</measure>
