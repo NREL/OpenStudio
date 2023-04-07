@@ -229,7 +229,7 @@ namespace model {
     return boost::none;
   }
 
-  ExternalFile::ExternalFile(const Model& model, const std::string& filename) : ResourceObject(ExternalFile::iddObjectType(), model) {
+  ExternalFile::ExternalFile(const Model& model, const std::string& filename, bool copy = true) : ResourceObject(ExternalFile::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ExternalFile_Impl>());
 
     WorkflowJSON workflow = model.workflowJSON();
@@ -246,40 +246,45 @@ namespace model {
     }
     OS_ASSERT(exists(p));
 
-    path destDir;
-    std::vector<path> absoluteFilePaths = workflow.absoluteFilePaths();
-    if (absoluteFilePaths.empty()) {
-      destDir = workflow.absoluteRootDir();
-    } else {
-      destDir = absoluteFilePaths[0];
-    }
-    path dest = destDir / p.filename();
-
-    if (exists(dest)) {
-      if (checksum(p) != checksum(dest)) {
-        this->remove();
-        LOG_AND_THROW("File \"" << p.filename() << "\" already exists in \"" << destDir << "\"");
-      }
-    } else {
-
-      try {
-        makeParentFolder(dest, path(), true);
-      } catch (std::exception&) {
-        this->remove();
-        LOG_AND_THROW("Failed to created parent folder at \"" << dest << "\"");
-      }
-      try {
-        boost::filesystem::copy(p, dest);
-      } catch (std::exception&) {
-        this->remove();
-        LOG_AND_THROW("Failed to copy file from \"" << p << "\" to \"" << dest << "\"");
-      }
-    }
-    OS_ASSERT(exists(dest));
-
     bool ok;
-    ok = setFileName(toString(dest.filename()));
-    OS_ASSERT(ok);
+    if (copy) {
+      path destDir;
+      std::vector<path> absoluteFilePaths = workflow.absoluteFilePaths();
+      if (absoluteFilePaths.empty()) {
+        destDir = workflow.absoluteRootDir();
+      } else {
+        destDir = absoluteFilePaths[0];
+      }
+      path dest = destDir / p.filename();
+
+      if (exists(dest)) {
+        if (checksum(p) != checksum(dest)) {
+          this->remove();
+          LOG_AND_THROW("File \"" << p.filename() << "\" already exists in \"" << destDir << "\"");
+        }
+      } else {
+
+        try {
+          makeParentFolder(dest, path(), true);
+        } catch (std::exception&) {
+          this->remove();
+          LOG_AND_THROW("Failed to created parent folder at \"" << dest << "\"");
+        }
+        try {
+          boost::filesystem::copy(p, dest);
+        } catch (std::exception&) {
+          this->remove();
+          LOG_AND_THROW("Failed to copy file from \"" << p << "\" to \"" << dest << "\"");
+        }
+      }
+      OS_ASSERT(exists(dest));
+
+      ok = setFileName(toString(dest.filename()));
+      OS_ASSERT(ok);
+    } else {
+      ok = setFileName(filename);
+      OS_ASSERT(ok);
+    }
   }
 
   IddObjectType ExternalFile::iddObjectType() {
