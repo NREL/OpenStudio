@@ -416,10 +416,11 @@ namespace model {
     : ScheduleInterval(ScheduleFile::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ScheduleFile_Impl>());
 
-    ExternalFile externalfile(model, filename, false);
+    boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, filename, false);
+    OS_ASSERT(externalfile);
 
     bool ok;
-    ok = setPointer(OS_Schedule_FileFields::ExternalFileName, externalfile.handle());
+    ok = setPointer(OS_Schedule_FileFields::ExternalFileName, externalfile->handle());
     OS_ASSERT(ok);
     ok = setColumnNumber(column);
     OS_ASSERT(ok);

@@ -69,7 +69,7 @@ namespace model {
 
     static std::vector<std::string> columnSeparatorValues();
 
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
+    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename, bool copy = true);
 
     /** @name Getters */
     //@{
@@ -116,7 +116,7 @@ namespace model {
    private:
     REGISTER_LOGGER("openstudio.model.ExternalFile");
 
-    ExternalFile(const Model& model, const std::string& filename);
+    ExternalFile(const Model& model, const std::string& filename, bool copy = true);
 
     bool setFileName(const std::string& fileName);
   };
