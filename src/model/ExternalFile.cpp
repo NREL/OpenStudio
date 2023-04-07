@@ -136,6 +136,9 @@ namespace model {
     path ExternalFile_Impl::filePath() const {
       path result;
       path fname = toPath(fileName());
+      if (openstudio::filesystem::exists(fname) || openstudio::filesystem::is_regular_file(fname)) {
+        return fname;
+      }
       std::vector<path> absoluteFilePaths = this->model().workflowJSON().absoluteFilePaths();
       if (absoluteFilePaths.empty()) {
         result = this->model().workflowJSON().absoluteRootDir() / fname;
