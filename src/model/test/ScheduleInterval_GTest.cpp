@@ -380,3 +380,60 @@ TEST_F(ModelFixture, ScheduleFile) {
   EXPECT_TRUE(exists(p));
   EXPECT_FALSE(exists(filePath));
 }
+
+TEST_F(ModelFixture, ScheduleFileAltCtor) {
+  Model model;
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
+
+  path p = resourcesPath() / toPath("model/schedulefile.csv");
+  EXPECT_TRUE(exists(p));
+
+  path expectedDestDir;
+  std::vector<path> absoluteFilePaths = model.workflowJSON().absoluteFilePaths();
+  if (absoluteFilePaths.empty()) {
+    expectedDestDir = model.workflowJSON().absoluteRootDir();
+  } else {
+    expectedDestDir = absoluteFilePaths[0];
+  }
+
+  if (exists(expectedDestDir)) {
+    removeDirectory(expectedDestDir);
+  }
+  ASSERT_FALSE(exists(expectedDestDir));
+
+  ScheduleFile schedule(openstudio::toString(p));
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
+  ExternalFile externalfile = schedule.externalFile();
+  EXPECT_EQ(1u, externalfile.scheduleFiles().size());
+  EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
+  //EXPECT_TRUE(externalfile.isColumnSeparatorDefaulted());
+  EXPECT_FALSE(equivalent(expectedDestDir / externalfile.fileName(), externalfile.filePath()));
+  EXPECT_TRUE(exists(externalfile.filePath()));
+  EXPECT_EQ(p, externalfile.filePath());
+  EXPECT_TRUE(schedule.isNumberofHoursofDataDefaulted());
+  EXPECT_EQ(1, schedule.columnNumber());
+  schedule.setColumnNumber(1);
+  EXPECT_EQ(1, schedule.columnNumber());
+  EXPECT_EQ(0, schedule.rowstoSkipatTop());
+  schedule.setRowstoSkipatTop(1);
+  EXPECT_EQ(1, schedule.rowstoSkipatTop());
+
+  EXPECT_EQ("Comma", schedule.columnSeparator());
+  EXPECT_TRUE(schedule.isColumnSeparatorDefaulted());
+  EXPECT_TRUE(schedule.setColumnSeparator("Tab"));
+  EXPECT_EQ("Tab", schedule.columnSeparator());
+
+  ScheduleFile schedule2(openstudio::toString(p));
+  EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleFile>().size());
+  ExternalFile externalfile2 = schedule2.externalFile();
+  EXPECT_EQ(2u, externalfile.scheduleFiles().size());
+  EXPECT_EQ(externalfile.handle(), externalfile2.handle());
+  EXPECT_TRUE(schedule2.isNumberofHoursofDataDefaulted());
+  EXPECT_EQ(1, schedule2.columnNumber());
+  schedule2.setColumnNumber(2);
+  EXPECT_EQ(2, schedule2.columnNumber());
+  EXPECT_EQ(0, schedule2.rowstoSkipatTop());
+  schedule2.setRowstoSkipatTop(1);
+  EXPECT_EQ(1, schedule2.rowstoSkipatTop());
+}
