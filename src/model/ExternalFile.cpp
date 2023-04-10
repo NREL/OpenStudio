@@ -214,7 +214,12 @@ namespace model {
     if (!p.has_filename()) {
       return boost::none;
     }
-    std::string s = toString(p.filename());
+    std::string s;
+    if (copy) {
+      s = toString(p.filename());
+    } else {
+      s = filename;
+    }
 
     // this factory method will give us better control if we start doing things like copying files
     for (const auto& externalFile : model.getConcreteModelObjects<ExternalFile>()) {

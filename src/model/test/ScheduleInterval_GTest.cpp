@@ -402,8 +402,9 @@ TEST_F(ModelFixture, ScheduleFileAltCtor) {
   }
   ASSERT_FALSE(exists(expectedDestDir));
 
-  ScheduleFile schedule(openstudio::toString(p));
+  ScheduleFile schedule(model, openstudio::toString(p));
   EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
   ExternalFile externalfile = schedule.externalFile();
   EXPECT_EQ(1u, externalfile.scheduleFiles().size());
   EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
@@ -424,8 +425,9 @@ TEST_F(ModelFixture, ScheduleFileAltCtor) {
   EXPECT_TRUE(schedule.setColumnSeparator("Tab"));
   EXPECT_EQ("Tab", schedule.columnSeparator());
 
-  ScheduleFile schedule2(openstudio::toString(p));
+  ScheduleFile schedule2(model, openstudio::toString(p));
   EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleFile>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
   ExternalFile externalfile2 = schedule2.externalFile();
   EXPECT_EQ(2u, externalfile.scheduleFiles().size());
   EXPECT_EQ(externalfile.handle(), externalfile2.handle());
