@@ -3,10 +3,7 @@
 	"seed_file": "seb.osm",
 	"steps": [
 		{
-			"measure_dir_name": "PythonPluginPython",
-			"arguments": {
-				"r_value": 45
-			}
+			"measure_dir_name": "PythonPluginPython"
 		}
 	]
 }
