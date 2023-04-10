@@ -1,7 +1,9 @@
-import os
+import os, sys
 import openstudio
 import typing
-# import jinja2 # ModuleNotFoundError: No module named 'jinja2
+sys.path.append('C:/Python38/Lib/site-packages') # this should (needs to?) be same version as E+'s version
+import jinja2
+import tempfile
 
 
 class PythonPluginPython(openstudio.measure.ModelMeasure):
@@ -49,7 +51,7 @@ class PythonPluginPython(openstudio.measure.ModelMeasure):
         # Add a PythonPlugin:Variable (all OS SDK PythonPluginVariable objects are
         # translated to a single E+ PythonPlugin:Variables (extensible object))
         py_var = openstudio.model.PythonPluginVariable(model)
-        py_var.setName('Averaged Building Temperature')
+        py_var.setName('AverageBuildingTemp')
 
         # Add a PythonPlugin:OutputVariable for that variable
         py_out_var = openstudio.model.PythonPluginOutputVariable(py_var)
@@ -90,6 +92,38 @@ class PythonPluginPython(openstudio.measure.ModelMeasure):
 
         # get the python plugin program (jinja template)
         pluginTemplatePath = os.path.join(os.path.dirname(__file__), '../../files/python_plugin_program.py')
+        f = open(pluginTemplatePath, 'r')
+        in_py = f.read()
+
+        dataPath = os.path.join(os.path.dirname(__file__), '../../files/python_plugin_program.csv')
+        openstudio.model.ExternalFile.getExternalFile(model, dataPath)
+
+        # configure plugin template with variable values
+        env = jinja2.Environment()
+        template = env.from_string(in_py)
+        context = {
+            'pluginClassName': pluginClassName,
+            'zone_names': sorted([tz.nameString() for tz in model.getThermalZones() ]),
+            'py_var': py_var,
+            'py_trend_var': py_trend_var,
+            'py_var2': py_var2
+        }
+        out_py = template.render(context)
+
+        # Write it to a temporary directory so we don't pollute the current directory
+        # ExternalFile will copy it
+        temp_dir = tempfile.TemporaryDirectory()
+        pluginPath = os.path.join(temp_dir.name, 'python_plugin_program.py')
+        with open(pluginPath, 'w') as f:
+            f.write(out_py)
+
+        # create the external file object
+        external_file = openstudio.model.ExternalFile.getExternalFile(model, pluginPath)
+        external_file = external_file.get()
+
+        # create the python plugin instance object
+        python_plugin_instance = openstudio.model.PythonPluginInstance(external_file, pluginClassName)
+        python_plugin_instance.setRunDuringWarmupDays(False)
 
         return True
 
