@@ -2687,7 +2687,8 @@ TEST_F(GeometryFixture, Intersection_Stability) {
     {-3.21, 55.3207, 0},
   };
   EXPECT_EQ(4, polygon.size());
-  for (size_t i = 0; const auto& pt : polygon) {
+  size_t i = 0;
+  for (const auto& pt : polygon) {
     EXPECT_TRUE(openstudio::isAlmostEqual3dPt(expectedPolygon[i++], pt, 0.001));
   }
 }
