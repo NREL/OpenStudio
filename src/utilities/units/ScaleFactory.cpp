@@ -167,7 +167,7 @@ std::pair<std::string, std::string> extractScaleAbbreviation(const std::string& 
     }
     std::stringstream regexComposer;
     regexComposer << "^(";
-    if (abbr.find(escapeChar) == 0) {
+    if (abbr.starts_with(escapeChar)) {
       regexComposer << "\\";
     }  // add extra escape character for regex
     regexComposer << abbr << ")";
