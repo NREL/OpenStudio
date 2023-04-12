@@ -18,7 +18,7 @@ jobs:
       run: |
           # We ignore polypartition and nano since these are third party libraries
           cppcheck \
-            --std=c++17 \
+            --std=c++20 \
             --enable=warning,style,information \
             --suppress=toomanyconfigs \
             --suppress=noExplicitConstructor \
