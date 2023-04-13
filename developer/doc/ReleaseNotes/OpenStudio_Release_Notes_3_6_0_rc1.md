@@ -1,6 +1,6 @@
-# OpenStudio Version 3.6.0
+# OpenStudio Version 3.6.0-rc1
 
-_Release Notes_ -  _TBD_
+_Release Notes_ -  Release planned for 05-12-2023
 
 These release notes describe version 3.6.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
@@ -98,7 +98,35 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 **New Contributors**:
 
 
-### OpenStudio Standards v0.3.0
+### OpenStudio Standards v0.4.0
+
+* #1475 Fix issue #109 check hard-sized values before autosized values
+
+* #1474 Fix issue #238 space_type_apply_internal_loads to return boolean instead of nil when no infiltration data available
+
+* #1473 Add more descriptive warning messages for missing standards space type, to help with issue #516
+
+* #1470 Fix issue #1466 by adding a version reference for initialization summary lookup
+
+* #1447 Fix issues #1446 and #1395 breaking out lighting controls into individual spaces
+
+* #1437 Fix issue #754 add support for HeatExchangerFluidToFluid objects for heating and cooling fuels
+
+* #1436 Fix issue #230 improve PRM baseline boiler naming
+
+* #1435 Fix issue #1423 typo in find_and_set_insulation_layer method
+
+* #1428 Appendix G PRM bug fixes, including unmet hour load loop, error handling, and schedule type checking with EMS
+
+* #1422 Fix issue #1417 add default chiller efficiency
+
+* #1421 Fix issue #1326 add model argument to create_cubic_curve and create_curve_exponent
+
+* #1418 Fix issue #1228 OS_AirLoopHVAC_UnitarySystem typo in heating and cooling fuels system lookup
+
+* #1414 Update DEER ventilation rate assumptions
+
+* #1410 Remove obsolete OpenStudio model object autosizing and hardsizing methods
 
 
 
