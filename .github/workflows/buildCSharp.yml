@@ -43,7 +43,7 @@ jobs:
       - name: Install conan
         run: |
           python --version
-          pip install conan
+          pip install conan==1.59
           conan --version
           echo "Enabling conan revisions and setting parallel_download"
           conan config set general.revisions_enabled=True
