@@ -90,8 +90,25 @@ namespace cli {
     for (const auto& arg : arguments) {
       cmd += fmt::format("ARGV << \"{}\"\n", arg);
     }
-    cmd += fmt::format("require '{}'", rubyScriptPath.generic_string());
-    rubyEngine->exec(cmd);
+    cmd += fmt::format(R"(
+begin
+  require '{}'
+rescue Exception => e
+  puts
+  puts "Error: #{{e.message}}"
+  puts "Backtrace:\n\t" + e.backtrace.join("\n\t")
+  raise
+end
+     )",
+                       rubyScriptPath.generic_string());
+    try {
+      rubyEngine->exec(cmd);
+    } catch (...) {
+      // Bail faster though ruby isn't slow like python
+      fmt::print(stderr, "Failed to execute '{}'\n", rubyScriptPath.generic_string());
+      exit(1);
+      // throw std::runtime_error(fmt::format("Failed to execute '{}'\n", rubyScriptPath.generic_string()));
+    }
   }
 
   void executePythonScriptCommand(openstudio::path pythonScriptPath, ScriptEngineInstance& pythonEngine, const std::vector<std::string>& arguments) {
@@ -117,7 +134,14 @@ spec.loader.exec_module(module)
 )python",
                        pythonScriptPath.generic_string());
     // fmt::print("{}\n", cmd);
-    pythonEngine->exec(cmd);
+    try {
+      pythonEngine->exec(cmd);
+    } catch (...) {
+      // Bail faster...
+      fmt::print(stderr, "Failed to execute '{}'\n", pythonScriptPath.generic_string());
+      exit(1);
+      // throw std::runtime_error(fmt::format("Failed to execute '{}'\n", pythonScriptPath.generic_string()));
+    }
   }
 
   void executeGemListCommand(ScriptEngineInstance& rubyEngine) {
