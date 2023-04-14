@@ -27,7 +27,7 @@ jobs:
         name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310]
         include:
         - name: Ubuntu
-          os: ubuntu-18.04
+          os: ubuntu-20.04
           python-version: 3.8
           allow_failure: false
           extra_cmake_args: "-DCONAN_FIRST_TIME_BUILD_ALL:BOOL=ON"
@@ -294,7 +294,7 @@ jobs:
         name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310]
         include:
         - name: Ubuntu
-          os: ubuntu-18.04
+          os: ubuntu-20.04
           python-version: 3.8
           allow_failure: false
         - name: macOS
