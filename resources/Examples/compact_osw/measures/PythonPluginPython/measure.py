@@ -113,11 +113,12 @@ class PythonPluginPython(openstudio.measure.ModelMeasure):
         # Write it to a temporary directory so we don't pollute the current directory
         # ExternalFile will copy it
         temp_dir = tempfile.TemporaryDirectory()
-        pluginPath = os.path.join(temp_dir.name, 'python_plugin_program.py')
+        pluginPath = os.path.join(temp_dir.name, 'python_plugin_program2.py')
         with open(pluginPath, 'w') as f:
             f.write(out_py)
 
         # create the external file object
+        # os.chdir('../..')
         external_file = openstudio.model.ExternalFile.getExternalFile(model, pluginPath)
         external_file = external_file.get()
 
