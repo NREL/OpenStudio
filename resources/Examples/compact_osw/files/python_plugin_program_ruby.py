@@ -4,7 +4,7 @@ import os, sys
 sys.path.append('C:/Python38/Lib/site-packages') # this should (needs to?) be same version as E+'s version
 import pandas as pd
 
-class {{ pluginClassName }}(EnergyPlusPlugin):
+class <%= pluginClassName %>(EnergyPlusPlugin):
 
     def __init__(self):
         super().__init__()
@@ -16,7 +16,7 @@ class {{ pluginClassName }}(EnergyPlusPlugin):
         if self.do_setup:
             self.data['zone_volumes'] = []
             self.data['zone_temps'] = []
-            zone_names = {{ zone_names }}
+            zone_names = <%= model.getThermalZones.map(&:nameString).sort %>
             for zone_name in zone_names:
                 handle = self.api.exchange.get_internal_variable_handle(state, 'Zone Air Volume', zone_name)
                 zone_volume = self.api.exchange.get_internal_variable_value(state, handle)
@@ -24,9 +24,9 @@ class {{ pluginClassName }}(EnergyPlusPlugin):
                 self.data['zone_temps'].append(
                     self.api.exchange.get_variable_handle(state, 'Zone Mean Air Temperature', zone_name)
                 )
-            self.data['avg_temp_variable'] = self.api.exchange.get_global_handle(state, '{{ py_var.nameString() }}')
-            self.data['trend'] = self.api.exchange.get_trend_handle(state, '{{ py_trend_var.nameString() }}')
-            self.data['running_avg_temp_variable'] = self.api.exchange.get_global_handle(state, '{{ py_var2.nameString() }}')
+            self.data['avg_temp_variable'] = self.api.exchange.get_global_handle(state, '<%= py_var.nameString %>')
+            self.data['trend'] = self.api.exchange.get_trend_handle(state, '<%= py_trend_var.nameString %>')
+            self.data['running_avg_temp_variable'] = self.api.exchange.get_global_handle(state, '<%= py_var2.nameString %>')
             self.do_setup = False
         zone_temps = list()
         for t_handle in self.data['zone_temps']:
