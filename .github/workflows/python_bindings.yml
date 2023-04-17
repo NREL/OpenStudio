@@ -87,8 +87,8 @@ jobs:
           # Weirdly enough, ninja makes ubuntu unresponsive...
           #echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
           # Use preinstalled gcc-10 to support C++20
-          echo CC=gcc-10 >> $GITHUB_ENV
-          echo CXX=g++-10 >> $GITHUB_ENV
+          #echo CC=gcc-10 >> $GITHUB_ENV
+          #echo CXX=g++-10 >> $GITHUB_ENV
         elif [ "$RUNNER_OS" == "macOS" ]; then
           echo "Setting up MACOSX_DEPLOYMENT_TARGET and SDKROOT"
           echo MACOSX_DEPLOYMENT_TARGET=${{ matrix.MACOSX_DEPLOYMENT_TARGET }} >> $GITHUB_ENV
