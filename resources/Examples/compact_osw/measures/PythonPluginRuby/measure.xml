@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>python_plugin_ruby</name>
+  <uid>42a4a936-5f9a-48fd-9157-e4981b9a9dca</uid>
+  <version_id>82178d8f-d734-4cc4-83eb-838a1b55962b</version_id>
+  <version_modified>20230417T222134Z</version_modified>
+  <xml_checksum>5872977E</xml_checksum>
+  <class_name>PythonPluginRuby</class_name>
+  <display_name>Python Plugin Ruby.</display_name>
+  <description>TODO</description>
+  <modeler_description>TODO</modeler_description>
+  <arguments />
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Opaque</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Ruby</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.6.0</identifier>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>C934F469</checksum>
+    </file>
+  </files>
+</measure>
