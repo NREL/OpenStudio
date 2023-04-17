@@ -51,11 +51,21 @@ int main(int argc, char* argv[]) {
   const std::string programName = std::move(args.front());
   args.erase(args.begin());
 
+  const bool is_labs = !args.empty() && (args[0] == "labs");
+  if (is_labs) {
+    // Replace backward slashes with forward slashes... cf #4856
+    std::for_each(args.begin(), args.end(), [](auto& s) {
+      //std::replace(s.begin(), s.end(), '\\', '/');
+      boost::replace_all(s, "\\", "\\\\");
+    });
+    // fmt::print("Cleaned after slash replacement arguments: {}\n", args);
+  }
+
   // ScriptEngineInstance will delay load the engines
   openstudio::ScriptEngineInstance rubyEngine("rubyengine", args);
   openstudio::ScriptEngineInstance pythonEngine("pythonengine", args);
 
-  if (!args.empty() && (std::string_view(args[0]) == "labs")) {
+  if (is_labs) {
     CLI::App app{"openstudio"};
     app.name(programName);
 

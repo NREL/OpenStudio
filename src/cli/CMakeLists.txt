@@ -230,6 +230,95 @@ if(BUILD_TESTING)
   )
   set_tests_properties(OpenStudioCLI.Labs.Run_RubyPython PROPERTIES RESOURCE_LOCK "compact_osw")
 
+
+  # ============ #4856 - Forward a Path properly no matter the slashes employed ============
+
+  # Note: I picked the name `test_folder`on purpose, because `\t` is an escape sequence, so I could test this up too.
+  # `.\test_folder\hello.xml`
+  #   ~~          ##
+  #    |           |
+  #   escape       |
+  #                <-- not an escape sequence, neither in C, ruby or Python
+
+  # Test via optparse and check file exists
+  # Historical CLI versions
+    add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.optparse.path_forwardslash
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_optparse_path.rb -x "./test_folder/hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  if (WIN32)
+    # Posix paths don't understand a backward slash anyways
+    add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.optparse.path_backwardslash
+      COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_optparse_path.rb -x ".\\test_folder\\hello.xml"
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
+  endif()
+  # Labs versions
+  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.optparse.path_forwardslash
+    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script execute_ruby_script_optparse_path.rb -x "./test_folder/hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  if (WIN32)
+    add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.optparse.path_backwardslash
+      COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script execute_ruby_script_optparse_path.rb -x ".\\test_folder\\hello.xml"
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
+  endif()
+
+  # Historical CLI versions
+  add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.path_forwardslash
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_with_arguments_test.rb -x "./test_folder/hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  set_tests_properties(OpenStudioCLI.execute_ruby_script.forward_flags.path_forwardslash PROPERTIES
+      PASS_REGULAR_EXPRESSION "Hello from -x, at ./test_folder/hello.xml"
+  )
+
+  add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.path_backwardslash
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_with_arguments_test.rb -x ".\\test_folder\\hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  set_tests_properties(OpenStudioCLI.execute_ruby_script.forward_flags.path_backwardslash PROPERTIES
+    # Cmake regexes require double escaping the \ escape, this tests that `Hello from -x, at .\test_folder\hello.xml` is printed to the console
+    PASS_REGULAR_EXPRESSION "Hello from -x, at .\\\\test_folder\\\\hello.xml"
+  )
+
+  # Labs versions
+  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.path_forwardslash
+    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script execute_ruby_script_with_arguments_test.rb -x "./test_folder/hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.forward_flags.path_forwardslash PROPERTIES
+      PASS_REGULAR_EXPRESSION "Hello from -x, at ./test_folder/hello.xml"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.path_backwardslash
+    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script execute_ruby_script_with_arguments_test.rb -x ".\\test_folder\\hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.forward_flags.path_backwardslash PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from -x, at .\\\\test_folder\\\\hello.xml"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags.path_forwardslash
+    COMMAND $<TARGET_FILE:openstudio> labs execute_python_script execute_python_script_with_arguments_test.py -x "./test_folder/hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags.path_forwardslash PROPERTIES
+      PASS_REGULAR_EXPRESSION "Hello from -x, at ./test_folder/hello.xml"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags.path_backwardslash
+    COMMAND $<TARGET_FILE:openstudio> labs execute_python_script execute_python_script_with_arguments_test.py -x ".\\test_folder\\hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags.path_backwardslash PROPERTIES
+    PASS_REGULAR_EXPRESSION "Hello from -x, at .\\\\test_folder\\\\hello.xml"
+  )
+
+  # ============ EndForward a Path properly no matter the slashes employed ============
+
+
   file(GLOB RUBY_TEST_SRC
     # find all CLI test
     "test/test*.rb"
