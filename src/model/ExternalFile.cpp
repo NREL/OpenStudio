@@ -215,7 +215,7 @@ namespace model {
       return boost::none;
     }
     std::string s;
-    if (copy) {
+    if (copyFile) {
       s = toString(p.filename());
     } else {
       s = filename;
