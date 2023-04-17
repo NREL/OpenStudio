@@ -58,7 +58,7 @@ namespace model {
 
     ScheduleFile(const ExternalFile& externalfile, int column = 1, int rowsToSkip = 0);
 
-    ScheduleFile(const Model& model, const std::string& filename, int column = 1, int rowsToSkip = 0);
+    ScheduleFile(const Model& model, const openstudio::path& filePath, int column = 1, int rowsToSkip = 0);
 
     virtual ~ScheduleFile() = default;
     // Default the copy and move operators because the virtual dtor is explicit

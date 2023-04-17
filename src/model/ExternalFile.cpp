@@ -209,7 +209,7 @@ namespace model {
 
   }  // namespace detail
 
-  boost::optional<ExternalFile> ExternalFile::getExternalFile(const Model& model, const std::string& filename, bool copy) {
+  boost::optional<ExternalFile> ExternalFile::getExternalFile(const Model& model, const std::string& filename, bool copyFile) {
     path p = toPath(filename);
     if (!p.has_filename()) {
       return boost::none;
@@ -231,13 +231,13 @@ namespace model {
     }
 
     try {
-      return ExternalFile(model, filename, copy);
+      return ExternalFile(model, filename, copyFile);
     } catch (std::exception&) {
     }
     return boost::none;
   }
 
-  ExternalFile::ExternalFile(const Model& model, const std::string& filename, bool copy) : ResourceObject(ExternalFile::iddObjectType(), model) {
+  ExternalFile::ExternalFile(const Model& model, const std::string& filename, bool copyFile) : ResourceObject(ExternalFile::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ExternalFile_Impl>());
 
     WorkflowJSON workflow = model.workflowJSON();
@@ -255,7 +255,7 @@ namespace model {
     OS_ASSERT(exists(p));
 
     bool ok;
-    if (copy) {
+    if (copyFile) {
       path destDir;
       std::vector<path> absoluteFilePaths = workflow.absoluteFilePaths();
       if (absoluteFilePaths.empty()) {
