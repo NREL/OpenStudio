@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -167,7 +167,7 @@ std::pair<std::string, std::string> extractScaleAbbreviation(const std::string& 
     }
     std::stringstream regexComposer;
     regexComposer << "^(";
-    if (abbr.find(escapeChar) == 0) {
+    if (abbr.starts_with(escapeChar)) {
       regexComposer << "\\";
     }  // add extra escape character for regex
     regexComposer << abbr << ")";
