@@ -27,7 +27,7 @@ jobs:
         name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310]
         include:
         - name: Ubuntu
-          os: ubuntu-20.04
+          os: ubuntu-22.04
           python-version: 3.8
           allow_failure: false
           extra_cmake_args: "-DCONAN_FIRST_TIME_BUILD_ALL:BOOL=ON"
@@ -237,7 +237,7 @@ jobs:
   upload_python_bindings_to_testpypi:
     needs: python_bindings
     name: Upload to TestPyPi
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
 
     - name: Set up Python ${{ matrix.python-version }}
@@ -294,7 +294,7 @@ jobs:
         name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310]
         include:
         - name: Ubuntu
-          os: ubuntu-20.04
+          os: ubuntu-22.04
           python-version: 3.8
           allow_failure: false
         - name: macOS
@@ -354,7 +354,7 @@ jobs:
     if: contains(github.ref, 'refs/tags')
     needs: test_python_bindings
     name: Upload to PyPi
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
 
     - name: Set up Python ${{ matrix.python-version }}
