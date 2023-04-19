@@ -593,8 +593,7 @@ namespace energyplus {
           auto varHeatingStage = varHeatingStages[i];
           auto stageFlow = varHeatingStage.referenceUnitRatedAirFlowRate();
           if (stageFlow && heatingFlow) {
-            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,
-                                 stageFlow.get() / heatingFlow.get());
+            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, stageFlow / heatingFlow.get());
           } else {
             extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, "Autosize");
           }
@@ -611,8 +610,7 @@ namespace energyplus {
           auto waterToAirHeatingStage = waterToAirHeatingStages[i];
           auto stageFlow = waterToAirHeatingStage.referenceUnitRatedAirFlow();
           if (stageFlow && heatingFlow) {
-            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,
-                                 stageFlow.get() / heatingFlow.get());
+            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, stageFlow / heatingFlow.get());
           } else {
             extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, "Autosize");
           }
@@ -633,8 +631,7 @@ namespace energyplus {
           auto varCoolingStage = varCoolingStages[i];
           auto stageFlow = varCoolingStage.referenceUnitRatedAirFlowRate();
           if (stageFlow && coolingFlow) {
-            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio,
-                                 stageFlow.get() / coolingFlow.get());
+            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, stageFlow / coolingFlow.get());
           } else {
             extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, "Autosize");
           }
@@ -642,8 +639,7 @@ namespace energyplus {
           auto waterToAirCoolingStage = waterToAirCoolingStages[i];
           auto stageFlow = waterToAirCoolingStage.referenceUnitRatedAirFlowRate();
           if (stageFlow && coolingFlow) {
-            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio,
-                                 stageFlow.get() / coolingFlow.get());
+            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, stageFlow / coolingFlow.get());
           } else {
             extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, "Autosize");
           }
