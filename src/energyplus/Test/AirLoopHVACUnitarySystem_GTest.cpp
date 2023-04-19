@@ -776,21 +776,31 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_VSCoils) {
 
   IdfExtensibleGroup eg1 = egs[0];
   EXPECT_EQ(1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg1.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
   EXPECT_EQ(1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg1.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
 
   IdfExtensibleGroup eg2 = egs[1];
   EXPECT_EQ(1, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
   EXPECT_EQ(1, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
 
   IdfExtensibleGroup eg3 = egs[2];
   EXPECT_EQ(1, eg3.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg3.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
   EXPECT_EQ(1, eg3.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg3.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
 
   IdfExtensibleGroup eg4 = egs[3];
   EXPECT_EQ(1, eg4.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg4.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
   EXPECT_EQ(1, eg4.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg4.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
 
   IdfExtensibleGroup eg5 = egs[4];
   EXPECT_EQ(1, eg5.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg5.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
   EXPECT_EQ(1, eg5.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+  EXPECT_EQ("Autosize", eg5.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
 }
