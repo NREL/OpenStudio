@@ -763,7 +763,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_VSCoils) {
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed).size());
 
-  idf_perf = workspace.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed)[0];
+  IdfObject idf_perf = workspace.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed)[0];
 
   EXPECT_EQ(5, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
   EXPECT_EQ(5, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
