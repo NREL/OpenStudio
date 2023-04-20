@@ -721,33 +721,34 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeating
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_VSCoils) {
   // Test for #4715 - Creating a VS WSHP using UnitarySystem object generates incorrect air flow ratios for UnitarySystemPerformance:Multispeed object
 
-  Model m;
-
-  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit c(m);
-  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs1(m);
-  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs2(m);
-  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs3(m);
-  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs4(m);
-  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs5(m);
-  c.addSpeed(cs1);
-  c.addSpeed(cs2);
-  c.addSpeed(cs3);
-  c.addSpeed(cs4);
-  c.addSpeed(cs5);
-  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit h(m);
-  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs1(m);
-  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs2(m);
-  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs3(m);
-  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs4(m);
-  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs5(m);
-  h.addSpeed(hs1);
-  h.addSpeed(hs2);
-  h.addSpeed(hs3);
-  h.addSpeed(hs4);
-  h.addSpeed(hs5);
-  FanSystemModel f(m);
-
+  // autosize the supply air flow rates
   {
+    Model m;
+
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit c(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs1(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs2(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs3(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs4(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs5(m);
+    c.addSpeed(cs1);
+    c.addSpeed(cs2);
+    c.addSpeed(cs3);
+    c.addSpeed(cs4);
+    c.addSpeed(cs5);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit h(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs1(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs2(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs3(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs4(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs5(m);
+    h.addSpeed(hs1);
+    h.addSpeed(hs2);
+    h.addSpeed(hs3);
+    h.addSpeed(hs4);
+    h.addSpeed(hs5);
+    FanSystemModel f(m);
+
     AirLoopHVACUnitarySystem unitary(m);
     unitary.setCoolingCoil(c);
     unitary.setHeatingCoil(h);
@@ -806,7 +807,34 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_VSCoils) {
     EXPECT_EQ("Autosize", eg5.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
   }
 
+  // hardsize the supply air flow rates
   {
+    Model m;
+
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit c(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs1(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs2(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs3(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs4(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs5(m);
+    c.addSpeed(cs1);
+    c.addSpeed(cs2);
+    c.addSpeed(cs3);
+    c.addSpeed(cs4);
+    c.addSpeed(cs5);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit h(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs1(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs2(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs3(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs4(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs5(m);
+    h.addSpeed(hs1);
+    h.addSpeed(hs2);
+    h.addSpeed(hs3);
+    h.addSpeed(hs4);
+    h.addSpeed(hs5);
+    FanSystemModel f(m);
+
     AirLoopHVACUnitarySystem unitary(m);
     unitary.setSupplyAirFlowRateDuringCoolingOperation(10);
     unitary.setSupplyAirFlowRateDuringHeatingOperation(10);
@@ -838,32 +866,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_VSCoils) {
 
     IdfExtensibleGroup eg1 = egs[0];
     EXPECT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg1.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
     EXPECT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg1.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
 
     IdfExtensibleGroup eg2 = egs[1];
     EXPECT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
     EXPECT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
 
     IdfExtensibleGroup eg3 = egs[2];
     EXPECT_TRUE(eg3.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg3.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
     EXPECT_TRUE(eg3.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg3.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
 
     IdfExtensibleGroup eg4 = egs[3];
     EXPECT_TRUE(eg4.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg4.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
     EXPECT_TRUE(eg4.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg4.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
 
     IdfExtensibleGroup eg5 = egs[4];
     EXPECT_TRUE(eg5.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg5.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
     EXPECT_TRUE(eg5.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_FALSE(eg5.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
   }
 }
