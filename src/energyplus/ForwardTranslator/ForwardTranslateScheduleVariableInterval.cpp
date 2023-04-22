@@ -53,7 +53,7 @@ namespace openstudio {
 namespace energyplus {
 
   static unsigned startNewDay(IdfObject& idfObject, unsigned fieldIndex, const Date& date) {
-    const std::string s = fmt::format("Through: {:02d}/{:02d}", date.monthOfYear().value(), date.dayOfMonth());
+    const std::string s = fmt::format("Through: {:02d}/{:02d}", month(date.monthOfYear().value()), date.dayOfMonth());
     idfObject.setString(fieldIndex, s);
     ++fieldIndex;
     idfObject.setString(fieldIndex, "For: AllDays");
