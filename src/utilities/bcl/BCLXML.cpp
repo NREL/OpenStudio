@@ -597,7 +597,7 @@ pugi::xml_document BCLXML::toXML() const {
 
   auto element = docElement.append_child("schema_version");
   auto text = element.text();
-  text.set("3.0");
+  text.set("3.1");
 
   if (m_error) {
     element = docElement.append_child("error");

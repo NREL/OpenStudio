@@ -32,10 +32,11 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include "../core/Path.hpp"
+#include "../core/Compare.hpp"
 #include "../core/Logger.hpp"
 #include "../core/LogMessage.hpp"
 #include "../core/Optional.hpp"
+#include "../core/Path.hpp"
 #include "../core/StringStreamLogSink.hpp"
 #include "../bcl/BCLEnums.hpp"
 
@@ -77,7 +78,11 @@ class UTILITIES_API XMLValidator
 
   static XMLValidator gbxmlValidator();
 
-  static XMLValidator bclXMLValidator(openstudio::BCLXMLType bclXMLType = openstudio::BCLXMLType::MeasureXML, int schemaVersion = 3);
+  static XMLValidator bclXMLValidator(openstudio::BCLXMLType bclXMLType = openstudio::BCLXMLType::MeasureXML,
+                                      const VersionString& schemaVersion = VersionString(3, 1));
+
+  static XMLValidator bclXMLValidator(openstudio::BCLXMLType bclXMLType = openstudio::BCLXMLType::MeasureXML, int schemaVersionMajor = 3,
+                                      int schemaVersionMinor = 1);
 
   //@}
   /** @name Getters */

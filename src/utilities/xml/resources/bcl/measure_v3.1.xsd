@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 (x64) (http://www.altova.com) by kflemin (NREL) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation>Measure.xsd describes the measures that are in the building component library or NREL analysis platform library.</xs:documentation>
+	</xs:annotation>
+	<xs:element name="schema_version" fixed="3.0">
+		<xs:annotation>
+			<xs:documentation>schema version</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="uid" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>universally unique identifier which does not chage</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="version_id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>identifier which changes each time a new version is created</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="version_modified" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation>timestamp at which the current version_id was created</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="xml_checksum" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>checksum of selected xml elements and attributes, used to detect changes to the xml</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="error">
+		<xs:annotation>
+			<xs:documentation>record an error with this component or measure</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>snake cased machine readable name</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="display_name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>user facing name</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="description" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>user facing description</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="modeler_description" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>technical description of implementation details</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="class_name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>for measures only. name of the Ruby class implementing a measure</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="arguments">
+		<xs:annotation>
+			<xs:documentation>for measures only. arguments are computed based on a particular model and passed to the measure at run time.  actual values passed to the measure at run time are not captured here, only properties of the arguments </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="argument" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="name"/>
+							<xs:element ref="display_name"/>
+							<xs:element name="short_name" minOccurs="0"/>
+							<xs:element ref="description" minOccurs="0"/>
+							<xs:element name="type">
+								<xs:annotation>
+									<xs:documentation>type of the argument</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Boolean"/>
+										<xs:enumeration value="Double"/>
+										<xs:enumeration value="Integer"/>
+										<xs:enumeration value="String"/>
+										<xs:enumeration value="Choice"/>
+										<xs:enumeration value="Path"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="units" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>units of the argument value in format parsable by OpenStudio::convert</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="required" type="xs:boolean">
+								<xs:annotation>
+									<xs:documentation>true if the argument is required in order for the measure to run</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="model_dependent" type="xs:boolean" default="false">
+								<xs:annotation>
+									<xs:documentation>true if any of this argument's properties depend on the specific model used.  default_value, choice_values, min_value, and max_value will not be populated for dynamic arguments</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="default_value" type="xs:anySimpleType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>default value for the argument</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="choices" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>list of allowable values</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="choice" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="value" type="xs:anySimpleType">
+														<xs:annotation>
+															<xs:documentation>allowable value</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="display_name" type="xs:string">
+														<xs:annotation>
+															<xs:documentation>user facing name for value</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="min_value" type="xs:anySimpleType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>minimum value</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="max_value" type="xs:anySimpleType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>maximum value</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="masterguide_csi_values">
+		<xs:annotation>
+			<xs:documentation>for components only. values from the MASTERSPEC</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="masterguide_csi_value" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="source">
+		<xs:annotation>
+			<xs:documentation>for components only. source of the data (the origin of the component information)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="0">
+				<xs:element name="manufacturer" type="xs:string" minOccurs="0"/>
+				<xs:element name="model" minOccurs="0"/>
+				<xs:element name="serial_no" minOccurs="0"/>
+				<xs:element name="year" minOccurs="0"/>
+				<xs:element name="url" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="provenances">
+		<xs:annotation>
+			<xs:documentation>provenance is used to enter author information.  </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="provenance" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="author" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>author who uploaded the content, will be equal to the user account on the bcl site</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="datetime" type="xs:dateTime">
+								<xs:annotation>
+									<xs:documentation>date content was uploaded</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="comment" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>general comment</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tags">
+		<xs:annotation>
+			<xs:documentation>tags are used to classify the content using the appropriate taxonomy.  currently only one tag per piece of content is supported.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="tag" type="xs:string" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="attributes">
+		<xs:annotation>
+			<xs:documentation>attributes are descriptors of the content.  attributes should be found in the corresponding taxonomy</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="name" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>user facing attribute name (should be found in appropriate taxonomy)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="value" type="xs:anySimpleType"/>
+							<xs:element name="datatype">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="float"/>
+										<xs:enumeration value="integer"/>
+										<xs:enumeration value="string"/>
+										<xs:enumeration value="boolean"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="units" type="xs:string" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="files">
+		<xs:annotation>
+			<xs:documentation>files lists details on all of the files associated with this piece content</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="file" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="version" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="software_program" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>software program the file is associated with</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="identifier" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>version of software program that this file is associated with</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="min_compatible" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>minimum version of the software this file is compatible with, if not specified assumed to be the version identifier</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="max_compatible" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>maximum version of the software this file is compatible with, if not specified assumed to be any version min_compatible or higher</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="filename" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>name of the file</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="filetype" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>ies, idf, </xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="usage_type">
+								<xs:annotation>
+									<xs:documentation>identifies the directory to search for the file in </xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="script"/>
+										<xs:enumeration value="test"/>
+										<xs:enumeration value="resource"/>
+										<xs:enumeration value="doc"/>
+										<xs:enumeration value="license"/>
+										<xs:enumeration value="readme"/>
+										<xs:enumeration value="readmeerb"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="checksum" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>checksum of the file as computed by OpenStudio::checksum</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="costs">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="cost" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="instance_name" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>name of cost for reference</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="cost_type">
+								<xs:annotation>
+									<xs:documentation>type of cost, includes low, high, average, estimate, etc</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="low"/>
+										<xs:enumeration value="high"/>
+										<xs:enumeration value="average"/>
+										<xs:enumeration value="estimate"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="category">
+								<xs:annotation>
+									<xs:documentation>ex:  operations and maintenance cost, salvage cost, materials cost, installation cost, upgrade cost, etc.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="value" type="xs:float">
+								<xs:annotation>
+									<xs:documentation>cost value based on the supplemntal fields</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="units" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>cost unit. If blank, absolute cost is assumed. ex:  $/ft2, $/person, etc.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="interval" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>number describing the interval on which this cost is incurred.  ex:  1, 6, 12.  Use 0 for onetime costs</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="interval_units" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>interval units. ex:  day, month, year, etc.</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="year(s)"/>
+										<xs:enumeration value="month(s)"/>
+										<xs:enumeration value="day(s)"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="year" type="xs:int" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>source year of the costs</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="start_year" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>define when this cost will start to incur. Useful when you may not want maintenance costs to start until n years after construction</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="end_year" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>define whne this cost will stop incurring.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="location" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>the geographic location where the component was costed (i.e. national, colorado, denver, etc).  By default all values should be national averages.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="currency" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>the currency of the cost.  If blank, USD is assumed.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="source" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>origin from which the cost data came</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="reference_component_name" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>display name of reference component prior to retrofit (for marginal costs)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="reference_component_id" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>ID of reference component prior to retrofit (for marginal costs)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="measure">
+		<xs:annotation>
+			<xs:documentation>root element defining a measure</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="schema_version"/>
+				<xs:element ref="error" minOccurs="0"/>
+				<xs:element ref="name"/>
+				<xs:element ref="uid"/>
+				<xs:element ref="version_id"/>
+				<xs:element ref="version_modified" minOccurs="0"/>
+				<xs:element ref="xml_checksum"/>
+				<xs:element ref="class_name"/>
+				<xs:element ref="display_name"/>
+				<xs:element ref="description"/>
+				<xs:element ref="modeler_description"/>
+				<xs:element ref="arguments"/>
+				<xs:element ref="outputs"/>
+				<xs:element ref="provenances"/>
+				<xs:element ref="tags"/>
+				<xs:element ref="attributes"/>
+				<xs:element ref="files"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="outputs">
+		<xs:annotation>
+			<xs:documentation>for measures ony.  Outputs represent the output values to include in analysis results</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="output" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="name"/>
+							<xs:element ref="display_name"/>
+							<xs:element name="short_name" type="xs:string" minOccurs="0"/>
+							<xs:element ref="description" minOccurs="0"/>
+							<xs:element name="type">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Boolean"/>
+										<xs:enumeration value="Double"/>
+										<xs:enumeration value="Integer"/>
+										<xs:enumeration value="String"/>
+										<xs:enumeration value="Choice"/>
+										<xs:enumeration value="Path"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="units" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>units of the output value in format parsable by OpenStudio::convert</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="model_dependent" type="xs:boolean" default="false">
+								<xs:annotation>
+									<xs:documentation>true if any of this output's properties depend on the specific model used.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

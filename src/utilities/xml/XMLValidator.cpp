@@ -505,14 +505,21 @@ XMLValidator XMLValidator::gbxmlValidator() {
   return XMLValidator(tmpDir / "GreenBuildingXML_Ver6.01.xsd");
 }
 
-XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, int schemaVersion) {
+XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, const VersionString& schemaVersion) {
+  return bclXMLValidator(bclXMLType, schemaVersion.major(), schemaVersion.minor());
+}
+
+XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, int schemaVersionMajor, int schemaVersionMinor) {
   const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
   if (tmpDir.empty()) {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
   }
 
-  if (schemaVersion < 2 || schemaVersion > 3) {
-    LOG_AND_THROW("Unknown schema version " << schemaVersion << ", accepted = [2, 3]");
+  if (schemaVersionMajor < 2 || schemaVersionMajor > 3) {
+    LOG_AND_THROW("Unknown schema major version " << schemaVersionMajor << ", accepted = [2, 3]");
+  }
+  if ((schemaVersionMinor != 0) && !((schemaVersionMajor == 3) && (schemaVersionMinor == 1))) {
+    LOG_AND_THROW("Unknown schema version combination " << schemaVersionMajor << "." << schemaVersionMinor << ", accepted = [2.0, 3.0, 3.1]");
   }
 
   std::string schemaName;
@@ -523,7 +530,7 @@ XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, in
   } else {
     LOG_AND_THROW("Unknown BCLXMLType " << bclXMLType.valueName());
   }
-  schemaName = fmt::format("{}_v{}.xsd", schemaName, schemaVersion);
+  schemaName = fmt::format("{}_v{}.{}.xsd", schemaName, schemaVersionMajor, schemaVersionMinor);
 
   const bool quiet = true;
   ::openstudio::embedded_files::extractFile(fmt::format(":/xml/resources/bcl/{}", schemaName), openstudio::toString(tmpDir), quiet);
