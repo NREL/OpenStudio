@@ -81,9 +81,6 @@ class UTILITIES_API XMLValidator
   static XMLValidator bclXMLValidator(openstudio::BCLXMLType bclXMLType = openstudio::BCLXMLType::MeasureXML,
                                       const VersionString& schemaVersion = VersionString(3, 1));
 
-  static XMLValidator bclXMLValidator(openstudio::BCLXMLType bclXMLType = openstudio::BCLXMLType::MeasureXML, int schemaVersionMajor = 3,
-                                      int schemaVersionMinor = 1);
-
   //@}
   /** @name Getters */
   //@{

@@ -42,6 +42,10 @@
 
 namespace openstudio {
 
+VersionString BCLXML::currentSchemaVersion() {
+  return {3, 1};
+}
+
 BCLXML::BCLXML(const BCLXMLType& bclXMLType)
   : m_bclXMLType(bclXMLType),
     m_uid{removeBraces(openstudio::createUUID())},
@@ -95,7 +99,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
   }
 
   // validate the gbxml prior to reverse translation
-  auto bclXMLValidator = XMLValidator::bclXMLValidator(m_bclXMLType, startingVersion.major());
+  auto bclXMLValidator = XMLValidator::bclXMLValidator(m_bclXMLType, startingVersion);
   if (!bclXMLValidator.validate(xmlPath)) {
     LOG(Warn, "Failed to validate measure.xml at " << xmlPath);
   }
@@ -597,7 +601,8 @@ pugi::xml_document BCLXML::toXML() const {
 
   auto element = docElement.append_child("schema_version");
   auto text = element.text();
-  text.set("3.1");
+  const std::string schemaVersion = BCLXML::currentSchemaVersion().str();
+  text.set(schemaVersion.c_str());
 
   if (m_error) {
     element = docElement.append_child("error");

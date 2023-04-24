@@ -506,14 +506,14 @@ XMLValidator XMLValidator::gbxmlValidator() {
 }
 
 XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, const VersionString& schemaVersion) {
-  return bclXMLValidator(bclXMLType, schemaVersion.major(), schemaVersion.minor());
-}
 
-XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, int schemaVersionMajor, int schemaVersionMinor) {
   const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
   if (tmpDir.empty()) {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
   }
+
+  int schemaVersionMajor = schemaVersion.major();
+  int schemaVersionMinor = schemaVersion.minor();
 
   if (schemaVersionMajor < 2 || schemaVersionMajor > 3) {
     LOG_AND_THROW("Unknown schema major version " << schemaVersionMajor << ", accepted = [2, 3]");

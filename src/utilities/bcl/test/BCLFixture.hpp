@@ -37,6 +37,9 @@
 #include "../../core/Logger.hpp"
 #include "../../core/FileLogSink.hpp"
 
+#include <string>
+#include <vector>
+
 class BCLFixture : public ::testing::Test
 {
  protected:
@@ -54,6 +57,9 @@ class BCLFixture : public ::testing::Test
 
   // set up logging
   REGISTER_LOGGER("BCLFixture");
+
+  static ::testing::AssertionResult checkLogMessagesContain(const std::vector<openstudio::LogMessage>& logMessages,
+                                                            const std::vector<std::string>& searchStrings, bool use_regex = false);
 
  public:
   // This is assigned in SetUp, per test, so doesn't have to be static

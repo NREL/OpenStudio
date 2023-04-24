@@ -125,10 +125,11 @@ TEST_F(BCLFixture, BCLXML_New) {
   EXPECT_TRUE(bclXML.save());
   EXPECT_EQ(versionId, bclXML.versionId());
 
+  // Validate any newly written XML
   boost::optional<BCLXML> copy = BCLXML::load(xmlPath);
   ASSERT_TRUE(copy);
 
-  auto bclXMLValidator = XMLValidator::bclXMLValidator(BCLXMLType::MeasureXML, 3);
+  auto bclXMLValidator = XMLValidator::bclXMLValidator(BCLXMLType::MeasureXML, BCLXML::currentSchemaVersion());
   EXPECT_TRUE(bclXMLValidator.validate(xmlPath));
   EXPECT_EQ(0, bclXMLValidator.errors().size()) << [&bclXMLValidator]() {
     std::string s;
@@ -178,4 +179,47 @@ TEST_F(BCLFixture, BCLXML_sorted_files) {
   EXPECT_EQ("fileB", savedFiles[1]);
   EXPECT_EQ("fileC", savedFiles[2]);
   EXPECT_EQ("fileD", savedFiles[3]);
+}
+
+TEST_F(BCLFixture, BCLXML_validation_historical) {
+
+  // This has an ISO8601 datetime instead of a valid xs:dateTime
+  // <version_modified>20170316T161836Z</version_modified>
+  const openstudio::path xmlPath = resourcesPath() / toPath("/utilities/BCL/Measures/v3/IncreaseRoofRValue/measure.xml");
+  const boost::optional<BCLXML> bclXML = BCLXML::load(xmlPath);
+  ASSERT_TRUE(bclXML);
+
+  // Validate with 3.0 schema: it should work
+  {
+    auto bclXMLValidator = XMLValidator::bclXMLValidator(BCLXMLType::MeasureXML, VersionString(3, 0));
+    EXPECT_TRUE(bclXMLValidator.validate(xmlPath));
+    EXPECT_EQ(0, bclXMLValidator.errors().size()) << [&bclXMLValidator]() {
+      std::string s;
+      for (auto& logMessage : bclXMLValidator.errors()) {
+        s += logMessage.logMessage() + "\n";
+      }
+      return s;
+    }();
+    EXPECT_EQ(0, bclXMLValidator.warnings().size());
+  }
+
+  // Validate with 3.1 schema: it shouldn't work
+  {
+    auto bclXMLValidator = XMLValidator::bclXMLValidator(BCLXMLType::MeasureXML, VersionString(3, 1));
+    EXPECT_FALSE(bclXMLValidator.validate(xmlPath));
+
+    EXPECT_EQ(2, bclXMLValidator.errors().size()) << [&bclXMLValidator]() {
+      std::string s;
+      for (auto& logMessage : bclXMLValidator.errors()) {
+        s += logMessage.logMessage() + "\n";
+      }
+      return s;
+    }();
+    EXPECT_TRUE(checkLogMessagesContain(bclXMLValidator.errors(),
+                                        {
+                                          "Element 'schema_version': The actual value '3.0' does not match the fixed value constraint '3.1'",
+                                          "Element 'version_modified': '20170316T161836Z' is not a valid value of the atomic type 'xs:dateTime",
+                                        }));
+    EXPECT_EQ(0, bclXMLValidator.warnings().size());
+  }
 }

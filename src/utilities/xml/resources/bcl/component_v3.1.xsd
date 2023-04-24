@@ -4,7 +4,7 @@
 	<xs:annotation>
 		<xs:documentation>Component.xsd describes the components that are in the building component library or NREL analysis platform library.</xs:documentation>
 	</xs:annotation>
-	<xs:element name="schema_version" fixed="3.0">
+	<xs:element name="schema_version" fixed="3.1">
 		<xs:annotation>
 			<xs:documentation>schema version</xs:documentation>
 		</xs:annotation>

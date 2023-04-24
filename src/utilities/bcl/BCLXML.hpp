@@ -78,6 +78,9 @@ class UTILITIES_API BCLXML
   /// Decode a string written in xml
   static std::string decodeString(const std::string& txt);
 
+  // Returns the component/measure XSD schema version currently in use when writting a new xml.
+  static VersionString currentSchemaVersion();
+
   //@}
   /** @name Destructor */
   //@{
