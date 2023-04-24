@@ -69,7 +69,11 @@ namespace model {
 
     static std::vector<std::string> columnSeparatorValues();
 
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
+    /** This factory method will look for an existing ExternalFile with the same file name. If not it will try to create one.
+      * - If copyFile is true, the file will be copied to the first entry of the WorkflowJSON's absoluteFilePaths() (or absoluteRootDir() if empty);
+      * - If copyFile is false, it assumes this is an absolute path.
+      * In both cases, the filename should resolve to a valid path or this will return an empty optional. */
+    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename, bool copyFile = true);
 
     /** @name Getters */
     //@{
@@ -116,7 +120,7 @@ namespace model {
    private:
     REGISTER_LOGGER("openstudio.model.ExternalFile");
 
-    ExternalFile(const Model& model, const std::string& filename);
+    ExternalFile(const Model& model, const std::string& filename, bool copyFile = true);
 
     bool setFileName(const std::string& fileName);
   };

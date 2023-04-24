@@ -136,6 +136,9 @@ namespace model {
     path ExternalFile_Impl::filePath() const {
       path result;
       path fname = toPath(fileName());
+      if (openstudio::filesystem::is_regular_file(fname)) {
+        return fname;
+      }
       std::vector<path> absoluteFilePaths = this->model().workflowJSON().absoluteFilePaths();
       if (absoluteFilePaths.empty()) {
         result = this->model().workflowJSON().absoluteRootDir() / fname;
@@ -144,7 +147,7 @@ namespace model {
         // (eg goes to hardcoded paths, then potentially generated_files, then files, etc.)
         for (const openstudio::path& dirpath : absoluteFilePaths) {
           path p = dirpath / fname;
-          if (openstudio::filesystem::exists(p) || openstudio::filesystem::is_regular_file(p)) {
+          if (openstudio::filesystem::is_regular_file(p)) {
             result = p;
             break;
           }
@@ -206,12 +209,17 @@ namespace model {
 
   }  // namespace detail
 
-  boost::optional<ExternalFile> ExternalFile::getExternalFile(const Model& model, const std::string& filename) {
+  boost::optional<ExternalFile> ExternalFile::getExternalFile(const Model& model, const std::string& filename, bool copyFile) {
     path p = toPath(filename);
     if (!p.has_filename()) {
       return boost::none;
     }
-    std::string s = toString(p.filename());
+    std::string s;
+    if (copyFile) {
+      s = toString(p.filename());
+    } else {
+      s = filename;
+    }
 
     // this factory method will give us better control if we start doing things like copying files
     for (const auto& externalFile : model.getConcreteModelObjects<ExternalFile>()) {
@@ -223,13 +231,13 @@ namespace model {
     }
 
     try {
-      return ExternalFile(model, filename);
+      return ExternalFile(model, filename, copyFile);
     } catch (std::exception&) {
     }
     return boost::none;
   }
 
-  ExternalFile::ExternalFile(const Model& model, const std::string& filename) : ResourceObject(ExternalFile::iddObjectType(), model) {
+  ExternalFile::ExternalFile(const Model& model, const std::string& filename, bool copyFile) : ResourceObject(ExternalFile::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ExternalFile_Impl>());
 
     WorkflowJSON workflow = model.workflowJSON();
@@ -246,40 +254,45 @@ namespace model {
     }
     OS_ASSERT(exists(p));
 
-    path destDir;
-    std::vector<path> absoluteFilePaths = workflow.absoluteFilePaths();
-    if (absoluteFilePaths.empty()) {
-      destDir = workflow.absoluteRootDir();
-    } else {
-      destDir = absoluteFilePaths[0];
-    }
-    path dest = destDir / p.filename();
-
-    if (exists(dest)) {
-      if (checksum(p) != checksum(dest)) {
-        this->remove();
-        LOG_AND_THROW("File \"" << p.filename() << "\" already exists in \"" << destDir << "\"");
-      }
-    } else {
-
-      try {
-        makeParentFolder(dest, path(), true);
-      } catch (std::exception&) {
-        this->remove();
-        LOG_AND_THROW("Failed to created parent folder at \"" << dest << "\"");
-      }
-      try {
-        boost::filesystem::copy(p, dest);
-      } catch (std::exception&) {
-        this->remove();
-        LOG_AND_THROW("Failed to copy file from \"" << p << "\" to \"" << dest << "\"");
-      }
-    }
-    OS_ASSERT(exists(dest));
-
     bool ok;
-    ok = setFileName(toString(dest.filename()));
-    OS_ASSERT(ok);
+    if (copyFile) {
+      path destDir;
+      std::vector<path> absoluteFilePaths = workflow.absoluteFilePaths();
+      if (absoluteFilePaths.empty()) {
+        destDir = workflow.absoluteRootDir();
+      } else {
+        destDir = absoluteFilePaths[0];
+      }
+      path dest = destDir / p.filename();
+
+      if (exists(dest)) {
+        if (checksum(p) != checksum(dest)) {
+          this->remove();
+          LOG_AND_THROW("File \"" << p.filename() << "\" already exists in \"" << destDir << "\"");
+        }
+      } else {
+
+        try {
+          makeParentFolder(dest, path(), true);
+        } catch (std::exception&) {
+          this->remove();
+          LOG_AND_THROW("Failed to created parent folder at \"" << dest << "\"");
+        }
+        try {
+          boost::filesystem::copy(p, dest);
+        } catch (std::exception&) {
+          this->remove();
+          LOG_AND_THROW("Failed to copy file from \"" << p << "\" to \"" << dest << "\"");
+        }
+      }
+      OS_ASSERT(exists(dest));
+
+      ok = setFileName(toString(dest.filename()));
+      OS_ASSERT(ok);
+    } else {
+      ok = setFileName(filename);
+      OS_ASSERT(ok);
+    }
   }
 
   IddObjectType ExternalFile::iddObjectType() {
