@@ -136,7 +136,7 @@ namespace model {
     path ExternalFile_Impl::filePath() const {
       path result;
       path fname = toPath(fileName());
-      if (openstudio::filesystem::exists(fname) || openstudio::filesystem::is_regular_file(fname)) {
+      if (openstudio::filesystem::is_regular_file(fname)) {
         return fname;
       }
       std::vector<path> absoluteFilePaths = this->model().workflowJSON().absoluteFilePaths();
@@ -147,7 +147,7 @@ namespace model {
         // (eg goes to hardcoded paths, then potentially generated_files, then files, etc.)
         for (const openstudio::path& dirpath : absoluteFilePaths) {
           path p = dirpath / fname;
-          if (openstudio::filesystem::exists(p) || openstudio::filesystem::is_regular_file(p)) {
+          if (openstudio::filesystem::is_regular_file(p)) {
             result = p;
             break;
           }
