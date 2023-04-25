@@ -3,6 +3,9 @@
 	"seed_file": "seb.osm",
 	"steps": [
 		{
+			"measure_dir_name": "PythonPluginRuby"
+		},
+		{
 			"measure_dir_name": "PythonPluginPython"
 		}
 	]

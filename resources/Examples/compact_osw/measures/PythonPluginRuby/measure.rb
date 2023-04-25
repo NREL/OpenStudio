@@ -92,7 +92,7 @@ class PythonPluginRuby < OpenStudio::Measure::ModelMeasure
 
     # Write it to a temporary directory so we don't pollute the current directory
     # ExternalFile will copy it
-    pluginPath = File.join(Dir.tmpdir, 'python_plugin_program2.py')
+    pluginPath = File.join(Dir.tmpdir, 'python_plugin_program_erb.py')
     File.open(pluginPath, 'w') do |file|
       file << out_py
     end
