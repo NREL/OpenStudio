@@ -1,6 +1,7 @@
 from pyenergyplus.plugin import EnergyPlusPlugin
 
-import os, sys
+import os
+import sys
 sys.path.append('C:/Python38/Lib/site-packages') # this should (needs to?) be same version as E+'s version
 import pandas as pd
 
