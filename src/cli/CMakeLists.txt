@@ -337,6 +337,30 @@ if(BUILD_TESTING)
 
   # ============ EndForward a Path properly no matter the slashes employed ============
 
+  # ============ Native Ruby Gems / Python Modules - C extensions =============
+  if (Python_NumPy_FOUND)
+    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.explicit_sys_path_insert
+      COMMAND $<TARGET_FILE:openstudio> labs execute_python_script execute_python_script_with_numpy.py ${Python_STDLIB}
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
+
+    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_path
+      COMMAND $<TARGET_FILE:openstudio> labs
+                --python_path "${Python_STDLIB}/site-packages"
+                --python_path "${Python_STDLIB}/lib-dynload"
+                execute_python_script execute_python_script_with_numpy.py
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
+
+    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_home
+      COMMAND $<TARGET_FILE:openstudio> labs
+                --python_home "${Python_ROOT_DIR}"
+                execute_python_script execute_python_script_with_numpy.py
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
+  else()
+    message(AUTHOR_WARNING "Cannot run the python numpy test, as numpy isn't installed on your system python")
+  endif()
 
   file(GLOB RUBY_TEST_SRC
     # find all CLI test
