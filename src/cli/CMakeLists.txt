@@ -339,22 +339,42 @@ if(BUILD_TESTING)
 
   # ============ Native Ruby Gems / Python Modules - C extensions =============
   if (Python_NumPy_FOUND)
+
+    if(NOT Python_ROOT_DIR)
+      # Python_STDLIB: we expect it to be
+      # Unix: ~/.pyenv/versions/3.8.12/lib/python3.8
+      # Windows C:\Python38\Lib
+      cmake_path(GET Python_STDLIB PARENT_PATH Python_ROOT_DIR)
+      if(UNIX)
+        cmake_path(GET Python_ROOT_DIR PARENT_PATH Python_ROOT_DIR)
+      endif()
+    endif()
+
     add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.explicit_sys_path_insert
       COMMAND $<TARGET_FILE:openstudio> labs execute_python_script execute_python_script_with_numpy.py ${Python_STDLIB}
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
     )
 
-    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_path
-      COMMAND $<TARGET_FILE:openstudio> labs
-                --python_path "${Python_STDLIB}/site-packages"
-                --python_path "${Python_STDLIB}/lib-dynload"
-                execute_python_script execute_python_script_with_numpy.py
-      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
-    )
+    if(UNIX)
+      add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_path
+        COMMAND $<TARGET_FILE:openstudio> labs
+                  --python_path "${Python_SITELIB}" # == "${Python_STDLIB}/site-packages"
+                  --python_path "${Python_STDLIB}/lib-dynload"
+                  execute_python_script execute_python_script_with_numpy.py
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+      )
+    else()
+      add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_path
+        COMMAND $<TARGET_FILE:openstudio> labs
+                  --python_path "$<SHELL_PATH:${Python_SITELIB}>"
+                  execute_python_script execute_python_script_with_numpy.py
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+      )
+    endif()
 
     add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_home
       COMMAND $<TARGET_FILE:openstudio> labs
-                --python_home "${Python_ROOT_DIR}"
+                --python_home "$<SHELL_PATH:${Python_ROOT_DIR}>"
                 execute_python_script execute_python_script_with_numpy.py
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
     )
