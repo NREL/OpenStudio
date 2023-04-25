@@ -30,9 +30,12 @@ void addToPythonPath(const openstudio::path& includePath) {
   if (!includePath.empty()) {
     PyObject* sys = PyImport_ImportModule("sys");
     PyObject* sysPath = PyObject_GetAttrString(sys, "path");
+    Py_DECREF(sys);  // PyImport_ImportModule returns a new reference, decrement it
+
     // fmt::print("Prepending '{}' to sys.path\n", includePath);
     PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.string().c_str());
     PyList_Insert(sysPath, 0, unicodeIncludePath);
+    Py_DECREF(sysPath);  // PyObject_GetAttrString returns a new reference, decrement it
   }
 }
 
@@ -41,13 +44,13 @@ void PythonEngine::pyimport(const std::string& importName, const std::string& in
   PyImport_ImportModule(importName.c_str());
 }
 
-void PythonEngine::setupPythonPath(const std::vector<openstudio::path>& includeDirs, const openstudio::path& pythonHomeDir) {
-  for (const auto& includeDir : includeDirs) {
-    addToPythonPath(includeDir);
-  }
-  if (!pythonHomeDir.empty()) {
-    wchar_t* a = Py_DecodeLocale(pythonHomeDir.generic_string().c_str(), nullptr);
-    Py_SetPythonHome(a);
+void PythonEngine::setupPythonPath(const std::vector<openstudio::path>& includeDirs) {
+
+  // Iterate in reverse order since addToPythonPath always inserts at pos 0
+  // --python_path path1 --python_path path2  =>  includeDirs = ["path1", "path2"]
+  // std::ranges::reverse_view needs modern compilers
+  for (auto it = includeDirs.rbegin(); it != includeDirs.rend(); it++) {
+    addToPythonPath(*it);
   }
 }
 
