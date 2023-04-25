@@ -150,6 +150,7 @@ int main(int argc, char* argv[]) {
     experimentalApp
       ->add_option("-I,--include", includeDirs, "Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     std::vector<openstudio::path> gemPathDirs;
@@ -157,21 +158,25 @@ int main(int argc, char* argv[]) {
       ->add_option("--gem_path", gemPathDirs,
                    "Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     openstudio::path gemHomeDir;
     experimentalApp->add_option("--gem_home", gemHomeDir, "Set GEM_HOME environment variable")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     openstudio::path bundleGemFilePath;
     experimentalApp->add_option("--bundle", bundleGemFilePath, "Use bundler for GEMFILE")
       ->option_text("GEMFILE")
+      ->check(CLI::ExistingFile)
       ->group(rubySpecificOptionsGroupName);
 
     openstudio::path bundleGemDirPath;
     experimentalApp->add_option("--bundle_path", bundleGemDirPath, "Use bundler installed gems in BUNDLE_PATH")
       ->option_text("BUNDLE_PATH")
+      ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     // std::vector<std::string>
@@ -204,11 +209,13 @@ int main(int argc, char* argv[]) {
       ->add_option("--python_path", pythonPathDirs,
                    "Add additional directory to add to front of PYTHONPATH environment variable (may be used more than once)")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(pythonSpecificOptionsGroupName);
 
     openstudio::path pythonHomeDir;
     experimentalApp->add_option("--python_home", pythonHomeDir, "Set PYTHONHOME environment variable")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(pythonSpecificOptionsGroupName);
 
     // This is a callback that's stored on the ScriptEngineInstance, triggered only the first time
