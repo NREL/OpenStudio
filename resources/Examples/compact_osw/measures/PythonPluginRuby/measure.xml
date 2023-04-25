@@ -3,8 +3,8 @@
   <schema_version>3.0</schema_version>
   <name>python_plugin_ruby</name>
   <uid>42a4a936-5f9a-48fd-9157-e4981b9a9dca</uid>
-  <version_id>82178d8f-d734-4cc4-83eb-838a1b55962b</version_id>
-  <version_modified>20230417T222134Z</version_modified>
+  <version_id>b04ea659-cd03-4519-ab08-d78579cbe6fa</version_id>
+  <version_modified>20230425T225141Z</version_modified>
   <xml_checksum>5872977E</xml_checksum>
   <class_name>PythonPluginRuby</class_name>
   <display_name>Python Plugin Ruby.</display_name>
@@ -48,11 +48,12 @@
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>3.6.0</identifier>
+        <min_compatible>3.6.0</min_compatible>
       </version>
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>C934F469</checksum>
+      <checksum>CF18DB98</checksum>
     </file>
   </files>
 </measure>

@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <measure>
   <schema_version>3.0</schema_version>
+  <error>Unable to locate primary Ruby script path for BCLMeasure 'python_plugin_python' located at C:/OpenStudio/OpenStudio/resources/Examples/compact_osw/measures/PythonPluginPython.</error>
   <name>python_plugin_python</name>
   <uid>42a4a936-5f9a-48fd-9157-e4981b9a9dca</uid>
-  <version_id>1eb1e662-31e0-466a-9f4b-6157483ea168</version_id>
-  <version_modified>20230407T213019Z</version_modified>
+  <version_id>81c577cc-60fd-4619-9e70-f2718323cbee</version_id>
+  <version_modified>20230425T225152Z</version_modified>
   <xml_checksum>33A29C78</xml_checksum>
   <class_name>PythonPluginPython</class_name>
   <display_name>Increase R-value of Insulation for Roofs by a Specified Percentage.</display_name>
@@ -14,10 +15,14 @@
     <argument>
       <name>r_value</name>
       <display_name>Percentage Increase of R-value for Roof Insulation.</display_name>
+      <description></description>
       <type>Double</type>
+      <units></units>
       <required>true</required>
       <model_dependent>false</model_dependent>
       <default_value>30</default_value>
+      <min_value></min_value>
+      <max_value></max_value>
     </argument>
   </arguments>
   <outputs />
@@ -62,7 +67,7 @@
       <filename>measure.py</filename>
       <filetype>py</filetype>
       <usage_type>script</usage_type>
-      <checksum>BC248E86</checksum>
+      <checksum>A2B283E7</checksum>
     </file>
   </files>
 </measure>
