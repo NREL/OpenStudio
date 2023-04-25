@@ -219,8 +219,9 @@ int main(int argc, char* argv[]) {
       ->group(pythonSpecificOptionsGroupName);
 
     // This is a callback that's stored on the ScriptEngineInstance, triggered only the first time
-    std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs, &pythonHomeDir]() {
-      pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
+    std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs]() {
+      // pythonHomeDir is retrieved from (argc, argv) actually, as Py_SetPythonHome has to be called before Py_Initialize
+      pythonEngine->setupPythonPath(pythonPathDirs);
       pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
       pythonEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
       pythonEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
