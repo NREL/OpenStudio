@@ -38,7 +38,7 @@ struct DynamicLibrary
 #ifdef __linux__
     if (m_location.filename().generic_string().find("python") != std::string::npos) {
       // https://stackoverflow.com/questions/67891197/ctypes-cpython-39-x86-64-linux-gnu-so-undefined-symbol-pyfloat-type-in-embedd
-      flags = RTLD_GLOBAL | RTLD_NOW;
+      flags = RTLD_LAZY | RTLD_GLOBAL;
     }
 #endif
     m_handle = {dlopen(m_location.c_str(), flags), m_handle_deleter};
