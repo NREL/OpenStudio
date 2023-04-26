@@ -340,7 +340,7 @@ if(BUILD_TESTING)
   # ============ Native Ruby Gems / Python Modules - C extensions =============
   if (Python_NumPy_FOUND)
 
-    if(NOT Python_ROOT_DIR)
+    if(NOT EXISTS "${Python_ROOT_DIR}")
       # Python_STDLIB: we expect it to be
       # Unix: ~/.pyenv/versions/3.8.12/lib/python3.8 or
       #       or on CI: /usr/lib/python3.8/ ... with numpy if install via pip3 and not apt install python3-numpy in `/usr/local/lib/python3.8/dist-packages/`
