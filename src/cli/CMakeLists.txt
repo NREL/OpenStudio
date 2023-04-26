@@ -352,7 +352,11 @@ if(BUILD_TESTING)
     endif()
 
     if(UNIX)
-      set(PYTHON_PATH "${Python_SITELIB}" "${Python_STDLIB}/lib-dynload")
+      if(EXISTS "${Python_SITELIB}")
+        set(PYTHON_PATH "${Python_SITELIB}" "${Python_STDLIB}/lib-dynload")
+      else()
+        set(PYTHON_PATH "${Python_STDLIB}/lib-dynload")
+      endif()
 
       if(NOT APPLE)
         set(EXTRA_LOCAL_DIST "/usr/local/lib/python3.8/dist-packages")
