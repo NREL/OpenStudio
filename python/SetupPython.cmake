@@ -35,6 +35,10 @@ else()
   endif()
 endif()
 
+if (PYTHON_INSTALL_NATIVE_MODULES)
+  execute_process(COMMAND ${CMAKE_COMMAND} -E env --unset=PIP_REQUIRE_VIRTUALENV ${Python_EXECUTABLE} -m pip install --target=${ENERGYPLUS_DIR}/python_standard_lib --upgrade jinja2 numpy pandas pip)
+endif()
+
 get_filename_component(Python_PROGRAM_NAME ${Python_EXECUTABLE} NAME)
 
 get_filename_component(RESOLVED_PYTHON_LIBRARY "${Python_LIBRARIES}" REALPATH)
