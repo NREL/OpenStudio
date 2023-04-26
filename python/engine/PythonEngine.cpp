@@ -90,6 +90,9 @@ PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), p
   if (pythonHomePassed) {
     addToPythonPath(pathToPythonPackages);
   }
+#if defined(__APPLE__) || defined(__linux___) || defined(__unix__)
+  addToPythonPath(pathToPythonPackages / "lib-dynload");
+#endif
 
   PyObject* m = PyImport_AddModule("__main__");
   if (m == nullptr) {
