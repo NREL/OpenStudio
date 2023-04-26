@@ -342,7 +342,8 @@ if(BUILD_TESTING)
 
     if(NOT Python_ROOT_DIR)
       # Python_STDLIB: we expect it to be
-      # Unix: ~/.pyenv/versions/3.8.12/lib/python3.8
+      # Unix: ~/.pyenv/versions/3.8.12/lib/python3.8 or
+      #       or on CI: /usr/lib/python3.8/ ... with numpy if install via pip3 and not apt install python3-numpy in `/usr/local/lib/python3.8/dist-packages/`
       # Windows C:\Python38\Lib
       cmake_path(GET Python_STDLIB PARENT_PATH Python_ROOT_DIR)
       if(UNIX)
@@ -350,27 +351,33 @@ if(BUILD_TESTING)
       endif()
     endif()
 
+    if(UNIX)
+      set(PYTHON_PATH "${Python_SITELIB}" "${Python_STDLIB}/lib-dynload")
+
+      if(NOT APPLE)
+        set(EXTRA_LOCAL_DIST "/usr/local/lib/python3.8/dist-packages")
+        if (EXISTS "${EXTRA_LOCAL_DIST}")
+          list(APPEND PYTHON_PATH "${EXTRA_LOCAL_DIST}")
+        endif()
+      endif()
+    else()
+      set(PYTHON_PATH "$<SHELL_PATH:${Python_SITELIB}>")
+    endif()
+
+    message(DEBUG "PYTHON_PATH=${PYTHON_PATH}")
+
     add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.explicit_sys_path_insert
       COMMAND $<TARGET_FILE:openstudio> labs execute_python_script execute_python_script_with_numpy.py ${Python_STDLIB}
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
     )
 
-    if(UNIX)
-      add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_path
-        COMMAND $<TARGET_FILE:openstudio> labs
-                  --python_path "${Python_SITELIB}" # == "${Python_STDLIB}/site-packages"
-                  --python_path "${Python_STDLIB}/lib-dynload"
-                  execute_python_script execute_python_script_with_numpy.py
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
-      )
-    else()
-      add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_path
-        COMMAND $<TARGET_FILE:openstudio> labs
-                  --python_path "$<SHELL_PATH:${Python_SITELIB}>"
-                  execute_python_script execute_python_script_with_numpy.py
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
-      )
-    endif()
+    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_path
+      COMMAND $<TARGET_FILE:openstudio> labs
+                "$<$<BOOL:${PYTHON_PATH}>:--python_path;$<JOIN:${PYTHON_PATH},;--python_path;>>"
+                execute_python_script execute_python_script_with_numpy.py
+      COMMAND_EXPAND_LISTS
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
 
     add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_home
       COMMAND $<TARGET_FILE:openstudio> labs
