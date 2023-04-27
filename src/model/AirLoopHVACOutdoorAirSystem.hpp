@@ -63,6 +63,9 @@ namespace model {
    */
     explicit AirLoopHVACOutdoorAirSystem(Model& model, const ControllerOutdoorAir& controller);
 
+    /** A default ControllerOutdoorAir will be created for you */
+    explicit AirLoopHVACOutdoorAirSystem(Model& model);
+
     virtual ~AirLoopHVACOutdoorAirSystem() = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& other) = default;
@@ -93,53 +96,53 @@ namespace model {
     /** Returns the optional ModelObject attached to the return air port. **/
     boost::optional<ModelObject> returnAirModelObject();
 
-    /** Returns the optional ModelObject attached to the outdoor air port. **/
+    /** Returns the optional ModelObject attached to the outdoor air port.
+     *  This is NOT the same as the outboardOANode (unless there isn't nothing on the outdoor air stream)
+     *  It is the oa node closest to the OA system **/
     boost::optional<ModelObject> outdoorAirModelObject();
 
-    /** Returns the optional ModelObject attached to the relief air port. **/
+    /** Returns the optional ModelObject attached to the relief air port.
+     *  This is NOT the same as the outboardReliefNode (unless there isn't nothing on the relief stream)
+     *  It is the relief node closest to the OA system **/
     boost::optional<ModelObject> reliefAirModelObject();
 
     /** Returns the optional ModelObject attached to the mixer air port. **/
     boost::optional<ModelObject> mixedAirModelObject();
 
     /** Returns the most outboard outdoor air Node. **/
-    boost::optional<Node> outboardOANode() const;
+    boost::optional<Node> outboardOANode() const;  // TODO: shouldn't be optional
 
     /** Returns the most outboard relief air Node. **/
-    boost::optional<Node> outboardReliefNode() const;
+    boost::optional<Node> outboardReliefNode() const;  // TODO: shouldn't be optional
 
-    /** Returns a vector of model objects that are on the path of the incoming outdoor air stream. **/
-    std::vector<ModelObject> oaComponents() const;
+    /** Returns a vector of model objects that are on the path of the incoming outdoor air stream.
+     * This is orderded like the airflow: from the outdoorOANode (OA Intake) towards the OASystem itself **/
+    std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-    /** Returns a vector of model objects that are on the path of the outgoing relief air stream. **/
-    std::vector<ModelObject> reliefComponents() const;
+    /** Returns a vector of model objects that are on the path of the outgoing relief air stream.
+      * This is orderded like the airflow: from the OASystem itself towards the outboardReliefNode (Relief to Outside) **/
+    std::vector<ModelObject> reliefComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
     /** Returns a vector that is the concatenation of oaComponents() and reliefComponents(). **/
-    std::vector<ModelObject> components() const;
+    std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
     /** Returns the optional ModelObject with the Handle given.  The optional
    *  will be false if the given handle does not correspond to the a ModelObject
    *  that is not part of the outdoor air system.
    **/
-    boost::optional<ModelObject> component(openstudio::Handle handle);
+    boost::optional<ModelObject> component(openstudio::Handle handle) const;
 
     /** Returns the optional ModelObject with the Handle given.  The optional
    *  will be false if the given handle does not correspond to the a ModelObject
    *  that is not part of the supply side of the outdoor air system.
    **/
-    boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
+    boost::optional<ModelObject> oaComponent(openstudio::Handle handle) const;
 
     /** Returns the optional ModelObject with the Handle given.  The optional
    *  will be false if the given handle does not correspond to the a ModelObject
    *  that is not part of the supply side of the outdoor air system.
    **/
-    boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
-
-    virtual bool addToNode(Node& node);
-
-    virtual std::vector<openstudio::IdfObject> remove();
-
-    virtual ModelObject clone(Model model) const;
+    boost::optional<ModelObject> reliefComponent(openstudio::Handle handle) const;
 
     /** Returns the ControllerOutdoorAir object associated with the AirLoopHVACOutdoorAirSystem. **/
     ControllerOutdoorAir getControllerOutdoorAir() const;
@@ -148,7 +151,7 @@ namespace model {
     bool setControllerOutdoorAir(const ControllerOutdoorAir& controllerOutdoorAir);
 
     /** Reimplemented from HVACComponent. **/
-    boost::optional<AirLoopHVAC> airLoop() const;
+    boost::optional<AirLoopHVAC> airLoop() const;  // TODO: this shouldn't exist!!!
 
     AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
