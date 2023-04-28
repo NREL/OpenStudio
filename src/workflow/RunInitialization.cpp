@@ -114,6 +114,9 @@ void OSWorkflow::runInitialization() {
     LOG(Debug, "No valid weather file defined in either the osm or osw");
   }
 
+  // Set a clone of the WorkflowJSON for the model, so that it finds the filePaths (such as generated_files we added above)
+  model.setWorkflowJSON(workflowJSON.clone());
+
   // Tell the workflowJSON we have started, it'll log the start time and reset the stepResults
   workflowJSON.start();
 }
