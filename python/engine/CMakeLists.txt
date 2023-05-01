@@ -34,8 +34,9 @@ target_link_libraries(
   openstudio_workflow
   openstudiolib
   CONAN_PKG::fmt
-  ${ALL_PYTHON_BINDING_TARGETS}
-  Python::Python
+  openstudio_pylib
+  #${ALL_PYTHON_BINDING_TARGETS}
+  #Python::Python
 )
 
 # tp_print is deprecated at of 3.8.

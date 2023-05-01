@@ -1,0 +1,12 @@
+#include <vector>
+#include <string>
+
+namespace openstudio {
+namespace python {
+
+static const std::vector<std::string> moduleNames = {
+  ${PYTHON_MODULE_NAMES_INIT_STRING}
+};
+
+} // python
+} // openstudio

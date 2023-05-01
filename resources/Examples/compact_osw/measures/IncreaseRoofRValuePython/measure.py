@@ -62,22 +62,26 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
             return False
 
         # create an array of roofs and find range of starting construction R-value (not just insulation layer)
+        handles = model.handles()
         surfaces = model.getSurfaces()
+        return True
         exterior_surfaces = []
         exterior_surface_constructions = []
         exterior_surface_construction_names = []
         roof_resistance = []
-        for surface in surfaces:
-            if surface.outsideBoundaryCondition() != "Outdoors" or surface.surfaceType() != "RoofCeiling":
-                continue
-            exterior_surfaces.append(surface)
-            roof_const = surface.construction().get()
-            # only add construction if it hasn't been added yet
-            if not roof_const.nameString() in exterior_surface_construction_names:
-                exterior_surface_constructions.append(roof_const.to_Construction().get())
 
-            exterior_surface_construction_names.append(roof_const.nameString())
-            roof_resistance.append(1.0 / roof_const.thermalConductance().get())
+        #for surface in surfaces:
+            #if surface.outsideBoundaryCondition() != "Outdoors" or surface.surfaceType() != "RoofCeiling":
+            #    continue
+            #exterior_surfaces.append(surface)
+            #roof_const = surface.construction().get()
+            ## only add construction if it hasn't been added yet
+            #if not roof_const.nameString() in exterior_surface_construction_names:
+            #    exterior_surface_constructions.append(roof_const.to_Construction().get())
+
+            #exterior_surface_construction_names.append(roof_const.nameString())
+            #roof_resistance.append(1.0 / roof_const.thermalConductance().get())
+
 
         # nothing will be done if there are no exterior surfaces
         if not exterior_surfaces:
