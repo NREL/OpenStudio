@@ -482,8 +482,6 @@ namespace model {
     }
 
     bool AirLoopHVACOutdoorAirSystem_Impl::addToNode(Node& node) {
-      Model _model = node.model();
-      auto thisModelObject = getObject<ModelObject>();
 
       auto airLoop_ = node.airLoopHVAC();
 
@@ -499,6 +497,9 @@ namespace model {
       if (!airLoop_->supplyComponent(node.handle())) {
         return false;
       }
+
+      Model _model = node.model();
+      auto thisModelObject = getObject<ModelObject>();
 
       if (node == airLoop_->supplyOutletNodes().front() && node.inletModelObject().get() == airLoop_->supplyInletNode()) {
         const unsigned oldOutletPort = node.connectedObjectPort(node.inletPort()).get();
