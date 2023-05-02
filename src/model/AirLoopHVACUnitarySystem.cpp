@@ -819,8 +819,11 @@ namespace model {
     }
 
     void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateDuringCoolingOperation() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation, "Autosize");
+      bool result;
+      result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation, "Autosize");
       OS_ASSERT(result);
+      //result = setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
+      //OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(
@@ -913,8 +916,11 @@ namespace model {
     }
 
     void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateDuringHeatingOperation() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, "Autosize");
+      bool result;
+      result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, "Autosize");
       OS_ASSERT(result);
+      //result = setSupplyAirFlowRateDuringHeatingOperation("SupplyAirFlowRate");
+      //OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(
