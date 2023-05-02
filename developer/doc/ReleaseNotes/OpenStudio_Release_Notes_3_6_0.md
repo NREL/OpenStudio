@@ -73,24 +73,34 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 ## New Features, Major Fixes and API-breaking changes
 
-* [#4719](https://github.com/NREL/OpenStudio/issues/4719),[#4721](https://github.com/NREL/OpenStudio/issues/4721) - Phase 2 support to run Python based measures. This functionality is still experimental and can only be accessed from the CLI using the experimental `labs` subcommand. Phase 2 now allows users to run both a Python and Ruby measure in the same workflow. To explore the various new options this new feature has to offer, you can access the help menu `openstudio labs --help` Also, to help jump start python measure development, included in the installation are example `.osw` workflow files that contain Python, Ruby and Python+Ruby based workflows that can be ran using the labs subcommand. For instance, the following will run a Ruby + Python based workflow: `openstudio run -w ./Examples/compact_osw/compact_ruby_and_python.osw`
+* [#4719](https://github.com/NREL/OpenStudio/issues/4719),[#4721](https://github.com/NREL/OpenStudio/issues/4721) - Phase 2 support to run Python based measures. This functionality is still experimental and can only be accessed from the CLI using the experimental `labs` subcommand. Phase 2 now allows users to run both a Python and Ruby measure in the same workflow. To explore the various new options this new feature has to offer, you can access the help menu `openstudio labs --help` Also, to help jump start python measure development, included in the installation are example `.osw` workflow files that contain Python, Ruby and Python+Ruby based workflows that can be ran using the labs subcommand. For instance, the following will run a Ruby + Python based workflow: `openstudio labs run -w ./Examples/compact_osw/compact_ruby_and_python.osw`
 
-* [#4778](https://github.com/NREL/OpenStudio/pull/4778) - Wrap AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl and AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
+* [#4778](https://github.com/NREL/OpenStudio/pull/4778) - Wrap `AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl` and `AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR`
     * `ZoneHVAC:TerminalUnit:VariableRefrigerantFlow` has API-breaking changes related to setters and getters for its heating and cooling coils. They now use `HVACComponent` instead of the more restrictive `CoilHeatingDXVariableRefrigerantFlow` and `CoilCoolingDXVariableRefrigerantFlow`.
     * `AirConditionerVariableRefrigerantFlow::clone` was changed to stop cloning the child `Curve` objects (20 of them)
 
-* [#4740](https://github.com/NREL/OpenStudio/pull/4740) - Fix issues around `ScheduleFixedInterval`, with A minor API breaking change: `intervalLength`/`setIntervalLength` now return/accept an `int` rather than a `double` to conform to the IDD type `\integer`
+* [#4740](https://github.com/NREL/OpenStudio/pull/4740) - Fix issues around `ScheduleFixedInterval`
+    * A minor API breaking change: `intervalLength`/`setIntervalLength` now return/accept an `int` rather than a `double` to conform to the IDD type `\integer`
+    * Translated daily schedules start on correct day
+    * Leap day is no longer ignored on translation
+    * Interval no longer restricted to one day or less
 
 * [#4813](https://github.com/NREL/OpenStudio/pull/4813) - Wrap `SolarCollectorPerformance:PhotovoltaicThermal:BIPVT`
     * `SolarCollectorFlatPlatePhotovoltaicThermal` has API-breaking changes in the `solarCollectorPerformance` getter due to the addition of this new object: it used to return a `SolarCollectorPerformancePhotovoltaicThermalSimple` (the only performance object at the time), now it's a `ModelObject`.
-* [#4717](https://github.com/NREL/OpenStudio/pull/4717)  Update GroundHeatExchangerHorizontalTrench: wrap Site:GroundTemperature:Undisturbed:XXX objects 
+* [#4717](https://github.com/NREL/OpenStudio/pull/4717) Update `GroundHeatExchangerHorizontalTrench`: wrap `Site:GroundTemperature:Undisturbed:XXX` objects
+    * Wrap `Site:GroundTemperature:Undisturbed:KusudaAchenbach` and `Site:GroundTemperature:Undisturbed:Xing` objects
+    * Update `GroundHeatExchanger:HorizontalTrench` to actually use the Ground Temeprature Model field
 * [#4532](https://github.com/NREL/OpenStudio/pull/4532) Performance improvements 
 * [#4800](https://github.com/NREL/OpenStudio/pull/4800),[#4844](https://github.com/NREL/OpenStudio/pull/4800) Update to v23.1.0 EnergyPlus 
-* [#4808](https://github.com/NREL/OpenStudio/pull/4808) Wrap OutputControl:Timestamp
+* [#4808](https://github.com/NREL/OpenStudio/pull/4808) Wrap `OutputControl:Timestamp`
 * [#4825](https://github.com/NREL/OpenStudio/pull/4825) add Coil:UserDefined 
-* [#4806](https://github.com/NREL/OpenStudio/pull/4806) Wrap Gas-Fired Absorption Heat Pump (GAHP) 
+* [#4806](https://github.com/NREL/OpenStudio/pull/4806) Wrap Gas-Fired Absorption Heat Pump (GAHP)
+    * Wrap `HeatPump:AirToWater:FuelFired:Heating` and `HeatPump:AirToWater:FuelFired:Cooling` objects
+    * The objects define an equation-fit fuel-fired absorption heat pump, based on manufacture-provided performance curves and testing/modeling methods
+    * The GAHP is a combined space heating and domestic hot water solution, especially for cold climates. It can serve as heat sources for plant loops of space heating coils, hydronic radiators, DHW water heaters, and low-temperature space heating floors or TABS systems. Driven by gas heat or other types of fuel heat, the equipment can consume very little electricity and can have a much higher overall COP than conventional fuel-combustion type boilers or water heaters.
 * [#4799](https://github.com/NREL/OpenStudio/pull/4799) Add Fuel-related Methods from OpenStudio-Standard 
-* [#4857](https://github.com/NREL/OpenStudio/pull/4857) Schedule:File ctor with path
+* [#4857](https://github.com/NREL/OpenStudio/pull/4857) `Schedule:File` ctor with path
+    * Introduce new `ScheduleFile` constructor with path instead of `ExternalFile` argument
 * Support Ubuntu 22.04 and remove 18.04
 
 
