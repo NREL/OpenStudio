@@ -71,6 +71,20 @@ namespace model {
 
   namespace detail {
 
+    // Helpers
+    std::pair<bool, boost::optional<ModelObject>> getOutletNodeForComponent(const ModelObject& modelObject) {
+      if (auto comp_ = modelObject.optionalCast<StraightComponent>()) {
+        return {true, comp_->outletModelObject()};
+      } else if (auto comp_ = modelObject.optionalCast<AirToAirComponent>()) {
+        return {true, comp_->secondaryAirOutletModelObject()};
+      } else if (auto comp_ = modelObject.optionalCast<WaterToAirComponent>()) {
+        return {true, comp_->airOutletModelObject()};
+      } else if (auto comp_ = modelObject.optionalCast<ZoneHVACComponent>()) {
+        return {true, comp_->airOutletModelObject()};
+      }
+      return {false, boost::none};
+    }
+
     AirLoopHVACOutdoorAirSystem_Impl::AirLoopHVACOutdoorAirSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : HVACComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == AirLoopHVACOutdoorAirSystem::iddObjectType());
@@ -173,7 +187,7 @@ namespace model {
       model.connect(oaclone, oaclone.reliefAirPort(), reliefNodeClone, reliefNodeClone.inletPort());
 
       // Clone oa stream comps
-
+      // Note that in the case of AirToAirComponent, this also does stuff to the relief side!
       auto oaComps = oaComponents();
       std::reverse(oaComps.begin(), oaComps.end());
       std::vector<Node> oaNodes;
@@ -206,14 +220,47 @@ namespace model {
       // Clone relief stream comps
 
       auto reliefComps = reliefComponents();
+
+      auto reliefAirToAirComps = subsetCastVector<AirToAirComponent>(reliefComps);
+
       std::vector<Node> reliefNodes;
 
-      for (const auto& comp : reliefComps) {
-        if (comp.iddObjectType() == Node::iddObjectType()) {
-          reliefNodes.push_back(comp.cast<Node>());
-        } else {
-          auto compClone = comp.clone(model).cast<HVACComponent>();
-          compClone.addToNode(reliefNodeClone);
+      if (reliefAirToAirComps.empty()) {
+        // Business as usual, but this is faster this way as we keep the same node to connect to throughout
+        std::vector<Node> reliefNodes;
+
+        for (const auto& comp : reliefComps) {
+          if (comp.iddObjectType() == Node::iddObjectType()) {
+            reliefNodes.push_back(comp.cast<Node>());
+          } else {
+            auto compClone = comp.clone(model).cast<HVACComponent>();
+            compClone.addToNode(reliefNodeClone);
+          }
+        }
+      } else {
+        auto targetNode = oaclone.reliefAirModelObject()->cast<Node>();
+
+        for (const auto& comp : reliefComps) {
+          if (comp.iddObjectType() == Node::iddObjectType()) {
+            reliefNodes.push_back(comp.cast<Node>());
+          } else if (comp.optionalCast<AirToAirComponent>()) {
+            auto reliefCloneMo_ = targetNode.outletModelObject();
+            OS_ASSERT(reliefCloneMo_);
+            auto reliefCloneAirToAir_ = reliefCloneMo_->optionalCast<AirToAirComponent>();
+            OS_ASSERT(reliefCloneAirToAir_);
+            auto mo_ = reliefCloneAirToAir_->secondaryAirOutletModelObject();
+            OS_ASSERT(mo_);
+            targetNode = mo_->cast<Node>();
+          } else {
+            auto compClone = comp.clone(model).cast<HVACComponent>();
+            compClone.addToNode(targetNode);
+            auto [ok, mo_] = getOutletNodeForComponent(compClone);
+            if (!ok) {
+              LOG_AND_THROW("For " << briefDescription() << ", unexpected reliefComponent found: " << compClone.briefDescription());
+            }
+            OS_ASSERT(mo_);
+            targetNode = mo_->cast<Node>();
+          }
         }
       }
 
@@ -345,22 +392,14 @@ namespace model {
       OptionalModelObject modelObject = this->reliefAirModelObject();
 
       while (modelObject) {
-        if (auto comp_ = modelObject->optionalCast<StraightComponent>()) {
-          modelObject = comp_->outletModelObject();
-          modelObjects.emplace_back(std::move(*comp_));
-        } else if (auto comp_ = modelObject->optionalCast<AirToAirComponent>()) {
-          modelObject = comp_->secondaryAirOutletModelObject();
-          modelObjects.emplace_back(std::move(*comp_));
-        } else if (auto comp_ = modelObject->optionalCast<WaterToAirComponent>()) {
-          modelObject = comp_->airOutletModelObject();
-          modelObjects.emplace_back(std::move(*comp_));
-        } else if (auto comp_ = modelObject->optionalCast<ZoneHVACComponent>()) {
-          modelObject = comp_->outletNode();
-          modelObjects.emplace_back(std::move(*comp_));
-        } else {
+        auto [ok, mo_] = getOutletNodeForComponent(*modelObject);
+        if (!ok) {
           LOG_AND_THROW("For " << briefDescription() << ", unexpected reliefComponent found: " << modelObject->briefDescription());
         }
+        modelObjects.emplace_back(std::move(*modelObject));
+        modelObject = mo_;
       }
+
       if (type != IddObjectType::Catchall) {
         modelObjects.erase(
           std::remove_if(modelObjects.begin(), modelObjects.end(), [&](const auto& mo) -> bool { return mo.iddObjectType() != type; }),
