@@ -651,3 +651,15 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_cloneAirLoopHVAC_Nodes) {
   ASSERT_EQ(1u, a.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem).size());
   EXPECT_EQ(unitary, a.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem)[0]);
 }
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_SupplyAirFlowRateMethodDuringOperation) {
+  // Test for #4695 - AirLoopHVACUnitarySystem: Supply Air Flow Rate Method During <XXX> Operation should be set via related setters/autosize
+
+  Model m;
+  AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
+
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringCoolingOperation().get());
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringHeatingOperation().get());
+}
