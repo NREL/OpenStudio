@@ -53,10 +53,14 @@
 #include "ConnectorSplitter_Impl.hpp"
 #include "Model.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/data/DataEnums.hpp"
+#include <algorithm>
+#include <functional>
 
 namespace openstudio {
 
@@ -254,21 +258,15 @@ namespace model {
       } else {
         findModelObjects(outletComp, visited, allPaths, true);
       }
-      std::vector<ModelObject> _demandComponents = std::vector<ModelObject>(allPaths.begin(), allPaths.end());
+      std::vector<ModelObject> modelObjects = std::vector<ModelObject>(allPaths.begin(), allPaths.end());
 
       // Filter modelObjects for type
-      if (type == IddObjectType::Catchall) {
-        return _demandComponents;
+      if (type != IddObjectType::Catchall) {
+        modelObjects.erase(
+          std::remove_if(modelObjects.begin(), modelObjects.end(), [&](const auto& mo) -> bool { return mo.iddObjectType() != type; }),
+          modelObjects.end());
       }
-      std::vector<ModelObject> reducedModelObjects;
-
-      for (const auto& demandComponent : _demandComponents) {
-        if (type == demandComponent.iddObject().type()) {
-          reducedModelObjects.push_back(demandComponent);
-        }
-      }
-
-      return reducedModelObjects;
+      return modelObjects;
     }
 
     template <typename T>
@@ -325,14 +323,7 @@ namespace model {
     }
 
     std::vector<ModelObject> Loop_Impl::components(openstudio::IddObjectType type) const {
-      std::vector<ModelObject> result;
-      result = this->supplyComponents(type);
-
-      std::vector<ModelObject> demandComponents = this->demandComponents(type);
-
-      result.insert(result.end(), demandComponents.begin(), demandComponents.end());
-
-      return result;
+      return openstudio::concat<ModelObject>(this->supplyComponents(type), this->demandComponents(type));
     }
 
     std::vector<ModelObject> Loop_Impl::supplyComponents(const HVACComponent& inletComp, const HVACComponent& outletComp,
@@ -346,21 +337,15 @@ namespace model {
       } else {
         findModelObjects(outletComp, visited, allPaths, false);
       }
-      std::vector<ModelObject> _supplyComponents = std::vector<ModelObject>(allPaths.begin(), allPaths.end());
+      std::vector<ModelObject> modelObjects = std::vector<ModelObject>(allPaths.begin(), allPaths.end());
 
       // Filter modelObjects for type
-      if (type == IddObjectType::Catchall) {
-        return _supplyComponents;
+      if (type != IddObjectType::Catchall) {
+        modelObjects.erase(
+          std::remove_if(modelObjects.begin(), modelObjects.end(), [&](const auto& mo) -> bool { return mo.iddObjectType() != type; }),
+          modelObjects.end());
       }
-      std::vector<ModelObject> reducedModelObjects;
-
-      for (const auto& supplyComponent : _supplyComponents) {
-        if (type == supplyComponent.iddObject().type()) {
-          reducedModelObjects.push_back(supplyComponent);
-        }
-      }
-
-      return reducedModelObjects;
+      return modelObjects;
     }
 
     std::vector<ModelObject> Loop_Impl::components(const HVACComponent& inletComp, const HVACComponent& outletComp,
