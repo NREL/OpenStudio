@@ -45,6 +45,9 @@
 
 #include <utilities/idd/IddEnums.hxx>
 
+#include <algorithm>
+#include <iterator>
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -287,6 +290,159 @@ TEST_F(ModelFixture, AirLoopHVACOutdoorAirSystem_Clone_Shared) {
     EXPECT_EQ(12, m.getConcreteModelObjects<Node>().size());
     EXPECT_EQ(4, m.getConcreteModelObjects<CoilHeatingElectric>().size());
     EXPECT_EQ(2, m.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+  }
+}
+
+TEST_F(ModelFixture, AirLoopHVACOutdoorAirSystem_Clone_SeveralERVs) {
+
+  // Add the OASystem to AirLoopHVAC and save resulting OSM to check the clones in OSApp
+  constexpr bool debug = true;
+
+  Model m;
+
+  ControllerOutdoorAir controller(m);
+  AirLoopHVACOutdoorAirSystem oaSystem(m, controller);
+
+  ASSERT_TRUE(oaSystem.outboardReliefNode());
+  auto outboardReliefNode = oaSystem.outboardReliefNode().get();
+  auto outboardOANode = oaSystem.outboardOANode().get();
+  outboardOANode.setName("(OA)");
+  outboardReliefNode.setName("(RE)");
+
+  CoilHeatingElectric oaCoilA(m);
+  oaCoilA.setName("OACoilA");
+  oaCoilA.setComment("OACoilA");
+  EXPECT_TRUE(oaCoilA.addToNode(outboardOANode));
+
+  CoilHeatingElectric reliefCoilA(m);
+  reliefCoilA.setName("RECoilA");
+  reliefCoilA.setComment("RECoilA");
+  EXPECT_TRUE(reliefCoilA.addToNode(outboardReliefNode));
+
+  HeatExchangerAirToAirSensibleAndLatent ervA(m);
+  ervA.setName("ERVA");
+  ervA.setComment("ERVA");
+  EXPECT_TRUE(ervA.addToNode(outboardOANode));
+
+  CoilHeatingElectric oaCoilB(m);
+  oaCoilB.setName("OACoilB");
+  oaCoilB.setComment("OACoilB");
+  EXPECT_TRUE(oaCoilB.addToNode(outboardOANode));
+
+  HeatExchangerAirToAirSensibleAndLatent ervB(m);
+  ervB.setName("ERVB");
+  ervB.setComment("ERVB");
+  EXPECT_TRUE(ervB.addToNode(outboardOANode));
+
+  CoilHeatingElectric reliefCoilB(m);
+  reliefCoilB.setName("RECoilB");
+  reliefCoilB.setComment("RECoilB");
+  EXPECT_TRUE(reliefCoilB.addToNode(outboardReliefNode));
+
+  EXPECT_EQ(18, oaSystem.components().size());       // ERV counted twice
+  EXPECT_EQ(9, oaSystem.reliefComponents().size());  //     o-----RECoilA-----o-----ERVA-----o-----ERVB-----o-----RECoilB-----(RE)
+  EXPECT_EQ(9, oaSystem.oaComponents().size());      //  (OA)-----ERVB-----o-----OACoilB-----o-----ERVA-----o-----OACoilA-----o
+                                                     //  <=>
+                                                     //  (RE)---- RECoilB-----o----ERVB-----o-----------------------ERVA-----o-----RECoilA-----o
+                                                     //                             X                                 X
+                                                     //  (OA)----------------------ERVB-----o-----OACoilB-----o-----ERVA-----o-----OACoilA-----o
+
+  EXPECT_EQ(1, m.getConcreteModelObjects<AirLoopHVACOutdoorAirSystem>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ControllerOutdoorAir>().size());
+  EXPECT_EQ(10, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(4, m.getConcreteModelObjects<CoilHeatingElectric>().size());
+  EXPECT_EQ(2, m.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+
+  auto getTypes = [](const auto& comps) {
+    std::vector<IddObjectType> compTypes;
+    compTypes.reserve(comps.size());
+    std::transform(comps.cbegin(), comps.cend(), std::back_inserter(compTypes), [](const auto& s) { return s.iddObjectType(); });
+    return compTypes;
+  };
+  auto getComments = [](const auto& comps) {
+    std::vector<std::string> compComments;
+    compComments.reserve(comps.size());
+    std::transform(comps.cbegin(), comps.cend(), std::back_inserter(compComments), [](const auto& s) { return s.comment(); });
+    return compComments;
+  };
+
+  auto testStreamLayout = [&getTypes, &getComments](const std::vector<ModelObject>& lhsComps, const std::vector<ModelObject>& rhsComps) {
+    ASSERT_EQ(lhsComps.size(), rhsComps.size());
+    auto lhsTypes = getTypes(lhsComps);
+    auto rhsTypes = getTypes(rhsComps);
+    EXPECT_EQ(lhsTypes, rhsTypes);
+    auto lhsComments = getComments(lhsComps);
+    auto rhsComments = getComments(rhsComps);
+    EXPECT_EQ(lhsComments, rhsComments);
+  };
+
+  auto testLayout = [&testStreamLayout](const AirLoopHVACOutdoorAirSystem& lhs, const AirLoopHVACOutdoorAirSystem& rhs) {
+    testStreamLayout(lhs.reliefComponents(), rhs.reliefComponents());
+    testStreamLayout(lhs.oaComponents(), rhs.oaComponents());
+  };
+
+  {
+    // Other model first
+    Model m2;
+    auto oaSystem2 = oaSystem.clone(m2).cast<AirLoopHVACOutdoorAirSystem>();
+
+    EXPECT_NE(controller, oaSystem2.getControllerOutdoorAir());
+
+    EXPECT_EQ(18, oaSystem2.components().size());  // ERV counted twice
+    EXPECT_EQ(9, oaSystem2.reliefComponents().size());
+    EXPECT_EQ(9, oaSystem2.oaComponents().size());  // (OA)-----Coil------o
+    EXPECT_EQ(1, m2.getConcreteModelObjects<AirLoopHVACOutdoorAirSystem>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<ControllerOutdoorAir>().size());
+    EXPECT_EQ(10, m2.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(4, m2.getConcreteModelObjects<CoilHeatingElectric>().size());
+    EXPECT_EQ(2, m2.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+
+    testLayout(oaSystem, oaSystem2);
+
+    if constexpr (debug) {
+      AirLoopHVAC a2(m2);
+      a2.setName("Cloned");
+      auto node = a2.supplyOutletNode();
+      oaSystem2.addToNode(node);
+      m2.save("AirLoopHVACOutdoorAirSystem_Clone_SeveralERVs_OtherModel.osm", true);
+    }
+  }
+
+  if constexpr (debug) {
+    AirLoopHVAC a(m);
+    a.setName("Ori");
+    auto node = a.supplyOutletNode();
+    oaSystem.addToNode(node);
+  }
+
+  {
+    // Same model
+    auto oaSystem2 = oaSystem.clone(m).cast<AirLoopHVACOutdoorAirSystem>();
+
+    EXPECT_NE(controller, oaSystem2.getControllerOutdoorAir());
+
+    EXPECT_EQ(18, oaSystem2.components().size());  // ERV counted twice
+    EXPECT_EQ(9, oaSystem2.reliefComponents().size());
+    EXPECT_EQ(9, oaSystem2.oaComponents().size());  // (OA)-----Coil------o
+    EXPECT_EQ(2, m.getConcreteModelObjects<AirLoopHVACOutdoorAirSystem>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<ControllerOutdoorAir>().size());
+    if constexpr (debug) {
+      EXPECT_EQ(25, m.getConcreteModelObjects<Node>().size());
+    } else {
+      EXPECT_EQ(20, m.getConcreteModelObjects<Node>().size());
+    }
+    EXPECT_EQ(8, m.getConcreteModelObjects<CoilHeatingElectric>().size());
+    EXPECT_EQ(4, m.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+
+    testLayout(oaSystem, oaSystem2);
+
+    if constexpr (debug) {
+      AirLoopHVAC a2(m);
+      a2.setName("Cloned");
+      auto node = a2.supplyOutletNode();
+      oaSystem2.addToNode(node);
+      m.save("AirLoopHVACOutdoorAirSystem_Clone_SeveralERVs.osm", true);
+    }
   }
 }
 
