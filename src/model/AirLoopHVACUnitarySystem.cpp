@@ -385,7 +385,7 @@ namespace model {
     }
 
     boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodDuringCoolingOperation() const {
-      return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation, true);
+      return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation, false);
     }
 
     boost::optional<double> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateDuringCoolingOperation() const {
@@ -414,7 +414,7 @@ namespace model {
     }
 
     boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodDuringHeatingOperation() const {
-      return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation, true);
+      return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation, false);
     }
 
     boost::optional<double> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateDuringHeatingOperation() const {
