@@ -45,9 +45,18 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include <fmt/format.h>
+#include <fmt/ranges.h>
+
 #include <boost/optional.hpp>
-#include <memory>
-#include <stdexcept>
+
+#include <algorithm>  // For std::transform
+#include <cstdlib>    // For std::exit
+#include <memory>     // make_shared
+#include <map>        // For std::map
+#include <stdexcept>  // For std::runtime_error
+#include <string>
+#include <string_view>
+#include <vector>
 
 namespace openstudio {
 namespace cli {
@@ -87,6 +96,124 @@ namespace cli {
     [[maybe_unused]] auto* startServerOpt = measureCommand->add_option("-s,--start_server", opt->server_port, "Start a measure manager server")
                                               ->option_text("PORT")
                                               ->excludes(directoryPathOpt);
+
+    {
+      auto* newMeasureSubCommand = measureCommand->add_subcommand("new", "Create a new measure");
+
+      // TODO: this includes 'UtilityMeasure' which I don't think we want to include
+      std::vector<std::string> measureTypeNames;
+      {
+        const auto& m = openstudio::MeasureType::getNames();
+        std::transform(m.cbegin(), m.cend(), back_inserter(measureTypeNames), [](const auto& x) { return x.second; });
+        // fmt::print("measureTypeNames={}\n", measureTypeNames);
+        [[maybe_unused]] auto* measureTypeOpt =
+          newMeasureSubCommand
+            ->add_option("-t,--type", opt->newMeasureOpts.measureType,
+                         fmt::format("Type of Measure [Default: '{}']: {}", opt->newMeasureOpts.measureType.valueName(), measureTypeNames))
+            ->option_text("measureType")
+            ->check(CLI::IsMember(measureTypeNames));
+      }
+
+      std::vector<std::string> measureLanguageNames;
+      {
+        const auto& m = openstudio::MeasureLanguage::getNames();
+        std::transform(m.cbegin(), m.cend(), back_inserter(measureLanguageNames), [](const auto& x) { return x.second; });
+        // fmt::print("measureLanguageNames={}\n", measureLanguageNames);
+        [[maybe_unused]] auto* measureLanguageOpt = newMeasureSubCommand
+                                                      ->add_option("-l,--language", opt->newMeasureOpts.measureLanguage,
+                                                                   fmt::format("Language of Measure [Default: '{}']: {}",
+                                                                               opt->newMeasureOpts.measureLanguage.valueName(), measureLanguageNames))
+                                                      ->option_text("measureLanguage")
+                                                      ->check(CLI::IsMember(measureLanguageNames));
+      }
+
+      newMeasureSubCommand->add_option("-c,--class-name", opt->newMeasureOpts.className, "Measure Class Name [Required]")
+        ->option_text("className")
+        ->required(true);
+
+      newMeasureSubCommand->add_option("-n,--name", opt->newMeasureOpts.name, "Measure Human Readable Name [Default: className]")
+        ->option_text("name")
+        ->required(false);
+
+      std::vector<std::string> taxonomyTags;
+      std::vector<std::string> firstLevelTaxonomyTerms = openstudio::BCLMeasure::suggestedFirstLevelTaxonomyTerms();
+      taxonomyTags.reserve(35);  // 2023-05-03: at this moment, this is the total number
+      for (auto& firstLevelTaxonomyTerm : firstLevelTaxonomyTerms) {
+        auto secondLevelTaxonomyTerms = openstudio::BCLMeasure::suggestedSecondLevelTaxonomyTerms(firstLevelTaxonomyTerm);
+        taxonomyTags.reserve(taxonomyTags.size() + secondLevelTaxonomyTerms.size());
+        std::transform(secondLevelTaxonomyTerms.begin(), secondLevelTaxonomyTerms.end(), std::back_inserter(taxonomyTags),
+                       [&firstLevelTaxonomyTerm](auto&& secondLevelTaxonomyTerm) {
+                         return fmt::format("{}.{}", firstLevelTaxonomyTerm, secondLevelTaxonomyTerm);
+                       });
+      }
+
+      newMeasureSubCommand
+        ->add_option("--taxonomy-tag", opt->newMeasureOpts.taxonomyTag, fmt::format("Taxonomy Tag [Default: '{}']", opt->newMeasureOpts.taxonomyTag))
+        ->option_text("tag")
+        ->required(false)
+        ->check(CLI::IsMember(taxonomyTags))
+        ->capture_default_str();
+      newMeasureSubCommand->add_option("-d,--description", opt->newMeasureOpts.description, "Description")->option_text("desc")->required(false);
+      newMeasureSubCommand->add_option("-m,--modeler-description", opt->newMeasureOpts.modelerDescription, "Modeler Description")
+        ->option_text("modeler_desc")
+        ->required(false);
+
+      [[maybe_unused]] auto* directoryPathOpt =
+        newMeasureSubCommand->add_option("DIRECTORY", opt->newMeasureOpts.directoryPath, "Directory for the measure")
+          ->option_text(" ")
+          ->required(true)
+          ->check(CLI::NonexistentPath);
+
+      newMeasureSubCommand->callback([opt] {
+        if (opt->newMeasureOpts.name.empty()) {
+          opt->newMeasureOpts.name = opt->newMeasureOpts.className;
+        }
+
+        [[maybe_unused]] auto b = BCLMeasure(opt->newMeasureOpts.name, opt->newMeasureOpts.className, opt->newMeasureOpts.directoryPath,
+                                             opt->newMeasureOpts.taxonomyTag, opt->newMeasureOpts.measureType, opt->newMeasureOpts.description,
+                                             opt->newMeasureOpts.modelerDescription, opt->newMeasureOpts.measureLanguage);
+
+        fmt::print("Created a {} {} with class name '{}' in '{}'", opt->newMeasureOpts.measureLanguage.valueName(),
+                   opt->newMeasureOpts.measureType.valueName(), opt->newMeasureOpts.className,
+                   openstudio::toString(openstudio::filesystem::canonical(b.directory())));
+
+        std::exit(0);  // NOLINT(concurrency-mt-unsafe)
+      });
+    }
+
+    {
+
+      auto* copyMeasureSubCommand = measureCommand->add_subcommand("copy", "Copy a measure");
+      [[maybe_unused]] auto* existingDirectoryPathOpt =
+        copyMeasureSubCommand->add_option("EXISTING_DIRECTORY", opt->directoryPath, "Existing Directory for the measure")
+          ->option_text(" ")
+          ->required(true)
+          ->check(CLI::ExistingDirectory);
+      [[maybe_unused]] auto* newDirectoryPathOpt =
+        copyMeasureSubCommand->add_option("NEW_DIRECTORY", opt->newMeasureOpts.directoryPath, "New Directory for the measure")
+          ->option_text(" ")
+          ->required(true)
+          ->check(CLI::NonexistentPath);
+
+      copyMeasureSubCommand->callback([opt] {
+        auto b = BCLMeasure(opt->directoryPath);
+        auto bClone_ = b.clone(opt->newMeasureOpts.directoryPath);
+        if (bClone_) {
+          // Force updating the UID
+          bClone_->changeUID();
+          bClone_->checkForUpdatesFiles();
+          bClone_->checkForUpdatesXML();
+          bClone_->save();
+          fmt::print("Cloned the {} {} with class name '{}' from '{}' to '{}'\n", b.measureLanguage().valueName(), b.measureType().valueName(),
+                     b.className(), openstudio::toString(openstudio::filesystem::canonical(b.directory())),
+                     openstudio::toString(openstudio::filesystem::canonical(bClone_->directory())));
+          std::exit(0);  // NOLINT(concurrency-mt-unsafe)
+        } else {
+          fmt::print("Something went wrong when cloning the measure");
+          std::exit(1);  // NOLINT(concurrency-mt-unsafe)
+        }
+      });
+    }
 
     measureCommand->callback([opt, &rubyEngine, &pythonEngine] { MeasureUpdateOptions::execute(*opt, rubyEngine, pythonEngine); });
   }

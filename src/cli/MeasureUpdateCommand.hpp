@@ -31,13 +31,27 @@
 #define CLI_MEASUREUPDATECOMMAND_HPP
 
 #include <CLI/App.hpp>
+
 #include "../utilities/core/Filesystem.hpp"
+#include "../utilities/bcl/BCLEnums.hpp"
 
 namespace openstudio {
 
 class ScriptEngineInstance;
 
 namespace cli {
+
+  struct MeasureNewOptions
+  {
+    std::string name;
+    std::string className = "MyExampleMeasure";
+    openstudio::path directoryPath;
+    std::string taxonomyTag = "Envelope.Fenestration";
+    openstudio::MeasureType measureType = openstudio::MeasureType::ModelMeasure;
+    openstudio::MeasureLanguage measureLanguage = openstudio::MeasureLanguage::Ruby;
+    std::string description = "DESCRIPTION_TEXT";
+    std::string modelerDescription = "MODELER_DESCRIPTION_TEXT";
+  };
 
   struct MeasureUpdateOptions
   {
@@ -57,6 +71,8 @@ namespace cli {
     bool run_tests = false;
 
     unsigned server_port = 0;
+
+    MeasureNewOptions newMeasureOpts;
   };
 
 }  // namespace cli
