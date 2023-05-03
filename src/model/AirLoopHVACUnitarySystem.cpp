@@ -808,6 +808,7 @@ namespace model {
       if (supplyAirFlowRateDuringCoolingOperation) {
         result =
           setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation, supplyAirFlowRateDuringCoolingOperation.get());
+        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
       } else {
         resetSupplyAirFlowRateDuringCoolingOperation();
         result = true;
@@ -823,9 +824,8 @@ namespace model {
     void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateDuringCoolingOperation() {
       bool result;
       result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation, "Autosize");
+      result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
       OS_ASSERT(result);
-      //result = setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
-      //OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(
@@ -834,6 +834,7 @@ namespace model {
       if (supplyAirFlowRatePerFloorAreaDuringCoolingOperation) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation,
                            supplyAirFlowRatePerFloorAreaDuringCoolingOperation.get());
+        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("FlowPerFloorArea");
       } else {
         resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
         result = true;
@@ -852,6 +853,7 @@ namespace model {
       if (fractionofAutosizedDesignCoolingSupplyAirFlowRate) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate,
                            fractionofAutosizedDesignCoolingSupplyAirFlowRate.get());
+        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("FractionOfAutosizedCoolingValue");
       } else {
         resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
         result = true;
@@ -870,6 +872,7 @@ namespace model {
       if (designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation,
                            designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation.get());
+        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("FlowPerCoolingCapacity");
       } else {
         resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
         result = true;
@@ -905,6 +908,7 @@ namespace model {
       if (supplyAirFlowRateDuringHeatingOperation) {
         result =
           setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, supplyAirFlowRateDuringHeatingOperation.get());
+        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate");
       } else {
         resetSupplyAirFlowRateDuringHeatingOperation();
         result = true;
@@ -920,9 +924,8 @@ namespace model {
     void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateDuringHeatingOperation() {
       bool result;
       result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, "Autosize");
+      result = result && setSupplyAirFlowRateDuringHeatingOperation("SupplyAirFlowRate");
       OS_ASSERT(result);
-      //result = setSupplyAirFlowRateDuringHeatingOperation("SupplyAirFlowRate");
-      //OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(
@@ -931,6 +934,7 @@ namespace model {
       if (supplyAirFlowRatePerFloorAreaduringHeatingOperation) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation,
                            supplyAirFlowRatePerFloorAreaduringHeatingOperation.get());
+        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation("FlowPerFloorArea");
       } else {
         resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
         result = true;
@@ -949,6 +953,7 @@ namespace model {
       if (fractionofAutosizedDesignHeatingSupplyAirFlowRate) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRate,
                            fractionofAutosizedDesignHeatingSupplyAirFlowRate.get());
+        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation("FractionOfAutosizedHeatingValue");
       } else {
         resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
         result = true;
@@ -967,6 +972,7 @@ namespace model {
       if (designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation,
                            designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation.get());
+        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation("FlowPerHeatingCapacity");
       } else {
         resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
         result = true;
