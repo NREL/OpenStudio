@@ -164,10 +164,86 @@ namespace cli {
           ->required(true)
           ->check(CLI::NonexistentPath);
 
+      {
+        static constexpr auto helpOptionsGroupName = "Help";
+        static constexpr auto newMeasureExamples = R"(Examples:
+
+1. Create a Ruby ModelMeasure:
+
+```
+$ openstudio labs measure new --class-name MyExampleRubyModelMeasure
+$ openstudio labs measure new --class-name MyExampleRubyModelMeasure --type ModelMeasure --language Ruby
+```
+
+2. Pass all optional args to create a Python EnergyPlusMeasure:
+
+```
+$ openstudio labs measure new --class-name MyExamplePythonMeasure --type EnergyPlusMeasure --language Python --name "My Python Measure" --description "This is my measure" --modeler-description "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
+
+$ openstudio labs measure new -c MyExamplePythonMeasure -t EnergyPlusMeasure -l Python -n "My Python Measure" -d "This is my measure" -m "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
+```
+
+3. List taxonomy tags
+```
+$ openstudio labs measure new --list-taxonomy-tags
+$ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
+```
+)";
+        newMeasureSubCommand->set_help_flag("-h,--help", "Print this help message and exit")->group(helpOptionsGroupName);
+
+        newMeasureSubCommand
+          ->add_flag_callback(
+            "--examples",
+            []() {
+              fmt::print("{}\n", newMeasureExamples);
+              std::exit(0);  // NOLINT(concurrency-mt-unsafe)
+            },
+            "Show Example usage")
+          ->group(helpOptionsGroupName);
+
+        [[maybe_unused]] auto* listTaxonomyFlag = newMeasureSubCommand
+                                                    ->add_flag_callback(
+                                                      "--list-taxonomy-tags",
+                                                      [taxonomyTags]() {
+                                                        fmt::print("{}\n", taxonomyTags);
+                                                        std::exit(0);  // NOLINT(concurrency-mt-unsafe)
+                                                      },
+                                                      "List all available Taxonomy tags")
+                                                    ->group(helpOptionsGroupName);
+
+        newMeasureSubCommand
+          ->add_option_function<std::string>(
+            "--list-for-first-taxonomy-tag",
+            [taxonomyTags](const std::string& firstLevelTaxonomyTerm) {
+              auto secondLevelTaxonomyTerms = openstudio::BCLMeasure::suggestedSecondLevelTaxonomyTerms(firstLevelTaxonomyTerm);
+              std::vector<std::string> taxonomyTags;
+              taxonomyTags.reserve(secondLevelTaxonomyTerms.size());
+              std::transform(secondLevelTaxonomyTerms.begin(), secondLevelTaxonomyTerms.end(), std::back_inserter(taxonomyTags),
+                             [&firstLevelTaxonomyTerm](auto&& secondLevelTaxonomyTerm) {
+                               return fmt::format("{}.{}", firstLevelTaxonomyTerm, secondLevelTaxonomyTerm);
+                             });
+              fmt::print("{}\n", taxonomyTags);
+              std::exit(0);  // NOLINT(concurrency-mt-unsafe)
+            },
+            "Limit taxonomy tags to this first level")
+          ->option_text("tag")
+          // ->excludes(listTaxonomyFlag)
+          ->check(CLI::IsMember(firstLevelTaxonomyTerms))
+          ->group(helpOptionsGroupName);
+
+        // newMeasureSubCommand->footer(std::string{newMeasureExamples});
+      }
+
       newMeasureSubCommand->callback([opt] {
         if (opt->newMeasureOpts.name.empty()) {
           opt->newMeasureOpts.name = opt->newMeasureOpts.className;
         }
+
+        // fmt::print(
+        //   "name={}, className={}, directoryPath={}, taxonomyTag={}, measureType={}, description={}, modelerDescription={}, measureLanguage={}\n",
+        //   opt->newMeasureOpts.name, opt->newMeasureOpts.className, openstudio::toString(opt->newMeasureOpts.directoryPath), opt->newMeasureOpts.taxonomyTag,
+        //   opt->newMeasureOpts.measureType.valueName(), opt->newMeasureOpts.description, opt->newMeasureOpts.modelerDescription,
+        //   opt->newMeasureOpts.measureLanguage.valueName());
 
         [[maybe_unused]] auto b = BCLMeasure(opt->newMeasureOpts.name, opt->newMeasureOpts.className, opt->newMeasureOpts.directoryPath,
                                              opt->newMeasureOpts.taxonomyTag, opt->newMeasureOpts.measureType, opt->newMeasureOpts.description,
@@ -196,6 +272,13 @@ namespace cli {
           ->check(CLI::NonexistentPath);
 
       copyMeasureSubCommand->callback([opt] {
+        // boost::optional<BCLMeasure> b_;
+        // try {
+        //   b_ = BCLMeasure(opt->directoryPath);
+        // } catch (...) {
+        //   throw std::runtime_error(fmt::format("Could not find a valid measure at '{}'\n", openstudio::toString(opt->directoryPath)));
+        // }
+        // auto bClone_ = b_->clone(opt->newMeasureOpts.directoryPath);
         auto b = BCLMeasure(opt->directoryPath);
         auto bClone_ = b.clone(opt->newMeasureOpts.directoryPath);
         if (bClone_) {
