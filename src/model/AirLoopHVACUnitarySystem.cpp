@@ -445,7 +445,7 @@ namespace model {
     }
 
     boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const {
-      return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired, true);
+      return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired, false, true);
     }
 
     boost::optional<double> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateWhenNoCoolingorHeatingisRequired() const {
@@ -808,7 +808,8 @@ namespace model {
       if (supplyAirFlowRateDuringCoolingOperation) {
         result =
           setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation, supplyAirFlowRateDuringCoolingOperation.get());
-        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
+        boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
+        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation(supplyAirFlowRateMethodDuringCoolingOperation);
       } else {
         resetSupplyAirFlowRateDuringCoolingOperation();
         result = true;
@@ -824,7 +825,8 @@ namespace model {
     void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateDuringCoolingOperation() {
       bool result;
       result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation, "Autosize");
-      result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
+      boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
+      result = result && setSupplyAirFlowRateMethodDuringCoolingOperation(supplyAirFlowRateMethodDuringCoolingOperation);
       OS_ASSERT(result);
     }
 
@@ -834,7 +836,8 @@ namespace model {
       if (supplyAirFlowRatePerFloorAreaDuringCoolingOperation) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation,
                            supplyAirFlowRatePerFloorAreaDuringCoolingOperation.get());
-        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("FlowPerFloorArea");
+        boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation("FlowPerFloorArea");
+        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation(supplyAirFlowRateMethodDuringCoolingOperation);
       } else {
         resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
         result = true;
@@ -853,7 +856,8 @@ namespace model {
       if (fractionofAutosizedDesignCoolingSupplyAirFlowRate) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate,
                            fractionofAutosizedDesignCoolingSupplyAirFlowRate.get());
-        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("FractionOfAutosizedCoolingValue");
+        boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation("FractionOfAutosizedCoolingValue");
+        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation(supplyAirFlowRateMethodDuringCoolingOperation);
       } else {
         resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
         result = true;
@@ -872,7 +876,8 @@ namespace model {
       if (designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation,
                            designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation.get());
-        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation("FlowPerCoolingCapacity");
+        boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation("FlowPerCoolingCapacity");
+        result = result && setSupplyAirFlowRateMethodDuringCoolingOperation(supplyAirFlowRateMethodDuringCoolingOperation);
       } else {
         resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
         result = true;
@@ -908,7 +913,8 @@ namespace model {
       if (supplyAirFlowRateDuringHeatingOperation) {
         result =
           setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, supplyAirFlowRateDuringHeatingOperation.get());
-        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate");
+        boost::optional<std::string> supplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate");
+        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation(supplyAirFlowRateMethodDuringHeatingOperation);
       } else {
         resetSupplyAirFlowRateDuringHeatingOperation();
         result = true;
@@ -924,7 +930,8 @@ namespace model {
     void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateDuringHeatingOperation() {
       bool result;
       result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, "Autosize");
-      result = result && setSupplyAirFlowRateDuringHeatingOperation("SupplyAirFlowRate");
+      boost::optional<std::string> supplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate");
+      result = result && setSupplyAirFlowRateMethodDuringHeatingOperation(supplyAirFlowRateMethodDuringHeatingOperation);
       OS_ASSERT(result);
     }
 
@@ -934,7 +941,8 @@ namespace model {
       if (supplyAirFlowRatePerFloorAreaduringHeatingOperation) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation,
                            supplyAirFlowRatePerFloorAreaduringHeatingOperation.get());
-        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation("FlowPerFloorArea");
+        boost::optional<std::string> supplyAirFlowRateMethodDuringHeatingOperation("FlowPerFloorArea");
+        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation(supplyAirFlowRateMethodDuringHeatingOperation);
       } else {
         resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
         result = true;
@@ -953,7 +961,8 @@ namespace model {
       if (fractionofAutosizedDesignHeatingSupplyAirFlowRate) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRate,
                            fractionofAutosizedDesignHeatingSupplyAirFlowRate.get());
-        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation("FractionOfAutosizedHeatingValue");
+        boost::optional<std::string> supplyAirFlowRateMethodDuringHeatingOperation("FractionOfAutosizedHeatingValue");
+        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation(supplyAirFlowRateMethodDuringHeatingOperation);
       } else {
         resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
         result = true;
@@ -972,7 +981,8 @@ namespace model {
       if (designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation,
                            designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation.get());
-        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation("FlowPerHeatingCapacity");
+        boost::optional<std::string> supplyAirFlowRateMethodDuringHeatingOperation("FlowPerHeatingCapacity");
+        result = result && setSupplyAirFlowRateMethodDuringHeatingOperation(supplyAirFlowRateMethodDuringHeatingOperation);
       } else {
         resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
         result = true;
@@ -1009,6 +1019,8 @@ namespace model {
       if (supplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired,
                            supplyAirFlowRateWhenNoCoolingorHeatingisRequired.get());
+        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate");
+        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
       } else {
         resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
         result = true;
@@ -1023,6 +1035,8 @@ namespace model {
 
     void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
       bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired, "Autosize");
+      boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate");
+      result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
       OS_ASSERT(result);
     }
 
@@ -1032,6 +1046,8 @@ namespace model {
       if (supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired,
                            supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired.get());
+        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FlowPerFloorArea");
+        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
       } else {
         resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
         result = true;
@@ -1050,6 +1066,8 @@ namespace model {
       if (fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,
                            fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired.get());
+        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FractionOfAutosizedCoolingValue");
+        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
       } else {
         resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
         result = true;
@@ -1069,6 +1087,8 @@ namespace model {
       if (fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
         result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,
                            fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired.get());
+        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FractionOfAutosizedHeatingValue");
+        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
       } else {
         resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
         result = true;
@@ -1089,6 +1109,8 @@ namespace model {
         result = setDouble(
           OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired,
           designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired.get());
+        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FlowPerCoolingCapacity");
+        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
       } else {
         resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
         result = true;
@@ -1109,6 +1131,8 @@ namespace model {
         result = setDouble(
           OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired,
           designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired.get());
+        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FlowPerHeatingCapacity");
+        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
       } else {
         resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
         result = true;
