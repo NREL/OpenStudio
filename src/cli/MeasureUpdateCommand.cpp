@@ -235,21 +235,17 @@ $ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
       }
 
       newMeasureSubCommand->callback([opt] {
+        // opt->newMeasureOpts.debug_print();
+
         if (opt->newMeasureOpts.name.empty()) {
           opt->newMeasureOpts.name = opt->newMeasureOpts.className;
         }
-
-        // fmt::print(
-        //   "name={}, className={}, directoryPath={}, taxonomyTag={}, measureType={}, description={}, modelerDescription={}, measureLanguage={}\n",
-        //   opt->newMeasureOpts.name, opt->newMeasureOpts.className, openstudio::toString(opt->newMeasureOpts.directoryPath), opt->newMeasureOpts.taxonomyTag,
-        //   opt->newMeasureOpts.measureType.valueName(), opt->newMeasureOpts.description, opt->newMeasureOpts.modelerDescription,
-        //   opt->newMeasureOpts.measureLanguage.valueName());
 
         [[maybe_unused]] auto b = BCLMeasure(opt->newMeasureOpts.name, opt->newMeasureOpts.className, opt->newMeasureOpts.directoryPath,
                                              opt->newMeasureOpts.taxonomyTag, opt->newMeasureOpts.measureType, opt->newMeasureOpts.description,
                                              opt->newMeasureOpts.modelerDescription, opt->newMeasureOpts.measureLanguage);
 
-        fmt::print("Created a {} {} with class name '{}' in '{}'", opt->newMeasureOpts.measureLanguage.valueName(),
+        fmt::print("Created a {} {} with class name '{}' in '{}'\n", opt->newMeasureOpts.measureLanguage.valueName(),
                    opt->newMeasureOpts.measureType.valueName(), opt->newMeasureOpts.className,
                    openstudio::toString(openstudio::filesystem::canonical(b.directory())));
 
@@ -577,7 +573,7 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
   }
 
   void MeasureUpdateOptions::execute(MeasureUpdateOptions const& opt, ScriptEngineInstance& rubyEngine, ScriptEngineInstance& pythonEngine) {
-    opt.debug_print();
+    // opt.debug_print();
 
     if (opt.server_port > 0) {
       const auto measureManagerCmd = fmt::format(
@@ -669,6 +665,18 @@ end
     fmt::print("server_port={}\n", this->server_port);
     fmt::print("\n\n");
   }
+
+  void MeasureNewOptions::debug_print() const {
+    fmt::print("\nMeasureNewOptions:\n");
+    fmt::print("name={}\n", name);
+    fmt::print("className={}\n", className);
+    fmt::print("directoryPath={}\n", openstudio::toString(directoryPath));
+    fmt::print("taxonomyTag={}\n", taxonomyTag);
+    fmt::print("measureType={}\n", measureType.valueName());
+    fmt::print("description={}\n", description);
+    fmt::print("modelerDescription={}\n", modelerDescription);
+    fmt::print("measureLanguage={}\n", measureLanguage.valueName());
+  };
 
 }  // namespace cli
 }  // namespace openstudio

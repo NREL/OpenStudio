@@ -51,6 +51,8 @@ namespace cli {
     openstudio::MeasureLanguage measureLanguage = openstudio::MeasureLanguage::Ruby;
     std::string description = "DESCRIPTION_TEXT";
     std::string modelerDescription = "MODELER_DESCRIPTION_TEXT";
+
+    void debug_print() const;
   };
 
   struct MeasureUpdateOptions
