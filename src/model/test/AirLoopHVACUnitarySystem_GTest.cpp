@@ -715,27 +715,27 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_SupplyAirFlowRateMethodDuringOpera
   EXPECT_TRUE(unitary.setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(1.0));
   ASSERT_TRUE(unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
   EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired().get());
-  
+
   // FlowPerFloorArea
   EXPECT_TRUE(unitary.setSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired(1.0));
   ASSERT_TRUE(unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
   EXPECT_EQ("FlowPerFloorArea", unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired().get());
-  
+
   // FractionOfAutosizedCoolingValue
   EXPECT_TRUE(unitary.setFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(1.0));
   ASSERT_TRUE(unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
   EXPECT_EQ("FractionOfAutosizedCoolingValue", unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired().get());
-  
+
   // FractionOfAutosizedHeatingValue
   EXPECT_TRUE(unitary.setFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(1.0));
   ASSERT_TRUE(unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
   EXPECT_EQ("FractionOfAutosizedHeatingValue", unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired().get());
-  
+
   // FlowPerCoolingCapacity
   EXPECT_TRUE(unitary.setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired(1.0));
   ASSERT_TRUE(unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
   EXPECT_EQ("FlowPerCoolingCapacity", unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired().get());
-  
+
   // FlowPerHeatingCapacity
   EXPECT_TRUE(unitary.setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired(1.0));
   ASSERT_TRUE(unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
