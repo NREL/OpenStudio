@@ -268,27 +268,26 @@ $ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
           ->check(CLI::NonexistentPath);
 
       copyMeasureSubCommand->callback([opt] {
-        // boost::optional<BCLMeasure> b_;
-        // try {
-        //   b_ = BCLMeasure(opt->directoryPath);
-        // } catch (...) {
-        //   throw std::runtime_error(fmt::format("Could not find a valid measure at '{}'\n", openstudio::toString(opt->directoryPath)));
-        // }
-        // auto bClone_ = b_->clone(opt->newMeasureOpts.directoryPath);
-        auto b = BCLMeasure(opt->directoryPath);
-        auto bClone_ = b.clone(opt->newMeasureOpts.directoryPath);
+        boost::optional<BCLMeasure> b_;
+        try {
+          b_ = BCLMeasure(opt->directoryPath);
+        } catch (...) {
+          fmt::print(stderr, "Could not find a valid measure at '{}'\n", openstudio::toString(opt->directoryPath));
+          std::exit(1);
+        }
+        auto bClone_ = b_->clone(opt->newMeasureOpts.directoryPath);
         if (bClone_) {
           // Force updating the UID
           bClone_->changeUID();
           bClone_->checkForUpdatesFiles();
           bClone_->checkForUpdatesXML();
           bClone_->save();
-          fmt::print("Cloned the {} {} with class name '{}' from '{}' to '{}'\n", b.measureLanguage().valueName(), b.measureType().valueName(),
-                     b.className(), openstudio::toString(openstudio::filesystem::canonical(b.directory())),
+          fmt::print("Cloned the {} {} with class name '{}' from '{}' to '{}'\n", b_->measureLanguage().valueName(), b_->measureType().valueName(),
+                     b_->className(), openstudio::toString(openstudio::filesystem::canonical(b_->directory())),
                      openstudio::toString(openstudio::filesystem::canonical(bClone_->directory())));
           std::exit(0);  // NOLINT(concurrency-mt-unsafe)
         } else {
-          fmt::print("Something went wrong when cloning the measure");
+          fmt::print(stderr, "Something went wrong when cloning the measure");
           std::exit(1);  // NOLINT(concurrency-mt-unsafe)
         }
       });
