@@ -241,9 +241,9 @@ $ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
           opt->newMeasureOpts.name = opt->newMeasureOpts.className;
         }
 
-        [[maybe_unused]] auto b = BCLMeasure(opt->newMeasureOpts.name, opt->newMeasureOpts.className, opt->newMeasureOpts.directoryPath,
-                                             opt->newMeasureOpts.taxonomyTag, opt->newMeasureOpts.measureType, opt->newMeasureOpts.description,
-                                             opt->newMeasureOpts.modelerDescription, opt->newMeasureOpts.measureLanguage);
+        BCLMeasure b(opt->newMeasureOpts.name, opt->newMeasureOpts.className, opt->newMeasureOpts.directoryPath, opt->newMeasureOpts.taxonomyTag,
+                     opt->newMeasureOpts.measureType, opt->newMeasureOpts.description, opt->newMeasureOpts.modelerDescription,
+                     opt->newMeasureOpts.measureLanguage);
 
         fmt::print("Created a {} {} with class name '{}' in '{}'\n", opt->newMeasureOpts.measureLanguage.valueName(),
                    opt->newMeasureOpts.measureType.valueName(), opt->newMeasureOpts.className,
