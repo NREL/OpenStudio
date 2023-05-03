@@ -315,7 +315,7 @@ namespace model {
     }
 
     boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::fanPlacement() const {
-      // No default, and return uninitalized if empty
+      // No default, and return uninitialized if empty
       return getString(OS_AirLoopHVAC_UnitarySystemFields::FanPlacement, false, true);
     }
 
@@ -385,7 +385,7 @@ namespace model {
     }
 
     boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodDuringCoolingOperation() const {
-      // No default, and return uninitalized if empty
+      // No default, and return uninitialized if empty
       return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation, false, true);
     }
 
@@ -415,7 +415,7 @@ namespace model {
     }
 
     boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodDuringHeatingOperation() const {
-      // No default, and return uninitalized if empty
+      // No default, and return uninitialized if empty
       return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation, false, true);
     }
 
@@ -445,6 +445,7 @@ namespace model {
     }
 
     boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const {
+      // No default, and return uninitialized if empty
       return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired, false, true);
     }
 
