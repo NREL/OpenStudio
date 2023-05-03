@@ -662,4 +662,52 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_SupplyAirFlowRateMethodDuringOpera
   EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringCoolingOperation().get());
   ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
   EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringHeatingOperation().get());
+
+  unitary.resetSupplyAirFlowRateMethodDuringCoolingOperation();
+  unitary.resetSupplyAirFlowRateMethodDuringHeatingOperation();
+  EXPECT_FALSE(unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+
+  EXPECT_TRUE(unitary.setSupplyAirFlowRateDuringCoolingOperation(1.0));
+  EXPECT_TRUE(unitary.setSupplyAirFlowRateDuringHeatingOperation(1.0));
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringCoolingOperation().get());
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringHeatingOperation().get());
+
+  unitary.resetSupplyAirFlowRateMethodDuringCoolingOperation();
+  unitary.resetSupplyAirFlowRateMethodDuringHeatingOperation();
+  EXPECT_FALSE(unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+
+  EXPECT_TRUE(unitary.setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(1.0));
+  EXPECT_TRUE(unitary.setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(1.0));
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_EQ("FlowPerFloorArea", unitary.supplyAirFlowRateMethodDuringCoolingOperation().get());
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_EQ("FlowPerFloorArea", unitary.supplyAirFlowRateMethodDuringHeatingOperation().get());
+
+  unitary.resetSupplyAirFlowRateMethodDuringCoolingOperation();
+  unitary.resetSupplyAirFlowRateMethodDuringHeatingOperation();
+  EXPECT_FALSE(unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+
+  EXPECT_TRUE(unitary.setFractionofAutosizedDesignCoolingSupplyAirFlowRate(1.0));
+  EXPECT_TRUE(unitary.setFractionofAutosizedDesignHeatingSupplyAirFlowRate(1.0));
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_EQ("FractionOfAutosizedCoolingValue", unitary.supplyAirFlowRateMethodDuringCoolingOperation().get());
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_EQ("FractionOfAutosizedHeatingValue", unitary.supplyAirFlowRateMethodDuringHeatingOperation().get());
+
+  unitary.resetSupplyAirFlowRateMethodDuringCoolingOperation();
+  unitary.resetSupplyAirFlowRateMethodDuringHeatingOperation();
+  EXPECT_FALSE(unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+
+  EXPECT_TRUE(unitary.setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation(1.0));
+  EXPECT_TRUE(unitary.setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation(1.0));
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_EQ("FlowPerCoolingCapacity", unitary.supplyAirFlowRateMethodDuringCoolingOperation().get());
+  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_EQ("FlowPerHeatingCapacity", unitary.supplyAirFlowRateMethodDuringHeatingOperation().get());
 }
