@@ -712,7 +712,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_SupplyAirFlowRateMethodDuringOpera
   EXPECT_FALSE(unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
 
   // SupplyAirFlowRate
-  EXPECT_TRUE(unitary.setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(1.0));
+  EXPECT_TRUE(unitary.setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(1.0));
   ASSERT_TRUE(unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
   EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired().get());
 
