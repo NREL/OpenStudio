@@ -1,6 +1,6 @@
 # OpenStudio Version 3.6.0
 
-_Release Notes_ -  _05/12/2023_
+_Release Notes_ -  _05/09/2023_
 
 These release notes describe version 3.6.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
