@@ -29,6 +29,9 @@
 
 #include <utilities/idd/IddEnums.hxx>
 
+#include "../../utilities/core/PathHelpers.hpp"
+#include <resources.hxx>
+
 #include <boost/regex.hpp>
 
 #include <sstream>
