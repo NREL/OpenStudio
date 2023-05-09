@@ -1880,7 +1880,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
   EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
   EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
 
-  path p toPath("model/schedulefile.csv") EXPECT_TRUE(path.is_relative());
+  path p = toPath("../../../resources/model/schedulefile.csv");
+  EXPECT_TRUE(p.is_relative());
 
   ScheduleFile schedule(model, openstudio::toString(p));
   EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
@@ -1889,6 +1890,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
   EXPECT_EQ(1u, externalfile.scheduleFiles().size());
   EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
   EXPECT_TRUE(toPath(externalfile.fileName()).is_relative());
+  EXPECT_TRUE(externalfile.filePath().is_relative());
   EXPECT_EQ(toPath(externalfile.fileName()), externalfile.filePath());
 
   ForwardTranslator ft;
