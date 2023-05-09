@@ -220,15 +220,17 @@ namespace model {
 
     // we expect all strings to be UTF-8 encoded
     path p = toPath(filename);
-    if (!exists(p)) {
-      boost::optional<path> op = workflow.findFile(filename);
-      if (!op) {
-        this->remove();
-        LOG_AND_THROW("Cannot find file \"" << filename << "\" for " << this->briefDescription());
+    if (copyFile || !p.is_relative()) {
+      if (!exists(p)) {
+        boost::optional<path> op = workflow.findFile(filename);
+        if (!op) {
+          this->remove();
+          LOG_AND_THROW("Cannot find file \"" << filename << "\" for " << this->briefDescription());
+        }
+        p = op.get();
       }
-      p = op.get();
+      OS_ASSERT(exists(p));
     }
-    OS_ASSERT(exists(p));
 
     bool ok;
     if (copyFile) {
