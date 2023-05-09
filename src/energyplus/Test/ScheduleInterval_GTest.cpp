@@ -1878,30 +1878,125 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleVariableInterval_Da
 }
 
 TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
-  Model model;
-  EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
+  // ScheduleFile(external_file(/abs/path))
+  {
+    Model model;
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
 
-  path p = toPath("../../../resources/model/schedulefile.csv");
-  EXPECT_TRUE(p.is_relative());
+    path p = resourcesPath() / toPath("model/schedulefile.csv");
+    EXPECT_FALSE(p.is_relative());
 
-  ScheduleFile schedule(model, openstudio::toString(p));
-  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
-  EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
-  ExternalFile externalfile = schedule.externalFile();
-  EXPECT_EQ(1u, externalfile.scheduleFiles().size());
-  EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
-  EXPECT_TRUE(toPath(externalfile.fileName()).is_relative());
-  EXPECT_TRUE(externalfile.filePath().is_relative());
-  EXPECT_EQ(toPath(externalfile.fileName()), externalfile.filePath());
+    ExternalFile external_file(model, openstudio::toString(p));
+    ScheduleFile schedule(external_file);
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
+    ExternalFile externalfile = schedule.externalFile();
+    EXPECT_EQ(1u, externalfile.scheduleFiles().size());
+    EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
+    EXPECT_TRUE(toPath(externalfile.fileName()).is_relative());
+    EXPECT_FALSE(externalfile.filePath().is_relative());
+    EXPECT_NE(toPath(externalfile.fileName()), externalfile.filePath());
 
-  ForwardTranslator ft;
-  Workspace workspace = ft.translateModel(model);
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(model);
 
-  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_File);
-  ASSERT_EQ(1u, objects.size());
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_File);
+    ASSERT_EQ(1u, objects.size());
 
-  boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
-  ASSERT_TRUE(fileName);
-  EXPECT_EQ(externalfile.fileName(), fileName.get());
+    boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
+    ASSERT_TRUE(fileName);
+    EXPECT_EQ(externalfile.filePath(), fileName.get());  // abs path
+  }
+
+  // ScheduleFile(external_file(/rel/path))
+  {
+    Model model;
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
+
+    path p = toPath("../../../model/schedulefile.csv");
+    EXPECT_TRUE(p.is_relative());
+
+    ExternalFile external_file(model, openstudio::toString(p));
+    ScheduleFile schedule(external_file);
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
+    ExternalFile externalfile = schedule.externalFile();
+    EXPECT_EQ(1u, externalfile.scheduleFiles().size());
+    EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
+    EXPECT_TRUE(toPath(externalfile.fileName()).is_relative());
+    EXPECT_FALSE(externalfile.filePath().is_relative());
+    EXPECT_NE(toPath(externalfile.fileName()), externalfile.filePath());
+
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(model);
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_File);
+    ASSERT_EQ(1u, objects.size());
+
+    boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
+    ASSERT_TRUE(fileName);
+    EXPECT_EQ(externalfile.filePath(), fileName.get());  // abs path
+  }
+
+  // ScheduleFile(model, /abs/path)
+  {
+    Model model;
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
+
+    path p = resourcesPath() / toPath("model/schedulefile.csv");
+    EXPECT_FALSE(p.is_relative());
+
+    ScheduleFile schedule(model, openstudio::toString(p));
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
+    ExternalFile externalfile = schedule.externalFile();
+    EXPECT_EQ(1u, externalfile.scheduleFiles().size());
+    EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
+    EXPECT_FALSE(toPath(externalfile.fileName()).is_relative());
+    EXPECT_FALSE(externalfile.filePath().is_relative());
+    EXPECT_EQ(toPath(externalfile.fileName()), externalfile.filePath());
+
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(model);
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_File);
+    ASSERT_EQ(1u, objects.size());
+
+    boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
+    ASSERT_TRUE(fileName);
+    EXPECT_EQ(externalfile.filePath(), fileName.get());  // abs path
+  }
+
+  // ScheduleFile(model, /rel/path)
+  {
+    Model model;
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
+
+    path p = toPath("../../../resources/model/schedulefile.csv");
+    EXPECT_TRUE(p.is_relative());
+
+    ScheduleFile schedule(model, openstudio::toString(p));
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
+    ExternalFile externalfile = schedule.externalFile();
+    EXPECT_EQ(1u, externalfile.scheduleFiles().size());
+    EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
+    EXPECT_TRUE(toPath(externalfile.fileName()).is_relative());
+    EXPECT_TRUE(externalfile.filePath().is_relative());
+    EXPECT_EQ(toPath(externalfile.fileName()), externalfile.filePath());
+
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(model);
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_File);
+    ASSERT_EQ(1u, objects.size());
+
+    boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
+    ASSERT_TRUE(fileName);
+    EXPECT_EQ(externalfile.filePath(), fileName.get());  // rel path
+  }
 }
