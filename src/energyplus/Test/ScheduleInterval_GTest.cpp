@@ -1874,3 +1874,31 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleVariableInterval_Da
   // check that there were XX untils
   //EXPECT_EQ(864, numUntils);
 }
+
+TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
+  Model model;
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
+
+  path p toPath("model/schedulefile.csv")
+  EXPECT_TRUE(path.is_relative());
+
+  ScheduleFile schedule(model, openstudio::toString(p));
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
+  ExternalFile externalfile = schedule.externalFile();
+  EXPECT_EQ(1u, externalfile.scheduleFiles().size());
+  EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
+  EXPECT_TRUE(toPath(externalfile.fileName()).is_relative());
+  EXPECT_EQ(toPath(externalfile.fileName()), externalfile.filePath());
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_File);
+  ASSERT_EQ(1u, objects.size());
+
+  boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
+  ASSERT_TRUE(fileName);
+  EXPECT_EQ(externalfile.fileName(), fileName.get());
+}
