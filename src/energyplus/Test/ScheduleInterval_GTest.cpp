@@ -44,6 +44,8 @@
 #include "../../model/ScheduleFixedInterval_Impl.hpp"
 #include "../../model/ScheduleVariableInterval.hpp"
 #include "../../model/ScheduleVariableInterval_Impl.hpp"
+#include "../../model/ExternalFile.hpp"
+#include "../../model/ExternalFile_Impl.hpp"
 #include "../../model/ScheduleFile.hpp"
 #include "../../model/ScheduleFile_Impl.hpp"
 #include "../../model/YearDescription.hpp"
