@@ -1880,8 +1880,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
   EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
   EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
 
-  path p toPath("model/schedulefile.csv")
-  EXPECT_TRUE(path.is_relative());
+  path p toPath("model/schedulefile.csv") EXPECT_TRUE(path.is_relative());
 
   ScheduleFile schedule(model, openstudio::toString(p));
   EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
