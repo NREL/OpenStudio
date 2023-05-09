@@ -41,12 +41,15 @@ namespace energyplus {
       }
     }
 
+    std::string fileName = modelObject.externalFile().fileName();
     path filePath = modelObject.externalFile().filePath();
     if (!exists(filePath)) {
       LOG(Warn, "Cannot find file \"" << filePath << "\"");
     } else {
-      // make the path correct for this system
-      filePath = system_complete(filePath);
+      if (!filePath.is_relative()) {
+        // make the path correct for this system
+        filePath = system_complete(filePath);
+      }
     }
 
     // DLM: this path is going to be in the temp dir, might want to fix it up when saving model temp dir
