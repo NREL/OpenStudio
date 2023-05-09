@@ -41,7 +41,6 @@ namespace energyplus {
       }
     }
 
-    std::string fileName = modelObject.externalFile().fileName();
     path filePath = modelObject.externalFile().filePath();
     if (!exists(filePath)) {
       LOG(Warn, "Cannot find file \"" << filePath << "\"");
