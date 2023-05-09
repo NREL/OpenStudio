@@ -1897,7 +1897,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
     EXPECT_EQ(1u, externalfile.scheduleFiles().size());
-    EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
+    EXPECT_EQ(openstudio::toString(p.filename()), externalfile.fileName());
     EXPECT_TRUE(toPath(externalfile.fileName()).is_relative());
     EXPECT_FALSE(externalfile.filePath().is_relative());
     EXPECT_NE(toPath(externalfile.fileName()), externalfile.filePath());
@@ -1919,7 +1919,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
     EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
 
-    path p = toPath("../../../model/schedulefile.csv");
+    path p = toPath("../../../resources/model/schedulefile.csv");
     EXPECT_TRUE(p.is_relative());
 
     boost::optional<ExternalFile> external_file = ExternalFile::getExternalFile(model, openstudio::toString(p));
@@ -1929,7 +1929,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
     EXPECT_EQ(1u, externalfile.scheduleFiles().size());
-    EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
+    EXPECT_EQ(openstudio::toString(p.filename()), externalfile.fileName());
     EXPECT_TRUE(toPath(externalfile.fileName()).is_relative());
     EXPECT_FALSE(externalfile.filePath().is_relative());
     EXPECT_NE(toPath(externalfile.fileName()), externalfile.filePath());
