@@ -831,8 +831,13 @@ if(BUILD_CLI)
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b6bf19e6958bd41be9788a7f16fd7f27")
        endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "957681cb4f3b5cf8ad95103a5fae9a72")
+       if (ARCH MATCHES "arm64")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-linux_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "979a8839facf2fa1c4096dcbae39ddc2")
+       else()
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-linux.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "957681cb4f3b5cf8ad95103a5fae9a72")
+       endif()
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
@@ -1211,6 +1216,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes the prerelease tag if any
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgomp1, libx11-6") # This is for EnergyPlus
 
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
 # CMAKE_PROJECT_HOMEPAGE_URL
