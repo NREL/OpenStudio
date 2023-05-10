@@ -1216,6 +1216,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes the prerelease tag if any
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgomp1, libx11-6") # This is for EnergyPlus
 
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
 # CMAKE_PROJECT_HOMEPAGE_URL
