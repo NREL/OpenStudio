@@ -159,7 +159,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "alpha")
+#set(PROJECT_VERSION_PRERELEASE "rc3")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -824,8 +824,8 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230413-darwin_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d13ccc3d5390d8ead47878814b5369fc")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-darwin_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "27ca992c6e5fe5347a7e342eb5b91511")
        else()
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-darwin.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b6bf19e6958bd41be9788a7f16fd7f27")
@@ -1187,7 +1187,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_5_0_20221110.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_6_0_20230509.pdf" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)
