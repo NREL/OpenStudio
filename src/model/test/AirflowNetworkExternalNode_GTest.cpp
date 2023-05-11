@@ -45,12 +45,10 @@ TEST_F(ModelFixture, AirflowNetwork_ExternalNode) {
   Model model;
 
   AirflowNetworkExternalNode extnode0(model);
-  Curve curve0 = extnode0.windPressureCoefficientCurve();
-  auto* cpt = static_cast<CurveLinear*>(&curve0);
-  //CurveLinear *cpt = dynamic_cast<CurveLinear*>(&curve0);
-  //ASSERT_NE(nullptr, cpt);
-  EXPECT_EQ(1.0, cpt->coefficient1Constant());
-  EXPECT_EQ(0.0, cpt->coefficient2x());
+  auto cpt_ = extnode0.windPressureCoefficientCurve().optionalCast<CurveLinear>();
+  ASSERT_TRUE(cpt_);
+  EXPECT_EQ(1.0, cpt_->coefficient1Constant());
+  EXPECT_EQ(0.0, cpt_->coefficient2x());
 
   EXPECT_TRUE(extnode0.isExternalNodeHeightDefaulted());
   EXPECT_TRUE(extnode0.isSymmetricWindPressureCoefficientCurveDefaulted());
