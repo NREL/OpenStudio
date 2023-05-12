@@ -170,3 +170,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_Sched
   // m.save(toPath("./PlantLoop_AVM_ScheduledOnOff.osm"), true);
   // w.save(toPath("./PlantLoop_AVM_ScheduledOnOff.idf"), true);
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_createFluidProperties) {
+  // test for #4482 - It crashes with 5 plantloops
+
+  for (int n = 1; n <= 10; ++n) {
+    Model m;
+
+    for (int i = 0; i < n; ++i) {
+      PlantLoop p(m);
+      EXPECT_TRUE(p.setFluidType("PropyleneGlycol"));
+      EXPECT_TRUE(p.setGlycolConcentration(50 + i));
+    }
+    ForwardTranslator ft;
+    // EXPECT_TRUE(false) << "Failed for " << n << " PlantLoops";
+    ASSERT_NO_THROW(ft.translateModel(m)) << "Failed for " << n << " PlantLoops";
+  }
+}
