@@ -16,7 +16,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.6.0)
+project(OpenStudio VERSION 3.6.1)
 
 include(CMake/compiler_flags.cmake)
 
@@ -824,15 +824,20 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230413-darwin_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d13ccc3d5390d8ead47878814b5369fc")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-darwin_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "27ca992c6e5fe5347a7e342eb5b91511")
        else()
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-darwin.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b6bf19e6958bd41be9788a7f16fd7f27")
        endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "957681cb4f3b5cf8ad95103a5fae9a72")
+       if (ARCH MATCHES "arm64")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-linux_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "979a8839facf2fa1c4096dcbae39ddc2")
+       else()
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-linux.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "957681cb4f3b5cf8ad95103a5fae9a72")
+       endif()
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
@@ -1187,7 +1192,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_5_0_20221110.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_6_0_20230509.pdf" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)
@@ -1211,6 +1216,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes the prerelease tag if any
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgomp1, libx11-6") # This is for EnergyPlus
 
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
 # CMAKE_PROJECT_HOMEPAGE_URL
