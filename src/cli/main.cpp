@@ -4,6 +4,7 @@
 #include "../workflow/OSWorkflow.hpp"
 #include "../utilities/core/ASCIIStrings.hpp"
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/StringStreamLogSink.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../measure/ModelMeasure.hpp"
 #include "../measure/EnergyPlusMeasure.hpp"
@@ -306,6 +307,14 @@ int main(int argc, char* argv[]) {
     // fmt::print("gemPathDirs={}\n", fmt::join(gemPathDirs, ","));
     // fmt::print("gemHomeDir={}\n", gemHomeDir);
   } else {
+#if defined _WIN32
+    // Poor man's hack #4847
+    // Disable this logger, we have a duplicate in the ruby shared lib
+    openstudio::Logger::instance().standardOutLogger().disable();
+    openstudio::Logger::instance().standardErrLogger().disable();
+    // Avoid getting some messages during getOpenStudioModule() when we locate the DLL
+    openstudio::StringStreamLogSink sink;
+#endif
     result = openstudio::rubyCLI(rubyEngine);
   }
 
