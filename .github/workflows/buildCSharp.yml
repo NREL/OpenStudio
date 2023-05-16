@@ -2,7 +2,7 @@ name: buildCSharpSDK
 
 on:
   push:
-    branches: [ master, develop, actions_pypi ]
+    branches: [ master, develop, CSharp ]
     # Sequence of patterns matched against refs/tags
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
@@ -32,7 +32,7 @@ jobs:
       - name: "Checkout develop Branch"
         uses: actions/checkout@v3
         with:
-          ref: develop
+          ref: master
 
       - uses: actions/setup-python@v4
         with:
