@@ -29,16 +29,14 @@ jobs:
           os: windows-latest
 
     steps:
-      - name: "Checkout develop Branch"
-        uses: actions/checkout@v3
-        with:
-          ref: master
+      - uses: actions/checkout@v3
+        # If you need to rebuild for a specific branch **after** you fixed the workflow...
+        # with:
+        #   ref: master
 
       - uses: actions/setup-python@v4
         with:
           python-version: '3.8.x'
-
-
 
       - name: Install conan
         run: |
@@ -204,9 +202,7 @@ jobs:
     needs: build-csharp
 
     steps:
-      - name: "Checkout Master Branch"
-        uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
 
       - name: Download CSharp_Windows32
         uses: actions/download-artifact@v3
@@ -305,8 +301,7 @@ jobs:
     needs: build-csharp
 
     steps:
-      - name: "Checkout Master Branch"
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Download nuget
         uses: actions/download-artifact@v3
