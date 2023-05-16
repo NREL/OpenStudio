@@ -521,6 +521,9 @@ if(UNIX)
     if (NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
       # DLM: had to add this due to issues with boost optional and gcc, may be resolved if we move to std::optional
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
+      if (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-uninitialized")
+      endif()
     endif()
   endif()
 
