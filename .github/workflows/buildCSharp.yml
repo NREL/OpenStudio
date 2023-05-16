@@ -158,20 +158,10 @@ jobs:
           echo "Listing ./build/Products/=========================================="
           ls -R ./build/Products
 
-
       - name: Zip Build/Source Artifact
-        if: runner.os != 'Windows'
-        run: |
-          zip -r CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
-          zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
-
-
-      - name: Zip Build/Source Artifact
-        if: runner.os == 'Windows'
         run: |
           7z a CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
           7z a CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
-
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -310,9 +300,8 @@ jobs:
 
       - name: unzip artifacts
         run: |
-          unzip CSharp_${{ matrix.name }}.zip -d ./nuget
-          mv ./nuget/build/Products/csharp/Release/*.nupkg ./nuget/
-          ls -R
+          7z e CSharp_${{ matrix.name }}.zip -o./nuget
+          ls nuget csharp/*
 
       - name: Tests
         run: |
