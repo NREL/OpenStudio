@@ -188,6 +188,7 @@ set(bcl_src
   bcl/BCL.cpp
   bcl/BCLComponent.hpp
   bcl/BCLComponent.cpp
+  bcl/BCLEnums.hpp
   bcl/BCLFileReference.hpp
   bcl/BCLFileReference.cpp
   bcl/BCLMeasure.hpp
@@ -504,6 +505,7 @@ add_library(openstudio_utilities_minimal
   core/StringStreamLogSink.hpp
   core/StringStreamLogSink_Impl.hpp
   core/StringStreamLogSink.cpp
+  bcl/BCLEnums.hpp
 )
 target_link_libraries(openstudio_utilities_minimal PUBLIC ${${target_name}_depends})
 
@@ -572,6 +574,6 @@ MAKE_SWIG_TARGET(OpenStudioUtilitiesSql utilitiessql "${CMAKE_CURRENT_SOURCE_DIR
 MAKE_SWIG_TARGET(OpenStudioUtilitiesTime utilitiestime "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesTime.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesSql)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesUnits utilitiesunits "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesUnits.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesTime)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesFileTypes utilitiesfiletypes "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesFileTypes.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesUnits)
-MAKE_SWIG_TARGET(OpenStudioUtilitiesXML utilitiesxml "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesXML.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesCore)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesXML utilitiesxml "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesXML.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesBCL)
 
 MAKE_SWIG_TARGET(OpenStudioUtilities utilities "${CMAKE_CURRENT_SOURCE_DIR}/Utilities.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesFileTypes)

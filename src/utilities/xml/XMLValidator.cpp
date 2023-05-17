@@ -32,8 +32,9 @@
 #include "XMLUtils.hpp"
 #include "XMLInitializer.hpp"
 
-#include "utilities/core/Filesystem.hpp"
-#include "utilities/core/FilesystemHelpers.hpp"
+#include "../core/Filesystem.hpp"
+#include "../core/FilesystemHelpers.hpp"
+#include "../bcl/BCLEnums.hpp"
 
 #include <libxml/xmlversion.h>
 #include <libxml/xmlreader.h>
@@ -499,9 +500,41 @@ XMLValidator XMLValidator::gbxmlValidator() {
   if (tmpDir.empty()) {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
   }
-  bool quiet = true;
+  const bool quiet = true;
   ::openstudio::embedded_files::extractFile(":/xml/resources/GreenBuildingXML_Ver6.01.xsd", openstudio::toString(tmpDir), quiet);
   return XMLValidator(tmpDir / "GreenBuildingXML_Ver6.01.xsd");
+}
+
+XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, const VersionString& schemaVersion) {
+
+  const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
+  if (tmpDir.empty()) {
+    LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
+  }
+
+  int schemaVersionMajor = schemaVersion.major();
+  int schemaVersionMinor = schemaVersion.minor();
+
+  if (schemaVersionMajor < 2 || schemaVersionMajor > 3) {
+    LOG_AND_THROW("Unknown schema major version " << schemaVersionMajor << ", accepted = [2, 3]");
+  }
+  if ((schemaVersionMinor != 0) && !((schemaVersionMajor == 3) && (schemaVersionMinor == 1))) {
+    LOG_AND_THROW("Unknown schema version combination " << schemaVersionMajor << "." << schemaVersionMinor << ", accepted = [2.0, 3.0, 3.1]");
+  }
+
+  std::string schemaName;
+  if (bclXMLType == BCLXMLType::ComponentXML) {
+    schemaName = "component";
+  } else if (bclXMLType == BCLXMLType::MeasureXML) {
+    schemaName = "measure";
+  } else {
+    LOG_AND_THROW("Unknown BCLXMLType " << bclXMLType.valueName());
+  }
+  schemaName = fmt::format("{}_v{}.{}.xsd", schemaName, schemaVersionMajor, schemaVersionMinor);
+
+  const bool quiet = true;
+  ::openstudio::embedded_files::extractFile(fmt::format(":/xml/resources/bcl/{}", schemaName), openstudio::toString(tmpDir), quiet);
+  return XMLValidator(tmpDir / schemaName);
 }
 
 }  // namespace openstudio

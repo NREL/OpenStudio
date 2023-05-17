@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,52 +27,68 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_BCL_TEST_BCLFIXTURE_HPP
-#define UTILITIES_BCL_TEST_BCLFIXTURE_HPP
+#ifndef UTILITIES_BCL_BCLENUMS_HPP
+#define UTILITIES_BCL_BCLENUMS_HPP
 
-#include <gtest/gtest.h>
+#include "../core/Enum.hpp"
 
-#include <resources.hxx>
+namespace openstudio {
 
-#include "../../core/Logger.hpp"
-#include "../../core/FileLogSink.hpp"
+// clang-format off
 
-#include <string>
-#include <vector>
+/** \class MeasureType
+ *  \brief Enumeration of the types of BCLMeasure, by input file type.
+ *  \details ModelMeasures accept OpenStudio Models as input; EnergyPlusMeasures accept
+ *  EnergyPlus IDF files as input; and UtilityMeasures do not operate on any sort of energy
+ *  model. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+ *  call is:
+ *  \code
+OPENSTUDIO_ENUM( MeasureType,
+  ((ModelMeasure)(Model Measure))
+  ((EnergyPlusMeasure)(EnergyPlus Measure))
+  ((UtilityMeasure)(Utility Measure))
+  ((ReportingMeasure)(Reporting Measure))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM( MeasureType,
+  ((ModelMeasure)(Model Measure))
+  ((EnergyPlusMeasure)(EnergyPlus Measure))
+  ((UtilityMeasure)(Utility Measure))
+  ((ReportingMeasure)(Reporting Measure))
+);
 
-class BCLFixture : public ::testing::Test
-{
- protected:
-  // initialize for each test: create unique library path to call LocalBCL::instance(currentLocalBCLPath)
-  virtual void SetUp() override;
+OPENSTUDIO_ENUM( MeasureBadgeType,
+  ((BCLMeasure))
+  ((MyMeasure))
+  ((OSMeasure))
+);
 
-  // tear down after each test: delete currentLocalBCLPath
-  virtual void TearDown() override;
+OPENSTUDIO_ENUM( MeasureLanguage,
+  ((Ruby))
+  ((Python))
+);
 
-  // initialize static members
-  static void SetUpTestSuite();
+/** \class BCLXMLType
+ *  \brief Enumeration of the BCL XML file types.
+ *  \details The Building Component Library (BCL) hosts both components and measures. The
+ *  meta-data for individual instances of these two types of items are transmitted using XML
+ *  files that with slightly different structures. Thus, this enum helps distinguish between the
+ *  expected schema.
+ *
+ *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
+ *  \code
+OPENSTUDIO_ENUM(BCLXMLType,
+  ((ComponentXML)(ComponentXML))
+  ((MeasureXML)(MeasureXML))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(BCLXMLType,
+  ((ComponentXML)(ComponentXML))
+  ((MeasureXML)(MeasureXML))
+);
 
-  // tear down static members
-  static void TearDownTestSuite();
+// clang-format on
 
-  // set up logging
-  REGISTER_LOGGER("BCLFixture");
+}  // namespace openstudio
 
-  static ::testing::AssertionResult checkLogMessagesContain(const std::vector<openstudio::LogMessage>& logMessages,
-                                                            const std::vector<std::string>& searchStrings, bool use_regex = false);
-
- public:
-  // This is assigned in SetUp, per test, so doesn't have to be static
-  std::string prodAuthKey;
-  std::string devAuthKey;
-
-  // Note: storage for static variables must be defined in a separate .cpp file
-  const static std::string defaultProdAuthKey;
-  const static std::string defaultDevAuthKey;
-  static boost::optional<openstudio::FileLogSink> logFile;
-
-  // Unique path to the current test's BCL location
-  openstudio::path currentLocalBCLPath;
-};
-
-#endif  // UTILITIES_BCL_TEST_BCLFIXTURE_HPP
+#endif  // UTILITIES_BCL_BCLENUMS_HPP

@@ -33,17 +33,24 @@
 #include "../core/Checksum.hpp"
 #include "../core/FilesystemHelpers.hpp"
 #include "../time/DateTime.hpp"
+#include "../xml/XMLValidator.hpp"
 
-#include <sstream>
 #include <pugixml.hpp>
 
+#include <algorithm>
+#include <sstream>
+
 namespace openstudio {
+
+VersionString BCLXML::currentSchemaVersion() {
+  return {3, 1};
+}
 
 BCLXML::BCLXML(const BCLXMLType& bclXMLType)
   : m_bclXMLType(bclXMLType),
     m_uid{removeBraces(openstudio::createUUID())},
     m_versionId{removeBraces(openstudio::createUUID())},
-    m_versionModified{DateTime::nowUTC().toISO8601()} {}
+    m_versionModified{DateTime::nowUTC().toXsdDateTime()} {}
 
 BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem::system_complete(xmlPath)) {
   if (!openstudio::filesystem::exists(xmlPath)) {
@@ -91,6 +98,12 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     }
   }
 
+  // validate the gbxml prior to reverse translation
+  auto bclXMLValidator = XMLValidator::bclXMLValidator(m_bclXMLType, startingVersion);
+  if (!bclXMLValidator.validate(xmlPath)) {
+    LOG(Warn, "Failed to validate measure.xml at " << xmlPath);
+  }
+
   m_name = decodeString(element.child("name").text().as_string());
 
   m_uid = element.child("uid").text().as_string();
@@ -113,7 +126,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
   subelement = element.child("version_modified");
   if (subelement) {
     m_versionModified = subelement.text().as_string();
-    if (!DateTime::fromISO8601(m_versionModified)) {
+    if (!DateTime::fromXsdDateTime(m_versionModified)) {
       // not an allowable date time
       m_versionModified = "";
     }
@@ -338,7 +351,7 @@ std::string BCLXML::versionId() const {
 boost::optional<DateTime> BCLXML::versionModified() const {
   boost::optional<DateTime> result;
   if (!m_versionModified.empty()) {
-    result = DateTime::fromISO8601(m_versionModified);
+    result = DateTime::fromXsdDateTime(m_versionModified);
   }
   return result;
 }
@@ -588,7 +601,8 @@ pugi::xml_document BCLXML::toXML() const {
 
   auto element = docElement.append_child("schema_version");
   auto text = element.text();
-  text.set("3.0");
+  const std::string schemaVersion = BCLXML::currentSchemaVersion().str();
+  text.set(schemaVersion.c_str());
 
   if (m_error) {
     element = docElement.append_child("error");
@@ -727,7 +741,11 @@ pugi::xml_document BCLXML::toXML() const {
 
   // write files
   element = docElement.append_child("files");
-  for (const BCLFileReference& file : m_files) {
+
+  // Fix for #4748 - sort files
+  auto sortedFiles = m_files;
+  std::sort(sortedFiles.begin(), sortedFiles.end());
+  for (const BCLFileReference& file : sortedFiles) {
     auto subelement = element.append_child("file");
     file.writeValues(subelement);
   }
@@ -796,7 +814,7 @@ void BCLXML::changeUID() {
 
 void BCLXML::incrementVersionId() {
   m_versionId = removeBraces(openstudio::createUUID());
-  m_versionModified = DateTime::nowUTC().toISO8601();
+  m_versionModified = DateTime::nowUTC().toXsdDateTime();
 }
 
 bool BCLXML::checkForUpdatesXML() {

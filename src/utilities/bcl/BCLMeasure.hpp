@@ -31,6 +31,7 @@
 #define UTILITIES_BCL_BCLMEASURE_HPP
 
 #include "BCLXML.hpp"
+#include "BCLEnums.hpp"
 #include "../core/Optional.hpp"
 #include "../core/Path.hpp"
 #include "../core/Deprecated.hpp"
@@ -42,42 +43,6 @@
 namespace openstudio {
 
 class FileReferenceType;
-
-// clang-format off
-
-/** \class MeasureType
- *  \brief Enumeration of the types of BCLMeasure, by input file type.
- *  \details ModelMeasures accept OpenStudio Models as input; EnergyPlusMeasures accept
- *  EnergyPlus IDF files as input; and UtilityMeasures do not operate on any sort of energy
- *  model. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
- *  call is:
- *  \code
-OPENSTUDIO_ENUM( MeasureType,
-  ((ModelMeasure)(Model Measure))
-  ((EnergyPlusMeasure)(EnergyPlus Measure))
-  ((UtilityMeasure)(Utility Measure))
-  ((ReportingMeasure)(Reporting Measure))
-);
- *  \endcode */
-OPENSTUDIO_ENUM( MeasureType,
-  ((ModelMeasure)(Model Measure))
-  ((EnergyPlusMeasure)(EnergyPlus Measure))
-  ((UtilityMeasure)(Utility Measure))
-  ((ReportingMeasure)(Reporting Measure))
-);
-
-OPENSTUDIO_ENUM( MeasureBadgeType,
-  ((BCLMeasure))
-  ((MyMeasure))
-  ((OSMeasure))
-);
-
-OPENSTUDIO_ENUM( MeasureLanguage,
-  ((Ruby))
-  ((Python))
-);
-
-// clang-format on
 
 /** BCLMeasure is a class for managing the contents of a BCL Measure directory including the xml description file.
   **/

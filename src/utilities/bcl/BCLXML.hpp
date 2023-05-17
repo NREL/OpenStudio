@@ -30,6 +30,7 @@
 #ifndef UTILITIES_BCL_BCLXML_HPP
 #define UTILITIES_BCL_BCLXML_HPP
 
+#include "BCLEnums.hpp"
 #include "BCLFileReference.hpp"
 #include "BCLMeasureArgument.hpp"
 #include "BCLMeasureOutput.hpp"
@@ -40,6 +41,7 @@
 #include "../core/Deprecated.hpp"
 #include "../UtilitiesAPI.hpp"
 
+#include <compare>
 #include <vector>
 
 namespace pugi {
@@ -51,29 +53,6 @@ namespace openstudio {
 class BCLComponent;
 class BCLMeasure;
 class DateTime;
-
-// clang-format off
-
-/** \class BCLXMLType
- *  \brief Enumeration of the BCL XML file types.
- *  \details The Building Component Library (BCL) hosts both components and measures. The
- *  meta-data for individual instances of these two types of items are transmitted using XML
- *  files that with slightly different structures. Thus, this enum helps distinguish between the
- *  expected schema.
- *
- *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
- *  \code
-OPENSTUDIO_ENUM(BCLXMLType,
-  ((ComponentXML)(ComponentXML))
-  ((MeasureXML)(MeasureXML))
-);
- *  \endcode */
-OPENSTUDIO_ENUM(BCLXMLType,
-  ((ComponentXML)(ComponentXML))
-  ((MeasureXML)(MeasureXML))
-);
-
-// clang-format on
 
 /** BCLXML is a class for accessing the common XML structures of BCLComponent and BCLMeasure.
   **/
@@ -98,6 +77,9 @@ class UTILITIES_API BCLXML
 
   /// Decode a string written in xml
   static std::string decodeString(const std::string& txt);
+
+  // Returns the component/measure XSD schema version currently in use when writting a new xml.
+  static VersionString currentSchemaVersion();
 
   //@}
   /** @name Destructor */
