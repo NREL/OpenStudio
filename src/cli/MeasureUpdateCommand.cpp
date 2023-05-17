@@ -33,6 +33,8 @@
 ***********************************************************************************************************************/
 
 #include "MeasureUpdateCommand.hpp"
+#include "MeasureManager.hpp"
+
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
@@ -578,6 +580,13 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
     // opt.debug_print();
 
     if (opt.server_port > 0) {
+
+      auto g_httpHandler = std::make_unique<MeasureManagerServer>(opt.server_port, rubyEngine, pythonEngine);
+      g_httpHandler->open();
+      while (true) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      }
+
       const auto measureManagerCmd = fmt::format(
         R"ruby(
 require 'measure_manager_server'

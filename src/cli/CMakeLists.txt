@@ -12,6 +12,8 @@ set(CLI_SRC
   UpdateCommand.cpp
   MeasureUpdateCommand.hpp
   MeasureUpdateCommand.cpp
+  MeasureManager.hpp
+  MeasureManager.cpp
 )
 
 if(WIN32)
