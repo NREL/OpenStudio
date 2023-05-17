@@ -38,6 +38,8 @@
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
+// Macro U from cpprestsdk is clashing with (cf boost https://github.com/microsoft/cpprestsdk/issues/1214)
+#define _TURN_OFF_PLATFORM_STRING
 #include <cpprest/http_client.h>
 #if (defined(__GNUC__))
 #  pragma GCC diagnostic pop

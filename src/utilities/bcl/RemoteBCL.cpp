@@ -229,13 +229,13 @@ int RemoteBCL::checkForComponentUpdates() {
     m_lastSearch.clear();
 
     auto client = getClient(remoteUrl(), m_timeOutSeconds);
-    web::uri_builder builder(U("/api/search/"));
+    web::uri_builder builder(to_string_t("/api/search/"));
 
-    builder.append_path(U("*.xml"));
+    builder.append_path(to_string_t("*.xml"));
 
-    builder.append_query(U("fq[]"), to_string_t("ss_uuid:" + component.uid()));
+    builder.append_query(to_string_t("fq[]"), to_string_t("ss_uuid:" + component.uid()));
 
-    builder.append_query(U("api_version"), to_string_t(m_apiVersion));
+    builder.append_query(to_string_t("api_version"), to_string_t(m_apiVersion));
 
     // LOG(Debug, m_remoteUrl << builder.to_string());
 
@@ -270,13 +270,13 @@ int RemoteBCL::checkForMeasureUpdates() {
     m_lastSearch.clear();
 
     auto client = getClient(remoteUrl(), m_timeOutSeconds);
-    web::uri_builder builder(U("/api/search/"));
+    web::uri_builder builder(to_string_t("/api/search/"));
 
-    builder.append_path(U("*.xml"));
+    builder.append_path(to_string_t("*.xml"));
 
-    builder.append_query(U("fq[]"), to_string_t("ss_uuid:" + measure.uid()));
+    builder.append_query(to_string_t("fq[]"), to_string_t("ss_uuid:" + measure.uid()));
 
-    builder.append_query(U("api_version"), to_string_t(m_apiVersion));
+    builder.append_query(to_string_t("api_version"), to_string_t(m_apiVersion));
 
     // LOG(Debug, m_remoteUrl << builder.to_string());
 
@@ -491,12 +491,12 @@ bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& r
     m_lastSearch.clear();
 
     auto client = getClient(remoteUrl, m_timeOutSeconds);
-    web::uri_builder builder(U("/api/search/"));
+    web::uri_builder builder(to_string_t("/api/search/"));
 
-    builder.append_path(U("*.xml"));
+    builder.append_path(to_string_t("*.xml"));
 
-    builder.append_query(U("api_version"), to_string_t(m_apiVersion));
-    builder.append_query(U("show_rows"), U("0"));
+    builder.append_query(to_string_t("api_version"), to_string_t(m_apiVersion));
+    builder.append_query(to_string_t("show_rows"), to_string_t("0"));
 
     // LOG(Debug, m_remoteUrl << builder.to_string());
 
@@ -601,13 +601,13 @@ bool RemoteBCL::downloadComponent(const std::string& uid) {
   m_downloadUid = uid;
   // request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
   auto client = getClient(remoteUrl(), m_timeOutSeconds);
-  web::uri_builder builder(U("/api/component/download"));
+  web::uri_builder builder(to_string_t("/api/component/download"));
 
-  builder.append_query(U("uids"), to_string_t(uid));
+  builder.append_query(to_string_t("uids"), to_string_t(uid));
 
   web::http::http_request msg(web::http::methods::GET);
-  msg.headers().add(U("User-Agent"),
-                    U("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17"));
+  msg.headers().add(to_string_t("User-Agent"),
+                    to_string_t("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17"));
   msg.set_request_uri(builder.to_string());
 
   // LOG(Debug, m_remoteUrl << builder.to_string());
@@ -637,22 +637,22 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
   m_lastMetaSearch.reset();
 
   auto client = getClient(remoteUrl(), m_timeOutSeconds);
-  web::uri_builder builder(U("/api/metasearch/"));
+  web::uri_builder builder(to_string_t("/api/metasearch/"));
 
   // web::uri::encode_data_string will Encodes a string by converting all characters
   // except for RFC 3986 unreserved characters to their hexadecimal representation. (eg: '+' => %2B, ' ' => %20)
   std::string query = searchTerm.empty() ? "*" : searchTerm;
   builder.append_path(web::uri::encode_data_string(utility::conversions::to_string_t(query + ".xml")));
 
-  builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
+  builder.append_query(to_string_t("fq[]"), to_string_t("bundle:" + filterType));
 
   if (!componentType.empty() && componentType != "*") {
     std::string filter = (filterType == "nrel_component") ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags";
     filter += ":\"" + componentType + "\"";
-    builder.append_query(U("fq[]"), to_string_t(filter));
+    builder.append_query(to_string_t("fq[]"), to_string_t(filter));
   }
 
-  builder.append_query(U("api_version"), to_string_t(m_apiVersion));
+  builder.append_query(to_string_t("api_version"), to_string_t(m_apiVersion));
 
   m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                      .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -684,19 +684,19 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
   m_lastMetaSearch.reset();
 
   auto client = getClient(remoteUrl(), m_timeOutSeconds);
-  web::uri_builder builder(U("/api/metasearch/"));
+  web::uri_builder builder(to_string_t("/api/metasearch/"));
 
   std::string query = searchTerm.empty() ? "*" : searchTerm;
   builder.append_path(web::uri::encode_data_string(utility::conversions::to_string_t(query + ".xml")));
 
-  builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
+  builder.append_query(to_string_t("fq[]"), to_string_t("bundle:" + filterType));
 
   if (componentTypeTID != 0) {
     std::string filter = "tid:" + openstudio::string_conversions::number(componentTypeTID);
-    builder.append_query(U("fq[]"), to_string_t(filter));
+    builder.append_query(to_string_t("fq[]"), to_string_t(filter));
   }
 
-  builder.append_query(U("api_version"), to_string_t(m_apiVersion));
+  builder.append_query(to_string_t("api_version"), to_string_t(m_apiVersion));
 
   m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                      .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -729,22 +729,22 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
   m_lastSearch.clear();
 
   auto client = getClient(remoteUrl(), m_timeOutSeconds);
-  web::uri_builder builder(U("/api/search/"));
+  web::uri_builder builder(to_string_t("/api/search/"));
 
   std::string query = searchTerm.empty() ? "*" : searchTerm;
   builder.append_path(web::uri::encode_data_string(utility::conversions::to_string_t(query + ".xml")));
 
-  builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
+  builder.append_query(to_string_t("fq[]"), to_string_t("bundle:" + filterType));
 
   if (!componentType.empty() && componentType != "*") {
     std::string filter = (filterType == "nrel_component") ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags";
     filter += ":\"" + componentType + "\"";
-    builder.append_query(U("fq[]"), to_string_t(filter));
+    builder.append_query(to_string_t("fq[]"), to_string_t(filter));
   }
 
-  builder.append_query(U("api_version"), to_string_t(m_apiVersion));
-  builder.append_query(U("show_rows"), to_string_t(openstudio::string_conversions::number(m_numResultsPerQuery)));
-  builder.append_query(U("page"), to_string_t(openstudio::string_conversions::number(page)));
+  builder.append_query(to_string_t("api_version"), to_string_t(m_apiVersion));
+  builder.append_query(to_string_t("show_rows"), to_string_t(openstudio::string_conversions::number(m_numResultsPerQuery)));
+  builder.append_query(to_string_t("page"), to_string_t(openstudio::string_conversions::number(page)));
 
   m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                      .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -771,20 +771,20 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
   m_lastSearch.clear();
 
   auto client = getClient(remoteUrl(), m_timeOutSeconds);
-  web::uri_builder builder(U("/api/search/"));
+  web::uri_builder builder(to_string_t("/api/search/"));
 
   std::string query = searchTerm.empty() ? "*" : searchTerm;
   builder.append_path(web::uri::encode_data_string(utility::conversions::to_string_t(query + ".xml")));
 
-  builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
+  builder.append_query(to_string_t("fq[]"), to_string_t("bundle:" + filterType));
 
   if (componentTypeTID != 0) {
     std::string filter = "tid:" + openstudio::string_conversions::number(componentTypeTID);
-    builder.append_query(U("fq[]"), to_string_t(filter));
+    builder.append_query(to_string_t("fq[]"), to_string_t(filter));
   }
-  builder.append_query(U("api_version"), to_string_t(m_apiVersion));
-  builder.append_query(U("show_rows"), to_string_t(openstudio::string_conversions::number(m_numResultsPerQuery)));
-  builder.append_query(U("page"), to_string_t(openstudio::string_conversions::number(page)));
+  builder.append_query(to_string_t("api_version"), to_string_t(m_apiVersion));
+  builder.append_query(to_string_t("show_rows"), to_string_t(openstudio::string_conversions::number(m_numResultsPerQuery)));
+  builder.append_query(to_string_t("page"), to_string_t(openstudio::string_conversions::number(page)));
 
   m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                      .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
