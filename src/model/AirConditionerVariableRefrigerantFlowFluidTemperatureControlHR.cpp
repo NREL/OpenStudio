@@ -265,7 +265,8 @@ namespace model {
     }
 
     boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedRatedEvaporativeCapacity() {
-      return getAutosizedValue("Design Size Rated Evaporative Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY + NOT IN SQL AT ALL
+      return getAutosizedValue("Design Size Rated Evaporative Capacity", "W", "AirConditioner:VariableRefrigerantFlow");
     }
 
     double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::ratedCompressorPowerPerUnitofRatedEvaporativeCapacity() const {
@@ -560,7 +561,8 @@ namespace model {
     }
 
     boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedResistiveDefrostHeaterCapacity() {
-      return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W", "AirConditioner:VariableRefrigerantFlow");
     }
 
     double AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::maximumOutdoorDrybulbTemperatureforDefrostOperation() const {
@@ -1175,11 +1177,13 @@ namespace model {
     }
 
     boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedGrossRatedTotalCoolingCapacity() const {
-      return getAutosizedValue("Design Size Rated Total Cooling Capacity (gross)", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Total Cooling Capacity (gross)", "W", "AirConditioner:VariableRefrigerantFlow");
     }
 
     boost::optional<double> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::autosizedGrossRatedHeatingCapacity() const {
-      return getAutosizedValue("Design Size Rated Total Heating Capacity", "W");
+      // EPLUS-SQL-INCONSISTENCY
+      return getAutosizedValue("Design Size Rated Total Heating Capacity", "W", "AirConditioner:VariableRefrigerantFlow");
     }
 
     ComponentType AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::componentType() const {
