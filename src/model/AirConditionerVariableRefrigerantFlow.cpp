@@ -1663,7 +1663,7 @@ namespace model {
     }
 
     boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedResistiveDefrostHeaterCapacity() const {
-      return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "");
+      return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W");
     }
 
     boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedWaterCondenserVolumeFlowRate() const {
