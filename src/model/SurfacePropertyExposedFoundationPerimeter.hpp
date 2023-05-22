@@ -70,6 +70,8 @@ namespace model {
 
     std::string surfaceName() const;
 
+    Surface surface() const;
+
     std::string exposedPerimeterCalculationMethod() const;
 
     boost::optional<double> totalExposedPerimeter();
