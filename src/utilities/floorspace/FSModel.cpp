@@ -1050,13 +1050,11 @@ boost::optional<FSVertex> FSDaylightingControl::vertex() const {
   return m_vertex;
 }
 
-const Point3d& FSDaylightingControl::point() const {
+Point3d FSDaylightingControl::point() const {
   if (m_vertex.has_value() && m_definition.has_value()) {
-    return *new Point3d(m_vertex->x(), m_vertex->y(), m_definition->height());
-  } else {
-
-    return *new Point3d(0, 0, 0);
+    return {m_vertex->x(), m_vertex->y(), m_definition->height()};
   }
+  return {0.0, 0.0, 0.0};
 }
 
 boost::optional<FSDaylightingControlDefinition> FSDaylightingControl::definition() const {
