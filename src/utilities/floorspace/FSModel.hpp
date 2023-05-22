@@ -249,8 +249,8 @@ class UTILITIES_API FSDaylightingControl : public FSBase
   void Accept(FSVisitor& visitor) const override;
 
   boost::optional<FSVertex> vertex() const;
-  const Point3d& point() const;
   boost::optional<FSDaylightingControlDefinition> definition() const;
+  Point3d point() const;
 
  private:
   boost::optional<FSVertex> m_vertex;
