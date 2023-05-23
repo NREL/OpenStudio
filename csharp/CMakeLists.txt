@@ -51,12 +51,11 @@ endif()
 set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/netstandard2.0/OpenStudio.dll")
 
 # ignore deprecated warnings since we will export deprecated methods
-if(MSVC)
-  add_definitions(/wd4996 /bigobj)
-else()
-  add_definitions(-Wno-deprecated-declarations)
-endif()
-
+add_library(csharp_warnings INTERFACE)
+target_compile_options(csharp_warnings INTERFACE "$<${is_msvc_genex}:/wd4996>")
+target_compile_options(csharp_warnings INTERFACE "$<${is_msvc_genex}:/bigobj>")
+target_compile_options(csharp_warnings INTERFACE "$<${is_gnu_or_clang_genex}:-Wno-deprecated-declarations>")
+target_compile_options(csharp_warnings INTERFACE "$<${is_gnu_or_clang_genex}:-Wno-unused-function>")
 
 # custom command to make OPENSTUDIO_CSHARP_DLL
 add_custom_command(
@@ -64,7 +63,6 @@ add_custom_command(
   COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "/p:Platform=${CSHARP_PLATFORM}" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
   DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
 )
-
 
 
 install(FILES "${OPENSTUDIO_CSHARP_DLL}" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
@@ -161,7 +159,9 @@ add_dependencies(openstudio_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
 
 
 target_link_libraries(openstudio_csharp
- openstudiolib
+  PRIVATE
+    openstudiolib
+    csharp_warnings
 )
 install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
 install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
@@ -173,7 +173,9 @@ add_library(
 )
 add_dependencies(openstudio_model_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
 target_link_libraries(openstudio_model_csharp
-  openstudiolib
+  PRIVATE
+    openstudiolib
+    csharp_warnings
 )
 install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
 install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
@@ -185,7 +187,9 @@ add_library(
 )
 add_dependencies(openstudio_translators_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
 target_link_libraries(openstudio_translators_csharp
-  openstudiolib
+  PRIVATE
+    openstudiolib
+    csharp_warnings
 )
 install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
 install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
