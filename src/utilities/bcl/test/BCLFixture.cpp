@@ -32,6 +32,9 @@
 #include "../LocalBCL.hpp"
 #include "../../core/ApplicationPathHelpers.hpp"
 
+#include <algorithm>
+#include <regex>
+
 using openstudio::LocalBCL;
 using openstudio::Logger;
 using openstudio::toPath;
@@ -92,6 +95,41 @@ void BCLFixture::SetUpTestSuite() {
 
 void BCLFixture::TearDownTestSuite() {
   logFile->disable();
+}
+
+::testing::AssertionResult BCLFixture::checkLogMessagesContain(const std::vector<openstudio::LogMessage>& logMessages,
+                                                               const std::vector<std::string>& searchStrings, bool use_regex) {
+
+  std::vector<std::string> logStrings;
+  std::transform(logMessages.cbegin(), logMessages.cend(), std::back_inserter(logStrings),
+                 [](const auto& logMessage) { return logMessage.logMessage(); });
+
+  std::stringstream ss;
+  int not_found = 0;
+
+  for (const std::string& searchString : searchStrings) {
+    bool match_found = false;
+    for (const std::string& logString : logStrings) {
+      if (use_regex) {
+        match_found = std::regex_match(logString, std::regex(searchString));
+      } else {
+        match_found = logString.find(searchString) != std::string::npos;
+      }
+      if (match_found) {
+        break;
+      }
+    }
+    if (!match_found) {
+      ++not_found;
+      ss << " * " << not_found << ": '" << searchString << "'\n";
+    }
+  }
+
+  if (not_found == 0) {
+    return ::testing::AssertionSuccess();
+  } else {
+    return ::testing::AssertionFailure() << "Could not find " << not_found << " messages:\n" << ss.str();
+  }
 }
 
 // define static storage

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,46 +27,68 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef UTILITIES_BCL_BCLENUMS_HPP
+#define UTILITIES_BCL_BCLENUMS_HPP
 
-#include "ModelFixture.hpp"
+#include "../core/Enum.hpp"
 
-#include "../AirflowNetworkExternalNode.hpp"
-#include "../AirflowNetworkExternalNode_Impl.hpp"
-#include "../Curve.hpp"
-#include "../Curve_Impl.hpp"
-#include "../CurveLinear.hpp"
-#include "../CurveLinear_Impl.hpp"
+namespace openstudio {
 
-using namespace openstudio;
-using namespace openstudio::model;
+// clang-format off
 
-TEST_F(ModelFixture, AirflowNetwork_ExternalNode) {
-  Model model;
+/** \class MeasureType
+ *  \brief Enumeration of the types of BCLMeasure, by input file type.
+ *  \details ModelMeasures accept OpenStudio Models as input; EnergyPlusMeasures accept
+ *  EnergyPlus IDF files as input; and UtilityMeasures do not operate on any sort of energy
+ *  model. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+ *  call is:
+ *  \code
+OPENSTUDIO_ENUM( MeasureType,
+  ((ModelMeasure)(Model Measure))
+  ((EnergyPlusMeasure)(EnergyPlus Measure))
+  ((UtilityMeasure)(Utility Measure))
+  ((ReportingMeasure)(Reporting Measure))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM( MeasureType,
+  ((ModelMeasure)(Model Measure))
+  ((EnergyPlusMeasure)(EnergyPlus Measure))
+  ((UtilityMeasure)(Utility Measure))
+  ((ReportingMeasure)(Reporting Measure))
+);
 
-  AirflowNetworkExternalNode extnode0(model);
-  auto cpt_ = extnode0.windPressureCoefficientCurve().optionalCast<CurveLinear>();
-  ASSERT_TRUE(cpt_);
-  EXPECT_EQ(1.0, cpt_->coefficient1Constant());
-  EXPECT_EQ(0.0, cpt_->coefficient2x());
+OPENSTUDIO_ENUM( MeasureBadgeType,
+  ((BCLMeasure))
+  ((MyMeasure))
+  ((OSMeasure))
+);
 
-  EXPECT_TRUE(extnode0.isExternalNodeHeightDefaulted());
-  EXPECT_TRUE(extnode0.isSymmetricWindPressureCoefficientCurveDefaulted());
-  EXPECT_EQ("Absolute", extnode0.windAngleType());
-  EXPECT_TRUE(extnode0.isWindAngleTypeDefaulted());
-  EXPECT_TRUE(extnode0.setWindAngleType("Relative"));
-  EXPECT_EQ("Relative", extnode0.windAngleType());
-  EXPECT_FALSE(extnode0.isWindAngleTypeDefaulted());
+OPENSTUDIO_ENUM( MeasureLanguage,
+  ((Ruby))
+  ((Python))
+);
 
-  CurveLinear curve1(model);
-  curve1.setCoefficient1Constant(0.5);
-  curve1.setCoefficient2x(0.0);
-  curve1.setMinimumValueofx(0.0);
-  curve1.setMaximumValueofx(360.0);
+/** \class BCLXMLType
+ *  \brief Enumeration of the BCL XML file types.
+ *  \details The Building Component Library (BCL) hosts both components and measures. The
+ *  meta-data for individual instances of these two types of items are transmitted using XML
+ *  files that with slightly different structures. Thus, this enum helps distinguish between the
+ *  expected schema.
+ *
+ *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
+ *  \code
+OPENSTUDIO_ENUM(BCLXMLType,
+  ((ComponentXML)(ComponentXML))
+  ((MeasureXML)(MeasureXML))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(BCLXMLType,
+  ((ComponentXML)(ComponentXML))
+  ((MeasureXML)(MeasureXML))
+);
 
-  extnode0.setWindPressureCoefficientCurve(curve1);
-  EXPECT_EQ(curve1, extnode0.windPressureCoefficientCurve());
+// clang-format on
 
-  AirflowNetworkExternalNode extnode1(model, curve1);
-  EXPECT_EQ(curve1, extnode1.windPressureCoefficientCurve());
-}
+}  // namespace openstudio
+
+#endif  // UTILITIES_BCL_BCLENUMS_HPP

@@ -27,7 +27,7 @@ jobs:
         name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310]
         include:
         - name: Ubuntu
-          os: ubuntu-18.04
+          os: ubuntu-20.04
           python-version: 3.8
           allow_failure: false
           extra_cmake_args: "-DCONAN_FIRST_TIME_BUILD_ALL:BOOL=ON"
@@ -87,8 +87,8 @@ jobs:
           # Weirdly enough, ninja makes ubuntu unresponsive...
           #echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
           # Use preinstalled gcc-10 to support C++20
-          echo CC=gcc-10 >> $GITHUB_ENV
-          echo CXX=g++-10 >> $GITHUB_ENV
+          #echo CC=gcc-10 >> $GITHUB_ENV
+          #echo CXX=g++-10 >> $GITHUB_ENV
         elif [ "$RUNNER_OS" == "macOS" ]; then
           echo "Setting up MACOSX_DEPLOYMENT_TARGET and SDKROOT"
           echo MACOSX_DEPLOYMENT_TARGET=${{ matrix.MACOSX_DEPLOYMENT_TARGET }} >> $GITHUB_ENV
@@ -210,8 +210,12 @@ jobs:
       shell: bash
       run: |
         set -x
-        cmake --build . --target package -j 2
-
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          cmake --build . --target package -j 1
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+          cmake --build . --target package -j 2
+        fi;
+          
     # We always upload to testpypi
     - name: Build python wheel
       shell: bash
@@ -248,6 +252,8 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
+        # urllib3 2.0 breaks 
+        pip install urllib3==1.26.15
         pip install setuptools wheel twine requests packaging
         mkdir wheels
 
@@ -294,7 +300,7 @@ jobs:
         name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310]
         include:
         - name: Ubuntu
-          os: ubuntu-18.04
+          os: ubuntu-20.04
           python-version: 3.8
           allow_failure: false
         - name: macOS

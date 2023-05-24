@@ -4506,16 +4506,17 @@ namespace energyplus {
     // TODO: JM 2019-03-22 I am not sure you need this one
     // But I temporarily removed the \reference FluidAndGlycolNames from FluidProperties_GlycolConcentration to avoid problems of having two objects of
     // the same reference group bearing the same name (FluidProperties:Name also has the same reference group)
-    IdfObject& fluidPropName = m_idfObjects.emplace_back(openstudio::IddObjectType::FluidProperties_Name);
-    fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
-    fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");
-
     IdfObject& fluidPropGlyConcentration = m_idfObjects.emplace_back(openstudio::IddObjectType::FluidProperties_GlycolConcentration);
     fluidPropGlyConcentration.setName(glycolName);
     fluidPropGlyConcentration.setString(FluidProperties_GlycolConcentrationFields::GlycolType, glycolType);
     fluidPropGlyConcentration.setDouble(FluidProperties_GlycolConcentrationFields::GlycolConcentration, glycolConcentration * 0.01);
 
-    return fluidPropName;
+    // NOTE: do not do another emplace_back before returning
+    IdfObject& fluidPropName = m_idfObjects.emplace_back(openstudio::IddObjectType::FluidProperties_Name);
+    fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
+    fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");
+
+    return {fluidPropName};
   }
 
   boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& fluidType) {

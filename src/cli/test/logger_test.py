@@ -12,7 +12,7 @@ handler.setLevel(logging.WARNING)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-openstudio.Logger_instance().standardOutLogger().setLogLevel(openstudio.Error)
+openstudio.Logger.instance().standardOutLogger().setLogLevel(openstudio.Error)
 
 logger.info("STDOUT Info")
 logger.warning("STDOUT Warn")
