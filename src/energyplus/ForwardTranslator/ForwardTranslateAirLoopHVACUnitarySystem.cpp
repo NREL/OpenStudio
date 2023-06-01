@@ -237,6 +237,34 @@ namespace energyplus {
         unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingCoilObjectType, _coolingCoil->iddObject().name());
         unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingCoilName, _coolingCoil->name().get());
       }
+
+      // Supply Air Flow Rate Method During Cooling Operation
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRateMethod,
+                              modelObject.supplyAirFlowRateMethodDuringCoolingOperation());
+
+      // Supply Air Flow Rate During Cooling Operation
+      if (modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized()) {
+        unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate, "Autosize");
+      } else if (auto val_ = modelObject.supplyAirFlowRateDuringCoolingOperation()) {
+        unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate, val_.get());
+      }
+
+      // Supply Air Flow Rate Per Floor Area During Cooling Operation
+      if (auto val_ = modelObject.supplyAirFlowRatePerFloorAreaDuringCoolingOperation()) {
+        unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRatePerFloorArea, val_.get());
+      }
+
+      // Fraction of Autosized Design Cooling Supply Air Flow Rate
+      if (auto val_ = modelObject.fractionofAutosizedDesignCoolingSupplyAirFlowRate()) {
+        unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingFractionofAutosizedCoolingSupplyAirFlowRate, val_.get());
+      }
+
+      // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation
+      if (auto val_ = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation()) {
+        unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRatePerUnitofCapacity, val_.get());
+      }
+    } else {
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRateMethod, "None");
     }
 
     // Use DOAS DX Cooling Coil
@@ -270,37 +298,6 @@ namespace energyplus {
         unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilObjectType, _supplementalHeatingCoil->iddObject().name());
         unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName, _supplementalHeatingCoil->name().get());
       }
-    }
-
-    // Supply Air Flow Rate Method During Cooling Operation
-    s = modelObject.supplyAirFlowRateMethodDuringCoolingOperation();
-    if (s) {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRateMethod, s.get());
-    }
-
-    // Supply Air Flow Rate During Cooling Operation
-    if (modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized()) {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate, "Autosize");
-    } else if ((d = modelObject.supplyAirFlowRateDuringCoolingOperation())) {
-      unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate, d.get());
-    }
-
-    // Supply Air Flow Rate Per Floor Area During Cooling Operation
-    d = modelObject.supplyAirFlowRatePerFloorAreaDuringCoolingOperation();
-    if (d) {
-      unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRatePerFloorArea, d.get());
-    }
-
-    // Fraction of Autosized Design Cooling Supply Air Flow Rate
-    d = modelObject.fractionofAutosizedDesignCoolingSupplyAirFlowRate();
-    if (d) {
-      unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingFractionofAutosizedCoolingSupplyAirFlowRate, d.get());
-    }
-
-    // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation
-    d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
-    if (d) {
-      unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRatePerUnitofCapacity, d.get());
     }
 
     // Supply Air Flow Rate Method During Heating Operation

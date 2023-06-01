@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -130,7 +132,7 @@ namespace model {
     boost::optional<HVACComponent> supplementalHeatingCoil() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate Method" **/
-    boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation() const;
+    std::string supplyAirFlowRateMethodDuringCoolingOperation() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
     boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
@@ -298,27 +300,21 @@ namespace model {
 
     void resetSupplementalHeatingCoil();
 
-    bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
-
-    void resetSupplyAirFlowRateMethodDuringCoolingOperation();
+    OS_DEPRECATED bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
+    OS_DEPRECATED void resetSupplyAirFlowRateMethodDuringCoolingOperation();
 
     bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
-
-    void resetSupplyAirFlowRateDuringCoolingOperation();
-
+    OS_DEPRECATED void resetSupplyAirFlowRateDuringCoolingOperation();
     void autosizeSupplyAirFlowRateDuringCoolingOperation();
 
     bool setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(double supplyAirFlowRatePerFloorAreaDuringCoolingOperation);
-
-    void resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
+    OS_DEPRECATED void resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
 
     bool setFractionofAutosizedDesignCoolingSupplyAirFlowRate(double fractionofAutosizedDesignCoolingSupplyAirFlowRate);
-
-    void resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
+    OS_DEPRECATED void resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
 
     bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation);
-
-    void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
+    OS_DEPRECATED void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
 
     bool setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation);
 
