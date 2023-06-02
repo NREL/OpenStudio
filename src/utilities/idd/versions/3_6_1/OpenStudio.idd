@@ -1,4 +1,4 @@
-!IDD_Version 3.7.0
+!IDD_Version 3.6.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.7.0
+       \default 3.6.1
   A3; \field Prerelease Identifier
        \type alpha
 
