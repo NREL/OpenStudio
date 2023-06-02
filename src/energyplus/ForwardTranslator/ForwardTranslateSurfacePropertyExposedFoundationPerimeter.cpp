@@ -51,7 +51,7 @@ namespace energyplus {
 
     m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, modelObject.surfaceName());
+    idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, modelObject.surface().nameString());
 
     idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod,
                         modelObject.exposedPerimeterCalculationMethod());
