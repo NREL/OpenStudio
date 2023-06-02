@@ -32,6 +32,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/SurfacePropertyExposedFoundationPerimeter.hpp"
 #include "../../model/SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
+#include "../../model/Surface.hpp"
 
 #include <utilities/idd/SurfaceProperty_ExposedFoundationPerimeter_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
