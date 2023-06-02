@@ -46,6 +46,7 @@
 #include "../utilities/units/Unit.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -691,57 +692,48 @@ namespace model {
   // DEPRECATED
 
   void ZoneMixing::resetSourceZone() {
-    LOG(Warn, "As of 3.5.0, resetSourceZone is deprecated. Use resetSourceZoneOrSpace instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG("3.5.0", "Use resetSourceZoneOrSpace instead.");
     getImpl<detail::ZoneMixing_Impl>()->resetSourceZoneOrSpace();
   }
 
   boost::optional<double> ZoneMixing::flowRateperZoneFloorArea() const {
-    LOG(Warn, "As of 3.5.0, flowRateperZoneFloorArea is deprecated. Use flowRateperFloorArea instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG("3.5.0", "Use flowRateperFloorArea instead.");
     return getImpl<detail::ZoneMixing_Impl>()->flowRateperFloorArea();
   }
 
   bool ZoneMixing::setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea) {
-    LOG(Warn, "As of 3.5.0, setFlowRateperZoneFloorArea is deprecated. Use setFlowRateperFloorArea instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG("3.5.0", "Use setFlowRateperFloorArea instead.");
     return getImpl<detail::ZoneMixing_Impl>()->setFlowRateperFloorArea(flowRateperZoneFloorArea);
   }
 
   // ReceivingTemperatureSchedule
   boost::optional<Schedule> ZoneMixing::minimumZoneTemperatureSchedule() const {
-    LOG(Warn, "As of 3.5.0, minimumZoneTemperatureSchedule is deprecated. Use minimumReceivingTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG("3.5.0", "Use minimumReceivingTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->minimumReceivingTemperatureSchedule();
   }
 
   bool ZoneMixing::setMinimumZoneTemperatureSchedule(Schedule& schedule) {
-    LOG(Warn, "As of 3.5.0, setMinimumZoneTemperatureSchedule is deprecated. Use setMinimumReceivingTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG("3.5.0", "Use setMinimumReceivingTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->setMinimumReceivingTemperatureSchedule(schedule);
   }
 
   void ZoneMixing::resetMinimumZoneTemperatureSchedule() {
-    LOG(Warn, "As of 3.5.0, resetMinimumZoneTemperatureSchedule is deprecated. Use resetMinimumReceivingTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG("3.5.0", "Use resetMinimumReceivingTemperatureSchedule instead.");
     getImpl<detail::ZoneMixing_Impl>()->resetMinimumReceivingTemperatureSchedule();
   }
 
   boost::optional<Schedule> ZoneMixing::maximumZoneTemperatureSchedule() const {
-    LOG(Warn, "As of 3.5.0, maximumZoneTemperatureSchedule is deprecated. Use maximumReceivingTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG("3.5.0", "Use maximumReceivingTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->maximumReceivingTemperatureSchedule();
   }
 
   bool ZoneMixing::setMaximumZoneTemperatureSchedule(Schedule& schedule) {
-    LOG(Warn, "As of 3.5.0, setMaximumZoneTemperatureSchedule is deprecated. Use setMaximumReceivingTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG("3.5.0", "Use setMaximumReceivingTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->setMaximumReceivingTemperatureSchedule(schedule);
   }
 
   void ZoneMixing::resetMaximumZoneTemperatureSchedule() {
-    LOG(Warn, "As of 3.5.0, resetMaximumZoneTemperatureSchedule is deprecated. Use resetMaximumReceivingTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG("3.5.0", "Use resetMaximumReceivingTemperatureSchedule instead.");
     getImpl<detail::ZoneMixing_Impl>()->resetMaximumReceivingTemperatureSchedule();
   }
 

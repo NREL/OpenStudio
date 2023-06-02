@@ -66,6 +66,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"  // For deprecation
+
 namespace openstudio {
 namespace model {
 
@@ -1086,18 +1088,6 @@ namespace model {
     getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setDefrostEnergyInputRatioFunctionofTemperatureCurve(boost::none);
   }
 
-  double CoilHeatingDXSingleSpeed::ratedSupplyFanPowerPerVolumeFlowRate() const {
-    LOG(Warn, "As of 3.5.0, ratedSupplyFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyFanPowerPerVolumeFlowRate2017 instead. It will be "
-              "removed within three releases.");
-    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->ratedSupplyFanPowerPerVolumeFlowRate2017();
-  }
-
-  bool CoilHeatingDXSingleSpeed::setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate) {
-    LOG(Warn, "As of 3.5.0, setRatedSupplyFanPowerPerVolumeFlowRate is deprecated. Use setRatedSupplyFanPowerPerVolumeFlowRate2017 instead. It will "
-              "be removed within three releases.");
-    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate2017(ratedSupplyFanPowerPerVolumeFlowRate);
-  }
-
   double CoilHeatingDXSingleSpeed::ratedSupplyFanPowerPerVolumeFlowRate2017() const {
     return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->ratedSupplyFanPowerPerVolumeFlowRate2017();
   }
@@ -1122,12 +1112,6 @@ namespace model {
     return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->airflowNetworkEquivalentDuct();
   }
 
-  /// @cond
-  CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(std::shared_ptr<detail::CoilHeatingDXSingleSpeed_Impl> impl)
-    : StraightComponent(std::move(impl)) {}
-
-  /// @endcond
-
   boost::optional<double> CoilHeatingDXSingleSpeed::autosizedRatedTotalHeatingCapacity() const {
     return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->autosizedRatedTotalHeatingCapacity();
   }
@@ -1139,6 +1123,23 @@ namespace model {
   boost::optional<double> CoilHeatingDXSingleSpeed::autosizedResistiveDefrostHeaterCapacity() const {
     return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->autosizedResistiveDefrostHeaterCapacity();
   }
+
+  /// @cond
+  CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(std::shared_ptr<detail::CoilHeatingDXSingleSpeed_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+
+  // DEPRECATED
+  double CoilHeatingDXSingleSpeed::ratedSupplyFanPowerPerVolumeFlowRate() const {
+    DEPRECATED_AT_MSG("3.5.0", "Use ratedSupplyFanPowerPerVolumeFlowRate2017 instead.");
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->ratedSupplyFanPowerPerVolumeFlowRate2017();
+  }
+
+  bool CoilHeatingDXSingleSpeed::setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate) {
+    DEPRECATED_AT_MSG("3.5.0", "Use setRatedSupplyFanPowerPerVolumeFlowRate2017 instead.");
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate2017(ratedSupplyFanPowerPerVolumeFlowRate);
+  }
+
+  /// @endcond
 
 }  // namespace model
 

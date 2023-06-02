@@ -24,6 +24,7 @@ set(core_src
   core/Containers.hpp
   core/Containers.cpp
   core/Deprecated.hpp
+  core/DeprecatedHelpers.hpp
   core/DynamicLibrary.hpp
   core/DynamicLibraryPOSIX.hpp
   core/DynamicLibraryWindows.hpp
