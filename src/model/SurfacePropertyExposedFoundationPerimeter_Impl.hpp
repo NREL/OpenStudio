@@ -69,8 +69,6 @@ namespace model {
       /** @name Getters */
       //@{
 
-      std::string surfaceName() const;
-
       Surface surface() const;
 
       std::string exposedPerimeterCalculationMethod() const;

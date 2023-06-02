@@ -71,12 +71,6 @@ namespace model {
       return SurfacePropertyExposedFoundationPerimeter::iddObjectType();
     }
 
-    std::string SurfacePropertyExposedFoundationPerimeter_Impl::surfaceName() const {
-      boost::optional<Surface> surface = optionalSurface();
-      OS_ASSERT(surface);
-      return surface.get().name().get();
-    }
-
     Surface SurfacePropertyExposedFoundationPerimeter_Impl::surface() const {
       boost::optional<Surface> value = optionalSurface();
       if (!value) {
@@ -181,7 +175,9 @@ namespace model {
   }
 
   std::string SurfacePropertyExposedFoundationPerimeter::surfaceName() const {
-    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->surfaceName();
+    LOG(Warn, "As of 3.7.0, surfaceName is deprecated. Use surface.nameString instead. It will be "
+              "removed within three releases.");
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->surface().nameString();
   }
 
   Surface SurfacePropertyExposedFoundationPerimeter::surface() const {
