@@ -71,11 +71,16 @@ namespace model {
       return SurfacePropertyExposedFoundationPerimeter::iddObjectType();
     }
 
-    std::string SurfacePropertyExposedFoundationPerimeter_Impl::surfaceName() const {
-      boost::optional<Surface> surface =
-        getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
-      OS_ASSERT(surface);
-      return surface.get().name().get();
+    Surface SurfacePropertyExposedFoundationPerimeter_Impl::surface() const {
+      boost::optional<Surface> value = optionalSurface();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Surface attached.");
+      }
+      return value.get();
+    }
+
+    boost::optional<Surface> SurfacePropertyExposedFoundationPerimeter_Impl::optionalSurface() const {
+      return getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
     }
 
     std::string SurfacePropertyExposedFoundationPerimeter_Impl::exposedPerimeterCalculationMethod() const {
@@ -170,7 +175,13 @@ namespace model {
   }
 
   std::string SurfacePropertyExposedFoundationPerimeter::surfaceName() const {
-    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->surfaceName();
+    LOG(Warn, "As of 3.7.0, surfaceName is deprecated. Use surface.nameString instead. It will be "
+              "removed within three releases.");
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->surface().nameString();
+  }
+
+  Surface SurfacePropertyExposedFoundationPerimeter::surface() const {
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->surface();
   }
 
   std::string SurfacePropertyExposedFoundationPerimeter::exposedPerimeterCalculationMethod() const {

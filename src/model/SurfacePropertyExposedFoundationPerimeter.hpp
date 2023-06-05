@@ -33,6 +33,7 @@
 #include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -68,7 +69,9 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string surfaceName() const;
+    OS_DEPRECATED std::string surfaceName() const;
+
+    Surface surface() const;
 
     std::string exposedPerimeterCalculationMethod() const;
 
