@@ -40,7 +40,7 @@
 #include <utilities/idd/Table_IndependentVariable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../../utilities/core/Deprecated.hpp"
+#include "../../utilities/core/DeprecatedHelpers.hpp"
 
 using namespace openstudio::model;
 
@@ -57,6 +57,7 @@ namespace energyplus {
 #endif
 
   boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(TableMultiVariableLookup& modelObject) {
+    DEPRECATED_AT_MSG(3, 5, 0, "The entire TableMultiVariableLookup will be removed.");
     OptionalString s;
     OptionalDouble d;
     OptionalModelObject temp;

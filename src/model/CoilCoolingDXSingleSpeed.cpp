@@ -1282,7 +1282,7 @@ namespace model {
     return result;
   }
 
-  std::vector<std::string> CoilCoolingDXSingleSpeed::condenserTypeValues() const {
+  std::vector<std::string> CoilCoolingDXSingleSpeed::condenserTypeValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Coil_Cooling_DX_SingleSpeedFields::CondenserType);
   }
 
@@ -1376,7 +1376,8 @@ namespace model {
 
   /// @cond
 
-  CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> impl) : StraightComponent(std::move(p)) {}
+  CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
 
   // DEPRECATED
   double CoilCoolingDXSingleSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {

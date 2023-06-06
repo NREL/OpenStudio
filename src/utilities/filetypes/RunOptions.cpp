@@ -32,6 +32,7 @@
 #include "ForwardTranslatorOptions.hpp"
 
 #include "../core/Assert.hpp"
+#include "../core/DeprecatedHelpers.hpp"
 
 #include <json/json.h>
 
@@ -441,14 +442,15 @@ void RunOptions::resetForwardTranslatorOptions() {
 
 // DEPRECATED
 std::string RunOptions::forwardTranslateOptions() const {
-  LOG(Warn, "As of 3.5.1, (std::string) forwardTranslateOptions is deprecated. Use (ForwardTranslatorOptions) forwardTranslatorOptions instead. "
-            "It will be removed within three releases.");
+  DEPRECATED_AT_MSG(3, 6, 0, "Use `ForwardTranslatorOptions RunOptions::forwardTranslatorOptions` instead.");
   return getImpl<detail::RunOptions_Impl>()->forwardTranslatorOptions().string();
 }
 
 bool RunOptions::setForwardTranslateOptions(const std::string& options) {
-  LOG(Warn, "As of 3.5.1, setForwardTranslateOptions(std::string) is deprecated. Use setForwardTranslatorOptions(ForwardTranslatorOptions) instead. "
-            "It will be removed within three releases.");
+  DEPRECATED_AT_MSG(
+    3, 6, 0,
+    "Use `ForwardTranslatorOptions RunOptions::setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions)` instead.");
+
   if (auto ftOptions_ = ForwardTranslatorOptions::fromString(options)) {
     return getImpl<detail::RunOptions_Impl>()->setForwardTranslatorOptions(ftOptions_.get());
   }
@@ -456,8 +458,7 @@ bool RunOptions::setForwardTranslateOptions(const std::string& options) {
 }
 
 void RunOptions::resetForwardTranslateOptions() {
-  LOG(Warn, "As of 3.5.1, resetForwardTranslateOptions is deprecated. Use resetForwardTranslateOptions instead. "
-            "It will be removed within three releases.");
+  DEPRECATED_AT_MSG(3, 6, 0, "Use resetForwardTranslateOptions instead.");
   getImpl<detail::RunOptions_Impl>()->resetForwardTranslatorOptions();
 }
 
