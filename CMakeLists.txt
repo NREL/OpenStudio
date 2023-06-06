@@ -206,7 +206,7 @@ set(ENERGYPLUS_REPO "NREL")
 set(RADIANCE_VERSION "5.0.a.12")
 
 # configure file with version information
-configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
+configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.hxx.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
 
 # Deployment target
 if(APPLE)
