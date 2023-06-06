@@ -1,4 +1,4 @@
-OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 following conditions are met:
@@ -9,12 +9,19 @@ disclaimer.
 (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
 disclaimer in the documentation and/or other materials provided with the distribution.
 
-(3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+(3) Redistribution of this software, without modification, must refer to the software by the same designation.
+Redistribution of a modified version of this software (i) may not refer to the modified version by the same designation,
+or by any confusingly similar designation, and (ii) must refer to the underlying software originally provided by
+Alliance as “OpenStudio(R)”. Except to comply with the foregoing, the term “OpenStudio(R)”, or any confusingly similar
+designation may not be used to refer to any modified version of this software or any modified version of the underlying
+software originally provided by Alliance without the prior written consent of Alliance.
+
+Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
 derived from this software without specific prior written permission from the respective party.
 
-(4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-written permission from Alliance for Sustainable Energy, LLC.
+(4) The name of the copyright holder(s), any contributors, the United States Government, the United States Department
+of Energy, or any of their employees may not be used to endorse or promote products derived from this software without
+specific prior written permission from the respective party.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
