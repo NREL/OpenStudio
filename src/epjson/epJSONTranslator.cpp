@@ -1,3 +1,7 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
+***********************************************************************************************************************/
 
 #include "epJSONTranslator.hpp"
 #include "../utilities/core/Assert.hpp"
