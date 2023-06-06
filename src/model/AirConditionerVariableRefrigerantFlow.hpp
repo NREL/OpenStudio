@@ -87,12 +87,12 @@ namespace model {
     bool setGrossRatedCoolingCOP(double grossRatedCoolingCOP);
 
     // Deprecated
-    OS_DEPRECATED boost::optional<double> ratedTotalCoolingCapacity() const;
-    OS_DEPRECATED bool isRatedTotalCoolingCapacityAutosized() const;
-    OS_DEPRECATED bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
-    OS_DEPRECATED void autosizeRatedTotalCoolingCapacity();
-    OS_DEPRECATED double ratedCoolingCOP() const;
-    OS_DEPRECATED bool setRatedCoolingCOP(double ratedCoolingCOP);
+    OS_DEPRECATED(2, 9, 0) boost::optional<double> ratedTotalCoolingCapacity() const;
+    OS_DEPRECATED(2, 9, 0) bool isRatedTotalCoolingCapacityAutosized() const;
+    OS_DEPRECATED(2, 9, 0) bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
+    OS_DEPRECATED(2, 9, 0) void autosizeRatedTotalCoolingCapacity();
+    OS_DEPRECATED(2, 9, 0) double ratedCoolingCOP() const;
+    OS_DEPRECATED(2, 9, 0) bool setRatedCoolingCOP(double ratedCoolingCOP);
 
     /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Minimum Condenser Inlet Node Temperature in Cooling Mode" **/
     double minimumOutdoorTemperatureinCoolingMode() const;
@@ -172,12 +172,12 @@ namespace model {
     bool setRatedHeatingCapacitySizingRatio(double ratedHeatingCapacitySizingRatio);
 
     // Deprecated
-    OS_DEPRECATED boost::optional<double> ratedTotalHeatingCapacity() const;
-    OS_DEPRECATED bool isRatedTotalHeatingCapacityAutosized() const;
-    OS_DEPRECATED bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
-    OS_DEPRECATED void autosizeRatedTotalHeatingCapacity();
-    OS_DEPRECATED double ratedTotalHeatingCapacitySizingRatio() const;
-    OS_DEPRECATED bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
+    OS_DEPRECATED(2, 9, 0) boost::optional<double> ratedTotalHeatingCapacity() const;
+    OS_DEPRECATED(2, 9, 0) bool isRatedTotalHeatingCapacityAutosized() const;
+    OS_DEPRECATED(2, 9, 0) bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
+    OS_DEPRECATED(2, 9, 0) void autosizeRatedTotalHeatingCapacity();
+    OS_DEPRECATED(2, 9, 0) double ratedTotalHeatingCapacitySizingRatio() const;
+    OS_DEPRECATED(2, 9, 0) bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
 
     double ratedHeatingCOP() const;
 
@@ -494,8 +494,8 @@ namespace model {
     boost::optional<double> autosizedGrossRatedHeatingCapacity() const;
 
     // Deprecated
-    OS_DEPRECATED boost::optional<double> autosizedRatedTotalCoolingCapacity() const;
-    OS_DEPRECATED boost::optional<double> autosizedRatedTotalHeatingCapacity() const;
+    OS_DEPRECATED(2, 9, 0) boost::optional<double> autosizedRatedTotalCoolingCapacity() const;
+    OS_DEPRECATED(2, 9, 0) boost::optional<double> autosizedRatedTotalHeatingCapacity() const;
 
     boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const;
 

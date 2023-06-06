@@ -56,7 +56,7 @@ namespace model {
 
     static std::vector<std::string> validDayTypeValues();
 
-    OS_DEPRECATED static std::vector<std::string> validHumidityIndicatingTypeValues();
+    OS_DEPRECATED(3, 3, 0) static std::vector<std::string> validHumidityIndicatingTypeValues();
 
     static std::vector<std::string> validHumidityConditionTypeValues();
 
@@ -78,9 +78,9 @@ namespace model {
 
     bool isDailyDryBulbTemperatureRangeDefaulted() const;
 
-    OS_DEPRECATED double humidityIndicatingConditionsAtMaximumDryBulb() const;
+    OS_DEPRECATED(3, 3, 0) double humidityIndicatingConditionsAtMaximumDryBulb() const;
 
-    OS_DEPRECATED bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
+    OS_DEPRECATED(3, 3, 0) bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
 
     double barometricPressure() const;
 
@@ -122,15 +122,15 @@ namespace model {
 
     bool isDaylightSavingTimeIndicatorDefaulted() const;
 
-    OS_DEPRECATED std::string humidityIndicatingType() const;
+    OS_DEPRECATED(3, 3, 0) std::string humidityIndicatingType() const;
 
     std::string humidityConditionType() const;
 
-    OS_DEPRECATED bool isHumidityIndicatingTypeDefaulted() const;
+    OS_DEPRECATED(3, 3, 0) bool isHumidityIndicatingTypeDefaulted() const;
 
     bool isHumidityConditionTypeDefaulted() const;
 
-    OS_DEPRECATED boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
+    OS_DEPRECATED(3, 3, 0) boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
 
     boost::optional<ScheduleDay> humidityConditionDaySchedule() const;
 
@@ -144,7 +144,7 @@ namespace model {
 
     bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
 
-    OS_DEPRECATED boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
+    OS_DEPRECATED(3, 3, 0) boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
 
     boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierDaySchedule() const;
 
@@ -156,19 +156,19 @@ namespace model {
 
     boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
 
-    OS_DEPRECATED double ashraeTaub() const;
+    OS_DEPRECATED(3, 3, 0) double ashraeTaub() const;
 
     double ashraeClearSkyOpticalDepthForBeamIrradiance() const;
 
-    OS_DEPRECATED bool isAshraeTaubDefaulted() const;
+    OS_DEPRECATED(3, 3, 0) bool isAshraeTaubDefaulted() const;
 
     bool isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted() const;
 
-    OS_DEPRECATED double ashraeTaud() const;
+    OS_DEPRECATED(3, 3, 0) double ashraeTaud() const;
 
     double ashraeClearSkyOpticalDepthForDiffuseIrradiance() const;
 
-    OS_DEPRECATED bool isAshraeTaudDefaulted() const;
+    OS_DEPRECATED(3, 3, 0) bool isAshraeTaudDefaulted() const;
 
     bool isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted() const;
 
@@ -232,28 +232,28 @@ namespace model {
 
     void resetDaylightSavingTimeIndicator();
 
-    OS_DEPRECATED bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
+    OS_DEPRECATED(3, 3, 0) bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
 
     bool setHumidityConditionType(const std::string& humidityConditionType);
 
-    OS_DEPRECATED void resetHumidityIndicatingType();
+    OS_DEPRECATED(3, 3, 0) void resetHumidityIndicatingType();
 
     void resetHumidityConditionType();
 
     /** Sets the humidity indicating day schedule. The appropriate ScheduleTypeLimits varies
    *  depending on the humidity indicating type. Please see the EnergyPlus input-output reference
    *  for details before using this feature. */
-    OS_DEPRECATED bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
+    OS_DEPRECATED(3, 3, 0) bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
 
     bool setHumidityConditionDaySchedule(const ScheduleDay& schedule);
 
-    OS_DEPRECATED void resetHumidityIndicatingDaySchedule();
+    OS_DEPRECATED(3, 3, 0) void resetHumidityIndicatingDaySchedule();
 
     void resetHumidityConditionDaySchedule();
 
-    OS_DEPRECATED bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
+    OS_DEPRECATED(3, 3, 0) bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
 
-    OS_DEPRECATED void resetHumidityIndicatingConditionsAtMaximumDryBulb();
+    OS_DEPRECATED(3, 3, 0) void resetHumidityIndicatingConditionsAtMaximumDryBulb();
 
     bool setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb);
 
@@ -274,11 +274,11 @@ namespace model {
     /** Sets the dry bulb temperature range modifier day schedule. The appropriate
    *  ScheduleTypeLimits varies depending on the dry bulb temperature range modifier type. Please
    *  see the EnergyPlus input-output reference for details before using this feature. */
-    OS_DEPRECATED bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
+    OS_DEPRECATED(3, 3, 0) bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
 
     bool setDryBulbTemperatureRangeModifierDaySchedule(const ScheduleDay& schedule);
 
-    OS_DEPRECATED void resetDryBulbTemperatureRangeModifierSchedule();
+    OS_DEPRECATED(3, 3, 0) void resetDryBulbTemperatureRangeModifierSchedule();
 
     void resetDryBulbTemperatureRangeModifierDaySchedule();
 
@@ -294,19 +294,19 @@ namespace model {
 
     void resetDiffuseSolarDaySchedule();
 
-    OS_DEPRECATED bool setAshraeTaub(double ashraeTaub);
+    OS_DEPRECATED(3, 3, 0) bool setAshraeTaub(double ashraeTaub);
 
     bool setAshraeClearSkyOpticalDepthForBeamIrradiance(double ashraeClearSkyOpticalDepthForBeamIrradiance);
 
-    OS_DEPRECATED void resetAshraeTaub();
+    OS_DEPRECATED(3, 3, 0) void resetAshraeTaub();
 
     void resetAshraeClearSkyOpticalDepthForBeamIrradiance();
 
-    OS_DEPRECATED bool setAshraeTaud(double ashraeTaud);
+    OS_DEPRECATED(3, 3, 0) bool setAshraeTaud(double ashraeTaud);
 
     bool setAshraeClearSkyOpticalDepthForDiffuseIrradiance(double ashraeClearSkyOpticalDepthForDiffuseIrradiance);
 
-    OS_DEPRECATED void resetAshraeTaud();
+    OS_DEPRECATED(3, 3, 0) void resetAshraeTaud();
 
     void resetAshraeClearSkyOpticalDepthForDiffuseIrradiance();
 

@@ -110,9 +110,9 @@ class UTILITIES_API RunOptions
   bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
   void resetCustomOutputAdapter();
 
-  OS_DEPRECATED std::string forwardTranslateOptions() const;
-  OS_DEPRECATED bool setForwardTranslateOptions(const std::string& options);
-  OS_DEPRECATED void resetForwardTranslateOptions();
+  OS_DEPRECATED(3, 6, 0) std::string forwardTranslateOptions() const;
+  OS_DEPRECATED(3, 6, 0) bool setForwardTranslateOptions(const std::string& options);
+  OS_DEPRECATED(3, 6, 0) void resetForwardTranslateOptions();
 
   ForwardTranslatorOptions forwardTranslatorOptions() const;
   bool setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions);

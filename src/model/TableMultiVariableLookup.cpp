@@ -49,6 +49,7 @@
 #include "../utilities/math/FloatCompare.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 #include <algorithm>
 #include <iomanip>
@@ -915,7 +916,7 @@ namespace model {
     : Curve(TableMultiVariableLookup::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::TableMultiVariableLookup_Impl>());
 
-    LOG(Warn, "TableMultiVariableLookup is deprecated.  Use TableLookup instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "TableMultiVariableLookup is deprecated. Use TableLookup instead.");
 
     // Check if numberofIndependentVariables between 1 and 5 included, otherwise THROW
     bool ok = getImpl<detail::TableMultiVariableLookup_Impl>()->setNumberofIndependentVariables(numberofIndependentVariables);

@@ -104,7 +104,7 @@ namespace model {
 
     bool allowShadingControl() const;
 
-    OS_DEPRECATED boost::optional<ShadingControl> shadingControl() const;
+    OS_DEPRECATED(3, 1, 0) boost::optional<ShadingControl> shadingControl() const;
 
     std::vector<ShadingControl> shadingControls() const;
 
@@ -150,10 +150,10 @@ namespace model {
     // This will remove this SubSurface from any shading control(s) it is on (`removeAllShadingControls()`) then will call `addShadingControl(shadingControl)`
     // NOTE: for backward compatibility with C++ interfaces, the argument is kept as `const ShadingControl&`,
     // but internally this will do a const_cast since the ShadingControl will be mutated
-    OS_DEPRECATED bool setShadingControl(const ShadingControl& shadingControl);
+    OS_DEPRECATED(3, 1, 0) bool setShadingControl(const ShadingControl& shadingControl);
 
     // Replaced with removeAllShadingControls
-    OS_DEPRECATED void resetShadingControl();
+    OS_DEPRECATED(3, 1, 0) void resetShadingControl();
 
     bool addShadingControl(ShadingControl& shadingControl);
 

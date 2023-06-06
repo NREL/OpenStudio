@@ -90,7 +90,7 @@ namespace model {
 
     bool isRatedAirFlowRateAutosized() const;
 
-    OS_DEPRECATED double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+    OS_DEPRECATED(3, 5, 0) double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
 
     double ratedEvaporatorFanPowerPerVolumeFlowRate2017() const;
 
@@ -146,7 +146,7 @@ namespace model {
 
     void autosizeRatedAirFlowRate();
 
-    OS_DEPRECATED bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
+    OS_DEPRECATED(3, 5, 0) bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
 
     bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017);
 

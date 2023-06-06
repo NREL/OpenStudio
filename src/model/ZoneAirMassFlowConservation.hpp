@@ -73,10 +73,10 @@ namespace model {
 
     std::string adjustZoneMixingandReturnForAirMassFlowBalance() const;
     // TODO: makes little sense
-    OS_DEPRECATED bool adjustZoneMixingForZoneAirMassFlowBalance() const;
+    OS_DEPRECATED(3, 2, 0) bool adjustZoneMixingForZoneAirMassFlowBalance() const;
 
     bool isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted() const;
-    OS_DEPRECATED bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
+    OS_DEPRECATED(3, 2, 0) bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
 
     std::string infiltrationBalancingMethod() const;
 
@@ -92,10 +92,10 @@ namespace model {
 
     bool setAdjustZoneMixingandReturnForAirMassFlowBalance(const std::string& adjustZoneMixingandReturnForAirMassFlowBalance);
     // TODO: makes little sense too
-    OS_DEPRECATED bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
+    OS_DEPRECATED(3, 2, 0) bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
 
     void resetAdjustZoneMixingandReturnForAirMassFlowBalance();
-    OS_DEPRECATED void resetAdjustZoneMixingForZoneAirMassFlowBalance();
+    OS_DEPRECATED(3, 2, 0) void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
     bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
 

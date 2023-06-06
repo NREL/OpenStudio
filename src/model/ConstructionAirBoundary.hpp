@@ -67,9 +67,9 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    OS_DEPRECATED static std::vector<std::string> solarAndDaylightingMethodValues();
+    OS_DEPRECATED(3, 2, 0) static std::vector<std::string> solarAndDaylightingMethodValues();
 
-    OS_DEPRECATED static std::vector<std::string> radiantExchangeMethodValues();
+    OS_DEPRECATED(3, 2, 0) static std::vector<std::string> radiantExchangeMethodValues();
 
     static std::vector<std::string> airExchangeMethodValues();
 
@@ -77,16 +77,16 @@ namespace model {
     //@{
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED std::string solarAndDaylightingMethod() const;
+    OS_DEPRECATED(3, 2, 0) std::string solarAndDaylightingMethod() const;
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED bool isSolarAndDaylightingMethodDefaulted() const;
+    OS_DEPRECATED(3, 2, 0) bool isSolarAndDaylightingMethodDefaulted() const;
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED std::string radiantExchangeMethod() const;
+    OS_DEPRECATED(3, 2, 0) std::string radiantExchangeMethod() const;
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED bool isRadiantExchangeMethodDefaulted() const;
+    OS_DEPRECATED(3, 2, 0) bool isRadiantExchangeMethodDefaulted() const;
 
     std::string airExchangeMethod() const;
 
@@ -103,16 +103,16 @@ namespace model {
     //@{
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
+    OS_DEPRECATED(3, 2, 0) bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED void resetSolarAndDaylightingMethod();
+    OS_DEPRECATED(3, 2, 0) void resetSolarAndDaylightingMethod();
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
+    OS_DEPRECATED(3, 2, 0) bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED void resetRadiantExchangeMethod();
+    OS_DEPRECATED(3, 2, 0) void resetRadiantExchangeMethod();
 
     bool setAirExchangeMethod(const std::string& airExchangeMethod);
 

@@ -58,7 +58,7 @@ namespace energyplus {
     NONE
   };
 
-  OS_DEPRECATED ENERGYPLUS_API openstudio::energyplus::ComponentType componentType(const openstudio::model::HVACComponent& component);
+  OS_DEPRECATED(3, 6, 0) ENERGYPLUS_API openstudio::energyplus::ComponentType componentType(const openstudio::model::HVACComponent& component);
 
   bool _isSetpointComponent(const openstudio::model::PlantLoop& plantLoop, const openstudio::model::ModelObject& comp);
 
@@ -78,7 +78,7 @@ namespace energyplus {
    * * If there is no cooling, no heating, no "both": None
    * * All other cases: "both"
    */
-  OS_DEPRECATED ENERGYPLUS_API openstudio::energyplus::ComponentType plantLoopType(const openstudio::model::PlantLoop& plantLoop);
+  OS_DEPRECATED(3, 6, 0) ENERGYPLUS_API openstudio::energyplus::ComponentType plantLoopType(const openstudio::model::PlantLoop& plantLoop);
 
   /* Some plant components air in a containingHVACComponent() and it is that
    * container which needs to go on the plant operation scheme. Here is a filter to figure that out.

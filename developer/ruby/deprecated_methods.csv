@@ -1,6 +1,6 @@
 Namespace,Class Name,Method,Deprecated Since,Commit SHA,Replace With,Removed In
-measure,OSMeasure,registerWithSketchUp,,,None,
-measure,OSMeasure,registerWithApplication,,,None,
+measure,OSMeasure,registerWithSketchUp,1.13.0,9b792e5a8d247c5ba075752ea93c91708b0e1bc4,None,
+measure,OSMeasure,registerWithApplication,1.13.0,9b792e5a8d247c5ba075752ea93c91708b0e1bc4,None,
 model,AvailabilityManagerNightCycle,controlThermalZone,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b7,controlThermalZones,3.4.1
 model,AvailabilityManagerNightCycle,setControlThermalZone,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b8,setControlThermalZones,3.4.1
 model,AvailabilityManagerNightCycle,resetControlThermalZone,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b9,resetControlThermalZones,3.4.1
@@ -233,6 +233,7 @@ model,GroundHeatExchangerHorizontalTrench,setKusudaAchenbachAverageSurfaceTemper
 model,GroundHeatExchangerHorizontalTrench,setKusudaAchenbachAverageAmplitudeofSurfaceTemperature,3.6.0,44a2436cab528eaaf4da2806b990de5f67a984e9,undisturbedGroundTemperatureModel,
 model,GroundHeatExchangerHorizontalTrench,setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature,3.6.0,44a2436cab528eaaf4da2806b990de5f67a984e9,undisturbedGroundTemperatureModel,
 model,SurfacePropertyExposedFoundationPerimeter,surfaceName,3.7.0,19bea0ce243d4f7484ff63dd084af4b75b21009d,surface().nameString(),
+model,TableMultiVariableLookup,Entire Class,3.5.0,1c7521a7912473b3b8ba5c533fdf810936ff5c60,TableLookup,
 energyplus,ForwardTranslator,translateTableMultiVariableLookup,3.5.0,1c7521a7912473b3b8ba5c533fdf810936ff5c60,Remove TableMultiVariableLookup for TableLookup,
 energyplus,ForwardTranslatePlantEquipmentOperationSchemes,componentType,3.6.0,1417dcb7f48c92629a1e5c43dd2b030c1711bf99,Model SDK: HVACComponent::componentType(),
 energyplus,ForwardTranslatePlantEquipmentOperationSchemes,plantLoopType,3.6.0,1417dcb7f48c92629a1e5c43dd2b030c1711bf99,Model SDK: Loop::componentType(),

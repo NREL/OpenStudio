@@ -69,7 +69,7 @@ namespace model {
     /** @name Getters */
     //@{
 
-    OS_DEPRECATED std::string surfaceName() const;
+    OS_DEPRECATED(3, 7, 0) std::string surfaceName() const;
 
     Surface surface() const;
 

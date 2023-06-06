@@ -169,7 +169,7 @@ namespace model {
     bool setHydronicTubingLength(double hydronicTubingLength);
 
     // Will forward to autosizeHydronicTubingLength()
-    OS_DEPRECATED void resetHydronicTubingLength();  // Shouldn't have existed to begin with.
+    OS_DEPRECATED(3, 0, 0) void resetHydronicTubingLength();  // Shouldn't have existed to begin with.
 
     void autosizeHydronicTubingLength();
 
@@ -192,7 +192,7 @@ namespace model {
     bool setRatedFlowRate(double ratedFlowRate);
 
     // Will forward to autosizeRatedFlowRate()
-    OS_DEPRECATED void resetRatedFlowRate();
+    OS_DEPRECATED(3, 0, 0) void resetRatedFlowRate();
 
     void autosizeRatedFlowRate();
 

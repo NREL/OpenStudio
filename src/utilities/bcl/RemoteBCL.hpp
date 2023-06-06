@@ -187,22 +187,22 @@ class UTILITIES_API RemoteBCL : public BCL
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
   boost::optional<BCLComponent> waitForComponentDownload() const;
-  OS_DEPRECATED boost::optional<BCLComponent> waitForComponentDownload(int) const;
+  OS_DEPRECATED(3, 2, 1) boost::optional<BCLComponent> waitForComponentDownload(int) const;
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
   boost::optional<BCLMeasure> waitForMeasureDownload() const;
-  OS_DEPRECATED boost::optional<BCLMeasure> waitForMeasureDownload(int) const;
+  OS_DEPRECATED(3, 2, 1) boost::optional<BCLMeasure> waitForMeasureDownload(int) const;
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
   boost::optional<BCLMetaSearchResult> waitForMetaSearch() const;
-  OS_DEPRECATED boost::optional<BCLMetaSearchResult> waitForMetaSearch(int) const;
+  OS_DEPRECATED(3, 2, 1) boost::optional<BCLMetaSearchResult> waitForMetaSearch(int) const;
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
   std::vector<BCLSearchResult> waitForSearch() const;
-  OS_DEPRECATED std::vector<BCLSearchResult> waitForSearch(int) const;
+  OS_DEPRECATED(3, 2, 1) std::vector<BCLSearchResult> waitForSearch(int) const;
 
   //@}
   /** @name Non-blocking class members */
