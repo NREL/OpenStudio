@@ -43,6 +43,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+
 #include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
@@ -973,12 +974,12 @@ namespace model {
 
   // DEPRECATED
   double CoilCoolingDXMultiSpeedStageData::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-    DEPRECATED_AT_MSG("3.5.0", "Use ratedEvaporatorFanPowerPerVolumeFlowRate2017 instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use ratedEvaporatorFanPowerPerVolumeFlowRate2017 instead.");
     return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
   }
 
   bool CoilCoolingDXMultiSpeedStageData::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
-    DEPRECATED_AT_MSG("3.5.0", "Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead.");
     return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(
       ratedEvaporatorFanPowerPerVolumeFlowRate);
   }

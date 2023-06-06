@@ -692,85 +692,79 @@ namespace model {
   // DEPRECATED
 
   void ZoneMixing::resetSourceZone() {
-    DEPRECATED_AT_MSG("3.5.0", "Use resetSourceZoneOrSpace instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use resetSourceZoneOrSpace instead.");
     getImpl<detail::ZoneMixing_Impl>()->resetSourceZoneOrSpace();
   }
 
   boost::optional<double> ZoneMixing::flowRateperZoneFloorArea() const {
-    DEPRECATED_AT_MSG("3.5.0", "Use flowRateperFloorArea instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use flowRateperFloorArea instead.");
     return getImpl<detail::ZoneMixing_Impl>()->flowRateperFloorArea();
   }
 
   bool ZoneMixing::setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea) {
-    DEPRECATED_AT_MSG("3.5.0", "Use setFlowRateperFloorArea instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setFlowRateperFloorArea instead.");
     return getImpl<detail::ZoneMixing_Impl>()->setFlowRateperFloorArea(flowRateperZoneFloorArea);
   }
 
   // ReceivingTemperatureSchedule
   boost::optional<Schedule> ZoneMixing::minimumZoneTemperatureSchedule() const {
-    DEPRECATED_AT_MSG("3.5.0", "Use minimumReceivingTemperatureSchedule instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use minimumReceivingTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->minimumReceivingTemperatureSchedule();
   }
 
   bool ZoneMixing::setMinimumZoneTemperatureSchedule(Schedule& schedule) {
-    DEPRECATED_AT_MSG("3.5.0", "Use setMinimumReceivingTemperatureSchedule instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setMinimumReceivingTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->setMinimumReceivingTemperatureSchedule(schedule);
   }
 
   void ZoneMixing::resetMinimumZoneTemperatureSchedule() {
-    DEPRECATED_AT_MSG("3.5.0", "Use resetMinimumReceivingTemperatureSchedule instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use resetMinimumReceivingTemperatureSchedule instead.");
     getImpl<detail::ZoneMixing_Impl>()->resetMinimumReceivingTemperatureSchedule();
   }
 
   boost::optional<Schedule> ZoneMixing::maximumZoneTemperatureSchedule() const {
-    DEPRECATED_AT_MSG("3.5.0", "Use maximumReceivingTemperatureSchedule instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use maximumReceivingTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->maximumReceivingTemperatureSchedule();
   }
 
   bool ZoneMixing::setMaximumZoneTemperatureSchedule(Schedule& schedule) {
-    DEPRECATED_AT_MSG("3.5.0", "Use setMaximumReceivingTemperatureSchedule instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setMaximumReceivingTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->setMaximumReceivingTemperatureSchedule(schedule);
   }
 
   void ZoneMixing::resetMaximumZoneTemperatureSchedule() {
-    DEPRECATED_AT_MSG("3.5.0", "Use resetMaximumReceivingTemperatureSchedule instead.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use resetMaximumReceivingTemperatureSchedule instead.");
     getImpl<detail::ZoneMixing_Impl>()->resetMaximumReceivingTemperatureSchedule();
   }
 
   // SourceTemperatureSchedule
   boost::optional<Schedule> ZoneMixing::minimumSourceZoneTemperatureSchedule() const {
-    LOG(Warn, "As of 3.5.0, minimumSourceZoneTemperatureSchedule is deprecated. Use minimumSourceTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use minimumSourceTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->minimumSourceTemperatureSchedule();
   }
 
   bool ZoneMixing::setMinimumSourceZoneTemperatureSchedule(Schedule& schedule) {
-    LOG(Warn, "As of 3.5.0, setMinimumSourceZoneTemperatureSchedule is deprecated. Use setMinimumSourceTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setMinimumSourceTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->setMinimumSourceTemperatureSchedule(schedule);
   }
 
   void ZoneMixing::resetMinimumSourceZoneTemperatureSchedule() {
-    LOG(Warn, "As of 3.5.0, resetMinimumSourceZoneTemperatureSchedule is deprecated. Use resetMinimumSourceTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use resetMinimumSourceTemperatureSchedule instead.");
     getImpl<detail::ZoneMixing_Impl>()->resetMinimumSourceTemperatureSchedule();
   }
 
   boost::optional<Schedule> ZoneMixing::maximumSourceZoneTemperatureSchedule() const {
-    LOG(Warn, "As of 3.5.0, maximumSourceZoneTemperatureSchedule is deprecated. Use maximumSourceTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use maximumSourceTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->maximumSourceTemperatureSchedule();
   }
 
   bool ZoneMixing::setMaximumSourceZoneTemperatureSchedule(Schedule& schedule) {
-    LOG(Warn, "As of 3.5.0, setMaximumSourceZoneTemperatureSchedule is deprecated. Use setMaximumSourceTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setMaximumSourceTemperatureSchedule instead.");
     return getImpl<detail::ZoneMixing_Impl>()->setMaximumSourceTemperatureSchedule(schedule);
   }
 
   void ZoneMixing::resetMaximumSourceZoneTemperatureSchedule() {
-    LOG(Warn, "As of 3.5.0, resetMaximumSourceZoneTemperatureSchedule is deprecated. Use resetMaximumSourceTemperatureSchedule instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG(3, 5, 0, "Use resetMaximumSourceTemperatureSchedule instead.");
     getImpl<detail::ZoneMixing_Impl>()->resetMaximumSourceTemperatureSchedule();
   }
 

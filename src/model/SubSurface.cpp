@@ -91,6 +91,7 @@
 #include "../utilities/geometry/Intersection.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 using boost::to_upper_copy;
 
@@ -1635,6 +1636,7 @@ namespace model {
 
   // DEPRECATED
   boost::optional<ShadingControl> SubSurface::shadingControl() const {
+    DEPRECATED_AT_MSG(3, 1, 0, "Use shadingControls() instead.");
     boost::optional<ShadingControl> result;
     auto scs = shadingControls();
     if (!scs.empty()) {
@@ -1648,12 +1650,14 @@ namespace model {
 
   // DEPRECATED
   bool SubSurface::setShadingControl(const ShadingControl& shadingControl) {
+    DEPRECATED_AT_MSG(3, 1, 0, "Use addShadingControl or addShadingControls instead.");
     removeAllShadingControls();
     return addShadingControl(const_cast<ShadingControl&>(shadingControl));
   }
 
   // DEPRECATED
   void SubSurface::resetShadingControl() {
+    DEPRECATED_AT_MSG(3, 1, 0, "Use removeAllShadingControls instead.");
     removeAllShadingControls();
   }
 

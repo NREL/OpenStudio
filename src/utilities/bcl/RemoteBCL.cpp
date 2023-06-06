@@ -34,6 +34,7 @@
 #include "../core/StringHelpers.hpp"
 #include "../core/System.hpp"
 #include "../core/UnzipFile.hpp"
+#include "../core/DeprecatedHelpers.hpp"
 
 #include <regex>
 
@@ -536,7 +537,7 @@ boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload() const {
 }
 
 boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload(int) const {
-  LOG(Warn, "waitForComponentDownload(int msec) is deprecated, the parameter is unused. Use waitForComponentDownload() instead");
+  DEPRECATED_AT_MSG(3, 2, 1, "The int parameter is unused. Use waitForComponentDownload() instead");
   return waitForComponentDownload();
 }
 
@@ -548,7 +549,7 @@ boost::optional<BCLMeasure> RemoteBCL::waitForMeasureDownload() const {
 }
 
 boost::optional<BCLMeasure> RemoteBCL::waitForMeasureDownload(int) const {
-  LOG(Warn, "waitForMeasureDownloadint is deprecated, the parameter is unused. Use waitForMeasureDownload() instead");
+  DEPRECATED_AT_MSG(3, 2, 1, "The int parameter is unused. Use waitForMeasureDownload() instead");
   return waitForMeasureDownload();
 }
 
@@ -560,7 +561,7 @@ boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch() const {
 }
 
 boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch(int) const {
-  LOG(Warn, "waitForMetaSearchint is deprecated, the parameter is unused. Use waitForMetaSearch() instead");
+  DEPRECATED_AT_MSG(3, 2, 1, "The int parameter is unused. Use waitForMetaSearch() instead");
   return waitForMetaSearch();
 }
 
@@ -572,7 +573,7 @@ std::vector<BCLSearchResult> RemoteBCL::waitForSearch() const {
 }
 
 std::vector<BCLSearchResult> RemoteBCL::waitForSearch(int) const {
-  LOG(Warn, "waitForSearchint is deprecated, the parameter is unused. Use waitForSearch() instead");
+  DEPRECATED_AT_MSG(3, 2, 1, "The int parameter is unused. Use waitForSearch() instead");
   return waitForSearch();
 }
 

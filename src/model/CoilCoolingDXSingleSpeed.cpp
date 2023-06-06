@@ -59,6 +59,8 @@
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
 #include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -67,8 +69,8 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
-#include "AirflowNetworkEquivalentDuct.hpp"
-#include "AirflowNetworkEquivalentDuct_Impl.hpp"
+
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -1010,8 +1012,6 @@ namespace model {
     setBasinHeaterSetpointTemperature(2.0);
   }
 
-  CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> p) : StraightComponent(std::move(p)) {}
-
   Schedule CoilCoolingDXSingleSpeed::availabilitySchedule() const {
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->availabilitySchedule();
   }
@@ -1032,30 +1032,12 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedCOP(value);
   }
 
-  double CoilCoolingDXSingleSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-    LOG(Warn, "As of 3.5.0, ratedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyFanPowerPerVolumeFlowRate2017 instead. It will be "
-              "removed within three releases.");
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
-  }
-
   double CoilCoolingDXSingleSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate2017() const {
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
   }
 
   double CoilCoolingDXSingleSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate2023() const {
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2023();
-  }
-
-  bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value) {
-    LOG(Warn, "As of 3.5.0, setRatedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead. "
-              "It will be removed within three releases.");
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
-  }
-
-  bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double value) {
-    LOG(Warn, "As of 3.5.0, setRatedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead. "
-              "It will be removed within three releases.");
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
   }
 
   bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(boost::optional<double> value) {
@@ -1391,6 +1373,27 @@ namespace model {
   boost::optional<double> CoilCoolingDXSingleSpeed::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedEvaporativeCondenserPumpRatedPowerConsumption();
   }
+
+  /// @cond
+
+  CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> impl) : StraightComponent(std::move(p)) {}
+
+  // DEPRECATED
+  double CoilCoolingDXSingleSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
+    DEPRECATED_AT_MSG(3, 5, 0, "Use ratedEvaporatorFanPowerPerVolumeFlowRate2017 instead.");
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
+  }
+
+  bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value) {
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead.");
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
+  }
+
+  bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double value) {
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead.");
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
+  }
+  /// @endcond
 
 }  // namespace model
 }  // namespace openstudio

@@ -53,6 +53,7 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 
@@ -825,7 +826,7 @@ namespace model {
   }
 
   std::string AirTerminalSingleDuctVAVReheat::zoneMinimumAirFlowMethod() {
-    LOG(Warn, "zoneMinimumAirFlowMethod is deprecated, please use zoneMinimumAirFlowInputMethod");
+    DEPRECATED_AT_MSG(3, 0, 1, "Use zoneMinimumAirFlowInputMethod instead.");
     return zoneMinimumAirFlowInputMethod();
   }
 
@@ -834,7 +835,7 @@ namespace model {
   }
 
   bool AirTerminalSingleDuctVAVReheat::setZoneMinimumAirFlowMethod(const std::string& value) {
-    LOG(Warn, "setZoneMinimumAirFlowMethod is deprecated, please use setZoneMinimumAirFlowInputMethod");
+    DEPRECATED_AT_MSG(3, 0, 1, "Use setZoneMinimumAirFlowInputMethod instead.");
     return setZoneMinimumAirFlowInputMethod(value);
   }
 

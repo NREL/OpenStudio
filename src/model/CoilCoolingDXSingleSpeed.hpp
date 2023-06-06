@@ -87,7 +87,7 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    std::vector<std::string> condenserTypeValues() const;
+    static std::vector<std::string> condenserTypeValues() const;
 
     /** @name Getters */
     //@{

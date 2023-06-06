@@ -43,6 +43,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -522,12 +523,6 @@ namespace model {
     return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->isRatedAirFlowRateAutosized();
   }
 
-  double CoilHeatingDXMultiSpeedStageData::ratedSupplyAirFanPowerPerVolumeFlowRate() const {
-    LOG(Warn, "As of 3.5.0, ratedSupplyAirFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyAirFanPowerPerVolumeFlowRate2017 instead. It will "
-              "be removed within three releases.")
-    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedSupplyAirFanPowerPerVolumeFlowRate2017();
-  }
-
   double CoilHeatingDXMultiSpeedStageData::ratedSupplyAirFanPowerPerVolumeFlowRate2017() const {
     return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedSupplyAirFanPowerPerVolumeFlowRate2017();
   }
@@ -584,13 +579,6 @@ namespace model {
     getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizeRatedAirFlowRate();
   }
 
-  bool CoilHeatingDXMultiSpeedStageData::setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate) {
-    LOG(Warn, "As of 3.5.0, setRatedSupplyAirFanPowerPerVolumeFlowRate is deprecated. Use setRatedSupplyAirFanPowerPerVolumeFlowRate2017 instead. It "
-              "will be removed within three releases.");
-    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedSupplyAirFanPowerPerVolumeFlowRate2017(
-      ratedSupplyAirFanPowerPerVolumeFlowRate);
-  }
-
   bool CoilHeatingDXMultiSpeedStageData::setRatedSupplyAirFanPowerPerVolumeFlowRate2017(double ratedSupplyAirFanPowerPerVolumeFlowRate2017) {
     return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedSupplyAirFanPowerPerVolumeFlowRate2017(
       ratedSupplyAirFanPowerPerVolumeFlowRate2017);
@@ -629,11 +617,6 @@ namespace model {
     return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setWasteHeatFunctionofTemperatureCurve(curve);
   }
 
-  /// @cond
-  CoilHeatingDXMultiSpeedStageData::CoilHeatingDXMultiSpeedStageData(std::shared_ptr<detail::CoilHeatingDXMultiSpeedStageData_Impl> impl)
-    : ParentObject(std::move(impl)) {}
-  /// @endcond
-
   boost::optional<double> CoilHeatingDXMultiSpeedStageData::autosizedGrossRatedHeatingCapacity() const {
     return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizedGrossRatedHeatingCapacity();
   }
@@ -657,6 +640,23 @@ namespace model {
   boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> CoilHeatingDXMultiSpeedStageData::stageIndexAndParentCoil() const {
     return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->stageIndexAndParentCoil();
   }
+
+  /// @cond
+  CoilHeatingDXMultiSpeedStageData::CoilHeatingDXMultiSpeedStageData(std::shared_ptr<detail::CoilHeatingDXMultiSpeedStageData_Impl> impl)
+    : ParentObject(std::move(impl)) {}
+
+  // DEPRECATED
+  double CoilHeatingDXMultiSpeedStageData::ratedSupplyAirFanPowerPerVolumeFlowRate() const {
+    DEPRECATED_AT_MSG(3, 5, 0, "Use ratedSupplyAirFanPowerPerVolumeFlowRate2017 instead.");
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedSupplyAirFanPowerPerVolumeFlowRate2017();
+  }
+
+  bool CoilHeatingDXMultiSpeedStageData::setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate) {
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setRatedSupplyAirFanPowerPerVolumeFlowRate2017 instead.");
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedSupplyAirFanPowerPerVolumeFlowRate2017(
+      ratedSupplyAirFanPowerPerVolumeFlowRate);
+  }
+  /// @endcond
 
 }  // namespace model
 }  // namespace openstudio
