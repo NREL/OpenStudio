@@ -33,6 +33,8 @@
 #include "../CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
 #include "../CoilCoolingWater.hpp"
 #include "../CoilCoolingWater_Impl.hpp"
+#include "../ControllerWaterCoil.hpp"
+#include "../ControllerWaterCoil_Impl.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../HeatExchangerDesiccantBalancedFlow.hpp"
@@ -198,5 +200,84 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_containingCompo
     boost::optional<ZoneHVACComponent> _c = coilSystem.containingZoneHVACComponent();
     ASSERT_TRUE(_c);
     EXPECT_EQ(_c->handle(), fc.handle());
+  }
+}
+
+TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_ControllerWaterCoil_AirLoopFirst) {
+
+  Model m;
+  AirLoopHVAC a(m);
+  auto airLoopSupplyOutlet = a.supplyOutletNode();
+  PlantLoop p(m);
+  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+  auto coil = coilSystem.coolingCoil().cast<CoilCoolingWater>();
+  EXPECT_FALSE(coil.controllerWaterCoil());
+
+  {
+    EXPECT_TRUE(coilSystem.addToNode(airLoopSupplyOutlet));
+    auto controller_ = coil.controllerWaterCoil();
+    ASSERT_TRUE(controller_);
+    EXPECT_TRUE(controller_->setMaximumActuatedFlow(1.0));  // Set a value to test that it's retained
+    ASSERT_TRUE(controller_->maximumActuatedFlow());
+    EXPECT_EQ(1.0, controller_->maximumActuatedFlow().get());
+    ASSERT_TRUE(controller_->waterCoil());
+    EXPECT_EQ(coil, controller_->waterCoil().get());
+    EXPECT_FALSE(controller_->actuatorNode());
+    EXPECT_EQ("Reverse", controller_->action().get());
+
+    EXPECT_TRUE(controller_->setAction("Normal"));
+    EXPECT_EQ("Normal", controller_->action().get());
+  }
+
+  {
+    EXPECT_TRUE(p.addDemandBranchForComponent(coil));
+    auto controller_ = coil.controllerWaterCoil();
+    ASSERT_TRUE(controller_);
+    ASSERT_TRUE(controller_->maximumActuatedFlow());
+    EXPECT_EQ(1.0, controller_->maximumActuatedFlow().get());
+    ASSERT_TRUE(controller_->waterCoil());
+    EXPECT_EQ(coil, controller_->waterCoil().get());
+    EXPECT_FALSE(controller_->actuatorNode());         // Explicit setting isn't done there... but FT does it right
+    EXPECT_EQ("Normal", controller_->action().get());  // This isn't being forced to Reverse but it logs a warning asking if you're sure
+  }
+}
+
+TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_ControllerWaterCoil_PlantLoopFirst) {
+
+  Model m;
+  AirLoopHVAC a(m);
+  auto airLoopSupplyOutlet = a.supplyOutletNode();
+  PlantLoop p(m);
+  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+  auto coil = coilSystem.coolingCoil().cast<CoilCoolingWater>();
+  EXPECT_FALSE(coil.controllerWaterCoil());
+
+  {
+    EXPECT_TRUE(p.addDemandBranchForComponent(coil));
+    auto controller_ = coil.controllerWaterCoil();
+    ASSERT_TRUE(controller_);
+    EXPECT_TRUE(controller_->setMaximumActuatedFlow(1.0));  // Set a value to test that it's retained
+    ASSERT_TRUE(controller_->maximumActuatedFlow());
+    EXPECT_EQ(1.0, controller_->maximumActuatedFlow().get());
+    ASSERT_TRUE(controller_->waterCoil());
+    EXPECT_EQ(coil, controller_->waterCoil().get());
+    EXPECT_FALSE(controller_->actuatorNode());
+    EXPECT_EQ("Reverse", controller_->action().get());
+
+    EXPECT_TRUE(controller_->setAction("Normal"));
+    EXPECT_EQ("Normal", controller_->action().get());
+  }
+
+  {
+    EXPECT_TRUE(coilSystem.addToNode(airLoopSupplyOutlet));
+    auto controller_ = coil.controllerWaterCoil();
+    ASSERT_TRUE(controller_);
+    ASSERT_TRUE(controller_->maximumActuatedFlow());
+    EXPECT_EQ(1.0, controller_->maximumActuatedFlow().get());
+    ASSERT_TRUE(controller_->waterCoil());
+    EXPECT_EQ(coil, controller_->waterCoil().get());
+    ASSERT_TRUE(controller_->actuatorNode());
+    EXPECT_EQ(coil.waterInletModelObject().get(), controller_->actuatorNode().get());  // Explicit setting is done here...
+    EXPECT_EQ("Reverse", controller_->action().get());                                 // This is being forced here
   }
 }
