@@ -313,9 +313,22 @@ namespace model {
                     << " cannot be connected directly to an AirLoopHVAC when it's part of a parent CoilSystemCoolingWaterHeatExchangerAssisted. "
                        "Please call CoilSystemCoolingWaterHeatExchangerAssisted::addToNode instead");
       } else {
-
-        success = WaterToAirComponent_Impl::addToNode(node);
+        // If trying to add to a PlantLoop, this will end up calling CoilCoolingWater_Impl::removePlantLoop which also removes the existing ControllerWaterCoil
+        auto t_plantLoop = node.plantLoop();
         auto t_containingZoneHVACComponent = containingZoneHVACComponent();
+        if (t_plantLoop && !t_containingZoneHVACComponent) {
+          if (!t_plantLoop->demandComponent(node.handle())) {
+            return false;
+          }
+
+          WaterToAirComponent_Impl::removeFromPlantLoop();  // NOLINT(bugprone-parent-virtual-call)
+
+          success =
+            HVACComponent_Impl::addToNode(node, t_plantLoop->demandInletNode(), t_plantLoop->demandOutletNode(), waterInletPort(), waterOutletPort());
+
+        } else {
+          success = WaterToAirComponent_Impl::addToNode(node);
+        }
 
         if (success && (!t_containingZoneHVACComponent)) {
           if (auto t_waterInletModelObject = waterInletModelObject()) {

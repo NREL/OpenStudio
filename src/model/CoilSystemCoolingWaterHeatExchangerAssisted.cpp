@@ -216,26 +216,33 @@ namespace model {
         if (!airLoop->demandComponent(node.handle())) {
           result = StraightComponent_Impl::addToNode(node);
           if (result) {
+            // 1. Only acceptable coil type is Coil:Cooling:Water at the moment
+            // 2. If the coil has been connected to a PlantLoop, it has a ControllerWaterCoil already (unless the user messed something up manually)
             auto t_coolingCoil = coolingCoil();
-            if (auto waterInletModelObject = t_coolingCoil.waterInletModelObject()) {
-
-              // TODO: why aren't we setting the water coil in this case? @kbenne thoughts please
-              if (auto coilCoolingWater = t_coolingCoil.optionalCast<CoilCoolingWater>()) {
-                if (auto oldController = coilCoolingWater->controllerWaterCoil()) {
-                  oldController->remove();
+            auto waterInletModelObject_ = t_coolingCoil.waterInletModelObject();
+            auto getOrCreateController = [this, &t_coolingCoil, &waterInletModelObject_]() -> ControllerWaterCoil {
+              if (waterInletModelObject_) {
+                if (auto coilCoolingWater = t_coolingCoil.optionalCast<CoilCoolingWater>()) {
+                  if (auto oldController = coilCoolingWater->controllerWaterCoil()) {
+                    return oldController.get();
+                  }
                 }
               }
-
               auto t_model = model();
-              ControllerWaterCoil controller(t_model);
+              return ControllerWaterCoil{t_model};
+            };
 
-              auto coilWaterInletNode = waterInletModelObject->optionalCast<Node>();
+            auto controller = getOrCreateController();
+            // We could let the FT default this too...
+            if (waterInletModelObject_) {
+              auto coilWaterInletNode = waterInletModelObject_->optionalCast<Node>();
               OS_ASSERT(coilWaterInletNode);
               controller.setActuatorNode(coilWaterInletNode.get());
-              // sensor node will be established in translator since that node does not yet exist
-
-              controller.setAction("Reverse");
             }
+            controller.getImpl<ControllerWaterCoil_Impl>()->setWaterCoil(t_coolingCoil);
+            // sensor node will be established in translator since that node does not yet exist
+
+            controller.setAction("Reverse");
           }
         }
       } else if (boost::optional<AirLoopHVACOutdoorAirSystem> oas = node.airLoopHVACOutdoorAirSystem()) {
