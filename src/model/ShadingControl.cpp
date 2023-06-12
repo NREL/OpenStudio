@@ -406,7 +406,7 @@ namespace model {
 
     void ShadingControl_Impl::resetSetpoint2() {
       std::string shadingControlType = this->shadingControlType();
-      if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType)) {
+      if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint2(shadingControlType)) {
         LOG(Warn,
             briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does require a Setpoint2, not resetting it");
       } else {
