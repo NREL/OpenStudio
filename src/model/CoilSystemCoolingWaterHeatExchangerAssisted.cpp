@@ -233,12 +233,7 @@ namespace model {
             };
 
             auto controller = getOrCreateController();
-            // We could let the FT default this too...
-            if (waterInletModelObject_) {
-              auto coilWaterInletNode = waterInletModelObject_->optionalCast<Node>();
-              OS_ASSERT(coilWaterInletNode);
-              controller.setActuatorNode(coilWaterInletNode.get());
-            }
+            // We leave the ForwardTranslator defining the Actuator Node
             controller.getImpl<ControllerWaterCoil_Impl>()->setWaterCoil(t_coolingCoil);
             // sensor node will be established in translator since that node does not yet exist
 

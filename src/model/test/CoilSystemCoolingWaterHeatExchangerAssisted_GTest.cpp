@@ -276,8 +276,7 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_ControllerWater
     EXPECT_EQ(1.0, controller_->maximumActuatedFlow().get());
     ASSERT_TRUE(controller_->waterCoil());
     EXPECT_EQ(coil, controller_->waterCoil().get());
-    ASSERT_TRUE(controller_->actuatorNode());
-    EXPECT_EQ(coil.waterInletModelObject().get(), controller_->actuatorNode().get());  // Explicit setting is done here...
-    EXPECT_EQ("Reverse", controller_->action().get());                                 // This is being forced here
+    EXPECT_FALSE(controller_->actuatorNode());          // Explicit setting isn't done there... but FT does it right
+    EXPECT_EQ("Reverse", controller_->action().get());  // This is being forced here
   }
 }
