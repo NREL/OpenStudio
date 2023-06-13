@@ -7,6 +7,8 @@
 #include "../energyplus/ForwardTranslator.hpp"
 #include "energyplus/ForwardTranslator.hpp"
 #include "utilities/bcl/LocalBCL.hpp"
+#include "utilities/idf/ValidityEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 #include <cpprest/asyncrt_utils.h>
 #include <json/json.h>
@@ -117,6 +119,53 @@ boost::optional<OSMInfo> MeasureManager::getModel(const openstudio::path& osmPat
 
   fmt::print("Failed to load model '{}'\n", osmPath.generic_string());
   m_osms.erase(osmPath);
+
+  return boost::none;
+}
+
+boost::optional<IDFInfo> MeasureManager::getIdf(const openstudio::path& idfPath, bool force_reload) {
+
+  if (!openstudio::filesystem::is_regular_file(idfPath)) {
+    fmt::print("Idf '{}' does not exist\n", idfPath.generic_string());
+    m_idfs.erase(idfPath);
+    m_measureInfos.erase(idfPath);
+    return boost::none;
+  }
+
+  IDFInfo current;
+  current.checksum = openstudio::checksum(idfPath);
+
+  if (!force_reload) {
+    auto it = m_idfs.find(idfPath);
+    if (it != m_idfs.end()) {
+      auto& cached = it->second;
+      if (current.checksum == cached.checksum) {
+        fmt::print("Using cached workspace {}\n", idfPath.generic_string());
+        return cached;
+      } else {
+        fmt::print("Checksum of cached workspace does not match current checksum for '{}'\n", idfPath.generic_string());
+      }
+    }
+  }
+
+  m_measureInfos.erase(idfPath);
+
+  fmt::print("Attempting to load idf '{}'\n", idfPath.generic_string());
+  if (auto workspace_ = openstudio::Workspace::load(idfPath, openstudio::IddFileType::EnergyPlus)) {
+    fmt::print("Successfully loaded idf '{}'\n", idfPath.generic_string());
+
+    if (workspace_->isValid(openstudio::StrictnessLevel::Draft)) {
+      current.workspace = std::move(*workspace_);
+      auto [it, ok] = m_idfs.insert_or_assign(idfPath, std::move(current));
+      return it->second;
+    } else {
+      fmt::print("Workspace loaded from '{}' is not valid to Draft StrictnessLevel\n", idfPath.generic_string());
+    }
+  } else {
+    fmt::print("Failed to load idf '{}'\n", idfPath.generic_string());
+  }
+
+  m_idfs.erase(idfPath);
 
   return boost::none;
 }

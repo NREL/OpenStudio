@@ -53,7 +53,7 @@ class MeasureManager
   MeasureManager(ScriptEngineInstance& t_rubyEngine, ScriptEngineInstance& t_pythonEngine);
 
   boost::optional<OSMInfo> getModel(const openstudio::path& osmPath, bool force_reload = false);
-  boost::optional<IDFInfo> getIdf(const openstudio::path& osmPath, bool force_reload = false);
+  boost::optional<IDFInfo> getIdf(const openstudio::path& idfPath, bool force_reload = false);
   boost::optional<openstudio::BCLMeasure> getMeasure(const openstudio::path& measureDirPath, bool force_reload = false);
 
   // getMeasureInfo;
