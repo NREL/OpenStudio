@@ -581,11 +581,13 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
 
     if (opt.server_port > 0) {
 
+      openstudio::interrupthandler::hookSIGINT();
       auto g_httpHandler = std::make_unique<MeasureManagerServer>(opt.server_port, rubyEngine, pythonEngine);
       g_httpHandler->open();
-      while (true) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      }
+      openstudio::interrupthandler::waitForUserInterrupt();
+      g_httpHandler->close();
+
+      return;
 
       const auto measureManagerCmd = fmt::format(
         R"ruby(

@@ -15,8 +15,37 @@
 #include <pugixml.hpp>
 
 #include <utility>  // make_pair
+#include <condition_variable>
+#include <mutex>
+#include <csignal>
 
 namespace openstudio {
+
+template <typename... T>
+[[nodiscard]] auto format_to_string_t(fmt::format_string<T...> fmt, T&&... args) -> utility::string_t {
+  return utility::conversions::to_string_t(vformat(fmt, fmt::make_format_args(args...)));
+}
+
+namespace interrupthandler {
+  static std::condition_variable condition_;
+  static std::mutex mutex_;
+  void handleUserInterrupt(int signal) {
+    if (signal == SIGINT) {
+      fmt::print("SIGINT trapped ...\n");
+      condition_.notify_one();
+    }
+  }
+  void hookSIGINT() {
+    std::signal(SIGINT, handleUserInterrupt);
+  }
+
+  void waitForUserInterrupt() {
+    std::unique_lock<std::mutex> lock{mutex_};
+    condition_.wait(lock);
+    fmt::print("user has signaled to interrup program...\n");
+    lock.unlock();
+  }
+}  // namespace interrupthandler
 
 MeasureManager::MeasureManager(ScriptEngineInstance& t_rubyEngine, ScriptEngineInstance& t_pythonEngine)
   : rubyEngine(t_rubyEngine), pythonEngine(t_pythonEngine) {
@@ -73,6 +102,8 @@ boost::optional<OSMInfo> MeasureManager::getModel(const openstudio::path& osmPat
     }
   }
 
+  m_measureInfos.erase(osmPath);
+
   fmt::print("Attempting to load model '{}'\n", osmPath.generic_string());
   openstudio::osversion::VersionTranslator vt;
   if (auto model_ = vt.loadModel(osmPath)) {
@@ -80,9 +111,12 @@ boost::optional<OSMInfo> MeasureManager::getModel(const openstudio::path& osmPat
     current.model = std::move(*model_);
     openstudio::energyplus::ForwardTranslator ft;
     current.workspace = ft.translateModel(current.model);
-    auto [it, ok] = m_osms.emplace(std::make_pair(osmPath, std::move(current)));
+    auto [it, ok] = m_osms.insert_or_assign(osmPath, std::move(current));
     return it->second;
   }
+
+  fmt::print("Failed to load model '{}'\n", osmPath.generic_string());
+  m_osms.erase(osmPath);
 
   return boost::none;
 }
@@ -124,8 +158,8 @@ void MeasureManagerServer::handle_get(web::http::http_request message) {
   // Need a mutex?
   std::cout << "Received GET request: " << message.to_string() << "uri=" << message.relative_uri().to_string() << "\n";
 
-  std::string uri = web::http::uri::decode(message.relative_uri().path());
-  std::vector<std::string> paths = web::http::uri::split_path(uri);
+  const std::string uri = web::http::uri::decode(message.relative_uri().path());
+  // std::vector<std::string> paths = web::http::uri::split_path(uri);
 
   // Cpprestsdk has it's own json implementation.....
   Json::Value result;
@@ -140,15 +174,18 @@ void MeasureManagerServer::handle_get(web::http::http_request message) {
     for (const auto& key : internalState.getMemberNames()) {
       result[key] = internalState[key];
     }
+  } else {
+    message.reply(web::http::status_codes::BadRequest, web::json::value::string("Error, unknown path '" + uri + "'"));
   }
 
-  message.reply(web::http::status_codes::OK, web::json::value::parse(result.toStyledString())).then([](pplx::task<void> t) {
-    try {
-      t.get();
-    } catch (...) {
-      //
-    }
-  });
+  message.reply(web::http::status_codes::OK, web::json::value::parse(result.toStyledString()));
+  // .then([](pplx::task<void> t) {
+  //   try {
+  //     t.get();
+  //   } catch (...) {
+  //     //
+  //   }
+  // });
 }
 
 void MeasureManagerServer::handle_post(web::http::http_request message) {
@@ -156,9 +193,9 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
   const std::string uri = web::http::uri::decode(message.relative_uri().path());
 
   if (uri == "/reset") {
-    fmt::print("Reseting internal state");
+    fmt::print("Resetting internal state");
     m_measureManager.reset();
-    message.reply(web::http::status_codes::OK, web::json::value());
+    message.reply(web::http::status_codes::OK, web::json::value::string("Resetting internal state"));
     return;
   }
 
@@ -179,13 +216,13 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
         const std::string uid = body.at("uid").as_string();
         const RemoteBCL r;
         if (auto bclMeasure_ = r.getMeasure(uid)) {
-          message.reply(web::http::status_codes::OK, web::json::value(bclMeasure_->xmlString()));
+          message.reply(web::http::status_codes::OK, web::json::value::string(bclMeasure_->xmlString()));
         } else {
-          message.reply(web::http::status_codes::BadRequest, web::json::value("Cannot find measure with uid =" + uid));
+          message.reply(web::http::status_codes::BadRequest, web::json::value::string(format_to_string_t("Cannot find measure with uid='{}'", uid)));
         }
       } else {
         fmt::print("Missing the uid in the post data\n");
-        message.reply(web::http::status_codes::BadRequest, web::json::value("Missing the uid in the post data"));
+        message.reply(web::http::status_codes::BadRequest, web::json::value::string("Missing the uid in the post data"));
       }
     });
     return;
@@ -195,12 +232,14 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
   if (uri == "/get_model") {
     message.extract_json().then([this, message](web::json::value body) {
       if (body.has_field("osm_path")) {
-        auto osmInfo_ = m_measureManager.getModel(openstudio::toPath(body.at("osm_path").as_string()));
+        auto osmPath = openstudio::toPath(body.at("osm_path").as_string());
+        auto osmInfo_ = m_measureManager.getModel(osmPath);
         if (osmInfo_) {
-          fmt::print("{}\n", osmInfo_->checksum);
-          message.reply(web::http::status_codes::OK, web::json::value("OK"));
+          message.reply(web::http::status_codes::OK,
+                        web::json::value::string(format_to_string_t("OK, loaded model with checksum {}", osmInfo_->checksum)));
         } else {
-          message.reply(web::http::status_codes::BadRequest, web::json::value("Wrong osm path"));
+          message.reply(web::http::status_codes::BadRequest,
+                        web::json::value::string(format_to_string_t("Wrong osm path: '{}'", osmPath.generic_string())));
         }
       }
     });
@@ -218,12 +257,38 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
   }
 
   if (uri == "/update_measures") {
+    auto response = web::json::value::object();
+    response["serviceName"] = web::json::value::string("C++ Measure Manager");
+    response["http_method"] = web::json::value::string(uri);
+    message.reply(web::http::status_codes::NotImplemented, response);
+    return;
   }
 
   if (uri == "/compute_arguments") {
+    auto response = web::json::value::object();
+    response["serviceName"] = web::json::value::string("C++ Measure Manager");
+    response["http_method"] = web::json::value::string(uri);
+    message.reply(web::http::status_codes::NotImplemented, response);
+    return;
   }
 
-  message.reply(web::http::status_codes::NotFound, web::json::value("404: Unknown Endpoint"));
+  if (uri == "/create_measure") {
+    auto response = web::json::value::object();
+    response["serviceName"] = web::json::value::string("C++ Measure Manager");
+    response["http_method"] = web::json::value::string(uri);
+    message.reply(web::http::status_codes::NotImplemented, response);
+    return;
+  }
+
+  if (uri == "/duplicate_measure") {
+    auto response = web::json::value::object();
+    response["serviceName"] = web::json::value::string("C++ Measure Manager");
+    response["http_method"] = web::json::value::string(uri);
+    message.reply(web::http::status_codes::NotImplemented, response);
+    return;
+  }
+
+  message.reply(web::http::status_codes::NotFound, web::json::value::string("404: Unknown Endpoint"));
 }
 
 }  // namespace openstudio

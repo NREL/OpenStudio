@@ -28,10 +28,22 @@ class Value;
 
 namespace openstudio {
 
+namespace interrupthandler {
+  void hookSIGINT();
+
+  void waitForUserInterrupt();
+}  // namespace interrupthandler
+
 struct OSMInfo
 {
   std::string checksum;
   openstudio::model::Model model;
+  openstudio::Workspace workspace;
+};
+
+struct IDFInfo
+{
+  std::string checksum;
   openstudio::Workspace workspace;
 };
 
@@ -41,7 +53,12 @@ class MeasureManager
   MeasureManager(ScriptEngineInstance& t_rubyEngine, ScriptEngineInstance& t_pythonEngine);
 
   boost::optional<OSMInfo> getModel(const openstudio::path& osmPath, bool force_reload = false);
+  boost::optional<IDFInfo> getIdf(const openstudio::path& osmPath, bool force_reload = false);
+  boost::optional<openstudio::BCLMeasure> getMeasure(const openstudio::path& measureDirPath, bool force_reload = false);
 
+  // getMeasureInfo;
+  // computeArguments
+  // getMeasureHash;
   Json::Value internalState() const;
 
   void reset();
@@ -55,7 +72,7 @@ class MeasureManager
   //#endif
 
   std::map<openstudio::path, OSMInfo> m_osms;
-  std::map<openstudio::path, openstudio::Workspace> m_idfs;
+  std::map<openstudio::path, IDFInfo> m_idfs;
   std::map<openstudio::path, openstudio::BCLMeasure> m_measures;
   std::map<openstudio::path, openstudio::measure::OSMeasureInfo> m_measureInfos;
 };
