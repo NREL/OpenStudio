@@ -49,16 +49,16 @@ class EpJSON_Test < MiniTest::Unit::TestCase
 
 
   def common_asserts(json, ep_version)
-    assert(json["Version"])
-    assert(Gem::Version.new(json["Version"]["Version 1"]["version_identifier"]) == ep_version)
-    assert(json["Building"])
-    assert(json["Building"]["Building 1"]["north_axis"] == 0.0)
+    assert(json[:Version])
+    assert(Gem::Version.new(json[:Version][:"Version 1"][:version_identifier]) == ep_version)
+    assert(json[:Building])
+    assert(json[:Building][:"Building 1"][:north_axis] == 0.0)
   end
 
   def test_epJSON_String
 
     json_str = OpenStudio::EPJSON::toJSONString(@idfFile);
-    json = JSON.parse(json_str)
+    json = JSON.parse(json_str, symbolize_names: true)
 
     common_asserts(json, @ep_version)
   end
