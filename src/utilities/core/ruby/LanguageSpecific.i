@@ -205,5 +205,37 @@ namespace boost {
 %rename(multiplyEqual) operator *=;
 
 
+%fragment("JsonToDict", "header", fragment="SWIG_FromCharPtrAndSize") {
+    VALUE SWIG_From_JsonValue(const Json::Value& value) {
+        if (value.isBool()) {
+            return value.asBool() ? Qtrue : Qfalse;
+        } else if (value.isIntegral()) {
+            return INT2NUM(value.asInt64());
+        } else if (value.isNumeric()) {
+            return DOUBLE2NUM(value.asDouble());
+        } else if (value.isString()) {
+            const auto str = value.asString();
+            return SWIG_FromCharPtrAndSize(str.data(), str.size());
+        } else if (value.isArray()) {
+            VALUE result = rb_ary_new2(value.size());
+            for( const auto& arrayElement : value) {
+                rb_ary_push(result, SWIG_From_JsonValue(arrayElement));
+            }
+            return result;
+
+        } else if (value.isObject()) {
+            VALUE result = rb_hash_new();
+            for( const auto& id : value.getMemberNames()) {
+                rb_hash_aset(result, ID2SYM(rb_intern(id.data())), SWIG_From_JsonValue(value[id]));
+            }
+            return result;
+        }
+
+        return rb_hash_new();
+    }
+}
+%typemap(out, fragment="JsonToDict") Json::Value {
+  $result = SWIG_From_JsonValue($1);
+}
 
 #endif // UTILITIES_RUBY_LANGUAGESPECIFIC_I
