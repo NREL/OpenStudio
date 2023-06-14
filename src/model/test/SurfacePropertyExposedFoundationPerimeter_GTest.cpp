@@ -195,9 +195,11 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfaceName) {
     surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
   auto prop = optprop.get();
   EXPECT_EQ("Surface 1", prop.surfaceName());
+  EXPECT_EQ(surface.handle(), prop.surface().handle());
   Surface surface2(points, model);
   boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop2 =
     surface2.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
   auto prop2 = optprop2.get();
   EXPECT_EQ("Surface 2", prop2.surfaceName());
+  EXPECT_EQ(surface2.handle(), prop2.surface().handle());
 }

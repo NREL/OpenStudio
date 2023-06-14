@@ -37,6 +37,8 @@
 namespace openstudio {
 namespace model {
 
+  class Surface;
+
   namespace detail {
 
     /** SurfacePropertyExposedFoundationPerimeter_Impl is a ModelObject_Impl that is the implementation class for SurfacePropertyExposedFoundationPerimeter.*/
@@ -67,7 +69,7 @@ namespace model {
       /** @name Getters */
       //@{
 
-      std::string surfaceName() const;
+      Surface surface() const;
 
       std::string exposedPerimeterCalculationMethod() const;
 
@@ -101,6 +103,8 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.SurfacePropertyExposedFoundationPerimeter");
+
+      boost::optional<Surface> optionalSurface() const;
     };
 
   }  // namespace detail

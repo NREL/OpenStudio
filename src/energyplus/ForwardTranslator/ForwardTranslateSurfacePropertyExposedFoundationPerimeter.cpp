@@ -32,6 +32,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/SurfacePropertyExposedFoundationPerimeter.hpp"
 #include "../../model/SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
+#include "../../model/Surface.hpp"
 
 #include <utilities/idd/SurfaceProperty_ExposedFoundationPerimeter_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -51,7 +52,7 @@ namespace energyplus {
 
     m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, modelObject.surfaceName());
+    idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, modelObject.surface().nameString());
 
     idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod,
                         modelObject.exposedPerimeterCalculationMethod());
