@@ -53,15 +53,16 @@ jobs:
         shell: bash
         run: |
           set -x
+          sudo apt update && sudo apt install -y ninja-build
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE:STRING=Release \
+          cmake -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release \
                 -DBUILD_CSHARP_BINDINGS:BOOL=ON -DBUILD_NUGET_PACKAGE:BOOL=OFF \
                 -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF \
                 -DBUILD_PACKAGE:BOOL=OFF \
                 ../
 
-          make -j2
+          ninja
 
 
       - name: Compile macOS
@@ -69,17 +70,18 @@ jobs:
         shell: bash
         run: |
           set -x
+          brew install ninja
           export CC=clang
           export CMAKE_OSX_ARCHITECTURES=x86_64
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE:STRING=Release \
+          cmake -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release \
                 -DBUILD_CSHARP_BINDINGS:BOOL=ON -DBUILD_NUGET_PACKAGE:BOOL=OFF \
                 -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF \
                 -DBUILD_PACKAGE:BOOL=OFF \
                 ../
 
-          make -j3
+           ninja
 
       - name: Compile Windows 64
         if: matrix.name == 'Windows64'
