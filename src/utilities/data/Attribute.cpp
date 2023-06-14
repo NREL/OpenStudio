@@ -13,6 +13,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <pugixml.hpp>
+#include <json/json.h>
 
 namespace openstudio {
 namespace detail {
@@ -603,6 +604,55 @@ namespace detail {
     }
   }
 
+  Json::Value Attribute_Impl::toJSON(bool short_version) const {
+
+    Json::Value root;
+    root["name"] = m_name;
+    root["display_name"] = displayName(true).get();
+
+    if (!short_version) {
+      root["uuid"] = openstudio::removeBraces(m_uuid);
+      root["versionuuid"] = openstudio::removeBraces(m_versionUUID);
+
+      if (!m_source.empty()) {
+        root["source"] = m_source;
+      }
+    }
+
+    // TODO: do we really need the lowercase?
+    // root["datatype"] = ascii_to_lower_copy(m_valueType.valueName());
+
+    if (m_valueType == AttributeValueType::Boolean) {
+      root["value"] = valueAsBoolean();
+      root["datatype"] = "boolean";
+    } else if (m_valueType == AttributeValueType::Double) {
+      root["value"] = valueAsDouble();
+      root["datatype"] = "float";
+    } else if (m_valueType == AttributeValueType::Integer) {
+      root["value"] = valueAsInteger();
+      root["datatype"] = "integer";
+    } else if (m_valueType == AttributeValueType::Unsigned) {
+      root["value"] = valueAsUnsigned();
+      root["datatype"] = "unsigned";
+    } else if (m_valueType == AttributeValueType::String) {
+      root["value"] = valueAsString();
+      root["datatype"] = "string";
+    } else if (m_valueType == AttributeValueType::AttributeVector) {
+      auto& subElement = root["value"];
+      root["datatype"] = "attributevector";
+      for (const Attribute& attribute : this->valueAsAttributeVector()) {
+        subElement.append(attribute.toJSON());
+      }
+    } else {
+      OS_ASSERT(false);
+    }
+
+    if (m_units) {
+      root["units"] = *m_units;
+    }
+    return root;
+  }
+
 }  // namespace detail
 
 // For debug purposes only
@@ -980,6 +1030,14 @@ std::string Attribute::toString() const {
 // Protected
 pugi::xml_document Attribute::toXml() const {
   return m_impl->toXml();
+}
+
+Json::Value Attribute::toJSON(bool short_version) const {
+  return m_impl->toJSON(short_version);
+}
+
+std::string Attribute::toJSONString() const {
+  return toJSON().toStyledString();
 }
 
 bool Attribute::saveToXml(const openstudio::path& path) const {

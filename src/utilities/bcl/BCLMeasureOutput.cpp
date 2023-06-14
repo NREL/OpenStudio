@@ -8,6 +8,7 @@
 #include "../core/Assert.hpp"
 
 #include <pugixml.hpp>
+#include <json/json.h>
 
 namespace openstudio {
 
@@ -107,6 +108,36 @@ void BCLMeasureOutput::writeValues(pugi::xml_node& element) const {
   subelement = element.append_child("model_dependent");
   text = subelement.text();
   text.set(m_modelDependent ? "true" : "false");
+}
+
+Json::Value BCLMeasureOutput::toJSON() const {
+  Json::Value root;
+
+  root["name"] = m_name;
+
+  root["display_name"] = m_displayName;
+
+  if (m_shortName) {
+    root["short_name"] = *m_shortName;
+  }
+
+  if (m_description) {
+    root["description"] = *m_description;
+  }
+
+  root["type"] = m_type;
+
+  if (m_units) {
+    root["units"] = *m_units;
+  }
+
+  root["model_dependent"] = m_modelDependent;
+
+  return root;
+}
+
+std::string BCLMeasureOutput::toJSONString() const {
+  return toJSON().toStyledString();
 }
 
 bool BCLMeasureOutput::operator==(const BCLMeasureOutput& other) const {
