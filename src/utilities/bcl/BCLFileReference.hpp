@@ -38,6 +38,10 @@ namespace pugi {
 class xml_node;
 }
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 
 /** BCLFileReference is a class for tracking files that come with BCL components and measures.
@@ -113,6 +117,9 @@ class UTILITIES_API BCLFileReference
   //@{
 
   void writeValues(pugi::xml_node& element) const;
+
+  Json::Value toJSON() const;
+  std::string toJSONString() const;
 
   /// Check if the file has been updated and return if so.  Will update checksum.
   bool checkForUpdate();

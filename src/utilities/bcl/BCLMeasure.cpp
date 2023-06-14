@@ -54,6 +54,8 @@
 #include <string_view>
 #include <vector>
 
+#include <json/json.h>
+
 namespace openstudio {
 
 /*****************************************************************************************************************************************************
@@ -1204,6 +1206,14 @@ boost::optional<BCLMeasure> BCLMeasure::clone(const openstudio::path& newDir) co
 
 std::string BCLMeasure::xmlString() const {
   return m_bclXML.toString();
+}
+
+Json::Value BCLMeasure::toJSON() const {
+  return m_bclXML.toJSON();
+}
+
+std::string BCLMeasure::toJSONString() const {
+  return m_bclXML.toJSONString();
 }
 
 }  // namespace openstudio

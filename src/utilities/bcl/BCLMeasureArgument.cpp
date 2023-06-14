@@ -32,6 +32,7 @@
 #include "../core/Assert.hpp"
 
 #include <pugixml.hpp>
+#include <json/json.h>
 
 namespace openstudio {
 
@@ -232,6 +233,55 @@ void BCLMeasureArgument::writeValues(pugi::xml_node& element) const {
     text = subElement.text();
     text.set(m_maxValue->c_str());
   }
+}
+
+Json::Value BCLMeasureArgument::toJSON() const {
+  Json::Value root;
+
+  root["name"] = m_name;
+  root["display_name"] = m_displayName;
+
+  if (m_description) {
+    root["description"] = *m_description;
+  }
+
+  root["type"] = m_type;
+
+  if (m_units) {
+    root["units"] = *m_units;
+  }
+
+  root["required"] = m_required;
+  root["model_dependent"] = m_modelDependent;
+
+  if (m_defaultValue) {
+    root["default_value"] = *m_defaultValue;
+  }
+
+  const size_t n = m_choiceValues.size();
+  OS_ASSERT(n == m_choiceDisplayNames.size());
+  if (n > 0) {
+    auto& choices = root["choices"];
+    for (size_t i = 0; i < n; ++i) {
+      auto& choice = choices["choice"];
+      choice["value"] = m_choiceValues[i];
+      choice["display_name"] = m_choiceDisplayNames[i];
+    }
+  }
+
+  if (m_minValue) {
+    root["min_value"] = *m_minValue;
+  }
+
+  if (m_maxValue) {
+    root["max_value"] = *m_maxValue;
+  }
+
+  return root;
+}
+
+std::string BCLMeasureArgument::toJSONString() const {
+  return toJSON().toStyledString();
 }
 
 bool BCLMeasureArgument::operator==(const BCLMeasureArgument& other) const {

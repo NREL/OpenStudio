@@ -35,7 +35,9 @@
 #include "../time/DateTime.hpp"
 #include "../xml/XMLValidator.hpp"
 
+#include <json/value.h>
 #include <pugixml.hpp>
+#include <json/json.h>
 
 #include <algorithm>
 #include <sstream>
@@ -751,6 +753,94 @@ pugi::xml_document BCLXML::toXML() const {
   }
 
   return doc;
+}
+
+Json::Value BCLXML::toJSON() const {
+
+  Json::Value root;
+
+  if (m_bclXMLType == BCLXMLType::ComponentXML) {
+    root["type"] = "component";
+  } else if (m_bclXMLType == BCLXMLType::MeasureXML) {
+    root["type"] = "measure";
+  } else {
+    LOG_AND_THROW("Unknown BCLXMLType '" << m_bclXMLType.valueName() << "'.");
+  }
+
+  root["schema_version"] = BCLXML::currentSchemaVersion().str();
+
+  if (m_error) {
+    root["error"] = escapeString(*m_error);
+  }
+  root["name"] = escapeString(m_name);
+
+  root["uid"] = m_uid;
+  root["version_id"] = m_versionId;
+  if (boost::optional<DateTime> versionMod_ = versionModified()) {
+    root["version_modified"] = versionMod_->toISO8601();
+  }
+  root["xml_checksum"] = m_xmlChecksum;
+
+  if (m_bclXMLType == BCLXMLType::MeasureXML) {
+    root["class_name"] = m_className;
+  }
+
+  root["display_name"] = m_displayName;
+  root["description"] = m_description;
+  if (m_bclXMLType == BCLXMLType::MeasureXML) {
+
+    root["modeler_description"] = m_modelerDescription;
+
+    {
+      auto& arguments = root["arguments"];
+      for (const BCLMeasureArgument& argument : m_arguments) {
+        arguments.append(argument.toJSON());
+      }
+    }
+
+    {
+      auto& outputs = root["outputs"];
+      for (const BCLMeasureOutput& output : m_outputs) {
+        outputs.append(output.toJSON());
+      }
+    }
+  }
+
+  // TODO: write provenances
+  // root["provenances"] = Json::Value(Json::arrayValue);
+
+  // write tags
+  // provenances isn't written so element above is not used... so ignore it here
+  // cppcheck-suppress redundantAssignment
+  auto& tags = root["tags"];
+  for (const std::string& tag : m_tags) {
+    tags.append(tag);
+  }
+
+  // TODO: why isn't this using Attribute::toXml (which appears unused anywhere and could be repurposed to work exactly as intended)?!
+
+  // write attributes
+  auto& attributes = root["attributes"];
+  for (const Attribute& attribute : m_attributes) {
+    attributes.append(attribute.toJSON(true));
+  }
+
+  // write files
+  {
+    auto& files = root["files"];
+    // Fix for #4748 - sort files
+    auto sortedFiles = m_files;
+    std::sort(sortedFiles.begin(), sortedFiles.end());
+    for (const BCLFileReference& file : sortedFiles) {
+      files.append(file.toJSON());
+    }
+  }
+
+  return root;
+}
+
+std::string BCLXML::toJSONString() const {
+  return toJSON().toStyledString();
 }
 
 bool BCLXML::save() const {

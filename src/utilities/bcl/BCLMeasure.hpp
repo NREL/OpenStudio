@@ -40,6 +40,10 @@
 
 #include <vector>
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 
 class FileReferenceType;
@@ -267,6 +271,9 @@ class UTILITIES_API BCLMeasure
 
   /// get all measures in an input directory
   static std::vector<BCLMeasure> getMeasuresInDir(const openstudio::path& dir);
+
+  Json::Value toJSON() const;
+  std::string toJSONString() const;
 
   //@}
  private:

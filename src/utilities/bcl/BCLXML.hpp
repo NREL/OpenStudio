@@ -48,6 +48,10 @@ namespace pugi {
 class xml_document;
 }  // namespace pugi
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 
 class BCLComponent;
@@ -210,6 +214,9 @@ class UTILITIES_API BCLXML
   /// if any xml fields (other than uid, version id, or xml checksum) have changed
   /// The xml file must still be saved to disk to preserve the new versionID
   bool checkForUpdatesXML();
+
+  Json::Value toJSON() const;
+  std::string toJSONString() const;
 
   //@}
  protected:

@@ -43,6 +43,10 @@ class xml_document;
 class xml_node;
 }  // namespace pugi
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 namespace detail {
 
@@ -182,6 +186,9 @@ namespace detail {
 
     /// write object and all children to xml
     pugi::xml_document toXml() const;
+
+    // short_version: if false, will include the uuid, versionuuid and source (if any)
+    Json::Value toJSON(bool short_version) const;
 
     /// comparison
     bool operator==(const Attribute& other) const;

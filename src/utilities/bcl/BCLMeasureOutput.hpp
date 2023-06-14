@@ -39,6 +39,10 @@ namespace pugi {
 class xml_node;
 }
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 
 /** BCLMeasureOutput is a class representing an output of a measure.  This class does not hold the particular
@@ -63,6 +67,9 @@ class UTILITIES_API BCLMeasureOutput
   bool modelDependent() const;
 
   void writeValues(pugi::xml_node& element) const;
+
+  Json::Value toJSON() const;
+  std::string toJSONString() const;
 
   bool operator==(const BCLMeasureOutput& other) const;
 

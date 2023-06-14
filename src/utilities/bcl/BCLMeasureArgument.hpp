@@ -39,6 +39,10 @@ namespace pugi {
 class xml_node;
 }
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 
 /** BCLMeasureArgument is a class representing an argument of a measure.  This class does not hold the particular
@@ -70,6 +74,9 @@ class UTILITIES_API BCLMeasureArgument
   boost::optional<std::string> maxValue() const;
 
   void writeValues(pugi::xml_node& element) const;
+
+  Json::Value toJSON() const;
+  std::string toJSONString() const;
 
   bool operator==(const BCLMeasureArgument& other) const;
 
