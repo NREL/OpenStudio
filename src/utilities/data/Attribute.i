@@ -4,6 +4,8 @@
 %{
   #include <utilities/data/Attribute.hpp>
   #include <utilities/data/Attribute_Impl.hpp>
+
+  #include <json/value.h>
 %}
 
 // create an instantiation of the optional class

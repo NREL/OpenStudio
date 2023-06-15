@@ -402,6 +402,7 @@ set(${target_name}_swig_src
   core/UUID.i
   core/UnzipFile.i
   core/ZipFile.i
+  core/jsoncpp.i
   core/ruby/LanguageSpecific.i
   core/python/LanguageSpecific.i
   core/csharp/LanguageSpecific.i
