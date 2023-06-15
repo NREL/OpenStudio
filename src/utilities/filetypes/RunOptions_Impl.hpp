@@ -52,6 +52,7 @@ namespace detail {
    public:
     RunOptions_Impl() = default;
 
+    Json::Value toJSON() const;
     std::string string() const;
 
     bool debug() const;

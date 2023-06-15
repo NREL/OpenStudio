@@ -35,6 +35,7 @@
 
 #include <json/json.h>
 
+#include <json/value.h>
 #include <memory>
 #include <string>
 
@@ -45,62 +46,50 @@ namespace detail {
     this->onChange.nano_emit();
   }
 
-  std::string RunOptions_Impl::string() const {
-    Json::Value value;
+  Json::Value RunOptions_Impl::toJSON() const {
+    Json::Value root;
 
     // TODO: Why is this only writing if not default? I find it weird
     if (m_debug) {
-      value["debug"] = m_debug;
+      root["debug"] = m_debug;
     }
 
     if (m_epjson) {
-      value["epjson"] = m_epjson;
+      root["epjson"] = m_epjson;
     }
 
     if (m_fast) {
-      value["fast"] = m_fast;
+      root["fast"] = m_fast;
     }
 
     if (m_preserveRunDir) {
-      value["preserve_run_dir"] = m_preserveRunDir;
+      root["preserve_run_dir"] = m_preserveRunDir;
     }
 
     if (m_skipExpandObjects) {
-      value["skip_expand_objects"] = m_skipExpandObjects;
+      root["skip_expand_objects"] = m_skipExpandObjects;
     }
 
     if (m_skipEnergyPlusPreprocess) {
-      value["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
+      root["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
     }
 
     if (m_customOutputAdapter) {
-      Json::Value outputAdapter;
-      outputAdapter["custom_file_name"] = m_customOutputAdapter->customFileName();
-      outputAdapter["class_name"] = m_customOutputAdapter->className();
-
-      Json::CharReaderBuilder rbuilder;
-      std::istringstream ss(m_customOutputAdapter->options());
-      std::string formattedErrors;
-      Json::Value options;
-      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &options, &formattedErrors);
-      if (parsingSuccessful) {
-        outputAdapter["options"] = options;
-      } else {
-        LOG(Warn, "Couldn't parse CustomOutputAdapter's options='" << m_customOutputAdapter->options() << "'. Error: '" << formattedErrors << "'.");
-      }
-
-      value["output_adapter"] = outputAdapter;
+      root["output_adapter"] = m_customOutputAdapter->toJSON();
     }
 
-    if (auto ft_opt = m_forwardTranslatorOptions.json()) {
-      value["ft_options"] = ft_opt;
+    if (auto ft_opt = m_forwardTranslatorOptions.toJSON()) {
+      root["ft_options"] = ft_opt;
     }
+    return root;
+  }
 
+  std::string RunOptions_Impl::string() const {
     // Write to string
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
     wbuilder["indentation"] = "   ";
-    std::string result = Json::writeString(wbuilder, value);
+    std::string result = Json::writeString(wbuilder, toJSON());
 
     return result;
   }
@@ -242,8 +231,24 @@ namespace detail {
 
 }  // namespace detail
 
-CustomOutputAdapter::CustomOutputAdapter(const std::string& customFileName, const std::string& className, const std::string& options)
-  : m_customFileName(customFileName), m_className(className), m_options(options) {}
+CustomOutputAdapter CustomOutputAdapter::fromString(std::string customFileName, std::string className, const std::string& options) {
+
+  if (options.empty()) {
+    return CustomOutputAdapter(std::move(customFileName), std::move(className));
+  }
+  const Json::CharReaderBuilder rbuilder;
+  std::istringstream ss(options);
+  std::string formattedErrors;
+  Json::Value parsedOptions;
+  const bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &parsedOptions, &formattedErrors);
+  if (!parsingSuccessful) {
+    parsedOptions = Json::Value(Json::nullValue);
+  }
+  return CustomOutputAdapter(std::move(customFileName), std::move(className), std::move(parsedOptions));
+}
+
+CustomOutputAdapter::CustomOutputAdapter(std::string customFileName, std::string className, Json::Value options)
+  : m_customFileName(std::move(customFileName)), m_className(std::move(className)), m_options(std::move(options)) {}
 
 std::string CustomOutputAdapter::customFileName() const {
   return m_customFileName;
@@ -254,7 +259,27 @@ std::string CustomOutputAdapter::className() const {
 }
 
 std::string CustomOutputAdapter::options() const {
+  if (m_options.isNull()) {
+    return "";
+  }
+
+  // Write to string
+  Json::StreamWriterBuilder wbuilder;
+  // mimic the old StyledWriter behavior:
+  wbuilder["indentation"] = "   ";
+  return Json::writeString(wbuilder, m_options);
+}
+
+Json::Value CustomOutputAdapter::optionsJSON() const {
   return m_options;
+}
+
+Json::Value CustomOutputAdapter::toJSON() const {
+  Json::Value outputAdapter;
+  outputAdapter["custom_file_name"] = m_customFileName;
+  outputAdapter["class_name"] = m_className;
+  outputAdapter["options"] = m_options;
+  return outputAdapter;
 }
 
 RunOptions::RunOptions() : m_impl(std::make_shared<detail::RunOptions_Impl>()) {
@@ -308,13 +333,7 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
       std::string customFileName = outputAdapter["custom_file_name"].asString();
       std::string className = outputAdapter["class_name"].asString();
       Json::Value options = outputAdapter["options"];
-
-      Json::StreamWriterBuilder wbuilder;
-      // mimic the old StyledWriter behavior:
-      wbuilder["indentation"] = "   ";
-      std::string optionString = Json::writeString(wbuilder, options);
-
-      CustomOutputAdapter coa(customFileName, className, optionString);
+      const CustomOutputAdapter coa(std::move(customFileName), std::move(className), std::move(options));
       result.setCustomOutputAdapter(coa);
     }
   }
@@ -324,6 +343,10 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
   }
 
   return result;
+}
+
+Json::Value RunOptions::toJSON() const {
+  return getImpl<detail::RunOptions_Impl>()->toJSON();
 }
 
 std::string RunOptions::string() const {

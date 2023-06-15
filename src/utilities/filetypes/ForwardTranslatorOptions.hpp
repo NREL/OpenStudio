@@ -62,6 +62,8 @@ class UTILITIES_API ForwardTranslatorOptions
   /// Construct from JSON formatted string
   static boost::optional<ForwardTranslatorOptions> fromString(const std::string& s);
 
+  Json::Value toJSON() const;
+
   /// Serialize to JSON formatted string
   std::string string() const;
 
@@ -107,7 +109,6 @@ class UTILITIES_API ForwardTranslatorOptions
   static std::vector<ForwardTranslatorOptionKeyMethod> forwardTranslatorOptionKeyMethods();
 
  protected:
-  Json::Value json() const;
   static ForwardTranslatorOptions fromJSON(const Json::Value& value);
 
   // get the impl

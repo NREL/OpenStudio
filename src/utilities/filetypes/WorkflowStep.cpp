@@ -41,6 +41,15 @@ namespace detail {
     return m_result;
   }
 
+  std::string WorkflowStep_Impl::string() const {
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string resultString = Json::writeString(wbuilder, toJSON());
+
+    return resultString;
+  }
+
   void WorkflowStep_Impl::setResult(const WorkflowStepResult& result) {
     m_result = result;
     onUpdate();
@@ -57,27 +66,24 @@ namespace detail {
 
   MeasureStep_Impl::MeasureStep_Impl(const std::string& measureDirName) : m_measureDirName(measureDirName) {}
 
-  std::string MeasureStep_Impl::string() const {
-    Json::Value result;
-    result["measure_dir_name"] = m_measureDirName;
+  Json::Value MeasureStep_Impl::toJSON() const {
+    Json::Value root;
+    root["measure_dir_name"] = m_measureDirName;
 
     if (m_name) {
-      result["name"] = m_name.get();
+      root["name"] = m_name.get();
     }
 
     if (m_description) {
-      result["description"] = m_description.get();
+      root["description"] = m_description.get();
     }
 
     if (m_modelerDescription) {
-      result["modeler_description"] = m_modelerDescription.get();
+      root["modeler_description"] = m_modelerDescription.get();
     }
 
     Json::Value arguments(Json::objectValue);
-    for (const auto& argument : m_arguments) {
-      std::string name = argument.first;
-      Variant value = argument.second;
-
+    for (const auto& [name, value] : m_arguments) {
       if (value.variantType() == VariantType::String) {
         arguments[name] = value.valueAsString();
       } else if (value.variantType() == VariantType::Double) {
@@ -88,30 +94,13 @@ namespace detail {
         arguments[name] = value.valueAsBoolean();
       }
     }
-    result["arguments"] = arguments;
+    root["arguments"] = arguments;
 
-    boost::optional<WorkflowStepResult> workflowStepResult = this->result();
-    if (workflowStepResult) {
-
-      // We let it fail but with a warning (this shouldn't ever happen really)
-      Json::CharReaderBuilder rbuilder;
-      std::istringstream ss(workflowStepResult->string());
-      std::string formattedErrors;
-      Json::Value value;
-      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
-      if (parsingSuccessful) {
-        result["result"] = value;
-      } else {
-        LOG(Warn, "Couldn't parse workflowStepResult s='" << workflowStepResult->string() << "'. Error: '" << formattedErrors << "'.");
-      }
+    if (boost::optional<WorkflowStepResult> workflowStepResult_ = this->result()) {
+      root["result"] = workflowStepResult_->toJSON();
     }
 
-    Json::StreamWriterBuilder wbuilder;
-    // mimic the old StyledWriter behavior:
-    wbuilder["indentation"] = "   ";
-    std::string resultString = Json::writeString(wbuilder, result);
-
-    return resultString;
+    return root;
   }
 
   std::string MeasureStep_Impl::measureDirName() const {
@@ -288,6 +277,10 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s) {
 
 std::string WorkflowStep::string() const {
   return getImpl<detail::WorkflowStep_Impl>()->string();
+}
+
+Json::Value WorkflowStep::toJSON() const {
+  return getImpl<detail::WorkflowStep_Impl>()->toJSON();
 }
 
 boost::optional<WorkflowStepResult> WorkflowStep::result() const {

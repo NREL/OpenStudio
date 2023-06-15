@@ -1,9 +1,13 @@
 #ifndef JSONCPP_I
 #define JSONCPP_I
 
+#if defined SWIGCSHARP
+%ignore openstudio::*::toJSON() const;
+#else
 %{
   #include <json/value.h>
 %}
+#endif
 
 #if defined SWIGPYTHON
 %fragment("JsonToDict","header", fragment="SWIG_FromCharPtrAndSize") {

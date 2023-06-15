@@ -33,6 +33,9 @@
 #include "../core/Json.hpp"
 #include <json/json.h>
 
+#include <memory>
+#include <utility>
+
 namespace openstudio {
 namespace detail {
 
@@ -94,15 +97,14 @@ namespace detail {
     return true;
   }
 
-  std::string StandardsJSON_Impl::string() const {
-    Json::StreamWriterBuilder wbuilder;
-    const std::string output = Json::writeString(wbuilder, m_standardsRoot);
-    return output;
+  Json::Value StandardsJSON_Impl::toJSON() const {
+    return m_standardsRoot;
   }
 
-  StandardsJSON StandardsJSON_Impl::clone() const {
-    StandardsJSON result(this->string());
-    return result;
+  std::string StandardsJSON_Impl::string() const {
+    const Json::StreamWriterBuilder wbuilder;
+    std::string output = Json::writeString(wbuilder, m_standardsRoot);
+    return output;
   }
 
   boost::optional<Json::Value> StandardsJSON_Impl::getPrimaryKey(const std::string& primaryKey) const {
@@ -121,11 +123,11 @@ namespace detail {
 
 }  // namespace detail
 
-StandardsJSON::StandardsJSON() : m_impl(std::shared_ptr<detail::StandardsJSON_Impl>(new detail::StandardsJSON_Impl())) {}
+StandardsJSON::StandardsJSON() : m_impl(std::make_shared<detail::StandardsJSON_Impl>()) {}
 
-StandardsJSON::StandardsJSON(const std::string& s) : m_impl(std::shared_ptr<detail::StandardsJSON_Impl>(new detail::StandardsJSON_Impl(s))) {}
+StandardsJSON::StandardsJSON(const std::string& s) : m_impl(std::make_shared<detail::StandardsJSON_Impl>(s)) {}
 
-StandardsJSON::StandardsJSON(std::shared_ptr<detail::StandardsJSON_Impl> impl) : m_impl(impl) {}
+StandardsJSON::StandardsJSON(std::shared_ptr<detail::StandardsJSON_Impl> impl) : m_impl(std::move(impl)) {}
 
 boost::optional<StandardsJSON> StandardsJSON::load(const std::string& s) {
   boost::optional<StandardsJSON> result;
@@ -136,12 +138,16 @@ boost::optional<StandardsJSON> StandardsJSON::load(const std::string& s) {
   return result;
 }
 
+Json::Value StandardsJSON::toJSON() const {
+  return getImpl<detail::StandardsJSON_Impl>()->toJSON();
+}
+
 std::string StandardsJSON::string() const {
   return getImpl<detail::StandardsJSON_Impl>()->string();
 }
 
 StandardsJSON StandardsJSON::clone() const {
-  return getImpl<detail::StandardsJSON_Impl>()->clone();
+  return {std::make_shared<detail::StandardsJSON_Impl>(*m_impl)};
 }
 
 boost::optional<Json::Value> StandardsJSON::getPrimaryKey(const std::string& primaryKey) const {

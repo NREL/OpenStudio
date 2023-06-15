@@ -52,7 +52,7 @@ namespace detail {
 
     StandardsJSON_Impl(const std::string& s);
 
-    StandardsJSON clone() const;
+    Json::Value toJSON() const;
 
     std::string string() const;
 

@@ -58,7 +58,11 @@ namespace detail {
 
     WorkflowJSON_Impl(const openstudio::path& p);
 
+    // Note: I'm keeping this one because I don't want to bother writting the copy/move constructors and assignment operators to handle the connection
+    // of the nano signals
     WorkflowJSON clone() const;
+
+    Json::Value toJSON(bool includeHash = true) const;
 
     std::string string(bool includeHash = true) const;
 
