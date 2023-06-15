@@ -29,7 +29,8 @@ namespace detail {
 
     virtual ~WorkflowStep_Impl() = default;
 
-    virtual std::string string() const = 0;
+    std::string string() const;
+    virtual Json::Value toJSON() const = 0;
 
     boost::optional<WorkflowStepResult> result() const;
 
@@ -55,7 +56,7 @@ namespace detail {
    public:
     MeasureStep_Impl(const std::string& measureDirName);
 
-    virtual std::string string() const override;
+    virtual Json::Value toJSON() const override;
 
     std::string measureDirName() const;
     bool setMeasureDirName(const std::string& measureDirName);

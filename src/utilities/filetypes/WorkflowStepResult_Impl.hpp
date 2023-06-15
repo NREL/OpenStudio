@@ -15,6 +15,10 @@
 #include "../time/DateTime.hpp"
 #include "../bcl/BCLMeasure.hpp"
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 namespace detail {
 
@@ -22,6 +26,8 @@ namespace detail {
   {
    public:
     WorkflowStepValue_Impl(const std::string& name, const Variant& value);
+
+    Json::Value toJSON() const;
 
     std::string string() const;
 
@@ -74,6 +80,8 @@ namespace detail {
   {
    public:
     WorkflowStepResult_Impl();
+
+    Json::Value toJSON() const;
 
     std::string string() const;
 

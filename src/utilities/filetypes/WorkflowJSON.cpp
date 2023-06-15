@@ -101,7 +101,8 @@ namespace detail {
     return result;
   }
 
-  std::string WorkflowJSON_Impl::string(bool includeHash) const {
+  Json::Value WorkflowJSON_Impl::toJSON(bool includeHash) const {
+
     Json::Value clone(m_value);
     if (!includeHash) {
       clone.removeMember("hash");
@@ -109,40 +110,22 @@ namespace detail {
 
     Json::Value steps(Json::arrayValue);
     for (const auto& step : m_steps) {
-
-      // We let it fail but with a warning (this shouldn't ever happen really)
-      Json::CharReaderBuilder rbuilder;
-      std::istringstream ss(step.string());
-      std::string formattedErrors;
-      Json::Value stepValue;
-      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &stepValue, &formattedErrors);
-      if (parsingSuccessful) {
-        steps.append(stepValue);
-      } else {
-        LOG(Warn, "Couldn't parse WorkflowJSON Step s='" << step.string() << "'. Error: '" << formattedErrors << "'.");
-      }
+      steps.append(step.toJSON());
     }
-    clone["steps"] = steps;
+    clone["steps"] = std::move(steps);
 
     if (m_runOptions) {
-
-      // We let it fail but with a warning (this shouldn't ever happen really)
-      Json::CharReaderBuilder rbuilder;
-      std::istringstream ss(m_runOptions->string());
-      std::string formattedErrors;
-      Json::Value options;
-      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &options, &formattedErrors);
-      if (parsingSuccessful) {
-        clone["run_options"] = options;
-      } else {
-        LOG(Warn, "Couldn't parse WorkflowJSON Run Options='" << m_runOptions->string() << "'. Error: '" << formattedErrors << "'.");
-      }
+      clone["run_options"] = m_runOptions->toJSON();
     }
 
+    return clone;
+  }
+
+  std::string WorkflowJSON_Impl::string(bool includeHash) const {
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
     wbuilder["indentation"] = "   ";
-    std::string result = Json::writeString(wbuilder, clone);
+    std::string result = Json::writeString(wbuilder, toJSON());
 
     return result;
   }
@@ -897,6 +880,10 @@ boost::optional<WorkflowJSON> WorkflowJSON::load(const openstudio::path& p) {
   } catch (const std::exception&) {
   }
   return result;
+}
+
+Json::Value WorkflowJSON::toJSON(bool includeHash) const {
+  return getImpl<detail::WorkflowJSON_Impl>()->toJSON(includeHash);
 }
 
 std::string WorkflowJSON::string(bool includeHash) const {

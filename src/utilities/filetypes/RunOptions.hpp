@@ -11,9 +11,7 @@
 #include "../core/Logger.hpp"
 #include "../core/Deprecated.hpp"
 
-namespace Json {
-class Value;
-}
+#include <json/json.h>
 
 namespace openstudio {
 
@@ -28,15 +26,23 @@ namespace detail {
 class UTILITIES_API CustomOutputAdapter
 {
  public:
-  CustomOutputAdapter(const std::string& customFileName, const std::string& className, const std::string& options);
+  // Couldn't add both ctors, it's ambiguous... so retaining existing as a static factory fromString
+  static CustomOutputAdapter fromString(std::string customFileName, std::string className, const std::string& options);
+  explicit CustomOutputAdapter(std::string customFileName, std::string className, Json::Value options = Json::nullValue);
+
   std::string customFileName() const;
   std::string className() const;
   std::string options() const;
+  Json::Value optionsJSON() const;
+
+  Json::Value toJSON() const;
 
  private:
+  REGISTER_LOGGER("openstudio.CustomOutputAdapter");
+
   std::string m_customFileName;
   std::string m_className;
-  std::string m_options;
+  Json::Value m_options;
 };
 
 /** Base class for defining a run options for a OpenStudio Workflow. */
@@ -50,6 +56,8 @@ class UTILITIES_API RunOptions
 
   /// Construct from JSON formatted string
   static boost::optional<RunOptions> fromString(const std::string& s);
+
+  Json::Value toJSON() const;
 
   /// Serialize to JSON formatted string
   std::string string() const;

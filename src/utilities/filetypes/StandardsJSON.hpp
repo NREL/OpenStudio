@@ -33,6 +33,8 @@ class UTILITIES_API StandardsJSON
   /** Clones this StandardsJSON into a separate one. */
   StandardsJSON clone() const;
 
+  Json::Value toJSON() const;
+
   /** Get the json as a string. */
   std::string string() const;
 
