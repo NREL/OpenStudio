@@ -632,7 +632,10 @@ namespace detail {
 
     Json::Value root;
     root["name"] = m_name;
-    root["display_name"] = displayName(true).get();
+    if (auto displayName_ = displayName(false)) {
+      root["display_name"] = std::move(*displayName_);
+    }
+    // root["display_name"] = displayName(true).get();
 
     if (!short_version) {
       root["uuid"] = openstudio::removeBraces(m_uuid);
