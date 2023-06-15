@@ -19,14 +19,19 @@ BCLMeasureOutput::BCLMeasureOutput(const pugi::xml_node& element) {
 
   m_displayName = element.child("display_name").text().as_string();
 
-  m_shortName = element.child("short_name").text().as_string();
-  ;
+  if (auto child_ = element.child("short_name")) {
+    m_shortName = child_.text().as_string();
+  }
 
-  m_description = element.child("description").text().as_string();
+  if (auto child_ = element.child("description")) {
+    m_description = child_.text().as_string();
+  }
 
   m_type = element.child("type").text().as_string();
 
-  m_units = element.child("units").text().as_string();
+  if (auto child_ = element.child("units")) {
+    m_units = child_.text().as_string();
+  }
 
   const std::string test = element.child("model_dependent").text().as_string();
   m_modelDependent = false;
