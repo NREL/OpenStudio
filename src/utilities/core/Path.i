@@ -361,6 +361,18 @@ namespace openstudio {
 
     // no need for freearg typemap since new did not get called
 
+    %typemap(out, fragment="commonpath") path {
+        const std::string s = $1.string();
+
+        PyObject * cls = importPathCls();
+
+        PyObject* args = Py_BuildValue("(s)", s.data());
+        $result = PyObject_CallObject(cls, args);
+
+        Py_DECREF(cls);
+        Py_DECREF(args);
+    }
+
     // handle const path like path
     %apply path { const path };
 
@@ -411,7 +423,7 @@ namespace openstudio {
         delete $1;
       }
     }
-  #endif
+  #endif  // SWIGPYTHON
 
 } // openstudio
 
