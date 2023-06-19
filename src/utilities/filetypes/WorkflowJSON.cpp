@@ -125,7 +125,7 @@ namespace detail {
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
     wbuilder["indentation"] = "   ";
-    std::string result = Json::writeString(wbuilder, toJSON());
+    std::string result = Json::writeString(wbuilder, toJSON(includeHash));
 
     return result;
   }
