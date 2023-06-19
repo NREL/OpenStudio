@@ -84,7 +84,47 @@ Json::Value MeasureManager::internalState() const {
   }
   result["osm"] = std::move(osms);
 
+  Json::Value idfs(Json::arrayValue);
+  for (const auto& [k, v] : m_idfs) {
+    Json::Value idfInfo(Json::objectValue);
+    idfInfo["idf_path"] = k.generic_string();
+    idfInfo["checksum"] = v.checksum;
+    idfs.append(std::move(idfInfo));
+  }
+  result["idf"] = std::move(idfs);
+
+  auto& measures = result["measures"];
+  for (const auto& [measureDirPath, bclMeasureInfo] : m_measures) {
+    Json::Value mInfo(Json::objectValue);
+    measures.append(bclMeasureInfo.measure.toJSON());
+  }
+
+  auto& measureInfos = result["measure_info"];
+  // Json::Value measureInfos(Json::arrayValue);
+  for (const auto& [measureDirPath, bclMeasureInfo] : m_measures) {
+    for (const auto& [osmOrIdfPath, measureInfo] : bclMeasureInfo.measureInfos) {
+      Json::Value mInfo(Json::objectValue);
+      mInfo["measureDirPath"] = measureDirPath.generic_string();
+      mInfo["osm_path"] = osmOrIdfPath.generic_string();
+      auto& args = mInfo["arguments"];
+      for (const auto& arg : measureInfo.bclMeasureArguments()) {
+        args.append(arg.toJSON());
+      }
+
+      measureInfos.append(std::move(mInfo));
+    }
+  }
+  // result["measure_info"] = std::move(measureInfos);
+
   return result;
+}
+
+size_t MeasureManager::clearMeasureInfoForOsmorIdfPath(const openstudio::path& osmOrIdfPath) {
+  size_t totalRemoved = 0;
+  for (auto& [key, value] : m_measures) {
+    totalRemoved += value.measureInfos.erase(osmOrIdfPath);
+  }
+  return totalRemoved;
 }
 
 boost::optional<OSMInfo> MeasureManager::getModel(const openstudio::path& osmPath, bool force_reload) {
@@ -92,7 +132,7 @@ boost::optional<OSMInfo> MeasureManager::getModel(const openstudio::path& osmPat
   if (!openstudio::filesystem::is_regular_file(osmPath)) {
     fmt::print("Model '{}' does not exist\n", osmPath.generic_string());
     m_osms.erase(osmPath);
-    m_measureInfos.erase(osmPath);
+    clearMeasureInfoForOsmorIdfPath(osmPath);
     return boost::none;
   }
 
@@ -112,7 +152,7 @@ boost::optional<OSMInfo> MeasureManager::getModel(const openstudio::path& osmPat
     }
   }
 
-  m_measureInfos.erase(osmPath);
+  clearMeasureInfoForOsmorIdfPath(osmPath);
 
   fmt::print("Attempting to load model '{}'\n", osmPath.generic_string());
   openstudio::osversion::VersionTranslator vt;
@@ -136,7 +176,7 @@ boost::optional<IDFInfo> MeasureManager::getIdf(const openstudio::path& idfPath,
   if (!openstudio::filesystem::is_regular_file(idfPath)) {
     fmt::print("Idf '{}' does not exist\n", idfPath.generic_string());
     m_idfs.erase(idfPath);
-    m_measureInfos.erase(idfPath);
+    clearMeasureInfoForOsmorIdfPath(idfPath);
     return boost::none;
   }
 
@@ -156,7 +196,7 @@ boost::optional<IDFInfo> MeasureManager::getIdf(const openstudio::path& idfPath,
     }
   }
 
-  m_measureInfos.erase(idfPath);
+  clearMeasureInfoForOsmorIdfPath(idfPath);
 
   fmt::print("Attempting to load idf '{}'\n", idfPath.generic_string());
   if (auto workspace_ = openstudio::Workspace::load(idfPath, openstudio::IddFileType::EnergyPlus)) {
@@ -178,7 +218,10 @@ boost::optional<IDFInfo> MeasureManager::getIdf(const openstudio::path& idfPath,
   return boost::none;
 }
 
-boost::optional<BCLMeasure> MeasureManager::getAndUpdateMeasure(const openstudio::path& measureDirPath, bool force_reload) {
+boost::optional<BCLMeasureInfo> MeasureManager::getAndUpdateMeasure(const openstudio::path& measureDirPath, bool force_reload,
+                                                                    const boost::optional<openstudio::path>& osmOrIdfPath_,
+                                                                    const boost::optional<model::Model>& model_,
+                                                                    const boost::optional<Workspace>& workspace_) {
 
   const auto& measureDirPathStr = measureDirPath.string();
 
@@ -186,46 +229,46 @@ boost::optional<BCLMeasure> MeasureManager::getAndUpdateMeasure(const openstudio
   if (!openstudio::filesystem::is_directory(measureDirPath)) {
     fmt::print("Measure '{}' does not exist.\n", measureDirPathStr);
     m_measures.erase(measureDirPath);
-    m_measureInfos.erase(measureDirPath);
     return boost::none;
   }
   if (!openstudio::filesystem::is_regular_file(measureDirPath / "measure.xml")) {
     fmt::print("Measure directory '{}' exists but does not have a measure.xml.\n", measureDirPathStr);
     m_measures.erase(measureDirPath);
-    m_measureInfos.erase(measureDirPath);
     return boost::none;
   }
 
-  boost::optional<BCLMeasure> measure_;
-
+  boost::optional<BCLMeasureInfo> measureInfo_;
   if (!force_reload) {
     auto it = m_measures.find(measureDirPath);
     if (it != m_measures.end()) {
-      measure_ = it->second;
+      measureInfo_ = it->second;
       fmt::print("Using cached measure {}\n", measureDirPath.generic_string());
     }
   }
 
-  if (!measure_) {
-    m_measureInfos.erase(measureDirPath);
+  if (!measureInfo_) {
+    m_measures.erase(measureDirPath);
 
     // load from disk
     fmt::print("Attempting to load measure '{}'\n", measureDirPathStr);
 
-    measure_ = openstudio::BCLMeasure::load(measureDirPath);
+    boost::optional<BCLMeasure> measure_ = openstudio::BCLMeasure::load(measureDirPath);
 
     if (!measure_) {
       fmt::print("Failed to load measure '{}'\n", measureDirPathStr);
-      m_measures.erase(measureDirPath);
       return boost::none;
     }
     fmt::print("Successfully loaded measure '{}'\n", measureDirPathStr);
-    m_measures.insert_or_assign(measureDirPath, measure_.get());
+    measureInfo_ = BCLMeasureInfo(std::move(*measure_));
+    auto [it, ok] = m_measures.insert({measureDirPath, std::move(*measureInfo_)});
+    measureInfo_ = it->second;
   }
 
+  auto& measure = measureInfo_->measure;
+
   // see if there are updates, want to make sure to perform both checks so do outside of conditional
-  bool file_updates = measure_->checkForUpdatesFiles();  // checks if any files have been updated
-  bool xml_updates = measure_->checkForUpdatesXML();     // only checks if xml as loaded has been changed since last save
+  bool file_updates = measure.checkForUpdatesFiles();  // checks if any files have been updated
+  bool xml_updates = measure.checkForUpdatesXML();     // only checks if xml as loaded has been changed since last save
 
   auto readmeInPath = measureDirPath / "README.md.erb";
   auto readmeOutPath = measureDirPath / "README.md";
@@ -233,12 +276,10 @@ boost::optional<BCLMeasure> MeasureManager::getAndUpdateMeasure(const openstudio
   bool readme_out_of_date = openstudio::filesystem::is_regular_file(readmeInPath) && !openstudio::filesystem::is_regular_file(readmeOutPath);
 
   // TODO: try catch like in measure_manager.rb?
-  bool missing_fields = measure_->missingRequiredFields();
+  bool missing_fields = measure.missingRequiredFields();
 
   if (file_updates || xml_updates || missing_fields || readme_out_of_date) {
     fmt::print("Changes detected, updating '{}'\n", measureDirPathStr);
-
-    m_measureInfos.erase(measureDirPath);
 
     // TODO: the readme.md generation from readme.md.erb requires ruby.
     fmt::print("Warn: readme.md generation from ERB is not supported yet\n");
@@ -247,12 +288,12 @@ boost::optional<BCLMeasure> MeasureManager::getAndUpdateMeasure(const openstudio
     // basically we need to compute the arguments of the measures, inspect outputs... so that requires doing something similar to what we do in the
     // `run` method
 
-    fmt::print("Measure at {} uses language = {}.\n", measureDirPathStr, measure_->measureLanguage().valueName());
+    fmt::print("Measure at {} uses language = {}.\n", measureDirPathStr, measure.measureLanguage().valueName());
 
-    auto scriptPath_ = measure_->primaryScriptPath();
+    auto scriptPath_ = measure.primaryScriptPath();
     if (!scriptPath_) {
       throw std::runtime_error(
-        fmt::format("Unable to locate primary Ruby script path for BCLMeasure '{}' located at '{}'", measure_->name(), measureDirPathStr));
+        fmt::format("Unable to locate primary Ruby script path for BCLMeasure '{}' located at '{}'", measure.name(), measureDirPathStr));
     }
 
     // TODO: Here we need to do two things:
@@ -273,7 +314,7 @@ boost::optional<BCLMeasure> MeasureManager::getAndUpdateMeasure(const openstudio
     std::vector<measure::OSArgument> arguments;
     std::vector<measure::OSOutput> outputs;
 
-    if (measure_->measureLanguage() == MeasureLanguage::Ruby) {
+    if (measure.measureLanguage() == MeasureLanguage::Ruby) {
       // same as the beginning of the OSMeasureInfoGetter::infoExtractorRubyFunction
       auto importCmd = fmt::format(R"ruby(
 currentObjects = Hash.new
@@ -347,8 +388,12 @@ puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
         taxonomy = measurePtr->taxonomy();
         modelerDescription = measurePtr->modeler_description();
 
-        openstudio::model::Model model;
-        arguments = measurePtr->arguments(model);
+        if (model_) {
+          arguments = measurePtr->arguments(*model_);
+        } else {
+          openstudio::model::Model model;
+          arguments = measurePtr->arguments(model);
+        }
         outputs = measurePtr->outputs();
 
       } else if (measureType == MeasureType::EnergyPlusMeasure) {
@@ -358,8 +403,12 @@ puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
         taxonomy = measurePtr->taxonomy();
         modelerDescription = measurePtr->modeler_description();
 
-        openstudio::Workspace workspace(openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus);
-        arguments = measurePtr->arguments(workspace);
+        if (workspace_) {
+          arguments = measurePtr->arguments(*workspace_);
+        } else {
+          openstudio::Workspace workspace(openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus);
+          arguments = measurePtr->arguments(workspace);
+        }
         outputs = measurePtr->outputs();
       } else if (measureType == MeasureType::ReportingMeasure) {
         auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
@@ -368,8 +417,12 @@ puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
         taxonomy = measurePtr->taxonomy();
         modelerDescription = measurePtr->modeler_description();
 
-        openstudio::model::Model model;
-        arguments = measurePtr->arguments(model);
+        if (model_) {
+          arguments = measurePtr->arguments(*model_);
+        } else {
+          openstudio::model::Model model;
+          arguments = measurePtr->arguments(model);
+        }
         outputs = measurePtr->outputs();
 
       } else {
@@ -380,7 +433,7 @@ puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
         name = className;
       }
 
-    } else if (measure_->measureLanguage() == MeasureLanguage::Python) {
+    } else if (measure.measureLanguage() == MeasureLanguage::Python) {
       // TODO: call initialization of the pythonEngine
       auto importCmd = fmt::format(R"python(
 import importlib.util
@@ -426,8 +479,12 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
         taxonomy = measurePtr->taxonomy();
         modelerDescription = measurePtr->modeler_description();
 
-        openstudio::model::Model model;
-        arguments = measurePtr->arguments(model);
+        if (model_) {
+          arguments = measurePtr->arguments(*model_);
+        } else {
+          openstudio::model::Model model;
+          arguments = measurePtr->arguments(model);
+        }
         outputs = measurePtr->outputs();
 
       } else if (measureType == MeasureType::EnergyPlusMeasure) {
@@ -437,8 +494,12 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
         taxonomy = measurePtr->taxonomy();
         modelerDescription = measurePtr->modeler_description();
 
-        openstudio::Workspace workspace(openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus);
-        arguments = measurePtr->arguments(workspace);
+        if (workspace_) {
+          arguments = measurePtr->arguments(*workspace_);
+        } else {
+          openstudio::Workspace workspace(openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus);
+          arguments = measurePtr->arguments(workspace);
+        }
         outputs = measurePtr->outputs();
       } else if (measureType == MeasureType::ReportingMeasure) {
         auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
@@ -447,8 +508,12 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
         taxonomy = measurePtr->taxonomy();
         modelerDescription = measurePtr->modeler_description();
 
-        openstudio::model::Model model;
-        arguments = measurePtr->arguments(model);
+        if (model_) {
+          arguments = measurePtr->arguments(*model_);
+        } else {
+          openstudio::model::Model model;
+          arguments = measurePtr->arguments(model);
+        }
         outputs = measurePtr->outputs();
 
       } else {
@@ -461,24 +526,28 @@ print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
     }
 
     openstudio::measure::OSMeasureInfo info(measureType, className, name, description, taxonomy, modelerDescription, arguments, outputs);
-    info.update(measure_.get());
+    info.update(measure);
+
     for (auto& arg : arguments) {
       fmt::print("arg={}\n", arg.displayName());
       // auto outputs = measurePtr->outputs();
     }
 
     // Save the xml file with changes triggered by checkForUpdatesFiles() / checkForUpdatesXML() above
-    measure_->save();
+    measure.save();
+
+    if (osmOrIdfPath_) {
+      measureInfo_->measureInfos.insert_or_assign(*osmOrIdfPath_, std::move(info));
+    }
   }
 
-  return measure_;
+  return *measureInfo_;
 }
 
 void MeasureManager::reset() {
   m_osms.clear();
   m_idfs.clear();
   m_measures.clear();
-  m_measureInfos.clear();
 }
 
 MeasureManagerServer::MeasureManagerServer(unsigned port, ScriptEngineInstance& rubyEngine, ScriptEngineInstance& pythonEngine)

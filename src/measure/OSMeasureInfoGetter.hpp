@@ -64,6 +64,8 @@ namespace measure {
     /// result of measure's arguments method called with empty model if information was successfully extracted from the script, otherwise empty
     std::vector<OSArgument> arguments() const;
 
+    std::vector<BCLMeasureArgument> bclMeasureArguments() const;
+
     /// result of measure's outputs method called with empty model if information was successfully extracted from the script, otherwise empty
     std::vector<OSOutput> outputs() const;
 

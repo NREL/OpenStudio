@@ -47,6 +47,14 @@ struct IDFInfo
   openstudio::Workspace workspace;
 };
 
+struct BCLMeasureInfo
+{
+  explicit BCLMeasureInfo(openstudio::BCLMeasure t_measure) : measure(std::move(t_measure)) {}
+  openstudio::BCLMeasure measure;
+  // Map of osmPath to measureInfo
+  std::map<openstudio::path, openstudio::measure::OSMeasureInfo> measureInfos;
+};
+
 class MeasureManager
 {
  public:
@@ -54,14 +62,21 @@ class MeasureManager
 
   boost::optional<OSMInfo> getModel(const openstudio::path& osmPath, bool force_reload = false);
   boost::optional<IDFInfo> getIdf(const openstudio::path& idfPath, bool force_reload = false);
-  boost::optional<openstudio::BCLMeasure> getAndUpdateMeasure(const openstudio::path& measureDirPath, bool force_reload = false);
+  boost::optional<BCLMeasureInfo> getAndUpdateMeasure(const openstudio::path& measureDirPath, bool force_reload = false,
+                                                      const boost::optional<openstudio::path>& osmOrIdfPath_ = boost::none,
+                                                      const boost::optional<model::Model>& model_ = boost::none,
+                                                      const boost::optional<Workspace>& workspace_ = boost::none);
 
-  // boost::optional<openstudio::measure::OSMeasureInfo> getMeasureInfo(const openstudio::path& measureDirPath, const openstudio::BCLMeasure& measure, const openstudio::path& osmPath, model, workspace)
+  //  boost::optional<openstudio::measure::OSMeasureInfo> getMeasureInfo(const openstudio::path& measureDirPath, const openstudio::BCLMeasure& measure,
+  //                                                                     const boost::optional<model::Model>& model,
+  //                                                                     const boost::optional<Workspace>& workspace);
 
   // getMeasureInfo;
   // computeArguments
   // getMeasureHash;
   Json::Value internalState() const;
+
+  std::size_t clearMeasureInfoForOsmorIdfPath(const openstudio::path& osmOrIdfPath);
 
   void reset();
 
@@ -75,8 +90,7 @@ class MeasureManager
 
   std::map<openstudio::path, OSMInfo> m_osms;
   std::map<openstudio::path, IDFInfo> m_idfs;
-  std::map<openstudio::path, openstudio::BCLMeasure> m_measures;
-  std::map<openstudio::path, openstudio::measure::OSMeasureInfo> m_measureInfos;
+  std::map<openstudio::path, BCLMeasureInfo> m_measures;
 };
 
 class MeasureManagerServer

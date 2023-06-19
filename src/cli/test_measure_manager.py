@@ -38,23 +38,25 @@ def get_open_port_for_serving():
     print(f"Using {port=}")
     return port
 
-port = get_open_port_for_serving()
-URL = f"http://{HOST}:{port}"
-p = subprocess.Popen([str(OPENSTUDIO_CLI), 'labs', 'measure', '-s', str(port)])
+
+if __name__ == "__main__":
+    port = get_open_port_for_serving()
+    URL = f"http://{HOST}:{port}"
+    p = subprocess.Popen([str(OPENSTUDIO_CLI), 'labs', 'measure', '-s', str(port)])
 
 
-r = requests.get(f"{URL}/internal_state")
-r.raise_for_status()
-assert r.json() == {'my_measures_dir': '', 'osm': [], 'status': 'running'}
+    r = requests.get(f"{URL}/internal_state")
+    r.raise_for_status()
+    assert r.json() == {'my_measures_dir': '', 'osm': [], 'status': 'running'}
 
-my_measures_dir = str(Path('~/OpenStudio/Measures').expanduser())
-r = requests.post(url=f"{URL}/set", json={"my_measures_dir": my_measures_dir})
-r.raise_for_status()
+    my_measures_dir = str(Path('~/OpenStudio/Measures').expanduser())
+    r = requests.post(url=f"{URL}/set", json={"my_measures_dir": my_measures_dir})
+    r.raise_for_status()
 
-r = requests.get(f"{URL}/internal_state")
-r.raise_for_status()
-assert r.json() == {'my_measures_dir': my_measures_dir, 'osm': [], 'status': 'running'}
+    r = requests.get(f"{URL}/internal_state")
+    r.raise_for_status()
+    assert r.json() == {'my_measures_dir': my_measures_dir, 'osm': [], 'status': 'running'}
 
 
-p.send_signal(signal.SIGINT)
-assert p.poll() == 0
+    p.send_signal(signal.SIGINT)
+    assert p.poll() == 0
