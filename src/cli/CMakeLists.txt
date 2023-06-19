@@ -230,17 +230,24 @@ if(BUILD_TESTING)
   )
   set_tests_properties(OpenStudioCLI.Labs.Run_RubyPython PROPERTIES RESOURCE_LOCK "compact_osw")
 
-  add_test(NAME OpenStudioCLI.test_logger_rb
-    COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.rb
-  )
+  if (Pytest_AVAILABLE)
+    add_test(NAME OpenStudioCLI.Labs.test_loglevel
+      COMMAND ${Python_EXECUTABLE} -m pytest --verbose ${Pytest_XDIST_OPTS} --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_loglevel.py"
+    )
+  else()
+    # TODO: Remove. Fallback on these for now, as I don't know if CI has pytest installed
+    add_test(NAME OpenStudioCLI.test_logger_rb
+      COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.rb
+    )
 
-  add_test(NAME OpenStudioCLI.Labs.test_logger_rb
-    COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> --labs ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.rb
-  )
+    add_test(NAME OpenStudioCLI.Labs.test_logger_rb
+      COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> --labs ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.rb
+    )
 
-  add_test(NAME OpenStudioCLI.Labs.test_logger_py
-    COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> --labs ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.py
-  )
+    add_test(NAME OpenStudioCLI.Labs.test_logger_py
+      COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> --labs ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.py
+    )
+  endif()
 
 
   # ============ #4856 - Forward a Path properly no matter the slashes employed ============

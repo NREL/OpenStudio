@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
       ->add_option_function<LogLevel>(
         "-l,--loglevel",
         [](const LogLevel& level) {
-          fmt::print("Setting log Level to {} ({})\n", logLevelStrs[static_cast<size_t>(level) - static_cast<size_t>(LogLevel::Trace)], level);
+          fmt::print("Setting Log Level to {} ({})\n", logLevelStrs[static_cast<size_t>(level) - static_cast<size_t>(LogLevel::Trace)], level);
           openstudio::Logger::instance().standardOutLogger().setLogLevel(level);
         },
         "LogLevel settings: One of {Trace, Debug, Info, Warn, Error, Fatal} [Default: Warn] Excludes: --verbose")

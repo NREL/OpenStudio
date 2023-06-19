@@ -1,4 +1,10 @@
 conan
-packaging
 python-dateutil
 rich
+setuptools
+wheel
+twine
+requests
+packaging
+pytest
+pytest-xdist
