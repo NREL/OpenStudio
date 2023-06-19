@@ -47,7 +47,9 @@ namespace cli {
 
     app->add_option("-s,--socket", opt->socket_port, "Pipe status messages to a socket on localhost PORT")->option_text("PORT");
 
-    auto* stdout_opt = app->add_flag("--show-stdout", opt->show_stdout, "export epJSON file format. The default is IDF")->group("Stdout Options");
+    auto* stdout_opt =
+      app->add_flag("--show-stdout", opt->show_stdout, "Prints the output of the workflow run in real time to the console, including E+ output")
+        ->group("Stdout Options");
     app->add_flag("--add-timings", opt->add_timings, "Print the start, end and elapsed times of each state of the simulation.")
       ->needs(stdout_opt)
       ->group("Stdout Options");
