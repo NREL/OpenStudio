@@ -551,9 +551,17 @@ void MeasureManager::reset() {
 }
 
 MeasureManagerServer::MeasureManagerServer(unsigned port, ScriptEngineInstance& rubyEngine, ScriptEngineInstance& pythonEngine)
-  : m_measureManager(rubyEngine, pythonEngine), m_url("http://localhost:" + std::to_string(port)) {
+  : m_measureManager(rubyEngine, pythonEngine), m_url(fmt::format("http://localhost:{}/", port)) {
 
-  m_listener = web::http::experimental::listener::http_listener(utility::conversions::to_string_t(m_url));
+  web::uri_builder uri_builder;
+  uri_builder.set_scheme(utility::conversions::to_string_t("http")).set_host(utility::conversions::to_string_t("0.0.0.0")).set_port(port);
+  auto builder_uri = uri_builder.to_uri();
+  // fmt::print("builder_uri: {} {} {} {}\n", web::http::uri::decode(builder_uri.scheme()), web::http::uri::decode(builder_uri.host()),
+  //            builder_uri.port(), web::http::uri::decode(builder_uri.path()));
+  fmt::print("Serving on: {}\n", m_url);
+
+  m_listener = web::http::experimental::listener::http_listener(builder_uri);
+
   m_listener.support(web::http::methods::GET, [this](auto&& request) { handle_get(std::forward<decltype(request)>(request)); });
   m_listener.support(web::http::methods::POST, [this](auto&& request) { handle_post(std::forward<decltype(request)>(request)); });
 }
@@ -617,6 +625,7 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
   if (uri == "/reset") {
     fmt::print("Resetting internal state");
     m_measureManager.reset();
+    my_measures_dir.clear();
     message.reply(web::http::status_codes::OK, web::json::value::string("Resetting internal state"));
     return;
   }
@@ -638,7 +647,7 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
         const std::string uid = body.at("uid").as_string();
         const RemoteBCL r;
         if (auto bclMeasure_ = r.getMeasure(uid)) {
-          message.reply(web::http::status_codes::OK, web::json::value::string(bclMeasure_->xmlString()));
+          message.reply(web::http::status_codes::OK, web::json::value::parse(bclMeasure_->toJSON().toStyledString()));
         } else {
           message.reply(web::http::status_codes::BadRequest, web::json::value::string(format_to_string_t("Cannot find measure with uid='{}'", uid)));
         }
