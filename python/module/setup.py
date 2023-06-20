@@ -1,3 +1,8 @@
+########################################################################################################################
+#  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+#  See also https://openstudio.net/license
+########################################################################################################################
+
 from setuptools import setup, find_packages
 from setuptools.dist import Distribution
 from setuptools.command.install import install
