@@ -38,18 +38,11 @@
 
 #include <airflow/embedded_files.hxx>
 
+#include <fmt/format.h>
+
 #include <algorithm>
 #include <cmath>
 #include <thread>
-
-// TODO: replace all sprintf stuff (and char buffer) things with C++ constructs
-#if defined(_MSC_VER)
-#  pragma warning(push)
-#  pragma warning(disable : 4996)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
 
 namespace openstudio {
 namespace contam {
@@ -71,10 +64,8 @@ namespace contam {
   }
 
   static std::string convertDateTime(const DateTime& datetime) {
-    char buffer[256];
-    sprintf(buffer, "%02d/%02d\t%02d:%02d:%02d", month(datetime.date().monthOfYear()), datetime.date().dayOfMonth(), datetime.time().hours(),
-            datetime.time().minutes(), datetime.time().seconds());
-    return {buffer};
+    return fmt::format("{:02d}/{:02d}\t{:02d}:{:02d}:{:02d}\n", month(datetime.date().monthOfYear()), datetime.date().dayOfMonth(),
+                       datetime.time().hours(), datetime.time().minutes(), datetime.time().seconds());
   }
 
   bool CvFile::write(openstudio::path filepath) {
@@ -84,8 +75,8 @@ namespace contam {
       file << "CVF file from E+ results\n";
       file << month(m_start.monthOfYear()) << '/' << m_start.dayOfMonth() << '\t' << month(m_end.monthOfYear()) << '/' << m_end.dayOfMonth() << '\n';
       file << m_names.size() << '\n';
-      for (unsigned int i = 0; i < m_names.size(); i++) {
-        file << m_names[i] << '\n';
+      for (const auto& m_name : m_names) {
+        file << m_name << '\n';
       }
       Time delta(0, 1, 0, 0);  // Hard code hourly data for now
       DateTime current(m_start);
@@ -105,9 +96,7 @@ namespace contam {
         current += delta;
         // Mess with the time a little bit to put 24:00:00 in for 00:00:00
         if (current.time().hours() == 0 && current.time().minutes() == 0 && current.time().seconds() == 0) {
-          char buffer[256];
-          sprintf(buffer, "%02d/%02d\t24:00:00", month(last.date().monthOfYear()), last.date().dayOfMonth());
-          file << buffer;
+          file << fmt::format("{:02d}/{:02d}\t24:00:00", month(last.date().monthOfYear()), last.date().dayOfMonth());
         } else {
           file << convertDateTime(current);
         }
@@ -411,15 +400,10 @@ namespace contam {
       std::string startString;
       std::string endString;
       try {
-        char buffer[256];
-
-        openstudio::Date start(rp->getBeginMonth(), rp->getBeginDayOfMonth());
-        sprintf(buffer, "%02d", start.dayOfMonth());
-        startString = start.monthOfYear().valueName() + std::string(buffer);
-        openstudio::Date end(rp->getEndMonth(), rp->getEndDayOfMonth());
-
-        sprintf(buffer, "%02d", end.dayOfMonth());
-        endString = end.monthOfYear().valueName() + std::string(buffer);
+        const openstudio::Date start(rp->getBeginMonth(), rp->getBeginDayOfMonth());
+        startString = fmt::format("{}{:02d}", start.monthOfYear().valueName(), start.dayOfMonth());
+        const openstudio::Date end(rp->getEndMonth(), rp->getEndDayOfMonth());
+        endString = fmt::format("{}{:02d}", end.monthOfYear().valueName(), end.dayOfMonth());
         m_startDateTime = boost::optional<DateTime>(DateTime(start, Time(0)));
         m_endDateTime = boost::optional<DateTime>(DateTime(end, Time(0, 24)));
       } catch (...) {
@@ -1037,9 +1021,3 @@ namespace contam {
 
 }  // namespace contam
 }  // namespace openstudio
-
-#if defined(_MSC_VER)
-#  pragma warning(pop)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic pop
-#endif
