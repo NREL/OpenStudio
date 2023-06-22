@@ -65,7 +65,7 @@ namespace measure {
     virtual std::vector<IdfObject> energyPlusOutputRequests(OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const;
     //@}
    protected:
-    ReportingMeasure() = default;
+    ReportingMeasure();
 
    private:
     REGISTER_LOGGER("openstudio.measure.ReportingMeasure");
