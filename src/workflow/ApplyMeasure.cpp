@@ -104,12 +104,6 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
     LOG(Debug, "Measure Type: " << bclMeasure.measureType().valueName());
     LOG(Debug, "Measure Language: " << measureLanguage.valueName());
 
-    //openstudio::measure::ModelMeasure* modelMeasurePtr = nullptr;
-    // TODO: probably want to do that ultimately, then static_cast appropriately
-    ScriptEngineInstance* thisEngine = nullptr;
-    ScriptObject measureScriptObject;
-    openstudio::measure::OSMeasure* measurePtr = nullptr;
-
     auto getArguments = [this, &measureType, &scriptPath_, &step](openstudio::measure::OSMeasure* measurePtr) -> measure::OSArgumentMap {
       if (!measurePtr) {
         throw std::runtime_error(fmt::format("Could not load measure at '{}'", openstudio::toString(scriptPath_.get())));
@@ -157,59 +151,30 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
       return argumentMap;
     };
 
+    ScriptEngineInstance* thisEngine = nullptr;
     if (measureLanguage == MeasureLanguage::Ruby) {
       // TODO: probably need to do path formatting properly for windows
 #if USE_RUBY_ENGINE
-      auto importCmd = fmt::format("require '{}'", openstudio::toString(scriptPath_.get()));
-      rubyEngine->exec(importCmd);
-      measureScriptObject = rubyEngine->eval(fmt::format("{}.new()", className));
       thisEngine = &rubyEngine;
 #else
       throw std::runtime_error("Cannot run a Ruby measure when RubyEngine isn't enabled");
 #endif
     } else if (measureLanguage == MeasureLanguage::Python) {
 #if USE_PYTHON_ENGINE
-      // place measureDirPath in sys.path; do from measure import MeasureName
-      // I think this can't work without a "as xxx" otherwise we'll repeatedly try to import a module named 'measure'
-      // pythonEngine->pyimport("measure", openstudio::toString(measureDirPath.get()));
-      //         auto importCmd = fmt::format(R"python(
-      // import sys
-      // sys.path.insert(0, r'{}')
-      // force_reload = 'measure' in sys.modules
-      // import measure
-      // if force_reload:
-      //     # print("force reload measure")
-      //     import importlib
-      //     importlib.reload(measure)
-      // )python",
-      //                                      scriptPath_->parent_path().generic_string());
-      auto importCmd = fmt::format(R"python(
-import importlib.util
-spec = importlib.util.spec_from_file_location('{}', r'{}')
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
-)python",
-                                   className, scriptPath_->generic_string());
-      // fmt::print("\nimportCmd:\n{}\n", importCmd);
-      pythonEngine->exec(importCmd);
-      // measureScriptObject = pythonEngine->eval(fmt::format("measure.{}()", className));
-      measureScriptObject = pythonEngine->eval(fmt::format("module.{}()", className));
-
       thisEngine = &pythonEngine;
 #else
       throw std::runtime_error("Cannot run a Python measure when PythonEngine isn't enabled");
 #endif
     }
 
+    ScriptObject measureScriptObject = (*thisEngine)->loadMeasure(*scriptPath_, className);
+    if (measureScriptObject.empty()) {
+      throw std::runtime_error(fmt::format("Failed to load measure '{}' from '{}'\n", className, openstudio::toString(scriptPath_.get())));
+    }
+
     // This pointer will only be valid for as long as the above PythonMeasure is in scope
     // After that, dereferencing the measure pointer will crash the program
-    if (measureType == MeasureType::ModelMeasure) {
-      measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
-    } else if (measureType == MeasureType::EnergyPlusMeasure) {
-      measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
-    } else if (measureType == MeasureType::ReportingMeasure) {
-      measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
-    }
+    auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
 
     const auto argmap = getArguments(measurePtr);
     // There is a bug. I can run one measure but not two. The one measure can be either python or ruby

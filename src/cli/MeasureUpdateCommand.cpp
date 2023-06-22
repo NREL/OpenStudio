@@ -608,9 +608,19 @@ server.start)ruby",
       rubyEngine->exec(measureManagerCmd);
 
     } else if (opt.update) {
-      getAndUpdateMeasure(opt.directoryPath, rubyEngine, pythonEngine);
+      MeasureManager measureManager(rubyEngine, pythonEngine);
+      if (auto measure_ = measureManager.getMeasure(opt.directoryPath, true)) {
+        // TODO: maybe I should write an OSMeasureInfo::toJSON() method, but that'd be duplicating the code in BCLMeasure (BCLXML to be exact).
+        // So since the only thing that's different is the OSArgument (OSMeasureInfo) versus BCLMeasureArgument (BCLMeasure), we just override
+        auto result = measure_->toJSON();
 
+        fmt::print("{}\n", result.toStyledString());
+      } else {
+        fmt::print(stderr, "Cannot load measure from {}\n", opt.directoryPath.generic_string());
+      }
+      return;
     } else if (opt.update_all) {
+      MeasureManager measureManager(rubyEngine, pythonEngine);
       std::vector<openstudio::path> subDirPaths;
       for (auto const& dir_entry : boost::filesystem::directory_iterator{opt.directoryPath}) {
         const auto& subDirPath = dir_entry.path();
@@ -621,14 +631,45 @@ server.start)ruby",
       }
       fmt::print("Found {} measure directories to update\n", subDirPaths.size());
       for (const auto& subDirPath : subDirPaths) {
-        getAndUpdateMeasure(subDirPath, rubyEngine, pythonEngine);
+        measureManager.getMeasure(subDirPath, true);
+      }
+    } else if (!opt.compute_arguments_model.empty()) {
+      // TODO: move into MeasureManager to avoid repeating the code shared with MeasureManagerServer
+      MeasureManager measureManager(rubyEngine, pythonEngine);
+      auto measure_ = measureManager.getMeasure(opt.directoryPath, true);
+      if (!measure_) {
+        auto msg = fmt::format("Cannot load measure at '{}'", opt.directoryPath.generic_string());
+        fmt::print(stderr, "{}\n", msg);
+        return;
       }
 
-    } else if (!opt.compute_arguments_model.empty()) {
-      // TODO: Same comment as above: we need to call the measure methods same as what we do in OSWorkflow::run
-      throw std::runtime_error("compute_arguments_model not implemented yet");
+      openstudio::measure::OSMeasureInfo info = measureManager.getMeasureInfo(opt.directoryPath, *measure_, opt.compute_arguments_model);
+      if (auto errorString_ = info.error()) {
+        fmt::print(stderr, "{}\n", *errorString_);
+        return;
+      }
+      // TODO: maybe I should write an OSMeasureInfo::toJSON() method, but that'd be duplicating the code in BCLMeasure (BCLXML to be exact).
+      // So since the only thing that's different is the OSArgument (OSMeasureInfo) versus BCLMeasureArgument (BCLMeasure), we just override
+      auto result = measure_->toJSON();
+      auto& arguments = result["arguments"];
+      arguments.clear();
+      for (const measure::OSArgument& argument : info.arguments()) {
+        arguments.append(argument.toJSON());
+      }
+      Json::StreamWriterBuilder builder;
+      builder["commentStyle"] = "None";
+      builder["indentation"] = "  ";
+      std::string resultStr = Json::writeString(builder, result);
+      fmt::print("{}\n", resultStr);
+      return;
     } else if (opt.run_tests) {
-      auto measure_ = getAndUpdateMeasure(opt.directoryPath, rubyEngine, pythonEngine);
+      MeasureManager measureManager(rubyEngine, pythonEngine);
+      auto measure_ = measureManager.getMeasure(opt.directoryPath, true);
+      if (!measure_) {
+        auto msg = fmt::format("Cannot load measure at '{}'", opt.directoryPath.generic_string());
+        fmt::print(stderr, "{}\n", msg);
+        return;
+      }
       if (measure_->measureLanguage() == MeasureLanguage::Ruby) {
         // TODO: need to capture arguments and pass as ARGV
 
