@@ -33,6 +33,10 @@ class RubyEngine final : public ScriptEngine
                                  const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,
                                  const openstudio::path& bundleGemDirPath, const std::string& bundleWithoutGroups) override;
 
+  virtual std::string inferMeasureClassName(const openstudio::path& measureScriptPath) override;
+
+  virtual ScriptObject loadMeasure(const openstudio::path& measureScriptPath, std::string_view className) override;
+
  protected:
   // convert the underlying object to the correct type, then return it as a void *
   // so the above template function can provide it back to the caller.

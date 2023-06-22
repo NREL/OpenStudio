@@ -213,6 +213,67 @@ void* PythonEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
 
   return return_value;
 }
+
+std::string PythonEngine::inferMeasureClassName(const openstudio::path& measureScriptPath) {
+
+  auto inferClassNameCmd = fmt::format(R"python(
+import importlib.util
+import inspect
+spec = importlib.util.spec_from_file_location(f"throwaway", "{}")
+
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+class_members = inspect.getmembers(module, lambda x: inspect.isclass(x) and issubclass(x, openstudio.measure.OSMeasure))
+assert len(class_members) == 1
+measure_name, measure_typeinfo = class_members[0]
+)python",
+                                       measureScriptPath.generic_string());
+
+  std::string className;
+  try {
+    exec(inferClassNameCmd);
+    ScriptObject measureClassNameObject = eval("measure_name");
+    className = *getAs<std::string*>(measureClassNameObject);
+  } catch (const std::runtime_error& e) {
+    auto msg = fmt::format("Failed to infer measure name from {}: {}", measureScriptPath.generic_string(), e.what());
+    fmt::print(stderr, "{}\n", msg);
+  }
+
+  return className;
+}
+
+// Ideally this would return a openstudio::measure::OSMeasure* or a shared_ptr<openstudio::measure::OSMeasure> but this poses memory management
+// issue for the underlying ScriptObject (and VALUE or PyObject), so just return the ScriptObject
+ScriptObject PythonEngine::loadMeasure(const openstudio::path& measureScriptPath, std::string_view className) {
+
+  ScriptObject result;
+
+  auto importCmd = fmt::format(R"python(
+import importlib.util
+spec = importlib.util.spec_from_file_location('{}', r'{}')
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+)python",
+                               className, measureScriptPath.generic_string());
+
+  // fmt::print("\nimportCmd:\n{}\n", importCmd);
+  try {
+    exec(importCmd);
+  } catch (const std::runtime_error& e) {
+    auto msg = fmt::format("Failed to load measure '{}' from '{}': {}", className, measureScriptPath.generic_string(), e.what());
+    fmt::print(stderr, "{}\n", msg);
+  }
+
+  try {
+    result = eval(fmt::format("module.{}()", className));
+  } catch (const std::runtime_error& e) {
+    auto msg = fmt::format("Failed to instantiate measure '{}' from '{}': {}", className, measureScriptPath.generic_string(), e.what());
+    fmt::print(stderr, "{}\n", msg);
+  }
+
+  return result;
+}
+
 }  // namespace openstudio
 
 extern "C"
