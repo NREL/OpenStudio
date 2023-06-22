@@ -24,9 +24,15 @@ inline VALUE evalString(const std::string& t_str) {
     VALUE errval = rb_eval_string("$!.to_s");
     char* str = StringValuePtr(errval);
     std::string err(str);
-    VALUE locval = rb_eval_string("$@.to_s");
-    str = StringValuePtr(locval);
-    std::string loc(str);
+    int locationError;
+    VALUE locval = rb_eval_string_protect("$@.to_s", &locationError);
+    std::string loc;
+    if (locationError == 0) {
+      str = StringValuePtr(locval);
+      loc = str;
+    } else {
+      loc = "Failed to get location";
+    }
     throw RubyException(err, loc);
   }
 
