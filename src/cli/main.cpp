@@ -174,6 +174,7 @@ int main(int argc, char* argv[]) {
     std::function<void()> runSetupEmbeddedGems = [&rubyEngine, &includeDirs, &gemPathDirs, &gemHomeDir, &bundleGemFilePath, &bundleGemDirPath,
                                                   &bundleWithoutGroups]() {
       rubyEngine->setupEmbeddedGems(includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, bundleWithoutGroups);
+      rubyEngine->registerType<openstudio::measure::OSMeasure*>("openstudio::measure::OSMeasure *");
       rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
       rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
       rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
@@ -200,6 +201,7 @@ int main(int argc, char* argv[]) {
     // This is a callback that's stored on the ScriptEngineInstance, triggered only the first time
     std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs, &pythonHomeDir]() {
       pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
+      pythonEngine->registerType<openstudio::measure::OSMeasure*>("openstudio::measure::OSMeasure *");
       pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
       pythonEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
       pythonEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");

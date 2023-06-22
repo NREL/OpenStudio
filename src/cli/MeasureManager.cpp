@@ -20,6 +20,7 @@
 #include "../measure/OSRunner.hpp"
 #include "../measure/OSMeasureInfoGetter.hpp"
 #include "../model/Model_Impl.hpp"  // For casting
+#include "../../ruby/interpreter/RubyException.hpp"
 
 #include <cpprest/asyncrt_utils.h>
 #include <json/json.h>
@@ -62,8 +63,8 @@ namespace interrupthandler {
 
 MeasureManager::MeasureManager(ScriptEngineInstance& t_rubyEngine, ScriptEngineInstance& t_pythonEngine)
   : rubyEngine(t_rubyEngine), pythonEngine(t_pythonEngine) {
-  rubyEngine->exec("puts 'Hello from ruby'");
-  pythonEngine->exec("print('Hello from python')");
+  // rubyEngine->exec("puts 'Hello from ruby'");
+  // pythonEngine->exec("print('Hello from python')");
 }
 //   :
 // #if USE_RUBY_ENGINE
@@ -365,6 +366,52 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
   };
 
   if (measure.measureLanguage() == MeasureLanguage::Ruby) {
+
+    auto inferClassName = fmt::format(R"ruby(
+# Measure should be at root level (not inside a module) so we can just get constants
+measurePath = "{}"
+prev = Object.constants
+load measurePath # need load in case have seen this script before
+just_defined = Object.constants - prev
+
+just_defined.select!{{|c| Object.const_get(c).ancestors.include?(OpenStudio::Measure::OSMeasure)}}
+if just_defined.empty?
+  raise "Unable to extract OpenStudio::Measure::OSMeasure object from " +
+       measurePath + ". The script should contain a class that derives " +
+      "from OpenStudio::Measure::OSMeasure and should close with a line stating " +
+      "the class name followed by .new.registerWithApplication."
+end
+if just_defined.size > 1
+  raise "Found more than one OSMeasure at #{{measurePath}}: #{{just_defined}}"
+end
+c = just_defined[0]
+class_info = Object.const_get(c)
+$measure_name = class_info.to_s
+
+# Undef what we loaded
+just_defined.each {{|x| Object.send(:remove_const, x) }}
+ObjectSpace.garbage_collect
+ObjectSpace.garbage_collect
+)ruby",
+                                      scriptPath_->generic_string());
+
+    thisEngine = &rubyEngine;
+    fmt::print("Debug: inferClassName=\n{}\n\n", inferClassName);
+
+    try {
+      rubyEngine->exec(inferClassName);
+      ScriptObject measureClassNameObject = rubyEngine->eval("$measure_name");
+      // measureClassNameObject = rubyEngine->eval(fmt::format("{}.new()", className));
+      // ScriptObject measureClassNameObject = rubyEngine->eval(inferClassName);
+      className = *rubyEngine->getAs<std::string*>(measureClassNameObject);
+      fmt::print("className={}\n", className);
+    } catch (const RubyException& e) {
+      auto msg = fmt::format("Failed to infer measure name: {}\nlocation={}", e.what(), e.location());
+      fmt::print(stderr, "{}\n", msg);
+      return openstudio::measure::OSMeasureInfo(msg);
+    }
+
+    /*
     // same as the beginning of the OSMeasureInfoGetter::infoExtractorRubyFunction
     auto importCmd = fmt::format(R"ruby(
 currentObjects = Hash.new
@@ -411,28 +458,25 @@ puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
 )ruby",
                                  scriptPath_->generic_string());
     fmt::print("Debug: importCmd=\n{}\n\n", importCmd);
-    thisEngine = &rubyEngine;
-
-    rubyEngine->exec(importCmd);
+    */
+    try {
+      auto importCmd = fmt::format("load '{}'", openstudio::toString(scriptPath_.get()));
+      rubyEngine->exec(importCmd);
+      measureScriptObject = rubyEngine->eval(fmt::format("{}.new()", className));
+    } catch (const RubyException& e) {
+      auto msg = fmt::format("Failed to load measure: {}\nlocation={}", e.what(), e.location());
+      fmt::print(stderr, "{}\n", msg);
+      return openstudio::measure::OSMeasureInfo(msg);
+    }
 
     fmt::print("Import done\n");
-    rubyEngine->exec("puts $measure_type");
 
-    // TODO: gotta figure out a way to retrieve a frigging string
-    // ScriptObject measureTypeObject = rubyEngine->eval("measure_type");
-    ScriptObject measureTypeObject = rubyEngine->eval("$measure_type");
-    std::string measureTypeStr = *(rubyEngine->getAs<std::string*>(measureTypeObject));
-    fmt::print("measureTypeStr={}\n", measureTypeStr);
-    measureType = MeasureType(measureTypeStr);
-
-    measureScriptObject = rubyEngine->eval("$measure");
-    ScriptObject measureClassNameObject = rubyEngine->eval("$measure_name");
-    className = *(*thisEngine)->getAs<std::string*>(measureClassNameObject);
-    fmt::print("className={}\n", className);
+    auto* osMeasurePtr = (*thisEngine)->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
+    measureType = osMeasurePtr->measureType();
+    fmt::print("measureType={}\n", measureType.valueName());
 
     if (measureType == MeasureType::ModelMeasure) {
-      auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
-
+      auto* measurePtr = static_cast<openstudio::measure::ModelMeasure*>(osMeasurePtr);
       name = measurePtr->name();
       description = measurePtr->description();
       taxonomy = measurePtr->taxonomy();
@@ -443,7 +487,7 @@ puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
       outputs = measurePtr->outputs();
 
     } else if (measureType == MeasureType::EnergyPlusMeasure) {
-      auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
+      auto* measurePtr = static_cast<openstudio::measure::EnergyPlusMeasure*>(osMeasurePtr);
       name = measurePtr->name();
       description = measurePtr->description();
       taxonomy = measurePtr->taxonomy();
@@ -453,7 +497,7 @@ puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
       arguments = measurePtr->arguments(workspace);
       outputs = measurePtr->outputs();
     } else if (measureType == MeasureType::ReportingMeasure) {
-      auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
+      auto* measurePtr = static_cast<openstudio::measure::ReportingMeasure*>(osMeasurePtr);
       name = measurePtr->name();
       description = measurePtr->description();
       taxonomy = measurePtr->taxonomy();
