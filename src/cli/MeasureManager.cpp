@@ -3,6 +3,8 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Checksum.hpp"
 #include "../utilities/core/Filesystem.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
+#include "../src/utilities/core/StringHelpers.cpp"
 #include "../osversion/VersionTranslator.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
 #include "energyplus/ForwardTranslator.hpp"
@@ -17,6 +19,7 @@
 #include "../measure/OSOutput.hpp"
 #include "../measure/OSRunner.hpp"
 #include "../measure/OSMeasureInfoGetter.hpp"
+#include "../model/Model_Impl.hpp"  // For casting
 
 #include <cpprest/asyncrt_utils.h>
 #include <json/json.h>
@@ -218,10 +221,7 @@ boost::optional<IDFInfo> MeasureManager::getIdf(const openstudio::path& idfPath,
   return boost::none;
 }
 
-boost::optional<BCLMeasureInfo> MeasureManager::getAndUpdateMeasure(const openstudio::path& measureDirPath, bool force_reload,
-                                                                    const boost::optional<openstudio::path>& osmOrIdfPath_,
-                                                                    const boost::optional<model::Model>& model_,
-                                                                    const boost::optional<Workspace>& workspace_) {
+boost::optional<BCLMeasure> MeasureManager::getMeasure(const openstudio::path& measureDirPath, bool force_reload) {
 
   const auto& measureDirPathStr = measureDirPath.string();
 
@@ -281,42 +281,92 @@ boost::optional<BCLMeasureInfo> MeasureManager::getAndUpdateMeasure(const openst
   if (file_updates || xml_updates || missing_fields || readme_out_of_date) {
     fmt::print("Changes detected, updating '{}'\n", measureDirPathStr);
 
+    // Clear cache before calling getMeasureInfo
+    measureInfo_->measureInfos.clear();
+
     // TODO: the readme.md generation from readme.md.erb requires ruby.
     fmt::print("Warn: readme.md generation from ERB is not supported yet\n");
 
-    // TODO: Also need to mimic OSMeasureInfoGetter::getInfo which is actually implemented in ruby itself...
-    // basically we need to compute the arguments of the measures, inspect outputs... so that requires doing something similar to what we do in the
-    // `run` method
+    openstudio::measure::OSMeasureInfo info = getMeasureInfo(measureDirPath, measure, openstudio::path{});
+    info.update(measure);
 
-    fmt::print("Measure at {} uses language = {}.\n", measureDirPathStr, measure.measureLanguage().valueName());
+    // Save the xml file with changes triggered by checkForUpdatesFiles() / checkForUpdatesXML() above
+    measure.save();
+  }
 
-    auto scriptPath_ = measure.primaryScriptPath();
-    if (!scriptPath_) {
-      throw std::runtime_error(
-        fmt::format("Unable to locate primary Ruby script path for BCLMeasure '{}' located at '{}'", measure.name(), measureDirPathStr));
+  return measure;
+}
+
+openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstudio::path& measureDirPath, const BCLMeasure& measure,
+                                                                  const openstudio::path& osmOrIdfPath, const boost::optional<model::Model>& model_,
+                                                                  const boost::optional<Workspace>& workspace_) {
+
+  if (!m_measures.contains(measureDirPath)) {
+    LOG_AND_THROW("Measure isn't recorded in m_measures, that should NOT happen");
+  }
+  auto& bclMeasureInfo = m_measures.at(measureDirPath);
+  auto it2 = bclMeasureInfo.measureInfos.find(osmOrIdfPath);
+  if (it2 != bclMeasureInfo.measureInfos.end()) {
+    fmt::print("Using cached OSMeasureInfo for '{}', '{}'\n", measureDirPath.generic_string(), osmOrIdfPath.generic_string());
+    return it2->second;
+  }
+
+  auto scriptPath_ = measure.primaryScriptPath();
+  if (!scriptPath_) {
+    throw std::runtime_error(
+      fmt::format("Unable to locate primary Ruby script path for BCLMeasure '{}' located at '{}'", measure.name(), measureDirPath.generic_string()));
+  }
+
+  // TODO: Here we need to do two things:
+  // * Find the class name by scanning the measure.rb/.py, then instantiate the measure
+  // * Do the same as in ApplyMeasure and compute the arguments with a dumb model/workspace, or the supplied one (for --compute_arguments)
+  ScriptEngineInstance* thisEngine = nullptr;
+  ScriptObject measureScriptObject;
+  // openstudio::measure::OSMeasure* measurePtr = nullptr;
+
+  std::string className;
+  MeasureType measureType;
+
+  std::string name;
+  std::string description;
+  std::string taxonomy;
+  std::string modelerDescription;
+
+  std::vector<measure::OSArgument> arguments;
+  std::vector<measure::OSOutput> outputs;
+
+  auto getOrCreateModel = [this, &model_, &osmOrIdfPath]() -> openstudio::model::Model {
+    if (model_) {
+      return model_->clone().cast<openstudio::model::Model>();
+    } else if (!osmOrIdfPath.empty()) {
+      // TODO: not sure we want to keep this here or not..
+      if (auto osmInfo_ = getModel(osmOrIdfPath)) {
+        return osmInfo_->model.clone().cast<openstudio::model::Model>();
+      } else {
+        LOG_AND_THROW("Failed to load the Model at " << osmOrIdfPath);
+      }
+    } else {
+      return {};
     }
+  };
 
-    // TODO: Here we need to do two things:
-    // * Find the class name by scanning the measure.rb/.py, then instantiate the measure
-    // * Do the same as in ApplyMeasure and compute the arguments with a dumb model/workspace, or the supplied one (for --compute_arguments)
-    ScriptEngineInstance* thisEngine = nullptr;
-    ScriptObject measureScriptObject;
-    // openstudio::measure::OSMeasure* measurePtr = nullptr;
+  auto getOrCreateWorkspace = [this, &workspace_, &osmOrIdfPath]() -> openstudio::Workspace {
+    if (workspace_) {
+      return workspace_->clone();
+    } else if (!osmOrIdfPath.empty()) {
+      if (auto idfInfo_ = getIdf(osmOrIdfPath)) {
+        return idfInfo_->workspace.clone();
+      } else {
+        LOG_AND_THROW("Failed to load the Model at " << osmOrIdfPath);
+      }
+    } else {
+      return {openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus};
+    }
+  };
 
-    std::string className;
-    MeasureType measureType;
-
-    std::string name;
-    std::string description;
-    std::string taxonomy;
-    std::string modelerDescription;
-
-    std::vector<measure::OSArgument> arguments;
-    std::vector<measure::OSOutput> outputs;
-
-    if (measure.measureLanguage() == MeasureLanguage::Ruby) {
-      // same as the beginning of the OSMeasureInfoGetter::infoExtractorRubyFunction
-      auto importCmd = fmt::format(R"ruby(
+  if (measure.measureLanguage() == MeasureLanguage::Ruby) {
+    // same as the beginning of the OSMeasureInfoGetter::infoExtractorRubyFunction
+    auto importCmd = fmt::format(R"ruby(
 currentObjects = Hash.new
 ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) do |obj|
   currentObjects[obj] = true
@@ -359,83 +409,71 @@ end
 $measure_name = $measure.class.to_s
 puts "#{{$measure}}, #{{$measure_type}}, #{{$measure_name}}"
 )ruby",
-                                   scriptPath_->generic_string());
-      fmt::print("Debug: importCmd=\n{}\n\n", importCmd);
-      thisEngine = &rubyEngine;
+                                 scriptPath_->generic_string());
+    fmt::print("Debug: importCmd=\n{}\n\n", importCmd);
+    thisEngine = &rubyEngine;
 
-      rubyEngine->exec(importCmd);
+    rubyEngine->exec(importCmd);
 
-      fmt::print("Import done\n");
-      rubyEngine->exec("puts $measure_type");
+    fmt::print("Import done\n");
+    rubyEngine->exec("puts $measure_type");
 
-      // TODO: gotta figure out a way to retrieve a frigging string
-      // ScriptObject measureTypeObject = rubyEngine->eval("measure_type");
-      ScriptObject measureTypeObject = rubyEngine->eval("$measure_type");
-      std::string measureTypeStr = *(rubyEngine->getAs<std::string*>(measureTypeObject));
-      fmt::print("measureTypeStr={}\n", measureTypeStr);
-      measureType = MeasureType(measureTypeStr);
+    // TODO: gotta figure out a way to retrieve a frigging string
+    // ScriptObject measureTypeObject = rubyEngine->eval("measure_type");
+    ScriptObject measureTypeObject = rubyEngine->eval("$measure_type");
+    std::string measureTypeStr = *(rubyEngine->getAs<std::string*>(measureTypeObject));
+    fmt::print("measureTypeStr={}\n", measureTypeStr);
+    measureType = MeasureType(measureTypeStr);
 
-      measureScriptObject = rubyEngine->eval("$measure");
-      ScriptObject measureClassNameObject = rubyEngine->eval("$measure_name");
-      className = *(*thisEngine)->getAs<std::string*>(measureClassNameObject);
-      fmt::print("className={}\n", className);
+    measureScriptObject = rubyEngine->eval("$measure");
+    ScriptObject measureClassNameObject = rubyEngine->eval("$measure_name");
+    className = *(*thisEngine)->getAs<std::string*>(measureClassNameObject);
+    fmt::print("className={}\n", className);
 
-      if (measureType == MeasureType::ModelMeasure) {
-        auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+    if (measureType == MeasureType::ModelMeasure) {
+      auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
 
-        name = measurePtr->name();
-        description = measurePtr->description();
-        taxonomy = measurePtr->taxonomy();
-        modelerDescription = measurePtr->modeler_description();
+      name = measurePtr->name();
+      description = measurePtr->description();
+      taxonomy = measurePtr->taxonomy();
+      modelerDescription = measurePtr->modeler_description();
 
-        if (model_) {
-          arguments = measurePtr->arguments(*model_);
-        } else {
-          openstudio::model::Model model;
-          arguments = measurePtr->arguments(model);
-        }
-        outputs = measurePtr->outputs();
+      auto model = getOrCreateModel();
+      arguments = measurePtr->arguments(model);
+      outputs = measurePtr->outputs();
 
-      } else if (measureType == MeasureType::EnergyPlusMeasure) {
-        auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
-        name = measurePtr->name();
-        description = measurePtr->description();
-        taxonomy = measurePtr->taxonomy();
-        modelerDescription = measurePtr->modeler_description();
+    } else if (measureType == MeasureType::EnergyPlusMeasure) {
+      auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
+      name = measurePtr->name();
+      description = measurePtr->description();
+      taxonomy = measurePtr->taxonomy();
+      modelerDescription = measurePtr->modeler_description();
 
-        if (workspace_) {
-          arguments = measurePtr->arguments(*workspace_);
-        } else {
-          openstudio::Workspace workspace(openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus);
-          arguments = measurePtr->arguments(workspace);
-        }
-        outputs = measurePtr->outputs();
-      } else if (measureType == MeasureType::ReportingMeasure) {
-        auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
-        name = measurePtr->name();
-        description = measurePtr->description();
-        taxonomy = measurePtr->taxonomy();
-        modelerDescription = measurePtr->modeler_description();
+      auto workspace = getOrCreateWorkspace();
+      arguments = measurePtr->arguments(workspace);
+      outputs = measurePtr->outputs();
+    } else if (measureType == MeasureType::ReportingMeasure) {
+      auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
+      name = measurePtr->name();
+      description = measurePtr->description();
+      taxonomy = measurePtr->taxonomy();
+      modelerDescription = measurePtr->modeler_description();
 
-        if (model_) {
-          arguments = measurePtr->arguments(*model_);
-        } else {
-          openstudio::model::Model model;
-          arguments = measurePtr->arguments(model);
-        }
-        outputs = measurePtr->outputs();
+      auto model = getOrCreateModel();
+      arguments = measurePtr->arguments(model);
+      outputs = measurePtr->outputs();
 
-      } else {
-        throw std::runtime_error("Unknown");
-      }
+    } else {
+      throw std::runtime_error("Unknown");
+    }
 
-      if (name.empty()) {
-        name = className;
-      }
+    if (name.empty()) {
+      name = className;
+    }
 
-    } else if (measure.measureLanguage() == MeasureLanguage::Python) {
-      // TODO: call initialization of the pythonEngine
-      auto importCmd = fmt::format(R"python(
+  } else if (measure.measureLanguage() == MeasureLanguage::Python) {
+    // TODO: call initialization of the pythonEngine
+    auto importCmd = fmt::format(R"python(
 import importlib.util
 import inspect
 spec = importlib.util.spec_from_file_location(f"throwaway", "{}")
@@ -455,93 +493,65 @@ elif issubclass(measure_typeinfo, openstudio.measure.ReportingMeasure):
     measure_type = "ReportingMeasure"
 print(f"{{measure_name}}, {{measure_typeinfo}}, {{measure_type}}")
 )python",
-                                   scriptPath_->generic_string());
-      pythonEngine->exec(importCmd);
-      thisEngine = &pythonEngine;
-      // measureScriptObject = pythonEngine->eval(fmt::format("module.{}()", className));
-      measureScriptObject = pythonEngine->eval("measure_typeinfo()");
+                                 scriptPath_->generic_string());
+    pythonEngine->exec(importCmd);
+    thisEngine = &pythonEngine;
+    // measureScriptObject = pythonEngine->eval(fmt::format("module.{}()", className));
+    measureScriptObject = pythonEngine->eval("measure_typeinfo()");
 
-      // TODO: gotta figure out a way to retrieve a frigging string
-      ScriptObject measureTypeObject = pythonEngine->eval("measure_type");
-      std::string measureTypeStr = *(*thisEngine)->getAs<std::string*>(measureTypeObject);
-      measureType = MeasureType(measureTypeStr);
+    // TODO: gotta figure out a way to retrieve a frigging string
+    ScriptObject measureTypeObject = pythonEngine->eval("measure_type");
+    std::string measureTypeStr = *(*thisEngine)->getAs<std::string*>(measureTypeObject);
+    measureType = MeasureType(measureTypeStr);
 
-      ScriptObject measureClassNameObject = pythonEngine->eval("measure_name");
-      className = *(*thisEngine)->getAs<std::string*>(measureClassNameObject);
+    ScriptObject measureClassNameObject = pythonEngine->eval("measure_name");
+    className = *(*thisEngine)->getAs<std::string*>(measureClassNameObject);
 
-      fmt::print("measureTypeStr={}\n", measureTypeStr);
+    fmt::print("measureTypeStr={}\n", measureTypeStr);
 
-      if (measureType == MeasureType::ModelMeasure) {
-        auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+    if (measureType == MeasureType::ModelMeasure) {
+      auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
 
-        name = measurePtr->name();
-        description = measurePtr->description();
-        taxonomy = measurePtr->taxonomy();
-        modelerDescription = measurePtr->modeler_description();
+      name = measurePtr->name();
+      description = measurePtr->description();
+      taxonomy = measurePtr->taxonomy();
+      modelerDescription = measurePtr->modeler_description();
 
-        if (model_) {
-          arguments = measurePtr->arguments(*model_);
-        } else {
-          openstudio::model::Model model;
-          arguments = measurePtr->arguments(model);
-        }
-        outputs = measurePtr->outputs();
+      auto model = getOrCreateModel();
+      arguments = measurePtr->arguments(model);
+      outputs = measurePtr->outputs();
+    } else if (measureType == MeasureType::EnergyPlusMeasure) {
+      auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
+      name = measurePtr->name();
+      description = measurePtr->description();
+      taxonomy = measurePtr->taxonomy();
+      modelerDescription = measurePtr->modeler_description();
 
-      } else if (measureType == MeasureType::EnergyPlusMeasure) {
-        auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
-        name = measurePtr->name();
-        description = measurePtr->description();
-        taxonomy = measurePtr->taxonomy();
-        modelerDescription = measurePtr->modeler_description();
+      auto workspace = getOrCreateWorkspace();
+      arguments = measurePtr->arguments(workspace);
+      outputs = measurePtr->outputs();
+    } else if (measureType == MeasureType::ReportingMeasure) {
+      auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
+      name = measurePtr->name();
+      description = measurePtr->description();
+      taxonomy = measurePtr->taxonomy();
+      modelerDescription = measurePtr->modeler_description();
 
-        if (workspace_) {
-          arguments = measurePtr->arguments(*workspace_);
-        } else {
-          openstudio::Workspace workspace(openstudio::StrictnessLevel::Draft, openstudio::IddFileType::EnergyPlus);
-          arguments = measurePtr->arguments(workspace);
-        }
-        outputs = measurePtr->outputs();
-      } else if (measureType == MeasureType::ReportingMeasure) {
-        auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
-        name = measurePtr->name();
-        description = measurePtr->description();
-        taxonomy = measurePtr->taxonomy();
-        modelerDescription = measurePtr->modeler_description();
-
-        if (model_) {
-          arguments = measurePtr->arguments(*model_);
-        } else {
-          openstudio::model::Model model;
-          arguments = measurePtr->arguments(model);
-        }
-        outputs = measurePtr->outputs();
-
-      } else {
-        throw std::runtime_error("Unknown");
-      }
-
-      if (name.empty()) {
-        name = className;
-      }
+      auto model = getOrCreateModel();
+      arguments = measurePtr->arguments(model);
+      outputs = measurePtr->outputs();
+    } else {
+      throw std::runtime_error("Unknown");
     }
 
-    openstudio::measure::OSMeasureInfo info(measureType, className, name, description, taxonomy, modelerDescription, arguments, outputs);
-    info.update(measure);
-
-    for (auto& arg : arguments) {
-      fmt::print("arg={}\n", arg.displayName());
-      // auto outputs = measurePtr->outputs();
-    }
-
-    // Save the xml file with changes triggered by checkForUpdatesFiles() / checkForUpdatesXML() above
-    measure.save();
-
-    if (osmOrIdfPath_) {
-      measureInfo_->measureInfos.insert_or_assign(*osmOrIdfPath_, std::move(info));
+    if (name.empty()) {
+      name = className;
     }
   }
 
-  return *measureInfo_;
+  openstudio::measure::OSMeasureInfo info(measureType, className, name, description, taxonomy, modelerDescription, arguments, outputs);
+  auto [it, ok] = bclMeasureInfo.measureInfos.insert({osmOrIdfPath, std::move(info)});
+  return it->second;
 }
 
 void MeasureManager::reset() {
@@ -551,7 +561,9 @@ void MeasureManager::reset() {
 }
 
 MeasureManagerServer::MeasureManagerServer(unsigned port, ScriptEngineInstance& rubyEngine, ScriptEngineInstance& pythonEngine)
-  : m_measureManager(rubyEngine, pythonEngine), m_url(fmt::format("http://localhost:{}/", port)) {
+  : m_measureManager(rubyEngine, pythonEngine),
+    m_url(fmt::format("http://localhost:{}/", port)),
+    my_measures_dir(openstudio::filesystem::home_path() / "OpenStudio/Measures") {
 
   web::uri_builder uri_builder;
   uri_builder.set_scheme(utility::conversions::to_string_t("http")).set_host(utility::conversions::to_string_t("0.0.0.0")).set_port(port);
@@ -625,7 +637,7 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
   if (uri == "/reset") {
     fmt::print("Resetting internal state");
     m_measureManager.reset();
-    my_measures_dir.clear();
+    // my_measures_dir = openstudio::filesystem::home_path() / "OpenStudio/Measures";
     message.reply(web::http::status_codes::OK, web::json::value::string("Resetting internal state"));
     return;
   }
@@ -678,44 +690,286 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
   }
 
   if (uri == "/bcl_measures") {
+    bool force_reload = false;  // Not supposed to mess with the BCL Measures!
     auto& localBCL = openstudio::LocalBCL::instance();
     std::vector<web::json::value> result;
     for (auto& measure : localBCL.measures()) {
-      result.emplace_back(utility::conversions::to_string_t(measure.name()));
+      auto measureDir = measure.directory();
+      if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(measureDir, force_reload)) {
+        result.emplace_back(web::json::value::parse(measure_->toJSON().toStyledString()));
+      } else {
+        fmt::print("Directory '{}' is not a measure\n", measureDir.generic_string());
+      }
     }
-    message.reply(web::http::status_codes::OK, web::json::value::array(result));
+    message.reply(web::http::status_codes::OK, web::json::value::array(std::move(result)));
     return;
   }
 
   if (uri == "/update_measures") {
-    auto response = web::json::value::object();
-    response["serviceName"] = web::json::value::string("C++ Measure Manager");
-    response["http_method"] = web::json::value::string(uri);
-    message.reply(web::http::status_codes::NotImplemented, response);
+    message.extract_json().then([this, message](web::json::value body) {
+      openstudio::path measuresDir = my_measures_dir;
+      bool force_reload = false;
+      if (body.has_field("measures_dir")) {
+        if (body.at("measures_dir").is_string()) {
+          measuresDir = openstudio::toPath(body.at("measures_dir").as_string());
+        } else {
+          fmt::print("param 'measures_dir' must be a string\n");
+        }
+      }
+      if (body.has_field("force_reload")) {
+        if (body.at("force_reload").is_boolean()) {
+          force_reload = body.at("force_reload").as_bool();
+        } else {
+          fmt::print("param 'force_reload' must be a boolean\n");
+        }
+      }
+      // Scan the directory for measures
+      std::vector<web::json::value> result;
+      for (const auto& dirEnt : openstudio::filesystem::directory_iterator{measuresDir}) {
+        if (openstudio::filesystem::is_directory(dirEnt)) {
+          const auto& measureDir = dirEnt.path();
+          if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(measureDir, force_reload)) {
+            result.emplace_back(web::json::value::parse(measure_->toJSON().toStyledString()));
+          } else {
+            fmt::print("Directory '{}' is not a measure\n", measureDir.generic_string());
+          }
+        }
+      }
+      message.reply(web::http::status_codes::OK, web::json::value::array(std::move(result)));
+    });
     return;
   }
 
   if (uri == "/compute_arguments") {
-    auto response = web::json::value::object();
-    response["serviceName"] = web::json::value::string("C++ Measure Manager");
-    response["http_method"] = web::json::value::string(uri);
-    message.reply(web::http::status_codes::NotImplemented, response);
+    message.extract_json().then([this, message](web::json::value body) {
+      openstudio::path measureDir;
+      bool force_reload = false;
+      if (body.has_field("measure_dir") && body.at("measure_dir").is_string()) {
+        measureDir = openstudio::toPath(body.at("measure_dir").as_string());
+      } else {
+        message.reply(web::http::status_codes::BadRequest, web::json::value::string("The 'measure_dir' (string) must be in the post data"));
+        return;
+      }
+
+      if (body.has_field("force_reload")) {
+        if (body.at("force_reload").is_boolean()) {
+          force_reload = body.at("force_reload").as_bool();
+        } else {
+          fmt::print("param 'force_reload' must be a boolean\n");
+        }
+      }
+
+      auto measure_ = m_measureManager.getMeasure(measureDir, force_reload);
+      if (!measure_) {
+        auto msg = fmt::format("Cannot load measure at '{}'", measureDir.generic_string());
+        fmt::print(stderr, "{}\n", msg);
+        message.reply(web::http::status_codes::BadRequest, web::json::value::string(msg));
+        return;
+      }
+
+      openstudio::path osmOrIdfPath;
+      if (body.has_field("osm_path") && body.at("osm_path").is_string()) {
+        osmOrIdfPath = openstudio::toPath(body.at("osm_path").as_string());
+      }
+
+      openstudio::measure::OSMeasureInfo info = m_measureManager.getMeasureInfo(measureDir, *measure_, osmOrIdfPath);
+      if (auto errorString_ = info.error()) {
+        message.reply(web::http::status_codes::OK, web::json::value::string(*errorString_));
+        return;
+      }
+      // TODO: maybe I should write an OSMeasureInfo::toJSON() method, but that'd be duplicating the code in BCLMeasure (BCLXML to be exact).
+      // So since the only thing that's different is the OSArgument (OSMeasureInfo) versus BCLMeasureArgument (BCLMeasure), we just override
+      auto result = measure_->toJSON();
+      if (!osmOrIdfPath.empty()) {
+        auto& arguments = result["arguments"];
+        arguments.clear();
+        for (const measure::OSArgument& argument : info.arguments()) {
+          arguments.append(argument.toJSON());
+        }
+      }
+      message.reply(web::http::status_codes::OK, web::json::value::parse(result.toStyledString()));
+    });
     return;
   }
 
   if (uri == "/create_measure") {
-    auto response = web::json::value::object();
-    response["serviceName"] = web::json::value::string("C++ Measure Manager");
-    response["http_method"] = web::json::value::string(uri);
-    message.reply(web::http::status_codes::NotImplemented, response);
+    message.extract_json().then([this, message](web::json::value body) {
+      static const std::array<std::string, 7> requiredParams = {
+        "measure_dir", "display_name", "class_name", "taxonomy_tag", "measure_type", "description", "modeler_description",
+      };
+      for (const auto& requiredParam : requiredParams) {
+        if (!body.has_field(requiredParam) || !body.at(requiredParam).is_string()) {
+          auto msg = fmt::format("The '{}' (string) must be in the post data.", requiredParam);
+          fmt::print("{}\n", msg);
+          message.reply(web::http::status_codes::BadRequest, web::json::value::string(msg));
+          return;
+        }
+      }
+
+      MeasureType measureType = MeasureType::ModelMeasure;
+      auto measureTypeString = body.at("measure_type").as_string();
+      try {
+        measureType = MeasureType(measureTypeString);
+      } catch (const std::exception& e) {
+        auto msg = fmt::format("Couldn't convert '{}' to a MeasureType: {}", measureTypeString, e.what());
+        fmt::print("{}\n", msg);
+        message.reply(web::http::status_codes::BadRequest, web::json::value::string(msg));
+        return;
+      }
+
+      MeasureLanguage measureLanguage = MeasureLanguage::Ruby;
+      if (body.has_field("measure_language") && body.at("measure_language").is_string()) {
+        auto measureLanguageString = body.at("measure_language").as_string();
+        try {
+          measureLanguage = MeasureLanguage(measureLanguageString);
+        } catch (const std::exception& e) {
+          auto msg = fmt::format("Couldn't convert '{}' to a MeasureLanguage: {}", measureLanguageString, e.what());
+          fmt::print("{}\n", msg);
+          message.reply(web::http::status_codes::BadRequest, web::json::value::string(msg));
+          return;
+        }
+      }
+
+      const openstudio::path measureDir = body.at("measure_dir").as_string();
+      // This is throwy when the directory already exists
+      if (openstudio::filesystem::is_directory(measureDir)) {
+        auto msg = fmt::format("The directory already exists at '{}'.", measureDir.generic_string());
+        fmt::print("{}\n", msg);
+        message.reply(web::http::status_codes::BadRequest, web::json::value::string(msg));
+        return;
+      }
+      const BCLMeasure measure(body.at("display_name").as_string(), body.at("class_name").as_string(), measureDir,
+                               body.at("taxonomy_tag").as_string(), measureType, body.at("description").as_string(),
+                               body.at("modeler_description").as_string(), measureLanguage);
+
+      if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(measureDir, true)) {
+        message.reply(web::http::status_codes::OK, web::json::value::parse(measure_->toJSON().toStyledString()));
+      } else {
+        fmt::print("Failed to update measure after creation, this shouldn't happen.");
+        message.reply(web::http::status_codes::BadRequest, web::json::value::parse(measure.toJSON().toStyledString()));
+      }
+    });
     return;
   }
 
   if (uri == "/duplicate_measure") {
-    auto response = web::json::value::object();
-    response["serviceName"] = web::json::value::string("C++ Measure Manager");
-    response["http_method"] = web::json::value::string(uri);
-    message.reply(web::http::status_codes::NotImplemented, response);
+
+    message.extract_json().then([this, message](web::json::value body) {
+      // Required parameters:
+      openstudio::path oldMeasureDir;
+      if (body.has_field("old_measure_dir") && body.at("old_measure_dir").is_string()) {
+        oldMeasureDir = openstudio::toPath(body.at("old_measure_dir").as_string());
+      } else {
+        message.reply(web::http::status_codes::BadRequest, web::json::value::string("The 'old_measure_dir' (string) must be in the post data"));
+        return;
+      }
+
+      openstudio::path newMeasureDir;
+      if (body.has_field("measure_dir") && body.at("measure_dir").is_string()) {
+        newMeasureDir = openstudio::toPath(body.at("measure_dir").as_string());
+      } else {
+        message.reply(web::http::status_codes::BadRequest, web::json::value::string("The 'measure_dir' (string) must be in the post data"));
+        return;
+      }
+
+      bool force_reload = false;
+      if (body.has_field("force_reload")) {
+        if (body.at("force_reload").is_boolean()) {
+          force_reload = body.at("force_reload").as_bool();
+        } else {
+          fmt::print("param 'force_reload' must be a boolean\n");
+        }
+      }
+
+      boost::optional<BCLMeasure> oldMeasure_ = m_measureManager.getMeasure(oldMeasureDir, force_reload);
+      if (!oldMeasure_) {
+        auto msg = fmt::format("Cannot load measure at '{}'.", oldMeasureDir.generic_string());
+        fmt::print("{}\n", msg);
+        message.reply(web::http::status_codes::BadRequest, web::json::value::string(msg));
+        return;
+      }
+
+      auto& oldMeasure = *oldMeasure_;
+
+      auto newMeasure_ = oldMeasure.clone(newMeasureDir);
+      if (!newMeasure_) {
+        auto msg = fmt::format("Cannot copy measure from '{}' to {}'", oldMeasureDir.generic_string(), newMeasureDir.generic_string());
+        fmt::print("{}\n", msg);
+        message.reply(web::http::status_codes::BadRequest, web::json::value::string(msg));
+        return;
+      }
+      auto& newMeasure = *newMeasure_;
+      // Force updating the UID
+      newMeasure.changeUID();
+      newMeasure.incrementVersionId();
+
+      if (body.has_field("display_name") && body.at("display_name").is_string()) {
+        newMeasure.setDisplayName(body.at("display_name").as_string());
+      }
+      if (body.has_field("class_name") && body.at("class_name").is_string()) {
+        std::string className = body.at("class_name").as_string();
+        newMeasure.setName(openstudio::toUnderscoreCase(className));
+        newMeasure.setClassName(className);
+      }
+      if (body.has_field("taxonomy_tag") && body.at("taxonomy_tag").is_string()) {
+        newMeasure.setTaxonomyTag(body.at("taxonomy_tag").as_string());
+      }
+
+      // Changing the measure Language is not supported!
+      auto newMeasureLanguage = oldMeasure.measureLanguage();
+      // if (body.has_field("measure_language") && body.at("measure_language").is_string()) {
+      //   auto measureLanguageString = body.at("measure_type").as_string();
+      //   try {
+      //     newMeasureLanguage = MeasureLanguage(measureLanguageString);
+      //     newMeasure.setMeasureLanguage(measureLanguage);
+      //   } catch (...) {
+      //     fmt::print("Couldn't convert '{}' to a MeasureLanguage", measureLanguageString);
+      //   }
+      // }
+
+      // Changing the measure Type should maybe not be supported either, the method signatures will be wrong and it might be missing
+      // energyPlusOutputRequests
+      auto newMeasureType = oldMeasure.measureType();
+      if (body.has_field("measure_type") && body.at("measure_type").is_string()) {
+        auto measureTypeString = body.at("measure_type").as_string();
+        try {
+          newMeasureType = MeasureType(measureTypeString);
+          newMeasure.setMeasureType(newMeasureType);
+        } catch (...) {
+          fmt::print("Couldn't convert '{}' to a MeasureType", measureTypeString);
+        }
+      }
+
+      if (body.has_field("description") && body.at("description").is_string()) {
+        newMeasure.setDescription(body.at("description").as_string());
+      }
+      if (body.has_field("modeler_description") && body.at("modeler_description").is_string()) {
+        newMeasure.setModelerDescription(body.at("modeler_description").as_string());
+      }
+
+      newMeasure.updateMeasureScript(oldMeasure.measureType(), newMeasureType, oldMeasure.measureLanguage(), newMeasureLanguage,
+                                     oldMeasure.className(), newMeasure.className(), newMeasure.displayName(), newMeasure.description(),
+                                     newMeasure.modelerDescription());
+      newMeasure.updateMeasureTests(oldMeasure.className(), newMeasure.className());
+
+      fmt::print("Cloned the {} {} with class name '{}' from '{}' to '{}'\n", oldMeasure.measureLanguage().valueName(),
+                 oldMeasure.measureType().valueName(), oldMeasure.className(),
+                 openstudio::toString(openstudio::filesystem::canonical(oldMeasure.directory())),
+                 openstudio::toString(openstudio::filesystem::canonical(newMeasure.directory())));
+
+      newMeasure.checkForUpdatesFiles();
+      newMeasure.checkForUpdatesXML();
+      newMeasure.save();
+
+      if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(newMeasureDir, true)) {
+        message.reply(web::http::status_codes::OK, web::json::value::parse(measure_->toJSON().toStyledString()));
+        return;
+      } else {
+        fmt::print("Failed to update measure after duplication, this shouldn't happen.");
+        message.reply(web::http::status_codes::BadRequest, web::json::value::parse(newMeasure.toJSON().toStyledString()));
+        return;
+      }
+    });
     return;
   }
 

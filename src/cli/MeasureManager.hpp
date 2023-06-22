@@ -2,6 +2,7 @@
 #define MEASUREMANAGER_H
 
 #include "../utilities/core/Path.hpp"
+#include "../utilities/core/Logger.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
 
 #include "../model/Model.hpp"
@@ -62,10 +63,11 @@ class MeasureManager
 
   boost::optional<OSMInfo> getModel(const openstudio::path& osmPath, bool force_reload = false);
   boost::optional<IDFInfo> getIdf(const openstudio::path& idfPath, bool force_reload = false);
-  boost::optional<BCLMeasureInfo> getAndUpdateMeasure(const openstudio::path& measureDirPath, bool force_reload = false,
-                                                      const boost::optional<openstudio::path>& osmOrIdfPath_ = boost::none,
-                                                      const boost::optional<model::Model>& model_ = boost::none,
-                                                      const boost::optional<Workspace>& workspace_ = boost::none);
+  boost::optional<BCLMeasure> getMeasure(const openstudio::path& measureDirPath, bool force_reload = false);
+  openstudio::measure::OSMeasureInfo getMeasureInfo(const openstudio::path& measureDirPath, const BCLMeasure& measure,
+                                                    const openstudio::path& osmOrIdfPath = "",
+                                                    const boost::optional<model::Model>& model_ = boost::none,
+                                                    const boost::optional<Workspace>& workspace_ = boost::none);
 
   //  boost::optional<openstudio::measure::OSMeasureInfo> getMeasureInfo(const openstudio::path& measureDirPath, const openstudio::BCLMeasure& measure,
   //                                                                     const boost::optional<model::Model>& model,
@@ -81,6 +83,7 @@ class MeasureManager
   void reset();
 
  private:
+  REGISTER_LOGGER("MeasureManager");
   //#if USE_RUBY_ENGINE
   ScriptEngineInstance& rubyEngine;
   //#endif
