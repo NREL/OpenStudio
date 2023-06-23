@@ -7,17 +7,16 @@ import time
 from contextlib import closing
 from copy import deepcopy
 from pathlib import Path
-from typing import Tuple
+from typing import Any, Dict, Tuple
 from urllib.parse import urljoin
 
 import pytest
 import requests
 
 HOST = "localhost"
-OPENSTUDIO_CLI = Path("~/Software/Others/OS-build-release/Products/openstudio").expanduser()
 DEFAULT_MEASURES_DIR = Path("~/OpenStudio/Measures").expanduser()
 
-BASE_INTERNAL_STATE = {
+BASE_INTERNAL_STATE: Dict[str, Any] = {
     "idf": [],
     "measure_info": None,
     "measures": None,
@@ -90,10 +89,10 @@ def get_open_port_for_serving():
     return port
 
 
-def launch_measure_manager_client() -> Tuple[subprocess.Popen, int]:
+def launch_measure_manager_client(osclipath: Path) -> Tuple[subprocess.Popen, int]:
     port = get_open_port_for_serving()
     base_url = get_url(port=port)
-    proc = subprocess.Popen([str(OPENSTUDIO_CLI), "labs", "measure", "-s", str(port)])
+    proc = subprocess.Popen([str(osclipath), "labs", "measure", "-s", str(port)])
     ok = False
     while not ok:
         try:
@@ -112,34 +111,30 @@ def launch_measure_manager_client() -> Tuple[subprocess.Popen, int]:
 
 
 @pytest.fixture
-def measure_manager_client():
-    """Launches a measure manager server and waits for it to be ready."""
-    proc, port = launch_measure_manager_client()
+def measure_manager_client(osclipath):
+    """Launches a measure manager server and waits for it to be ready, then destroys at end."""
+    proc, port = launch_measure_manager_client(osclipath=osclipath)
     yield MeasureManagerClient(port=port)
     proc.send_signal(signal.SIGINT)
     proc.kill()
 
 
 # TODO: probably would be easier to just locate openstudio python bindings
-def _write_model_cli(osm_path: Path):
-    subprocess.check_output(
-        [str(OPENSTUDIO_CLI), "-e", f"m = OpenStudio::Model::Model.new; m.save('{osm_path}',  true)"]
-    )
+def _write_model_cli(osclipath: Path, osm_path: Path):
+    subprocess.check_output([str(osclipath), "-e", f"m = OpenStudio::Model::Model.new; m.save('{osm_path}',  true)"])
     # model = openstudio.model.Model()
     # model.save(str(osm_path), True)
 
 
-def _write_example_model_cli(osm_path: Path):
-    subprocess.check_output(
-        [str(OPENSTUDIO_CLI), "-e", f"m = OpenStudio::Model::exampleModel; m.save('{osm_path}',  true)"]
-    )
+def _write_example_model_cli(osclipath: Path, osm_path: Path):
+    subprocess.check_output([str(osclipath), "-e", f"m = OpenStudio::Model::exampleModel; m.save('{osm_path}',  true)"])
     # model = openstudio.model.exampleModel()
     # model.save(str(osm_path), True)
 
 
-def _checksum_cli(osm_path: Path):
+def _checksum_cli(osclipath: Path, osm_path: Path):
     r = subprocess.check_output(
-        [str(OPENSTUDIO_CLI), "-e", f"puts OpenStudio::checksum(OpenStudio::toPath('{osm_path}'))"], encoding="utf-8"
+        [str(osclipath), "-e", f"puts OpenStudio::checksum(OpenStudio::toPath('{osm_path}'))"], encoding="utf-8"
     )
     return r.splitlines()[0]
     # openstudio.checksum(openstudio.toPath(str(osm_path)))
@@ -163,14 +158,19 @@ def test_set_measures_dir(measure_manager_client, expected_internal_state):
 
 # tmp_path is a built-in pytest fixture hich will provide a temporary directory unique to the test invocation,
 # created in the base temporary directory.
-def test_get_model(measure_manager_client, expected_internal_state, tmp_path):
+def test_get_model(
+    measure_manager_client: MeasureManagerClient,
+    expected_internal_state: Dict[str, Any],
+    tmp_path: Path,
+    osclipath: Path,
+):
     osm_path = tmp_path / "model.osm"
     osm_path2 = tmp_path / "model2.osm"
 
-    _write_model_cli(osm_path)
-    model_checksum = _checksum_cli(osm_path)
-    _write_model_cli(osm_path2)
-    model_checksum2 = _checksum_cli(osm_path2)
+    _write_model_cli(osclipath=osclipath, osm_path=osm_path)
+    model_checksum = _checksum_cli(osclipath=osclipath, osm_path=osm_path)
+    _write_model_cli(osclipath=osclipath, osm_path=osm_path2)
+    model_checksum2 = _checksum_cli(osclipath=osclipath, osm_path=osm_path2)
     r = measure_manager_client.post("/get_model", json={"osm_path": str(osm_path)})
     r.raise_for_status()
     assert r.json() == f"OK, loaded model with checksum {model_checksum}"
@@ -201,8 +201,8 @@ def test_get_model(measure_manager_client, expected_internal_state, tmp_path):
     assert r.json() == f"OK, loaded model with checksum {model_checksum}"
 
     # Overwrite model1 and try again, it should reload it
-    _write_model_cli(osm_path)
-    model_checksum = _checksum_cli(osm_path)
+    _write_model_cli(osclipath=osclipath, osm_path=osm_path)
+    model_checksum = _checksum_cli(osclipath=osclipath, osm_path=osm_path)
 
     r = measure_manager_client.post("/get_model", json={"osm_path": str(osm_path)})
     r.raise_for_status()
@@ -215,7 +215,7 @@ def test_get_model(measure_manager_client, expected_internal_state, tmp_path):
     measure_manager_client.reset_and_assert_internal_state()
 
 
-def test_download_bcl_measures(measure_manager_client, expected_internal_state):
+def test_download_bcl_measures(measure_manager_client: MeasureManagerClient, expected_internal_state: Dict[str, Any]):
     r = measure_manager_client.post(url="/download_bcl_measure", json={"": ""})
     assert r.status_code == 400
     assert r.json() == "Missing the uid in the post data"
@@ -257,12 +257,17 @@ def test_download_bcl_measures(measure_manager_client, expected_internal_state):
     assert n_ori + 1 == n_new
 
 
-def test_update_measures(measure_manager_client, expected_internal_state):
+def test_update_measures(measure_manager_client: MeasureManagerClient, expected_internal_state: Dict[str, Any]):
     r = measure_manager_client.post(url="/update_measures")
     r.raise_for_status()
 
 
-def test_compute_arguments_ruby(measure_manager_client, expected_internal_state, tmp_path):
+def test_compute_arguments_ruby(
+    measure_manager_client: MeasureManagerClient,
+    expected_internal_state: Dict[str, Any],
+    tmp_path: Path,
+    osclipath: Path,
+):
     measure_dir = BCL_DIR / TEST_BCL_MEASURE_MODEL_DEPENDENT
     if measure_dir.exists():
         measure_version_dir = next(measure_dir.glob("*/measure.rb")).parent
@@ -285,7 +290,7 @@ def test_compute_arguments_ruby(measure_manager_client, expected_internal_state,
     r.raise_for_status()
 
     osm_path = tmp_path / "model.osm"
-    _write_example_model_cli(osm_path=osm_path)
+    _write_example_model_cli(osclipath=osclipath, osm_path=osm_path)
     assert osm_path.is_file()
     r = measure_manager_client.post(
         url="/compute_arguments", json={"measure_dir": str(measure_version_dir), "osm_path": str(osm_path)}
@@ -302,7 +307,7 @@ def modify_python_measure_for_model_dependent_arg(measure_dir: Path):
         lines = f.read().splitlines()
 
     in_block = False
-    arg_line = None
+    arg_line = -1
     for i, line in enumerate(lines):
         line = line.strip()
         if "def arguments" in line:
@@ -312,8 +317,9 @@ def modify_python_measure_for_model_dependent_arg(measure_dir: Path):
         if line.startswith("args = "):
             arg_line = i
             break
+    assert arg_line > 0
 
-    indent = lines[arg_line].index("args")
+    indent: int = lines[arg_line].index("args")  # type: ignore
 
     prog = """
 construction_handles = []
@@ -339,8 +345,12 @@ args.append(construction)"""
         f.write("\n".join(lines) + "\n")
 
 
-def test_compute_arguments_python(measure_manager_client, expected_internal_state, tmp_path):
-
+def test_compute_arguments_python(
+    measure_manager_client: MeasureManagerClient,
+    expected_internal_state: Dict[str, Any],
+    tmp_path: Path,
+    osclipath: Path,
+):
     measure_dir = tmp_path / "new_measure"
     assert not measure_dir.is_dir()
 
@@ -368,7 +378,7 @@ def test_compute_arguments_python(measure_manager_client, expected_internal_stat
     r.raise_for_status()
 
     osm_path = tmp_path / "model.osm"
-    _write_example_model_cli(osm_path=osm_path)
+    _write_example_model_cli(osclipath=osclipath, osm_path=osm_path)
     assert osm_path.is_file()
     r = measure_manager_client.post(
         url="/compute_arguments", json={"measure_dir": str(measure_dir), "osm_path": str(osm_path)}
@@ -384,7 +394,11 @@ def test_compute_arguments_python(measure_manager_client, expected_internal_stat
     assert len(construction_arg["choice_display_names"]) == len(construction_arg["choices_values"])
 
 
-def test_create_measure(measure_manager_client, expected_internal_state, tmp_path):
+def test_create_measure(
+    measure_manager_client: MeasureManagerClient,
+    expected_internal_state: Dict[str, Any],
+    tmp_path: Path,
+):
     data = {
         # "name": "name",
         "display_name": "display_name",
@@ -446,7 +460,11 @@ def test_create_measure(measure_manager_client, expected_internal_state, tmp_pat
     assert "The directory already exists" in r.json()
 
 
-def test_duplicate_measure(measure_manager_client, expected_internal_state, tmp_path):
+def test_duplicate_measure(
+    measure_manager_client: MeasureManagerClient,
+    expected_internal_state: Dict[str, Any],
+    tmp_path: Path,
+):
     old_measure_dir = tmp_path / "old_measure"
     new_measure_dir = tmp_path / "new_measure_dir"
 
