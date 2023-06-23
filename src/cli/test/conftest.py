@@ -4,7 +4,7 @@ import pytest
 
 
 def validate_file(arg):
-    if (filepath := Path(arg)).is_file():
+    if (filepath := Path(arg).expanduser()).is_file():
         return filepath
     else:
         raise FileNotFoundError(arg)

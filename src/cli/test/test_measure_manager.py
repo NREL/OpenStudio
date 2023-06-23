@@ -1,3 +1,14 @@
+"""Tests for the CLI's MeasureManagerServer.
+
+Calls the CLI to serve the MeasureManagerServer and uses python to send GET/POST requests
+
+Example Usage:
+
+```
+pytest --verbose --tb=short -rfEsxX --durations=0 test_measure_manager.py \
+       --os-cli-path=~/Software/Others/OS-build/Products/openstudio
+```
+"""
 import errno
 import shutil
 import signal
