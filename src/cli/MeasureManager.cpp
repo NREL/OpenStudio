@@ -368,9 +368,7 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
     return openstudio::measure::OSMeasureInfo(msg);
   }
 
-  auto* osMeasurePtr = (*thisEngine)->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
-  MeasureType measureType = osMeasurePtr->measureType();
-  fmt::print("measureType={}\n", measureType.valueName());
+  MeasureType measureType;
 
   std::string name;
   std::string description;
@@ -380,40 +378,51 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
   std::vector<measure::OSArgument> arguments;
   std::vector<measure::OSOutput> outputs;
 
-  if (measureType == MeasureType::ModelMeasure) {
-    auto* measurePtr = static_cast<openstudio::measure::ModelMeasure*>(osMeasurePtr);
-    name = measurePtr->name();
-    description = measurePtr->description();
-    taxonomy = measurePtr->taxonomy();
-    modelerDescription = measurePtr->modeler_description();
+  try {
+    auto* osMeasurePtr = (*thisEngine)->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
+    measureType = osMeasurePtr->measureType();
+    fmt::print("measureType={}\n", measureType.valueName());
 
-    auto model = getOrCreateModel();
-    arguments = measurePtr->arguments(model);
-    outputs = measurePtr->outputs();
+    if (measureType == MeasureType::ModelMeasure) {
+      auto* measurePtr = static_cast<openstudio::measure::ModelMeasure*>(osMeasurePtr);
+      name = measurePtr->name();
+      description = measurePtr->description();
+      taxonomy = measurePtr->taxonomy();
+      modelerDescription = measurePtr->modeler_description();
 
-  } else if (measureType == MeasureType::EnergyPlusMeasure) {
-    auto* measurePtr = static_cast<openstudio::measure::EnergyPlusMeasure*>(osMeasurePtr);
-    name = measurePtr->name();
-    description = measurePtr->description();
-    taxonomy = measurePtr->taxonomy();
-    modelerDescription = measurePtr->modeler_description();
+      auto model = getOrCreateModel();
+      arguments = measurePtr->arguments(model);
+      outputs = measurePtr->outputs();
 
-    auto workspace = getOrCreateWorkspace();
-    arguments = measurePtr->arguments(workspace);
-    outputs = measurePtr->outputs();
-  } else if (measureType == MeasureType::ReportingMeasure) {
-    auto* measurePtr = static_cast<openstudio::measure::ReportingMeasure*>(osMeasurePtr);
-    name = measurePtr->name();
-    description = measurePtr->description();
-    taxonomy = measurePtr->taxonomy();
-    modelerDescription = measurePtr->modeler_description();
+    } else if (measureType == MeasureType::EnergyPlusMeasure) {
+      auto* measurePtr = static_cast<openstudio::measure::EnergyPlusMeasure*>(osMeasurePtr);
+      name = measurePtr->name();
+      description = measurePtr->description();
+      taxonomy = measurePtr->taxonomy();
+      modelerDescription = measurePtr->modeler_description();
 
-    auto model = getOrCreateModel();
-    arguments = measurePtr->arguments(model);
-    outputs = measurePtr->outputs();
+      auto workspace = getOrCreateWorkspace();
+      arguments = measurePtr->arguments(workspace);
+      outputs = measurePtr->outputs();
+    } else if (measureType == MeasureType::ReportingMeasure) {
+      auto* measurePtr = static_cast<openstudio::measure::ReportingMeasure*>(osMeasurePtr);
+      name = measurePtr->name();
+      description = measurePtr->description();
+      taxonomy = measurePtr->taxonomy();
+      modelerDescription = measurePtr->modeler_description();
 
-  } else {
-    throw std::runtime_error("Unknown");
+      auto model = getOrCreateModel();
+      // TODO: for ruby at least, need to try the arity... model was added later, at 3.0.0
+      arguments = measurePtr->arguments(model);
+      outputs = measurePtr->outputs();
+
+    } else {
+      throw std::runtime_error("Unknown");
+    }
+  } catch (const std::exception& e) {
+    auto msg = fmt::format("Failed to query information from measure '{}' from '{}': {}\n", className, scriptPath_->generic_string(), e.what());
+    fmt::print(stderr, "{}\n", msg);
+    return openstudio::measure::OSMeasureInfo(msg);
   }
 
   if (name.empty()) {
