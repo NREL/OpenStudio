@@ -187,6 +187,18 @@ ScriptObject RubyEngine::loadMeasure(const openstudio::path& measureScriptPath, 
   return result;
 }
 
+int RubyEngine::numberOfArguments(ScriptObject& methodObject, std::string_view methodName) {
+  auto val = std::any_cast<VALUE>(methodObject.object);
+  ID method_id = rb_intern(methodName.data());
+  // Ruby IS SO WEIRD. This will return n for methods that take a fixed number of arguments, and -n - 1 where n is the number of required arguments...
+  // def f() => 0
+  // def f(a) => 1
+  // def f(a = nil) => -1! Because WHY NOT, right?
+  // def f(a, c = nil) => -2
+  // def f(a, b = nil, c = nil) => also -2
+  return rb_obj_method_arity(val, method_id);
+}
+
 }  // namespace openstudio
 
 extern "C"

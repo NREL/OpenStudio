@@ -77,6 +77,8 @@ class ScriptEngine
   // issue for the underlying ScriptObject (and VALUE or PyObject), so just return the ScriptObject
   virtual ScriptObject loadMeasure(const openstudio::path& measureScriptPath, std::string_view className) = 0;
 
+  virtual int numberOfArguments(ScriptObject& methodObject, std::string_view methodName) = 0;
+
   template <typename T>
   T getAs(ScriptObject& obj) {
     void* result = getAs_impl(obj, typeid(T));

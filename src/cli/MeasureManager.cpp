@@ -348,9 +348,10 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
   };
 
   ScriptEngineInstance* thisEngine = nullptr;
-  if (measure.measureLanguage() == MeasureLanguage::Ruby) {
+  const MeasureLanguage measureLanguage = measure.measureLanguage();
+  if (measureLanguage == MeasureLanguage::Ruby) {
     thisEngine = &rubyEngine;
-  } else if (measure.measureLanguage() == MeasureLanguage::Python) {
+  } else if (measureLanguage == MeasureLanguage::Python) {
     thisEngine = &pythonEngine;
   }
 
@@ -411,9 +412,36 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
       taxonomy = measurePtr->taxonomy();
       modelerDescription = measurePtr->modeler_description();
 
-      auto model = getOrCreateModel();
       // TODO: for ruby at least, need to try the arity... model was added later, at 3.0.0
-      arguments = measurePtr->arguments(model);
+      const int numArgs = (*thisEngine)->numberOfArguments(measureScriptObject, "arguments");
+      fmt::print("numArgs={}\n", numArgs);
+      if (numArgs == 0) {
+        if (measureLanguage == MeasureLanguage::Ruby) {
+          auto patchArgumentsCmd = fmt::format(R"ruby(
+module {0}Extensions
+  def arguments(model)
+    super()
+  end
+end
+
+class {0}
+  prepend {0}Extensions # the only change to above: prepend instead of include
+end
+)ruby",
+                                               className);
+          rubyEngine->exec(patchArgumentsCmd);
+          arguments = measurePtr->arguments(openstudio::model::Model{});
+          rubyEngine->exec(fmt::format("Object.send(:remove_const, :{}Extensions)", className));
+        } else {
+          auto msg =
+            fmt::format("Wrong number of parameters for method `arguments`in measure '{}' from '{}'\n", className, scriptPath_->generic_string());
+          fmt::print(stderr, "{}\n", msg);
+          return openstudio::measure::OSMeasureInfo(msg);
+        }
+      } else {
+        auto model = getOrCreateModel();
+        arguments = measurePtr->arguments(model);
+      }
       outputs = measurePtr->outputs();
 
     } else {
@@ -427,6 +455,10 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
 
   if (name.empty()) {
     name = className;
+  }
+
+  if (measureLanguage == MeasureLanguage::Ruby) {
+    rubyEngine->exec(fmt::format("Object.send(:remove_const, :{})", className));
   }
 
   openstudio::measure::OSMeasureInfo info(measureType, className, name, description, taxonomy, modelerDescription, arguments, outputs);

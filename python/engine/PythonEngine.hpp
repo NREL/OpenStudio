@@ -36,6 +36,8 @@ class PythonEngine final : public ScriptEngine
 
   virtual ScriptObject loadMeasure(const openstudio::path& measureScriptPath, std::string_view className) override;
 
+  virtual int numberOfArguments(ScriptObject& methodObject, std::string_view methodName) override;
+
  protected:
   void* getAs_impl(ScriptObject& obj, const std::type_info&) override;
   void importOpenStudio();
