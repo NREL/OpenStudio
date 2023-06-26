@@ -238,11 +238,11 @@ boost::optional<BCLMeasure> MeasureManager::getMeasure(const openstudio::path& m
     return boost::none;
   }
 
-  boost::optional<BCLMeasureInfo> measureInfo_;
+  BCLMeasureInfo* measureInfo_ = nullptr;
   if (!force_reload) {
     auto it = m_measures.find(measureDirPath);
     if (it != m_measures.end()) {
-      measureInfo_ = it->second;
+      measureInfo_ = &(it->second);
       fmt::print("Using cached measure {}\n", measureDirPath.generic_string());
     }
   }
@@ -260,9 +260,8 @@ boost::optional<BCLMeasure> MeasureManager::getMeasure(const openstudio::path& m
       return boost::none;
     }
     fmt::print("Successfully loaded measure '{}'\n", measureDirPathStr);
-    measureInfo_ = BCLMeasureInfo(std::move(*measure_));
-    auto [it, ok] = m_measures.insert({measureDirPath, std::move(*measureInfo_)});
-    measureInfo_ = it->second;
+    auto [it, ok] = m_measures.insert({measureDirPath, BCLMeasureInfo{std::move(*measure_)}});
+    measureInfo_ = &(it->second);
   }
 
   auto& measure = measureInfo_->measure;
@@ -298,7 +297,10 @@ boost::optional<BCLMeasure> MeasureManager::getMeasure(const openstudio::path& m
       auto* measureInfoBindingPtr = rubyEngine->getAs<openstudio::measure::MeasureInfoBinding*>(measureInfoBindingObject);
       measureInfoBindingPtr->setMeasureInfo(info);
       const bool result = measureInfoBindingPtr->renderFile(readmeInPath.generic_string());
-      if (!result) {
+      if (result) {
+        // check for file updates again
+        file_updates = measure.checkForUpdatesFiles();
+      } else {
         fmt::print(stderr, "Failed to generate the README.md via ERB\n");
       }
     }
@@ -370,6 +372,7 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
   std::string className = (*thisEngine)->inferMeasureClassName(*scriptPath_);
   fmt::print("className={}\n", className);
   if (className.empty()) {
+    // TODO: could also just fallback on trusting the BCLXML is up to date with respect to the class name and use BCLMeasure::className()
     auto msg = fmt::format("Failed to infer measure name from '{}'", scriptPath_->generic_string());
     fmt::print(stderr, "{}\n", msg);
     return openstudio::measure::OSMeasureInfo(msg);
