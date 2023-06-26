@@ -293,7 +293,14 @@ boost::optional<BCLMeasure> MeasureManager::getMeasure(const openstudio::path& m
       if (hasReadmeOut) {
         openstudio::filesystem::remove(readmeOutPath);
       }
-      ScriptObject measureInfoBindingObject = rubyEngine->eval("OpenStudio::Measure::RubyMeasureInfoBinding.new()");
+      ScriptObject measureInfoBindingObject;
+      try {
+        measureInfoBindingObject = rubyEngine->eval("OpenStudio::Measure::RubyMeasureInfoBinding.new()");
+      } catch (const RubyException& e) {
+        auto msg = fmt::format("Failed to instantiate a RubyMeasureInfoBinding: {}\nlocation={}", e.what(), e.location());
+        fmt::print(stderr, "{}\n", msg);
+        LOG_AND_THROW(msg);
+      }
       auto* measureInfoBindingPtr = rubyEngine->getAs<openstudio::measure::MeasureInfoBinding*>(measureInfoBindingObject);
       measureInfoBindingPtr->setMeasureInfo(info);
       const bool result = measureInfoBindingPtr->renderFile(readmeInPath.generic_string());
