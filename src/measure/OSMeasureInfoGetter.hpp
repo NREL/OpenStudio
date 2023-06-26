@@ -113,6 +113,16 @@ namespace measure {
  *  pathway should produce identical results. \relates OSMeasureInfoGetter */
   MEASURE_API std::string infoExtractorRubyFunction();
 
+  /** Interface class for rendering the ruby readme via ERB, parent class for the RubyMeasureInfoBinding
+   *  declared in ruby/bindings/InitRubyBindings.cpp so we can use it from C++ */
+  class MEASURE_API MeasureInfoBinding
+  {
+   public:
+    virtual ~MeasureInfoBinding() = default;
+    virtual void setMeasureInfo(OSMeasureInfo& info);
+    virtual bool renderFile(const std::string& readmeInPath);
+  };
+
 }  // namespace measure
 }  // namespace openstudio
 

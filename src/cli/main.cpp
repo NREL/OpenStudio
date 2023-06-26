@@ -17,6 +17,7 @@
 
 #include "RunCommand.hpp"
 #include "MeasureUpdateCommand.hpp"
+#include "measure/OSMeasureInfoGetter.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -178,6 +179,7 @@ int main(int argc, char* argv[]) {
       rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
       rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
       rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
+      rubyEngine->registerType<openstudio::measure::MeasureInfoBinding*>("openstudio::measure::MeasureInfoBinding *");
       // rubyEngine->registerType<std::string>("std::string");
       // rubyEngine->registerType<std::string*>("std::string *");
       rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");

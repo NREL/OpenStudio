@@ -5,6 +5,7 @@
 
 #include "RubyEngine.hpp"
 #include "InitRubyBindings.hpp"
+#include "RubyException.hpp"
 #include <embedded_files.hxx>
 #include <csignal>
 #include <stdexcept>
@@ -121,6 +122,8 @@ void* RubyEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
 std::string RubyEngine::inferMeasureClassName(const openstudio::path& measureScriptPath) {
 
   auto inferClassNameCmd = fmt::format(R"ruby(
+ObjectSpace.garbage_collect
+ObjectSpace.garbage_collect
 # Measure should be at root level (not inside a module) so we can just get constants
 measurePath = "{}"
 prev = Object.constants

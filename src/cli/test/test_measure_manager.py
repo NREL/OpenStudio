@@ -39,8 +39,6 @@ BASE_INTERNAL_STATE: Dict[str, Any] = {
 BCL_DIR = Path("~/BCL").expanduser()
 # This is 'Test Measure Recursive Folders'
 TEST_BCL_MEASURE_UID = "b79e1024-8a7a-4c9d-91bf-6c11de58f4a9"
-# Change R-value of Insulation Layer for Construction By a Specified Percentage
-TEST_BCL_MEASURE_MODEL_DEPENDENT = "7ee248fd-052a-48d6-a8eb-b1fc6a0dc348"
 
 
 def get_url(port: int):
@@ -103,7 +101,7 @@ def get_open_port_for_serving():
 def launch_measure_manager_client(osclipath: Path) -> Tuple[subprocess.Popen, int]:
     port = get_open_port_for_serving()
     base_url = get_url(port=port)
-    proc = subprocess.Popen([str(osclipath), "labs", "measure", "-s", str(port)])
+    proc = subprocess.Popen([str(osclipath), "labs", "measure", "-s", str(port)])  # NOTE: remove 'labs' to test old CLI
     ok = False
     while not ok:
         try:
@@ -124,6 +122,10 @@ def launch_measure_manager_client(osclipath: Path) -> Tuple[subprocess.Popen, in
 @pytest.fixture
 def measure_manager_client(osclipath):
     """Launches a measure manager server and waits for it to be ready, then destroys at end."""
+    # If you want to attach to your debug CLI session you have launched in a debugger, just do this isntead
+    # yield MeasureManagerClient(port=8094)
+    # return
+    # Regular
     proc, port = launch_measure_manager_client(osclipath=osclipath)
     yield MeasureManagerClient(port=port)
     proc.send_signal(signal.SIGINT)
@@ -273,48 +275,13 @@ def test_update_measures(measure_manager_client: MeasureManagerClient, expected_
     r.raise_for_status()
 
 
-def test_compute_arguments_ruby(
-    measure_manager_client: MeasureManagerClient,
-    expected_internal_state: Dict[str, Any],
-    tmp_path: Path,
-    osclipath: Path,
-):
-    measure_dir = BCL_DIR / TEST_BCL_MEASURE_MODEL_DEPENDENT
-    if measure_dir.exists():
-        measure_version_dir = next(measure_dir.glob("*/measure.rb")).parent
-    else:
-        r = measure_manager_client.post(url="/download_bcl_measure", json={"uid": TEST_BCL_MEASURE_MODEL_DEPENDENT})
-        r.raise_for_status()
-        measure_data = r.json()
-        measure_version_dir = measure_dir / measure_data["version_id"]
-    assert measure_version_dir.exists()
+def modify_measure_for_model_dependent_arg(measure_dir: Path, is_ruby: bool):
+    ext = "rb" if is_ruby else "py"
+    measure_file = measure_dir / f"measure.{ext}"
+    if not measure_file.exists():
+        raise ValueError(f"{measure_file} doesn't exist")
 
-    r = measure_manager_client.post(url="/compute_arguments", json={"": ""})
-    assert r.status_code == 400
-    assert r.json() == "The 'measure_dir' (string) must be in the post data"
-
-    r = measure_manager_client.post(url=f"/compute_arguments", json={"measure_dir": "bogusdirectory"})
-    assert r.status_code == 400
-    assert r.json() == "Cannot load measure at 'bogusdirectory'"
-
-    r = measure_manager_client.post(url="/compute_arguments", json={"measure_dir": str(measure_version_dir)})
-    r.raise_for_status()
-
-    osm_path = tmp_path / "model.osm"
-    _write_example_model_cli(osclipath=osclipath, osm_path=osm_path)
-    assert osm_path.is_file()
-    r = measure_manager_client.post(
-        url="/compute_arguments", json={"measure_dir": str(measure_version_dir), "osm_path": str(osm_path)}
-    )
-    r.raise_for_status()
-
-
-def modify_python_measure_for_model_dependent_arg(measure_dir: Path):
-    measure_py = measure_dir / "measure.py"
-    if not measure_py.exists():
-        raise ValueError(f"{measure_py} doesn't exist")
-
-    with open(measure_py, "r") as f:
+    with open(measure_file, "r") as f:
         lines = f.read().splitlines()
 
     in_block = False
@@ -332,7 +299,24 @@ def modify_python_measure_for_model_dependent_arg(measure_dir: Path):
 
     indent: int = lines[arg_line].index("args")  # type: ignore
 
-    prog = """
+    if is_ruby:
+        prog = """
+construction_handles = []
+construction_display_names = []
+
+model.getConstructions.each do |c|
+    construction_handles << c.handle.to_s
+    construction_display_names << c.nameString
+end
+construction = OpenStudio::Measure::OSArgument.makeChoiceArgument(
+    'construction', construction_handles, construction_display_names, true, true
+)
+construction.setDisplayName("Choose a Construction to Alter")
+construction.setDescription("Pick a construction from model")
+args << construction"""
+
+    else:
+        prog = """
 construction_handles = []
 construction_display_names = []
 
@@ -341,8 +325,10 @@ for c in model.getConstructions():
     construction_display_names.append(c.nameString())
 
 construction = openstudio.measure.OSArgument.makeChoiceArgument(
-    'construction', construction_handles, construction_display_names, True
+    'construction', construction_handles, construction_display_names, True, True
 )
+construction.setDisplayName("Choose a Construction to Alter")
+construction.setDescription("Pick a construction from model")
 args.append(construction)"""
 
     for line in prog.splitlines():
@@ -352,41 +338,62 @@ args.append(construction)"""
         else:
             lines.insert(arg_line, "")
 
-    with open(measure_py, "w") as f:
+    with open(measure_file, "w") as f:
         f.write("\n".join(lines) + "\n")
 
 
-def test_compute_arguments_python(
+@pytest.mark.parametrize(
+    "measure_language",
+    ["Ruby", "Python"],
+)
+def test_compute_arguments(
+    measure_language: str,
     measure_manager_client: MeasureManagerClient,
     expected_internal_state: Dict[str, Any],
     tmp_path: Path,
     osclipath: Path,
 ):
-    measure_dir = tmp_path / "new_measure"
+    is_ruby = measure_language == "Ruby"
+    measure_dir = tmp_path / f"new_{measure_language}_measure"
     assert not measure_dir.is_dir()
+    readme_out_path = measure_dir / "README.md"
 
     data = {
         # "name": "name",
         "measure_dir": str(measure_dir),
-        "display_name": "display_name",
-        "class_name": "class_name",
+        "display_name": "A ModelMeasure that depends on model",
+        "class_name": "ModelDependentMeasure",
         "taxonomy_tag": "taxonomy_tag",
         "measure_type": "ModelMeasure",  # <=
-        "measure_language": "Python",  # <=
-        "description": "description",
-        "modeler_description": "modeler_description",
+        "measure_language": measure_language,  # <=
+        "description": "This is the description",
+        "modeler_description": "This is the modeler description",
     }
     r = measure_manager_client.post(url="/create_measure", json=data)
     r.raise_for_status
     assert measure_dir.is_dir()
 
+    # Test README.md ERB generation
+    if is_ruby:
+        assert readme_out_path.exists()
+        readme_out_path.unlink()
+
+    breakpoint()
     r = measure_manager_client.post(url="/compute_arguments", json={"measure_dir": str(measure_dir)})
     r.raise_for_status()
 
-    modify_python_measure_for_model_dependent_arg(measure_dir=measure_dir)
+    if is_ruby:
+        assert readme_out_path.exists()
+        readme_out_path.unlink()
+
+    modify_measure_for_model_dependent_arg(measure_dir=measure_dir, is_ruby=is_ruby)
 
     r = measure_manager_client.post(url="/compute_arguments", json={"measure_dir": str(measure_dir)})
     r.raise_for_status()
+
+    if is_ruby:
+        assert readme_out_path.exists()
+        readme_out_path.unlink()
 
     osm_path = tmp_path / "model.osm"
     _write_example_model_cli(osclipath=osclipath, osm_path=osm_path)
@@ -403,6 +410,11 @@ def test_compute_arguments_python(
     assert "choices_values" in construction_arg
     assert len(construction_arg["choice_display_names"]) > 5
     assert len(construction_arg["choice_display_names"]) == len(construction_arg["choices_values"])
+
+    if is_ruby:
+        assert readme_out_path.exists()
+        readme_out_md = readme_out_path.read_text()
+        assert "Choose a Construction to Alter" in readme_out_md
 
 
 def test_create_measure(

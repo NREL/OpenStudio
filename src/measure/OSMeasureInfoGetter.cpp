@@ -306,5 +306,10 @@ namespace measure {
     return ss.str();
   }
 
+  void MeasureInfoBinding::setMeasureInfo(OSMeasureInfo& info){};
+  bool MeasureInfoBinding::renderFile(const std::string& readmeInPath) {
+    return false;
+  };
+
 }  // namespace measure
 }  // namespace openstudio

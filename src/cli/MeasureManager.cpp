@@ -274,7 +274,9 @@ boost::optional<BCLMeasure> MeasureManager::getMeasure(const openstudio::path& m
   auto readmeInPath = measureDirPath / "README.md.erb";
   auto readmeOutPath = measureDirPath / "README.md";
 
-  bool readme_out_of_date = openstudio::filesystem::is_regular_file(readmeInPath) && !openstudio::filesystem::is_regular_file(readmeOutPath);
+  const bool hasReadmeIn = openstudio::filesystem::is_regular_file(readmeInPath);
+  const bool hasReadmeOut = openstudio::filesystem::is_regular_file(readmeOutPath);
+  const bool readme_out_of_date = hasReadmeIn && !hasReadmeOut;
 
   // TODO: try catch like in measure_manager.rb?
   bool missing_fields = measure.missingRequiredFields();
@@ -285,11 +287,21 @@ boost::optional<BCLMeasure> MeasureManager::getMeasure(const openstudio::path& m
     // Clear cache before calling getMeasureInfo
     measureInfo_->measureInfos.clear();
 
-    // TODO: the readme.md generation from readme.md.erb requires ruby.
-    fmt::print("Warn: readme.md generation from ERB is not supported yet\n");
-
     openstudio::measure::OSMeasureInfo info = getMeasureInfo(measureDirPath, measure, openstudio::path{});
     info.update(measure);
+
+    if (hasReadmeIn) {
+      if (hasReadmeOut) {
+        openstudio::filesystem::remove(readmeOutPath);
+      }
+      ScriptObject measureInfoBindingObject = rubyEngine->eval("OpenStudio::Measure::RubyMeasureInfoBinding.new()");
+      auto* measureInfoBindingPtr = rubyEngine->getAs<openstudio::measure::MeasureInfoBinding*>(measureInfoBindingObject);
+      measureInfoBindingPtr->setMeasureInfo(info);
+      const bool result = measureInfoBindingPtr->renderFile(readmeInPath.generic_string());
+      if (!result) {
+        fmt::print(stderr, "Failed to generate the README.md via ERB\n");
+      }
+    }
 
     // Save the xml file with changes triggered by checkForUpdatesFiles() / checkForUpdatesXML() above
     measure.save();
