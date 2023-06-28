@@ -31,7 +31,7 @@ BASE_INTERNAL_STATE: Dict[str, Any] = {
     "idf": [],
     "measure_info": None,
     "measures": None,
-    "my_measures_dir": str(DEFAULT_MEASURES_DIR),
+    "my_measures_dir": DEFAULT_MEASURES_DIR.as_posix(),
     "osm": [],
     "status": "running",
 }
@@ -128,7 +128,10 @@ def measure_manager_client(osclipath):
     # Regular
     proc, port = launch_measure_manager_client(osclipath=osclipath)
     yield MeasureManagerClient(port=port)
-    proc.send_signal(signal.SIGINT)
+    # if sys.platform == "win32":
+    #     proc.send_signal(signal.CTRL_C_EVENT)
+    # else:
+    #     proc.send_signal(signal.SIGINT)
     proc.kill()
 
 
@@ -162,10 +165,10 @@ def test_default_internal_state(measure_manager_client, expected_internal_state)
 
 
 def test_set_measures_dir(measure_manager_client, expected_internal_state):
-    my_measures_dir = str(Path("~/OpenStudio/Measures2").expanduser())
-    r = measure_manager_client.post("/set", json={"my_measures_dir": my_measures_dir})
+    my_measures_dir = Path("~/OpenStudio/Measures2").expanduser()
+    r = measure_manager_client.post("/set", json={"my_measures_dir": str(my_measures_dir)})
     r.raise_for_status()
-    expected_internal_state["my_measures_dir"] = my_measures_dir
+    expected_internal_state["my_measures_dir"] = my_measures_dir.as_posix()
     assert measure_manager_client.internal_state() == expected_internal_state
 
 
@@ -191,7 +194,7 @@ def test_get_model(
     expected_internal_state["osm"].append(
         {
             "checksum": model_checksum,
-            "osm_path": str(osm_path),
+            "osm_path": osm_path.as_posix(),
         }
     )
     assert measure_manager_client.internal_state() == expected_internal_state
@@ -203,7 +206,7 @@ def test_get_model(
     expected_internal_state["osm"].append(
         {
             "checksum": model_checksum2,
-            "osm_path": str(osm_path2),
+            "osm_path": osm_path2.as_posix(),
         }
     )
     assert measure_manager_client.internal_state() == expected_internal_state
@@ -222,7 +225,7 @@ def test_get_model(
     assert r.json() == f"OK, loaded model with checksum {model_checksum}"
     expected_internal_state["osm"][0] = {
         "checksum": model_checksum,
-        "osm_path": str(osm_path),
+        "osm_path": osm_path.as_posix(),
     }
 
     measure_manager_client.reset_and_assert_internal_state()
@@ -437,7 +440,7 @@ def test_create_measure(
     assert r.json() == "The 'measure_dir' (string) must be in the post data."
 
     measure_dir = tmp_path / "new_measure"
-    data["measure_dir"] = str(measure_dir)
+    data["measure_dir"] = measure_dir.as_posix()
     assert not measure_dir.is_dir()
 
     # The enums are throwy! Make sure we handle that gracefully
@@ -495,7 +498,7 @@ def test_duplicate_measure(
     assert not new_measure_dir.is_dir()
 
     data_ori = {
-        "measure_dir": str(old_measure_dir),
+        "measure_dir": old_measure_dir.as_posix(),
         "display_name": "old_display_name",
         "class_name": "old_class_name",
         "taxonomy_tag": "old_taxonomy_tag",
@@ -511,8 +514,8 @@ def test_duplicate_measure(
     assert not new_measure_dir.is_dir()
 
     data = {
-        "old_measure_dir": str(old_measure_dir),
-        "measure_dir": str(new_measure_dir),
+        "old_measure_dir": old_measure_dir.as_posix(),
+        "measure_dir": new_measure_dir.as_posix(),
         "display_name": "display_name",
         "class_name": "class_name",
         "taxonomy_tag": "taxonomy_tag",
