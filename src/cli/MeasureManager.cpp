@@ -575,7 +575,13 @@ MeasureManagerServer::MeasureManagerServer(unsigned port, ScriptEngineInstance& 
     my_measures_dir(openstudio::filesystem::home_path() / "OpenStudio/Measures") {
 
   web::uri_builder uri_builder;
+#if (defined(_WIN32) || defined(_WIN64))
+  // Works only for localhost...
+  uri_builder.set_scheme(utility::conversions::to_string_t("http")).set_host(utility::conversions::to_string_t("localhost")).set_port(port);
+#else
+  // Works for 127.0.0.1, 0.0.0.0 and localhost on TCP4
   uri_builder.set_scheme(utility::conversions::to_string_t("http")).set_host(utility::conversions::to_string_t("0.0.0.0")).set_port(port);
+#endif
   auto builder_uri = uri_builder.to_uri();
   // fmt::print("builder_uri: {} {} {} {}\n", web::http::uri::decode(builder_uri.scheme()), web::http::uri::decode(builder_uri.host()),
   //            builder_uri.port(), web::http::uri::decode(builder_uri.path()));
