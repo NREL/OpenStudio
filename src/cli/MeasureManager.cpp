@@ -4,7 +4,7 @@
 #include "../utilities/core/Checksum.hpp"
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
-#include "../src/utilities/core/StringHelpers.cpp"
+#include "../src/utilities/core/StringHelpers.hpp"
 #include "../osversion/VersionTranslator.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
 #include "energyplus/ForwardTranslator.hpp"
