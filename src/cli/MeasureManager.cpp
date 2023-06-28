@@ -35,10 +35,6 @@
 
 namespace openstudio {
 
-std::string toString(const utility::string_t& s) {
-  return utility::conversions::to_utf8string(s);
-}
-
 #if (defined(_WIN32) || defined(_WIN64))
 openstudio::path toPath(const std::wstring& s) {
   return openstudio::path(s);
