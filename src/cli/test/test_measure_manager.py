@@ -378,7 +378,7 @@ def test_compute_arguments(
         assert readme_out_path.exists()
         readme_out_path.unlink()
 
-    breakpoint()
+    # breakpoint()
     r = measure_manager_client.post(url="/compute_arguments", json={"measure_dir": str(measure_dir)})
     r.raise_for_status()
 
