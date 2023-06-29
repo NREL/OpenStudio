@@ -110,6 +110,7 @@
 #include "../../model/GeneratorMicroTurbine.hpp"
 #include "../../model/GeneratorMicroTurbine_Impl.hpp"
 #include "../../utilities/data/DataEnums.hpp"
+#include "../../utilities/core/DeprecatedHelpers.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio::energyplus;
@@ -152,12 +153,14 @@ namespace energyplus {
   }
 
   openstudio::energyplus::ComponentType plantLoopType(const PlantLoop& plantLoop) {
-    LOG_FREE(Warn, "openstudio.energyplus.plantLoopType", "Method is deprecated. Use Loop::componentType instead");
+    auto logChannel = [] { return "openstudio::energyplus::plantLoopType"; };
+    DEPRECATED_AT_MSG(3, 6, 0, "Use Loop::componentType instead");
     return convertOSEnumToEnum(plantLoop.componentType());
   }
 
   openstudio::energyplus::ComponentType componentType(const openstudio::model::HVACComponent& component) {
-    LOG_FREE(Warn, "openstudio.energyplus.componentType", "Method is deprecated. Use HVACComponent::componentType instead");
+    auto logChannel = [] { return "openstudio::energyplus::componentType"; };
+    DEPRECATED_AT_MSG(3, 6, 0, "Use HVACComponent::componentType instead");
     return convertOSEnumToEnum(component.componentType());
   }
 

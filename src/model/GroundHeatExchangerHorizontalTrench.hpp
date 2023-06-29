@@ -42,7 +42,7 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    OS_DEPRECATED static std::vector<std::string> groundTemperatureModelValues();
+    OS_DEPRECATED(3, 6, 0) static std::vector<std::string> groundTemperatureModelValues();
 
     /** @name Getters */
     //@{
@@ -77,16 +77,16 @@ namespace model {
 
     double soilMoistureContentPercentatSaturation() const;
 
-    OS_DEPRECATED std::string groundTemperatureModel() const;
+    OS_DEPRECATED(3, 6, 0) std::string groundTemperatureModel() const;
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED bool isGroundTemperatureModelDefaulted() const;
+    OS_DEPRECATED(3, 6, 0) bool isGroundTemperatureModelDefaulted() const;
 
-    OS_DEPRECATED double kusudaAchenbachAverageSurfaceTemperature() const;
+    OS_DEPRECATED(3, 6, 0) double kusudaAchenbachAverageSurfaceTemperature() const;
 
-    OS_DEPRECATED double kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const;
+    OS_DEPRECATED(3, 6, 0) double kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const;
 
-    OS_DEPRECATED double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const;
+    OS_DEPRECATED(3, 6, 0) double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const;
 
     double evapotranspirationGroundCoverParameter() const;
 
@@ -127,16 +127,16 @@ namespace model {
     bool setSoilMoistureContentPercentatSaturation(double soilMoistureContentPercentatSaturation);
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED bool setGroundTemperatureModel(const std::string& groundTemperatureModel);
+    OS_DEPRECATED(3, 6, 0) bool setGroundTemperatureModel(const std::string& groundTemperatureModel);
 
     // cppcheck-suppress functionStatic
-    OS_DEPRECATED void resetGroundTemperatureModel();
+    OS_DEPRECATED(3, 6, 0) void resetGroundTemperatureModel();
 
-    OS_DEPRECATED bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
+    OS_DEPRECATED(3, 6, 0) bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
 
-    OS_DEPRECATED bool setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
+    OS_DEPRECATED(3, 6, 0) bool setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
 
-    OS_DEPRECATED bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
+    OS_DEPRECATED(3, 6, 0) bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
 
     bool setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter);
 

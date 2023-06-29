@@ -19,6 +19,7 @@
 #include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -317,14 +318,12 @@ namespace model {
   // DEPRECATED
 
   boost::optional<ModelObject> EnergyManagementSystemActuator::zoneName() const {
-    LOG(Warn, "As of 3.6.0, EnergyManagementSystemActuator::zoneName is deprecated. Use zoneOrSpace instead. "
-              "It will be removed within three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use zoneOrSpace instead.");
     return getImpl<detail::EnergyManagementSystemActuator_Impl>()->zoneOrSpace();
   }
 
   void EnergyManagementSystemActuator::resetZoneName() {
-    LOG(Warn, "As of 3.6.0, EnergyManagementSystemActuator::resetZoneName is deprecated. Use resetZoneOrSpace instead. "
-              "It will be removed within three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use resetZoneOrSpace instead.");
     getImpl<detail::EnergyManagementSystemActuator_Impl>()->resetZoneOrSpace();
   }
   /// @endcond

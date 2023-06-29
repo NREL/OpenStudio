@@ -72,18 +72,18 @@ namespace model {
     bool isRatedHeatingPowerConsumptionAutosized() const;
 
     CurveQuadLinear heatingCapacityCurve() const;
-    OS_DEPRECATED double heatingCapacityCoefficient1() const;
-    OS_DEPRECATED double heatingCapacityCoefficient2() const;
-    OS_DEPRECATED double heatingCapacityCoefficient3() const;
-    OS_DEPRECATED double heatingCapacityCoefficient4() const;
-    OS_DEPRECATED double heatingCapacityCoefficient5() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient1() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient2() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient3() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient4() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient5() const;
 
     CurveQuadLinear heatingCompressorPowerCurve() const;
-    OS_DEPRECATED double heatingCompressorPowerCoefficient1() const;
-    OS_DEPRECATED double heatingCompressorPowerCoefficient2() const;
-    OS_DEPRECATED double heatingCompressorPowerCoefficient3() const;
-    OS_DEPRECATED double heatingCompressorPowerCoefficient4() const;
-    OS_DEPRECATED double heatingCompressorPowerCoefficient5() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCompressorPowerCoefficient1() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCompressorPowerCoefficient2() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCompressorPowerCoefficient3() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCompressorPowerCoefficient4() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCompressorPowerCoefficient5() const;
 
     double referenceCoefficientofPerformance() const;
 
@@ -121,19 +121,19 @@ namespace model {
 
     bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
 
-    OS_DEPRECATED bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
-    OS_DEPRECATED bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
-    OS_DEPRECATED bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
-    OS_DEPRECATED bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
-    OS_DEPRECATED bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
 
     bool setHeatingCompressorPowerCurve(const CurveQuadLinear& heatingCompressorPowerCurve);
 
-    OS_DEPRECATED bool setHeatingCompressorPowerCoefficient1(double heatingCompressorPowerCoefficient1);
-    OS_DEPRECATED bool setHeatingCompressorPowerCoefficient2(double heatingCompressorPowerCoefficient2);
-    OS_DEPRECATED bool setHeatingCompressorPowerCoefficient3(double heatingCompressorPowerCoefficient3);
-    OS_DEPRECATED bool setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
-    OS_DEPRECATED bool setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCompressorPowerCoefficient1(double heatingCompressorPowerCoefficient1);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCompressorPowerCoefficient2(double heatingCompressorPowerCoefficient2);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCompressorPowerCoefficient3(double heatingCompressorPowerCoefficient3);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
 
     bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 

@@ -108,7 +108,7 @@ namespace model {
 
     void resetInterpolatetoTimestep();
 
-    OS_DEPRECATED bool setMinutesperItem(const std::string& minutesperItem);
+    OS_DEPRECATED(3, 2, 0) bool setMinutesperItem(const std::string& minutesperItem);
 
     bool setMinutesperItem(int minutesperItem);
 

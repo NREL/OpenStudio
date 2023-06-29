@@ -1467,7 +1467,7 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor& modelObject);
 
-    OS_DEPRECATED boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
+    OS_DEPRECATED(3, 5, 0) boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
 
     boost::optional<IdfObject> translateTableLookup(model::TableLookup& modelObject);
 

@@ -38,6 +38,8 @@
 #include <utilities/idd/OS_AirConditioner_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include "../utilities/core/DeprecatedHelpers.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -3049,58 +3051,72 @@ namespace model {
 
   // DEPRECATED
   bool AirConditionerVariableRefrigerantFlow::setRatedTotalCoolingCapacity(double grossRatedTotalCoolingCapacity) {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use setGrossRatedTotalCoolingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setGrossRatedTotalCoolingCapacity(grossRatedTotalCoolingCapacity);
   }
 
   void AirConditionerVariableRefrigerantFlow::autosizeRatedTotalCoolingCapacity() {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use autosizeGrossRatedTotalCoolingCapacity instead.");
     getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizeGrossRatedTotalCoolingCapacity();
   }
 
   bool AirConditionerVariableRefrigerantFlow::setRatedCoolingCOP(double grossRatedCoolingCOP) {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use setGrossRatedCoolingCOP instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setGrossRatedCoolingCOP(grossRatedCoolingCOP);
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow::ratedTotalCoolingCapacity() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use grossRatedTotalCoolingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->grossRatedTotalCoolingCapacity();
   }
 
   bool AirConditionerVariableRefrigerantFlow::isRatedTotalCoolingCapacityAutosized() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use isGrossRatedTotalCoolingCapacityAutosized instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->isGrossRatedTotalCoolingCapacityAutosized();
   }
 
   double AirConditionerVariableRefrigerantFlow::ratedCoolingCOP() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use grossRatedCoolingCOP instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->grossRatedCoolingCOP();
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow::ratedTotalHeatingCapacity() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use grossRatedHeatingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->grossRatedHeatingCapacity();
   }
 
   bool AirConditionerVariableRefrigerantFlow::isRatedTotalHeatingCapacityAutosized() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use isGrossRatedHeatingCapacityAutosized instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->isGrossRatedHeatingCapacityAutosized();
   }
 
   double AirConditionerVariableRefrigerantFlow::ratedTotalHeatingCapacitySizingRatio() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use ratedHeatingCapacitySizingRatio instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->ratedHeatingCapacitySizingRatio();
   }
 
   bool AirConditionerVariableRefrigerantFlow::setRatedTotalHeatingCapacity(double grossRatedHeatingCapacity) {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use setGrossRatedHeatingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setGrossRatedHeatingCapacity(grossRatedHeatingCapacity);
   }
 
   void AirConditionerVariableRefrigerantFlow::autosizeRatedTotalHeatingCapacity() {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use autosizeGrossRatedHeatingCapacity instead.");
     getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizeGrossRatedHeatingCapacity();
   }
 
   bool AirConditionerVariableRefrigerantFlow::setRatedTotalHeatingCapacitySizingRatio(double ratedHeatingCapacitySizingRatio) {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use setRatedHeatingCapacitySizingRatio instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setRatedHeatingCapacitySizingRatio(ratedHeatingCapacitySizingRatio);
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedRatedTotalCoolingCapacity() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use autosizedGrossRatedTotalCoolingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedGrossRatedTotalCoolingCapacity();
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedRatedTotalHeatingCapacity() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use autosizedGrossRatedHeatingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedGrossRatedHeatingCapacity();
   }
 

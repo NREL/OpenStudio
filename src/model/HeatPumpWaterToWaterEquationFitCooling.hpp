@@ -75,18 +75,18 @@ namespace model {
     bool isRatedCoolingPowerConsumptionAutosized() const;
 
     CurveQuadLinear coolingCapacityCurve() const;
-    OS_DEPRECATED double coolingCapacityCoefficient1() const;
-    OS_DEPRECATED double coolingCapacityCoefficient2() const;
-    OS_DEPRECATED double coolingCapacityCoefficient3() const;
-    OS_DEPRECATED double coolingCapacityCoefficient4() const;
-    OS_DEPRECATED double coolingCapacityCoefficient5() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCapacityCoefficient1() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCapacityCoefficient2() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCapacityCoefficient3() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCapacityCoefficient4() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCapacityCoefficient5() const;
 
     CurveQuadLinear coolingCompressorPowerCurve() const;
-    OS_DEPRECATED double coolingCompressorPowerCoefficient1() const;
-    OS_DEPRECATED double coolingCompressorPowerCoefficient2() const;
-    OS_DEPRECATED double coolingCompressorPowerCoefficient3() const;
-    OS_DEPRECATED double coolingCompressorPowerCoefficient4() const;
-    OS_DEPRECATED double coolingCompressorPowerCoefficient5() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCompressorPowerCoefficient1() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCompressorPowerCoefficient2() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCompressorPowerCoefficient3() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCompressorPowerCoefficient4() const;
+    OS_DEPRECATED(3, 2, 0) double coolingCompressorPowerCoefficient5() const;
 
     double referenceCoefficientofPerformance() const;
 
@@ -124,19 +124,19 @@ namespace model {
 
     bool setCoolingCapacityCurve(const CurveQuadLinear& coolingCapacityCurve);
 
-    OS_DEPRECATED bool setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1);
-    OS_DEPRECATED bool setCoolingCapacityCoefficient2(double coolingCapacityCoefficient2);
-    OS_DEPRECATED bool setCoolingCapacityCoefficient3(double coolingCapacityCoefficient3);
-    OS_DEPRECATED bool setCoolingCapacityCoefficient4(double coolingCapacityCoefficient4);
-    OS_DEPRECATED bool setCoolingCapacityCoefficient5(double coolingCapacityCoefficient5);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCapacityCoefficient2(double coolingCapacityCoefficient2);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCapacityCoefficient3(double coolingCapacityCoefficient3);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCapacityCoefficient4(double coolingCapacityCoefficient4);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCapacityCoefficient5(double coolingCapacityCoefficient5);
 
     bool setCoolingCompressorPowerCurve(const CurveQuadLinear& coolingCompressorPowerCurve);
 
-    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient1(double coolingCompressorPowerCoefficient1);
-    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient2(double coolingCompressorPowerCoefficient2);
-    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient3(double coolingCompressorPowerCoefficient3);
-    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4);
-    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCompressorPowerCoefficient1(double coolingCompressorPowerCoefficient1);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCompressorPowerCoefficient2(double coolingCompressorPowerCoefficient2);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCompressorPowerCoefficient3(double coolingCompressorPowerCoefficient3);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5);
 
     bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 

@@ -12,9 +12,9 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#ifdef __GNUC__
-#  define OS_DEPRECATED __attribute__((deprecated))
-#elif defined(_MSC_VER)
+#define OS_DEPRECATED(__deprecatedAtVersionMajor__, __deprecatedAtVersionMinor__, __deprecatedAtVersionPatch__)                   \
+  [[deprecated("Deprecated at " #__deprecatedAtVersionMajor__ "." #__deprecatedAtVersionMinor__ "." #__deprecatedAtVersionPatch__ \
+               ". It will be removed after three releases.")]]
 /// In MSVC this will generate warning C4996
 /// To intentionally disable this warning, e.g. in test code that still uses deprecated functionality
 /// place this around the code that uses the deprecated functionality
@@ -26,11 +26,5 @@
 /// #if defined(_MSC_VER)
 ///   #pragma warning( pop )
 /// #endif
-
-#  define OS_DEPRECATED __declspec(deprecated)
-#else
-#  pragma message("WARNING: You need to implement DEPRECATED for this compiler")
-#  define OS_DEPRECATED
-#endif
 
 #endif  // UTILITIES_CORE_DEPRECATED_HPP

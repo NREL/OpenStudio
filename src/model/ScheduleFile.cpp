@@ -22,6 +22,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/filetypes/CSVFile.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"
+
 #include <unordered_map>
 
 namespace openstudio {
@@ -524,8 +526,9 @@ unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
   }
 
   bool ScheduleFile::setMinutesperItem(const std::string& minutesperItem) {
-    LOG(Warn, "ScheduleFile::setMinutesperItem(const std::string&) is deprecated, use the ScheduleFile::setMinutesperItem(int) instead");
+    DEPRECATED_AT_MSG(3, 2, 0, "Use the setMinutesperItem(int) instead");
     try {
+      // TODO: remove the Impl too
       return getImpl<detail::ScheduleFile_Impl>()->setMinutesperItem(std::stoi(minutesperItem));
     } catch (...) {
       return false;
@@ -549,7 +552,7 @@ unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
   }
 
   /// @cond
-  ScheduleFile::ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl) : ScheduleInterval(impl) {}
+  ScheduleFile::ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl) : ScheduleInterval(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

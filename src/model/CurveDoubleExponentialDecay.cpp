@@ -13,6 +13,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"
+
 #include <cmath>
 
 using namespace std;
@@ -293,7 +295,7 @@ namespace model {
   }
 
   double CurveDoubleExponentialDecay::coefficient3C4() const {
-    LOG(Warn, "This method is deprecated and will removed in a future release, please replace it with coefficient4C4.");
+    DEPRECATED_AT_MSG(3, 1, 0, "Use coefficient4C4 instead.");
     return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->coefficient4C4();
   }
 
@@ -302,7 +304,7 @@ namespace model {
   }
 
   double CurveDoubleExponentialDecay::coefficient3C5() const {
-    LOG(Warn, "This method is deprecated and will removed in a future release, please replace it with coefficient5C5.");
+    DEPRECATED_AT_MSG(3, 1, 0, "Use coefficient4C4 instead.");
     return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->coefficient5C5();
   }
 
@@ -355,7 +357,7 @@ namespace model {
   }
 
   bool CurveDoubleExponentialDecay::setCoefficient3C4(double coefficient4C4) {
-    LOG(Warn, "This method is deprecated and will removed in a future release, please replace it with setCoefficient4C4.");
+    DEPRECATED_AT_MSG(3, 1, 0, "Use setCoefficient4C4 instead.");
     return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->setCoefficient4C4(coefficient4C4);
   }
 
@@ -364,7 +366,7 @@ namespace model {
   }
 
   bool CurveDoubleExponentialDecay::setCoefficient3C5(double coefficient5C5) {
-    LOG(Warn, "This method is deprecated and will removed in a future release, please replace it with setCoefficient5C5.");
+    DEPRECATED_AT_MSG(3, 1, 0, "Use setCoefficient5C5 instead.");
     return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->setCoefficient5C5(coefficient5C5);
   }
 

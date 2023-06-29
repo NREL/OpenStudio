@@ -76,7 +76,7 @@ namespace model {
 
     std::string actuatedComponentType() const;
 
-    OS_DEPRECATED boost::optional<ModelObject> zoneName() const;
+    OS_DEPRECATED(3, 6, 0) boost::optional<ModelObject> zoneName() const;
 
     boost::optional<ModelObject> zoneOrSpace() const;
     boost::optional<ThermalZone> thermalZone() const;
@@ -96,7 +96,7 @@ namespace model {
     //set the ZoneName field to the Space's ThermalZone's name
     bool setSpace(const Space& space);
 
-    OS_DEPRECATED void resetZoneName();
+    OS_DEPRECATED(3, 6, 0) void resetZoneName();
     void resetZoneOrSpace();
 
     //@}

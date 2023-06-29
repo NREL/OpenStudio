@@ -50,11 +50,11 @@ namespace measure {
 
     /** Register this script with SketchUp. Deprecated in favor of registerWithApplication().
    *  Base class implementation does nothing and returns false. \deprecated */
-    OS_DEPRECATED virtual bool registerWithSketchUp() const;
+    OS_DEPRECATED(1, 13, 0) virtual bool registerWithSketchUp() const;
 
     /** Register this script with an Application. Base class implementation does nothing and
    *  returns false. \deprecated */
-    OS_DEPRECATED virtual bool registerWithApplication() const;
+    OS_DEPRECATED(1, 13, 0) virtual bool registerWithApplication() const;
 
    protected:
     OSMeasure() = default;

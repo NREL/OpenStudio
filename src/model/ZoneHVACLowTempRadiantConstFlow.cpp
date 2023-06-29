@@ -35,6 +35,7 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -1055,16 +1056,18 @@ namespace model {
   /// @cond
   ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl)
     : ZoneHVACComponent(std::move(impl)) {}
-  /// @endcond
 
-  // TODO: deprecated
+  // DEPRECATED
   void ZoneHVACLowTempRadiantConstFlow::resetHydronicTubingLength() {
+    DEPRECATED_AT_MSG(3, 0, 0, "Use autosizeHydronicTubingLength instead.");
     getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizeHydronicTubingLength();
   }
 
   void ZoneHVACLowTempRadiantConstFlow::resetRatedFlowRate() {
+    DEPRECATED_AT_MSG(3, 0, 0, "Use autosizeRatedFlowRate instead.");
     getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizeRatedFlowRate();
   }
+  /// @endcond
 
 }  // namespace model
 }  // namespace openstudio

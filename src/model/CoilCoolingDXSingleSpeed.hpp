@@ -63,7 +63,7 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    std::vector<std::string> condenserTypeValues() const;
+    static std::vector<std::string> condenserTypeValues();
 
     /** @name Getters */
     //@{
@@ -75,7 +75,7 @@ namespace model {
     double ratedCOP() const;
 
     /** Returns the value of the RatedEvaporatorFanPowerPerVolumeFlowRate field. **/
-    OS_DEPRECATED double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+    OS_DEPRECATED(3, 5, 0) double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
 
     /** Returns the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2017 field. **/
     double ratedEvaporatorFanPowerPerVolumeFlowRate2017() const;
@@ -158,7 +158,7 @@ namespace model {
     bool setRatedCOP(double value);
 
     /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate field. **/
-    OS_DEPRECATED bool setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value);
+    OS_DEPRECATED(3, 5, 0) bool setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value);
 
     /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2017 field. **/
     bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(boost::optional<double> value);
@@ -166,7 +166,7 @@ namespace model {
     /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2023 field. **/
     bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(boost::optional<double> value);
 
-    OS_DEPRECATED bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double value);
+    OS_DEPRECATED(3, 5, 0) bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double value);
 
     bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double value);
 

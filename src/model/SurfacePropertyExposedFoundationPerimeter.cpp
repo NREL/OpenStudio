@@ -16,6 +16,7 @@
 #include <utilities/idd/OS_SurfaceProperty_ExposedFoundationPerimeter_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -151,8 +152,7 @@ namespace model {
   }
 
   std::string SurfacePropertyExposedFoundationPerimeter::surfaceName() const {
-    LOG(Warn, "As of 3.7.0, surfaceName is deprecated. Use surface.nameString instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG(3, 7, 0, "Use surface.nameString instead.");
     return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->surface().nameString();
   }
 

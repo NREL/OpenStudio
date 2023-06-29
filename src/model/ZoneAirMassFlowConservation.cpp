@@ -11,6 +11,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -182,8 +184,7 @@ namespace model {
   bool ZoneAirMassFlowConservation::adjustZoneMixingForZoneAirMassFlowBalance() const {
     // TODO: DEPRECATED
     std::string cur_choice = getImpl<detail::ZoneAirMassFlowConservation_Impl>()->adjustZoneMixingandReturnForAirMassFlowBalance();
-    LOG(Warn, "ZoneAirMassFlowConservation: This method is deprecated. "
-              "It captures two out of five possible choices, use adjustZoneMixingandReturnForAirMassFlowBalance instead.");
+    DEPRECATED_AT_MSG(3, 2, 0, "It captures two out of five possible choices, use adjustZoneMixingandReturnForAirMassFlowBalance instead.");
     if (openstudio::istringEqual("None", cur_choice)) {
       return false;
     } else if (openstudio::istringEqual("AdjustMixingOnly", cur_choice)) {
@@ -197,14 +198,13 @@ namespace model {
   }
 
   bool ZoneAirMassFlowConservation::isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const {
-    LOG(Warn, "ZoneAirMassFlowConservation: This method is deprecated. "
-              "It captures two out of five possible choices, use isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted instead.");
+    DEPRECATED_AT_MSG(3, 2, 0,
+                      "It captures two out of five possible choices, use isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted instead.");
     return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted();
   }
 
   bool ZoneAirMassFlowConservation::setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance) {
-    LOG(Warn, "ZoneAirMassFlowConservation: This method is deprecated. "
-              "It captures two out of five possible choices, use setAdjustZoneMixingandReturnForAirMassFlowBalance instead.");
+    DEPRECATED_AT_MSG(3, 2, 0, "It captures two out of five possible choices, use setAdjustZoneMixingandReturnForAirMassFlowBalance instead.");
     if (adjustZoneMixingForZoneAirMassFlowBalance) {
       return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->setAdjustZoneMixingandReturnForAirMassFlowBalance("AdjustMixingOnly");
     } else {
@@ -213,8 +213,7 @@ namespace model {
   }
 
   void ZoneAirMassFlowConservation::resetAdjustZoneMixingForZoneAirMassFlowBalance() {
-    LOG(Warn, "ZoneAirMassFlowConservation: This method is deprecated. It captures two out of five possible choices, use "
-              "resetAdjustZoneMixingandReturnForAirMassFlowBalance instead.");
+    DEPRECATED_AT_MSG(3, 2, 0, "It captures two out of five possible choices, use resetAdjustZoneMixingandReturnForAirMassFlowBalance instead.");
     getImpl<detail::ZoneAirMassFlowConservation_Impl>()->resetAdjustZoneMixingandReturnForAirMassFlowBalance();
   }
 

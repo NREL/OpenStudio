@@ -66,14 +66,14 @@ namespace model {
     /** Returns the value of the MaximumAirFlowRate field. */
     std::string zoneMinimumAirFlowInputMethod();
     /** deprecated **/
-    OS_DEPRECATED std::string zoneMinimumAirFlowMethod();
+    OS_DEPRECATED(3, 0, 1) std::string zoneMinimumAirFlowMethod();
 
     /** Sets the value of the MaximumAirFlowRate field.
    *  Options are FixedFlowRate and Scheduled.
    */
     bool setZoneMinimumAirFlowInputMethod(const std::string& value);
     /** deprecated **/
-    OS_DEPRECATED bool setZoneMinimumAirFlowMethod(const std::string& value);
+    OS_DEPRECATED(3, 0, 1) bool setZoneMinimumAirFlowMethod(const std::string& value);
 
     /** Returns the value of the ConstantMinimumAirFlowFraction field. */
     boost::optional<double> constantMinimumAirFlowFraction() const;

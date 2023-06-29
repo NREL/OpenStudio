@@ -22,6 +22,7 @@
 #include <utilities/idd/OS_Coil_Cooling_DX_CurveFit_Speed_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -493,12 +494,6 @@ namespace model {
     return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->activeFractionofCoilFaceArea();
   }
 
-  double CoilCoolingDXCurveFitSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-    LOG(Warn, "As of 3.5.0, ratedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use ratedEvaporatorFanPowerPerVolumeFlowRate2017 instead. It "
-              "will be removed within three releases.");
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
-  }
-
   double CoilCoolingDXCurveFitSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate2017() const {
     return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
   }
@@ -581,13 +576,6 @@ namespace model {
 
   bool CoilCoolingDXCurveFitSpeed::setActiveFractionofCoilFaceArea(double activeFractionofCoilFaceArea) {
     return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setActiveFractionofCoilFaceArea(activeFractionofCoilFaceArea);
-  }
-
-  bool CoilCoolingDXCurveFitSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
-    LOG(Warn, "As of 3.5.0, setRatedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead. "
-              "It will be removed within three releases.");
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(
-      ratedEvaporatorFanPowerPerVolumeFlowRate);
   }
 
   bool CoilCoolingDXCurveFitSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017) {
@@ -689,7 +677,21 @@ namespace model {
   }
 
   /// @cond
-  CoilCoolingDXCurveFitSpeed::CoilCoolingDXCurveFitSpeed(std::shared_ptr<detail::CoilCoolingDXCurveFitSpeed_Impl> impl) : ResourceObject(impl) {}
+  CoilCoolingDXCurveFitSpeed::CoilCoolingDXCurveFitSpeed(std::shared_ptr<detail::CoilCoolingDXCurveFitSpeed_Impl> impl)
+    : ResourceObject(std::move(impl)) {}
+
+  // DEPRECATED
+  double CoilCoolingDXCurveFitSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
+    DEPRECATED_AT_MSG(3, 5, 0, "Use ratedEvaporatorFanPowerPerVolumeFlowRate2017 instead.");
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
+  }
+
+  bool CoilCoolingDXCurveFitSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
+    DEPRECATED_AT_MSG(3, 5, 0, "Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead.");
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(
+      ratedEvaporatorFanPowerPerVolumeFlowRate);
+  }
+
   /// @endcond
 
 }  // namespace model

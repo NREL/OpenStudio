@@ -60,7 +60,7 @@ namespace model {
 
     double activeFractionofCoilFaceArea() const;
 
-    OS_DEPRECATED double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+    OS_DEPRECATED(3, 5, 0) double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
 
     double ratedEvaporatorFanPowerPerVolumeFlowRate2017() const;
 
@@ -108,7 +108,7 @@ namespace model {
 
     bool setActiveFractionofCoilFaceArea(double activeFractionofCoilFaceArea);
 
-    OS_DEPRECATED bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
+    OS_DEPRECATED(3, 5, 0) bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
 
     bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017);
 

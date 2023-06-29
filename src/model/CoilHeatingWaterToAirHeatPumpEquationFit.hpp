@@ -80,19 +80,19 @@ namespace model {
 
     CurveQuadLinear heatingCapacityCurve() const;
 
-    OS_DEPRECATED double heatingCapacityCoefficient1() const;
-    OS_DEPRECATED double heatingCapacityCoefficient2() const;
-    OS_DEPRECATED double heatingCapacityCoefficient3() const;
-    OS_DEPRECATED double heatingCapacityCoefficient4() const;
-    OS_DEPRECATED double heatingCapacityCoefficient5() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient1() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient2() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient3() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient4() const;
+    OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient5() const;
 
     CurveQuadLinear heatingPowerConsumptionCurve() const;
 
-    OS_DEPRECATED double heatingPowerConsumptionCoefficient1() const;
-    OS_DEPRECATED double heatingPowerConsumptionCoefficient2() const;
-    OS_DEPRECATED double heatingPowerConsumptionCoefficient3() const;
-    OS_DEPRECATED double heatingPowerConsumptionCoefficient4() const;
-    OS_DEPRECATED double heatingPowerConsumptionCoefficient5() const;
+    OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient1() const;
+    OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient2() const;
+    OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient3() const;
+    OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient4() const;
+    OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient5() const;
 
     //@}
     /** @name Setters */
@@ -134,19 +134,19 @@ namespace model {
 
     bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
 
-    OS_DEPRECATED bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
-    OS_DEPRECATED bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
-    OS_DEPRECATED bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
-    OS_DEPRECATED bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
-    OS_DEPRECATED bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
 
     bool setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve);
 
-    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
-    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
-    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
-    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
-    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
+    OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
 
     //@}
     /** @name Other */
