@@ -20,6 +20,10 @@
 #include "../../model/FanVariableVolume_Impl.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/FanConstantVolume_Impl.hpp"
+#include "../../model/FanOnOff.hpp"
+#include "../../model/FanOnOff_Impl.hpp"
+#include "../../model/FanSystemModel.hpp"
+#include "../../model/FanSystemModel_Impl.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../utilities/core/Assert.hpp"
@@ -39,19 +43,14 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateCoilSystemCoolingWaterHeatExchangerAssisted(CoilSystemCoolingWaterHeatExchangerAssisted& modelObject) {
-    IdfObject idfObject(IddObjectType::CoilSystem_Cooling_Water_HeatExchangerAssisted);
-    m_idfObjects.push_back(idfObject);
 
-    // Name
-    if (auto s = modelObject.name()) {
-      idfObject.setName(*s);
-    }
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::CoilSystem_Cooling_Water_HeatExchangerAssisted, modelObject);
 
     std::string hxSupplyAirInletNodeName;
     // InletNodeName
     if (auto mo = modelObject.inletModelObject()) {
       if (auto node = mo->optionalCast<Node>()) {
-        hxSupplyAirInletNodeName = node->name().get();
+        hxSupplyAirInletNodeName = node->nameString();
       }
     }
 
@@ -59,12 +58,12 @@ namespace energyplus {
     // OutletNodeName
     if (auto mo = modelObject.outletModelObject()) {
       if (auto node = mo->optionalCast<Node>()) {
-        hxExhaustAirOutletNodeName = node->name().get();
+        hxExhaustAirOutletNodeName = node->nameString();
       }
     }
 
-    std::string hxSupplyAirOutletNodeName = modelObject.name().get() + " HX Supply Air Outlet - Cooling Inlet Node";
-    std::string hxExhaustAirInletNodeName = modelObject.name().get() + " HX Exhaust Air Inlet - Cooling Outlet Node";
+    std::string hxSupplyAirOutletNodeName = modelObject.nameString() + " HX Supply Air Outlet - Cooling Inlet Node";
+    std::string hxExhaustAirInletNodeName = modelObject.nameString() + " HX Exhaust Air Inlet - Cooling Outlet Node";
 
     // HeatExchangerObjectType
     // HeatExchangerName
@@ -72,7 +71,7 @@ namespace energyplus {
       auto hx = modelObject.heatExchanger();
       if (auto idf = translateAndMapModelObject(hx)) {
         idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::HeatExchangerObjectType, idf->iddObject().name());
-        idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::HeatExchangerName, idf->name().get());
+        idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::HeatExchangerName, idf->nameString());
         if (idf->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent) {
           idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName, hxSupplyAirInletNodeName);
           idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletNodeName, hxSupplyAirOutletNodeName);
@@ -88,7 +87,7 @@ namespace energyplus {
       auto coolingCoil = modelObject.coolingCoil();
       if (auto idf = translateAndMapModelObject(coolingCoil)) {
         idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoilObjectType, idf->iddObject().name());
-        idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoilName, idf->name().get());
+        idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoilName, idf->nameString());
         if (idf->iddObject().type() == IddObjectType::Coil_Cooling_Water) {
           idf->setString(Coil_Cooling_WaterFields::AirInletNodeName, hxSupplyAirOutletNodeName);
           idf->setString(Coil_Cooling_WaterFields::AirOutletNodeName, hxExhaustAirInletNodeName);
@@ -111,15 +110,19 @@ namespace energyplus {
 
       // Need a SPM:MixedAir on the Coil:Cooling:Water outlet node (that we **created** just above in IDF directly, so it won't get picked up by the
       // ForwardTranslateAirLoopHVAC method)
-      if (boost::optional<AirLoopHVAC> _airLoop = modelObject.airLoopHVAC()) {
+      if (boost::optional<AirLoopHVAC> airLoop_ = modelObject.airLoopHVAC()) {
         std::vector<StraightComponent> fans;
-        std::vector<ModelObject> supplyComponents = _airLoop->supplyComponents();
+        std::vector<ModelObject> supplyComponents = airLoop_->supplyComponents();
 
         for (auto it = supplyComponents.begin(); it != supplyComponents.end(); ++it) {
-          if (boost::optional<FanVariableVolume> variableFan = it->optionalCast<FanVariableVolume>()) {
-            fans.insert(fans.begin(), *variableFan);
-          } else if (boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>()) {
-            fans.insert(fans.begin(), *constantFan);
+          if (auto fan_ = it->optionalCast<FanVariableVolume>()) {
+            fans.insert(fans.begin(), std::move(*fan_));
+          } else if (auto fan_ = it->optionalCast<FanConstantVolume>()) {
+            fans.insert(fans.begin(), std::move(*fan_));
+          } else if (auto fan_ = it->optionalCast<FanSystemModel>()) {
+            fans.insert(fans.begin(), std::move(*fan_));
+          } else if (auto fan_ = it->optionalCast<FanOnOff>()) {
+            fans.insert(fans.begin(), std::move(*fan_));
           }
         }
 
@@ -137,11 +140,11 @@ namespace energyplus {
             idf_spm.setString(SetpointManager_MixedAirFields::Name, hxExhaustAirInletNodeName + " OS Default SPM");
             idf_spm.setString(SetpointManager_MixedAirFields::ControlVariable, "Temperature");
 
-            Node supplyOutletNode = _airLoop->supplyOutletNode();
-            idf_spm.setString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName, supplyOutletNode.name().get());
+            Node supplyOutletNode = airLoop_->supplyOutletNode();
+            idf_spm.setString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName, supplyOutletNode.nameString());
 
-            idf_spm.setString(SetpointManager_MixedAirFields::FanInletNodeName, inletNode->name().get());
-            idf_spm.setString(SetpointManager_MixedAirFields::FanOutletNodeName, outletNode->name().get());
+            idf_spm.setString(SetpointManager_MixedAirFields::FanInletNodeName, inletNode->nameString());
+            idf_spm.setString(SetpointManager_MixedAirFields::FanOutletNodeName, outletNode->nameString());
 
             idf_spm.setString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName, hxExhaustAirInletNodeName);
 
