@@ -8,6 +8,8 @@
 #include "Path.hpp"
 #include "Assert.hpp"
 
+#include <fmt/format.h>
+
 namespace openstudio {
 namespace filesystem {
   std::vector<char> read(openstudio::filesystem::ifstream& t_file) {
@@ -140,17 +142,15 @@ namespace filesystem {
     static std::atomic<unsigned int> count = 0;
     constexpr auto allowed_attempts = 1000;
 
-    const auto temp_dir = openstudio::filesystem::temp_directory_path();
+    const auto base_temp_dir = openstudio::filesystem::temp_directory_path();
+    // std::filesystem::unique_path doesn't exist, if moving to std::filesystem, use emoveBraces(createUUID)
+    auto upath = boost::filesystem::unique_path();
+    const auto temp_dir = base_temp_dir / fmt::format("{}-{}-{}-", basename.string(), upath.string(), std::time(nullptr));
 
-    int attempts{0};
-
-    while (attempts < allowed_attempts) {
+    while (count < allowed_attempts) {
       // concat number to path basename, without adding a new path element
-      auto filename = basename;
-      filename += openstudio::toPath("-" + std::to_string(std::time(nullptr)) + "-" + std::to_string(count++));
-      auto full_pathname = temp_dir / filename;
-      // full_path_name = {temp_path}/{base_name}-{count++}
-
+      auto full_pathname = temp_dir;
+      full_pathname += std::to_string(count++);
       try {
         if (openstudio::filesystem::create_directories(full_pathname)) {
           // if the path was created, then we know it was created for us
