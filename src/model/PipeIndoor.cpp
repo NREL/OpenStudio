@@ -63,14 +63,14 @@ namespace model {
 
     std::vector<ScheduleTypeKey> PipeIndoor_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
-      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin());
-      UnsignedVector::const_iterator e(fieldIndices.end());
+      const UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      const auto b = fieldIndices.cbegin();
+      const auto e = fieldIndices.cend();
       if (std::find(b, e, OS_Pipe_IndoorFields::AmbientTemperatureSchedule) != e) {
-        result.push_back(ScheduleTypeKey("PipeIndoor", "Ambient Temperature Schedule"));
+        result.emplace_back("PipeIndoor", "Ambient Temperature Schedule");
       }
       if (std::find(b, e, OS_Pipe_IndoorFields::AmbientAirVelocitySchedule) != e) {
-        result.push_back(ScheduleTypeKey("PipeIndoor", "Ambient Air Velocity Schedule"));
+        result.emplace_back("PipeIndoor", "Ambient Air Velocity Schedule");
       }
       return result;
     }

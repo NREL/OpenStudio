@@ -23,38 +23,33 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translatePipeIndoor(PipeIndoor& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::Pipe_Indoor);
 
-    m_idfObjects.push_back(idfObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Pipe_Indoor, modelObject);
 
-    if (auto value = modelObject.name()) {
-      idfObject.setName(value.get());
+    if (auto node_ = modelObject.inletModelObject()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::FluidInletNodeName, node_->nameString());
     }
 
-    if (auto node = modelObject.inletModelObject()) {
-      idfObject.setString(openstudio::Pipe_IndoorFields::FluidInletNodeName, node->name().get());
+    if (auto node_ = modelObject.outletModelObject()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::FluidOutletNodeName, node_->nameString());
     }
 
-    if (auto node = modelObject.outletModelObject()) {
-      idfObject.setString(openstudio::Pipe_IndoorFields::FluidOutletNodeName, node->name().get());
-    }
-
-    if (auto construction = modelObject.construction()) {
-      idfObject.setString(openstudio::Pipe_IndoorFields::ConstructionName, construction->name().get());
+    if (auto construction_ = modelObject.construction()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::ConstructionName, construction_->nameString());
     }
 
     idfObject.setString(openstudio::Pipe_IndoorFields::EnvironmentType, modelObject.environmentType());
 
-    if (auto zone = modelObject.ambientTemperatureZone()) {
-      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureZoneName, zone->name().get());
+    if (auto zone_ = modelObject.ambientTemperatureZone()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureZoneName, zone_->nameString());
     }
 
-    if (auto schedule = modelObject.ambientTemperatureSchedule()) {
-      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureScheduleName, schedule->name().get());
+    if (auto schedule_ = modelObject.ambientTemperatureSchedule()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureScheduleName, schedule_->nameString());
     }
 
-    if (auto schedule = modelObject.ambientAirVelocitySchedule()) {
-      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientAirVelocityScheduleName, schedule->name().get());
+    if (auto schedule_ = modelObject.ambientAirVelocitySchedule()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientAirVelocityScheduleName, schedule_->nameString());
     }
 
     idfObject.setDouble(openstudio::Pipe_IndoorFields::PipeInsideDiameter, modelObject.pipeInsideDiameter());
