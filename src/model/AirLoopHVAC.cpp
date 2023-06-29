@@ -239,9 +239,7 @@ namespace model {
       ModelObjectVector modelObjects;
       modelObjects = supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
       if (modelObjects.size() == 1) {
-        if (OptionalAirLoopHVACOutdoorAirSystem oaSystem = modelObjects.front().optionalCast<AirLoopHVACOutdoorAirSystem>()) {
-          result = oaSystem;
-        }
+        return modelObjects.front().optionalCast<AirLoopHVACOutdoorAirSystem>();
       }
 
       return result;
@@ -876,9 +874,9 @@ namespace model {
       return {demandComps.begin(), end};
     }
 
-    std::vector<ModelObject> AirLoopHVAC_Impl::oaComponents(openstudio::IddObjectType /*type*/) const {
+    std::vector<ModelObject> AirLoopHVAC_Impl::oaComponents(openstudio::IddObjectType type) const {
       if (airLoopHVACOutdoorAirSystem()) {
-        return airLoopHVACOutdoorAirSystem()->components();
+        return airLoopHVACOutdoorAirSystem()->components(type);
       } else {
         return {};
       }

@@ -67,20 +67,23 @@ namespace model {
 
       virtual bool addToNode(Node& node) override;
 
+      // Take a shortcut to avoid also checking each AirLoopHVAC's OutdoorAirSystem's component like HVACComponent logically does
+      virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
+
       virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent>& prev) override;
 
-      std::vector<ModelObject> oaComponents() const;
+      std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-      std::vector<ModelObject> reliefComponents() const;
+      std::vector<ModelObject> reliefComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
+
+      std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
       boost::optional<Node> outboardOANode() const;
       boost::optional<Node> outboardReliefNode() const;
 
-      boost::optional<AirLoopHVAC> airLoop() const;
-      std::vector<ModelObject> components() const;
-      boost::optional<ModelObject> component(openstudio::Handle handle);
-      boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
-      boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
+      boost::optional<ModelObject> component(openstudio::Handle handle) const;
+      boost::optional<ModelObject> oaComponent(openstudio::Handle handle) const;
+      boost::optional<ModelObject> reliefComponent(openstudio::Handle handle) const;
 
       AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
@@ -97,12 +100,9 @@ namespace model {
       REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");
 
       boost::optional<ModelObject> controllerOutdoorAirAsModelObject() const;
-      std::vector<ModelObject> oaComponentsAsModelObjects() const;
-      std::vector<ModelObject> reliefComponentsAsModelObjects() const;
       boost::optional<ModelObject> outboardOANodeAsModelObject() const;
       boost::optional<ModelObject> outboardReliefNodeAsModelObject() const;
       boost::optional<ModelObject> airLoopAsModelObject() const;
-      std::vector<ModelObject> componentsAsModelObjects() const;
 
       bool setControllerOutdoorAirAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
