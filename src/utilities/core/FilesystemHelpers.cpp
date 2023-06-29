@@ -1,36 +1,14 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "FilesystemHelpers.hpp"
 #include "Filesystem.hpp"
 #include "Path.hpp"
 #include "Assert.hpp"
+
+#include <fmt/format.h>
 
 namespace openstudio {
 namespace filesystem {
@@ -164,17 +142,15 @@ namespace filesystem {
     static std::atomic<unsigned int> count = 0;
     constexpr auto allowed_attempts = 1000;
 
-    const auto temp_dir = openstudio::filesystem::temp_directory_path();
+    const auto base_temp_dir = openstudio::filesystem::temp_directory_path();
+    // std::filesystem::unique_path doesn't exist, if moving to std::filesystem, use emoveBraces(createUUID)
+    auto upath = boost::filesystem::unique_path();
+    const auto temp_dir = base_temp_dir / fmt::format("{}-{}-{}-", basename.string(), upath.string(), std::time(nullptr));
 
-    int attempts{0};
-
-    while (attempts < allowed_attempts) {
+    while (count < allowed_attempts) {
       // concat number to path basename, without adding a new path element
-      auto filename = basename;
-      filename += openstudio::toPath("-" + std::to_string(std::time(nullptr)) + "-" + std::to_string(count++));
-      auto full_pathname = temp_dir / filename;
-      // full_path_name = {temp_path}/{base_name}-{count++}
-
+      auto full_pathname = temp_dir;
+      full_pathname += std::to_string(count++);
       try {
         if (openstudio::filesystem::create_directories(full_pathname)) {
           // if the path was created, then we know it was created for us

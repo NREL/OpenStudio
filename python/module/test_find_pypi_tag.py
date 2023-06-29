@@ -1,4 +1,7 @@
-# To run: `python -m unittest test_find_pypi_tag.py`
+########################################################################################################################
+#  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+#  See also https://openstudio.net/license
+########################################################################################################################
 
 import unittest
 import sys

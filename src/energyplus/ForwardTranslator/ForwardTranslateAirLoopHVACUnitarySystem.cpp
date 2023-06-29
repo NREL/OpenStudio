@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
@@ -45,6 +21,8 @@
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeedSpeedData.hpp"
+#include "../../model/CoilCoolingDXVariableSpeedSpeedData_Impl.hpp"
 #include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
 #include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
 #include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
@@ -67,14 +45,16 @@
 #include "../../model/CoilHeatingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
-#include "../../model/CoilCoolingDXMultiSpeed.hpp"
-#include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStage.hpp"
 #include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
 #include "../../model/CoilCoolingDX.hpp"
 #include "../../model/CoilCoolingDX_Impl.hpp"
+#include "../../model/CoilCoolingDXMultiSpeed.hpp"
+#include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/UnitarySystemPerformanceMultispeed.hpp"
 #include "../../model/UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
@@ -478,13 +458,12 @@ namespace energyplus {
       // If it doesn't have one hard set, we check if there's at least one coil that should have speeds
     } else if ((coolingCoil
                 && ((coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())
-                    || (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())
+                    || (coolingCoil->iddObjectType() == model::CoilCoolingDXVariableSpeed::iddObjectType())
                     || (coolingCoil->iddObjectType() == model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::iddObjectType())))
                || (heatingCoil
                    && ((heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType())
                        || (heatingCoil->iddObjectType() == model::CoilHeatingDXVariableSpeed::iddObjectType())
                        || (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())
-                       || (heatingCoil->iddObjectType() == model::CoilHeatingDXVariableSpeed::iddObjectType())
                        || (heatingCoil->iddObjectType() == model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::iddObjectType())))) {
 
       // If not user specified, then generate the UnitarySystemPerformance:Multispeed used for multi speed coils
@@ -498,6 +477,7 @@ namespace energyplus {
       boost::optional<model::CoilHeatingGasMultiStage> multistageGasHeating;
       boost::optional<model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit> varSpeedWaterToAirHeating;
       boost::optional<model::CoilCoolingDXMultiSpeed> multispeedDXCooling;
+      boost::optional<model::CoilCoolingDXVariableSpeed> varSpeedDXCooling;
       boost::optional<model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit> varSpeedWaterToAirCooling;
 
       int maxStages = 0;
@@ -511,6 +491,7 @@ namespace energyplus {
 
       if (coolingCoil) {
         multispeedDXCooling = coolingCoil->optionalCast<model::CoilCoolingDXMultiSpeed>();
+        varSpeedDXCooling = coolingCoil->optionalCast<model::CoilCoolingDXVariableSpeed>();
         varSpeedWaterToAirCooling = coolingCoil->optionalCast<model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
       }
 
@@ -520,6 +501,7 @@ namespace energyplus {
       std::vector<model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> waterToAirHeatingStages;
 
       std::vector<model::CoilCoolingDXMultiSpeedStageData> coolingStages;
+      std::vector<model::CoilCoolingDXVariableSpeedSpeedData> varCoolingStages;
       std::vector<model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> waterToAirCoolingStages;
 
       if (multispeedDXHeating) {
@@ -544,11 +526,12 @@ namespace energyplus {
 
       if (multispeedDXCooling) {
         coolingStages = multispeedDXCooling->stages();
-        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingStages.size());
-        int stages = coolingStages.size();
-        if (stages > maxStages) {
-          maxStages = stages;
-        }
+        maxStages = coolingStages.size();
+        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, maxStages);
+      } else if (varSpeedDXCooling) {
+        varCoolingStages = varSpeedDXCooling->speeds();
+        maxStages = varCoolingStages.size();
+        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, maxStages);
       } else if (varSpeedWaterToAirCooling) {
         waterToAirCoolingStages = varSpeedWaterToAirCooling->speeds();
         maxStages = waterToAirCoolingStages.size();
@@ -582,12 +565,28 @@ namespace energyplus {
           } else {
             extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, "Autosize");
           }
+        } else if (static_cast<unsigned>(i) < varHeatingStages.size()) {
+          auto varHeatingStage = varHeatingStages[i];
+          double stageFlow = varHeatingStage.referenceUnitRatedAirFlowRate();
+          if (heatingFlow) {
+            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, stageFlow / heatingFlow.get());
+          } else {
+            extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, "Autosize");
+          }
         } else if (static_cast<unsigned>(i) < gasHeatingStages.size()) {
           auto gasHeatingStage = gasHeatingStages[i];
           auto stageCap = gasHeatingStage.nominalCapacity();
           if (stageCap) {
             extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio,
                                  stageCap.get() / totalGasHeatingCap);
+          } else {
+            extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, "Autosize");
+          }
+        } else if (static_cast<unsigned>(i) < waterToAirHeatingStages.size()) {
+          auto waterToAirHeatingStage = waterToAirHeatingStages[i];
+          double stageFlow = waterToAirHeatingStage.referenceUnitRatedAirFlow();
+          if (heatingFlow) {
+            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, stageFlow / heatingFlow.get());
           } else {
             extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, "Autosize");
           }
@@ -601,6 +600,22 @@ namespace energyplus {
           if (stageFlow && coolingFlow) {
             extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio,
                                  stageFlow.get() / coolingFlow.get());
+          } else {
+            extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, "Autosize");
+          }
+        } else if (static_cast<unsigned>(i) < varCoolingStages.size()) {
+          auto varCoolingStage = varCoolingStages[i];
+          double stageFlow = varCoolingStage.referenceUnitRatedAirFlowRate();
+          if (coolingFlow) {
+            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, stageFlow / coolingFlow.get());
+          } else {
+            extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, "Autosize");
+          }
+        } else if (static_cast<unsigned>(i) < waterToAirCoolingStages.size()) {
+          auto waterToAirCoolingStage = waterToAirCoolingStages[i];
+          double stageFlow = waterToAirCoolingStage.referenceUnitRatedAirFlowRate();
+          if (coolingFlow) {
+            extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, stageFlow / coolingFlow.get());
           } else {
             extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, "Autosize");
           }

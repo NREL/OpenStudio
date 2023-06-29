@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #ifndef MODEL_SPACE_HPP
@@ -103,7 +79,8 @@ namespace model {
     static IddObjectType iddObjectType();
 
     /// Create a space from a floor print and extrude distance.
-    static boost::optional<Space> fromFloorPrint(const std::vector<Point3d>& floorPrint, double floorHeight, Model& model);
+    static boost::optional<Space> fromFloorPrint(const std::vector<Point3d>& floorPrint, double floorHeight, Model& model,
+                                                 const std::string& spaceName = "");
 
     /** @name Getters */
     //@{
@@ -639,6 +616,30 @@ namespace model {
 
     /** Returns all ZoneMixing objects which exhaust air from this space */
     std::vector<ZoneMixing> exhaustZoneMixing() const;
+
+    // Find all surfaces where the outwardNormal does not point towards the outside of the Space
+    std::vector<Surface> findSurfacesWithIncorrectOrientation() const;
+
+    // Checks the outwardNormal of every surface points towards the outside of the Space
+    bool areAllSurfacesCorrectlyOriented() const;
+
+    // Returns true if the orientation of any surface has been changed
+    bool fixSurfacesWithIncorrectOrientation();
+
+    /** This method will check the floorPrint of the space, if that can't be computed, it's not convex. If it can, it checks whether that resulting
+        * Surface3d is convex. Note: having a floorPrint that's convex isn't sufficied to deem a space to be convex, the walls could still be non
+        * convex, but it should suit most typical applications */
+    bool isConvex() const;
+
+    /** Checks if every Surface is convex, returns the Concave ones.
+        * Note: having a non convex surface does not necesarilly mean that the Space is not convex
+        * eg: a box with a wall that is split into two L s would return false, while the Space is actually still convex. */
+    std::vector<Surface> findNonConvexSurfaces() const;
+
+    /// @cond
+    void cacheGeometryDiagnostics();
+    void resetCachedGeometryDiagnostics();
+    /// @endcond
 
     //@}
    protected:

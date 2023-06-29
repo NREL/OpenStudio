@@ -1,3 +1,8 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
+***********************************************************************************************************************/
+
 #ifndef dynamiclibrary_posix_hpp_INCLUDED
 #define dynamiclibrary_posix_hpp_INCLUDED
 

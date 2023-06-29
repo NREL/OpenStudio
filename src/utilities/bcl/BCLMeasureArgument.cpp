@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "BCLMeasureArgument.hpp"
@@ -36,17 +12,28 @@
 namespace openstudio {
 
 BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node& element) {
+
   // TODO: escape name
   // cppcheck-suppress useInitializationList
   m_name = element.child("name").text().as_string();
 
   m_displayName = element.child("display_name").text().as_string();
 
-  m_description = element.child("description").text().as_string();
+  auto getOptionaString = [&element](const char* name) -> boost::optional<std::string> {
+    if (auto subelement = element.child(name)) {
+      const std::string text = subelement.text().as_string();
+      if (!text.empty()) {
+        return {text};
+      }
+    }
+    return boost::none;
+  };
+
+  m_description = getOptionaString("description");
 
   m_type = element.child("type").text().as_string();
 
-  m_units = element.child("units").text().as_string();
+  m_units = getOptionaString("units");
 
   m_required = false;
   std::string test = element.child("required").text().as_string();
@@ -60,12 +47,11 @@ BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node& element) {
     m_modelDependent = true;
   }
 
-  m_defaultValue = element.child("default_value").text().as_string();
+  m_defaultValue = getOptionaString("default_value");
 
-  auto subelement = element.child("choices");
-  if (subelement) {
+  if (auto subelement = element.child("choices")) {
     for (auto& choiceElement : subelement.children("choice")) {
-      std::string choiceValue = choiceElement.child("value").text().as_string();
+      const std::string choiceValue = choiceElement.child("value").text().as_string();
       if (!choiceValue.empty()) {  // Not exactly the same test as before, probably needs a better test and/or error reporting
         m_choiceValues.push_back(choiceValue);
         auto display_name = choiceElement.child("display_name");
@@ -73,15 +59,14 @@ BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node& element) {
           // DLM: this is technically an invalid file, attempt to fix it here
           m_choiceDisplayNames.push_back(choiceValue);
         } else {
-          m_choiceDisplayNames.push_back(display_name.text().as_string());
+          m_choiceDisplayNames.emplace_back(display_name.text().as_string());
         }
       }
     }
   }
 
-  m_minValue = element.child("min_value").text().as_string();
-
-  m_maxValue = element.child("max_value").text().as_string();
+  m_minValue = getOptionaString("min_value");
+  m_maxValue = getOptionaString("max_value");
 }
 
 BCLMeasureArgument::BCLMeasureArgument(const std::string& name, const std::string& displayName, const boost::optional<std::string>& description,
@@ -168,7 +153,7 @@ void BCLMeasureArgument::writeValues(pugi::xml_node& element) const {
   if (m_description) {
     subElement = element.append_child("description");
     text = subElement.text();
-    text.set((*m_description).c_str());
+    text.set(m_description->c_str());
   }
 
   subElement = element.append_child("type");
@@ -178,7 +163,7 @@ void BCLMeasureArgument::writeValues(pugi::xml_node& element) const {
   if (m_units) {
     subElement = element.append_child("units");
     text = subElement.text();
-    text.set((*m_units).c_str());
+    text.set(m_units->c_str());
   }
 
   subElement = element.append_child("required");
@@ -192,10 +177,10 @@ void BCLMeasureArgument::writeValues(pugi::xml_node& element) const {
   if (m_defaultValue) {
     subElement = element.append_child("default_value");
     text = subElement.text();
-    text.set((*m_defaultValue).c_str());
+    text.set(m_defaultValue->c_str());
   }
 
-  unsigned n = m_choiceValues.size();
+  const unsigned n = m_choiceValues.size();
   OS_ASSERT(n == m_choiceDisplayNames.size());
   if (n > 0) {
     auto choicesElement = element.append_child("choices");
@@ -215,13 +200,13 @@ void BCLMeasureArgument::writeValues(pugi::xml_node& element) const {
   if (m_minValue) {
     subElement = element.append_child("min_value");
     text = subElement.text();
-    text.set((*m_minValue).c_str());
+    text.set(m_minValue->c_str());
   }
 
   if (m_maxValue) {
     subElement = element.append_child("max_value");
     text = subElement.text();
-    text.set((*m_maxValue).c_str());
+    text.set(m_maxValue->c_str());
   }
 }
 
