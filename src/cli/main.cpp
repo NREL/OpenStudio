@@ -100,18 +100,37 @@ int main(int argc, char* argv[]) {
 
     auto* const experimentalApp = app.add_subcommand("labs");
 
-    experimentalApp->add_flag_function(
+    auto* const verboseOpt = experimentalApp->add_flag_function(
       "--verbose",
       [](auto count) {
         if (count == 1) {
-          fmt::print("Setting log Level to Debug\n");
+          fmt::print("Setting Log Level to Debug ({})\n", LogLevel::Debug);
           openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Debug);
         } else if (count == 2) {
-          fmt::print("Setting log Level to Trace\n");
+          fmt::print("Setting Log Level to Trace ({})\n", LogLevel::Trace);
           openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Trace);
         }
       },
-      "Print the full log to STDOUT");
+      "Print the full log to STDOUT - sets verbosity to Debug if given once and Trace if given twice.");
+
+    // specify string->value mappings
+    const std::map<std::string, LogLevel> logLevelMap{
+      {"Trace", LogLevel::Trace}, {"Debug", LogLevel::Debug}, {"Info", LogLevel::Info},
+      {"Warn", LogLevel::Warn},   {"Error", LogLevel::Error}, {"Fatal", LogLevel::Fatal},
+    };
+    static constexpr std::array<std::string_view, 6> logLevelStrs = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
+
+    experimentalApp
+      ->add_option_function<LogLevel>(
+        "-l,--loglevel",
+        [](const LogLevel& level) {
+          fmt::print("Setting Log Level to {} ({})\n", logLevelStrs[static_cast<size_t>(level) - static_cast<size_t>(LogLevel::Trace)], level);
+          openstudio::Logger::instance().standardOutLogger().setLogLevel(level);
+        },
+        "LogLevel settings: One of {Trace, Debug, Info, Warn, Error, Fatal} [Default: Warn] Excludes: --verbose")
+      ->excludes(verboseOpt)
+      ->option_text("LEVEL")
+      ->transform(CLI::CheckedTransformer(logLevelMap, CLI::ignore_case));
 
     std::vector<std::string> executeRubyCmds;
     CLI::Option* execRubyOption = experimentalApp
