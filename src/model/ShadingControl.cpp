@@ -215,41 +215,29 @@ namespace model {
     }
 
     bool ShadingControl_Impl::setShadingControlType(const std::string& shadingControlType) {
-      std::string oldControlType = this->shadingControlType();
-      bool result = setString(OS_ShadingControlFields::ShadingControlType, shadingControlType);
+      const bool result = setString(OS_ShadingControlFields::ShadingControlType, shadingControlType);
       if (result) {
         if (!ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType)) {
-          // Not calling reset to avoid double check on whether it's required
-          // resetSetpoint();
-          LOG(Info,
-              briefDescription() << " Shading Control Type was changed to '" << shadingControlType << " which does not require a Setpoint, reseting");
-          bool test = setString(OS_ShadingControlFields::Setpoint, "");
+          // Not calling resetSetpoint to avoid double check on whether it's required
+          LOG(Info, briefDescription() << " Shading Control Type was changed to '" << shadingControlType
+                                       << " which does not require a Setpoint, resetting it.");
+          const bool test = setString(OS_ShadingControlFields::Setpoint, "");
           OS_ASSERT(test);
         }
         if (!ShadingControl_Impl::isControlTypeValueNeedingSetpoint2(shadingControlType)) {
-          // Not calling reset to avoid double check on whether it's required
-          // resetSetpoint2();
+          // Not calling resetSetpoint2 to avoid double check on whether it's required
           LOG(Info, briefDescription() << " Shading Control Type was changed to '" << shadingControlType
-                                       << " which does not require a Setpoint2, reseting");
-          bool test = setString(OS_ShadingControlFields::Setpoint2, "");
+                                       << " which does not require a Setpoint2, resetting it.");
+          const bool test = setString(OS_ShadingControlFields::Setpoint2, "");
           OS_ASSERT(test);
         }
         if (!ShadingControl_Impl::isControlTypeValueAllowingSchedule(shadingControlType)) {
-          LOG(Info,
-              briefDescription() << " Shading Control Type was changed to '" << shadingControlType << " which does not allow a Schedule, reseting");
+          LOG(Info, briefDescription() << " Shading Control Type was changed to '" << shadingControlType
+                                       << " which does not allow a Schedule, resetting it.");
           bool test = setString(OS_ShadingControlFields::ScheduleName, "");
           OS_ASSERT(test);
           test = setString(OS_ShadingControlFields::ShadingControlIsScheduled, "No");
           OS_ASSERT(test);
-        }
-
-        // TODO: do we want to force remove this stuff like it did resetSetpoint before? Units/quantity might be oranges and apples when switching
-        // types, but they could be compatible, and it may be very confusing at least for interface users that are playing with a dropdown to see
-        // schedulesand setpoints disapear
-        if (!openstudio::istringEqual(oldControlType, shadingControlType)) {
-          resetSetpoint();  // For backward compatibility
-          // resetSetpoint2();
-          // resetSchedule();
         }
       }
       return result;
@@ -382,7 +370,7 @@ namespace model {
 
     void ShadingControl_Impl::resetSetpoint2() {
       std::string shadingControlType = this->shadingControlType();
-      if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType)) {
+      if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint2(shadingControlType)) {
         LOG(Warn,
             briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does require a Setpoint2, not resetting it");
       } else {
