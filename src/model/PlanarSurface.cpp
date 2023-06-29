@@ -28,6 +28,7 @@
 
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Polyhedron.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -463,6 +464,14 @@ namespace model {
       return m_cachedPlane.get();
     }
 
+    Surface3d PlanarSurface_Impl::surface3d() const {
+      return {this->vertices(), this->nameString(), 0};
+    }
+
+    bool PlanarSurface_Impl::isConvex() const {
+      return surface3d().isConvex();
+    }
+
     std::vector<std::vector<Point3d>> PlanarSurface_Impl::triangulation() const {
       if (m_cachedTriangulation.empty()) {
         Transformation faceTransformation = Transformation::alignFace(this->vertices());
@@ -697,6 +706,10 @@ namespace model {
 
   Plane PlanarSurface::plane() const {
     return getImpl<detail::PlanarSurface_Impl>()->plane();
+  }
+
+  bool PlanarSurface::isConvex() const {
+    return getImpl<detail::PlanarSurface_Impl>()->isConvex();
   }
 
   std::vector<std::vector<Point3d>> PlanarSurface::triangulation() const {

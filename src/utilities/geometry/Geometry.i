@@ -25,6 +25,7 @@
   #include <utilities/geometry/FloorplanJS.hpp>
   #include <utilities/geometry/RoofGeometry.hpp>
   #include <utilities/geometry/Polyhedron.hpp>
+  #include <utilities/geometry/StandardShapes.hpp>
 
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
@@ -55,7 +56,6 @@
 %template(OptionalFloorplanJS) boost::optional<openstudio::FloorplanJS>;
 %template(OptionalFloorplanObject) boost::optional<openstudio::FloorplanObject>;
 %template(OptionalPolygon3d) boost::optional<openstudio::Polygon3d>;
-%template(OptionalPolyhedron) boost::optional<openstudio::Polyhedron>;
 
 // create an instantiation of the vector classes
 // Note JM 2019-04-16: No need to ignore std::vector<T>::vector/resize when you have a default constructor
@@ -66,8 +66,7 @@
 %template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
 %template(Vector3dVector) std::vector<openstudio::Vector3d>;
 %template(Polygon3dVector) std::vector<openstudio::Polygon3d>;
-%template(PolyhedronVector) std::vector<openstudio::Polyhedron>;
-%template(Surface3dVector) std::vector<openstudio::Surface3d>;
+
 
 %ignore std::vector<openstudio::Plane>::vector(size_type);
 %ignore std::vector<openstudio::Plane>::resize(size_type);
@@ -96,9 +95,18 @@
 %ignore std::vector<openstudio::FloorplanObject>::resize(size_type);
 %template(FloorplanObjectVector) std::vector<openstudio::FloorplanObject>;
 
+%template(OptionalSurface3dEdge) boost::optional<openstudio::Surface3dEdge>;
 %ignore std::vector<openstudio::Surface3dEdge>::vector(size_type);
 %ignore std::vector<openstudio::Surface3dEdge>::resize(size_type);
 %template(Surface3dEdgeVector) std::vector<openstudio::Surface3dEdge>;
+
+%ignore std::vector<openstudio::Surface3d>::vector(size_type);
+%ignore std::vector<openstudio::Surface3d>::resize(size_type);
+%template(Surface3dVector) std::vector<openstudio::Surface3d>;
+
+%ignore std::vector<openstudio::Polyhedron>::vector(size_type);
+%ignore std::vector<openstudio::Polyhedron>::resize(size_type);
+%template(PolyhedronVector) std::vector<openstudio::Polyhedron>;
 
 %template(SizeTVector) std::vector<size_t>;
 %template(StringStringMap) std::map<std::string, std::string>;
@@ -119,6 +127,7 @@
 %include <utilities/geometry/FloorplanJS.hpp>
 %include <utilities/geometry/RoofGeometry.hpp>
 %include <utilities/geometry/Polyhedron.hpp>
+%include <utilities/geometry/StandardShapes.hpp>
 
 %extend openstudio::Vector3d{
   std::string __str__() const {

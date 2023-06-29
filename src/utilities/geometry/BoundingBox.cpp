@@ -9,8 +9,6 @@
 
 namespace openstudio {
 
-BoundingBox::BoundingBox() = default;
-
 void BoundingBox::add(const BoundingBox& other) {
   this->addPoints(other.corners());
 }

@@ -8,6 +8,7 @@
 
 #include "ModelAPI.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
+#include "Surface.hpp"
 
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
@@ -484,6 +485,31 @@ namespace model {
       Polyhedron polyhedron() const;
       bool isEnclosedVolume() const;
 
+      // Find all surfaces where the outwardNormal does not point towards the outside of the Space
+      std::vector<Surface> findSurfacesWithIncorrectOrientation() const;
+
+      std::vector<Surface> findSurfacesWithIncorrectOrientationRaycasting() const;
+      std::vector<Surface> findSurfacesWithIncorrectOrientationPolyhedron(const Polyhedron& volumePoly) const;
+
+      // Checks the outwardNormal of every surface points towards the outside of the Space
+      bool areAllSurfacesCorrectlyOriented() const;
+
+      // Returns true if the orientation of any surface has been changed
+      bool fixSurfacesWithIncorrectOrientation();
+
+      /** This method will check the floorPrint of the space, if that can't be computed, it's not convex. If it can, it checks whether that resulting
+        * Surface3d is convex. Note: having a floorPrint that's convex isn't sufficied to deem a space to be convex, the walls could still be non
+        * convex, but it should suit most typical applications */
+      bool isConvex() const;
+
+      /** Checks if every Surface is convex, returns the Concave ones.
+        * Note: having a non convex surface does not necesarilly mean that the Space is not convex
+        * eg: a box with a wall that is split into two L s would return false, while the Space is actually still convex. */
+      std::vector<Surface> findNonConvexSurfaces() const;
+
+      void cacheGeometryDiagnostics();
+      void resetCachedGeometryDiagnostics();
+
       std::vector<ZoneMixing> zoneMixing() const;
       std::vector<ZoneMixing> supplyZoneMixing() const;
       std::vector<ZoneMixing> exhaustZoneMixing() const;
@@ -530,6 +556,10 @@ namespace model {
 
       // helper function to get a boost polygon point from a Point3d
       boost::tuple<double, double> point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const;
+
+      mutable boost::optional<std::vector<Surface>> m_cachedNonConvexSurfaces;
+      mutable boost::optional<bool> m_cachedIsConvex;
+      mutable boost::optional<bool> m_cachedIsEnclosed;
     };
 
   }  // namespace detail

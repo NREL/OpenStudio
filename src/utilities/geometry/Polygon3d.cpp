@@ -11,8 +11,6 @@
 
 namespace openstudio {
 
-Polygon3d::Polygon3d() = default;
-
 Polygon3d::Polygon3d(const Point3dVector& outerPath) {
   for (const auto& p : outerPath) {
     m_outerPath.emplace_back(p);

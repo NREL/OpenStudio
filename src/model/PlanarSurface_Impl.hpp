@@ -16,6 +16,8 @@
 
 namespace openstudio {
 
+class Surface3d;
+
 namespace model {
 
   class PlanarSurfaceGroup;
@@ -129,6 +131,10 @@ namespace model {
       bool reverseEqualVertices(const PlanarSurface& other) const;
 
       Plane plane() const;
+
+      Surface3d surface3d() const;
+
+      bool isConvex() const;
 
       std::vector<std::vector<Point3d>> triangulation() const;
 

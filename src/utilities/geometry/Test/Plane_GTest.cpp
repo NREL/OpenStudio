@@ -701,3 +701,227 @@ TEST_F(GeometryFixture, Plane_ProblemSurface2) {
     EXPECT_TRUE(plane2->equal(*plane));
   }
 }
+
+TEST_F(GeometryFixture, Plane_RayIntersection) {
+
+  // This is a 30x10x0.3 base, with a rectangle triangle on top of 30x10x10
+  //                       ▲ z
+  //                       │
+  //                      x├─ 10.3
+  //                    x  │
+  //                  x    │
+  //                x      │
+  //              x        │
+  //            x          │
+  //          x            │
+  //        x              ├─ 0.3
+  //        │              │
+  //   ◄────┼──────────────┼─
+  //  y    10.0            0.0
+
+  // Putting extra vertices here on purpose to show that the Space::volume was miscalculating due to averaging foor and ceiling heights
+  std::vector<Point3d> roof{
+    {+30.0, +0.0, +10.3},  //
+    {+30.0, +10.0, +0.3},  //
+    {+0.0, +10.0, +0.3},   //
+    {+0.0, +0.0, +10.3},   //
+    {+10.0, +0.0, +10.3},  //
+    {+20.0, +0.0, +10.3},
+  };
+
+  std::vector<Point3d> east{
+    {+30.0, +0.0, +10.3},
+    {+30.0, +0.0, +0.0},
+    {+30.0, +10.0, +0.0},
+    {+30.0, +10.0, +0.3},
+  };
+
+  std::vector<Point3d> north{
+    {+30.0, +10.0, +0.3},
+    {+30.0, +10.0, +0.0},
+    {+0.0, +10.0, +0.0},
+    {+0.0, +10.0, +0.3},
+  };
+
+  std::vector<Point3d> west{
+    {+0.0, +10.0, +0.3},
+    {+0.0, +10.0, +0.0},
+    {+0.0, +0.0, +0.0},
+    {+0.0, +0.0, +10.3},
+  };
+
+  std::vector<Point3d> south1{
+    {+0.0, +0.0, +10.3},
+    {+0.0, +0.0, +0.0},
+    {+15.0, +0.0, +0.0},
+    {+15.0, +0.0, +10.3},
+  };
+
+  std::vector<Point3d> south2{
+    {+15.0, +0.0, +10.3},
+    {+15.0, +0.0, +0.0},
+    {+30.0, +0.0, +0.0},
+    {+30.0, +0.0, +10.3},
+  };
+
+  // Clockwise because normal is pointing down
+  std::vector<Point3d> floor{
+    {+0.0, +0.0, +0.0},
+    {+0.0, +10.0, +0.0},
+    {+30.0, +10.0, +0.0},
+    {+30.0, +0.0, +0.0},
+  };
+
+  Plane floorPlane(floor);
+  EXPECT_DOUBLE_EQ(0.0, floorPlane.a());
+  EXPECT_DOUBLE_EQ(0.0, floorPlane.b());
+  EXPECT_DOUBLE_EQ(-1.0, floorPlane.c());
+  EXPECT_DOUBLE_EQ(0.0, floorPlane.d());
+
+  Plane roofPlane(roof);
+  Vector3d roofNormal(0, 1, 1);
+  ASSERT_TRUE(roofNormal.normalize());
+  EXPECT_DOUBLE_EQ(0.0, roofPlane.a());
+  EXPECT_DOUBLE_EQ(roofNormal.y(), roofPlane.b());
+  EXPECT_DOUBLE_EQ(roofNormal.z(), roofPlane.c());
+  EXPECT_DOUBLE_EQ(-roofNormal.y() * 10.3, roofPlane.d());
+  EXPECT_DOUBLE_EQ(-7.2831998462214402, roofPlane.d());
+
+  Plane south1Plane(south1);
+  EXPECT_DOUBLE_EQ(0.0, south1Plane.a());
+  EXPECT_DOUBLE_EQ(-1.0, south1Plane.b());
+  EXPECT_DOUBLE_EQ(0.0, south1Plane.c());
+  EXPECT_DOUBLE_EQ(0.0, south1Plane.d());
+
+  Plane south2Plane(south2);
+  EXPECT_DOUBLE_EQ(0.0, south2Plane.a());
+  EXPECT_DOUBLE_EQ(-1.0, south2Plane.b());
+  EXPECT_DOUBLE_EQ(0.0, south2Plane.c());
+  EXPECT_DOUBLE_EQ(0.0, south2Plane.d());
+
+  Plane northPlane(north);
+  EXPECT_DOUBLE_EQ(0.0, northPlane.a());
+  EXPECT_DOUBLE_EQ(1.0, northPlane.b());
+  EXPECT_DOUBLE_EQ(0.0, northPlane.c());
+  EXPECT_DOUBLE_EQ(-10.0, northPlane.d());
+
+  Plane westPlane(west);
+  EXPECT_DOUBLE_EQ(-1.0, westPlane.a());
+  EXPECT_DOUBLE_EQ(0.0, westPlane.b());
+  EXPECT_DOUBLE_EQ(0.0, westPlane.c());
+  EXPECT_DOUBLE_EQ(0.0, westPlane.d());
+
+  Plane eastPlane(east);
+  EXPECT_DOUBLE_EQ(1.0, eastPlane.a());
+  EXPECT_DOUBLE_EQ(0.0, eastPlane.b());
+  EXPECT_DOUBLE_EQ(0.0, eastPlane.c());
+  EXPECT_DOUBLE_EQ(-30.0, eastPlane.d());
+
+  for (const auto& plane : {floorPlane, roofPlane, south1Plane, south2Plane, northPlane, westPlane, eastPlane}) {
+    const Point3d p = plane.anyPointOnPlane();
+    EXPECT_TRUE(plane.pointOnPlane(p));
+  }
+
+  // Floor shoots to Roof (only)
+  {
+    Point3d r0(5.0, 5.0, 0.0);
+    EXPECT_TRUE(floorPlane.pointOnPlane(r0));
+    Vector3d rD = floorPlane.outwardNormal().reverseVector();
+    EXPECT_TRUE(vectorEqual(Vector3d(0.0, 0.0, 1.0), rD));
+
+    EXPECT_FALSE(south1Plane.rayIntersection(r0, rD));
+    EXPECT_FALSE(south2Plane.rayIntersection(r0, rD));
+    EXPECT_FALSE(northPlane.rayIntersection(r0, rD));
+    EXPECT_FALSE(eastPlane.rayIntersection(r0, rD));
+    EXPECT_FALSE(westPlane.rayIntersection(r0, rD));
+
+    {
+      boost::optional<Point3d> intersection_ = roofPlane.rayIntersection(r0, rD);
+      ASSERT_TRUE(intersection_);
+      EXPECT_TRUE(pointEqual({5.0, 5.0, 5.3}, intersection_.get()));
+      EXPECT_TRUE(roofPlane.pointOnPlane(intersection_.get()));
+    }
+
+    // Reverse shoots nowhere
+    EXPECT_FALSE(south1Plane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(south2Plane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(northPlane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(westPlane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(eastPlane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(roofPlane.rayIntersection(r0, rD.reverseVector()));
+  }
+
+  // Roof shoots to floor and the south walls
+  // it shouldn't shoot to the north wall because even though they aren't orthogonal, we should expect (t < 0)
+  {
+    Point3d r0(5.0, 5.0, 5.3);
+    EXPECT_TRUE(roofPlane.pointOnPlane(r0));
+    Vector3d rD = roofPlane.outwardNormal().reverseVector();
+    EXPECT_TRUE(vectorEqual(Vector3d(0.0, -0.707107, -0.707107), rD));
+
+    EXPECT_FALSE(northPlane.rayIntersection(r0, rD));
+    EXPECT_FALSE(eastPlane.rayIntersection(r0, rD));
+    EXPECT_FALSE(westPlane.rayIntersection(r0, rD));
+
+    {
+      boost::optional<Point3d> intersection_ = floorPlane.rayIntersection(r0, rD);
+      ASSERT_TRUE(intersection_);
+      EXPECT_TRUE(pointEqual({5.0, -0.3, 0.0}, intersection_.get()));
+      EXPECT_TRUE(floorPlane.pointOnPlane(intersection_.get()));
+    }
+
+    {
+      boost::optional<Point3d> intersection_ = south1Plane.rayIntersection(r0, rD);
+      ASSERT_TRUE(intersection_);
+      EXPECT_TRUE(pointEqual({5.0, 0.0, 0.3}, intersection_.get())) << intersection_.get();
+      EXPECT_TRUE(south1Plane.pointOnPlane(intersection_.get()));
+    }
+    {
+      boost::optional<Point3d> intersection_ = south2Plane.rayIntersection(r0, rD);
+      ASSERT_TRUE(intersection_);
+      EXPECT_TRUE(pointEqual({5.0, 0.0, 0.3}, intersection_.get())) << intersection_.get();
+      EXPECT_TRUE(south2Plane.pointOnPlane(intersection_.get()));
+    }
+
+    // Reverse shoots to the north plane...
+    EXPECT_FALSE(south1Plane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(south2Plane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(westPlane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(eastPlane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(floorPlane.rayIntersection(r0, rD.reverseVector()));
+
+    {
+      boost::optional<Point3d> intersection_ = northPlane.rayIntersection(r0, rD.reverseVector());
+      ASSERT_TRUE(intersection_);
+      EXPECT_TRUE(pointEqual({5.0, 10.0, 10.3}, intersection_.get())) << intersection_.get();
+      EXPECT_TRUE(northPlane.pointOnPlane(intersection_.get()));
+    }
+  }
+
+  // East wall shoots to West wall (only)
+  {
+    Point3d r0(30.0, 5.0, 5.0);
+    EXPECT_TRUE(eastPlane.pointOnPlane(r0));
+    Vector3d rD = eastPlane.outwardNormal().reverseVector();
+    EXPECT_FALSE(south1Plane.rayIntersection(r0, rD));
+    EXPECT_FALSE(south2Plane.rayIntersection(r0, rD));
+    EXPECT_FALSE(northPlane.rayIntersection(r0, rD));
+    EXPECT_FALSE(floorPlane.rayIntersection(r0, rD));
+    EXPECT_FALSE(roofPlane.rayIntersection(r0, rD));
+
+    {
+      boost::optional<Point3d> intersection_ = westPlane.rayIntersection(r0, rD);
+      ASSERT_TRUE(intersection_);
+      EXPECT_TRUE(pointEqual({0.0, 5.0, 5.0}, intersection_.get()));
+      EXPECT_TRUE(westPlane.pointOnPlane(intersection_.get()));
+    }
+
+    // Reverse shoots nowhere
+    EXPECT_FALSE(south1Plane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(south2Plane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(northPlane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(westPlane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(floorPlane.rayIntersection(r0, rD.reverseVector()));
+    EXPECT_FALSE(roofPlane.rayIntersection(r0, rD.reverseVector()));
+  }
+}

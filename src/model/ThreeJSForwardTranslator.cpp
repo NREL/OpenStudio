@@ -169,7 +169,7 @@ namespace model {
     return result;
   }
 
-  void updateUserData(ThreeUserData& userData, const PlanarSurface& planarSurface) {
+  void updateUserData(ThreeUserData& userData, const PlanarSurface& planarSurface, bool includeGeometryDiagnostics) {
     std::string name = planarSurface.nameString();
     boost::optional<Surface> surface = planarSurface.optionalCast<Surface>();
     boost::optional<ShadingSurface> shadingSurface = planarSurface.optionalCast<ShadingSurface>();
@@ -182,6 +182,11 @@ namespace model {
     userData.setHandle(toThreeUUID(toString(planarSurface.handle())));
     userData.setName(name);
     userData.setCoincidentWithOutsideObject(false);
+
+    if (includeGeometryDiagnostics) {
+      userData.setIncludeGeometryDiagnostics(true);
+      userData.setConvex(planarSurface.isConvex());
+    }
 
     if (surface) {
       std::string surfaceType = surface->surfaceType();
@@ -199,6 +204,15 @@ namespace model {
 
       // set boundary conditions before calling getBoundaryMaterialName
       userData.setBoundaryMaterialName(getBoundaryMaterialName(userData));
+
+      if (includeGeometryDiagnostics && space) {
+        auto sfs = space->findSurfacesWithIncorrectOrientation();
+        if (std::find(sfs.cbegin(), sfs.cend(), planarSurface) != sfs.cend()) {
+          userData.setCorrectlyOriented(false);
+        }
+        userData.setSpaceConvex(space->isConvex());
+        userData.setSpaceEnclosed(space->isEnclosedVolume());
+      }
     }
 
     if (shadingSurface) {
@@ -299,7 +313,7 @@ namespace model {
   }
 
   void makeGeometries(const PlanarSurface& planarSurface, std::vector<ThreeGeometry>& geometries, std::vector<ThreeUserData>& userDatas,
-                      bool triangulateSurfaces) {
+                      bool triangulateSurfaces, bool includeGeometryDiagnostics) {
     std::string name = planarSurface.nameString();
     boost::optional<Surface> surface = planarSurface.optionalCast<Surface>();
     boost::optional<PlanarSurfaceGroup> planarSurfaceGroup = planarSurface.planarSurfaceGroup();
@@ -373,7 +387,7 @@ namespace model {
     geometries.push_back(geometry);
 
     ThreeUserData userData;
-    updateUserData(userData, planarSurface);
+    updateUserData(userData, planarSurface, includeGeometryDiagnostics);
 
     // check if the adjacent surface is truly adjacent
     // this controls display only, not energy model
@@ -403,6 +417,14 @@ namespace model {
     m_logSink.setLogLevel(Warn);
     //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSForwardTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
+  }
+
+  bool ThreeJSForwardTranslator::includeGeometryDiagnostics() const {
+    return m_includeGeometryDiagnostics;
+  }
+
+  void ThreeJSForwardTranslator::setIncludeGeometryDiagnostics(bool includeGeometryDiagnostics) {
+    m_includeGeometryDiagnostics = includeGeometryDiagnostics;
   }
 
   std::vector<LogMessage> ThreeJSForwardTranslator::warnings() const {
@@ -458,11 +480,19 @@ namespace model {
     std::vector<PlanarSurface>::size_type N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size()
                                               + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + airLoopHVACs.size() + 1;
 
+    std::vector<Space> spaces;
+    if (m_includeGeometryDiagnostics) {
+      spaces = model.getConcreteModelObjects<Space>();
+      for (auto& space : spaces) {
+        space.cacheGeometryDiagnostics();
+      }
+    }
+
     // loop over all surfaces
     for (const auto& planarSurface : planarSurfaces) {
       std::vector<ThreeGeometry> geometries;
       std::vector<ThreeUserData> userDatas;
-      makeGeometries(planarSurface, geometries, userDatas, triangulateSurfaces);
+      makeGeometries(planarSurface, geometries, userDatas, triangulateSurfaces, m_includeGeometryDiagnostics);
       OS_ASSERT(geometries.size() == userDatas.size());
 
       size_t n = geometries.size();
@@ -480,6 +510,12 @@ namespace model {
 
       n += 1;
       updatePercentage(100.0 * n / N);
+    }
+
+    if (m_includeGeometryDiagnostics) {
+      for (auto& space : spaces) {
+        space.resetCachedGeometryDiagnostics();
+      }
     }
 
     ThreeSceneObject sceneObject(toThreeUUID(toString(openstudio::createUUID())), sceneChildren);
