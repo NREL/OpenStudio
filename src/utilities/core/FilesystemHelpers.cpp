@@ -140,7 +140,7 @@ namespace filesystem {
     // making this count static/atomic so that we reduce the chance of collisions
     // on each run of the binary. This is threadsafe, with the atomic
     static std::atomic<unsigned int> count = 0;
-    constexpr auto allowed_attempts = 1000;
+    constexpr unsigned int allowed_attempts = 1000;
 
     const auto base_temp_dir = openstudio::filesystem::temp_directory_path();
     // std::filesystem::unique_path doesn't exist, if moving to std::filesystem, use emoveBraces(createUUID)
