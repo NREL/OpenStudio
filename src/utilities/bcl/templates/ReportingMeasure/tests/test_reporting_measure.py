@@ -1,10 +1,11 @@
 """Insert your copyright here."""
 
-from pathlib import Path
 import os
+import subprocess
+from pathlib import Path
+
 import openstudio
 import pytest
-import subprocess
 
 from measure import ReportingMeasureName
 
@@ -33,9 +34,12 @@ class TestReportingMeasureName:
         return TestReportingMeasureName.run_dir(test_name) / "report.html"
 
     @staticmethod
-    def setup_test(test_name: str, idf_output_requests: openstudio.IdfObjectVector, model_in_path: Path = MODEL_IN_PATH_DEFAULT, epw_path: Path =
-                   EPW_IN_PATH_DEFAULT):
-
+    def setup_test(
+        test_name: str,
+        idf_output_requests: openstudio.IdfObjectVector,
+        model_in_path: Path = MODEL_IN_PATH_DEFAULT,
+        epw_path: Path = EPW_IN_PATH_DEFAULT,
+    ):
         run_dir = TestReportingMeasureName.run_dir(test_name)
         run_dir.mkdir(parents=True, exist_ok=True)
 
@@ -62,23 +66,22 @@ class TestReportingMeasureName:
         model.addObjects(request_model.objects())
         model.save(str(model_out_path), True)
 
-        if os.environ.get('OPENSTUDIO_TEST_NO_CACHE_SQLFILE'):
+        if os.environ.get("OPENSTUDIO_TEST_NO_CACHE_SQLFILE"):
             sql_file = TestReportingMeasureName.sql_path(test_name)
             if sql_file.exists():
                 sql_file.unlink()
 
-        osw_path = run_dir / 'in.osw'
+        osw_path = run_dir / "in.osw"
 
-        # workflow = openstudio.WorkflowJSON()    # TODO: FIXME
-        workflow = openstudio.openstudioutilitiesfiletypes.WorkflowJSON()
+        workflow = openstudio.WorkflowJSON()
 
         workflow.setSeedFile(str(model_out_path))
         workflow.setWeatherFile(str(epw_path))
         workflow.saveAs(str(osw_path))
 
         # TODO: use the system openstudio for now, replace with openstudio.getOpenStudioCLI eventually
-        cli_path = 'openstudio'
-        args = [cli_path, 'run', '-w', str(osw_path)]
+        cli_path = "openstudio"
+        args = [cli_path, "run", "-w", str(osw_path)]
         print(" ".join(args))
         subprocess.check_call(args)
 
@@ -97,14 +100,13 @@ class TestReportingMeasureName:
 
     def test_with_drybulb_temp(self):
         """Test running the measure with appropriate arguments, with db temp."""
-        test_name = 'test_with_drybulb_temp'
+        test_name = "test_with_drybulb_temp"
 
         # create an instance of the measure
         measure = ReportingMeasureName()
 
         # create runner with empty OSW
-        # osw = openstudio.WorkflowJSON()    # TODO: FIXME
-        osw = openstudio.openstudioutilitiesfiletypes.WorkflowJSON()
+        osw = openstudio.WorkflowJSON()
         runner = openstudio.measure.OSRunner(osw)
 
         # make an empty model
@@ -149,7 +151,7 @@ class TestReportingMeasureName:
 
         # temporarily change directory to the run directory and run the measure
         start_dir = Path.cwd()
-        #try:
+        # try:
         os.chdir(TestReportingMeasureName.run_dir(test_name))
 
         # run the measure
@@ -159,7 +161,7 @@ class TestReportingMeasureName:
         assert result.value().valueName() == "Success"
         assert len(result.warnings()) == 0
         os.chdir(start_dir)
-        #except:
+        # except:
         #    os.chdir(start_dir)
 
         # make sure the report file exists
@@ -167,14 +169,13 @@ class TestReportingMeasureName:
 
     def test_without_drybulb_temp(self):
         """Test running the measure with appropriate arguments, without db temp."""
-        test_name = 'test_without_drybulb_temp'
+        test_name = "test_without_drybulb_temp"
 
         # create an instance of the measure
         measure = ReportingMeasureName()
 
         # create runner with empty OSW
-        # osw = openstudio.WorkflowJSON()    # TODO: FIXME
-        osw = openstudio.openstudioutilitiesfiletypes.WorkflowJSON()
+        osw = openstudio.WorkflowJSON()
         runner = openstudio.measure.OSRunner(osw)
 
         # make an empty model
@@ -219,7 +220,7 @@ class TestReportingMeasureName:
 
         # temporarily change directory to the run directory and run the measure
         start_dir = Path.cwd()
-        #try:
+        # try:
         os.chdir(TestReportingMeasureName.run_dir(test_name))
 
         # run the measure
@@ -229,7 +230,7 @@ class TestReportingMeasureName:
         assert result.value().valueName() == "Success"
         assert len(result.warnings()) == 0
         os.chdir(start_dir)
-        #except:
+        # except:
         #    os.chdir(start_dir)
 
         # make sure the report file exists

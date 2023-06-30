@@ -32,8 +32,7 @@ class TestEnergyPlusMeasureName:
         measure = EnergyPlusMeasureName()
 
         # create runner with empty OSW
-        # osw = openstudio.WorkflowJSON()    # TODO: FIXME
-        osw = openstudio.openstudioutilitiesfiletypes.WorkflowJSON()
+        osw = openstudio.WorkflowJSON()
         runner = openstudio.measure.OSRunner(osw)
 
         # make an empty workspace
@@ -65,8 +64,7 @@ class TestEnergyPlusMeasureName:
         measure = EnergyPlusMeasureName()
 
         # create runner with empty OSW
-        # osw = openstudio.WorkflowJSON()    # TODO: FIXME
-        osw = openstudio.openstudioutilitiesfiletypes.WorkflowJSON()
+        osw = openstudio.WorkflowJSON()
         runner = openstudio.measure.OSRunner(osw)
 
         # make an empty workspace
