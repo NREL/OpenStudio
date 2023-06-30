@@ -10,6 +10,9 @@
 #endif
 
 #if defined SWIGPYTHON
+/*******************************************************************************
+ *                                 TYPEMAP: OUT                                *
+ *******************************************************************************/
 %fragment("JsonToDict", "header", fragment="SWIG_FromCharPtrAndSize") {
   SWIGINTERN PyObject* SWIG_From_JsonValue(const Json::Value& value) {
     // PyErr_WarnEx(PyExc_UserWarning, "Translating a Json::Value to a PyObject", 1);  // Debugging
@@ -67,10 +70,119 @@
   $result = SWIG_From_JsonValue($1);
 }
 
+/*******************************************************************************
+ *                                 TYPEMAP: IN                                 *
+ *******************************************************************************/
+%fragment("ToJsonValue", "header") {
+  SWIGINTERN Json::Value SWIG_to_JsonValue(PyObject * obj) {
+    PyErr_WarnEx(PyExc_UserWarning, "Constructing a Json::Value", 1);  // Debugging
+    if (obj == Py_None) {
+      return Json::Value{Json::nullValue};
+    }
+
+    if (PyBool_Check(obj)) {
+      bool b = PyObject_IsTrue(obj) == 1;
+      return Json::Value{b};
+    }
+
+    if (PyFloat_Check(obj)) {
+      auto d = PyFloat_AsDouble(obj);
+      return Json::Value{d};
+    }
+
+    if (PyNumber_Check(obj)) { // or PyLong_Check
+      std::int64_t i = PyLong_AsLongLong(obj);
+      return Json::Value{i};
+    }
+
+    if (PyUnicode_Check(obj)) {
+      const char *p = PyUnicode_AsUTF8(obj);
+      return Json::Value{p};
+    }
+
+    if (PyList_Check(obj)) {
+      auto result = Json::Value(Json::arrayValue);
+      size_t n = PyList_Size(obj);
+      for (size_t i = 0; i < n; ++i) {
+        result.append(SWIG_to_JsonValue(PyList_GetItem(obj, i)));
+      }
+      return result;
+    }
+
+    if (PyTuple_Check(obj)) {
+      auto result = Json::Value(Json::arrayValue);
+      size_t n = PyTuple_Size(obj);
+      for (size_t i = 0; i < n; ++i) {
+        result.append(SWIG_to_JsonValue(PyTuple_GetItem(obj, i)));
+      }
+      return result;
+    }
+
+    if (PyAnySet_Check(obj)) {
+      auto result = Json::Value(Json::arrayValue);
+      PyObject *iter;
+      if ((iter = PyObject_GetIter(obj)) == nullptr) {
+        return result;
+      }
+      PyObject *item;
+      while ((item = PyIter_Next(iter)) != nullptr) {
+        result.append(SWIG_to_JsonValue(item));
+        Py_DECREF(item);
+      }
+      Py_DECREF(iter);
+      return result;
+    }
+
+    if (PyDict_Check(obj)) {
+      auto result = Json::Value(Json::objectValue);
+      PyObject *key;
+      PyObject *value;
+      Py_ssize_t pos = 0;
+
+      while (PyDict_Next(obj, &pos, &key, &value)) {
+        if (!PyUnicode_Check(key)) {
+          std::invalid_argument("Object keys must be strings");
+        }
+        const char * jsonKey = PyUnicode_AsUTF8(key);
+        result[jsonKey] = SWIG_to_JsonValue(value);
+      }
+      return result;
+    }
+
+    return Json::Value{Json::nullValue};
+  }
+
+}
+
+%typemap(in, fragment="ToJsonValue") Json::Value {
+  void* argp = 0;
+  int res = SWIG_ConvertPtr($input, &argp, $descriptor(Json::Value *), $disown |  0 );
+  if (SWIG_IsOK(res)) {
+    PyErr_WarnEx(PyExc_UserWarning, "reusing a Json::Value", 1);
+    Json::Value * temp = %reinterpret_cast(argp, $ltype *);
+    $1 = *temp;
+  } else {
+    $1 = SWIG_to_JsonValue($input);
+  }
+}
+
+%typemap(in, fragment="ToJsonValue") Json::Value const *, Json::Value const & {
+  void* argp = 0;
+  int res = SWIG_ConvertPtr($input, &argp, $descriptor, $disown |  0 );
+  if (SWIG_IsOK(res)) {
+    PyErr_WarnEx(PyExc_UserWarning, "reusing a Json::Value", 1);
+    $1 = %reinterpret_cast(argp, $ltype);
+  } else {
+    $1 = new Json::Value(SWIG_to_JsonValue($input));
+  }
+}
 
 #endif
 
 #if defined SWIGRUBY
+/*******************************************************************************
+ *                                 TYPEMAP: OUT                                *
+ *******************************************************************************/
 %fragment("JsonToDict","header", fragment="SWIG_FromCharPtrAndSize") {
   SWIGINTERN VALUE SWIG_From_JsonValue(const Json::Value& value) {
 
@@ -117,6 +229,105 @@
 
 %typemap(out, fragment="JsonToDict") Json::Value {
   $result = SWIG_From_JsonValue($1);
+}
+
+/*******************************************************************************
+ *                                 TYPEMAP: IN                                 *
+ *******************************************************************************/
+%fragment("ToJsonValue","header") {
+
+  SWIGINTERN Json::Value SWIG_to_JsonValue(VALUE obj) {
+
+    if (RB_TYPE_P(obj, T_NIL)) {
+      return Json::Value{Json::nullValue};
+    }
+
+    if (RB_TYPE_P(obj, T_TRUE)) {
+      return Json::Value(true);
+    }
+
+    if (RB_TYPE_P(obj, T_FALSE)) {
+      return Json::Value(false);
+    }
+
+    if (RB_TYPE_P(obj, T_FIXNUM)) {
+      return Json::Value(NUM2INT(obj));
+    }
+
+    if (RB_TYPE_P(obj, T_BIGNUM)) {
+      return Json::Value(static_cast<std::int64_t>(NUM2LL(obj)));
+    }
+
+    if (RB_TYPE_P(obj, T_FLOAT)) {
+      return Json::Value(NUM2DBL(obj));
+    }
+
+    if (RB_TYPE_P(obj, T_SYMBOL)) {
+      return Json::Value(rb_id2name(SYM2ID(obj)));
+    }
+
+    if (RB_TYPE_P(obj, T_STRING)) {
+      // This is potentially not null terminated...
+      return Json::Value(StringValuePtr(obj));
+    }
+
+    if (RB_TYPE_P(obj, T_ARRAY)) {
+      auto result = Json::Value(Json::arrayValue);
+
+      VALUE* elements = RARRAY_PTR(obj);
+      for (long c = 0; c < RARRAY_LEN(obj); ++c) {
+        VALUE entry = elements[c];
+        result.append(SWIG_to_JsonValue(entry));
+      }
+      return result;
+    }
+
+
+    if (RB_TYPE_P(obj, T_HASH)) {
+      auto result = Json::Value(Json::objectValue);
+
+      VALUE keys = rb_funcall(obj, rb_intern("keys"), 0);
+      VALUE* elements = RARRAY_PTR(keys);
+      for (long c = 0; c < RARRAY_LEN(keys); ++c) {
+        VALUE key = elements[c];
+        std::string jsonKey;
+        if (RB_TYPE_P(key, T_SYMBOL)) {
+           jsonKey = std::string(rb_id2name(SYM2ID(key)));
+        } else if (RB_TYPE_P(key, T_STRING)) {
+          // This is potentially not null terminated...
+          jsonKey = std::string(StringValuePtr(key));
+        } else {
+          throw std::runtime_error("Object keys must be strings or keys");
+        }
+        VALUE value = rb_hash_aref(obj, key);
+        result[jsonKey] = SWIG_to_JsonValue(value);
+      }
+      return result;
+    }
+
+    return Json::Value{Json::nullValue};
+  }
+}
+
+%typemap(in, fragment="ToJsonValue") Json::Value {
+  void* argp = 0;
+  int res = SWIG_ConvertPtr($input, &argp, $descriptor(Json::Value *), $disown |  0 );
+  if (SWIG_IsOK(res)) {
+    Json::Value * temp = %reinterpret_cast(argp, $ltype *);
+    $1 = *temp;
+  } else {
+    $1 = SWIG_to_JsonValue($input);
+  }
+}
+
+%typemap(in, fragment="ToJsonValue") Json::Value const *, Json::Value const & {
+  void* argp = 0;
+  int res = SWIG_ConvertPtr($input, &argp, $descriptor, $disown |  0 );
+  if (SWIG_IsOK(res)) {
+    $1 = %reinterpret_cast(argp, $ltype);
+  } else {
+    $1 = new Json::Value(SWIG_to_JsonValue($input));
+  }
 }
 #endif
 
