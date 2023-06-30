@@ -100,19 +100,6 @@ int main(int argc, char* argv[]) {
 
     auto* const experimentalApp = app.add_subcommand("labs");
 
-    auto* const verboseOpt = experimentalApp->add_flag_function(
-      "--verbose",
-      [](auto count) {
-        if (count == 1) {
-          fmt::print("Setting Log Level to Debug ({})\n", LogLevel::Debug);
-          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Debug);
-        } else if (count == 2) {
-          fmt::print("Setting Log Level to Trace ({})\n", LogLevel::Trace);
-          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Trace);
-        }
-      },
-      "Print the full log to STDOUT - sets verbosity to Debug if given once and Trace if given twice.");
-
     // specify string->value mappings
     const std::map<std::string, LogLevel> logLevelMap{
       {"Trace", LogLevel::Trace}, {"Debug", LogLevel::Debug}, {"Info", LogLevel::Info},
@@ -127,8 +114,7 @@ int main(int argc, char* argv[]) {
           fmt::print("Setting Log Level to {} ({})\n", logLevelStrs[static_cast<size_t>(level) - static_cast<size_t>(LogLevel::Trace)], level);
           openstudio::Logger::instance().standardOutLogger().setLogLevel(level);
         },
-        "LogLevel settings: One of {Trace, Debug, Info, Warn, Error, Fatal} [Default: Warn] Excludes: --verbose")
-      ->excludes(verboseOpt)
+        "LogLevel settings: One of {Trace, Debug, Info, Warn, Error, Fatal} [Default: Warn]")
       ->option_text("LEVEL")
       ->transform(CLI::CheckedTransformer(logLevelMap, CLI::ignore_case));
 
