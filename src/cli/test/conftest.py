@@ -1,5 +1,7 @@
-import pytest
 from pathlib import Path
+
+import pytest
+
 
 def validate_file(arg):
     if (filepath := Path(arg)).is_file():
@@ -9,9 +11,8 @@ def validate_file(arg):
 
 
 def pytest_addoption(parser):
-    parser.addoption(
-        "--os-cli-path", type=validate_file, help="Path to the OS CLI" #, required=True
-    )
+    parser.addoption("--os-cli-path", type=validate_file, help="Path to the OS CLI")  # , required=True
+
 
 @pytest.fixture
 def osclipath(request):

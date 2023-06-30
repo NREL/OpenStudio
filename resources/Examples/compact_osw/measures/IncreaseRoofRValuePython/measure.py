@@ -1,9 +1,9 @@
-import openstudio
 import typing
+
+import openstudio
 
 
 class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.ModelMeasure):
-
     def name(self):
         """
         Return the human readable name.
@@ -37,24 +37,25 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
 
         return args
 
-    def run(self,
-            model: openstudio.model.Model,
-            runner: openstudio.measure.OSRunner,
-            user_arguments: openstudio.measure.OSArgumentMap):
+    def run(
+        self,
+        model: openstudio.model.Model,
+        runner: openstudio.measure.OSRunner,
+        user_arguments: openstudio.measure.OSArgumentMap,
+    ):
         """
         define what happens when the measure is run
         """
         super().run(model, runner, user_arguments)  # Do **NOT** remove this line
 
-        if not(runner.validateUserArguments(self.arguments(model),
-                                            user_arguments)):
+        if not (runner.validateUserArguments(self.arguments(model), user_arguments)):
             return False
 
         r_value = runner.getDoubleArgumentValue("r_value", user_arguments)
 
         # set limit for minimum insulation. This is used to limit input and for inferring insulation layer in construction.
         min_expected_r_value_ip = 1  # ip units
-        min_expected_r_value_si = openstudio.convert(min_expected_r_value_ip, "ft^2*h*R/Btu","m^2*K/W").get()
+        min_expected_r_value_si = openstudio.convert(min_expected_r_value_ip, "ft^2*h*R/Btu", "m^2*K/W").get()
 
         # check the R-value for reasonableness
         if r_value < -100:
@@ -89,17 +90,19 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
         for exterior_surface_construction in exterior_surface_constructions:
             # unit conversion of roof insulation from SI units (M^2*K/W) to IP units (ft^2*h*R/Btu)
             initial_conductance_ip = openstudio.convert(
-                1.0 / exterior_surface_construction.thermalConductance().get(),
-                "m^2*K/W", "ft^2*h*R/Btu").get()
-            initial_string.append(
-                f"{exterior_surface_construction.nameString()} (R-{initial_conductance_ip:.1f})"
-            )
+                1.0 / exterior_surface_construction.thermalConductance().get(), "m^2*K/W", "ft^2*h*R/Btu"
+            ).get()
+            initial_string.append(f"{exterior_surface_construction.nameString()} (R-{initial_conductance_ip:.1f})")
 
-        runner.registerInitialCondition(f"The building had {len(initial_string)} roof constructions: {', '.join(sorted(initial_string))}.")
+        runner.registerInitialCondition(
+            f"The building had {len(initial_string)} roof constructions: {', '.join(sorted(initial_string))}."
+        )
 
         # hashes to track constructions and materials made by the measure, to avoid duplicates
         constructions_hash_old_new = {}
-        constructions_hash_new_old = {} # used to get netArea of new construction and then cost objects of construction it replaced
+        constructions_hash_new_old = (
+            {}
+        )  # used to get netArea of new construction and then cost objects of construction it replaced
         materials_hash = {}
 
         # array and counter for new constructions that are made, used for reporting final condition
@@ -123,7 +126,9 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
                 thermal_resistance_values.append(construction_layer_r_value)
 
             if max(thermal_resistance_values) <= min_expected_r_value_si:
-                runner.registerWarning(f"Construction '{exterior_surface_construction.nameString()}' does not appear to have an insulation layer and was not altered.")
+                runner.registerWarning(
+                    f"Construction '{exterior_surface_construction.nameString()}' does not appear to have an insulation layer and was not altered."
+                )
                 continue
 
             # clone the construction
@@ -136,12 +141,14 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
 
             # push to hashes
             constructions_hash_old_new[exterior_surface_construction.nameString()] = final_construction
-            constructions_hash_new_old[final_construction.nameString()] = exterior_surface_construction #push the object to hash key vs. name
+            constructions_hash_new_old[
+                final_construction.nameString()
+            ] = exterior_surface_construction  # push the object to hash key vs. name
 
             # find already cloned insulation material and link to construction
             target_material = max_thermal_resistance_material
             found_material = False
-            for orig,new in materials_hash.items():
+            for orig, new in materials_hash.items():
                 if target_material.nameString() == orig:
                     new_material = new
                     materials_hash[max_thermal_resistance_material.nameString()] = new_material
@@ -158,7 +165,9 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
                 materials_hash[max_thermal_resistance_material.nameString()] = new_material
                 final_construction.eraseLayer(max_thermal_resistance_material_index)
                 final_construction.insertLayer(max_thermal_resistance_material_index, new_material)
-                runner.registerInfo(f"For construction'{final_construction.nameString()}', material '{new_material.nameString()}' was altered.")
+                runner.registerInfo(
+                    f"For construction'{final_construction.nameString()}', material '{new_material.nameString()}' was altered."
+                )
 
                 # edit insulation material
                 new_material_matt = new_material.to_Material()
@@ -170,13 +179,16 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
                 new_material_massless = new_material.to_MasslessOpaqueMaterial()
                 if new_material_massless.is_initialized():
                     starting_thermal_resistance = new_material_massless.get().thermalResistance()
-                    final_thermal_resistance = new_material_massless.get().setThermalResistance(starting_thermal_resistance)
+                    final_thermal_resistance = new_material_massless.get().setThermalResistance(
+                        starting_thermal_resistance
+                    )
 
                 new_material_airgap = new_material.to_AirGap()
                 if new_material_airgap.is_initialized():
                     starting_thermal_resistance = new_material_airgap.get().thermalResistance()
-                    final_thermal_resistance = new_material_airgap.get().setThermalResistance(starting_thermal_resistance)
-
+                    final_thermal_resistance = new_material_airgap.get().setThermalResistance(
+                        starting_thermal_resistance
+                    )
 
         # loop through construction sets used in the model
         default_construction_sets = model.getDefaultConstructionSets()
@@ -194,7 +206,9 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
             new_default_construction_set.setName(f"{default_construction_set.nameString()} adj roof insulation")
 
             # create new surface set and link to construction set
-            new_default_surface_const_set = default_surface_const_set.get().clone(model).to_DefaultSurfaceConstructions().get()
+            new_default_surface_const_set = (
+                default_surface_const_set.get().clone(model).to_DefaultSurfaceConstructions().get()
+            )
             new_default_surface_const_set.setName(f"{default_surface_const_set.get().nameString()} adj roof insulation")
             new_default_construction_set.setDefaultExteriorSurfaceConstructions(new_default_surface_const_set)
 
@@ -209,9 +223,12 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
                         new_default_surface_const_set.setRoofCeilingConstruction(final_construction)
                         found_const_flag = True
 
-                if not found_const_flag: # this should never happen but is just an extra test in case something goes wrong with the measure code
-                    runner.registerWarning(f"Measure couldn't find the construction named '{target_const}' in the exterior surface hash.")
-
+                if (
+                    not found_const_flag
+                ):  # this should never happen but is just an extra test in case something goes wrong with the measure code
+                    runner.registerWarning(
+                        f"Measure couldn't find the construction named '{target_const}' in the exterior surface hash."
+                    )
 
             # swap all uses of the old construction set for the new
             construction_set_sources = default_construction_set.sources()
@@ -251,16 +268,17 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
                         final_construction = new
 
         # report strings for final condition
-        final_string = []   # not all exterior roof constructions, but only new ones made. If  roof didn't have insulation and was not altered we don't want to show it
+        final_string = (
+            []
+        )  # not all exterior roof constructions, but only new ones made. If  roof didn't have insulation and was not altered we don't want to show it
         affected_area_si = 0
         for final_construction in final_constructions_array:
-
             # unit conversion of roof insulation from SI units (M^2*K/W) to IP units (ft^2*h*R/Btu)
-            final_conductance_ip = openstudio.convert(1.0 / final_construction.thermalConductance().get(),
-                                                      "m^2*K/W", "ft^2*h*R/Btu").get()
+            final_conductance_ip = openstudio.convert(
+                1.0 / final_construction.thermalConductance().get(), "m^2*K/W", "ft^2*h*R/Btu"
+            ).get()
             final_string.append(f"{final_construction.nameString()} (R-{final_conductance_ip:.1f})")
             affected_area_si = affected_area_si + final_construction.getNetArea()
-
 
         # add not applicable test if there were exterior roof constructions but none of them were altered (already enough insulation or doesn't look like insulated wall)
         if affected_area_si == 0:
@@ -275,7 +293,8 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
         runner.registerFinalCondition(
             f"The existing insulation for roofs was increased by {r_value}%. "
             f"This was applied to {affected_area_ip:,.0f} (ft^2) across "
-            f"{len(final_string)} roof constructions: {', '.join(sorted(final_string))}.")
+            f"{len(final_string)} roof constructions: {', '.join(sorted(final_string))}."
+        )
 
         return True
 
