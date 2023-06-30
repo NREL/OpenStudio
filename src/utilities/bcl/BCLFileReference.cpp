@@ -8,6 +8,7 @@
 #include "../core/StringHelpers.hpp"
 
 #include <pugixml.hpp>
+#include <json/json.h>
 
 namespace openstudio {
 
@@ -158,6 +159,35 @@ void BCLFileReference::writeValues(pugi::xml_node& element) const {
   subelement = element.append_child("checksum");
   text = subelement.text();
   text.set(m_checksum.c_str());
+}
+
+Json::Value BCLFileReference::toJSON() const {
+  Json::Value root;
+  if (m_usageType == "script" && !m_softwareProgram.empty() && !m_softwareProgramVersion.empty()) {
+    auto& versionElement = root["version"];
+
+    versionElement["software_program"] = m_softwareProgram;
+    versionElement["identifier"] = m_softwareProgramVersion;
+
+    if (m_minCompatibleVersion) {
+      versionElement["min_compatible"] = m_minCompatibleVersion->str();
+    }
+
+    if (m_maxCompatibleVersion) {
+      versionElement["max_compatible"] = m_maxCompatibleVersion->str();
+    }
+  }
+
+  root["filename"] = fileName();
+  root["filetype"] = fileType();
+  root["usage_type"] = m_usageType;
+  root["checksum"] = m_checksum;
+
+  return root;
+}
+
+std::string BCLFileReference::toJSONString() const {
+  return toJSON().toStyledString();
 }
 
 bool BCLFileReference::checkForUpdate() {

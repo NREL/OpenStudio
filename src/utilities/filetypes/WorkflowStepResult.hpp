@@ -13,6 +13,10 @@
 #include "../core/Path.hpp"
 #include "../data/Variant.hpp"
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 
 namespace detail {
@@ -66,6 +70,8 @@ class UTILITIES_API WorkflowStepValue
 
   /// Construct from JSON formatted string
   static boost::optional<WorkflowStepValue> fromString(const std::string& s);
+
+  Json::Value toJSON() const;
 
   /// Serialize to JSON formatted string
   std::string string() const;
@@ -146,6 +152,8 @@ class UTILITIES_API WorkflowStepResult
 
   /// Construct from JSON formatted string
   static boost::optional<WorkflowStepResult> fromString(const std::string& s);
+
+  Json::Value toJSON() const;
 
   /// Serialize to JSON formatted string
   std::string string() const;

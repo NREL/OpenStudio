@@ -35,6 +35,8 @@ class UTILITIES_API WorkflowStep
   /// Serialize to JSON formatted string
   std::string string() const;
 
+  Json::Value toJSON() const;
+
   /// Returns the optional WorkflowStepResult
   boost::optional<WorkflowStepResult> result() const;
 

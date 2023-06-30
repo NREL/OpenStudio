@@ -8,6 +8,7 @@
 #include "../core/Assert.hpp"
 
 #include <pugixml.hpp>
+#include <json/json.h>
 
 namespace openstudio {
 
@@ -18,14 +19,19 @@ BCLMeasureOutput::BCLMeasureOutput(const pugi::xml_node& element) {
 
   m_displayName = element.child("display_name").text().as_string();
 
-  m_shortName = element.child("short_name").text().as_string();
-  ;
+  if (auto child_ = element.child("short_name")) {
+    m_shortName = child_.text().as_string();
+  }
 
-  m_description = element.child("description").text().as_string();
+  if (auto child_ = element.child("description")) {
+    m_description = child_.text().as_string();
+  }
 
   m_type = element.child("type").text().as_string();
 
-  m_units = element.child("units").text().as_string();
+  if (auto child_ = element.child("units")) {
+    m_units = child_.text().as_string();
+  }
 
   const std::string test = element.child("model_dependent").text().as_string();
   m_modelDependent = false;
@@ -107,6 +113,36 @@ void BCLMeasureOutput::writeValues(pugi::xml_node& element) const {
   subelement = element.append_child("model_dependent");
   text = subelement.text();
   text.set(m_modelDependent ? "true" : "false");
+}
+
+Json::Value BCLMeasureOutput::toJSON() const {
+  Json::Value root;
+
+  root["name"] = m_name;
+
+  root["display_name"] = m_displayName;
+
+  if (m_shortName) {
+    root["short_name"] = *m_shortName;
+  }
+
+  if (m_description) {
+    root["description"] = *m_description;
+  }
+
+  root["type"] = m_type;
+
+  if (m_units) {
+    root["units"] = *m_units;
+  }
+
+  root["model_dependent"] = m_modelDependent;
+
+  return root;
+}
+
+std::string BCLMeasureOutput::toJSONString() const {
+  return toJSON().toStyledString();
 }
 
 bool BCLMeasureOutput::operator==(const BCLMeasureOutput& other) const {

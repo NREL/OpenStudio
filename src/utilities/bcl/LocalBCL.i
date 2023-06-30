@@ -32,6 +32,8 @@
   #include <utilities/units/SIUnit.hpp>
   #include <utilities/units/ThermUnit.hpp>
   #include <utilities/units/WhUnit.hpp>
+
+  #include <json/value.h>
 %}
 
 %ignore componentDownloaded;

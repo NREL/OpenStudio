@@ -1050,7 +1050,7 @@ TEST(Filetypes, RunOptions) {
 
   EXPECT_FALSE(workflow.runOptions());
 
-  CustomOutputAdapter adapter("my_ruby_file.rb", "MyOutputAdapter", "{}");
+  CustomOutputAdapter adapter("my_ruby_file.rb", "MyOutputAdapter");
 
   RunOptions options;
   options.setDebug(true);
@@ -1063,6 +1063,8 @@ TEST(Filetypes, RunOptions) {
   ASSERT_TRUE(workflow.runOptions()->customOutputAdapter());
   EXPECT_EQ("my_ruby_file.rb", workflow.runOptions()->customOutputAdapter()->customFileName());
   EXPECT_EQ("MyOutputAdapter", workflow.runOptions()->customOutputAdapter()->className());
+  EXPECT_TRUE(workflow.runOptions()->customOutputAdapter()->options().empty());
+  EXPECT_TRUE(workflow.runOptions()->customOutputAdapter()->optionsJSON().isNull());
 
   std::string s = workflow.string();
 

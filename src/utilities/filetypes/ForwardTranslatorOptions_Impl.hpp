@@ -28,7 +28,7 @@ namespace detail {
     void reset();
 
     std::string string() const;
-    Json::Value json() const;
+    Json::Value toJSON() const;
 
     bool keepRunControlSpecialDays() const;
     bool isKeepRunControlSpecialDaysDefaulted() const;

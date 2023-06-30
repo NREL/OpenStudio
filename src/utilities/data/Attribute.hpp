@@ -23,6 +23,10 @@ class xml_document;
 class xml_node;
 }  // namespace pugi
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 
 class Attribute;
@@ -295,6 +299,10 @@ class UTILITIES_API Attribute
     }
     return result;
   }
+
+  // short_version: if false, will include the uuid, versionuuid and source (if any)
+  Json::Value toJSON(bool short_version = true) const;
+  std::string toJSONString() const;
 
  protected:
   UTILITIES_API friend std::ostream& operator<<(std::ostream& os, const Attribute& attribute);

@@ -50,6 +50,8 @@ class UTILITIES_API WorkflowJSON
   /** Attempt to load a WorkflowJSON from path */
   static boost::optional<WorkflowJSON> load(const openstudio::path& p);
 
+  Json::Value toJSON(bool includeHash = true) const;
+
   /** Get the workflow as a string. */
   std::string string(bool includeHash = true) const;
 

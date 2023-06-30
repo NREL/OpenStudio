@@ -193,7 +193,7 @@ namespace detail {
     }
   }
 
-  Json::Value ForwardTranslatorOptions_Impl::json() const {
+  Json::Value ForwardTranslatorOptions_Impl::toJSON() const {
     Json::Value value;
 
     if (!m_is_runcontrolspecialdays_defaulted) {
@@ -229,7 +229,7 @@ namespace detail {
 
   std::string ForwardTranslatorOptions_Impl::string() const {
 
-    const Json::Value data = this->json();
+    const Json::Value data = this->toJSON();
     if (data.isNull()) {
       return "";
     }
@@ -296,8 +296,8 @@ ForwardTranslatorOptions ForwardTranslatorOptions::fromJSON(const Json::Value& v
   return result;
 }
 
-Json::Value ForwardTranslatorOptions::json() const {
-  return m_impl->json();
+Json::Value ForwardTranslatorOptions::toJSON() const {
+  return m_impl->toJSON();
 }
 
 std::string ForwardTranslatorOptions::string() const {
