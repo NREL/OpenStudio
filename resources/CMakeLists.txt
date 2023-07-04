@@ -175,6 +175,8 @@ set(model_resources_src
   model/ASHRAECourthouse.osm
   model/A205ExampleChiller.RS0001.a205.cbor
   model/4837_SpaceVolume.osm
+  model/empty361.osm
+  model/empty361/workflow.osw
 )
 
 
