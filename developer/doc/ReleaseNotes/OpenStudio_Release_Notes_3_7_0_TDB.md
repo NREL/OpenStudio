@@ -74,6 +74,7 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 ## New Features, Major Fixes and API-breaking changes
 
 * [#4827](https://github.com/NREL/OpenStudio/pull/4827) - #4748 #4817 - Validate BCLXML with schema when loading + make sorting of files in measure.xml consistent when saving
+* [#4923](https://github.com/NREL/OpenStudio/pull/4923) - Fix #4692 - Modify `Model::load` to use the VersionTranslator instead of loading it assuming the version of the loaded OSM is the same as the current SDK version being used.
 
 ## Minor changes and bug fixes
 
