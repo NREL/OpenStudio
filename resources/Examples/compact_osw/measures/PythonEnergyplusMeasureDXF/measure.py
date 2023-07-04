@@ -41,7 +41,7 @@ class PythonEnergyplusMeasureDXF(openstudio.measure.EnergyPlusMeasure):
         """
         args = openstudio.measure.OSArgumentVector()
 
-        dxf_type = openstudio.measure.OSArgument.makeChoiceArgument('dxf_type', ["DXF", "DXF:WireFrame"], True)
+        dxf_type = openstudio.measure.OSArgument.makeChoiceArgument("dxf_type", ["DXF", "DXF:WireFrame"], True)
         dxf_type.setDisplayName("DXF Type")
         dxf_type.setDescription("DXF Type for the eplusout.dxf")
 
@@ -61,7 +61,7 @@ class PythonEnergyplusMeasureDXF(openstudio.measure.EnergyPlusMeasure):
         if not (runner.validateUserArguments(self.arguments(workspace), user_arguments)):
             return False
 
-        dxf_type = runner.getStringArgumentValue('dxf_type', user_arguments)
+        dxf_type = runner.getStringArgumentValue("dxf_type", user_arguments)
 
         idfObject: openstudio.IdfObject = openstudio.IdfObject(openstudio.IddObjectType("Output:Surfaces:Drawing"))
         result = idfObject.setString(0, dxf_type)
@@ -71,7 +71,9 @@ class PythonEnergyplusMeasureDXF(openstudio.measure.EnergyPlusMeasure):
         if dxf_type == "DXF":
             result = idfObject.setString(1, "Triangulate3DFace")
             if not result:
-                runner.registerError("Something went wrong when trying to set the Report Specifications 1 to Triangulate3DFace")
+                runner.registerError(
+                    "Something went wrong when trying to set the Report Specifications 1 to Triangulate3DFace"
+                )
                 return False
         wsObject_: openstudio.OptionalWorkspaceObject = workspace.addObject(idfObject)
         if not wsObject_.is_initialized():

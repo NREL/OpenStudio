@@ -1,12 +1,13 @@
 import logging
-import openstudio
 import sys
+
+import openstudio
 
 # Root logger
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
 
-formatter = logging.Formatter('LOGGER - %(message)s')
+formatter = logging.Formatter("LOGGER - %(message)s")
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.WARNING)
 handler.setFormatter(formatter)
