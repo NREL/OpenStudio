@@ -30,7 +30,7 @@ class PythonEngine final : public ScriptEngine
   ScriptObject eval(std::string_view sv) override;
   void exec(std::string_view sv) override;
 
-  virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs, const openstudio::path& pythonHomeDir) override;
+  virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs) override;
 
  protected:
   void* getAs_impl(ScriptObject& obj, const std::type_info&) override;
