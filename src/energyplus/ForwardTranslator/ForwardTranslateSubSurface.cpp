@@ -43,8 +43,17 @@ namespace energyplus {
 
     idfObject.setString(FenestrationSurface_DetailedFields::Name, modelObject.name().get());
 
-    openstudio::Vector3d offset(0, 0, 0);
     idfObject.clearExtensibleGroups();
+
+    openstudio::Vector3d offset(0, 0, 0);
+    boost::optional<WindowPropertyFrameAndDivider> frameAndDivider = modelObject.windowPropertyFrameAndDivider();
+    if (frameAndDivider) {
+      if (!frameAndDivider->isOutsideRevealDepthDefaulted()) {
+        offset = -frameAndDivider->outsideRevealDepth() * modelObject.outwardNormal();
+      }
+      idfObject.setString(FenestrationSurface_DetailedFields::FrameandDividerName, frameAndDivider->name().get());
+    }
+
     for (const Point3d& point : modelObject.vertices()) {
       IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
       if (group.empty()) {
@@ -53,7 +62,7 @@ namespace energyplus {
         return boost::none;
       }
 
-      Point3d newPoint = point + offset;
+      const Point3d newPoint = point + offset;
 
       group.setDouble(0, newPoint.x());
       group.setDouble(1, newPoint.y());
@@ -135,14 +144,6 @@ namespace energyplus {
     boost::optional<double> viewFactortoGround = modelObject.viewFactortoGround();
     if (viewFactortoGround) {
       idfObject.setDouble(FenestrationSurface_DetailedFields::ViewFactortoGround, *viewFactortoGround);
-    }
-
-    boost::optional<WindowPropertyFrameAndDivider> frameAndDivider = modelObject.windowPropertyFrameAndDivider();
-    if (frameAndDivider) {
-      if (!frameAndDivider->isOutsideRevealDepthDefaulted()) {
-        offset = -frameAndDivider->outsideRevealDepth() * modelObject.outwardNormal();
-      }
-      idfObject.setString(FenestrationSurface_DetailedFields::FrameandDividerName, frameAndDivider->name().get());
     }
 
     if (!modelObject.isMultiplierDefaulted()) {
