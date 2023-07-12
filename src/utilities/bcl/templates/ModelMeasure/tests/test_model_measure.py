@@ -1,8 +1,10 @@
 """insert your copyright here."""
 
-import pytest
-import openstudio
 from pathlib import Path
+
+import openstudio
+import pytest
+
 from measure import ModelMeasureName
 
 
@@ -28,8 +30,7 @@ class TestModelMeasureName:
         measure = ModelMeasureName()
 
         # create runner with empty OSW
-        # osw = openstudio.WorkflowJSON()    # TODO: FIXME
-        osw = openstudio.openstudioutilitiesfiletypes.WorkflowJSON()
+        osw = openstudio.WorkflowJSON()
         runner = openstudio.measure.OSRunner(osw)
 
         # Make an empty model
@@ -72,8 +73,7 @@ class TestModelMeasureName:
         measure = ModelMeasureName()
 
         # create runner with empty OSW
-        # osw = openstudio.WorkflowJSON()    # TODO: FIXME
-        osw = openstudio.openstudioutilitiesfiletypes.WorkflowJSON()
+        osw = openstudio.WorkflowJSON()
         runner = openstudio.measure.OSRunner(osw)
 
         # load the test model

@@ -174,6 +174,7 @@ set(model_resources_src
   model/ParkUnder_Retail_Office_C2.osm
   model/ASHRAECourthouse.osm
   model/A205ExampleChiller.RS0001.a205.cbor
+  model/4837_SpaceVolume.osm
 )
 
 

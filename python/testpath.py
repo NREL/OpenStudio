@@ -1,11 +1,15 @@
+########################################################################################################################
+#  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+#  See also https://openstudio.net/license
+########################################################################################################################
+
 import openstudio
+
 # import openstudio_dynamic as openstudio
 
 # workspace test
 workspace = openstudio.Workspace()
-zone = workspace.addObject(
-    openstudio.IdfObject(openstudio.IddObjectType("Zone"))
-)
+zone = workspace.addObject(openstudio.IdfObject(openstudio.IddObjectType("Zone")))
 zone = zone.get()
 zone.setName("New Zone")
 

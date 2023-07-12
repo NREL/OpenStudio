@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #ifndef MODEL_DESIGNDAY_HPP
@@ -56,7 +32,7 @@ namespace model {
 
     static std::vector<std::string> validDayTypeValues();
 
-    OS_DEPRECATED static std::vector<std::string> validHumidityIndicatingTypeValues();
+    OS_DEPRECATED(3, 3, 0) static std::vector<std::string> validHumidityIndicatingTypeValues();
 
     static std::vector<std::string> validHumidityConditionTypeValues();
 
@@ -78,9 +54,9 @@ namespace model {
 
     bool isDailyDryBulbTemperatureRangeDefaulted() const;
 
-    OS_DEPRECATED double humidityIndicatingConditionsAtMaximumDryBulb() const;
+    OS_DEPRECATED(3, 3, 0) double humidityIndicatingConditionsAtMaximumDryBulb() const;
 
-    OS_DEPRECATED bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
+    OS_DEPRECATED(3, 3, 0) bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
 
     double barometricPressure() const;
 
@@ -122,15 +98,15 @@ namespace model {
 
     bool isDaylightSavingTimeIndicatorDefaulted() const;
 
-    OS_DEPRECATED std::string humidityIndicatingType() const;
+    OS_DEPRECATED(3, 3, 0) std::string humidityIndicatingType() const;
 
     std::string humidityConditionType() const;
 
-    OS_DEPRECATED bool isHumidityIndicatingTypeDefaulted() const;
+    OS_DEPRECATED(3, 3, 0) bool isHumidityIndicatingTypeDefaulted() const;
 
     bool isHumidityConditionTypeDefaulted() const;
 
-    OS_DEPRECATED boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
+    OS_DEPRECATED(3, 3, 0) boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
 
     boost::optional<ScheduleDay> humidityConditionDaySchedule() const;
 
@@ -144,7 +120,7 @@ namespace model {
 
     bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
 
-    OS_DEPRECATED boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
+    OS_DEPRECATED(3, 3, 0) boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
 
     boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierDaySchedule() const;
 
@@ -156,19 +132,19 @@ namespace model {
 
     boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
 
-    OS_DEPRECATED double ashraeTaub() const;
+    OS_DEPRECATED(3, 3, 0) double ashraeTaub() const;
 
     double ashraeClearSkyOpticalDepthForBeamIrradiance() const;
 
-    OS_DEPRECATED bool isAshraeTaubDefaulted() const;
+    OS_DEPRECATED(3, 3, 0) bool isAshraeTaubDefaulted() const;
 
     bool isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted() const;
 
-    OS_DEPRECATED double ashraeTaud() const;
+    OS_DEPRECATED(3, 3, 0) double ashraeTaud() const;
 
     double ashraeClearSkyOpticalDepthForDiffuseIrradiance() const;
 
-    OS_DEPRECATED bool isAshraeTaudDefaulted() const;
+    OS_DEPRECATED(3, 3, 0) bool isAshraeTaudDefaulted() const;
 
     bool isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted() const;
 
@@ -232,28 +208,28 @@ namespace model {
 
     void resetDaylightSavingTimeIndicator();
 
-    OS_DEPRECATED bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
+    OS_DEPRECATED(3, 3, 0) bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
 
     bool setHumidityConditionType(const std::string& humidityConditionType);
 
-    OS_DEPRECATED void resetHumidityIndicatingType();
+    OS_DEPRECATED(3, 3, 0) void resetHumidityIndicatingType();
 
     void resetHumidityConditionType();
 
     /** Sets the humidity indicating day schedule. The appropriate ScheduleTypeLimits varies
    *  depending on the humidity indicating type. Please see the EnergyPlus input-output reference
    *  for details before using this feature. */
-    OS_DEPRECATED bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
+    OS_DEPRECATED(3, 3, 0) bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
 
     bool setHumidityConditionDaySchedule(const ScheduleDay& schedule);
 
-    OS_DEPRECATED void resetHumidityIndicatingDaySchedule();
+    OS_DEPRECATED(3, 3, 0) void resetHumidityIndicatingDaySchedule();
 
     void resetHumidityConditionDaySchedule();
 
-    OS_DEPRECATED bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
+    OS_DEPRECATED(3, 3, 0) bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
 
-    OS_DEPRECATED void resetHumidityIndicatingConditionsAtMaximumDryBulb();
+    OS_DEPRECATED(3, 3, 0) void resetHumidityIndicatingConditionsAtMaximumDryBulb();
 
     bool setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb);
 
@@ -274,11 +250,11 @@ namespace model {
     /** Sets the dry bulb temperature range modifier day schedule. The appropriate
    *  ScheduleTypeLimits varies depending on the dry bulb temperature range modifier type. Please
    *  see the EnergyPlus input-output reference for details before using this feature. */
-    OS_DEPRECATED bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
+    OS_DEPRECATED(3, 3, 0) bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
 
     bool setDryBulbTemperatureRangeModifierDaySchedule(const ScheduleDay& schedule);
 
-    OS_DEPRECATED void resetDryBulbTemperatureRangeModifierSchedule();
+    OS_DEPRECATED(3, 3, 0) void resetDryBulbTemperatureRangeModifierSchedule();
 
     void resetDryBulbTemperatureRangeModifierDaySchedule();
 
@@ -294,19 +270,19 @@ namespace model {
 
     void resetDiffuseSolarDaySchedule();
 
-    OS_DEPRECATED bool setAshraeTaub(double ashraeTaub);
+    OS_DEPRECATED(3, 3, 0) bool setAshraeTaub(double ashraeTaub);
 
     bool setAshraeClearSkyOpticalDepthForBeamIrradiance(double ashraeClearSkyOpticalDepthForBeamIrradiance);
 
-    OS_DEPRECATED void resetAshraeTaub();
+    OS_DEPRECATED(3, 3, 0) void resetAshraeTaub();
 
     void resetAshraeClearSkyOpticalDepthForBeamIrradiance();
 
-    OS_DEPRECATED bool setAshraeTaud(double ashraeTaud);
+    OS_DEPRECATED(3, 3, 0) bool setAshraeTaud(double ashraeTaud);
 
     bool setAshraeClearSkyOpticalDepthForDiffuseIrradiance(double ashraeClearSkyOpticalDepthForDiffuseIrradiance);
 
-    OS_DEPRECATED void resetAshraeTaud();
+    OS_DEPRECATED(3, 3, 0) void resetAshraeTaud();
 
     void resetAshraeClearSkyOpticalDepthForDiffuseIrradiance();
 

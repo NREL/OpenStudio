@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "AirConditionerVariableRefrigerantFlow.hpp"
@@ -61,6 +37,8 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirConditioner_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 
@@ -3073,58 +3051,72 @@ namespace model {
 
   // DEPRECATED
   bool AirConditionerVariableRefrigerantFlow::setRatedTotalCoolingCapacity(double grossRatedTotalCoolingCapacity) {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use setGrossRatedTotalCoolingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setGrossRatedTotalCoolingCapacity(grossRatedTotalCoolingCapacity);
   }
 
   void AirConditionerVariableRefrigerantFlow::autosizeRatedTotalCoolingCapacity() {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use autosizeGrossRatedTotalCoolingCapacity instead.");
     getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizeGrossRatedTotalCoolingCapacity();
   }
 
   bool AirConditionerVariableRefrigerantFlow::setRatedCoolingCOP(double grossRatedCoolingCOP) {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use setGrossRatedCoolingCOP instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setGrossRatedCoolingCOP(grossRatedCoolingCOP);
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow::ratedTotalCoolingCapacity() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use grossRatedTotalCoolingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->grossRatedTotalCoolingCapacity();
   }
 
   bool AirConditionerVariableRefrigerantFlow::isRatedTotalCoolingCapacityAutosized() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use isGrossRatedTotalCoolingCapacityAutosized instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->isGrossRatedTotalCoolingCapacityAutosized();
   }
 
   double AirConditionerVariableRefrigerantFlow::ratedCoolingCOP() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use grossRatedCoolingCOP instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->grossRatedCoolingCOP();
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow::ratedTotalHeatingCapacity() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use grossRatedHeatingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->grossRatedHeatingCapacity();
   }
 
   bool AirConditionerVariableRefrigerantFlow::isRatedTotalHeatingCapacityAutosized() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use isGrossRatedHeatingCapacityAutosized instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->isGrossRatedHeatingCapacityAutosized();
   }
 
   double AirConditionerVariableRefrigerantFlow::ratedTotalHeatingCapacitySizingRatio() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use ratedHeatingCapacitySizingRatio instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->ratedHeatingCapacitySizingRatio();
   }
 
   bool AirConditionerVariableRefrigerantFlow::setRatedTotalHeatingCapacity(double grossRatedHeatingCapacity) {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use setGrossRatedHeatingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setGrossRatedHeatingCapacity(grossRatedHeatingCapacity);
   }
 
   void AirConditionerVariableRefrigerantFlow::autosizeRatedTotalHeatingCapacity() {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use autosizeGrossRatedHeatingCapacity instead.");
     getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizeGrossRatedHeatingCapacity();
   }
 
   bool AirConditionerVariableRefrigerantFlow::setRatedTotalHeatingCapacitySizingRatio(double ratedHeatingCapacitySizingRatio) {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use setRatedHeatingCapacitySizingRatio instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setRatedHeatingCapacitySizingRatio(ratedHeatingCapacitySizingRatio);
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedRatedTotalCoolingCapacity() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use autosizedGrossRatedTotalCoolingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedGrossRatedTotalCoolingCapacity();
   }
 
   boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedRatedTotalHeatingCapacity() const {
+    DEPRECATED_AT_MSG(2, 9, 0, "Use autosizedGrossRatedHeatingCapacity instead.");
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedGrossRatedHeatingCapacity();
   }
 

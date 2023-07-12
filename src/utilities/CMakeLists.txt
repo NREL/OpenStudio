@@ -24,6 +24,7 @@ set(core_src
   core/Containers.hpp
   core/Containers.cpp
   core/Deprecated.hpp
+  core/DeprecatedHelpers.hpp
   core/DynamicLibrary.hpp
   core/DynamicLibraryPOSIX.hpp
   core/DynamicLibraryWindows.hpp
@@ -152,6 +153,8 @@ set(geometry_src
   geometry/Polygon3d.cpp
   geometry/Polyhedron.hpp
   geometry/Polyhedron.cpp
+  geometry/StandardShapes.hpp
+  geometry/StandardShapes.cpp
   ../polypartition/polypartition.cpp
 )
 
@@ -399,6 +402,7 @@ set(${target_name}_swig_src
   core/UUID.i
   core/UnzipFile.i
   core/ZipFile.i
+  core/jsoncpp.i
   core/ruby/LanguageSpecific.i
   core/python/LanguageSpecific.i
   core/csharp/LanguageSpecific.i

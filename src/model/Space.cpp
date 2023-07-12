@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "Space.hpp"
@@ -152,6 +128,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iterator>
+
+#include <fmt/core.h>
 
 namespace openstudio {
 namespace model {
@@ -850,19 +829,25 @@ namespace model {
     }
 
     Polyhedron Space_Impl::polyhedron() const {
+      auto sfs = surfaces();
       std::vector<Surface3d> surface3ds;
-      for (auto& surface : surfaces()) {
-        surface3ds.emplace_back(surface.vertices(), surface.nameString());
+      surface3ds.reserve(sfs.size());
+      for (size_t surfNum = 0; auto& surface : sfs) {
+        surface3ds.emplace_back(surface.vertices(), surface.nameString(), surfNum++);
       }
       return {surface3ds};
     }
 
     bool Space_Impl::isEnclosedVolume() const {
+      if (m_cachedIsEnclosed.has_value()) {
+        return m_cachedIsEnclosed.get();
+      }
       auto volumePoly = this->polyhedron();
-      auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
+      auto isVolEnclosed = volumePoly.isEnclosedVolume();
       if (!isVolEnclosed) {
+        const auto edgesNot2 = volumePoly.edgesNotTwo();
         LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size() << " edges that aren't used exactly twice");
-        for (const Surface3dEdge& edge : edgesNot2) {
+        for (const auto& edge : edgesNot2) {
           LOG(Debug, edge);
         }
       }
@@ -918,6 +903,124 @@ namespace model {
       return result;
     }
 
+    std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientationRaycasting() const {
+      std::vector<Surface> result;
+
+      const Point3d p0{};
+
+      auto surfaces = this->surfaces();
+      for (const auto& surface : surfaces) {
+
+        auto outwardNormal = surface.outwardNormal();
+        auto inwardNormal = outwardNormal.reverseVector();
+
+        auto surfacePoint = surface.centroid();
+        bool found = false;
+        for (const auto& anotherSurface : surfaces) {
+          if (surface == anotherSurface) {
+            continue;
+          }
+          auto anotherPlane = anotherSurface.plane();
+          const double vd = anotherPlane.outwardNormal().dot(outwardNormal);
+
+          auto reversedPlane = anotherPlane.reversePlane();
+          const double vd2 = reversedPlane.outwardNormal().dot(inwardNormal);
+          OS_ASSERT(vd == vd2);
+
+          // If this isn't orthogonal
+          if (std::abs(vd) < 0.001) {
+            LOG(Debug, "Surface " << surface.nameString() << " is orthogonal to " << anotherSurface.nameString());
+            continue;
+          }
+          if (vd < 0) {
+            LOG(Debug, "Surfaces '" << surface.nameString() << "' and '" << anotherSurface.nameString()
+                                    << "' are seemingly pointing in the opposite outward direction, which is a good sign.");
+          } else {
+            LOG(Debug, "Surfaces '" << surface.nameString() << "' and '" << anotherSurface.nameString()
+                                    << "' are seemingly pointing in the same outward direction, potentially one is in the wrong direction.");
+          }
+
+          const double v0 = anotherPlane.outwardNormal().dot(surfacePoint - p0) + anotherPlane.d();
+          const double v02 = -(reversedPlane.outwardNormal().dot(surfacePoint - p0) + reversedPlane.d());
+          OS_ASSERT(v0 == v02);
+          const double t = v0 / vd;
+          if (t > 0.0) {
+            LOG(Debug, "Surface '" << surface.nameString() << "' raycasts to " << anotherSurface.nameString());
+            found = true;
+            break;
+          } else {
+            LOG(Debug, "Surface '" << surface.nameString() << "' does not raycast to " << anotherSurface.nameString());
+          }
+        }
+        if (!found) {
+          result.push_back(surface);
+        }
+      }
+
+      return result;
+    }
+
+    std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientationPolyhedron(const Polyhedron& volumePoly) const {
+      auto sf3ds = volumePoly.findSurfacesWithIncorrectOrientation();
+      if (sf3ds.empty()) {
+        return {};
+      }
+      std::vector<std::string> sfNames;
+      sfNames.reserve(sf3ds.size());
+      std::transform(sf3ds.cbegin(), sf3ds.cend(), std::back_inserter(sfNames), [](const auto& sf3d) { return sf3d.name; });
+      std::vector<Surface> surfaces = this->surfaces();
+      surfaces.erase(std::remove_if(surfaces.begin(), surfaces.end(),
+                                    [&sfNames](const auto& surface) {
+                                      return std::find(sfNames.cbegin(), sfNames.cend(), surface.nameString()) == sfNames.cend();
+                                    }),
+                     surfaces.end());
+      return surfaces;
+    }
+
+    std::vector<Surface> Space_Impl::findSurfacesWithIncorrectOrientation() const {
+      if (m_cachedNonConvexSurfaces.has_value()) {
+        return m_cachedNonConvexSurfaces.get();
+      }
+      auto volumePoly = this->polyhedron();
+      // Actually, its perfectly fine to lookup incorrect orientations even if the polyhedron isn't enclosed...
+      // If a Box space is missing one wall for eg, the opposite wall will be deemed incorrectly oriented if using ray casting.
+      return findSurfacesWithIncorrectOrientationPolyhedron(volumePoly);
+      // if (volumePoly.isEnclosedVolume()) {
+      //   return findSurfacesWithIncorrectOrientationPolyhedron(volumePoly);
+      // }
+      // LOG(Warn, "Can't lookup surfaces with incorrect orientations for a non-enclosed Polyhedron, falling back to the Raycasting method. "
+      //           "This will produce false-negatives for non-convex spaces such as H-shaped spaces.");
+      // return findSurfacesWithIncorrectOrientationRaycasting();
+    }
+
+    bool Space_Impl::areAllSurfacesCorrectlyOriented() const {
+      auto surfaces = findSurfacesWithIncorrectOrientation();
+      for (const auto& surface : surfaces) {
+        LOG(Error,
+            "In Space '" << nameString() << "', Surface '" << surface.nameString() << "' has an outward normal pointing in the wrong direction.");
+      }
+
+      return surfaces.empty();
+    }
+
+    bool Space_Impl::fixSurfacesWithIncorrectOrientation() {
+
+      auto surfaces = findSurfacesWithIncorrectOrientation();
+      if (surfaces.empty()) {
+        return false;
+      }
+
+      for (auto& surface : surfaces) {
+        auto vertices = surface.vertices();
+
+        LOG(Error, "In Space '" << nameString() << "', Surface '" << surface.nameString()
+                                << "' has an outward normal pointing in the wrong direction. Flipping it.");
+        std::reverse(vertices.begin(), vertices.end());
+        surface.setVertices(openstudio::reorderULC(vertices));
+      }
+      return true;
+    }
+
     double Space_Impl::volume() const {
       boost::optional<double> value = getDouble(OS_SpaceFields::Volume, true);
       if (value) {
@@ -926,17 +1029,24 @@ namespace model {
 
       auto volumePoly = this->polyhedron();
 
-      auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
-      if (isVolEnclosed) {
-        return volumePoly.calcPolyhedronVolume();
+      if (volumePoly.isEnclosedVolume()) {
+        if (volumePoly.isCompletelyInsideOut()) {
+          const double volume = volumePoly.polyhedronVolume();
+          LOG(Error, briefDescription() << " has all of its Surfaces that are inside-out. Call Space::fixSurfacesWithIncorrectOrientation().");
+          return -volume;
+        } else if (!volumePoly.hasAnySurfaceWithIncorrectOrientation()) {
+          return volumePoly.polyhedronVolume();
+        } else {
+          LOG(Warn, briefDescription() << " has some Surfaces with incorrection orientation. Call Space::fixSurfacesWithIncorrectOrientation(). "
+                                          "Falling back to ceilingHeight * floorArea. Volume calculation will be potentially inaccurate.");
+        }
+      } else {
+        LOG(Warn, briefDescription() << " is not enclosed, there are " << volumePoly.edgesNotTwo().size()
+                                     << " edges that aren't used exactly twice. "
+                                        "Falling back to ceilingHeight * floorArea. Volume calculation will be potentially inaccurate.");
       }
 
-      LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size()
-                                   << " edges that aren't used exactly twice. Volume calculation will be potentially inaccurate");
-
-      double result = 0;
-
-      result = this->ceilingHeight() * this->floorArea();
+      const double result = this->ceilingHeight() * this->floorArea();
 
       return result;
     }
@@ -987,7 +1097,7 @@ namespace model {
 
     double Space_Impl::numberOfPeople() const {
       double result = 0.0;
-      double area = floorArea();
+      const double area = floorArea();
 
       for (const People& person : this->people()) {
         result += person.getNumberOfPeople(area);
@@ -2798,6 +2908,40 @@ namespace model {
       return result;
     }
 
+    bool Space_Impl::isConvex() const {
+      if (m_cachedIsConvex.has_value()) {
+        return m_cachedIsConvex.get();
+      }
+      auto points = floorPrint();
+      if (points.empty()) {
+        LOG(Warn, "Can't compute a floorPrint for " << briefDescription());
+        return false;
+      }
+      Surface3d sf3d(points, fmt::format("{} floorPrint", nameString()), 0);
+      return sf3d.isConvex();
+    }
+
+    std::vector<Surface> Space_Impl::findNonConvexSurfaces() const {
+      auto surfaces = this->surfaces();
+      surfaces.erase(std::remove_if(surfaces.begin(), surfaces.end(), [](const auto& surface) { return surface.isConvex(); }), surfaces.end());
+      return surfaces;
+    }
+
+    void Space_Impl::cacheGeometryDiagnostics() {
+      m_cachedIsConvex = isConvex();
+      auto volumePoly = this->polyhedron();
+      m_cachedIsEnclosed = volumePoly.isEnclosedVolume();
+      // Actually, its perfectly fine to lookup incorrect orientations even if the polyhedron isn't enclosed...
+      // If a Box space is missing one wall for eg, the opposite wall will be deemed incorrectly oriented if using ray casting.
+      m_cachedNonConvexSurfaces = findSurfacesWithIncorrectOrientationPolyhedron(volumePoly);
+    }
+
+    void Space_Impl::resetCachedGeometryDiagnostics() {
+      m_cachedNonConvexSurfaces.reset();
+      m_cachedIsConvex.reset();
+      m_cachedIsEnclosed.reset();
+    }
+
     bool Space_Impl::isPlenum() const {
       bool result = false;
       boost::optional<ThermalZone> thermalZone = this->thermalZone();
@@ -2884,7 +3028,8 @@ namespace model {
     return result;
   }
 
-  boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPrint, double floorHeight, Model& model) {
+  boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPrint, double floorHeight, Model& model,
+                                               const std::string& spaceName) {
     // check floor height
     if (floorHeight <= 0) {
       LOG(Error, "Cannot create a space with floorHeight " << floorHeight << ".");
@@ -2907,7 +3052,14 @@ namespace model {
       }
     }
 
-    boost::optional<Vector3d> outwardNormal = getOutwardNormal(floorPrint);
+    // Enforce the same z
+    std::vector<Point3d> reorderedFloorPrint;
+    reorderedFloorPrint.reserve(floorPrint.size());
+    std::transform(floorPrint.cbegin(), floorPrint.cend(), std::back_inserter(reorderedFloorPrint), [&z](const auto& pt) {
+      return Point3d{pt.x(), pt.y(), z};
+    });
+
+    boost::optional<Vector3d> outwardNormal = getOutwardNormal(reorderedFloorPrint);
     if (!outwardNormal) {
       LOG(Error, "Cannot compute outwardNormal for floorPrint.");
       return boost::none;
@@ -2918,36 +3070,50 @@ namespace model {
       return boost::none;
     }
 
+    // reorderedFloorPrint = openstudio::reorderULC(reorderedFloorPrint);
+
     // we are good to go, create the space
     Space space(model);
 
     // create the floor
-    std::vector<Point3d> points;
-    for (const auto& elem : floorPrint) {
-      points.push_back(Point3d(elem.x(), elem.y(), z));
+    Surface floor(reorderedFloorPrint, model);
+    if (!spaceName.empty()) {
+      space.setName(spaceName);
+      floor.setName(fmt::format("{} Floor", space.nameString()));
     }
-    Surface floor(points, model);
     floor.setSpace(space);
 
+    double zCeiling = z + floorHeight;
+    std::vector<Point3d> points;
+    points.reserve(4);
     // create each wall
     for (unsigned i = 1; i <= numPoints; ++i) {
+      // Counter clockwise, Upper Left Corner convention
       points = {
-        {floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z + floorHeight},
-        {floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z},
-        {floorPrint[i - 1].x(), floorPrint[i - 1].y(), z},
-        {floorPrint[i - 1].x(), floorPrint[i - 1].y(), z + floorHeight},
+        {reorderedFloorPrint[i - 1].x(), reorderedFloorPrint[i - 1].y(), zCeiling},                  // Upper Left Corner
+        {reorderedFloorPrint[i % numPoints].x(), reorderedFloorPrint[i % numPoints].y(), zCeiling},  // Upper Right Corner
+        {reorderedFloorPrint[i % numPoints].x(), reorderedFloorPrint[i % numPoints].y(), z},         // Lower Right Corner
+        {reorderedFloorPrint[i - 1].x(), reorderedFloorPrint[i - 1].y(), z},                         // Lower Left Corner
       };
 
       Surface wall(points, model);
+      if (!spaceName.empty()) {
+        wall.setName(fmt::format("{} Wall {}", space.nameString(), i));
+      }
+
       wall.setSpace(space);
     }
 
     // create the roofCeiling
-    points.clear();
-    for (auto rit = floorPrint.rbegin(), ritend = floorPrint.rend(); rit != ritend; ++rit) {
-      points.push_back(Point3d(rit->x(), rit->y(), z + floorHeight));
+    std::vector<Point3d> ceilingPoints;
+    ceilingPoints.reserve(reorderedFloorPrint.size());
+    std::transform(reorderedFloorPrint.crbegin(), reorderedFloorPrint.crend(), std::back_inserter(ceilingPoints), [zCeiling](const auto& pt) {
+      return Point3d{pt.x(), pt.y(), zCeiling};
+    });
+    Surface roofCeiling(ceilingPoints, model);
+    if (!spaceName.empty()) {
+      roofCeiling.setName(fmt::format("{} RoofCeiling", space.nameString()));
     }
-    Surface roofCeiling(points, model);
     roofCeiling.setSpace(space);
 
     return space;
@@ -3469,6 +3635,35 @@ namespace model {
   std::vector<ZoneMixing> Space::exhaustZoneMixing() const {
     return getImpl<detail::Space_Impl>()->exhaustZoneMixing();
   }
+
+  std::vector<Surface> Space::findSurfacesWithIncorrectOrientation() const {
+    return getImpl<detail::Space_Impl>()->findSurfacesWithIncorrectOrientation();
+  }
+
+  bool Space::areAllSurfacesCorrectlyOriented() const {
+    return getImpl<detail::Space_Impl>()->areAllSurfacesCorrectlyOriented();
+  }
+
+  bool Space::fixSurfacesWithIncorrectOrientation() {
+    return getImpl<detail::Space_Impl>()->fixSurfacesWithIncorrectOrientation();
+  }
+
+  bool Space::isConvex() const {
+    return getImpl<detail::Space_Impl>()->isConvex();
+  }
+
+  std::vector<Surface> Space::findNonConvexSurfaces() const {
+    return getImpl<detail::Space_Impl>()->findNonConvexSurfaces();
+  }
+
+  /// @cond
+  void Space::cacheGeometryDiagnostics() {
+    getImpl<detail::Space_Impl>()->cacheGeometryDiagnostics();
+  }
+  void Space::resetCachedGeometryDiagnostics() {
+    getImpl<detail::Space_Impl>()->resetCachedGeometryDiagnostics();
+  }
+  /// @endcond
 
   /// @cond
   Space::Space(std::shared_ptr<detail::Space_Impl> impl) : PlanarSurfaceGroup(std::move(impl)) {}

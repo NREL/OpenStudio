@@ -1,5 +1,5 @@
 message(STATUS "Using CMake ${CMAKE_VERSION}")
-cmake_minimum_required(VERSION 3.19.0)
+cmake_minimum_required(VERSION 3.20.0)
 cmake_policy(SET CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -206,7 +206,7 @@ set(ENERGYPLUS_REPO "NREL")
 set(RADIANCE_VERSION "5.0.a.12")
 
 # configure file with version information
-configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
+configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.hxx.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
 
 # Deployment target
 if(APPLE)

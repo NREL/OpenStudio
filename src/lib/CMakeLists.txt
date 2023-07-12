@@ -59,7 +59,7 @@ target_include_directories(
 install(TARGETS openstudiolib
         EXPORT openstudio
         DESTINATION ${LIB_DESTINATION_DIR}
-        COMPONENT "CPPAPI"
+        COMPONENT "CLI"  # CLI is no longer self-contained, it needs it
         INCLUDES DESTINATION include
           include/openstudio
         )

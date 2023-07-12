@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #ifndef UTILITIES_FILETYPES_RUNOPTIONS_HPP
@@ -35,9 +11,7 @@
 #include "../core/Logger.hpp"
 #include "../core/Deprecated.hpp"
 
-namespace Json {
-class Value;
-}
+#include <json/json.h>
 
 namespace openstudio {
 
@@ -52,15 +26,23 @@ namespace detail {
 class UTILITIES_API CustomOutputAdapter
 {
  public:
-  CustomOutputAdapter(const std::string& customFileName, const std::string& className, const std::string& options);
+  // Couldn't add both ctors, it's ambiguous... so retaining existing as a static factory fromString
+  static CustomOutputAdapter fromString(std::string customFileName, std::string className, const std::string& options);
+  explicit CustomOutputAdapter(std::string customFileName, std::string className, Json::Value options = Json::nullValue);
+
   std::string customFileName() const;
   std::string className() const;
   std::string options() const;
+  Json::Value optionsJSON() const;
+
+  Json::Value toJSON() const;
 
  private:
+  REGISTER_LOGGER("openstudio.CustomOutputAdapter");
+
   std::string m_customFileName;
   std::string m_className;
-  std::string m_options;
+  Json::Value m_options;
 };
 
 /** Base class for defining a run options for a OpenStudio Workflow. */
@@ -74,6 +56,8 @@ class UTILITIES_API RunOptions
 
   /// Construct from JSON formatted string
   static boost::optional<RunOptions> fromString(const std::string& s);
+
+  Json::Value toJSON() const;
 
   /// Serialize to JSON formatted string
   std::string string() const;
@@ -110,9 +94,9 @@ class UTILITIES_API RunOptions
   bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
   void resetCustomOutputAdapter();
 
-  OS_DEPRECATED std::string forwardTranslateOptions() const;
-  OS_DEPRECATED bool setForwardTranslateOptions(const std::string& options);
-  OS_DEPRECATED void resetForwardTranslateOptions();
+  OS_DEPRECATED(3, 6, 0) std::string forwardTranslateOptions() const;
+  OS_DEPRECATED(3, 6, 0) bool setForwardTranslateOptions(const std::string& options);
+  OS_DEPRECATED(3, 6, 0) void resetForwardTranslateOptions();
 
   ForwardTranslatorOptions forwardTranslatorOptions() const;
   bool setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions);

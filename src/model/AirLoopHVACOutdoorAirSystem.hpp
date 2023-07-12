@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #ifndef MODEL_AIRLOOPHVACOUTDOORAIRSYSTEM_HPP
@@ -63,6 +39,9 @@ namespace model {
    */
     explicit AirLoopHVACOutdoorAirSystem(Model& model, const ControllerOutdoorAir& controller);
 
+    /** A default ControllerOutdoorAir will be created for you */
+    explicit AirLoopHVACOutdoorAirSystem(Model& model);
+
     virtual ~AirLoopHVACOutdoorAirSystem() = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& other) = default;
@@ -93,53 +72,53 @@ namespace model {
     /** Returns the optional ModelObject attached to the return air port. **/
     boost::optional<ModelObject> returnAirModelObject();
 
-    /** Returns the optional ModelObject attached to the outdoor air port. **/
+    /** Returns the optional ModelObject attached to the outdoor air port.
+     *  This is NOT the same as the outboardOANode (unless there isn't nothing on the outdoor air stream)
+     *  It is the oa node closest to the OA system **/
     boost::optional<ModelObject> outdoorAirModelObject();
 
-    /** Returns the optional ModelObject attached to the relief air port. **/
+    /** Returns the optional ModelObject attached to the relief air port.
+     *  This is NOT the same as the outboardReliefNode (unless there isn't nothing on the relief stream)
+     *  It is the relief node closest to the OA system **/
     boost::optional<ModelObject> reliefAirModelObject();
 
     /** Returns the optional ModelObject attached to the mixer air port. **/
     boost::optional<ModelObject> mixedAirModelObject();
 
     /** Returns the most outboard outdoor air Node. **/
-    boost::optional<Node> outboardOANode() const;
+    boost::optional<Node> outboardOANode() const;  // TODO: shouldn't be optional
 
     /** Returns the most outboard relief air Node. **/
-    boost::optional<Node> outboardReliefNode() const;
+    boost::optional<Node> outboardReliefNode() const;  // TODO: shouldn't be optional
 
-    /** Returns a vector of model objects that are on the path of the incoming outdoor air stream. **/
-    std::vector<ModelObject> oaComponents() const;
+    /** Returns a vector of model objects that are on the path of the incoming outdoor air stream.
+     * This is orderded like the airflow: from the outdoorOANode (OA Intake) towards the OASystem itself **/
+    std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-    /** Returns a vector of model objects that are on the path of the outgoing relief air stream. **/
-    std::vector<ModelObject> reliefComponents() const;
+    /** Returns a vector of model objects that are on the path of the outgoing relief air stream.
+      * This is orderded like the airflow: from the OASystem itself towards the outboardReliefNode (Relief to Outside) **/
+    std::vector<ModelObject> reliefComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
     /** Returns a vector that is the concatenation of oaComponents() and reliefComponents(). **/
-    std::vector<ModelObject> components() const;
+    std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
     /** Returns the optional ModelObject with the Handle given.  The optional
    *  will be false if the given handle does not correspond to the a ModelObject
    *  that is not part of the outdoor air system.
    **/
-    boost::optional<ModelObject> component(openstudio::Handle handle);
+    boost::optional<ModelObject> component(openstudio::Handle handle) const;
 
     /** Returns the optional ModelObject with the Handle given.  The optional
    *  will be false if the given handle does not correspond to the a ModelObject
    *  that is not part of the supply side of the outdoor air system.
    **/
-    boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
+    boost::optional<ModelObject> oaComponent(openstudio::Handle handle) const;
 
     /** Returns the optional ModelObject with the Handle given.  The optional
    *  will be false if the given handle does not correspond to the a ModelObject
    *  that is not part of the supply side of the outdoor air system.
    **/
-    boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
-
-    virtual bool addToNode(Node& node);
-
-    virtual std::vector<openstudio::IdfObject> remove();
-
-    virtual ModelObject clone(Model model) const;
+    boost::optional<ModelObject> reliefComponent(openstudio::Handle handle) const;
 
     /** Returns the ControllerOutdoorAir object associated with the AirLoopHVACOutdoorAirSystem. **/
     ControllerOutdoorAir getControllerOutdoorAir() const;
@@ -148,7 +127,7 @@ namespace model {
     bool setControllerOutdoorAir(const ControllerOutdoorAir& controllerOutdoorAir);
 
     /** Reimplemented from HVACComponent. **/
-    boost::optional<AirLoopHVAC> airLoop() const;
+    boost::optional<AirLoopHVAC> airLoop() const;  // TODO: this shouldn't exist!!!
 
     AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
