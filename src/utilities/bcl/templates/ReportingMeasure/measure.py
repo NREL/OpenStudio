@@ -4,8 +4,9 @@
 # http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 """
 
-import openstudio
 from pathlib import Path
+
+import openstudio
 
 
 class ReportingMeasureName(openstudio.measure.ReportingMeasure):
@@ -50,7 +51,7 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
 
         report_drybulb_temp = openstudio.measure.OSArgument.makeBoolArgument("report_drybulb_temp", True)
         report_drybulb_temp.setDisplayName("Add output variables for Drybulb Temperature")
-        report_drybulb_temp.setDescription('Will add drybulb temp and report min/mix value in html.')
+        report_drybulb_temp.setDescription("Will add drybulb temp and report min/mix value in html.")
         report_drybulb_temp.setValue(True)
         args.append(report_drybulb_temp)
 
@@ -65,9 +66,7 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
         return outs
 
     def energyPlusOutputRequests(
-        self,
-        runner: openstudio.measure.OSRunner,
-        user_arguments: openstudio.measure.OSArgumentMap
+        self, runner: openstudio.measure.OSRunner, user_arguments: openstudio.measure.OSArgumentMap
     ):
         """Returns a vector of IdfObject's to request EnergyPlus objects needed by the run method."""
         super().energyPlusOutputRequests(runner, user_arguments)  # Do **NOT** remove this line
@@ -78,7 +77,7 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
         # get the last model and sql file
         model = runner.lastOpenStudioModel()
         if not model.is_initialized():
-            runner.registerError('Cannot find last model.')
+            runner.registerError("Cannot find last model.")
             return False
 
         model = model.get()
@@ -87,9 +86,10 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
         if not runner.validateUserArguments(self.arguments(model), user_arguments):
             return False
 
-        if runner.getBoolArgumentValue('report_drybulb_temp', user_arguments):
+        if runner.getBoolArgumentValue("report_drybulb_temp", user_arguments):
             request = openstudio.IdfObject.load(
-                'Output:Variable, , Site Outdoor Air Drybulb Temperature, Hourly;').get()
+                "Output:Variable, , Site Outdoor Air Drybulb Temperature, Hourly;"
+            ).get()
             result.append(request)
 
         return result
@@ -105,7 +105,7 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
         # get the last model and sql file
         model = runner.lastOpenStudioModel()
         if not model.is_initialized():
-            runner.registerError('Cannot find last model.')
+            runner.registerError("Cannot find last model.")
             return False
         model = model.get()
 
@@ -114,12 +114,12 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
             return False
 
         # get measure arguments
-        report_drybulb_temp = runner.getBoolArgumentValue('report_drybulb_temp', user_arguments)
+        report_drybulb_temp = runner.getBoolArgumentValue("report_drybulb_temp", user_arguments)
 
         # load sql file
         sql_file = runner.lastEnergyPlusSqlFile()
         if not sql_file.is_initialized():
-            runner.registerError('Cannot find last sql file.')
+            runner.registerError("Cannot find last sql file.")
             return False
 
         sql_file = sql_file.get()
@@ -226,23 +226,23 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
                 env_type = sql_file.environmentType(env_pd)
                 if not env_type.is_initialized():
                     continue
-                if env_type.get() == openstudio.EnvironmentType('WeatherRunPeriod'):
+                if env_type.get() == openstudio.EnvironmentType("WeatherRunPeriod"):
                     ann_env_pd = env_pd
                     break
             if ann_env_pd is None:
-                runner.registerWarning('No annual environment period found.')
+                runner.registerWarning("No annual environment period found.")
             else:
                 # get desired variable
-                key_value = 'Environment'
-                time_step = 'Hourly'  # "Zone Timestep", "Hourly", "HVAC System Timestep"
-                variable_name = 'Site Outdoor Air Drybulb Temperature'
+                key_value = "Environment"
+                time_step = "Hourly"  # "Zone Timestep", "Hourly", "HVAC System Timestep"
+                variable_name = "Site Outdoor Air Drybulb Temperature"
 
                 # key value would go at the end if we used it.
                 output_timeseries = sql_file.timeSeries(ann_env_pd, time_step, variable_name, key_value)
                 if not output_timeseries.is_initialized():
-                    runner.registerWarning('Timeseries not found.')
+                    runner.registerWarning("Timeseries not found.")
                 else:
-                    runner.registerInfo('Found timeseries.')
+                    runner.registerInfo("Found timeseries.")
 
                     output_timeseries = output_timeseries.get()
                     values = output_timeseries.values()
@@ -369,8 +369,8 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
 
         # write html file: any file named 'report*.*' in the current working directory
         # will be copied to the ./reports/ folder as 'reports/<measure_class_name>_<filename>.html'
-        html_out_path = Path('./report.html').absolute()
-        with open(html_out_path, 'w') as f:
+        html_out_path = Path("./report.html").absolute()
+        with open(html_out_path, "w") as f:
             f.write(output)
 
         # Close the sql file

@@ -1,50 +1,35 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "Polyhedron.hpp"
 #include "Polygon3d.hpp"
-#include "Vector3d.hpp"
-#include "Point3d.hpp"
+
 #include "Geometry.hpp"
-#include "Plane.hpp"
 #include "Intersection.hpp"
-#include <utilities/geometry/Transformation.hpp>
+#include "Plane.hpp"
+#include "Point3d.hpp"
+#include "Transformation.hpp"
+#include "Vector3d.hpp"
+
+#include <fmt/core.h>
 
 #include <algorithm>
+#include <numeric>
 #include <utility>
 #include <vector>
 
 namespace openstudio {
 
-Surface3dEdge::Surface3dEdge(Point3d start, Point3d end, Surface3d firstSurface, size_t firstSurfNum)
-  : m_start(std::move(start)), m_end(std::move(end)), m_firstSurfNum(firstSurfNum) {
-  m_allSurfaces.emplace_back(std::move(firstSurface));
+Surface3dEdge::Surface3dEdge(Point3d start, Point3d end, const Surface3d& firstSurface)
+  : m_start(std::move(start)), m_end(std::move(end)), m_firstSurfaceName(firstSurface.name) {
+  m_allSurfNums.push_back(firstSurface.surfNum);
+}
+
+Surface3dEdge::Surface3dEdge(Point3d start, Point3d end, std::string t_name, size_t t_surfNum)
+  : m_start(std::move(start)), m_end(std::move(end)), m_firstSurfaceName(std::move(t_name)) {
+  m_allSurfNums.push_back(t_surfNum);
 }
 
 /// check equality
@@ -58,136 +43,254 @@ bool Surface3dEdge::operator!=(const Surface3dEdge& other) const {
   return !(*this == other);
 }
 
-Point3d Surface3dEdge::start() const {
+bool Surface3dEdge::reverseEqual(const Surface3dEdge& other) const {
+  return isAlmostEqual3dPt(m_start, other.m_end) && isAlmostEqual3dPt(m_end, other.m_start);
+}
+
+const Point3d& Surface3dEdge::start() const {
   return m_start;
 }
-Point3d Surface3dEdge::end() const {
+const Point3d& Surface3dEdge::end() const {
   return m_end;
 }
 
 size_t Surface3dEdge::count() const {
-  return m_allSurfaces.size();
+  return m_allSurfNums.size();
 }
 
 size_t Surface3dEdge::firstSurfNum() const {
-  return m_firstSurfNum;
+  return m_allSurfNums.front();
 }
 
-std::vector<Surface3d> Surface3dEdge::allSurfaces() const {
-  return m_allSurfaces;
+std::string Surface3dEdge::firstSurfaceName() const {
+  return m_firstSurfaceName;
 }
 
-void Surface3dEdge::appendSurface(Surface3d surface) {
-  m_allSurfaces.emplace_back(std::move(surface));
+const std::vector<size_t>& Surface3dEdge::allSurfNums() const {
+  return m_allSurfNums;
+}
+
+void Surface3dEdge::markConflictedOrientation() {
+  m_conflictedOrientation = true;
+}
+
+bool Surface3dEdge::hasConflictedOrientation() const {
+  return m_conflictedOrientation;
+}
+
+void Surface3dEdge::markCreated() {
+  m_hasBeenCreated = true;
+}
+
+bool Surface3dEdge::hasBeenCreated() const {
+  return m_hasBeenCreated;
+}
+
+void Surface3dEdge::appendSurface(const Surface3d& surface) {
+  m_allSurfNums.emplace_back(surface.surfNum);
+}
+
+void Surface3dEdge::resetEdgeMatching() {
+  m_allSurfNums.erase(std::next(m_allSurfNums.begin()), m_allSurfNums.end());
+  m_conflictedOrientation = false;
 }
 
 bool Surface3dEdge::containsPoint(const Point3d& testVertex) {
   return !isAlmostEqual3dPt(m_start, testVertex) && !isAlmostEqual3dPt(m_end, testVertex) && isPointOnLineBetweenPoints(m_start, m_end, testVertex);
 }
 
+Vector3d Surface3dEdge::asVector() const {
+  return m_end - m_start;
+}
+
 std::ostream& operator<<(std::ostream& os, const Surface3dEdge& edge) {
   os << "Surface3dEdge: start=" << edge.start() << ", end=" << edge.end() << ", count=" << edge.count()
-     << ", firstSurface=" << edge.allSurfaces()[0].name;
+     << ", firstSurface=" << edge.firstSurfaceName();
   return os;
 }
 
-Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name) : vertices(std::move(t_vertices)), name(std::move(t_name)) {}
+Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name, size_t t_surfNum)
+  : vertices(std::move(t_vertices)), name(std::move(t_name)), surfNum(t_surfNum) {
+  for (auto it = vertices.begin(); it != vertices.end(); ++it) {
 
-Polyhedron::Polyhedron(std::vector<Surface3d> surfaces) : m_surfaces(std::move(surfaces)){};
+    auto itnext = std::next(it);
+    if (itnext == std::end(vertices)) {
+      itnext = std::begin(vertices);
+    }
 
-size_t Polyhedron::numVertices() const {
-  size_t count = 0;
-  for (const auto& surface : m_surfaces) {
-    count += surface.vertices.size();
+    edges.emplace_back(*it, *itnext, t_name, t_surfNum);
   }
-  return count;
 }
 
-std::vector<Point3d> Polyhedron::uniqueVertices() const {
+bool Surface3d::operator<(const Surface3d& rhs) const {
+  return this->name < rhs.name;
+}
 
-  std::vector<Point3d> uniqVertices;
-  uniqVertices.reserve(numVertices());
+size_t Surface3d::numConflictedEdges() const {
+  return std::count_if(edges.cbegin(), edges.cend(), [](const auto& edge) { return edge.hasConflictedOrientation(); });
+}
 
-  for (const auto& surface : m_surfaces) {
-    for (const auto& pt : surface.vertices) {
-      if (std::find_if(uniqVertices.cbegin(), uniqVertices.cend(), [&pt](const auto& unqV) { return isAlmostEqual3dPt(pt, unqV); })
-          == uniqVertices.cend()) {
-        uniqVertices.push_back(pt);
+double Surface3d::ratioOfConflictedEdges() const {
+  return static_cast<double>(numConflictedEdges()) / static_cast<double>(edges.size());
+}
+
+void Surface3d::resetEdgeMatching() {
+  for (auto& edge : edges) {
+    edge.resetEdgeMatching();
+  }
+}
+
+bool Surface3d::isConvex() const {
+
+  // for each triangle of 3 points, we compute the triangleNormal by taking the cross product of AB x AC.
+  // We then take the dot product with the initial outwardNormal. If the dot product is negative, this means the triangleNomal is pointing in the
+  // opposite direction and we therefore have a non convex surface
+
+  // const auto& a = edges.front().start();
+  // const auto& b = edges.front().end();
+  // const auto& c = edges.at(1).end();
+
+  auto ab1 = edges.front().asVector();
+  auto bc1 = edges[1].asVector();
+  auto outwardNormal = ab1.cross(bc1);
+  outwardNormal.normalize();
+
+  for (auto it = std::next(edges.begin()); it != edges.end(); ++it) {
+    auto itnext = std::next(it);
+    if (itnext == std::end(edges)) {
+      itnext = std::begin(edges);
+    }
+    const Point3d& a = it->start();
+    const Point3d& b = it->end();
+    const Point3d& c = itnext->end();
+
+    auto ab = b - a;
+    auto ac = c - a;
+
+    auto triangleNormal = ab.cross(ac);
+    auto d = outwardNormal.dot(triangleNormal);
+    if (d < 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+Polyhedron::Polyhedron(std::vector<Surface3d> surfaces) : m_surfaces(std::move(surfaces)) {
+  performEdgeMatching();
+
+  // if all edges had two counts then it is fully enclosed
+  if (!hasEdgesNot2()) {
+    m_isEnclosedVolume = true;
+  } else {
+    LOG(Warn, "Polyhedron is not enclosed in original testing. Trying to add missing colinear points.");
+    updateZonePolygonsForMissingColinearPoints();
+  }
+  if (!m_isEnclosedVolume) {
+    LOG(Warn, "Polyhedron is not enclosed.");
+  } else {
+    // We call the volume calculation... if this ends up being negative, we're in the case where ALL surfaces are in the wrong orientation
+    if (!m_hasAnySurfaceWithIncorrectOrientation) {
+      m_polyhedronVolume = calcPolyhedronVolume();
+      if (m_polyhedronVolume < 0) {
+        LOG(Error, "It seems that ALL surfaces are reversed");
+        m_hasAnySurfaceWithIncorrectOrientation = true;
+        m_isCompletelyInsideOut = true;
       }
     }
   }
-  return uniqVertices;
+};
+
+bool Polyhedron::hasEdgesNot2() const {
+  return std::any_of(m_surfaces.cbegin(), m_surfaces.cend(), [](const auto& surface) {
+    return std::any_of(surface.edges.cbegin(), surface.edges.cend(), [](const auto& edge) { return edge.count() != 2; });
+  });
 }
 
-std::vector<Surface3dEdge> Polyhedron::edgesNotTwoForEnclosedVolumeTest(const Polyhedron& volumePoly) {
+bool Polyhedron::hasAnySurfaceWithIncorrectOrientation() const {
+  return m_hasAnySurfaceWithIncorrectOrientation;
+}
 
-  std::vector<Surface3dEdge> uniqueSurface3dEdges;
-  uniqueSurface3dEdges.reserve(volumePoly.numVertices());
+bool Polyhedron::hasAddedColinearPoints() const {
+  return m_hasAddedColinearPoints;
+}
 
-  // construct list of unique edges
-  int surfNum = 0;
-  for (const auto& surface : volumePoly.m_surfaces) {
-    LOG(Debug, "Surface: " << surface.name);
-    const auto& vertices = surface.vertices;
-    for (auto it = vertices.begin(); it != vertices.end(); ++it) {
-      auto itnext = std::next(it);
-      if (itnext == std::end(vertices)) {
-        itnext = std::begin(vertices);
+bool Polyhedron::isEnclosedVolume() const {
+  return m_isEnclosedVolume;
+}
+
+bool Polyhedron::isCompletelyInsideOut() const {
+  return m_isCompletelyInsideOut;
+}
+
+void Polyhedron::performEdgeMatching() {
+
+  m_hasAnySurfaceWithIncorrectOrientation = false;
+
+  for (size_t i = 0; i < m_surfaces.size(); ++i) {
+    for (size_t j = 0; j < m_surfaces.size(); ++j) {
+      if (i == j) {
+        continue;
       }
-      Surface3dEdge thisSurface3dEdge(*it, *itnext, surface, surfNum);
-      auto itFound = std::find(uniqueSurface3dEdges.begin(), uniqueSurface3dEdges.end(), thisSurface3dEdge);
-      if (itFound == uniqueSurface3dEdges.end()) {
-        LOG(Debug, "NOT FOUND: " << thisSurface3dEdge);
-        uniqueSurface3dEdges.emplace_back(std::move(thisSurface3dEdge));
-      } else {
-        LOG(Debug, "    FOUND: " << thisSurface3dEdge);
-        itFound->appendSurface(surface);
+      auto& surface1 = m_surfaces[i];
+      auto& surface2 = m_surfaces[j];
+      for (Surface3dEdge& edge1 : surface1.edges) {
+        for (Surface3dEdge& edge2 : surface2.edges) {
+          if (edge1 == edge2) {
+            if (std::find(edge1.allSurfNums().begin(), edge1.allSurfNums().cend(), edge2.firstSurfNum()) == edge1.allSurfNums().end()) {
+              // appendSurface will allow use to check edge.count() later to check if count == 2.
+              // All edges must be count == 2 in an Enclosed Polyhedron
+              edge1.appendSurface(surface2);
+              edge2.appendSurface(surface1);
+              // In a Polyhedron that has a consistent orientation (typically all faces are in counter clockwise order),
+              // each edge must be matched by an edge in the **opposite** direction. If not, mark conflicted
+              if (!edge1.reverseEqual(edge2)) {
+                edge1.markConflictedOrientation();
+                edge2.markConflictedOrientation();
+                m_hasAnySurfaceWithIncorrectOrientation = true;
+              }
+            }
+          }
+        }
       }
     }
-    ++surfNum;
   }
-
-  for (auto& edge : uniqueSurface3dEdges) {
-    LOG(Debug, edge);
-  }
-  // All edges for an enclosed polyhedron should be shared by two (and only two) sides.
-  // So if the count is not two for all edges, the polyhedron is not enclosed, so erase all that are 2
-  uniqueSurface3dEdges.erase(
-    std::remove_if(uniqueSurface3dEdges.begin(), uniqueSurface3dEdges.end(), [](const auto& edge) { return edge.count() == 2; }),
-    uniqueSurface3dEdges.end());
-
-  return uniqueSurface3dEdges;
 }
 
-Polyhedron Polyhedron::updateZonePolygonsForMissingColinearPoints() const {
-  // Make a copy, we don't want to mutate in place
-  Polyhedron updZonePoly(*this);
+void Polyhedron::resetEdgeMatching() {
+  for (auto& surface : m_surfaces) {
+    surface.resetEdgeMatching();
+  }
+  m_hasAnySurfaceWithIncorrectOrientation = false;
+}
 
-  std::vector<Point3d> uniqVertices = uniqueVertices();
+void Polyhedron::updateZonePolygonsForMissingColinearPoints() {
+  const std::vector<Point3d> uniqVertices = uniqueVertices();
 
-  for (auto& surface : updZonePoly.m_surfaces) {
-    // for (int iterationLimiter = 0; iterationLimiter < 20; ++iterationLimiter) {  // could probably be while loop but want to make sure it does not get stuck
+  bool anyInserted = false;
+
+  for (auto& surface : m_surfaces) {
     LOG(Debug, surface.name)
     bool insertedVertext = true;
     while (insertedVertext) {
       insertedVertext = false;
-      auto& vertices = surface.vertices;
-      for (auto it = vertices.begin(); it != vertices.end(); ++it) {
 
-        auto itnext = std::next(it);
-        if (itnext == std::end(vertices)) {
-          itnext = std::begin(vertices);
-        }
-
-        // Don't care about surfNum
-        Surface3dEdge thisSurface3dEdge(*it, *itnext, surface, 0);
+      for (auto it = surface.edges.begin(); it != surface.edges.end(); ++it) {
 
         // now go through all the vertices and see if they are colinear with start and end vertices
         for (const auto& testVertex : uniqVertices) {
-          if (thisSurface3dEdge.containsPoint(testVertex)) {
-            LOG(Debug, testVertex << " is on " << thisSurface3dEdge);
-            vertices.insert(itnext, testVertex);
+          if (const boost::optional<Surface3dEdge> newEdge = it->splitEdge(testVertex)) {
+            LOG(Debug, testVertex << " is on " << *it);
+            auto itnext = std::next(it);
+            if (itnext == std::end(surface.edges)) {
+              itnext = std::begin(surface.edges);
+            }
+            auto before_pos = std::distance(surface.edges.begin(), itnext);
+            surface.edges.insert(itnext, newEdge.get());
+            surface.vertices.insert(std::next(surface.vertices.begin(), before_pos), testVertex);
+
             insertedVertext = true;
+            anyInserted = true;
             break;
           }
         }
@@ -198,56 +301,144 @@ Polyhedron Polyhedron::updateZonePolygonsForMissingColinearPoints() const {
       }
     }
   }
-  return updZonePoly;
+
+  if (anyInserted) {
+    resetEdgeMatching();
+    performEdgeMatching();
+    m_hasAddedColinearPoints = true;
+    m_isEnclosedVolume = !hasEdgesNot2();
+  }
 }
 
-std::vector<Surface3dEdge> edgesInBoth(const std::vector<Surface3dEdge>& edges1, const std::vector<Surface3dEdge>& edges2) {
-  // this is not optimized but the number of edges for a typical polyhedron is 12 and is probably rarely bigger than 20.
+size_t Polyhedron::numVertices() const {
+  return std::accumulate(m_surfaces.cbegin(), m_surfaces.cend(), 0, [](size_t sum, const auto& surface) { return sum + surface.edges.size(); });
+}
 
-  // (std::set_union could be used, but that requires sorting...)
-  std::vector<Surface3dEdge> inBoth;
-  for (const auto& e1 : edges1) {
-    for (const auto& e2 : edges2) {
-      // If they have the same surface and are the same (within tolerance)
-      if ((e1.firstSurfNum() == e2.firstSurfNum()) && (e1 == e2)) {
-        inBoth.push_back(e1);
-        break;
+std::vector<Point3d> Polyhedron::uniqueVertices() const {
+
+  std::vector<Point3d> uniqVertices;
+  uniqVertices.reserve(numVertices());
+
+  for (const auto& surface : m_surfaces) {
+    for (const auto& edge : surface.edges) {
+      const auto& pt = edge.start();
+      if (std::find_if(uniqVertices.cbegin(), uniqVertices.cend(), [&pt](const auto& unqV) { return isAlmostEqual3dPt(pt, unqV); })
+          == uniqVertices.cend()) {
+        uniqVertices.push_back(pt);
       }
     }
   }
-  return inBoth;
+  return uniqVertices;
 }
 
-VolumeEnclosedReturnType Polyhedron::isEnclosedVolume() const {
+std::vector<Surface3dEdge> Polyhedron::uniqueEdges() const {
 
-  VolumeEnclosedReturnType result;
+  std::vector<Surface3dEdge> uniqueSurface3dEdges;
+  uniqueSurface3dEdges.reserve(numVertices());
 
-  std::vector<Surface3dEdge> edgeNot2orig = edgesNotTwoForEnclosedVolumeTest(*this);
-  // if all edges had two counts then it is fully enclosed
-  if (edgeNot2orig.empty()) {
-    result.isEnclosedVolume = true;
-    return result;
-  } else {  // if the count is three or greater it is likely that a vertex that is colinear was counted on the faces on one edge and not
-            // on the "other side" of the edge Go through all the points looking for the number that are colinear and see if that is
-            // consistent with the number of edges found that didn't have a count of two
-    Polyhedron updatedZonePoly =
-      updateZonePolygonsForMissingColinearPoints();  // this is done after initial test since it is computationally intensive.
-    std::vector<Surface3dEdge> edgeNot2again = edgesNotTwoForEnclosedVolumeTest(updatedZonePoly);
-    if (edgeNot2again.empty()) {
-      result.isEnclosedVolume = true;
-      return result;
+  // construct list of unique edges
+  for (const auto& surface : m_surfaces) {
+    for (const Surface3dEdge& thisSurface3dEdge : surface.edges) {
+      auto itFound = std::find(uniqueSurface3dEdges.begin(), uniqueSurface3dEdges.end(), thisSurface3dEdge);
+      if (itFound == uniqueSurface3dEdges.end()) {
+        uniqueSurface3dEdges.push_back(thisSurface3dEdge);
+      }
     }
-    // only return a list of those edges that appear in both the original edge and the revised edges:
-    // this eliminates added edges that will confuse users (edges that were caught by the updateZonePolygonsForMissingColinearPoints routine)
-    result.isEnclosedVolume = false;
-    result.edgesNot2 = edgesInBoth(edgeNot2orig, edgeNot2again);
-    return result;
   }
+
+  return uniqueSurface3dEdges;
+}
+
+std::vector<Surface3dEdge> Polyhedron::edgesNotTwo(bool includeCreatedEdges) const {
+
+  std::vector<Surface3dEdge> edgesNotTwo;
+  edgesNotTwo.reserve(numVertices());
+
+  // All edges for an enclosed polyhedron should be shared by two (and only two) side
+  for (const auto& surface : m_surfaces) {
+    for (const Surface3dEdge& thisSurface3dEdge : surface.edges) {
+      // only return a list of those edges that appear in both the original edge and the revised edges:
+      // this eliminates added edges that will confuse users (edges that were caught by the updateZonePolygonsForMissingColinearPoints routine)
+      if ((thisSurface3dEdge.count() != 2) && (includeCreatedEdges || !thisSurface3dEdge.hasBeenCreated())) {
+        auto itFound = std::find(edgesNotTwo.begin(), edgesNotTwo.end(), thisSurface3dEdge);
+        if (itFound == edgesNotTwo.end()) {
+          edgesNotTwo.push_back(thisSurface3dEdge);
+        }
+      }
+    }
+  }
+  for (auto& edge : edgesNotTwo) {
+    LOG(Debug, edge);
+  }
+
+  return edgesNotTwo;
+}
+
+boost::optional<Surface3dEdge> Surface3dEdge::splitEdge(Point3d testVertex) {
+  if (containsPoint(testVertex)) {
+    Surface3dEdge newEdge(*this);
+    this->m_end = testVertex;
+    newEdge.m_start = std::move(testVertex);
+    this->markCreated();
+    newEdge.markCreated();
+    return newEdge;
+  }
+
+  return boost::none;
+}
+
+std::vector<Surface3d> Polyhedron::findSurfacesWithIncorrectOrientation() const {
+
+  if (!m_hasAnySurfaceWithIncorrectOrientation) {
+    return {};
+  }
+
+  if (m_isCompletelyInsideOut) {
+    LOG(Error, "It seems that ALL surfaces are reversed");
+    return m_surfaces;
+  }
+
+  if (!m_isEnclosedVolume) {
+    LOG(Warn, "Polyhedron is not enclosed. Looking surfaces with incorrect orientations can return false negatives.");
+    //  return {};
+  }
+
+  std::vector<Surface3dEdge> uniqueSurface3dEdges = uniqueEdges();
+
+  // Remove non-conflicted edges (Note: this also removes any edge that doesn't have at least one match... since these can't be conflicted)
+  uniqueSurface3dEdges.erase(
+    std::remove_if(uniqueSurface3dEdges.begin(), uniqueSurface3dEdges.end(), [](const auto& edge) { return !edge.hasConflictedOrientation(); }),
+    uniqueSurface3dEdges.end());
+  if (uniqueSurface3dEdges.empty()) {
+    return {};
+  }
+
+  std::set<Surface3d> conflictedSurfaces;
+  for (auto& edge : uniqueSurface3dEdges) {
+    const auto& surfNums = edge.allSurfNums();
+    const size_t sfIndex1 = surfNums.front();
+    const size_t sfIndex2 = surfNums.back();
+
+    const auto& sf1 = m_surfaces.at(sfIndex1);
+    const auto& sf2 = m_surfaces.at(sfIndex2);
+
+    const auto c1 = sf1.ratioOfConflictedEdges();
+    const auto c2 = sf2.ratioOfConflictedEdges();
+
+    LOG(Trace, fmt::format("'{}' has {:.2f}% conflicted edges ({}/{}), while '{}' has {:.2f}% conflicted edges ({}/{})", sf1.name, c1,
+                           sf1.numConflictedEdges(), sf1.edges.size(), sf2.name, c2, sf2.numConflictedEdges(), sf2.edges.size()));
+    if (c1 > c2) {
+      conflictedSurfaces.insert(sf1);
+    } else {
+      conflictedSurfaces.insert(sf2);
+    }
+  }
+
+  return {conflictedSurfaces.begin(), conflictedSurfaces.end()};
 }
 
 // boost::optional<double> Polyhedron::calculatedVolume() const {
-//   auto [isVolEnclosed, edgesNot2] = isEnclosedVolume();
-//   if (isVolEnclosed) {
+//   if (m_m_isEnclosedVolume) {
 //     return calcPolyhedronVolume();
 //   }
 //   return boost::none;
@@ -255,15 +446,16 @@ VolumeEnclosedReturnType Polyhedron::isEnclosedVolume() const {
 
 double Polyhedron::calcPolyhedronVolume() const {
 
+  const Point3d p0{};
   double volume = 0.0;
   for (const auto& surface : m_surfaces) {
     const std::vector<Point3d>& vertices = surface.vertices;
-    Vector3d p3FaceOrigin = vertices[1] - Point3d{};
+    const Vector3d p3FaceOrigin = vertices[1] - p0;
     boost::optional<Vector3d> newellAreaVector = getNewellVector(vertices);
     if (!newellAreaVector) {
       LOG_AND_THROW("Cannot compute newellAreaVector");
     }
-    double pyramidVolume = newellAreaVector->dot(p3FaceOrigin);
+    const double pyramidVolume = newellAreaVector->dot(p3FaceOrigin);
     volume += pyramidVolume;
   }
   // for (int NFace = 1; NFace <= Poly.NumSurfaceFaces; ++NFace) {
@@ -274,11 +466,23 @@ double Polyhedron::calcPolyhedronVolume() const {
   return volume / 6.0;  // Our newellArea vector has twice the length
 }
 
+double Polyhedron::polyhedronVolume() const {
+  if (m_isEnclosedVolume && (m_isCompletelyInsideOut || !m_hasAnySurfaceWithIncorrectOrientation)) {
+    return m_polyhedronVolume;
+  }
+  if (!m_isEnclosedVolume) {
+    LOG(Error, "Polyhedron volume calculation for a non-enclosed Polyhedron will return bogus values");
+  } else if (m_hasAnySurfaceWithIncorrectOrientation && !m_isCompletelyInsideOut) {
+    LOG(Error, "Polyhedron volume calculation for an enclosed Polyhedron but with incorrectly oriented surfaces will return bogus values");
+  }
+  return calcPolyhedronVolume();
+}
+
 double Polyhedron::calcDivergenceTheoremVolume() const {
   double volume = 0.0;
   for (const auto& surface : m_surfaces) {
     const std::vector<Point3d>& vertices = surface.vertices;
-    Plane plane(vertices);
+    const Plane plane(vertices);
     boost::optional<double> area = getArea(vertices);
     if (!area) {
       LOG_AND_THROW("Cannot compute area for " << surface.name);

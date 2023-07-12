@@ -15,17 +15,10 @@ RE_CONAN = re.compile(
 )
 
 
-def locate_conan_files(
-    base_dir: Path, include_cmake_files: Optional[bool] = False
-) -> List[Path]:
-
-    files = list(base_dir.glob("**/conanfile.py")) + list(
-        base_dir.glob("**/conanfile.txt")
-    )
+def locate_conan_files(base_dir: Path, include_cmake_files: Optional[bool] = False) -> List[Path]:
+    files = list(base_dir.glob("**/conanfile.py")) + list(base_dir.glob("**/conanfile.txt"))
     if include_cmake_files:
-        cmake_files = list(base_dir.glob("**/*.cmake")) + list(
-            base_dir.glob("**/CMakeLists.txt")
-        )
+        cmake_files = list(base_dir.glob("**/*.cmake")) + list(base_dir.glob("**/CMakeLists.txt"))
         for cmake_file in cmake_files:
             print(f"reading {cmake_file}")
             with open(cmake_file, "r") as f:
@@ -45,9 +38,7 @@ class RemoteInfo:
     #    r'\[Verify SSL: (?P<ssl>(?:True|False))\]'
     # )
 
-    RE_REMOTE = re.compile(
-        r"(?P<name>\w+): (?P<url>.+) \[Verify SSL: (?P<ssl>(?:True|False))\]"
-    )
+    RE_REMOTE = re.compile(r"(?P<name>\w+): (?P<url>.+) \[Verify SSL: (?P<ssl>(?:True|False))\]")
 
     @classmethod
     def from_conan_str(cls, line: str):
@@ -88,7 +79,6 @@ class PackageInfo:
         channel: Optional[str],
         rev: Optional[str],
     ):
-
         self.package = package
         self.version = version
         self.user = user
@@ -138,29 +128,20 @@ class PackageInfo:
         # print(r.decode().splitlines())
 
         # Filter out the cci.DATE stuff
-        known_versions = [
-            x for x in r.decode().splitlines() if "cci." not in x
-        ]
+        known_versions = [x for x in r.decode().splitlines() if "cci." not in x]
 
         known_versions = [
             m.version
             for x in known_versions
-            if (m := PackageInfo.from_str(x)) is not None
-            and ((self.user is None) == (m.user is None))
+            if (m := PackageInfo.from_str(x)) is not None and ((self.user is None) == (m.user is None))
         ]
 
         # Filter prereleases
-        known_versions = list(
-            filter(
-                lambda v: not version.parse(v).is_prerelease, known_versions
-            )
-        )
+        known_versions = list(filter(lambda v: not version.parse(v).is_prerelease, known_versions))
 
         # Force a version
         if self.force_version:
-            known_versions = [
-                x for x in known_versions if self.force_version in x
-            ]
+            known_versions = [x for x in known_versions if self.force_version in x]
 
         known_versions.sort(key=lambda v: version.parse(v))
         return known_versions
@@ -182,30 +163,21 @@ class PackageInfo:
             # print(f"{query} found in {remote}")
             found = True
             last_v_str = known_versions[-1]
-            if version.parse(last_v_str) >= version.parse(
-                self.last_known_version
-            ):
+            if version.parse(last_v_str) >= version.parse(self.last_known_version):
                 # print(f"FOUND {last_v_str} in {remote}")
                 self.last_known_version = last_v_str
                 self.last_known_v_remote = remote
         if not found:
-            raise ValueError(
-                f"Could not find {query} in any of the remotes: {remotes}"
-            )
+            raise ValueError(f"Could not find {query} in any of the remotes: {remotes}")
         return self.last_known_version
 
-    def _lookup_all_revs_for_version(
-        self, version: Optional[str] = None
-    ) -> str:
+    def _lookup_all_revs_for_version(self, version: Optional[str] = None) -> str:
         if version is None:
             version = self.version
 
         query = self._lookup_query(version=version)
 
-        cmd = (
-            f"conan search -r {self.last_known_v_remote.name} "
-            f"{query} -rev --raw"
-        )
+        cmd = f"conan search -r {self.last_known_v_remote.name} " f"{query} -rev --raw"
         print(cmd)
         r = subprocess.check_output(shlex.split(cmd))
 
@@ -229,12 +201,8 @@ class PackageInfo:
         cur_v = version.parse(self.version)
 
         if self.rev:
-            self.last_revs_info = self._lookup_all_revs_for_version(
-                version=self.last_known_version
-            )
-            self.last_known_rev = max(
-                self.last_revs_info, key=lambda k: self.last_revs_info[k]
-            )
+            self.last_revs_info = self._lookup_all_revs_for_version(version=self.last_known_version)
+            self.last_known_rev = max(self.last_revs_info, key=lambda k: self.last_revs_info[k])
 
         if cur_v > last_v:
             # Not expected, though that might be possible
@@ -244,16 +212,12 @@ class PackageInfo:
         elif cur_v == last_v:
             if self.rev is None:
                 print(
-                    f"\n:white_check_mark: [green]Package {self} is using "
-                    "the latest version and has no revision[/]"
+                    f"\n:white_check_mark: [green]Package {self} is using " "the latest version and has no revision[/]"
                 )
                 # No-op!
                 return False
             elif self.rev == self.last_known_rev:
-                print(
-                    f"\n:white_check_mark: [green]Package {self} is using "
-                    "the latest version and revision[/]"
-                )
+                print(f"\n:white_check_mark: [green]Package {self} is using " "the latest version and revision[/]")
                 # No-op!
                 return False
             else:
@@ -305,9 +269,7 @@ class ConanFileUpdater:
             cls.all_remotes_known = []
             r = subprocess.check_output(shlex.split("conan remote list"))
             for line in r.decode().splitlines():
-                cls.all_remotes_known.append(
-                    RemoteInfo.from_conan_str(line=line)
-                )
+                cls.all_remotes_known.append(RemoteInfo.from_conan_str(line=line))
             print(f"Found {len(cls.all_remotes_known)} remotes:")
             for remote in cls.all_remotes_known:
                 if cls.__conan_center_url in remote.url:
@@ -315,10 +277,7 @@ class ConanFileUpdater:
                 print(remote)
 
             if cls.conan_center is None:
-                raise ValueError(
-                    "Could not find any remote for conancenter: "
-                    f"{cls.__conan_center_url}"
-                )
+                raise ValueError("Could not find any remote for conancenter: " f"{cls.__conan_center_url}")
 
     def __init__(self, filepath: Path):
         if not filepath.exists():
@@ -372,19 +331,13 @@ class ConanFileUpdater:
                     self.need_updates += 1
 
     def update_conanfile(self) -> bool:
-        print(
-            "\n:crossed_fingers: [bold yellow]Checking "
-            f"{self.filepath} for updates[/]"
-        )
+        print("\n:crossed_fingers: [bold yellow]Checking " f"{self.filepath} for updates[/]")
         self.__lookup_package_updates()
         if self.need_updates == 0:
             print("\n:+1: [bold green]Everything up to date[/]")
             return False
 
-        print(
-            "\n\n:fire: :fire_engine: "
-            f"[bold cyan]{self.need_updates} packages need updates[/]\n"
-        )
+        print("\n\n:fire: :fire_engine: " f"[bold cyan]{self.need_updates} packages need updates[/]\n")
 
         with open(self.filepath, "r") as f:
             content = f.read()
@@ -402,20 +355,15 @@ class ConanFileUpdater:
 
 
 if __name__ == "__main__":
-
     base_dir = Path(__file__).resolve().parent.parent.parent
 
     conanfile = base_dir / "ConanInstall.cmake"
 
     conanfileupdater = ConanFileUpdater(filepath=conanfile)
 
-    conanfileupdater.flag_package_to_check_in_all_remotes(
-        package_name="openstudio_ruby"
-    )
+    conanfileupdater.flag_package_to_check_in_all_remotes(package_name="openstudio_ruby")
 
-    conanfileupdater.force_package_version(
-        package_name="openssl", version_contains="1.1.1"
-    )
+    conanfileupdater.force_package_version(package_name="openssl", version_contains="1.1.1")
 
     if conanfileupdater.update_conanfile():
         exit(1)

@@ -204,6 +204,4 @@ namespace boost {
 
 %rename(multiplyEqual) operator *=;
 
-
-
 #endif // UTILITIES_RUBY_LANGUAGESPECIFIC_I

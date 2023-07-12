@@ -4,8 +4,9 @@
 # http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 """
 
-import openstudio
 import typing
+
+import openstudio
 
 
 class ModelMeasureName(openstudio.measure.ModelMeasure):

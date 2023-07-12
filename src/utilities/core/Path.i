@@ -295,7 +295,24 @@ namespace openstudio {
   #endif
 
   #ifdef SWIGPYTHON
-    %typemap(in) (path) {
+
+    %fragment("SWIG_openstudio_path", "header") {
+        SWIGINTERN PyObject * importPathCls() {
+            PyObject * pymodule = PyImport_ImportModule("pathlib");
+            PyObject * cls = PyObject_GetAttrString(pymodule, "Path");
+            Py_DECREF(pymodule);
+            return cls;
+        }
+
+        SWIGINTERN bool isPathInstance(PyObject * obj) {
+            PyObject * cls = importPathCls();
+            bool is_instance =  PyObject_IsInstance(obj, cls);
+            Py_DECREF(cls);
+            return is_instance;
+        }
+    }
+
+    %typemap(in, fragment="SWIG_openstudio_path") (path) {
 
       // check if input is a path already
       void *vptr = 0;
@@ -306,7 +323,7 @@ namespace openstudio {
           openstudio::path * p = reinterpret_cast< openstudio::path * >(vptr);
           $1 = openstudio::path(*p);
         }else{
-          SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &");
+          SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path");
         }
       } else if(PyUnicode_Check($input)) {
         // Python 3
@@ -316,29 +333,46 @@ namespace openstudio {
         // Python2, PyString_Check does PyBytes_Check
         std::string s(PyString_AsString($input));
         $1 = openstudio::toPath(s);
+      } else if (isPathInstance($input)) {
+        PyObject * str_obj = PyObject_Str($input);   // New reference
+        const char * s = PyUnicode_AsUTF8(str_obj);  // This stores the UTF-8 representation buffer within str_obj
+        $1 = openstudio::toPath(s);
+        Py_DECREF(str_obj);
       } else {
-        SWIG_exception_fail(SWIG_ArgError(res), "Wrong input type for openstudio::path const &");
+        SWIG_exception_fail(SWIG_ArgError(res), "Wrong input type for openstudio::path");
       }
     }
 
-    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (path) {
-      bool stringType = PyString_Check($input) || PyUnicode_Check($input);
+    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING, fragment="SWIG_openstudio_path") (path) {
+      bool stringOrPathlibType = PyString_Check($input) || PyUnicode_Check($input) || isPathInstance($input);
       bool pathType = false;
-      if (!stringType){
+      if (stringOrPathlibType){
         void *vptr = 0;
         int res = SWIG_ConvertPtr($input, &vptr, $&1_descriptor, 0);
         pathType = (SWIG_IsOK(res) && (vptr != 0));
       }
-      $1 = (stringType || pathType) ? 1 : 0;
+      $1 = (stringOrPathlibType || pathType) ? 1 : 0;
     }
 
     // no need for freearg typemap since new did not get called
+
+    %typemap(out, fragment="SWIG_openstudio_path") path {
+        const std::string s = $1.string();
+
+        PyObject * cls = importPathCls();
+
+        PyObject* args = Py_BuildValue("(s)", s.data());
+        $result = PyObject_CallObject(cls, args);
+
+        Py_DECREF(cls);
+        Py_DECREF(args);
+    }
 
     // handle const path like path
     %apply path { const path };
 
     // handle const path& separately
-    %typemap(in) (const path&) {
+    %typemap(in, fragment="SWIG_openstudio_path") (const path&) {
       $1=NULL;
 
       // check if input is a path already
@@ -360,20 +394,25 @@ namespace openstudio {
         // Python2, PyString_Check does PyBytes_Check
         std::string s(PyString_AsString($input));
         $1 = new openstudio::path(openstudio::toPath(s));
+      } else if (isPathInstance($input)) {
+        PyObject * str_obj = PyObject_Str($input);   // New reference
+        const char * s = PyUnicode_AsUTF8(str_obj);
+        $1 = new openstudio::path(openstudio::toPath(s));
+        Py_DECREF(str_obj);
       } else {
         SWIG_exception_fail(SWIG_ArgError(res), "Wrong input type for openstudio::path const &");
       }
     }
 
-    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (const path&) {
-      bool stringType = PyString_Check($input) || PyUnicode_Check($input);
+    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING, fragment="SWIG_openstudio_path") (const path&) {
+      bool stringOrPathlibType = PyString_Check($input) || PyUnicode_Check($input) || isPathInstance($input);
       bool pathType = false;
-      if (!stringType){
+      if (stringOrPathlibType) {
         void *vptr = 0;
         int res = SWIG_ConvertPtr($input, &vptr, $1_descriptor, 0);
         pathType = (SWIG_IsOK(res) && (vptr != 0));
       }
-      $1 = (stringType || pathType) ? 1 : 0;
+      $1 = (stringOrPathlibType || pathType) ? 1 : 0;
     }
 
     %typemap(freearg) (const path&) {
@@ -381,7 +420,7 @@ namespace openstudio {
         delete $1;
       }
     }
-  #endif
+  #endif  // SWIGPYTHON
 
 } // openstudio
 

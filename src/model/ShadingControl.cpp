@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "ShadingControl.hpp"
@@ -239,41 +215,29 @@ namespace model {
     }
 
     bool ShadingControl_Impl::setShadingControlType(const std::string& shadingControlType) {
-      std::string oldControlType = this->shadingControlType();
-      bool result = setString(OS_ShadingControlFields::ShadingControlType, shadingControlType);
+      const bool result = setString(OS_ShadingControlFields::ShadingControlType, shadingControlType);
       if (result) {
         if (!ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType)) {
-          // Not calling reset to avoid double check on whether it's required
-          // resetSetpoint();
-          LOG(Info,
-              briefDescription() << " Shading Control Type was changed to '" << shadingControlType << " which does not require a Setpoint, reseting");
-          bool test = setString(OS_ShadingControlFields::Setpoint, "");
+          // Not calling resetSetpoint to avoid double check on whether it's required
+          LOG(Info, briefDescription() << " Shading Control Type was changed to '" << shadingControlType
+                                       << " which does not require a Setpoint, resetting it.");
+          const bool test = setString(OS_ShadingControlFields::Setpoint, "");
           OS_ASSERT(test);
         }
         if (!ShadingControl_Impl::isControlTypeValueNeedingSetpoint2(shadingControlType)) {
-          // Not calling reset to avoid double check on whether it's required
-          // resetSetpoint2();
+          // Not calling resetSetpoint2 to avoid double check on whether it's required
           LOG(Info, briefDescription() << " Shading Control Type was changed to '" << shadingControlType
-                                       << " which does not require a Setpoint2, reseting");
-          bool test = setString(OS_ShadingControlFields::Setpoint2, "");
+                                       << " which does not require a Setpoint2, resetting it.");
+          const bool test = setString(OS_ShadingControlFields::Setpoint2, "");
           OS_ASSERT(test);
         }
         if (!ShadingControl_Impl::isControlTypeValueAllowingSchedule(shadingControlType)) {
-          LOG(Info,
-              briefDescription() << " Shading Control Type was changed to '" << shadingControlType << " which does not allow a Schedule, reseting");
+          LOG(Info, briefDescription() << " Shading Control Type was changed to '" << shadingControlType
+                                       << " which does not allow a Schedule, resetting it.");
           bool test = setString(OS_ShadingControlFields::ScheduleName, "");
           OS_ASSERT(test);
           test = setString(OS_ShadingControlFields::ShadingControlIsScheduled, "No");
           OS_ASSERT(test);
-        }
-
-        // TODO: do we want to force remove this stuff like it did resetSetpoint before? Units/quantity might be oranges and apples when switching
-        // types, but they could be compatible, and it may be very confusing at least for interface users that are playing with a dropdown to see
-        // schedulesand setpoints disapear
-        if (!openstudio::istringEqual(oldControlType, shadingControlType)) {
-          resetSetpoint();  // For backward compatibility
-          // resetSetpoint2();
-          // resetSchedule();
         }
       }
       return result;
@@ -406,7 +370,7 @@ namespace model {
 
     void ShadingControl_Impl::resetSetpoint2() {
       std::string shadingControlType = this->shadingControlType();
-      if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType)) {
+      if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint2(shadingControlType)) {
         LOG(Warn,
             briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does require a Setpoint2, not resetting it");
       } else {

@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "WorkflowStep.hpp"
@@ -39,6 +15,15 @@ namespace detail {
 
   boost::optional<WorkflowStepResult> WorkflowStep_Impl::result() const {
     return m_result;
+  }
+
+  std::string WorkflowStep_Impl::string() const {
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string resultString = Json::writeString(wbuilder, toJSON());
+
+    return resultString;
   }
 
   void WorkflowStep_Impl::setResult(const WorkflowStepResult& result) {
@@ -57,27 +42,24 @@ namespace detail {
 
   MeasureStep_Impl::MeasureStep_Impl(const std::string& measureDirName) : m_measureDirName(measureDirName) {}
 
-  std::string MeasureStep_Impl::string() const {
-    Json::Value result;
-    result["measure_dir_name"] = m_measureDirName;
+  Json::Value MeasureStep_Impl::toJSON() const {
+    Json::Value root;
+    root["measure_dir_name"] = m_measureDirName;
 
     if (m_name) {
-      result["name"] = m_name.get();
+      root["name"] = m_name.get();
     }
 
     if (m_description) {
-      result["description"] = m_description.get();
+      root["description"] = m_description.get();
     }
 
     if (m_modelerDescription) {
-      result["modeler_description"] = m_modelerDescription.get();
+      root["modeler_description"] = m_modelerDescription.get();
     }
 
     Json::Value arguments(Json::objectValue);
-    for (const auto& argument : m_arguments) {
-      std::string name = argument.first;
-      Variant value = argument.second;
-
+    for (const auto& [name, value] : m_arguments) {
       if (value.variantType() == VariantType::String) {
         arguments[name] = value.valueAsString();
       } else if (value.variantType() == VariantType::Double) {
@@ -88,30 +70,13 @@ namespace detail {
         arguments[name] = value.valueAsBoolean();
       }
     }
-    result["arguments"] = arguments;
+    root["arguments"] = arguments;
 
-    boost::optional<WorkflowStepResult> workflowStepResult = this->result();
-    if (workflowStepResult) {
-
-      // We let it fail but with a warning (this shouldn't ever happen really)
-      Json::CharReaderBuilder rbuilder;
-      std::istringstream ss(workflowStepResult->string());
-      std::string formattedErrors;
-      Json::Value value;
-      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
-      if (parsingSuccessful) {
-        result["result"] = value;
-      } else {
-        LOG(Warn, "Couldn't parse workflowStepResult s='" << workflowStepResult->string() << "'. Error: '" << formattedErrors << "'.");
-      }
+    if (boost::optional<WorkflowStepResult> workflowStepResult_ = this->result()) {
+      root["result"] = workflowStepResult_->toJSON();
     }
 
-    Json::StreamWriterBuilder wbuilder;
-    // mimic the old StyledWriter behavior:
-    wbuilder["indentation"] = "   ";
-    std::string resultString = Json::writeString(wbuilder, result);
-
-    return resultString;
+    return root;
   }
 
   std::string MeasureStep_Impl::measureDirName() const {
@@ -288,6 +253,10 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s) {
 
 std::string WorkflowStep::string() const {
   return getImpl<detail::WorkflowStep_Impl>()->string();
+}
+
+Json::Value WorkflowStep::toJSON() const {
+  return getImpl<detail::WorkflowStep_Impl>()->toJSON();
 }
 
 boost::optional<WorkflowStepResult> WorkflowStep::result() const {

@@ -1,3 +1,8 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
+***********************************************************************************************************************/
+
 #include "RubyCLI.hpp"
 #include "UpdateCommand.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
@@ -95,18 +100,23 @@ int main(int argc, char* argv[]) {
 
     auto* const experimentalApp = app.add_subcommand("labs");
 
-    experimentalApp->add_flag_function(
-      "--verbose",
-      [](auto count) {
-        if (count == 1) {
-          fmt::print("Setting log Level to Debug\n");
-          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Debug);
-        } else if (count == 2) {
-          fmt::print("Setting log Level to Trace\n");
-          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Trace);
-        }
-      },
-      "Print the full log to STDOUT");
+    // specify string->value mappings
+    const std::map<std::string, LogLevel> logLevelMap{
+      {"Trace", LogLevel::Trace}, {"Debug", LogLevel::Debug}, {"Info", LogLevel::Info},
+      {"Warn", LogLevel::Warn},   {"Error", LogLevel::Error}, {"Fatal", LogLevel::Fatal},
+    };
+    static constexpr std::array<std::string_view, 6> logLevelStrs = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
+
+    experimentalApp
+      ->add_option_function<LogLevel>(
+        "-l,--loglevel",
+        [](const LogLevel& level) {
+          fmt::print("Setting Log Level to {} ({})\n", logLevelStrs[static_cast<size_t>(level) - static_cast<size_t>(LogLevel::Trace)], level);
+          openstudio::Logger::instance().standardOutLogger().setLogLevel(level);
+        },
+        "LogLevel settings: One of {Trace, Debug, Info, Warn, Error, Fatal} [Default: Warn]")
+      ->option_text("LEVEL")
+      ->transform(CLI::CheckedTransformer(logLevelMap, CLI::ignore_case));
 
     std::vector<std::string> executeRubyCmds;
     CLI::Option* execRubyOption = experimentalApp
@@ -126,6 +136,7 @@ int main(int argc, char* argv[]) {
     experimentalApp
       ->add_option("-I,--include", includeDirs, "Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     std::vector<openstudio::path> gemPathDirs;
@@ -133,21 +144,25 @@ int main(int argc, char* argv[]) {
       ->add_option("--gem_path", gemPathDirs,
                    "Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     openstudio::path gemHomeDir;
     experimentalApp->add_option("--gem_home", gemHomeDir, "Set GEM_HOME environment variable")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     openstudio::path bundleGemFilePath;
     experimentalApp->add_option("--bundle", bundleGemFilePath, "Use bundler for GEMFILE")
       ->option_text("GEMFILE")
+      ->check(CLI::ExistingFile)
       ->group(rubySpecificOptionsGroupName);
 
     openstudio::path bundleGemDirPath;
     experimentalApp->add_option("--bundle_path", bundleGemDirPath, "Use bundler installed gems in BUNDLE_PATH")
       ->option_text("BUNDLE_PATH")
+      ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     // std::vector<std::string>
@@ -180,16 +195,19 @@ int main(int argc, char* argv[]) {
       ->add_option("--python_path", pythonPathDirs,
                    "Add additional directory to add to front of PYTHONPATH environment variable (may be used more than once)")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(pythonSpecificOptionsGroupName);
 
     openstudio::path pythonHomeDir;
     experimentalApp->add_option("--python_home", pythonHomeDir, "Set PYTHONHOME environment variable")
       ->option_text("DIR")
+      ->check(CLI::ExistingDirectory)
       ->group(pythonSpecificOptionsGroupName);
 
     // This is a callback that's stored on the ScriptEngineInstance, triggered only the first time
-    std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs, &pythonHomeDir]() {
-      pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
+    std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs]() {
+      // pythonHomeDir is retrieved from (argc, argv) actually, as Py_SetPythonHome has to be called before Py_Initialize
+      pythonEngine->setupPythonPath(pythonPathDirs);
       pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
       pythonEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
       pythonEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");

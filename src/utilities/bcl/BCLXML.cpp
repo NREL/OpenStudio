@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "BCLXML.hpp"
@@ -35,7 +11,9 @@
 #include "../time/DateTime.hpp"
 #include "../xml/XMLValidator.hpp"
 
+#include <json/value.h>
 #include <pugixml.hpp>
+#include <json/json.h>
 
 #include <algorithm>
 #include <sstream>
@@ -751,6 +729,94 @@ pugi::xml_document BCLXML::toXML() const {
   }
 
   return doc;
+}
+
+Json::Value BCLXML::toJSON() const {
+
+  Json::Value root;
+
+  if (m_bclXMLType == BCLXMLType::ComponentXML) {
+    root["type"] = "component";
+  } else if (m_bclXMLType == BCLXMLType::MeasureXML) {
+    root["type"] = "measure";
+  } else {
+    LOG_AND_THROW("Unknown BCLXMLType '" << m_bclXMLType.valueName() << "'.");
+  }
+
+  root["schema_version"] = BCLXML::currentSchemaVersion().str();
+
+  if (m_error) {
+    root["error"] = escapeString(*m_error);
+  }
+  root["name"] = escapeString(m_name);
+
+  root["uid"] = m_uid;
+  root["version_id"] = m_versionId;
+  if (boost::optional<DateTime> versionMod_ = versionModified()) {
+    root["version_modified"] = versionMod_->toISO8601();
+  }
+  root["xml_checksum"] = m_xmlChecksum;
+
+  if (m_bclXMLType == BCLXMLType::MeasureXML) {
+    root["class_name"] = m_className;
+  }
+
+  root["display_name"] = m_displayName;
+  root["description"] = m_description;
+  if (m_bclXMLType == BCLXMLType::MeasureXML) {
+
+    root["modeler_description"] = m_modelerDescription;
+
+    {
+      auto& arguments = root["arguments"];
+      for (const BCLMeasureArgument& argument : m_arguments) {
+        arguments.append(argument.toJSON());
+      }
+    }
+
+    {
+      auto& outputs = root["outputs"];
+      for (const BCLMeasureOutput& output : m_outputs) {
+        outputs.append(output.toJSON());
+      }
+    }
+  }
+
+  // TODO: write provenances
+  // root["provenances"] = Json::Value(Json::arrayValue);
+
+  // write tags
+  // provenances isn't written so element above is not used... so ignore it here
+  // cppcheck-suppress redundantAssignment
+  auto& tags = root["tags"];
+  for (const std::string& tag : m_tags) {
+    tags.append(tag);
+  }
+
+  // TODO: why isn't this using Attribute::toXml (which appears unused anywhere and could be repurposed to work exactly as intended)?!
+
+  // write attributes
+  auto& attributes = root["attributes"];
+  for (const Attribute& attribute : m_attributes) {
+    attributes.append(attribute.toJSON(true));
+  }
+
+  // write files
+  {
+    auto& files = root["files"];
+    // Fix for #4748 - sort files
+    auto sortedFiles = m_files;
+    std::sort(sortedFiles.begin(), sortedFiles.end());
+    for (const BCLFileReference& file : sortedFiles) {
+      files.append(file.toJSON());
+    }
+  }
+
+  return root;
+}
+
+std::string BCLXML::toJSONString() const {
+  return toJSON().toStyledString();
 }
 
 bool BCLXML::save() const {
