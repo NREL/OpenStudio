@@ -276,21 +276,21 @@ namespace model {
 
     void resetSupplementalHeatingCoil();
 
-    OS_DEPRECATED(3, 5, 1) bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
-    OS_DEPRECATED(3, 5, 1) void resetSupplyAirFlowRateMethodDuringCoolingOperation();
+    OS_DEPRECATED(3, 7, 0) bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateMethodDuringCoolingOperation();
 
     bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
-    OS_DEPRECATED(3, 5, 1) void resetSupplyAirFlowRateDuringCoolingOperation();
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateDuringCoolingOperation();
     void autosizeSupplyAirFlowRateDuringCoolingOperation();
 
     bool setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(double supplyAirFlowRatePerFloorAreaDuringCoolingOperation);
-    OS_DEPRECATED(3, 5, 1) void resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
 
     bool setFractionofAutosizedDesignCoolingSupplyAirFlowRate(double fractionofAutosizedDesignCoolingSupplyAirFlowRate);
-    OS_DEPRECATED(3, 5, 1) void resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
+    OS_DEPRECATED(3, 7, 0) void resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
 
     bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation);
-    OS_DEPRECATED(3, 5, 1) void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
+    OS_DEPRECATED(3, 7, 0) void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
 
     bool setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation);
 
