@@ -84,6 +84,7 @@ namespace model {
 
       boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
+      bool hasHeatingCoil() const;  // For speed
       boost::optional<HVACComponent> heatingCoil() const;
 
       double dXHeatingCoilSizingRatio() const;

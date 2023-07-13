@@ -697,7 +697,7 @@ namespace model {
       OS_ASSERT(result);
       OS_ASSERT(setSupplyAirFlowRateMethodDuringHeatingOperation("None"));
       resetSupplyAirFlowRateDuringHeatingOperation();
-      resetSupplyAirFlowRatePerFloorAreaDuringHeatingOperation();
+      resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
       resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
       resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
     }
@@ -878,7 +878,7 @@ namespace model {
         setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, supplyAirFlowRateDuringHeatingOperation);
       OS_ASSERT(setSupplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate"));
       // resetSupplyAirFlowRateDuringHeatingOperation();
-      resetSupplyAirFlowRatePerFloorAreaDuringHeatingOperation();
+      resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
       resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
       resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
       return result;
@@ -894,7 +894,7 @@ namespace model {
       OS_ASSERT(result);
       OS_ASSERT(setSupplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate"));
       // resetSupplyAirFlowRateDuringHeatingOperation();
-      resetSupplyAirFlowRatePerFloorAreaDuringHeatingOperation();
+      resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
       resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
       resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
     }
@@ -905,14 +905,14 @@ namespace model {
                                     supplyAirFlowRatePerFloorAreaDuringHeatingOperation);
       OS_ASSERT(setSupplyAirFlowRateMethodDuringHeatingOperation("FlowPerFloorArea"));
       resetSupplyAirFlowRateDuringHeatingOperation();
-      // resetSupplyAirFlowRatePerFloorAreaDuringHeatingOperation();
+      // resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
       resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
       resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation() {
-      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringHeatingOperation, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation, "");
       OS_ASSERT(result);
     }
 
@@ -939,7 +939,7 @@ namespace model {
                                     designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation);
       OS_ASSERT(setSupplyAirFlowRateMethodDuringHeatingOperation("FlowPerHeatingCapacity"));
       resetSupplyAirFlowRateDuringHeatingOperation();
-      resetSupplyAirFlowRatePerFloorAreaDuringHeatingOperation();
+      resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
       resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
       // resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
       return result;
@@ -2133,7 +2133,7 @@ namespace model {
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
-  void AirLoopHVACUnitarySystem::resetSupplyAirFlowRatePerFloorAreaDuringHeatingOperation() {
+  void AirLoopHVACUnitarySystem::resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation() {
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
