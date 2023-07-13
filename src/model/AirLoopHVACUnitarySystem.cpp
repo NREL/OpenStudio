@@ -901,7 +901,7 @@ namespace model {
 
     bool AirLoopHVACUnitarySystem_Impl::setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(
       double supplyAirFlowRatePerFloorAreaDuringHeatingOperation) {
-      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringHeatingOperation,
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation,
                                     supplyAirFlowRatePerFloorAreaDuringHeatingOperation);
       OS_ASSERT(setSupplyAirFlowRateMethodDuringHeatingOperation("FlowPerFloorArea"));
       resetSupplyAirFlowRateDuringHeatingOperation();
@@ -922,7 +922,7 @@ namespace model {
                                     fractionofAutosizedDesignHeatingSupplyAirFlowRate);
       OS_ASSERT(setSupplyAirFlowRateMethodDuringHeatingOperation("FractionOfAutosizedHeatingValue"));
       resetSupplyAirFlowRateDuringHeatingOperation();
-      resetSupplyAirFlowRatePerFloorAreaDuringHeatingOperation();
+      resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
       // resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
       resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
       return result;
