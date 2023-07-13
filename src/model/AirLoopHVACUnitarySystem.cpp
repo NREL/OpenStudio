@@ -370,13 +370,9 @@ namespace model {
     }
 
     std::string AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodDuringCoolingOperation() const {
-      // No default, and return uninitialized if empty
-      boost::optional<std::string> result_ =
-        getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation, false, true);
-      if (result_) {
-        return *result_;
-      }
-      return "None";
+      boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<double> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateDuringCoolingOperation() const {

@@ -11902,6 +11902,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \key FlowPerFloorArea
        \key FractionOfAutosizedCoolingValue
        \key FlowPerCoolingCapacity
+       \default None
        \note Enter the method used to determine the cooling supply air volume flow rate.
        \note None is used when a cooling coil is not included in the unitary system or this field may be blank.
        \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
