@@ -634,10 +634,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_SupplyAirFlowRateMethodDuringOpera
   Model m;
   AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
 
-  // we've already autosized in the ctor
   EXPECT_EQ("None", unitary.supplyAirFlowRateMethodDuringCoolingOperation());
-  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
-  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringHeatingOperation().get());
 
   EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringCoolingOperationAutosized());
   EXPECT_FALSE(unitary.supplyAirFlowRateDuringCoolingOperation());
@@ -712,10 +709,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_SupplyAirFlowRateMethodDuringOpera
   Model m;
   AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
 
-  // we've already autosized in the ctor
   EXPECT_EQ("None", unitary.supplyAirFlowRateMethodDuringHeatingOperation());
-  ASSERT_TRUE(unitary.supplyAirFlowRateMethodDuringHeatingOperation());
-  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringHeatingOperation().get());
 
   EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringHeatingOperationAutosized());
   EXPECT_FALSE(unitary.supplyAirFlowRateDuringHeatingOperation());
