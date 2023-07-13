@@ -794,7 +794,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_needToRemoveDeprecated) {
   EXPECT_NO_THROW(unitary.resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation());
   EXPECT_NO_THROW(unitary.resetFractionofAutosizedDesignCoolingSupplyAirFlowRate());
   EXPECT_NO_THROW(unitary.resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation());
-  
+
   EXPECT_NO_THROW(unitary.setSupplyAirFlowRateMethodDuringHeatingOperation(""));
   EXPECT_NO_THROW(unitary.resetSupplyAirFlowRateMethodDuringHeatingOperation());
   EXPECT_NO_THROW(unitary.resetSupplyAirFlowRateDuringHeatingOperation());

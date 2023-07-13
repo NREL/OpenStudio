@@ -916,7 +916,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setFractionofAutosizedDesignHeatingSupplyAirFlowRate(double fractionofAutosizedDesignHeatingSupplyAirFlowRate) {
+    bool
+      AirLoopHVACUnitarySystem_Impl::setFractionofAutosizedDesignHeatingSupplyAirFlowRate(double fractionofAutosizedDesignHeatingSupplyAirFlowRate) {
       const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRate,
                                     fractionofAutosizedDesignHeatingSupplyAirFlowRate);
       OS_ASSERT(setSupplyAirFlowRateMethodDuringHeatingOperation("FractionOfAutosizedHeatingValue"));

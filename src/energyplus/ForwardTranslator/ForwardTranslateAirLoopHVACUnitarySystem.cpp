@@ -222,7 +222,7 @@ namespace energyplus {
       // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation
       if (auto val_ = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation()) {
         unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRatePerUnitofCapacity, val_.get());
-      }      
+      }
     } else {
       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRateMethod, "None");
     }
