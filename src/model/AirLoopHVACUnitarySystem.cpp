@@ -2096,52 +2096,64 @@ namespace model {
   }
 
   bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation) {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
     return false;
   }
 
   void AirLoopHVACUnitarySystem::resetSupplyAirFlowRateMethodDuringCoolingOperation() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
   void AirLoopHVACUnitarySystem::resetSupplyAirFlowRateDuringCoolingOperation() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
   void AirLoopHVACUnitarySystem::resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
   void AirLoopHVACUnitarySystem::resetFractionofAutosizedDesignCoolingSupplyAirFlowRate() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
   void AirLoopHVACUnitarySystem::resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
   bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation) {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
     return false;
   }
 
   void AirLoopHVACUnitarySystem::resetSupplyAirFlowRateMethodDuringHeatingOperation() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
   void AirLoopHVACUnitarySystem::resetSupplyAirFlowRateDuringHeatingOperation() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
   void AirLoopHVACUnitarySystem::resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
   void AirLoopHVACUnitarySystem::resetFractionofAutosizedDesignHeatingSupplyAirFlowRate() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
   void AirLoopHVACUnitarySystem::resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation() {
+    //DEPRECATED_AT_MSG(3, 7, 0, "");
     log_deprecation_and_throw_if_time_to_remove(BOOST_CURRENT_FUNCTION);
   }
 
