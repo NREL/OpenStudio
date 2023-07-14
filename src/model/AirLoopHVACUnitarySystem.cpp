@@ -30,9 +30,7 @@
 #include <utilities/idd/OS_AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <OpenStudio.hxx>              // For deprecation
-#include <boost/current_function.hpp>  // For deprecation
-#include <fmt/core.h>
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
