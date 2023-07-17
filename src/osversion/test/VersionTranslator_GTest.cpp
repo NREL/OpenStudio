@@ -2507,27 +2507,27 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_GroundHeatExchangerVertical) {
   WorkspaceObject ghx = ghxs[0];
 
   EXPECT_EQ("Ground Heat Exchanger Vertical 1", ghx.getString(1).get());  // Name
-  EXPECT_TRUE(ghx.isEmpty(2));                                                     // Inlet Node Name
-  EXPECT_TRUE(ghx.isEmpty(3));                                                     // Outlet Node Name
-  EXPECT_EQ(0.0033, ghx.getDouble(4).get());                                        // Design Flow Rate
-  EXPECT_EQ(120, ghx.getInt(5).get());                                           // Number of Bore Holes
-  EXPECT_EQ(76.2, ghx.getDouble(6).get());                                               // Bore Hole Length
-  EXPECT_EQ(0.063508, ghx.getDouble(7).get());                                            // Bore Hole Radius
-  EXPECT_EQ(0.692626, ghx.getDouble(8).get());                                        // Ground Thermal Conductivity
-  EXPECT_EQ(2347000, ghx.getDouble(9).get());                                      // Ground Thermal Heat Capacity
-  EXPECT_EQ(13.375, ghx.getDouble(10).get());                                        // Ground Temperature
-  EXPECT_EQ(0.692626, ghx.getDouble(11).get());                                        // Grout Thermal Conductivity
-  EXPECT_EQ(0.391312, ghx.getDouble(12).get());                                         // Pipe Thermal Conductivity
-  EXPECT_EQ(0.0266667, ghx.getDouble(13).get());                                        // Pipe Out Diameter
-  EXPECT_EQ(0.253977, ghx.getDouble(14).get());                                      // U-Tube Distance
-  EXPECT_EQ(0.00241285, ghx.getDouble(15).get());                                         // Pipe Thickness
-  EXPECT_EQ(2, ghx.getInt(16).get());                                        // Maximum Length of Simulation
-  EXPECT_NE("", ghx.getString(17).get());                                          // Undisturbed Ground Temperature Model
-  EXPECT_EQ(0.0005, ghx.getDouble(18).get());                                          // G-Function Reference Ratio {dimensionless}
-  EXPECT_NE(-15.2996, ghx.getDouble(19).get());                                          // G-Function Ln(T/Ts) Value 1
-  EXPECT_EQ(-0.348322, ghx.getDouble(20).get());                                       // G-Function G Value 1
-  EXPECT_NE(3.003, ghx.getDouble(87).get());                                          // G-Function Ln(T/Ts) Value 35
-  EXPECT_EQ(72.511, ghx.getDouble(88).get());                                       // G-Function G Value 35
+  EXPECT_TRUE(ghx.isEmpty(2));                                            // Inlet Node Name
+  EXPECT_TRUE(ghx.isEmpty(3));                                            // Outlet Node Name
+  EXPECT_EQ(0.0033, ghx.getDouble(4).get());                              // Design Flow Rate
+  EXPECT_EQ(120, ghx.getInt(5).get());                                    // Number of Bore Holes
+  EXPECT_EQ(76.2, ghx.getDouble(6).get());                                // Bore Hole Length
+  EXPECT_EQ(0.063508, ghx.getDouble(7).get());                            // Bore Hole Radius
+  EXPECT_EQ(0.692626, ghx.getDouble(8).get());                            // Ground Thermal Conductivity
+  EXPECT_EQ(2347000, ghx.getDouble(9).get());                             // Ground Thermal Heat Capacity
+  EXPECT_EQ(13.375, ghx.getDouble(10).get());                             // Ground Temperature
+  EXPECT_EQ(0.692626, ghx.getDouble(11).get());                           // Grout Thermal Conductivity
+  EXPECT_EQ(0.391312, ghx.getDouble(12).get());                           // Pipe Thermal Conductivity
+  EXPECT_EQ(0.0266667, ghx.getDouble(13).get());                          // Pipe Out Diameter
+  EXPECT_EQ(0.253977, ghx.getDouble(14).get());                           // U-Tube Distance
+  EXPECT_EQ(0.00241285, ghx.getDouble(15).get());                         // Pipe Thickness
+  EXPECT_EQ(2, ghx.getInt(16).get());                                     // Maximum Length of Simulation
+  EXPECT_NE("", ghx.getString(17).get());                                 // Undisturbed Ground Temperature Model
+  EXPECT_EQ(0.0005, ghx.getDouble(18).get());                             // G-Function Reference Ratio {dimensionless}
+  EXPECT_NE(-15.2996, ghx.getDouble(19).get());                           // G-Function Ln(T/Ts) Value 1
+  EXPECT_EQ(-0.348322, ghx.getDouble(20).get());                          // G-Function G Value 1
+  EXPECT_NE(3.003, ghx.getDouble(87).get());                              // G-Function Ln(T/Ts) Value 35
+  EXPECT_EQ(72.511, ghx.getDouble(88).get());                             // G-Function G Value 35
 
   std::vector<WorkspaceObject> ukas = model->getObjectsByType("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach");
   ASSERT_EQ(1u, ukas.size());
@@ -2537,10 +2537,10 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_GroundHeatExchangerVertical) {
   EXPECT_EQ(uka.nameString(), ghx.getTarget(19)->nameString());
   EXPECT_EQ(IddObjectType(IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach), uka.iddObject().type());
   EXPECT_EQ("Site Ground Temperature Undisturbed Kusuda Achenbach 1", uka.getString(1).get());  // Name
-  EXPECT_EQ(0.692626, uka.getDouble(2).get());                                                      // Soil Thermal Conductivity
-  EXPECT_EQ(920.0, uka.getDouble(3).get());                                                       // Soil Density
-  EXPECT_EQ(2347000 / 920.0, uka.getDouble(4).get());                                                      // Soil Specific Heat
-  EXPECT_EQ(13.375, uka.getDouble(5).get());                                                      // Average Soil Surface Temperature
-  EXPECT_EQ(3.2, uka.getDouble(6).get());                                                      // Average Amplitude of Surface Temperature
-  EXPECT_EQ(8.0, uka.getDouble(7).get());                                                      // Phase Shift of Minimum Surface Temperature
+  EXPECT_EQ(0.692626, uka.getDouble(2).get());                                                  // Soil Thermal Conductivity
+  EXPECT_EQ(920.0, uka.getDouble(3).get());                                                     // Soil Density
+  EXPECT_EQ(2347000 / 920.0, uka.getDouble(4).get());                                           // Soil Specific Heat
+  EXPECT_EQ(13.375, uka.getDouble(5).get());                                                    // Average Soil Surface Temperature
+  EXPECT_EQ(3.2, uka.getDouble(6).get());                                                       // Average Amplitude of Surface Temperature
+  EXPECT_EQ(8.0, uka.getDouble(7).get());                                                       // Phase Shift of Minimum Surface Temperature
 }
