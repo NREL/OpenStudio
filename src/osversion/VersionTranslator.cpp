@@ -7639,9 +7639,9 @@ namespace osversion {
                 kusudaObject.setString(i - 5, value.get());
               }
             }
-            if ((boost::optional<double> d = object.getDouble(i))) {
+            if (boost::optional<double> _value = object.getDouble(i)) {
               if (i == 9) {  // Soil Specific Heat
-                kusudaObject.setDouble(i - 5, d.get() / 920.0);
+                kusudaObject.setDouble(i - 5, _value.get() / 920.0);
               }
             }
           } else if (i == 17) {  // Undisturbed Ground Temperature Model
