@@ -330,8 +330,7 @@ namespace model {
     }
 
     bool GroundHeatExchangerVertical_Impl::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
-      bool result =
-        setPointer(OS_GroundHeatExchanger_VerticalFields::UndisturbedGroundTemperatureModel, undisturbedGroundTemperatureModel.handle());
+      bool result = setPointer(OS_GroundHeatExchanger_VerticalFields::UndisturbedGroundTemperatureModel, undisturbedGroundTemperatureModel.handle());
       return result;
     }
 
