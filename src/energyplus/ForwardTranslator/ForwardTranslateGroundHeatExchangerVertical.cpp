@@ -15,7 +15,6 @@
 #include <utilities/idd/GroundHeatExchanger_System_FieldEnums.hxx>
 #include <utilities/idd/GroundHeatExchanger_Vertical_Properties_FieldEnums.hxx>
 #include <utilities/idd/GroundHeatExchanger_ResponseFactors_FieldEnums.hxx>
-#include <utilities/idd/Site_GroundTemperature_Undisturbed_KusudaAchenbach_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -90,6 +89,17 @@ namespace energyplus {
 
     // 1  { GroundHeatExchanger_ResponseFactorsExtensibleFields::gFunctionLn_T_Ts_Value, "gFunctionLn_T_Ts_Value", "g-Function Ln(T/Ts) Value"},
     // 2  { GroundHeatExchanger_ResponseFactorsExtensibleFields::gFunctiongValue, "gFunctiongValue", "g-Function g Value"},
+
+    // UndisturbedGroundTemperatureModelName, is required, so start by that
+    ModelObject undisturbedGroundTemperatureModel = modelObject.undisturbedGroundTemperatureModel();
+    boost::optional<IdfObject> _undisturbedGroundTemperatureModel = translateAndMapModelObject(undisturbedGroundTemperatureModel);
+    if (_undisturbedGroundTemperatureModel) {
+      s = _undisturbedGroundTemperatureModel->name().get();
+    } else {
+      LOG(Warn, modelObject.briefDescription() << " cannot be translated as its undisturbed ground temperature model object cannot be translated: "
+                                               << undisturbedGroundTemperatureModel.briefDescription() << ".");
+      return boost::none;
+    }
 
     // Name
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::GroundHeatExchanger_System, modelObject);
@@ -166,28 +176,12 @@ namespace energyplus {
       propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::UTubeDistance, value.get());
     }
 
-    IdfObject groundIdfObject(IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
-    m_idfObjects.push_back(groundIdfObject);
+    // UndisturbedGroundTemperatureModelName
+    idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelName, s.get());
 
-    groundIdfObject.setName(groundModelName);
-
-    if ((value = modelObject.groundThermalConductivity())) {
-      groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity, value.get());
-    }
-
-    groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity, 920.0);
-
-    if ((value = modelObject.groundThermalHeatCapacity())) {
-      groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat, value.get() / 920.0);
-    }
-
-    if ((value = modelObject.groundTemperature())) {
-      groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature, value.get());
-    }
-
-    groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature, 3.2);
-
-    groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, 8.0);
+    // UndisturbedGroundTemperatureModelType
+    idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelType,
+                        _undisturbedGroundTemperatureModel->iddObject().name());
 
     IdfObject rfIdfObject(IddObjectType::GroundHeatExchanger_ResponseFactors);
     m_idfObjects.push_back(rfIdfObject);
