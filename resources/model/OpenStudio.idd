@@ -16669,8 +16669,8 @@ OS:DistrictHeating,
 
 OS:GroundHeatExchanger:Vertical,
         \extensible:2
-        \min-fields 21
-        \max-fields 219
+        \min-fields 22
+        \max-fields 220
         \memo Variable short time step vertical ground heat exchanger model based on
         \memo Yavuztruk, C., J.D.Spitler. 1999. A Short Time Step response Factor Model for
         \memo Vertical Ground Loop Heat Exchangers
@@ -16748,6 +16748,10 @@ OS:GroundHeatExchanger:Vertical,
   N13,  \field Maximum Length of Simulation
         \type real
         \minimum> 0.0
+  A5,   \field Undisturbed Ground Temperature Model
+        \required-field
+        \type object-list
+        \object-list UndisturbedGroundTempModels
   N14,  \field G-Function Reference Ratio
         \type real
         \units dimensionless
