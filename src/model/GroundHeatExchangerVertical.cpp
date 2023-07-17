@@ -9,6 +9,8 @@
 #include "Node_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
+#include "SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -111,6 +113,14 @@ namespace model {
 
     bool GroundHeatExchangerVertical_Impl::isGFunctionReferenceRatioDefaulted() const {
       return isEmpty(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio);
+    }
+
+    ModelObject GroundHeatExchangerVertical_Impl::undisturbedGroundTemperatureModel() const {
+      boost::optional<ModelObject> modelObject;
+      modelObject =
+        getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_GroundHeatExchanger_VerticalFields::UndisturbedGroundTemperatureModel);
+      OS_ASSERT(modelObject);
+      return modelObject.get();
     }
 
     bool GroundHeatExchangerVertical_Impl::setNumberofBoreHoles(boost::optional<int> numberofBoreHoles) {
@@ -319,6 +329,12 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool GroundHeatExchangerVertical_Impl::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
+      bool result =
+        setPointer(OS_GroundHeatExchanger_VerticalFields::UndisturbedGroundTemperatureModel, undisturbedGroundTemperatureModel.handle());
+      return result;
+    }
+
     unsigned GroundHeatExchangerVertical_Impl::inletPort() const {
       return OS_GroundHeatExchanger_VerticalFields::InletNodeName;
     }
@@ -476,6 +492,76 @@ namespace model {
     addGFunction(2.028, 71.361);
     addGFunction(2.275, 71.79);
     addGFunction(3.003, 72.511);
+
+    SiteGroundTemperatureUndisturbedKusudaAchenbach undisturbedGroundTemperatureModel(model);
+    undisturbedGroundTemperatureModel.setSoilThermalConductivity(0.692626);
+    undisturbedGroundTemperatureModel.setSoilDensity(920.0);
+    undisturbedGroundTemperatureModel.setSoilSpecificHeat(0.234700E+07 / 920.0);
+    undisturbedGroundTemperatureModel.setAverageSoilSurfaceTemperature(13.375);
+    undisturbedGroundTemperatureModel.setAverageAmplitudeofSurfaceTemperature(3.2);
+    undisturbedGroundTemperatureModel.setPhaseShiftofMinimumSurfaceTemperature(8.0);
+    setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
+  }
+
+  GroundHeatExchangerVertical::GroundHeatExchangerVertical(const Model& model, const ModelObject& undisturbedGroundTemperatureModel)
+    : StraightComponent(GroundHeatExchangerVertical::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::GroundHeatExchangerVertical_Impl>());
+
+    bool ok = setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Undisturbed Ground Temperature Model to "
+                                     << undisturbedGroundTemperatureModel.briefDescription() << ".");
+    }
+    setNumberofBoreHoles(120);
+    setBoreHoleLength(76.2);
+    setBoreHoleRadius(0.635080E-01);
+    setGroundThermalConductivity(0.692626);
+    setGroundThermalHeatCapacity(0.234700E+07);
+    setGroundTemperature(13.375);
+    setDesignFlowRate(0.0033);
+    setGroutThermalConductivity(0.692626);
+    setPipeThermalConductivity(0.391312);
+    setPipeOutDiameter(2.66667E-02);
+    setUTubeDistance(2.53977E-02);
+    setPipeThickness(2.41285E-03);
+    setMaximumLengthofSimulation(2);
+    setGFunctionReferenceRatio(0.0005);
+    addGFunction(-15.2996, -0.348322);
+    addGFunction(-14.201, 0.022208);
+    addGFunction(-13.2202, 0.412345);
+    addGFunction(-12.2086, 0.867498);
+    addGFunction(-11.1888, 1.357839);
+    addGFunction(-10.1816, 1.852024);
+    addGFunction(-9.1815, 2.345656);
+    addGFunction(-8.6809, 2.593958);
+    addGFunction(-8.5, 2.679);
+    addGFunction(-7.8, 3.023);
+    addGFunction(-7.2, 3.32);
+    addGFunction(-6.5, 3.681);
+    addGFunction(-5.9, 4.071);
+    addGFunction(-5.2, 4.828);
+    addGFunction(-4.5, 6.253);
+    addGFunction(-3.963, 7.894);
+    addGFunction(-3.27, 11.82);
+    addGFunction(-2.864, 15.117);
+    addGFunction(-2.577, 18.006);
+    addGFunction(-2.171, 22.887);
+    addGFunction(-1.884, 26.924);
+    addGFunction(-1.191, 38.004);
+    addGFunction(-0.497, 49.919);
+    addGFunction(-0.274, 53.407);
+    addGFunction(-0.051, 56.632);
+    addGFunction(0.196, 59.825);
+    addGFunction(0.419, 62.349);
+    addGFunction(0.642, 64.524);
+    addGFunction(0.873, 66.412);
+    addGFunction(1.112, 67.993);
+    addGFunction(1.335, 69.162);
+    addGFunction(1.679, 70.476);
+    addGFunction(2.028, 71.361);
+    addGFunction(2.275, 71.79);
+    addGFunction(3.003, 72.511);
   }
 
   IddObjectType GroundHeatExchangerVertical::iddObjectType() {
@@ -565,6 +651,10 @@ namespace model {
 
   bool GroundHeatExchangerVertical::isGFunctionReferenceRatioDefaulted() const {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->isGFunctionReferenceRatioDefaulted();
+  }
+
+  ModelObject GroundHeatExchangerVertical::undisturbedGroundTemperatureModel() const {
+    return getImpl<detail::GroundHeatExchangerVertical_Impl>()->undisturbedGroundTemperatureModel();
   }
 
   bool GroundHeatExchangerVertical::setNumberofBoreHoles(int numberofBoreHoles) {
@@ -673,6 +763,10 @@ namespace model {
 
   void GroundHeatExchangerVertical::resetGFunctionReferenceRatio() {
     getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetGFunctionReferenceRatio();
+  }
+
+  bool GroundHeatExchangerVertical::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
+    return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
   }
 
   /// @cond
