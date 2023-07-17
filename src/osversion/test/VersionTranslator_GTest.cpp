@@ -2519,22 +2519,26 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_GroundHeatExchangerVertical) {
   EXPECT_EQ(0.692626, ghx.getDouble(11).get());                           // Grout Thermal Conductivity
   EXPECT_EQ(0.391312, ghx.getDouble(12).get());                           // Pipe Thermal Conductivity
   EXPECT_EQ(0.0266667, ghx.getDouble(13).get());                          // Pipe Out Diameter
-  EXPECT_EQ(0.253977, ghx.getDouble(14).get());                           // U-Tube Distance
+  EXPECT_EQ(0.0253977, ghx.getDouble(14).get());                          // U-Tube Distance
   EXPECT_EQ(0.00241285, ghx.getDouble(15).get());                         // Pipe Thickness
   EXPECT_EQ(2, ghx.getInt(16).get());                                     // Maximum Length of Simulation
   EXPECT_NE("", ghx.getString(17).get());                                 // Undisturbed Ground Temperature Model
   EXPECT_EQ(0.0005, ghx.getDouble(18).get());                             // G-Function Reference Ratio {dimensionless}
-  EXPECT_NE(-15.2996, ghx.getDouble(19).get());                           // G-Function Ln(T/Ts) Value 1
-  EXPECT_EQ(-0.348322, ghx.getDouble(20).get());                          // G-Function G Value 1
-  EXPECT_NE(3.003, ghx.getDouble(87).get());                              // G-Function Ln(T/Ts) Value 35
-  EXPECT_EQ(72.511, ghx.getDouble(88).get());                             // G-Function G Value 35
+
+  EXPECT_EQ(35u, ghx.numExtensibleGroups());
+  auto eg1 = ghx.extensibleGroups()[0];
+  EXPECT_EQ(-15.2996, eg1.getDouble(0, false).get());   // G-Function Ln(T/Ts) Value 1
+  EXPECT_EQ(-0.348322, eg1.getDouble(1, false).get());  // G-Function G Value 1
+  auto eg35 = ghx.extensibleGroups()[34];
+  EXPECT_EQ(3.003, eg35.getDouble(0, false).get());   // G-Function Ln(T/Ts) Value 35
+  EXPECT_EQ(72.511, eg35.getDouble(1, false).get());  // G-Function G Value 35
 
   std::vector<WorkspaceObject> ukas = model->getObjectsByType("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach");
   ASSERT_EQ(1u, ukas.size());
 
-  ASSERT_TRUE(ghx.getTarget(19));
-  WorkspaceObject uka = ghx.getTarget(19).get();
-  EXPECT_EQ(uka.nameString(), ghx.getTarget(19)->nameString());
+  ASSERT_TRUE(ghx.getTarget(17));
+  WorkspaceObject uka = ghx.getTarget(17).get();
+  EXPECT_EQ(uka.nameString(), ghx.getTarget(17)->nameString());
   EXPECT_EQ(IddObjectType(IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach), uka.iddObject().type());
   EXPECT_EQ("Site Ground Temperature Undisturbed Kusuda Achenbach 1", uka.getString(1).get());  // Name
   EXPECT_EQ(0.692626, uka.getDouble(2).get());                                                  // Soil Thermal Conductivity

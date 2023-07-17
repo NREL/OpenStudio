@@ -7644,9 +7644,10 @@ namespace osversion {
                 kusudaObject.setDouble(i - 5, _value.get() / 920.0);
               }
             }
-          } else if (i == 17) {  // Undisturbed Ground Temperature Model
-            ghxObject.setString(i, kusudaObject.getString(0).get());
           } else {
+            if (i == 17) {  // Undisturbed Ground Temperature Model
+              ghxObject.setString(i, kusudaObject.getString(0).get());
+            }
             if ((value = object.getString(i))) {
               ghxObject.setString(i + 1, value.get());
             }
