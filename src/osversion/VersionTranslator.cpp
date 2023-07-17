@@ -7639,9 +7639,9 @@ namespace osversion {
                 kusudaObject.setString(i - 5, value.get());
               }
             }
-            if ((value = object.getDouble(i))) {
+            if ((boost::optional<double> d = object.getDouble(i))) {
               if (i == 9) {  // Soil Specific Heat
-                kusudaObject.setDouble(i - 5, value.get() / 920.0);
+                kusudaObject.setDouble(i - 5, d.get() / 920.0);
               }
             }
           } else if (i == 17) {  // Undisturbed Ground Temperature Model
@@ -7653,9 +7653,9 @@ namespace osversion {
           }
         }
 
-        kusudaObject.setString(3, 920.0);  // Soil Density
-        kusudaObject.setString(6, 3.2);    // Average Amplitude of Surface Temperature
-        kusudaObject.setString(7, 8.0);    // Phase Shift of Minimum Surface Temperature
+        kusudaObject.setDouble(3, 920.0);  // Soil Density
+        kusudaObject.setDouble(6, 3.2);    // Average Amplitude of Surface Temperature
+        kusudaObject.setDouble(7, 8.0);    // Phase Shift of Minimum Surface Temperature
 
         m_refactored.push_back(RefactoredObjectData(object, ghxObject));
         m_new.push_back(kusudaObject);
