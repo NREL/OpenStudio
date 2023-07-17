@@ -7624,22 +7624,24 @@ namespace osversion {
         // 1 Field has been added from 3.6.1 to 3.7.0:
         // -------------------------------------------
         // * Undisturbed Ground Temperature Model * 17
-        auto iddObject = idd_3_6_1.getObject(iddname);
+        auto iddObject = idd_3_7_0.getObject(iddname);
         IdfObject ghxObject(iddObject.get());
-        IdfObject kusudaObject(idd_3_6_0.getObject("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach").get());
+        IdfObject kusudaObject(idd_3_7_0.getObject("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach").get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
           if (i < 17) {
             if ((value = object.getString(i))) {
               ghxObject.setString(i, value.get());
-              if ((i == 8)) {  // Soil Thermal Conductivity
+              if (i == 8) {  // Soil Thermal Conductivity
                 kusudaObject.setString(i - 6, value.get());
               }
-              if ((i == 9)) {  // Soil Specific Heat
-                kusudaObject.setString(i - 5, value.get() / 920.0);
-              }
-              if ((i == 10)) {  // Average Soil Surface Temperature
+              if (i == 10) {  // Average Soil Surface Temperature
                 kusudaObject.setString(i - 5, value.get());
+              }
+            }
+            if ((value = object.getDouble(i))) {
+              if (i == 9) {  // Soil Specific Heat
+                kusudaObject.setDouble(i - 5, value.get() / 920.0);
               }
             }
           } else if (i == 17) {  // Undisturbed Ground Temperature Model
