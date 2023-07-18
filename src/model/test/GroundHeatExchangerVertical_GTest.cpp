@@ -36,7 +36,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_GroundHeatExchangerVertical) {
   {
     Model m;
     GroundHeatExchangerVertical gh(m);
-    
+
     ASSERT_TRUE(gh.designFlowRate());
     EXPECT_EQ(0.0033, gh.designFlowRate().get());
     ASSERT_TRUE(gh.numberofBoreHoles());
@@ -130,10 +130,10 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_SetGetFields) {
   EXPECT_TRUE(gh.setPipeThickness(2.5E-03));
   EXPECT_TRUE(gh.setMaximumLengthofSimulation(3));
   EXPECT_TRUE(gh.setGFunctionReferenceRatio(0.001));
-  
+
   SiteGroundTemperatureUndisturbedKusudaAchenbach sgt(m);
   EXPECT_TRUE(gh.setUndisturbedGroundTemperatureModel(sgt));
-  
+
   ASSERT_TRUE(gh.designFlowRate());
   EXPECT_EQ(0.004, gh.designFlowRate().get());
   ASSERT_TRUE(gh.numberofBoreHoles());
@@ -167,7 +167,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_SetGetFields) {
     undisturbedGroundTemperatureModel.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
   ASSERT_TRUE(uka);
   EXPECT_EQ(sgt, uka.get());
-  
+
   SiteGroundTemperatureUndisturbedXing sgt2(m);
   EXPECT_TRUE(gh.setUndisturbedGroundTemperatureModel(sgt2));
 
@@ -200,8 +200,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_SetGetFields) {
   EXPECT_EQ(0.001, gh.gFunctionReferenceRatio());
   EXPECT_FALSE(gh.isGFunctionReferenceRatioDefaulted());
   ModelObject undisturbedGroundTemperatureModel2 = gh.undisturbedGroundTemperatureModel();
-  boost::optional<SiteGroundTemperatureUndisturbedXing> ux =
-    undisturbedGroundTemperatureModel2.optionalCast<SiteGroundTemperatureUndisturbedXing>();
+  boost::optional<SiteGroundTemperatureUndisturbedXing> ux = undisturbedGroundTemperatureModel2.optionalCast<SiteGroundTemperatureUndisturbedXing>();
   ASSERT_TRUE(ux);
   EXPECT_EQ(sgt, ux.get());
 }

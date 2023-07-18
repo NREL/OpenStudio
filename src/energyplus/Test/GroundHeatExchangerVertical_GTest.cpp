@@ -76,17 +76,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerVertical) {
   EXPECT_EQ("GHX Inlet Node", idfObject.getString(GroundHeatExchanger_SystemFields::InletNodeName).get());
   EXPECT_EQ("GHX Outlet Node", idfObject.getString(GroundHeatExchanger_SystemFields::OutletNodeName).get());
   EXPECT_EQ(0.004, idfObject.getDouble(GroundHeatExchanger_SystemFields::DesignFlowRate).get());
-  
+
   EXPECT_EQ("Site:GroundTemperature:Undisturbed:KusudaAchenbach",
             idfObject.getString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelType).get());
-  
+
   ASSERT_TRUE(idfObject.getTarget(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelName));
   const WorkspaceObject kusuda = idfObject.getTarget(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelName).get();
   EXPECT_EQ(IddObjectType{IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach}, kusuda.iddObject().type());
-  
+
   EXPECT_EQ(0.7, idfObject.getDouble(GroundHeatExchanger_SystemFields::GroundThermalConductivity).get());
   EXPECT_EQ(0.3E+07, idfObject.getDouble(GroundHeatExchanger_SystemFields::GroundThermalHeatCapacity).get());
-  
+
   ASSERT_TRUE(idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ResponseFactorsObjectName).get());
   const WorkspaceObject response = idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ResponseFactorsObjectName).get();
   EXPECT_EQ(IddObjectType{IddObjectType::GroundHeatExchanger_ResponseFactors}, response.iddObject().type());
@@ -100,11 +100,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerVertical) {
   EXPECT_EQ(13.375, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature).get());
   EXPECT_EQ(3.2, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature).get());
   EXPECT_EQ(8.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature).get());
-  
+
   ASSERT_TRUE(response.getTarget(GroundHeatExchanger_ResponseFactorsFields::GHE_Vertical_PropertiesObjectName).get());
   const WorkspaceObject properties = response.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_PropertiesObjectName).get();
   EXPECT_EQ(IddObjectType{IddObjectType::GroundHeatExchanger_Vertical_Properties}, properties.iddObject().type());
-  
+
   EXPECT_EQ(100, response.getDouble(GroundHeatExchanger_ResponseFactorsFields::NumberofBoreholes).get());
   EXPECT_EQ(0.001, response.getDouble(GroundHeatExchanger_ResponseFactorsFields::GFunctionReferenceRatio).get());
 
