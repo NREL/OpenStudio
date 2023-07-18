@@ -2543,7 +2543,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_GroundHeatExchangerVertical) {
   EXPECT_EQ("Site Ground Temperature Undisturbed Kusuda Achenbach 1", uka.getString(1).get());  // Name
   EXPECT_EQ(0.692626, uka.getDouble(2).get());                                                  // Soil Thermal Conductivity
   EXPECT_EQ(920.0, uka.getDouble(3).get());                                                     // Soil Density
-  EXPECT_EQ(2347000.0 / 920.0, uka.getDouble(4).get());                                         // Soil Specific Heat
+  EXPECT_DOUBLE_EQ(2347000.0 / 920.0, uka.getDouble(4).get());                                  // Soil Specific Heat
   EXPECT_EQ(13.375, uka.getDouble(5).get());                                                    // Average Soil Surface Temperature
   EXPECT_EQ(3.2, uka.getDouble(6).get());                                                       // Average Amplitude of Surface Temperature
   EXPECT_EQ(8.0, uka.getDouble(7).get());                                                       // Phase Shift of Minimum Surface Temperature

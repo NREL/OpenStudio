@@ -202,7 +202,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_SetGetFields) {
   ModelObject undisturbedGroundTemperatureModel2 = gh.undisturbedGroundTemperatureModel();
   boost::optional<SiteGroundTemperatureUndisturbedXing> ux = undisturbedGroundTemperatureModel2.optionalCast<SiteGroundTemperatureUndisturbedXing>();
   ASSERT_TRUE(ux);
-  EXPECT_EQ(sgt, ux.get());
+  EXPECT_EQ(sgt2, ux.get());
 }
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_Connections) {

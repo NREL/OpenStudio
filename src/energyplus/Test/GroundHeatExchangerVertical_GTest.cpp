@@ -91,12 +91,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerVertical) {
   const WorkspaceObject response = idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ResponseFactorsObjectName).get();
   EXPECT_EQ(IddObjectType{IddObjectType::GroundHeatExchanger_ResponseFactors}, response.iddObject().type());
 
-  EXPECT_EQ("UHFcalc", idfObject.getString(GroundHeatExchanger_SystemFields::gFunctionCalculationMethod).get());
+  EXPECT_EQ(idfObject.isEmpty(GroundHeatExchanger_SystemFields::gFunctionCalculationMethod));
   ASSERT_FALSE(idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ArrayObjectName));
 
   EXPECT_EQ(0.692626, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity).get());
   EXPECT_EQ(920.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity).get());
-  EXPECT_EQ(0.234700E+07 / 920.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat).get());
+  EXPECT_DOUBLE_EQ(0.234700E+07 / 920.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat).get());
   EXPECT_EQ(13.375, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature).get());
   EXPECT_EQ(3.2, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature).get());
   EXPECT_EQ(8.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature).get());
