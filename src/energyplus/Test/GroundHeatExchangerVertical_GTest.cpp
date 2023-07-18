@@ -87,12 +87,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerVertical) {
   EXPECT_EQ(0.7, idfObject.getDouble(GroundHeatExchanger_SystemFields::GroundThermalConductivity).get());
   EXPECT_EQ(0.3E+07, idfObject.getDouble(GroundHeatExchanger_SystemFields::GroundThermalHeatCapacity).get());
 
-  ASSERT_TRUE(idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ResponseFactorsObjectName).get());
+  ASSERT_TRUE(idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ResponseFactorsObjectName));
   const WorkspaceObject response = idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ResponseFactorsObjectName).get();
   EXPECT_EQ(IddObjectType{IddObjectType::GroundHeatExchanger_ResponseFactors}, response.iddObject().type());
 
   EXPECT_EQ("UHFcalc", idfObject.getString(GroundHeatExchanger_SystemFields::gFunctionCalculationMethod).get());
-  EXPECT_EQ("", idfObject.getString(GroundHeatExchanger_SystemFields::GHE_Vertical_ArrayObjectName).get());
+  ASSERT_FALSE(idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ArrayObjectName));
 
   EXPECT_EQ(0.692626, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity).get());
   EXPECT_EQ(920.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity).get());
@@ -101,7 +101,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerVertical) {
   EXPECT_EQ(3.2, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature).get());
   EXPECT_EQ(8.0, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature).get());
 
-  ASSERT_TRUE(response.getTarget(GroundHeatExchanger_ResponseFactorsFields::GHE_Vertical_PropertiesObjectName).get());
+  ASSERT_TRUE(response.getTarget(GroundHeatExchanger_ResponseFactorsFields::GHE_Vertical_PropertiesObjectName));
   const WorkspaceObject properties = response.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_PropertiesObjectName).get();
   EXPECT_EQ(IddObjectType{IddObjectType::GroundHeatExchanger_Vertical_Properties}, properties.iddObject().type());
 
