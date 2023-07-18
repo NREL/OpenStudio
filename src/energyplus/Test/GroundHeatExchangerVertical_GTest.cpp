@@ -91,7 +91,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerVertical) {
   const WorkspaceObject response = idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ResponseFactorsObjectName).get();
   EXPECT_EQ(IddObjectType{IddObjectType::GroundHeatExchanger_ResponseFactors}, response.iddObject().type());
 
-  EXPECT_EQ(idfObject.isEmpty(GroundHeatExchanger_SystemFields::gFunctionCalculationMethod));
+  EXPECT_TRUE(idfObject.isEmpty(GroundHeatExchanger_SystemFields::gFunctionCalculationMethod));
   ASSERT_FALSE(idfObject.getTarget(GroundHeatExchanger_SystemFields::GHE_Vertical_ArrayObjectName));
 
   EXPECT_EQ(0.692626, kusuda.getDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity).get());
