@@ -48,7 +48,8 @@ endif()
 
 # The Release/Debug can be stripped probably
 # Also probably don't need to use multiple `<TargetFrameworks>` which is the reason there's an extra netstandard2.0/ level
-set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/netstandard2.0/OpenStudio.dll")
+# Note: can't use CMAKE_BUILD_TYPE as it's empty for multi generators (MSVC for eg). So we use a genex
+set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>/netstandard2.0/OpenStudio.dll")
 
 # ignore deprecated warnings since we will export deprecated methods
 add_library(csharp_warnings INTERFACE)
@@ -60,14 +61,11 @@ target_compile_options(csharp_warnings INTERFACE "$<${is_gnu_or_clang_genex}:-Wn
 # custom command to make OPENSTUDIO_CSHARP_DLL
 add_custom_command(
   OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-  COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "/p:Platform=${CSHARP_PLATFORM}" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
+  COMMAND "${DOTNET}" "build" "-c" "$<CONFIG>" "/p:Platform=${CSHARP_PLATFORM}" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
   DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
 )
 
-
-install(FILES "${OPENSTUDIO_CSHARP_DLL}" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
-
-
+install(FILES "${OPENSTUDIO_CSHARP_DLL}" DESTINATION CSharp/openstudio/ COMPONENT "CSharpAPI")
 
 # keep the following lists aligned with translator_names in ProjectMacros.cmake
 set(translator_wrappers
