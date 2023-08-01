@@ -735,6 +735,7 @@ set(${target_name}_test_src
   Test/GeneratorMicroTurbine_GTest.cpp
   Test/GeneratorWindTurbine_GTest.cpp
   Test/GroundHeatExchangerHorizontalTrench_GTest.cpp
+  Test/GroundHeatExchangerVertical_GTest.cpp
   Test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
   Test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   Test/HeatPumpAirToWaterFuelFired_GTest.cpp

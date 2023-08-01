@@ -84,6 +84,8 @@ namespace model {
 
       bool isGFunctionReferenceRatioDefaulted() const;
 
+      ModelObject undisturbedGroundTemperatureModel() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -141,6 +143,8 @@ namespace model {
       bool setGFunctionReferenceRatio(double gFunctionReferenceRatio);
 
       void resetGFunctionReferenceRatio();
+
+      bool setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel);
 
       //@}
       /** @name Other */

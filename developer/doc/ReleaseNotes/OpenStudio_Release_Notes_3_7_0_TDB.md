@@ -78,6 +78,9 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
     * Fix #4695 - AirLoopHVACUnitarySystem: Supply Air Flow Rate Method During <XXX> Operation should be set via related setters/autosize
     * Breaks the return of `supplyAirFlowRateMethodDuringCoolingOperation` and `supplyAirFlowRateMethodDuringHeatingOperation`: now returns `std::string` instead of `boost::optional<std::string>`
     * Deprecates many set/reset methods
+* [#4932](https://github.com/NREL/OpenStudio/pull/4932) - Support undisturbed ground temperature models on GroundHeatExchangerVertical
+    * Fix #4930 - Support undisturbed ground temperature models on GroundHeatExchangerVertical
+    * Update `GroundHeatExchanger:Vertical` to actually use the Ground Temeprature Model field
 
 ## Minor changes and bug fixes
 
