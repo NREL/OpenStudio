@@ -493,10 +493,10 @@ namespace model {
     addGFunction(3.003, 72.511);
 
     SiteGroundTemperatureUndisturbedKusudaAchenbach undisturbedGroundTemperatureModel(model);
-    undisturbedGroundTemperatureModel.setSoilThermalConductivity(0.692626);
+    undisturbedGroundTemperatureModel.setSoilThermalConductivity(groundThermalConductivity().get());
     undisturbedGroundTemperatureModel.setSoilDensity(920.0);
-    undisturbedGroundTemperatureModel.setSoilSpecificHeat(0.234700E+07 / 920.0);
-    undisturbedGroundTemperatureModel.setAverageSoilSurfaceTemperature(13.375);
+    undisturbedGroundTemperatureModel.setSoilSpecificHeat(groundThermalHeatCapacity().get() / 920.0);
+    undisturbedGroundTemperatureModel.setAverageSoilSurfaceTemperature(groundTemperature().get());
     undisturbedGroundTemperatureModel.setAverageAmplitudeofSurfaceTemperature(3.2);
     undisturbedGroundTemperatureModel.setPhaseShiftofMinimumSurfaceTemperature(8.0);
     setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);

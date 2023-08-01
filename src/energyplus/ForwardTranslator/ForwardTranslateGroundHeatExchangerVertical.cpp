@@ -114,25 +114,29 @@ namespace energyplus {
       idfObject.setString(GroundHeatExchanger_SystemFields::OutletNodeName, temp->name().get());
     }
 
-    // Maximum Flow Rate
+    // Design Flow Rate
     if ((value = modelObject.designFlowRate())) {
       idfObject.setDouble(GroundHeatExchanger_SystemFields::DesignFlowRate, value.get());
     }
 
+    // Undisturbed Ground Temperature Model Type
     idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelType,
-                        "Site:GroundTemperature:Undisturbed:KusudaAchenbach");
+                        _undisturbedGroundTemperatureModel->iddObject().name());
 
-    auto groundModelName = modelObject.nameString() + " Ground Temps";
-    idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelName, groundModelName);
+    // Undisturbed Ground Temperature Model Name
+    idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelName, s.get());
 
+    // Ground Thermal Conductivity
     if ((value = modelObject.groundThermalConductivity())) {
       idfObject.setDouble(GroundHeatExchanger_SystemFields::GroundThermalConductivity, value.get());
     }
 
+    // Ground Thermal Heat Capacity
     if ((value = modelObject.groundThermalHeatCapacity())) {
       idfObject.setDouble(GroundHeatExchanger_SystemFields::GroundThermalHeatCapacity, value.get());
     }
 
+    // GHE:Vertical:ResponseFactors Object Name
     auto responseFactorsObjectName = modelObject.nameString() + " Response Factors";
     idfObject.setString(GroundHeatExchanger_SystemFields::GHE_Vertical_ResponseFactorsObjectName, responseFactorsObjectName);
 
@@ -175,13 +179,6 @@ namespace energyplus {
     if ((value = modelObject.uTubeDistance())) {
       propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::UTubeDistance, value.get());
     }
-
-    // UndisturbedGroundTemperatureModelName
-    idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelName, s.get());
-
-    // UndisturbedGroundTemperatureModelType
-    idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelType,
-                        _undisturbedGroundTemperatureModel->iddObject().name());
 
     IdfObject rfIdfObject(IddObjectType::GroundHeatExchanger_ResponseFactors);
     m_idfObjects.push_back(rfIdfObject);
