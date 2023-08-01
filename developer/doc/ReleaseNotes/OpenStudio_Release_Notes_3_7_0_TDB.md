@@ -74,6 +74,9 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 ## New Features, Major Fixes and API-breaking changes
 
 * [#4827](https://github.com/NREL/OpenStudio/pull/4827) - #4748 #4817 - Validate BCLXML with schema when loading + make sorting of files in measure.xml consistent when saving
+* [#4932](https://github.com/NREL/OpenStudio/pull/4932) - Support undisturbed ground temperature models on GroundHeatExchangerVertical
+    * Fix #4930 - Support undisturbed ground temperature models on GroundHeatExchangerVertical
+    * Update `GroundHeatExchanger:Vertical` to actually use the Ground Temeprature Model field
 
 ## Minor changes and bug fixes
 
