@@ -612,351 +612,392 @@ bool MeasureManagerServer::close() {
 }
 
 void MeasureManagerServer::handle_get(web::http::http_request message) {
-  // Need a mutex?
-  std::cout << "Received GET request: " << message.to_string() << "uri=" << message.relative_uri().to_string() << "\n";
-
   const std::string uri = toString(web::http::uri::decode(message.relative_uri().path()));
-  // std::vector<std::string> paths = web::http::uri::split_path(uri);
-
-  // Cpprestsdk has it's own json implementation.....
-  Json::Value result;
-  result["status"] = "running";
-  result["my_measures_dir"] = my_measures_dir.generic_string();
 
   if (uri == "/") {
-    // Don't do anything else
-  } else if (uri == "/internal_state") {
-
-    auto internalState = m_measureManager.internalState();
-    for (const auto& key : internalState.getMemberNames()) {
-      result[key] = internalState[key];
-    }
-  } else {
-    message.reply(web::http::status_codes::BadRequest, toWebJSON(fmt::format("Error, unknown path '{}'", uri)));
+    Json::Value result;
+    result["status"] = "running";
+    result["my_measures_dir"] = my_measures_dir.generic_string();
+    message.reply(web::http::status_codes::OK, toWebJSON(result));
   }
 
-  message.reply(web::http::status_codes::OK, toWebJSON(result));
-  // .then([](pplx::task<void> t) {
-  //   try {
-  //     t.get();
-  //   } catch (...) {
-  //     //
-  //   }
-  // });
+  // Cpprestsdk has it's own json implementation.....
+  if (uri == "/internal_state") {
+    handle_request(message, web::json::value(), std::bind(&MeasureManagerServer::internal_state, this, std::placeholders::_1));  // NOLINT
+    return;
+  }
+
+  message.reply(web::http::status_codes::BadRequest, toWebJSON(fmt::format("Error, unknown path '{}'", uri)));
 }
 
 void MeasureManagerServer::handle_post(web::http::http_request message) {
-  std::cout << "Received POST request: " << message.to_string();
   const std::string uri = toString(web::http::uri::decode(message.relative_uri().path()));
 
   if (uri == "/reset") {
-    fmt::print("Resetting internal state");
-    m_measureManager.reset();
-    // my_measures_dir = openstudio::filesystem::home_path() / "OpenStudio/Measures";
-    message.reply(web::http::status_codes::OK, toWebJSON("Resetting internal state"));
+    handle_request(message, web::json::value(), std::bind(&MeasureManagerServer::reset, this, std::placeholders::_1));  // NOLINT
     return;
   }
 
   if (uri == "/set") {
     // curl -H "Content-Type: application/json" -X POST  --data '{"my_measures_dir": "/Users/julien/OpenStudio/Measures"}' http://localhost:8090/set
-    message.extract_json().then([this, message](web::json::value body) {
-      if (auto p_ = get_field<openstudio::path>(body, "my_measures_dir")) {
-        this->my_measures_dir = std::move(*p_);
-      }
-      message.reply(web::http::status_codes::OK, web::json::value());
+    message.extract_json().then([this, message](const web::json::value& body) {
+      handle_request(message, body, std::bind(&MeasureManagerServer::set, this, std::placeholders::_1));  // NOLINT
     });
     return;
   }
 
   if (uri == "/download_bcl_measure") {
-    message.extract_json().then([message](web::json::value body) {
-      if (auto uid_ = get_field<std::string>(body, "uid")) {
-        const RemoteBCL r;
-        if (auto bclMeasure_ = r.getMeasure(*uid_)) {
-          message.reply(web::http::status_codes::OK, toWebJSON(bclMeasure_->toJSON()));
-        } else {
-          message.reply(web::http::status_codes::BadRequest, toWebJSON(fmt::format("Cannot find measure with uid='{}'", *uid_)));
-        }
-      } else {
-        fmt::print("Missing the uid in the post data\n");
-        message.reply(web::http::status_codes::BadRequest, toWebJSON("Missing the uid in the post data"));
-      }
+    message.extract_json().then([this, message](const web::json::value& body) {
+      handle_request(message, body, std::bind(&MeasureManagerServer::download_bcl_measure, this, std::placeholders::_1));  // NOLINT
     });
     return;
   }
 
   // TODO: for testing only, remove
   if (uri == "/get_model") {
-    message.extract_json().then([this, message](web::json::value body) {
-      if (auto osmPath_ = get_field<openstudio::path>(body, "osm_path")) {
-        auto osmInfo_ = m_measureManager.getModel(*osmPath_);
-        if (osmInfo_) {
-          message.reply(web::http::status_codes::OK, toWebJSON(fmt::format("OK, loaded model with checksum {}", osmInfo_->checksum)));
-        } else {
-          message.reply(web::http::status_codes::BadRequest, toWebJSON(fmt::format("Wrong osm path: '{}'", osmPath_->generic_string())));
-        }
-      } else {
-        message.reply(web::http::status_codes::BadRequest, toWebJSON("The 'osm_path' (string/path) must be in the post data"));
-      }
+    message.extract_json().then([this, message](const web::json::value& body) {
+      handle_request(message, body, std::bind(&MeasureManagerServer::get_model, this, std::placeholders::_1));  // NOLINT
     });
     return;
   }
 
   if (uri == "/bcl_measures") {
-    const bool force_reload = false;  // Not supposed to mess with the BCL Measures!
-    auto& localBCL = openstudio::LocalBCL::instance();
-    std::vector<web::json::value> result;
-    for (auto& measure : localBCL.measures()) {
-      auto measureDir = measure.directory();
+    handle_request(message, web::json::value(), std::bind(&MeasureManagerServer::bcl_measures, this, std::placeholders::_1));  // NOLINT
+    return;
+  }
+
+  if (uri == "/update_measures") {
+    message.extract_json().then([this, message](const web::json::value& body) {
+      handle_request(message, body, std::bind(&MeasureManagerServer::update_measures, this, std::placeholders::_1));  // NOLINT
+    });
+    return;
+  }
+
+  if (uri == "/compute_arguments") {
+    message.extract_json().then([this, message](const web::json::value& body) {
+      handle_request(message, body, std::bind(&MeasureManagerServer::compute_arguments, this, std::placeholders::_1));  // NOLINT
+    });
+    return;
+  }
+
+  if (uri == "/create_measure") {
+    message.extract_json().then([this, message](const web::json::value& body) {
+      handle_request(message, body, std::bind(&MeasureManagerServer::create_measure, this, std::placeholders::_1));  // NOLINT
+    });
+    return;
+  }
+
+  if (uri == "/duplicate_measure") {
+    message.extract_json().then([this, message](const web::json::value& body) {
+      handle_request(message, body, std::bind(&MeasureManagerServer::duplicate_measure, this, std::placeholders::_1));  // NOLINT
+    });
+    return;
+  }
+
+  message.reply(web::http::status_codes::NotFound, toWebJSON("404: Unknown Endpoint"));
+}
+MeasureManagerServer::ResponseType MeasureManagerServer::internal_state([[maybe_unused]] const web::json::value& body) {
+  Json::Value result;
+  result["status"] = "running";
+  result["my_measures_dir"] = my_measures_dir.generic_string();
+
+  auto internalState = m_measureManager.internalState();
+  for (const auto& key : internalState.getMemberNames()) {
+    result[key] = internalState[key];
+  }
+
+  return {web::http::status_codes::OK, toWebJSON(result)};
+}
+
+MeasureManagerServer::ResponseType MeasureManagerServer::reset([[maybe_unused]] const web::json::value& body) {
+  m_measureManager.reset();
+  return {web::http::status_codes::OK, toWebJSON("Resetting internal state")};
+}
+
+MeasureManagerServer::ResponseType MeasureManagerServer::set(const web::json::value& body) {
+  if (auto p_ = get_field<openstudio::path>(body, "my_measures_dir")) {
+    this->my_measures_dir = std::move(*p_);
+  }
+  return {web::http::status_codes::OK, web::json::value()};
+}
+
+MeasureManagerServer::ResponseType MeasureManagerServer::download_bcl_measure(const web::json::value& body) {  // NOLINT
+  if (auto uid_ = get_field<std::string>(body, "uid")) {
+    const RemoteBCL r;
+    if (auto bclMeasure_ = r.getMeasure(*uid_)) {
+      return {web::http::status_codes::OK, toWebJSON(bclMeasure_->toJSON())};
+    } else {
+      return {web::http::status_codes::BadRequest, toWebJSON(fmt::format("Cannot find measure with uid='{}'", *uid_))};
+    }
+  } else {
+    fmt::print("Missing the uid in the post data\n");
+    return {web::http::status_codes::BadRequest, toWebJSON("Missing the uid in the post data")};
+  }
+}
+
+MeasureManagerServer::ResponseType MeasureManagerServer::get_model(const web::json::value& body) {
+  if (auto osmPath_ = get_field<openstudio::path>(body, "osm_path")) {
+    auto osmInfo_ = m_measureManager.getModel(*osmPath_);
+    if (osmInfo_) {
+      return {web::http::status_codes::OK, toWebJSON(fmt::format("OK, loaded model with checksum {}", osmInfo_->checksum))};
+    } else {
+      return {web::http::status_codes::BadRequest, toWebJSON(fmt::format("Wrong osm path: '{}'", osmPath_->generic_string()))};
+    }
+  } else {
+    return {web::http::status_codes::BadRequest, toWebJSON("The 'osm_path' (string/path) must be in the post data")};
+  }
+}
+
+MeasureManagerServer::ResponseType MeasureManagerServer::bcl_measures([[maybe_unused]] const web::json::value& body) {
+  const bool force_reload = false;  // Not supposed to mess with the BCL Measures!
+  auto& localBCL = openstudio::LocalBCL::instance();
+  std::vector<web::json::value> result;
+  for (auto& measure : localBCL.measures()) {
+    auto measureDir = measure.directory();
+    if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(measureDir, force_reload)) {
+      result.emplace_back(toWebJSON(measure_->toJSON()));
+    } else {
+      fmt::print("Directory '{}' is not a measure\n", measureDir.generic_string());
+    }
+  }
+
+  return {web::http::status_codes::OK, web::json::value::array(result)};
+}
+
+MeasureManagerServer::ResponseType MeasureManagerServer::update_measures(const web::json::value& body) {
+  auto measuresDir = get_field<openstudio::path>(body, "measures_dir", my_measures_dir);
+  const bool force_reload = get_field<bool>(body, "force_reload", false);
+
+  // Scan the directory for measures
+  std::vector<web::json::value> result;
+  for (const auto& dirEnt : openstudio::filesystem::directory_iterator{measuresDir}) {
+    if (openstudio::filesystem::is_directory(dirEnt)) {
+      const auto& measureDir = dirEnt.path();
       if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(measureDir, force_reload)) {
         result.emplace_back(toWebJSON(measure_->toJSON()));
       } else {
         fmt::print("Directory '{}' is not a measure\n", measureDir.generic_string());
       }
     }
-    message.reply(web::http::status_codes::OK, web::json::value::array(std::move(result)));
-    return;
   }
 
-  if (uri == "/update_measures") {
-    message.extract_json().then([this, message](web::json::value body) {
-      auto measuresDir = get_field<openstudio::path>(body, "measures_dir", my_measures_dir);
+  return {web::http::status_codes::OK, web::json::value::array(result)};
+}
 
-      const bool force_reload = get_field<bool>(body, "force_reload", false);
-
-      // Scan the directory for measures
-      std::vector<web::json::value> result;
-      for (const auto& dirEnt : openstudio::filesystem::directory_iterator{measuresDir}) {
-        if (openstudio::filesystem::is_directory(dirEnt)) {
-          const auto& measureDir = dirEnt.path();
-          if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(measureDir, force_reload)) {
-            result.emplace_back(toWebJSON(measure_->toJSON()));
-          } else {
-            fmt::print("Directory '{}' is not a measure\n", measureDir.generic_string());
-          }
-        }
-      }
-      message.reply(web::http::status_codes::OK, web::json::value::array(std::move(result)));
-    });
-    return;
+MeasureManagerServer::ResponseType MeasureManagerServer::compute_arguments(const web::json::value& body) {
+  openstudio::path measureDir;
+  if (auto p_ = get_field<openstudio::path>(body, "measure_dir")) {
+    measureDir = std::move(*p_);
+  } else {
+    return {web::http::status_codes::BadRequest, toWebJSON("The 'measure_dir' (string) must be in the post data")};
   }
 
-  if (uri == "/compute_arguments") {
-    message.extract_json().then([this, message](web::json::value body) {
-      openstudio::path measureDir;
-      if (auto p_ = get_field<openstudio::path>(body, "measure_dir")) {
-        measureDir = std::move(*p_);
-      } else {
-        message.reply(web::http::status_codes::BadRequest, toWebJSON("The 'measure_dir' (string) must be in the post data"));
-        return;
-      }
+  const bool force_reload = get_field<bool>(body, "force_reload", false);
 
-      const bool force_reload = get_field<bool>(body, "force_reload", false);
-
-      auto measure_ = m_measureManager.getMeasure(measureDir, force_reload);
-      if (!measure_) {
-        auto msg = fmt::format("Cannot load measure at '{}'", measureDir.generic_string());
-        fmt::print(stderr, "{}\n", msg);
-        message.reply(web::http::status_codes::BadRequest, toWebJSON(msg));
-        return;
-      }
-
-      const openstudio::path osmOrIdfPath = get_field<openstudio::path>(body, "osm_path", {});
-
-      const openstudio::measure::OSMeasureInfo info = m_measureManager.getMeasureInfo(measureDir, *measure_, osmOrIdfPath);
-      if (auto errorString_ = info.error()) {
-        message.reply(web::http::status_codes::OK, toWebJSON(*errorString_));
-        return;
-      }
-      // TODO: maybe I should write an OSMeasureInfo::toJSON() method, but that'd be duplicating the code in BCLMeasure (BCLXML to be exact).
-      // So since the only thing that's different is the OSArgument (OSMeasureInfo) versus BCLMeasureArgument (BCLMeasure), we just override
-      auto result = measure_->toJSON();
-      if (!osmOrIdfPath.empty()) {
-        auto& arguments = result["arguments"];
-        arguments.clear();
-        for (const measure::OSArgument& argument : info.arguments()) {
-          arguments.append(argument.toJSON());
-        }
-      }
-      message.reply(web::http::status_codes::OK, toWebJSON(result));
-    });
-    return;
+  auto measure_ = m_measureManager.getMeasure(measureDir, force_reload);
+  if (!measure_) {
+    auto msg = fmt::format("Cannot load measure at '{}'", measureDir.generic_string());
+    fmt::print(stderr, "{}\n", msg);
+    return {web::http::status_codes::BadRequest, toWebJSON(msg)};
   }
 
-  if (uri == "/create_measure") {
-    message.extract_json().then([this, message](web::json::value body) {
-      static const std::array<std::string, 7> requiredParams = {
-        "measure_dir", "display_name", "class_name", "taxonomy_tag", "measure_type", "description", "modeler_description",
-      };
-      for (const auto& requiredParam : requiredParams) {
-        auto key = utility::conversions::to_string_t(requiredParam);
-        if (!body.has_string_field(key)) {
-          auto msg = fmt::format("The '{}' (string) must be in the post data.", requiredParam);
-          fmt::print("{}\n", msg);
-          message.reply(web::http::status_codes::BadRequest, toWebJSON(msg));
-          return;
-        }
-      }
+  const openstudio::path osmOrIdfPath = get_field<openstudio::path>(body, "osm_path", {});
 
-      MeasureType measureType = MeasureType::ModelMeasure;
-      auto measureTypeString = get_field<std::string>(body, "measure_type", "ModelMeasure");
-      try {
-        measureType = MeasureType(measureTypeString);
-      } catch (const std::exception& e) {
-        auto msg = fmt::format("Couldn't convert '{}' to a MeasureType: {}", measureTypeString, e.what());
-        fmt::print("{}\n", msg);
-        message.reply(web::http::status_codes::BadRequest, toWebJSON(msg));
-        return;
-      }
-
-      MeasureLanguage measureLanguage = MeasureLanguage::Ruby;
-      if (auto measureLanguageString_ = get_field<std::string>(body, "measure_language")) {
-        try {
-          measureLanguage = MeasureLanguage(*measureLanguageString_);
-        } catch (const std::exception& e) {
-          auto msg = fmt::format("Couldn't convert '{}' to a MeasureLanguage: {}", *measureLanguageString_, e.what());
-          fmt::print("{}\n", msg);
-          message.reply(web::http::status_codes::BadRequest, toWebJSON(msg));
-          return;
-        }
-      }
-
-      const openstudio::path measureDir = get_field<openstudio::path>(body, "measure_dir", "");
-      // This is throwy when the directory already exists
-      if (openstudio::filesystem::is_directory(measureDir)) {
-        auto msg = fmt::format("The directory already exists at '{}'.", measureDir.generic_string());
-        fmt::print("{}\n", msg);
-        message.reply(web::http::status_codes::BadRequest, toWebJSON(msg));
-        return;
-      }
-      const BCLMeasure measure(get_field<std::string>(body, "display_name", "DisplayName"), get_field<std::string>(body, "class_name", "ClassName"),
-                               measureDir, get_field<std::string>(body, "taxonomy_tag", "taxonomy.tag"), measureType,
-                               get_field<std::string>(body, "description", "Description"),
-                               get_field<std::string>(body, "modeler_description", "ModelerDescription"), measureLanguage);
-
-      if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(measureDir, true)) {
-        message.reply(web::http::status_codes::OK, toWebJSON(measure_->toJSON()));
-      } else {
-        fmt::print("Failed to update measure after creation, this shouldn't happen.");
-        message.reply(web::http::status_codes::BadRequest, toWebJSON(measure.toJSON()));
-      }
-    });
-    return;
+  const openstudio::measure::OSMeasureInfo info = m_measureManager.getMeasureInfo(measureDir, *measure_, osmOrIdfPath);
+  if (auto errorString_ = info.error()) {
+    return {web::http::status_codes::OK, toWebJSON(*errorString_)};
   }
 
-  if (uri == "/duplicate_measure") {
-    message.extract_json().then([this, message](web::json::value body) {
-      // Required parameters:
-      openstudio::path oldMeasureDir;
-      if (auto oldMeasureDir_ = get_field<openstudio::path>(body, "old_measure_dir")) {
-        oldMeasureDir = std::move(*oldMeasureDir_);
-      } else {
-        message.reply(web::http::status_codes::BadRequest, toWebJSON("The 'old_measure_dir' (string) must be in the post data"));
-        return;
-      }
-
-      openstudio::path newMeasureDir;
-      if (auto newMeasureDir_ = get_field<openstudio::path>(body, "measure_dir")) {
-        newMeasureDir = std::move(*newMeasureDir_);
-      } else {
-        message.reply(web::http::status_codes::BadRequest, toWebJSON("The 'measure_dir' (string) must be in the post data"));
-        return;
-      }
-
-      const bool force_reload = get_field<bool>(body, "force_reload", false);
-
-      boost::optional<BCLMeasure> oldMeasure_ = m_measureManager.getMeasure(oldMeasureDir, force_reload);
-      if (!oldMeasure_) {
-        auto msg = fmt::format("Cannot load measure at '{}'.", oldMeasureDir.generic_string());
-        fmt::print("{}\n", msg);
-        message.reply(web::http::status_codes::BadRequest, toWebJSON(msg));
-        return;
-      }
-
-      auto& oldMeasure = *oldMeasure_;
-
-      auto newMeasure_ = oldMeasure.clone(newMeasureDir);
-      if (!newMeasure_) {
-        auto msg = fmt::format("Cannot copy measure from '{}' to {}'", oldMeasureDir.generic_string(), newMeasureDir.generic_string());
-        fmt::print("{}\n", msg);
-        message.reply(web::http::status_codes::BadRequest, toWebJSON(msg));
-        return;
-      }
-      auto& newMeasure = *newMeasure_;
-      // Force updating the UID
-      newMeasure.changeUID();
-      newMeasure.incrementVersionId();
-
-      if (auto val_ = get_field<std::string>(body, "display_name")) {
-        newMeasure.setDisplayName(*val_);
-      }
-      if (auto val_ = get_field<std::string>(body, "class_name")) {
-        newMeasure.setName(openstudio::toUnderscoreCase(*val_));
-        newMeasure.setClassName(*val_);
-      }
-      if (auto val_ = get_field<std::string>(body, "taxonomy_tag")) {
-        newMeasure.setTaxonomyTag(*val_);
-      }
-
-      // Changing the measure Language is not supported!
-      auto newMeasureLanguage = oldMeasure.measureLanguage();
-      // if (body.has_field("measure_language") && body.at("measure_language").is_string()) {
-      //   auto measureLanguageString = body.at("measure_type").as_string();
-      //   try {
-      //     newMeasureLanguage = MeasureLanguage(measureLanguageString);
-      //     newMeasure.setMeasureLanguage(measureLanguage);
-      //   } catch (...) {
-      //     fmt::print("Couldn't convert '{}' to a MeasureLanguage", measureLanguageString);
-      //   }
-      // }
-
-      // Changing the measure Type should maybe not be supported either, the method signatures will be wrong and it might be missing
-      // energyPlusOutputRequests
-      auto newMeasureType = oldMeasure.measureType();
-      if (auto measureTypeString_ = get_field<std::string>(body, "measure_type")) {
-        try {
-          newMeasureType = MeasureType(*measureTypeString_);
-          newMeasure.setMeasureType(newMeasureType);
-        } catch (...) {
-          fmt::print("Couldn't convert '{}' to a MeasureType", *measureTypeString_);
-        }
-      }
-
-      if (auto val_ = get_field<std::string>(body, "description")) {
-        newMeasure.setDescription(*val_);
-      }
-
-      if (auto val_ = get_field<std::string>(body, "modeler_description")) {
-        newMeasure.setModelerDescription(*val_);
-      }
-
-      newMeasure.updateMeasureScript(oldMeasure.measureType(), newMeasureType, oldMeasure.measureLanguage(), newMeasureLanguage,
-                                     oldMeasure.className(), newMeasure.className(), newMeasure.displayName(), newMeasure.description(),
-                                     newMeasure.modelerDescription());
-      newMeasure.updateMeasureTests(oldMeasure.className(), newMeasure.className());
-
-      fmt::print("Cloned the {} {} with class name '{}' from '{}' to '{}'\n", oldMeasure.measureLanguage().valueName(),
-                 oldMeasure.measureType().valueName(), oldMeasure.className(),
-                 openstudio::toString(openstudio::filesystem::canonical(oldMeasure.directory())),
-                 openstudio::toString(openstudio::filesystem::canonical(newMeasure.directory())));
-
-      newMeasure.checkForUpdatesFiles();
-      newMeasure.checkForUpdatesXML();
-      newMeasure.save();
-
-      if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(newMeasureDir, true)) {
-        message.reply(web::http::status_codes::OK, toWebJSON(measure_->toJSON()));
-        return;
-      } else {
-        fmt::print("Failed to update measure after duplication, this shouldn't happen.");
-        message.reply(web::http::status_codes::BadRequest, toWebJSON(newMeasure.toJSON()));
-        return;
-      }
-    });
-    return;
+  // TODO: maybe I should write an OSMeasureInfo::toJSON() method, but that'd be duplicating the code in BCLMeasure (BCLXML to be exact).
+  // So since the only thing that's different is the OSArgument (OSMeasureInfo) versus BCLMeasureArgument (BCLMeasure), we just override
+  auto result = measure_->toJSON();
+  if (!osmOrIdfPath.empty()) {
+    auto& arguments = result["arguments"];
+    arguments.clear();
+    for (const measure::OSArgument& argument : info.arguments()) {
+      arguments.append(argument.toJSON());
+    }
   }
 
-  message.reply(web::http::status_codes::NotFound, toWebJSON("404: Unknown Endpoint"));
+  return {web::http::status_codes::OK, toWebJSON(result)};
+}
+
+MeasureManagerServer::ResponseType MeasureManagerServer::create_measure(const web::json::value& body) {
+  static const std::array<std::string, 7> requiredParams = {
+    "measure_dir", "display_name", "class_name", "taxonomy_tag", "measure_type", "description", "modeler_description",
+  };
+  for (const auto& requiredParam : requiredParams) {
+    auto key = utility::conversions::to_string_t(requiredParam);
+    if (!body.has_string_field(key)) {
+      auto msg = fmt::format("The '{}' (string) must be in the post data.", requiredParam);
+      fmt::print("{}\n", msg);
+      return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+    }
+  }
+
+  MeasureType measureType = MeasureType::ModelMeasure;
+  auto measureTypeString = get_field<std::string>(body, "measure_type", "ModelMeasure");
+  try {
+    measureType = MeasureType(measureTypeString);
+  } catch (const std::exception& e) {
+    auto msg = fmt::format("Couldn't convert '{}' to a MeasureType: {}", measureTypeString, e.what());
+    fmt::print("{}\n", msg);
+    return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+  }
+
+  MeasureLanguage measureLanguage = MeasureLanguage::Ruby;
+  if (auto measureLanguageString_ = get_field<std::string>(body, "measure_language")) {
+    try {
+      measureLanguage = MeasureLanguage(*measureLanguageString_);
+    } catch (const std::exception& e) {
+      auto msg = fmt::format("Couldn't convert '{}' to a MeasureLanguage: {}", *measureLanguageString_, e.what());
+      fmt::print("{}\n", msg);
+      return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+    }
+  }
+
+  const openstudio::path measureDir = get_field<openstudio::path>(body, "measure_dir", "");
+  // This is throwy when the directory already exists
+  if (openstudio::filesystem::is_directory(measureDir)) {
+    auto msg = fmt::format("The directory already exists at '{}'.", measureDir.generic_string());
+    fmt::print("{}\n", msg);
+    return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+  }
+  const BCLMeasure measure(get_field<std::string>(body, "display_name", "DisplayName"), get_field<std::string>(body, "class_name", "ClassName"),
+                           measureDir, get_field<std::string>(body, "taxonomy_tag", "taxonomy.tag"), measureType,
+                           get_field<std::string>(body, "description", "Description"),
+                           get_field<std::string>(body, "modeler_description", "ModelerDescription"), measureLanguage);
+
+  if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(measureDir, true)) {
+    return {web::http::status_codes::OK, toWebJSON(measure_->toJSON())};
+  } else {
+    fmt::print("Failed to update measure after creation, this shouldn't happen.");
+    return {web::http::status_codes::BadRequest, toWebJSON(measure.toJSON())};
+  }
+}
+
+MeasureManagerServer::ResponseType MeasureManagerServer::duplicate_measure(const web::json::value& body) {
+  // Required parameters:
+  openstudio::path oldMeasureDir;
+  if (auto oldMeasureDir_ = get_field<openstudio::path>(body, "old_measure_dir")) {
+    oldMeasureDir = std::move(*oldMeasureDir_);
+  } else {
+    return {web::http::status_codes::BadRequest, toWebJSON("The 'old_measure_dir' (string) must be in the post data")};
+  }
+
+  openstudio::path newMeasureDir;
+  if (auto newMeasureDir_ = get_field<openstudio::path>(body, "measure_dir")) {
+    newMeasureDir = std::move(*newMeasureDir_);
+  } else {
+    return {web::http::status_codes::BadRequest, toWebJSON("The 'measure_dir' (string) must be in the post data")};
+  }
+
+  const bool force_reload = get_field<bool>(body, "force_reload", false);
+
+  boost::optional<BCLMeasure> oldMeasure_ = m_measureManager.getMeasure(oldMeasureDir, force_reload);
+  if (!oldMeasure_) {
+    auto msg = fmt::format("Cannot load measure at '{}'.", oldMeasureDir.generic_string());
+    fmt::print("{}\n", msg);
+    return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+  }
+
+  auto& oldMeasure = *oldMeasure_;
+
+  auto newMeasure_ = oldMeasure.clone(newMeasureDir);
+  if (!newMeasure_) {
+    auto msg = fmt::format("Cannot copy measure from '{}' to {}'", oldMeasureDir.generic_string(), newMeasureDir.generic_string());
+    fmt::print("{}\n", msg);
+    return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+  }
+  auto& newMeasure = *newMeasure_;
+  // Force updating the UID
+  newMeasure.changeUID();
+  newMeasure.incrementVersionId();
+
+  if (auto val_ = get_field<std::string>(body, "display_name")) {
+    newMeasure.setDisplayName(*val_);
+  }
+  if (auto val_ = get_field<std::string>(body, "class_name")) {
+    newMeasure.setName(openstudio::toUnderscoreCase(*val_));
+    newMeasure.setClassName(*val_);
+  }
+  if (auto val_ = get_field<std::string>(body, "taxonomy_tag")) {
+    newMeasure.setTaxonomyTag(*val_);
+  }
+
+  // Changing the measure Language is not supported!
+  auto newMeasureLanguage = oldMeasure.measureLanguage();
+  // if (body.has_field("measure_language") && body.at("measure_language").is_string()) {
+  //   auto measureLanguageString = body.at("measure_type").as_string();
+  //   try {
+  //     newMeasureLanguage = MeasureLanguage(measureLanguageString);
+  //     newMeasure.setMeasureLanguage(measureLanguage);
+  //   } catch (...) {
+  //     fmt::print("Couldn't convert '{}' to a MeasureLanguage", measureLanguageString);
+  //   }
+  // }
+
+  // Changing the measure Type should maybe not be supported either, the method signatures will be wrong and it might be missing
+  // energyPlusOutputRequests
+  auto newMeasureType = oldMeasure.measureType();
+  if (auto measureTypeString_ = get_field<std::string>(body, "measure_type")) {
+    try {
+      newMeasureType = MeasureType(*measureTypeString_);
+      newMeasure.setMeasureType(newMeasureType);
+    } catch (...) {
+      fmt::print("Couldn't convert '{}' to a MeasureType", *measureTypeString_);
+    }
+  }
+
+  if (auto val_ = get_field<std::string>(body, "description")) {
+    newMeasure.setDescription(*val_);
+  }
+
+  if (auto val_ = get_field<std::string>(body, "modeler_description")) {
+    newMeasure.setModelerDescription(*val_);
+  }
+
+  newMeasure.updateMeasureScript(oldMeasure.measureType(), newMeasureType, oldMeasure.measureLanguage(), newMeasureLanguage, oldMeasure.className(),
+                                 newMeasure.className(), newMeasure.displayName(), newMeasure.description(), newMeasure.modelerDescription());
+  newMeasure.updateMeasureTests(oldMeasure.className(), newMeasure.className());
+
+  fmt::print("Cloned the {} {} with class name '{}' from '{}' to '{}'\n", oldMeasure.measureLanguage().valueName(),
+             oldMeasure.measureType().valueName(), oldMeasure.className(),
+             openstudio::toString(openstudio::filesystem::canonical(oldMeasure.directory())),
+             openstudio::toString(openstudio::filesystem::canonical(newMeasure.directory())));
+
+  newMeasure.checkForUpdatesFiles();
+  newMeasure.checkForUpdatesXML();
+  newMeasure.save();
+
+  if (boost::optional<BCLMeasure> measure_ = m_measureManager.getMeasure(newMeasureDir, true)) {
+    return {web::http::status_codes::OK, toWebJSON(measure_->toJSON())};
+  } else {
+    fmt::print("Failed to update measure after duplication, this shouldn't happen.");
+    return {web::http::status_codes::BadRequest, toWebJSON(newMeasure.toJSON())};
+  }
+}
+
+void MeasureManagerServer::handle_request(const web::http::http_request& message, const web::json::value& body,
+                                          const std::function<ResponseType(const web::json::value&)>& request_handler) {
+  std::packaged_task<ResponseType()> task([&body, &request_handler]() { return request_handler(body); });
+  auto future_result = task.get_future();
+  tasks.push_back(std::move(task));
+  try {
+    auto result = future_result.get();
+    message.reply(result.status_code, result.body);
+  } catch (const std::exception& e) {
+    constexpr auto msg = "MeasureManager Server encountered an error:\n\"{}\"\n";
+    fmt::print(msg, e.what());
+    message.reply(web::http::status_codes::InternalError, fmt::format(msg, e.what()));
+  }
+}
+
+void MeasureManagerServer::do_tasks_forever() {
+  while (true) {
+    auto task = tasks.wait_for_one();
+    task();
+  }
 }
 
 }  // namespace openstudio

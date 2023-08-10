@@ -3,12 +3,14 @@
 
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Containers.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
 
 #include "../model/Model.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../measure/OSMeasureInfoGetter.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
+#include <future>
 
 #if (defined(__GNUC__))
 #  pragma GCC diagnostic push
@@ -103,14 +105,37 @@ class MeasureManagerServer
 
   bool open();
   bool close();
+  void do_tasks_forever();
 
  protected:
  private:
+  struct ResponseType
+  {
+    web::http::status_code status_code;
+    web::json::value body;
+  };
+
+  void handle_request(const web::http::http_request& message, const web::json::value& body,
+                      const std::function<ResponseType(const web::json::value&)>& request_handler);
+
+  // Request handlers
+  ResponseType internal_state(const web::json::value& body);
+  ResponseType reset(const web::json::value& body);
+  ResponseType set(const web::json::value& body);
+  ResponseType download_bcl_measure(const web::json::value& body);
+  ResponseType get_model(const web::json::value& body);
+  ResponseType bcl_measures(const web::json::value& body);
+  ResponseType compute_arguments(const web::json::value& body);
+  ResponseType create_measure(const web::json::value& body);
+  ResponseType duplicate_measure(const web::json::value& body);
+  ResponseType update_measures(const web::json::value& body);
+
   void handle_get(web::http::http_request message);
   void handle_post(web::http::http_request message);
   static void handle_error(pplx::task<void>& t);
   MeasureManager m_measureManager;
   web::http::experimental::listener::http_listener m_listener;
+  ThreadSafeDeque<std::packaged_task<ResponseType()>> tasks;
 
   std::string m_url;
   openstudio::path my_measures_dir;

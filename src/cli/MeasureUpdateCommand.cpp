@@ -305,33 +305,14 @@ $ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
     // opt.debug_print();
 
     if (opt.server_port > 0) {
-
-      openstudio::interrupthandler::hookSIGINT();
-      auto g_httpHandler = std::make_unique<MeasureManagerServer>(opt.server_port, rubyEngine, pythonEngine);
-      g_httpHandler->open();
-      openstudio::interrupthandler::waitForUserInterrupt();
-      g_httpHandler->close();
+      //auto g_httpHandler = std::make_unique<MeasureManagerServer>(opt.server_port, rubyEngine, pythonEngine);
+      //g_httpHandler->open();
+      //g_httpHandler->do_tasks_forever();
+      MeasureManagerServer server(opt.server_port, rubyEngine, pythonEngine);
+      server.open();
+      server.do_tasks_forever();
 
       return;
-
-      const auto measureManagerCmd = fmt::format(
-        R"ruby(
-require 'measure_manager_server'
-port = {}
-
-server = WEBrick::HTTPServer.new(:Port => port)
-
-server.mount "/", MeasureManagerServlet
-
-trap("INT") {{
-    server.shutdown
-}}
-
-server.start)ruby",
-        opt.server_port);
-
-      rubyEngine->exec(measureManagerCmd);
-
     } else if (opt.update) {
       MeasureManager measureManager(rubyEngine, pythonEngine);
       if (auto measure_ = measureManager.getMeasure(opt.directoryPath, true)) {

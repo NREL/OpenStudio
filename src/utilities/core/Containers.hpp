@@ -10,13 +10,13 @@
 #include "Compare.hpp"
 
 #include <boost/optional.hpp>
-
 #include <vector>
 #include <set>
 #include <string>
-
 #include <iterator>     // for make_move_iterator
 #include <type_traits>  // for declval, conditional, decay_t, enable_if_t
+#include <mutex>
+#include <condition_variable>
 
 namespace openstudio {
 
@@ -72,6 +72,35 @@ std::vector<std::vector<T>> castArray(const std::vector<std::vector<U>>& origina
   }
   return result;
 }
+
+// Thank you https://codereview.stackexchange.com/questions/238347/a-simple-thread-safe-deque-in-c
+template <class T>
+class ThreadSafeDeque
+{
+ public:
+  T wait_for_one() {
+    // unique_lock can be unlocked, lock_guard can not
+    std::unique_lock<std::mutex> lock{mutex};  // locks
+    while (deque.empty()) {
+      condition.wait(lock);  // unlocks, sleeps and relocks when woken up
+    }
+    auto t = std::move(deque.front());
+    deque.pop_front();
+    return t;
+  }  // unlocks as goes out of scope
+
+  void push_back(T&& t) {
+    std::unique_lock<std::mutex> lock{mutex};
+    deque.push_back(std::move(t));
+    lock.unlock();
+    condition.notify_one();  // wakes up pop_front_waiting
+  }
+
+ private:
+  std::deque<T> deque;
+  std::mutex mutex;
+  std::condition_variable condition{};
+};
 
 }  // namespace openstudio
 
