@@ -598,6 +598,7 @@ void MeasureManagerServer::handle_get(web::http::http_request message) {
     result["status"] = "running";
     result["my_measures_dir"] = my_measures_dir.generic_string();
     message.reply(web::http::status_codes::OK, toWebJSON(result));
+    return;
   }
 
   // Cpprestsdk has it's own json implementation.....
