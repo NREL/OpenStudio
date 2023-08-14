@@ -115,27 +115,6 @@ bool get_field(const web::json::value& body, const std::string& field_name, cons
   return defaultValue;
 }
 
-namespace interrupthandler {
-  static std::condition_variable condition_;
-  static std::mutex mutex_;
-  void handleUserInterrupt(int signal) {
-    if (signal == SIGINT) {
-      fmt::print("SIGINT trapped ...\n");
-      condition_.notify_one();
-    }
-  }
-  void hookSIGINT() {
-    std::signal(SIGINT, handleUserInterrupt);
-  }
-
-  void waitForUserInterrupt() {
-    std::unique_lock<std::mutex> lock{mutex_};
-    condition_.wait(lock);
-    fmt::print("user has signaled to interrup program...\n");
-    lock.unlock();
-  }
-}  // namespace interrupthandler
-
 MeasureManager::MeasureManager(ScriptEngineInstance& t_rubyEngine, ScriptEngineInstance& t_pythonEngine)
   : rubyEngine(t_rubyEngine), pythonEngine(t_pythonEngine) {
   // rubyEngine->exec("puts 'Hello from ruby'");

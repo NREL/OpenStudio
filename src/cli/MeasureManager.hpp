@@ -31,12 +31,6 @@ class Value;
 
 namespace openstudio {
 
-namespace interrupthandler {
-  void hookSIGINT();
-
-  void waitForUserInterrupt();
-}  // namespace interrupthandler
-
 struct OSMInfo
 {
   std::string checksum;
