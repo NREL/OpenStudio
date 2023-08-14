@@ -602,7 +602,7 @@ void MeasureManagerServer::handle_get(web::http::http_request message) {
 
   // Cpprestsdk has it's own json implementation.....
   if (uri == "/internal_state") {
-    handle_request(message, web::json::value(), std::bind(&MeasureManagerServer::internal_state, this, std::placeholders::_1));  // NOLINT
+    handle_request(message, web::json::value(), &MeasureManagerServer::internal_state);
     return;
   }
 
@@ -613,63 +613,54 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
   const std::string uri = toString(web::http::uri::decode(message.relative_uri().path()));
 
   if (uri == "/reset") {
-    handle_request(message, web::json::value(), std::bind(&MeasureManagerServer::reset, this, std::placeholders::_1));  // NOLINT
+    handle_request(message, web::json::value(), &MeasureManagerServer::reset);
     return;
   }
 
   if (uri == "/set") {
     // curl -H "Content-Type: application/json" -X POST  --data '{"my_measures_dir": "/Users/julien/OpenStudio/Measures"}' http://localhost:8090/set
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::set, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then([this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::set); });
     return;
   }
 
   if (uri == "/download_bcl_measure") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::download_bcl_measure, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::download_bcl_measure); });
     return;
   }
 
   // TODO: for testing only, remove
   if (uri == "/get_model") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::get_model, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then([this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::get_model); });
     return;
   }
 
   if (uri == "/bcl_measures") {
-    handle_request(message, web::json::value(), std::bind(&MeasureManagerServer::bcl_measures, this, std::placeholders::_1));  // NOLINT
+    handle_request(message, web::json::value(), &MeasureManagerServer::bcl_measures);
     return;
   }
 
   if (uri == "/update_measures") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::update_measures, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::update_measures); });
     return;
   }
 
   if (uri == "/compute_arguments") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::compute_arguments, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::compute_arguments); });
     return;
   }
 
   if (uri == "/create_measure") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::create_measure, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::create_measure); });
     return;
   }
 
   if (uri == "/duplicate_measure") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::duplicate_measure, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::duplicate_measure); });
     return;
   }
 
@@ -958,8 +949,9 @@ MeasureManagerServer::ResponseType MeasureManagerServer::duplicate_measure(const
 }
 
 void MeasureManagerServer::handle_request(const web::http::http_request& message, const web::json::value& body,
-                                          const std::function<ResponseType(const web::json::value&)>& request_handler) {
-  std::packaged_task<ResponseType()> task([&body, &request_handler]() { return request_handler(body); });
+                                          memRequestHandlerFunPtr request_handler) {
+
+  std::packaged_task<ResponseType()> task([this, &body, &request_handler]() { return (this->*request_handler)(body); });
   auto future_result = task.get_future();
   tasks.push_back(std::move(task));
   try {

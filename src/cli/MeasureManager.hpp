@@ -109,9 +109,6 @@ class MeasureManagerServer
     web::json::value body;
   };
 
-  void handle_request(const web::http::http_request& message, const web::json::value& body,
-                      const std::function<ResponseType(const web::json::value&)>& request_handler);
-
   // Request handlers
   ResponseType internal_state(const web::json::value& body);
   ResponseType reset(const web::json::value& body);
@@ -123,6 +120,10 @@ class MeasureManagerServer
   ResponseType create_measure(const web::json::value& body);
   ResponseType duplicate_measure(const web::json::value& body);
   ResponseType update_measures(const web::json::value& body);
+
+  // Generally request handler, to ensure the work is done on the main thread.
+  using memRequestHandlerFunPtr = ResponseType (MeasureManagerServer::*)(const web::json::value& body);
+  void handle_request(const web::http::http_request& message, const web::json::value& body, memRequestHandlerFunPtr request_handler);
 
   void handle_get(web::http::http_request message);
   void handle_post(web::http::http_request message);
