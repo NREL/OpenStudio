@@ -69,7 +69,7 @@ class ScriptEngine
                                  const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,
                                  const openstudio::path& bundleGemDirPath, const std::string& bundleWithoutGroups){};
 
-  virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs, const openstudio::path& pythonHomeDir){};
+  virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs){};
 
   virtual std::string inferMeasureClassName(const openstudio::path& measureScriptPath) = 0;
 

@@ -7,6 +7,10 @@
 #include "ModelFixture.hpp"
 #include "../GroundHeatExchangerVertical.hpp"
 #include "../GroundHeatExchangerVertical_Impl.hpp"
+#include "../SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
+#include "../SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
+#include "../SiteGroundTemperatureUndisturbedXing.hpp"
+#include "../SiteGroundTemperatureUndisturbedXing_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
@@ -17,7 +21,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, GroundHeatExchangerVertical_DefaultConstructor) {
+TEST_F(ModelFixture, GroundHeatExchangerVertical_GroundHeatExchangerVertical) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
@@ -28,6 +32,177 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_DefaultConstructor) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  {
+    Model m;
+    GroundHeatExchangerVertical gh(m);
+
+    ASSERT_TRUE(gh.designFlowRate());
+    EXPECT_EQ(0.0033, gh.designFlowRate().get());
+    ASSERT_TRUE(gh.numberofBoreHoles());
+    EXPECT_EQ(120, gh.numberofBoreHoles().get());
+    ASSERT_TRUE(gh.boreHoleLength());
+    EXPECT_EQ(76.2, gh.boreHoleLength().get());
+    ASSERT_TRUE(gh.boreHoleRadius());
+    EXPECT_EQ(0.635080E-01, gh.boreHoleRadius().get());
+    ASSERT_TRUE(gh.groundThermalConductivity());
+    EXPECT_EQ(0.692626, gh.groundThermalConductivity().get());
+    ASSERT_TRUE(gh.groundThermalHeatCapacity());
+    EXPECT_EQ(0.234700E+07, gh.groundThermalHeatCapacity().get());
+    ASSERT_TRUE(gh.groundTemperature());
+    EXPECT_EQ(13.375, gh.groundTemperature().get());
+    ASSERT_TRUE(gh.groutThermalConductivity());
+    EXPECT_EQ(0.692626, gh.groutThermalConductivity().get());
+    ASSERT_TRUE(gh.pipeThermalConductivity());
+    EXPECT_EQ(0.391312, gh.pipeThermalConductivity().get());
+    ASSERT_TRUE(gh.pipeOutDiameter());
+    EXPECT_EQ(2.66667E-02, gh.pipeOutDiameter().get());
+    ASSERT_TRUE(gh.uTubeDistance());
+    EXPECT_EQ(2.53977E-02, gh.uTubeDistance().get());
+    ASSERT_TRUE(gh.pipeThickness());
+    EXPECT_EQ(2.41285E-03, gh.pipeThickness().get());
+    ASSERT_TRUE(gh.maximumLengthofSimulation());
+    EXPECT_EQ(2, gh.maximumLengthofSimulation().get());
+    EXPECT_EQ(0.0005, gh.gFunctionReferenceRatio());
+    EXPECT_FALSE(gh.isGFunctionReferenceRatioDefaulted());
+    ModelObject undisturbedGroundTemperatureModel = gh.undisturbedGroundTemperatureModel();
+    boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> uka =
+      undisturbedGroundTemperatureModel.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+    ASSERT_TRUE(uka);
+  }
+
+  {
+    Model m;
+    SiteGroundTemperatureUndisturbedKusudaAchenbach sgt(m);
+    GroundHeatExchangerVertical gh(m, sgt);
+
+    ASSERT_TRUE(gh.designFlowRate());
+    EXPECT_EQ(0.0033, gh.designFlowRate().get());
+    ASSERT_TRUE(gh.numberofBoreHoles());
+    EXPECT_EQ(120, gh.numberofBoreHoles().get());
+    ASSERT_TRUE(gh.boreHoleLength());
+    EXPECT_EQ(76.2, gh.boreHoleLength().get());
+    ASSERT_TRUE(gh.boreHoleRadius());
+    EXPECT_EQ(0.635080E-01, gh.boreHoleRadius().get());
+    ASSERT_TRUE(gh.groundThermalConductivity());
+    EXPECT_EQ(0.692626, gh.groundThermalConductivity().get());
+    ASSERT_TRUE(gh.groundThermalHeatCapacity());
+    EXPECT_EQ(0.234700E+07, gh.groundThermalHeatCapacity().get());
+    ASSERT_TRUE(gh.groundTemperature());
+    EXPECT_EQ(13.375, gh.groundTemperature().get());
+    ASSERT_TRUE(gh.groutThermalConductivity());
+    EXPECT_EQ(0.692626, gh.groutThermalConductivity().get());
+    ASSERT_TRUE(gh.pipeThermalConductivity());
+    EXPECT_EQ(0.391312, gh.pipeThermalConductivity().get());
+    ASSERT_TRUE(gh.pipeOutDiameter());
+    EXPECT_EQ(2.66667E-02, gh.pipeOutDiameter().get());
+    ASSERT_TRUE(gh.uTubeDistance());
+    EXPECT_EQ(2.53977E-02, gh.uTubeDistance().get());
+    ASSERT_TRUE(gh.pipeThickness());
+    EXPECT_EQ(2.41285E-03, gh.pipeThickness().get());
+    ASSERT_TRUE(gh.maximumLengthofSimulation());
+    EXPECT_EQ(2, gh.maximumLengthofSimulation().get());
+    EXPECT_EQ(0.0005, gh.gFunctionReferenceRatio());
+    EXPECT_FALSE(gh.isGFunctionReferenceRatioDefaulted());
+    ModelObject undisturbedGroundTemperatureModel = gh.undisturbedGroundTemperatureModel();
+    boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> uka =
+      undisturbedGroundTemperatureModel.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+    ASSERT_TRUE(uka);
+    EXPECT_EQ(sgt, uka.get());
+  }
+}
+
+TEST_F(ModelFixture, GroundHeatExchangerVertical_SetGetFields) {
+  Model m;
+  GroundHeatExchangerVertical gh(m);
+
+  EXPECT_TRUE(gh.setDesignFlowRate(0.004));
+  EXPECT_TRUE(gh.setNumberofBoreHoles(100));
+  EXPECT_TRUE(gh.setBoreHoleLength(80.0));
+  EXPECT_TRUE(gh.setBoreHoleRadius(0.7E-01));
+  EXPECT_TRUE(gh.setGroundThermalConductivity(0.7));
+  EXPECT_TRUE(gh.setGroundThermalHeatCapacity(0.3E+07));
+  EXPECT_TRUE(gh.setGroundTemperature(14.0));
+  EXPECT_TRUE(gh.setGroutThermalConductivity(0.7));
+  EXPECT_TRUE(gh.setPipeThermalConductivity(0.4));
+  EXPECT_TRUE(gh.setPipeOutDiameter(2.7E-02));
+  EXPECT_TRUE(gh.setUTubeDistance(2.6E-02));
+  EXPECT_TRUE(gh.setPipeThickness(2.5E-03));
+  EXPECT_TRUE(gh.setMaximumLengthofSimulation(3));
+  EXPECT_TRUE(gh.setGFunctionReferenceRatio(0.001));
+
+  SiteGroundTemperatureUndisturbedKusudaAchenbach sgt(m);
+  EXPECT_TRUE(gh.setUndisturbedGroundTemperatureModel(sgt));
+
+  ASSERT_TRUE(gh.designFlowRate());
+  EXPECT_EQ(0.004, gh.designFlowRate().get());
+  ASSERT_TRUE(gh.numberofBoreHoles());
+  EXPECT_EQ(100, gh.numberofBoreHoles().get());
+  ASSERT_TRUE(gh.boreHoleLength());
+  EXPECT_EQ(80.0, gh.boreHoleLength().get());
+  ASSERT_TRUE(gh.boreHoleRadius());
+  EXPECT_EQ(0.7E-01, gh.boreHoleRadius().get());
+  ASSERT_TRUE(gh.groundThermalConductivity());
+  EXPECT_EQ(0.7, gh.groundThermalConductivity().get());
+  ASSERT_TRUE(gh.groundThermalHeatCapacity());
+  EXPECT_EQ(0.3E+07, gh.groundThermalHeatCapacity().get());
+  ASSERT_TRUE(gh.groundTemperature());
+  EXPECT_EQ(14.0, gh.groundTemperature().get());
+  ASSERT_TRUE(gh.groutThermalConductivity());
+  EXPECT_EQ(0.7, gh.groutThermalConductivity().get());
+  ASSERT_TRUE(gh.pipeThermalConductivity());
+  EXPECT_EQ(0.4, gh.pipeThermalConductivity().get());
+  ASSERT_TRUE(gh.pipeOutDiameter());
+  EXPECT_EQ(2.7E-02, gh.pipeOutDiameter().get());
+  ASSERT_TRUE(gh.uTubeDistance());
+  EXPECT_EQ(2.6E-02, gh.uTubeDistance().get());
+  ASSERT_TRUE(gh.pipeThickness());
+  EXPECT_EQ(2.5E-03, gh.pipeThickness().get());
+  ASSERT_TRUE(gh.maximumLengthofSimulation());
+  EXPECT_EQ(3, gh.maximumLengthofSimulation().get());
+  EXPECT_EQ(0.001, gh.gFunctionReferenceRatio());
+  EXPECT_FALSE(gh.isGFunctionReferenceRatioDefaulted());
+  ModelObject undisturbedGroundTemperatureModel = gh.undisturbedGroundTemperatureModel();
+  boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> uka =
+    undisturbedGroundTemperatureModel.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+  ASSERT_TRUE(uka);
+  EXPECT_EQ(sgt, uka.get());
+
+  SiteGroundTemperatureUndisturbedXing sgt2(m);
+  EXPECT_TRUE(gh.setUndisturbedGroundTemperatureModel(sgt2));
+
+  ASSERT_TRUE(gh.designFlowRate());
+  EXPECT_EQ(0.004, gh.designFlowRate().get());
+  ASSERT_TRUE(gh.numberofBoreHoles());
+  EXPECT_EQ(100, gh.numberofBoreHoles().get());
+  ASSERT_TRUE(gh.boreHoleLength());
+  EXPECT_EQ(80.0, gh.boreHoleLength().get());
+  ASSERT_TRUE(gh.boreHoleRadius());
+  EXPECT_EQ(0.7E-01, gh.boreHoleRadius().get());
+  ASSERT_TRUE(gh.groundThermalConductivity());
+  EXPECT_EQ(0.7, gh.groundThermalConductivity().get());
+  ASSERT_TRUE(gh.groundThermalHeatCapacity());
+  EXPECT_EQ(0.3E+07, gh.groundThermalHeatCapacity().get());
+  ASSERT_TRUE(gh.groundTemperature());
+  EXPECT_EQ(14.0, gh.groundTemperature().get());
+  ASSERT_TRUE(gh.groutThermalConductivity());
+  EXPECT_EQ(0.7, gh.groutThermalConductivity().get());
+  ASSERT_TRUE(gh.pipeThermalConductivity());
+  EXPECT_EQ(0.4, gh.pipeThermalConductivity().get());
+  ASSERT_TRUE(gh.pipeOutDiameter());
+  EXPECT_EQ(2.7E-02, gh.pipeOutDiameter().get());
+  ASSERT_TRUE(gh.uTubeDistance());
+  EXPECT_EQ(2.6E-02, gh.uTubeDistance().get());
+  ASSERT_TRUE(gh.pipeThickness());
+  EXPECT_EQ(2.5E-03, gh.pipeThickness().get());
+  ASSERT_TRUE(gh.maximumLengthofSimulation());
+  EXPECT_EQ(3, gh.maximumLengthofSimulation().get());
+  EXPECT_EQ(0.001, gh.gFunctionReferenceRatio());
+  EXPECT_FALSE(gh.isGFunctionReferenceRatioDefaulted());
+  ModelObject undisturbedGroundTemperatureModel2 = gh.undisturbedGroundTemperatureModel();
+  boost::optional<SiteGroundTemperatureUndisturbedXing> ux = undisturbedGroundTemperatureModel2.optionalCast<SiteGroundTemperatureUndisturbedXing>();
+  ASSERT_TRUE(ux);
+  EXPECT_EQ(sgt2, ux.get());
 }
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_Connections) {

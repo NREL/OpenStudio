@@ -25,7 +25,10 @@ namespace model {
 
   }  // namespace detail
 
-  /** RefrigerationAirChiller is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Refrigeration:AirChiller'. */
+  /** RefrigerationAirChiller is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Refrigeration:AirChiller'.
+    *
+    * This component is a ZoneHVACComponent, and you can call RefrigerationAirChiller::addToThermalZone(ThermalZone&) and the ForwardTranslator will
+    * produce a ZoneHVAC:RefrigerationAirChillerSet for you: a ZoneHVACRefrigrerationAirChillerSet class is not needed in the model SDK. */
   class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent
   {
    public:
