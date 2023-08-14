@@ -71,6 +71,7 @@ set(core_src
   core/StringStreamLogSink.cpp
   core/System.hpp
   core/System.cpp
+  core/ThreadSafeDeque.hpp
   core/UUID.hpp
   core/UUID.cpp
   core/UnzipFile.hpp
