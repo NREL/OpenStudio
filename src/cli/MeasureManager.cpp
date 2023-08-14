@@ -686,9 +686,16 @@ MeasureManagerServer::ResponseType MeasureManagerServer::reset([[maybe_unused]] 
 
 MeasureManagerServer::ResponseType MeasureManagerServer::set(const web::json::value& body) {
   if (auto p_ = get_field<openstudio::path>(body, "my_measures_dir")) {
+    if (!openstudio::filesystem::is_directory(*p_)) {
+      // Issue an error message
+      return {web::http::status_codes::BadRequest,
+              toWebJSON(fmt::format("Error, my_measures_dir '{}' is a not a valid directory", p_->generic_string()))};
+    }
     this->my_measures_dir = std::move(*p_);
+    return {web::http::status_codes::OK, web::json::value()};
+  } else {
+    return {web::http::status_codes::BadRequest, toWebJSON("Missing the my_measures_dir in the post data")};
   }
-  return {web::http::status_codes::OK, web::json::value()};
 }
 
 MeasureManagerServer::ResponseType MeasureManagerServer::download_bcl_measure(const web::json::value& body) {  // NOLINT
