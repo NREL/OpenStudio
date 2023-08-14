@@ -7,9 +7,10 @@
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include "../../src/utilities/core/Filesystem.hpp"
 #include <fmt/format.h>
+
 #include <stdexcept>
 #include <string>
-#include <iostream>
+#include <type_traits>
 
 #ifdef __GNUC__
 #  pragma GCC diagnostic push
@@ -27,12 +28,31 @@
 namespace openstudio {
 
 void addToPythonPath(const openstudio::path& includePath) {
-  if (!includePath.empty()) {
-    PyObject* sys = PyImport_ImportModule("sys");
-    PyObject* sysPath = PyObject_GetAttrString(sys, "path");
-    // fmt::print("Prepending '{}' to sys.path\n", includePath);
-    PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.string().c_str());
-    PyList_Insert(sysPath, 0, unicodeIncludePath);
+
+  if (includePath.empty()) {
+    return;
+  }
+
+  // fmt::print("Prepending '{}' to sys.path\n", includePath);
+
+  PyObject* unicodeIncludePath = nullptr;
+  if constexpr (std::is_same_v<typename openstudio::path::value_type, wchar_t>) {
+    const std::wstring ws = includePath.generic_wstring();
+    unicodeIncludePath = PyUnicode_FromWideChar(ws.c_str(), static_cast<Py_ssize_t>(ws.size()));  // New reference
+  } else {
+    const std::string s = includePath.generic_string();
+    unicodeIncludePath = PyUnicode_FromString(s.c_str());  // New reference
+  }
+
+  if (unicodeIncludePath == nullptr) {
+    throw std::runtime_error(fmt::format("Unable to convert path '{}' for addition to sys.path in Python", includePath.generic_string()));
+  }
+
+  PyObject* sysPath = PySys_GetObject("path");  // Borrowed reference
+  int ret = PyList_Insert(sysPath, 0, unicodeIncludePath);
+  Py_DECREF(unicodeIncludePath);
+  if (ret != 0) {
+    throw std::runtime_error(fmt::format("Unable to add path '{}' to the sys.path in Python", includePath.generic_string()));
   }
 }
 
