@@ -952,10 +952,11 @@ void MeasureManagerServer::handle_request(const web::http::http_request& message
                                           memRequestHandlerFunPtr request_handler) {
 
   std::packaged_task<ResponseType()> task([this, &body, &request_handler]() { return (this->*request_handler)(body); });
-  auto future_result = task.get_future();
-  tasks.push_back(std::move(task));
+
+  auto future_result = task.get_future();  // The task hasn't been started yet
+  tasks.push_back(std::move(task));        // It gets queued, the **main** thread will process it
   try {
-    auto result = future_result.get();
+    auto result = future_result.get();  // This block until it's been processed
     message.reply(result.status_code, result.body);
   } catch (const std::exception& e) {
     constexpr auto msg = "MeasureManager Server encountered an error:\n\"{}\"\n";

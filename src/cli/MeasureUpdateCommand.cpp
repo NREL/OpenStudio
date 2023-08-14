@@ -305,12 +305,9 @@ $ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
     // opt.debug_print();
 
     if (opt.server_port > 0) {
-      //auto g_httpHandler = std::make_unique<MeasureManagerServer>(opt.server_port, rubyEngine, pythonEngine);
-      //g_httpHandler->open();
-      //g_httpHandler->do_tasks_forever();
       MeasureManagerServer server(opt.server_port, rubyEngine, pythonEngine);
-      server.open();
-      server.do_tasks_forever();
+      server.open();              // This starts the cpprestsdk http listener, which processes tasks in subthreads
+      server.do_tasks_forever();  // This starts the event loop on the **main** thread to process the requests there and NOT in a subthread
 
       return;
     } else if (opt.update) {
