@@ -9204,6 +9204,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
         model::Schedule schedule = model.alwaysOnDiscreteSchedule();
         wshp->setSupplyAirFanOperatingModeSchedule(schedule);
       }
+
+      // OffCyclePwrFrac
+      const auto offCyclePwrFrac = lexicalCastToDouble(element.child("OffCyclePwrFrac"));
+      if (offCyclePwrFrac) {
+        wshp->setFractionofOnCyclePowerUse(offCyclePwrFrac.get());
+      }
     }
 
     if (fanOperModeSch) {
