@@ -1766,11 +1766,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         auto hx = mo->cast<model::HeatExchangerAirToAirSensibleAndLatent>();
         hx.addToNode(outboardOANode);
 
+        // TempCtrlByEMS
+        const auto tempCtrlByEMS = htRcvryElement.child("").text().as_bool(false);
+
         // TempCtrl
         auto tempCtrl = htRcvryElement.child("TempCtrl").text().as_string();
         if( istringEqual(tempCtrl,"None") ) {
           hx.setSupplyAirOutletTemperatureControl(false);
-        } else if( istringEqual(tempCtrl,"Fixed") ) {
+        } else if( istringEqual(tempCtrl,"Fixed") || tempCtrlByEMS ) {
           hx.setSupplyAirOutletTemperatureControl(true);
           boost::optional<double> _FixedSupTemp = lexicalCastToDouble(htRcvryElement.child("FixedSupTemp"));
           if( _FixedSupTemp ) {
