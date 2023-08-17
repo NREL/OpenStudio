@@ -2334,6 +2334,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   std::string coilName = nameElement.text().as_string();
   pugi::xml_node capTotRtdElement = heatingCoilElement.child("CapTotGrossRtdSim");
 
+  // AvailCtrlByEMS
+  const auto availCtrlByEMS = heatingCoilElement.child("AvailCtrlByEMS").text().as_int(0);
+  
+  boost::optional<model::Schedule> availabilitySchedule;
+  if(availCtrlByEMS == 1) {
+    availabilitySchedule = model.alwaysOnDiscreteSchedule().clone(model).cast<model::Schedule>();
+    availabilitySchedule->setName(coilName + " AvailSch");
+  } else {
+    availabilitySchedule = model.alwaysOnDiscreteSchedule();
+  }
+
   // CapTotGrossRtd
   boost::optional<double> capTotGrossRtd;
 
@@ -2386,6 +2397,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     coil.setName(coilName);
 
+    coil.setAvailableSchedule(availabilitySchedule.get());
+
     // CapTotGrossRtd
     if( capTotGrossRtd )
     {
@@ -2430,6 +2443,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     model::CoilHeatingWater coil(model,schedule);
 
     coil.setName(coilName);
+
+    coil.setAvailableSchedule(availabilitySchedule.get());
 
     pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
 
@@ -2510,6 +2525,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     model::CoilHeatingElectric coil(model,schedule);
 
     coil.setName(coilName);
+
+    coil.setAvailabilitySchedule(availabilitySchedule.get());
 
     // CapTotGrossRtd
     if( capTotGrossRtd )
@@ -2747,6 +2764,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       // Name
       heatingCoil.setName(coilName);
 
+      heatingCoil.setAvailabilitySchedule(availabilitySchedule.get());
+
       // FlowCapSim
       if( _flowCap )
       {
@@ -2854,9 +2873,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   }
   else
   {
-    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
-    model::CoilHeatingElectric coil(model,schedule);
+    model::CoilHeatingElectric coil(model,availabilitySchedule.get());
 
     coil.setName(coilName);
 
@@ -2883,11 +2900,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
     return result;
   }
 
-  //AvailSchRef
-  pugi::xml_node availSchRefElement = fanElement.child("AvailSchRef");
-  std::string availSchRef = escapeName(availSchRefElement.text().as_string());
-  auto availSch = model.getModelObjectByName<model::Schedule>(availSchRef);
-
   // FanControlMethod
   pugi::xml_node fanControlMethodElement = fanElement.child("CtrlMthdSim");
 
@@ -2912,6 +2924,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   if( istringEqual(mtrPosElement.text().as_string(),"InAirStream") )
   {
     motorInAirstream = true;
+  }
+
+  //AvailSchRef
+  pugi::xml_node availSchRefElement = fanElement.child("AvailSchRef");
+  std::string availSchRef = escapeName(availSchRefElement.text().as_string());
+  auto availSch = model.getModelObjectByName<model::Schedule>(availSchRef);
+
+  if (!availSch) {
+    // AvailCtrlByEMS
+    const auto availCtrlByEMS = fanElement.child("AvailCtrlByEMS").text().as_int(0);
+    
+    if(availCtrlByEMS == 1) {
+      availSch = model.alwaysOnDiscreteSchedule().clone(model).cast<model::Schedule>();
+      availSch->setName(std::string(nameElement.text().as_string()) + " AvailSch");
+    }
   }
 
   boost::optional<double> flowCap;
@@ -3451,6 +3478,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     // Name
     pugi::xml_node nameElement = coolingCoilElement.child("Name");
     std::string coilName = nameElement.text().as_string();
+
+    // AvailCtrlByEMS
+    const auto availCtrlByEMS = coolingCoilElement.child("AvailCtrlByEMS").text().as_int(0);
+    
+    boost::optional<model::Schedule> availabilitySchedule;
+    if(availCtrlByEMS == 1) {
+      availabilitySchedule = model.alwaysOnDiscreteSchedule().clone(model).cast<model::Schedule>();
+      availabilitySchedule->setName(coilName + " AvailSch");
+    } else {
+      availabilitySchedule = model.alwaysOnDiscreteSchedule();
+    }
+
     // NumClgStages
     pugi::xml_node numClgStagesElement = coolingCoilElement.child("NumClgStages");
 
@@ -3475,6 +3514,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         unitary->setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate");
         unitary->setSupplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate");
         unitary->setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
+        unitary->setAvailabilitySchedule(availabilitySchedule.get());
         result = unitary.get();
       }
 
@@ -3569,8 +3609,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     // Unspecified=assume 1, or specified as 1 stage
     else if( !numClgStagesElement || (numClgStagesElement.text().as_int() == 1) )
     {
-      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
       // Cap_fTempCrvRef
 
       boost::optional<model::Curve> coolingCurveFofTemp;
@@ -3675,7 +3713,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       model::CoilCoolingDXSingleSpeed coilCooling( model,
-                                                   schedule,
+                                                   availabilitySchedule.get(),
                                                    coolingCurveFofTemp.get(),
                                                    coolingCurveFofFlow.get(),
                                                    energyInputRatioFofTemp.get(),
@@ -3762,8 +3800,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     }
     else if( numClgStagesElement.text().as_int() == 2 )
     {
-      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
       // Cap_fTempCrvRef
 
       boost::optional<model::Curve> coolingCurveFofTemp;
@@ -3868,7 +3904,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       model::CoilCoolingDXTwoSpeed coilCooling( model,
-                                              schedule,
+                                              availabilitySchedule.get(),
                                               coolingCurveFofTemp.get(),
                                               coolingCurveFofFlow.get(),
                                               energyInputRatioFofTemp.get(),
@@ -3988,13 +4024,23 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   // ChilledWater
   if( istringEqual(coilCoolingTypeElement.text().as_string(),"ChilledWater") )
   {
-    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
-    model::CoilCoolingWater coilCooling(model,schedule);
 
     // Name
     pugi::xml_node nameElement = coolingCoilElement.child("Name");
     std::string coilName = nameElement.text().as_string();
+
+    // AvailCtrlByEMS
+    const auto availCtrlByEMS = coolingCoilElement.child("AvailCtrlByEMS").text().as_int(0);
+    
+    boost::optional<model::Schedule> availabilitySchedule;
+    if(availCtrlByEMS == 1) {
+      availabilitySchedule = model.alwaysOnDiscreteSchedule().clone(model).cast<model::Schedule>();
+      availabilitySchedule->setName(coilName + " AvailSch");
+    } else {
+      availabilitySchedule = model.alwaysOnDiscreteSchedule();
+    }
+
+    model::CoilCoolingWater coilCooling(model,availabilitySchedule.get());
 
     coilCooling.setName(coilName);
 
