@@ -395,7 +395,8 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
 
   auto getOrCreateModel = [this, &model_, &osmOrIdfPath]() -> openstudio::model::Model {
     if (model_) {
-      return model_->clone().cast<openstudio::model::Model>();
+      // model should already have been cloned in the endpoint, so no need to do it twice
+      return *model_;  // _->clone(true).cast<openstudio::model::Model>();
     } else if (!osmOrIdfPath.empty()) {
       // TODO: not sure we want to keep this here or not..
       if (auto osmInfo_ = getModel(osmOrIdfPath)) {
@@ -410,7 +411,7 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
 
   auto getOrCreateWorkspace = [this, &workspace_, &osmOrIdfPath]() -> openstudio::Workspace {
     if (workspace_) {
-      return workspace_->clone();
+      return *workspace_;  // ->clone(true);
     } else if (!osmOrIdfPath.empty()) {
       if (auto idfInfo_ = getIdf(osmOrIdfPath)) {
         return idfInfo_->workspace.clone();
@@ -764,10 +765,23 @@ MeasureManagerServer::ResponseType MeasureManagerServer::update_measures(const w
 
 MeasureManagerServer::ResponseType MeasureManagerServer::compute_arguments(const web::json::value& body) {
   openstudio::path measureDir;
-  if (auto p_ = get_field<openstudio::path>(body, "measure_dir")) {
+  if (boost::optional<openstudio::path> p_ = get_field<openstudio::path>(body, "measure_dir")) {  // Not passing a default value => optional
     measureDir = std::move(*p_);
   } else {
     return {web::http::status_codes::BadRequest, toWebJSON("The 'measure_dir' (string) must be in the post data")};
+  }
+
+  // NOTE: this endpoint expects an OSM (even if it's an EnergyPlusMeasure), NOT an OSM or IDF like the CLI --compute_arguments flag does
+  const openstudio::path osmPath = get_field<openstudio::path>(body, "osm_path", {});  // defaults to an empty path
+  bool has_valid_osm_path = false;
+  if (!osmPath.empty()) {
+    if (osmPath.extension() != ".osm") {
+      auto msg =
+        fmt::format("For /compute_arguments endpoint, parameter 'osm_path' must always be an '.osm' file, not '{}'", osmPath.generic_string());
+      fmt::print(stderr, "{}\n", msg);
+      return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+    }
+    has_valid_osm_path = true;
   }
 
   const bool force_reload = get_field<bool>(body, "force_reload", false);
@@ -779,9 +793,22 @@ MeasureManagerServer::ResponseType MeasureManagerServer::compute_arguments(const
     return {web::http::status_codes::BadRequest, toWebJSON(msg)};
   }
 
-  const openstudio::path osmOrIdfPath = get_field<openstudio::path>(body, "osm_path", {});
+  boost::optional<model::Model> model_;
+  boost::optional<Workspace> workspace_;
 
-  const openstudio::measure::OSMeasureInfo info = m_measureManager.getMeasureInfo(measureDir, *measure_, osmOrIdfPath);
+  if (has_valid_osm_path) {
+    if (auto osmInfo_ = m_measureManager.getModel(osmPath, force_reload)) {
+      // Clone and keep handles
+      model_ = osmInfo_->model.clone(true).cast<openstudio::model::Model>();
+      workspace_ = osmInfo_->workspace.clone(true);
+    } else {
+      auto msg = fmt::format("Cannot load model at '{}'", osmPath.generic_string());
+      fmt::print(stderr, "{}\n", msg);
+      return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+    }
+  }
+
+  const openstudio::measure::OSMeasureInfo info = m_measureManager.getMeasureInfo(measureDir, *measure_, osmPath, model_, workspace_);
   if (auto errorString_ = info.error()) {
     return {web::http::status_codes::OK, toWebJSON(*errorString_)};
   }
@@ -789,7 +816,7 @@ MeasureManagerServer::ResponseType MeasureManagerServer::compute_arguments(const
   // TODO: maybe I should write an OSMeasureInfo::toJSON() method, but that'd be duplicating the code in BCLMeasure (BCLXML to be exact).
   // So since the only thing that's different is the OSArgument (OSMeasureInfo) versus BCLMeasureArgument (BCLMeasure), we just override
   auto result = measure_->toJSON();
-  if (!osmOrIdfPath.empty()) {
+  if (has_valid_osm_path) {
     auto& arguments = result["arguments"];
     arguments.clear();
     for (const measure::OSArgument& argument : info.arguments()) {
