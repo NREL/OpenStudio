@@ -227,10 +227,16 @@ if(BUILD_TESTING)
   set_tests_properties(OpenStudioCLI.Labs.Run_PythonOnly_TwoMeasure PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Labs.Run_RubyPython
-    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_and_python.osw
+    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_then_python.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
   set_tests_properties(OpenStudioCLI.Labs.Run_RubyPython PROPERTIES RESOURCE_LOCK "compact_osw")
+
+  add_test(NAME OpenStudioCLI.Labs.Run_PythonRuby
+    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_then_ruby.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
 
   if (Pytest_AVAILABLE)
     add_test(NAME OpenStudioCLI.Labs.test_loglevel
