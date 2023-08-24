@@ -10,9 +10,11 @@ install(DIRECTORY "examples"
   PATTERN "*.docx"
 )
 
-file(TO_NATIVE_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp" CSHARP_LIBRARY_OUTPUT_DIRECTORY)
-file(TO_NATIVE_PATH "${PROJECT_SOURCE_DIR}/csharp" CSHARP_SOURCE_DIR)
-file(TO_NATIVE_PATH "${PROJECT_BINARY_DIR}/csharp_wrapper" CSHARP_BINARY_DIR)
+set(CSHARP_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp")
+
+# For csproj.in
+file(TO_NATIVE_PATH "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}" CSHARP_LIBRARY_OUTPUT_DIRECTORY_NATIVE)
+file(TO_NATIVE_PATH "${PROJECT_SOURCE_DIR}/csharp" CSHARP_SOURCE_DIR_NATIVE)
 
 set(CSHARP_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CSHARP_VERSION_MINOR ${PROJECT_VERSION_MINOR})
@@ -49,6 +51,7 @@ endif()
 # The Release/Debug can be stripped probably
 # Also probably don't need to use multiple `<TargetFrameworks>` which is the reason there's an extra netstandard2.0/ level
 # Note: can't use CMAKE_BUILD_TYPE as it's empty for multi generators (MSVC for eg). So we use a genex
+# We use the non-native, cmake_path, version of library output directory otherwise install fails with mistmatched `/` and `\` on windows
 set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>/netstandard2.0/OpenStudio.dll")
 
 # ignore deprecated warnings since we will export deprecated methods
