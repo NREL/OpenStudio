@@ -9,7 +9,7 @@ set(Python_USE_STATIC_LIBS OFF)
 if (PYTHON_VERSION)
   find_package(Python ${PYTHON_VERSION} EXACT REQUIRED COMPONENTS Interpreter Development OPTIONAL_COMPONENTS NumPy)
 else()
-  find_package(Python REQUIRED COMPONENTS Interpreter Development OPTIONAL_COMPONENTS NumPy)
+  find_package(Python 3 EXACT REQUIRED COMPONENTS Interpreter Development OPTIONAL_COMPONENTS NumPy)
 endif()
 
 execute_process(COMMAND ${Python_EXECUTABLE} -m pytest --version
