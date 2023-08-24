@@ -7,9 +7,9 @@ set(Python_USE_STATIC_LIBS OFF)
 # find_package(Python) has the problem that on github actions in particular it'll pick up the most recent python (eg 3.9) from the tool cache
 # even if you have used the setup-python action and set it to 3.8
 if (PYTHON_VERSION)
-  find_package(Python ${PYTHON_VERSION} EXACT COMPONENTS Interpreter Development REQUIRED)
+  find_package(Python ${PYTHON_VERSION} EXACT REQUIRED COMPONENTS Interpreter Development OPTIONAL_COMPONENTS NumPy)
 else()
-  find_package(Python COMPONENTS Interpreter Development REQUIRED)
+  find_package(Python 3 EXACT REQUIRED COMPONENTS Interpreter Development OPTIONAL_COMPONENTS NumPy)
 endif()
 
 execute_process(COMMAND ${Python_EXECUTABLE} -m pytest --version

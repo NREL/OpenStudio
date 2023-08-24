@@ -135,7 +135,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::update_3_4_0_to_3_5_0;
     m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
     m_updateMethods[VersionString("3.6.0")] = &VersionTranslator::update_3_5_1_to_3_6_0;
-    m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::update_3_6_1_to_3_7_0;
+    // m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -7607,11 +7608,71 @@ namespace osversion {
 
   }  // end update_3_5_1_to_3_6_0
 
-  /*
-  std::string VersionTranslator::update_3_6_1_to_3_7_0(const IdfFile& idf_3_6_1, const IddFileAndFactoryWrapper& idd_3_7_0)
+  std::string VersionTranslator::update_3_6_1_to_3_7_0(const IdfFile& idf_3_6_1, const IddFileAndFactoryWrapper& idd_3_7_0) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_6_1.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_7_0.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_6_1.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:GroundHeatExchanger:Vertical") {
+
+        // 1 Field has been added from 3.6.1 to 3.7.0:
+        // -------------------------------------------
+        // * Undisturbed Ground Temperature Model * 17
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject ghxObject(iddObject.get());
+        IdfObject kusudaObject(idd_3_7_0.getObject("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach").get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if (i < 17) {
+            if ((value = object.getString(i))) {
+              ghxObject.setString(i, value.get());
+              if (i == 8) {  // Soil Thermal Conductivity
+                kusudaObject.setString(i - 6, value.get());
+              }
+              if (i == 10) {  // Average Soil Surface Temperature
+                kusudaObject.setString(i - 5, value.get());
+              }
+            }
+            if (boost::optional<double> _value = object.getDouble(i)) {
+              if (i == 9) {  // Soil Specific Heat
+                kusudaObject.setDouble(i - 5, _value.get() / 920.0);
+              }
+            }
+          } else {
+            if (i == 17) {  // Undisturbed Ground Temperature Model
+              ghxObject.setString(i, kusudaObject.getString(0).get());
+            }
+            if ((value = object.getString(i))) {
+              ghxObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        kusudaObject.setDouble(3, 920.0);  // Soil Density
+        kusudaObject.setDouble(6, 3.2);    // Average Amplitude of Surface Temperature
+        kusudaObject.setDouble(7, 8.0);    // Phase Shift of Minimum Surface Temperature
+
+        m_refactored.push_back(RefactoredObjectData(object, ghxObject));
+        m_new.push_back(kusudaObject);
+
+        ss << ghxObject;
+        ss << kusudaObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
 
   }  // end update_3_6_1_to_3_7_0
-  */
 
 }  // namespace osversion
 }  // namespace openstudio

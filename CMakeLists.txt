@@ -1,5 +1,5 @@
 message(STATUS "Using CMake ${CMAKE_VERSION}")
-cmake_minimum_required(VERSION 3.19.0)
+cmake_minimum_required(VERSION 3.20.0)
 cmake_policy(SET CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -1216,7 +1216,9 @@ if(NOT UNIX)
   if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
     install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "bin")
     install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "Ruby" COMPONENT "RubyAPI")
-    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "CSharp/openstudio/" COMPONENT "CSharpAPI")
+    if (BUILD_CSHARP_BINDINGS)
+      install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "CSharp/openstudio/" COMPONENT "CSharpAPI")
+    endif()
   endif()
 endif()
 
