@@ -5,7 +5,7 @@
 // Not implemented for this target: %include <cwstring.i>
 %include <std_wstring.i>
 
-%rename(Path) openstudio::path; // For consistancy with other class names and to avoid conflicts
+%rename(Path) openstudio::path; // For consistency with other class names and to avoid conflicts
 %rename(ZeroException) Exception;
 %rename(ReportingFrequencyEnum) ReportingFrequency;
 %ignore openstudio::SqlFile::dataDictionary();
