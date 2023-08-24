@@ -81,6 +81,7 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4932](https://github.com/NREL/OpenStudio/pull/4932) - Support undisturbed ground temperature models on GroundHeatExchangerVertical
     * Fix #4930 - Support undisturbed ground temperature models on GroundHeatExchangerVertical
     * Update `GroundHeatExchanger:Vertical` to actually use the Ground Temeprature Model field
+* [#4923](https://github.com/NREL/OpenStudio/pull/4923) - Fix #4692 - Modify `Model::load` to use the VersionTranslator instead of loading it assuming the version of the loaded OSM is the same as the current SDK version being used.
 
 ## Minor changes and bug fixes
 
