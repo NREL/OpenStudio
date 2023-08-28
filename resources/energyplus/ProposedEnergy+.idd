@@ -450,7 +450,7 @@ SimulationControl,
       \key No
       \default Yes
   A6, \field Do HVAC Sizing Simulation for Sizing Periods
-      \note If Yes, SizingPeriod:* objects are exectuted additional times for advanced sizing.
+      \note If Yes, SizingPeriod:* objects are executed additional times for advanced sizing.
       \note Currently limited to use with coincident plant sizing, see Sizing:Plant object
       \type choice
       \key Yes
@@ -458,7 +458,7 @@ SimulationControl,
       \default No
   N1; \field Maximum Number of HVAC Sizing Simulation Passes
       \note the entire set of SizingPeriod:* objects may be repeated to fine tune size results
-      \note this input sets a limit on the number of passes that the sizing algorithms can repeate the set
+      \note this input sets a limit on the number of passes that the sizing algorithms can repeat the set
       \type integer
       \minimum 1
       \default 1
@@ -591,7 +591,7 @@ ShadowCalculation,
        \note or importing from external shading data.
        \note If PixelCounting is selected and GPU hardware (or GPU emulation) is not available, a warning will be
        \note displayed and EnergyPlus will revert to PolygonClipping.
-       \note If Scheduled is chosen, the External Shading Fraction Schedule Name is required
+       \note If Scheduled is chosen, the Sunlit Fraction Schedule Name is required
        \note in SurfaceProperty:LocalEnvironment.
        \note If Imported is chosen, the Schedule:File:Shading object is required.
        \type choice
@@ -1258,7 +1258,7 @@ SizingPeriod:DesignDay,
        \type integer
   A13; \field Begin Environment Reset Mode
        \note If used this can control if you want the thermal history to be reset at the beginning of the design day.
-       \note When using a series of similiar design days, this field can be used to retain warmup state from the previous design day.
+       \note When using a series of similar design days, this field can be used to retain warmup state from the previous design day.
        \type choice
        \key FullResetAtBeginEnvironment
        \key SuppressAllBeginEnvironmentResets
@@ -5578,22 +5578,22 @@ Construction:ComplexFenestrationState,
        \object-list CFSGlazingName
        \object-list WindowComplexShades
        \begin-extensible
-  A11, \field Outside Layer Directional Front Absoptance Matrix Name
+  A11, \field Outside Layer Directional Front Absorptance Matrix Name
        \required-field
        \type object-list
        \object-list DataMatrices
-  A12, \field Outside Layer Directional Back Absoptance Matrix Name
+  A12, \field Outside Layer Directional Back Absorptance Matrix Name
        \required-field
        \type object-list
        \object-list DataMatrices
   A13, \field Gap Name
        \type object-list
        \object-list CFSGap
-  A14, \field CFS Gap Directional Front Absoptance Matrix Name
+  A14, \field CFS Gap Directional Front Absorptance Matrix Name
        \note Reserved for future use. Leave it blank for this version
        \type object-list
        \object-list DataMatrices
-  A15; \field CFS Gap Directional Back Absoptance Matrix Name
+  A15; \field CFS Gap Directional Back Absorptance Matrix Name
        \note Reserved for future use. Leave it blank for this version
        \type object-list
        \object-list DataMatrices
@@ -8530,7 +8530,7 @@ SurfaceProperty:ExposedFoundationPerimeter,
        \note exposed. Value * Fraction = Total exposed perimeter
        \note BySegment => define whether the segment between each set of
        \note consecutive vertices of the floor surface is exposed.
-       \note SUM(exposed segement lengths) = Total exposed perimeter
+       \note SUM(exposed segment lengths) = Total exposed perimeter
        \required-field
        \type choice
        \key TotalExposedPerimeter
@@ -9924,7 +9924,7 @@ ZoneProperty:UserViewFactors:BySurfaceName,
        \format ViewFactor
   A1,  \field Zone or ZoneList or Space or SpaceList Name
        \note View factors may be entered for a space, zone, group of spaces, or group of zones in the same enclosure
-       \note by way of Constructon:AirBoundary or open spaces within a zone. This name must align with an enclosure
+       \note by way of Construction:AirBoundary or open spaces within a zone. This name must align with an enclosure
        \note encompassing the same zones or spaces.
        \type object-list
        \object-list SpaceNames
@@ -10059,10 +10059,10 @@ GroundHeatTransfer:Slab:MatlProps,
 GroundHeatTransfer:Slab:BoundConds,
       \memo Supplies some of the boundary conditions used in the ground heat transfer calculations.
         A1, \field EVTR: Is surface evapotranspiration modeled
-            \note This field specifies whether or not to use the evapotransporation model.
-            \note The inclusion of evapotransporation in the calculation has the greatest
+            \note This field specifies whether or not to use the evapotranspiration model.
+            \note The inclusion of evapotranspiration in the calculation has the greatest
             \note effect in warm dry climates, primarily on the ground surface temperature.
-            \note This field can be used to turn the evapotransporation off and on to check
+            \note This field can be used to turn the evapotranspiration off and on to check
             \note sensitivity to it.
             \type choice
             \key TRUE
@@ -12254,7 +12254,7 @@ ElectricEquipment:ITE:AirCooled,
        \type object-list
        \object-list BivariateFunctions
        \note The name of a two-variable curve or table lookup object which modifies the recirculation
-       \note fractionas a function of CPU loading (x) and supply air node temperature (y).
+       \note fraction as a function of CPU loading (x) and supply air node temperature (y).
        \note This curve (table) should equal 1.0 at design conditions (CPU loading = 1.0 and
        \note Design Entering Air Temperature).This field is used only if the
        \note Air Node Connection Type = AdjustedSupply. If this curve is left blank, then the curve
@@ -13615,7 +13615,7 @@ ZoneCrossMixing,
   A6 , \field Delta Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
-       \note This scheulde contains the temperature differential between source and
+       \note This schedule contains the temperature differential between source and
        \note receiving zone or space below which mixing is shutoff. If a source zone is
        \note specified and it contains more than one space, the average source zone temperature
        \note will be used for control. Schedule values must be greater than or equal to zero.
@@ -14072,7 +14072,7 @@ AirflowNetwork:SimulationControl,
       \default SkylineLU
  A9 , \field Allow Unsupported Zone Equipment
       \note Set this input to Yes to have zone equipment that are currently unsupported in the AirflowNetwork model
-      \note allowed in the simulation if present. Setting this field to Yes, allows the following equipments
+      \note allowed in the simulation if present. Setting this field to Yes, allows the following equipment
       \note to be modeled along an AirflowNetwork model: ZoneHVAC:Dehumidifier, ZoneHVAC:EnergyRecoveryVentilator,
       \note WaterHeater:HeatPump:*.
       \type choice
@@ -23615,7 +23615,7 @@ ZoneHVAC:IdealLoadsAirSystem,
        \note This field is only required when the Ideal Loads Air System is connected to an
        \note AirloopHVAC:ZoneReturnPlenum, otherwise leave this field blank. When connected to a plenum
        \note the return plenum Outlet Node Name (or Induced Air Outlet Node Name when connecting multiple
-       \note ideal loads air sytems) is entered here. The two ideal loads air system node name fields described above,
+       \note ideal loads air systems) is entered here. The two ideal loads air system node name fields described above,
        \note the Zone Supply Air Node Name and the Zone Exhaust Air Node Name must also be entered.
        \note The Zone Supply Air Node Name must match a zone inlet air node name for the zone where this
        \note Ideal Loads Air System is connected. The Zone Exhaust Air Node Name must match an inlet air
@@ -25158,7 +25158,7 @@ ZoneHVAC:EvaporativeCoolerUnit,
         \key ZoneCoolingLoadOnOffCycling
         \key ZoneCoolingLoadVariableSpeedFan
    N2 , \field Throttling Range Temperature Difference
-        \note used for ZoneTemperatureDeadbandOnOffCycling hystersis range for thermostatic control
+        \note used for ZoneTemperatureDeadbandOnOffCycling hysteresis range for thermostatic control
         \type real
         \units deltaC
         \default 1.0
@@ -25201,7 +25201,7 @@ ZoneHVAC:EvaporativeCoolerUnit,
 
 ZoneHVAC:HybridUnitaryHVAC,
         \memo Hybrid Unitary HVAC. A black box model for multi-mode packaged forced air equipment. Independent variables include outdoor air conditions and indoor air conditions. Controlled inputs include operating mode, supply air flow rate, and outdoor air faction. Emperical lookup tables are required to map supply air temperature supply air humidity, electricity use, fuel uses, water use, fan electricity use, and external static pressure as a function of each indpednent varaible and each controlled input. In each timestep the model will choose one or more combinations of settings for mode, supply air flow rate, outdoor air faction, and part runtime fraction so as to satisfy zone requests for sensible cooling, heating, ventilation, and/or dehumidification with the least resource consumption. Equipment in this class may consume electricity, water, and up to two additional fuel types.
-        \extensible:25 repeat last twentyfive fields remembering to move the semi-colon to the last value
+        \extensible:25 repeat last twenty five fields remembering to move the semi-colon to the last value
     A1, \field Name
         \required-field
         \type alpha
@@ -25215,7 +25215,7 @@ ZoneHVAC:HybridUnitaryHVAC,
         \type object-list
         \object-list SystemAvailabilityManagerLists
     A4, \field Minimum Supply Air Temperature Schedule Name
-        \note Values in this schedule are used as a constraint in choosing the feasible settings for supply air flow rate and ouside air fraction in each operating mode. If this field is blank, no minimum is imposed.
+        \note Values in this schedule are used as a constraint in choosing the feasible settings for supply air flow rate and outside air fraction in each operating mode. If this field is blank, no minimum is imposed.
         \type object-list
         \object-list ScheduleNames
     A5, \field Maximum Supply Air Temperature Schedule Name
@@ -25254,7 +25254,7 @@ ZoneHVAC:HybridUnitaryHVAC,
     N1, \field System Maximum Supply Air Flow Rate
         \type real
         \minimum> 0
-        \note The value in this field represents the maximum supply air volume flow rate among all operating modes. Values of extensive variables in lookup tables are normalized by the system maximum supply air mass flow rate that was used to build performance curves. The value in this field is used to rescale the output from exenstive variables to a desired system size.
+        \note The value in this field represents the maximum supply air volume flow rate among all operating modes. Values of extensive variables in lookup tables are normalized by the system maximum supply air mass flow rate that was used to build performance curves. The value in this field is used to rescale the output from extensive variables to a desired system size.
         \units m3/s
     N2, \field External Static Pressure at System Maximum Supply Air Flow Rate
         \type real
@@ -25366,7 +25366,7 @@ ZoneHVAC:HybridUnitaryHVAC,
         \type alpha
         \retaincase
         \note Enter a name for Mode 0.
-        \note Mode 0 describes equipment performance in standby. Mode 0 is usually characterized by electricity use for controls and crankcase heaters, or other standby resouce consumption. Mode 0 will be chosen for any timestep, or portion of timestep, when no ventilation, cooling, humidification, or dehumidification is required. Mode 0 is available at any environmental condition.
+        \note Mode 0 describes equipment performance in standby. Mode 0 is usually characterized by electricity use for controls and crankcase heaters, or other standby resource consumption. Mode 0 will be chosen for any timestep, or portion of timestep, when no ventilation, cooling, humidification, or dehumidification is required. Mode 0 is available at any environmental condition.
    A21, \field Mode 0 Supply Air Temperature Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
@@ -25378,7 +25378,7 @@ ZoneHVAC:HybridUnitaryHVAC,
         \object-list MultivariateFunctions
         \note Enter the name of the Supply Air Humidity Ratio Lookup Table for Mode 0.
         \note Units for lookup table values should be in kgWater/kgDryAir.
-        \note If this field is blank, Mode 0 will not be considered for any period that requires ventilation, heating, cooling, humidification, or dehumidification. If this field is blank, when Mode 0 is chosen (during standby periods) the supply air humidty ratio will equal the return air humidity ratio.
+        \note If this field is blank, Mode 0 will not be considered for any period that requires ventilation, heating, cooling, humidification, or dehumidification. If this field is blank, when Mode 0 is chosen (during standby periods) the supply air humidity ratio will equal the return air humidity ratio.
    A23, \field Mode 0 System Electric Power Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
@@ -25501,7 +25501,7 @@ ZoneHVAC:HybridUnitaryHVAC,
         \maximum 0.10
         \units kgWater/kgDryAir
         \note Enter the minimum outdoor humidity ratio allowed for Mode 1.
-        \note Mode 1 will not be considerd when outdoor air absolute humidity is below the value in this field.
+        \note Mode 1 will not be considered when outdoor air absolute humidity is below the value in this field.
         \note If this field is blank, the lower constraint on outdoor air humidity ratio will be 0.00 kgWater/kgDryAir.
         \default 0.00
    N11, \field Mode 1 Maximum Outdoor Air Humidity Ratio
@@ -25577,7 +25577,7 @@ ZoneHVAC:HybridUnitaryHVAC,
         \minimum 0.00
         \maximum 100.00
         \units percent
-        \note Enter the maximum return air relative humdity allowed for Mode 1.
+        \note Enter the maximum return air relative humidity allowed for Mode 1.
         \note Relative humidity as percent from 0.00 to 100.00.
         \note Mode 1 will not be considered when the return air relative humidity is above the value in this field.
         \note If this field is blank, the upper constraint on return air relative humidity will be 100%.
@@ -25790,7 +25790,7 @@ ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \units m3/s
         \minimum 0.0
         \autosizable
-        \note This field is used only when an oudoor air mixer is included.
+        \note This field is used only when an outdoor air mixer is included.
         \note This field is set to zero flow when the VRF terminal unit is connected to
         \note central dedicated outdoor air through air terminal single duct mixer object.
         \note When this VRF terminal is used as air loop equipment the autosized flow
@@ -25801,7 +25801,7 @@ ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \units m3/s
         \minimum 0.0
         \autosizable
-        \note This field is used only when an oudoor air mixer is included.
+        \note This field is used only when an outdoor air mixer is included.
         \note This field is set to zero flow when the VRF terminal unit is connected to
         \note central dedicated outdoor air through air terminal single duct mixer object.
         \note When this VRF terminal is used as air loop equipment the autosized flow
@@ -25812,7 +25812,7 @@ ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \units m3/s
         \minimum 0.0
         \autosizable
-        \note This field is used only when an oudoor air mixer is included.
+        \note This field is used only when an outdoor air mixer is included.
         \note This field is set to zero flow when the VRF terminal unit is connected to
         \note central dedicated outdoor air through air terminal single duct mixer object.
         \note When this VRF terminal is used as air loop equipment the autosized flow
@@ -26687,7 +26687,7 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow:Design,
         \default 1.0
   A10; \field Changeover Delay Time Period Schedule
         \note Changeover delay schedule name for this system. Schedule value <= 0 allows changeover with no delay
-        \note The schedule values are interpretted as hours.
+        \note The schedule values are interpreted as hours.
         \note If this field is blank, the system allows changeover with no delay
         \type object-list
         \object-list ScheduleNames
@@ -26873,7 +26873,7 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow:Design,
         \default 1.0
    A5 ; \field Changeover Delay Time Period Schedule
         \note Changeover delay schedule name for this system. Schedule value <= 0 allows changeover with no delay
-        \note The schedule values are interpretted as hours.
+        \note The schedule values are interpreted as hours.
         \note If this field is blank, the system allows changeover with no delay
         \type object-list
         \object-list ScheduleNames
@@ -28261,7 +28261,7 @@ AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam,
        \minimum> 0.0
        \default 27.8
   N11, \field Beam Rated Hot Water Volume Flow Rate per Beam Length
-       \note The volume flow rate of hoy water per meter of beam length at the rating point.
+       \note The volume flow rate of hot water per meter of beam length at the rating point.
        \type real
        \units m3/s-m
        \ip-units gal/min-ft
@@ -28468,7 +28468,7 @@ AirTerminal:SingleDuct:Mixer,
        \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
        \note be computed based on the current number of occupants in the zone, as for demand controlled ventilation.
        \note If this field is blank, then the terminal unit will be controlled using the
-       \note DesignSpecification:OutdoorAir objec referenced in the Sizing:Zone object.
+       \note DesignSpecification:OutdoorAir object referenced in the Sizing:Zone object.
    A9; \field Per Person Ventilation Rate Mode
        \type choice
        \key CurrentOccupancy
@@ -29094,7 +29094,7 @@ Fan:VariableVolume,
        \maximum 1.0
   N8 , \field Fan Power Coefficient 1
        \note all Fan Power Coefficients should not be 0.0 or no fan power will be consumed.
-       \note Fan Power Coefficents are specified as function of full flow rate/power
+       \note Fan Power Coefficients are specified as function of full flow rate/power
        \note Equation:
   N9 , \field Fan Power Coefficient 2
   N10, \field Fan Power Coefficient 3
@@ -29704,9 +29704,9 @@ Coil:Cooling:Water:DetailedGeometry,
        \autosizable
        \default autosize
        \minimum> 0
-       \note This input field is optional. If specified, it is used for sizing the coil Design Geomtery
+       \note This input field is optional. If specified, it is used for sizing the coil Design Geometry
        \note Parameters. If autosized, the Design Loop Exit Temperature value specified in Sizing:Plant
-       \note object is used for sizing the coil Design Geomtery Parameters. If the autosized value is
+       \note object is used for sizing the coil Design Geometry Parameters. If the autosized value is
        \note higher than the coil design outlet air temperature, then the design inlet water temperature
        \note value is reset to coil design outlet air temperature minus 5.0 DeltaC.
 
@@ -33902,7 +33902,7 @@ Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note due to variations in part load ratio.
 
 Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
-       \memo vairlable-speed Heat pump water heater (VSHPWH) heating coil, air-to-water direct-expansion (DX)
+       \memo variable-speed Heat pump water heater (VSHPWH) heating coil, air-to-water direct-expansion (DX)
        \memo system which includes a variable-speed water heating coil, evaporator air coil, evaporator
        \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump system.
        \min-fields 33
@@ -35562,7 +35562,7 @@ EvaporativeCooler:Indirect:ResearchSpecial,
   N2 , \field Cooler Drybulb Design Effectiveness
        \type real
        \note dry operation effectiveness with respect to drybulb temperature difference
-       \note this is the nominal design dryblub effectiveness at design air flow rates, no evaporation water active
+       \note this is the nominal design drybulb effectiveness at design air flow rates, no evaporation water active
        \minimum 0.0
   A4 , \field Drybulb Effectiveness Flow Ratio Modifier Curve Name
        \note this curve modifies the drybulb effectiveness in the previous field (eff_db_design)
@@ -35608,7 +35608,7 @@ EvaporativeCooler:Indirect:ResearchSpecial,
        \type real
        \units dimensionless
        \default 1.0
-       \note This field is used when the previous field is set to autoize. The Primary Design Air Flow Rate is scaled using this factor
+       \note This field is used when the previous field is set to autosize. The Primary Design Air Flow Rate is scaled using this factor
        \note to calculate the secondary design air flow rate.
   N7 , \field Secondary Air Fan Design Power
        \type real
@@ -37233,7 +37233,7 @@ AirLoopHVAC:UnitarySystem,
   A27; \field Design Specification Multispeed Object Name
        \type object-list
        \object-list UnitarySystemPerformaceNames
-       \note Enter the name of the performance specification object used to describe the multispeed coil.
+       \note The name of the performance specification object used to describe the multispeed coil.
 
 UnitarySystemPerformance:Multispeed,
        \memo The UnitarySystemPerformance object is used to specify the air flow ratio at each
@@ -40037,7 +40037,7 @@ Controller:MechanicalVentilation,
         \object-list DSOASpaceListNames
    A7;  \field Design Specification Zone Air Distribution Object Name 1
         \note If left blank, the name will be taken from the Sizing:Zone object for this zone.
-        \note If no specification is found for this zone, then effectivness will be 1.0 and
+        \note If no specification is found for this zone, then effectiveness will be 1.0 and
         \note and secondary recirculation will be zero.
         \type object-list
         \object-list DesignSpecificationZoneAirDistributionNames
@@ -41172,7 +41172,7 @@ Pump:VariableSpeed,
         \type object-list
         \object-list ScheduleNames
   A13,  \field Zone Name
-        \note optional, if used pump losses transfered to zone as internal gains
+        \note optional, if used pump losses transferred to zone as internal gains
         \type object-list
         \object-list ZoneNames
   N12,  \field Skin Loss Radiative Fraction
@@ -41287,7 +41287,7 @@ Pump:ConstantSpeed,
        \type real
        \note "N" in above expression in field A6
   A7,  \field Zone Name
-       \note optional, if used pump losses transfered to zone as internal gains
+       \note optional, if used pump losses transferred to zone as internal gains
        \type object-list
        \object-list ZoneNames
   N8,  \field Skin Loss Radiative Fraction
@@ -41382,7 +41382,7 @@ Pump:VariableSpeed:Condensate,
        \type object-list
        \object-list ScheduleNames
   A5 , \field Zone Name
-       \note optional, if used pump losses transfered to zone as internal gains
+       \note optional, if used pump losses transferred to zone as internal gains
        \type object-list
        \object-list ZoneNames
   N10, \field Skin Loss Radiative Fraction
@@ -41482,7 +41482,7 @@ HeaderedPumps:ConstantSpeed,
        \type object-list
        \object-list ScheduleNames
   A7 , \field Zone Name
-       \note optional, if used pump losses transfered to zone as internal gains
+       \note optional, if used pump losses transferred to zone as internal gains
        \type object-list
        \object-list ZoneNames
   N7 , \field Skin Loss Radiative Fraction
@@ -41595,7 +41595,7 @@ HeaderedPumps:VariableSpeed,
        \type object-list
        \object-list ScheduleNames
   A7 , \field Zone Name
-       \note optional, if used pump losses transfered to zone as internal gains
+       \note optional, if used pump losses transferred to zone as internal gains
        \type object-list
        \object-list ZoneNames
   N12, \field Skin Loss Radiative Fraction
@@ -41675,7 +41675,7 @@ LoadProfile:Plant,
        \memo Used to simulate a scheduled plant loop demand profile. Load and flow rate are
        \memo specified using schedules. Positive values are heating loads, and negative values are
        \memo cooling loads. The actual load met is dependent on the performance of the supply
-       \memo loop components.
+       \memo loop components. Optional inputs for steam loop.
   A1 , \field Name
        \required-field
        \type alpha
@@ -42572,10 +42572,10 @@ Chiller:Electric:ASHRAE205,
        \minimum> 0
        \ip-units gal/min
   A21, \field Heat Recovery Inlet Node Name
-       \note Not yet implemented / reserved for future use. Heat recovery is not yet within scope of ASHRAE Stanard 205.
+       \note Not yet implemented / reserved for future use. Heat recovery is not yet within scope of ASHRAE Standard 205.
        \type node
   A21, \field Heat Recovery Outlet Node Name
-       \note Not yet implemented / reserved for future use. Heat recovery is not yet within scope of ASHRAE Stanard 205.
+       \note Not yet implemented / reserved for future use. Heat recovery is not yet within scope of ASHRAE Standard 205.
        \type node
   A23; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
@@ -44313,7 +44313,6 @@ HeatPump:PlantLoop:EIR:Cooling,
         \required-field
         \type node
    A4,  \field Condenser Type
-        \note required-field disabled as it has a default
         \type choice
         \key WaterSource
         \key AirSource
@@ -44334,7 +44333,6 @@ HeatPump:PlantLoop:EIR:Cooling,
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
-        \note required-field disabled as it has a default
         \type real
         \minimum> 0.0
         \units m3/s
@@ -44342,7 +44340,6 @@ HeatPump:PlantLoop:EIR:Cooling,
         \autosizable
         \default autosize
    N2,  \field Source Side Reference Flow Rate
-        \note required-field disabled as it has a default
         \type real
         \minimum> 0.0
         \units m3/s
@@ -44350,21 +44347,18 @@ HeatPump:PlantLoop:EIR:Cooling,
         \autosizable
         \default autosize
    N3,  \field Reference Capacity
-        \note required-field disabled as it has a default
         \type real
         \minimum> 0.0
         \units W
         \autosizable
         \default autosize
    N4,  \field Reference Coefficient of Performance
-        \note required-field disabled as it has a default
         \type real
         \minimum> 0.0
         \default 7.5
         \units W/W
    N5,  \field Sizing Factor
-        \note required-field disabled as it has a default
-        \note Multiplies the autosized capacity and flow rates
+        \note Multiplies the autosized load side reference flow rate which is then used to autosize the capacity
         \type real
         \minimum> 0.0
         \default 1.0
@@ -44413,7 +44407,6 @@ HeatPump:PlantLoop:EIR:Heating,
         \type node
    A4,  \field Condenser Type
         \type choice
-        \note required-field disabled as it has a default
         \key WaterSource
         \key AirSource
         \default WaterSource
@@ -44433,7 +44426,6 @@ HeatPump:PlantLoop:EIR:Heating,
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
-        \note required-field disabled as it has a default
         \type real
         \minimum> 0.0
         \units m3/s
@@ -44441,7 +44433,6 @@ HeatPump:PlantLoop:EIR:Heating,
         \autosizable
         \default autosize
    N2,  \field Source Side Reference Flow Rate
-        \note required-field disabled as it has a default
         \type real
         \minimum> 0.0
         \units m3/s
@@ -44449,21 +44440,18 @@ HeatPump:PlantLoop:EIR:Heating,
         \autosizable
         \default autosize
    N3,  \field Reference Capacity
-        \note required-field disabled as it has a default
         \type real
         \minimum> 0.0
         \units W
         \autosizable
         \default autosize
    N4,  \field Reference Coefficient of Performance
-        \note required-field disabled as it has a default
         \type real
         \minimum> 0.0
         \default 7.5
         \units W/W
    N5,  \field Sizing Factor
-        \note Multiplies the autosized capacity and flow rates
-        \note required-field disabled as it has a default
+        \note Multiplies the autosized load side reference flow rate which is then used to autosize the capacity
         \type real
         \minimum> 0.0
         \default 1.0
@@ -44544,7 +44532,7 @@ HeatPump:AirToWater:FuelFired:Heating,
        \autosizable
        \minimum> 0
        \units W
-       \note Nominal Heating Capacity in [W] (autosizeable)
+       \note Nominal Heating Capacity in [W] (autosizable)
   N2 , \field Nominal COP
        \type real
        \minimum> 0
@@ -44555,7 +44543,7 @@ HeatPump:AirToWater:FuelFired:Heating,
        \autosizable
        \minimum> 0
        \units m3/s
-       \note Design Flow Rate in m3/s (autosizeable)
+       \note Design Flow Rate in m3/s (autosizable)
   N4 , \field Design Supply Temperature
        \default 60
        \units C
@@ -44723,7 +44711,7 @@ HeatPump:AirToWater:FuelFired:Cooling,
        \autosizable
        \minimum> 0
        \units W
-       \note Nominal Cooling Capacity in [W] (autosizeable)
+       \note Nominal Cooling Capacity in [W] (autosizable)
   N2 , \field Nominal COP
        \type real
        \minimum> 0
@@ -44734,7 +44722,7 @@ HeatPump:AirToWater:FuelFired:Cooling,
        \autosizable
        \minimum> 0
        \units m3/s
-       \note Design Flow Rate in m3/s (autosizeable)
+       \note Design Flow Rate in m3/s (autosizable)
   N4 , \field Design Supply Temperature
        \default 7.0
        \units C
@@ -49984,7 +49972,7 @@ PlantLoop,
         \key None
         \default None
    N6;  \field Loop Circulation Time
-        \note This field is only used to autocalulate the Plant Loop Volume.
+        \note This field is only used to autocalculate the Plant Loop Volume.
         \note Loop Volume = Loop Circulation Time * Maximum Loop Flow Rate
         \type real
         \units minutes
@@ -50083,7 +50071,7 @@ CondenserLoop,
         \key None
         \default None
    N6;  \field Loop Circulation Time
-        \note This field is only used to autocalulate the Condenser Loop Volume.
+        \note This field is only used to autocalculate the Condenser Loop Volume.
         \note Loop Volume = Loop Circulation Time * Maximum Loop Flow Rate
         \type real
         \units minutes
@@ -57530,7 +57518,7 @@ ElectricLoadCenter:Distribution,
        \note while accounting for any on-site generation. Only excess on site generation  gets stored (legacy behavior).
        \default TrackFacilityElectricDemandStoreExcessOnSite
        \key TrackMeterDemandStoreExcessOnSite
-       \note TrackMeterDemandStoreExcessOnSite indicates that storage discharge control will follow an electric meter named in the field called Storage Control Track Meter Name. This scheme is similiar
+       \note TrackMeterDemandStoreExcessOnSite indicates that storage discharge control will follow an electric meter named in the field called Storage Control Track Meter Name. This scheme is similar
        \note to TrackFacilityElectricDemandStoreExcessOnSite except that instead of the main facility electric meter, the control is based off of a user-selected meter.
        \key TrackChargeDischargeSchedules
        \note TrackChargeDischargeSchedules indicates that control will follow the charging and discharging power and schedules defined in the fields called Maximum Storage Charge Grid Supply Power,
@@ -61850,7 +61838,7 @@ Output:Table:Annual,
        \note   hours with a zero value are all included.
        \note HourInTenBinsMinToMax - Creates 10 columns for the specified variable and shows the number
        \note   of hours in each of 10 bins based on the minimum and maximum value. The bin sizes will
-       \note   be rounded up to the next most signficant digit value.
+       \note   be rounded up to the next most significant digit value.
        \note HourInTenBinsZeroToMax - Creates 11 columns for the specified variable and shows the number
        \note   of hours in each of 10 bins from zero to the maximum value and a bin for hours below zero.
        \note   The bin sizes will be rounded up to the next most significant digit value.
