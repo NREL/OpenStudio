@@ -16513,7 +16513,7 @@ HVACTemplate:Zone:PTHP,
       \default None
 
 HVACTemplate:Zone:WaterToAirHeatPump,
-      \min-fields 44
+      \min-fields 43
       \memo Water to Air Heat Pump to be used with HVACTemplate:Plant:MixedWaterLoop
   A1, \field Zone Name
       \required-field
@@ -16684,7 +16684,7 @@ HVACTemplate:Zone:WaterToAirHeatPump,
       \default 2.5
       \note The maximum on-off cycling rate for the compressor
       \note Suggested value is 2.5 for a typical heat pump
- N19, \field Heat Pump Time Constant
+ N19, \field Latent Capacity Time Constant
       \type real
       \units s
       \minimum 0.0
@@ -16692,14 +16692,7 @@ HVACTemplate:Zone:WaterToAirHeatPump,
       \default 60.0
       \note Time constant for the cooling coil's capacity to reach steady state after startup
       \note Suggested value is 60 for a typical heat pump
- N20, \field Fraction of On-Cycle Power Use
-      \minimum 0.0
-      \maximum 0.05
-      \default 0.01
-      \note The fraction of on-cycle power use to adjust the part load fraction based on
-      \note the off-cycle power consumption due to crankcase heaters, controls, fans, and etc.
-      \note Suggested value is 0.01 for a typical heat pump
- N21, \field Heat Pump Fan Delay Time
+ N20, \field Heat Pump Fan Delay Time
       \units s
       \minimum 0.0
       \default 60
@@ -16724,13 +16717,13 @@ HVACTemplate:Zone:WaterToAirHeatPump,
       \key SupplyAirTemperature
       \key TemperatureDifference
       \default SupplyAirTemperature
- N22, \field Zone Cooling Design Supply Air Temperature
+ N21, \field Zone Cooling Design Supply Air Temperature
       \type real
       \units C
       \default 14.0
       \note Zone Cooling Design Supply Air Temperature is only used when Zone Cooling Design
       \note Supply Air Temperature Input Method = SupplyAirTemperature
- N23, \field Zone Cooling Design Supply Air Temperature Difference
+ N22, \field Zone Cooling Design Supply Air Temperature Difference
       \type real
       \units deltaC
       \default 11.11
@@ -16745,13 +16738,13 @@ HVACTemplate:Zone:WaterToAirHeatPump,
       \key SupplyAirTemperature
       \key TemperatureDifference
       \default SupplyAirTemperature
- N24, \field Zone Heating Design Supply Air Temperature
+ N23, \field Zone Heating Design Supply Air Temperature
       \type real
       \units C
       \default 50.0
       \note Zone Heating Design Supply Air Temperature is only used when Zone Heating Design
       \note Supply Air Temperature Input Method = SupplyAirTemperature
- N25, \field Zone Heating Design Supply Air Temperature Difference
+ N24, \field Zone Heating Design Supply Air Temperature Difference
       \type real
       \units deltaC
       \default 30.0
@@ -16788,7 +16781,7 @@ HVACTemplate:Zone:WaterToAirHeatPump,
       \note If blank, always on
       \type object-list
       \object-list ScheduleNames
- N26; \field Baseboard Heating Capacity
+ N25; \field Baseboard Heating Capacity
       \autosizable
       \default autosize
       \units W
