@@ -26,7 +26,7 @@ namespace energyplus {
     OptionalModelObject temp;
     boost::optional<double> value;
 
-    IdfObject idfObject(IddObjectType::DistrictHeating);
+    IdfObject idfObject(IddObjectType::DistrictHeating_Water);
 
     m_idfObjects.push_back(idfObject);
 
@@ -44,7 +44,7 @@ namespace energyplus {
     if (temp) {
       s = temp->name();
       if (s) {
-        idfObject.setString(openstudio::DistrictHeatingFields::HotWaterInletNodeName, *s);
+        idfObject.setString(openstudio::DistrictHeating_WaterFields::HotWaterInletNodeName, *s);
       }
     }
     ///////////////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ namespace energyplus {
     if (temp) {
       s = temp->name();
       if (s) {
-        idfObject.setString(openstudio::DistrictHeatingFields::HotWaterOutletNodeName, *s);
+        idfObject.setString(openstudio::DistrictHeating_WaterFields::HotWaterOutletNodeName, *s);
       }
     }
     ///
@@ -64,9 +64,9 @@ namespace energyplus {
     ///////////////////////////////////////////////////////////////////////////
     //Nominal Capacity ///////////////////////////////////////////////////
     if (modelObject.isNominalCapacityAutosized()) {
-      idfObject.setString(DistrictHeatingFields::NominalCapacity, "Autosize");
+      idfObject.setString(DistrictHeating_WaterFields::NominalCapacity, "Autosize");
     } else if ((value = modelObject.nominalCapacity())) {
-      idfObject.setDouble(DistrictHeatingFields::NominalCapacity, value.get());
+      idfObject.setDouble(DistrictHeating_WaterFields::NominalCapacity, value.get());
     }
     //
     ////////////////////////////////////////////////////////////////////////

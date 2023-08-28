@@ -45130,7 +45130,7 @@ DistrictCooling,
        \type object-list
        \object-list ScheduleNames
 
-DistrictHeating,
+DistrictHeating:Water,
        \memo Centralized source of hot water, such as a district heating system.
   A1 , \field Name
        \required-field
