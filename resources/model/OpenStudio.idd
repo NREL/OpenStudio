@@ -6858,7 +6858,7 @@ OS:SurfaceProperty:LocalEnvironment,
        \type object-list
        \object-list AllHeatTranSurfNames
        \note Enter the name of an exterior surface object
-   A4, \field Sunlit Fraction Schedule Name
+   A4, \field External Shading Fraction Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Enter the name of a Schedule object
