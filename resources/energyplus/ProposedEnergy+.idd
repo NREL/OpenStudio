@@ -32068,7 +32068,7 @@ Coil:Heating:Desuperheater,
        \type node
        \note Required if coil is temperature controlled.
        \note Temperature-based control requires the use of a SetpointManager object
-  N2 ; \field Parasitic Electric Load
+  N2 ; \field On Cycle Parasitic Electric Load
        \type real
        \units W
        \minimum 0
