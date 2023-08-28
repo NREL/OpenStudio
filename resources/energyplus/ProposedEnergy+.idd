@@ -31988,9 +31988,9 @@ Coil:Heating:Gas:MultiStage,
        \note This part load degradation is for coil performance & will
        \note increase the gas consumption of the coil due to transient coil
        \note operation.
-  N1,  \field Parasitic Gas Load
+  N1,  \field Off Cycle Parasitic Gas Load
        \units W
-       \note parasitic gas load associated with the gas coil operation (i.e.,
+       \note parasitic gas load when the gas coil is not operating (i.e.,
        \note standing pilot)
   N2 , \field Number of Stages
        \required-field
@@ -32011,7 +32011,7 @@ Coil:Heating:Gas:MultiStage,
        \units W
        \minimum> 0.0
        \autosizable
-  N5; \field Stage 1 Parasitic Electric Load
+  N5; \field Stage 1 On Cycle Parasitic Electric Load
        \units W
        \note Stage 1 parasitic electric load associated with the gas coil operation
        \note such as an inducer fan, etc. This will be modified by the part

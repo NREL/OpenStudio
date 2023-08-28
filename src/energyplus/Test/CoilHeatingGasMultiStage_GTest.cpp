@@ -95,7 +95,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     EXPECT_EQ("UnitarySys Heat Coil Outlet", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AirOutletNodeName, false).get());
     EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Gas_MultiStageFields::TemperatureSetpointNodeName));
     EXPECT_EQ("HP HC Curve", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurveName, false).get());
-    EXPECT_EQ(10.0, idf_coil.getDouble(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, false).get());
+    EXPECT_EQ(10.0, idf_coil.getDouble(Coil_Heating_Gas_MultiStageFields::OffCycleParasiticGasLoad, false).get());
     EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Gas_MultiStageFields::NumberofStages, false).get());
     ASSERT_EQ(1, idf_coil.numExtensibleGroups());
     auto egs = idf_coil.extensibleGroups();
@@ -106,7 +106,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
 
       EXPECT_EQ(2.5, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency).get());
       EXPECT_EQ(2000.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity).get());
-      EXPECT_EQ(15.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad).get());
+      EXPECT_EQ(15.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageOnCycleParasiticElectricLoad).get());
     }
   }
 
@@ -164,7 +164,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     EXPECT_EQ("UnitarySys Heating Coil - Fan Node", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AirOutletNodeName, false).get());
     EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Gas_MultiStageFields::TemperatureSetpointNodeName));
     EXPECT_EQ("HP HC Curve", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurveName, false).get());
-    EXPECT_EQ(10.0, idf_coil.getDouble(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, false).get());
+    EXPECT_EQ(10.0, idf_coil.getDouble(Coil_Heating_Gas_MultiStageFields::OffCycleParasiticGasLoad, false).get());
     EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Gas_MultiStageFields::NumberofStages, false).get());
     ASSERT_EQ(1, idf_coil.numExtensibleGroups());
     auto egs = idf_coil.extensibleGroups();
@@ -175,7 +175,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
 
       EXPECT_EQ(2.5, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency).get());
       EXPECT_EQ(2000.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity).get());
-      EXPECT_EQ(15.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad).get());
+      EXPECT_EQ(15.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageOnCycleParasiticElectricLoad).get());
     }
   }
 }
