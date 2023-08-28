@@ -68,11 +68,11 @@ namespace energyplus {
         coil.setNominalCapacity(*d);
       }
 
-      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::ParasiticElectricLoad);
+      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::OnCycleParasiticElectricLoad);
       if (d) {
         coil.setParasiticElectricLoad(*d);
       }
-      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::ParasiticFuelLoad);
+      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::OffCycleParasiticFuelLoad);
       if (d) {
         coil.setParasiticGasLoad(*d);
       }

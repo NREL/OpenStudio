@@ -41,6 +41,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGas) {
   EXPECT_EQ("Propane", *coil.getString(Coil_Heating_FuelFields::FuelType));
   EXPECT_DOUBLE_EQ(0.6, *coil.getDouble(Coil_Heating_FuelFields::BurnerEfficiency));
   EXPECT_DOUBLE_EQ(1535.0, *coil.getDouble(Coil_Heating_FuelFields::NominalCapacity));
-  EXPECT_DOUBLE_EQ(48.0, *coil.getDouble(Coil_Heating_FuelFields::ParasiticElectricLoad));
-  EXPECT_DOUBLE_EQ(51.0, *coil.getDouble(Coil_Heating_FuelFields::ParasiticFuelLoad));
+  EXPECT_DOUBLE_EQ(48.0, *coil.getDouble(Coil_Heating_FuelFields::OnCycleParasiticElectricLoad));
+  EXPECT_DOUBLE_EQ(51.0, *coil.getDouble(Coil_Heating_FuelFields::OffCycleParasiticFuelLoad));
 }

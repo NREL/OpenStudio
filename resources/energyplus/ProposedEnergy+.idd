@@ -31927,7 +31927,7 @@ Coil:Heating:Fuel,
   A6 , \field Temperature Setpoint Node Name
        \type node
        \note optional, used if coil is temperature control and not load-base controlled
-  N3 , \field Parasitic Electric Load
+  N3 , \field On Cycle Parasitic Electric Load
        \units W
        \note parasitic electric load associated with the coil operation
        \note such as an inducer fan, etc... This will be modified by the part load ratio to reflect
@@ -31943,9 +31943,9 @@ Coil:Heating:Fuel,
        \note Coil runtime fraction = Part Load Ratio / PLF
        \note This part load degradation is for coil performance & will
        \note increase the fuel consumption of the coil due to transient coil operation.
-  N4 ; \field Parasitic Fuel Load
+  N4 ; \field Off Cycle Parasitic Fuel Load
        \units W
-       \note parasitic fuel load associated with the coil operation (i.e., standing pilot)
+       \note parasitic fuel load when the coil is not operating (i.e., standing pilot)
 
 Coil:Heating:Gas:MultiStage,
        \memo Gas heating coil, multi-stage. If the coil is located directly in an air loop

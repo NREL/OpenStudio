@@ -63,8 +63,8 @@ namespace energyplus {
       idfObject.setString(openstudio::Coil_Heating_FuelFields::NominalCapacity, "AutoSize");
     }
     ///////////////////////////////////////////////////////////////////////////
-    idfObject.setDouble(openstudio::Coil_Heating_FuelFields::ParasiticElectricLoad, modelObject.parasiticElectricLoad());
-    idfObject.setDouble(openstudio::Coil_Heating_FuelFields::ParasiticFuelLoad, modelObject.parasiticGasLoad());
+    idfObject.setDouble(openstudio::Coil_Heating_FuelFields::OnCycleParasiticElectricLoad, modelObject.parasiticElectricLoad());
+    idfObject.setDouble(openstudio::Coil_Heating_FuelFields::OffCycleParasiticFuelLoad, modelObject.parasiticGasLoad());
 
     ///////////////////////////////////////////////////////////////////////////
     // Field: Air Inlet Node Name /////////////////////////////////////////////

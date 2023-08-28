@@ -19460,7 +19460,7 @@ OS:Coil:Heating:Gas,
        \type object-list
        \object-list UnivariateFunctions
   N4, \field Parasitic Gas Load
-       \note parasitic gas load associated with the gas coil operation (i.e., standing pilot)
+       \note parasitic gas load when the coil is not operating (i.e., standing pilot)
        \type real
        \units W
   A8;  \field Fuel Type
