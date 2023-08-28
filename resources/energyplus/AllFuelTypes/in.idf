@@ -1,4 +1,4 @@
-  Version,23.1;
+  Version,23.2;
 
   Timestep,6;
 
@@ -284,7 +284,7 @@
 
   Exterior:FuelEquipment,
     DistrictHeating - 12000 W,  !- Name
-    DistrictHeating,         !- Fuel Use Type
+    DistrictHeatingWater,    !- Fuel Use Type
     Always On Discrete,      !- Schedule Name
     12000,                   !- Design Level {W}
     General;                 !- End-Use Subcategory
@@ -347,7 +347,7 @@
 
   Exterior:FuelEquipment,
     Steam - 11000 W,         !- Name
-    Steam,                   !- Fuel Use Type
+    DistrictHeatingSteam,    !- Fuel Use Type
     Always On Discrete,      !- Schedule Name
     11000,                   !- Design Level {W}
     General;                 !- End-Use Subcategory
@@ -530,15 +530,15 @@
   Output:Table:Monthly,
     Building Energy Performance - District Heating,  !- Name
     2,                       !- Digits After Decimal
-    ExteriorEquipment:DistrictHeating,  !- Variable or Meter 1 Name
+    ExteriorEquipment:DistrictHeatingWater,  !- Variable or Meter 1 Name
     SumOrAverage;            !- Aggregation Type for Variable or Meter 1
 
   Output:Table:Monthly,
     Building Energy Performance - District Heating Peak Demand,  !- Name
     2,                       !- Digits After Decimal
-    DistrictHeating:Facility,!- Variable or Meter 1 Name
+    DistrictHeatingWater:Facility,  !- Variable or Meter 1 Name
     Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:DistrictHeating,  !- Variable or Meter 2 Name
+    ExteriorEquipment:DistrictHeatingWater,  !- Variable or Meter 2 Name
     ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
 
   Output:Table:Monthly,

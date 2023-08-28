@@ -100,7 +100,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,23.1;
+  Version,23.2;
 
   Building,
     Building,                !- Name
@@ -3654,13 +3654,13 @@
     SumOrAverage,            !- Aggregation Type for Variable or Meter 2
     InteriorEquipment:DistrictHeating,  !- Variable or Meter 3 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 3
-    ExteriorEquipment:DistrictHeating,  !- Variable or Meter 4 Name
+    ExteriorEquipment:DistrictHeatingWater,  !- Variable or Meter 4 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 4
     Fans:DistrictHeating,    !- Variable or Meter 5 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 5
     Pumps:DistrictHeating,   !- Variable or Meter 6 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 6
-    Heating:DistrictHeating, !- Variable or Meter 7 Name
+    Heating:DistrictHeatingWater,  !- Variable or Meter 7 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 7
     Cooling:DistrictHeating, !- Variable or Meter 8 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 8
