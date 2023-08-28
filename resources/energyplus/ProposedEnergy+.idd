@@ -5429,7 +5429,6 @@ ConstructionProperty:InternalHeatSource,
        \note uniform spacing between tubes or resistance wires in direction
        \note perpendicular to main intended direction of heat transfer
   N5;  \field Two-Dimensional Temperature Calculation Position
-       \note required-field disabled as it has a default
        \minimum 0.0
        \maximum 1.0
        \default 0.0
@@ -9780,7 +9779,7 @@ SurfaceProperty:LocalEnvironment,
        \type object-list
        \object-list AllHeatTranSurfNames
        \note Enter the name of an exterior surface object
-   A3, \field External Shading Fraction Schedule Name
+   A3, \field Sunlit Fraction Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Enter the name of a Schedule object
