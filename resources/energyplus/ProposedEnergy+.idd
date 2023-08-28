@@ -42372,7 +42372,7 @@ Boiler:HotWater,
        \key LeavingSetpointModulated
        \key NotModulated
        \default NotModulated
-  N8 , \field Parasitic Electric Load
+  N8 , \field On Cycle Parasitic Electric Load
        \type real
        \units W
        \minimum 0.0

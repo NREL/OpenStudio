@@ -135,10 +135,10 @@ namespace energyplus {
       idfObject.setString(Boiler_HotWaterFields::BoilerFlowMode, s.get());
     }
 
-    // ParasiticElectricLoad
+    // OnCycleParasiticElectricLoad
 
     if ((value = modelObject.parasiticElectricLoad())) {
-      idfObject.setDouble(Boiler_HotWaterFields::ParasiticElectricLoad, value.get());
+      idfObject.setDouble(Boiler_HotWaterFields::OnCycleParasiticElectricLoad, value.get());
     }
 
     // SizingFactor
