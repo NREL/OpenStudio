@@ -21255,7 +21255,7 @@ OS:Controller:OutdoorAir,
        \default Yes
        \key Yes
        \key No
-  A20; \field Heat Recovery Bypass Control Type
+  A20, \field Heat Recovery Bypass Control Type
        \note BypassWhenWithinEconomizerLimits specifies that heat recovery
        \note is active only when the economizer is off because conditions
        \note are outside the economizer control limits
@@ -21266,6 +21266,21 @@ OS:Controller:OutdoorAir,
        \default BypassWhenWithinEconomizerLimits
        \key BypassWhenWithinEconomizerLimits
        \key BypassWhenOAFlowGreaterThanMinimum
+  A21; \field Economizer Operation Staging
+       \type choice
+       \key EconomizerFirst
+       \key InterlockedWithMechanicalCooling
+       \default InterlockedWithMechanicalCooling
+       \note This input is only used when the Controller:OutdoorAir is used in conjunction
+       \note with an AirLoopHVAC:UnitarySystem with multiple cooling speeds.
+       \note When modeling an AirLoopHVAC:UnitarySystem with multiple cooling speeds
+       \note (as specified in a UnitarySystemPerformance:Multispeed), EconomizerFirst runs
+       \note the economizer at all speeds, all the way to the highest cooling speed before
+       \note mechanical cooling is used to meet the load. InterlockedWithMechanicalCooling
+       \note runs the economizer at the cooling speed chosen by the AirLoopHVAC:UnitarySystem.
+       \note Use EconomizerFirst to model typical economizer staging for multi-speed
+       \note packaged single-zone equipment with sensible load control (Control Type input of
+       \note the AirLoopHVAC:UnitarySystem should be set to Load).
 
 OS:Controller:WaterCoil,
        \min-fields 10
