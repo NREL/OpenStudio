@@ -204,7 +204,9 @@ namespace model {
     }
 
     double BoilerHotWater_Impl::offCycleParasiticFuelLoad() const {
-      return getDouble(OS_Boiler_HotWaterFields::OffCycleParasiticFuelLoad, true);
+      boost::optional<double> value = getDouble(OS_Boiler_HotWaterFields::OffCycleParasiticFuelLoad, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool BoilerHotWater_Impl::setFuelType(const std::string& fuelType) {
