@@ -12,8 +12,7 @@
 namespace openstudio {
 namespace model {
 
-  class CurveQuadLinear;
-  class CurveQuintLinear;
+  class Curve
 
   namespace detail {
 
