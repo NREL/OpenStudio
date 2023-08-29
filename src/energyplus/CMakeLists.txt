@@ -748,6 +748,7 @@ set(${target_name}_test_src
   Test/LifeCycleCost_GTest.cpp
   Test/LifeCycleCostParameters_GTest.cpp
   Test/Lights_GTest.cpp
+  Test/LoadProfilePlant_GTest.cpp
   Test/Luminaire_GTest.cpp
   Test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
   Test/MaterialPropertyPhaseChange_GTest.cpp
