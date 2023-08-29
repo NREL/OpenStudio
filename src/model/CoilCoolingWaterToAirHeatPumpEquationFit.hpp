@@ -28,8 +28,7 @@ namespace model {
     /** @name Constructors and Destructors */
 
     /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit with required curve objects */
-    CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model, const Curve& totalCoolingCapacityCurve,
-                                             const Curve& sensibleCoolingCapacityCurve,
+    CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model, const Curve& totalCoolingCapacityCurve, const Curve& sensibleCoolingCapacityCurve,
                                              const Curve& coolingPowerConsumptionCurve);
 
     /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit object and places it inside the model.  The coil is fully initialized with all companion objects. */

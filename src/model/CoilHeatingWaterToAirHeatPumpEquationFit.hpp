@@ -31,8 +31,7 @@ namespace model {
     //@{
 
     /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit with required curve objects */
-    CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model, const Curve& heatingCapacityCurve,
-                                             const Curve& heatingPowerConsumptionCurve);
+    CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model, const Curve& heatingCapacityCurve, const Curve& heatingPowerConsumptionCurve);
 
     CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model);
 

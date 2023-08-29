@@ -14,7 +14,8 @@ namespace model {
 
   class Curve
 
-  namespace detail {
+    namespace detail
+  {
 
     class MODEL_API CoilCoolingWaterToAirHeatPumpEquationFit_Impl : public WaterToAirComponent_Impl
     {

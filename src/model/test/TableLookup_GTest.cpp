@@ -289,7 +289,7 @@ TEST_F(ModelFixture, TableLookup_CoilWaterToAirHeatPumpEquationFit) {
     ASSERT_TRUE(ch.heatingCapacityCurve().optionalCast<CurveQuadLinear>());
     ASSERT_TRUE(ch.heatingPowerConsumptionCurve().optionalCast<CurveQuadLinear>());
   }
-  
+
   // test ctor 2
   {
     // ctor maintains backward compatibility
@@ -303,7 +303,7 @@ TEST_F(ModelFixture, TableLookup_CoilWaterToAirHeatPumpEquationFit) {
     EXPECT_EQ(sccc, cc.sensibleCoolingCapacityCurve());
     ASSERT_TRUE(cc.coolingPowerConsumptionCurve().optionalCast<CurveQuadLinear>());
     EXPECT_EQ(cpcc, cc.coolingPowerConsumptionCurve());
-    
+
     CurveQuadLinear hcc(m);
     CurveQuadLinear hpcc(m);
     CoilHeatingWaterToAirHeatPumpEquationFit ch(m, hcc, hpcc);
@@ -312,7 +312,7 @@ TEST_F(ModelFixture, TableLookup_CoilWaterToAirHeatPumpEquationFit) {
     ASSERT_TRUE(ch.heatingPowerConsumptionCurve().optionalCast<CurveQuadLinear>());
     EXPECT_EQ(hpcc, ch.heatingPowerConsumptionCurve());
   }
-  
+
   {
     // ctor can now handle table lookup curves
     TableLookup tl1(m);
@@ -334,7 +334,7 @@ TEST_F(ModelFixture, TableLookup_CoilWaterToAirHeatPumpEquationFit) {
     ASSERT_TRUE(ch.heatingPowerConsumptionCurve().optionalCast<TableLookup>());
     EXPECT_EQ(tl5, ch.heatingPowerConsumptionCurve());
   }
-  
+
   // test new setter/getter
   {
     CoilCoolingWaterToAirHeatPumpEquationFit cc(m);
@@ -345,14 +345,12 @@ TEST_F(ModelFixture, TableLookup_CoilWaterToAirHeatPumpEquationFit) {
     EXPECT_TRUE(cc.setTotalCoolingCapacityCurve(cql1));
     ASSERT_TRUE(cc.totalCoolingCapacityCurve().optionalCast<CurveQuadLinear>());
     EXPECT_EQ(cql2, cc.totalCoolingCapacityCurve());
-    
-    CurveQuintLinear cql2(m)
-    EXPECT_TRUE(cc.setSensibleCoolingCapacityCurve(cql2));
+
+    CurveQuintLinear cql2(m) EXPECT_TRUE(cc.setSensibleCoolingCapacityCurve(cql2));
     ASSERT_TRUE(cc.sensibleCoolingCapacityCurve().optionalCast<CurveQuintLinear>());
     EXPECT_EQ(cql2, cc.sensibleCoolingCapacityCurve());
-    
-    CurveQuadLinear cql3(m)
-    EXPECT_TRUE(cc.setCoolingPowerConsumptionCurve(cql3));
+
+    CurveQuadLinear cql3(m) EXPECT_TRUE(cc.setCoolingPowerConsumptionCurve(cql3));
     ASSERT_TRUE(cc.coolingPowerConsumptionCurve().optionalCast<CurveQuadLinear>());
     EXPECT_EQ(cql3, cc.coolingPowerConsumptionCurve());
 
@@ -365,20 +363,18 @@ TEST_F(ModelFixture, TableLookup_CoilWaterToAirHeatPumpEquationFit) {
     EXPECT_TRUE(ch.setHeatingPowerConsumptionCurve(cql1));
     ASSERT_TRUE(ch.heatingPowerConsumptionCurve().optionalCast<CurveQuadLinear>());
     EXPECT_EQ(cql5, ch.heatingPowerConsumptionCurve());
-    
+
     // setter can now handle table lookup curves
     TableLookup tbl1(m);
     EXPECT_TRUE(cc.setTotalCoolingCapacityCurve(tbl1));
     ASSERT_TRUE(cc.totalCoolingCapacityCurve().optionalCast<TableLookup>());
     EXPECT_EQ(tbl1, cc.totalCoolingCapacityCurve());
-    
-    TableLookup tbl1(m)
-    EXPECT_TRUE(cc.setSensibleCoolingCapacityCurve(tbl1));
+
+    TableLookup tbl1(m) EXPECT_TRUE(cc.setSensibleCoolingCapacityCurve(tbl1));
     ASSERT_TRUE(cc.sensibleCoolingCapacityCurve().optionalCast<TableLookup>());
     EXPECT_EQ(tbl1, cc.sensibleCoolingCapacityCurve());
-    
-    TableLookup tbl3(m)
-    EXPECT_TRUE(cc.setCoolingPowerConsumptionCurve(tbl3));
+
+    TableLookup tbl3(m) EXPECT_TRUE(cc.setCoolingPowerConsumptionCurve(tbl3));
     ASSERT_TRUE(cc.coolingPowerConsumptionCurve().optionalCast<TableLookup>());
     EXPECT_EQ(tbl3, cc.coolingPowerConsumptionCurve());
 

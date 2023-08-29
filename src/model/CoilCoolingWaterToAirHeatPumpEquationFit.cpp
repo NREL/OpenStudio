@@ -494,8 +494,7 @@ namespace model {
   }  // namespace detail
 
   // Ctors
-  CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model,
-                                                                                     const Curve& totalCoolingCapacityCurve,
+  CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model, const Curve& totalCoolingCapacityCurve,
                                                                                      const Curve& sensibleCoolingCapacityCurve,
                                                                                      const Curve& coolingPowerConsumptionCurve)
     : WaterToAirComponent(CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType(), model) {
