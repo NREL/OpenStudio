@@ -12,10 +12,9 @@
 namespace openstudio {
 namespace model {
 
-  class Curve
+  class Curve;
 
-    namespace detail
-  {
+  namespace detail {
 
     class MODEL_API CoilCoolingWaterToAirHeatPumpEquationFit_Impl : public WaterToAirComponent_Impl
     {
@@ -98,11 +97,11 @@ namespace model {
 
       double ratedEnteringAirWetBulbTemperature() const;
 
-      CurveQuadLinear totalCoolingCapacityCurve() const;
+      Curve totalCoolingCapacityCurve() const;
 
-      CurveQuintLinear sensibleCoolingCapacityCurve() const;
+      Curve sensibleCoolingCapacityCurve() const;
 
-      CurveQuadLinear coolingPowerConsumptionCurve() const;
+      Curve coolingPowerConsumptionCurve() const;
 
       double nominalTimeforCondensateRemovaltoBegin() const;
 
@@ -160,11 +159,11 @@ namespace model {
 
       bool setRatedEnteringAirWetBulbTemperature(double ratedEnteringAirWetBulbTemperature);
 
-      bool setTotalCoolingCapacityCurve(const CurveQuadLinear& totalCoolingCapacityCurve);
+      bool setTotalCoolingCapacityCurve(const Curve& totalCoolingCapacityCurve);
 
-      bool setSensibleCoolingCapacityCurve(const CurveQuintLinear& sensibleCoolingCapacityCurve);
+      bool setSensibleCoolingCapacityCurve(const Curve& sensibleCoolingCapacityCurve);
 
-      bool setCoolingPowerConsumptionCurve(const CurveQuadLinear& coolingPowerConsumptionCurve);
+      bool setCoolingPowerConsumptionCurve(const Curve& coolingPowerConsumptionCurve);
 
       bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
 
