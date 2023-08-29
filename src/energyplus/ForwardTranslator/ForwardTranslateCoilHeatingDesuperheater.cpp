@@ -113,7 +113,7 @@ namespace energyplus {
     // }
     // object.setString(Coil_Heating_DesuperheaterFields::TemperatureSetpointNodeName,"");
 
-    // Parasitic Electric Load
+    // On Cycle Parasitic Electric Load
     d = modelObject.parasiticElectricLoad();
     if (d) {
       object.setDouble(Coil_Heating_DesuperheaterFields::OnCycleParasiticElectricLoad, d.get());

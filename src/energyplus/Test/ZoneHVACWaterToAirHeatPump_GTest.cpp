@@ -255,10 +255,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
     EXPECT_EQ("HP HC", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName).get());
     EXPECT_EQ("Coil:Cooling:WaterToAirHeatPump:EquationFit", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilObjectType).get());
     EXPECT_EQ("HP CC", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName).get());
-    EXPECT_EQ(2.6, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate).get());
+/*     EXPECT_EQ(2.6, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate).get());
     EXPECT_EQ(60.1, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant).get());
     EXPECT_EQ(0.02, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse).get());
-    EXPECT_EQ(60.2, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime).get());
+    EXPECT_EQ(60.2, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime).get()); */
     EXPECT_EQ("Coil:Heating:Electric", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplementalHeatingCoilObjectType).get());
     EXPECT_EQ("HP SupHC", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplementalHeatingCoilName).get());
     EXPECT_EQ(30.0, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater).get());

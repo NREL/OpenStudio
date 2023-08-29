@@ -64,9 +64,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_EnvironmentalImpactFactors) {
     ASSERT_EQ(1u, idfObjs.size());
     auto idfObject = idfObjs[0];
 
-    EXPECT_EQ(0.35, idfObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency).get());
+    EXPECT_EQ(0.35, idfObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingWaterEfficiency).get());
     EXPECT_EQ(3.3, idfObject.getDouble(EnvironmentalImpactFactorsFields::DistrictCoolingCOP).get());
-    EXPECT_EQ(0.27, idfObject.getDouble(EnvironmentalImpactFactorsFields::SteamConversionEfficiency).get());
+    EXPECT_EQ(0.27, idfObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingSteamConversionEfficiency).get());
     EXPECT_EQ(79.2, idfObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromN2O).get());
     EXPECT_EQ(6.1, idfObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCH4).get());
     EXPECT_EQ(0.31, idfObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCO2).get());
@@ -87,9 +87,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_EnvironmentalImpactFactors) {
 
   OptionalWorkspaceObject _i_environmentalImpactFactors = w.addObject(IdfObject(IddObjectType::EnvironmentalImpactFactors));
   ASSERT_TRUE(_i_environmentalImpactFactors);
-  EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency, 0.35));
+  EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingWaterEfficiency, 0.35));
   EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::DistrictCoolingCOP, 3.3));
-  EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::SteamConversionEfficiency, 0.27));
+  EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingSteamConversionEfficiency, 0.27));
   EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromN2O, 79.2));
   EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCH4, 6.1));
   EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCO2, 0.31));

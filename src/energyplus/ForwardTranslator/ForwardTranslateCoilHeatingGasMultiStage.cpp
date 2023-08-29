@@ -86,7 +86,7 @@ namespace energyplus {
         eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity, value.get());
       }
 
-      // Stage1ParasiticElectricLoad
+      // Stage1OnCycleParasiticElectricLoad
       eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageOnCycleParasiticElectricLoad, stage.parasiticElectricLoad());
     }
 
