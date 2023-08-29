@@ -119,6 +119,9 @@ namespace model {
     boost::optional<std::string> getHeatRecoveryBypassControlType() const;
     bool setHeatRecoveryBypassControlType(const std::string& v);
 
+    boost::optional<std::string> getEconomizerOperationStaging() const;
+    bool setEconomizerOperationStaging(const std::string& v);
+
     boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
     AirflowNetworkOutdoorAirflow getAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack);

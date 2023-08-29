@@ -95,6 +95,9 @@ namespace model {
       OptionalString getHeatRecoveryBypassControlType() const;
       bool setHeatRecoveryBypassControlType(const std::string& v);
 
+      OptionalString getEconomizerOperationStaging() const;
+      bool setEconomizerOperationStaging(const std::string& v);
+
       CurveQuadratic getElectronicEnthalpyLimitCurve() const;
 
       ScheduleCompact getMinimumOutdoorAirSchedule() const;

@@ -374,7 +374,14 @@ namespace model {
 
     bool ControllerOutdoorAir_Impl::setHeatRecoveryBypassControlType(const std::string& v) {
       return setString(openstudio::OS_Controller_OutdoorAirFields::HeatRecoveryBypassControlType, v);
-      ;
+    }
+
+    OptionalString ControllerOutdoorAir_Impl::getEconomizerOperationStaging() const {
+      return getString(openstudio::OS_Controller_OutdoorAirFields::EconomizerOperationStaging);
+    }
+
+    bool ControllerOutdoorAir_Impl::setEconomizerOperationStaging(const std::string& v) {
+      return setString(openstudio::OS_Controller_OutdoorAirFields::EconomizerOperationStaging, v);
     }
 
     ControllerMechanicalVentilation ControllerOutdoorAir_Impl::controllerMechanicalVentilation() const {
@@ -597,6 +604,7 @@ namespace model {
     setString(OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, "");
     setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "");
     setHeatRecoveryBypassControlType("BypassWhenWithinEconomizerLimits");
+    setEconomizerOperationStaging("InterlockedWithMechanicalCooling");
 
     ControllerMechanicalVentilation controllerMechanicalVentilation(model);
     setControllerMechanicalVentilation(controllerMechanicalVentilation);
@@ -738,6 +746,13 @@ namespace model {
   }
   bool ControllerOutdoorAir::setHeatRecoveryBypassControlType(const std::string& v) {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setHeatRecoveryBypassControlType(v);
+  }
+
+  boost::optional<std::string> ControllerOutdoorAir::getEconomizerOperationStaging() const {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->getEconomizerOperationStaging();
+  }
+  bool ControllerOutdoorAir::setEconomizerOperationStaging(const std::string& v) {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerOperationStaging(v);
   }
 
   IddObjectType ControllerOutdoorAir::iddObjectType() {
