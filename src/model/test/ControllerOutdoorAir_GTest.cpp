@@ -73,7 +73,7 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   EXPECT_TRUE(controller.setHeatRecoveryBypassControlType("BypassWhenOAFlowGreaterThanMinimum"));
   ASSERT_TRUE(controller.getHeatRecoveryBypassControlType());
   EXPECT_EQ("BypassWhenOAFlowGreaterThanMinimum", controller.getHeatRecoveryBypassControlType().get());
-  
+
   // Economizer Operation Staging
   EXPECT_TRUE(controller.setEconomizerOperationStaging("EconomizerFirst"));
   ASSERT_TRUE(controller.getEconomizerOperationStaging());

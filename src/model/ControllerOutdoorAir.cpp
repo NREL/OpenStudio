@@ -723,6 +723,7 @@ namespace model {
   boost::optional<bool> ControllerOutdoorAir::getHighHumidityControl() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getHighHumidityControl();
   }
+
   bool ControllerOutdoorAir::setHighHumidityControl(bool val) {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityControl(val);
   }
@@ -730,6 +731,7 @@ namespace model {
   boost::optional<double> ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getHighHumidityOutdoorAirFlowRatio();
   }
+
   bool ControllerOutdoorAir::setHighHumidityOutdoorAirFlowRatio(double v) {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityOutdoorAirFlowRatio(v);
   }
@@ -737,6 +739,7 @@ namespace model {
   boost::optional<bool> ControllerOutdoorAir::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
   }
+
   bool ControllerOutdoorAir::setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v) {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(v);
   }
@@ -744,6 +747,7 @@ namespace model {
   boost::optional<std::string> ControllerOutdoorAir::getHeatRecoveryBypassControlType() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getHeatRecoveryBypassControlType();
   }
+
   bool ControllerOutdoorAir::setHeatRecoveryBypassControlType(const std::string& v) {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setHeatRecoveryBypassControlType(v);
   }
@@ -751,6 +755,7 @@ namespace model {
   boost::optional<std::string> ControllerOutdoorAir::getEconomizerOperationStaging() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getEconomizerOperationStaging();
   }
+
   bool ControllerOutdoorAir::setEconomizerOperationStaging(const std::string& v) {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerOperationStaging(v);
   }
