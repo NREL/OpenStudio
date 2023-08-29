@@ -2276,93 +2276,243 @@ namespace detail {
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingHeating() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Heating') and (Units = 'GJ')");
+    return districtHeatingWaterHeating() + districtHeatingSteamHeating();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingCooling() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Cooling') and (Units = 'GJ')");
+    return districtHeatingWaterCooling() + districtHeatingSteamCooling();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingInteriorLighting() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Interior Lights') and (Units = 'GJ')");
+    return return districtHeatingWaterInteriorLighting() + districtHeatingSteamInteriorLighting();;
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingExteriorLighting() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Exterior Lights') and (Units = 'GJ')");
+    return districtHeatingWaterExteriorLighting() + districtHeatingSteamExteriorLighting();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingInteriorEquipment() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+    return districtHeatingWaterInteriorEquipment() + districtHeatingSteamInteriorEquipment();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingExteriorEquipment() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+    return districtHeatingWaterExteriorEquipment() + districtHeatingSteamExteriorEquipment();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingFans() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Fans') and (Units = 'GJ')");
+    return districtHeatingWaterFans() + districtHeatingSteamFans();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingPumps() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Pumps') and (Units = 'GJ')");
+    return districtHeatingWaterPumps() + districtHeatingSteamPumps();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingHeatRejection() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+    return districtHeatingWaterHeatRejection() + districtHeatingSteamHeatRejection();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingHumidification() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Humidification') and (Units = 'GJ')");
+    return districtHeatingWaterHumidification() + districtHeatingSteamHumidification();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingHeatRecovery() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+    return districtHeatingWaterHeatRecovery() + districtHeatingSteamHeatRecovery();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingWaterSystems() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Water Systems') and (Units = 'GJ')");
+    return districtHeatingWaterWaterSystems() + districtHeatingSteamWaterSystems();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingRefrigeration() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Refrigeration') and (Units = 'GJ')");
+    return districtHeatingWaterRefrigeration() + districtHeatingSteamRefrigeration();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingGenerators() const {
-    return execAndReturnFirstDouble(
-      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Generators') and (Units = 'GJ')");
+    return districtHeatingWaterGenerators() + districtHeatingSteamGenerators();
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingTotalEndUses() const {
+    return districtHeatingWaterTotalEndUses() + districtHeatingSteamTotalEndUses();
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterHeating() const {
     return execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
-      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Total End Uses') and (Units = 'GJ')");
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Heating') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterCooling() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Cooling') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterInteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Interior Lights') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterExteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Exterior Lights') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterInteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterFans() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Fans') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterPumps() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Pumps') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterHeatRejection() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterHumidification() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Humidification') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterHeatRecovery() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterWaterSystems() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Water Systems') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterRefrigeration() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Refrigeration') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterGenerators() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Generators') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingWaterTotalEndUses() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Water') and (RowName ='Total End Uses') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamHeating() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Heating') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamCooling() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Cooling') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamInteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Interior Lights') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamExteriorLighting() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Exterior Lights') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamInteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamExteriorEquipment() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamFans() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Fans') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamPumps() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Pumps') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamHeatRejection() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamHumidification() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Humidification') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamHeatRecovery() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamWaterSystems() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Water Systems') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamRefrigeration() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Refrigeration') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamGenerators() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Generators') and (Units = 'GJ')");
+  }
+
+  OptionalDouble SqlFile_Impl::districtHeatingSteamTotalEndUses() const {
+    return execAndReturnFirstDouble(
+      "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
+      "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating Steam') and (RowName ='Total End Uses') and (Units = 'GJ')");
   }
 
   OptionalDouble SqlFile_Impl::waterHeating() const {
