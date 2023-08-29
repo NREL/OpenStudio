@@ -110,6 +110,8 @@ namespace model {
 
       std::string endUseSubcategory() const;
 
+      double offCycleParasiticFuelLoad() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -167,6 +169,8 @@ namespace model {
       void resetSizingFactor();
 
       bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+      bool setOffCycleParasiticFuelLoad(double offCycleParasiticFuelLoad);
 
       //@}
      private:

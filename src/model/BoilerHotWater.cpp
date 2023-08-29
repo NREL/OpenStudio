@@ -203,6 +203,10 @@ namespace model {
       return isEmpty(OS_Boiler_HotWaterFields::SizingFactor);
     }
 
+    double BoilerHotWater_Impl::offCycleParasiticFuelLoad() const {
+      return getDouble(OS_Boiler_HotWaterFields::OffCycleParasiticFuelLoad, true);
+    }
+
     bool BoilerHotWater_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_Boiler_HotWaterFields::FuelType, fuelType);
       return result;
@@ -366,6 +370,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool BoilerHotWater_Impl::setOffCycleParasiticFuelLoad(double offCycleParasiticFuelLoad) {
+      bool result = setDouble(OS_Boiler_HotWaterFields::OffCycleParasiticFuelLoad, offCycleParasiticFuelLoad);
+      return result;
+    }
+
     bool BoilerHotWater_Impl::addToNode(Node& node) {
       if (boost::optional<PlantLoop> plant = node.plantLoop()) {
         if (plant->supplyComponent(node.handle())) {
@@ -472,6 +481,8 @@ namespace model {
     setSizingFactor(1.0);
 
     setEndUseSubcategory("General");
+
+    setOffCycleParasiticFuelLoad(0.0);
   }
 
   IddObjectType BoilerHotWater::iddObjectType() {
@@ -574,6 +585,10 @@ namespace model {
 
   bool BoilerHotWater::isSizingFactorDefaulted() const {
     return getImpl<detail::BoilerHotWater_Impl>()->isSizingFactorDefaulted();
+  }
+
+  double BoilerHotWater::offCycleParasiticFuelLoad() const {
+    return getImpl<detail::BoilerHotWater_Impl>()->offCycleParasiticFuelLoad();
   }
 
   bool BoilerHotWater::setFuelType(const std::string& fuelType) {
@@ -686,6 +701,10 @@ namespace model {
 
   bool BoilerHotWater::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::BoilerHotWater_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  }
+
+  bool BoilerHotWater::setOffCycleParasiticFuelLoad(double offCycleParasiticFuelLoad) {
+    return getImpl<detail::BoilerHotWater_Impl>()->setOffCycleParasiticFuelLoad(offCycleParasiticFuelLoad);
   }
 
   /// @cond
