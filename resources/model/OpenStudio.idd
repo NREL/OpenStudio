@@ -13774,11 +13774,14 @@ OS:Boiler:HotWater,
        \type real
        \minimum> 0.0
        \default 1.0
-  A9 ; \field End-Use Subcategory
+  A9, \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
+  N10; \field Off Cycle Parasitic Fuel Load
+       \units W
+       \note parasitic fuel load when the boiler is not operating (i.e., standing pilot)
 
 OS:Boiler:Steam,
        \memo This boiler model is an adaptation of the empirical model from the Building
