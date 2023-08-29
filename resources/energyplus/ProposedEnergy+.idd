@@ -42114,7 +42114,7 @@ LoadProfile:Plant,
        \type object-list
        \object-list ScheduleNames
   A6 , \field Plant Loop Fluid Type
-       \required-field
+       \note required-field disabled as it has a default
        \type choice
        \key Water
        \key Steam
