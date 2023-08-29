@@ -52,6 +52,12 @@ namespace model {
 
     Schedule flowRateFractionSchedule() const;
 
+    std::string plantLoopFluidType() const;
+    
+    double degreeofSubCooling() const;
+    
+    double degreeofLoopSubCooling() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -61,6 +67,12 @@ namespace model {
     bool setPeakFlowRate(double peakFlowRate);
 
     bool setFlowRateFractionSchedule(Schedule& schedule);
+
+    bool setPlantLoopFluidType(const std::string& plantLoopFluidType);
+    
+    bool setDegreeofSubCooling(double degreeofSubCooling);
+    
+    bool setDegreeofLoopSubCooling(double degreeofLoopSubCooling);
 
     //@}
     /** @name Other */

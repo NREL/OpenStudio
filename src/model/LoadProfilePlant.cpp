@@ -100,6 +100,24 @@ namespace model {
       return value.get();
     }
 
+    std::string LoadProfilePlant_Impl::plantLoopFluidType() const {
+      boost::optional<std::string> value = getString(OS_LoadProfile_PlantFields::PlantLoopFluidType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double LoadProfilePlant_Impl::degreeofSubCooling() const {
+      boost::optional<double> value = getDouble(OS_LoadProfile_PlantFields::DegreeofSubCooling, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double LoadProfilePlant_Impl::degreeofLoopSubCooling() const {
+      boost::optional<double> value = getDouble(OS_LoadProfile_PlantFields::DegreeofLoopSubCooling, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
     bool LoadProfilePlant_Impl::setLoadSchedule(Schedule& schedule) {
       bool result = setSchedule(OS_LoadProfile_PlantFields::LoadScheduleName, "LoadProfilePlant", "Load", schedule);
       return result;
@@ -122,6 +140,23 @@ namespace model {
 
     boost::optional<Schedule> LoadProfilePlant_Impl::optionalFlowRateFractionSchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_LoadProfile_PlantFields::FlowRateFractionScheduleName);
+    }
+
+    bool LoadProfilePlant_Impl::setPlantLoopFluidType(const std::string& plantLoopFluidType) {
+      bool result = setString(OS_LoadProfile_PlantFields::PlantLoopFluidType, plantLoopFluidType);
+      return result;
+    }
+
+    bool LoadProfilePlant_Impl::setDegreeofSubCooling(double degreeofSubCooling) {
+      bool result = setDouble(OS_LoadProfile_PlantFields::DegreeofSubCooling, degreeofSubCooling);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool LoadProfilePlant_Impl::setDegreeofLoopSubCooling(double degreeofLoopSubCooling) {
+      bool result = setDouble(OS_LoadProfile_PlantFields::DegreeofLoopSubCooling, degreeofLoopSubCooling);
+      OS_ASSERT(result);
+      return result;
     }
 
     bool LoadProfilePlant_Impl::addToNode(Node& node) {
@@ -180,6 +215,12 @@ namespace model {
     setPeakFlowRate(0.002);
     ok = setFlowRateFractionSchedule(alwaysOn);
     OS_ASSERT(ok);
+    ok = setPlantLoopFluidType("Water");
+    OS_ASSERT(ok);
+    ok = setDegreeofSubCooling(5.0);
+    OS_ASSERT(ok);
+    ok = setDegreeofLoopSubCooling(20.0);
+    OS_ASSERT(ok);
   }
 
   LoadProfilePlant::LoadProfilePlant(const Model& model, Schedule& loadSchedule, Schedule& flowRateFractionSchedule)
@@ -189,6 +230,9 @@ namespace model {
     setLoadSchedule(loadSchedule);
     setPeakFlowRate(0.0);
     setFlowRateFractionSchedule(flowRateFractionSchedule);
+    setPlantLoopFluidType("Water");
+    setDegreeofSubCooling(5.0);
+    setDegreeofLoopSubCooling(20.0);
   }
 
   IddObjectType LoadProfilePlant::iddObjectType() {
@@ -207,6 +251,18 @@ namespace model {
     return getImpl<detail::LoadProfilePlant_Impl>()->flowRateFractionSchedule();
   }
 
+  std::string LoadProfilePlant::plantLoopFluidType() const {
+    return getImpl<detail::LoadProfilePlant_Impl>()->plantLoopFluidType();
+  }
+
+  double LoadProfilePlant::degreeofSubCooling() const {
+    return getImpl<detail::LoadProfilePlant_Impl>()->degreeofSubCooling();
+  }
+
+  double LoadProfilePlant::degreeofLoopSubCooling() const {
+    return getImpl<detail::LoadProfilePlant_Impl>()->degreeofLoopSubCooling();
+  }
+
   bool LoadProfilePlant::setLoadSchedule(Schedule& schedule) {
     return getImpl<detail::LoadProfilePlant_Impl>()->setLoadSchedule(schedule);
   }
@@ -217,6 +273,18 @@ namespace model {
 
   bool LoadProfilePlant::setFlowRateFractionSchedule(Schedule& schedule) {
     return getImpl<detail::LoadProfilePlant_Impl>()->setFlowRateFractionSchedule(schedule);
+  }
+
+  bool LoadProfilePlant::setPlantLoopFluidType(const std::string& plantLoopFluidType) {
+    return getImpl<detail::LoadProfilePlant_Impl>()->setPlantLoopFluidType(plantLoopFluidType);
+  }
+
+  bool LoadProfilePlant::setDegreeofSubCooling(double degreeofSubCooling) {
+    return getImpl<detail::LoadProfilePlant_Impl>()->setDegreeofSubCooling(degreeofSubCooling);
+  }
+
+  bool LoadProfilePlant::setDegreeofLoopSubCooling(double degreeofLoopSubCooling) {
+    return getImpl<detail::LoadProfilePlant_Impl>()->setDegreeofLoopSubCooling(degreeofLoopSubCooling);
   }
 
   /// @cond
