@@ -57,8 +57,11 @@ namespace openstudio {
  *
  *  Structures for storing data such as \link Vector.hpp vectors\endlink,
  *  \link Matrix.hpp matrices\endlink, and \link TimeSeries time series\endlink. The Attribute
- *  class is used for reporting measures in particular; class EndUses and the enumeration classes in
- *  DataEnums.hpp are also of interest.
+ *  class provides a way for storing data additional values attached to objects,
+ *  and is useful for reporting measures in particular. EndUses and associated enumeration
+ *  classes EndUseType, EndUseCategoryType, and EndUseFuelType are helpful to break out energy use in reporting.
+ *  FuelType, AppGFuelType, and ComponentType are useful to determine fuel and component sources
+ *  for standards code. These and other enumerations are listed in DataEnums.hpp.
  *
  *  \section filetypes_sec Filetypes
  *
