@@ -7,6 +7,8 @@
 #include "DistrictHeating_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -43,6 +45,17 @@ namespace model {
       return DistrictHeating::iddObjectType();
     }
 
+    std::vector<ScheduleTypeKey> DistrictHeating_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
+      if (std::find(b, e, OS_DistrictHeatingFields::CapacityFractionSchedule) != e) {
+        result.push_back(ScheduleTypeKey("DistrictHeating", "Capacity Fraction Schedule"));
+      }
+      return result;
+    }
+
     boost::optional<double> DistrictHeating_Impl::nominalCapacity() const {
       return getDouble(OS_DistrictHeatingFields::NominalCapacity, true);
     }
@@ -54,6 +67,25 @@ namespace model {
         result = openstudio::istringEqual(value.get(), "autosize");
       }
       return result;
+    }
+
+    boost::optional<Schedule> DistrictHeating_Impl::optionalCapacityFractionSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_DistrictHeatingFields::CapacityFractionSchedule);
+    }
+
+    Schedule DistrictHeating_Impl::capacityFractionSchedule() const {
+      boost::optional<Schedule> value = optionalCapacityFractionSchedule();
+      if (!value) {
+        // it is an error if we get here, however we don't want to crash
+        // so we hook up to global always on schedule
+        LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
+        value = this->model().alwaysOnDiscreteSchedule();
+        OS_ASSERT(value);
+        const_cast<DistrictHeating_Impl*>(this)->setCapacityFractionSchedule(*value);
+        value = optionalCapacityFractionSchedule();
+      }
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool DistrictHeating_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
@@ -86,6 +118,12 @@ namespace model {
 
       return false;
     }
+
+    bool DistrictHeating_Impl::setCapacityFractionSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_DistrictHeatingFields::CapacityFractionSchedule, "DistrictHeating", "Availability Schedule", schedule);
+      return result;
+    }
+
 
     boost::optional<double> DistrictHeating_Impl::autosizedNominalCapacity() const {
       return getAutosizedValue("Design Size Nominal Capacity", "W");
@@ -123,6 +161,10 @@ namespace model {
 
   DistrictHeating::DistrictHeating(const Model& model) : StraightComponent(DistrictHeating::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::DistrictHeating_Impl>());
+
+    auto always_on = model.alwaysOnDiscreteSchedule();
+    bool ok = setCapacityFractionSchedule(always_on);
+    OS_ASSERT(ok);
     autosizeNominalCapacity();
   }
 
@@ -139,12 +181,20 @@ namespace model {
     return getImpl<detail::DistrictHeating_Impl>()->isNominalCapacityAutosized();
   }
 
+  Schedule DistrictHeating::capacityFractionSchedule() const {
+    return getImpl<detail::DistrictHeating_Impl>()->capacityFractionSchedule();
+  }
+
   bool DistrictHeating::setNominalCapacity(double nominalCapacity) {
     return getImpl<detail::DistrictHeating_Impl>()->setNominalCapacity(nominalCapacity);
   }
 
   void DistrictHeating::autosizeNominalCapacity() {
     getImpl<detail::DistrictHeating_Impl>()->autosizeNominalCapacity();
+  }
+
+  bool DistrictHeating::setCapacityFractionSchedule(Schedule& schedule) {
+    return getImpl<detail::DistrictHeating_Impl>()->setCapacityFractionSchedule(schedule);
   }
 
   /// @cond

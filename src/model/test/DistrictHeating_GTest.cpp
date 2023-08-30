@@ -12,6 +12,10 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -28,6 +32,22 @@ TEST_F(ModelFixture, DistrictHeating_DistrictHeating) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  DistrictHeating districtHeating(m);
+
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+
+  EXPECT_EQ(alwaysOn, districtHeating.capacityFractionSchedule());
+
+  ScheduleConstant scheduleConstant(model);
+  scheduleConstant.setValue(0.5);
+  EXPECT_TRUE(districtHeating.setCapacityFractionSchedule(scheduleConstant));
+
+  Schedule schedule = districtHeating.capacityFractionSchedule();
+  boost::optional<ScheduleConstant> scheduleConstant2 = schedule.optionalCast<ScheduleConstant>();
+  ASSERT_TRUE(scheduleConstant2);
+  EXPECT_EQ((*scheduleConstant2).value(), 0.5);
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node

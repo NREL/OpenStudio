@@ -13,6 +13,8 @@ namespace openstudio {
 
 namespace model {
 
+  class Schedule;
+
   namespace detail {
 
     class DistrictHeating_Impl;
@@ -53,6 +55,8 @@ namespace model {
 
     bool isNominalCapacityAutosized() const;
 
+    Schedule capacityFractionSchedule() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -60,6 +64,8 @@ namespace model {
     bool setNominalCapacity(double nominalCapacity);
 
     void autosizeNominalCapacity();
+
+    bool setCapacityFractionSchedule(Schedule& schedule);
 
     //@}
     /** @name Other */
