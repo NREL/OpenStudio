@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "Plane.hpp"
@@ -42,13 +18,6 @@
 
 namespace openstudio {
 
-Plane::Plane(const Plane& other) : m_a(other.a()), m_b(other.b()), m_c(other.c()), m_d(other.d()) {
-  // test that normal has length 1
-  double length = m_a * m_a + m_b * m_b + m_c * m_c;
-  double tol = 0.0001;
-  OS_ASSERT(std::fabs(1.0 - length) < tol);
-}
-
 Plane::Plane(const Point3d& point, const Vector3d& outwardNormal) {
   Vector3d thisNormal(outwardNormal);
   if (!thisNormal.normalize()) {
@@ -62,21 +31,21 @@ Plane::Plane(const Point3d& point, const Vector3d& outwardNormal) {
 }
 
 double det3x3(const Matrix& m) {
-  double det = m(0, 0) * m(1, 1) * m(2, 2) + m(0, 1) * m(1, 2) * m(2, 0) + m(0, 2) * m(1, 0) * m(2, 1) - m(0, 2) * m(1, 1) * m(2, 0)
-               - m(0, 1) * m(1, 0) * m(2, 2) - m(0, 0) * m(1, 2) * m(2, 1);
+  const double det = m(0, 0) * m(1, 1) * m(2, 2) + m(0, 1) * m(1, 2) * m(2, 0) + m(0, 2) * m(1, 0) * m(2, 1) - m(0, 2) * m(1, 1) * m(2, 0)
+                     - m(0, 1) * m(1, 0) * m(2, 2) - m(0, 0) * m(1, 2) * m(2, 1);
   return det;
 }
 
 Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0), m_d(0.0) {
-  size_t N = points.size();
+  const size_t N = points.size();
   if (N < 3) {
     LOG_AND_THROW("Cannot compute plane with fewer than three points");
   } else if (N == 3) {
 
     // duplicates code in point and normal ctor, points[1] is the point and (a x b) is the normal
-    Point3d point = points[1];
-    Vector3d a = points[1] - points[0];
-    Vector3d b = points[2] - points[1];
+    const Point3d& point = points[1];
+    const Vector3d a = points[1] - points[0];
+    const Vector3d b = points[2] - points[1];
     Vector3d thisNormal = a.cross(b);
 
     if (!thisNormal.normalize()) {
@@ -91,8 +60,8 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
   } else {
 
     bool foundSolution = false;
-    double tol = 1e-8;  // 0.0001 was too big for the determinant tolerance, 1e-12 was too small
-    double maxDet = tol;
+    // 0.0001 was too big for the determinant tolerance, 1e-12 was too small
+    double maxDet = 1e-8;
 
     // solve the equation ax+by+cz+d=0 in a few different ways, keep the best one
 
@@ -111,17 +80,17 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
         b[i] = -(points[i].z() - points[0].z());
       }
 
-      Matrix AtA = prod(At, A);
-      double det = det3x3(AtA);  // always positive for A'*A
+      const Matrix AtA = prod(At, A);
+      const double det = det3x3(AtA);  // always positive for A'*A
       if (det > maxDet) {
         Matrix AtAInv(3, 3);
-        bool test = invert(AtA, AtAInv);
+        const bool test = invert(AtA, AtAInv);
         if (test) {
           maxDet = det;
           Vector x = prod(prod(AtAInv, At), b);
-          double a_c = x[0];
-          double b_c = x[1];
-          double d_c = x[2];
+          const double a_c = x[0];
+          const double b_c = x[1];
+          const double d_c = x[2];
 
           // a = a_c*c
           // b = b_c*c
@@ -153,17 +122,17 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
         b[i] = -(points[i].y() - points[0].y());
       }
 
-      Matrix AtA = prod(At, A);
-      double det = det3x3(AtA);  // always positive for A'*A
+      const Matrix AtA = prod(At, A);
+      const double det = det3x3(AtA);  // always positive for A'*A
       if (det > maxDet) {
         Matrix AtAInv(3, 3);
-        bool test = invert(AtA, AtAInv);
+        const bool test = invert(AtA, AtAInv);
         if (test) {
           maxDet = det;
           Vector x = prod(prod(AtAInv, At), b);
-          double a_b = x[0];
-          double c_b = x[1];
-          double d_b = x[2];
+          const double a_b = x[0];
+          const double c_b = x[1];
+          const double d_b = x[2];
 
           // a = a_b*b
           // c = c_b*b
@@ -195,16 +164,16 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
         b[i] = -(points[i].x() - points[0].x());
       }
 
-      Matrix AtA = prod(At, A);
-      double det = det3x3(AtA);  // always positive for A'*A
+      const Matrix AtA = prod(At, A);
+      const double det = det3x3(AtA);  // always positive for A'*A
       if (det > maxDet) {
         Matrix AtAInv(3, 3);
-        bool test = invert(AtA, AtAInv);
+        const bool test = invert(AtA, AtAInv);
         if (test) {
           Vector x = prod(prod(AtAInv, At), b);
-          double b_a = x[0];
-          double c_a = x[1];
-          double d_a = x[2];
+          const double b_a = x[0];
+          const double c_a = x[1];
+          const double d_a = x[2];
 
           // b = b_a*a
           // c = c_a*a
@@ -232,7 +201,7 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
     // this corresponds to the other solution to the sqrt
     boost::optional<Vector3d> outwardNormal = getOutwardNormal(points);
     if (outwardNormal) {
-      double thisDot = m_a * outwardNormal.get().x() + m_b * outwardNormal.get().y() + m_c * outwardNormal.get().z();
+      const double thisDot = m_a * outwardNormal.get().x() + m_b * outwardNormal.get().y() + m_c * outwardNormal.get().z();
       if (thisDot < 0) {
         m_a = -m_a;
         m_b = -m_b;
@@ -242,16 +211,16 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
     }
 
     // test that normal has length 1
-    double length = m_a * m_a + m_b * m_b + m_c * m_c;
-    tol = 0.0001;
+    const double length = m_a * m_a + m_b * m_b + m_c * m_c;
+    constexpr double tol = 0.0001;
     OS_ASSERT(std::fabs(1.0 - length) <= tol);
   }
 }
 
 Plane::Plane(double a, double b, double c, double d) : m_a(a), m_b(b), m_c(c), m_d(d) {
   // test that normal has length 1
-  double length = m_a * m_a + m_b * m_b + m_c * m_c;
-  double tol = 0.0001;
+  const double length = m_a * m_a + m_b * m_b + m_c * m_c;
+  constexpr double tol = 0.0001;
   OS_ASSERT(std::fabs(1.0 - length) <= tol);
 }
 
@@ -261,26 +230,26 @@ Vector3d Plane::outwardNormal() const {
 
 bool Plane::parallel(const Plane& other, double tol) const {
   // dot product of outward normals should be 1 or negative 1
-  double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
-  bool result = (std::fabs(thisDot) >= 1.0 - tol);
+  const double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
+  const bool result = (std::fabs(thisDot) >= 1.0 - tol);
   return result;
 }
 
 // is this plane equal to the other plane
 // true if dot product of outward normals is >= (1-tol) and abs(d1-d2) <= tol
 bool Plane::equal(const Plane& other, double tol) const {
-  double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
-  double dist = m_d - other.d();
-  bool result = (thisDot >= 1 - tol) && (std::fabs(dist) <= tol);
+  const double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
+  const double dist = m_d - other.d();
+  const bool result = (thisDot >= 1 - tol) && (std::fabs(dist) <= tol);
   return result;
 }
 
 // is this plane reverse equal to the other plane
 // true if dot product of outward normals is <= (-1+tol) and abs(d1+d2) <= tol
 bool Plane::reverseEqual(const Plane& other, double tol) const {
-  double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
-  double dist = m_d + other.d();
-  bool result = (thisDot <= -1 + tol) && (std::fabs(dist) <= tol);
+  const double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
+  const double dist = m_d + other.d();
+  const bool result = (thisDot <= -1 + tol) && (std::fabs(dist) <= tol);
   return result;
 }
 
@@ -290,17 +259,17 @@ Plane Plane::reversePlane() const {
 
 Point3d Plane::project(const Point3d& point) const {
   // http://www.9math.com/book/projection-point-plane
-  double u = point.x();
-  double v = point.y();
-  double w = point.z();
+  const double u = point.x();
+  const double v = point.y();
+  const double w = point.z();
 
-  double num = m_a * u + m_b * v + m_c * w + m_d;
-  double den = m_a * m_a + m_b * m_b + m_c * m_c;  // this should always be 1.0
-  double ratio = num / den;
+  const double num = m_a * u + m_b * v + m_c * w + m_d;
+  const double den = m_a * m_a + m_b * m_b + m_c * m_c;  // this should always be 1.0
+  const double ratio = num / den;
 
-  double x = u - m_a * ratio;
-  double y = v - m_b * ratio;
-  double z = w - m_c * ratio;
+  const double x = u - m_a * ratio;
+  const double y = v - m_b * ratio;
+  const double z = w - m_c * ratio;
 
   return {x, y, z};
 }
@@ -316,11 +285,11 @@ std::vector<Point3d> Plane::project(const std::vector<Point3d>& points) const {
 
 bool Plane::pointOnPlane(const Point3d& point, double tol) const {
   // project point to plane
-  Point3d projected = project(point);
+  const Point3d projected = project(point);
 
   // get distance
-  Vector3d diff = point - projected;
-  double dist = diff.length();
+  const Vector3d diff = point - projected;
+  const double dist = diff.length();
 
   return (dist <= tol);
 }
@@ -341,7 +310,70 @@ double Plane::d() const {
   return m_d;
 }
 
+Point3d Plane::anyPointOnPlane() const {
+
+  if (std::abs(m_d) < 0.0001) {
+    return {0.0, 0.0, 0.0};
+  }
+  //  a*x + b*y + c*z + d = 0, any point that satisfies this equation is on the plane.
+  if (std::abs(m_a) > 0.0) {
+    return {-m_d / m_a, 0.0, 0.0};
+  }
+  if (std::abs(m_b) > 0.0) {
+    return {0.0, -m_d / m_b, 0.0};
+  }
+
+  return {0.0, 0.0, -m_d / m_c};
+}
+
+boost::optional<Point3d> Plane::rayIntersection(const Point3d& rayOrigin, const Vector3d& rayDirection, bool enforceDirectionOfPlane) const {
+
+  // Any point on plane p = (x, y, z):
+  // a*x + b*y +c*z + d = 0
+  // <=> Pn · p + d = 0, where Pn is the plane outwardNormal (1)
+  //
+  // Any point on a ray, given it's origin r0 (X0, Y0, Z0) and the direction rD (Xd, Yd, Zd), satisfies this equation
+  // r(t) = r0 + t * rD, **with t > 0**  (2)
+  // (t > 0 because, directed ray, otherwise, it's a line)
+  //
+  // If there is an intersection, then this equation must be satisfied:
+  // Pn · r(t) + d = 0
+  // <=> Pn · R0 + t * (Pn·Rd) + d = 0
+  // <=> t = -((Pn · R0) + d) / (Pn · Rd),  **With t > 0**
+
+  const Point3d p0{};
+
+  auto thisOutwardNormal = outwardNormal();
+
+  const double vd = thisOutwardNormal.dot(rayDirection);
+
+  if (std::abs(vd) < 0.001) {
+    LOG(Debug, "Plane is orthogonal to Ray, no intersection possible");
+    return {};
+  }
+  if (vd > 0) {
+    if (enforceDirectionOfPlane) {
+      LOG(Debug, "Plane normal and ray are poiting in the same direction...");
+      return {};
+    } else {
+      LOG(Trace, "Plane normal and ray are poiting in the same direction...");
+    }
+  } else {
+    LOG(Trace, "Plane normal and ray are poiting in the opposite direction...");
+  }
+
+  const double v0 = -(thisOutwardNormal.dot(rayOrigin - p0) + m_d);
+  const double t = v0 / vd;
+  LOG(Trace, "vd=" << vd << ", v0=" << v0 << ", t=" << t);
+  if (t > 0.0) {
+    return rayOrigin + t * rayDirection;
+  }
+
+  return {};
+}
+
 std::ostream& operator<<(std::ostream& os, const Plane& plane) {
+  // os << fmt::format("Plane: {:g}x {:+g}y {:+g}z {:+g} = 0", plane.a(), plane.b(), plane.c(), plane.d());
   os << "[" << plane.a() << ", " << plane.b() << ", " << plane.c() << ", " << plane.d() << "]";
   return os;
 }

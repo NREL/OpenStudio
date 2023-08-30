@@ -1,6 +1,7 @@
-#(const std::vector<openstudio::path>& includeDirs, std::vector<openstudio::path> gemPathDirs,
-#                               const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,
-#                               const openstudio::path& bundleGemDirPath, const std::string& bundleWithoutGroups) {
+########################################################################################################################
+#  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+#  See also https://openstudio.net/license
+########################################################################################################################
 
 def setup_embedded_gems() #includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, use_bundler, bundleWithoutGroups)
 

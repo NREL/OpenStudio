@@ -2,7 +2,7 @@ name: buildCSharpSDK
 
 on:
   push:
-    branches: [ master, develop, actions_pypi ]
+    branches: [ master, develop, CSharp ]
     # Sequence of patterns matched against refs/tags
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
@@ -22,23 +22,21 @@ jobs:
         - name: Ubuntu
           os: ubuntu-20.04
         - name: macOS
-          os: macos-10.15
+          os: macos-11
         - name: Windows64
           os: windows-latest
         - name: Windows32
           os: windows-latest
 
     steps:
-      - name: "Checkout develop Branch"
-        uses: actions/checkout@v3
-        with:
-          ref: develop
+      - uses: actions/checkout@v3
+        # If you need to rebuild for a specific branch **after** you fixed the workflow...
+        # with:
+        #   ref: master
 
       - uses: actions/setup-python@v4
         with:
           python-version: '3.8.x'
-
-
 
       - name: Install conan
         run: |
@@ -55,15 +53,16 @@ jobs:
         shell: bash
         run: |
           set -x
+          sudo apt update && sudo apt install -y ninja-build
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release \
-                -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
-                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_CLI=OFF \
-                -DBUILD_PACKAGE=OFF \
+          cmake -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release \
+                -DBUILD_CSHARP_BINDINGS:BOOL=ON -DBUILD_NUGET_PACKAGE:BOOL=OFF \
+                -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF \
+                -DBUILD_PACKAGE:BOOL=OFF \
                 ../
-          
-          make -j2
+
+          ninja
 
 
       - name: Compile macOS
@@ -71,17 +70,18 @@ jobs:
         shell: bash
         run: |
           set -x
+          brew install ninja
           export CC=clang
           export CMAKE_OSX_ARCHITECTURES=x86_64
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release \
-                -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
-                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_CLI=OFF \
-                -DBUILD_PACKAGE=OFF \
+          cmake -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release \
+                -DBUILD_CSHARP_BINDINGS:BOOL=ON -DBUILD_NUGET_PACKAGE:BOOL=OFF \
+                -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF \
+                -DBUILD_PACKAGE:BOOL=OFF \
                 ../
 
-          make -j3
+           ninja
 
       - name: Compile Windows 64
         if: matrix.name == 'Windows64'
@@ -90,10 +90,10 @@ jobs:
           mkdir build
           cd build
           cmake -G "Visual Studio 17 2022" -A x64 ^
-                -DCMAKE_BUILD_TYPE=Release ^
-                -DBUILD_CSHARP_BINDINGS=ON  -DBUILD_NUGET_PACKAGE=OFF ^
-                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_CLI=OFF ^
-                -DBUILD_PACKAGE=OFF ^
+                -DCMAKE_BUILD_TYPE:STRING=Release ^
+                -DBUILD_CSHARP_BINDINGS:BOOL=ON  -DBUILD_NUGET_PACKAGE:BOOL=OFF ^
+                -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF ^
+                -DBUILD_PACKAGE:BOOL=OFF ^
                 ../
           cmake --build . --verbose --config Release -j 2
 
@@ -112,10 +112,10 @@ jobs:
           mkdir build
           cd build
           cmake  -G "Visual Studio 17 2022" -A Win32 ^
-                -DCMAKE_BUILD_TYPE=Release ^
-                -DBUILD_CSHARP_BINDINGS=ON  -DBUILD_NUGET_PACKAGE=OFF ^
-                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_CLI=OFF ^
-                -DBUILD_PACKAGE=OFF ^
+                -DCMAKE_BUILD_TYPE:STRING=Release ^
+                -DBUILD_CSHARP_BINDINGS:BOOL=ON  -DBUILD_NUGET_PACKAGE:BOOL=OFF ^
+                -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF ^
+                -DBUILD_PACKAGE:BOOL=OFF ^
                 ../
           cmake --build . --verbose --config Release -j 2
 
@@ -124,7 +124,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
-          
+
       - name: build nuget for Linux
         if: runner.os == 'Linux'
         run: |
@@ -147,7 +147,7 @@ jobs:
           cp ./csharp/*.targets ./build/Products
           ls ./build/Products
           dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
-          
+
 
       - name: list files
         run: |
@@ -160,20 +160,10 @@ jobs:
           echo "Listing ./build/Products/=========================================="
           ls -R ./build/Products
 
-  
       - name: Zip Build/Source Artifact
-        if: runner.os != 'Windows'
-        run: |
-          zip -r CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
-          zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
-          
-
-      - name: Zip Build/Source Artifact
-        if: runner.os == 'Windows'
         run: |
           7z a CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
           7z a CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
-          
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -204,10 +194,8 @@ jobs:
     needs: build-csharp
 
     steps:
-      - name: "Checkout Master Branch"
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      
       - name: Download CSharp_Windows32
         uses: actions/download-artifact@v3
         with:
@@ -222,11 +210,11 @@ jobs:
         run: |
           Expand-Archive CSharp_Windows32.zip -DestinationPath x86
           Expand-Archive CSharp_Windows64.zip -DestinationPath x64
-          
+
           Expand-Archive x86\*.nupkg -DestinationPath x86\package
           Expand-Archive x64\*.nupkg -DestinationPath x64\package
           ls -R
-          
+
       - name: merge x86 into x64
         run: |
           cp x64\package x64x86 -r
@@ -238,7 +226,7 @@ jobs:
           mkdir x64x86\build\net45\x86
 
           mv x64x86\build\netstandard2.0\*.dll x64x86\build\netstandard2.0\x64
-          mv x64x86\build\net45\*.dll x64x86\build\net45\x64 
+          mv x64x86\build\net45\*.dll x64x86\build\net45\x64
 
           mv x86\package\lib\netstandard2.0\* x64x86\build\netstandard2.0\x86
           mv x86\package\lib\net45\* x64x86\build\net45\x86
@@ -249,7 +237,7 @@ jobs:
           cd x64x86
           ls -R
 
-      - name: make a new nupkg for Windows 
+      - name: make a new nupkg for Windows
         run: |
           $VERSION = (Get-Item x64x86\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
           echo $VERSION
@@ -276,9 +264,9 @@ jobs:
           cp *.nupkg csharp/examples/OpenStudio.Tests/
           cd csharp/examples/OpenStudio.Tests/
           ls
-          
+
           dotnet remove OpenStudio.Tests.csproj package OpenStudio
-          dotnet remove OpenStudio.Tests.x86.csproj package OpenStudio  
+          dotnet remove OpenStudio.Tests.x86.csproj package OpenStudio
           dotnet restore OpenStudio.Tests.csproj
           dotnet restore OpenStudio.Tests.x86.csproj
           dotnet add OpenStudio.Tests.csproj package OpenStudio -s "." -v $VERSION
@@ -305,8 +293,7 @@ jobs:
     needs: build-csharp
 
     steps:
-      - name: "Checkout Master Branch"
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Download nuget
         uses: actions/download-artifact@v3
@@ -315,19 +302,15 @@ jobs:
 
       - name: unzip artifacts
         run: |
-          unzip CSharp_${{ matrix.name }}.zip -d ./nuget
-          mv ./nuget/build/Products/csharp/Release/*.nupkg ./nuget/
-          ls -R
-          
+          7z e CSharp_${{ matrix.name }}.zip -o./nuget
+          ls nuget csharp/*
+
       - name: Tests
         run: |
           cd csharp/examples/OpenStudio.Tests/
-          dotnet remove OpenStudio.Tests.csproj package OpenStudio 
+          dotnet remove OpenStudio.Tests.csproj package OpenStudio
           dotnet restore OpenStudio.Tests.csproj
           dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../nuget"
 
           dotnet clean OpenStudio.Tests.csproj
           dotnet test OpenStudio.Tests.csproj --arch x64
-
-        
-          

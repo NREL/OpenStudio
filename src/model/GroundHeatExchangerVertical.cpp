@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "GroundHeatExchangerVertical.hpp"
@@ -33,6 +9,8 @@
 #include "Node_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
+#include "SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -135,6 +113,14 @@ namespace model {
 
     bool GroundHeatExchangerVertical_Impl::isGFunctionReferenceRatioDefaulted() const {
       return isEmpty(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio);
+    }
+
+    ModelObject GroundHeatExchangerVertical_Impl::undisturbedGroundTemperatureModel() const {
+      boost::optional<ModelObject> modelObject;
+      modelObject =
+        getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_GroundHeatExchanger_VerticalFields::UndisturbedGroundTemperatureModel);
+      OS_ASSERT(modelObject);
+      return modelObject.get();
     }
 
     bool GroundHeatExchangerVertical_Impl::setNumberofBoreHoles(boost::optional<int> numberofBoreHoles) {
@@ -343,6 +329,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool GroundHeatExchangerVertical_Impl::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
+      bool result = setPointer(OS_GroundHeatExchanger_VerticalFields::UndisturbedGroundTemperatureModel, undisturbedGroundTemperatureModel.handle());
+      return result;
+    }
+
     unsigned GroundHeatExchangerVertical_Impl::inletPort() const {
       return OS_GroundHeatExchanger_VerticalFields::InletNodeName;
     }
@@ -500,6 +491,76 @@ namespace model {
     addGFunction(2.028, 71.361);
     addGFunction(2.275, 71.79);
     addGFunction(3.003, 72.511);
+
+    SiteGroundTemperatureUndisturbedKusudaAchenbach undisturbedGroundTemperatureModel(model);
+    undisturbedGroundTemperatureModel.setSoilThermalConductivity(groundThermalConductivity().get());
+    undisturbedGroundTemperatureModel.setSoilDensity(920.0);
+    undisturbedGroundTemperatureModel.setSoilSpecificHeat(groundThermalHeatCapacity().get() / 920.0);
+    undisturbedGroundTemperatureModel.setAverageSoilSurfaceTemperature(groundTemperature().get());
+    undisturbedGroundTemperatureModel.setAverageAmplitudeofSurfaceTemperature(3.2);
+    undisturbedGroundTemperatureModel.setPhaseShiftofMinimumSurfaceTemperature(8.0);
+    setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
+  }
+
+  GroundHeatExchangerVertical::GroundHeatExchangerVertical(const Model& model, const ModelObject& undisturbedGroundTemperatureModel)
+    : StraightComponent(GroundHeatExchangerVertical::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::GroundHeatExchangerVertical_Impl>());
+
+    bool ok = setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Undisturbed Ground Temperature Model to "
+                                     << undisturbedGroundTemperatureModel.briefDescription() << ".");
+    }
+    setNumberofBoreHoles(120);
+    setBoreHoleLength(76.2);
+    setBoreHoleRadius(0.635080E-01);
+    setGroundThermalConductivity(0.692626);
+    setGroundThermalHeatCapacity(0.234700E+07);
+    setGroundTemperature(13.375);
+    setDesignFlowRate(0.0033);
+    setGroutThermalConductivity(0.692626);
+    setPipeThermalConductivity(0.391312);
+    setPipeOutDiameter(2.66667E-02);
+    setUTubeDistance(2.53977E-02);
+    setPipeThickness(2.41285E-03);
+    setMaximumLengthofSimulation(2);
+    setGFunctionReferenceRatio(0.0005);
+    addGFunction(-15.2996, -0.348322);
+    addGFunction(-14.201, 0.022208);
+    addGFunction(-13.2202, 0.412345);
+    addGFunction(-12.2086, 0.867498);
+    addGFunction(-11.1888, 1.357839);
+    addGFunction(-10.1816, 1.852024);
+    addGFunction(-9.1815, 2.345656);
+    addGFunction(-8.6809, 2.593958);
+    addGFunction(-8.5, 2.679);
+    addGFunction(-7.8, 3.023);
+    addGFunction(-7.2, 3.32);
+    addGFunction(-6.5, 3.681);
+    addGFunction(-5.9, 4.071);
+    addGFunction(-5.2, 4.828);
+    addGFunction(-4.5, 6.253);
+    addGFunction(-3.963, 7.894);
+    addGFunction(-3.27, 11.82);
+    addGFunction(-2.864, 15.117);
+    addGFunction(-2.577, 18.006);
+    addGFunction(-2.171, 22.887);
+    addGFunction(-1.884, 26.924);
+    addGFunction(-1.191, 38.004);
+    addGFunction(-0.497, 49.919);
+    addGFunction(-0.274, 53.407);
+    addGFunction(-0.051, 56.632);
+    addGFunction(0.196, 59.825);
+    addGFunction(0.419, 62.349);
+    addGFunction(0.642, 64.524);
+    addGFunction(0.873, 66.412);
+    addGFunction(1.112, 67.993);
+    addGFunction(1.335, 69.162);
+    addGFunction(1.679, 70.476);
+    addGFunction(2.028, 71.361);
+    addGFunction(2.275, 71.79);
+    addGFunction(3.003, 72.511);
   }
 
   IddObjectType GroundHeatExchangerVertical::iddObjectType() {
@@ -589,6 +650,10 @@ namespace model {
 
   bool GroundHeatExchangerVertical::isGFunctionReferenceRatioDefaulted() const {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->isGFunctionReferenceRatioDefaulted();
+  }
+
+  ModelObject GroundHeatExchangerVertical::undisturbedGroundTemperatureModel() const {
+    return getImpl<detail::GroundHeatExchangerVertical_Impl>()->undisturbedGroundTemperatureModel();
   }
 
   bool GroundHeatExchangerVertical::setNumberofBoreHoles(int numberofBoreHoles) {
@@ -697,6 +762,10 @@ namespace model {
 
   void GroundHeatExchangerVertical::resetGFunctionReferenceRatio() {
     getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetGFunctionReferenceRatio();
+  }
+
+  bool GroundHeatExchangerVertical::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
+    return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
   }
 
   /// @cond

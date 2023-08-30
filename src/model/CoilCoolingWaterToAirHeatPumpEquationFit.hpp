@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #ifndef MODEL_COILCOOLINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP
@@ -107,28 +83,28 @@ namespace model {
 
     CurveQuadLinear totalCoolingCapacityCurve() const;
 
-    OS_DEPRECATED double totalCoolingCapacityCoefficient1() const;
-    OS_DEPRECATED double totalCoolingCapacityCoefficient2() const;
-    OS_DEPRECATED double totalCoolingCapacityCoefficient3() const;
-    OS_DEPRECATED double totalCoolingCapacityCoefficient4() const;
-    OS_DEPRECATED double totalCoolingCapacityCoefficient5() const;
+    OS_DEPRECATED(3, 2, 0) double totalCoolingCapacityCoefficient1() const;
+    OS_DEPRECATED(3, 2, 0) double totalCoolingCapacityCoefficient2() const;
+    OS_DEPRECATED(3, 2, 0) double totalCoolingCapacityCoefficient3() const;
+    OS_DEPRECATED(3, 2, 0) double totalCoolingCapacityCoefficient4() const;
+    OS_DEPRECATED(3, 2, 0) double totalCoolingCapacityCoefficient5() const;
 
     CurveQuintLinear sensibleCoolingCapacityCurve() const;
 
-    OS_DEPRECATED double sensibleCoolingCapacityCoefficient1() const;
-    OS_DEPRECATED double sensibleCoolingCapacityCoefficient2() const;
-    OS_DEPRECATED double sensibleCoolingCapacityCoefficient3() const;
-    OS_DEPRECATED double sensibleCoolingCapacityCoefficient4() const;
-    OS_DEPRECATED double sensibleCoolingCapacityCoefficient5() const;
-    OS_DEPRECATED double sensibleCoolingCapacityCoefficient6() const;
+    OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient1() const;
+    OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient2() const;
+    OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient3() const;
+    OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient4() const;
+    OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient5() const;
+    OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient6() const;
 
     CurveQuadLinear coolingPowerConsumptionCurve() const;
 
-    OS_DEPRECATED double coolingPowerConsumptionCoefficient1() const;
-    OS_DEPRECATED double coolingPowerConsumptionCoefficient2() const;
-    OS_DEPRECATED double coolingPowerConsumptionCoefficient3() const;
-    OS_DEPRECATED double coolingPowerConsumptionCoefficient4() const;
-    OS_DEPRECATED double coolingPowerConsumptionCoefficient5() const;
+    OS_DEPRECATED(3, 2, 0) double coolingPowerConsumptionCoefficient1() const;
+    OS_DEPRECATED(3, 2, 0) double coolingPowerConsumptionCoefficient2() const;
+    OS_DEPRECATED(3, 2, 0) double coolingPowerConsumptionCoefficient3() const;
+    OS_DEPRECATED(3, 2, 0) double coolingPowerConsumptionCoefficient4() const;
+    OS_DEPRECATED(3, 2, 0) double coolingPowerConsumptionCoefficient5() const;
 
     double nominalTimeforCondensateRemovaltoBegin() const;
 
@@ -174,28 +150,28 @@ namespace model {
 
     bool setTotalCoolingCapacityCurve(const CurveQuadLinear& totalCoolingCapacityCurve);
 
-    OS_DEPRECATED bool setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1);
-    OS_DEPRECATED bool setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2);
-    OS_DEPRECATED bool setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3);
-    OS_DEPRECATED bool setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4);
-    OS_DEPRECATED bool setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5);
+    OS_DEPRECATED(3, 2, 0) bool setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1);
+    OS_DEPRECATED(3, 2, 0) bool setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2);
+    OS_DEPRECATED(3, 2, 0) bool setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3);
+    OS_DEPRECATED(3, 2, 0) bool setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4);
+    OS_DEPRECATED(3, 2, 0) bool setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5);
 
     bool setSensibleCoolingCapacityCurve(const CurveQuintLinear& sensibleCoolingCapacityCurve);
 
-    OS_DEPRECATED bool setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1);
-    OS_DEPRECATED bool setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2);
-    OS_DEPRECATED bool setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3);
-    OS_DEPRECATED bool setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4);
-    OS_DEPRECATED bool setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5);
-    OS_DEPRECATED bool setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6);
+    OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1);
+    OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2);
+    OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3);
+    OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4);
+    OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5);
+    OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6);
 
     bool setCoolingPowerConsumptionCurve(const CurveQuadLinear& coolingPowerConsumptionCurve);
 
-    OS_DEPRECATED bool setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1);
-    OS_DEPRECATED bool setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2);
-    OS_DEPRECATED bool setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3);
-    OS_DEPRECATED bool setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4);
-    OS_DEPRECATED bool setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4);
+    OS_DEPRECATED(3, 2, 0) bool setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5);
 
     bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
 

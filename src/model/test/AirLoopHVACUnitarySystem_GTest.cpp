@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
@@ -650,4 +626,173 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_cloneAirLoopHVAC_Nodes) {
   EXPECT_EQ(unitaryClone, aClone.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem)[0]);
   ASSERT_EQ(1u, a.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem).size());
   EXPECT_EQ(unitary, a.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem)[0]);
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_SupplyAirFlowRateMethodDuringOperation_Cooling) {
+  // Test for #4695 - AirLoopHVACUnitarySystem: Supply Air Flow Rate Method During <XXX> Operation should be set via related setters/autosize
+
+  Model m;
+  AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
+
+  EXPECT_EQ("None", unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringCoolingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringCoolingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaDuringCoolingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignCoolingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation());
+
+  // Setting a coil changes things
+  CoilCoolingDXSingleSpeed cc(m);
+  EXPECT_TRUE(unitary.setCoolingCoil(cc));
+  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_TRUE(unitary.isSupplyAirFlowRateDuringCoolingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringCoolingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaDuringCoolingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignCoolingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation());
+
+  unitary.resetCoolingCoil();
+  EXPECT_EQ("None", unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringCoolingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringCoolingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaDuringCoolingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignCoolingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation());
+  // Put it back
+  EXPECT_TRUE(unitary.setCoolingCoil(cc));
+
+  // SupplyAirFlowRate
+  EXPECT_TRUE(unitary.setSupplyAirFlowRateDuringCoolingOperation(1.0));
+  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringCoolingOperationAutosized());
+  ASSERT_TRUE(unitary.supplyAirFlowRateDuringCoolingOperation());
+  EXPECT_EQ(1.0, unitary.supplyAirFlowRateDuringCoolingOperation().get());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaDuringCoolingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignCoolingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation());
+
+  // FlowPerFloorArea
+  EXPECT_TRUE(unitary.setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(1.0));
+  EXPECT_EQ("FlowPerFloorArea", unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringCoolingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringCoolingOperation());
+  ASSERT_TRUE(unitary.supplyAirFlowRatePerFloorAreaDuringCoolingOperation());
+  EXPECT_EQ(1.0, unitary.supplyAirFlowRatePerFloorAreaDuringCoolingOperation().get());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignCoolingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation());
+
+  // FractionOfAutosizedCoolingValue
+  EXPECT_TRUE(unitary.setFractionofAutosizedDesignCoolingSupplyAirFlowRate(1.0));
+  EXPECT_EQ("FractionOfAutosizedCoolingValue", unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringCoolingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringCoolingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaDuringCoolingOperation());
+  ASSERT_TRUE(unitary.fractionofAutosizedDesignCoolingSupplyAirFlowRate());
+  EXPECT_EQ(1.0, unitary.fractionofAutosizedDesignCoolingSupplyAirFlowRate().get());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation());
+
+  // FlowPerCoolingCapacity
+  EXPECT_TRUE(unitary.setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation(1.0));
+  EXPECT_EQ("FlowPerCoolingCapacity", unitary.supplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringCoolingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringCoolingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaDuringCoolingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignCoolingSupplyAirFlowRate());
+  ASSERT_TRUE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation());
+  EXPECT_EQ(1.0, unitary.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation().get());
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_SupplyAirFlowRateMethodDuringOperation_Heating) {
+  // Test for #4695 - AirLoopHVACUnitarySystem: Supply Air Flow Rate Method During <XXX> Operation should be set via related setters/autosize
+
+  Model m;
+  AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
+
+  EXPECT_EQ("None", unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringHeatingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringHeatingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaduringHeatingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignHeatingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation());
+
+  // Setting a coil changes things
+  CoilHeatingDXSingleSpeed cc(m);
+  EXPECT_TRUE(unitary.setHeatingCoil(cc));
+  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_TRUE(unitary.isSupplyAirFlowRateDuringHeatingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringHeatingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaduringHeatingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignHeatingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation());
+
+  unitary.resetHeatingCoil();
+  EXPECT_EQ("None", unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringHeatingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringHeatingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaduringHeatingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignHeatingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation());
+  // Put it back
+  EXPECT_TRUE(unitary.setHeatingCoil(cc));
+
+  // SupplyAirFlowRate
+  EXPECT_TRUE(unitary.setSupplyAirFlowRateDuringHeatingOperation(1.0));
+  EXPECT_EQ("SupplyAirFlowRate", unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringHeatingOperationAutosized());
+  ASSERT_TRUE(unitary.supplyAirFlowRateDuringHeatingOperation());
+  EXPECT_EQ(1.0, unitary.supplyAirFlowRateDuringHeatingOperation().get());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaduringHeatingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignHeatingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation());
+
+  // FlowPerFloorArea
+  EXPECT_TRUE(unitary.setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(1.0));
+  EXPECT_EQ("FlowPerFloorArea", unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringHeatingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringHeatingOperation());
+  ASSERT_TRUE(unitary.supplyAirFlowRatePerFloorAreaduringHeatingOperation());
+  EXPECT_EQ(1.0, unitary.supplyAirFlowRatePerFloorAreaduringHeatingOperation().get());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignHeatingSupplyAirFlowRate());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation());
+
+  // FractionOfAutosizedHeatingValue
+  EXPECT_TRUE(unitary.setFractionofAutosizedDesignHeatingSupplyAirFlowRate(1.0));
+  EXPECT_EQ("FractionOfAutosizedHeatingValue", unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringHeatingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringHeatingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaduringHeatingOperation());
+  ASSERT_TRUE(unitary.fractionofAutosizedDesignHeatingSupplyAirFlowRate());
+  EXPECT_EQ(1.0, unitary.fractionofAutosizedDesignHeatingSupplyAirFlowRate().get());
+  EXPECT_FALSE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation());
+
+  // FlowPerHeatingCapacity
+  EXPECT_TRUE(unitary.setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation(1.0));
+  EXPECT_EQ("FlowPerHeatingCapacity", unitary.supplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_FALSE(unitary.isSupplyAirFlowRateDuringHeatingOperationAutosized());
+  EXPECT_FALSE(unitary.supplyAirFlowRateDuringHeatingOperation());
+  EXPECT_FALSE(unitary.supplyAirFlowRatePerFloorAreaduringHeatingOperation());
+  EXPECT_FALSE(unitary.fractionofAutosizedDesignHeatingSupplyAirFlowRate());
+  ASSERT_TRUE(unitary.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation());
+  EXPECT_EQ(1.0, unitary.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation().get());
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_needToRemoveDeprecated) {
+  Model m;
+  AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
+
+  EXPECT_NO_THROW(unitary.setSupplyAirFlowRateMethodDuringCoolingOperation(""));
+  EXPECT_NO_THROW(unitary.resetSupplyAirFlowRateMethodDuringCoolingOperation());
+  EXPECT_NO_THROW(unitary.resetSupplyAirFlowRateDuringCoolingOperation());
+  EXPECT_NO_THROW(unitary.resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation());
+  EXPECT_NO_THROW(unitary.resetFractionofAutosizedDesignCoolingSupplyAirFlowRate());
+  EXPECT_NO_THROW(unitary.resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation());
+
+  EXPECT_NO_THROW(unitary.setSupplyAirFlowRateMethodDuringHeatingOperation(""));
+  EXPECT_NO_THROW(unitary.resetSupplyAirFlowRateMethodDuringHeatingOperation());
+  EXPECT_NO_THROW(unitary.resetSupplyAirFlowRateDuringHeatingOperation());
+  EXPECT_NO_THROW(unitary.resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation());
+  EXPECT_NO_THROW(unitary.resetFractionofAutosizedDesignHeatingSupplyAirFlowRate());
+  EXPECT_NO_THROW(unitary.resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation());
 }

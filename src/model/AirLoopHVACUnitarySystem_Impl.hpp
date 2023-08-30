@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #ifndef MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP
@@ -108,12 +84,14 @@ namespace model {
 
       boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
+      bool hasHeatingCoil() const;  // For speed
       boost::optional<HVACComponent> heatingCoil() const;
 
       double dXHeatingCoilSizingRatio() const;
 
       bool isDXHeatingCoilSizingRatioDefaulted() const;
 
+      bool hasCoolingCoil() const;  // For speed
       boost::optional<HVACComponent> coolingCoil() const;
 
       bool useDOASDXCoolingCoil() const;
@@ -132,7 +110,7 @@ namespace model {
 
       boost::optional<HVACComponent> supplementalHeatingCoil() const;
 
-      boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation() const;
+      std::string supplyAirFlowRateMethodDuringCoolingOperation() const;
 
       boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
 
@@ -144,7 +122,7 @@ namespace model {
 
       boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation() const;
 
-      boost::optional<std::string> supplyAirFlowRateMethodDuringHeatingOperation() const;
+      std::string supplyAirFlowRateMethodDuringHeatingOperation() const;
 
       boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
 
@@ -268,7 +246,7 @@ namespace model {
 
       void resetSupplyAirFanOperatingModeSchedule();
 
-      bool setHeatingCoil(const boost::optional<HVACComponent>& heatingCoil);
+      bool setHeatingCoil(const HVACComponent& heatingCoil);
 
       void resetHeatingCoil();
 
@@ -276,7 +254,7 @@ namespace model {
 
       void resetDXHeatingCoilSizingRatio();
 
-      bool setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil);
+      bool setCoolingCoil(const HVACComponent& coolingCoil);
 
       void resetCoolingCoil();
 
@@ -298,49 +276,45 @@ namespace model {
 
       void resetSupplementalHeatingCoil();
 
-      bool setSupplyAirFlowRateMethodDuringCoolingOperation(boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation);
+      bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
 
-      void resetSupplyAirFlowRateMethodDuringCoolingOperation();
-
-      bool setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation);
+      bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
       void resetSupplyAirFlowRateDuringCoolingOperation();
 
       void autosizeSupplyAirFlowRateDuringCoolingOperation();
 
-      bool setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(boost::optional<double> supplyAirFlowRatePerFloorAreaDuringCoolingOperation);
+      bool setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(double supplyAirFlowRatePerFloorAreaDuringCoolingOperation);
 
       void resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
 
-      bool setFractionofAutosizedDesignCoolingSupplyAirFlowRate(boost::optional<double> fractionofAutosizedDesignCoolingSupplyAirFlowRate);
+      bool setFractionofAutosizedDesignCoolingSupplyAirFlowRate(double fractionofAutosizedDesignCoolingSupplyAirFlowRate);
 
       void resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
 
-      bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation(
-        boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation);
+      bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation);
 
       void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
 
-      bool setSupplyAirFlowRateMethodDuringHeatingOperation(boost::optional<std::string> supplyAirFlowRateMethodDuringHeatingOperation);
+      bool setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation);
 
       void resetSupplyAirFlowRateMethodDuringHeatingOperation();
 
-      bool setSupplyAirFlowRateDuringHeatingOperation(boost::optional<double> supplyAirFlowRateDuringHeatingOperation);
+      bool setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation);
 
       void resetSupplyAirFlowRateDuringHeatingOperation();
 
       void autosizeSupplyAirFlowRateDuringHeatingOperation();
 
-      bool setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(boost::optional<double> supplyAirFlowRatePerFloorAreaduringHeatingOperation);
+      bool setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(double supplyAirFlowRatePerFloorAreaduringHeatingOperation);
 
       void resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
 
-      bool setFractionofAutosizedDesignHeatingSupplyAirFlowRate(boost::optional<double> fractionofAutosizedDesignHeatingSupplyAirFlowRate);
+      bool setFractionofAutosizedDesignHeatingSupplyAirFlowRate(double fractionofAutosizedDesignHeatingSupplyAirFlowRate);
 
       void resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
 
-      bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation(
-        boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation);
+      bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation);
 
       void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
 

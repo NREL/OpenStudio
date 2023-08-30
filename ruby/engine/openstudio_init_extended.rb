@@ -1,7 +1,7 @@
-# This is called from inside of Kernel::require
-# and the autoload constants still exist at this point
-# so we manually remove them here to avoid conflicts
-# with the modules registered in init_rest_of_openstudio
+########################################################################################################################
+#  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+#  See also https://openstudio.net/license
+########################################################################################################################
 
 ::OpenStudio.module_eval { remove_const(:Airflow) }
 ::OpenStudio.module_eval { remove_const(:EnergyPlus) }

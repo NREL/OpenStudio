@@ -1,3 +1,8 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
+***********************************************************************************************************************/
+
 #ifndef WORKFLOW_UTIL_TIMER_HPP
 #define WORKFLOW_UTIL_TIMER_HPP
 

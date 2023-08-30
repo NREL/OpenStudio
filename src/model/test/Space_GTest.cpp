@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
@@ -64,17 +40,27 @@
 
 #include "../../utilities/core/UUID.hpp"
 
-#include "../../utilities/geometry/Point3d.hpp"
-#include "../../utilities/geometry/Vector3d.hpp"
-#include "../../utilities/geometry/Transformation.hpp"
-#include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/geometry/BoundingBox.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Polyhedron.hpp"
+#include "../../utilities/geometry/StandardShapes.hpp"
+#include "../../utilities/geometry/Transformation.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
+
 #include "../../utilities/idf/WorkspaceObjectWatcher.hpp"
 #include "../../utilities/core/Compare.hpp"
 #include "../../osversion/VersionTranslator.hpp"
 #include "../../utilities/geometry/Intersection.hpp"
 
+#include <algorithm>
 #include <iostream>
+#include <iterator>
+#include <string>
+#include <vector>
+
+#include <fmt/format.h>
+#include <fmt/ranges.h>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -3179,7 +3165,7 @@ TEST_F(ModelFixture, Space_Polyhedron_Volume) {
   // This is a 30x10x0.3 base, with a rectangle triangle on top of 30x10x10
   //                       ▲ z
   //                       │
-  //                      x├─ 10.0
+  //                      x├─ 10.3
   //                    x  │
   //                  x    │
   //                x      │
@@ -3195,7 +3181,7 @@ TEST_F(ModelFixture, Space_Polyhedron_Volume) {
   south2.setName("1-SOUTH-2");
   south2.setSpace(s);
 
-  // Putting extra vertices here on purpose to show that the Space::volume will miscalculate due to averaging foor and ceiling heights
+  // Putting extra vertices here on purpose to show that the Space::volume was miscalculating due to averaging foor and ceiling heights
   Surface roof({{+30.0, +0.0, +10.3}, {+30.0, +10.0, +0.3}, {+0.0, +10.0, +0.3}, {+0.0, +0.0, +10.3}, {+10.0, +0.0, +10.3}, {+20.0, +0.0, +10.3}}, m);
   roof.setName("ROOF");
   roof.setSpace(s);
@@ -3220,10 +3206,508 @@ TEST_F(ModelFixture, Space_Polyhedron_Volume) {
   floor.setName("FLOOR");
   floor.setSpace(s);
 
+  auto wrongOrientations = s.findSurfacesWithIncorrectOrientation();
+  EXPECT_EQ(0, wrongOrientations.size()) << [&wrongOrientations]() {
+    std::vector<std::string> surfaceNames;
+    surfaceNames.reserve(wrongOrientations.size());
+    std::transform(wrongOrientations.cbegin(), wrongOrientations.cend(), std::back_inserter(surfaceNames),
+                   [](const auto& sf) { return sf.nameString(); });
+    return fmt::format("surfaceNames={}", surfaceNames);
+  }();
+  EXPECT_TRUE(s.areAllSurfacesCorrectlyOriented());
   EXPECT_TRUE(s.isEnclosedVolume());
 
-  double volume = 30.0 * 10.0 * 0.3 + 30.0 * 10.0 * 10.0 / 2.0;
+  constexpr double volume = (30.0 * 10.0 * 0.3) + (30.0 * 10.0 * 10.0) / 2.0;
   EXPECT_EQ(volume, s.volume());
 }
 
-//#  endif // SURFACESHATTERING
+TEST_F(ModelFixture, Issue_4837) {
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/4837_SpaceVolume.osm");
+  model::OptionalModel model_ = translator.loadModel(modelPath);
+  ASSERT_TRUE(model_);
+  Model model = model_.get();
+
+  {
+    auto space = model.getConcreteModelObjectByName<Space>("Zone1 Office").get();
+    EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+    EXPECT_TRUE(space.isEnclosedVolume());
+    EXPECT_NEAR(1010.76, space.volume(), 0.1);
+  }
+
+  {
+    auto surface = model.getConcreteModelObjectByName<Surface>("Bulk Storage Front Wall Reversed").get();
+    auto vertices = surface.vertices();
+    auto outNormal = surface.outwardNormal();
+    EXPECT_EQ(openstudio::Vector3d(0, -1, 0), outNormal);
+
+    auto space = model.getConcreteModelObjectByName<Space>("Zone2 Fine Storage").get();
+    auto wrongOrientations = space.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+    EXPECT_EQ("Bulk Storage Front Wall Reversed", wrongOrientations.front().nameString());
+    EXPECT_FALSE(space.areAllSurfacesCorrectlyOriented());
+    EXPECT_TRUE(space.fixSurfacesWithIncorrectOrientation());
+    EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+    EXPECT_TRUE(space.isEnclosedVolume());
+    EXPECT_NEAR(10880.57, space.volume(), 0.1);
+
+    auto newVertices = surface.vertices();
+    EXPECT_NE(vertices, newVertices);
+    auto newOutNormal = surface.outwardNormal();
+    EXPECT_NE(outNormal, newOutNormal);
+    EXPECT_EQ(openstudio::Vector3d(0, 1, 0), newOutNormal);
+  }
+
+  {
+    auto surface = model.getConcreteModelObjectByName<Surface>("Bulk Storage Front Wall").get();
+    auto vertices = surface.vertices();
+    auto outNormal = surface.outwardNormal();
+    EXPECT_EQ(openstudio::Vector3d(0, 1, 0), outNormal);
+
+    auto space = model.getConcreteModelObjectByName<Space>("Zone3 Bulk Storage").get();
+    EXPECT_FALSE(space.areAllSurfacesCorrectlyOriented());
+    auto wrongOrientations = space.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+    EXPECT_EQ(surface.nameString(), wrongOrientations.front().nameString());
+    EXPECT_TRUE(space.fixSurfacesWithIncorrectOrientation());
+    EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+    EXPECT_TRUE(space.isEnclosedVolume());
+    EXPECT_NEAR(27350.0, space.volume(), 0.1);
+
+    auto newVertices = surface.vertices();
+    EXPECT_NE(vertices, newVertices);
+    auto newOutNormal = surface.outwardNormal();
+    EXPECT_NE(outNormal, newOutNormal);
+    EXPECT_EQ(openstudio::Vector3d(0, -1, 0), newOutNormal);
+  }
+}
+
+TEST_F(ModelFixture, Space_4837_SpaceVolume_BoxEnclosed) {
+
+  Model m;
+
+  constexpr double width = 10.0;
+  constexpr double height = 3.6;
+  constexpr double spaceFloorArea = width * width;
+  constexpr double spaceVolume = spaceFloorArea * height;
+
+  //    y (=North)
+  //   ▲
+  //   │
+  // 10o────────o
+  //   │        │
+  //   │        │
+  //   │ Space 1│
+  //   │        │
+  //   o────────o───► x
+  //  0        10
+
+  // Counterclockwise points, Upper Left Corner convention
+  std::vector<Point3d> floorPointsSpace1{
+    {width, width, 0.0},
+    {width, 0.0, 0.0},
+    {0.0, 0.0, 0.0},
+    {0.0, width, 0.0},
+  };
+
+  auto space1 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+
+  // Grab a wall, flip it so it's outward normal points towards the space and not outside
+  auto surfaces = space1.surfaces();
+  auto it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
+  ASSERT_TRUE(it != surfaces.end());
+  auto sfName = it->nameString();
+  auto vertices = it->vertices();
+  std::reverse(vertices.begin(), vertices.end());
+  it->setVertices(vertices);
+  auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+  EXPECT_EQ(1, wrongOrientations.size());
+  EXPECT_EQ(sfName, wrongOrientations.front().nameString());
+  EXPECT_FALSE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_EQ(spaceVolume, space1.volume());  // It falls back to the floor * ceilingHeight and since this is a box, it works...
+  EXPECT_TRUE(space1.fixSurfacesWithIncorrectOrientation());
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+
+  // Flip everything
+  for (auto& sf : surfaces) {
+    auto vertices = sf.vertices();
+    std::reverse(vertices.begin(), vertices.end());
+    sf.setVertices(vertices);
+  }
+
+  wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+  EXPECT_EQ(6, wrongOrientations.size());
+  EXPECT_FALSE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_EQ(spaceVolume, space1.volume());
+  EXPECT_TRUE(space1.fixSurfacesWithIncorrectOrientation());
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+}
+
+TEST_F(ModelFixture, Space_4837_SpaceVolume_NonConvex) {
+
+  Model m;
+
+  //   y (=North)                                  z
+  //   ▲                                           ▲
+  //   │                  building height = 2m    2├─────────────────┐
+  // 10├────────┼────────┼                         │                 │
+  //   │                 │                         │                 │
+  //   │        |        │                        1├        ┌────────┘
+  //   │ z=0      z=1    │                         │        │
+  //   │        |        │                         │        │
+  //   └────────┴────────┴───► x                   └────────┴────────┴───► x
+  //  0        10       20                        0        10       20
+
+  constexpr double width = 10.0;
+  constexpr double heightPart1 = 2.0;
+  constexpr double heightPart2 = 1.0;
+  constexpr double spaceFloorAreaEach = width * width;
+  constexpr double spaceVolumePart1 = (spaceFloorAreaEach * heightPart1);
+  constexpr double spaceVolumePart2 = (spaceFloorAreaEach * heightPart2);
+  constexpr double spaceVolume = spaceVolumePart1 + spaceVolumePart2;
+
+  auto makeFloor = [](double min_x, double max_x, double min_y, double max_y, double z) {
+    // Counterclockwise points, Upper Left Corner convention, except here we want to create a floor
+    // so outward normal must be pointing DOWN, so clockwise order
+    return std::vector<Point3d>{
+      Point3d(max_x, max_y, z),
+      Point3d(max_x, min_y, z),
+      Point3d(min_x, min_y, z),
+      Point3d(min_x, max_y, z),
+    };
+  };
+
+  auto floorSurface1Points = makeFloor(0.0, width, 0.0, width, 0.0);
+  auto space1 = Space::fromFloorPrint(floorSurface1Points, heightPart1, m).get();
+  EXPECT_EQ(spaceFloorAreaEach, space1.floorArea());
+  EXPECT_EQ(spaceVolumePart1, space1.volume());
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_TRUE(space1.isConvex());
+  EXPECT_TRUE(space1.findNonConvexSurfaces().empty());
+
+  auto floorSurface2Points = makeFloor(width, 2 * width, 0.0, width, 1.0);
+  auto space2 = Space::fromFloorPrint(floorSurface2Points, heightPart2, m).get();
+  EXPECT_EQ(spaceFloorAreaEach, space2.floorArea());
+  EXPECT_EQ(spaceVolumePart2, space2.volume());
+  EXPECT_TRUE(space2.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space2.isEnclosedVolume());
+  EXPECT_TRUE(space2.isConvex());
+  EXPECT_TRUE(space2.findNonConvexSurfaces().empty());
+
+  EXPECT_EQ(12, m.getConcreteModelObjects<Surface>().size());
+  space1.intersectSurfaces(space2);
+  EXPECT_EQ(13, m.getConcreteModelObjects<Surface>().size());
+  space1.matchSurfaces(space2);
+  EXPECT_EQ(13, m.getConcreteModelObjects<Surface>().size());
+
+  ThermalZone z(m);
+  space1.setThermalZone(z);
+  space2.setThermalZone(z);
+  auto mergedSpace = z.combineSpaces().get();
+  EXPECT_EQ(11, m.getConcreteModelObjects<Surface>().size());
+
+  EXPECT_TRUE(mergedSpace.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(mergedSpace.isEnclosedVolume());
+  EXPECT_EQ(2 * spaceFloorAreaEach, mergedSpace.floorArea());
+  EXPECT_EQ(spaceVolume, mergedSpace.volume());
+  // Space is deemed non convex because it doesn't have a floorPrint, but no surfaces are concave
+  EXPECT_FALSE(mergedSpace.isConvex());
+  EXPECT_TRUE(mergedSpace.findNonConvexSurfaces().empty());
+}
+
+TEST_F(ModelFixture, Space_4837_SpaceVolume_Hshaped) {
+
+  Model m;
+
+  //   ▲ y (=North)
+  //   │    (5)   (8)         building height = 2m
+  //15 o────o    o────o (1)
+  //   │(4) │    │    │
+  //   │    │<---│----│---- Space1 Wall 5
+  //10 │    o────o    │<---- Space1 Wall 1
+  //   │   (6)  (7)   │
+  //   │              │
+  //   │(3)           │ (2)
+  //   o──────────────o───► x
+  //  0     5    10   15
+
+  constexpr double height = 2.0;
+
+  constexpr double width = 15.0;
+  constexpr double spaceFloorAreaOri = width * width;
+
+  constexpr double widthRemoved = 5.0;
+  constexpr double spaceFloorAreaRemoved = widthRemoved * widthRemoved;
+
+  constexpr double spaceFloorArea = spaceFloorAreaOri - spaceFloorAreaRemoved;
+  constexpr double spaceVolume = spaceFloorArea * height;
+
+  EXPECT_EQ(200.0, spaceFloorArea);
+  EXPECT_EQ(400.0, spaceVolume);
+
+  std::vector<Point3d> floorPoints{
+    {15.0, 15.0, 0.0},  //
+    {15.0, 0.00, 0.0},  //
+    {0.00, 0.00, 0.0},  //
+    {0.00, 15.0, 0.0},  //
+    {5.00, 15.0, 0.0},  //
+    {5.00, 10.0, 0.0},  //
+    {10.0, 10.0, 0.0},  //
+    {10.0, 15.0, 0.0},  //
+  };
+  auto space = Space::fromFloorPrint(floorPoints, 2.0, m, "Space1").get();
+  EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space.volume());
+
+  auto surfaces = space.surfaces();
+  const std::string sfName = "Space1 Wall 5";
+
+  auto it = std::find_if(surfaces.begin(), surfaces.end(), [&sfName](const Surface& s) { return s.nameString() == sfName; });
+  ASSERT_TRUE(it != surfaces.end()) << [&surfaces]() {
+    std::vector<std::string> surfaceNames;
+    surfaceNames.reserve(surfaces.size());
+    std::transform(surfaces.cbegin(), surfaces.cend(), std::back_inserter(surfaceNames), [](const auto& sf) { return sf.nameString(); });
+    return fmt::format("surfaceNames={}", surfaceNames);
+  }();
+  auto vertices = it->vertices();
+  std::reverse(vertices.begin(), vertices.end());
+  it->setVertices(vertices);
+
+  {
+    auto wrongOrientations = space.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+  }
+
+  // Use the Polyhedron method of checking the surface edges (ensuring they are in REVERSE order)
+  {
+    std::vector<Surface3d> wrongOrientations = space.polyhedron().findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+    EXPECT_EQ(sfName, wrongOrientations.front().name);
+  }
+
+  EXPECT_FALSE(space.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space.isEnclosedVolume());
+  EXPECT_EQ(spaceVolume, space.volume());  // It falls back to the floor * ceilingHeight and since this is a box, it works...
+  EXPECT_TRUE(space.fixSurfacesWithIncorrectOrientation());
+  EXPECT_TRUE(space.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space.volume());
+}
+
+TEST_F(ModelFixture, Space_4837_SpaceVolume_NonEnclosed) {
+
+  Model m;
+
+  constexpr double width = 10.0;
+  constexpr double height = 3.6;
+  constexpr double spaceFloorArea = width * width;
+  constexpr double spaceVolume = spaceFloorArea * height;
+
+  //    y (=North)
+  //   ▲
+  //   │
+  // 10o────────o
+  //   │        │
+  //   │        │
+  //   │ Space 1│
+  //   │        │
+  //   o────────o───► x
+  //  0        10
+
+  // Counterclockwise points, Upper Left Corner convention
+  std::vector<Point3d> floorPointsSpace1{
+    {width, width, 0.0},
+    {width, 0.0, 0.0},
+    {0.0, 0.0, 0.0},
+    {0.0, width, 0.0},
+  };
+
+  auto space1 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  EXPECT_EQ(6, space1.surfaces().size());
+  EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+  EXPECT_TRUE(space1.isEnclosedVolume());
+  EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+
+  // Grab a wall, delete it
+  {
+    auto surfaces = space1.surfaces();
+    auto it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
+    ASSERT_TRUE(it != surfaces.end());
+    it->remove();
+
+    EXPECT_EQ(5, space1.surfaces().size());
+    EXPECT_TRUE(space1.areAllSurfacesCorrectlyOriented());
+    EXPECT_FALSE(space1.isEnclosedVolume());
+    EXPECT_DOUBLE_EQ(spaceVolume, space1.volume());
+
+    auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(0, wrongOrientations.size());
+  }
+
+  {
+    // Grab a wall, flip it
+    auto surfaces = space1.surfaces();
+    auto it = std::find_if(surfaces.begin(), surfaces.end(), [](auto& sf) { return sf.surfaceType() == "Wall"; });
+    auto vertices = it->vertices();
+    std::reverse(vertices.begin(), vertices.end());
+    it->setVertices(vertices);
+
+    EXPECT_EQ(5, space1.surfaces().size());
+    EXPECT_FALSE(space1.areAllSurfacesCorrectlyOriented());
+    EXPECT_FALSE(space1.isEnclosedVolume());
+    auto wrongOrientations = space1.findSurfacesWithIncorrectOrientation();
+    EXPECT_EQ(1, wrongOrientations.size());
+  }
+
+  // m.save("Space_4837_SpaceVolume_NonEnclosed.osm", true);
+}
+
+TEST_F(ModelFixture, Space_Convexity) {
+
+  Model m;
+
+  constexpr double total_length = 10.0;
+
+  int counter = 0;
+
+  constexpr size_t gridsize = 4;
+  constexpr size_t ntot = gridsize * gridsize;
+  constexpr size_t nstandardsShapes = 4;
+
+  auto getPos = [](size_t i) -> std::pair<double, double> {
+    auto row = i / gridsize;
+    auto col = i % gridsize;
+    return {total_length * 3 * row, total_length * 3 * col};
+  };
+
+  const Point3d p0{};
+  for (size_t i = 3; i < (ntot - nstandardsShapes + 3); ++i) {
+    std::vector<Point3d> points = convexRegularPolygon(p0, i, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, fmt::format("Regular {}-sided polygon", i));
+    ASSERT_TRUE(s_);
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+    EXPECT_TRUE(s_->isConvex());
+    EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
+  }
+
+  {
+    std::vector<Point3d> points = hShapedPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, "hShapedPolygon");
+    ASSERT_TRUE(s_);
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+    EXPECT_FALSE(s_->isConvex());
+    // Roof and floor
+    EXPECT_EQ(2, s_->findNonConvexSurfaces().size());
+    EXPECT_EQ("hShapedPolygon Floor", s_->findNonConvexSurfaces().front().nameString());
+    EXPECT_EQ("hShapedPolygon RoofCeiling", s_->findNonConvexSurfaces().back().nameString());
+  }
+
+  {
+    std::vector<Point3d> points = hShapedPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, "hShapedPolygon");
+    ASSERT_TRUE(s_);
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+    EXPECT_FALSE(s_->isConvex());
+    // Roof and floor
+    EXPECT_EQ(2, s_->findNonConvexSurfaces().size());
+  }
+
+  {
+    std::vector<Point3d> points = tShapedPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, "tShapedPolygon");
+    ASSERT_TRUE(s_);
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+    EXPECT_FALSE(s_->isConvex());
+    // Roof and floor
+    EXPECT_EQ(2, s_->findNonConvexSurfaces().size());
+  }
+
+  {
+    std::vector<Point3d> points = lShapedPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, "lShapedPolygon");
+    ASSERT_TRUE(s_);
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+    EXPECT_FALSE(s_->isConvex());
+    // Roof and floor
+    EXPECT_EQ(2, s_->findNonConvexSurfaces().size());
+  }
+
+  {
+    std::vector<Point3d> points = squaredPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, "squaredPolygon");
+    ASSERT_TRUE(s_);
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+    EXPECT_TRUE(s_->isConvex());
+    EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
+  }
+
+  {
+    std::vector<Point3d> points = rectangularPolygon(p0, total_length * 2, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, "rectangularPolygon");
+    ASSERT_TRUE(s_);
+    auto [x, y] = getPos(counter++);
+    s_->setXOrigin(x);
+    s_->setYOrigin(y);
+    EXPECT_TRUE(s_->isConvex());
+    EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
+  }
+
+  // m.save("Test_convexity.osm", true);
+}
+
+TEST_F(ModelFixture, Space_Convexity_2) {
+
+  Model m;
+  ThermalZone z(m);
+
+  Point3d p0;
+  constexpr double total_length = 10.0;
+
+  for (size_t i = 0; i < 2; ++i) {
+    std::vector<Point3d> points = squaredPolygon(p0, total_length);
+    std::reverse(points.begin(), points.end());
+    auto s_ = Space::fromFloorPrint(points, 2, m, fmt::format("squaredPolygon{}", i));
+    ASSERT_TRUE(s_);
+    s_->setXOrigin(0.0);
+    s_->setYOrigin(i * total_length);
+    EXPECT_TRUE(s_->isConvex());
+    EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
+    s_->setThermalZone(z);
+  }
+  auto s_ = z.combineSpaces();
+  EXPECT_TRUE(s_);
+  // So, that space has two floor surfaces...
+  EXPECT_TRUE(s_->isConvex());
+  // Roof and floor
+  EXPECT_TRUE(s_->findNonConvexSurfaces().empty());
+}

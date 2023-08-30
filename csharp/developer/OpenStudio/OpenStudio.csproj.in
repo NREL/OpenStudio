@@ -5,9 +5,9 @@
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeReferencedLibInPackage</TargetsForTfmSpecificContentInPackage>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <OutputPath>${CSHARP_LIBRARY_OUTPUT_DIRECTORY}\$(Configuration)\</OutputPath>
+    <OutputPath>${CSHARP_LIBRARY_OUTPUT_DIRECTORY_NATIVE}\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>${CSHARP_SOURCE_DIR}\developer\OpenStudio\StrongNameKeyFile.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>${CSHARP_SOURCE_DIR_NATIVE}\developer\OpenStudio\StrongNameKeyFile.snk</AssemblyOriginatorKeyFile>
 
 
     <!-- CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member' -->

@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "HeatPumpWaterToWaterEquationFitCooling.hpp"
@@ -41,6 +17,8 @@
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_HeatPump_WaterToWater_EquationFit_Cooling_FieldEnums.hxx>
+
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -535,128 +513,122 @@ namespace model {
 
   // DEPRECATED
   double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient1() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient1Constant() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient1Constant() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.coefficient1Constant();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1) {
-    LOG(Warn,
-        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient1Constant(double) instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient1Constant(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.setCoefficient1Constant(coolingCapacityCoefficient1);
   }
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient2() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient2w() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient2w() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.coefficient2w();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCapacityCoefficient2(double coolingCapacityCoefficient2) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient2w(double) instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient2w(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.setCoefficient2w(coolingCapacityCoefficient2);
   }
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient3() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient3x() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient3x() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.coefficient3x();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCapacityCoefficient3(double coolingCapacityCoefficient3) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient3x(double) instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient3x(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.setCoefficient3x(coolingCapacityCoefficient3);
   }
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient4() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient4y() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient4y() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.coefficient4y();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCapacityCoefficient4(double coolingCapacityCoefficient4) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient4y(double) instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient4y(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.setCoefficient4y(coolingCapacityCoefficient4);
   }
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient5() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient5z() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient5z() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.coefficient5z();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCapacityCoefficient5(double coolingCapacityCoefficient5) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient5z(double) instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient5z(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.setCoefficient5z(coolingCapacityCoefficient5);
   }
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient1() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient1Constant() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient1Constant() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.coefficient1Constant();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient1(double coolingCompressorPowerCoefficient1) {
-    LOG(
-      Warn,
-      "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient1Constant(double) instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient1Constant(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient1Constant(coolingCompressorPowerCoefficient1);
   }
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient2() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient2w() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient2w() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.coefficient2w();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient2(double coolingCompressorPowerCoefficient2) {
-    LOG(Warn,
-        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient2w(double) instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient2w(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient2w(coolingCompressorPowerCoefficient2);
   }
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient3() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient3x() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient3x() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.coefficient3x();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient3(double coolingCompressorPowerCoefficient3) {
-    LOG(Warn,
-        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient3x(double) instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient3x(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient3x(coolingCompressorPowerCoefficient3);
   }
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient4() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient4y() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient4y() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.coefficient4y();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4) {
     LOG(Warn,
-        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient4y(double) instead.")
+        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient4y(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient4y(coolingCompressorPowerCoefficient4);
   }
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient5() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient5z() instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient5z() instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.coefficient5z();
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5) {
-    LOG(Warn,
-        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient5z(double) instead.")
+    DEPRECATED_AT_MSG(3, 2, 0, "Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient5z(double) instead.");
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient5z(coolingCompressorPowerCoefficient5);
   }

@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "DesignDay.hpp"
@@ -39,6 +15,8 @@
 #include <utilities/idd/OS_SizingPeriod_DesignDay_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
+
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 
@@ -724,6 +702,7 @@ namespace model {
 
   // Deprecated
   std::vector<std::string> DesignDay::validHumidityIndicatingTypeValues() {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use validHumidityConditionTypeValues instead.");
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_SizingPeriod_DesignDayFields::HumidityConditionType);
   }
 
@@ -761,6 +740,7 @@ namespace model {
   }
 
   double DesignDay::humidityIndicatingConditionsAtMaximumDryBulb() const {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use wetBulbOrDewPointAtMaximumDryBulb, humidityRatioAtMaximumDryBulb, or enthalpyAtMaximumDryBulb instead.");
     boost::optional<std::string> value = getString(OS_SizingPeriod_DesignDayFields::HumidityConditionType, true);
     OS_ASSERT(value);
     std::string humidityConditionType = value.get();
@@ -778,6 +758,9 @@ namespace model {
   }
 
   bool DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const {
+    DEPRECATED_AT_MSG(
+      3, 3, 0,
+      "Check that None of these have a value: wetBulbOrDewPointAtMaximumDryBulb,humidityRatioAtMaximumDryBulb, enthalpyAtMaximumDryBulb instead.");
     bool wetBulbOrDewPointAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb);
     bool humidityRatioAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb);
     bool enthalpyAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb);
@@ -865,6 +848,7 @@ namespace model {
   }
 
   std::string DesignDay::humidityIndicatingType() const {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use humidityConditionType instead.");
     return getImpl<detail::DesignDay_Impl>()->humidityConditionType();
   }
 
@@ -873,6 +857,7 @@ namespace model {
   }
 
   bool DesignDay::isHumidityIndicatingTypeDefaulted() const {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use isHumidityConditionTypeDefaulted instead.");
     return getImpl<detail::DesignDay_Impl>()->isHumidityConditionTypeDefaulted();
   }
 
@@ -881,6 +866,7 @@ namespace model {
   }
 
   boost::optional<ScheduleDay> DesignDay::humidityIndicatingDaySchedule() const {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use humidityConditionDaySchedule instead.");
     return getImpl<detail::DesignDay_Impl>()->humidityConditionDaySchedule();
   }
 
@@ -909,6 +895,7 @@ namespace model {
   }
 
   boost::optional<ScheduleDay> DesignDay::dryBulbTemperatureRangeModifierSchedule() const {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use dryBulbTemperatureRangeModifierDaySchedule instead.");
     return getImpl<detail::DesignDay_Impl>()->dryBulbTemperatureRangeModifierDaySchedule();
   }
 
@@ -933,6 +920,7 @@ namespace model {
   }
 
   double DesignDay::ashraeTaub() const {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use ashraeClearSkyOpticalDepthForBeamIrradiance instead.");
     return getImpl<detail::DesignDay_Impl>()->ashraeClearSkyOpticalDepthForBeamIrradiance();
   }
 
@@ -941,6 +929,7 @@ namespace model {
   }
 
   bool DesignDay::isAshraeTaubDefaulted() const {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted instead.");
     return getImpl<detail::DesignDay_Impl>()->isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted();
   }
 
@@ -949,6 +938,7 @@ namespace model {
   }
 
   double DesignDay::ashraeTaud() const {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use ashraeClearSkyOpticalDepthForDiffuseIrradiance instead.");
     return getImpl<detail::DesignDay_Impl>()->ashraeClearSkyOpticalDepthForDiffuseIrradiance();
   }
 
@@ -957,6 +947,7 @@ namespace model {
   }
 
   bool DesignDay::isAshraeTaudDefaulted() const {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted instead.");
     return getImpl<detail::DesignDay_Impl>()->isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted();
   }
 
@@ -1077,6 +1068,7 @@ namespace model {
   }
 
   bool DesignDay::setHumidityIndicatingType(const std::string& humidityIndicatingType) {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use setHumidityConditionType instead.");
     return getImpl<detail::DesignDay_Impl>()->setHumidityConditionType(humidityIndicatingType);
   }
 
@@ -1085,6 +1077,7 @@ namespace model {
   }
 
   void DesignDay::resetHumidityIndicatingType() {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use resetHumidityConditionType instead.");
     getImpl<detail::DesignDay_Impl>()->resetHumidityConditionType();
   }
 
@@ -1093,6 +1086,7 @@ namespace model {
   }
 
   bool DesignDay::setHumidityIndicatingDaySchedule(const ScheduleDay& schedule) {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use setHumidityConditionDaySchedule instead.");
     return getImpl<detail::DesignDay_Impl>()->setHumidityConditionDaySchedule(schedule);
   }
 
@@ -1101,6 +1095,7 @@ namespace model {
   }
 
   void DesignDay::resetHumidityIndicatingDaySchedule() {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use resetHumidityConditionDaySchedule instead.");
     getImpl<detail::DesignDay_Impl>()->resetHumidityConditionDaySchedule();
   }
 
@@ -1109,6 +1104,7 @@ namespace model {
   }
 
   bool DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb) {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use setWetBulbOrDewPointAtMaximumDryBulb, setHumidityRatioAtMaximumDryBulb, or setEnthalpyAtMaximumDryBulb instead.");
     boost::optional<std::string> value = getString(OS_SizingPeriod_DesignDayFields::HumidityConditionType, true);
     OS_ASSERT(value);
     std::string humidityConditionType = value.get();
@@ -1126,6 +1122,8 @@ namespace model {
   }
 
   void DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb() {
+    DEPRECATED_AT_MSG(3, 3, 0,
+                      "Use resetWetBulbOrDewPointAtMaximumDryBulb, resetHumidityRatioAtMaximumDryBulb, and resetEnthalpyAtMaximumDryBulb instead.");
     getImpl<detail::DesignDay_Impl>()->resetWetBulbOrDewPointAtMaximumDryBulb();
     getImpl<detail::DesignDay_Impl>()->resetHumidityRatioAtMaximumDryBulb();
     getImpl<detail::DesignDay_Impl>()->resetEnthalpyAtMaximumDryBulb();
@@ -1164,6 +1162,7 @@ namespace model {
   }
 
   bool DesignDay::setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule) {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use setDryBulbTemperatureRangeModifierDaySchedule instead.");
     return getImpl<detail::DesignDay_Impl>()->setDryBulbTemperatureRangeModifierDaySchedule(schedule);
   }
 
@@ -1172,6 +1171,7 @@ namespace model {
   }
 
   void DesignDay::resetDryBulbTemperatureRangeModifierSchedule() {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use resetDryBulbTemperatureRangeModifierDaySchedule instead.");
     getImpl<detail::DesignDay_Impl>()->resetDryBulbTemperatureRangeModifierDaySchedule();
   }
 
@@ -1204,6 +1204,7 @@ namespace model {
   }
 
   bool DesignDay::setAshraeTaub(double ashraeTaub) {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use setAshraeClearSkyOpticalDepthForBeamIrradiance instead.");
     return getImpl<detail::DesignDay_Impl>()->setAshraeClearSkyOpticalDepthForBeamIrradiance(ashraeTaub);
   }
 
@@ -1212,6 +1213,7 @@ namespace model {
   }
 
   void DesignDay::resetAshraeTaub() {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use resetAshraeClearSkyOpticalDepthForBeamIrradiance instead.");
     getImpl<detail::DesignDay_Impl>()->resetAshraeClearSkyOpticalDepthForBeamIrradiance();
   }
 
@@ -1220,6 +1222,7 @@ namespace model {
   }
 
   bool DesignDay::setAshraeTaud(double ashraeTaud) {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use setAshraeClearSkyOpticalDepthForDiffuseIrradiance instead.");
     return getImpl<detail::DesignDay_Impl>()->setAshraeClearSkyOpticalDepthForDiffuseIrradiance(ashraeTaud);
   }
 
@@ -1228,6 +1231,7 @@ namespace model {
   }
 
   void DesignDay::resetAshraeTaud() {
+    DEPRECATED_AT_MSG(3, 3, 0, "Use resetAshraeClearSkyOpticalDepthForDiffuseIrradiance instead.");
     getImpl<detail::DesignDay_Impl>()->resetAshraeClearSkyOpticalDepthForDiffuseIrradiance();
   }
 
