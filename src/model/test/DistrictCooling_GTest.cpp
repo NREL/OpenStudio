@@ -38,7 +38,7 @@ TEST_F(ModelFixture, DistrictCooling_DistrictCooling) {
 
   EXPECT_FALSE(districtCooling.capacityFractionSchedule());
 
-  ScheduleConstant scheduleConstant(model);
+  ScheduleConstant scheduleConstant(m);
   scheduleConstant.setValue(0.5);
   EXPECT_TRUE(districtCooling.setCapacityFractionSchedule(scheduleConstant));
 
