@@ -55,8 +55,8 @@ namespace openstudio {
  *
  *  \section data_sec Data
  *
- *  Structures for storing data such as \link Vector.hpp vectors\endlink,
- *  \link Matrix.hpp matrices\endlink, and \link TimeSeries time series\endlink. The Attribute
+ *  Structures for storing data such as \link Vector vectors\endlink,
+ *  \link Matrix matrices\endlink, and \link TimeSeries time series\endlink. The Attribute
  *  class provides a way for storing data additional values attached to objects,
  *  and is useful for reporting measures in particular. EndUses and associated enumeration
  *  classes EndUseType, EndUseCategoryType, and EndUseFuelType are helpful to break out energy use in reporting.
