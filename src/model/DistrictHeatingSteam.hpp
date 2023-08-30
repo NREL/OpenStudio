@@ -55,7 +55,7 @@ namespace model {
 
     bool isNominalCapacityAutosized() const;
 
-    Schedule capacityFractionSchedule() const;
+    boost::optional<Schedule> capacityFractionSchedule() const;
 
     //@}
     /** @name Setters */
@@ -66,6 +66,8 @@ namespace model {
     void autosizeNominalCapacity();
 
     bool setCapacityFractionSchedule(Schedule& schedule);
+
+    void resetCapacityFractionSchedule();
 
     //@}
     /** @name Other */

@@ -56,6 +56,10 @@ namespace model {
       return result;
     }
 
+    boost::optional<Schedule> DistrictCooling_Impl::capacityFractionSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_DistrictCoolingFields::CapacityFractionSchedule);
+    }
+
     bool DistrictCooling_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
       bool result(false);
       if (nominalCapacity) {
@@ -85,6 +89,16 @@ namespace model {
       }
 
       return false;
+    }
+
+    bool DistrictCooling_Impl::setCapacityFractionSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_DistrictCoolingFields::CapacityFractionSchedule, "DistrictCooling", "Capacity Fraction", schedule);
+      return result;
+    }
+
+    void DistrictCooling_Impl::resetCapacityFractionSchedule() {
+      bool result = setString(OS_DistrictCoolingFields::CapacityFractionSchedule, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<double> DistrictCooling_Impl::autosizedNominalCapacity() const {
@@ -139,12 +153,24 @@ namespace model {
     return getImpl<detail::DistrictCooling_Impl>()->isNominalCapacityAutosized();
   }
 
+  boost::optional<Schedule> DistrictCooling::capacityFractionSchedule() const {
+    return getImpl<detail::DistrictCooling_Impl>()->capacityFractionSchedule();
+  }
+
   bool DistrictCooling::setNominalCapacity(double nominalCapacity) {
     return getImpl<detail::DistrictCooling_Impl>()->setNominalCapacity(nominalCapacity);
   }
 
   void DistrictCooling::autosizeNominalCapacity() {
     getImpl<detail::DistrictCooling_Impl>()->autosizeNominalCapacity();
+  }
+
+  bool DistrictCooling::setCapacityFractionSchedule(Schedule& schedule) {
+    return getImpl<detail::DistrictCooling_Impl>()->setCapacityFractionSchedule(schedule);
+  }
+
+  void DistrictCooling::resetCapacityFractionSchedule() {
+    getImpl<detail::DistrictCooling_Impl>()->resetCapacityFractionSchedule();
   }
 
   /// @cond

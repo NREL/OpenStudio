@@ -16642,11 +16642,15 @@ OS:DistrictCooling,
        \required-field
        \type object-list
        \object-list ConnectionNames
-  N1 ; \field Nominal Capacity
+  N1 , \field Nominal Capacity
        \units W
        \minimum 0.0
        \autosizable
        \required-field
+  A5 ; \field Capacity Fraction Schedule
+       \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \type object-list
+       \object-list ScheduleNames
 
 OS:DistrictHeating,
        \memo Centralized source of hot water, such as a district heating system.
@@ -16673,7 +16677,6 @@ OS:DistrictHeating,
        \note Schedule values are multiplied by Nominal Capacity for current capacity
        \type object-list
        \object-list ScheduleNames
-       \required-field
 
 OS:DistrictHeating:Steam,
        \memo Centralized source of Steam, such as a district heating system.
@@ -16700,7 +16703,6 @@ OS:DistrictHeating:Steam,
        \note Schedule values are multiplied by Nominal Capacity for current capacity
        \type object-list
        \object-list ScheduleNames
-       \required-field
 
 OS:GroundHeatExchanger:Vertical,
         \extensible:2

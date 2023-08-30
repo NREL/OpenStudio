@@ -63,19 +63,25 @@ namespace model {
 
       boost::optional<double> autosizedNominalCapacity() const;
 
+      boost::optional<Schedule> capacityFractionSchedule() const;
+
       //@}
       /** @name Setters */
-      //@{
-
-      bool addToNode(Node& node) override;
-
-      //@}
-      /** @name Other */
       //@{
 
       bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
       void autosizeNominalCapacity();
+
+      bool addToNode(Node& node) override;
+
+      bool setCapacityFractionSchedule(Schedule& schedule);
+
+      void resetCapacityFractionSchedule();
+
+      //@}
+      /** @name Other */
+      //@{
 
       //@}
 

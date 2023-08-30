@@ -28,6 +28,21 @@ TEST_F(ModelFixture, DistrictCooling_DistrictCooling) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  DistrictCooling districtCooling(m);
+
+  EXPECT_FALSE(districtCooling.capacityFractionSchedule());
+
+  ScheduleConstant scheduleConstant(model);
+  scheduleConstant.setValue(0.5);
+  EXPECT_TRUE(districtCooling.setCapacityFractionSchedule(scheduleConstant));
+
+  ASSERT_TRUE(districtCooling.capacityFractionSchedule());
+  EXPECT_EQ(scheduleConstant, districtCooling.capacityFractionSchedule().get());
+  
+  districtCooling.resetCapacityFractionSchedule();
+  EXPECT_FALSE(districtCooling.capacityFractionSchedule());
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node

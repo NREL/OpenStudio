@@ -66,7 +66,7 @@ namespace model {
 
       boost::optional<double> autosizedNominalCapacity() const;
 
-      Schedule capacityFractionSchedule() const;
+      boost::optional<Schedule> capacityFractionSchedule() const;
 
       //@}
       /** @name Setters */
@@ -80,6 +80,8 @@ namespace model {
 
       bool setCapacityFractionSchedule(Schedule& schedule);
 
+      void resetCapacityFractionSchedule();
+
       //@}
       /** @name Other */
       //@{
@@ -89,8 +91,6 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.DistrictHeatingSteam");
-
-      boost::optional<Schedule> optionalCapacityFractionSchedule() const;
     };
 
   }  // namespace detail

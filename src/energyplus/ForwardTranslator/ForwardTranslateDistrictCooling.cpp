@@ -71,6 +71,20 @@ namespace energyplus {
     //
     ////////////////////////////////////////////////////////////////////////
 
+    ///////////////////////////////////////////////////////////////////////////
+    //Capacity Fraction Schedule Name ///////////////////////////////////////////////////
+    boost::optional<Schedule> capacityFractionSchedule = modelObject.capacityFractionSchedule();
+
+    if (capacityFractionSchedule) {
+      boost::optional<IdfObject> _capacityFractionSchedule = translateAndMapModelObject(capacityFractionSchedule.get());
+
+      if (_capacityFractionSchedule && _capacityFractionSchedule->name()) {
+        idfObject.setString(DistrictCoolingFields::CapacityFractionScheduleName, _capacityFractionSchedule->name().get());
+      }
+    }
+    //
+    ////////////////////////////////////////////////////////////////////////
+
     return boost::optional<IdfObject>(idfObject);
   }
 

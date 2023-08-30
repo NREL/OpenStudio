@@ -36,18 +36,17 @@ TEST_F(ModelFixture, DistrictHeating_DistrictHeating) {
   Model m;
   DistrictHeating districtHeating(m);
 
-  auto alwaysOn = model.alwaysOnDiscreteSchedule();
-
-  EXPECT_EQ(alwaysOn, districtHeating.capacityFractionSchedule());
+  EXPECT_FALSE(districtHeating.capacityFractionSchedule());
 
   ScheduleConstant scheduleConstant(model);
   scheduleConstant.setValue(0.5);
   EXPECT_TRUE(districtHeating.setCapacityFractionSchedule(scheduleConstant));
 
-  Schedule schedule = districtHeating.capacityFractionSchedule();
-  boost::optional<ScheduleConstant> scheduleConstant2 = schedule.optionalCast<ScheduleConstant>();
-  ASSERT_TRUE(scheduleConstant2);
-  EXPECT_EQ((*scheduleConstant2).value(), 0.5);
+  ASSERT_TRUE(districtHeating.capacityFractionSchedule());
+  EXPECT_EQ(scheduleConstant, districtHeating.capacityFractionSchedule().get());
+
+  districtHeating.resetCapacityFractionSchedule();
+  EXPECT_FALSE(districtHeating.capacityFractionSchedule());
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node

@@ -75,10 +75,13 @@ namespace energyplus {
 
     ///////////////////////////////////////////////////////////////////////////
     //Capacity Fraction Schedule Name ///////////////////////////////////////////////////
-    {
-      auto schedule = modelObject.capacityFractionSchedule();
-      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule)) {
-        idfObject.setString(DistrictHeating_SteamFields::CapacityFractionScheduleName, _schedule->name().get());
+    boost::optional<Schedule> capacityFractionSchedule = modelObject.capacityFractionSchedule();
+
+    if (capacityFractionSchedule) {
+      boost::optional<IdfObject> _capacityFractionSchedule = translateAndMapModelObject(capacityFractionSchedule.get());
+
+      if (_capacityFractionSchedule && _capacityFractionSchedule->name()) {
+        idfObject.setString(DistrictHeating_SteamFields::CapacityFractionScheduleName, _capacityFractionSchedule->name().get());
       }
     }
     //
