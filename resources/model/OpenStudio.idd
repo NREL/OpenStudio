@@ -20106,10 +20106,16 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \required-field
        \type object-list
        \object-list QuadvariateFunctions
-  A8;  \field Heating Power Consumption Curve Name
+  A8,  \field Heating Power Consumption Curve Name
        \required-field
        \type object-list
        \object-list QuadvariateFunctions
+  A9;  \field Part Load Fraction Correlation Curve
+       \note quadratic curve = a + b*PLR + c*PLR**2
+       \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+       \note PLR = part load ratio (heat load/steady state capacity)
+       \type object-list
+       \object-list UnivariateFunctions
 
 OS:Coil:Heating:DX:MultiSpeed,
        \extensible:1
