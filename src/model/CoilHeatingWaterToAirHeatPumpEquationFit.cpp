@@ -328,7 +328,8 @@ namespace model {
     }
 
     boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::partLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurve);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurve);
     }
 
     bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
