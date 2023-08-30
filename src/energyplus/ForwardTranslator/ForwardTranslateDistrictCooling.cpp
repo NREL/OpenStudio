@@ -7,6 +7,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/DistrictCooling.hpp"
 #include "../../model/DistrictCooling_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"

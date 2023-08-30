@@ -13,6 +13,8 @@ namespace openstudio {
 
 namespace model {
 
+  class Schedule;
+
   namespace detail {
 
     class DistrictCooling_Impl;

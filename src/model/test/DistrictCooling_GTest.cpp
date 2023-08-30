@@ -12,6 +12,10 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -40,7 +44,7 @@ TEST_F(ModelFixture, DistrictCooling_DistrictCooling) {
 
   ASSERT_TRUE(districtCooling.capacityFractionSchedule());
   EXPECT_EQ(scheduleConstant, districtCooling.capacityFractionSchedule().get());
-  
+
   districtCooling.resetCapacityFractionSchedule();
   EXPECT_FALSE(districtCooling.capacityFractionSchedule());
 }

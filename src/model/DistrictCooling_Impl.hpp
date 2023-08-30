@@ -13,6 +13,8 @@ namespace openstudio {
 
 namespace model {
 
+  class Schedule;
+
   namespace detail {
 
     /** DistrictCooling_Impl is a StraightComponent_Impl that is the implementation class for DistrictCooling.*/

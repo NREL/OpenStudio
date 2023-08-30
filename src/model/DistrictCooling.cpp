@@ -7,6 +7,8 @@
 #include "DistrictCooling_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
