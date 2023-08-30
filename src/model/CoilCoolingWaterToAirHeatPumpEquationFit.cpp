@@ -859,8 +859,8 @@ namespace model {
   double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient1() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient1Constant() instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->coefficient1Constant();
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->coefficient1Constant();
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1) {
@@ -868,78 +868,78 @@ namespace model {
                       "Use "
                       "CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient1Constant(double) instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->setCoefficient1Constant(sensibleCoolingCapacityCoefficient1);
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->setCoefficient1Constant(sensibleCoolingCapacityCoefficient1);
   }
 
   double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient2() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient2v() instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->coefficient2v();
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->coefficient2v();
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient2v(double) instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->setCoefficient2v(sensibleCoolingCapacityCoefficient2);
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->setCoefficient2v(sensibleCoolingCapacityCoefficient2);
   }
 
   double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient3() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient3w() instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->coefficient3w();
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->coefficient3w();
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient3w(double) instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->setCoefficient3w(sensibleCoolingCapacityCoefficient3);
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->setCoefficient3w(sensibleCoolingCapacityCoefficient3);
   }
 
   double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient4() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient4x() instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->coefficient4x();
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->coefficient4x();
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient4x(double) instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->setCoefficient4x(sensibleCoolingCapacityCoefficient4);
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->setCoefficient4x(sensibleCoolingCapacityCoefficient4);
   }
 
   double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient5() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient5y() instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->coefficient5y();
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->coefficient5y();
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient5y(double) instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->setCoefficient5y(sensibleCoolingCapacityCoefficient5);
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->setCoefficient5y(sensibleCoolingCapacityCoefficient5);
   }
 
   double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient6() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient6z() instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->coefficient6z();
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->coefficient6z();
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient6z(double) instead.");
     Curve curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
-    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
-    return curveQuadLinear->setCoefficient6z(sensibleCoolingCapacityCoefficient6);
+    boost::optional<CurveQuintLinear> curveQuintLinear = curve.optionalCast<CurveQuintLinear>();
+    return curveQuintLinear->setCoefficient6z(sensibleCoolingCapacityCoefficient6);
   }
 
   double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient1() const {
