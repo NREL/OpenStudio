@@ -626,6 +626,9 @@ set(${target_name}_src
   DistrictHeating.hpp
   DistrictHeating_Impl.hpp
   DistrictHeating.cpp
+  DistrictHeatingSteam.hpp
+  DistrictHeatingSteam_Impl.hpp
+  DistrictHeatingSteam.cpp
   Duct.hpp
   Duct_Impl.hpp
   Duct.cpp
@@ -2051,6 +2054,7 @@ set(${target_name}_test_src
   test/DesignSpecificationZoneAirDistribution_GTest.cpp
   test/DistrictCooling_GTest.cpp
   test/DistrictHeating_GTest.cpp
+  test/DistrictHeatingSteam_GTest.cpp
   test/Duct_GTest.cpp
   test/ElectricEquipment_GTest.cpp
   test/ElectricEquipmentITEAirCooled_GTest.cpp
