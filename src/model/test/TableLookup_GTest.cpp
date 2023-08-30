@@ -344,13 +344,15 @@ TEST_F(ModelFixture, TableLookup_CoilWaterToAirHeatPumpEquationFit) {
     CurveQuadLinear cql1(m);
     EXPECT_TRUE(cc.setTotalCoolingCapacityCurve(cql1));
     ASSERT_TRUE(cc.totalCoolingCapacityCurve().optionalCast<CurveQuadLinear>());
-    EXPECT_EQ(cql2, cc.totalCoolingCapacityCurve());
+    EXPECT_EQ(cql1, cc.totalCoolingCapacityCurve());
 
-    CurveQuintLinear cql2(m) EXPECT_TRUE(cc.setSensibleCoolingCapacityCurve(cql2));
+    CurveQuintLinear cql2(m);
+    EXPECT_TRUE(cc.setSensibleCoolingCapacityCurve(cql2));
     ASSERT_TRUE(cc.sensibleCoolingCapacityCurve().optionalCast<CurveQuintLinear>());
     EXPECT_EQ(cql2, cc.sensibleCoolingCapacityCurve());
 
-    CurveQuadLinear cql3(m) EXPECT_TRUE(cc.setCoolingPowerConsumptionCurve(cql3));
+    CurveQuadLinear cql3(m);
+    EXPECT_TRUE(cc.setCoolingPowerConsumptionCurve(cql3));
     ASSERT_TRUE(cc.coolingPowerConsumptionCurve().optionalCast<CurveQuadLinear>());
     EXPECT_EQ(cql3, cc.coolingPowerConsumptionCurve());
 
@@ -370,11 +372,13 @@ TEST_F(ModelFixture, TableLookup_CoilWaterToAirHeatPumpEquationFit) {
     ASSERT_TRUE(cc.totalCoolingCapacityCurve().optionalCast<TableLookup>());
     EXPECT_EQ(tbl1, cc.totalCoolingCapacityCurve());
 
-    TableLookup tbl1(m) EXPECT_TRUE(cc.setSensibleCoolingCapacityCurve(tbl1));
+    TableLookup tbl2(m);
+    EXPECT_TRUE(cc.setSensibleCoolingCapacityCurve(tbl2));
     ASSERT_TRUE(cc.sensibleCoolingCapacityCurve().optionalCast<TableLookup>());
-    EXPECT_EQ(tbl1, cc.sensibleCoolingCapacityCurve());
+    EXPECT_EQ(tbl2, cc.sensibleCoolingCapacityCurve());
 
-    TableLookup tbl3(m) EXPECT_TRUE(cc.setCoolingPowerConsumptionCurve(tbl3));
+    TableLookup tbl3(m);
+    EXPECT_TRUE(cc.setCoolingPowerConsumptionCurve(tbl3));
     ASSERT_TRUE(cc.coolingPowerConsumptionCurve().optionalCast<TableLookup>());
     EXPECT_EQ(tbl3, cc.coolingPowerConsumptionCurve());
 
