@@ -62,7 +62,7 @@ namespace energyplus {
     if ((s = modelObject.plantLoopFluidType())) {
       idfObject.setString(LoadProfile_PlantFields::PlantLoopFluidType, s.get());
     }
-    
+
     // DegreeofSubCooling
     if ((value = modelObject.degreeofSubCooling())) {
       idfObject.setDouble(LoadProfile_PlantFields::DegreeofSubCooling, value.get());

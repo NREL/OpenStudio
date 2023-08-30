@@ -68,9 +68,9 @@ namespace model {
       virtual std::vector<std::string> emsInternalVariableNames() const override;
 
       std::string plantLoopFluidType() const;
-      
+
       double degreeofSubCooling() const;
-      
+
       double degreeofLoopSubCooling() const;
 
       //@}
@@ -84,9 +84,9 @@ namespace model {
       bool setFlowRateFractionSchedule(Schedule& schedule);
 
       bool setPlantLoopFluidType(const std::string& plantLoopFluidType);
-      
+
       bool setDegreeofSubCooling(double degreeofSubCooling);
-      
+
       bool setDegreeofLoopSubCooling(double degreeofLoopSubCooling);
 
       //@}
