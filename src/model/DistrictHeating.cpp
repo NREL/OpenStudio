@@ -124,7 +124,6 @@ namespace model {
       return result;
     }
 
-
     boost::optional<double> DistrictHeating_Impl::autosizedNominalCapacity() const {
       return getAutosizedValue("Design Size Nominal Capacity", "W");
     }
