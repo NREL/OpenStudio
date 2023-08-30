@@ -2275,65 +2275,77 @@ namespace detail {
       "Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Total End Uses') and (Units = 'GJ')");
   }
 
+  OptionalDouble addTwoOptionalDoubles(OptionalDouble val1_, OptionalDouble val2_) {
+    const bool hasVal1 = val1_.has_value();
+    const bool hasVal2 = val2_.has_value();
+    if (hasVal1 && hasVal2) {
+      return *val1_ + *val2_;
+    } else if (hasVal1) {
+      return *val1_;
+    } else if (hasVal2) {
+      return *val2_;
+    }
+    return boost::none;
+  }
+
   OptionalDouble SqlFile_Impl::districtHeatingHeating() const {
-    return districtHeatingWaterHeating() + districtHeatingSteamHeating();
+    return addTwoOptionalDoubles(districtHeatingWaterHeating(), districtHeatingSteamHeating());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingCooling() const {
-    return districtHeatingWaterCooling() + districtHeatingSteamCooling();
+    return addTwoOptionalDoubles(districtHeatingWaterCooling(), districtHeatingSteamCooling());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingInteriorLighting() const {
-    return return districtHeatingWaterInteriorLighting() + districtHeatingSteamInteriorLighting();
-    ;
+    return addTwoOptionalDoubles(districtHeatingWaterInteriorLighting(), districtHeatingSteamInteriorLighting());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingExteriorLighting() const {
-    return districtHeatingWaterExteriorLighting() + districtHeatingSteamExteriorLighting();
+    return addTwoOptionalDoubles(districtHeatingWaterExteriorLighting(), districtHeatingSteamExteriorLighting());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingInteriorEquipment() const {
-    return districtHeatingWaterInteriorEquipment() + districtHeatingSteamInteriorEquipment();
+    return addTwoOptionalDoubles(districtHeatingWaterInteriorEquipment(), districtHeatingSteamInteriorEquipment());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingExteriorEquipment() const {
-    return districtHeatingWaterExteriorEquipment() + districtHeatingSteamExteriorEquipment();
+    return addTwoOptionalDoubles(districtHeatingWaterExteriorEquipment(), districtHeatingSteamExteriorEquipment());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingFans() const {
-    return districtHeatingWaterFans() + districtHeatingSteamFans();
+    return addTwoOptionalDoubles(districtHeatingWaterFans(), districtHeatingSteamFans());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingPumps() const {
-    return districtHeatingWaterPumps() + districtHeatingSteamPumps();
+    return addTwoOptionalDoubles(districtHeatingWaterPumps(), districtHeatingSteamPumps());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingHeatRejection() const {
-    return districtHeatingWaterHeatRejection() + districtHeatingSteamHeatRejection();
+    return addTwoOptionalDoubles(districtHeatingWaterHeatRejection(), districtHeatingSteamHeatRejection());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingHumidification() const {
-    return districtHeatingWaterHumidification() + districtHeatingSteamHumidification();
+    return addTwoOptionalDoubles(districtHeatingWaterHumidification(), districtHeatingSteamHumidification());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingHeatRecovery() const {
-    return districtHeatingWaterHeatRecovery() + districtHeatingSteamHeatRecovery();
+    return addTwoOptionalDoubles(districtHeatingWaterHeatRecovery(), districtHeatingSteamHeatRecovery());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingWaterSystems() const {
-    return districtHeatingWaterWaterSystems() + districtHeatingSteamWaterSystems();
+    return addTwoOptionalDoubles(districtHeatingWaterWaterSystems(), districtHeatingSteamWaterSystems());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingRefrigeration() const {
-    return districtHeatingWaterRefrigeration() + districtHeatingSteamRefrigeration();
+    return addTwoOptionalDoubles(districtHeatingWaterRefrigeration(), districtHeatingSteamRefrigeration());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingGenerators() const {
-    return districtHeatingWaterGenerators() + districtHeatingSteamGenerators();
+    return addTwoOptionalDoubles(districtHeatingWaterGenerators(), districtHeatingSteamGenerators());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingTotalEndUses() const {
-    return districtHeatingWaterTotalEndUses() + districtHeatingSteamTotalEndUses();
+    return addTwoOptionalDoubles(districtHeatingWaterTotalEndUses(), districtHeatingSteamTotalEndUses());
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingWaterHeating() const {
