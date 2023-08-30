@@ -891,6 +891,126 @@ class UTILITIES_API SqlFile
   /// Requires EnergyPlus simulation output to calculate.
   boost::optional<double> districtHeatingTotalEndUses() const;
 
+  /// Returns the district heating water energy used for heating in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterHeating() const;
+
+  /// Returns the district heating water energy used for cooling in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterCooling() const;
+
+  /// Returns the district heating water energy used for interior lighting in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterInteriorLighting() const;
+
+  /// Returns the district heating water energy used for exterior lighting in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterExteriorLighting() const;
+
+  /// Returns the district heating water energy used for interior equipment in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterInteriorEquipment() const;
+
+  /// Returns the district heating water energy used for exterior equipment in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterExteriorEquipment() const;
+
+  /// Returns the district heating water energy used for fans in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterFans() const;
+
+  /// Returns the district heating water energy used for pumps in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterPumps() const;
+
+  /// Returns the district heating water energy used for heat rejection in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterHeatRejection() const;
+
+  /// Returns the district heating water energy used for humidification in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterHumidification() const;
+
+  /// Returns the district heating water energy used for heat recovery in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterHeatRecovery() const;
+
+  /// Returns the district heating water energy used for water systems in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterWaterSystems() const;
+
+  /// Returns the district heating water energy used for refrigeration in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterRefrigeration() const;
+
+  /// Returns the district heating water energy used for generators in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterGenerators() const;
+
+  /// Returns the district heating water energy used for all end uses in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingWaterTotalEndUses() const;
+
+  /// Returns the district heating steam energy used for heating in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamHeating() const;
+
+  /// Returns the district heating steam energy used for cooling in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamCooling() const;
+
+  /// Returns the district heating steam energy used for interior lighting in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamInteriorLighting() const;
+
+  /// Returns the district heating steam energy used for exterior lighting in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamExteriorLighting() const;
+
+  /// Returns the district heating steam energy used for interior equipment in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamInteriorEquipment() const;
+
+  /// Returns the district heating steam energy used for exterior equipment in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamExteriorEquipment() const;
+
+  /// Returns the district heating steam energy used for fans in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamFans() const;
+
+  /// Returns the district heating steam energy used for pumps in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamPumps() const;
+
+  /// Returns the district heating steam energy used for heat rejection in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamHeatRejection() const;
+
+  /// Returns the district heating steam energy used for humidification in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamHumidification() const;
+
+  /// Returns the district heating steam energy used for heat recovery in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamHeatRecovery() const;
+
+  /// Returns the district heating steam energy used for water systems in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamWaterSystems() const;
+
+  /// Returns the district heating steam energy used for refrigeration in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamRefrigeration() const;
+
+  /// Returns the district heating steam energy used for generators in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamGenerators() const;
+
+  /// Returns the district heating steam energy used for all end uses in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> districtHeatingSteamTotalEndUses() const;
+
   /// Returns the water used for heating in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
   boost::optional<double> waterHeating() const;

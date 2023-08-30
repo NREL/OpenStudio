@@ -2284,7 +2284,8 @@ namespace detail {
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingInteriorLighting() const {
-    return return districtHeatingWaterInteriorLighting() + districtHeatingSteamInteriorLighting();;
+    return return districtHeatingWaterInteriorLighting() + districtHeatingSteamInteriorLighting();
+    ;
   }
 
   OptionalDouble SqlFile_Impl::districtHeatingExteriorLighting() const {
