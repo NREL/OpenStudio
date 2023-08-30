@@ -139,7 +139,7 @@ namespace model {
     }
 
     std::vector<FuelType> DistrictHeatingSteam_Impl::heatingFuelTypes() const {
-      return {FuelType::DistrictHeatingSteam};
+      return {FuelType::Steam};
     }
 
     std::vector<AppGFuelType> DistrictHeatingSteam_Impl::appGHeatingFuelTypes() const {
@@ -154,7 +154,7 @@ namespace model {
   }
 
   IddObjectType DistrictHeatingSteam::iddObjectType() {
-    IddObjectType result(IddObjectType::OS_DistrictHeatingSteam);
+    IddObjectType result(IddObjectType::OS_DistrictHeating_Steam);
     return result;
   }
 
