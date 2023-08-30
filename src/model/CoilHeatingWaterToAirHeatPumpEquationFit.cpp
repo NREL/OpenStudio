@@ -16,6 +16,8 @@
 #include "Model.hpp"
 #include "CurveQuadLinear.hpp"
 #include "CurveQuadLinear_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -323,6 +325,21 @@ namespace model {
       bool result =
         setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName, heatingPowerConsumptionCurve.handle());
       return result;
+    }
+
+    boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::partLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurve);
+    }
+
+    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurve, curve.handle());
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::resetPartLoadFractionCorrelationCurve() {
+      bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurve, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedAirFlowRate() const {
@@ -738,6 +755,18 @@ namespace model {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient5z(double) instead.");
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
     return curve.setCoefficient5z(heatingPowerConsumptionCoefficient5);
+  }
+
+  boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit::partLoadFractionCorrelationCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->partLoadFractionCorrelationCurve();
+  }
+
+  bool CoilHeatingWaterToAirHeatPumpEquationFit::setPartLoadFractionCorrelationCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setPartLoadFractionCorrelationCurve(curve);
+  }
+
+  void CoilHeatingWaterToAirHeatPumpEquationFit::resetPartLoadFractionCorrelationCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetPartLoadFractionCorrelationCurve();
   }
 
   /// @endcond

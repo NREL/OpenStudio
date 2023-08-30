@@ -79,4 +79,12 @@ TEST_F(ModelFixture, CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
   EXPECT_EQ(1.0, coilHeatingWaterToAirHPEquationFit.ratioofRatedHeatingCapacitytoRatedCoolingCapacity());
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(1.2));
   EXPECT_EQ(1.2, coilHeatingWaterToAirHPEquationFit.ratioofRatedHeatingCapacitytoRatedCoolingCapacity());
+
+  // test part load fraction correlation curve
+  EXPECT_FALSE(coilHeatingWaterToAirHPEquationFit.partLoadFractionCorrelationCurve());
+  CurveQuadratic partLoadFractionCorrelationCurve(model);
+  coilHeatingWaterToAirHPEquationFit.setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
+  EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.partLoadFractionCorrelationCurve());
+  coilHeatingWaterToAirHPEquationFit.resetPartLoadFractionCorrelationCurve();
+  EXPECT_FALSE(coilHeatingWaterToAirHPEquationFit.partLoadFractionCorrelationCurve());
 }

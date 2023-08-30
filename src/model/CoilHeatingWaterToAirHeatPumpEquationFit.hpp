@@ -16,6 +16,7 @@ namespace openstudio {
 namespace model {
 
   class CurveQuadLinear;
+  class Curve;
 
   namespace detail {
 
@@ -94,6 +95,8 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient4() const;
     OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient5() const;
 
+    boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -147,6 +150,10 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
     OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
     OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
+
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+
+    void resetPartLoadFractionCorrelationCurve();
 
     //@}
     /** @name Other */
