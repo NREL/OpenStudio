@@ -357,12 +357,12 @@ TEST_F(ModelFixture, TableLookup_CoilWaterToAirHeatPumpEquationFit) {
     EXPECT_EQ(cql3, cc.coolingPowerConsumptionCurve());
 
     CurveQuadLinear cql4(m);
-    EXPECT_TRUE(ch.setHeatingCapacityCurve(cql1));
+    EXPECT_TRUE(ch.setHeatingCapacityCurve(cql4));
     ASSERT_TRUE(ch.heatingCapacityCurve().optionalCast<CurveQuadLinear>());
     EXPECT_EQ(cql4, ch.heatingCapacityCurve());
 
     CurveQuadLinear cql5(m);
-    EXPECT_TRUE(ch.setHeatingPowerConsumptionCurve(cql1));
+    EXPECT_TRUE(ch.setHeatingPowerConsumptionCurve(cql5));
     ASSERT_TRUE(ch.heatingPowerConsumptionCurve().optionalCast<CurveQuadLinear>());
     EXPECT_EQ(cql5, ch.heatingPowerConsumptionCurve());
 
