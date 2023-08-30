@@ -3,8 +3,8 @@
 *  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
-#ifndef MODEL_DISTRICTHEATING_HPP
-#define MODEL_DISTRICTHEATING_HPP
+#ifndef MODEL_DISTRICTHEATINGSTEAM_HPP
+#define MODEL_DISTRICTHEATINGSTEAM_HPP
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
@@ -101,4 +101,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_DISTRICTHEATING_HPP
+#endif  // MODEL_DISTRICTHEATINGSTEAM_HPP
