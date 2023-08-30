@@ -20,6 +20,7 @@
 #include "../../model/PortList.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/PlantLoop.hpp"
+#include "../../model/CurveQuadratic.hpp"
 
 #include <utilities/idd/ZoneHVAC_WaterToAirHeatPump_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
@@ -49,6 +50,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
   sch.setName("HP AvailSch");
   CoilHeatingWaterToAirHeatPumpEquationFit htg_coil(m);
   htg_coil.setName("HP HC");
+  CurveQuadratic partLoadFractionCorrelationCurve(model);
+  htg_coil.setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
   CoilCoolingWaterToAirHeatPumpEquationFit clg_coil(m);
   clg_coil.setName("HP CC");
   FanOnOff fan(m);
@@ -294,6 +297,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
         idf_heatingCoil.getTarget(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName));
       ASSERT_TRUE(woCurve2);
       EXPECT_EQ(woCurve2->iddObject().type(), IddObjectType::Curve_QuadLinear);
+      boost::optional<WorkspaceObject> woCurve3(
+        idf_heatingCoil.getTarget(Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurveName));
+      ASSERT_TRUE(woCurve3);
+      EXPECT_EQ(woCurve3->iddObject().type(), IddObjectType::Curve_Quadratic);
     }
 
     {
