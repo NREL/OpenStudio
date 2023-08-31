@@ -759,15 +759,15 @@ namespace model {
   }
 
   boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit::partLoadFractionCorrelationCurve() const {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->partLoadFractionCorrelationCurve();
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->partLoadFractionCorrelationCurve();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setPartLoadFractionCorrelationCurve(const Curve& curve) {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setPartLoadFractionCorrelationCurve(curve);
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setPartLoadFractionCorrelationCurve(curve);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit::resetPartLoadFractionCorrelationCurve() {
-    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetPartLoadFractionCorrelationCurve();
+    getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->resetPartLoadFractionCorrelationCurve();
   }
 
   /// @endcond
