@@ -50,7 +50,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
   sch.setName("HP AvailSch");
   CoilHeatingWaterToAirHeatPumpEquationFit htg_coil(m);
   htg_coil.setName("HP HC");
-  CurveQuadratic partLoadFractionCorrelationCurve(model);
+  CurveQuadratic partLoadFractionCorrelationCurve(m);
   htg_coil.setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
   CoilCoolingWaterToAirHeatPumpEquationFit clg_coil(m);
   clg_coil.setName("HP CC");
