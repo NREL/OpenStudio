@@ -2163,12 +2163,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         const double& rstSPLow
     ) {
       model::SetpointManagerOutdoorAirReset spm(model);
-
-      spm.setOutdoorHighTemperature(rstOutdrHi);
-      spm.setSetpointatOutdoorHighTemperature(rstSPHi);
-      spm.setOutdoorLowTemperature(rstOutdrLow);
-      spm.setSetpointatOutdoorLowTemperature(rstSPLow);
-
+      spm.setOutdoorHighTemperature(rstOutdrLow);
+      spm.setSetpointatOutdoorHighTemperature(rstSPLow);
+      spm.setOutdoorLowTemperature(rstOutdrHi);
+      spm.setSetpointatOutdoorLowTemperature(rstSPHi);
       return spm;
     };
 
