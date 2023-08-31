@@ -146,6 +146,11 @@ namespace energyplus {
         eg.setDouble(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedReferenceUnitRatedAirFlowRate, value.get());
       }
 
+      eg.setDouble(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate2017,
+                   speed.ratedSupplyFanPowerPerVolumeFlowRate2017());
+      eg.setDouble(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate2023,
+                   speed.ratedSupplyFanPowerPerVolumeFlowRate2023());
+
       // SpeedHeatingCapacityFunctionofTemperatureCurveName
       {
         auto curve = speed.heatingCapacityFunctionofTemperatureCurve();

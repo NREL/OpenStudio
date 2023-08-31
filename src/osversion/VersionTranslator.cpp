@@ -42,6 +42,7 @@
 #include <OpenStudio.hxx>
 
 #include <algorithm>
+#include <cmath>
 #include <iterator>
 #include <map>
 #include <memory>
@@ -7663,6 +7664,78 @@ namespace osversion {
 
         ss << ghxObject;
         ss << kusudaObject;
+
+      } else if ((iddname == "OS:Coil:Cooling:DX:VariableSpeed:SpeedData") || (iddname == "OS:Coil:Heating:DX:VariableSpeed:SpeedData")) {
+
+        // The two coils have the new fields in the same location, with the same defaults
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // Heating:
+        // * Rated Supply Fan Power Per Volume Flow Rate 2017 * 6
+        // * Rated Supply Fan Power Per Volume Flow Rate 2023 * 7
+        // Cooling:
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2017 - 6
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 - 7
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 6) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 2, value.get());
+            }
+          }
+        }
+
+        // Rated Supply/Evaporator Fan Power Per Volume Flow Rate 2017
+        newObject.setDouble(6, 773.3);
+
+        // Rated Supply/Evaporator Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(7, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:DX:TwoSpeed") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017 * 7
+        // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023 * 8
+        // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017 * 21
+        // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023 * 22
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else if (i < 19) {
+              newObject.setString(i + 2, value.get());
+            } else {
+              newObject.setString(i + 4, value.get());
+            }
+          }
+        }
+
+        // Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017
+        newObject.setDouble(7, 773.3);
+        // Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(8, 934.4);
+
+        // Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2017
+        newObject.setDouble(21, 773.3);
+        // Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(22, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
 
         // No-op
       } else {

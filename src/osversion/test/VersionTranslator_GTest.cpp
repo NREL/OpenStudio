@@ -2548,3 +2548,77 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_GroundHeatExchangerVertical) {
   EXPECT_EQ(3.2, uka.getDouble(6).get());                                                       // Average Amplitude of Surface Temperature
   EXPECT_EQ(8.0, uka.getDouble(7).get());                                                       // Phase Shift of Minimum Surface Temperature
 }
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowRate) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_RatedFanPowerPerVolumeFlowRate.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_RatedFanPowerPerVolumeFlowRate.osm");
+  model->save(outPath, true);
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:TwoSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(39, coil.numFields());
+
+    // 2 new fields inserted at position 7,
+    // Field Before
+    EXPECT_EQ(2.0, coil.getDouble(6).get());
+    EXPECT_EQ(773.3, coil.getDouble(7).get());  // Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, coil.getDouble(8).get());  // Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023
+    EXPECT_EQ(400.0, coil.getDouble(9).get());
+
+    EXPECT_EQ(1.0, coil.getDouble(20).get());
+    EXPECT_EQ(773.3, coil.getDouble(21).get());  // Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, coil.getDouble(22).get());  // Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2023
+    ASSERT_TRUE(coil.getTarget(23));
+    EXPECT_EQ("LowSpeedTotCapFT", coil.getTarget(23)->nameString());
+
+    // Last field
+    ASSERT_TRUE(coil.getTarget(39));
+    EXPECT_EQ("BasinHeaterOpSch", coil.getTarget(39)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> ccSps = model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed:SpeedData");
+    ASSERT_EQ(1u, ccSps.size());
+    WorkspaceObject ccSp = ccSps[0];
+
+    EXPECT_EQ(14, ccSp.numFields());
+
+    // 2 new fields inserted at position 5
+    // Field Before
+    EXPECT_EQ(1.0, ccSp.getDouble(4).get());
+    EXPECT_EQ(773.3, ccSp.getDouble(5).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, ccSp.getDouble(6).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+    EXPECT_EQ(2.0, ccSp.getDouble(7).get());
+
+    // Last field
+    ASSERT_TRUE(ccSp.getTarget(11));
+    EXPECT_EQ("ccSp_EIRfFlow", ccSp.getTarget(11)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> hcSps = model->getObjectsByType("OS:Coil:Heating:DX:VariableSpeed:SpeedData");
+    ASSERT_EQ(1u, hcSps.size());
+    WorkspaceObject hcSp = hcSps[0];
+
+    EXPECT_EQ(11, hcSp.numFields());
+
+    // 2 new fields inserted at position 5
+    // Field Before
+    EXPECT_EQ(1.0, hcSp.getDouble(4).get());
+    EXPECT_EQ(773.3, hcSp.getDouble(5).get());  // Rated Supply Air Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, hcSp.getDouble(6).get());  // Rated Supply Air Fan Power Per Volume Flow Rate 2023
+    ASSERT_TRUE(hcSp.getTarget(7));
+    EXPECT_EQ("hcSp_heatCapFT", hcSp.getTarget(7)->nameString());
+
+    // Last field
+    ASSERT_TRUE(hcSp.getTarget(11));
+    EXPECT_EQ("hcSp_EIRfFlow", hcSp.getTarget(11)->nameString());
+  }
+}

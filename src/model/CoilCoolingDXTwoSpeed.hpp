@@ -85,6 +85,10 @@ namespace model {
    *  Optional == false means "Autocalculate" */
     boost::optional<double> ratedHighSpeedAirFlowRate() const;
 
+    double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+    double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023() const;
+
     /** Returns the Curve referred to by the
    *  TotalCoolingCapacityFunctionOfTemperatureCurveName field. */
     Curve totalCoolingCapacityFunctionOfTemperatureCurve() const;
@@ -119,6 +123,10 @@ namespace model {
     /** Returns the value of the RatedLowSpeedAirFlowRate field.
    *  Optional == false means "Autocalculate" */
     boost::optional<double> ratedLowSpeedAirFlowRate() const;
+
+    double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+    double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023() const;
 
     /** Returns the Curve referred to by the
    *  TotalCoolingCapacityFunctionOfTemperatureCurveName field. */
@@ -197,6 +205,10 @@ namespace model {
 
     bool setRatedHighSpeedAirFlowRate(double value);
 
+    bool setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017);
+
+    bool setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023);
+
     /** Sets the Curve referred to by the
    *  TotalCoolingCapacityFunctionOfTemperatureCurveName field. **/
     bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
@@ -234,6 +246,10 @@ namespace model {
     bool setRatedLowSpeedAirFlowRate(boost::optional<double> value);
 
     bool setRatedLowSpeedAirFlowRate(double value);
+
+    bool setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017);
+
+    bool setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023);
 
     /** Sets the Curve referred to by the LowSpeedTotalCoolingCapacityFunctionOfTemperatureCurveName field. */
     bool setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);

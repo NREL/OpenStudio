@@ -160,6 +160,11 @@ namespace energyplus {
         eg.setDouble(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedReferenceUnitRatedAirFlowRate, value.get());
       }
 
+      eg.setDouble(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                   speed.ratedEvaporatorFanPowerPerVolumeFlowRate2017());
+      eg.setDouble(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                   speed.ratedEvaporatorFanPowerPerVolumeFlowRate2023());
+
       // SpeedReferenceUnitRatedCondenserAirFlowRate
       if ((value = speed.referenceUnitRatedCondenserAirFlowRate())) {
         eg.setDouble(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedReferenceUnitRatedCondenserAirFlowRate, value.get());

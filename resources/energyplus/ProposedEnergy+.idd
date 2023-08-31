@@ -30722,7 +30722,7 @@ Coil:Cooling:DX:TwoSpeed,
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR
        \note and Rated COP. Should be between 0.00004027 m3/s and .00006041 m3/s per watt
        \note of rated total cooling capacity.
-  N5 , \field High Speed 2017 Rated Evaporator Fan Power Per Volume Flow Rate
+  N5 , \field High Speed Rated Evaporator Fan Power Per Volume Flow Rate 2017
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30735,7 +30735,7 @@ Coil:Cooling:DX:TwoSpeed,
        \minimum 0.0
        \maximum 1250.0
        \default 773.3
-  N6 , \field High Speed 2023 Rated Evaporator Fan Power Per Volume Flow Rate
+  N6 , \field High Speed Rated Evaporator Fan Power Per Volume Flow Rate 2023
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30832,7 +30832,7 @@ Coil:Cooling:DX:TwoSpeed,
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR
        \note and Rated COP. Should be between 0.00004027 m3/s and .00006041 m3/s per watt
        \note of rated total cooling capacity.
-  N12, \field Low Speed 2017 Rated Evaporator Fan Power Per Volume Flow Rate
+  N12, \field Low Speed Rated Evaporator Fan Power Per Volume Flow Rate 2017
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30845,7 +30845,7 @@ Coil:Cooling:DX:TwoSpeed,
        \minimum 0.0
        \maximum 1250.0
        \default 773.3
-  N13, \field Low Speed 2023 Rated Evaporator Fan Power Per Volume Flow Rate
+  N13, \field Low Speed Rated Evaporator Fan Power Per Volume Flow Rate 2023
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.

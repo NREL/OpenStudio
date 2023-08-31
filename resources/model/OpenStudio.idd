@@ -18213,7 +18213,7 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
        \required-field
 
 OS:Coil:Cooling:DX:TwoSpeed,
-       \min-fields 20
+       \min-fields 24
   A1, \field Handle
        \type handle
        \required-field
@@ -18260,7 +18260,33 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \autosizable
        \units m3/s
        \minimum> 0
-  N5 , \field Unit Internal Static Air Pressure
+  N5 , \field Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017
+       \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
+       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
+       \note The test conditions vary external static pressure based on total cooling capacity.
+       \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER), Energy
+       \note Efficiency Ratio (EER), Integrated Energy Efficiency Ratio (IEER), and the Standard Rating
+       \note (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file. This value is not
+       \note used for modeling the evaporator fan during simulations.
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1250.0
+       \required-field
+  N6 , \field Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023
+       \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
+       \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
+       \note The test conditions vary external static pressure based on total cooling capacity.
+       \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER2), Energy
+       \note Efficiency Ratio (EER), Integrated Energy Efficiency Ratio (IEER), and the Standard Rating
+       \note (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file. This value is not
+       \note used for modeling the evaporator fan during simulations.
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1505.0
+       \required-field
+  N7 , \field Unit Internal Static Air Pressure
        \note Enter pressure drop for the unit containing the coil.
        \note This value is only used to calculate Energy Efficiency Ratio
        \note (EER), Integrated Energy Efficiency Ratio (IEER), and the
@@ -18313,7 +18339,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type object-list
        \required-field
        \object-list UnivariateFunctions
-  N6, \field Rated Low Speed Total Cooling Capacity
+  N8, \field Rated Low Speed Total Cooling Capacity
        \note gross capacity excluding supply air fan heat
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
@@ -18322,7 +18348,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \autosizable
        \units W
        \minimum> 0
-  N7, \field Rated Low Speed Sensible Heat Ratio
+  N9, \field Rated Low Speed Sensible Heat Ratio
        \note Rated sensible heat ratio (gross sensible capacity/gross total capacity)
        \note sensible and total capacities do not include supply fan heat
        \type real
@@ -18330,14 +18356,14 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \autosizable
        \minimum 0.5
        \maximum 1
-  N8, \field Rated Low Speed COP
+  N10, \field Rated Low Speed COP
        \note Gross cooling capacity divided by power input to the compressor and outdoor fan,
        \note does not include supply fan heat or supply fan electrical energy input
        \type real
        \units W/W
        \minimum> 0
        \required-field
-  N9, \field Rated Low Speed Air Flow Rate
+  N11, \field Rated Low Speed Air Flow Rate
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR
        \note and Rated COP. Should be between 0.00004027 m3/s and .00006041 m3/s per watt
        \note of rated total cooling capacity.
@@ -18346,6 +18372,32 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \autosizable
        \units m3/s
        \minimum> 0
+  N12, \field Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2017
+       \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
+       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
+       \note The test conditions vary external static pressure based on total cooling capacity.
+       \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER), Energy
+       \note Efficiency Ratio (EER), Integrated Energy Efficiency Ratio (IEER), and the Standard Rating
+       \note (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file. This value is not
+       \note used for modeling the evaporator fan during simulations.
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1250.0
+       \required-field
+  N13, \field Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2023
+       \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
+       \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
+       \note The test conditions vary external static pressure based on total cooling capacity.
+       \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER2), Energy
+       \note Efficiency Ratio (EER), Integrated Energy Efficiency Ratio (IEER), and the Standard Rating
+       \note (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file. This value is not
+       \note used for modeling the evaporator fan during simulations.
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1505.0
+       \required-field
   A11, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
@@ -18369,42 +18421,42 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \default AirCooled
        \key AirCooled
        \key EvaporativelyCooled
-  N10, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  N14, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \required-field
        \units C
-  N11, \field High Speed Evaporative Condenser Effectiveness
+  N15, \field High Speed Evaporative Condenser Effectiveness
        \type real
        \units dimensionless
        \minimum 0
        \maximum 1
        \required-field
-  N12, \field High Speed Evaporative Condenser Air Flow Rate
+  N16, \field High Speed Evaporative Condenser Air Flow Rate
        \note Used to calculate evaporative condenser water use
        \type real
        \autosizable
        \units m3/s
        \minimum> 0
-  N13, \field High Speed Evaporative Condenser Pump Rated Power Consumption
+  N17, \field High Speed Evaporative Condenser Pump Rated Power Consumption
        \note Rated power consumed by the evaporative condenser's water pump at high speed
        \type real
        \autosizable
        \units W
         \ip-units W
        \minimum 0
-  N14, \field Low Speed Evaporative Condenser Effectiveness
+  N18, \field Low Speed Evaporative Condenser Effectiveness
        \type real
        \units dimensionless
        \minimum 0
        \maximum 1
        \required-field
-  N15, \field Low Speed Evaporative Condenser Air Flow Rate
+  N19, \field Low Speed Evaporative Condenser Air Flow Rate
        \note Used to calculate evaporative condenser water use
        \type real
        \autosizable
        \units m3/s
        \minimum> 0
-  N16, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
+  N20, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
        \note Rated power consumed by the evaporative condenser's water pump at low speed
        \type real
        \autosizable
@@ -18417,7 +18469,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
   A16, \field Condensate Collection Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
-  N17, \field Basin Heater Capacity
+  N21, \field Basin Heater Capacity
        \note This field is only used for Condenser Type = EvaporativelyCooled and for periods
        \note when the basin heater is available (field Basin Heater Operating Schedule Name).
        \note For this situation, the heater maintains the basin water temperature at the basin heater
@@ -18427,7 +18479,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \units W/K
        \minimum 0
        \required-field
-  N18, \field Basin Heater Setpoint Temperature
+  N22, \field Basin Heater Setpoint Temperature
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
        \type real
@@ -20383,7 +20435,7 @@ OS:Coil:Heating:DX:VariableSpeed,
         \object-list ModelObjectLists
 
 OS:Coil:Heating:DX:VariableSpeed:SpeedData,
-        \min-fields 9
+        \min-fields 11
    A1,  \field Handle
         \type handle
         \required-field
@@ -20406,6 +20458,28 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
         \units m3/s
         \type real
         \minimum 0
+        \required-field
+   N4,  \field Rated Supply Air Fan Power Per Volume Flow Rate 2017
+        \note Enter the supply air fan power per air volume flow rate at the rated speed 1 test conditions
+        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
+        \note The test conditions vary external static pressure based on heating capacity. This value
+        \note is only used to calculate Heating Seasonal Performance Factor(HSPF). This value is not
+        \note used for modeling the supply air fan during simulations.
+        \type real
+        \units W/(m3/s)
+        \minimum 0.0
+        \maximum 1250.0
+        \required-field
+   N5,  \field Rated Supply Air Fan Power Per Volume Flow Rate 2023
+        \note Enter the supply air fan power per air volume flow rate at the rated speed 1 test conditions
+        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
+        \note The test conditions vary external static pressure based on heating capacity. This value
+        \note is only used to calculate Heating Seasonal Performance Factor(HSPF). This value is not
+        \note used for modeling the supply air fan during simulations.
+        \type real
+        \units W/(m3/s)
+        \minimum 0.0
+        \maximum 1505.0
         \required-field
    A3,  \field Heating Capacity Function of Temperature Curve Name
         \required-field
@@ -20536,7 +20610,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \object-list ModelObjectLists
 
 OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
-        \min-fields 12
+        \min-fields 14
    A1,  \field Handle
         \type handle
         \required-field
@@ -20565,12 +20639,35 @@ OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
         \type real
         \minimum 0
         \required-field
-   N5,  \field Reference Unit Rated Condenser Air Flow Rate
+   N5,  \field Rated Evaporator Fan Power Per Volume Flow Rate 2017
+        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions.
+        \note The test conditions vary external static pressure based on total cooling capacity.
+        \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER), and the
+        \note Standard Rating (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file.
+        \note This value is not used for modeling the evaporator fan during simulations.
+        \type real
+        \units W/(m3/s)
+        \minimum 0.0
+        \maximum 1250.0
+        \required-field
+   N6,  \field Rated Evaporator Fan Power Per Volume Flow Rate 2023
+        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
+        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
+        \note The test conditions vary external static pressure based on total cooling capacity.
+        \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER2), and the
+        \note Standard Rating (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file.
+        \note This value is not used for modeling the evaporator fan during simulations.
+        \type real
+        \units W/(m3/s)
+        \minimum 0.0
+        \maximum 1505.0
+        \required-field
+   N7,  \field Reference Unit Rated Condenser Air Flow Rate
         \units m3/s
         \type real
         \minimum 0
         \note This field is only used for Condenser Type = EvaporativelyCooled
-   N6,  \field Reference Unit Rated Pad Effectiveness of Evap Precooling
+   N8,  \field Reference Unit Rated Pad Effectiveness of Evap Precooling
         \units dimensionless
         \type real
         \minimum 0

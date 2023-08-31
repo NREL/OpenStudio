@@ -80,6 +80,10 @@ namespace model {
 
       boost::optional<double> ratedHighSpeedAirFlowRate() const;
 
+      double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+      double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023() const;
+
       Curve totalCoolingCapacityFunctionOfTemperatureCurve() const;
 
       Curve totalCoolingCapacityFunctionOfFlowFractionCurve() const;
@@ -97,6 +101,10 @@ namespace model {
       double ratedLowSpeedCOP() const;
 
       boost::optional<double> ratedLowSpeedAirFlowRate() const;
+
+      double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+      double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023() const;
 
       Curve lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve() const;
 
@@ -148,6 +156,10 @@ namespace model {
 
       bool setRatedHighSpeedAirFlowRate(double value);
 
+      bool setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017);
+
+      bool setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023);
+
       bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
       bool setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve);
@@ -171,6 +183,10 @@ namespace model {
       bool setRatedLowSpeedAirFlowRate(boost::optional<double> value);
 
       bool setRatedLowSpeedAirFlowRate(double value);
+
+      bool setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017);
+
+      bool setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023);
 
       bool setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
