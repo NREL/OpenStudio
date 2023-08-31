@@ -2449,6 +2449,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     coil.setAvailableSchedule(availabilitySchedule.get());
 
+    coil.setRatedInletWaterTemperature(82.2);
+    coil.setRatedInletAirTemperature(16.6);
+    coil.setRatedOutletWaterTemperature(71.1);
+    coil.setRatedOutletAirTemperature(32.2);
+
     pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
 
     boost::optional<model::PlantLoop> plant;
@@ -2475,6 +2480,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
             }
           }
         }
+
+        // Replace the default temperature rating values, with values that align with the plant sizing.
+        coil.setRatedInletWaterTemperature(plant->sizingPlant().designLoopExitTemperature());
+        const auto outletTemp = plant->sizingPlant().designLoopExitTemperature() - plant->sizingPlant().loopDesignTemperatureDifference();
+        coil.setRatedOutletWaterTemperature(outletTemp);
       } else {
         LOG(Error, "CoilHeatingWater '" << coilName << "' has a FluidSegInRef of '" << fluidSegInRefElement.text().as_string()
                 << "' but we couldn't find a plantLoop that matches.");
@@ -2486,14 +2496,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       coil.setPerformanceInputMethod("NominalCapacity");
 
       coil.setRatedCapacity(capTotGrossRtd.get());
-
-      coil.setRatedInletWaterTemperature(82.2);
-
-      coil.setRatedInletAirTemperature(16.6);
-
-      coil.setRatedOutletWaterTemperature(71.1);
-
-      coil.setRatedOutletAirTemperature(32.2);
 
       // Find related/containing systems (aka figure out the context of the coil)
 
