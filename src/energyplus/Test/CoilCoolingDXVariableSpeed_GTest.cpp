@@ -13,6 +13,7 @@
 #include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/CurveLinear.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -26,6 +27,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXVariableSpeed_MinOATCom
 
   CoilCoolingDXVariableSpeed coil(m);
   coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-7.5);
+
+  EXPECT_TRUE(coil.setMaximumCyclingRate(3.5));
+  EXPECT_TRUE(coil.setLatentCapacityTimeConstant(90.0));
+  EXPECT_TRUE(coil.setFanDelayTime(120.0));
+
+  CurveLinear crankCurve(m);
+  crankCurve.setName("CrankCurve");
+  EXPECT_TRUE(coil.setCrankcaseHeaterCapacityFunctionofTemperatureCurve(crankCurve));
 
   // Need to be used to be translated
   AirLoopHVAC airLoop(m);
@@ -42,4 +51,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXVariableSpeed_MinOATCom
   auto _d = idf_coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
   ASSERT_TRUE(_d);
   EXPECT_DOUBLE_EQ(-7.5, _d.get());
+
+  EXPECT_EQ(3.5, coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::MaximumCyclingRate).get());
+  EXPECT_EQ(90.0, coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::LatentCapacityTimeConstant).get());
+  EXPECT_EQ(120.0, coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::FanDelayTime).get());
+  EXPECT_EQ("CrankCurve", coil.getString(Coil_Cooling_DX_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName).get());
 }

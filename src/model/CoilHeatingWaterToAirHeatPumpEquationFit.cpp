@@ -16,6 +16,7 @@
 #include "Model.hpp"
 #include "CurveQuadLinear.hpp"
 #include "CurveQuadLinear_Impl.hpp"
+#include "CurveLinear.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -304,24 +305,58 @@ namespace model {
       return boost::none;
     }
 
+    boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::optionalHeatingCapacityCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName);
+    }
+
     CurveQuadLinear CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingCapacityCurve() const {
-      WorkspaceObject wo = getTarget(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName).get();
-      return wo.cast<CurveQuadLinear>();
+      boost::optional<Curve> value = optionalHeatingCapacityCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Heating Capacity Curve attached.");
+      }
+      return value->cast<CurveQuadLinear>();
     }
 
     bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve) {
-      bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName, heatingCapacityCurve.handle());
+      const bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName, heatingCapacityCurve.handle());
       return result;
     }
 
+    boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::optionalHeatingPowerConsumptionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName);
+    }
+
     CurveQuadLinear CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingPowerConsumptionCurve() const {
-      WorkspaceObject wo = getTarget(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName).get();
-      return wo.cast<CurveQuadLinear>();
+      boost::optional<Curve> value = optionalHeatingPowerConsumptionCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Heating Power Consumption Curve attached.");
+      }
+      return value->cast<CurveQuadLinear>();
     }
 
     bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve) {
-      bool result =
+      const bool result =
         setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName, heatingPowerConsumptionCurve.handle());
+      return result;
+    }
+
+    boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::optionalPartLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurveName);
+    }
+
+    Curve CoilHeatingWaterToAirHeatPumpEquationFit_Impl::partLoadFractionCorrelationCurve() const {
+      boost::optional<Curve> value = optionalPartLoadFractionCorrelationCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Part Load Fraction Correlation Curve attached.");
+      }
+      return value.get();
+    }
+
+    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
+      const bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurveName,
+                                     partLoadFractionCorrelationCurve.handle());
       return result;
     }
 
@@ -416,6 +451,13 @@ namespace model {
 
     ok = setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
     OS_ASSERT(ok);
+
+    constexpr double maximumCyclingRateSeconds = 60.0;
+    constexpr double heatPumpTimeConstantPerHour = 2.5;
+    const CurveLinear plfCorrelation =
+      CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve(model, maximumCyclingRateSeconds, heatPumpTimeConstantPerHour);
+    ok = setPartLoadFractionCorrelationCurve(plfCorrelation);
+    OS_ASSERT(ok);
   }
 
   // create a new CoilHeatingWaterToAirHeatPumpEquationFit object in the model's workspace
@@ -449,6 +491,13 @@ namespace model {
     heatingPowerConsumptionCurve.setCoefficient4y(-0.050682973);
     heatingPowerConsumptionCurve.setCoefficient5z(0.011385145);
     ok = setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
+    OS_ASSERT(ok);
+
+    constexpr double maximumCyclingRateSeconds = 60.0;
+    constexpr double heatPumpTimeConstantPerHour = 2.5;
+    const CurveLinear plfCorrelation =
+      CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve(model, maximumCyclingRateSeconds, heatPumpTimeConstantPerHour);
+    ok = setPartLoadFractionCorrelationCurve(plfCorrelation);
     OS_ASSERT(ok);
   }
 
@@ -610,6 +659,14 @@ namespace model {
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve) {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
+  }
+
+  Curve CoilHeatingWaterToAirHeatPumpEquationFit::partLoadFractionCorrelationCurve() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->partLoadFractionCorrelationCurve();
+  }
+
+  bool CoilHeatingWaterToAirHeatPumpEquationFit::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
   }
 
   /// @cond

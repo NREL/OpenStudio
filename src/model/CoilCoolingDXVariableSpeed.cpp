@@ -410,6 +410,57 @@ namespace model {
       return result;
     }
 
+    double CoilCoolingDXVariableSpeed_Impl::maximumCyclingRate() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeedFields::MaximumCyclingRate, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingDXVariableSpeed_Impl::setMaximumCyclingRate(double maximumCyclingRate) {
+      const bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::MaximumCyclingRate, maximumCyclingRate);
+      // OS_ASSERT(result);
+      return result;
+    }
+
+    double CoilCoolingDXVariableSpeed_Impl::latentCapacityTimeConstant() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeedFields::LatentCapacityTimeConstant, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingDXVariableSpeed_Impl::setLatentCapacityTimeConstant(double latentCapacityTimeConstant) {
+      const bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::LatentCapacityTimeConstant, latentCapacityTimeConstant);
+      // OS_ASSERT(result);
+      return result;
+    }
+
+    double CoilCoolingDXVariableSpeed_Impl::fanDelayTime() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeedFields::FanDelayTime, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingDXVariableSpeed_Impl::setFanDelayTime(double fanDelayTime) {
+      const bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::FanDelayTime, fanDelayTime);
+      // OS_ASSERT(result);
+      return result;
+    }
+
+    boost::optional<Curve> CoilCoolingDXVariableSpeed_Impl::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName);
+    }
+
+    bool CoilCoolingDXVariableSpeed_Impl::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+      const bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve.handle());
+      return result;
+    }
+
+    void CoilCoolingDXVariableSpeed_Impl::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+      const bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
     boost::optional<Curve> CoilCoolingDXVariableSpeed_Impl::optionalEnergyPartLoadFractionCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName);
     }
@@ -428,6 +479,9 @@ namespace model {
     std::vector<ModelObject> CoilCoolingDXVariableSpeed_Impl::children() const {
       std::vector<ModelObject> children;
       children.push_back(energyPartLoadFractionCurve());
+      if (auto c_ = crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+        children.emplace_back(std::move(*c_));
+      }
       if (auto const _stageDataList = speedDataList()) {
         for (const auto& mo : _stageDataList->modelObjects()) {
           children.push_back(mo);
@@ -685,6 +739,11 @@ namespace model {
     OS_ASSERT(ok);
     ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
     OS_ASSERT(ok);
+    ok = setMaximumCyclingRate(2.5);
+    OS_ASSERT(ok);
+    ok = setLatentCapacityTimeConstant(60.0);
+    OS_ASSERT(ok);
+    ok = setFanDelayTime(60.0);
 
     auto partLoadFraction = CurveQuadratic(model);
     partLoadFraction.setCoefficient1Constant(0.85);
@@ -732,6 +791,11 @@ namespace model {
     OS_ASSERT(ok);
     ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
     OS_ASSERT(ok);
+    ok = setMaximumCyclingRate(2.5);
+    OS_ASSERT(ok);
+    ok = setLatentCapacityTimeConstant(60.0);
+    OS_ASSERT(ok);
+    ok = setFanDelayTime(60.0);
     ok = setEnergyPartLoadFractionCurve(partLoadFraction);
     OS_ASSERT(ok);
     ok = setCondenserType("AirCooled");
@@ -968,6 +1032,42 @@ namespace model {
 
   void CoilCoolingDXVariableSpeed::removeAllSpeeds() {
     getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->removeAllSpeeds();
+  }
+
+  double CoilCoolingDXVariableSpeed::maximumCyclingRate() const {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->maximumCyclingRate();
+  }
+
+  bool CoilCoolingDXVariableSpeed::setMaximumCyclingRate(double maximumCyclingRate) {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setMaximumCyclingRate(maximumCyclingRate);
+  }
+
+  double CoilCoolingDXVariableSpeed::latentCapacityTimeConstant() const {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->latentCapacityTimeConstant();
+  }
+
+  bool CoilCoolingDXVariableSpeed::setLatentCapacityTimeConstant(double latentCapacityTimeConstant) {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setLatentCapacityTimeConstant(latentCapacityTimeConstant);
+  }
+
+  double CoilCoolingDXVariableSpeed::fanDelayTime() const {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->fanDelayTime();
+  }
+
+  bool CoilCoolingDXVariableSpeed::setFanDelayTime(double fanDelayTime) {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setFanDelayTime(fanDelayTime);
+  }
+
+  boost::optional<Curve> CoilCoolingDXVariableSpeed::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->crankcaseHeaterCapacityFunctionofTemperatureCurve();
+  }
+
+  bool CoilCoolingDXVariableSpeed::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setCrankcaseHeaterCapacityFunctionofTemperatureCurve(curve);
+  }
+
+  void CoilCoolingDXVariableSpeed::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+    getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
   }
 
   /// @cond

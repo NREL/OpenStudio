@@ -164,6 +164,43 @@ namespace model {
       return value.get();
     }
 
+    double CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::maximumCyclingRate() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::MaximumCyclingRate, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::setMaximumCyclingRate(double maximumCyclingRate) {
+      const bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::MaximumCyclingRate, maximumCyclingRate);
+      // OS_ASSERT(result);
+      return result;
+    }
+
+    double CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::latentCapacityTimeConstant() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::LatentCapacityTimeConstant, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::setLatentCapacityTimeConstant(double latentCapacityTimeConstant) {
+      const bool result =
+        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::LatentCapacityTimeConstant, latentCapacityTimeConstant);
+      // OS_ASSERT(result);
+      return result;
+    }
+
+    double CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::fanDelayTime() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::FanDelayTime, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::setFanDelayTime(double fanDelayTime) {
+      const bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::FanDelayTime, fanDelayTime);
+      // OS_ASSERT(result);
+      return result;
+    }
+
     bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::useHotGasReheat() const {
       boost::optional<std::string> value = getString(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::UseHotGasReheat, true);
       OS_ASSERT(value);
@@ -478,6 +515,12 @@ namespace model {
     OS_ASSERT(ok);
     ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
     OS_ASSERT(ok);
+    ok = setMaximumCyclingRate(0.0);
+    OS_ASSERT(ok);
+    ok = setLatentCapacityTimeConstant(0.0);
+    OS_ASSERT(ok);
+    ok = setFanDelayTime(60.0);
+    OS_ASSERT(ok);
     setUseHotGasReheat(false);
 
     auto partLoadFraction = CurveQuadratic(model);
@@ -509,6 +552,12 @@ namespace model {
     ok = setNominalTimeforCondensatetoBeginLeavingtheCoil(0);
     OS_ASSERT(ok);
     ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
+    OS_ASSERT(ok);
+    ok = setMaximumCyclingRate(0.0);
+    OS_ASSERT(ok);
+    ok = setLatentCapacityTimeConstant(0.0);
+    OS_ASSERT(ok);
+    ok = setFanDelayTime(60.0);
     OS_ASSERT(ok);
     setUseHotGasReheat(false);
     ok = setEnergyPartLoadFractionCurve(partLoadFraction);
@@ -640,6 +689,30 @@ namespace model {
 
   void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::removeAllSpeeds() {
     getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->removeAllSpeeds();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::maximumCyclingRate() const {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->maximumCyclingRate();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::setMaximumCyclingRate(double maximumCyclingRate) {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setMaximumCyclingRate(maximumCyclingRate);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::latentCapacityTimeConstant() const {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->latentCapacityTimeConstant();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::setLatentCapacityTimeConstant(double latentCapacityTimeConstant) {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setLatentCapacityTimeConstant(latentCapacityTimeConstant);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::fanDelayTime() const {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->fanDelayTime();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::setFanDelayTime(double fanDelayTime) {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setFanDelayTime(fanDelayTime);
   }
 
   /// @cond

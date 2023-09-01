@@ -18981,6 +18981,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \memo compressor), single-speed, equation-fit model. Optional inputs for moisture
        \memo evaporation from wet coil when compressor cycles off with continuous fan operation.
        \memo Equation-fit model uses normalized curves to describe the heat pump performance.
+       \min-fields 23
   A1,  \field Handle
        \type handle
        \required-field
@@ -19074,6 +19075,13 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \required-field
        \type object-list
        \object-list QuadvariateFunctions
+  A10, \field Part Load Fraction Correlation Curve Name
+       \note quadratic curve = a + b*PLR + c*PLR**2
+       \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+       \note PLR = part load ratio (cooling load/steady state capacity)
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
   N9,  \field Nominal Time for Condensate Removal to Begin
        \type real
        \units s
@@ -19085,7 +19093,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \note Nominal time is equal to the ratio of the energy of the coil's maximum
        \note condensate holding capacity (J) to the coil's steady state latent capacity (W).
        \note Suggested value is 1000; zero value means latent degradation model is disabled.
-  N10; \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+  N10, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
        \type real
        \units dimensionless
        \minimum 0.0
@@ -19095,6 +19103,30 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \note the compressor first turns off) and the coil's steady state latent capacity
        \note at rated air flow rate and temperature conditions. Suggested value is 1.5; zero value
        \note means latent degradation model is disabled.
+  N11, \field Maximum Cycling Rate
+       \note The maximum on-off cycling Rate for the compressor, which occurs at 50% run time
+       \note fraction. Suggested value is 3; zero value means latent degradation model is disabled.
+       \type real
+       \units cycles/hr
+       \minimum 0.0
+       \maximum 5.0
+       \required-field
+  N12, \field Latent Capacity Time Constant
+       \note Time constant for the cooling coil's latent capacity to reach steady state after
+       \note startup. Suggested value is 45; zero value means latent degradation model is disabled.
+       \type real
+       \units s
+       \minimum 0.0
+       \maximum 500.0
+       \required-field
+  N13; \field Fan Delay Time
+       \units s
+       \minimum 0.0
+       \required-field
+       \note Programmed time delay for heat pump fan to shut off after compressor cycle off.
+       \note Only required when fan operating mode is cycling
+       \note Enter 0 when fan operating mode is continuous
+
 
 OS:Coil:Heating:DX:SingleSpeed,
        \min-fields 23
@@ -20079,6 +20111,7 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \memo Direct expansion (DX) heating coil for water-to-air heat pump (includes electric
        \memo compressor), single-speed, equation-fit model. Equation-fit model uses normalized
        \memo curves to describe the heat pump performance.
+       \min-fields 16
   A1,  \field Handle
        \type handle
        \required-field
@@ -20158,10 +20191,17 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \required-field
        \type object-list
        \object-list QuadvariateFunctions
-  A8;  \field Heating Power Consumption Curve Name
+  A8,  \field Heating Power Consumption Curve Name
        \required-field
        \type object-list
        \object-list QuadvariateFunctions
+  A9;  \field Part Load Fraction Correlation Curve Name
+       \note quadratic curve = a + b*PLR + c*PLR**2
+       \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+       \note PLR = part load ratio (heat load/steady state capacity)
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
 
 OS:Coil:Heating:DX:MultiSpeed,
        \extensible:1
@@ -20511,7 +20551,7 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
         \note ffa = Fraction of the full load Air Flow
 
 OS:Coil:Cooling:DX:VariableSpeed,
-        \min-fields 21
+        \min-fields 26
    A1,  \field Handle
         \type handle
         \required-field
@@ -20554,6 +20594,28 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \type real
         \minimum 0
         \required-field
+   N6,  \field Maximum Cycling Rate
+        \note The maximum on-off cycling Rate for the compressor, which occurs at 50% run time
+        \note fraction. Suggested value is 3; zero value means latent degradation model is disabled.
+        \type real
+        \units cycles/hr
+        \minimum 0.0
+        \maximum 5.0
+        \required-field
+   N7,  \field Latent Capacity Time Constant
+        \note Time constant for the cooling coil's latent capacity to reach steady state after
+        \note startup. Suggested value is 45; zero value means latent degradation model is disabled.
+        \type real
+        \units s
+        \minimum 0.0
+        \maximum 500.0
+        \required-field
+   N8,  \field Fan Delay Time
+        \units s
+        \minimum 0.0
+        \required-field
+        \note Programmed time delay for fan to shut off after compressor cycle off.
+        \note Enter 0 when fan operating mode is continuous
    A5,  \field Energy Part Load Fraction Curve Name
         \required-field
         \type object-list
@@ -20565,47 +20627,53 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \type choice
         \key AirCooled
         \key EvaporativelyCooled
-   N6,  \field Evaporative Condenser Pump Rated Power Consumption
+   N9,  \field Evaporative Condenser Pump Rated Power Consumption
         \required-field
         \type real
         \units W
         \minimum 0.0
         \autosizable
-   N7,  \field Crankcase Heater Capacity
+   N10, \field Crankcase Heater Capacity
         \required-field
         \type real
         \minimum 0.0
         \units W
         \ip-units W
-   N8,  \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+   A8,  \field Crankcase Heater Capacity Function of Temperature Curve Name
+        \note A Curve:* or Table:Lookup object encoding the relationship between
+        \note the crankcase heater capacity and the outdoor air temperature. When this field is
+        \note missing or empty, constant crankcase heater capacity will be assumed.
+        \type object-list
+        \object-list UnivariateFunctions
+   N11, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
         \required-field
         \type real
         \minimum 0.0
         \units C
-   N9,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+   N12, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
         \type real
         \required-field
         \units C
-   A8,  \field Supply Water Storage Tank Name
+   A9,  \field Supply Water Storage Tank Name
         \type object-list
         \object-list WaterStorageTankNames
-   A9,  \field Condensate Collection Water Storage Tank Name
+   A10, \field Condensate Collection Water Storage Tank Name
         \type object-list
         \object-list WaterStorageTankNames
-   N10, \field Basin Heater Capacity
+   N13, \field Basin Heater Capacity
         \required-field
         \type real
         \units W/K
         \minimum 0.0
-   N11, \field Basin Heater Setpoint Temperature
+   N14, \field Basin Heater Setpoint Temperature
         \required-field
         \type real
         \units C
         \minimum 2.0
-   A10, \field Basin Heater Operating Schedule Name
+   A11, \field Basin Heater Operating Schedule Name
         \type object-list
         \object-list ScheduleNames
-   A11; \field Speed Data List
+   A12; \field Speed Data List
         \type object-list
         \object-list ModelObjectLists
 
@@ -20812,7 +20880,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \object-list BivariateFunctions
 
 OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
-        \min-fields 15
+        \min-fields 18
    A1,  \field Handle
         \type handle
         \required-field
@@ -20868,16 +20936,38 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \type real
         \minimum 0
         \required-field
-   N7,  \field Use Hot Gas Reheat
+   N7,  \field Maximum Cycling Rate
+        \note The maximum on-off cycling Rate for the compressor, which occurs at 50% run time
+        \note fraction. Suggested value is 3; zero value means latent degradation model is disabled.
+        \type real
+        \units cycles/hr
+        \minimum 0.0
+        \maximum 5.0
+        \required-field
+   N8,  \field Latent Capacity Time Constant
+        \note Time constant for the cooling coil's latent capacity to reach steady state after
+        \note startup. Suggested value is 45; zero value means latent degradation model is disabled.
+        \type real
+        \units s
+        \minimum 0.0
+        \maximum 500.0
+        \required-field
+   N9,  \field Fan Delay Time
+        \units s
+        \minimum 0.0
+        \required-field
+        \note Programmed time delay for heat pump fan to shut off after compressor cycle off.
+        \note Enter 0 when fan operating mode is continuous
+   A7,  \field Use Hot Gas Reheat
         \type choice
         \key Yes
         \key No
         \required-field
-   A7,  \field Energy Part Load Fraction Curve Name
+   A8,  \field Energy Part Load Fraction Curve Name
         \required-field
         \type object-list
         \object-list UnivariateFunctions
-   A8;  \field Speed Data List
+   A9;  \field Speed Data List
         \type object-list
         \object-list ModelObjectLists
 

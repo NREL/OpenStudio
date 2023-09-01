@@ -219,6 +219,25 @@ namespace model {
     setDouble(OS_Curve_LinearFields::MaximumValueofx, 1.0);
   }
 
+  CurveLinear CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve(const Model& model, double maximumCyclingRateSeconds,
+                                                                  double heatPumpTimeConstantPerHour) {
+    const double A = 4 * (heatPumpTimeConstantPerHour / 3600.0) * maximumCyclingRateSeconds;
+    const double Cd = A * (1 - std::exp(-1 / A));
+
+    CurveLinear c(model);
+    c.setName("PLFCorrelationCurve");
+
+    c.setDouble(OS_Curve_LinearFields::Coefficient1Constant, (1 - Cd));
+    c.setDouble(OS_Curve_LinearFields::Coefficient2x, Cd);
+    c.setDouble(OS_Curve_LinearFields::MinimumValueofx, 0.0);
+    c.setDouble(OS_Curve_LinearFields::MaximumValueofx, 1.0);
+    c.setDouble(OS_Curve_LinearFields::MinimumCurveOutput, 0.0);
+    c.setDouble(OS_Curve_LinearFields::MaximumCurveOutput, 1.0);
+    c.setString(OS_Curve_LinearFields::InputUnitTypeforX, "Dimensionless");
+    c.setString(OS_Curve_LinearFields::OutputUnitType, "Dimensionless");
+    return c;
+  }
+
   IddObjectType CurveLinear::iddObjectType() {
     IddObjectType result(IddObjectType::OS_Curve_Linear);
     return result;
