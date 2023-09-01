@@ -1282,6 +1282,32 @@ namespace model {
     DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
   }
 
+  bool ZoneHVACWaterToAirHeatPump::setMaximumCyclingRate(boost::optional<double> maximumCyclingRate) {
+    if (maximumCyclingRate) {
+      return setMaximumCyclingRate(*maximumCyclingRate);
+    }
+    return false;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::setHeatPumpTimeConstant(boost::optional<double> heatPumpTimeConstant) {
+    if (heatPumpTimeConstant) {
+      return setHeatPumpTimeConstant(*heatPumpTimeConstant);
+    }
+    return false;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::setHeatPumpFanDelayTime(boost::optional<double> heatPumpFanDelayTime) {
+    if (heatPumpFanDelayTime) {
+      return setHeatPumpTimeConstant(*heatPumpFanDelayTime);
+    }
+    return false;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::setFractionofOnCyclePowerUse(boost::optional<double> /* heatPumpTimeConstant */) {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
+    return false;
+  }
+
   /// @endcond
 
   boost::optional<double> ZoneHVACWaterToAirHeatPump::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
