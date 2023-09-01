@@ -7655,8 +7655,10 @@ namespace osversion {
                                                             double maximumCyclingRateSeconds = 60.0, double heatPumpTimeConstantPerHour = 2.5);
 
     bool isCurveCreationNeeded() const {
-      return !heatingCoilType.empty() || coolingCoilType == "OS:Coil:WaterToAirHeatPump:EquationFit";
+      return (heatingCoilType == "OS:Coil:Heating:WaterToAirHeatPump:EquationFit" ||  //
+              coolingCoilType == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit");
       // OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit, and OS:Coil:Cooling:DX:VariableSpeed already have a PLF curve
+      // OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit does not have any change
     }
 
     IdfObject createCurveLinear(const IddFileAndFactoryWrapper& idd_3_7_0) const;
@@ -7735,8 +7737,9 @@ namespace osversion {
 
     static constexpr std::array<std::string_view, 2> heatingCoilTypesChanged{"OS:Coil:Heating:WaterToAirHeatPump:EquationFit",
                                                                              "OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit"};
-    static constexpr std::array<std::string_view, 3> coolingCoilTypesChanged{
-      "OS:Coil:WaterToAirHeatPump:EquationFit", "OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit", "OS:Coil:Cooling:DX:VariableSpeed"};
+    static constexpr std::array<std::string_view, 3> coolingCoilTypesChanged{"OS:Coil:Cooling:WaterToAirHeatPump:EquationFit",
+                                                                             "OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit",
+                                                                             "OS:Coil:Cooling:DX:VariableSpeed"};
 
     std::vector<CoilLatentTransitionInfo> result;
 
@@ -8237,7 +8240,7 @@ namespace osversion {
           }
         }
 
-        auto it = CoilLatentTransitionInfo::findFromCoolingCoil(coilTransitionInfos, object);
+        auto it = CoilLatentTransitionInfo::findFromHeatingCoil(coilTransitionInfos, object);
         const bool hasCoilInfo = (it != coilTransitionInfos.end());
         const std::string curveName = hasCoilInfo ? it->curveName() : fmt::format("{}-PLFCorrelationCurve", object.nameString());
         newObject.setString(15, curveName);
