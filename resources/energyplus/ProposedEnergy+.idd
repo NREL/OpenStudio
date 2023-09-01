@@ -13850,7 +13850,7 @@ ZoneEarthtube:Parameters,
       \units dimensionless
       \minimum 0.25
       \maximum 1.0
-      \default 1.0 
+      \default 1.0
  N4,  \field Earth Tube Dimensionless Boundary Above
       \note When set to 1.0, the upper boundary is one earth tube radius below ground.
       \type real
@@ -30086,6 +30086,8 @@ Coil:Cooling:DX:CurveFit:Performance,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
    N2, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \default -25.0
@@ -30607,6 +30609,8 @@ Coil:Cooling:DX:SingleSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N16, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -31052,6 +31056,8 @@ Coil:Cooling:DX:MultiSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N3 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -31373,6 +31379,8 @@ Coil:Cooling:DX:VariableSpeed,
         \note A Curve:* or Table:Lookup object encoding the relationship between
         \note the crankcase heater capacity and the outdoor air temperature. When this field is
         \note missing or empty, constant crankcase heater capacity will be assumed.
+        \type object-list
+        \object-list UnivariateFunctions
    N12, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
         \type real
         \minimum 0.0
@@ -31536,6 +31544,8 @@ Coil:Cooling:DX:TwoStageWithHumidityControlMode,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed
+       \type object-list
+       \object-list UnivariateFunctions
   N2 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -32558,6 +32568,8 @@ Coil:Heating:DX:SingleSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N10, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -32701,6 +32713,8 @@ Coil:Heating:DX:MultiSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N4 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -32965,6 +32979,8 @@ Coil:Heating:DX:VariableSpeed,
         \note A Curve:* or Table:Lookup object encoding the relationship between
         \note the crankcase heater capacity and the outdoor air temperature. When this field is
         \note missing or empty, constant crankcase heater capacity will be assumed.
+        \type object-list
+        \object-list UnivariateFunctions
    N9,  \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
         \type real
         \minimum 0.0
@@ -33237,6 +33253,7 @@ Coil:Cooling:WaterToAirHeatPump:ParameterEstimation,
         \note quadratic curve = a + b*PLR + c*PLR**2
         \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
         \note PLR = part load ratio (cooling load/steady state capacity)
+        \required-field
         \type object-list
         \object-list UnivariateFunctions
    N21, \field Maximum Cycling Rate
@@ -33413,6 +33430,7 @@ Coil:Heating:WaterToAirHeatPump:ParameterEstimation,
         \note quadratic curve = a + b*PLR + c*PLR**2
         \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
         \note PLR = part load ratio (heating load/steady state capacity)
+        \required-field
         \type object-list
         \object-list UnivariateFunctions
 
@@ -33513,6 +33531,7 @@ Coil:Cooling:WaterToAirHeatPump:EquationFit,
         \note quadratic curve = a + b*PLR + c*PLR**2
         \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
         \note PLR = part load ratio (cooling load/steady state capacity)
+        \required-field
         \type object-list
         \object-list UnivariateFunctions
    N9, \field Nominal Time for Condensate Removal to Begin
@@ -33748,7 +33767,7 @@ Coil:Heating:WaterToAirHeatPump:EquationFit,
         \memo Direct expansion (DX) heating coil for water-to-air heat pump (includes electric
         \memo compressor), single-speed, equation-fit model. Equation-fit model uses normalized
         \memo curves to describe the heat pump performance.
-        \min-fields 12
+        \min-fields 15
    A1,  \field Name
         \required-field
         \type alpha
@@ -33830,6 +33849,7 @@ Coil:Heating:WaterToAirHeatPump:EquationFit,
         \note quadratic curve = a + b*PLR + c*PLR**2
         \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
         \note PLR = part load ratio (heat load/steady state capacity)
+        \required-field
         \type object-list
         \object-list UnivariateFunctions
 
@@ -34115,6 +34135,8 @@ Coil:WaterHeating:AirToWaterHeatPump:Pumped,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N12, \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
@@ -34293,6 +34315,8 @@ Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N9,  \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
@@ -34492,6 +34516,8 @@ Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N11, \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
@@ -51384,7 +51410,7 @@ PlantEquipmentOperation:OutdoorDewpointDifference,
 
 PlantEquipmentOperation:ChillerHeaterChangeover,
        \memo Plant equipment operation object to control switchover between chiller
-       \memo and heater operation of chiller heater heat pump serving 2 plant loops. 
+       \memo and heater operation of chiller heater heat pump serving 2 plant loops.
        \memo Poll zone loads and determine if plant should be in heating, cooling
        \memo or simultaneous heating and cooling and dispatch equipment accordingly.
   A1 , \field Name
