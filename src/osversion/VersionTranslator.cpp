@@ -7672,18 +7672,21 @@ namespace osversion {
         // Fields that have been added from 3.6.1 to 3.7.0:
         // ------------------------------------------------
         // Heating:
-        // * Rated Supply Fan Power Per Volume Flow Rate 2017 * 6
-        // * Rated Supply Fan Power Per Volume Flow Rate 2023 * 7
+        // * Rated Supply Fan Power Per Volume Flow Rate 2017 * 5
+        // * Rated Supply Fan Power Per Volume Flow Rate 2023 * 6
         // Cooling:
         // * Rated Evaporator Fan Power Per Volume Flow Rate 2017 - 6
         // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 - 7
+
+        const bool is_cooling = (iddname == "OS:Coil:Cooling:DX:VariableSpeed:SpeedData");
+        const size_t insertionIndex = is_cooling ? 6 : 5;
 
         auto iddObject = idd_3_7_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
           if ((value = object.getString(i))) {
-            if (i < 6) {
+            if (i < insertionIndex) {
               newObject.setString(i, value.get());
             } else {
               newObject.setString(i + 2, value.get());
@@ -7692,10 +7695,10 @@ namespace osversion {
         }
 
         // Rated Supply/Evaporator Fan Power Per Volume Flow Rate 2017
-        newObject.setDouble(6, 773.3);
+        newObject.setDouble(insertionIndex, 773.3);
 
         // Rated Supply/Evaporator Fan Power Per Volume Flow Rate 2023
-        newObject.setDouble(7, 934.4);
+        newObject.setDouble(insertionIndex + 1, 934.4);
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
@@ -7706,8 +7709,8 @@ namespace osversion {
         // ------------------------------------------------
         // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017 * 7
         // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023 * 8
-        // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017 * 21
-        // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023 * 22
+        // * Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2017 * 21
+        // * Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2023 * 22
 
         auto iddObject = idd_3_7_0.getObject(iddname);
         IdfObject newObject(iddObject.get());

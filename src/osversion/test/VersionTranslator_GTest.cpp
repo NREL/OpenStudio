@@ -2579,8 +2579,8 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowR
     EXPECT_EQ("LowSpeedTotCapFT", coil.getTarget(23)->nameString());
 
     // Last field
-    ASSERT_TRUE(coil.getTarget(39));
-    EXPECT_EQ("BasinHeaterOpSch", coil.getTarget(39)->nameString());
+    ASSERT_TRUE(coil.getTarget(38));
+    EXPECT_EQ("BasinHeaterOpSch", coil.getTarget(38)->nameString());
   }
 
   {
@@ -2598,8 +2598,8 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowR
     EXPECT_EQ(2.0, ccSp.getDouble(7).get());
 
     // Last field
-    ASSERT_TRUE(ccSp.getTarget(11));
-    EXPECT_EQ("ccSp_EIRfFlow", ccSp.getTarget(11)->nameString());
+    ASSERT_TRUE(ccSp.getTarget(13));
+    EXPECT_EQ("ccSp_EIRfFlow", ccSp.getTarget(13)->nameString());
   }
 
   {
@@ -2618,7 +2618,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowR
     EXPECT_EQ("hcSp_heatCapFT", hcSp.getTarget(7)->nameString());
 
     // Last field
-    ASSERT_TRUE(hcSp.getTarget(11));
-    EXPECT_EQ("hcSp_EIRfFlow", hcSp.getTarget(11)->nameString());
+    ASSERT_TRUE(hcSp.getTarget(10));
+    EXPECT_EQ("hcSp_EIRfFlow", hcSp.getTarget(10)->nameString());
   }
 }
