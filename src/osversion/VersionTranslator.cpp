@@ -41,16 +41,20 @@
 
 #include <OpenStudio.hxx>
 
+#include <boost/regex.hpp>
+#include <boost/lexical_cast.hpp>
+#include <fmt/format.h>
+
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <iterator>
 #include <map>
 #include <memory>
 #include <sstream>
+#include <string>
+#include <string_view>
 #include <thread>
-
-#include <boost/regex.hpp>
-#include <boost/lexical_cast.hpp>
 
 namespace openstudio {
 namespace osversion {
@@ -7617,6 +7621,19 @@ namespace osversion {
     IdfFile targetIdf(idd_3_7_0.iddFile());
     ss << targetIdf.versionObject().get();
 
+    constexpr std::array<std::pair<std::string_view, size_t>, 10> crankcaseCoilWithIndex{{
+      {"OS:Coil:Cooling:DX:CurveFit:Performance", 3},
+      {"OS:Coil:Cooling:DX:SingleSpeed", 27},
+      {"OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode", 6},
+      {"OS:Coil:Cooling:DX:MultiSpeed", 13},
+      {"OS:Coil:Heating:DX:SingleSpeed", 19},
+      {"OS:Coil:Heating:DX:MultiSpeed", 8},
+      {"OS:Coil:Heating:DX:VariableSpeed", 13},
+      {"OS:Coil:WaterHeating:AirToWaterHeatPump", 20},
+      {"OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed", 18},
+      {"OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped", 13},
+    }};
+
     for (const IdfObject& object : idf_3_6_1.objects()) {
       auto iddname = object.iddObject().name();
 
@@ -7736,6 +7753,35 @@ namespace osversion {
         newObject.setDouble(21, 773.3);
         // Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2023
         newObject.setDouble(22, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (auto it = std::find_if(crankcaseCoilWithIndex.cbegin(), crankcaseCoilWithIndex.cend(),
+                                        [&iddname](const auto& p) { return iddname == p.first; });
+                 it != crankcaseCoilWithIndex.cend()) {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Crankcase Heater Capacity Function of Temperature Curve Name * (varies)
+
+        const size_t insertionIndex = it->second;
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < insertionIndex) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Cranckcase curve is optional
+        // newObject.setString(insertionIndex; "");
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;

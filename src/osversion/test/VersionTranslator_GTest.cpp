@@ -2555,7 +2555,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowR
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_RatedFanPowerPerVolumeFlowRate.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_RatedFanPowerPerVolumeFlowRate_updated.osm");
   model->save(outPath, true);
 
   {
@@ -2590,12 +2590,12 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowR
 
     EXPECT_EQ(14, ccSp.numFields());
 
-    // 2 new fields inserted at position 5
+    // 2 new fields inserted at position 6
     // Field Before
-    EXPECT_EQ(1.0, ccSp.getDouble(4).get());
-    EXPECT_EQ(773.3, ccSp.getDouble(5).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
-    EXPECT_EQ(934.4, ccSp.getDouble(6).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
-    EXPECT_EQ(2.0, ccSp.getDouble(7).get());
+    EXPECT_EQ(1.0, ccSp.getDouble(5).get());
+    EXPECT_EQ(773.3, ccSp.getDouble(6).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, ccSp.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+    EXPECT_EQ(2.0, ccSp.getDouble(8).get());
 
     // Last field
     ASSERT_TRUE(ccSp.getTarget(13));
@@ -2620,5 +2620,211 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowR
     // Last field
     ASSERT_TRUE(hcSp.getTarget(10));
     EXPECT_EQ("hcSp_EIRfFlow", hcSp.getTarget(10)->nameString());
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_CrankcaseCurve) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_CrankcaseCurve.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_CrankcaseCurve_updated.osm");
+  model->save(outPath, true);
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:CurveFit:Performance");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(15, coil.numFields());
+
+    const size_t insertionIndex = 3;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Alternative Operating Mode 2
+    ASSERT_TRUE(coil.getTarget(14));
+    EXPECT_EQ("AlternativeOpMode2", coil.getTarget(14)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(34, coil.numFields());
+
+    const size_t insertionIndex = 27;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Basin Heater Operating Schedule Name
+    ASSERT_TRUE(coil.getTarget(33));
+    EXPECT_EQ("BasinHeaterOpSch", coil.getTarget(33)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(20, coil.numFields());
+
+    const size_t insertionIndex = 6;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Basin Heater Operating Schedule
+    ASSERT_TRUE(coil.getTarget(19));
+    EXPECT_EQ("BasinHeaterOpSch", coil.getTarget(19)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:MultiSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(19, coil.numFields());
+
+    const size_t insertionIndex = 13;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Fuel Type
+    EXPECT_EQ("Electricity", coil.getString(18).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:SingleSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(25, coil.numFields());
+
+    const size_t insertionIndex = 19;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Resistive Defrost Heater Capacity
+    EXPECT_EQ(1000.0, coil.getDouble(24).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(19, coil.numFields());
+
+    const size_t insertionIndex = 8;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Region number for Calculating HSPF
+    EXPECT_EQ(4, coil.getInt(18).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:VariableSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(20, coil.numFields());
+
+    const size_t insertionIndex = 13;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Speed Data List
+    ASSERT_TRUE(coil.getTarget(19));
+    EXPECT_EQ("CoilHeatingDXVariableSpeed Speed Data List", coil.getTarget(19)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:WaterHeating:AirToWaterHeatPump");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(30, coil.numFields());
+
+    const size_t insertionIndex = 20;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Part Load Fraction Correlation Curve
+    ASSERT_TRUE(coil.getTarget(29));
+    EXPECT_EQ("CoilWaterHeatingAirToWaterHeatPump PLFCorrelationCurve", coil.getTarget(29)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(23, coil.numFields());
+
+    const size_t insertionIndex = 18;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Speed Data List
+    ASSERT_TRUE(coil.getTarget(22));
+    EXPECT_EQ("CoilWaterHeatingAirToWaterHeatPumpVariableSpeed Speed Data List", coil.getTarget(22)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(21, coil.numFields());
+
+    const size_t insertionIndex = 13;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Part Load Fraction Correlation Curve Name
+    ASSERT_TRUE(coil.getTarget(20));
+    EXPECT_EQ("CoilWaterHeatingAirToWaterHeatPumpWrapped PLFCorrelationCurve", coil.getTarget(20)->nameString());
   }
 }
