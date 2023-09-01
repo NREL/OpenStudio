@@ -219,9 +219,9 @@ namespace model {
     setDouble(OS_Curve_LinearFields::MaximumValueofx, 1.0);
   }
 
-  CurveLinear CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve(const Model& model, double maximumCyclingRateSeconds,
-                                                                  double heatPumpTimeConstantPerHour) {
-    const double A = 4 * (heatPumpTimeConstantPerHour / 3600.0) * maximumCyclingRateSeconds;
+  CurveLinear CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve(const Model& model, double maximumCyclingRatePerHour,
+                                                                  double heatPumpTimeConstantSeconds) {
+    const double A = 4 * (heatPumpTimeConstantSeconds / 3600.0) * maximumCyclingRatePerHour;
     const double Cd = A * (1 - std::exp(-1 / A));
 
     CurveLinear c(model);

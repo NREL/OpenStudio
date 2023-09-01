@@ -580,10 +580,10 @@ namespace model {
       ok = setRatedEnteringAirWetBulbTemperature(19.0);
       OS_ASSERT(ok);
 
-      constexpr double maximumCyclingRateSeconds = 60.0;
-      constexpr double heatPumpTimeConstantPerHour = 2.5;
+      constexpr double maximumCyclingRatePerHour = 2.5;
+      constexpr double heatPumpTimeConstantSeconds = 60.0;
       const CurveLinear plfCorrelation =
-        CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve(model, maximumCyclingRateSeconds, heatPumpTimeConstantPerHour);
+        CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve(model, maximumCyclingRatePerHour, heatPumpTimeConstantSeconds);
 
       ok = setPartLoadFractionCorrelationCurve(plfCorrelation);
 

@@ -7652,7 +7652,7 @@ namespace osversion {
                                                                                const IdfObject& coilObject);
 
     static IdfObject defaultHeatPumpCoilPLFCorrelationCurve(const IddFileAndFactoryWrapper& idd_3_7_0, const std::string& name,
-                                                            double maximumCyclingRateSeconds = 60.0, double heatPumpTimeConstantPerHour = 2.5);
+                                                            double maximumCyclingRatePerHour = 2.5, double heatPumpTimeConstantSeconds = 60.0);
 
     bool isCurveCreationNeeded() const {
       return (heatingCoilType == "OS:Coil:Heating:WaterToAirHeatPump:EquationFit" ||  //
@@ -7700,9 +7700,9 @@ namespace osversion {
   }
 
   IdfObject CoilLatentTransitionInfo::defaultHeatPumpCoilPLFCorrelationCurve(const IddFileAndFactoryWrapper& idd_3_7_0, const std::string& name,
-                                                                             double maximumCyclingRateSeconds, double heatPumpTimeConstantPerHour) {
+                                                                             double maximumCyclingRatePerHour, double heatPumpTimeConstantSeconds) {
 
-    const double A = 4 * (heatPumpTimeConstantPerHour / 3600.0) * maximumCyclingRateSeconds;
+    const double A = 4 * (heatPumpTimeConstantSeconds / 3600.0) * maximumCyclingRatePerHour;
     const double Cd = A * (1 - std::exp(-1 / A));
 
     auto iddObject = idd_3_7_0.getObject("OS:Curve:Linear");
