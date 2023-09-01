@@ -2828,3 +2828,138 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_CrankcaseCurve) {
     EXPECT_EQ("CoilWaterHeatingAirToWaterHeatPumpWrapped PLFCorrelationCurve", coil.getTarget(20)->nameString());
   }
 }
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_solo) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_solo.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_solo_updated.osm");
+  model->save(outPath, true);
+
+  // I expect two Curve:Linear to have been created
+  EXPECT_EQ(2, model->getObjectsByType("OS:Curve:Linear").size());
+
+  constexpr double defaultC1 = 0.833746458696111;
+  constexpr double defaultC2 = 0.166253541303889;
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:WaterToAirHeatPump:EquationFit");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(16, coil.numFields());
+
+    // Previous last field: Heating Power Consumption Curve Name
+    ASSERT_TRUE(coil.getTarget(14));
+    EXPECT_EQ("heatingPowerConsumptionCurve", coil.getTarget(14)->nameString());
+
+    ASSERT_TRUE(coil.getTarget(15));
+    EXPECT_EQ("HC Eq Solo-PLFCorrelationCurve", coil.getTarget(15)->nameString());
+    EXPECT_DOUBLE_EQ(defaultC1, coil.getTarget(15)->getDouble(2).get());
+    EXPECT_DOUBLE_EQ(defaultC2, coil.getTarget(15)->getDouble(3).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(12, coil.numFields());
+
+    ASSERT_TRUE(coil.getTarget(11));
+    EXPECT_EQ("HC VsdEq Solo Speed Data List", coil.getTarget(11)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(23, coil.numFields());
+
+    {
+      const size_t insertionIndex = 17;
+      ASSERT_TRUE(coil.getTarget(insertionIndex - 1));
+      EXPECT_EQ("coolingPowerConsumptionCurve", coil.getTarget(insertionIndex - 1)->nameString());
+
+      // Part Load Fraction Correlation Curve Name
+      ASSERT_TRUE(coil.getTarget(insertionIndex));
+      EXPECT_EQ("CC Eq Solo-PLFCorrelationCurve", coil.getTarget(insertionIndex)->nameString());
+      EXPECT_DOUBLE_EQ(defaultC1, coil.getTarget(insertionIndex)->getDouble(2).get());
+      EXPECT_DOUBLE_EQ(defaultC2, coil.getTarget(insertionIndex)->getDouble(3).get());
+
+      EXPECT_EQ(1.5, coil.getDouble(insertionIndex + 1).get());
+    }
+
+    // Previous last field: Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+    EXPECT_EQ(0.02, coil.getDouble(19).get());
+
+    {
+      const size_t insertionIndex = 20;
+      // No Unitary -> IDD DEFAULTS
+      EXPECT_EQ(0.0, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
+      EXPECT_EQ(0.0, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+    }
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(18, coil.numFields());
+
+    {
+      const size_t insertionIndex = 12;
+      EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+      // No Unitary -> IDD DEFAULTS
+      EXPECT_EQ(0.0, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
+      EXPECT_EQ(0.0, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+      EXPECT_EQ("Yes", coil.getString(insertionIndex + 3).get());
+    }
+
+    ASSERT_TRUE(coil.getTarget(17));
+    EXPECT_EQ("CC VsdEq Solo Speed Data List", coil.getTarget(17)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(26, coil.numFields());
+
+    {
+      const size_t insertionIndex = 9;
+      EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+      // No Unitary -> IDD DEFAULTS (NOTE: Yes, They ARE NOT the same as the WaterToAir ones...)
+      EXPECT_EQ(2.5, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 1).get());  // Latent Capacity Time Constant
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+      ASSERT_TRUE(coil.getTarget(insertionIndex + 3));
+      EXPECT_EQ("EnergyPartLoadFractionCurve", coil.getTarget(insertionIndex + 3)->nameString());
+    }
+
+    {
+      const size_t insertionIndex = 17;
+      EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+      // Crankcase Heater Capacity Function of Temperature Curve Name
+      EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+      EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+    }
+
+    // Last field: Part Load Fraction Correlation Curve Name
+    ASSERT_TRUE(coil.getTarget(25));
+    EXPECT_EQ("CC DXVsd Solo Speed Data List", coil.getTarget(25)->nameString());
+  }
+}
