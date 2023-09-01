@@ -27,7 +27,7 @@ def make_cc_eqfit(m, name)
   cc = CoilCoolingWaterToAirHeatPumpEquationFit.new(m)
   cc.setName(name)
   # Before after insertion point
-  cc.coolingPowerConsumptionCurve.setName("coolingPowerConsumptionCurve")
+  cc.coolingPowerConsumptionCurve.setName("#{name} coolingPowerConsumptionCurve")
   cc.setNominalTimeforCondensateRemovaltoBegin(1.5)
   # Last field (three new fields at end)
   cc.setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.02)
@@ -50,7 +50,7 @@ def make_cc_dx_vsd(m, name)
   cc.setName(name)
   # Before after insertion point
   cc.setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0.02)
-  cc.energyPartLoadFractionCurve.setName("EnergyPartLoadFractionCurve")
+  cc.energyPartLoadFractionCurve.setName("#{name} EnergyPartLoadFractionCurve")
 
   # Before after second insertion point
   cc.setCrankcaseHeaterCapacity(100.0)
@@ -64,7 +64,7 @@ end
 def make_hc_eqfit(m, name)
   hc = CoilHeatingWaterToAirHeatPumpEquationFit.new(m)
   hc.setName(name)
-  hc.heatingPowerConsumptionCurve.setName("heatingPowerConsumptionCurve")
+  hc.heatingPowerConsumptionCurve.setName("#{name} heatingPowerConsumptionCurve")
   return hc
 end
 
