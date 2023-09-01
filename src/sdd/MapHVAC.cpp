@@ -1767,7 +1767,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         hx.addToNode(outboardOANode);
 
         // TempCtrlByEMS
-        const auto tempCtrlByEMS = htRcvryElement.child("").text().as_bool(false);
+        const auto tempCtrlByEMS = htRcvryElement.child("TempCtrlByEMS").text().as_bool(false);
 
         // TempCtrl
         auto tempCtrl = htRcvryElement.child("TempCtrl").text().as_string();
