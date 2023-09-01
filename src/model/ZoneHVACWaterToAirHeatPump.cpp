@@ -36,6 +36,13 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
+// Remove when deprecated methods (maximumCyclingRate and co) are removed
+#include "../utilities/core/DeprecatedHelpers.hpp"
+#include "CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
+#include "CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
+#include "CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
+#include "CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -290,46 +297,6 @@ namespace model {
       return value.get();
     }
 
-    double ZoneHVACWaterToAirHeatPump_Impl::maximumCyclingRate() const {
-      boost::optional<double> value = getDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool ZoneHVACWaterToAirHeatPump_Impl::isMaximumCyclingRateDefaulted() const {
-      return isEmpty(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate);
-    }
-
-    double ZoneHVACWaterToAirHeatPump_Impl::heatPumpTimeConstant() const {
-      boost::optional<double> value = getDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool ZoneHVACWaterToAirHeatPump_Impl::isHeatPumpTimeConstantDefaulted() const {
-      return isEmpty(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant);
-    }
-
-    double ZoneHVACWaterToAirHeatPump_Impl::fractionofOnCyclePowerUse() const {
-      boost::optional<double> value = getDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool ZoneHVACWaterToAirHeatPump_Impl::isFractionofOnCyclePowerUseDefaulted() const {
-      return isEmpty(OS_ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse);
-    }
-
-    double ZoneHVACWaterToAirHeatPump_Impl::heatPumpFanDelayTime() const {
-      boost::optional<double> value = getDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool ZoneHVACWaterToAirHeatPump_Impl::isHeatPumpFanDelayTimeDefaulted() const {
-      return isEmpty(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime);
-    }
-
     HVACComponent ZoneHVACWaterToAirHeatPump_Impl::supplementalHeatingCoil() const {
       boost::optional<HVACComponent> value = optionalSupplementalHeatingCoil();
       OS_ASSERT(value);
@@ -547,62 +514,6 @@ namespace model {
 
     bool ZoneHVACWaterToAirHeatPump_Impl::setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP) {
       return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName, coolingCoilsWaterToAirHP.handle());
-    }
-
-    bool ZoneHVACWaterToAirHeatPump_Impl::setMaximumCyclingRate(boost::optional<double> maximumCyclingRate) {
-      bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate, maximumCyclingRate.get());
-      return result;
-    }
-    bool ZoneHVACWaterToAirHeatPump_Impl::setMaximumCyclingRate(double maximumCyclingRate) {
-      bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate, maximumCyclingRate);
-      return result;
-    }
-
-    void ZoneHVACWaterToAirHeatPump_Impl::resetMaximumCyclingRate() {
-      bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate, "");
-      OS_ASSERT(result);
-    }
-
-    bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpTimeConstant(boost::optional<double> heatPumpTimeConstant) {
-      bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant, heatPumpTimeConstant.get());
-      return result;
-    }
-    bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpTimeConstant(double heatPumpTimeConstant) {
-      bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant, heatPumpTimeConstant);
-      return result;
-    }
-
-    void ZoneHVACWaterToAirHeatPump_Impl::resetHeatPumpTimeConstant() {
-      bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant, "");
-      OS_ASSERT(result);
-    }
-
-    bool ZoneHVACWaterToAirHeatPump_Impl::setFractionofOnCyclePowerUse(boost::optional<double> fractionofOnCyclePowerUse) {
-      bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse, fractionofOnCyclePowerUse.get());
-      return result;
-    }
-    bool ZoneHVACWaterToAirHeatPump_Impl::setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse) {
-      bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse, fractionofOnCyclePowerUse);
-      return result;
-    }
-
-    void ZoneHVACWaterToAirHeatPump_Impl::resetFractionofOnCyclePowerUse() {
-      bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse, "");
-      OS_ASSERT(result);
-    }
-
-    bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpFanDelayTime(boost::optional<double> heatPumpFanDelayTime) {
-      bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime, heatPumpFanDelayTime.get());
-      return result;
-    }
-    bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpFanDelayTime(double heatPumpFanDelayTime) {
-      bool result = setDouble(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime, heatPumpFanDelayTime);
-      return result;
-    }
-
-    void ZoneHVACWaterToAirHeatPump_Impl::resetHeatPumpFanDelayTime() {
-      bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime, "");
-      OS_ASSERT(result);
     }
 
     bool ZoneHVACWaterToAirHeatPump_Impl::setSupplementalHeatingCoil(HVACComponent& heatingCoilName) {
@@ -1028,38 +939,6 @@ namespace model {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->coolingCoil();
   }
 
-  double ZoneHVACWaterToAirHeatPump::maximumCyclingRate() const {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->maximumCyclingRate();
-  }
-
-  bool ZoneHVACWaterToAirHeatPump::isMaximumCyclingRateDefaulted() const {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->isMaximumCyclingRateDefaulted();
-  }
-
-  double ZoneHVACWaterToAirHeatPump::heatPumpTimeConstant() const {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->heatPumpTimeConstant();
-  }
-
-  bool ZoneHVACWaterToAirHeatPump::isHeatPumpTimeConstantDefaulted() const {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->isHeatPumpTimeConstantDefaulted();
-  }
-
-  double ZoneHVACWaterToAirHeatPump::fractionofOnCyclePowerUse() const {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->fractionofOnCyclePowerUse();
-  }
-
-  bool ZoneHVACWaterToAirHeatPump::isFractionofOnCyclePowerUseDefaulted() const {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->isFractionofOnCyclePowerUseDefaulted();
-  }
-
-  double ZoneHVACWaterToAirHeatPump::heatPumpFanDelayTime() const {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->heatPumpFanDelayTime();
-  }
-
-  bool ZoneHVACWaterToAirHeatPump::isHeatPumpFanDelayTimeDefaulted() const {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->isHeatPumpFanDelayTimeDefaulted();
-  }
-
   HVACComponent ZoneHVACWaterToAirHeatPump::supplementalHeatingCoil() const {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->supplementalHeatingCoil();
   }
@@ -1213,50 +1092,6 @@ namespace model {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setCoolingCoil(coolingCoilsWaterToAirHP);
   }
 
-  bool ZoneHVACWaterToAirHeatPump::setMaximumCyclingRate(boost::optional<double> maximumCyclingRate) {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setMaximumCyclingRate(maximumCyclingRate);
-  }
-  bool ZoneHVACWaterToAirHeatPump::setMaximumCyclingRate(double maximumCyclingRate) {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setMaximumCyclingRate(maximumCyclingRate);
-  }
-
-  void ZoneHVACWaterToAirHeatPump::resetMaximumCyclingRate() {
-    getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetMaximumCyclingRate();
-  }
-
-  bool ZoneHVACWaterToAirHeatPump::setHeatPumpTimeConstant(boost::optional<double> heatPumpTimeConstant) {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpTimeConstant(heatPumpTimeConstant);
-  }
-  bool ZoneHVACWaterToAirHeatPump::setHeatPumpTimeConstant(double heatPumpTimeConstant) {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpTimeConstant(heatPumpTimeConstant);
-  }
-
-  void ZoneHVACWaterToAirHeatPump::resetHeatPumpTimeConstant() {
-    getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetHeatPumpTimeConstant();
-  }
-
-  bool ZoneHVACWaterToAirHeatPump::setFractionofOnCyclePowerUse(boost::optional<double> fractionofOnCyclePowerUse) {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setFractionofOnCyclePowerUse(fractionofOnCyclePowerUse);
-  }
-  bool ZoneHVACWaterToAirHeatPump::setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse) {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setFractionofOnCyclePowerUse(fractionofOnCyclePowerUse);
-  }
-
-  void ZoneHVACWaterToAirHeatPump::resetFractionofOnCyclePowerUse() {
-    getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetFractionofOnCyclePowerUse();
-  }
-
-  bool ZoneHVACWaterToAirHeatPump::setHeatPumpFanDelayTime(boost::optional<double> heatPumpFanDelayTime) {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpFanDelayTime(heatPumpFanDelayTime);
-  }
-  bool ZoneHVACWaterToAirHeatPump::setHeatPumpFanDelayTime(double heatPumpFanDelayTime) {
-    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpFanDelayTime(heatPumpFanDelayTime);
-  }
-
-  void ZoneHVACWaterToAirHeatPump::resetHeatPumpFanDelayTime() {
-    getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetHeatPumpFanDelayTime();
-  }
-
   bool ZoneHVACWaterToAirHeatPump::setSupplementalHeatingCoil(HVACComponent& heatingCoilName) {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setSupplementalHeatingCoil(heatingCoilName);
   }
@@ -1321,6 +1156,132 @@ namespace model {
   /// @cond
   ZoneHVACWaterToAirHeatPump::ZoneHVACWaterToAirHeatPump(std::shared_ptr<detail::ZoneHVACWaterToAirHeatPump_Impl> impl)
     : ZoneHVACComponent(std::move(impl)) {}
+
+  // DEPRECATED
+
+  double ZoneHVACWaterToAirHeatPump::maximumCyclingRate() const {
+    DEPRECATED_AT_MSG(3, 7, 0,
+                      "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil().maximumCyclingRate() instead.");
+    double result = 2.5;  // former default
+    const HVACComponent c = coolingCoil();
+    if (auto c_eq_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+      result = c_eq_->maximumCyclingRate();
+    } else if (auto c_vs_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+      result = c_vs_->maximumCyclingRate();
+    }
+    return result;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::isMaximumCyclingRateDefaulted() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+    return false;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::setMaximumCyclingRate(double maximumCyclingRate) {
+    DEPRECATED_AT_MSG(3, 7, 0,
+                      "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil().setMaximumCyclingRate() instead.");
+    bool result = false;
+    const HVACComponent c = coolingCoil();
+    if (auto c_eq_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+      result = c_eq_->setMaximumCyclingRate(maximumCyclingRate);
+    } else if (auto c_vs_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+      result = c_vs_->setMaximumCyclingRate(maximumCyclingRate);
+    }
+    return result;
+  }
+
+  void ZoneHVACWaterToAirHeatPump::resetMaximumCyclingRate() {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+  }
+
+  double ZoneHVACWaterToAirHeatPump::heatPumpTimeConstant() const {
+    DEPRECATED_AT_MSG(3, 7, 0,
+                      "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil().latentCapacityTimeConstant() instead.");
+    double result = 60;  // former default
+    const HVACComponent c = coolingCoil();
+    if (auto c_eq_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+      result = c_eq_->latentCapacityTimeConstant();
+    } else if (auto c_vs_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+      result = c_vs_->latentCapacityTimeConstant();
+    }
+    return result;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::isHeatPumpTimeConstantDefaulted() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+    return false;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::setHeatPumpTimeConstant(double heatPumpTimeConstant) {
+    DEPRECATED_AT_MSG(
+      3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil().setLatentCapacityTimeConstant() instead.");
+    bool result = false;
+    const HVACComponent c = coolingCoil();
+    if (auto c_eq_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+      result = c_eq_->setLatentCapacityTimeConstant(heatPumpTimeConstant);
+    } else if (auto c_vs_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+      result = c_vs_->setLatentCapacityTimeConstant(heatPumpTimeConstant);
+    }
+    return result;
+  }
+
+  void ZoneHVACWaterToAirHeatPump::resetHeatPumpTimeConstant() {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+  }
+
+  double ZoneHVACWaterToAirHeatPump::fractionofOnCyclePowerUse() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
+    const double result = 0.01;  // former default
+    return result;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::isFractionofOnCyclePowerUseDefaulted() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
+    return false;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse) {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
+    return false;
+  }
+
+  void ZoneHVACWaterToAirHeatPump::resetFractionofOnCyclePowerUse() {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
+  }
+
+  double ZoneHVACWaterToAirHeatPump::heatPumpFanDelayTime() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil().fanDelayTime() instead.");
+    double result = 60;  // former default
+    const HVACComponent c = coolingCoil();
+    if (auto c_eq_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+      result = c_eq_->fanDelayTime();
+    } else if (auto c_vs_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+      result = c_vs_->fanDelayTime();
+    }
+    return result;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::isHeatPumpFanDelayTimeDefaulted() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+    return false;
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::setHeatPumpFanDelayTime(double heatPumpFanDelayTime) {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil().setFanDelayTime() instead.");
+    bool result = false;
+    const HVACComponent c = coolingCoil();
+    if (auto c_eq_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+      result = c_eq_->setFanDelayTime(heatPumpFanDelayTime);
+    } else if (auto c_vs_ = c.optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+      result = c_vs_->setFanDelayTime(heatPumpFanDelayTime);
+    }
+    return result;
+  }
+
+  void ZoneHVACWaterToAirHeatPump::resetHeatPumpFanDelayTime() {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+  }
+
   /// @endcond
 
   boost::optional<double> ZoneHVACWaterToAirHeatPump::autosizedSupplyAirFlowRateDuringCoolingOperation() const {

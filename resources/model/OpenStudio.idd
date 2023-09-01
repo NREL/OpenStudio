@@ -11731,7 +11731,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \memo configuration of coils and/or fan. This object is a replacement of other
        \memo AirloopHVAC objects. This object can be used in outdoor air systems,
        \memo outdoor air units, air loops, and as zone equipment if desired.
-       \min-fields 13
+       \min-fields 40
   A1,  \field Handle
        \type handle
        \required-field
@@ -12059,57 +12059,21 @@ OS:AirLoopHVAC:UnitarySystem,
        \note If this field is blank, outdoor temperature from the weather file is used.
        \note If this field is not blank, the node name specified determines the outdoor temperature used
        \note for controlling supplemental heater operation.
-  N19, \field Maximum Cycling Rate
-       \type real
-       \units cycles/hr
-       \minimum 0.0
-       \maximum 5.0
-       \default 2.5
-       \note Used only for water source heat pump.
-       \note The maximum on-off cycling rate for the compressor.
-       \note Suggested value is 2.5 for a typical heat pump.
-  N20, \field Heat Pump Time Constant
-       \type real
-       \units s
-       \minimum 0.0
-       \maximum 500.0
-       \default 60.0
-       \note Used only for water source heat pump.
-       \note Time constant for the cooling coil's capacity to reach steady state after startup.
-       \note Suggested value is 60 for a typical heat pump.
-  N21, \field Fraction of On-Cycle Power Use
-       \type real
-       \minimum 0.0
-       \maximum 0.05
-       \default 0.01
-       \note Used only for water source heat pump.
-       \note The fraction of on-cycle power use to adjust the part load fraction based on
-       \note the off-cycle power consumption due to crankcase heaters, controls, fans, and etc.
-       \note Suggested value is 0.01 for a typical heat pump.
-  N22, \field Heat Pump Fan Delay Time
-       \type real
-       \units s
-       \minimum 0.0
-       \default 60
-       \note Used only for water source heat pump.
-       \note Programmed time delay for heat pump fan to shut off after compressor cycle off.
-       \note Only required when fan operating mode is cycling.
-       \note Enter 0 when fan operating mode is continuous.
-  N23, \field Ancilliary On-Cycle Electric Power
+  N19, \field Ancilliary On-Cycle Electric Power
        \type real
        \units W
         \ip-units W
        \minimum 0
        \default 0
        \note Enter the value of ancilliary electric power for controls or other devices consumed during the on cycle.
-  N24, \field Ancilliary Off-Cycle Electric Power
+  N20, \field Ancilliary Off-Cycle Electric Power
        \type real
        \units W
         \ip-units W
        \minimum 0
        \default 0
        \note Enter the value of ancilliary electric power for controls or other devices consumed during the off cycle.
-  N25, \field Design Heat Recovery Water Flow Rate
+  N21, \field Design Heat Recovery Water Flow Rate
        \type real
        \units m3/s
        \ip-units gal/min
@@ -12117,7 +12081,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \default 0.0
        \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
        \note Used for heat recovery to an EnergyPlus plant loop.
-  N26, \field Maximum Temperature for Heat Recovery
+  N22, \field Maximum Temperature for Heat Recovery
        \type real
        \units C
        \maximum 100.0
@@ -29259,7 +29223,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
        \note When terminal unit is used in air loop and is load controlled, this zone's thermostat will control operation.
 
 OS:ZoneHVAC:WaterToAirHeatPump,
-        \min-fields 25
+        \min-fields 22
    A1,  \field Handle
         \type handle
         \required-field
@@ -29349,47 +29313,17 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \required-field
         \object-list CoolingCoilsWaterToAirHP
         \object-list CoolingCoilsWaterToAirVSHP
-   N7,  \field Maximum Cycling Rate
-        \note The maximum on-off cycling rate for the compressor
-        \note Suggested value is 2.5 for a typical heat pump
-        \type real
-        \units cycles/hr
-        \minimum 0.0
-        \maximum 5.0
-        \default 2.5
-   N8,  \field Heat Pump Time Constant
-        \note Time constant for the cooling coil's capacity to reach steady state after startup
-        \note Suggested value is 60 for a typical heat pump
-        \type real
-        \units s
-        \minimum 0.0
-        \maximum 500.0
-        \default 60.0
-   N9,  \field Fraction of On-Cycle Power Use
-        \note The fraction of on-cycle power use to adjust the part load fraction based on
-        \note the off-cycle power consumption due to crankcase heaters, controls, fans, and etc.
-        \note Suggested value is 0.01 for a typical heat pump
-        \minimum 0.0
-        \maximum 0.05
-        \default 0.01
-   N10, \field Heat Pump Fan Delay Time
-        \note Programmed time delay for heat pump fan to shut off after compressor cycle off.
-        \note Only required when fan operating mode is cycling
-        \note Enter 0 when fan operating mode is continuous
-        \units s
-        \minimum 0.0
-        \default 60
    A10, \field Supplemental Heating Coil Name
         \note  Needs to match in the supplemental heating coil object
         \type object-list
         \required-field
         \object-list HeatingCoilName
-   N11, \field Maximum Supply Air Temperature from Supplemental Heater
+   N7,  \field Maximum Supply Air Temperature from Supplemental Heater
         \required-field
         \type real
         \units C
         \autosizable
-   N12, \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
+   N8,  \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
         \type real
         \maximum 21.0
         \default 21.0
