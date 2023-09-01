@@ -17093,7 +17093,7 @@ OS:Coil:Cooling:DX:CurveFit:Performance,
        \memo DX cooling coil performance specification referencing one or more
        \memo operating modes. Mode 1 is always the base design operating mode.
        \memo Additional modes are optional states such as subcool reheat for humidity control.
-       \min-fields 12
+       \min-fields 13
   A1, \field Handle
        \type handle
        \required-field
@@ -17107,6 +17107,12 @@ OS:Coil:Cooling:DX:CurveFit:Performance,
        \units W
        \ip-units W
        \required-field
+  A3,  \field Crankcase Heater Capacity Function of Temperature Curve Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the crankcase heater capacity and the outdoor air temperature. When this field is
+       \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N2, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \units C
@@ -17126,7 +17132,7 @@ OS:Coil:Cooling:DX:CurveFit:Performance,
        \units Pa
        \minimum> 0.0
        \required-field
-  A3, \field Capacity Control Method
+  A4, \field Capacity Control Method
        \type choice
        \key Discrete
        \key Continuous
@@ -17148,7 +17154,7 @@ OS:Coil:Cooling:DX:CurveFit:Performance,
        \units C
        \minimum 2.0
        \required-field
-  A4, \field Evaporative Condenser Basin Heater Operating Schedule
+  A5, \field Evaporative Condenser Basin Heater Operating Schedule
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
        \note air dry-bulb temperature is below the basin heater setpoint temperature.
@@ -17157,7 +17163,7 @@ OS:Coil:Cooling:DX:CurveFit:Performance,
        \type object-list
        \object-list ScheduleNames
        \required-field
-  A5, \field Compressor Fuel Type
+  A6, \field Compressor Fuel Type
        \type choice
        \key Electricity
        \key NaturalGas
@@ -17169,19 +17175,19 @@ OS:Coil:Cooling:DX:CurveFit:Performance,
        \key OtherFuel1
        \key OtherFuel2
        \required-field
-  A6, \field Base Operating Mode
+  A7, \field Base Operating Mode
        \note Operating Mode 1 is always used as the base design operating mode.
        \required-field
        \type object-list
        \object-list DXCoolingOperatingModeNames
-  A7, \field Alternative Operating Mode 1
+  A8, \field Alternative Operating Mode 1
        \note The alternative operating mode is used for enhanced dehumidification.
        \note If this is blank, the coil will always operate in the base operating mode.
        \note If an alternate mode is defined here, the coil will use the enhanced mode if
        \note activated by the parent system controls.
        \type object-list
        \object-list DXCoolingOperatingModeNames
-  A8; \field Alternative Operating Mode 2
+  A9; \field Alternative Operating Mode 2
        \note The alternative operating mode is used for enhanced dehumidification.
        \note If this is blank, the coil will always operate in the base operating mode or
        \note Alternative Mode 1. If both Alternative Operating Mode 1 and Mode 2 are defined here,
@@ -17636,15 +17642,21 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \ip-units Btu/h
        \minimum 0
        \required-field
+  A13, \field Crankcase Heater Capacity Function of Temperature Curve Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the crankcase heater capacity and the outdoor air temperature. When this field is
+       \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N16, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \units C
        \minimum 0
        \required-field
-  A13, \field Supply Water Storage Tank Name
+  A14, \field Supply Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
-  A14, \field Condensate Collection Water Storage Tank Name
+  A15, \field Condensate Collection Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
   N17, \field Basin Heater Capacity
@@ -17664,7 +17676,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units C
        \minimum 2
        \required-field
-  A15; \field Basin Heater Operating Schedule Name
+  A16; \field Basin Heater Operating Schedule Name
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
        \note air dry-bulb temperature is below the basin heater setpoint temperature.
@@ -17679,7 +17691,7 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
         \memo reheat). Optional inputs for moisture evaporation from wet coil when compressor
         \memo cycles off with continuous fan operation. Requires two to four sets of performance
         \memo data, see CoilPerformance:DX:Cooling. Stages are modeled as a face-split coil.
-       \min-fields 18
+       \min-fields 19
   A1, \field Handle
        \type handle
        \required-field
@@ -17710,6 +17722,12 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
        \units W
        \ip-units W
        \required-field
+  A6 , \field Crankcase Heater Capacity Function of Temperature Curve Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the crankcase heater capacity and the outdoor air temperature. When this field is
+       \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N2 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -17725,22 +17743,22 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
        \minimum 0
        \maximum 1
        \required-field
-  A6 , \field Normal Mode Stage 1 Coil Performance
+  A7 , \field Normal Mode Stage 1 Coil Performance
        \type object-list
        \object-list CoilPerformanceDX
-  A7 , \field Normal Mode Stage 1 Plus 2 Coil Performance
+  A8 , \field Normal Mode Stage 1 Plus 2 Coil Performance
        \type object-list
        \object-list CoilPerformanceDX
-  A8, \field Dehumidification Mode 1 Stage 1 Coil Performance
+  A9,  \field Dehumidification Mode 1 Stage 1 Coil Performance
        \type object-list
        \object-list CoilPerformanceDX
-  A9, \field Dehumidification Mode 1 Stage 1 Plus 2 Coil Performance
+  A10, \field Dehumidification Mode 1 Stage 1 Plus 2 Coil Performance
        \type object-list
        \object-list CoilPerformanceDX
-  A10, \field Supply Water Storage Tank
+  A11, \field Supply Water Storage Tank
        \type object-list
        \object-list WaterStorageTankNames
-  A11, \field Condensate Collection Water Storage Tank
+  A12, \field Condensate Collection Water Storage Tank
        \type object-list
        \object-list WaterStorageTankNames
   N5,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
@@ -17764,7 +17782,7 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
        \required-field
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
-  A12; \field Basin Heater Operating Schedule
+  A13; \field Basin Heater Operating Schedule
        \type object-list
        \object-list ScheduleNames
        \note This field is only used for Condenser Type = EvaporativelyCooled.
@@ -17954,7 +17972,7 @@ OS:CoilPerformance:DX:Cooling,
 
 OS:Coil:Cooling:DX:MultiSpeed,
        \extensible:1
-       \max-fields 22
+       \max-fields 23
        \memo Direct expansion (DX) cooling coil and condensing unit (includes electric or
        \memo engine-driven compressor and condenser fan), multi-speed (or variable-speed).
        \memo Optional moisture evaporation from wet coil when compressor cycles off with continuous
@@ -18012,6 +18030,12 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \units W
        \ip-units W
        \required-field
+  A12, \field Crankcase Heater Capacity Function of Temperature Curve Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the crankcase heater capacity and the outdoor air temperature. When this field is
+       \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N3 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -18027,10 +18051,10 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \units C
        \minimum 2.0
        \required-field
-  A12, \field Basin Heater Operating Schedule
+  A13, \field Basin Heater Operating Schedule
        \type object-list
        \object-list ScheduleNames
-  A13, \field Fuel Type
+  A14, \field Fuel Type
        \type choice
        \key Electricity
        \key NaturalGas
@@ -18042,7 +18066,7 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \key OtherFuel1
        \key OtherFuel2
        \required-field
-  A14; \field Stage 1
+  A15; \field Stage 1
        \begin-extensible
        \type object-list
        \object-list CoilCoolingDXMultiSpeedStageData
@@ -19093,7 +19117,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
 
 
 OS:Coil:Heating:DX:SingleSpeed,
-       \min-fields 23
+       \min-fields 25
   A1,  \field Handle
        \type handle
        \required-field
@@ -19228,17 +19252,23 @@ OS:Coil:Heating:DX:SingleSpeed,
        \ip-units Btu/h
        \minimum 0
        \default 0.0
+  A12, \field Crankcase Heater Capacity Function of Temperature Curve Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the crankcase heater capacity and the outdoor air temperature. When this field is
+       \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N9,  \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \units C
        \minimum 0
        \default 10.0
-  A12, \field Defrost Strategy
+  A13, \field Defrost Strategy
        \type choice
        \default ReverseCycle
        \key ReverseCycle
        \key Resistive
-  A13, \field Defrost Control
+  A14, \field Defrost Control
        \type choice
        \default Timed
        \key Timed
@@ -20169,7 +20199,7 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
 
 OS:Coil:Heating:DX:MultiSpeed,
        \extensible:1
-       \max-fields 22
+       \max-fields 23
        \memo Direct expansion (DX) heating coil (air-to-air heat pump) and compressor unit
        \memo (includes electric or engine-driven compressor and outdoor fan), multi-speed
        \memo (or variable-speed), with defrost controls. Requires two to four sets
@@ -20207,12 +20237,18 @@ OS:Coil:Heating:DX:MultiSpeed,
        \minimum 0.0
        \units W
        \ip-units W
+  A6 , \field Crankcase Heater Capacity Function of Temperature Curve Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the crankcase heater capacity and the outdoor air temperature. When this field is
+       \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N4 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \required-field
        \type real
        \minimum 0.0
        \units C
-  A6 , \field Defrost Energy Input Ratio Function of Temperature Curve Name
+  A7 , \field Defrost Energy Input Ratio Function of Temperature Curve Name
        \type object-list
        \object-list BivariateFunctions
   N5 , \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
@@ -20221,12 +20257,12 @@ OS:Coil:Heating:DX:MultiSpeed,
        \minimum 0.0
        \maximum 7.22
        \units C
-  A7 , \field Defrost Strategy
+  A8 , \field Defrost Strategy
        \required-field
        \type choice
        \key ReverseCycle
        \key Resistive
-  A8 , \field Defrost Control
+  A9 , \field Defrost Control
        \required-field
        \type choice
        \key Timed
@@ -20242,12 +20278,12 @@ OS:Coil:Heating:DX:MultiSpeed,
        \autosizable
        \units W
        \ip-units W
-  A9 , \field Apply Part Load Fraction to Speeds Greater than 1
+  A10, \field Apply Part Load Fraction to Speeds Greater than 1
        \required-field
        \type choice
        \key Yes
        \key No
-  A10, \field Fuel Type
+  A11, \field Fuel Type
        \required-field
        \type choice
        \key Electricity
@@ -20264,7 +20300,7 @@ OS:Coil:Heating:DX:MultiSpeed,
        \type integer
        \minimum 1
        \maximum 6
-  A11; \field Stage 1
+  A12; \field Stage 1
        \begin-extensible
        \type object-list
        \object-list CoilHeatingDXMultiSpeedStageData
@@ -20342,7 +20378,7 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
        \object-list BivariateFunctions
 
 OS:Coil:Heating:DX:VariableSpeed,
-        \min-fields 19
+        \min-fields 20
    A1,  \field Handle
         \type handle
         \required-field
@@ -20408,17 +20444,23 @@ OS:Coil:Heating:DX:VariableSpeed,
         \minimum 0.0
         \units W
         \ip-units W
+   A7,  \field Crankcase Heater Capacity Function of Temperature Curve Name
+        \note A Curve:* or Table:Lookup object encoding the relationship between
+        \note the crankcase heater capacity and the outdoor air temperature. When this field is
+        \note missing or empty, constant crankcase heater capacity will be assumed.
+        \type object-list
+        \object-list UnivariateFunctions
    N8,  \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
         \required-field
         \type real
         \minimum 0.0
         \units C
-   A7,  \field Defrost Strategy
+   A8,  \field Defrost Strategy
         \required-field
         \type choice
         \key ReverseCycle
         \key Resistive
-   A8,  \field Defrost Control
+   A9,  \field Defrost Control
         \required-field
         \type choice
         \key Timed
@@ -20434,7 +20476,7 @@ OS:Coil:Heating:DX:VariableSpeed,
         \autosizable
         \units W
         \ip-units W
-   A9;  \field Speed Data List
+   A10; \field Speed Data List
         \type object-list
         \object-list ModelObjectLists
 
@@ -30366,7 +30408,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \memo Heat pump water heater (HPWH) heating coil, air-to-water direct-expansion (DX)
        \memo system which includes a water heating coil, evaporator air coil, evaporator
        \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump system.
-       \min-fields 29
+       \min-fields 30
   A1, \field Handle
        \type handle
        \required-field
@@ -30510,6 +30552,12 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note surrounding the compressor is below the Maximum Ambient Temperature for Crankcase
        \note Heater Operation and the DX coil is off.  The ambient temperature surrounding the
        \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
+  A10, \field Crankcase Heater Capacity Function of Temperature Curve Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the crankcase heater capacity and the outdoor air temperature. When this field is
+       \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N12, \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
@@ -30519,7 +30567,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note surrounding the compressor is below the Maximum Outdoor Temperature for Crankcase
        \note Heater Operation and the unit is off. The ambient temperature surrounding the
        \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
-  A10 , \field Evaporator Air Temperature Type for Curve Objects
+  A11, \field Evaporator Air Temperature Type for Curve Objects
        \type choice
        \key DryBulbTemperature
        \key WetBulbTemperature
@@ -30527,7 +30575,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note Determines temperature type for heating capacity curves and
        \note heating COP curves. This input determines whether
        \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
-  A11, \field Heating Capacity Function of Temperature Curve
+  A12, \field Heating Capacity Function of Temperature Curve
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
@@ -30539,7 +30587,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note tw = condenser inlet water temperature (C).
        \note The field Evaporator Air Temperature Type for Curve Objects determines if dry-bulb or wet-bulb
        \note is used as the evaporator inlet air temperature (ta).
-  A12, \field Heating Capacity Function of Air Flow Fraction Curve
+  A13, \field Heating Capacity Function of Air Flow Fraction Curve
        \type object-list
        \required-field
        \object-list UnivariateFunctions
@@ -30549,7 +30597,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note ff = fraction of the rated evaporator air flow rate.
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in air flow rate fraction.
-  A13, \field Heating Capacity Function of Water Flow Fraction Curve
+  A14, \field Heating Capacity Function of Water Flow Fraction Curve
        \type object-list
        \required-field
        \object-list UnivariateFunctions
@@ -30559,7 +30607,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note ff = fraction of the rated condenser water flow rate.
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in water flow rate fraction.
-  A14, \field Heating COP Function of Temperature Curve
+  A15, \field Heating COP Function of Temperature Curve
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
@@ -30571,7 +30619,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note tw = condenser inlet water temperature (C).
        \note The field Evaporator Air Temperature Type for Curve Objects determines if dry-bulb or wet-bulb
        \note is used as the evaporator inlet air temperature (ta).
-  A15, \field Heating COP Function of Air Flow Fraction Curve
+  A16, \field Heating COP Function of Air Flow Fraction Curve
        \type object-list
        \object-list UnivariateFunctions
        \required-field
@@ -30581,7 +30629,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note ff = fraction of the rated evaporator air flow rate.
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in air flow rate fraction.
-  A16, \field Heating COP Function of Water Flow Fraction Curve
+  A17, \field Heating COP Function of Water Flow Fraction Curve
        \type object-list
        \required-field
        \object-list UnivariateFunctions
@@ -30591,7 +30639,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note ff = fraction of the rated condenser water flow rate.
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in water flow rate fraction.
-  A17; \field Part Load Fraction Correlation Curve
+  A18; \field Part Load Fraction Correlation Curve
        \type object-list
        \required-field
        \object-list UnivariateFunctions
@@ -30820,7 +30868,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \memo variable-speed Heat pump water heater (VSHPWH) heating coil, air-to-water direct-expansion (DX)
        \memo system which includes a variable-speed water heating coil, evaporator air coil, evaporator
        \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump system.
-       \min-fields 22
+       \min-fields 23
   A1,  \field Handle
        \type handle
        \required-field
@@ -30940,6 +30988,12 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note surrounding the compressor is below the Maximum Ambient Temperature for Crankcase
        \note Heater Operation and the DX coil is off.  The ambient temperature surrounding the
        \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
+  A10, \field Crankcase Heater Capacity Function of Temperature Curve Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the crankcase heater capacity and the outdoor air temperature. When this field is
+       \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N10, \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
@@ -30949,7 +31003,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note surrounding the compressor is below the Maximum Outdoor Temperature for Crankcase
        \note Heater Operation and the unit is off. The ambient temperature surrounding the
        \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
-  A10, \field Evaporator Air Temperature Type for Curve Objects
+  A11, \field Evaporator Air Temperature Type for Curve Objects
        \type choice
        \key DryBulbTemperature
        \key WetBulbTemperature
@@ -30957,7 +31011,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note Determines temperature type for heating capacity curves and
        \note heating COP curves. This input determines whether
        \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
-  A11, \field Part Load Fraction Correlation Curve Name
+  A12, \field Part Load Fraction Correlation Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
@@ -30968,7 +31022,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note PLR = part load ratio (heating delivered/steady state heating capacity).
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in part load ratio.
-  A12; \field Speed Data List
+  A13; \field Speed Data List
        \type object-list
        \object-list ModelObjectLists
 
@@ -31077,7 +31131,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \memo Heat pump water heater (HPWH) heating coil, air-to-water direct-expansion (DX)
        \memo system which includes a water heating coil, evaporator air coil, evaporator
        \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump:WrappedCondenser system.
-       \min-fields 20
+       \min-fields 21
   A1, \field Handle
        \type handle
        \required-field
@@ -31166,6 +31220,12 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note surrounding the compressor is below the Maximum Ambient Temperature for Crankcase
        \note Heater Operation and the DX coil is off.  The ambient temperature surrounding the
        \note compressor is set by the WaterHeater:HeatPump:WrappedCondenser parent object (field Compressor Location).
+  A6,  \field Crankcase Heater Capacity Function of Temperature Curve Name
+       \note A Curve:* or Table:Lookup object encoding the relationship between
+       \note the crankcase heater capacity and the outdoor air temperature. When this field is
+       \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N9,  \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
@@ -31175,7 +31235,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note surrounding the compressor is below the Maximum Outdoor Temperature for Crankcase
        \note Heater Operation and the unit is off. The ambient temperature surrounding the
        \note compressor is set by the WaterHeater:HeatPump:WrappedCondenser parent object (field Compressor Location).
-  A6,  \field Evaporator Air Temperature Type for Curve Objects
+  A7,  \field Evaporator Air Temperature Type for Curve Objects
        \type choice
        \key DryBulbTemperature
        \key WetBulbTemperature
@@ -31183,7 +31243,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note Determines temperature type for heating capacity curves and
        \note heating COP curves. This input determines whether
        \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
-  A7,  \field Heating Capacity Function of Temperature Curve Name
+  A8,  \field Heating Capacity Function of Temperature Curve Name
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
@@ -31195,7 +31255,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note tw = condenser inlet water temperature (C).
        \note The field Evaporator Air Temperature Type for Curve Objects determines if dry-bulb or wet-bulb
        \note is used as the evaporator inlet air temperature (ta).
-  A8,  \field Heating Capacity Function of Air Flow Fraction Curve Name
+  A9,  \field Heating Capacity Function of Air Flow Fraction Curve Name
        \type object-list
        \required-field
        \object-list UnivariateFunctions
@@ -31205,7 +31265,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note ff = fraction of the rated evaporator air flow rate.
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in air flow rate fraction.
-  A9,  \field Heating COP Function of Temperature Curve Name
+  A10, \field Heating COP Function of Temperature Curve Name
        \type object-list
        \required-field
        \object-list UnivariateFunctions
@@ -31217,7 +31277,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note tw = condenser inlet water temperature (C).
        \note The field Evaporator Air Temperature Type for Curve Objects determines if dry-bulb or wet-bulb
        \note is used as the evaporator inlet air temperature (ta).
-  A10,  \field Heating COP Function of Air Flow Fraction Curve Name
+  A11, \field Heating COP Function of Air Flow Fraction Curve Name
        \type object-list
        \required-field
        \object-list UnivariateFunctions
@@ -31227,7 +31287,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note ff = fraction of the rated evaporator air flow rate.
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in air flow rate fraction.
-  A11; \field Part Load Fraction Correlation Curve Name
+  A12; \field Part Load Fraction Correlation Curve Name
        \type object-list
        \required-field
        \object-list UnivariateFunctions
