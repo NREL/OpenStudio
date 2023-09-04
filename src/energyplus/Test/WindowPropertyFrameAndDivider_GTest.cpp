@@ -9,6 +9,7 @@
 #include "../ErrorFile.hpp"
 #include "../ForwardTranslator.hpp"
 #include "../ReverseTranslator.hpp"
+#include "../GeometryTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/Space.hpp"
@@ -30,6 +31,8 @@
 #include "../../utilities/idf/IdfFile.hpp"
 
 #include <resources.hxx>
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 
 #include <sstream>
 
@@ -76,8 +79,9 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
   EXPECT_DOUBLE_EQ(-1.0, normal.y());
   EXPECT_DOUBLE_EQ(0.0, normal.z());
 
+  static constexpr double outsideRevealDepth = 1.75;
   WindowPropertyFrameAndDivider frameAndDivider(model);
-  frameAndDivider.setOutsideRevealDepth(1.0);
+  frameAndDivider.setOutsideRevealDepth(outsideRevealDepth);
 
   EXPECT_FALSE(subSurface2.allowWindowPropertyFrameAndDivider());
   EXPECT_TRUE(subSurface2.setSubSurfaceType("GlassDoor"));
@@ -86,12 +90,48 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
   EXPECT_TRUE(subSurface2.setWindowPropertyFrameAndDivider(frameAndDivider));
   ASSERT_TRUE(subSurface2.windowPropertyFrameAndDivider());
 
+  model.save("WindowPropertyFrameAndDivider.osm", true);
+
   ForwardTranslator forwardTranslator;
-  OptionalWorkspace outWorkspace = forwardTranslator.translateModel(model);
-  ASSERT_TRUE(outWorkspace);
+  auto workspace = forwardTranslator.translateModel(model);
+
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::WindowProperty_FrameAndDivider).size());
+
+  auto pointEqual = [](const Point3d& a, const Point3d& b) {
+    static constexpr double tol = 1.0e-6;
+    EXPECT_NEAR(a.x(), b.x(), tol);
+    EXPECT_NEAR(a.y(), b.y(), tol);
+    EXPECT_NEAR(a.z(), b.z(), tol);
+  };
+
+  {
+    auto ss_ = workspace.getObjectByTypeAndName(IddObjectType::FenestrationSurface_Detailed, subSurface1.nameString());
+    ASSERT_TRUE(ss_);
+    EXPECT_TRUE(ss_->isEmpty(FenestrationSurface_DetailedFields::FrameandDividerName));
+    auto idf_vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, *ss_);
+    ASSERT_EQ(vertices.size(), idf_vertices.size());
+    for (size_t i = 0; i < vertices.size(); ++i) {
+      pointEqual(vertices[i], idf_vertices[i]);
+    }
+  }
+
+  {
+    auto ss_ = workspace.getObjectByTypeAndName(IddObjectType::FenestrationSurface_Detailed, subSurface2.nameString());
+    ASSERT_TRUE(ss_);
+    auto frame_ = ss_->getTarget(FenestrationSurface_DetailedFields::FrameandDividerName);
+    ASSERT_TRUE(frame_);
+
+    auto idf_vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, *ss_);
+    ASSERT_EQ(vertices.size(), idf_vertices.size());
+    for (size_t i = 0; i < vertices.size(); ++i) {
+      auto pt = vertices[i] + Vector3d(0.0, outsideRevealDepth, 0.0);
+      pointEqual(pt, idf_vertices[i]);
+    }
+  }
 
   ReverseTranslator reverseTranslator;
-  OptionalModel outModel = reverseTranslator.translateWorkspace(*outWorkspace);
+  OptionalModel outModel = reverseTranslator.translateWorkspace(workspace);
   ASSERT_TRUE(outModel);
 
   EXPECT_EQ(1u, outModel->getConcreteModelObjects<WindowPropertyFrameAndDivider>().size());
@@ -102,7 +142,7 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
   vertices = testSubSurface->vertices();
   ASSERT_EQ(4u, vertices.size());
   EXPECT_DOUBLE_EQ(0.0, vertices[0].x());
-  EXPECT_DOUBLE_EQ(0.0, vertices[0].y());
+  EXPECT_DOUBLE_EQ(outsideRevealDepth, vertices[0].y());
   EXPECT_DOUBLE_EQ(1.0, vertices[0].z());
 
   testSubSurface = outModel->getConcreteModelObjectByName<SubSurface>("No Offset");
