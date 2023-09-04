@@ -121,7 +121,7 @@ def make_unitary_vsdeqfit_model()
   u_hc_vsd_eq.setHeatingCoil(hc_vsd_eq)
 
   u_both_eq = make_unitary(m, "Unitary Both VsdEq")
-  cc_eq = make_hc_vsdeqfit(m, "CC VsdEq Unitary Both")
+  cc_eq = make_cc_vsdeqfit(m, "CC VsdEq Unitary Both")
   u_both_eq.setCoolingCoil(cc_eq)
   hc_eq = make_hc_vsdeqfit(m, "HC VsdEq Unitary Both")
   u_both_eq.setHeatingCoil(hc_eq)
@@ -141,6 +141,13 @@ def make_wahp_eqfit(m, name)
   supplementalHC = OpenStudio::Model::CoilHeatingElectric.new(m)
   wahp = OpenStudio::Model::ZoneHVACWaterToAirHeatPump.new(m, m.alwaysOnDiscreteSchedule, supplyFan, hc, cc, supplementalHC)
   wahp.setName(name)
+
+  # Deleted and moved to child
+  wahp.setMaximumCyclingRate(MAX_CYCLING_RATE)
+  wahp.setFractionofOnCyclePowerUse(0.05) # Just deleted
+  wahp.setHeatPumpTimeConstant(HEAT_PUMP_TIME_CONSTANT)
+  wahp.setHeatPumpFanDelayTime(HEAT_PUMP_FAN_DELAY_TIME)
+
   return wahp
 end
 
@@ -155,13 +162,20 @@ def make_wahp_vsdeqfit(m, name)
   supplementalHC = OpenStudio::Model::CoilHeatingElectric.new(m)
   wahp = OpenStudio::Model::ZoneHVACWaterToAirHeatPump.new(m, m.alwaysOnDiscreteSchedule, supplyFan, hc, cc, supplementalHC)
   wahp.setName(name)
+
+  # Deleted and moved to child
+  wahp.setMaximumCyclingRate(MAX_CYCLING_RATE)
+  wahp.setFractionofOnCyclePowerUse(0.05) # Just deleted
+  wahp.setHeatPumpTimeConstant(HEAT_PUMP_TIME_CONSTANT)
+  wahp.setHeatPumpFanDelayTime(HEAT_PUMP_FAN_DELAY_TIME)
+
   return wahp
 end
 
 def make_wahp_model()
   m = Model.new
   wahp_eq = make_wahp_eqfit(m, "WAHP Eq")
-  wahp_vsd_eq = make_wahp_eqfit(m, "WAHP VsdEq")
+  wahp_vsd_eq = make_wahp_vsdeqfit(m, "WAHP VsdEq")
   m.save("test_vt_Coils_Latent_wahp.osm", true)
 end
 

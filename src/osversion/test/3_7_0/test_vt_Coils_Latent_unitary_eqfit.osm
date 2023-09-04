@@ -1,10 +1,10 @@
 
 OS:Version,
-  {487e9a06-ec14-494a-82d0-d4c78a60ef2c}, !- Handle
+  {3302470b-4939-4889-b871-20825b3e3067}, !- Handle
   3.6.1;                                  !- Version Identifier
 
 OS:AirLoopHVAC:UnitarySystem,
-  {6caf8643-f5b9-4aad-92dd-8c474ccb822a}, !- Handle
+  {6f98ca78-64cb-4360-93a0-ac972a1b1128}, !- Handle
   Unitary CC Eq,                          !- Name
   Load,                                   !- Control Type
   ,                                       !- Controlling Zone or Thermostat Location
@@ -17,7 +17,7 @@ OS:AirLoopHVAC:UnitarySystem,
   ,                                       !- Supply Air Fan Operating Mode Schedule Name
   ,                                       !- Heating Coil Name
   1,                                      !- DX Heating Coil Sizing Ratio
-  {556d4b9e-bf6e-4c66-a3ca-850545fd7101}, !- Cooling Coil Name
+  {6b63c40f-c043-4e5b-8a0f-dc105a4f0e76}, !- Cooling Coil Name
   No,                                     !- Use DOAS DX Cooling Coil
   2,                                      !- DOAS DX Cooling Coil Leaving Minimum Air Temperature {C}
   SensibleOnlyLoadControl,                !- Latent Load Control
@@ -50,7 +50,7 @@ OS:AirLoopHVAC:UnitarySystem,
   1;                                      !- Ancilliary Off-Cycle Electric Power {W}
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
-  {556d4b9e-bf6e-4c66-a3ca-850545fd7101}, !- Handle
+  {6b63c40f-c043-4e5b-8a0f-dc105a4f0e76}, !- Handle
   CC Eq Unitary,                          !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
@@ -64,14 +64,14 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   30,                                     !- Rated Entering Water Temperature {C}
   27,                                     !- Rated Entering Air Dry-Bulb Temperature {C}
   19,                                     !- Rated Entering Air Wet-Bulb Temperature {C}
-  {a808deb9-2d13-4582-8ad4-05eb5c002c2b}, !- Total Cooling Capacity Curve Name
-  {1a4d1622-b30a-4eba-a133-9c58114809b2}, !- Sensible Cooling Capacity Curve Name
-  {4c917bd3-cce1-42c1-ba93-277a9697a20e}, !- Cooling Power Consumption Curve Name
+  {9cfd5bfc-0934-47b8-be94-b82f643a7b0c}, !- Total Cooling Capacity Curve Name
+  {3e8ecf1a-a437-4c7b-a61f-97bea500ac97}, !- Sensible Cooling Capacity Curve Name
+  {d18af99c-1fd2-4fa9-9f44-0946d31bf252}, !- Cooling Power Consumption Curve Name
   1.5,                                    !- Nominal Time for Condensate Removal to Begin {s}
   0.02;                                   !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
 OS:Curve:QuadLinear,
-  {a808deb9-2d13-4582-8ad4-05eb5c002c2b}, !- Handle
+  {9cfd5bfc-0934-47b8-be94-b82f643a7b0c}, !- Handle
   TotCoolCapCurve,                        !- Name
   -0.68126221,                            !- Coefficient1 Constant
   1.99529297,                             !- Coefficient2 w
@@ -88,7 +88,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Curve:QuintLinear,
-  {1a4d1622-b30a-4eba-a133-9c58114809b2}, !- Handle
+  {3e8ecf1a-a437-4c7b-a61f-97bea500ac97}, !- Handle
   Curve Quint Linear 1,                   !- Name
   2.24209455,                             !- Coefficient1 Constant
   7.28913391,                             !- Coefficient2 v
@@ -108,7 +108,7 @@ OS:Curve:QuintLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Curve:QuadLinear,
-  {4c917bd3-cce1-42c1-ba93-277a9697a20e}, !- Handle
+  {d18af99c-1fd2-4fa9-9f44-0946d31bf252}, !- Handle
   CC Eq Unitary coolingPowerConsumptionCurve, !- Name
   -3.20456384,                            !- Coefficient1 Constant
   0.47656454,                             !- Coefficient2 w
@@ -125,7 +125,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:AirLoopHVAC:UnitarySystem,
-  {cad1fd9d-a425-4ad4-a6a1-413d7882ba67}, !- Handle
+  {aa30338c-6984-4f86-a63a-4e4f978c37e7}, !- Handle
   Unitary HC Eq,                          !- Name
   Load,                                   !- Control Type
   ,                                       !- Controlling Zone or Thermostat Location
@@ -136,7 +136,7 @@ OS:AirLoopHVAC:UnitarySystem,
   ,                                       !- Supply Fan Name
   ,                                       !- Fan Placement
   ,                                       !- Supply Air Fan Operating Mode Schedule Name
-  {79b751b8-d80e-4d25-91a0-4b066c723be8}, !- Heating Coil Name
+  {c1c5ec02-4bd2-4677-b29d-82c5259961af}, !- Heating Coil Name
   1,                                      !- DX Heating Coil Sizing Ratio
   ,                                       !- Cooling Coil Name
   No,                                     !- Use DOAS DX Cooling Coil
@@ -171,7 +171,7 @@ OS:AirLoopHVAC:UnitarySystem,
   1;                                      !- Ancilliary Off-Cycle Electric Power {W}
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
-  {79b751b8-d80e-4d25-91a0-4b066c723be8}, !- Handle
+  {c1c5ec02-4bd2-4677-b29d-82c5259961af}, !- Handle
   HC Eq Unitary,                          !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
@@ -184,11 +184,11 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   20,                                     !- Rated Entering Water Temperature {C}
   20,                                     !- Rated Entering Air Dry-Bulb Temperature {C}
   1,                                      !- Ratio of Rated Heating Capacity to Rated Cooling Capacity
-  {8b5bc1dc-cd08-41cb-b0ee-de1077589a0a}, !- Heating Capacity Curve Name
-  {bc6d2d24-401e-4a96-a6bd-c0ef61d3723b}; !- Heating Power Consumption Curve Name
+  {658e02d7-0cdc-43dd-aa91-77939549e57f}, !- Heating Capacity Curve Name
+  {9ea0cff9-b563-4d43-9683-a90e91c788f2}; !- Heating Power Consumption Curve Name
 
 OS:Curve:QuadLinear,
-  {8b5bc1dc-cd08-41cb-b0ee-de1077589a0a}, !- Handle
+  {658e02d7-0cdc-43dd-aa91-77939549e57f}, !- Handle
   Curve Quad Linear 1,                    !- Name
   -5.50102734,                            !- Coefficient1 Constant
   -0.96688754,                            !- Coefficient2 w
@@ -205,7 +205,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Curve:QuadLinear,
-  {bc6d2d24-401e-4a96-a6bd-c0ef61d3723b}, !- Handle
+  {9ea0cff9-b563-4d43-9683-a90e91c788f2}, !- Handle
   HC Eq Unitary heatingPowerConsumptionCurve, !- Name
   -7.47517858,                            !- Coefficient1 Constant
   6.40876653,                             !- Coefficient2 w
@@ -222,7 +222,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:AirLoopHVAC:UnitarySystem,
-  {993eff9d-9c53-4ba2-8d16-e60a42a9e688}, !- Handle
+  {5c888d05-5265-4e4e-8eba-8479be101a14}, !- Handle
   Unitary Both Eq,                        !- Name
   Load,                                   !- Control Type
   ,                                       !- Controlling Zone or Thermostat Location
@@ -233,9 +233,9 @@ OS:AirLoopHVAC:UnitarySystem,
   ,                                       !- Supply Fan Name
   ,                                       !- Fan Placement
   ,                                       !- Supply Air Fan Operating Mode Schedule Name
-  {8885e19e-883b-4251-be58-5706b90f8466}, !- Heating Coil Name
+  {861c44f7-d6be-43c0-9e39-956e2278337e}, !- Heating Coil Name
   1,                                      !- DX Heating Coil Sizing Ratio
-  {791742b1-c0a2-4525-a69d-79d1c431af49}, !- Cooling Coil Name
+  {b84730ba-5538-4772-b094-79d4ad4c726e}, !- Cooling Coil Name
   No,                                     !- Use DOAS DX Cooling Coil
   2,                                      !- DOAS DX Cooling Coil Leaving Minimum Air Temperature {C}
   SensibleOnlyLoadControl,                !- Latent Load Control
@@ -268,7 +268,7 @@ OS:AirLoopHVAC:UnitarySystem,
   1;                                      !- Ancilliary Off-Cycle Electric Power {W}
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
-  {791742b1-c0a2-4525-a69d-79d1c431af49}, !- Handle
+  {b84730ba-5538-4772-b094-79d4ad4c726e}, !- Handle
   CC Eq Unitary Both,                     !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
@@ -282,14 +282,14 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   30,                                     !- Rated Entering Water Temperature {C}
   27,                                     !- Rated Entering Air Dry-Bulb Temperature {C}
   19,                                     !- Rated Entering Air Wet-Bulb Temperature {C}
-  {8cd06a2b-0bac-4e3a-bfcb-f4115e10c71f}, !- Total Cooling Capacity Curve Name
-  {2efa4557-a233-4ec1-abe0-efe007101626}, !- Sensible Cooling Capacity Curve Name
-  {ecbfac5f-bbd5-4f12-872f-952c730356d0}, !- Cooling Power Consumption Curve Name
+  {cfe2ea9a-79fc-4381-9876-8e797cf14837}, !- Total Cooling Capacity Curve Name
+  {090b4e7f-61f2-4ac8-baca-182495b12e85}, !- Sensible Cooling Capacity Curve Name
+  {91707c1a-0291-4213-be15-cecbf5a6dcc7}, !- Cooling Power Consumption Curve Name
   1.5,                                    !- Nominal Time for Condensate Removal to Begin {s}
   0.02;                                   !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
 OS:Curve:QuadLinear,
-  {8cd06a2b-0bac-4e3a-bfcb-f4115e10c71f}, !- Handle
+  {cfe2ea9a-79fc-4381-9876-8e797cf14837}, !- Handle
   TotCoolCapCurve 1,                      !- Name
   -0.68126221,                            !- Coefficient1 Constant
   1.99529297,                             !- Coefficient2 w
@@ -306,7 +306,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Curve:QuintLinear,
-  {2efa4557-a233-4ec1-abe0-efe007101626}, !- Handle
+  {090b4e7f-61f2-4ac8-baca-182495b12e85}, !- Handle
   Curve Quint Linear 2,                   !- Name
   2.24209455,                             !- Coefficient1 Constant
   7.28913391,                             !- Coefficient2 v
@@ -326,7 +326,7 @@ OS:Curve:QuintLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Curve:QuadLinear,
-  {ecbfac5f-bbd5-4f12-872f-952c730356d0}, !- Handle
+  {91707c1a-0291-4213-be15-cecbf5a6dcc7}, !- Handle
   CC Eq Unitary Both coolingPowerConsumptionCurve, !- Name
   -3.20456384,                            !- Coefficient1 Constant
   0.47656454,                             !- Coefficient2 w
@@ -343,7 +343,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
-  {8885e19e-883b-4251-be58-5706b90f8466}, !- Handle
+  {861c44f7-d6be-43c0-9e39-956e2278337e}, !- Handle
   HC Eq Unitary Both,                     !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
@@ -356,11 +356,11 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   20,                                     !- Rated Entering Water Temperature {C}
   20,                                     !- Rated Entering Air Dry-Bulb Temperature {C}
   1,                                      !- Ratio of Rated Heating Capacity to Rated Cooling Capacity
-  {7d778352-bb52-408f-b2cb-dbfb42d8d6fc}, !- Heating Capacity Curve Name
-  {13e5dd21-a809-405f-aaea-5b27527a673b}; !- Heating Power Consumption Curve Name
+  {b57f43a0-f0d5-4565-8da5-aabf6be9103c}, !- Heating Capacity Curve Name
+  {d383764f-2704-449b-a61e-c0d9540b8ae2}; !- Heating Power Consumption Curve Name
 
 OS:Curve:QuadLinear,
-  {7d778352-bb52-408f-b2cb-dbfb42d8d6fc}, !- Handle
+  {b57f43a0-f0d5-4565-8da5-aabf6be9103c}, !- Handle
   Curve Quad Linear 2,                    !- Name
   -5.50102734,                            !- Coefficient1 Constant
   -0.96688754,                            !- Coefficient2 w
@@ -377,7 +377,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Curve:QuadLinear,
-  {13e5dd21-a809-405f-aaea-5b27527a673b}, !- Handle
+  {d383764f-2704-449b-a61e-c0d9540b8ae2}, !- Handle
   HC Eq Unitary Both heatingPowerConsumptionCurve, !- Name
   -7.47517858,                            !- Coefficient1 Constant
   6.40876653,                             !- Coefficient2 w

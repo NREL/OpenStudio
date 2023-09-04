@@ -2555,12 +2555,12 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_GroundHeatExchangerVertical) {
 }
 
 TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowRate) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_RatedFanPowerPerVolumeFlowRate.osm");
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_RatedFanPowerPerVolumeFlowRate.osm");
   osversion::VersionTranslator vt;
-  boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_RatedFanPowerPerVolumeFlowRate_updated.osm");
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
   model->save(outPath, true);
 
   {
@@ -2629,12 +2629,12 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowR
 }
 
 TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_CrankcaseCurve) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_CrankcaseCurve.osm");
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_CrankcaseCurve.osm");
   osversion::VersionTranslator vt;
-  boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_CrankcaseCurve_updated.osm");
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
   model->save(outPath, true);
   {
     std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:CurveFit:Performance");
@@ -2835,12 +2835,12 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_CrankcaseCurve) {
 }
 
 TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_solo) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_solo.osm");
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_solo.osm");
   osversion::VersionTranslator vt;
-  boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_solo_updated.osm");
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
   model->save(outPath, true);
 
   // I expect two Curve:Linear to have been created
@@ -2974,12 +2974,12 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_solo) {
 }
 
 TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_eqfit) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_unitary_eqfit.osm");
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_unitary_eqfit.osm");
   osversion::VersionTranslator vt;
-  boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_unitary_eqfit_updated.osm");
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
   model->save(outPath, true);
 
   constexpr double MAX_CYCLING_RATE = 3.5;
@@ -3009,7 +3009,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_eqfit) {
     auto unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
     ASSERT_EQ(3, unitarys.size());
 
-    const size_t deletionIndex = 38;
+    constexpr size_t deletionIndex = 38;
     for (const auto& unitary : unitarys) {
 
       EXPECT_EQ("sensor", unitary.getString(deletionIndex - 1).get());
@@ -3019,8 +3019,8 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_eqfit) {
     }
   }
 
-  const int heatingCoilNameIndex = 11;
-  const int coolingCoilNameIndex = 13;
+  constexpr int heatingCoilNameIndex = 11;
+  constexpr int coolingCoilNameIndex = 13;
 
   {
     auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary HC Eq").get();
@@ -3133,6 +3133,312 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_eqfit) {
         EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
         EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
       }
+    }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_vsdeqfit) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_unitary_vsdeqfit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model->save(outPath, true);
+
+  constexpr double MAX_CYCLING_RATE = 3.5;
+  constexpr double HEAT_PUMP_TIME_CONSTANT = 90.0;
+  constexpr double HEAT_PUMP_FAN_DELAY_TIME = 120.0;
+
+  {
+    // I expect zero Curve:Linear to have been created as none of the coils need one
+    auto curves = model->getObjectsByType("OS:Curve:Linear");
+    EXPECT_EQ(0, curves.size());
+  }
+
+  {
+    auto unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
+    ASSERT_EQ(4, unitarys.size());
+
+    constexpr size_t deletionIndex = 38;
+    for (const auto& unitary : unitarys) {
+
+      EXPECT_EQ("sensor", unitary.getString(deletionIndex - 1).get());
+
+      EXPECT_EQ(2.0, unitary.getDouble(deletionIndex).get());
+      EXPECT_EQ(1.0, unitary.getDouble(deletionIndex + 1).get());
+    }
+  }
+
+  constexpr int heatingCoilNameIndex = 11;
+  constexpr int coolingCoilNameIndex = 13;
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary HC VsdEq").get();
+    ASSERT_TRUE(unitary.isEmpty(coolingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(heatingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(12, coil.numFields());
+
+      // It has no changes
+      ASSERT_TRUE(coil.getTarget(11));
+      EXPECT_EQ("HC VsdEq Unitary Speed Data List", coil.getTarget(11)->nameString());
+    }
+  }
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary CC VsdEq").get();
+    ASSERT_TRUE(unitary.isEmpty(heatingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(18, coil.numFields());
+
+      {
+        const size_t insertionIndex = 12;
+        EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+        // From Unitary
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+        EXPECT_EQ("Yes", coil.getString(insertionIndex + 3).get());
+      }
+
+      ASSERT_TRUE(coil.getTarget(17));
+      EXPECT_EQ("CC VsdEq Unitary Speed Data List", coil.getTarget(17)->nameString());
+    }
+  }
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary CC DXVsd").get();
+    ASSERT_TRUE(unitary.isEmpty(heatingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:DX:VariableSpeed", coil.iddObject().name());
+
+      EXPECT_EQ(26, coil.numFields());
+
+      {
+        const size_t insertionIndex = 9;
+        EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+        // From Unitary
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+        ASSERT_TRUE(coil.getTarget(insertionIndex + 3));
+        EXPECT_EQ("CC DXVsd Unitary EnergyPartLoadFractionCurve", coil.getTarget(insertionIndex + 3)->nameString());
+      }
+
+      {
+        const size_t insertionIndex = 17;
+        EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+        // Crankcase Heater Capacity Function of Temperature Curve Name
+        EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+        EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+      }
+
+      // Last field: Part Load Fraction Correlation Curve Name
+      ASSERT_TRUE(coil.getTarget(25));
+      EXPECT_EQ("CC DXVsd Unitary Speed Data List", coil.getTarget(25)->nameString());
+    }
+  }
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary Both VsdEq").get();
+    ASSERT_TRUE(unitary.getTarget(heatingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(12, coil.numFields());
+
+      // It has no changes
+      ASSERT_TRUE(coil.getTarget(11));
+      EXPECT_EQ("HC VsdEq Unitary Both Speed Data List", coil.getTarget(11)->nameString());
+    }
+
+    {
+      auto coil = unitary.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(18, coil.numFields());
+
+      {
+        const size_t insertionIndex = 12;
+        EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+        // From Unitary
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+        EXPECT_EQ("Yes", coil.getString(insertionIndex + 3).get());
+      }
+
+      ASSERT_TRUE(coil.getTarget(17));
+      EXPECT_EQ("CC VsdEq Unitary Both Speed Data List", coil.getTarget(17)->nameString());
+    }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_wahp) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_wahp.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model->save(outPath, true);
+
+  constexpr double MAX_CYCLING_RATE = 3.5;
+  constexpr double HEAT_PUMP_TIME_CONSTANT = 90.0;
+  constexpr double HEAT_PUMP_FAN_DELAY_TIME = 120.0;
+
+  constexpr double A = 4 * (HEAT_PUMP_TIME_CONSTANT / 3600.0) * MAX_CYCLING_RATE;
+  const double calculatedC2 = A * (1 - std::exp(-1 / A));
+  const double calculatedC1 = (1 - calculatedC2);
+
+  EXPECT_DOUBLE_EQ(0.670101416743666, calculatedC1);
+  EXPECT_DOUBLE_EQ(0.329898583256334, calculatedC2);
+
+  {
+    // I expect one Curve:Linear to have been created:
+    // * One for the WAHP with EquationFit
+    // * Zero for the WAHP with VariableSpeedEquationFit coils
+    auto curves = model->getObjectsByType("OS:Curve:Linear");
+    ASSERT_EQ(1, curves.size());
+
+    EXPECT_TRUE(std::all_of(curves.cbegin(), curves.cend(),
+                            [](const auto& curve) { return curve.nameString().find("AutogeneratedPLFCurve") != std::string::npos; }));
+  }
+
+  {
+    auto wahps = model->getObjectsByType("OS:ZoneHVAC:WaterToAirHeatPump");
+    ASSERT_EQ(2, wahps.size());
+
+    constexpr size_t deletionIndex = 15;
+    for (const auto& wahp : wahps) {
+
+      // Before: cooling coil name
+      EXPECT_TRUE(wahp.getTarget(deletionIndex - 1));
+
+      // After: supplemental heating coil
+      EXPECT_TRUE(wahp.getTarget(deletionIndex));
+
+      EXPECT_EQ("OS:Coil:Heating:Electric", wahp.getTarget(deletionIndex)->iddObject().name());
+    }
+  }
+
+  constexpr int heatingCoilNameIndex = 13;
+  constexpr int coolingCoilNameIndex = 14;
+
+  {
+    auto wahp = model->getObjectByTypeAndName("OS:ZoneHVAC:WaterToAirHeatPump", "WAHP Eq").get();
+    ASSERT_TRUE(wahp.getTarget(heatingCoilNameIndex));
+    ASSERT_TRUE(wahp.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = wahp.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:EquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(16, coil.numFields());
+
+      // Previous last field: Heating Power Consumption Curve Name
+      ASSERT_TRUE(coil.getTarget(14));
+      EXPECT_EQ("HC Eq WAHP heatingPowerConsumptionCurve", coil.getTarget(14)->nameString());
+
+      ASSERT_TRUE(coil.getTarget(15));
+      EXPECT_EQ("WAHP Eq-AutogeneratedPLFCurve", coil.getTarget(15)->nameString());
+      EXPECT_DOUBLE_EQ(calculatedC1, coil.getTarget(15)->getDouble(2).get());
+      EXPECT_DOUBLE_EQ(calculatedC2, coil.getTarget(15)->getDouble(3).get());
+    }
+
+    {
+      auto coil = wahp.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(23, coil.numFields());
+
+      {
+        const size_t insertionIndex = 17;
+        ASSERT_TRUE(coil.getTarget(insertionIndex - 1));
+        EXPECT_EQ("CC Eq WAHP coolingPowerConsumptionCurve", coil.getTarget(insertionIndex - 1)->nameString());
+
+        // Part Load Fraction Correlation Curve Name
+        ASSERT_TRUE(coil.getTarget(insertionIndex));
+        EXPECT_EQ("WAHP Eq-AutogeneratedPLFCurve", coil.getTarget(insertionIndex)->nameString());
+        EXPECT_DOUBLE_EQ(calculatedC1, coil.getTarget(insertionIndex)->getDouble(2).get());
+        EXPECT_DOUBLE_EQ(calculatedC2, coil.getTarget(insertionIndex)->getDouble(3).get());
+
+        EXPECT_EQ(1.5, coil.getDouble(insertionIndex + 1).get());
+      }
+
+      // Previous last field: Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+      EXPECT_EQ(0.02, coil.getDouble(19).get());
+
+      {
+        const size_t insertionIndex = 20;
+        // From WAHP
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+      }
+    }
+  }
+
+  {
+    auto wahp = model->getObjectByTypeAndName("OS:ZoneHVAC:WaterToAirHeatPump", "WAHP VsdEq").get();
+    ASSERT_TRUE(wahp.getTarget(heatingCoilNameIndex));
+    ASSERT_TRUE(wahp.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = wahp.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(12, coil.numFields());
+
+      // It has no changes
+      ASSERT_TRUE(coil.getTarget(11));
+      EXPECT_EQ("HC VsdEq WAHP Speed Data List", coil.getTarget(11)->nameString());
+    }
+
+    {
+      auto coil = wahp.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(18, coil.numFields());
+
+      {
+        const size_t insertionIndex = 12;
+        EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+        // From WAHP
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+        EXPECT_EQ("Yes", coil.getString(insertionIndex + 3).get());
+      }
+
+      ASSERT_TRUE(coil.getTarget(17));
+      EXPECT_EQ("CC VsdEq WAHP Speed Data List", coil.getTarget(17)->nameString());
     }
   }
 }

@@ -1,10 +1,10 @@
 
 OS:Version,
-  {60e8614d-0825-4c65-b2a1-c9689d9bf15e}, !- Handle
+  {36c73a11-9c06-4f97-90e8-e71929191dc7}, !- Handle
   3.6.1;                                  !- Version Identifier
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
-  {568362b4-e5d0-4a10-9d6f-72d24d95eefd}, !- Handle
+  {9739f2db-8508-44f0-b227-4fefd9142102}, !- Handle
   CC Eq Solo,                             !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
@@ -18,14 +18,14 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   30,                                     !- Rated Entering Water Temperature {C}
   27,                                     !- Rated Entering Air Dry-Bulb Temperature {C}
   19,                                     !- Rated Entering Air Wet-Bulb Temperature {C}
-  {6f164986-f163-4518-963d-dcffc3f28702}, !- Total Cooling Capacity Curve Name
-  {4c6e8dc5-5bb5-4326-a2a4-5657cb289caf}, !- Sensible Cooling Capacity Curve Name
-  {21c962f9-f386-4105-8053-a96ab4489b4c}, !- Cooling Power Consumption Curve Name
+  {7a507a35-ab8f-4009-a513-5d4b2e749d59}, !- Total Cooling Capacity Curve Name
+  {549d72cf-a1dd-4fca-9176-4e2f08788de6}, !- Sensible Cooling Capacity Curve Name
+  {b54c1273-1f55-4bdf-a487-00140d0922c9}, !- Cooling Power Consumption Curve Name
   1.5,                                    !- Nominal Time for Condensate Removal to Begin {s}
   0.02;                                   !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 
 OS:Curve:QuadLinear,
-  {6f164986-f163-4518-963d-dcffc3f28702}, !- Handle
+  {7a507a35-ab8f-4009-a513-5d4b2e749d59}, !- Handle
   TotCoolCapCurve,                        !- Name
   -0.68126221,                            !- Coefficient1 Constant
   1.99529297,                             !- Coefficient2 w
@@ -42,7 +42,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Curve:QuintLinear,
-  {4c6e8dc5-5bb5-4326-a2a4-5657cb289caf}, !- Handle
+  {549d72cf-a1dd-4fca-9176-4e2f08788de6}, !- Handle
   Curve Quint Linear 1,                   !- Name
   2.24209455,                             !- Coefficient1 Constant
   7.28913391,                             !- Coefficient2 v
@@ -62,7 +62,7 @@ OS:Curve:QuintLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Curve:QuadLinear,
-  {21c962f9-f386-4105-8053-a96ab4489b4c}, !- Handle
+  {b54c1273-1f55-4bdf-a487-00140d0922c9}, !- Handle
   CC Eq Solo coolingPowerConsumptionCurve, !- Name
   -3.20456384,                            !- Coefficient1 Constant
   0.47656454,                             !- Coefficient2 w
@@ -79,7 +79,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
-  {d8ab937b-2dff-46e4-aa68-c5e19faef497}, !- Handle
+  {13998366-bef3-4610-9b6f-f73f6ebbc585}, !- Handle
   CC VsdEq Solo,                          !- Name
   ,                                       !- Water-to-Refrigerant HX Water Inlet Node Name
   ,                                       !- Water-to-Refrigerant HX Water Outlet Node Name
@@ -92,11 +92,11 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
   0,                                      !- Nominal Time for Condensate to Begin Leaving the Coil {s}
   0.02,                                   !- Initial Moisture Evaporation Rate Divided by Steady-State AC Latent Capacity {dimensionless}
   Yes,                                    !- Use Hot Gas Reheat
-  {74ceedae-133b-44a8-8308-c5015959d058}, !- Energy Part Load Fraction Curve Name
-  {e77d09fb-31de-4145-b004-d7414d88334d}; !- Speed Data List
+  {72249a5f-a6e9-4101-9b39-2b2471eba269}, !- Energy Part Load Fraction Curve Name
+  {500e1b47-b71c-4117-b5be-d80d8e6b2374}; !- Speed Data List
 
 OS:Curve:Quadratic,
-  {74ceedae-133b-44a8-8308-c5015959d058}, !- Handle
+  {72249a5f-a6e9-4101-9b39-2b2471eba269}, !- Handle
   Curve Quadratic 1,                      !- Name
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
@@ -105,11 +105,11 @@ OS:Curve:Quadratic,
   1;                                      !- Maximum Value of x
 
 OS:ModelObjectList,
-  {e77d09fb-31de-4145-b004-d7414d88334d}, !- Handle
+  {500e1b47-b71c-4117-b5be-d80d8e6b2374}, !- Handle
   CC VsdEq Solo Speed Data List;          !- Name
 
 OS:Coil:Cooling:DX:VariableSpeed,
-  {6a6fc7bf-4edb-4451-a5de-1581ed6ca087}, !- Handle
+  {90ac0122-105b-4a7f-a910-db48d935b7d4}, !- Handle
   CC DXVsd Solo,                          !- Name
   ,                                       !- Indoor Air Inlet Node Name
   ,                                       !- Indoor Air Outlet Node Name
@@ -118,7 +118,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
   autosize,                               !- Rated Air Flow Rate At Selected Nominal Speed Level {m3/s}
   0,                                      !- Nominal Time for Condensate to Begin Leaving the Coil {s}
   0.02,                                   !- Initial Moisture Evaporation Rate Divided by Steady-State AC Latent Capacity {dimensionless}
-  {44277ad4-a793-445b-9ca3-190baf15890a}, !- Energy Part Load Fraction Curve Name
+  {292f4068-f2a9-4b15-84a6-12bc27c17b4f}, !- Energy Part Load Fraction Curve Name
   ,                                       !- Condenser Air Inlet Node Name
   AirCooled,                              !- Condenser Type
   0,                                      !- Evaporative Condenser Pump Rated Power Consumption {W}
@@ -130,10 +130,10 @@ OS:Coil:Cooling:DX:VariableSpeed,
   0,                                      !- Basin Heater Capacity {W/K}
   2,                                      !- Basin Heater Setpoint Temperature {C}
   ,                                       !- Basin Heater Operating Schedule Name
-  {500e3693-7993-4ffa-99ec-3d3130051418}; !- Speed Data List
+  {5b0a3c49-0f7c-4931-b51b-ab53ee2dedc7}; !- Speed Data List
 
 OS:Curve:Quadratic,
-  {44277ad4-a793-445b-9ca3-190baf15890a}, !- Handle
+  {292f4068-f2a9-4b15-84a6-12bc27c17b4f}, !- Handle
   CC DXVsd Solo EnergyPartLoadFractionCurve, !- Name
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
@@ -142,11 +142,11 @@ OS:Curve:Quadratic,
   1;                                      !- Maximum Value of x
 
 OS:ModelObjectList,
-  {500e3693-7993-4ffa-99ec-3d3130051418}, !- Handle
+  {5b0a3c49-0f7c-4931-b51b-ab53ee2dedc7}, !- Handle
   CC DXVsd Solo Speed Data List;          !- Name
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
-  {56d941e1-9ed5-4acb-bf5a-a7cb4f93daaa}, !- Handle
+  {8e908b01-eee0-492a-8a72-69627b3a6231}, !- Handle
   HC Eq Solo,                             !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
@@ -159,11 +159,11 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   20,                                     !- Rated Entering Water Temperature {C}
   20,                                     !- Rated Entering Air Dry-Bulb Temperature {C}
   1,                                      !- Ratio of Rated Heating Capacity to Rated Cooling Capacity
-  {49cd69cf-1011-4fcf-8492-58a03e16232e}, !- Heating Capacity Curve Name
-  {964f7679-22e7-4bb2-b760-8cc0377e7f4f}; !- Heating Power Consumption Curve Name
+  {f2be97cf-1684-45d7-9fea-f825b282929e}, !- Heating Capacity Curve Name
+  {0cd20c98-6f3c-4784-9d50-c222fd6514b9}; !- Heating Power Consumption Curve Name
 
 OS:Curve:QuadLinear,
-  {49cd69cf-1011-4fcf-8492-58a03e16232e}, !- Handle
+  {f2be97cf-1684-45d7-9fea-f825b282929e}, !- Handle
   Curve Quad Linear 1,                    !- Name
   -5.50102734,                            !- Coefficient1 Constant
   -0.96688754,                            !- Coefficient2 w
@@ -180,7 +180,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Curve:QuadLinear,
-  {964f7679-22e7-4bb2-b760-8cc0377e7f4f}, !- Handle
+  {0cd20c98-6f3c-4784-9d50-c222fd6514b9}, !- Handle
   HC Eq Solo heatingPowerConsumptionCurve, !- Name
   -7.47517858,                            !- Coefficient1 Constant
   6.40876653,                             !- Coefficient2 w
@@ -197,7 +197,7 @@ OS:Curve:QuadLinear,
   100;                                    !- Maximum Value of z {BasedOnField A5}
 
 OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
-  {25a2973e-18cc-44e4-bdc6-46b4081eac29}, !- Handle
+  {b9b8152c-d9f4-4916-a193-bdb31ae4dbae}, !- Handle
   HC VsdEq Solo,                          !- Name
   ,                                       !- Water-to-Refrigerant HX Water Inlet Node Name
   ,                                       !- Water-to-Refrigerant HX Water Outlet Node Name
@@ -207,11 +207,11 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
   autosize,                               !- Rated Heating Capacity At Selected Nominal Speed Level {W}
   autosize,                               !- Rated Air Flow Rate At Selected Nominal Speed Level {m3/s}
   autosize,                               !- Rated Water Flow Rate At Selected Nominal Speed Level {m3/s}
-  {c2f39d3e-c0ea-4ef2-9400-44c7105b398f}, !- Energy Part Load Fraction Curve Name
-  {e1706fbe-b4d0-4c4d-9e10-e59840c3e069}; !- Speed Data List
+  {9c34dffd-e3ae-499e-9632-365aaf0adbae}, !- Energy Part Load Fraction Curve Name
+  {e7e4204d-f0c2-431f-877f-92d440ef4610}; !- Speed Data List
 
 OS:Curve:Quadratic,
-  {c2f39d3e-c0ea-4ef2-9400-44c7105b398f}, !- Handle
+  {9c34dffd-e3ae-499e-9632-365aaf0adbae}, !- Handle
   Curve Quadratic 2,                      !- Name
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
@@ -220,6 +220,6 @@ OS:Curve:Quadratic,
   1;                                      !- Maximum Value of x
 
 OS:ModelObjectList,
-  {e1706fbe-b4d0-4c4d-9e10-e59840c3e069}, !- Handle
+  {e7e4204d-f0c2-431f-877f-92d440ef4610}, !- Handle
   HC VsdEq Solo Speed Data List;          !- Name
 
