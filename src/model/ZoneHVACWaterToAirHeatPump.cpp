@@ -1282,6 +1282,13 @@ namespace model {
     DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
   }
 
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
   bool ZoneHVACWaterToAirHeatPump::setMaximumCyclingRate(boost::optional<double> maximumCyclingRate) {
     if (maximumCyclingRate) {
       return setMaximumCyclingRate(*maximumCyclingRate);
@@ -1302,6 +1309,11 @@ namespace model {
     }
     return false;
   }
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
 
   bool ZoneHVACWaterToAirHeatPump::setFractionofOnCyclePowerUse(boost::optional<double> /* heatPumpTimeConstant */) {
     DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
