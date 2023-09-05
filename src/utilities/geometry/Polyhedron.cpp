@@ -118,7 +118,7 @@ Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name, size_t
       itnext = std::begin(vertices);
     }
 
-    edges.emplace_back(*it, *itnext, t_name, t_surfNum);
+    edges.emplace_back(*it, *itnext, name, surfNum);
   }
 }
 
