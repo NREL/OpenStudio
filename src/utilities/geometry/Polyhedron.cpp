@@ -104,8 +104,8 @@ Vector3d Surface3dEdge::asVector() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Surface3dEdge& edge) {
-  os << "Surface3dEdge: start=" << edge.start() << ", end=" << edge.end() << ", count=" << edge.count()
-     << ", firstSurface=" << edge.firstSurfaceName();
+  os << "Surface3dEdge: start=" << edge.start() << ", end=" << edge.end() << ", count=" << edge.count() << ", firstSurface='"
+     << edge.firstSurfaceName() << "'";
   return os;
 }
 
@@ -120,6 +120,19 @@ Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name, size_t
 
     edges.emplace_back(*it, *itnext, name, surfNum);
   }
+}
+
+std::ostream& operator<<(std::ostream& os, const Surface3d& surface3d) {
+  os << "Surface3d ";
+  if (!surface3d.name.empty()) {
+    os << "'" << surface3d.name << "' ";
+  }
+  os << "= [\n";
+  for (const auto& pt : surface3d.vertices) {
+    os << "  " << pt << ",\n";
+  }
+  os << "]";
+  return os;
 }
 
 bool Surface3d::operator<(const Surface3d& rhs) const {

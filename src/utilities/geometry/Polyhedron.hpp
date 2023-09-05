@@ -166,6 +166,7 @@ using PolyhedronVector = std::vector<Polyhedron>;
 
 /// ostream operator
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Surface3dEdge& edge);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const Surface3d& surface3d);
 
 }  // namespace openstudio
 
