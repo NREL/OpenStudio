@@ -24,11 +24,11 @@ class UTILITIES_API Vector3d
   /// constructor with x, y, z
   Vector3d(double x, double y, double z);
 
-  // Copy and move operators are implicitly declared  (Rule of 1)
-  // Vector3d(const Vector3d& other) = default;
-  // Vector3d(Vector3d&& other) = default;
-  // Vector3d& operator=(const Vector3d&) = default;
-  // Vector3d& operator=(Vector3d&&) = default;
+  // Copy and move operators are implicitly declared  (Rule of 1), but we want the copy ctor for SWIG so we have to define all of them
+  Vector3d(const Vector3d& other) = default;
+  Vector3d(Vector3d&& other) noexcept = default;
+  Vector3d& operator=(const Vector3d&) = default;
+  Vector3d& operator=(Vector3d&&) noexcept = default;
   // ~Vector3d() noexcept = default;
 
   /// get x
