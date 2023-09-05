@@ -138,6 +138,8 @@ class UTILITIES_API Polyhedron
     * proportion of conflicted edges / total number of edges */
   std::vector<Surface3d> findSurfacesWithIncorrectOrientation() const;
 
+  std::vector<Surface3d> surface3ds() const;
+
  protected:
   void performEdgeMatching();
   void resetEdgeMatching();

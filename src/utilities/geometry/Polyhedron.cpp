@@ -492,4 +492,8 @@ double Polyhedron::calcDivergenceTheoremVolume() const {
   return volume;
 }
 
+std::vector<Surface3d> Polyhedron::surface3ds() const {
+  return m_surfaces;
+}
+
 }  // namespace openstudio
