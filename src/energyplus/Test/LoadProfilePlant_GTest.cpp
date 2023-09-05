@@ -10,6 +10,7 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/LoadProfilePlant.hpp"
+#include "../../model/PlantLoop.hpp"
 
 #include <utilities/idd/LoadProfile_Plant_FieldEnums.hxx>
 
@@ -27,7 +28,9 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_LoadProfilePlant) {
   Model m;
 
+  PlantLoop pl(m);
   LoadProfilePlant lpp(m);
+  EXPECT_TRUE(pl.addDemandBranchForComponent(lpp));
 
   EXPECT_TRUE(lpp.setPeakFlowRate(0.005));
   EXPECT_TRUE(lpp.setPlantLoopFluidType("Steam"));
