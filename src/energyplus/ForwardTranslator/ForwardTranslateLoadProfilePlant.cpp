@@ -59,19 +59,13 @@ namespace energyplus {
     }
 
     // PlantLoopFluidType
-    if ((s = modelObject.plantLoopFluidType())) {
-      idfObject.setString(LoadProfile_PlantFields::PlantLoopFluidType, s.get());
-    }
+    idfObject.setString(LoadProfile_PlantFields::PlantLoopFluidType, modelObject.plantLoopFluidType());
 
     // DegreeofSubCooling
-    if ((value = modelObject.degreeofSubCooling())) {
-      idfObject.setDouble(LoadProfile_PlantFields::DegreeofSubCooling, value.get());
-    }
+    idfObject.setDouble(LoadProfile_PlantFields::DegreeofSubCooling, modelObject.degreeofSubCooling());
 
     // DegreeofLoopSubCooling
-    if ((value = modelObject.degreeofLoopSubCooling())) {
-      idfObject.setDouble(LoadProfile_PlantFields::DegreeofLoopSubCooling, value.get());
-    }
+    idfObject.setDouble(LoadProfile_PlantFields::DegreeofLoopSubCooling, modelObject.degreeofLoopSubCooling());
 
     return idfObject;
   }
