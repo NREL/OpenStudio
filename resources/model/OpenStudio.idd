@@ -14066,7 +14066,7 @@ OS:HeatPump:PlantLoop:EIR:Heating,
 
 OS:HeatPump:PlantLoop:EIR:Cooling,
        \memo An EIR formulated water to water heat pump model, cooling operation.
-       \min-fields 16
+       \min-fields 21
    A1, \field Handle
        \type handle
        \required-field
@@ -14152,7 +14152,7 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
        \note CWS = supply (leaving) chilled water temperature(C)
        \note ECT = entering condenser fluid temperature(C)
-   A11;\field Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
+   A11,\field Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
        \note Electric Input Ratio (EIR) modifier as a function of Part Load Ratio (PLR)
        \note EIR = 1/COP
        \required-field
@@ -14160,6 +14160,50 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \object-list UnivariateFunctions
        \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
        \note PLR = part load ratio (cooling load/steady state capacity)
+   A12,\field Control Type
+       \note Heat pump can be controlled on leaving water temperature set point or plant load
+       \type choice
+       \key Setpoint
+       \key Load
+       \required-field
+   A13,\field Flow Mode
+       \note Select operating mode for fluid flow through the chiller. "ConstantFlow" is for
+       \note constant pumping with flow controlled by chiller to operate at full design
+       \note flow rate. "VariableSpeedPumping" is for variable pumping with flow proportional
+       \note to chiller operating part load ratio.
+       \type choice
+       \key ConstantFlow
+       \key VariableSpeedPumping
+       \required-field
+   N6, \field Minimum Part Load Ratio
+       \note Below this operating limit compressor cycling will occur
+       \type real
+       \minimum 0.0
+       \required-field
+   N7, \field Minimum Source Inlet Temperature
+       \type real
+       \units C
+       \required-field
+       \note Enter the minimum inlet outdoor air dry-bulb temperature
+       \note for air-cooled units or minimum inlet water temperature for water-cooled units.
+       \note The unit is disabled below this temperature.
+   N8, \field Maximum Source Inlet Temperature
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum inlet outdoor air dry-bulb temperature
+       \note for air-cooled units or maximum inlet water temperature for water-cooled units.
+       \note The unit is disabled above this temperature.
+   N9, \field Minimum Supply Water Temperature Curve Name
+       \type object-list
+       \object-list UnivariateFunctions
+       \note quadratic curve = a + b*OAT is typical, other univariate curves may be used
+       \note OAT = Outdoor Dry-Bulb Temperature
+   N10;\field Maximum Supply Water Temperature Curve Name
+       \type object-list
+       \object-list UnivariateFunctions
+       \note quadratic curve = a + b*OAT is typical, other univariate curves may be used
+       \note OAT = Outdoor Dry-Bulb Temperature
 
 OS:HeatPump:AirToWater:FuelFired:Heating,
        \memo The object defines a fuel-fired absorption heat pump based on equation-fit models.
