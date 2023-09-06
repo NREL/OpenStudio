@@ -139,6 +139,28 @@ namespace energyplus {
       }
     }
 
+    idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::ControlType, modelObject.controlType());
+    
+    idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, modelObject.flowMode());
+    
+    idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MinimumPartLoadRatio, modelObject.minimumPartLoadRatio());
+    
+    idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSourceInletTemperature, modelObject.minimumSourceInletTemperature());
+    
+    idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemeperature, modelObject.maximumSourceInletTemeperature());
+
+    if (boost::optional<model::Curve> curve = modelObject.minimumSupplyWaterTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurve, _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.maximumSupplyWaterTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurve, _curve->name().get());
+      }
+    }
+
     return idfObject;
   }
 

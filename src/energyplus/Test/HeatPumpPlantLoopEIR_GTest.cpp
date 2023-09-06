@@ -49,6 +49,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   EXPECT_TRUE(plhp_clg.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
   CurveQuadratic curve3(m);
   EXPECT_TRUE(plhp_clg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
+  EXPECT_TRUE(plhp_clg.setControlType("Setpoint"));
+  EXPECT_TRUE(plhp_clg.setFlowMode("VariableSpeedPumping"));
+  EXPECT_TRUE(plhp_clg.setMinimumPartLoadRatio(6.0));
+  EXPECT_TRUE(plhp_clg.setMinimumSourceInletTemperature(7.0));
+  EXPECT_TRUE(plhp_clg.setMaximumSourceInletTemperature(8.0));
+  CurveQuadratic curve4(m);
+  EXPECT_TRUE(plhp_clg.setMinimumSupplyWaterTemperatureCurve(curve4));
+  CurveQuadratic curve5(m);
+  EXPECT_TRUE(plhp_clg.setMaximumSupplyWaterTemperatureCurve(curve5));
 
   HeatPumpPlantLoopEIRHeating plhp_htg(m);
   EXPECT_TRUE(plhp_htg.setLoadSideReferenceFlowRate(1.0));
@@ -107,6 +116,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
       idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName));
     EXPECT_TRUE(woCurve3);
     EXPECT_EQ(woCurve3->iddObject().type(), IddObjectType::Curve_Quadratic);
+    EXPECT_EQ("Setpoint", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::ControlType, false).get());
+    EXPECT_EQ("VariableSpeedPumping", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, false).get());
+    EXPECT_EQ(6.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MinimumPartLoadRatio, false).get());
+    EXPECT_EQ(7.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSourceInletTemperature, false).get());
+    EXPECT_EQ(8.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemeperature, false).get());
+    boost::optional<WorkspaceObject> woCurve4(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurve));
+    EXPECT_TRUE(woCurve4);
+    boost::optional<WorkspaceObject> woCurve5(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurve));
+    EXPECT_TRUE(woCurve5);
   }
 
   {
