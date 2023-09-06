@@ -151,13 +151,13 @@ namespace energyplus {
 
     if (boost::optional<model::Curve> curve = modelObject.minimumSupplyWaterTemperatureCurve()) {
       if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
-        idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurve, _curve->name().get());
+        idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurveName, _curve->name().get());
       }
     }
 
     if (boost::optional<model::Curve> curve = modelObject.maximumSupplyWaterTemperatureCurve()) {
       if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
-        idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurve, _curve->name().get());
+        idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurveName, _curve->name().get());
       }
     }
 

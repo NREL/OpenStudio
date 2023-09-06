@@ -272,11 +272,11 @@ namespace model {
     }
 
     boost::optional<Curve> HeatPumpPlantLoopEIRCooling_Impl::minimumSupplyWaterTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurve);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurveName);
     }
 
     boost::optional<Curve> HeatPumpPlantLoopEIRCooling_Impl::maximumSupplyWaterTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurve);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurveName);
     }
 
     bool HeatPumpPlantLoopEIRCooling_Impl::setCompanionHeatingHeatPump(const HeatPumpPlantLoopEIRHeating& companionHP) {
@@ -362,13 +362,13 @@ namespace model {
 
     bool HeatPumpPlantLoopEIRCooling_Impl::setMinimumSupplyWaterTemperatureCurve(const Curve& minimumSupplyWaterTemperatureCurve) {
       bool result =
-        setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurve, minimumSupplyWaterTemperatureCurve.handle());
+        setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurveName, minimumSupplyWaterTemperatureCurve.handle());
       return result;
     }
 
     bool HeatPumpPlantLoopEIRCooling_Impl::setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve) {
       bool result =
-        setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurve, maximumSupplyWaterTemperatureCurve.handle());
+        setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurveName, maximumSupplyWaterTemperatureCurve.handle());
       return result;
     }
 
