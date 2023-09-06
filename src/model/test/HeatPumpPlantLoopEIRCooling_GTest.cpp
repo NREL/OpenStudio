@@ -59,6 +59,13 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_HeatPumpPlantLoopEIRCooling) {
   boost::optional<Curve> electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve =
     hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
   EXPECT_TRUE(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+  EXPECT_EQ("Load", hp.controlType());
+  EXPECT_EQ("ConstantFlow", hp.flowMode());
+  EXPECT_EQ(0.0, hp.minimumPartLoadRatio());
+  EXPECT_EQ(-100.0, hp.minimumSourceInletTemperature());
+  EXPECT_EQ(100.0, hp.maximumSourceInletTemeperature());
+  EXPECT_FALSE(hp.minimumSupplyWaterTemperatureCurve());
+  EXPECT_FALSE(hp.maximumSupplyWaterTemperatureCurve());
 }
 
 TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
@@ -79,6 +86,15 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
   EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
   CurveQuadratic curve3(m);
   EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
+  EXPECT_TRUE(hp.setControlType("Setpoint"));
+  EXPECT_TRUE(hp.setFlowMode("VariableSpeedPumping"));
+  EXPECT_TRUE(hp.setMinimumPartLoadRatio(1));
+  EXPECT_TRUE(hp.setMinimumSourceInletTemperature(2));
+  EXPECT_TRUE(hp.setMaximumSourceInletTemperature(3));
+  CurveQuadratic curve4(m);
+  EXPECT_TRUE(hp.setMinimumSupplyWaterTemperatureCurve(curve4));
+  CurveQuadratic curve5(m);
+  EXPECT_TRUE(hp.setMaximumSupplyWaterTemperatureCurve(curve5));
 
   EXPECT_EQ("AirSource", hp.condenserType());
   ASSERT_TRUE(hp.companionHeatingHeatPump());
@@ -97,6 +113,13 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
   EXPECT_EQ(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
   EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
   EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
+  EXPECT_EQ("Setpoint", hp.controlType());
+  EXPECT_EQ("VariableSpeedPumping", hp.flowMode());
+  EXPECT_EQ(1, hp.minimumPartLoadRatio());
+  EXPECT_EQ(2, hp.minimumSourceInletTemperature());
+  EXPECT_EQ(3, hp.maximumSourceInletTemeperature());
+  EXPECT_EQ(curve4.handle(), hp.minimumSupplyWaterTemperatureCurve().handle());
+  EXPECT_EQ(curve5.handle(), hp.maximumSupplyWaterTemperatureCurve().handle());
 
   hp.autosizeLoadSideReferenceFlowRate();
   EXPECT_TRUE(hp.isLoadSideReferenceFlowRateAutosized());

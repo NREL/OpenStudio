@@ -241,6 +241,44 @@ namespace model {
       return wo.optionalCast<Curve>().get();
     }
 
+    std::string HeatPumpPlantLoopEIRCooling_Impl::controlType() const {
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::ControlType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    std::string HeatPumpPlantLoopEIRCooling_Impl::flowMode() const {
+      boost::optional<double> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double HeatPumpPlantLoopEIRCooling_Impl::minimumPartLoadRatio() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumPartLoadRatio, true);
+      OS_ASSERT(value);
+      return value.get();      
+    }
+    
+    double HeatPumpPlantLoopEIRCooling_Impl::minimumSourceInletTemperature() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSourceInletTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double HeatPumpPlantLoopEIRCooling_Impl::maximumSourceInletTemeperature() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemeperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    boost::optional<Curve> HeatPumpPlantLoopEIRCooling_Impl::minimumSupplyWaterTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurve);
+    }
+    
+    boost::optional<Curve> HeatPumpPlantLoopEIRCooling_Impl::maximumSupplyWaterTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurve);
+    }
+
     bool HeatPumpPlantLoopEIRCooling_Impl::setCompanionHeatingHeatPump(const HeatPumpPlantLoopEIRHeating& companionHP) {
       return this->setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::CompanionHeatPumpName, companionHP.handle());
     }
@@ -297,6 +335,38 @@ namespace model {
       const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
       bool result = setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName,
                                electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.handle());
+      return result;
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setControlType(const std::string& controlType) {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::ControlType, controlType);
+      return result;
+    }
+    
+    bool HeatPumpPlantLoopEIRCooling_Impl::setFlowMode(double flowMode) {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, flowMode);
+      return result;
+    }
+    
+    bool HeatPumpPlantLoopEIRCooling_Impl::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumPartLoadRatio, minimumPartLoadRatio);
+    }
+    
+    bool HeatPumpPlantLoopEIRCooling_Impl::setMinimumSourceInletTemperature(double minimumSourceInletTemperature) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSourceInletTemperature, minimumSourceInletTemperature);
+    }
+    
+    bool HeatPumpPlantLoopEIRCooling_Impl::setMaximumSourceInletTemperature(double maximumSourceInletTemeperature) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemeperature, maximumSourceInletTemeperature);
+    }
+    
+    bool HeatPumpPlantLoopEIRCooling_Impl::setMinimumSupplyWaterTemperatureCurve(const Curve& minimumSupplyWaterTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurve, minimumSupplyWaterTemperatureCurve.handle());
+      return result;
+    }
+    
+    bool HeatPumpPlantLoopEIRCooling_Impl::setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurve, maximumSupplyWaterTemperatureCurve.handle());
       return result;
     }
 
@@ -390,6 +460,11 @@ namespace model {
 
     setReferenceCoefficientofPerformance(7.5);  // IDD default
     setSizingFactor(1.0);
+    setControlType("Load");
+    setFlowMode("ConstantFlow");
+    setMinimumPartLoadRatio(0.0);
+    setMinimumSourceInletTemperature(-100.0);
+    setMaximumSourceInletTemperature(100.0);
   }
 
   HeatPumpPlantLoopEIRCooling::HeatPumpPlantLoopEIRCooling(const Model& model)
@@ -450,6 +525,11 @@ namespace model {
 
     setReferenceCoefficientofPerformance(7.5);
     setSizingFactor(1.0);
+    setControlType("Load");
+    setFlowMode("ConstantFlow");
+    setMinimumPartLoadRatio(0.0);
+    setMinimumSourceInletTemperature(-100.0);
+    setMaximumSourceInletTemperature(100.0);
   }
 
   IddObjectType HeatPumpPlantLoopEIRCooling::iddObjectType() {
@@ -516,6 +596,34 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
   }
 
+  std::string HeatPumpPlantLoopEIRCooling::controlType() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->controlType();
+  }
+  
+  std::string HeatPumpPlantLoopEIRCooling::flowMode() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->flowMode();
+  }
+  
+  double HeatPumpPlantLoopEIRCooling::minimumPartLoadRatio() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->minimumPartLoadRatio();
+  }
+  
+  double HeatPumpPlantLoopEIRCooling::minimumSourceInletTemperature() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->minimumSourceInletTemperature();
+  }
+  
+  double HeatPumpPlantLoopEIRCooling::maximumSourceInletTemeperature() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->maximumSourceInletTemeperature();
+  }
+  
+  boost::optional<Curve> HeatPumpPlantLoopEIRCooling::minimumSupplyWaterTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->minimumSupplyWaterTemperatureCurve();
+  }
+  
+  boost::optional<Curve> HeatPumpPlantLoopEIRCooling::maximumSupplyWaterTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->maximumSupplyWaterTemperatureCurve();
+  }
+
   bool HeatPumpPlantLoopEIRCooling::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setCondenserType(condenserType);
   }
@@ -571,6 +679,34 @@ namespace model {
     const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
       electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setControlType(const std::string& controlType) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setControlType(controlType);
+  }
+  
+  bool HeatPumpPlantLoopEIRCooling::setFlowMode(const std::string& flowMode) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setFlowMode(flowMode);
+  }
+  
+  bool HeatPumpPlantLoopEIRCooling::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMinimumPartLoadRatio(minimumPartLoadRatio);
+  }
+  
+  bool HeatPumpPlantLoopEIRCooling::setMinimumSourceInletTemperature(double minimumSourceInletTemperature) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMinimumSourceInletTemperature(minimumSourceInletTemperature);
+  }
+  
+  bool HeatPumpPlantLoopEIRCooling::setMaximumSourceInletTemperature(double maximumSourceInletTemeperature) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMaximumSourceInletTemperature(maximumSourceInletTemeperature);
+  }
+  
+  bool HeatPumpPlantLoopEIRCooling::setMinimumSupplyWaterTemperatureCurve(const Curve& minimumSupplyWaterTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMinimumSupplyWaterTemperatureCurve(minimumSupplyWaterTemperatureCurve);
+  }
+  
+  bool HeatPumpPlantLoopEIRCooling::setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMaximumSupplyWaterTemperatureCurve(maximumSupplyWaterTemperatureCurve);
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRCooling::autosizedLoadSideReferenceFlowRate() const {
