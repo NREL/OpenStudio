@@ -248,7 +248,7 @@ namespace model {
     }
 
     std::string HeatPumpPlantLoopEIRCooling_Impl::flowMode() const {
-      boost::optional<double> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, true);
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -265,8 +265,8 @@ namespace model {
       return value.get();
     }
 
-    double HeatPumpPlantLoopEIRCooling_Impl::maximumSourceInletTemeperature() const {
-      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemeperature, true);
+    double HeatPumpPlantLoopEIRCooling_Impl::maximumSourceInletTemperature() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemperature, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -343,7 +343,7 @@ namespace model {
       return result;
     }
 
-    bool HeatPumpPlantLoopEIRCooling_Impl::setFlowMode(double flowMode) {
+    bool HeatPumpPlantLoopEIRCooling_Impl::setFlowMode(const std::string& flowMode) {
       bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, flowMode);
       return result;
     }
@@ -356,8 +356,8 @@ namespace model {
       return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSourceInletTemperature, minimumSourceInletTemperature);
     }
 
-    bool HeatPumpPlantLoopEIRCooling_Impl::setMaximumSourceInletTemperature(double maximumSourceInletTemeperature) {
-      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemeperature, maximumSourceInletTemeperature);
+    bool HeatPumpPlantLoopEIRCooling_Impl::setMaximumSourceInletTemperature(double maximumSourceInletTemperature) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemperature, maximumSourceInletTemperature);
     }
 
     bool HeatPumpPlantLoopEIRCooling_Impl::setMinimumSupplyWaterTemperatureCurve(const Curve& minimumSupplyWaterTemperatureCurve) {
@@ -614,8 +614,8 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->minimumSourceInletTemperature();
   }
 
-  double HeatPumpPlantLoopEIRCooling::maximumSourceInletTemeperature() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->maximumSourceInletTemeperature();
+  double HeatPumpPlantLoopEIRCooling::maximumSourceInletTemperature() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->maximumSourceInletTemperature();
   }
 
   boost::optional<Curve> HeatPumpPlantLoopEIRCooling::minimumSupplyWaterTemperatureCurve() const {
@@ -699,8 +699,8 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMinimumSourceInletTemperature(minimumSourceInletTemperature);
   }
 
-  bool HeatPumpPlantLoopEIRCooling::setMaximumSourceInletTemperature(double maximumSourceInletTemeperature) {
-    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMaximumSourceInletTemperature(maximumSourceInletTemeperature);
+  bool HeatPumpPlantLoopEIRCooling::setMaximumSourceInletTemperature(double maximumSourceInletTemperature) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMaximumSourceInletTemperature(maximumSourceInletTemperature);
   }
 
   bool HeatPumpPlantLoopEIRCooling::setMinimumSupplyWaterTemperatureCurve(const Curve& minimumSupplyWaterTemperatureCurve) {

@@ -87,7 +87,7 @@ namespace model {
 
     double minimumSourceInletTemperature() const;
 
-    double maximumSourceInletTemeperature() const;
+    double maximumSourceInletTemperature() const;
 
     boost::optional<Curve> minimumSupplyWaterTemperatureCurve() const;
 
@@ -126,13 +126,13 @@ namespace model {
 
     bool setControlType(const std::string& controlType);
 
-    bool setFlowMode(double flowMode);
+    bool setFlowMode(const std::string& flowMode);
 
     bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
 
     bool setMinimumSourceInletTemperature(double minimumSourceInletTemperature);
 
-    bool setMaximumSourceInletTemperature(double maximumSourceInletTemeperature);
+    bool setMaximumSourceInletTemperature(double maximumSourceInletTemperature);
 
     bool setMinimumSupplyWaterTemperatureCurve(const Curve& minimumSupplyWaterTemperatureCurve);
 
