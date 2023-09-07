@@ -45029,17 +45029,17 @@ HeatPump:PlantLoop:EIR:Heating,
         \note The unit is disabled above this temperature.
    A14, \field Minimum Supply Water Temperature Curve Name
         \type object-list
-        \object-list UniVariateFunctions
+        \object-list UnivariateFunctions
         \note quadratic curve = a + b*OAT is typical, other univariate curves may be used
         \note OAT = Outdoor Dry-Bulb Temperature
    A15, \field Maximum Supply Water Temperature Curve Name
         \type object-list
-        \object-list UniVariateFunctions
+        \object-list UnivariateFunctions
         \note quadratic curve = a + b*OAT is typical, other univariate curves may be used
         \note OAT = Outdoor Dry-Bulb Temperature
    A16, \field Dry Outdoor Correction Factor Curve Name
         \type object-list
-        \object-list UniVariateFunctions
+        \object-list UnivariateFunctions
    N10, \field Maximum Outdoor Dry Bulb Temperature For Defrost Operation
         \type real
         \default 10.0
@@ -45067,14 +45067,14 @@ HeatPump:PlantLoop:EIR:Heating,
         \note only required if Timed or OnDemand defrost strategy is specified
    A19, \field Timed Empirical Defrost Frequency Curve Name
         \type object-list
-        \object-list UniVariateFunctions
+        \object-list UnivariateFunctions
         \note univariate curve = a + b*OAT is typical, other univariate curves may be used
         \note OAT = outdoor air dry-bulb temperature (C)
         \note Timed Empirical Defrost Frequency fraction in hours = curve output
         \note only applicable if TimedEmpirical defrost control is specified
    A20, \field Timed Empirical Defrost Heat Load Penalty Curve Name
         \type object-list
-        \object-list UniVariateFunctions
+        \object-list UnivariateFunctions
         \object-list BivariateFunctions
         \note univariate curve = a + b*OAT is typical, other univariate curves may be used
         \note bivariate curve = a + b*WB + c*WB**2 + d*OAT + e*OAT**2 + f*WB*OAT
@@ -45084,7 +45084,7 @@ HeatPump:PlantLoop:EIR:Heating,
         \note only applicable if TimedEmpirical defrost control is specified
    A21; \field Timed Empirical Defrost Heat Input Energy Fraction Curve Name
         \type object-list
-        \object-list UniVariateFunctions
+        \object-list UnivariateFunctions
         \object-list BivariateFunctions
         \note univariate curve = a + b*OAT is typical, other univariate curves may be used
         \note bivariate curve = a + b*WB + c*WB**2 + d*OAT + e*OAT**2 + f*WB*OAT

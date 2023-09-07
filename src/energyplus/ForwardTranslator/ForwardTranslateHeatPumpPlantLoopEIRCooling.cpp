@@ -143,11 +143,11 @@ namespace energyplus {
 
     idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, modelObject.flowMode());
 
-    idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MinimumPartLoadRatio, modelObject.minimumPartLoadRatio());
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_CoolingFields::MinimumPartLoadRatio, modelObject.minimumPartLoadRatio());
 
-    idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSourceInletTemperature, modelObject.minimumSourceInletTemperature());
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSourceInletTemperature, modelObject.minimumSourceInletTemperature());
 
-    idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemeperature, modelObject.maximumSourceInletTemeperature());
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemperature, modelObject.maximumSourceInletTemperature());
 
     if (boost::optional<model::Curve> curve = modelObject.minimumSupplyWaterTemperatureCurve()) {
       if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
