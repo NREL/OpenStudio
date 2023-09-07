@@ -168,12 +168,13 @@ namespace energyplus {
       }
     }
 
-    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumOutdoorDryBulbTemperatureForDefrostOperation, modelObject.maximumOutdoorDryBulbTemperatureForDefrostOperation());
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumOutdoorDryBulbTemperatureForDefrostOperation,
+                        modelObject.maximumOutdoorDryBulbTemperatureForDefrostOperation());
 
     idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostControl, modelObject.heatPumpDefrostControl());
 
     idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostTimePeriodFraction, modelObject.heatPumpDefrostTimePeriodFraction());
-    
+
     if (boost::optional<model::Curve> curve = modelObject.defrostEnergyInputRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
         idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, _curve->name().get());

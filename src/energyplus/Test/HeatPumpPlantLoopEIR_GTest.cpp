@@ -196,13 +196,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
     EXPECT_EQ(10.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumOutdoorDryBulbTemperatureForDefrostOperation, false).get());
     EXPECT_EQ("Timed", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostControl, false).get());
     EXPECT_EQ(11.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostTimePeriodFraction, false).get());
-    boost::optional<WorkspaceObject> woCurve7(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName));
+    boost::optional<WorkspaceObject> woCurve7(
+      idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName));
     EXPECT_TRUE(woCurve7);
     boost::optional<WorkspaceObject> woCurve8(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostFrequencyCurveName));
     EXPECT_TRUE(woCurve8);
     boost::optional<WorkspaceObject> woCurve9(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatLoadPenaltyCurveName));
     EXPECT_TRUE(woCurve9);
-    boost::optional<WorkspaceObject> woCurve10(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName));
+    boost::optional<WorkspaceObject> woCurve10(
+      idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName));
     EXPECT_TRUE(woCurve10);
   }
 }

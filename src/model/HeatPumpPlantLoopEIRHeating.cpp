@@ -247,13 +247,13 @@ namespace model {
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     std::string HeatPumpPlantLoopEIRHeating_Impl::heatPumpSizingMethod() const {
       boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpSizingMethod, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     std::string HeatPumpPlantLoopEIRHeating_Impl::controlType() const {
       boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ControlType, true);
       OS_ASSERT(value);
@@ -291,43 +291,46 @@ namespace model {
     boost::optional<Curve> HeatPumpPlantLoopEIRHeating_Impl::maximumSupplyWaterTemperatureCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_HeatingFields::MaximumSupplyWaterTemperatureCurveName);
     }
-    
+
     boost::optional<Curve> HeatPumpPlantLoopEIRHeating_Impl::dryOutdoorCorrectionFactorCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_HeatingFields::DryOutdoorCorrectionFactorCurveName);
     }
-    
+
     double HeatPumpPlantLoopEIRHeating_Impl::maximumOutdoorDryBulbTemperatureForDefrostOperation() const {
       boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::MaximumOutdoorDryBulbTemperatureForDefrostOperation, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     std::string HeatPumpPlantLoopEIRHeating_Impl::heatPumpDefrostControl() const {
       boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostControl, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double HeatPumpPlantLoopEIRHeating_Impl::heatPumpDefrostTimePeriodFraction() const {
       boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostTimePeriodFraction, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     boost::optional<Curve> HeatPumpPlantLoopEIRHeating_Impl::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_HeatingFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_PlantLoop_EIR_HeatingFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName);
     }
-    
+
     boost::optional<Curve> HeatPumpPlantLoopEIRHeating_Impl::timedEmpiricalDefrostFrequencyCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostFrequencyCurveName);
     }
-    
+
     boost::optional<Curve> HeatPumpPlantLoopEIRHeating_Impl::timedEmpiricalDefrostHeatLoadPenaltyCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatLoadPenaltyCurveName);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatLoadPenaltyCurveName);
     }
-    
+
     boost::optional<Curve> HeatPumpPlantLoopEIRHeating_Impl::timedEmpiricalDefrostHeatInputEnergyFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName);
     }
 
     bool HeatPumpPlantLoopEIRHeating_Impl::setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP) {
@@ -395,9 +398,9 @@ namespace model {
 
     bool HeatPumpPlantLoopEIRHeating_Impl::setHeatPumpSizingMethod(const std::string& heatPumpSizingMethod) {
       bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpSizingMethod, heatPumpSizingMethod);
-      return result;      
+      return result;
     }
-    
+
     bool HeatPumpPlantLoopEIRHeating_Impl::setControlType(const std::string& controlType) {
       bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ControlType, controlType);
       return result;
@@ -431,47 +434,51 @@ namespace model {
         setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::MaximumSupplyWaterTemperatureCurveName, maximumSupplyWaterTemperatureCurve.handle());
       return result;
     }
-    
+
     bool HeatPumpPlantLoopEIRHeating_Impl::setDryOutdoorCorrectionFactorCurve(const Curve& dryOutdoorCorrectionFactorCurve) {
       bool result =
         setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::DryOutdoorCorrectionFactorCurveName, dryOutdoorCorrectionFactorCurve.handle());
       return result;
     }
-    
-    bool HeatPumpPlantLoopEIRHeating_Impl::setMaximumOutdoorDryBulbTemperatureForDefrostOperation(double maximumOutdoorDryBulbTemperatureForDefrostOperation) {
-      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::MaximumOutdoorDryBulbTemperatureForDefrostOperation, maximumOutdoorDryBulbTemperatureForDefrostOperation);
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setMaximumOutdoorDryBulbTemperatureForDefrostOperation(
+      double maximumOutdoorDryBulbTemperatureForDefrostOperation) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::MaximumOutdoorDryBulbTemperatureForDefrostOperation,
+                       maximumOutdoorDryBulbTemperatureForDefrostOperation);
     }
-    
+
     bool HeatPumpPlantLoopEIRHeating_Impl::setHeatPumpDefrostControl(const std::string& heatPumpDefrostControl) {
       bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostControl, heatPumpDefrostControl);
-      return result;  
+      return result;
     }
-    
+
     bool HeatPumpPlantLoopEIRHeating_Impl::setHeatPumpDefrostTimePeriodFraction(double heatPumpDefrostTimePeriodFraction) {
       return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostTimePeriodFraction, heatPumpDefrostTimePeriodFraction);
     }
-    
-    bool HeatPumpPlantLoopEIRHeating_Impl::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const Curve& defrostEnergyInputRatioFunctionofTemperatureCurve) {
-      bool result =
-        setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, defrostEnergyInputRatioFunctionofTemperatureCurve.handle());
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setDefrostEnergyInputRatioFunctionofTemperatureCurve(
+      const Curve& defrostEnergyInputRatioFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName,
+                               defrostEnergyInputRatioFunctionofTemperatureCurve.handle());
       return result;
     }
-    
+
     bool HeatPumpPlantLoopEIRHeating_Impl::setTimedEmpiricalDefrostFrequencyCurve(const Curve& timedEmpiricalDefrostFrequencyCurve) {
       bool result =
         setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostFrequencyCurveName, timedEmpiricalDefrostFrequencyCurve.handle());
       return result;
     }
-    
+
     bool HeatPumpPlantLoopEIRHeating_Impl::setTimedEmpiricalDefrostHeatLoadPenaltyCurve(const Curve& timedEmpiricalDefrostHeatLoadPenaltyCurve) {
-      bool result =
-        setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatLoadPenaltyCurveName, timedEmpiricalDefrostHeatLoadPenaltyCurve.handle());
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatLoadPenaltyCurveName,
+                               timedEmpiricalDefrostHeatLoadPenaltyCurve.handle());
       return result;
     }
-    
-    bool HeatPumpPlantLoopEIRHeating_Impl::setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(const Curve& timedEmpiricalDefrostHeatInputEnergyFractionCurve) {
-      bool result =
-        setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName, timedEmpiricalDefrostHeatInputEnergyFractionCurve.handle());
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(
+      const Curve& timedEmpiricalDefrostHeatInputEnergyFractionCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName,
+                               timedEmpiricalDefrostHeatInputEnergyFractionCurve.handle());
       return result;
     }
 
@@ -714,11 +721,11 @@ namespace model {
   double HeatPumpPlantLoopEIRHeating::heatingtoCoolingCapacitySizingRatio() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingtoCoolingCapacitySizingRatio();
   }
-  
+
   std::string HeatPumpPlantLoopEIRHeating::heatPumpSizingMethod() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatPumpSizingMethod();
   }
-  
+
   std::string HeatPumpPlantLoopEIRHeating::controlType() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->controlType();
   }
@@ -746,19 +753,19 @@ namespace model {
   boost::optional<Curve> HeatPumpPlantLoopEIRHeating::maximumSupplyWaterTemperatureCurve() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->maximumSupplyWaterTemperatureCurve();
   }
-  
+
   boost::optional<Curve> HeatPumpPlantLoopEIRHeating::dryOutdoorCorrectionFactorCurve() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->dryOutdoorCorrectionFactorCurve();
   }
-  
+
   double HeatPumpPlantLoopEIRHeating::maximumOutdoorDryBulbTemperatureForDefrostOperation() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->maximumOutdoorDryBulbTemperatureForDefrostOperation();
   }
-  
+
   std::string HeatPumpPlantLoopEIRHeating::heatPumpDefrostControl() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatPumpDefrostControl();
   }
-  
+
   double HeatPumpPlantLoopEIRHeating::heatPumpDefrostTimePeriodFraction() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatPumpDefrostTimePeriodFraction();
   }
@@ -766,15 +773,15 @@ namespace model {
   boost::optional<Curve> HeatPumpPlantLoopEIRHeating::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->defrostEnergyInputRatioFunctionofTemperatureCurve();
   }
-  
+
   boost::optional<Curve> HeatPumpPlantLoopEIRHeating::timedEmpiricalDefrostFrequencyCurve() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->timedEmpiricalDefrostFrequencyCurve();
   }
-  
+
   boost::optional<Curve> HeatPumpPlantLoopEIRHeating::timedEmpiricalDefrostHeatLoadPenaltyCurve() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->timedEmpiricalDefrostHeatLoadPenaltyCurve();
   }
-  
+
   boost::optional<Curve> HeatPumpPlantLoopEIRHeating::timedEmpiricalDefrostHeatInputEnergyFractionCurve() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->timedEmpiricalDefrostHeatInputEnergyFractionCurve();
   }
@@ -843,7 +850,7 @@ namespace model {
   bool HeatPumpPlantLoopEIRHeating::setHeatPumpSizingMethod(const std::string& heatPumpSizingMethod) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatPumpSizingMethod(heatPumpSizingMethod);
   }
-  
+
   bool HeatPumpPlantLoopEIRHeating::setControlType(const std::string& controlType) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setControlType(controlType);
   }
@@ -871,37 +878,44 @@ namespace model {
   bool HeatPumpPlantLoopEIRHeating::setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setMaximumSupplyWaterTemperatureCurve(maximumSupplyWaterTemperatureCurve);
   }
-  
+
   bool HeatPumpPlantLoopEIRHeating::setDryOutdoorCorrectionFactorCurve(const Curve& dryOutdoorCorrectionFactorCurve) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setDryOutdoorCorrectionFactorCurve(dryOutdoorCorrectionFactorCurve);
   }
-  
-  bool HeatPumpPlantLoopEIRHeating::setMaximumOutdoorDryBulbTemperatureForDefrostOperation(double maximumOutdoorDryBulbTemperatureForDefrostOperation) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setMaximumOutdoorDryBulbTemperatureForDefrostOperation(maximumOutdoorDryBulbTemperatureForDefrostOperation);
+
+  bool
+    HeatPumpPlantLoopEIRHeating::setMaximumOutdoorDryBulbTemperatureForDefrostOperation(double maximumOutdoorDryBulbTemperatureForDefrostOperation) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setMaximumOutdoorDryBulbTemperatureForDefrostOperation(
+      maximumOutdoorDryBulbTemperatureForDefrostOperation);
   }
-  
+
   bool HeatPumpPlantLoopEIRHeating::setHeatPumpDefrostControl(const std::string& heatPumpDefrostControl) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatPumpDefrostControl(heatPumpDefrostControl);
   }
-  
+
   bool HeatPumpPlantLoopEIRHeating::setHeatPumpDefrostTimePeriodFraction(double heatPumpDefrostTimePeriodFraction) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatPumpDefrostTimePeriodFraction(heatPumpDefrostTimePeriodFraction);
   }
-  
-  bool HeatPumpPlantLoopEIRHeating::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const Curve& defrostEnergyInputRatioFunctionofTemperatureCurve) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setDefrostEnergyInputRatioFunctionofTemperatureCurve(defrostEnergyInputRatioFunctionofTemperatureCurve);
+
+  bool HeatPumpPlantLoopEIRHeating::setDefrostEnergyInputRatioFunctionofTemperatureCurve(
+    const Curve& defrostEnergyInputRatioFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setDefrostEnergyInputRatioFunctionofTemperatureCurve(
+      defrostEnergyInputRatioFunctionofTemperatureCurve);
   }
-  
+
   bool HeatPumpPlantLoopEIRHeating::setTimedEmpiricalDefrostFrequencyCurve(const Curve& timedEmpiricalDefrostFrequencyCurve) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setTimedEmpiricalDefrostFrequencyCurve(timedEmpiricalDefrostFrequencyCurve);
   }
-  
+
   bool HeatPumpPlantLoopEIRHeating::setTimedEmpiricalDefrostHeatLoadPenaltyCurve(const Curve& timedEmpiricalDefrostHeatLoadPenaltyCurve) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setTimedEmpiricalDefrostHeatLoadPenaltyCurve(timedEmpiricalDefrostHeatLoadPenaltyCurve);
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setTimedEmpiricalDefrostHeatLoadPenaltyCurve(
+      timedEmpiricalDefrostHeatLoadPenaltyCurve);
   }
-  
-  bool HeatPumpPlantLoopEIRHeating::setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(const Curve& timedEmpiricalDefrostHeatInputEnergyFractionCurve) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(timedEmpiricalDefrostHeatInputEnergyFractionCurve);
+
+  bool HeatPumpPlantLoopEIRHeating::setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(
+    const Curve& timedEmpiricalDefrostHeatInputEnergyFractionCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(
+      timedEmpiricalDefrostHeatInputEnergyFractionCurve);
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedLoadSideReferenceFlowRate() const {
