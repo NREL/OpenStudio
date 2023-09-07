@@ -65,7 +65,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_HeatPumpPlantLoopEIRHeating) {
   EXPECT_EQ("ConstantFlow", hp.flowMode());
   EXPECT_EQ(0.0, hp.minimumPartLoadRatio());
   EXPECT_EQ(-100.0, hp.minimumSourceInletTemperature());
-  EXPECT_EQ(100.0, hp.maximumSourceInletTemeperature());
+  EXPECT_EQ(100.0, hp.maximumSourceInletTemperature());
   EXPECT_FALSE(hp.minimumSupplyWaterTemperatureCurve());
   EXPECT_FALSE(hp.maximumSupplyWaterTemperatureCurve());
   EXPECT_FALSE(hp.dryOutdoorCorrectionFactorCurve());
@@ -145,7 +145,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_EQ("VariableSpeedPumping", hp.flowMode());
   EXPECT_EQ(2, hp.minimumPartLoadRatio());
   EXPECT_EQ(3, hp.minimumSourceInletTemperature());
-  EXPECT_EQ(4, hp.maximumSourceInletTemeperature());
+  EXPECT_EQ(4, hp.maximumSourceInletTemperature());
   ASSERT_TRUE(hp.minimumSupplyWaterTemperatureCurve());
   EXPECT_EQ(curve4.handle(), hp.minimumSupplyWaterTemperatureCurve().get().handle());
   ASSERT_TRUE(hp.maximumSupplyWaterTemperatureCurve());
