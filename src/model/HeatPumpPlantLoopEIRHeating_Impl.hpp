@@ -96,7 +96,7 @@ namespace model {
 
       Curve electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const;
 
-      double heatingtoCoolingCapacitySizingRatio() const;
+      double heatingToCoolingCapacitySizingRatio() const;
 
       std::string heatPumpSizingMethod() const;
 
@@ -161,7 +161,7 @@ namespace model {
       bool setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
         const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
 
-      bool setHeatingtoCoolingCapacitySizingRatio(double heatingtoCoolingCapacitySizingRatio);
+      bool setHeatingToCoolingCapacitySizingRatio(double heatingToCoolingCapacitySizingRatio);
 
       bool setHeatPumpSizingMethod(const std::string& heatPumpSizingMethod);
 

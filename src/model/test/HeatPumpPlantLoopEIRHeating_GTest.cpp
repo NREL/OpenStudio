@@ -59,7 +59,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_HeatPumpPlantLoopEIRHeating) {
   boost::optional<Curve> electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve =
     hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
   EXPECT_TRUE(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
-  EXPECT_EQ(1.0, hp.heatingtoCoolingCapacitySizingRatio());
+  EXPECT_EQ(1.0, hp.heatingToCoolingCapacitySizingRatio());
   EXPECT_EQ("CoolingCapacity", hp.heatPumpSizingMethod());
   EXPECT_EQ("Load", hp.controlType());
   EXPECT_EQ("ConstantFlow", hp.flowMode());
@@ -96,7 +96,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
   CurveQuadratic curve3(m);
   EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
-  EXPECT_TRUE(hp.setHeatingtoCoolingCapacitySizingRatio(1));
+  EXPECT_TRUE(hp.setHeatingToCoolingCapacitySizingRatio(1));
   EXPECT_TRUE(hp.setHeatPumpSizingMethod("HeatingCapacity"));
   EXPECT_TRUE(hp.setControlType("Setpoint"));
   EXPECT_TRUE(hp.setFlowMode("VariableSpeedPumping"));
@@ -139,7 +139,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
   EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
 
-  EXPECT_EQ(1, hp.heatingtoCoolingCapacitySizingRatio());
+  EXPECT_EQ(1, hp.heatingToCoolingCapacitySizingRatio());
   EXPECT_EQ("HeatingCapacity", hp.heatPumpSizingMethod());
   EXPECT_EQ("Setpoint", hp.controlType());
   EXPECT_EQ("VariableSpeedPumping", hp.flowMode());

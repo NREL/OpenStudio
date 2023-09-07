@@ -136,7 +136,7 @@ namespace energyplus {
       }
     }
 
-    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatingtoCoolingCapacitySizingRatio, modelObject.heatingtoCoolingCapacitySizingRatio());
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatingToCoolingCapacitySizingRatio, modelObject.heatingToCoolingCapacitySizingRatio());
 
     idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpSizingMethod, modelObject.heatPumpSizingMethod());
 

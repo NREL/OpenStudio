@@ -242,8 +242,8 @@ namespace model {
       return wo.optionalCast<Curve>().get();
     }
 
-    double HeatPumpPlantLoopEIRHeating_Impl::heatingtoCoolingCapacitySizingRatio() const {
-      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatingtoCoolingCapacitySizingRatio, true);
+    double HeatPumpPlantLoopEIRHeating_Impl::heatingToCoolingCapacitySizingRatio() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatingToCoolingCapacitySizingRatio, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -392,8 +392,8 @@ namespace model {
       return result;
     }
 
-    bool HeatPumpPlantLoopEIRHeating_Impl::setHeatingtoCoolingCapacitySizingRatio(double heatingtoCoolingCapacitySizingRatio) {
-      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatingtoCoolingCapacitySizingRatio, heatingtoCoolingCapacitySizingRatio);
+    bool HeatPumpPlantLoopEIRHeating_Impl::setHeatingToCoolingCapacitySizingRatio(double heatingToCoolingCapacitySizingRatio) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatingToCoolingCapacitySizingRatio, heatingToCoolingCapacitySizingRatio);
     }
 
     bool HeatPumpPlantLoopEIRHeating_Impl::setHeatPumpSizingMethod(const std::string& heatPumpSizingMethod) {
@@ -572,7 +572,7 @@ namespace model {
 
     setReferenceCoefficientofPerformance(7.5);  // IDD default
     setSizingFactor(1.0);
-    setHeatingtoCoolingCapacitySizingRatio(1.0);
+    setHeatingToCoolingCapacitySizingRatio(1.0);
     setHeatPumpSizingMethod("CoolingCapacity");
     setControlType("Load");
     setFlowMode("ConstantFlow");
@@ -642,7 +642,7 @@ namespace model {
 
     setReferenceCoefficientofPerformance(7.5);
     setSizingFactor(1.0);
-    setHeatingtoCoolingCapacitySizingRatio(1.0);
+    setHeatingToCoolingCapacitySizingRatio(1.0);
     setHeatPumpSizingMethod("CoolingCapacity");
     setControlType("Load");
     setFlowMode("ConstantFlow");
@@ -718,8 +718,8 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
   }
 
-  double HeatPumpPlantLoopEIRHeating::heatingtoCoolingCapacitySizingRatio() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingtoCoolingCapacitySizingRatio();
+  double HeatPumpPlantLoopEIRHeating::heatingToCoolingCapacitySizingRatio() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingToCoolingCapacitySizingRatio();
   }
 
   std::string HeatPumpPlantLoopEIRHeating::heatPumpSizingMethod() const {
@@ -843,8 +843,8 @@ namespace model {
       electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
   }
 
-  bool HeatPumpPlantLoopEIRHeating::setHeatingtoCoolingCapacitySizingRatio(double heatingtoCoolingCapacitySizingRatio) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatingtoCoolingCapacitySizingRatio(heatingtoCoolingCapacitySizingRatio);
+  bool HeatPumpPlantLoopEIRHeating::setHeatingToCoolingCapacitySizingRatio(double heatingToCoolingCapacitySizingRatio) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatingToCoolingCapacitySizingRatio(heatingToCoolingCapacitySizingRatio);
   }
 
   bool HeatPumpPlantLoopEIRHeating::setHeatPumpSizingMethod(const std::string& heatPumpSizingMethod) {

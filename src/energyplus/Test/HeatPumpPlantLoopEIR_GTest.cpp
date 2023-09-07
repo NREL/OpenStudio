@@ -71,7 +71,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve7));
   CurveQuadratic curve8(m);
   EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve8));
-  EXPECT_TRUE(plhp_htg.setHeatingtoCoolingCapacitySizingRatio(6.0));
+  EXPECT_TRUE(plhp_htg.setHeatingToCoolingCapacitySizingRatio(6.0));
   EXPECT_TRUE(plhp_htg.setHeatPumpSizingMethod("HeatingCapacity"));
   EXPECT_TRUE(plhp_htg.setControlType("Setpoint"));
   EXPECT_TRUE(plhp_htg.setFlowMode("VariableSpeedPumping"));
@@ -180,7 +180,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
       idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName));
     EXPECT_TRUE(woCurve3);
     EXPECT_EQ(woCurve3->iddObject().type(), IddObjectType::Curve_Quadratic);
-    EXPECT_EQ(6.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatingtoCoolingCapacitySizingRatio, false).get());
+    EXPECT_EQ(6.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatingToCoolingCapacitySizingRatio, false).get());
     EXPECT_EQ("HeatingCapacity", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpSizingMethod, false).get());
     EXPECT_EQ("Setpoint", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::ControlType, false).get());
     EXPECT_EQ("VariableSpeedPumping", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::FlowMode, false).get());
