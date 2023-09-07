@@ -14055,7 +14055,7 @@ OS:HeatPump:PlantLoop:EIR:Heating,
        \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
        \note CWS = supply (leaving) hot water temperature(C)
        \note ECT = entering condenser fluid temperature(C)
-   A11;\field Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
+   A11,\field Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
        \note Electric Input Ratio (EIR) modifier as a function of Part Load Ratio (PLR)
        \note EIR = 1/COP
        \required-field
