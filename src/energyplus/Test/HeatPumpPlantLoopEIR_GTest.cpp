@@ -144,7 +144,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
     EXPECT_EQ("VariableSpeedPumping", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, false).get());
     EXPECT_EQ(6.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MinimumPartLoadRatio, false).get());
     EXPECT_EQ(7.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSourceInletTemperature, false).get());
-    EXPECT_EQ(8.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemeperature, false).get());
+    EXPECT_EQ(8.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemperature, false).get());
     boost::optional<WorkspaceObject> woCurve4(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurveName));
     EXPECT_TRUE(woCurve4);
     boost::optional<WorkspaceObject> woCurve5(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurveName));
@@ -186,12 +186,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
     EXPECT_EQ("VariableSpeedPumping", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::FlowMode, false).get());
     EXPECT_EQ(7.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MinimumPartLoadRatio, false).get());
     EXPECT_EQ(8.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MinimumSourceInletTemperature, false).get());
-    EXPECT_EQ(9.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumSourceInletTemeperature, false).get());
+    EXPECT_EQ(9.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumSourceInletTemperature, false).get());
     boost::optional<WorkspaceObject> woCurve4(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::MinimumSupplyWaterTemperatureCurveName));
     EXPECT_TRUE(woCurve4);
     boost::optional<WorkspaceObject> woCurve5(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::MaximumSupplyWaterTemperatureCurveName));
     EXPECT_TRUE(woCurve5);
-    boost::optional<WorkspaceObject> woCurve6(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::dryOutdoorCorrectionFactorCurveName));
+    boost::optional<WorkspaceObject> woCurve6(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::DryOutdoorCorrectionFactorCurveName));
     EXPECT_TRUE(woCurve6);
     EXPECT_EQ(10.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumOutdoorDryBulbTemperatureForDefrostOperation, false).get());
     EXPECT_EQ("Timed", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostControl, false).get());
