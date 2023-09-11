@@ -11,6 +11,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/LoadProfilePlant.hpp"
 #include "../../model/PlantLoop.hpp"
+#include "../../model/ScheduleConstant.hpp"
 
 #include <utilities/idd/LoadProfile_Plant_FieldEnums.hxx>
 
@@ -32,7 +33,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LoadProfilePlant) {
   LoadProfilePlant lpp(m);
   EXPECT_TRUE(pl.addDemandBranchForComponent(lpp));
 
+  ScheduleConstant loadSchedule(m);
+  loadSchedule.setName("Load Schedule");
+  EXPECT_TRUE(lpp.setLoadSchedule(loadSchedule));
+
   EXPECT_TRUE(lpp.setPeakFlowRate(0.005));
+
+  ScheduleConstant flowRateFractionSchedule(m);
+  flowRateFractionSchedule.setName("Flow Rate Fraction Schedule");
+  EXPECT_TRUE(lpp.setFlowRateFractionSchedule(flowRateFractionSchedule));
+
   EXPECT_TRUE(lpp.setPlantLoopFluidType("Steam"));
   EXPECT_TRUE(lpp.setDegreeofSubCooling(6.0));
   EXPECT_TRUE(lpp.setDegreeofLoopSubCooling(21.0));
@@ -47,9 +57,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LoadProfilePlant) {
   EXPECT_EQ(lpp.nameString(), idf_lpp.getString(LoadProfile_PlantFields::Name, false).get());
   EXPECT_FALSE(idf_lpp.isEmpty(LoadProfile_PlantFields::InletNodeName));
   EXPECT_FALSE(idf_lpp.isEmpty(LoadProfile_PlantFields::OutletNodeName));
-  EXPECT_EQ("Schedule Ruleset 1", idf_lpp.getString(LoadProfile_PlantFields::LoadScheduleName, false).get());
+  EXPECT_EQ(loadSchedule.nameString(), idf_lpp.getString(LoadProfile_PlantFields::LoadScheduleName, false).get());
   EXPECT_EQ(0.005, idf_lpp.getDouble(LoadProfile_PlantFields::PeakFlowRate, false).get());
-  EXPECT_EQ("Always On Discrete", idf_lpp.getString(LoadProfile_PlantFields::FlowRateFractionScheduleName, false).get());
+  EXPECT_EQ(flowRateFractionSchedule.nameString(), idf_lpp.getString(LoadProfile_PlantFields::FlowRateFractionScheduleName, false).get());
   EXPECT_EQ("Steam", idf_lpp.getString(LoadProfile_PlantFields::PlantLoopFluidType, false).get());
   EXPECT_EQ(6.0, idf_lpp.getDouble(LoadProfile_PlantFields::DegreeofSubCooling, false).get());
   EXPECT_EQ(21.0, idf_lpp.getDouble(LoadProfile_PlantFields::DegreeofLoopSubCooling, false).get());

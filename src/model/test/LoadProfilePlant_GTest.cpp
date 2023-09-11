@@ -44,19 +44,25 @@ TEST_F(ModelFixture, LoadProfilePlant_GettersSetters) {
   Model m;
   LoadProfilePlant lpp(m);
 
-  ScheduleConstant scheduleConstant1(m);
-  EXPECT_TRUE(lpp.setLoadSchedule(scheduleConstant1));
-  EXPECT_TRUE(lpp.setPeakFlowRate(0.005));
-  ScheduleConstant scheduleConstant2(m);
-  EXPECT_TRUE(hpp.setFLowRateFractionSchedule(scheduleConstant2));
-  EXPECT_TRUE(lpp.setPlantLoopFluidType("Steam"));
-  EXPECT_TRUE(lpp.setDegreeofSubCooling(6.0));
-  EXPECT_TRUE(lpp.setDegreeofLoopSubCooling(21.0));
+  ScheduleConstant loadSchedule(m);
+  loadSchedule.setName("Load Schedule");
+  EXPECT_TRUE(lpp.setLoadSchedule(loadSchedule));
+  EXPECT_EQ(loadSchedule, lpp.flowRateFractionSchedule());
 
-  ASSERT_TRUE(lpp.loadSchedule().optionalCast<ScheduleConstant>());
+  EXPECT_TRUE(lpp.setPeakFlowRate(0.005));
   EXPECT_EQ(0.005, lpp.peakFlowRate());
-  ASSERT_TRUE(lpp.flowRateFractionSchedule().optionalCast<ScheduleConstant>());
+
+  ScheduleConstant flowRateFractionSchedule(m);
+  flowRateFractionSchedule.setName("Flow Rate Fraction Schedule");
+  EXPECT_TRUE(lpp.setFlowRateFractionSchedule(flowRateFractionSchedule));
+  EXPECT_EQ(flowRateFractionSchedule, lpp.flowRateFractionSchedule());
+
+  EXPECT_TRUE(lpp.setPlantLoopFluidType("Steam"));
   EXPECT_EQ("Steam", lpp.plantLoopFluidType());
+
+  EXPECT_TRUE(lpp.setDegreeofSubCooling(6.0));
   EXPECT_EQ(6.0, lpp.degreeofSubCooling());
+
+  EXPECT_TRUE(lpp.setDegreeofLoopSubCooling(21.0));
   EXPECT_EQ(21.0, lpp.degreeofLoopSubCooling());
 }
