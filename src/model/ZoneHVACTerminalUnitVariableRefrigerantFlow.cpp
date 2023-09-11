@@ -38,6 +38,8 @@
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
+#include "UnitarySystemPerformanceMultispeed.hpp"
+#include "UnitarySystemPerformanceMultispeed_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -581,6 +583,28 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    boost::optional<UnitarySystemPerformanceMultispeed> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::designSpecificationMultispeedObject() const {
+      return getObject<ModelObject>().getModelObjectTarget<UnitarySystemPerformanceMultispeed>(
+        OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName);
+    }
+
+    bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setDesignSpecificationMultispeedObject(
+      const boost::optional<UnitarySystemPerformanceMultispeed>& unitarySystemPerformace) {
+      bool result(false);
+      if (unitarySystemPerformace) {
+        result = setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName, unitarySystemPerformace.get().handle());
+      } else {
+        resetDesignSpecificationMultispeedObject();
+        result = true;
+      }
+      return result;
+    }
+
+    void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::resetDesignSpecificationMultispeedObject() {
+      bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName, "");
+      OS_ASSERT(result);
+    }
+
     ModelObject ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::clone(Model model) const {
       ModelObject terminalClone = ZoneHVACComponent_Impl::clone(model);
 
@@ -602,6 +626,10 @@ namespace model {
       if (auto coil = supplementalHeatingCoil()) {
         auto coilClone = coil->clone(model).cast<HVACComponent>();
         terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplementalHeatingCoil(coilClone);
+      }
+
+      if (auto designSpec = designSpecificationMultispeedObject()) {
+        terminalClone.setDesignSpecificationMultispeedObject(designSpec->clone(model).cast<UnitarySystemPerformanceMultispeed>());
       }
 
       // TODO Move this into base clase
@@ -628,6 +656,10 @@ namespace model {
 
       if (auto coil = supplementalHeatingCoil()) {
         result.push_back(coil.get());
+      }
+
+      if (auto designSpec = designSpecificationMultispeedObject()) {
+        result.push_back(*designSpec);
       }
 
       return result;
@@ -1332,6 +1364,18 @@ namespace model {
 
   bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement) {
     return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFanPlacement(supplyAirFanPlacement);
+  }
+
+  boost::optional<UnitarySystemPerformanceMultispeed> ZoneHVACTerminalUnitVariableRefrigerantFlow::designSpecificationMultispeedObject() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->designSpecificationMultispeedObject();
+  }
+  
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setDesignSpecificationMultispeedObject(const UnitarySystemPerformanceMultispeed& unitarySystemPerformace) {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setDesignSpecificationMultispeedObject(unitarySystemPerformace);
+  }
+
+  void ZoneHVACTerminalUnitVariableRefrigerantFlow::resetDesignSpecificationMultispeedObject() {
+    getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->resetDesignSpecificationMultispeedObject();
   }
 
   /// @cond

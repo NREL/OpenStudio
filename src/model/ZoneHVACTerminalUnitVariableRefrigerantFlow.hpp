@@ -20,6 +20,7 @@ namespace model {
   class CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl;
   class CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl;
   class ThermalZone;
+  class UnitarySystemPerformanceMultispeed;
 
   namespace detail {
 
@@ -179,6 +180,10 @@ namespace model {
     boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
     bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
     void resetControllingZoneorThermostatLocation();
+
+    boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject() const;
+    bool setDesignSpecificationMultispeedObject(const UnitarySystemPerformanceMultispeed& unitarySystemPerformace);
+    void resetDesignSpecificationMultispeedObject();
 
     boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
