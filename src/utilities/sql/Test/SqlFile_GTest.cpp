@@ -71,6 +71,10 @@ TEST_F(SqlFileFixture, FuelTypes) {
   EXPECT_NEAR(315.36, *(sqlFile3.otherFuel2TotalEndUses()), 2);
   EXPECT_NEAR(409.97, *(sqlFile3.districtCoolingExteriorEquipment()), 2);
   EXPECT_NEAR(409.97, *(sqlFile3.districtCoolingTotalEndUses()), 2);
+  EXPECT_NEAR(378.43, *(sqlFile3.districtHeatingWaterExteriorEquipment()), 2);
+  EXPECT_NEAR(378.43, *(sqlFile3.districtHeatingWaterTotalEndUses()), 2);
+  EXPECT_NEAR(346.90, *(sqlFile3.districtHeatingSteamExteriorEquipment()), 2);
+  EXPECT_NEAR(346.90, *(sqlFile3.districtHeatingSteamTotalEndUses()), 2);
   EXPECT_NEAR(725.33, *(sqlFile3.districtHeatingExteriorEquipment()), 2);
   EXPECT_NEAR(725.33, *(sqlFile3.districtHeatingTotalEndUses()), 2);
 }
