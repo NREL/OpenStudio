@@ -383,7 +383,7 @@ namespace energyplus {
 
       if (_unitarySystemPerformance && _unitarySystemPerformance->name()) {
         idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectType,
-                                _unitarySystemPerformance->iddObject().name());
+                            _unitarySystemPerformance->iddObject().name());
         idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName, _unitarySystemPerformance->name().get());
       }
     }

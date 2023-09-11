@@ -440,8 +440,9 @@ namespace energyplus {
 
       if (_unitarySystemPerformance && _unitarySystemPerformance->name()) {
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectType,
-                                _unitarySystemPerformance->iddObject().name());
-        idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName, _unitarySystemPerformance->name().get());
+                            _unitarySystemPerformance->iddObject().name());
+        idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName,
+                            _unitarySystemPerformance->name().get());
       }
     }
 

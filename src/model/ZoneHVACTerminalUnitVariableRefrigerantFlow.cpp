@@ -583,7 +583,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    boost::optional<UnitarySystemPerformanceMultispeed> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::designSpecificationMultispeedObject() const {
+    boost::optional<UnitarySystemPerformanceMultispeed>
+      ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::designSpecificationMultispeedObject() const {
       return getObject<ModelObject>().getModelObjectTarget<UnitarySystemPerformanceMultispeed>(
         OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName);
     }
@@ -592,7 +593,8 @@ namespace model {
       const boost::optional<UnitarySystemPerformanceMultispeed>& unitarySystemPerformace) {
       bool result(false);
       if (unitarySystemPerformace) {
-        result = setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName, unitarySystemPerformace.get().handle());
+        result = setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName,
+                            unitarySystemPerformace.get().handle());
       } else {
         resetDesignSpecificationMultispeedObject();
         result = true;
@@ -1369,8 +1371,9 @@ namespace model {
   boost::optional<UnitarySystemPerformanceMultispeed> ZoneHVACTerminalUnitVariableRefrigerantFlow::designSpecificationMultispeedObject() const {
     return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->designSpecificationMultispeedObject();
   }
-  
-  bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setDesignSpecificationMultispeedObject(const UnitarySystemPerformanceMultispeed& unitarySystemPerformace) {
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setDesignSpecificationMultispeedObject(
+    const UnitarySystemPerformanceMultispeed& unitarySystemPerformace) {
     return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setDesignSpecificationMultispeedObject(unitarySystemPerformace);
   }
 
