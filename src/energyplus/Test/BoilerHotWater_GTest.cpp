@@ -49,7 +49,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_BoilerHotWater) {
   EXPECT_TRUE(bhw.setParasiticElectricLoad(8.0));
   EXPECT_TRUE(bhw.setSizingFactor(9.0));
   EXPECT_TRUE(bhw.setEndUseSubcategory("Test"));
-  EXPECT_TRUE(bhw.setOffCycleParasiticFuelLoad(10.0));  
+  EXPECT_TRUE(bhw.setOffCycleParasiticFuelLoad(10.0));
 
   EXPECT_TRUE(plant_loop.addSupplyBranchForComponent(bhw));
 
