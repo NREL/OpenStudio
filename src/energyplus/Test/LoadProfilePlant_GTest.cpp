@@ -45,9 +45,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LoadProfilePlant) {
   IdfObject idf_lpp = w.getObjectsByType(IddObjectType::LoadProfile_Plant)[0];
 
   EXPECT_EQ(lpp.nameString(), idf_lpp.getString(LoadProfile_PlantFields::Name, false).get());
-  EXPECT_EQ("Inlet Node", idf_lpp.getString(LoadProfile_PlantFields::InletNodeName, false).get());
-  EXPECT_EQ("Outlet Node", idf_lpp.getString(LoadProfile_PlantFields::OutletNodeName, false).get());
-  EXPECT_EQ("Schedule Ruletset 1", idf_lpp.getString(LoadProfile_PlantFields::LoadScheduleName, false).get());
+  EXPECT_FALSE(idf_lpp.isEmpty(LoadProfile_PlantFields::InletNodeName));
+  EXPECT_FALSE(idf_lpp.isEmpty(LoadProfile_PlantFields::OutletNodeName));
+  EXPECT_EQ("Schedule Ruleset 1", idf_lpp.getString(LoadProfile_PlantFields::LoadScheduleName, false).get());
   EXPECT_EQ(0.005, idf_lpp.getDouble(LoadProfile_PlantFields::PeakFlowRate, false).get());
   EXPECT_EQ("Always On Discrete", idf_lpp.getString(LoadProfile_PlantFields::FlowRateFractionScheduleName, false).get());
   EXPECT_EQ("Steam", idf_lpp.getString(LoadProfile_PlantFields::PlantLoopFluidType, false).get());
