@@ -25366,7 +25366,7 @@ OS:PlantComponent:TemperatureSource,
        \note Used if Temperature Specification Type = Scheduled
 
 OS:LoadProfile:Plant,
-       \min-fields 7
+       \min-fields 10
   A1 , \field Handle
        \type handle
        \required-field
@@ -25391,10 +25391,25 @@ OS:LoadProfile:Plant,
        \type real
        \units m3/s
        \ip-units gal/min
-  A6 ; \field Flow Rate Fraction Schedule Name
+  A6 , \field Flow Rate Fraction Schedule Name
        \required-field
        \type object-list
        \object-list ScheduleNames
+  A7 , \field Plant Loop Fluid Type
+       \type choice
+       \key Water
+       \key Steam
+       \required-field
+  N2 , \field Degree of SubCooling
+       \note This field is used only when Plant Loop Fluid Type=Steam.
+       \units C
+       \minimum 1.0
+       \required-field
+  N3 ; \field Degree of Loop SubCooling
+       \note This field is used only when Plant Loop Fluid Type=Steam.
+       \units C
+       \minimum 10.0
+       \required-field
 
 OS:Pump:ConstantSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
