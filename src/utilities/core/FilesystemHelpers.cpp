@@ -137,16 +137,14 @@ namespace filesystem {
   }
 
   openstudio::path create_temporary_directory(const openstudio::path& basename) {
-    // making this count static/atomic so that we reduce the chance of collisions
-    // on each run of the binary. This is threadsafe, with the atomic
-    static std::atomic<unsigned int> count = 0;
-    constexpr unsigned int allowed_attempts = 1000;
-
     const auto base_temp_dir = openstudio::filesystem::temp_directory_path();
-    // std::filesystem::unique_path doesn't exist, if moving to std::filesystem, use emoveBraces(createUUID)
+    // std::filesystem::unique_path doesn't exist, if moving to std::filesystem, use removeBraces(createUUID())
     auto upath = boost::filesystem::unique_path();
     const auto temp_dir = base_temp_dir / fmt::format("{}-{}-{}-", basename.string(), upath.string(), std::time(nullptr));
 
+    // unique_path is supposed to be unique already...
+    unsigned int count = 0;
+    constexpr unsigned int allowed_attempts = 1000;
     while (count < allowed_attempts) {
       // concat number to path basename, without adding a new path element
       auto full_pathname = temp_dir;
