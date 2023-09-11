@@ -27,6 +27,7 @@
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
+#include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfObject.hpp"
@@ -269,6 +270,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
     EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityManagerListName));
     EXPECT_EQ("ConstantOnDemand", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode).get());
     EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationZoneHVACSizingObjectName));
+    EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectType));
+    EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName));
 
     {
       ASSERT_TRUE(idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName));
