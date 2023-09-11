@@ -13,8 +13,8 @@ namespace openstudio {
 namespace model {
 
   class Schedule;
-
   class HVACComponent;
+  class UnitarySystemPerformanceMultispeed;
 
   namespace detail {
 
@@ -131,6 +131,8 @@ namespace model {
       bool isHeatPumpCoilWaterFlowModeDefaulted() const;
 
       boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+
+      boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject() const;
 
       boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
@@ -265,6 +267,10 @@ namespace model {
       bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
       void resetSupplyAirFanOperatingModeSchedule();
+
+      bool setDesignSpecificationMultispeedObject(const boost::optional<UnitarySystemPerformanceMultispeed>& unitarySystemPerformace);
+
+      void resetDesignSpecificationMultispeedObject();
 
       //@}
       /** @name Other */

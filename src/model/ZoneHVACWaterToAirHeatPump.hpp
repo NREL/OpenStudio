@@ -14,8 +14,8 @@ namespace openstudio {
 namespace model {
 
   class Schedule;
-
   class HVACComponent;
+  class UnitarySystemPerformanceMultispeed;
 
   namespace detail {
 
@@ -129,6 +129,8 @@ namespace model {
     // TODO: field 'Availability Manager List Name' isn't implemented
 
     // TODO: field 'Design Specification ZoneHVAC Sizing' isn't implemented since the object isn't wrapped in SDK
+
+    boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject() const;
 
     //@}
     /** @name Setters */
@@ -245,6 +247,10 @@ namespace model {
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
     void resetSupplyAirFanOperatingModeSchedule();
+
+    bool setDesignSpecificationMultispeedObject(const UnitarySystemPerformanceMultispeed& unitarySystemPerformace);
+
+    void resetDesignSpecificationMultispeedObject();
 
     //@}
     /** @name Other */
