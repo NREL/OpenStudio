@@ -13766,7 +13766,7 @@ OS:Boiler:HotWater,
   N8, \field Parasitic Electric Load
        \type real
        \units W
-        \ip-units W
+       \ip-units W
        \minimum 0.0
        \default 0.0
   N9, \field Sizing Factor
