@@ -19,6 +19,7 @@
 
 #include "../../model/Node.hpp"
 #include "../../model/Curve.hpp"
+#include "../../model/CurveLinear.hpp"
 #include "../../model/CurveBiquadratic.hpp"
 #include "../../model/ScheduleConstant.hpp"
 
@@ -78,13 +79,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_Basic) {
 
   EXPECT_TRUE(coil.setAvailabilitySchedule(availSch));
   EXPECT_TRUE(coil.setCondenserType("EvaporativelyCooled"));
-  EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0));
+  EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-7.5));
   // EXPECT_TRUE(coil.setSupplyWaterStorageTank(""));
   // EXPECT_TRUE(coil.setCondensateCollectionWaterStorageTank(""));
   EXPECT_TRUE(coil.setApplyPartLoadFractiontoSpeedsGreaterthan1(false));
   EXPECT_TRUE(coil.setApplyLatentDegradationtoSpeedsGreaterthan1(true));
-  EXPECT_TRUE(coil.setCrankcaseHeaterCapacity(0.0));
-  EXPECT_TRUE(coil.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0));
+  EXPECT_TRUE(coil.setCrankcaseHeaterCapacity(105.0));
+  CurveLinear crankCurve(m);
+  crankCurve.setName("CrankHeatCapFT");
+  EXPECT_TRUE(coil.setCrankcaseHeaterCapacityFunctionofTemperatureCurve(crankCurve));
+  EXPECT_TRUE(coil.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(9.0));
   EXPECT_TRUE(coil.setBasinHeaterCapacity(0.0));
   EXPECT_TRUE(coil.setBasinHeaterSetpointTemperature(2.0));
 
@@ -124,13 +128,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_Basic) {
   EXPECT_EQ("Outlet Node", idf_coil.getString(Coil_Cooling_DX_MultiSpeedFields::AirOutletNodeName).get());
   EXPECT_EQ("", idf_coil.getString(Coil_Cooling_DX_MultiSpeedFields::CondenserAirInletNodeName).get());
   EXPECT_EQ("EvaporativelyCooled", idf_coil.getString(Coil_Cooling_DX_MultiSpeedFields::CondenserType).get());
-  EXPECT_EQ(-25.0, idf_coil.getDouble(Coil_Cooling_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation).get());
+  EXPECT_EQ(-7.5, idf_coil.getDouble(Coil_Cooling_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation).get());
   EXPECT_EQ("", idf_coil.getString(Coil_Cooling_DX_MultiSpeedFields::SupplyWaterStorageTankName).get());
   EXPECT_EQ("", idf_coil.getString(Coil_Cooling_DX_MultiSpeedFields::CondensateCollectionWaterStorageTankName).get());
   EXPECT_EQ("No", idf_coil.getString(Coil_Cooling_DX_MultiSpeedFields::ApplyPartLoadFractiontoSpeedsGreaterthan1).get());
   EXPECT_EQ("Yes", idf_coil.getString(Coil_Cooling_DX_MultiSpeedFields::ApplyLatentDegradationtoSpeedsGreaterthan1).get());
-  EXPECT_EQ(0.0, idf_coil.getDouble(Coil_Cooling_DX_MultiSpeedFields::CrankcaseHeaterCapacity).get());
-  EXPECT_EQ(10.0, idf_coil.getDouble(Coil_Cooling_DX_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation).get());
+  EXPECT_EQ(105.0, idf_coil.getDouble(Coil_Cooling_DX_MultiSpeedFields::CrankcaseHeaterCapacity).get());
+  EXPECT_EQ("CrankHeatCapFT", idf_coil.getString(Coil_Cooling_DX_MultiSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName).get());
+  EXPECT_EQ(9.0, idf_coil.getDouble(Coil_Cooling_DX_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation).get());
   EXPECT_EQ(0.0, idf_coil.getDouble(Coil_Cooling_DX_MultiSpeedFields::BasinHeaterCapacity).get());
   EXPECT_EQ(2.0, idf_coil.getDouble(Coil_Cooling_DX_MultiSpeedFields::BasinHeaterSetpointTemperature).get());
   EXPECT_EQ("Basin Heater Sch", idf_coil.getString(Coil_Cooling_DX_MultiSpeedFields::BasinHeaterOperatingScheduleName).get());

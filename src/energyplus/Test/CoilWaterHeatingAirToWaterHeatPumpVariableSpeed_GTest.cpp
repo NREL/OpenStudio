@@ -13,6 +13,7 @@
 #include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp"
 #include "../../model/Schedule.hpp"
+#include "../../model/CurveLinear.hpp"
 #include "../../model/CurveQuadratic.hpp"
 #include "../../model/CurveBiquadratic.hpp"
 #include "../../model/WaterHeaterHeatPump.hpp"
@@ -33,6 +34,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
   Model m;
 
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+
+  EXPECT_TRUE(coil.setCrankcaseHeaterCapacity(105.0));
+  CurveLinear crankCurve(m);
+  crankCurve.setName("CrankCapFT");
+  EXPECT_TRUE(coil.setCrankcaseHeaterCapacityFunctionofTemperatureCurve(crankCurve));
+  EXPECT_TRUE(coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(9.0));
 
   WaterHeaterHeatPump hpwh(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed(m);
@@ -75,10 +82,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
   EXPECT_NE("", idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirOutletNodeName, false).get());
   EXPECT_NE("", idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterInletNodeName, false).get());
   EXPECT_NE("", idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterOutletNodeName, false).get());
-  EXPECT_EQ(0, idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CrankcaseHeaterCapacity, false).get());
+  EXPECT_EQ(105.0, idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CrankcaseHeaterCapacity).get());
   EXPECT_EQ(
-    10,
-    idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation, false).get());
+    "CrankCapFT",
+    idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName).get());
+  EXPECT_EQ(9.0,
+            idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation).get());
   EXPECT_EQ("WetBulbTemperature",
             idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirTemperatureTypeforCurveObjects, false).get());
   boost::optional<WorkspaceObject> idf_curve(
