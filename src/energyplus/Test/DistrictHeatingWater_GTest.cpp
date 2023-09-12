@@ -45,8 +45,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DistrictHeatingWater) {
   IdfObject idf_dhw = w.getObjectsByType(IddObjectType::DistrictHeating_Water)[0];
 
   EXPECT_EQ(districtHeatingWater.nameString(), idf_dhw.getString(DistrictHeating_WaterFields::Name, false).get());
-  EXPECT_EQ(districtHeatingWater.inletModelObject().get().nameString(), idf_dhw.getString(DistrictHeating_WaterFields::HotWaterInletNodeName, false).get());
-  EXPECT_EQ(districtHeatingWater.outletModelObject().get().nameString(), idf_dhw.getString(DistrictHeating_WaterFields::HotWaterOutletNodeName, false).get());
+  EXPECT_EQ(districtHeatingWater.inletModelObject().get().nameString(),
+            idf_dhw.getString(DistrictHeating_WaterFields::HotWaterInletNodeName, false).get());
+  EXPECT_EQ(districtHeatingWater.outletModelObject().get().nameString(),
+            idf_dhw.getString(DistrictHeating_WaterFields::HotWaterOutletNodeName, false).get());
   EXPECT_EQ(1.0, idf_dhw.getDouble(DistrictHeating_WaterFields::NominalCapacity, false).get());
   EXPECT_EQ(scheduleConstant.nameString(), idf_dhw.getString(DistrictHeating_WaterFields::CapacityFractionScheduleName, false).get());
 }

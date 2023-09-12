@@ -105,9 +105,9 @@ TEST_F(ModelFixture, DistrictCooling_NominalCapacity) {
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1, capacity.get());
 
-  EXPECT_FALSE(districtHeating.isNominalCapacityAutosized());
-  districtHeating.autosizeNominalCapacity();
-  EXPECT_TRUE(districtHeating.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtCooling.isNominalCapacityAutosized());
+  districtCooling.autosizeNominalCapacity();
+  EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
 }
 
 //test cloning the object

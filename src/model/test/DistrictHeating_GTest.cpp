@@ -111,65 +111,66 @@ TEST_F(ModelFixture, DistrictHeating_NominalCapacity) {
   EXPECT_FALSE(districtHeating.isNominalCapacityAutosized());
   districtHeating.autosizeNominalCapacity();
   EXPECT_TRUE(districtHeating.isNominalCapacityAutosized());
+}
 
-  //test cloning the object
-  TEST_F(ModelFixture, DistrictHeating_Clone) {
+//test cloning the object
+TEST_F(ModelFixture, DistrictHeating_Clone) {
 
-    Model m;
+  Model m;
 
-    //make an object to clone, and edit some property to make sure the clone worked
+  //make an object to clone, and edit some property to make sure the clone worked
 
-    DistrictHeating districtHeating(m);
+  DistrictHeating districtHeating(m);
 
-    districtHeating.setNominalCapacity(1234);
+  districtHeating.setNominalCapacity(1234);
 
-    //clone into the same model
+  //clone into the same model
 
-    auto districtHeatingClone = districtHeating.clone(m).cast<DistrictHeating>();
+  auto districtHeatingClone = districtHeating.clone(m).cast<DistrictHeating>();
 
-    auto capacity = districtHeatingClone.nominalCapacity();
-    ASSERT_TRUE(capacity);
-    ASSERT_EQ(1234, capacity.get());
+  auto capacity = districtHeatingClone.nominalCapacity();
+  ASSERT_TRUE(capacity);
+  ASSERT_EQ(1234, capacity.get());
 
-    //clone into another model
+  //clone into another model
 
-    Model m2;
+  Model m2;
 
-    auto districtHeatingClone2 = districtHeating.clone(m2).cast<DistrictHeating>();
+  auto districtHeatingClone2 = districtHeating.clone(m2).cast<DistrictHeating>();
 
-    capacity = districtHeatingClone2.nominalCapacity();
-    ASSERT_TRUE(capacity);
-    ASSERT_EQ(1234, capacity.get());
-  }
+  capacity = districtHeatingClone2.nominalCapacity();
+  ASSERT_TRUE(capacity);
+  ASSERT_EQ(1234, capacity.get());
+}
 
-  TEST_F(ModelFixture, DistrictHeating_addToNode) {
-    Model m;
-    DistrictHeating testObject(m);
+TEST_F(ModelFixture, DistrictHeating_addToNode) {
+  Model m;
+  DistrictHeating testObject(m);
 
-    AirLoopHVAC airLoop(m);
+  AirLoopHVAC airLoop(m);
 
-    Node supplyOutletNode = airLoop.supplyOutletNode();
+  Node supplyOutletNode = airLoop.supplyOutletNode();
 
-    EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-    EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
-    Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
-    EXPECT_FALSE(testObject.addToNode(inletNode));
-    EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
 
-    PlantLoop plantLoop(m);
-    supplyOutletNode = plantLoop.supplyOutletNode();
-    EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-    EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
-    Node demandOutletNode = plantLoop.demandOutletNode();
-    EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-    EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-    auto testObjectClone = testObject.clone(m).cast<DistrictHeating>();
-    supplyOutletNode = plantLoop.supplyOutletNode();
+  auto testObjectClone = testObject.clone(m).cast<DistrictHeating>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
 
-    EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-    EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
-  }
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
+}

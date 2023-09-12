@@ -45,8 +45,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DistrictHeatingSteam) {
   IdfObject idf_dhs = w.getObjectsByType(IddObjectType::DistrictHeating_Steam)[0];
 
   EXPECT_EQ(districtHeatingSteam.nameString(), idf_dhs.getString(DistrictHeating_SteamFields::Name, false).get());
-  EXPECT_EQ(districtHeatingSteam.inletModelObject().get().nameString(), idf_dhs.getString(DistrictHeating_SteamFields::SteamInletNodeName, false).get());
-  EXPECT_EQ(districtHeatingSteam.outletModelObject().get().nameString(), idf_dhs.getString(DistrictHeating_SteamFields::SteamOutletNodeName, false).get());
+  EXPECT_EQ(districtHeatingSteam.inletModelObject().get().nameString(),
+            idf_dhs.getString(DistrictHeating_SteamFields::SteamInletNodeName, false).get());
+  EXPECT_EQ(districtHeatingSteam.outletModelObject().get().nameString(),
+            idf_dhs.getString(DistrictHeating_SteamFields::SteamOutletNodeName, false).get());
   EXPECT_EQ(1.0, idf_dhs.getDouble(DistrictHeating_SteamFields::NominalCapacity, false).get());
   EXPECT_EQ(scheduleConstant.nameString(), idf_dhs.getString(DistrictHeating_SteamFields::CapacityFractionScheduleName, false).get());
 }
