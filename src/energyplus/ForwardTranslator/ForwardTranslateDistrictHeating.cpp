@@ -24,13 +24,10 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDistrictHeating(DistrictHeating& modelObject) {
     OptionalString s;
-    OptionalDouble d;
     OptionalModelObject temp;
     boost::optional<double> value;
 
-    IdfObject idfObject(IddObjectType::DistrictHeating_Water);
-
-    m_idfObjects.push_back(idfObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::DistrictHeating_Water, modelObject);
 
     ///////////////////////////////////////////////////////////////////////////
     // Field: Name ////////////////////////////////////////////////////////////
