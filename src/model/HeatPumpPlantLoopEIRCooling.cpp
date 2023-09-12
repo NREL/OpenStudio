@@ -366,10 +366,20 @@ namespace model {
       return result;
     }
 
+    void HeatPumpPlantLoopEIRCooling_Impl::resetMinimumSupplyWaterTemperatureCurve() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
     bool HeatPumpPlantLoopEIRCooling_Impl::setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve) {
       bool result =
         setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurveName, maximumSupplyWaterTemperatureCurve.handle());
       return result;
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::resetMaximumSupplyWaterTemperatureCurve() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurveName, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::autosizedLoadSideReferenceFlowRate() const {
@@ -707,8 +717,16 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMinimumSupplyWaterTemperatureCurve(minimumSupplyWaterTemperatureCurve);
   }
 
+  void HeatPumpPlantLoopEIRCooling::resetMinimumSupplyWaterTemperatureCurve() {
+    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetMinimumSupplyWaterTemperatureCurve();
+  }
+
   bool HeatPumpPlantLoopEIRCooling::setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve) {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMaximumSupplyWaterTemperatureCurve(maximumSupplyWaterTemperatureCurve);
+  }
+
+  void HeatPumpPlantLoopEIRCooling::resetMaximumSupplyWaterTemperatureCurve() {
+    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetMaximumSupplyWaterTemperatureCurve();
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRCooling::autosizedLoadSideReferenceFlowRate() const {

@@ -177,9 +177,15 @@ namespace model {
 
       bool setMinimumSupplyWaterTemperatureCurve(const Curve& minimumSupplyWaterTemperatureCurve);
 
+      void resetMinimumSupplyWaterTemperatureCurve();
+
       bool setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve);
 
+      void resetMaximumSupplyWaterTemperatureCurve();
+
       bool setDryOutdoorCorrectionFactorCurve(const Curve& dryOutdoorCorrectionFactorCurve);
+
+      void resetDryOutdoorCorrectionFactorCurve();
 
       bool setMaximumOutdoorDryBulbTemperatureForDefrostOperation(double maximumOutdoorDryBulbTemperatureForDefrostOperation);
 
@@ -189,11 +195,19 @@ namespace model {
 
       bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const Curve& defrostEnergyInputRatioFunctionofTemperatureCurve);
 
+      void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
+
       bool setTimedEmpiricalDefrostFrequencyCurve(const Curve& timedEmpiricalDefrostFrequencyCurve);
+
+      void resetTimedEmpiricalDefrostFrequencyCurve();
 
       bool setTimedEmpiricalDefrostHeatLoadPenaltyCurve(const Curve& timedEmpiricalDefrostHeatLoadPenaltyCurve);
 
+      void resetTimedEmpiricalDefrostHeatLoadPenaltyCurve();
+
       bool setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(const Curve& timedEmpiricalDefrostHeatInputEnergyFractionCurve);
+
+      void resetTimedEmpiricalDefrostHeatInputEnergyFractionCurve();
 
       //@}
       /** @name Other */

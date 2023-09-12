@@ -137,6 +137,11 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
   EXPECT_TRUE(hp.isLoadSideReferenceFlowRateAutosized());
   EXPECT_TRUE(hp.isSourceSideReferenceFlowRateAutosized());
   EXPECT_TRUE(hp.isReferenceCapacityAutosized());
+
+  hp.resetMinimumSupplyWaterTemperatureCurve();
+  hp.resetMaximumSupplyWaterTemperatureCurve();
+  EXPECT_FALSE(hp.minimumSupplyWaterTemperatureCurve());
+  EXPECT_FALSE(hp.maximumSupplyWaterTemperatureCurve());
 }
 
 TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_remove) {

@@ -136,7 +136,11 @@ namespace model {
 
     bool setMinimumSupplyWaterTemperatureCurve(const Curve& minimumSupplyWaterTemperatureCurve);
 
+    void resetMinimumSupplyWaterTemperatureCurve();
+
     bool setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve);
+
+    void resetMaximumSupplyWaterTemperatureCurve();
 
     //@}
     /** @name Other */
