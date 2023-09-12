@@ -919,7 +919,7 @@ namespace model {
   }
 
   void HeatPumpPlantLoopEIRHeating::resetMaximumSupplyWaterTemperatureCurve() {
-    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetMaximumSupplyWaterTemperatureCurve();
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetMaximumSupplyWaterTemperatureCurve();
   }
 
   bool HeatPumpPlantLoopEIRHeating::setDryOutdoorCorrectionFactorCurve(const Curve& dryOutdoorCorrectionFactorCurve) {
@@ -927,7 +927,7 @@ namespace model {
   }
 
   void HeatPumpPlantLoopEIRHeating::resetDryOutdoorCorrectionFactorCurve() {
-    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetDryOutdoorCorrectionFactorCurve();
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetDryOutdoorCorrectionFactorCurve();
   }
 
   bool
@@ -951,7 +951,7 @@ namespace model {
   }
 
   void HeatPumpPlantLoopEIRHeating::resetDefrostEnergyInputRatioFunctionofTemperatureCurve() {
-    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
   }
 
   bool HeatPumpPlantLoopEIRHeating::setTimedEmpiricalDefrostFrequencyCurve(const Curve& timedEmpiricalDefrostFrequencyCurve) {
@@ -959,7 +959,7 @@ namespace model {
   }
 
   void HeatPumpPlantLoopEIRHeating::resetTimedEmpiricalDefrostFrequencyCurve() {
-    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetTimedEmpiricalDefrostFrequencyCurve();
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetTimedEmpiricalDefrostFrequencyCurve();
   }
 
   bool HeatPumpPlantLoopEIRHeating::setTimedEmpiricalDefrostHeatLoadPenaltyCurve(const Curve& timedEmpiricalDefrostHeatLoadPenaltyCurve) {
@@ -968,7 +968,7 @@ namespace model {
   }
 
   void HeatPumpPlantLoopEIRHeating::resetTimedEmpiricalDefrostHeatLoadPenaltyCurve() {
-    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetTimedEmpiricalDefrostHeatLoadPenaltyCurve();
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetTimedEmpiricalDefrostHeatLoadPenaltyCurve();
   }
 
   bool HeatPumpPlantLoopEIRHeating::setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(
@@ -978,7 +978,7 @@ namespace model {
   }
 
   void HeatPumpPlantLoopEIRHeating::resetTimedEmpiricalDefrostHeatInputEnergyFractionCurve() {
-    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetTimedEmpiricalDefrostHeatInputEnergyFractionCurve();
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetTimedEmpiricalDefrostHeatInputEnergyFractionCurve();
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedLoadSideReferenceFlowRate() const {
