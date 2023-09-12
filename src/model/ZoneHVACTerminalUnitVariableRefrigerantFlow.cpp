@@ -631,7 +631,8 @@ namespace model {
       }
 
       if (auto designSpec = designSpecificationMultispeedObject()) {
-        terminalClone.setDesignSpecificationMultispeedObject(designSpec->clone(model).cast<UnitarySystemPerformanceMultispeed>());
+        auto designSpecClone = designSpec->clone(model).cast<UnitarySystemPerformanceMultispeed>();
+        terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setDesignSpecificationMultispeedObject(designSpecClone);
       }
 
       // TODO Move this into base clase
