@@ -293,7 +293,7 @@ namespace model {
       const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed) {
       auto modelObjectList = speedDataList();
       if (modelObjectList) {
-        modelObjectList->addModelObject(speed);
+        return modelObjectList->addModelObject(speed);
       }
       return false;
     }

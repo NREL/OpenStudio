@@ -13850,9 +13850,9 @@ ZoneEarthtube:Parameters,
       \units dimensionless
       \minimum 0.25
       \maximum 1.0
-      \default 1.0 
- N4,  \field Earth Tube Dimensionless Boundary Above
-      \note When set to 1.0, the upper boundary is one earth tube radius below ground.
+      \default 1.0
+ N4,  \field Earth Tube Dimensionless Boundary Below
+      \note When set to 1.0, the lower boundary is one earth tube radius below the earth tube.
       \type real
       \units dimensionless
       \minimum 0.25
@@ -30086,6 +30086,8 @@ Coil:Cooling:DX:CurveFit:Performance,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
    N2, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \default -25.0
@@ -30607,6 +30609,8 @@ Coil:Cooling:DX:SingleSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N16, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -30722,7 +30726,7 @@ Coil:Cooling:DX:TwoSpeed,
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR
        \note and Rated COP. Should be between 0.00004027 m3/s and .00006041 m3/s per watt
        \note of rated total cooling capacity.
-  N5 , \field High Speed 2017 Rated Evaporator Fan Power Per Volume Flow Rate
+  N5 , \field High Speed Rated Evaporator Fan Power Per Volume Flow Rate 2017
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30735,7 +30739,7 @@ Coil:Cooling:DX:TwoSpeed,
        \minimum 0.0
        \maximum 1250.0
        \default 773.3
-  N6 , \field High Speed 2023 Rated Evaporator Fan Power Per Volume Flow Rate
+  N6 , \field High Speed Rated Evaporator Fan Power Per Volume Flow Rate 2023
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30832,7 +30836,7 @@ Coil:Cooling:DX:TwoSpeed,
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR
        \note and Rated COP. Should be between 0.00004027 m3/s and .00006041 m3/s per watt
        \note of rated total cooling capacity.
-  N12, \field Low Speed 2017 Rated Evaporator Fan Power Per Volume Flow Rate
+  N12, \field Low Speed Rated Evaporator Fan Power Per Volume Flow Rate 2017
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30845,7 +30849,7 @@ Coil:Cooling:DX:TwoSpeed,
        \minimum 0.0
        \maximum 1250.0
        \default 773.3
-  N13, \field Low Speed 2023 Rated Evaporator Fan Power Per Volume Flow Rate
+  N13, \field Low Speed Rated Evaporator Fan Power Per Volume Flow Rate 2023
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -31052,6 +31056,8 @@ Coil:Cooling:DX:MultiSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N3 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -31273,7 +31279,7 @@ Coil:Cooling:DX:VariableSpeed,
         \memo wet coil when compressor cycles off with continuous fan operation. Requires two to
         \memo ten sets of performance data and will interpolate between speeds. Modeled as a
         \memo single coil with variable-speed compressor.
-        \extensible:10
+        \extensible:12
         \min-fields 35
    A1,  \field Name
         \required-field
@@ -31373,6 +31379,8 @@ Coil:Cooling:DX:VariableSpeed,
         \note A Curve:* or Table:Lookup object encoding the relationship between
         \note the crankcase heater capacity and the outdoor air temperature. When this field is
         \note missing or empty, constant crankcase heater capacity will be assumed.
+        \type object-list
+        \object-list UnivariateFunctions
    N12, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
         \type real
         \minimum 0.0
@@ -31536,6 +31544,8 @@ Coil:Cooling:DX:TwoStageWithHumidityControlMode,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed
+       \type object-list
+       \object-list UnivariateFunctions
   N2 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -32558,6 +32568,8 @@ Coil:Heating:DX:SingleSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N10, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -32701,6 +32713,8 @@ Coil:Heating:DX:MultiSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N4 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -32887,7 +32901,7 @@ Coil:Heating:DX:VariableSpeed,
         \memo (includes electric compressor and outdoor fan), variable-speed, with defrost
         \memo controls. Requires two to ten sets of performance data and will interpolate between
         \memo speeds.
-        \extensible:7
+        \extensible:9
         \min-fields 26
         \max-fields 89
    A1,  \field Name
@@ -32965,6 +32979,8 @@ Coil:Heating:DX:VariableSpeed,
         \note A Curve:* or Table:Lookup object encoding the relationship between
         \note the crankcase heater capacity and the outdoor air temperature. When this field is
         \note missing or empty, constant crankcase heater capacity will be assumed.
+        \type object-list
+        \object-list UnivariateFunctions
    N9,  \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
         \type real
         \minimum 0.0
@@ -33237,6 +33253,7 @@ Coil:Cooling:WaterToAirHeatPump:ParameterEstimation,
         \note quadratic curve = a + b*PLR + c*PLR**2
         \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
         \note PLR = part load ratio (cooling load/steady state capacity)
+        \required-field
         \type object-list
         \object-list UnivariateFunctions
    N21, \field Maximum Cycling Rate
@@ -33413,6 +33430,7 @@ Coil:Heating:WaterToAirHeatPump:ParameterEstimation,
         \note quadratic curve = a + b*PLR + c*PLR**2
         \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
         \note PLR = part load ratio (heating load/steady state capacity)
+        \required-field
         \type object-list
         \object-list UnivariateFunctions
 
@@ -33513,6 +33531,7 @@ Coil:Cooling:WaterToAirHeatPump:EquationFit,
         \note quadratic curve = a + b*PLR + c*PLR**2
         \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
         \note PLR = part load ratio (cooling load/steady state capacity)
+        \required-field
         \type object-list
         \object-list UnivariateFunctions
    N9, \field Nominal Time for Condensate Removal to Begin
@@ -33748,7 +33767,7 @@ Coil:Heating:WaterToAirHeatPump:EquationFit,
         \memo Direct expansion (DX) heating coil for water-to-air heat pump (includes electric
         \memo compressor), single-speed, equation-fit model. Equation-fit model uses normalized
         \memo curves to describe the heat pump performance.
-        \min-fields 12
+        \min-fields 15
    A1,  \field Name
         \required-field
         \type alpha
@@ -33830,6 +33849,7 @@ Coil:Heating:WaterToAirHeatPump:EquationFit,
         \note quadratic curve = a + b*PLR + c*PLR**2
         \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
         \note PLR = part load ratio (heat load/steady state capacity)
+        \required-field
         \type object-list
         \object-list UnivariateFunctions
 
@@ -34115,6 +34135,8 @@ Coil:WaterHeating:AirToWaterHeatPump:Pumped,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N12, \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
@@ -34293,6 +34315,8 @@ Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N9,  \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
@@ -34492,6 +34516,8 @@ Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note A Curve:* or Table:Lookup object encoding the relationship between
        \note the crankcase heater capacity and the outdoor air temperature. When this field is
        \note missing or empty, constant crankcase heater capacity will be assumed.
+       \type object-list
+       \object-list UnivariateFunctions
   N11, \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
@@ -51384,7 +51410,7 @@ PlantEquipmentOperation:OutdoorDewpointDifference,
 
 PlantEquipmentOperation:ChillerHeaterChangeover,
        \memo Plant equipment operation object to control switchover between chiller
-       \memo and heater operation of chiller heater heat pump serving 2 plant loops. 
+       \memo and heater operation of chiller heater heat pump serving 2 plant loops.
        \memo Poll zone loads and determine if plant should be in heating, cooling
        \memo or simultaneous heating and cooling and dispatch equipment accordingly.
   A1 , \field Name

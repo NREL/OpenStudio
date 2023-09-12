@@ -12,6 +12,7 @@
 namespace openstudio {
 namespace model {
 
+  class Curve;
   class CurveQuadLinear;
 
   namespace detail {
@@ -91,6 +92,8 @@ namespace model {
 
       CurveQuadLinear heatingPowerConsumptionCurve() const;
 
+      Curve partLoadFractionCorrelationCurve() const;
+
       boost::optional<double> autosizedRatedAirFlowRate() const;
 
       boost::optional<double> autosizedRatedWaterFlowRate() const;
@@ -143,6 +146,8 @@ namespace model {
 
       bool setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve);
 
+      bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
+
       //@}
       /** @name Other */
       //@{
@@ -151,6 +156,10 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingWaterToAirHeatPumpEquationFit");
+
+      boost::optional<Curve> optionalHeatingCapacityCurve() const;
+      boost::optional<Curve> optionalHeatingPowerConsumptionCurve() const;
+      boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
 
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;
     };

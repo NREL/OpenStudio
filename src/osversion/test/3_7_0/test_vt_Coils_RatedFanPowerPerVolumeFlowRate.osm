@@ -1,0 +1,262 @@
+
+OS:Version,
+  {4c1394b3-0d76-418e-af7c-a351f74c8ab8}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:Coil:Cooling:DX:TwoSpeed,
+  {d033c815-eaf2-497f-bbb6-6fff5cc4c685}, !- Handle
+  Coil Cooling DX Two Speed 1,            !- Name
+  {ec607a53-8908-4259-be75-5a3357c7f16c}, !- Availability Schedule Name
+  Autosize,                               !- Rated High Speed Total Cooling Capacity {W}
+  Autosize,                               !- Rated High Speed Sensible Heat Ratio
+  3,                                      !- Rated High Speed COP {W/W}
+  2,                                      !- Rated High Speed Air Flow Rate {m3/s}
+  400,                                    !- Unit Internal Static Air Pressure {Pa}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {b2e3a552-59e9-4207-8271-8219e8198594}, !- Total Cooling Capacity Function of Temperature Curve Name
+  {fea71a07-b4cc-4ca8-af38-a582b538bb0c}, !- Total Cooling Capacity Function of Flow Fraction Curve Name
+  {b79159e9-2166-45c0-9b8f-7df6d20c38c6}, !- Energy Input Ratio Function of Temperature Curve Name
+  {3fcb761a-5a5e-4a2f-95d9-eff79879057e}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {966fbc34-5123-4a17-af03-04ad44bda385}, !- Part Load Fraction Correlation Curve Name
+  Autosize,                               !- Rated Low Speed Total Cooling Capacity {W}
+  0.69,                                   !- Rated Low Speed Sensible Heat Ratio
+  3,                                      !- Rated Low Speed COP {W/W}
+  1,                                      !- Rated Low Speed Air Flow Rate {m3/s}
+  {ef016cb4-7bda-491c-a617-55a7a734fe77}, !- Low Speed Total Cooling Capacity Function of Temperature Curve Name
+  {a6b2ee57-859a-4dd8-96bc-461dc3eb6b70}, !- Low Speed Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Condenser Air Inlet Node Name
+  AirCooled,                              !- Condenser Type
+  -25,                                    !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  0.9,                                    !- High Speed Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               !- High Speed Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               !- High Speed Evaporative Condenser Pump Rated Power Consumption {W}
+  0.9,                                    !- Low Speed Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               !- Low Speed Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               !- Low Speed Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Supply Water Storage Tank Name
+  ,                                       !- Condensate Collection Water Storage Tank Name
+  0,                                      !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  {f98fd4ca-f6e8-4800-b021-65983b9e16a8}; !- Basin Heater Operating Schedule Name
+
+OS:Schedule:Constant,
+  {ec607a53-8908-4259-be75-5a3357c7f16c}, !- Handle
+  Always On Discrete,                     !- Name
+  {3f7a4676-d462-445d-8185-7ee600bb8ba8}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {3f7a4676-d462-445d-8185-7ee600bb8ba8}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Curve:Biquadratic,
+  {b2e3a552-59e9-4207-8271-8219e8198594}, !- Handle
+  Curve Biquadratic 1,                    !- Name
+  0.42415,                                !- Coefficient1 Constant
+  0.04426,                                !- Coefficient2 x
+  -0.00042,                               !- Coefficient3 x**2
+  0.00333,                                !- Coefficient4 y
+  -8e-05,                                 !- Coefficient5 y**2
+  -0.00021,                               !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {fea71a07-b4cc-4ca8-af38-a582b538bb0c}, !- Handle
+  Curve Quadratic 1,                      !- Name
+  0.77136,                                !- Coefficient1 Constant
+  0.34053,                                !- Coefficient2 x
+  -0.11088,                               !- Coefficient3 x**2
+  0.75918,                                !- Minimum Value of x
+  1.13877;                                !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {b79159e9-2166-45c0-9b8f-7df6d20c38c6}, !- Handle
+  Curve Biquadratic 2,                    !- Name
+  1.23649,                                !- Coefficient1 Constant
+  -0.02431,                               !- Coefficient2 x
+  0.00057,                                !- Coefficient3 x**2
+  -0.01434,                               !- Coefficient4 y
+  0.00063,                                !- Coefficient5 y**2
+  -0.00038,                               !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {3fcb761a-5a5e-4a2f-95d9-eff79879057e}, !- Handle
+  Curve Quadratic 2,                      !- Name
+  1.2055,                                 !- Coefficient1 Constant
+  -0.32953,                               !- Coefficient2 x
+  0.12308,                                !- Coefficient3 x**2
+  0.75918,                                !- Minimum Value of x
+  1.13877;                                !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {966fbc34-5123-4a17-af03-04ad44bda385}, !- Handle
+  Curve Quadratic 3,                      !- Name
+  0.771,                                  !- Coefficient1 Constant
+  0.229,                                  !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {ef016cb4-7bda-491c-a617-55a7a734fe77}, !- Handle
+  LowSpeedTotCapFT,                       !- Name
+  0.42415,                                !- Coefficient1 Constant
+  0.04426,                                !- Coefficient2 x
+  -0.00042,                               !- Coefficient3 x**2
+  0.00333,                                !- Coefficient4 y
+  -8e-05,                                 !- Coefficient5 y**2
+  -0.00021,                               !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
+
+OS:Curve:Biquadratic,
+  {a6b2ee57-859a-4dd8-96bc-461dc3eb6b70}, !- Handle
+  Curve Biquadratic 4,                    !- Name
+  1.23649,                                !- Coefficient1 Constant
+  -0.02431,                               !- Coefficient2 x
+  0.00057,                                !- Coefficient3 x**2
+  -0.01434,                               !- Coefficient4 y
+  0.00063,                                !- Coefficient5 y**2
+  -0.00038,                               !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
+
+OS:Schedule:Constant,
+  {f98fd4ca-f6e8-4800-b021-65983b9e16a8}, !- Handle
+  BasinHeaterOpSch,                       !- Name
+  {3f7a4676-d462-445d-8185-7ee600bb8ba8}, !- Schedule Type Limits Name
+  0;                                      !- Value
+
+OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
+  {e709f8c2-21e9-4508-bc12-6dbb60f4bd72}, !- Handle
+  Coil Cooling DX Variable Speed Speed Data 1, !- Name
+  8914.185229,                            !- Reference Unit Gross Rated Total Cooling Capacity {W}
+  0.79,                                   !- Reference Unit Gross Rated Sensible Heat Ratio {dimensionless}
+  3.980488789,                            !- Reference Unit Gross Rated Cooling COP {W/W}
+  1,                                      !- Reference Unit Rated Air Flow Rate {m3/s}
+  2,                                      !- Reference Unit Rated Condenser Air Flow Rate {m3/s}
+  ,                                       !- Reference Unit Rated Pad Effectiveness of Evap Precooling {dimensionless}
+  {ab9ea88e-321b-4464-b0b8-c069b79080a4}, !- Total Cooling Capacity Function of Temperature Curve Name
+  {dc2b1d94-7512-4905-a7a8-ff4dc66224d1}, !- Total Cooling Capacity Function of Air Flow Fraction Curve Name
+  {4a89c16a-c68b-46b3-af7b-e6b93457005f}, !- Energy Input Ratio Function of Temperature Curve Name
+  {94681a99-e928-4b23-b26e-6780982a9364}; !- Energy Input Ratio Function of Air Flow Fraction Curve Name
+
+OS:Curve:Biquadratic,
+  {ab9ea88e-321b-4464-b0b8-c069b79080a4}, !- Handle
+  Curve Biquadratic 3,                    !- Name
+  1.6253449506,                           !- Coefficient1 Constant
+  -0.0786550838,                          !- Coefficient2 x
+  0.0030679776,                           !- Coefficient3 x**2
+  0.0008002088,                           !- Coefficient4 y
+  -3.5406e-05,                            !- Coefficient5 y**2
+  -0.0003534409,                          !- Coefficient6 x*y
+  13.89,                                  !- Minimum Value of x
+  22.22,                                  !- Maximum Value of x
+  12.78,                                  !- Minimum Value of y
+  51.67;                                  !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {dc2b1d94-7512-4905-a7a8-ff4dc66224d1}, !- Handle
+  Curve Quadratic 4,                      !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {4a89c16a-c68b-46b3-af7b-e6b93457005f}, !- Handle
+  Curve Biquadratic 5,                    !- Name
+  1.4240389306,                           !- Coefficient1 Constant
+  -0.0593310687,                          !- Coefficient2 x
+  0.002606807,                            !- Coefficient3 x**2
+  0.0008867551,                           !- Coefficient4 y
+  -3.69191e-05,                           !- Coefficient5 y**2
+  -0.0003552805,                          !- Coefficient6 x*y
+  13.89,                                  !- Minimum Value of x
+  22.22,                                  !- Maximum Value of x
+  12.78,                                  !- Minimum Value of y
+  51.67;                                  !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {94681a99-e928-4b23-b26e-6780982a9364}, !- Handle
+  ccSp_EIRfFlow,                          !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Coil:Heating:DX:VariableSpeed:SpeedData,
+  {e5a01fab-7891-4db7-ba2e-fa8c9b408dbe}, !- Handle
+  Coil Heating DX Variable Speed Speed Data 1, !- Name
+  9124.853458,                            !- Reference Unit Gross Rated Heating Capacity {W}
+  4.29731,                                !- Reference Unit Gross Rated Heating COP {dimensionless}
+  1,                                      !- Reference Unit Rated Air Flow Rate {m3/s}
+  {62dcabd5-32d5-4b3f-9e4a-fd31e249f984}, !- Heating Capacity Function of Temperature Curve Name
+  {edc70e9e-373d-4882-b2fa-9b275b49848c}, !- Total  Heating Capacity Function of Air Flow Fraction Curve Name
+  {2e447ddc-c000-466d-816f-6f6997d7e5ef}, !- Energy Input Ratio Function of Temperature Curve Name
+  {a5559137-d06e-40bf-95e5-87cc2e43acc3}; !- Energy Input Ratio Function of Air Flow Fraction Curve Name
+
+OS:Curve:Biquadratic,
+  {62dcabd5-32d5-4b3f-9e4a-fd31e249f984}, !- Handle
+  hcSp_heatCapFT,                         !- Name
+  0.8406506803,                           !- Coefficient1 Constant
+  -8.3433e-05,                            !- Coefficient2 x
+  -6.83822e-05,                           !- Coefficient3 x**2
+  0.0234244981,                           !- Coefficient4 y
+  0.000176366,                            !- Coefficient5 y**2
+  -9.01777e-05,                           !- Coefficient6 x*y
+  17.78,                                  !- Minimum Value of x
+  23.33,                                  !- Maximum Value of x
+  -30.56,                                 !- Minimum Value of y
+  17.22;                                  !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {edc70e9e-373d-4882-b2fa-9b275b49848c}, !- Handle
+  Curve Quadratic 5,                      !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {2e447ddc-c000-466d-816f-6f6997d7e5ef}, !- Handle
+  Curve Biquadratic 7,                    !- Name
+  0.9172082199,                           !- Coefficient1 Constant
+  -0.0116036212,                          !- Coefficient2 x
+  0.0010074804,                           !- Coefficient3 x**2
+  -0.0089288423,                          !- Coefficient4 y
+  0.0009349133,                           !- Coefficient5 y**2
+  -0.0009326244,                          !- Coefficient6 x*y
+  17.78,                                  !- Minimum Value of x
+  23.33,                                  !- Maximum Value of x
+  -30.56,                                 !- Minimum Value of y
+  17.22;                                  !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {a5559137-d06e-40bf-95e5-87cc2e43acc3}, !- Handle
+  hcSp_EIRfFlow,                          !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+

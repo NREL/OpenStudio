@@ -176,21 +176,21 @@ namespace model {
 
     boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName() const;
 
-    double maximumCyclingRate() const;
+    OS_DEPRECATED(3, 7, 0) double maximumCyclingRate() const;
 
-    bool isMaximumCyclingRateDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isMaximumCyclingRateDefaulted() const;
 
-    double heatPumpTimeConstant() const;
+    OS_DEPRECATED(3, 7, 0) double heatPumpTimeConstant() const;
 
-    bool isHeatPumpTimeConstantDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isHeatPumpTimeConstantDefaulted() const;
 
-    double fractionofOnCyclePowerUse() const;
+    OS_DEPRECATED(3, 7, 0) double fractionofOnCyclePowerUse() const;
 
-    bool isFractionofOnCyclePowerUseDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isFractionofOnCyclePowerUseDefaulted() const;
 
-    double heatPumpFanDelayTime() const;
+    OS_DEPRECATED(3, 7, 0) double heatPumpFanDelayTime() const;
 
-    bool isHeatPumpFanDelayTimeDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isHeatPumpFanDelayTimeDefaulted() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Ancillary On-Cycle Electric Power" **/
     double ancilliaryOnCycleElectricPower() const;
@@ -356,21 +356,21 @@ namespace model {
 
     void resetOutdoorDryBulbTemperatureSensorNodeName();
 
-    bool setMaximumCyclingRate(double maximumCyclingRate);
+    OS_DEPRECATED(3, 7, 0) bool setMaximumCyclingRate(double maximumCyclingRate);
 
-    void resetMaximumCyclingRate();
+    OS_DEPRECATED(3, 7, 0) void resetMaximumCyclingRate();
 
-    bool setHeatPumpTimeConstant(double heatPumpTimeConstant);
+    OS_DEPRECATED(3, 7, 0) bool setHeatPumpTimeConstant(double heatPumpTimeConstant);
 
-    void resetHeatPumpTimeConstant();
+    OS_DEPRECATED(3, 7, 0) void resetHeatPumpTimeConstant();
 
-    bool setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse);
+    OS_DEPRECATED(3, 7, 0) bool setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse);
 
-    void resetFractionofOnCyclePowerUse();
+    OS_DEPRECATED(3, 7, 0) void resetFractionofOnCyclePowerUse();
 
-    bool setHeatPumpFanDelayTime(double heatPumpFanDelayTime);
+    OS_DEPRECATED(3, 7, 0) bool setHeatPumpFanDelayTime(double heatPumpFanDelayTime);
 
-    void resetHeatPumpFanDelayTime();
+    OS_DEPRECATED(3, 7, 0) void resetHeatPumpFanDelayTime();
 
     bool setAncilliaryOnCycleElectricPower(double ancilliaryOnCycleElectricPower);
 

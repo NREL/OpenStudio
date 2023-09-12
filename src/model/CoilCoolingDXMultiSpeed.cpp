@@ -19,6 +19,9 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
@@ -251,6 +254,21 @@ namespace model {
       bool result = setDouble(OS_Coil_Cooling_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
                               minimumOutdoorDryBulbTemperatureforCompressorOperation);
       return result;
+    }
+
+    boost::optional<Curve> CoilCoolingDXMultiSpeed_Impl::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_MultiSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName);
+    }
+
+    bool CoilCoolingDXMultiSpeed_Impl::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+      const bool result = setPointer(OS_Coil_Cooling_DX_MultiSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve.handle());
+      return result;
+    }
+
+    void CoilCoolingDXMultiSpeed_Impl::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+      const bool result = setString(OS_Coil_Cooling_DX_MultiSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
     }
 
     unsigned CoilCoolingDXMultiSpeed_Impl::inletPort() const {
@@ -624,6 +642,18 @@ namespace model {
     double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
     return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(
       minimumOutdoorDryBulbTemperatureforCompressorOperation);
+  }
+
+  boost::optional<Curve> CoilCoolingDXMultiSpeed::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->crankcaseHeaterCapacityFunctionofTemperatureCurve();
+  }
+
+  bool CoilCoolingDXMultiSpeed::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setCrankcaseHeaterCapacityFunctionofTemperatureCurve(curve);
+  }
+
+  void CoilCoolingDXMultiSpeed::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+    getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
   }
 
   unsigned CoilCoolingDXMultiSpeed::numberOfStages() const {

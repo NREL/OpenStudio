@@ -77,6 +77,11 @@ namespace energyplus {
       idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedAirFlowRate, "Autosize");
     }
 
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                        modelObject.ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017());
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                        modelObject.ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023());
+
     // Unit Internal Static Air Pressure
     {
       auto value = modelObject.unitInternalStaticAirPressure();
@@ -157,6 +162,11 @@ namespace energyplus {
     } else {
       idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::LowSpeedRatedAirFlowRate, "Autosize");
     }
+
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedRatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                        modelObject.ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017());
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedRatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                        modelObject.ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023());
 
     //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
     cq = modelObject.lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve();

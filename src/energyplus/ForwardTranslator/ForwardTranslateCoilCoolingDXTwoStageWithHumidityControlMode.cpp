@@ -69,6 +69,14 @@ namespace energyplus {
       idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::CrankcaseHeaterCapacity, value);
     }
 
+    // CrankcaseHeaterCapacityFunctionofTemperatureCurveName
+    if (auto crankCurve_ = modelObject.crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+      if (auto curve_ = translateAndMapModelObject(*crankCurve_)) {
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName,
+                            curve_->nameString());
+      }
+    }
+
     // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
     {
       auto value = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
