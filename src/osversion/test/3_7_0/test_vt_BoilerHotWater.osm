@@ -1,25 +1,34 @@
 
 OS:Version,
-  {61d25577-0980-413b-89cb-64eb0bfdfac0}, !- Handle
+  {da82353f-7f06-44d3-9003-9db5586aec1f}, !- Handle
   3.6.1;                                  !- Version Identifier
 
 OS:Boiler:HotWater,
-  {a1f52bc9-14e1-4531-9251-cab1cb19ba42}, !- Handle
+  {4b65bc89-fbb7-423b-8b56-bfe9ec5ebd7f}, !- Handle
   Boiler Hot Water 1,                     !- Name
-  ,                                       !- Fuel Type
-  ,                                       !- Nominal Capacity {W}
-  ,                                       !- Nominal Thermal Efficiency
-  ,                                       !- Efficiency Curve Temperature Evaluation Variable
-  ,                                       !- Normalized Boiler Efficiency Curve Name
-  ,                                       !- Design Water Flow Rate {m3/s}
-  ,                                       !- Minimum Part Load Ratio
-  ,                                       !- Maximum Part Load Ratio
-  ,                                       !- Optimum Part Load Ratio
+  Propane,                                !- Fuel Type
+  1,                                      !- Nominal Capacity {W}
+  0.9,                                    !- Nominal Thermal Efficiency
+  EnteringBoiler,                         !- Efficiency Curve Temperature Evaluation Variable
+  {9f578c74-3ee0-4edc-9521-b8ae5fb65fe7}, !- Normalized Boiler Efficiency Curve Name
+  3,                                      !- Design Water Flow Rate {m3/s}
+  4,                                      !- Minimum Part Load Ratio
+  5,                                      !- Maximum Part Load Ratio
+  6,                                      !- Optimum Part Load Ratio
   ,                                       !- Boiler Water Inlet Node Name
   ,                                       !- Boiler Water Outlet Node Name
-  99,                                     !- Water Outlet Upper Temperature Limit {C}
-  ConstantFlow,                           !- Boiler Flow Mode
-  0,                                      !- Parasitic Electric Load {W}
-  1,                                      !- Sizing Factor
-  General;                                !- End-Use Subcategory
+  7,                                      !- Water Outlet Upper Temperature Limit {C}
+  LeavingSetpointModulated,               !- Boiler Flow Mode
+  8,                                      !- Parasitic Electric Load {W}
+  9,                                      !- Sizing Factor
+  Test;                                   !- End-Use Subcategory
+
+OS:Curve:Quadratic,
+  {9f578c74-3ee0-4edc-9521-b8ae5fb65fe7}, !- Handle
+  Curve Quadratic 1,                      !- Name
+  0,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  1,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 

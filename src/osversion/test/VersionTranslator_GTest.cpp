@@ -3453,22 +3453,22 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_BoilerHotWater) {
   ASSERT_EQ(1u, bhws.size());
   WorkspaceObject bhw = bhws[0];
 
-  EXPECT_EQ("Boiler Hot Water 1", bhw.getString(1).get());  // Name
-  EXPECT_TRUE(bhw.isEmpty(2));                              // Fuel Type
-  EXPECT_TRUE(bhw.isEmpty(3));                              // Nominal Capacity
-  EXPECT_TRUE(bhw.isEmpty(4));                              // Nominal Thermal Efficiency
-  EXPECT_TRUE(bhw.isEmpty(5));                              // Efficiency Curve Temperature Evaluation Variable
-  EXPECT_TRUE(bhw.isEmpty(6));                              // Normalized Boiler Efficiency Curve Name
-  EXPECT_TRUE(bhw.isEmpty(7));                              // Design Water Flow Rate
-  EXPECT_TRUE(bhw.isEmpty(8));                              // Minimum Part Load Ratio
-  EXPECT_TRUE(bhw.isEmpty(9));                              // Maximum Part Load Ratio
-  EXPECT_TRUE(bhw.isEmpty(10));                             // Optimum Part Load Ratio
-  EXPECT_TRUE(bhw.isEmpty(11));                             // Boiler Water Inlet Node Name
-  EXPECT_TRUE(bhw.isEmpty(12));                             // Boiler Water Outlet Node Name
-  EXPECT_EQ(99, bhw.getDouble(13).get());                   // Water Outlet Upper Temperature Limit
-  EXPECT_EQ("ConstantFlow", bhw.getString(14).get());       // Boiler Flow Mode
-  EXPECT_EQ(0, bhw.getDouble(15).get());                    // On Cycle Parasitic Electric Load
-  EXPECT_EQ(0, bhw.getDouble(16).get());                    // Off Cycle Parasitic Fuel Load
-  EXPECT_EQ(1, bhw.getDouble(17).get());                    // Sizing Factor
-  EXPECT_EQ("General", bhw.getString(18).get());            // End-Use Subcategory
+  EXPECT_EQ("Boiler Hot Water 1", bhw.getString(1).get());         // Name
+  EXPECT_TRUE("Propane", bhw.getString(2));                        // Fuel Type
+  EXPECT_TRUE(1, bhw.getDouble(3));                                // Nominal Capacity
+  EXPECT_TRUE(0.9, bhw.getDouble(4));                              // Nominal Thermal Efficiency
+  EXPECT_TRUE("EnteringBoiler", bhw.getString(5));                 // Efficiency Curve Temperature Evaluation Variable
+  EXPECT_NE("", bhw.getString(6));                                 // Normalized Boiler Efficiency Curve Name
+  EXPECT_TRUE(3, bhw.getDouble(7));                                // Design Water Flow Rate
+  EXPECT_TRUE(4, bhw.getDouble(8));                                // Minimum Part Load Ratio
+  EXPECT_TRUE(5, bhw.getDouble(9));                                // Maximum Part Load Ratio
+  EXPECT_TRUE(6, bhw.getDouble(10));                               // Optimum Part Load Ratio
+  EXPECT_TRUE(bhw.isEmpty(11));                                    // Boiler Water Inlet Node Name
+  EXPECT_TRUE(bhw.isEmpty(12));                                    // Boiler Water Outlet Node Name
+  EXPECT_EQ(7, bhw.getDouble(13).get());                           // Water Outlet Upper Temperature Limit
+  EXPECT_EQ("LeavingSetpointModulated", bhw.getString(14).get());  // Boiler Flow Mode
+  EXPECT_EQ(8, bhw.getDouble(15).get());                           // On Cycle Parasitic Electric Load
+  EXPECT_EQ(0, bhw.getDouble(16).get());                           // Off Cycle Parasitic Fuel Load
+  EXPECT_EQ(9, bhw.getDouble(17).get());                           // Sizing Factor
+  EXPECT_EQ("Test", bhw.getString(18).get());                      // End-Use Subcategory
 }
