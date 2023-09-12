@@ -39,8 +39,10 @@
 #include <OpenStudio.hxx>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <string>
+#include <tuple>
 #include <vector>
 
 using namespace openstudio;
@@ -545,41 +547,35 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
     {"PropaneGas", "Propane"},
   });
 
-  const std::multimap<std::string, int> fuelTypeRenamesMap({
-    {"OS:OtherEquipment", 6},                           // Fuel Type
-    {"OS:Exterior:FuelEquipment", 4},                   // Fuel Use Type
-    {"OS:AirConditioner:VariableRefrigerantFlow", 67},  // Fuel Type
-    {"OS:Boiler:Steam", 2},                             // Fuel Type
-    {"OS:Coil:Cooling:DX:MultiSpeed", 16},              // Fuel Type
-    {"OS:Coil:Heating:Gas", 11},                        // Fuel Type
-    {"OS:Coil:Heating:DX:MultiSpeed", 16},              // Fuel Type
-    {"OS:WaterHeater:Mixed", 11},                       // Heater Fuel Type
-    {"OS:WaterHeater:Mixed", 15},                       // Off Cycle Parasitic Fuel Type
-    {"OS:WaterHeater:Mixed", 18},                       // On Cycle Parasitic Fuel Type
-    {"OS:WaterHeater:Stratified", 17},                  // Heater Fuel Type
-    {"OS:WaterHeater:Stratified", 20},                  // Off Cycle Parasitic Fuel Type
-    {"OS:WaterHeater:Stratified", 24},                  // On Cycle Parasitic Fuel Type
-    {"OS:Generator:MicroTurbine", 13},                  // Fuel Type
-    // {"OS:LifeCycleCost:UsePriceEscalation", 2},  // Resource - UNUSED!
-    {"OS:Meter:Custom", 2},                                  // Fuel Type
-    {"OS:Meter:CustomDecrement", 2},                         // Fuel Type
-    {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
-    {"OS:Boiler:HotWater", 2},                               // Fuel Type
-  });
+  // iddname, 291 index, current index
+  const std::array<std::tuple<std::string, int, int>, 18> fuelTypeRenamesMap{{
+    {"OS:OtherEquipment", 6, 6},                            // Fuel Type
+    {"OS:Exterior:FuelEquipment", 4, 4},                    // Fuel Use Type
+    {"OS:AirConditioner:VariableRefrigerantFlow", 67, 67},  // Fuel Type
+    {"OS:Boiler:Steam", 2, 2},                              // Fuel Type
+    {"OS:Coil:Cooling:DX:MultiSpeed", 16, 18},              // Fuel Type
+    {"OS:Coil:Heating:Gas", 11, 11},                        // Fuel Type
+    {"OS:Coil:Heating:DX:MultiSpeed", 16, 17},              // Fuel Type
+    {"OS:WaterHeater:Mixed", 11, 11},                       // Heater Fuel Type
+    {"OS:WaterHeater:Mixed", 15, 15},                       // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Mixed", 18, 18},                       // On Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 17, 17},                  // Heater Fuel Type
+    {"OS:WaterHeater:Stratified", 20, 20},                  // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 24, 24},                  // On Cycle Parasitic Fuel Type
+    {"OS:Generator:MicroTurbine", 13, 13},                  // Fuel Type
+    // {"OS:LifeCycleCost:UsePriceEscalation", 2,2},  // Resource - UNUSED!
+    {"OS:Meter:Custom", 2, 2},                                  // Fuel Type
+    {"OS:Meter:CustomDecrement", 2, 2},                         // Fuel Type
+    {"OS:EnergyManagementSystem:MeteredOutputVariable", 5, 5},  // Resource Type
+    {"OS:Boiler:HotWater", 2, 2},                               // Fuel Type
+  }};
 
-  for (const auto& mapEntry : fuelTypeRenamesMap) {
-    const std::string iddname = mapEntry.first;
-    const int fieldIndex = mapEntry.second;
+  for (const auto& [iddname, oldFieldIndex, newFieldIndex] : fuelTypeRenamesMap) {
 
-    std::string old_fuelType = _oldIdfFile->getObjectsByType(oldIddFile.getObject(iddname).get())[0].getString(fieldIndex).get();
+    std::string old_fuelType = _oldIdfFile->getObjectsByType(oldIddFile.getObject(iddname).get())[0].getString(oldFieldIndex).get();
     // Check that the test model (in 2.9.1), actually has bad starting fuels
     EXPECT_TRUE(replaceFuelTypesMap.find(old_fuelType) != replaceFuelTypesMap.end());
 
-    int newFieldIndex = fieldIndex;
-    if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {
-      // Fuel Type, was 16 on 3.0.0, 17 on 3.0.1
-      newFieldIndex = 17;
-    }
     std::string new_fuelType = model->getObjectsByType(iddname)[0].getString(newFieldIndex).get();
     EXPECT_NE(old_fuelType, new_fuelType);
     EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType) << "Failed for " << iddname;
@@ -754,8 +750,8 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   EXPECT_EQ(1000.0, c.getDouble(17).get());
 
   // Last field
-  ASSERT_TRUE(c.getTarget(32));
-  EXPECT_EQ("Always Off Discrete", c.getTarget(32)->nameString());
+  ASSERT_TRUE(c.getTarget(33));
+  EXPECT_EQ("Always Off Discrete", c.getTarget(33)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidityControlMode_minOATCompressor) {
@@ -771,19 +767,19 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidity
   WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode")[0];
 
   // Field before insertion point is unused (storage tank)
-  EXPECT_FALSE(c.getString(14, false, true));
+  EXPECT_FALSE(c.getString(15, false, true));
 
-  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(15));
-  EXPECT_EQ(-25.0, c.getDouble(15).get());
+  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default): 3.7.0 a new field was inserted before
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(-25.0, c.getDouble(16).get());
 
   // After should be 100.0
-  ASSERT_TRUE(c.getDouble(16));
-  EXPECT_EQ(100.0, c.getDouble(16).get());
+  ASSERT_TRUE(c.getDouble(17));
+  EXPECT_EQ(100.0, c.getDouble(17).get());
 
   // Last field
-  ASSERT_TRUE(c.getDouble(17));
-  EXPECT_EQ(3.0, c.getDouble(17).get());
+  ASSERT_TRUE(c.getDouble(18));
+  EXPECT_EQ(3.0, c.getDouble(18).get());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCompressor) {
@@ -811,8 +807,8 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCom
   EXPECT_FALSE(c.getString(8, false, true));
 
   // Last field
-  ASSERT_TRUE(c.getString(17, false, true));
-  EXPECT_EQ("Electricity", c.getString(17, false, true).get());
+  ASSERT_TRUE(c.getString(18, false, true));
+  EXPECT_EQ("Electricity", c.getString(18, false, true).get());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOATCompressor) {
@@ -829,19 +825,19 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOAT
   WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed")[0];
 
   // Field before insertion point
-  ASSERT_TRUE(c.getDouble(14));
-  EXPECT_EQ(11.0, c.getDouble(14).get());
+  ASSERT_TRUE(c.getDouble(18));
+  EXPECT_EQ(11.0, c.getDouble(18).get());
 
   // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(15));
-  EXPECT_EQ(-25.0, c.getDouble(15).get());
+  ASSERT_TRUE(c.getDouble(19));
+  EXPECT_EQ(-25.0, c.getDouble(19).get());
 
   // After is unused (storage tank)
-  EXPECT_FALSE(c.getString(16, false, true));
+  EXPECT_FALSE(c.getString(20, false, true));
 
   // Last field is the SpeedDataList
-  ASSERT_TRUE(c.getTarget(21));
-  EXPECT_EQ("Coil Cooling DX Variable Speed 1 Speed Data List", c.getTarget(21)->nameString());
+  ASSERT_TRUE(c.getTarget(25));
+  EXPECT_EQ("Coil Cooling DX Variable Speed 1 Speed Data List", c.getTarget(25)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompressor) {
@@ -867,26 +863,26 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   EXPECT_EQ(773.3, c.getDouble(7).get());
 
   // After is the inlet node, via a Connection
-  ASSERT_TRUE(c.getTarget(8));
+  ASSERT_TRUE(c.getTarget(10));
   // We have to resolve to computing or it'll fail in > 3.1.0, since we removed the Name field
-  EXPECT_EQ("Coil Inlet Node Name", c.getTarget(8)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
+  EXPECT_EQ("Coil Inlet Node Name", c.getTarget(10)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
 
   // Second insertion
   // Field before insertion point
-  ASSERT_TRUE(c.getString(22, false, true));
-  EXPECT_EQ("EvaporativelyCooled", c.getString(22, false, true).get());
+  ASSERT_TRUE(c.getString(26, false, true));
+  EXPECT_EQ("EvaporativelyCooled", c.getString(26, false, true).get());
 
   // Insertion point is at index 23, and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(23));
-  EXPECT_EQ(-25.0, c.getDouble(23).get());
+  ASSERT_TRUE(c.getDouble(27));
+  EXPECT_EQ(-25.0, c.getDouble(27).get());
 
   // After
-  ASSERT_TRUE(c.getDouble(24));
-  EXPECT_EQ(0.5, c.getDouble(24).get());
+  ASSERT_TRUE(c.getDouble(28));
+  EXPECT_EQ(0.5, c.getDouble(28).get());
 
   // Last field is a schedule
-  ASSERT_TRUE(c.getTarget(34));
-  EXPECT_EQ("Basin Heater Operating Schedule Name", c.getTarget(34)->nameString());
+  ASSERT_TRUE(c.getTarget(38));
+  EXPECT_EQ("Basin Heater Operating Schedule Name", c.getTarget(38)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AvailabilityManagerHybridVentilation) {
@@ -1381,7 +1377,7 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   // Field before: Rated COP
   EXPECT_EQ(4.2, coil.getDouble(10).get());
 
-  // 3.4.0 to 3.5.0: (3) fields added
+  // 3.4.0 to 3.5.0: (3) fields added, 3.7.0 changed again
 
   // Curves
   {
@@ -1447,10 +1443,10 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   // Field after: Nominal Time for Condensate Removal to Begin
-  EXPECT_EQ(360.0, coil.getDouble(17).get());
+  EXPECT_EQ(360.0, coil.getDouble(18).get());
 
   // Last field
-  EXPECT_EQ(0.1, coil.getDouble(18).get());
+  EXPECT_EQ(0.1, coil.getDouble(19).get());
 }
 
 TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
@@ -1803,7 +1799,7 @@ TEST_F(OSVersionFixture, update_3_3_0_to_3_4_0_CoilHeatingDXMultiSpeed) {
   ASSERT_EQ(1u, coils.size());
   WorkspaceObject coil = coils[0];
 
-  ASSERT_EQ(22u, coil.numFields());
+  ASSERT_EQ(23u, coil.numFields());
   ASSERT_EQ(4u, coil.numExtensibleGroups());
 
   ASSERT_EQ(4u, model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed:StageData").size());
@@ -2043,7 +2039,8 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXSingleSpeed) {
     EXPECT_EQ("Autosize", cc.getString(24).get());
     EXPECT_EQ("Autosize", cc.getString(25).get());
     EXPECT_EQ(26, cc.getDouble(26).get());
-    EXPECT_EQ(27, cc.getDouble(27).get());
+    // 3.7.0, inserted crankcase curve
+    EXPECT_EQ(27, cc.getDouble(28).get());
 
     EXPECT_EQ(773.3, cc.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
     EXPECT_EQ(934.4, cc.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
@@ -2062,7 +2059,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXSingleSpeed) {
     EXPECT_EQ("Autosize", cc.getString(24).get());
     EXPECT_EQ("Autosize", cc.getString(25).get());
     EXPECT_EQ(0, cc.getInt(26).get());
-    EXPECT_EQ(0, cc.getInt(27).get());
+    EXPECT_EQ(0, cc.getInt(28).get());
 
     EXPECT_EQ(773.3, cc.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
     EXPECT_EQ(934.4, cc.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
