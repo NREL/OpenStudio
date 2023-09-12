@@ -385,7 +385,7 @@ namespace model {
     bool CoilHeatingDXVariableSpeed_Impl::addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
       auto modelObjectList = speedDataList();
       if (modelObjectList) {
-        modelObjectList->addModelObject(speed);
+        return modelObjectList->addModelObject(speed);
       }
       return false;
     }

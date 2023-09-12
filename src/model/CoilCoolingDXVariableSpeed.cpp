@@ -495,12 +495,11 @@ namespace model {
     }
 
     bool CoilCoolingDXVariableSpeed_Impl::addSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed) {
-      bool result = false;
       auto modelObjectList = speedDataList();
       if (modelObjectList) {
-        result = modelObjectList->addModelObject(speed);
+        return modelObjectList->addModelObject(speed);
       }
-      return result;
+      return false;
     }
 
     void CoilCoolingDXVariableSpeed_Impl::removeSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed) {
