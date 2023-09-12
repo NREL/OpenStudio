@@ -12,8 +12,8 @@
 namespace openstudio {
 namespace model {
 
-  class Curve;
   class CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData;
+  class Curve;
   class ModelObjectList;
 
   namespace detail {
@@ -91,6 +91,8 @@ namespace model {
 
       double crankcaseHeaterCapacity() const;
 
+      boost::optional<Curve> crankcaseHeaterCapacityFunctionofTemperatureCurve() const;
+
       double maximumAmbientTemperatureforCrankcaseHeaterOperation() const;
 
       std::string evaporatorAirTemperatureTypeforCurveObjects() const;
@@ -129,6 +131,9 @@ namespace model {
       bool setFractionofCondenserPumpHeattoWater(double fractionofCondenserPumpHeattoWater);
 
       bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+
+      bool setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve);
+      void resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
 
       bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
 

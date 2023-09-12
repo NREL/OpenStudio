@@ -634,6 +634,58 @@ namespace model {
       return result;
     }
 
+    double CoilCoolingDXTwoSpeed_Impl::ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017(
+      double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017) {
+      bool result = setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017,
+                              ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017);
+      return result;
+    }
+
+    double CoilCoolingDXTwoSpeed_Impl::ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023(
+      double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023) {
+      bool result = setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023,
+                              ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023);
+      return result;
+    }
+
+    double CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017(
+      double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017) {
+      bool result = setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017,
+                              ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017);
+      return result;
+    }
+
+    double CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023(
+      double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023) {
+      bool result = setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023,
+                              ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023);
+      return result;
+    }
+
     bool CoilCoolingDXTwoSpeed_Impl::addToNode(Node& node) {
       if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
         if (!airLoop->demandComponent(node.handle())) {
@@ -836,6 +888,10 @@ namespace model {
     setRatedHighSpeedCOP(3.0);
     //  N4 , \field Rated High Speed Air Flow Rate
     setRatedHighSpeedAirFlowRate(OptionalDouble());  //autosize
+
+    setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
+
     //  A5 , \field Total Cooling Capacity Function of Temperature Curve Name
     setTotalCoolingCapacityFunctionOfTemperatureCurve(coolingCurveFofTemp);
     //  A6 , \field Total Cooling Capacity Function of Flow Fraction Curve Name
@@ -853,7 +909,11 @@ namespace model {
     //  N7 , \field Rated Low Speed COP
     setRatedLowSpeedCOP(3.0);
     //  N8 , \field Rated Low Speed Air Flow Rate
-    setRatedHighSpeedAirFlowRate(OptionalDouble());  //autosize
+    setRatedLowSpeedAirFlowRate(OptionalDouble());  //autosize
+
+    setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
+
     //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
     setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(lowSpeedCoolingCurveFofTemp);
     //  A11, \field Low Speed Energy Input Ratio Function of Temperature Curve Name
@@ -965,6 +1025,8 @@ namespace model {
     setRatedHighSpeedSensibleHeatRatio(OptionalDouble());     //autosize
     setRatedHighSpeedCOP(3.0);
     setRatedHighSpeedAirFlowRate(OptionalDouble());  //autosize
+    setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
     setTotalCoolingCapacityFunctionOfTemperatureCurve(coolingCurveFofTemp);
     setTotalCoolingCapacityFunctionOfFlowFractionCurve(coolingCurveFofFlow);
     setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
@@ -973,7 +1035,9 @@ namespace model {
     setRatedLowSpeedTotalCoolingCapacity(OptionalDouble());  //autosize
     setRatedLowSpeedSensibleHeatRatio(0.69);                 //autosize
     setRatedLowSpeedCOP(3.0);
-    setRatedHighSpeedAirFlowRate(OptionalDouble());  //autosize
+    setRatedLowSpeedAirFlowRate(OptionalDouble());  //autosize
+    setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
     setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(coolingLowSpdCurveFofTemp);
     setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(energyLowSpdInputRatioFofTemp);
     setCondenserType("AirCooled");
@@ -1305,6 +1369,42 @@ namespace model {
 
   bool CoilCoolingDXTwoSpeed::setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure) {
     return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setUnitInternalStaticAirPressure(unitInternalStaticAirPressure);
+  }
+
+  double CoilCoolingDXTwoSpeed::ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017();
+  }
+
+  bool CoilCoolingDXTwoSpeed::setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017) {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017(
+      ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2017);
+  }
+
+  double CoilCoolingDXTwoSpeed::ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023();
+  }
+
+  bool CoilCoolingDXTwoSpeed::setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023) {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023(
+      ratedHighSpeedEvaporatorFanPowerPerVolumeFlowRate2023);
+  }
+
+  double CoilCoolingDXTwoSpeed::ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017();
+  }
+
+  bool CoilCoolingDXTwoSpeed::setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017) {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017(
+      ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2017);
+  }
+
+  double CoilCoolingDXTwoSpeed::ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023();
+  }
+
+  bool CoilCoolingDXTwoSpeed::setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023) {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023(
+      ratedLowSpeedEvaporatorFanPowerPerVolumeFlowRate2023);
   }
 
   boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedTotalCoolingCapacity() const {

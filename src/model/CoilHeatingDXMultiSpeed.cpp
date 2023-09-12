@@ -289,6 +289,21 @@ namespace model {
       return result;
     }
 
+    boost::optional<Curve> CoilHeatingDXMultiSpeed_Impl::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Heating_DX_MultiSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName);
+    }
+
+    bool CoilHeatingDXMultiSpeed_Impl::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+      const bool result = setPointer(OS_Coil_Heating_DX_MultiSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve.handle());
+      return result;
+    }
+
+    void CoilHeatingDXMultiSpeed_Impl::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+      const bool result = setString(OS_Coil_Heating_DX_MultiSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
     unsigned CoilHeatingDXMultiSpeed_Impl::inletPort() const {
       return OS_Coil_Heating_DX_MultiSpeedFields::AirInletNodeName;
     }
@@ -312,6 +327,10 @@ namespace model {
 
       if (auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve()) {
         children.push_back(curve.get());
+      }
+
+      if (auto c_ = crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+        children.emplace_back(std::move(*c_));
       }
 
       std::vector<AirflowNetworkEquivalentDuct> myAFNItems =
@@ -721,6 +740,18 @@ namespace model {
 
   bool CoilHeatingDXMultiSpeed::setRegionnumberforCalculatingHSPF(int regionnumberforCalculatingHSPF) {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setRegionnumberforCalculatingHSPF(regionnumberforCalculatingHSPF);
+  }
+
+  boost::optional<Curve> CoilHeatingDXMultiSpeed::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->crankcaseHeaterCapacityFunctionofTemperatureCurve();
+  }
+
+  bool CoilHeatingDXMultiSpeed::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setCrankcaseHeaterCapacityFunctionofTemperatureCurve(curve);
+  }
+
+  void CoilHeatingDXMultiSpeed::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+    getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
   }
 
   unsigned CoilHeatingDXMultiSpeed::numberOfStages() const {

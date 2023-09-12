@@ -192,6 +192,32 @@ namespace model {
       return result;
     }
 
+    double CoilCoolingDXVariableSpeedSpeedData_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool
+      CoilCoolingDXVariableSpeedSpeedData_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017) {
+      bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                              ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+      return result;
+    }
+
+    double CoilCoolingDXVariableSpeedSpeedData_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool
+      CoilCoolingDXVariableSpeedSpeedData_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023) {
+      bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                              ratedEvaporatorFanPowerPerVolumeFlowRate2023);
+      return result;
+    }
+
     boost::optional<Curve> CoilCoolingDXVariableSpeedSpeedData_Impl::optionalTotalCoolingCapacityFunctionofTemperatureCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofTemperatureCurveName);
@@ -280,6 +306,10 @@ namespace model {
     OS_ASSERT(ok);
     ok = setReferenceUnitRatedAirFlowRate(0.944);
     OS_ASSERT(ok);
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    OS_ASSERT(ok);
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
+    OS_ASSERT(ok);
     ok = setTotalCoolingCapacityFunctionofTemperatureCurve(cooling_curve_1);
     OS_ASSERT(ok);
     ok = setTotalCoolingCapacityFunctionofAirFlowFractionCurve(cooling_curve_2);
@@ -306,6 +336,10 @@ namespace model {
     ok = setReferenceUnitGrossRatedCoolingCOP(3.980488789);
     OS_ASSERT(ok);
     ok = setReferenceUnitRatedAirFlowRate(0.944);
+    OS_ASSERT(ok);
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    OS_ASSERT(ok);
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
     OS_ASSERT(ok);
     ok = setTotalCoolingCapacityFunctionofTemperatureCurve(totalCoolingCapacityFunctionofTemperatureCurve);
     OS_ASSERT(ok);
@@ -412,6 +446,24 @@ namespace model {
 
   bool CoilCoolingDXVariableSpeedSpeedData::setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve) {
     return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setEnergyInputRatioFunctionofAirFlowFractionCurve(curve);
+  }
+
+  double CoilCoolingDXVariableSpeedSpeedData::ratedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+    return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
+  }
+
+  bool CoilCoolingDXVariableSpeedSpeedData::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017) {
+    return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(
+      ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+  }
+
+  double CoilCoolingDXVariableSpeedSpeedData::ratedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+    return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2023();
+  }
+
+  bool CoilCoolingDXVariableSpeedSpeedData::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023) {
+    return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2023(
+      ratedEvaporatorFanPowerPerVolumeFlowRate2023);
   }
 
   /// @cond

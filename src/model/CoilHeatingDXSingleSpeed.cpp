@@ -479,6 +479,21 @@ namespace model {
       return accepted;
     }
 
+    boost::optional<Curve> CoilHeatingDXSingleSpeed_Impl::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Heating_DX_SingleSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName);
+    }
+
+    bool CoilHeatingDXSingleSpeed_Impl::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+      const bool result = setPointer(OS_Coil_Heating_DX_SingleSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve.handle());
+      return result;
+    }
+
+    void CoilHeatingDXSingleSpeed_Impl::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+      const bool result = setString(OS_Coil_Heating_DX_SingleSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
     ModelObject CoilHeatingDXSingleSpeed_Impl::clone(Model model) const {
       auto newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingDXSingleSpeed>();
 
@@ -552,6 +567,9 @@ namespace model {
       result.push_back(energyInputRatioFunctionofTemperatureCurve());
       result.push_back(energyInputRatioFunctionofFlowFractionCurve());
       result.push_back(partLoadFractionCorrelationCurve());
+      if (auto c_ = crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+        result.emplace_back(std::move(*c_));
+      }
 
       std::vector<AirflowNetworkEquivalentDuct> myAFNItems =
         getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
@@ -1078,6 +1096,18 @@ namespace model {
 
   bool CoilHeatingDXSingleSpeed::setRatedSupplyFanPowerPerVolumeFlowRate2023(double ratedSupplyFanPowerPerVolumeFlowRate2023) {
     return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate2023(ratedSupplyFanPowerPerVolumeFlowRate2023);
+  }
+
+  boost::optional<Curve> CoilHeatingDXSingleSpeed::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->crankcaseHeaterCapacityFunctionofTemperatureCurve();
+  }
+
+  bool CoilHeatingDXSingleSpeed::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setCrankcaseHeaterCapacityFunctionofTemperatureCurve(curve);
+  }
+
+  void CoilHeatingDXSingleSpeed::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+    getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
   }
 
   AirflowNetworkEquivalentDuct CoilHeatingDXSingleSpeed::getAirflowNetworkEquivalentDuct(double length, double diameter) {

@@ -107,6 +107,8 @@ namespace model {
 
       double crankcaseHeaterCapacity() const;
 
+      boost::optional<Curve> crankcaseHeaterCapacityFunctionofTemperatureCurve() const;
+
       double maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation() const;
 
       double basinHeaterCapacity() const;
@@ -204,6 +206,9 @@ namespace model {
       bool setCrankcaseHeaterCapacity(boost::optional<double> value);
 
       bool setCrankcaseHeaterCapacity(double value);
+
+      bool setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve);
+      void resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
 
       bool setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(boost::optional<double> value);
 

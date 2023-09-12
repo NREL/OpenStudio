@@ -277,6 +277,22 @@ namespace model {
       return result;
     }
 
+    boost::optional<Curve> CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName);
+    }
+
+    bool CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+      const bool result =
+        setPointer(OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve.handle());
+      return result;
+    }
+
+    void CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+      const bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
     boost::optional<Curve> CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::optionalHeatingCapacityFunctionofTemperatureCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::HeatingCapacityFunctionofTemperatureCurveName);
@@ -561,6 +577,18 @@ namespace model {
 
   bool CoilWaterHeatingAirToWaterHeatPumpWrapped::setPartLoadFractionCorrelationCurve(const Curve& curve) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->setPartLoadFractionCorrelationCurve(curve);
+  }
+
+  boost::optional<Curve> CoilWaterHeatingAirToWaterHeatPumpWrapped::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->crankcaseHeaterCapacityFunctionofTemperatureCurve();
+  }
+
+  bool CoilWaterHeatingAirToWaterHeatPumpWrapped::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->setCrankcaseHeaterCapacityFunctionofTemperatureCurve(curve);
+  }
+
+  void CoilWaterHeatingAirToWaterHeatPumpWrapped::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+    getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
   }
 
   /// @cond

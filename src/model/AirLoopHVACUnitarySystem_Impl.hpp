@@ -162,22 +162,6 @@ namespace model {
 
       boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName() const;
 
-      double maximumCyclingRate() const;
-
-      bool isMaximumCyclingRateDefaulted() const;
-
-      double heatPumpTimeConstant() const;
-
-      bool isHeatPumpTimeConstantDefaulted() const;
-
-      double fractionofOnCyclePowerUse() const;
-
-      bool isFractionofOnCyclePowerUseDefaulted() const;
-
-      double heatPumpFanDelayTime() const;
-
-      bool isHeatPumpFanDelayTimeDefaulted() const;
-
       double ancilliaryOnCycleElectricPower() const;
 
       bool isAncilliaryOnCycleElectricPowerDefaulted() const;
@@ -367,22 +351,6 @@ namespace model {
       bool setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName);
 
       void resetOutdoorDryBulbTemperatureSensorNodeName();
-
-      bool setMaximumCyclingRate(double maximumCyclingRate);
-
-      void resetMaximumCyclingRate();
-
-      bool setHeatPumpTimeConstant(double heatPumpTimeConstant);
-
-      void resetHeatPumpTimeConstant();
-
-      bool setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse);
-
-      void resetFractionofOnCyclePowerUse();
-
-      bool setHeatPumpFanDelayTime(double heatPumpFanDelayTime);
-
-      void resetHeatPumpFanDelayTime();
 
       bool setAncilliaryOnCycleElectricPower(double ancilliaryOnCycleElectricPower);
 

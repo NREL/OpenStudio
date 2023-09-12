@@ -1,0 +1,882 @@
+
+OS:Version,
+  {4d06ab1f-b0f1-4147-a478-167b70304d3d}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:Schedule:Constant,
+  {7974f778-9352-4eb0-993b-733e53ba308c}, !- Handle
+  BasinHeaterOpSch,                       !- Name
+  {c64df923-80ee-4126-a2b6-0eccee985830}, !- Schedule Type Limits Name
+  0;                                      !- Value
+
+OS:Coil:Cooling:DX:CurveFit:OperatingMode,
+  {fcaa83a7-e486-4a70-b99a-6535d069fc8c}, !- Handle
+  Coil Cooling DX Curve Fit Operating Mode 1, !- Name
+  autosize,                               !- Rated Gross Total Cooling Capacity {W}
+  autosize,                               !- Rated Evaporator Air Flow Rate {m3/s}
+  autosize,                               !- Rated Condenser Air Flow Rate {m3/s}
+  0,                                      !- Maximum Cycling Rate {cycles/hr}
+  0,                                      !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  0,                                      !- Latent Capacity Time Constant {s}
+  0,                                      !- Nominal Time for Condensate Removal to Begin {s}
+  No,                                     !- Apply Latent Degradation to Speeds Greater than 1
+  AirCooled,                              !- Condenser Type
+  autosize,                               !- Nominal Evaporative Condenser Pump Power {W}
+  ;                                       !- Nominal Speed Number
+
+OS:Coil:Cooling:DX:CurveFit:Performance,
+  {236295dd-63e8-4c9f-903f-d3953726d4da}, !- Handle
+  Coil Cooling DX Curve Fit Performance 1, !- Name
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  10,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  773.3,                                  !- Unit Internal Static Air Pressure {Pa}
+  Discrete,                               !- Capacity Control Method
+  0,                                      !- Evaporative Condenser Basin Heater Capacity {W/K}
+  2,                                      !- Evaporative Condenser Basin Heater Setpoint Temperature {C}
+  {a71d60ac-65ea-4957-909e-5c661ac66cd2}, !- Evaporative Condenser Basin Heater Operating Schedule
+  Electricity,                            !- Compressor Fuel Type
+  {fcaa83a7-e486-4a70-b99a-6535d069fc8c}, !- Base Operating Mode
+  ,                                       !- Alternative Operating Mode 1
+  {4538e4e2-40b0-4fa7-9124-09e99f6c1a0c}; !- Alternative Operating Mode 2
+
+OS:Schedule:Constant,
+  {a71d60ac-65ea-4957-909e-5c661ac66cd2}, !- Handle
+  Always On Discrete,                     !- Name
+  {c64df923-80ee-4126-a2b6-0eccee985830}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {c64df923-80ee-4126-a2b6-0eccee985830}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Coil:Cooling:DX:CurveFit:OperatingMode,
+  {4538e4e2-40b0-4fa7-9124-09e99f6c1a0c}, !- Handle
+  AlternativeOpMode2,                     !- Name
+  autosize,                               !- Rated Gross Total Cooling Capacity {W}
+  autosize,                               !- Rated Evaporator Air Flow Rate {m3/s}
+  autosize,                               !- Rated Condenser Air Flow Rate {m3/s}
+  0,                                      !- Maximum Cycling Rate {cycles/hr}
+  0,                                      !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  0,                                      !- Latent Capacity Time Constant {s}
+  0,                                      !- Nominal Time for Condensate Removal to Begin {s}
+  No,                                     !- Apply Latent Degradation to Speeds Greater than 1
+  AirCooled,                              !- Condenser Type
+  autosize,                               !- Nominal Evaporative Condenser Pump Power {W}
+  ;                                       !- Nominal Speed Number
+
+OS:Coil:Cooling:DX:SingleSpeed,
+  {40d6ebc4-13a5-4c5e-91c1-b46c39b5f080}, !- Handle
+  Coil Cooling DX Single Speed 1,         !- Name
+  {a71d60ac-65ea-4957-909e-5c661ac66cd2}, !- Availability Schedule Name
+  autosize,                               !- Rated Total Cooling Capacity {W}
+  autosize,                               !- Rated Sensible Heat Ratio
+  3,                                      !- Rated COP {W/W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Evaporator Fan Power Per Volume Flow Rate 2017 {W/(m3/s)}
+  934.4,                                  !- Rated Evaporator Fan Power Per Volume Flow Rate 2023 {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {c911ebdd-21b6-403a-9c15-850cd8cc8573}, !- Total Cooling Capacity Function of Temperature Curve Name
+  {3cabbb48-bd01-4953-b5bd-37b06919fba3}, !- Total Cooling Capacity Function of Flow Fraction Curve Name
+  {2297e678-5c33-49b8-9ed8-c1d381cdfcf9}, !- Energy Input Ratio Function of Temperature Curve Name
+  {63d2ec33-370f-44a8-9c5f-0866737497d8}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {dc01896a-a191-463e-befe-e2426b984625}, !- Part Load Fraction Correlation Curve Name
+  -25,                                    !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  0,                                      !- Nominal Time for Condensate Removal to Begin {s}
+  0,                                      !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  0,                                      !- Maximum Cycling Rate {cycles/hr}
+  0,                                      !- Latent Capacity Time Constant {s}
+  ,                                       !- Condenser Air Inlet Node Name
+  AirCooled,                              !- Condenser Type
+  0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
+  autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       !- Supply Water Storage Tank Name
+  ,                                       !- Condensate Collection Water Storage Tank Name
+  0,                                      !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  {7974f778-9352-4eb0-993b-733e53ba308c}; !- Basin Heater Operating Schedule Name
+
+OS:Curve:Biquadratic,
+  {c911ebdd-21b6-403a-9c15-850cd8cc8573}, !- Handle
+  Curve Biquadratic 1,                    !- Name
+  0.942587793,                            !- Coefficient1 Constant
+  0.009543347,                            !- Coefficient2 x
+  0.00068377,                             !- Coefficient3 x**2
+  -0.011042676,                           !- Coefficient4 y
+  5.249e-06,                              !- Coefficient5 y**2
+  -9.72e-06,                              !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {3cabbb48-bd01-4953-b5bd-37b06919fba3}, !- Handle
+  Curve Quadratic 1,                      !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {2297e678-5c33-49b8-9ed8-c1d381cdfcf9}, !- Handle
+  Curve Biquadratic 2,                    !- Name
+  0.342414409,                            !- Coefficient1 Constant
+  0.034885008,                            !- Coefficient2 x
+  -0.0006237,                             !- Coefficient3 x**2
+  0.004977216,                            !- Coefficient4 y
+  0.000437951,                            !- Coefficient5 y**2
+  -0.000728028,                           !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {63d2ec33-370f-44a8-9c5f-0866737497d8}, !- Handle
+  Curve Quadratic 2,                      !- Name
+  1.1552,                                 !- Coefficient1 Constant
+  -0.1808,                                !- Coefficient2 x
+  0.0256,                                 !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {dc01896a-a191-463e-befe-e2426b984625}, !- Handle
+  Curve Quadratic 3,                      !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
+  {fabffc2f-fd64-4317-9469-0f2e140196d1}, !- Handle
+  Coil Cooling DX Two Stage With Humidity Control Mode 1, !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  2,                                      !- Number of Capacity Stages
+  1,                                      !- Number of Enhanced Dehumidification Modes
+  {b0ab1db3-9be6-4a03-826f-ee631c0412e6}, !- Normal Mode Stage 1 Coil Performance
+  {a0768aef-2eca-4b7a-a4bb-89616f830a36}, !- Normal Mode Stage 1 Plus 2 Coil Performance
+  {21b434ff-a70b-4ef8-9803-5ea649ec7f43}, !- Dehumidification Mode 1 Stage 1 Coil Performance
+  {098ce555-1a42-45ac-b3a2-ef8b2b66decc}, !- Dehumidification Mode 1 Stage 1 Plus 2 Coil Performance
+  ,                                       !- Supply Water Storage Tank
+  ,                                       !- Condensate Collection Water Storage Tank
+  -25,                                    !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  0,                                      !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  {7974f778-9352-4eb0-993b-733e53ba308c}; !- Basin Heater Operating Schedule
+
+OS:Curve:Biquadratic,
+  {ba79d3f8-4262-4078-a905-870484ae6204}, !- Handle
+  Curve Biquadratic 3,                    !- Name
+  1.067939449,                            !- Coefficient1 Constant
+  -0.031261829,                           !- Coefficient2 x
+  0.001974308,                            !- Coefficient3 x**2
+  -0.002726426,                           !- Coefficient4 y
+  -5.52654e-05,                           !- Coefficient5 y**2
+  -6.31169e-05,                           !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {168d4cd9-8b81-4d83-8bb1-e94589d1c6ce}, !- Handle
+  Curve Quadratic 4,                      !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {ca4cc185-7493-4bcf-bcc2-51b375bb08ac}, !- Handle
+  Curve Biquadratic 4,                    !- Name
+  0.174059889,                            !- Coefficient1 Constant
+  0.022281508,                            !- Coefficient2 x
+  -0.000134077,                           !- Coefficient3 x**2
+  0.028298025,                            !- Coefficient4 y
+  0.0004851,                              !- Coefficient5 y**2
+  -0.001677095,                           !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {8de19f47-c3e2-462a-ad46-c1c75e6205ec}, !- Handle
+  Curve Quadratic 5,                      !- Name
+  1.1552,                                 !- Coefficient1 Constant
+  -0.1808,                                !- Coefficient2 x
+  0.0256,                                 !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {ce0bbbdb-5ecc-437d-aae0-b8f0d578328a}, !- Handle
+  Curve Quadratic 6,                      !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:CoilPerformance:DX:Cooling,
+  {b0ab1db3-9be6-4a03-826f-ee631c0412e6}, !- Handle
+  Coil Performance DX Cooling 1,          !- Name
+  autosize,                               !- Gross Rated Total Cooling Capacity {W}
+  autosize,                               !- Gross Rated Sensible Heat Ratio
+  3,                                      !- Gross Rated Cooling COP {W/W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  0.5,                                    !- Fraction of Air Flow Bypassed Around Coil
+  {ba79d3f8-4262-4078-a905-870484ae6204}, !- Total Cooling Capacity Function of Temperature Curve
+  {168d4cd9-8b81-4d83-8bb1-e94589d1c6ce}, !- Total Cooling Capacity Function of Flow Fraction Curve
+  {ca4cc185-7493-4bcf-bcc2-51b375bb08ac}, !- Energy Input Ratio Function of Temperature Curve
+  {8de19f47-c3e2-462a-ad46-c1c75e6205ec}, !- Energy Input Ratio Function of Flow Fraction Curve
+  {ce0bbbdb-5ecc-437d-aae0-b8f0d578328a}, !- Part Load Fraction Correlation Curve
+  1000,                                   !- Nominal Time for Condensate Removal to Begin {s}
+  1.5,                                    !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  3,                                      !- Maximum Cycling Rate {cycles/hr}
+  45,                                     !- Latent Capacity Time Constant {s}
+  ,                                       !- Condenser Air Inlet Node
+  AirCooled,                              !- Condenser Type
+  0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
+  autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Sensible Heat Ratio Function of Temperature Curve
+  ;                                       !- Sensible Heat Ratio Function of Flow Fraction Curve
+
+OS:Curve:Biquadratic,
+  {fc653c33-210f-455d-839b-5b7c17b3a95c}, !- Handle
+  Curve Biquadratic 5,                    !- Name
+  1.067939449,                            !- Coefficient1 Constant
+  -0.031261829,                           !- Coefficient2 x
+  0.001974308,                            !- Coefficient3 x**2
+  -0.002726426,                           !- Coefficient4 y
+  -5.52654e-05,                           !- Coefficient5 y**2
+  -6.31169e-05,                           !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {9e4e6a94-e421-4248-92a9-bf17e562e584}, !- Handle
+  Curve Quadratic 7,                      !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {798a6cd9-4ff5-49dd-9b84-aaae2169700e}, !- Handle
+  Curve Biquadratic 6,                    !- Name
+  0.174059889,                            !- Coefficient1 Constant
+  0.022281508,                            !- Coefficient2 x
+  -0.000134077,                           !- Coefficient3 x**2
+  0.028298025,                            !- Coefficient4 y
+  0.0004851,                              !- Coefficient5 y**2
+  -0.001677095,                           !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {ea257574-9b92-45a7-8c46-1b70294aa1a9}, !- Handle
+  Curve Quadratic 8,                      !- Name
+  1.1552,                                 !- Coefficient1 Constant
+  -0.1808,                                !- Coefficient2 x
+  0.0256,                                 !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {dba88ecc-54f9-4b73-a24e-a087033f12dd}, !- Handle
+  Curve Quadratic 9,                      !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:CoilPerformance:DX:Cooling,
+  {a0768aef-2eca-4b7a-a4bb-89616f830a36}, !- Handle
+  Coil Performance DX Cooling 2,          !- Name
+  autosize,                               !- Gross Rated Total Cooling Capacity {W}
+  autosize,                               !- Gross Rated Sensible Heat Ratio
+  3,                                      !- Gross Rated Cooling COP {W/W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  0,                                      !- Fraction of Air Flow Bypassed Around Coil
+  {fc653c33-210f-455d-839b-5b7c17b3a95c}, !- Total Cooling Capacity Function of Temperature Curve
+  {9e4e6a94-e421-4248-92a9-bf17e562e584}, !- Total Cooling Capacity Function of Flow Fraction Curve
+  {798a6cd9-4ff5-49dd-9b84-aaae2169700e}, !- Energy Input Ratio Function of Temperature Curve
+  {ea257574-9b92-45a7-8c46-1b70294aa1a9}, !- Energy Input Ratio Function of Flow Fraction Curve
+  {dba88ecc-54f9-4b73-a24e-a087033f12dd}, !- Part Load Fraction Correlation Curve
+  1000,                                   !- Nominal Time for Condensate Removal to Begin {s}
+  1.5,                                    !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  3,                                      !- Maximum Cycling Rate {cycles/hr}
+  45,                                     !- Latent Capacity Time Constant {s}
+  ,                                       !- Condenser Air Inlet Node
+  AirCooled,                              !- Condenser Type
+  0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
+  autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Sensible Heat Ratio Function of Temperature Curve
+  ;                                       !- Sensible Heat Ratio Function of Flow Fraction Curve
+
+OS:Curve:Biquadratic,
+  {e2c53295-5460-4ee4-ab71-c34037640674}, !- Handle
+  Curve Biquadratic 7,                    !- Name
+  0.596779741,                            !- Coefficient1 Constant
+  0.034216637,                            !- Coefficient2 x
+  0.000113924,                            !- Coefficient3 x**2
+  -0.00375859,                            !- Coefficient4 y
+  -9.17495e-05,                           !- Coefficient5 y**2
+  -8.98373e-05,                           !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {23700cb9-6cec-4e98-8c4d-edc030cdc626}, !- Handle
+  Curve Quadratic 10,                     !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {31bf8a85-0eb4-4601-9252-a190fdfec52e}, !- Handle
+  Curve Biquadratic 8,                    !- Name
+  0.435347586,                            !- Coefficient1 Constant
+  0.004015641,                            !- Coefficient2 x
+  0.000604235,                            !- Coefficient3 x**2
+  0.015824043,                            !- Coefficient4 y
+  0.000747287,                            !- Coefficient5 y**2
+  -0.001779745,                           !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {1cce5ca9-49ed-40a9-91f3-578cddbd3f42}, !- Handle
+  Curve Quadratic 11,                     !- Name
+  1.1552,                                 !- Coefficient1 Constant
+  -0.1808,                                !- Coefficient2 x
+  0.0256,                                 !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {75678adc-222b-438e-8070-1a9d70b2ad03}, !- Handle
+  Curve Quadratic 12,                     !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:CoilPerformance:DX:Cooling,
+  {21b434ff-a70b-4ef8-9803-5ea649ec7f43}, !- Handle
+  Coil Performance DX Cooling 3,          !- Name
+  autosize,                               !- Gross Rated Total Cooling Capacity {W}
+  autosize,                               !- Gross Rated Sensible Heat Ratio
+  2.7,                                    !- Gross Rated Cooling COP {W/W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  0.5,                                    !- Fraction of Air Flow Bypassed Around Coil
+  {e2c53295-5460-4ee4-ab71-c34037640674}, !- Total Cooling Capacity Function of Temperature Curve
+  {23700cb9-6cec-4e98-8c4d-edc030cdc626}, !- Total Cooling Capacity Function of Flow Fraction Curve
+  {31bf8a85-0eb4-4601-9252-a190fdfec52e}, !- Energy Input Ratio Function of Temperature Curve
+  {1cce5ca9-49ed-40a9-91f3-578cddbd3f42}, !- Energy Input Ratio Function of Flow Fraction Curve
+  {75678adc-222b-438e-8070-1a9d70b2ad03}, !- Part Load Fraction Correlation Curve
+  1000,                                   !- Nominal Time for Condensate Removal to Begin {s}
+  1.5,                                    !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  3,                                      !- Maximum Cycling Rate {cycles/hr}
+  45,                                     !- Latent Capacity Time Constant {s}
+  ,                                       !- Condenser Air Inlet Node
+  AirCooled,                              !- Condenser Type
+  0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
+  autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Sensible Heat Ratio Function of Temperature Curve
+  ;                                       !- Sensible Heat Ratio Function of Flow Fraction Curve
+
+OS:Curve:Biquadratic,
+  {cdbbf82a-7100-4be3-a883-6eca4d74bd19}, !- Handle
+  Curve Biquadratic 9,                    !- Name
+  0.596779741,                            !- Coefficient1 Constant
+  0.034216637,                            !- Coefficient2 x
+  0.000113924,                            !- Coefficient3 x**2
+  -0.00375859,                            !- Coefficient4 y
+  -9.17495e-05,                           !- Coefficient5 y**2
+  -8.98373e-05,                           !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {d4da6a7b-ee17-4df0-8ace-229ddf6292f9}, !- Handle
+  Curve Quadratic 13,                     !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {b0d35d70-46e7-44fe-81a1-04f84c74eeb8}, !- Handle
+  Curve Biquadratic 10,                   !- Name
+  0.435347586,                            !- Coefficient1 Constant
+  0.004015641,                            !- Coefficient2 x
+  0.000604235,                            !- Coefficient3 x**2
+  0.015824043,                            !- Coefficient4 y
+  0.000747287,                            !- Coefficient5 y**2
+  -0.001779745,                           !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {21d7bed1-8d2e-4cfd-b10f-75c5f99559ab}, !- Handle
+  Curve Quadratic 14,                     !- Name
+  1.1552,                                 !- Coefficient1 Constant
+  -0.1808,                                !- Coefficient2 x
+  0.0256,                                 !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {c8683159-d80c-4513-9112-5acd6c3a1780}, !- Handle
+  Curve Quadratic 15,                     !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:CoilPerformance:DX:Cooling,
+  {098ce555-1a42-45ac-b3a2-ef8b2b66decc}, !- Handle
+  Coil Performance DX Cooling 4,          !- Name
+  autosize,                               !- Gross Rated Total Cooling Capacity {W}
+  autosize,                               !- Gross Rated Sensible Heat Ratio
+  2.7,                                    !- Gross Rated Cooling COP {W/W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  0,                                      !- Fraction of Air Flow Bypassed Around Coil
+  {cdbbf82a-7100-4be3-a883-6eca4d74bd19}, !- Total Cooling Capacity Function of Temperature Curve
+  {d4da6a7b-ee17-4df0-8ace-229ddf6292f9}, !- Total Cooling Capacity Function of Flow Fraction Curve
+  {b0d35d70-46e7-44fe-81a1-04f84c74eeb8}, !- Energy Input Ratio Function of Temperature Curve
+  {21d7bed1-8d2e-4cfd-b10f-75c5f99559ab}, !- Energy Input Ratio Function of Flow Fraction Curve
+  {c8683159-d80c-4513-9112-5acd6c3a1780}, !- Part Load Fraction Correlation Curve
+  1000,                                   !- Nominal Time for Condensate Removal to Begin {s}
+  1.5,                                    !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  3,                                      !- Maximum Cycling Rate {cycles/hr}
+  45,                                     !- Latent Capacity Time Constant {s}
+  ,                                       !- Condenser Air Inlet Node
+  AirCooled,                              !- Condenser Type
+  0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
+  autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Sensible Heat Ratio Function of Temperature Curve
+  ;                                       !- Sensible Heat Ratio Function of Flow Fraction Curve
+
+OS:Coil:Cooling:DX:MultiSpeed,
+  {8652e79c-79ad-4e94-b5e5-e0b509692bac}, !- Handle
+  Coil Cooling DX Multi Speed 1,          !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Air Inlet Node
+  ,                                       !- Air Outlet Node
+  ,                                       !- Condenser Air Inlet Node
+  AirCooled,                              !- Condenser Type
+  -25,                                    !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Supply Water Storage Tank
+  ,                                       !- Condensate Collection Water Storage Tank
+  No,                                     !- Apply Part Load Fraction to Speeds Greater than 1
+  ,                                       !- Apply Latent Degradation to Speeds Greater than 1
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  0,                                      !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  ,                                       !- Basin Heater Operating Schedule
+  Electricity;                            !- Fuel Type
+
+OS:Coil:Heating:DX:SingleSpeed,
+  {b040c980-f3cb-4fdf-8c90-33b246187aba}, !- Handle
+  Coil Heating DX Single Speed 1,         !- Name
+  {a71d60ac-65ea-4957-909e-5c661ac66cd2}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate 2017 {W/(m3/s)}
+  934.4,                                  !- Rated Supply Fan Power Per Volume Flow Rate 2023 {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {5ebb7e4d-748a-4c72-9c2d-2e8311904644}, !- Total Heating Capacity Function of Temperature Curve Name
+  {1e2c76c2-8d4c-4184-bab7-0a635b4c0386}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {2869c0f3-99bf-47b5-9914-e7119b9eb22e}, !- Energy Input Ratio Function of Temperature Curve Name
+  {5a5dc834-4fb0-4184-9772-a9b2ffc1a71a}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {24967ecd-4f11-4b01-80fe-937b3beea625}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  1000;                                   !- Resistive Defrost Heater Capacity {W}
+
+OS:Curve:Cubic,
+  {5ebb7e4d-748a-4c72-9c2d-2e8311904644}, !- Handle
+  Curve Cubic 1,                          !- Name
+  0.758746,                               !- Coefficient1 Constant
+  0.027626,                               !- Coefficient2 x
+  0.000148716,                            !- Coefficient3 x**2
+  3.4992e-06,                             !- Coefficient4 x**3
+  -20,                                    !- Minimum Value of x
+  20;                                     !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {1e2c76c2-8d4c-4184-bab7-0a635b4c0386}, !- Handle
+  Curve Cubic 2,                          !- Name
+  0.84,                                   !- Coefficient1 Constant
+  0.16,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {2869c0f3-99bf-47b5-9914-e7119b9eb22e}, !- Handle
+  Curve Cubic 3,                          !- Name
+  1.19248,                                !- Coefficient1 Constant
+  -0.0300438,                             !- Coefficient2 x
+  0.00103745,                             !- Coefficient3 x**2
+  -2.3328e-05,                            !- Coefficient4 x**3
+  -20,                                    !- Minimum Value of x
+  20;                                     !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {5a5dc834-4fb0-4184-9772-a9b2ffc1a71a}, !- Handle
+  Curve Quadratic 16,                     !- Name
+  1.3824,                                 !- Coefficient1 Constant
+  -0.4336,                                !- Coefficient2 x
+  0.0512,                                 !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {24967ecd-4f11-4b01-80fe-937b3beea625}, !- Handle
+  Curve Quadratic 17,                     !- Name
+  0.75,                                   !- Coefficient1 Constant
+  0.25,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Coil:Heating:DX:MultiSpeed,
+  {b25468cb-0846-4463-ac57-3d089a0c0514}, !- Handle
+  Coil Heating DX Multi Speed 1,          !- Name
+  {a71d60ac-65ea-4957-909e-5c661ac66cd2}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  -8,                                     !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Outdoor Dry-Bulb Temperature to Turn On Compressor {C}
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  5,                                      !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  Resistive,                              !- Defrost Strategy
+  OnDemand,                               !- Defrost Control
+  0.058333,                               !- Defrost Time Period Fraction
+  autosize,                               !- Resistive Defrost Heater Capacity {W}
+  No,                                     !- Apply Part Load Fraction to Speeds Greater than 1
+  NaturalGas,                             !- Fuel Type
+  4;                                      !- Region number for Calculating HSPF
+
+OS:Coil:Heating:DX:VariableSpeed,
+  {ae5a0e4a-9ff0-48fc-aacf-2e7fbe8b37ae}, !- Handle
+  Coil Heating DX Variable Speed 1,       !- Name
+  ,                                       !- Indoor Air Inlet Node Name
+  ,                                       !- Indoor Air Outlet Node Name
+  1,                                      !- Nominal Speed Level {dimensionless}
+  autosize,                               !- Rated Heating Capacity At Selected Nominal Speed Level {W}
+  autosize,                               !- Rated Air Flow Rate At Selected Nominal Speed Level {m3/s}
+  {80884866-e43d-4b61-bea7-48d013eae4a5}, !- Energy Part Load Fraction Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  -5,                                     !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Outdoor Dry-Bulb Temperature to Turn On Compressor {C}
+  5,                                      !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  OnDemand,                               !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  autosize,                               !- Resistive Defrost Heater Capacity {W}
+  {207e59fe-cafb-4bc2-929d-bec0023a3d73}; !- Speed Data List
+
+OS:Curve:Quadratic,
+  {80884866-e43d-4b61-bea7-48d013eae4a5}, !- Handle
+  Curve Quadratic 18,                     !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:ModelObjectList,
+  {207e59fe-cafb-4bc2-929d-bec0023a3d73}, !- Handle
+  CoilHeatingDXVariableSpeed Speed Data List; !- Name
+
+OS:Coil:WaterHeating:AirToWaterHeatPump,
+  {69a03146-ad6f-45ee-9131-e7e55619b4a6}, !- Handle
+  Coil Water Heating Air To Water Heat Pump 1, !- Name
+  4000,                                   !- Rated Heating Capacity {W}
+  3.2,                                    !- Rated COP {W/W}
+  0.6956,                                 !- Rated Sensible Heat Ratio
+  29.44,                                  !- Rated Evaporator Inlet Air Dry-Bulb Temperature {C}
+  22.22,                                  !- Rated Evaporator Inlet Air Wet-Bulb Temperature {C}
+  55.72,                                  !- Rated Condenser Inlet Water Temperature {C}
+  autosize,                               !- Rated Evaporator Air Flow Rate {m3/s}
+  autosize,                               !- Rated Condenser Water Flow Rate {m3/s}
+  No,                                     !- Evaporator Fan Power Included in Rated COP
+  No,                                     !- Condenser Pump Power Included in Rated COP
+  No,                                     !- Condenser Pump Heat Included in Rated Heating Capacity and Rated COP
+  150,                                    !- Condenser Water Pump Power {W}
+  0.1,                                    !- Fraction of Condenser Pump Heat to Water
+  ,                                       !- Evaporator Air Inlet Node Name
+  ,                                       !- Evaporator Air Outlet Node Name
+  ,                                       !- Condenser Water Inlet Node
+  ,                                       !- Condenser Water Outlet Node
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Ambient Temperature for Crankcase Heater Operation {C}
+  WetBulbTemperature,                     !- Evaporator Air Temperature Type for Curve Objects
+  {85135f6b-bf04-4f1e-b8e8-6b24021a6dec}, !- Heating Capacity Function of Temperature Curve
+  {dfd193f7-a0e5-4d1f-b066-eccc7b2ab3a2}, !- Heating Capacity Function of Air Flow Fraction Curve
+  {fb42697d-747f-4f8c-83b8-f7fa44aad3c9}, !- Heating Capacity Function of Water Flow Fraction Curve
+  {abf5690e-ed2a-489d-9861-bfb6c69bffd0}, !- Heating COP Function of Temperature Curve
+  {85837c2e-3b2d-4ff9-a63e-c1e17b6c1c67}, !- Heating COP Function of Air Flow Fraction Curve
+  {d3b71765-88af-4dcd-9355-a6bed9879afe}, !- Heating COP Function of Water Flow Fraction Curve
+  {96e27d2c-0473-4dcb-8e05-2c3385f4f9ea}; !- Part Load Fraction Correlation Curve
+
+OS:Curve:Biquadratic,
+  {85135f6b-bf04-4f1e-b8e8-6b24021a6dec}, !- Handle
+  Curve Biquadratic 11,                   !- Name
+  0.369827,                               !- Coefficient1 Constant
+  0.043341,                               !- Coefficient2 x
+  -0.00023,                               !- Coefficient3 x**2
+  0.000466,                               !- Coefficient4 y
+  2.6e-05,                                !- Coefficient5 y**2
+  -0.00027,                               !- Coefficient6 x*y
+  0,                                      !- Minimum Value of x
+  40,                                     !- Maximum Value of x
+  20,                                     !- Minimum Value of y
+  90,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Quadratic,
+  {dfd193f7-a0e5-4d1f-b066-eccc7b2ab3a2}, !- Handle
+  Curve Quadratic 19,                     !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {fb42697d-747f-4f8c-83b8-f7fa44aad3c9}, !- Handle
+  Curve Quadratic 20,                     !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {abf5690e-ed2a-489d-9861-bfb6c69bffd0}, !- Handle
+  Curve Biquadratic 12,                   !- Name
+  1.19713,                                !- Coefficient1 Constant
+  0.077849,                               !- Coefficient2 x
+  -1.6e-06,                               !- Coefficient3 x**2
+  -0.02675,                               !- Coefficient4 y
+  0.000296,                               !- Coefficient5 y**2
+  -0.00112,                               !- Coefficient6 x*y
+  0,                                      !- Minimum Value of x
+  40,                                     !- Maximum Value of x
+  20,                                     !- Minimum Value of y
+  90,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Quadratic,
+  {85837c2e-3b2d-4ff9-a63e-c1e17b6c1c67}, !- Handle
+  Curve Quadratic 21,                     !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {d3b71765-88af-4dcd-9355-a6bed9879afe}, !- Handle
+  Curve Quadratic 22,                     !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {96e27d2c-0473-4dcb-8e05-2c3385f4f9ea}, !- Handle
+  CoilWaterHeatingAirToWaterHeatPump PLFCorrelationCurve, !- Name
+  0.75,                                   !- Coefficient1 Constant
+  0.25,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
+  {044edc9d-e695-45d1-9287-3d198604465c}, !- Handle
+  Coil Water Heating Air To Water Heat Pump Variable Speed 1, !- Name
+  1,                                      !- Nominal Speed Level {dimensionless}
+  4000,                                   !- Rated Water Heating Capacity {W}
+  29.44,                                  !- Rated Evaporator Inlet Air Dry-Bulb Temperature {C}
+  22.22,                                  !- Rated Evaporator Inlet Air Wet-Bulb Temperature {C}
+  55.72,                                  !- Rated Condenser Inlet Water Temperature {C}
+  autocalculate,                          !- Rated Evaporator Air Flow Rate {m3/s}
+  autocalculate,                          !- Rated Condenser Water Flow Rate {m3/s}
+  Yes,                                    !- Evaporator Fan Power Included in Rated COP
+  No,                                     !- Condenser Pump Power Included in Rated COP
+  No,                                     !- Condenser Pump Heat Included in Rated Heating Capacity and Rated COP
+  0.2,                                    !- Fraction of Condenser Pump Heat to Water
+  ,                                       !- Evaporator Air Inlet Node Name
+  ,                                       !- Evaporator Air Outlet Node Name
+  ,                                       !- Condenser Water Inlet Node Name
+  ,                                       !- Condenser Water Outlet Node Name
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Ambient Temperature for Crankcase Heater Operation {C}
+  WetBulbTemperature,                     !- Evaporator Air Temperature Type for Curve Objects
+  {1e5f686a-f085-44f2-9c00-2cd1e6168ba9}, !- Part Load Fraction Correlation Curve Name
+  {498a7012-e17b-4709-9c3f-e1cd4605e4e2}; !- Speed Data List
+
+OS:Curve:Quadratic,
+  {1e5f686a-f085-44f2-9c00-2cd1e6168ba9}, !- Handle
+  Curve Quadratic 23,                     !- Name
+  0.75,                                   !- Coefficient1 Constant
+  0.25,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:ModelObjectList,
+  {498a7012-e17b-4709-9c3f-e1cd4605e4e2}, !- Handle
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed Speed Data List; !- Name
+
+OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
+  {69890a5f-6af6-4fa3-b8e0-b918e780bb44}, !- Handle
+  Coil Water Heating Air To Water Heat Pump Wrapped 1, !- Name
+  2349.6,                                 !- Rated Heating Capacity {W}
+  2.4,                                    !- Rated COP {W/W}
+  0.981,                                  !- Rated Sensible Heat Ratio
+  19.72,                                  !- Rated Evaporator Inlet Air Dry-Bulb Temperature {C}
+  13.5,                                   !- Rated Evaporator Inlet Air Wet-Bulb Temperature {C}
+  48.89,                                  !- Rated Condenser Water Temperature {C}
+  0.189,                                  !- Rated Evaporator Air Flow Rate {m3/s}
+  Yes,                                    !- Evaporator Fan Power Included in Rated COP
+  ,                                       !- Evaporator Air Inlet Node Name
+  ,                                       !- Evaporator Air Outlet Node Name
+  100,                                    !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Ambient Temperature for Crankcase Heater Operation {C}
+  WetBulbTemperature,                     !- Evaporator Air Temperature Type for Curve Objects
+  {57a1c97c-0545-46e5-899a-1ae34f031506}, !- Heating Capacity Function of Temperature Curve Name
+  {6ee32b80-288a-4c10-bf4e-8c0dc8aa672a}, !- Heating Capacity Function of Air Flow Fraction Curve Name
+  {71b1416c-c67f-43df-a1e1-6b134696e876}, !- Heating COP Function of Temperature Curve Name
+  {c4ceb1a3-680c-470b-b4ee-11a5f9ea3cf1}, !- Heating COP Function of Air Flow Fraction Curve Name
+  {c84e6c90-2f99-4816-b4fe-e8a96c1e00d7}; !- Part Load Fraction Correlation Curve Name
+
+OS:Curve:Biquadratic,
+  {57a1c97c-0545-46e5-899a-1ae34f031506}, !- Handle
+  HPWH-Htg-Cap-fT,                        !- Name
+  0.563,                                  !- Coefficient1 Constant
+  0.0437,                                 !- Coefficient2 x
+  3.9e-05,                                !- Coefficient3 x**2
+  0.0055,                                 !- Coefficient4 y
+  -0.000148,                              !- Coefficient5 y**2
+  -0.000145,                              !- Coefficient6 x*y
+  0,                                      !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  100,                                    !- Maximum Value of y
+  0;                                      !- Minimum Curve Output
+
+OS:Curve:Cubic,
+  {6ee32b80-288a-4c10-bf4e-8c0dc8aa672a}, !- Handle
+  HPWH-Htg-Cap-FF,                        !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x
+  100;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {71b1416c-c67f-43df-a1e1-6b134696e876}, !- Handle
+  HPWH-Htg-COP-fT,                        !- Name
+  1.1332,                                 !- Coefficient1 Constant
+  0.063,                                  !- Coefficient2 x
+  -9.79e-05,                              !- Coefficient3 x**2
+  -0.00972,                               !- Coefficient4 y
+  -2.14e-05,                              !- Coefficient5 y**2
+  -0.000686,                              !- Coefficient6 x*y
+  0,                                      !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  100;                                    !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {c4ceb1a3-680c-470b-b4ee-11a5f9ea3cf1}, !- Handle
+  HPWH-Htg-COP-FF,                        !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x
+  100;                                    !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {c84e6c90-2f99-4816-b4fe-e8a96c1e00d7}, !- Handle
+  CoilWaterHeatingAirToWaterHeatPumpWrapped PLFCorrelationCurve, !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+

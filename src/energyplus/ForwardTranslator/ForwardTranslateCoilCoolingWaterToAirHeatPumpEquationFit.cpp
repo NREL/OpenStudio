@@ -140,6 +140,14 @@ namespace energyplus {
       }
     }
 
+    // Part Load Fraction Correlation Curve Name
+    {
+      auto curve = modelObject.partLoadFractionCorrelationCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurveName, _curve->nameString());
+      }
+    }
+
     // Nominal Time for Condensate Removal to Begin
     if ((value = modelObject.nominalTimeforCondensateRemovaltoBegin())) {
       idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::NominalTimeforCondensateRemovaltoBegin, *value);
@@ -150,6 +158,15 @@ namespace energyplus {
       idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity,
                           *value);
     }
+
+    // Maximum Cycling Rate
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::MaximumCyclingRate, modelObject.maximumCyclingRate());
+
+    // Latent Capacity Time Constnat
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::LatentCapacityTimeConstant, modelObject.latentCapacityTimeConstant());
+
+    // Fan Delay Time
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::FanDelayTime, modelObject.fanDelayTime());
 
     return idfObject;
   }

@@ -13,6 +13,7 @@
 #include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp"
 #include "../../model/Schedule.hpp"
+#include "../../model/CurveLinear.hpp"
 #include "../../model/CurveQuadratic.hpp"
 #include "../../model/CurveBiquadratic.hpp"
 #include "../../model/WaterHeaterHeatPump.hpp"
@@ -34,6 +35,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
 
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
 
+  EXPECT_TRUE(coil.setCrankcaseHeaterCapacity(105.0));
+  CurveLinear crankCurve(m);
+  crankCurve.setName("CrankCapFT");
+  EXPECT_TRUE(coil.setCrankcaseHeaterCapacityFunctionofTemperatureCurve(crankCurve));
+  EXPECT_TRUE(coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(9.0));
+
   WaterHeaterHeatPump hpwh(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed(m);
   ThermalZone tz(m);
@@ -45,15 +52,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
   coil.addSpeed(speed);
 
   ForwardTranslator ft;
-  Workspace w = ft.translateModel(m);
+  const Workspace w = ft.translateModel(m);
 
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_HeatPump_PumpedCondenser).size());
   EXPECT_EQ(6u, w.getObjectsByType(IddObjectType::Curve_Quadratic).size());
   EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
 
-  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed));
-  EXPECT_EQ(1u, idf_coils.size());
-  WorkspaceObject idf_coil(idf_coils[0]);
+  auto idfs_coils = w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed);
+  ASSERT_EQ(1, idfs_coils.size());
+  const WorkspaceObject& idf_coil = idfs_coils[0];
 
   EXPECT_EQ(1, idf_coil.getInt(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::NominalSpeedLevel, false).get());
   EXPECT_EQ(4000.0, idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::RatedWaterHeatingCapacity, false).get());
@@ -75,10 +82,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
   EXPECT_NE("", idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirOutletNodeName, false).get());
   EXPECT_NE("", idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterInletNodeName, false).get());
   EXPECT_NE("", idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterOutletNodeName, false).get());
-  EXPECT_EQ(0, idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CrankcaseHeaterCapacity, false).get());
+  EXPECT_EQ(105.0, idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CrankcaseHeaterCapacity).get());
   EXPECT_EQ(
-    10,
-    idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation, false).get());
+    "CrankCapFT",
+    idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName).get());
+  EXPECT_EQ(9.0,
+            idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation).get());
   EXPECT_EQ("WetBulbTemperature",
             idf_coil.getString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirTemperatureTypeforCurveObjects, false).get());
   boost::optional<WorkspaceObject> idf_curve(
