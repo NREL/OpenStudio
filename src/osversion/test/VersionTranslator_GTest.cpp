@@ -3454,15 +3454,15 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_BoilerHotWater) {
   WorkspaceObject bhw = bhws[0];
 
   EXPECT_EQ("Boiler Hot Water 1", bhw.getString(1).get());         // Name
-  EXPECT_TRUE("Propane", bhw.getString(2));                        // Fuel Type
-  EXPECT_TRUE(1, bhw.getDouble(3));                                // Nominal Capacity
-  EXPECT_TRUE(0.9, bhw.getDouble(4));                              // Nominal Thermal Efficiency
-  EXPECT_TRUE("EnteringBoiler", bhw.getString(5));                 // Efficiency Curve Temperature Evaluation Variable
+  EXPECT_EQ("Propane", bhw.getString(2));                          // Fuel Type
+  EXPECT_EQ(1, bhw.getDouble(3));                                  // Nominal Capacity
+  EXPECT_EQ(0.9, bhw.getDouble(4));                                // Nominal Thermal Efficiency
+  EXPECT_EQ("EnteringBoiler", bhw.getString(5));                   // Efficiency Curve Temperature Evaluation Variable
   EXPECT_NE("", bhw.getString(6));                                 // Normalized Boiler Efficiency Curve Name
-  EXPECT_TRUE(3, bhw.getDouble(7));                                // Design Water Flow Rate
-  EXPECT_TRUE(4, bhw.getDouble(8));                                // Minimum Part Load Ratio
-  EXPECT_TRUE(5, bhw.getDouble(9));                                // Maximum Part Load Ratio
-  EXPECT_TRUE(6, bhw.getDouble(10));                               // Optimum Part Load Ratio
+  EXPECT_EQ(3, bhw.getDouble(7));                                  // Design Water Flow Rate
+  EXPECT_EQ(4, bhw.getDouble(8));                                  // Minimum Part Load Ratio
+  EXPECT_EQ(5, bhw.getDouble(9));                                  // Maximum Part Load Ratio
+  EXPECT_EQ(6, bhw.getDouble(10));                                 // Optimum Part Load Ratio
   EXPECT_TRUE(bhw.isEmpty(11));                                    // Boiler Water Inlet Node Name
   EXPECT_TRUE(bhw.isEmpty(12));                                    // Boiler Water Outlet Node Name
   EXPECT_EQ(7, bhw.getDouble(13).get());                           // Water Outlet Upper Temperature Limit
