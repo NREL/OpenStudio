@@ -190,7 +190,7 @@ namespace model {
     }
 
     boost::optional<double> BoilerHotWater_Impl::parasiticElectricLoad() const {
-      return getDouble(OS_Boiler_HotWaterFields::ParasiticElectricLoad, true);
+      return getDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, true);
     }
 
     double BoilerHotWater_Impl::sizingFactor() const {
@@ -350,15 +350,15 @@ namespace model {
     bool BoilerHotWater_Impl::setParasiticElectricLoad(boost::optional<double> parasiticElectricLoad) {
       bool result = false;
       if (parasiticElectricLoad) {
-        result = setDouble(OS_Boiler_HotWaterFields::ParasiticElectricLoad, parasiticElectricLoad.get());
+        result = setDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, parasiticElectricLoad.get());
       } else {
-        result = setString(OS_Boiler_HotWaterFields::ParasiticElectricLoad, "");
+        result = setString(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, "");
       }
       return result;
     }
 
     void BoilerHotWater_Impl::resetParasiticElectricLoad() {
-      bool result = setString(OS_Boiler_HotWaterFields::ParasiticElectricLoad, "");
+      bool result = setString(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, "");
       OS_ASSERT(result);
     }
 

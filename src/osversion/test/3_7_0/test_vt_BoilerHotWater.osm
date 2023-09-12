@@ -1,0 +1,25 @@
+
+OS:Version,
+  {61d25577-0980-413b-89cb-64eb0bfdfac0}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:Boiler:HotWater,
+  {a1f52bc9-14e1-4531-9251-cab1cb19ba42}, !- Handle
+  Boiler Hot Water 1,                     !- Name
+  ,                                       !- Fuel Type
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Nominal Thermal Efficiency
+  ,                                       !- Efficiency Curve Temperature Evaluation Variable
+  ,                                       !- Normalized Boiler Efficiency Curve Name
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Minimum Part Load Ratio
+  ,                                       !- Maximum Part Load Ratio
+  ,                                       !- Optimum Part Load Ratio
+  ,                                       !- Boiler Water Inlet Node Name
+  ,                                       !- Boiler Water Outlet Node Name
+  99,                                     !- Water Outlet Upper Temperature Limit {C}
+  ConstantFlow,                           !- Boiler Flow Mode
+  0,                                      !- Parasitic Electric Load {W}
+  1,                                      !- Sizing Factor
+  General;                                !- End-Use Subcategory
+
