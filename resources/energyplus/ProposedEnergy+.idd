@@ -31279,7 +31279,7 @@ Coil:Cooling:DX:VariableSpeed,
         \memo wet coil when compressor cycles off with continuous fan operation. Requires two to
         \memo ten sets of performance data and will interpolate between speeds. Modeled as a
         \memo single coil with variable-speed compressor.
-        \extensible:10
+        \extensible:12
         \min-fields 35
    A1,  \field Name
         \required-field
@@ -32901,7 +32901,7 @@ Coil:Heating:DX:VariableSpeed,
         \memo (includes electric compressor and outdoor fan), variable-speed, with defrost
         \memo controls. Requires two to ten sets of performance data and will interpolate between
         \memo speeds.
-        \extensible:7
+        \extensible:9
         \min-fields 26
         \max-fields 89
    A1,  \field Name
