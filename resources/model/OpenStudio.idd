@@ -13969,7 +13969,7 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
 
 OS:HeatPump:PlantLoop:EIR:Heating,
        \memo An EIR formulated water to water heat pump model, heating operation
-       \min-fields 16
+       \min-fields 29
    A1, \field Handle
        \type handle
        \required-field
