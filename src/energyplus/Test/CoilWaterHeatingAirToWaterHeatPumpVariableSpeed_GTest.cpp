@@ -52,15 +52,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
   coil.addSpeed(speed);
 
   ForwardTranslator ft;
-  Workspace w = ft.translateModel(m);
+  const Workspace w = ft.translateModel(m);
 
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_HeatPump_PumpedCondenser).size());
   EXPECT_EQ(6u, w.getObjectsByType(IddObjectType::Curve_Quadratic).size());
   EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
 
-  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed));
-  EXPECT_EQ(1u, idf_coils.size());
-  WorkspaceObject idf_coil(idf_coils[0]);
+  auto idfs_coils = w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed);
+  ASSERT_EQ(1, idfs_coils.size());
+  const WorkspaceObject& idf_coil = idfs_coils[0];
 
   EXPECT_EQ(1, idf_coil.getInt(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::NominalSpeedLevel, false).get());
   EXPECT_EQ(4000.0, idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::RatedWaterHeatingCapacity, false).get());

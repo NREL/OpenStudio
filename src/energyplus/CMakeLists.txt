@@ -706,6 +706,8 @@ set(${target_name}_test_src
   Test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
   Test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   Test/CoilUserDefined_GTest.cpp
+  Test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
+  Test/CoilWaterHeatingAirToWaterHeatPumpWrapped_GTest.cpp
   Test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
   Test/CoilWaterHeatingDesuperheater_GTest.cpp
   Test/Construction_GTest.cpp
