@@ -1135,7 +1135,7 @@ namespace model {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->supplyAirFanOperatingModeSchedule();
   }
 
-  boost::optional<ZoneHVACWaterToAirHeatPump> AirLoopHVACUnitarySystem::designSpecificationMultispeedObject() const {
+  boost::optional<UnitarySystemPerformanceMultispeed> ZoneHVACWaterToAirHeatPump::designSpecificationMultispeedObject() const {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->designSpecificationMultispeedObject();
   }
 
