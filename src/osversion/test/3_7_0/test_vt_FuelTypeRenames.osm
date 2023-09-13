@@ -1,0 +1,322 @@
+
+OS:Version,
+  {da66fe55-ffce-458c-850a-e466ec186b6c}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:OtherEquipment:Definition,
+  {58cd9f82-3d9d-4802-b677-9e4aa93c34f0}, !- Handle
+  Other Equipment Definition 1,           !- Name
+  EquipmentLevel,                         !- Design Level Calculation Method
+  0,                                      !- Design Level {W}
+  ,                                       !- Watts per Space Floor Area {W/m2}
+  ;                                       !- Watts per Person {W/Person}
+
+OS:OtherEquipment,
+  {dc34d5c6-017a-4f62-aa17-1842f7db2745}, !- Handle
+  Other Equipment 1,                      !- Name
+  {58cd9f82-3d9d-4802-b677-9e4aa93c34f0}, !- Other Equipment Definition Name
+  ,                                       !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  SteAm,                                  !- Fuel Type
+  General;                                !- End-Use Subcategory
+
+OS:Exterior:FuelEquipment:Definition,
+  {7f0e8123-fe5a-44ce-ab78-7a5ac5c910cf}, !- Handle
+  Exterior Fuel Equipment Definition 1,   !- Name
+  0;                                      !- Design Level {W}
+
+OS:Exterior:FuelEquipment,
+  {9aa75d96-ffee-4ab6-8b05-41404a1fb1d9}, !- Handle
+  Exterior Fuel Equipment 1,              !- Name
+  {7f0e8123-fe5a-44ce-ab78-7a5ac5c910cf}, !- Exterior Fuel Equipment Definition Name
+  {5af67428-f17b-4cdc-b413-628abfc87d52}, !- Schedule Name
+  DISTRICTHEATING,                        !- Fuel Use Type
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
+
+OS:Schedule:Constant,
+  {5af67428-f17b-4cdc-b413-628abfc87d52}, !- Handle
+  Always On Discrete,                     !- Name
+  {4d061cb6-77fd-48cd-99a1-ed2bcfc67f09}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {4d061cb6-77fd-48cd-99a1-ed2bcfc67f09}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:WaterHeater:Mixed,
+  {bbe0e73c-db94-4258-9c53-ff745b54aa8a}, !- Handle
+  Water Heater Mixed 1,                   !- Name
+  0.3785,                                 !- Tank Volume {m3}
+  {5f2a992f-485a-419e-bfaf-9fc47af145f5}, !- Setpoint Temperature Schedule Name
+  2,                                      !- Deadband Temperature Difference {deltaC}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  Cycle,                                  !- Heater Control Type
+  845000,                                 !- Heater Maximum Capacity {W}
+  ,                                       !- Heater Minimum Capacity {W}
+  ,                                       !- Heater Ignition Minimum Flow Rate {m3/s}
+  ,                                       !- Heater Ignition Delay {s}
+  StEAm,                                  !- Heater Fuel Type
+  0.8,                                    !- Heater Thermal Efficiency
+  ,                                       !- Part Load Factor Curve Name
+  20,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  DisTrictHeating,                        !- Off Cycle Parasitic Fuel Type
+  0.8,                                    !- Off Cycle Parasitic Heat Fraction to Tank
+  ,                                       !- On Cycle Parasitic Fuel Consumption Rate {W}
+  STEAM,                                  !- On Cycle Parasitic Fuel Type
+  ,                                       !- On Cycle Parasitic Heat Fraction to Tank
+  Schedule,                               !- Ambient Temperature Indicator
+  {1f7aaa2a-f213-41e9-ac3d-81b48ed3b610}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  6,                                      !- Off Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- Off Cycle Loss Fraction to Thermal Zone
+  6,                                      !- On Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- On Cycle Loss Fraction to Thermal Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  IndirectHeatPrimarySetpoint,            !- Source Side Flow Control Mode
+  ,                                       !- Indirect Alternate Setpoint Temperature Schedule Name
+  General;                                !- End-Use Subcategory
+
+OS:Schedule:Ruleset,
+  {1f7aaa2a-f213-41e9-ac3d-81b48ed3b610}, !- Handle
+  Schedule Ruleset 1,                     !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  {11737fd3-5e75-4304-b123-bcff959e4281}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {11737fd3-5e75-4304-b123-bcff959e4281}, !- Handle
+  Schedule Day 1,                         !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  22;                                     !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Ruleset,
+  {5f2a992f-485a-419e-bfaf-9fc47af145f5}, !- Handle
+  Schedule Ruleset 2,                     !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  {dc95ae70-6594-4a59-92e8-727520722a45}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {dc95ae70-6594-4a59-92e8-727520722a45}, !- Handle
+  Schedule Day 2,                         !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  60;                                     !- Value Until Time 1
+
+OS:WaterHeater:Sizing,
+  {13c91487-9aa4-4d2d-b84c-2f1604f79181}, !- Handle
+  {bbe0e73c-db94-4258-9c53-ff745b54aa8a}, !- WaterHeater Name
+  PeakDraw,                               !- Design Mode
+  0.538503,                               !- Time Storage Can Meet Peak Draw {hr}
+  0,                                      !- Time for Tank Recovery {hr}
+  1;                                      !- Nominal Tank Volume for Autosizing Plant Connections {m3}
+
+OS:WaterHeater:Stratified,
+  {50b7bf36-da5e-4e83-a96c-918409f4731d}, !- Handle
+  Water Heater Stratified 1,              !- Name
+  General,                                !- End-Use Subcategory
+  0.1893,                                 !- Tank Volume {m3}
+  1.4,                                    !- Tank Height {m}
+  VerticalCylinder,                       !- Tank Shape
+  ,                                       !- Tank Perimeter {m}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  MasterSlave,                            !- Heater Priority Control
+  {2658fb79-223b-4aec-9cfa-57d9c2e3f977}, !- Heater 1 Setpoint Temperature Schedule Name
+  2,                                      !- Heater 1 Deadband Temperature Difference {deltaC}
+  4500,                                   !- Heater 1 Capacity {W}
+  1,                                      !- Heater 1 Height {m}
+  {38abb995-09e3-4941-843d-3547f6aa109e}, !- Heater 2 Setpoint Temperature Schedule Name
+  5,                                      !- Heater 2 Deadband Temperature Difference {deltaC}
+  4500,                                   !- Heater 2 Capacity {W}
+  0,                                      !- Heater 2 Height {m}
+  StEAm,                                  !- Heater Fuel Type
+  0.98,                                   !- Heater Thermal Efficiency
+  10,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  DisTrictHeating,                        !- Off Cycle Parasitic Fuel Type
+  0,                                      !- Off Cycle Parasitic Heat Fraction to Tank
+  0,                                      !- Off Cycle Parasitic Height {m}
+  10,                                     !- On Cycle Parasitic Fuel Consumption Rate {W}
+  STEAM,                                  !- On Cycle Parasitic Fuel Type
+  0,                                      !- On Cycle Parasitic Heat Fraction to Tank
+  0,                                      !- On Cycle Parasitic Height {m}
+  Schedule,                               !- Ambient Temperature Indicator
+  {3d6bde8d-3b8f-43d3-bfe9-2f8901334c22}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  0.846,                                  !- Uniform Skin Loss Coefficient per Unit Area to Ambient Temperature {W/m2-K}
+  1,                                      !- Skin Loss Fraction to Zone
+  0,                                      !- Off Cycle Flue Loss Coefficient to Ambient Temperature {W/K}
+  1,                                      !- Off Cycle Flue Loss Fraction to Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  0,                                      !- Use Side Inlet Height {m}
+  autocalculate,                          !- Use Side Outlet Height {m}
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autocalculate,                          !- Source Side Inlet Height {m}
+  0,                                      !- Source Side Outlet Height {m}
+  Fixed,                                  !- Inlet Mode
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  6,                                      !- Number of Nodes
+  0.1,                                    !- Additional Destratification Conductivity {W/m-K}
+  0.15,                                   !- Node 1 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 2 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 3 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 4 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 5 Additional Loss Coefficient {W/m2-K}
+  0.1,                                    !- Node 6 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 7 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 8 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 9 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 10 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 11 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 12 Additional Loss Coefficient {W/m2-K}
+  IndirectHeatPrimarySetpoint;            !- Source Side Flow Control Mode
+
+OS:Schedule:Ruleset,
+  {2658fb79-223b-4aec-9cfa-57d9c2e3f977}, !- Handle
+  Schedule Ruleset 3,                     !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  {1bb5df00-4279-48c0-aa72-339dfbd7923b}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {1bb5df00-4279-48c0-aa72-339dfbd7923b}, !- Handle
+  Schedule Day 3,                         !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  48.89;                                  !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {38abb995-09e3-4941-843d-3547f6aa109e}, !- Handle
+  Schedule Ruleset 4,                     !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  {e0483ea6-948f-41af-ac6b-724b4572b846}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {e0483ea6-948f-41af-ac6b-724b4572b846}, !- Handle
+  Schedule Day 4,                         !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  48.89;                                  !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {3d6bde8d-3b8f-43d3-bfe9-2f8901334c22}, !- Handle
+  Schedule Ruleset 5,                     !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  {1333316e-3889-4525-9622-d750097d35b8}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {1333316e-3889-4525-9622-d750097d35b8}, !- Handle
+  Schedule Day 5,                         !- Name
+  {c9967ce4-a0c8-4366-8f65-12e04d391f8e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  22;                                     !- Value Until Time 1
+
+OS:WaterHeater:Sizing,
+  {323f9629-b410-4d1b-ac86-660ceb905844}, !- Handle
+  {50b7bf36-da5e-4e83-a96c-918409f4731d}, !- WaterHeater Name
+  PeakDraw,                               !- Design Mode
+  0.538503,                               !- Time Storage Can Meet Peak Draw {hr}
+  0,                                      !- Time for Tank Recovery {hr}
+  1;                                      !- Nominal Tank Volume for Autosizing Plant Connections {m3}
+
+OS:UtilityBill,
+  {6f15e3fc-6b43-4600-b493-ac8808029cc1}, !- Handle
+  Legacy,                                 !- Name
+  FuelOil_1,                              !- Fuel Type
+  ,                                       !- Meter Install Location
+  ,                                       !- Meter Specific Install Location
+  ,                                       !- Meter End Use Category
+  ,                                       !- Meter Specific End Use
+  gal,                                    !- Consumption Unit
+  ,                                       !- Consumption Unit Conversion Factor
+  ;                                       !- Peak Demand Unit
+
+OS:UtilityBill,
+  {50864982-faf4-4076-977d-9f9f3dccbb6a}, !- Handle
+  Steam,                                  !- Name
+  Steam,                                  !- Fuel Type
+  ,                                       !- Meter Install Location
+  ,                                       !- Meter Specific Install Location
+  ,                                       !- Meter End Use Category
+  ,                                       !- Meter Specific End Use
+  lbs,                                    !- Consumption Unit
+  ,                                       !- Consumption Unit Conversion Factor
+  ;                                       !- Peak Demand Unit
+
+OS:Meter:Custom,
+  {cb9b369b-4b14-4f01-8269-fd2d02f90b1a}, !- Handle
+  Meter Custom 1,                         !- Name
+  DistrictHEATING;                        !- Fuel Type
+
+OS:Meter:CustomDecrement,
+  {c51d53c8-a79c-4fe5-8ed6-ef0209104132}, !- Handle
+  Meter Custom Decrement 1,               !- Name
+  STEAM,                                  !- Fuel Type
+  Meter Custom 1;                         !- Source Meter Name
+
+OS:EnergyManagementSystem:MeteredOutputVariable,
+  {c509bb1e-ec74-4832-abe5-ae494d17f0a6}, !- Handle
+  Energy Management System Metered Output Variable 1, !- Name
+  DUMMY,                                  !- EMS Variable Name
+  SystemTimestep,                         !- Update Frequency
+  ,                                       !- EMS Program or Subroutine Name
+  STEAM,                                  !- Resource Type
+  Building,                               !- Group Type
+  Fans;                                   !- End-Use Category
+
+OS:PythonPlugin:Variable,
+  {2cc399bd-a99d-4c7e-ac96-1f2ec024dead}, !- Handle
+  Python Plugin Variable 1;               !- Name
+
+OS:PythonPlugin:OutputVariable,
+  {49cd2d69-671e-4b5c-bb28-7a6b63fa0685}, !- Handle
+  Python Plugin Output Variable 1,        !- Name
+  {2cc399bd-a99d-4c7e-ac96-1f2ec024dead}, !- Python Plugin Variable Name
+  Averaged,                               !- Type of Data in Variable
+  ZoneTimestep,                           !- Update Frequency
+  ,                                       !- Units
+  DISTRictHeating;                        !- Resource Type
+

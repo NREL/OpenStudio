@@ -34,6 +34,7 @@
 #include "../utilities/math/FloatCompare.hpp"
 #include "../utilities/idf/IdfObject_Impl.hpp"
 #include "../utilities/core/UUID.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -7897,6 +7898,50 @@ namespace osversion {
       {"OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped", 13},
     }};
 
+    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap{{
+      {"Steam", "DistrictHeatingSteam"},
+      {"DistrictHeating", "DistrictHeatingWater"},
+      // Additionally, for UtilityBill, align the IDD choices to E+. This will also be covered by this
+      {"FuelOil_1", "FuelOilNo1"},
+      {"FuelOil_2", "FuelOilNo2"},
+      {"OtherFuel_1", "OtherFuel1"},
+      {"OtherFuel_2", "OtherFuel2"},
+    }};
+
+    const std::multimap<std::string, int> fuelTypeRenamesMap{{
+      {"OS:OtherEquipment", 6},                                // Fuel Type
+      {"OS:Exterior:FuelEquipment", 4},                        // Fuel Use Type
+      {"OS:WaterHeater:Mixed", 11},                            // Heater Fuel Type
+      {"OS:WaterHeater:Mixed", 15},                            // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Mixed", 18},                            // On Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 17},                       // Heater Fuel Type
+      {"OS:WaterHeater:Stratified", 20},                       // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 24},                       // On Cycle Parasitic Fuel Type
+      {"OS:UtilityBill", 2},                                   // Fuel Type
+      {"OS:Meter:Custom", 2},                                  // Fuel Type
+      {"OS:Meter:CustomDecrement", 2},                         // Fuel Type
+      {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
+      {"OS:PythonPlugin:OutputVariable", 6},                   // Resource Type
+    }};
+
+    auto checkIfReplaceNeeded = [replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
+      if (boost::optional<std::string> fuelType_ = object.getString(fieldIndex)) {
+        return replaceFuelTypesMap.contains(*fuelType_);
+      }
+      return false;
+    };
+
+    auto replaceForField = [&replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
+      if (boost::optional<std::string> fuelType_ = object.getString(fieldIndex)) {
+        auto it = replaceFuelTypesMap.find(*fuelType_);
+        if (it != replaceFuelTypesMap.end()) {
+          LOG(Trace, "Replacing " << *fuelType_ << " with " << it->second << " at fieldIndex " << fieldIndex << " for " << object.nameString());
+          newObject.setString(fieldIndex, it->second);
+        }
+      }
+    };
+
     for (const IdfObject& object : idf_3_6_1.objects()) {
       auto iddname = object.iddObject().name();
 
@@ -8258,6 +8303,29 @@ namespace osversion {
 
         ss << object;
 
+      } else if (iddname == "OS:Boiler:HotWater") {
+
+        // 1 Field has been added from 3.6.1 to 3.7.0:
+        // -------------------------------------------
+        // * Off Cycle Parasitic Fuel Load * 16
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 16) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setDouble(16, 0.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
       } else if (auto it = std::find_if(crankcaseCoilWithIndex.cbegin(), crankcaseCoilWithIndex.cend(),
                                         [&iddname](const auto& p) { return iddname == p.first; });
                  it != crankcaseCoilWithIndex.cend()) {
@@ -8287,28 +8355,40 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
-      } else if (iddname == "OS:Boiler:HotWater") {
-
-        // 1 Field has been added from 3.6.1 to 3.7.0:
-        // -------------------------------------------
-        // * Off Cycle Parasitic Fuel Load * 16
-        auto iddObject = idd_3_7_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
-
-        for (size_t i = 0; i < object.numFields(); ++i) {
-          if ((value = object.getString(i))) {
-            if (i < 16) {
-              newObject.setString(i, value.get());
-            } else {
-              newObject.setString(i + 1, value.get());
-            }
+      } else if (fuelTypeRenamesMap.find(iddname) != fuelTypeRenamesMap.end()) {
+        LOG(Trace, "Checking for a fuel type rename in Object of type '" << iddname << "' and named '" << object.nameString() << "'");
+        auto rangeFields = fuelTypeRenamesMap.equal_range(iddname);
+        // First pass, find if a replacement is needed
+        bool isReplaceNeeded = false;
+        for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+          if (checkIfReplaceNeeded(object, it->second)) {
+            isReplaceNeeded = true;
+            break;
           }
         }
+        if (isReplaceNeeded) {
+          LOG(Trace, "Replace needed!");
 
-        newObject.setDouble(16, 0.0);
+          // Make a new object, and copy evertything in place
+          auto iddObject = idd_3_7_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject;
+          // Then handle the renames
+          for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+            replaceForField(object, newObject, it->second);
+          }
+
+          ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
+        } else {
+          // No-op
+          ss << object;
+        }
 
         // No-op
       } else {

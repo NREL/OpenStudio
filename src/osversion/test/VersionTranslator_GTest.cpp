@@ -42,6 +42,7 @@
 #include <array>
 #include <cmath>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <vector>
 
@@ -3471,4 +3472,67 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_BoilerHotWater) {
   EXPECT_EQ(0, bhw.getDouble(16).get());                           // Off Cycle Parasitic Fuel Load
   EXPECT_EQ(9, bhw.getDouble(17).get());                           // Sizing Factor
   EXPECT_EQ("Test", bhw.getString(18).get());                      // End-Use Subcategory
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_fuelTypeRenames) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_fuel.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  IddFile oldIddFile = getOpenStudioIddFileForVersion(VersionString(3, 6, 1));
+  OptionalIdfFile oldIdfFile_ = IdfFile::load(osmPath, oldIddFile);
+  ASSERT_TRUE(oldIdfFile_);
+
+  // Making the map case-insentive by providing a Comparator `IstringCompare`
+  const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap{{
+    {"Steam", "DistrictHeatingSteam"},
+    {"DistrictHeating", "DistrictHeatingWater"},
+    // Additionally, for UtilityBill, align the IDD choices to E+. This will also be covered by this
+    {"FuelOil_1", "FuelOilNo1"},
+    {"FuelOil_2", "FuelOilNo2"},
+    {"OtherFuel_1", "OtherFuel1"},
+    {"OtherFuel_2", "OtherFuel2"},
+  }};
+
+  // iddname, 361 & 370 index, current index
+  const std::array<std::tuple<std::string, int, int>, 13> fuelTypeRenamesMap{{
+    {"OS:OtherEquipment", 6, 6},                                // Fuel Type
+    {"OS:Exterior:FuelEquipment", 4, 4},                        // Fuel Use Type
+    {"OS:WaterHeater:Mixed", 11, 11},                           // Heater Fuel Type
+    {"OS:WaterHeater:Mixed", 15, 15},                           // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Mixed", 18, 18},                           // On Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 17, 17},                      // Heater Fuel Type
+    {"OS:WaterHeater:Stratified", 20, 20},                      // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 24, 24},                      // On Cycle Parasitic Fuel Type
+    {"OS:Meter:Custom", 2, 2},                                  // Fuel Type
+    {"OS:Meter:CustomDecrement", 2, 2},                         // Fuel Type
+    {"OS:EnergyManagementSystem:MeteredOutputVariable", 5, 5},  // Resource Type
+    {"OS:PythonPlugin:OutputVariable", 6, 6},                   // Resource Type
+    {"OS:UtilityBill", 2, 2},                                   // Fuel Type
+  }};
+
+  for (const auto& [iddname, oldFieldIndex, newFieldIndex] : fuelTypeRenamesMap) {
+
+    const std::string old_fuelType = oldIdfFile_->getObjectsByType(oldIddFile.getObject(iddname).get())[0].getString(oldFieldIndex).get();
+    // Check that the test model (in 3.6.1), actually has bad starting fuels
+    EXPECT_TRUE(replaceFuelTypesMap.find(old_fuelType) != replaceFuelTypesMap.end());
+
+    const std::string new_fuelType = model_->getObjectsByType(iddname)[0].getString(newFieldIndex).get();
+    EXPECT_NE(old_fuelType, new_fuelType);
+    EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType) << "Failed for " << iddname;
+  }
+
+  // I have two instances of this object, so do them manually
+  {
+    auto u = model_->getObjectByTypeAndName("OS:UtilityBill", "Legacy").get();
+    EXPECT_EQ("FuelOilNo1", u.getString(2).get());
+  }
+  {
+    auto u = model_->getObjectByTypeAndName("OS:UtilityBill", "Steam").get();
+    EXPECT_EQ("DistrictHeatingSteam", u.getString(2).get());
+  }
 }
