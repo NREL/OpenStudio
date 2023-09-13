@@ -7352,8 +7352,8 @@ OS:OtherEquipment,
        \key Coal
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
        \key DistrictCooling
        \default None
   A7;  \field End-Use Subcategory
@@ -7591,8 +7591,8 @@ OS:Exterior:FuelEquipment,
        \key Coal
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
        \key DistrictCooling
   N1,  \field Multiplier
        \type real
@@ -30217,8 +30217,8 @@ OS:WaterHeater:Mixed,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N8 , \field Heater Thermal Efficiency
        \type real
        \minimum> 0.0
@@ -30243,8 +30243,8 @@ OS:WaterHeater:Mixed,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N10, \field Off Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -30267,8 +30267,8 @@ OS:WaterHeater:Mixed,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N12, \field On Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -31574,8 +31574,8 @@ OS:WaterHeater:Stratified,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N11, \field Heater Thermal Efficiency
        \required-field
        \type real
@@ -31599,8 +31599,8 @@ OS:WaterHeater:Stratified,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N13, \field Off Cycle Parasitic Heat Fraction to Tank
        \required-field
        \type real
@@ -31629,8 +31629,8 @@ OS:WaterHeater:Stratified,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N16, \field On Cycle Parasitic Heat Fraction to Tank
        \required-field
        \type real
@@ -35641,7 +35641,7 @@ OS:LifeCycleCost:UsePriceEscalation,
         \key ElectricitySurplusSold
         \key ElectricityNet
         \key NaturalGas
-        \key Steam
+        \key DistrictHeatingSteam
         \key Gasoline
         \key Diesel
         \key Coal
@@ -35694,7 +35694,7 @@ OS:UtilityBill,
        \type choice
        \required-field
        \key Electricity
-       \key Gas
+       \key NaturalGas
        \key Gasoline
        \key Diesel
        \key Coal
@@ -35702,9 +35702,9 @@ OS:UtilityBill,
        \key FuelOilNo2
        \key Propane
        \key Water
-       \key Steam
+       \key DistrictHeatingSteam
        \key DistrictCooling
-       \key DistrictHeating
+       \key DistrictHeatingWater
        \key OtherFuel1
        \key OtherFuel2
        \key EnergyTransfer
@@ -36676,8 +36676,8 @@ OS:Meter:Custom,
         \key Coal
         \key OtherFuel1
         \key OtherFuel2
-        \key Steam
-        \key DistrictHeating
+        \key DistrictHeatingSteam
+        \key DistrictHeatingWater
         \key DistrictCooling
         \key Water
         \key Generic
@@ -36707,8 +36707,8 @@ OS:Meter:CustomDecrement,
         \key Coal
         \key OtherFuel1
         \key OtherFuel2
-        \key Steam
-        \key DistrictHeating
+        \key DistrictHeatingSteam
+        \key DistrictHeatingWater
         \key DistrictCooling
         \key Water
         \key Generic
@@ -37397,9 +37397,9 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \key WellWaterDrawn
        \key CondensateWaterCollected
        \key EnergyTransfer
-       \key Steam
+       \key DistrictHeatingSteam
        \key DistrictCooling
-       \key DistrictHeating
+       \key DistrictHeatingWater
        \key ElectricityProducedOnSite
        \key SolarWaterHeating
        \key SolarAirHeating
@@ -37637,9 +37637,9 @@ OS:PythonPlugin:OutputVariable,
        \key WellWaterDrawn
        \key CondensateWaterCollected
        \key EnergyTransfer
-       \key Steam
+       \key DistrictHeatingSteam
        \key DistrictCooling
-       \key DistrictHeating
+       \key DistrictHeatingWater
        \key ElectricityProducedOnSite
        \key SolarWaterHeating
        \key SolarAirHeating
