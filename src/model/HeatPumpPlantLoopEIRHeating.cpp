@@ -911,7 +911,7 @@ namespace model {
   }
 
   void HeatPumpPlantLoopEIRHeating::resetMinimumSupplyWaterTemperatureCurve() {
-    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetMinimumSupplyWaterTemperatureCurve();
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetMinimumSupplyWaterTemperatureCurve();
   }
 
   bool HeatPumpPlantLoopEIRHeating::setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve) {
