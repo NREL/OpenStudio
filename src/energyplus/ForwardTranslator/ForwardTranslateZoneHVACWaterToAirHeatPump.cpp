@@ -286,26 +286,6 @@ namespace energyplus {
       }
     }
 
-    //Maximum Cycling Rate
-    if ((value = modelObject.maximumCyclingRate())) {
-      /* idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate, value.get()); */
-    }
-
-    //Heat Pump Time Constant
-    if ((value = modelObject.heatPumpTimeConstant())) {
-      /* idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant, value.get()); */
-    }
-
-    //Fraction of On-Cycle Power Use
-    if ((value = modelObject.fractionofOnCyclePowerUse())) {
-      /* idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse, value.get()); */
-    }
-
-    //Heat Pump Fan Delay Time
-    if ((value = modelObject.heatPumpFanDelayTime())) {
-      /* idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime, value.get()); */
-    }
-
     // SupplementalHeatingCoilObjectType and SupplementalHeatingCoilName
     HVACComponent supplementalHeatingCoil = modelObject.supplementalHeatingCoil();
 

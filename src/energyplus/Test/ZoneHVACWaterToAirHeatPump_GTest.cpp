@@ -67,10 +67,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
   EXPECT_TRUE(hp.setOutdoorAirFlowRateDuringHeatingOperation(0.4));
   EXPECT_TRUE(hp.setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.2));
 
-  EXPECT_TRUE(hp.setMaximumCyclingRate(2.6));
-  EXPECT_TRUE(hp.setHeatPumpTimeConstant(60.1));
-  EXPECT_TRUE(hp.setFractionofOnCyclePowerUse(0.02));
-  EXPECT_TRUE(hp.setHeatPumpFanDelayTime(60.2));
   EXPECT_TRUE(hp.setMaximumSupplyAirTemperaturefromSupplementalHeater(30.0));
 
   EXPECT_TRUE(hp.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(15.0));

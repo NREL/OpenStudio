@@ -35,11 +35,11 @@ class UTILITIES_API Transformation
   /// constructor from storage, asserts vector is size 16
   Transformation(const Vector& vector);
 
-  // Copy and move operators are implicitly declared (Rule of 1)
-  // Transformation(const Transformation& other) = default;
-  // Transformation(Transformation&& other) = default;
-  // Transformation& operator=(const Transformation&) = default;
-  // Transformation& operator=(Transformation&&) = default;
+  // Copy and move operators are implicitly declared (Rule of 1), but we want the copy ctor for SWIG so we have to define all of them
+  Transformation(const Transformation& other) = default;
+  Transformation(Transformation&& other) noexcept = default;
+  Transformation& operator=(const Transformation&) = default;
+  Transformation& operator=(Transformation&&) noexcept = default;
   // ~Transformation() noexcept = default;
 
   /// rotation about origin defined by axis and angle (radians)

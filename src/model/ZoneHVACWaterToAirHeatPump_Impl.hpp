@@ -95,22 +95,6 @@ namespace model {
 
       HVACComponent coolingCoil() const;
 
-      double maximumCyclingRate() const;
-
-      bool isMaximumCyclingRateDefaulted() const;
-
-      double heatPumpTimeConstant() const;
-
-      bool isHeatPumpTimeConstantDefaulted() const;
-
-      double fractionofOnCyclePowerUse() const;
-
-      bool isFractionofOnCyclePowerUseDefaulted() const;
-
-      double heatPumpFanDelayTime() const;
-
-      bool isHeatPumpFanDelayTimeDefaulted() const;
-
       HVACComponent supplementalHeatingCoil() const;
 
       boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
@@ -211,30 +195,6 @@ namespace model {
       bool setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP);
 
       bool setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP);
-
-      bool setMaximumCyclingRate(boost::optional<double> maximumCyclingRate);
-
-      bool setMaximumCyclingRate(double maximumCyclingRate);
-
-      void resetMaximumCyclingRate();
-
-      bool setHeatPumpTimeConstant(boost::optional<double> heatPumpTimeConstant);
-
-      bool setHeatPumpTimeConstant(double heatPumpTimeConstant);
-
-      void resetHeatPumpTimeConstant();
-
-      bool setFractionofOnCyclePowerUse(boost::optional<double> fractionofOnCyclePowerUse);
-
-      bool setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse);
-
-      void resetFractionofOnCyclePowerUse();
-
-      bool setHeatPumpFanDelayTime(boost::optional<double> heatPumpFanDelayTime);
-
-      bool setHeatPumpFanDelayTime(double heatPumpFanDelayTime);
-
-      void resetHeatPumpFanDelayTime();
 
       bool setSupplementalHeatingCoil(HVACComponent& heatingCoilName);
 

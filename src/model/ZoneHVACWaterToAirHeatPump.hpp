@@ -9,6 +9,8 @@
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -90,21 +92,21 @@ namespace model {
 
     HVACComponent coolingCoil() const;
 
-    double maximumCyclingRate() const;
+    OS_DEPRECATED(3, 7, 0) double maximumCyclingRate() const;
 
-    bool isMaximumCyclingRateDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isMaximumCyclingRateDefaulted() const;
 
-    double heatPumpTimeConstant() const;
+    OS_DEPRECATED(3, 7, 0) double heatPumpTimeConstant() const;
 
-    bool isHeatPumpTimeConstantDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isHeatPumpTimeConstantDefaulted() const;
 
-    double fractionofOnCyclePowerUse() const;
+    OS_DEPRECATED(3, 7, 0) double fractionofOnCyclePowerUse() const;
 
-    bool isFractionofOnCyclePowerUseDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isFractionofOnCyclePowerUseDefaulted() const;
 
-    double heatPumpFanDelayTime() const;
+    OS_DEPRECATED(3, 7, 0) double heatPumpFanDelayTime() const;
 
-    bool isHeatPumpFanDelayTimeDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isHeatPumpFanDelayTimeDefaulted() const;
 
     HVACComponent supplementalHeatingCoil() const;
 
@@ -192,29 +194,29 @@ namespace model {
 
     bool setCoolingCoil(HVACComponent& coolingCoils);
 
-    bool setMaximumCyclingRate(boost::optional<double> maximumCyclingRate);
+    OS_DEPRECATED(3, 7, 0) bool setMaximumCyclingRate(boost::optional<double> maximumCyclingRate);
 
-    bool setMaximumCyclingRate(double maximumCyclingRate);
+    OS_DEPRECATED(3, 7, 0) bool setMaximumCyclingRate(double maximumCyclingRate);
 
-    void resetMaximumCyclingRate();
+    OS_DEPRECATED(3, 7, 0) void resetMaximumCyclingRate();
 
-    bool setHeatPumpTimeConstant(boost::optional<double> heatPumpTimeConstant);
+    OS_DEPRECATED(3, 7, 0) bool setHeatPumpTimeConstant(boost::optional<double> heatPumpTimeConstant);
 
-    bool setHeatPumpTimeConstant(double heatPumpTimeConstant);
+    OS_DEPRECATED(3, 7, 0) bool setHeatPumpTimeConstant(double heatPumpTimeConstant);
 
-    void resetHeatPumpTimeConstant();
+    OS_DEPRECATED(3, 7, 0) void resetHeatPumpTimeConstant();
 
-    bool setFractionofOnCyclePowerUse(boost::optional<double> fractionofOnCyclePowerUse);
+    OS_DEPRECATED(3, 7, 0) bool setFractionofOnCyclePowerUse(boost::optional<double> fractionofOnCyclePowerUse);
 
-    bool setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse);
+    OS_DEPRECATED(3, 7, 0) bool setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse);
 
-    void resetFractionofOnCyclePowerUse();
+    OS_DEPRECATED(3, 7, 0) void resetFractionofOnCyclePowerUse();
 
-    bool setHeatPumpFanDelayTime(boost::optional<double> heatPumpFanDelayTime);
+    OS_DEPRECATED(3, 7, 0) bool setHeatPumpFanDelayTime(boost::optional<double> heatPumpFanDelayTime);
 
-    bool setHeatPumpFanDelayTime(double heatPumpFanDelayTime);
+    OS_DEPRECATED(3, 7, 0) bool setHeatPumpFanDelayTime(double heatPumpFanDelayTime);
 
-    void resetHeatPumpFanDelayTime();
+    OS_DEPRECATED(3, 7, 0) void resetHeatPumpFanDelayTime();
 
     bool setSupplementalHeatingCoil(HVACComponent& heatingCoilName);
 

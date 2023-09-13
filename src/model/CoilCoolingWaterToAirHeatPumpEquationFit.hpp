@@ -15,6 +15,7 @@ namespace openstudio {
 
 namespace model {
 
+  class Curve;
   class CurveQuadLinear;
   class CurveQuintLinear;
 
@@ -106,6 +107,8 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) double coolingPowerConsumptionCoefficient4() const;
     OS_DEPRECATED(3, 2, 0) double coolingPowerConsumptionCoefficient5() const;
 
+    Curve partLoadFractionCorrelationCurve() const;
+
     double nominalTimeforCondensateRemovaltoBegin() const;
 
     bool isNominalTimeforCondensateRemovaltoBeginDefaulted() const;
@@ -113,6 +116,12 @@ namespace model {
     double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
 
     bool isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted() const;
+
+    double maximumCyclingRate() const;
+
+    double latentCapacityTimeConstant() const;
+
+    double fanDelayTime() const;
 
     /** @name Setters */
 
@@ -173,6 +182,8 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) bool setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4);
     OS_DEPRECATED(3, 2, 0) bool setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5);
 
+    bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
+
     bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
 
     void resetNominalTimeforCondensateRemovaltoBegin();
@@ -181,6 +192,12 @@ namespace model {
       setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
 
     void resetRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
+
+    bool setMaximumCyclingRate(double maximumCyclingRate);
+
+    bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
+
+    bool setFanDelayTime(double fanDelayTime);
 
     //@}
     /** @name Other */

@@ -131,6 +131,8 @@ namespace model {
     /** Returns the value of the crankcaseHeaterCapacity field. **/
     double crankcaseHeaterCapacity() const;
 
+    boost::optional<Curve> crankcaseHeaterCapacityFunctionofTemperatureCurve() const;
+
     /** Returns the value of the MaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation field. **/
     double maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation() const;
 
@@ -245,6 +247,9 @@ namespace model {
     bool setCrankcaseHeaterCapacity(boost::optional<double> value);
 
     bool setCrankcaseHeaterCapacity(double value);
+
+    bool setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve);
+    void resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
 
     /** Sets the value of the MaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation field. **/
     bool setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(boost::optional<double> value);

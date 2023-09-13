@@ -20,6 +20,7 @@
 #include "../../model/Node.hpp"
 #include "../../model/Curve.hpp"
 #include "../../model/CurveBiquadratic.hpp"
+#include "../../model/CurveLinear.hpp"
 #include "../../model/ScheduleConstant.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
@@ -63,18 +64,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXMultiSpeed_Basic) {
 
   EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-7.0));
   EXPECT_TRUE(coil.setOutdoorDryBulbTemperaturetoTurnOnCompressor(12.0));
-  EXPECT_TRUE(coil.setCrankcaseHeaterCapacity(0.0));
-  EXPECT_TRUE(coil.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0));
+  EXPECT_TRUE(coil.setCrankcaseHeaterCapacity(105.0));
+  CurveLinear crankCurve(m);
+  crankCurve.setName("CrankHeatCapFT");
+  EXPECT_TRUE(coil.setCrankcaseHeaterCapacityFunctionofTemperatureCurve(crankCurve));
+  EXPECT_TRUE(coil.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(9.0));
 
   CurveBiquadratic defrostEIRFT(m);
   defrostEIRFT.setName("Defrost EIR FT");
 
   EXPECT_TRUE(coil.setDefrostEnergyInputRatioFunctionofTemperatureCurve(defrostEIRFT));
-  EXPECT_TRUE(coil.setMaximumOutdoorDryBulbTemperatureforDefrostOperation(5.0));
+  EXPECT_TRUE(coil.setMaximumOutdoorDryBulbTemperatureforDefrostOperation(6.0));
   EXPECT_TRUE(coil.setDefrostStrategy("Resistive"));
   EXPECT_TRUE(coil.setDefrostControl("OnDemand"));
-  EXPECT_TRUE(coil.setDefrostTimePeriodFraction(0.058333));
-  EXPECT_TRUE(coil.setResistiveDefrostHeaterCapacity(0.0));
+  EXPECT_TRUE(coil.setDefrostTimePeriodFraction(0.08));
+  EXPECT_TRUE(coil.setResistiveDefrostHeaterCapacity(20.5));
   EXPECT_TRUE(coil.setApplyPartLoadFractiontoSpeedsGreaterthan1(false));
   EXPECT_TRUE(coil.setFuelType("NaturalGas"));
   EXPECT_TRUE(coil.setRegionnumberforCalculatingHSPF(4));
@@ -98,10 +102,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXMultiSpeed_Basic) {
 
   //translate the model to EnergyPlus
   ForwardTranslator ft;
-  Workspace workspace = ft.translateModel(m);
+  const Workspace workspace = ft.translateModel(m);
 
-  ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_MultiSpeed).size());
-  WorkspaceObject idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_MultiSpeed)[0];
+  auto idfs_coils = workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_MultiSpeed);
+  ASSERT_EQ(1, idfs_coils.size());
+  const WorkspaceObject& idf_coil = idfs_coils[0];
 
   EXPECT_EQ("Coil Heating DX Multi Speed", idf_coil.getString(Coil_Heating_DX_MultiSpeedFields::Name).get());
   EXPECT_EQ("Coil Avail Sch", idf_coil.getString(Coil_Heating_DX_MultiSpeedFields::AvailabilityScheduleName).get());
@@ -109,14 +114,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXMultiSpeed_Basic) {
   EXPECT_EQ("Outlet Node", idf_coil.getString(Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName).get());
   EXPECT_EQ(-7.0, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation).get());
   EXPECT_EQ(12.0, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::OutdoorDryBulbTemperaturetoTurnOnCompressor).get());
-  EXPECT_EQ(0.0, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::CrankcaseHeaterCapacity).get());
-  EXPECT_EQ(10.0, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation).get());
+  EXPECT_EQ(105.0, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::CrankcaseHeaterCapacity).get());
+  EXPECT_EQ("CrankHeatCapFT", idf_coil.getString(Coil_Heating_DX_MultiSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName).get());
+  EXPECT_EQ(9.0, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation).get());
   EXPECT_EQ("Defrost EIR FT", idf_coil.getString(Coil_Heating_DX_MultiSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName).get());
-  EXPECT_EQ(5.0, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation).get());
+  EXPECT_EQ(6.0, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation).get());
   EXPECT_EQ("Resistive", idf_coil.getString(Coil_Heating_DX_MultiSpeedFields::DefrostStrategy).get());
   EXPECT_EQ("OnDemand", idf_coil.getString(Coil_Heating_DX_MultiSpeedFields::DefrostControl).get());
-  EXPECT_EQ(0.058333, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::DefrostTimePeriodFraction).get());
-  EXPECT_EQ(0.0, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::ResistiveDefrostHeaterCapacity).get());
+  EXPECT_EQ(0.08, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::DefrostTimePeriodFraction).get());
+  EXPECT_EQ(20.5, idf_coil.getDouble(Coil_Heating_DX_MultiSpeedFields::ResistiveDefrostHeaterCapacity).get());
   EXPECT_EQ("No", idf_coil.getString(Coil_Heating_DX_MultiSpeedFields::ApplyPartLoadFractiontoSpeedsGreaterthan1).get());
   EXPECT_EQ("NaturalGas", idf_coil.getString(Coil_Heating_DX_MultiSpeedFields::FuelType).get());
   EXPECT_EQ(4, idf_coil.getInt(Coil_Heating_DX_MultiSpeedFields::RegionnumberforCalculatingHSPF).get());

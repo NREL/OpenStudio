@@ -8,6 +8,7 @@
 
 #include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 
+#include "../../model/Curve.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
@@ -44,6 +45,12 @@ namespace energyplus {
 
     // CrankcaseHeaterCapacity
     idfObject.setDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, modelObject.crankcaseHeaterCapacity());
+
+    if (auto crankCurve_ = modelObject.crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+      if (auto curve_ = translateAndMapModelObject(*crankCurve_)) {
+        idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve_->nameString());
+      }
+    }
 
     // MinimumOutdoorDryBulbTemperatureforCompressorOperation
     idfObject.setDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,

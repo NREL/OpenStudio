@@ -30,7 +30,14 @@
 #include <utilities/idd/OS_AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+// Remove when deprecated methods (maximumCyclingRate and co) are removed
 #include "../utilities/core/DeprecatedHelpers.hpp"
+#include "CoilCoolingDXVariableSpeed.hpp"
+#include "CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
+#include "CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
+#include "CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
+#include "CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -505,46 +512,6 @@ namespace model {
 
     boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::outdoorDryBulbTemperatureSensorNodeName() const {
       return getString(OS_AirLoopHVAC_UnitarySystemFields::OutdoorDryBulbTemperatureSensorNodeName, true);
-    }
-
-    double AirLoopHVACUnitarySystem_Impl::maximumCyclingRate() const {
-      boost::optional<double> value = getDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool AirLoopHVACUnitarySystem_Impl::isMaximumCyclingRateDefaulted() const {
-      return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate);
-    }
-
-    double AirLoopHVACUnitarySystem_Impl::heatPumpTimeConstant() const {
-      boost::optional<double> value = getDouble(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool AirLoopHVACUnitarySystem_Impl::isHeatPumpTimeConstantDefaulted() const {
-      return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant);
-    }
-
-    double AirLoopHVACUnitarySystem_Impl::fractionofOnCyclePowerUse() const {
-      boost::optional<double> value = getDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool AirLoopHVACUnitarySystem_Impl::isFractionofOnCyclePowerUseDefaulted() const {
-      return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse);
-    }
-
-    double AirLoopHVACUnitarySystem_Impl::heatPumpFanDelayTime() const {
-      boost::optional<double> value = getDouble(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool AirLoopHVACUnitarySystem_Impl::isHeatPumpFanDelayTimeDefaulted() const {
-      return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime);
     }
 
     double AirLoopHVACUnitarySystem_Impl::ancilliaryOnCycleElectricPower() const {
@@ -1153,46 +1120,6 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setMaximumCyclingRate(double maximumCyclingRate) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate, maximumCyclingRate);
-      return result;
-    }
-
-    void AirLoopHVACUnitarySystem_Impl::resetMaximumCyclingRate() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirLoopHVACUnitarySystem_Impl::setHeatPumpTimeConstant(double heatPumpTimeConstant) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant, heatPumpTimeConstant);
-      return result;
-    }
-
-    void AirLoopHVACUnitarySystem_Impl::resetHeatPumpTimeConstant() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirLoopHVACUnitarySystem_Impl::setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse, fractionofOnCyclePowerUse);
-      return result;
-    }
-
-    void AirLoopHVACUnitarySystem_Impl::resetFractionofOnCyclePowerUse() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse, "");
-      OS_ASSERT(result);
-    }
-
-    bool AirLoopHVACUnitarySystem_Impl::setHeatPumpFanDelayTime(double heatPumpFanDelayTime) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime, heatPumpFanDelayTime);
-      return result;
-    }
-
-    void AirLoopHVACUnitarySystem_Impl::resetHeatPumpFanDelayTime() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime, "");
-      OS_ASSERT(result);
-    }
-
     bool AirLoopHVACUnitarySystem_Impl::setAncilliaryOnCycleElectricPower(double ancilliaryOnCycleElectricPower) {
       bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOnCycleElectricPower, ancilliaryOnCycleElectricPower);
       return result;
@@ -1394,14 +1321,6 @@ namespace model {
     autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
     setMaximumSupplyAirTemperature(80.0);
     setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
-    ok = setMaximumCyclingRate(2.5);
-    OS_ASSERT(ok);
-    ok = setHeatPumpTimeConstant(60.0);
-    OS_ASSERT(ok);
-    ok = setFractionofOnCyclePowerUse(0.01);
-    OS_ASSERT(ok);
-    ok = setHeatPumpFanDelayTime(60);
-    OS_ASSERT(ok);
     ok = setAncilliaryOnCycleElectricPower(0.0);
     OS_ASSERT(ok);
     ok = setAncilliaryOffCycleElectricPower(0.0);
@@ -1635,38 +1554,6 @@ namespace model {
 
   boost::optional<std::string> AirLoopHVACUnitarySystem::outdoorDryBulbTemperatureSensorNodeName() const {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->outdoorDryBulbTemperatureSensorNodeName();
-  }
-
-  double AirLoopHVACUnitarySystem::maximumCyclingRate() const {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->maximumCyclingRate();
-  }
-
-  bool AirLoopHVACUnitarySystem::isMaximumCyclingRateDefaulted() const {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isMaximumCyclingRateDefaulted();
-  }
-
-  double AirLoopHVACUnitarySystem::heatPumpTimeConstant() const {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->heatPumpTimeConstant();
-  }
-
-  bool AirLoopHVACUnitarySystem::isHeatPumpTimeConstantDefaulted() const {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isHeatPumpTimeConstantDefaulted();
-  }
-
-  double AirLoopHVACUnitarySystem::fractionofOnCyclePowerUse() const {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->fractionofOnCyclePowerUse();
-  }
-
-  bool AirLoopHVACUnitarySystem::isFractionofOnCyclePowerUseDefaulted() const {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isFractionofOnCyclePowerUseDefaulted();
-  }
-
-  double AirLoopHVACUnitarySystem::heatPumpFanDelayTime() const {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->heatPumpFanDelayTime();
-  }
-
-  bool AirLoopHVACUnitarySystem::isHeatPumpFanDelayTimeDefaulted() const {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isHeatPumpFanDelayTimeDefaulted();
   }
 
   double AirLoopHVACUnitarySystem::ancilliaryOnCycleElectricPower() const {
@@ -1978,38 +1865,6 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetOutdoorDryBulbTemperatureSensorNodeName();
   }
 
-  bool AirLoopHVACUnitarySystem::setMaximumCyclingRate(double maximumCyclingRate) {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setMaximumCyclingRate(maximumCyclingRate);
-  }
-
-  void AirLoopHVACUnitarySystem::resetMaximumCyclingRate() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetMaximumCyclingRate();
-  }
-
-  bool AirLoopHVACUnitarySystem::setHeatPumpTimeConstant(double heatPumpTimeConstant) {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setHeatPumpTimeConstant(heatPumpTimeConstant);
-  }
-
-  void AirLoopHVACUnitarySystem::resetHeatPumpTimeConstant() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetHeatPumpTimeConstant();
-  }
-
-  bool AirLoopHVACUnitarySystem::setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse) {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setFractionofOnCyclePowerUse(fractionofOnCyclePowerUse);
-  }
-
-  void AirLoopHVACUnitarySystem::resetFractionofOnCyclePowerUse() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetFractionofOnCyclePowerUse();
-  }
-
-  bool AirLoopHVACUnitarySystem::setHeatPumpFanDelayTime(double heatPumpFanDelayTime) {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setHeatPumpFanDelayTime(heatPumpFanDelayTime);
-  }
-
-  void AirLoopHVACUnitarySystem::resetHeatPumpFanDelayTime() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetHeatPumpFanDelayTime();
-  }
-
   bool AirLoopHVACUnitarySystem::setAncilliaryOnCycleElectricPower(double ancilliaryOnCycleElectricPower) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setAncilliaryOnCycleElectricPower(ancilliaryOnCycleElectricPower);
   }
@@ -2155,6 +2010,147 @@ namespace model {
     DEPRECATED_AT_MSG(3, 7, 0,
                       "Use setSupplyAirFlowRateDuringHeatingOperation, autosizeSupplyAirFlowRateDuringHeatingOperation, "
                       "setSupplyAirFlowRatePerFloorAreaduringHeatingOperation, or setFractionofAutosizedDesignHeatingSupplyAirFlowRate instead.");
+  }
+
+  double AirLoopHVACUnitarySystem::maximumCyclingRate() const {
+    DEPRECATED_AT_MSG(3, 7, 0,
+                      "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil()->maximumCyclingRate() instead.");
+    double result = 2.5;  // former default
+    if (auto c_ = coolingCoil()) {
+      if (auto c_eq_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+        result = c_eq_->maximumCyclingRate();
+      } else if (auto c_vs_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+        result = c_vs_->maximumCyclingRate();
+      } else if (auto c_dx_ = c_->optionalCast<CoilCoolingDXVariableSpeed>()) {
+        result = c_dx_->maximumCyclingRate();
+      }
+    }
+    return result;
+  }
+
+  bool AirLoopHVACUnitarySystem::isMaximumCyclingRateDefaulted() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+    return false;
+  }
+
+  bool AirLoopHVACUnitarySystem::setMaximumCyclingRate(double maximumCyclingRate) {
+    DEPRECATED_AT_MSG(3, 7, 0,
+                      "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil()->setMaximumCyclingRate() instead.");
+    bool result = false;
+    if (auto c_ = coolingCoil()) {
+      if (auto c_eq_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+        result = c_eq_->setMaximumCyclingRate(maximumCyclingRate);
+      } else if (auto c_vs_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+        result = c_vs_->setMaximumCyclingRate(maximumCyclingRate);
+      } else if (auto c_dx_ = c_->optionalCast<CoilCoolingDXVariableSpeed>()) {
+        result = c_dx_->setMaximumCyclingRate(maximumCyclingRate);
+      }
+    }
+    return result;
+  }
+
+  void AirLoopHVACUnitarySystem::resetMaximumCyclingRate() {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+  }
+
+  double AirLoopHVACUnitarySystem::heatPumpTimeConstant() const {
+    DEPRECATED_AT_MSG(
+      3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil()->latentCapacityTimeConstant() instead.");
+    double result = 60;  // former default
+    if (auto c_ = coolingCoil()) {
+      if (auto c_eq_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+        result = c_eq_->latentCapacityTimeConstant();
+      } else if (auto c_vs_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+        result = c_vs_->latentCapacityTimeConstant();
+      } else if (auto c_dx_ = c_->optionalCast<CoilCoolingDXVariableSpeed>()) {
+        result = c_dx_->latentCapacityTimeConstant();
+      }
+    }
+    return result;
+  }
+
+  bool AirLoopHVACUnitarySystem::isHeatPumpTimeConstantDefaulted() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+    return false;
+  }
+
+  bool AirLoopHVACUnitarySystem::setHeatPumpTimeConstant(double heatPumpTimeConstant) {
+    DEPRECATED_AT_MSG(
+      3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil()->setLatentCapacityTimeConstant() instead.");
+    bool result = false;
+    if (auto c_ = coolingCoil()) {
+      if (auto c_eq_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+        result = c_eq_->setLatentCapacityTimeConstant(heatPumpTimeConstant);
+      } else if (auto c_vs_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+        result = c_vs_->setLatentCapacityTimeConstant(heatPumpTimeConstant);
+      } else if (auto c_dx_ = c_->optionalCast<CoilCoolingDXVariableSpeed>()) {
+        result = c_dx_->setLatentCapacityTimeConstant(heatPumpTimeConstant);
+      }
+    }
+    return result;
+  }
+
+  void AirLoopHVACUnitarySystem::resetHeatPumpTimeConstant() {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+  }
+
+  double AirLoopHVACUnitarySystem::fractionofOnCyclePowerUse() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
+    const double result = 0.01;  // former default
+    return result;
+  }
+
+  bool AirLoopHVACUnitarySystem::isFractionofOnCyclePowerUseDefaulted() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
+    return false;
+  }
+
+  bool AirLoopHVACUnitarySystem::setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse) {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
+    return false;
+  }
+
+  void AirLoopHVACUnitarySystem::resetFractionofOnCyclePowerUse() {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is no longer used.");
+  }
+
+  double AirLoopHVACUnitarySystem::heatPumpFanDelayTime() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil()->fanDelayTime() instead.");
+    double result = 60;  // former default
+    if (auto c_ = coolingCoil()) {
+      if (auto c_eq_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+        result = c_eq_->fanDelayTime();
+      } else if (auto c_vs_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+        result = c_vs_->fanDelayTime();
+      } else if (auto c_dx_ = c_->optionalCast<CoilCoolingDXVariableSpeed>()) {
+        result = c_dx_->fanDelayTime();
+      }
+    }
+    return result;
+  }
+
+  bool AirLoopHVACUnitarySystem::isHeatPumpFanDelayTimeDefaulted() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
+    return false;
+  }
+
+  bool AirLoopHVACUnitarySystem::setHeatPumpFanDelayTime(double heatPumpFanDelayTime) {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil. Use coolingCoil()->setFanDelayTime() instead.");
+    bool result = false;
+    if (auto c_ = coolingCoil()) {
+      if (auto c_eq_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>()) {
+        result = c_eq_->setFanDelayTime(heatPumpFanDelayTime);
+      } else if (auto c_vs_ = c_->optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>()) {
+        result = c_vs_->setFanDelayTime(heatPumpFanDelayTime);
+      } else if (auto c_dx_ = c_->optionalCast<CoilCoolingDXVariableSpeed>()) {
+        result = c_dx_->setFanDelayTime(heatPumpFanDelayTime);
+      }
+    }
+    return result;
+  }
+
+  void AirLoopHVACUnitarySystem::resetHeatPumpFanDelayTime() {
+    DEPRECATED_AT_MSG(3, 7, 0, "As of EnergyPlus 23.2.0, this property is on the child cooling coil and it's a required-field");
   }
 
   /// @endcond

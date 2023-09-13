@@ -135,6 +135,30 @@ namespace model {
       return result;
     }
 
+    double CoilHeatingDXVariableSpeedSpeedData_Impl::ratedSupplyFanPowerPerVolumeFlowRate2017() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeed_SpeedDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate2017, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilHeatingDXVariableSpeedSpeedData_Impl::setRatedSupplyFanPowerPerVolumeFlowRate2017(double ratedSupplyFanPowerPerVolumeFlowRate2017) {
+      const bool result = setDouble(OS_Coil_Heating_DX_VariableSpeed_SpeedDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate2017,
+                                    ratedSupplyFanPowerPerVolumeFlowRate2017);
+      return result;
+    }
+
+    double CoilHeatingDXVariableSpeedSpeedData_Impl::ratedSupplyFanPowerPerVolumeFlowRate2023() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeed_SpeedDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate2023, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilHeatingDXVariableSpeedSpeedData_Impl::setRatedSupplyFanPowerPerVolumeFlowRate2023(double ratedSupplyFanPowerPerVolumeFlowRate2023) {
+      const bool result = setDouble(OS_Coil_Heating_DX_VariableSpeed_SpeedDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate2023,
+                                    ratedSupplyFanPowerPerVolumeFlowRate2023);
+      return result;
+    }
+
     boost::optional<Curve> CoilHeatingDXVariableSpeedSpeedData_Impl::optionalHeatingCapacityFunctionofTemperatureCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Heating_DX_VariableSpeed_SpeedDataFields::HeatingCapacityFunctionofTemperatureCurveName);
@@ -221,6 +245,10 @@ namespace model {
     OS_ASSERT(ok);
     ok = setReferenceUnitRatedAirFlowRate(0.653);
     OS_ASSERT(ok);
+    ok = setRatedSupplyFanPowerPerVolumeFlowRate2017(773.3);
+    OS_ASSERT(ok);
+    ok = setRatedSupplyFanPowerPerVolumeFlowRate2023(934.4);
+    OS_ASSERT(ok);
     ok = setHeatingCapacityFunctionofTemperatureCurve(heating_curve_1);
     OS_ASSERT(ok);
     ok = setTotalHeatingCapacityFunctionofAirFlowFractionCurve(heating_curve_2);
@@ -244,6 +272,10 @@ namespace model {
     ok = setReferenceUnitGrossRatedHeatingCOP(4.29731);
     OS_ASSERT(ok);
     ok = setReferenceUnitRatedAirFlowRate(0.653);
+    OS_ASSERT(ok);
+    ok = setRatedSupplyFanPowerPerVolumeFlowRate2017(773.3);
+    OS_ASSERT(ok);
+    ok = setRatedSupplyFanPowerPerVolumeFlowRate2023(934.4);
     OS_ASSERT(ok);
     ok = setHeatingCapacityFunctionofTemperatureCurve(heatingCapacityFunctionofTemperatureCurve);
     OS_ASSERT(ok);
@@ -314,6 +346,24 @@ namespace model {
 
   bool CoilHeatingDXVariableSpeedSpeedData::setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve) {
     return getImpl<detail::CoilHeatingDXVariableSpeedSpeedData_Impl>()->setEnergyInputRatioFunctionofAirFlowFractionCurve(curve);
+  }
+
+  double CoilHeatingDXVariableSpeedSpeedData::ratedSupplyFanPowerPerVolumeFlowRate2017() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeedSpeedData_Impl>()->ratedSupplyFanPowerPerVolumeFlowRate2017();
+  }
+
+  bool CoilHeatingDXVariableSpeedSpeedData::setRatedSupplyFanPowerPerVolumeFlowRate2017(double ratedSupplyFanPowerPerVolumeFlowRate2017) {
+    return getImpl<detail::CoilHeatingDXVariableSpeedSpeedData_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate2017(
+      ratedSupplyFanPowerPerVolumeFlowRate2017);
+  }
+
+  double CoilHeatingDXVariableSpeedSpeedData::ratedSupplyFanPowerPerVolumeFlowRate2023() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeedSpeedData_Impl>()->ratedSupplyFanPowerPerVolumeFlowRate2023();
+  }
+
+  bool CoilHeatingDXVariableSpeedSpeedData::setRatedSupplyFanPowerPerVolumeFlowRate2023(double ratedSupplyFanPowerPerVolumeFlowRate2023) {
+    return getImpl<detail::CoilHeatingDXVariableSpeedSpeedData_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate2023(
+      ratedSupplyFanPowerPerVolumeFlowRate2023);
   }
 
   /// @cond

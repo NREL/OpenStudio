@@ -370,30 +370,6 @@ namespace energyplus {
       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::OutdoorDryBulbTemperatureSensorNodeName, s.get());
     }
 
-    // Maximum Cycling Rate
-    d = modelObject.maximumCyclingRate();
-    if (d) {
-      /* unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate, d.get()); */
-    }
-
-    // Heat Pump Time Constant
-    d = modelObject.heatPumpTimeConstant();
-    if (d) {
-      /* unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant, d.get()); */
-    }
-
-    // Fraction of On-Cycle Power Use
-    d = modelObject.fractionofOnCyclePowerUse();
-    if (d) {
-      /* unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse, d.get()); */
-    }
-
-    // Heat Pump Fan Delay Time
-    d = modelObject.heatPumpFanDelayTime();
-    if (d) {
-      /* unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime, d.get()); */
-    }
-
     // Ancilliary On-Cycle Electric Power
     d = modelObject.ancilliaryOnCycleElectricPower();
     if (d) {

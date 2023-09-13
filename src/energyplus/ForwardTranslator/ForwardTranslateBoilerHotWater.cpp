@@ -152,6 +152,12 @@ namespace energyplus {
       idfObject.setString(Boiler_HotWaterFields::EndUseSubcategory, s.get());
     }
 
+    // OffCycleParasiticFuelLoad
+
+    if ((value = modelObject.offCycleParasiticFuelLoad())) {
+      idfObject.setDouble(Boiler_HotWaterFields::OffCycleParasiticFuelLoad, value.get());
+    }
+
     return boost::optional<IdfObject>(idfObject);
   }
 

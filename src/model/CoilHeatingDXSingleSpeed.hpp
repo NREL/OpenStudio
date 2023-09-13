@@ -14,9 +14,9 @@ namespace openstudio {
 
 namespace model {
 
-  class Schedule;
-  class Curve;
   class AirflowNetworkEquivalentDuct;
+  class Curve;
+  class Schedule;
 
   namespace detail {
 
@@ -84,6 +84,8 @@ namespace model {
 
     double crankcaseHeaterCapacity() const;
 
+    boost::optional<Curve> crankcaseHeaterCapacityFunctionofTemperatureCurve() const;
+
     bool isCrankcaseHeaterCapacityDefaulted() const;
 
     double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
@@ -141,6 +143,9 @@ namespace model {
     bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
     void resetCrankcaseHeaterCapacity();
+
+    bool setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve);
+    void resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
 
     bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
