@@ -20,6 +20,7 @@
 #include "../../model/PortList.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/PlantLoop.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed.hpp"
 
 #include <utilities/idd/ZoneHVAC_WaterToAirHeatPump_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
@@ -27,7 +28,6 @@
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
-#include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfObject.hpp"
@@ -99,6 +99,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
   EXPECT_TRUE(clg_coil.setRatedEnteringWaterTemperature(31.0));
   EXPECT_TRUE(clg_coil.setRatedEnteringAirDryBulbTemperature(26.0));
   EXPECT_TRUE(clg_coil.setRatedEnteringAirWetBulbTemperature(20.1));
+
+  UnitarySystemPerformanceMultispeed perf(m);
+  perf.setName("US Perf Multispeed");
+  EXPECT_TRUE(hp.setDesignSpecificationMultispeedObject(perf));
 
   ThermalZone z(m);
   Space s(m);
@@ -234,6 +238,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
     ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Coil_Heating_Electric).size());
     ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Zone).size());
     ASSERT_EQ(1, w.getObjectsByType(IddObjectType::ZoneHVAC_EquipmentList).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed).size());
 
     validateNodeMatch(w, "", drawThrough);
 
@@ -266,8 +271,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
     EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityManagerListName));
     EXPECT_EQ("ConstantOnDemand", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode).get());
     EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationZoneHVACSizingObjectName));
-    EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectType));
-    EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName));
+    EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+              idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectType).get());
+    EXPECT_EQ("US Perf Multispeed", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName).get());
 
     {
       ASSERT_TRUE(idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName));

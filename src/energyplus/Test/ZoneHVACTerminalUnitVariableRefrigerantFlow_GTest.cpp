@@ -33,6 +33,7 @@
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/SetpointManagerScheduled.hpp"
 #include "../../model/FanSystemModel.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfObject_Impl.hpp"
@@ -79,6 +80,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
   CoilHeatingDXVariableRefrigerantFlow hc(m);
 
   ZoneHVACTerminalUnitVariableRefrigerantFlow vrf(m, cc, hc, fan);
+
+  UnitarySystemPerformanceMultispeed perf(m);
+  perf.setName("US Perf Multispeed");
+  EXPECT_TRUE(vrf.setDesignSpecificationMultispeedObject(perf));
 
   ThermalZone z(m);
   Space s(m);
@@ -291,6 +296,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
 
     EXPECT_EQ(idf_supHC.getString(Coil_Heating_WaterFields::AirOutletNodeName).get(),
               idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNodeName).get());
+
+    EXPECT_EQ("UnitarySystemPerformance:Multispeed", idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectType).get());
+    EXPECT_EQ("US Perf Multispeed", idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName).get());
   }
 }
 
