@@ -260,12 +260,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
     std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
     std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
     std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Water);
+    std::vector<WorkspaceObject> idf_perfs = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed);
 
     EXPECT_EQ(1u, idf_vrfs.size());
     EXPECT_EQ(1u, idf_ccs.size());
     EXPECT_EQ(1u, idf_hcs.size());
     EXPECT_EQ(1u, idf_fans.size());
     EXPECT_EQ(1u, idf_supHCs.size());
+    EXPECT_EQ(1u, idf_perfs.size());
 
     WorkspaceObject idf_vrf = idf_vrfs[0];
     WorkspaceObject idf_cc = idf_ccs[0];
@@ -297,8 +299,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
     EXPECT_EQ(idf_supHC.getString(Coil_Heating_WaterFields::AirOutletNodeName).get(),
               idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNodeName).get());
 
-    EXPECT_EQ("UnitarySystemPerformance:Multispeed", idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectType).get());
-    EXPECT_EQ("US Perf Multispeed", idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName).get());
+    EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+              idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectType).get());
+    EXPECT_EQ("US Perf Multispeed",
+              idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName).get());
   }
 }
 
