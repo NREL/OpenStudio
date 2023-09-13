@@ -35698,15 +35698,15 @@ OS:UtilityBill,
        \key Gasoline
        \key Diesel
        \key Coal
-       \key FuelOil_1
-       \key FuelOil_2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Propane
        \key Water
        \key Steam
        \key DistrictCooling
        \key DistrictHeating
-       \key OtherFuel_1
-       \key OtherFuel_2
+       \key OtherFuel1
+       \key OtherFuel2
        \key EnergyTransfer
   A4, \field Meter Install Location
        \note Location the meter associated with this utility bill object is installed.
