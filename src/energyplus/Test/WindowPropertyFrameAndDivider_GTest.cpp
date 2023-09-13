@@ -90,7 +90,6 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
   EXPECT_TRUE(subSurface2.setWindowPropertyFrameAndDivider(frameAndDivider));
   ASSERT_TRUE(subSurface2.windowPropertyFrameAndDivider());
 
-
   ForwardTranslator forwardTranslator;
   auto workspace = forwardTranslator.translateModel(model);
 

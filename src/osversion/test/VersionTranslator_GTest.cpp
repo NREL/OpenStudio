@@ -3439,3 +3439,36 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_wahp) {
     }
   }
 }
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_BoilerHotWater) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_BoilerHotWater.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_BoilerHotWater_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> bhws = model->getObjectsByType("OS:Boiler:HotWater");
+  ASSERT_EQ(1u, bhws.size());
+  WorkspaceObject bhw = bhws[0];
+
+  EXPECT_EQ("Boiler Hot Water 1", bhw.getString(1).get());         // Name
+  EXPECT_EQ("Propane", bhw.getString(2).get());                    // Fuel Type
+  EXPECT_EQ(1, bhw.getDouble(3).get());                            // Nominal Capacity
+  EXPECT_EQ(0.9, bhw.getDouble(4).get());                          // Nominal Thermal Efficiency
+  EXPECT_EQ("EnteringBoiler", bhw.getString(5).get());             // Efficiency Curve Temperature Evaluation Variable
+  EXPECT_NE("", bhw.getString(6).get());                           // Normalized Boiler Efficiency Curve Name
+  EXPECT_EQ(3, bhw.getDouble(7).get());                            // Design Water Flow Rate
+  EXPECT_EQ(4, bhw.getDouble(8).get());                            // Minimum Part Load Ratio
+  EXPECT_EQ(5, bhw.getDouble(9).get());                            // Maximum Part Load Ratio
+  EXPECT_EQ(6, bhw.getDouble(10).get());                           // Optimum Part Load Ratio
+  EXPECT_TRUE(bhw.isEmpty(11));                                    // Boiler Water Inlet Node Name
+  EXPECT_TRUE(bhw.isEmpty(12));                                    // Boiler Water Outlet Node Name
+  EXPECT_EQ(7, bhw.getDouble(13).get());                           // Water Outlet Upper Temperature Limit
+  EXPECT_EQ("LeavingSetpointModulated", bhw.getString(14).get());  // Boiler Flow Mode
+  EXPECT_EQ(8, bhw.getDouble(15).get());                           // On Cycle Parasitic Electric Load
+  EXPECT_EQ(0, bhw.getDouble(16).get());                           // Off Cycle Parasitic Fuel Load
+  EXPECT_EQ(9, bhw.getDouble(17).get());                           // Sizing Factor
+  EXPECT_EQ("Test", bhw.getString(18).get());                      // End-Use Subcategory
+}

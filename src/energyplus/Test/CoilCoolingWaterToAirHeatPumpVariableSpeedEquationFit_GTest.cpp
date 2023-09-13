@@ -216,4 +216,3 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingWaterToAirHeatPumpVariabl
                 ->nameString());
   }
 }
-
