@@ -1848,7 +1848,6 @@ OS:WeatherProperty:SkyTemperature,
        \key Idso
        \key BerdahlMartin
        \key ScheduleValue
-       \key ScheduleValue
        \key DifferenceScheduleDryBulbValue
        \key DifferenceScheduleDewPointValue
   A4, \field Schedule Name
