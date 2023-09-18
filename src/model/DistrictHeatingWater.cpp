@@ -52,7 +52,7 @@ namespace model {
     std::vector<ScheduleTypeKey> DistrictHeatingWater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_DistrictHeating_WaterFields::CapacityFractionSchedule) != e) {
+      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_DistrictHeating_WaterFields::CapacityFractionSchedule) != fieldIndices.cend()) {
         result.emplace_back("DistrictHeatingWater", "Capacity Fraction Schedule");
       }
       return result;

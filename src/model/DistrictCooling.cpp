@@ -49,6 +49,15 @@ namespace model {
       return DistrictCooling::iddObjectType();
     }
 
+    std::vector<ScheduleTypeKey> DistrictCooling_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_DistrictCoolingFields::CapacityFractionSchedule) != fieldIndices.cend()) {
+        result.emplace_back("DistrictCooling", "Capacity Fraction Schedule");
+      }
+      return result;
+    }
+
     boost::optional<double> DistrictCooling_Impl::nominalCapacity() const {
       return getDouble(OS_DistrictCoolingFields::NominalCapacity, true);
     }

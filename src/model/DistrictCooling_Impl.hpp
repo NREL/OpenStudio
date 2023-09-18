@@ -55,6 +55,8 @@ namespace model {
       virtual std::vector<FuelType> heatingFuelTypes() const override;
       virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
       //@}
       /** @name Getters */
       //@{
