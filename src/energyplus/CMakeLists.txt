@@ -144,7 +144,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDesignDay.cpp
   ForwardTranslator/ForwardTranslateDesignSpecificationOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateDistrictCooling.cpp
-  ForwardTranslator/ForwardTranslateDistrictHeating.cpp
+  ForwardTranslator/ForwardTranslateDistrictHeatingWater.cpp
   ForwardTranslator/ForwardTranslateDuct.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
   ForwardTranslator/ForwardTranslateElectricEquipmentITEAirCooled.cpp

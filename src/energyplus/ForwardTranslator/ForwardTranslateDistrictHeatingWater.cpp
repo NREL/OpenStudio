@@ -5,8 +5,8 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-#include "../../model/DistrictHeating.hpp"
-#include "../../model/DistrictHeating_Impl.hpp"
+#include "../../model/DistrictHeatingWater.hpp"
+#include "../../model/DistrictHeatingWater_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
@@ -20,7 +20,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateDistrictHeating(DistrictHeating& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateDistrictHeatingWater(DistrictHeatingWater& modelObject) {
     OptionalString s;
     OptionalDouble d;
     OptionalModelObject temp;

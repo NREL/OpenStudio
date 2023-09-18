@@ -16773,7 +16773,7 @@ OS:DistrictCooling,
        \autosizable
        \required-field
 
-OS:DistrictHeating,
+OS:DistrictHeating:Water,
   A1, \field Handle
        \type handle
        \required-field

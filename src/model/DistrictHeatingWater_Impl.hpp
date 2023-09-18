@@ -3,8 +3,8 @@
 *  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
-#ifndef MODEL_DISTRICTHEATING_IMPL_HPP
-#define MODEL_DISTRICTHEATING_IMPL_HPP
+#ifndef MODEL_DISTRICTHEATINGWATER_IMPL_HPP
+#define MODEL_DISTRICTHEATINGWATER_IMPL_HPP
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
@@ -15,22 +15,22 @@ namespace model {
 
   namespace detail {
 
-    /** DistrictHeating_Impl is a StraightComponent_Impl that is the implementation class for DistrictHeating.*/
+    /** DistrictHeatingWater_Impl is a StraightComponent_Impl that is the implementation class for DistrictHeatingWater.*/
 
-    class MODEL_API DistrictHeating_Impl : public StraightComponent_Impl
+    class MODEL_API DistrictHeatingWater_Impl : public StraightComponent_Impl
     {
 
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      DistrictHeating_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      DistrictHeatingWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      DistrictHeating_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      DistrictHeatingWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      DistrictHeating_Impl(const DistrictHeating_Impl& other, Model_Impl* model, bool keepHandle);
+      DistrictHeatingWater_Impl(const DistrictHeatingWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DistrictHeating_Impl() = default;
+      virtual ~DistrictHeatingWater_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -80,7 +80,7 @@ namespace model {
 
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.DistrictHeating");
+      REGISTER_LOGGER("openstudio.model.DistrictHeatingWater");
     };
 
   }  // namespace detail
@@ -89,4 +89,4 @@ namespace model {
 
 }  // namespace openstudio
 
-#endif  // MODEL_DISTRICTHEATING_IMPL_HPP
+#endif  // MODEL_DISTRICTHEATINGWATER_IMPL_HPP

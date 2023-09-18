@@ -3600,3 +3600,24 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_fuelTypeRenames) {
     }
   }
 }
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_DistrictHeating) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_RenameDistrictHeating.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  std::vector<WorkspaceObject> dhs = model_->getObjectsByType("OS:DistrictHeating:Water");
+  ASSERT_EQ(1u, dhs.size());
+  const auto& dh = dhs.front();
+
+  EXPECT_EQ("My DistrictHeating", dh.nameString());
+  ASSERT_TRUE(dh.getTarget(2));
+  EXPECT_EQ("DH Inlet", dh.getTarget(2)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
+  ASSERT_TRUE(dh.getTarget(3));
+  EXPECT_EQ("DH Outlet", dh.getTarget(3)->getTarget(OS_ConnectionFields::TargetObject)->nameString());
+  EXPECT_EQ(1000.0, dh.getDouble(4).get());
+}

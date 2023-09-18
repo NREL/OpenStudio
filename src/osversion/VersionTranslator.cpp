@@ -8359,6 +8359,20 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:DistrictHeating") {
+        // We just create a new object, and copy every field.
+        auto iddObject = idd_3_7_0.getObject("OS:DistrictHeating:Water");
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
       } else if (iddname == "OS:Output:Meter") {
 
         std::string name = object.nameString();

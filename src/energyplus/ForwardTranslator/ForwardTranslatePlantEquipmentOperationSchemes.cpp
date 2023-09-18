@@ -204,7 +204,7 @@ namespace energyplus {
         result = waterHeater.useSideDesignFlowRate();
         break;
       }
-      case openstudio::IddObjectType::OS_DistrictHeating: {
+      case openstudio::IddObjectType::OS_DistrictHeating_Water: {
         break;
       }
       case openstudio::IddObjectType::OS_CentralHeatPumpSystem: {
