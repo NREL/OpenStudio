@@ -36744,7 +36744,7 @@ OS:EnvironmentalImpactFactors,
   A1, \field Handle
       \type handle
       \required-field
-  N1, \field District Heating Efficiency
+  N1, \field District Heating Water Efficiency
       \note District heating efficiency used when converted to natural gas
       \minimum> 0.0
       \required-field
@@ -36753,7 +36753,7 @@ OS:EnvironmentalImpactFactors,
       \units W/W
       \minimum> 0.0
       \required-field
-  N3, \field Steam Conversion Efficiency
+  N3, \field District Heating Steam Conversion Efficiency
       \note Steam conversion efficiency used to convert steam usage to natural gas
       \minimum> 0.0
       \required-field

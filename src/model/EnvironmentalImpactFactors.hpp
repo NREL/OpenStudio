@@ -9,6 +9,8 @@
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -40,11 +42,13 @@ namespace model {
     /** @name Getters */
     //@{
 
-    double districtHeatingEfficiency() const;
+    double districtHeatingWaterEfficiency() const;
+    OS_DEPRECATED(3, 7, 0) double districtHeatingEfficiency() const;
 
     double districtCoolingCOP() const;
 
-    double steamConversionEfficiency() const;
+    double districtHeatingSteamConversionEfficiency() const;
+    OS_DEPRECATED(3, 7, 0) double steamConversionEfficiency() const;
 
     double totalCarbonEquivalentEmissionFactorFromN2O() const;
 
@@ -56,11 +60,13 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setDistrictHeatingEfficiency(double districtHeatingEfficiency);
+    bool setDistrictHeatingWaterEfficiency(double districtHeatingEfficiency);
+    OS_DEPRECATED(3, 7, 0) bool setDistrictHeatingEfficiency(double districtHeatingEfficiency);
 
     bool setDistrictCoolingCOP(double districtCoolingCOP);
 
-    bool setSteamConversionEfficiency(double steamConversionEfficiency);
+    bool setDistrictHeatingSteamConversionEfficiency(double districtHeatingSteamConversionEfficiency);
+    OS_DEPRECATED(3, 7, 0) bool setSteamConversionEfficiency(double steamConversionEfficiency);
 
     bool setTotalCarbonEquivalentEmissionFactorFromN2O(double totalCarbonEquivalentEmissionFactorFromN2O);
 
