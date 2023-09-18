@@ -9,6 +9,10 @@
 #include "../../model/UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include "../../model/AirLoopHVACUnitarySystem.hpp"
 #include "../../model/AirLoopHVACUnitarySystem_Impl.hpp"
+#include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
+#include "../../model/ZoneHVACWaterToAirHeatPump.hpp"
+#include "../../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "../../model/CoilHeatingDXMultiSpeed.hpp"
 #include "../../model/CoilHeatingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXMultiSpeedStageData.hpp"
@@ -33,24 +37,10 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateUnitarySystemPerformanceMultispeed(UnitarySystemPerformanceMultispeed& modelObject) {
-    boost::optional<std::string> s;
-    boost::optional<double> d;
-
-    // Name
-    IdfObject sysPerf = createRegisterAndNameIdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed, modelObject);
-
-    // Find the associated AirLoopHVACUnitarySystem
-    std::vector<AirLoopHVACUnitarySystem> unitarySystems = modelObject.getModelObjectSources<AirLoopHVACUnitarySystem>();
-    if (unitarySystems.size() != 1) {
-      LOG(Error, "OS:UnitarySystemPerformance:Multispeed should be referenced by one and only one OS:AirLoopHVAC:UnitarySystem, "
-                   << modelObject.nameString() << " is referenced by " << unitarySystems.size() << ".")
-      return boost::none;
-    }
-    AirLoopHVACUnitarySystem& unitarySystem = unitarySystems[0];
+  bool translateCoils(sysPerf, system) {
 
     // Number of speeds for heating
-    boost::optional<HVACComponent> heatingCoil = unitarySystem.heatingCoil();
+    boost::optional<HVACComponent> heatingCoil = system.heatingCoil();
     if (heatingCoil) {
       if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed) {
         auto heatingCoilDXMultispeed = heatingCoil->cast<CoilHeatingDXMultiSpeed>();
@@ -66,7 +56,7 @@ namespace energyplus {
     }
 
     // Number of speeds for cooling
-    boost::optional<HVACComponent> coolingCoil = unitarySystem.coolingCoil();
+    boost::optional<HVACComponent> coolingCoil = system.coolingCoil();
     if (coolingCoil) {
       if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed) {
         auto coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
@@ -86,6 +76,47 @@ namespace energyplus {
 
     for (const auto& airflowRatioField : modelObject.supplyAirflowRatioFields()) {
       sysPerf.pushExtensibleGroup(airflowRatioField.getHeatingCoolingRatiosAsStrings());
+    }
+
+    return true;
+  }
+
+  bool zoneHVAC(sysPerf, zoneHVACs) {
+    
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateUnitarySystemPerformanceMultispeed(UnitarySystemPerformanceMultispeed& modelObject) {
+
+    // Name
+    IdfObject sysPerf = createRegisterAndNameIdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed, modelObject);
+
+    bool result = false;
+
+    // Find the associated AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> unitarySystems = modelObject.getModelObjectSources<AirLoopHVACUnitarySystem>();
+    if (unitarySystems.size() == 1) {
+      AirLoopHVACUnitarySystem& unitarySystem = unitarySystems[0];
+      result = translateCoils(sysPerf, unitarySystem);
+    }
+
+    // Find the associated ZoneHVACTerminalUnitVariableRefrigerantFlow
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> tuVRFs = modelObject.getModelObjectSources<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+    if (tuVRFs.size() == 1) {
+      ZoneHVACTerminalUnitVariableRefrigerantFlow& tuVRF = tuVRFs[0];
+      result = translateCoils(sysPerf, tuVRF);
+    }
+
+    // Find the associated ZoneHVACWaterToAirHeatPump
+    std::vector<ZoneHVACWaterToAirHeatPump> hps = modelObject.getModelObjectSources<ZoneHVACWaterToAirHeatPump>();
+    if (hps.size() == 1) {
+      ZoneHVACWaterToAirHeatPump& hp = hps[0];
+      result = translateCoils(sysPerf, hp);
+    }
+
+    if (!result) {
+      LOG(Error, "OS:UnitarySystemPerformance:Multispeed should be referenced by one and only one OS:AirLoopHVAC:UnitarySystem or OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow or OS:ZoneHVAC:WaterToAirHeatPump, "
+                   << modelObject.nameString() << " is referenced by " << unitarySystems.size() << " OS:AirLoopHVAC:UnitarySystem, " << tuVRFs.size() << " OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow, " << hps.size() << " OS:ZoneHVAC:WaterToAirHeatPump.")
+      return boost::none;
     }
 
     return sysPerf;
