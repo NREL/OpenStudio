@@ -122,7 +122,8 @@ OPENSTUDIO_ENUM(EndUseFuelType,
   ((OtherFuel_1)(Other Fuel 1))
   ((OtherFuel_2)(Other Fuel 2))
   ((DistrictCooling)(District Cooling))
-  ((DistrictHeating)(District Heating))
+  ((DistrictHeating)(District Heating Water))
+  ((DistrictHeatingSteam)(District Heating Steam))
   ((Water))
 );
 
