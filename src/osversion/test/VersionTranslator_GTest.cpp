@@ -3474,12 +3474,12 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_BoilerHotWater) {
 }
 
 TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_CoilsHeating) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_CoilsHeating.osm");
+  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Heating.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_CoilsHeating_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Heating_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> chgs = model->getObjectsByType("OS:Coil:Heating:Gas");
