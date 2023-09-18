@@ -3475,7 +3475,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_BoilerHotWater) {
 }
 
 TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_fuelTypeRenames) {
-  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_fuel.osm");
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_FuelTypeRenames.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model_ = vt.loadModel(osmPath);
   ASSERT_TRUE(model_) << "Failed to load " << osmPath;
@@ -3499,7 +3499,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_fuelTypeRenames) {
   }};
 
   // iddname, 361 & 370 index, current index
-  const std::array<std::tuple<std::string, int, int>, 13> fuelTypeRenamesMap{{
+  const std::array<std::tuple<std::string, int, int>, 12> fuelTypeRenamesMap{{
     {"OS:OtherEquipment", 6, 6},                                // Fuel Type
     {"OS:Exterior:FuelEquipment", 4, 4},                        // Fuel Use Type
     {"OS:WaterHeater:Mixed", 11, 11},                           // Heater Fuel Type
@@ -3512,7 +3512,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_fuelTypeRenames) {
     {"OS:Meter:CustomDecrement", 2, 2},                         // Fuel Type
     {"OS:EnergyManagementSystem:MeteredOutputVariable", 5, 5},  // Resource Type
     {"OS:PythonPlugin:OutputVariable", 6, 6},                   // Resource Type
-    {"OS:UtilityBill", 2, 2},                                   // Fuel Type
+    // {"OS:UtilityBill", 2, 2},                                   // Fuel Type
   }};
 
   for (const auto& [iddname, oldFieldIndex, newFieldIndex] : fuelTypeRenamesMap) {
@@ -3534,5 +3534,69 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_fuelTypeRenames) {
   {
     auto u = model_->getObjectByTypeAndName("OS:UtilityBill", "Steam").get();
     EXPECT_EQ("DistrictHeatingSteam", u.getString(2).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> outputMeters = model_->getObjectsByType("OS:Output:Meter");
+    ASSERT_EQ(2u, outputMeters.size());
+    EXPECT_NE(std::find_if(outputMeters.begin(), outputMeters.end(),
+                           [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "DistrictHeatingSteam:Facility"); }),
+              outputMeters.end());
+    EXPECT_NE(std::find_if(outputMeters.begin(), outputMeters.end(),
+                           [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "Heating:DistrictHeatingWater"); }),
+              outputMeters.end());
+  }
+
+  {
+    const static std::map<std::string, std::string> renameMap({
+      {"District Cooling Chilled Water Energy", "District Cooling Water Energy"},
+      {"District Cooling Chilled Water Rate", "District Cooling Water Rate"},
+      {"District Cooling Rate", "District Cooling Water Rate"},
+      {"District Cooling Inlet Temperature", "District Cooling Water Inlet Temperature"},
+      {"District Cooling Outlet Temperature", "District Cooling Water Outlet Temperature"},
+      {"District Cooling Mass Flow Rate", "District Cooling Water Mass Flow Rate"},
+      {"District Heating Hot Water Energy", "District Heating Water Energy"},
+      {"District Heating Hot Water Rate", "District Heating Water Rate"},
+      {"District Heating Rate", "District Heating Water Rate"},
+      {"District Heating Inlet Temperature", "District Heating Water Inlet Temperature"},
+      {"District Heating Outlet Temperature", "District Heating Water Outlet Temperature"},
+      {"District Heating Mass Flow Rate", "District Heating Water Mass Flow Rate"},
+    });
+
+    std::vector<WorkspaceObject> outputVariables = model_->getObjectsByType("OS:Output:Variable");
+    ASSERT_EQ(renameMap.size(), outputVariables.size());
+    ASSERT_EQ(12, outputVariables.size());
+    for (const auto& outputVariable : outputVariables) {
+      auto name = outputVariable.nameString();
+      auto it = renameMap.find(name);
+      ASSERT_NE(it, renameMap.end()) << "Output:Variable named " << name << " not in replaceMap";
+      EXPECT_EQ(it->second, outputVariable.getString(3).get())
+        << "Output:Variable named " << name << " did not get the expected rename for Variable Name field";
+    }
+
+    std::vector<WorkspaceObject> emsSensors = model_->getObjectsByType("OS:EnergyManagementSystem:Sensor");
+    ASSERT_EQ(15, emsSensors.size());
+
+    EXPECT_NE(std::find_if(emsSensors.begin(), emsSensors.end(),
+                           [](const WorkspaceObject& wo) {
+                             return openstudio::istringEqual(wo.nameString(), "District_Cooling_Inlet_Temperature_Standandalone");
+                           }),
+              emsSensors.end());
+
+    for (const auto& emsSensor : emsSensors) {
+      if (openstudio::istringEqual(emsSensor.nameString(), "District_Cooling_Inlet_Temperature_Standandalone")) {
+        // District Cooling Inlet Temperature => District Cooling Water Inlet Temperature
+        EXPECT_EQ("District Cooling Water Inlet Temperature", emsSensor.getString(3).get());
+      } else {
+        // All of these have actual handles stored at string, these shouldn't have been touched
+        boost::optional<std::string> handle = emsSensor.getString(3);
+        ASSERT_TRUE(handle.is_initialized());
+        UUID uid = toUUID(handle.get());
+        boost::optional<WorkspaceObject> object = model_->getObject(uid);
+        ASSERT_TRUE(object);
+        EXPECT_TRUE(openstudio::istringEqual(object->iddObject().name(), "OS:Output:Variable")
+                    || openstudio::istringEqual(object->iddObject().name(), "OS:Output:Meter"));
+      }
+    }
   }
 }
