@@ -8313,9 +8313,6 @@ namespace osversion {
       } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage") || ("OS:Coil:Heating:Gas:MultiStage:StageData")
                  || (iddname == "OS:Coil:Heating:Desuperheater")) {
 
-        auto iddObject = idd_3_7_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
-
         // Change Parasitic Electric Load to On Cycle Parasitic Electric Load
         // Change Parasitic Gas Load to Off Cycle Parasitic Gas Load
 
