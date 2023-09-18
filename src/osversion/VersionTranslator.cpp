@@ -7903,6 +7903,7 @@ namespace osversion {
       {"Steam", "DistrictHeatingSteam"},
       {"DistrictHeating", "DistrictHeatingWater"},
       // Additionally, for UtilityBill, align the IDD choices to E+. This will also be covered by this
+      {"Gas", "NaturalGas"},
       {"FuelOil_1", "FuelOilNo1"},
       {"FuelOil_2", "FuelOilNo2"},
       {"OtherFuel_1", "OtherFuel1"},
