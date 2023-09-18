@@ -34,8 +34,12 @@ namespace model {
 
     const std::vector<std::string>& DistrictCooling_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{
-        "District Cooling Chilled Water Rate", "District Cooling Chilled Water Energy", "District Cooling Rate",
-        "District Cooling Inlet Temperature",  "District Cooling Outlet Temperature",   "District Cooling Mass Flow Rate"};
+        "District Cooling Water Rate",
+        "District Cooling Water Energy",
+        "District Cooling Water Inlet Temperature",
+        "District Cooling Water Outlet Temperature",
+        "District Cooling Water Mass Flow Rate",
+      };
       return result;
     }
 

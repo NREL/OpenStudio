@@ -5675,8 +5675,8 @@ namespace osversion {
     });
 
     /*****************************************************************************************************************************************************
-       *                                                          Output:Meter fuel types renames                                                          *
-       *****************************************************************************************************************************************************/
+     *                                                          Output:Meter fuel types renames                                                          *
+     *****************************************************************************************************************************************************/
 
     const static std::map<std::string, std::string> meterFuelTypesMap({
       {"FuelOil_1", "FuelOilNo1"},
@@ -7942,6 +7942,38 @@ namespace osversion {
       }
     };
 
+    /*************************************************************************************************************************************************
+     *                                                               Output:Variable fuel                                                            *
+     ************************************************************************************************************************************************/
+
+    const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
+
+    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
+    const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
+      {"District Cooling Chilled Water Energy", "District Cooling Water Energy"},
+      {"District Cooling Chilled Water Rate", "District Cooling Water Rate"},
+      {"District Cooling Rate", "District Cooling Water Rate"},
+      {"District Cooling Inlet Temperature", "District Cooling Water Inlet Temperature"},
+      {"District Cooling Outlet Temperature", "District Cooling Water Outlet Temperature"},
+      {"District Cooling Mass Flow Rate", "District Cooling Water Mass Flow Rate"},
+      {"District Heating Hot Water Energy", "District Heating Water Energy"},
+      {"District Heating Hot Water Rate", "District Heating Water Rate"},
+      {"District Heating Rate", "District Heating Water Rate"},
+      {"District Heating Inlet Temperature", "District Heating Water Inlet Temperature"},
+      {"District Heating Outlet Temperature", "District Heating Water Outlet Temperature"},
+      {"District Heating Mass Flow Rate", "District Heating Water Mass Flow Rate"},
+    });
+
+    /*************************************************************************************************************************************************
+     *                                                          Output:Meter fuel types renames                                                      *
+     ************************************************************************************************************************************************/
+
+    const static std::array<std::pair<std::string, std::string>, 2> meterFuelTypesMap{{
+      {"DistrictHeating", "DistrictHeatingWater"},
+      {"Steam", "DistrictHeatingSteam"},
+    }};
+
     for (const IdfObject& object : idf_3_6_1.objects()) {
       auto iddname = object.iddObject().name();
 
@@ -8325,6 +8357,82 @@ namespace osversion {
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
+
+      } else if (iddname == "OS:Output:Meter") {
+
+        std::string name = object.nameString();
+
+        // Structured bindings
+        for (const auto& [k, v] : meterFuelTypesMap) {
+          name = boost::regex_replace(name, boost::regex(k, boost::regex::icase), v);
+        }
+        if (name == object.nameString()) {
+          // No-op
+          ss << object;
+        } else {
+
+          // Copy everything but 'Variable Name' field
+          auto iddObject = idd_3_7_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            // Skip name field
+            if (i == 1) {
+              continue;
+            }
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
+
+          newObject.setName(name);
+
+          ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
+        }
+
+      } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")
+                 || (iddname == "OS:EnergyManagementSystem:Actuator")) {
+
+        unsigned variableNameIndex = 3;
+        if (iddname == "OS:EnergyManagementSystem:Actuator") {
+          variableNameIndex = 4;  // Actuated Component Control Type
+        }
+
+        if ((value = object.getString(variableNameIndex))) {
+
+          std::string variableName = value.get();
+          // Strip consecutive spaces and all
+          variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+
+          auto it = replaceOutputVariablesMap.find(variableName);
+          if (it == replaceOutputVariablesMap.end()) {
+            // No-op
+            ss << object;
+          } else {
+
+            // Copy everything but 'Variable Name' field
+            auto iddObject = idd_3_7_0.getObject(iddname);
+            IdfObject newObject(iddObject.get());
+
+            for (size_t i = 0; i < object.numFields(); ++i) {
+              if (i == variableNameIndex) {
+                continue;
+              } else if ((value = object.getString(i))) {
+                newObject.setString(i, value.get());
+              }
+            }
+
+            LOG(Trace, "Replacing " << variableName << " with " << it->second << " for " << object.nameString());
+            newObject.setString(variableNameIndex, it->second);
+
+            ss << newObject;
+            m_refactored.emplace_back(std::move(object), std::move(newObject));
+          }
+        } else {
+          // No-op
+          ss << object;
+        }
 
       } else if (auto it = std::find_if(crankcaseCoilWithIndex.cbegin(), crankcaseCoilWithIndex.cend(),
                                         [&iddname](const auto& p) { return iddname == p.first; });
