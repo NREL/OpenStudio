@@ -52,7 +52,7 @@ namespace model {
 
       bool isNominalCapacityAutosized() const;
 
-      double parasiticElectricLoad() const;
+      double onCycleParasiticElectricLoad() const;
 
       boost::optional<double> autosizedNominalCapacity() const;
 
@@ -60,13 +60,13 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setGasBurnerEfficiency(double StageGasBurnerEfficiency);
+      bool setGasBurnerEfficiency(double stageGasBurnerEfficiency);
 
-      bool setNominalCapacity(boost::optional<double> StageNominalCapacity);
+      bool setNominalCapacity(boost::optional<double> stageNominalCapacity);
 
       void autosizeNominalCapacity();
 
-      bool setParasiticElectricLoad(double StageParasiticElectricLoad);
+      bool setOnCycleParasiticElectricLoad(double stageonCycleParasiticElectricLoad);
 
       //@}
       /** @name Other */

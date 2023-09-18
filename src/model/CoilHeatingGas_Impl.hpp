@@ -77,16 +77,16 @@ namespace model {
       bool setGasBurnerEfficiency(double val);
 
       // Get ParasiticElectricLoad
-      double parasiticElectricLoad() const;
+      double onCycleParasiticElectricLoad() const;
 
-      // Set parasiticElectricLoad
-      bool setParasiticElectricLoad(double val);
+      // Set OnCycleParasiticElectricLoad
+      bool setOnCycleParasiticElectricLoad(double val);
 
-      // Get ParasiticGasLoad
-      double parasiticGasLoad() const;
+      // Get OffCycleParasiticGasLoad
+      double offCycleParasiticGasLoad() const;
 
-      // Set parasiticGasLoad
-      bool setParasiticGasLoad(double val);
+      // Set OffCycleParasiticGasLoad
+      bool setOffCycleParasiticGasLoad(double val);
 
       boost::optional<double> nominalCapacity() const;
 

@@ -14,6 +14,8 @@
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"  // For deprecation
+
 namespace openstudio {
 namespace model {
 
@@ -62,21 +64,21 @@ namespace model {
       return result;
     }
 
-    double CoilHeatingGasMultiStageStageData_Impl::parasiticElectricLoad() const {
-      boost::optional<double> value = getDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::ParasiticElectricLoad, true);
+    double CoilHeatingGasMultiStageStageData_Impl::onCycleParasiticElectricLoad() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::OnCycleParasiticElectricLoad, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool CoilHeatingGasMultiStageStageData_Impl::setGasBurnerEfficiency(double GasBurnerEfficiency) {
-      bool result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::GasBurnerEfficiency, GasBurnerEfficiency);
+    bool CoilHeatingGasMultiStageStageData_Impl::setGasBurnerEfficiency(double gasBurnerEfficiency) {
+      bool result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::GasBurnerEfficiency, gasBurnerEfficiency);
       return result;
     }
 
-    bool CoilHeatingGasMultiStageStageData_Impl::setNominalCapacity(boost::optional<double> NominalCapacity) {
+    bool CoilHeatingGasMultiStageStageData_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
       bool result(false);
-      if (NominalCapacity) {
-        result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::NominalCapacity, NominalCapacity.get());
+      if (nominalCapacity) {
+        result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::NominalCapacity, nominalCapacity.get());
       }
       return result;
     }
@@ -86,8 +88,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilHeatingGasMultiStageStageData_Impl::setParasiticElectricLoad(double ParasiticElectricLoad) {
-      bool result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::ParasiticElectricLoad, ParasiticElectricLoad);
+    bool CoilHeatingGasMultiStageStageData_Impl::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
+      bool result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::OnCycleParasiticElectricLoad, onCycleParasiticElectricLoad);
       OS_ASSERT(result);
       return result;
     }
@@ -157,7 +159,7 @@ namespace model {
 
     setGasBurnerEfficiency(0.80);
     autosizeNominalCapacity();
-    setParasiticElectricLoad(0.0);
+    setOnCycleParasiticElectricLoad(0.0);
   }
 
   IddObjectType CoilHeatingGasMultiStageStageData::iddObjectType() {
@@ -176,24 +178,36 @@ namespace model {
     return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->isNominalCapacityAutosized();
   }
 
+  // DEPRECATED
   double CoilHeatingGasMultiStageStageData::parasiticElectricLoad() const {
-    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->parasiticElectricLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use onCycleParasiticElectricLoad instead.");
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->onCycleParasiticElectricLoad();
   }
 
-  bool CoilHeatingGasMultiStageStageData::setGasBurnerEfficiency(double GasBurnerEfficiency) {
-    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setGasBurnerEfficiency(GasBurnerEfficiency);
+  double CoilHeatingGasMultiStageStageData::onCycleParasiticElectricLoad() const {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->onCycleParasiticElectricLoad();
   }
 
-  bool CoilHeatingGasMultiStageStageData::setNominalCapacity(double NominalCapacity) {
-    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setNominalCapacity(NominalCapacity);
+  bool CoilHeatingGasMultiStageStageData::setGasBurnerEfficiency(double gasBurnerEfficiency) {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setGasBurnerEfficiency(gasBurnerEfficiency);
+  }
+
+  bool CoilHeatingGasMultiStageStageData::setNominalCapacity(double nominalCapacity) {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setNominalCapacity(nominalCapacity);
   }
 
   void CoilHeatingGasMultiStageStageData::autosizeNominalCapacity() {
     getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->autosizeNominalCapacity();
   }
 
-  bool CoilHeatingGasMultiStageStageData::setParasiticElectricLoad(double ParasiticElectricLoad) {
-    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setParasiticElectricLoad(ParasiticElectricLoad);
+  // DEPRECATED
+  bool CoilHeatingGasMultiStageStageData::setParasiticElectricLoad(double parasiticElectricLoad) {
+    DEPRECATED_AT_MSG(3, 7, 0, "Use setOnCycleParasiticElectricLoad instead.");
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setOnCycleParasiticElectricLoad(parasiticElectricLoad);
+  }
+  
+  bool CoilHeatingGasMultiStageStageData::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setOnCycleParasiticElectricLoad(onCycleParasiticElectricLoad);
   }
 
   /// @cond

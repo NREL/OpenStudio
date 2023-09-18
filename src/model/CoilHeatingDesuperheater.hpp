@@ -9,6 +9,7 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -61,9 +62,13 @@ namespace model {
 
     boost::optional<ModelObject> heatingSource() const;
 
-    double parasiticElectricLoad() const;
+    OS_DEPRECATED(3, 7, 0) double parasiticElectricLoad() const;
+    
+    double onCycleParasiticElectricLoad() const;
 
-    bool isParasiticElectricLoadDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isParasiticElectricLoadDefaulted() const;
+    
+    bool isOnCycleParasiticElectricLoadDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -93,9 +98,13 @@ namespace model {
 
     void resetHeatingSource();
 
-    bool setParasiticElectricLoad(double parasiticElectricLoad);
+    OS_DEPRECATED(3, 7, 0) bool setParasiticElectricLoad(double parasiticElectricLoad);
+    
+    bool setOnCycleParasiticElectricLoad(double onCyclearasiticElectricLoad);
 
-    void resetParasiticElectricLoad();
+    OS_DEPRECATED(3, 7, 0) void resetParasiticElectricLoad();
+    
+    void resetOnCycleParasiticElectricLoad();
 
     //@}
     /** @name Other */

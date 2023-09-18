@@ -51,6 +51,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"  // For deprecation
+
 namespace openstudio {
 namespace model {
 
@@ -179,20 +181,20 @@ namespace model {
       return this->setDouble(OS_Coil_Heating_GasFields::GasBurnerEfficiency, val);
     }
 
-    double CoilHeatingGas_Impl::parasiticElectricLoad() const {
-      return this->getDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad).get();
+    double CoilHeatingGas_Impl::onCycleParasiticElectricLoad() const {
+      return this->getDouble(OS_Coil_Heating_GasFields::OnCycleParasiticElectricLoad).get();
     }
 
-    bool CoilHeatingGas_Impl::setParasiticElectricLoad(double val) {
-      return this->setDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad, val);
+    bool CoilHeatingGas_Impl::setOnCycleParasiticElectricLoad(double val) {
+      return this->setDouble(OS_Coil_Heating_GasFields::OnCycleParasiticElectricLoad, val);
     }
 
-    double CoilHeatingGas_Impl::parasiticGasLoad() const {
-      return this->getDouble(OS_Coil_Heating_GasFields::ParasiticGasLoad).get();
+    double CoilHeatingGas_Impl::offCycleParasiticGasLoad() const {
+      return this->getDouble(OS_Coil_Heating_GasFields::OffCycleParasiticGasLoad).get();
     }
 
-    bool CoilHeatingGas_Impl::setParasiticGasLoad(double val) {
-      return this->setDouble(OS_Coil_Heating_GasFields::ParasiticGasLoad, val);
+    bool CoilHeatingGas_Impl::setOffCycleParasiticGasLoad(double val) {
+      return this->setDouble(OS_Coil_Heating_GasFields::OffCycleParasiticGasLoad, val);
     }
 
     boost::optional<HVACComponent> CoilHeatingGas_Impl::containingHVACComponent() const {
@@ -550,8 +552,8 @@ namespace model {
     }
     setGasBurnerEfficiency(0.8);
     setString(openstudio::OS_Coil_Heating_GasFields::NominalCapacity, "AutoSize");
-    setParasiticElectricLoad(0);
-    setParasiticGasLoad(0);
+    setOnCycleParasiticElectricLoad(0);
+    setOffCycleParasiticGasLoad(0);
   }
 
   CoilHeatingGas::CoilHeatingGas(const Model& model) : StraightComponent(CoilHeatingGas::iddObjectType(), model) {
@@ -562,8 +564,8 @@ namespace model {
 
     setGasBurnerEfficiency(0.8);
     setString(openstudio::OS_Coil_Heating_GasFields::NominalCapacity, "AutoSize");
-    setParasiticElectricLoad(0);
-    setParasiticGasLoad(0);
+    setOnCycleParasiticElectricLoad(0);
+    setOffCycleParasiticGasLoad(0);
   }
 
   CoilHeatingGas::CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> p) : StraightComponent(std::move(p)) {}
@@ -605,20 +607,44 @@ namespace model {
     return getImpl<detail::CoilHeatingGas_Impl>()->setGasBurnerEfficiency(val);
   }
 
+  // DEPRECATED
   double CoilHeatingGas::parasiticElectricLoad() const {
-    return getImpl<detail::CoilHeatingGas_Impl>()->parasiticElectricLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use onCycleParasiticElectricLoad instead.");
+    return getImpl<detail::CoilHeatingGas_Impl>()->onCycleParasiticElectricLoad();
   }
 
+  double CoilHeatingGas::onCycleParasiticElectricLoad() const {
+    return getImpl<detail::CoilHeatingGas_Impl>()->onCycleParasiticElectricLoad();
+  }
+
+  // DEPRECATED
   bool CoilHeatingGas::setParasiticElectricLoad(double val) {
-    return getImpl<detail::CoilHeatingGas_Impl>()->setParasiticElectricLoad(val);
+    DEPRECATED_AT_MSG(3, 7, 0, "Use setOnCycleParasiticElectricLoad instead.");
+    return getImpl<detail::CoilHeatingGas_Impl>()->setOnCycleParasiticElectricLoad(val);
   }
 
+  bool CoilHeatingGas::setOnCycleParasiticElectricLoad(double val) {
+    return getImpl<detail::CoilHeatingGas_Impl>()->setOnCycleParasiticElectricLoad(val);
+  }
+
+  // DEPRECATED
   double CoilHeatingGas::parasiticGasLoad() const {
-    return getImpl<detail::CoilHeatingGas_Impl>()->parasiticGasLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use offCycleParasiticGasLoad instead.");
+    return getImpl<detail::CoilHeatingGas_Impl>()->offCycleParasiticGasLoad();
   }
 
+  double CoilHeatingGas::offCycleParasiticGasLoad() const {
+    return getImpl<detail::CoilHeatingGas_Impl>()->offCycleParasiticGasLoad();
+  }
+
+  // DEPRECATED
   bool CoilHeatingGas::setParasiticGasLoad(double val) {
-    return getImpl<detail::CoilHeatingGas_Impl>()->setParasiticGasLoad(val);
+    DEPRECATED_AT_MSG(3, 7, 0, "Use setOffCycleParasiticGasLoad instead.");
+    return getImpl<detail::CoilHeatingGas_Impl>()->setOffCycleParasiticGasLoad(val);
+  }
+
+  bool CoilHeatingGas::setOffCycleParasiticGasLoad(double val) {
+    return getImpl<detail::CoilHeatingGas_Impl>()->setOffCycleParasiticGasLoad(val);
   }
 
   boost::optional<double> CoilHeatingGas::nominalCapacity() const {

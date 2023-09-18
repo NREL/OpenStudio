@@ -68,7 +68,7 @@ namespace model {
 
       boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
-      boost::optional<double> parasiticGasLoad() const;
+      boost::optional<double> offCycleParasiticGasLoad() const;
 
       //@}
       /** @name Setters */
@@ -80,9 +80,9 @@ namespace model {
 
       void resetPartLoadFractionCorrelationCurve();
 
-      bool setParasiticGasLoad(boost::optional<double> parasiticGasLoad);
+      bool setOffCycleParasiticGasLoad(boost::optional<double> offCycleParasiticGasLoad);
 
-      void resetParasiticGasLoad();
+      void resetOffCycleParasiticGasLoad();
 
       //@}
       /** @name Other */

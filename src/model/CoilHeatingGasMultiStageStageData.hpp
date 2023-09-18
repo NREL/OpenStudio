@@ -9,6 +9,7 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 #include "../model/CoilHeatingGasMultiStage.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -49,19 +50,23 @@ namespace model {
 
     bool isNominalCapacityAutosized() const;
 
-    double parasiticElectricLoad() const;
+    OS_DEPRECATED(3, 7, 0) double parasiticElectricLoad() const;
+    
+    double onCycleParasiticElectricLoad() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setGasBurnerEfficiency(double GasBurnerEfficiency);
+    bool setGasBurnerEfficiency(double gasBurnerEfficiency);
 
-    bool setNominalCapacity(double StageNominalCapacity);
+    bool setNominalCapacity(double stageNominalCapacity);
 
     void autosizeNominalCapacity();
 
-    bool setParasiticElectricLoad(double StageParasiticElectricLoad);
+    OS_DEPRECATED(3, 7, 0) bool setParasiticElectricLoad(double stageParasiticElectricLoad);
+    
+    bool setOnCycleParasiticElectricLoad(double stageOnCycleParasiticElectricLoad);
 
     //@}
     /** @name Other */
