@@ -8254,10 +8254,6 @@ namespace osversion {
           m_new.emplace_back(std::move(plfCurve));
         }
 
-      } else if (iddname == "OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit") {
-
-        ss << object;
-
       } else if (auto it = std::find_if(crankcaseCoilWithIndex.cbegin(), crankcaseCoilWithIndex.cend(),
                                         [&iddname](const auto& p) { return iddname == p.first; });
                  it != crankcaseCoilWithIndex.cend()) {
@@ -8310,8 +8306,8 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
-      } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage") || ("OS:Coil:Heating:Gas:MultiStage:StageData")
-                 || (iddname == "OS:Coil:Heating:Desuperheater")) {
+      } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage")
+                 || (iddname == "OS:Coil:Heating:Gas:MultiStage:StageData") || (iddname == "OS:Coil:Heating:Desuperheater")) {
 
         // Change Parasitic Electric Load to On Cycle Parasitic Electric Load
         // Change Parasitic Gas Load to Off Cycle Parasitic Gas Load
@@ -8324,6 +8320,9 @@ namespace osversion {
             newObject.setString(i, value.get());
           }
         }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
 
         // No-op
       } else {
