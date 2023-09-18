@@ -298,9 +298,9 @@ inline UTILITIES_API AppGFuelType convertFuelTypeToAppG(FuelType fuelType) {
     return AppGFuelType::Electric;
   } else if ((fuelType == FuelType::Gas) || (fuelType == FuelType::Gasoline) || (fuelType == FuelType::Diesel) || (fuelType == FuelType::Coal)
              || (fuelType == FuelType::FuelOil_1) || (fuelType == FuelType::FuelOil_2) || (fuelType == FuelType::Propane)
-             || (fuelType == FuelType::Steam) || (fuelType == FuelType::OtherFuel_1) || (fuelType == FuelType::OtherFuel_2)) {
+             || (fuelType == FuelType::OtherFuel_1) || (fuelType == FuelType::OtherFuel_2)) {
     return AppGFuelType::Fuel;
-  } else if ((fuelType == FuelType::DistrictCooling) || (fuelType == FuelType::DistrictHeating)) {
+  } else if ((fuelType == FuelType::DistrictCooling) || (fuelType == FuelType::DistrictHeating) || (fuelType == FuelType::Steam)) {
     return AppGFuelType::District;
   }
 

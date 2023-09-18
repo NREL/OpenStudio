@@ -12,6 +12,10 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -28,6 +32,23 @@ TEST_F(ModelFixture, DistrictHeatingWater_DistrictHeatingWater) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  DistrictHeatingWater districtHeating(m);
+
+  EXPECT_FALSE(districtHeating.nominalCapacity());
+  EXPECT_TRUE(districtHeating.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtHeating.capacityFractionSchedule());
+
+  ScheduleConstant scheduleConstant(m);
+  scheduleConstant.setValue(0.5);
+  EXPECT_TRUE(districtHeating.setCapacityFractionSchedule(scheduleConstant));
+
+  ASSERT_TRUE(districtHeating.capacityFractionSchedule());
+  EXPECT_EQ(scheduleConstant, districtHeating.capacityFractionSchedule().get());
+
+  districtHeating.resetCapacityFractionSchedule();
+  EXPECT_FALSE(districtHeating.capacityFractionSchedule());
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node
@@ -87,7 +108,9 @@ TEST_F(ModelFixture, DistrictHeatingWater_NominalCapacity) {
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1, capacity.get());
 
-  //test setting and getting the field with a quantity
+  EXPECT_FALSE(districtHeating.isNominalCapacityAutosized());
+  districtHeating.autosizeNominalCapacity();
+  EXPECT_TRUE(districtHeating.isNominalCapacityAutosized());
 }
 
 //test cloning the object

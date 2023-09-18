@@ -3,8 +3,8 @@
 *  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
-#ifndef MODEL_DISTRICTCOOLING_HPP
-#define MODEL_DISTRICTCOOLING_HPP
+#ifndef MODEL_DISTRICTHEATINGSTEAM_HPP
+#define MODEL_DISTRICTHEATINGSTEAM_HPP
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
@@ -17,27 +17,27 @@ namespace model {
 
   namespace detail {
 
-    class DistrictCooling_Impl;
+    class DistrictHeatingSteam_Impl;
 
   }  // namespace detail
 
-  /** DistrictCooling is a StraightComponent that wraps the OpenStudio IDD object 'OS:DistrictCooling'. */
+  /** DistrictHeatingSteam is a StraightComponent that wraps the OpenStudio IDD object 'OS:DistrictHeatingSteam'. */
 
-  class MODEL_API DistrictCooling : public StraightComponent
+  class MODEL_API DistrictHeatingSteam : public StraightComponent
   {
 
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    explicit DistrictCooling(const Model& model);
+    explicit DistrictHeatingSteam(const Model& model);
 
-    virtual ~DistrictCooling() = default;
+    virtual ~DistrictHeatingSteam() = default;
     // Default the copy and move operators because the virtual dtor is explicit
-    DistrictCooling(const DistrictCooling& other) = default;
-    DistrictCooling(DistrictCooling&& other) = default;
-    DistrictCooling& operator=(const DistrictCooling&) = default;
-    DistrictCooling& operator=(DistrictCooling&&) = default;
+    DistrictHeatingSteam(const DistrictHeatingSteam& other) = default;
+    DistrictHeatingSteam(DistrictHeatingSteam&& other) = default;
+    DistrictHeatingSteam& operator=(const DistrictHeatingSteam&) = default;
+    DistrictHeatingSteam& operator=(DistrictHeatingSteam&&) = default;
 
     //@}
 
@@ -79,11 +79,11 @@ namespace model {
 
    protected:
     /// @cond
-    using ImplType = detail::DistrictCooling_Impl;
+    using ImplType = detail::DistrictHeatingSteam_Impl;
 
-    explicit DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl);
+    explicit DistrictHeatingSteam(std::shared_ptr<detail::DistrictHeatingSteam_Impl> impl);
 
-    friend class detail::DistrictCooling_Impl;
+    friend class detail::DistrictHeatingSteam_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
@@ -91,16 +91,16 @@ namespace model {
     /// @endcond
 
    private:
-    REGISTER_LOGGER("openstudio.model.DistrictCooling");
+    REGISTER_LOGGER("openstudio.model.DistrictHeatingSteam");
   };
 
-  /** \relates DistrictCooling*/
-  using OptionalDistrictCooling = boost::optional<DistrictCooling>;
+  /** \relates DistrictHeatingSteam*/
+  using OptionalDistrictHeatingSteam = boost::optional<DistrictHeatingSteam>;
 
-  /** \relates DistrictCooling*/
-  using DistrictCoolingVector = std::vector<DistrictCooling>;
+  /** \relates DistrictHeatingSteam*/
+  using DistrictHeatingSteamVector = std::vector<DistrictHeatingSteam>;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_DISTRICTCOOLING_HPP
+#endif  // MODEL_DISTRICTHEATINGSTEAM_HPP

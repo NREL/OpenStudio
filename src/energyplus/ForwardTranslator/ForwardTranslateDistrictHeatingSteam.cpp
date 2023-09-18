@@ -5,15 +5,15 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-#include "../../model/DistrictCooling.hpp"
-#include "../../model/DistrictCooling_Impl.hpp"
+#include "../../model/DistrictHeatingSteam.hpp"
+#include "../../model/DistrictHeatingSteam_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
-#include <utilities/idd/DistrictCooling_FieldEnums.hxx>
+#include <utilities/idd/DistrictHeating_Steam_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -22,12 +22,12 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateDistrictCooling(DistrictCooling& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateDistrictHeatingSteam(DistrictHeatingSteam& modelObject) {
     OptionalString s;
     OptionalModelObject temp;
     boost::optional<double> value;
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::DistrictCooling, modelObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::DistrictHeating_Steam, modelObject);
 
     ///////////////////////////////////////////////////////////////////////////
     // Field: Name ////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ namespace energyplus {
     if (temp) {
       s = temp->name();
       if (s) {
-        idfObject.setString(openstudio::DistrictCoolingFields::ChilledWaterInletNodeName, *s);
+        idfObject.setString(openstudio::DistrictHeating_SteamFields::SteamInletNodeName, *s);
       }
     }
     ///////////////////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ namespace energyplus {
     if (temp) {
       s = temp->name();
       if (s) {
-        idfObject.setString(openstudio::DistrictCoolingFields::ChilledWaterOutletNodeName, *s);
+        idfObject.setString(openstudio::DistrictHeating_SteamFields::SteamOutletNodeName, *s);
       }
     }
     ///
@@ -63,9 +63,9 @@ namespace energyplus {
     ///////////////////////////////////////////////////////////////////////////
     //Nominal Capacity ///////////////////////////////////////////////////
     if (modelObject.isNominalCapacityAutosized()) {
-      idfObject.setString(DistrictCoolingFields::NominalCapacity, "Autosize");
+      idfObject.setString(DistrictHeating_SteamFields::NominalCapacity, "Autosize");
     } else if ((value = modelObject.nominalCapacity())) {
-      idfObject.setDouble(DistrictCoolingFields::NominalCapacity, value.get());
+      idfObject.setDouble(DistrictHeating_SteamFields::NominalCapacity, value.get());
     }
     //
     ////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ namespace energyplus {
       boost::optional<IdfObject> _capacityFractionSchedule = translateAndMapModelObject(capacityFractionSchedule.get());
 
       if (_capacityFractionSchedule && _capacityFractionSchedule->name()) {
-        idfObject.setString(DistrictCoolingFields::CapacityFractionScheduleName, _capacityFractionSchedule->name().get());
+        idfObject.setString(DistrictHeating_SteamFields::CapacityFractionScheduleName, _capacityFractionSchedule->name().get());
       }
     }
     //

@@ -4025,6 +4025,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(DesignSpecificationZoneAirDistribution);
     REGISTER_CONSTRUCTOR(DistrictCooling);
     REGISTER_CONSTRUCTOR(DistrictHeatingWater);
+    REGISTER_CONSTRUCTOR(DistrictHeatingSteam);
     REGISTER_CONSTRUCTOR(Duct);
     REGISTER_CONSTRUCTOR(ElectricEquipment);
     REGISTER_CONSTRUCTOR(ElectricEquipmentDefinition);
@@ -4596,6 +4597,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(DesignSpecificationZoneAirDistribution);
     REGISTER_COPYCONSTRUCTORS(DistrictCooling);
     REGISTER_COPYCONSTRUCTORS(DistrictHeatingWater);
+    REGISTER_COPYCONSTRUCTORS(DistrictHeatingSteam);
     REGISTER_COPYCONSTRUCTORS(Duct);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipment);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipmentDefinition);

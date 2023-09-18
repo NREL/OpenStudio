@@ -7,6 +7,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/DistrictHeatingWater.hpp"
 #include "../../model/DistrictHeatingWater_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
@@ -22,13 +24,10 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDistrictHeatingWater(DistrictHeatingWater& modelObject) {
     OptionalString s;
-    OptionalDouble d;
     OptionalModelObject temp;
     boost::optional<double> value;
 
-    IdfObject idfObject(IddObjectType::DistrictHeating_Water);
-
-    m_idfObjects.push_back(idfObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::DistrictHeating_Water, modelObject);
 
     ///////////////////////////////////////////////////////////////////////////
     // Field: Name ////////////////////////////////////////////////////////////
@@ -71,7 +70,20 @@ namespace energyplus {
     //
     ////////////////////////////////////////////////////////////////////////
 
-    return boost::optional<IdfObject>(idfObject);
+    ///////////////////////////////////////////////////////////////////////////
+    //Capacity Fraction Schedule Name ///////////////////////////////////////////////////
+    boost::optional<Schedule> capacityFractionSchedule = modelObject.capacityFractionSchedule();
+
+    if (capacityFractionSchedule) {
+      boost::optional<IdfObject> _capacityFractionSchedule = translateAndMapModelObject(capacityFractionSchedule.get());
+
+      if (_capacityFractionSchedule && _capacityFractionSchedule->name()) {
+        idfObject.setString(DistrictHeating_WaterFields::CapacityFractionScheduleName, _capacityFractionSchedule->name().get());
+      }
+    }
+    ////////////////////////////////////////////////////////////////////////
+
+    return idfObject;
   }
 
 }  // namespace energyplus

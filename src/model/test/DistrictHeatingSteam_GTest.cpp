@@ -5,8 +5,8 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
-#include "../DistrictCooling.hpp"
-#include "../DistrictCooling_Impl.hpp"
+#include "../DistrictHeatingSteam.hpp"
+#include "../DistrictHeatingSteam_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
@@ -21,67 +21,67 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //test construction of the object
-TEST_F(ModelFixture, DistrictCooling_DistrictCooling) {
+TEST_F(ModelFixture, DistrictHeatingSteam_DistrictHeatingSteam) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
     {
       Model m;
-      DistrictCooling districtCooling(m);
+      DistrictHeatingSteam districtHeatingSteam(m);
 
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
 
   Model m;
-  DistrictCooling districtCooling(m);
+  DistrictHeatingSteam districtHeatingSteam(m);
 
-  EXPECT_FALSE(districtCooling.nominalCapacity());
-  EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
-  EXPECT_FALSE(districtCooling.capacityFractionSchedule());
+  EXPECT_FALSE(districtHeatingSteam.nominalCapacity());
+  EXPECT_TRUE(districtHeatingSteam.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtHeatingSteam.capacityFractionSchedule());
 
   ScheduleConstant scheduleConstant(m);
   scheduleConstant.setValue(0.5);
-  EXPECT_TRUE(districtCooling.setCapacityFractionSchedule(scheduleConstant));
+  EXPECT_TRUE(districtHeatingSteam.setCapacityFractionSchedule(scheduleConstant));
 
-  ASSERT_TRUE(districtCooling.capacityFractionSchedule());
-  EXPECT_EQ(scheduleConstant, districtCooling.capacityFractionSchedule().get());
+  ASSERT_TRUE(districtHeatingSteam.capacityFractionSchedule());
+  EXPECT_EQ(scheduleConstant, districtHeatingSteam.capacityFractionSchedule().get());
 
-  districtCooling.resetCapacityFractionSchedule();
-  EXPECT_FALSE(districtCooling.capacityFractionSchedule());
+  districtHeatingSteam.resetCapacityFractionSchedule();
+  EXPECT_FALSE(districtHeatingSteam.capacityFractionSchedule());
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node
-TEST_F(ModelFixture, DistrictCooling_connections) {
+TEST_F(ModelFixture, DistrictHeatingSteam_connections) {
   Model m;
 
   //make a plant loop
   PlantLoop plantLoop(m);
 
-  //make a DistrictCooling object
-  DistrictCooling districtCooling(m);
+  //make a districtHeatingSteam object
+  DistrictHeatingSteam districtHeatingSteam(m);
 
   //get the supply outlet node of the plant loop
   Node plantOutletNode = plantLoop.supplyOutletNode();
 
-  //hook the DistrictCooling object to the supply outlet node
-  ASSERT_TRUE(districtCooling.addToNode(plantOutletNode));
+  //hook the districtHeatingSteam object to the supply outlet node
+  ASSERT_TRUE(districtHeatingSteam.addToNode(plantOutletNode));
 
   //it should now be on a loop and have inlet and outlet objects
-  ASSERT_TRUE(districtCooling.loop());
-  ASSERT_TRUE(districtCooling.inletModelObject());
-  ASSERT_TRUE(districtCooling.outletModelObject());
+  ASSERT_TRUE(districtHeatingSteam.loop());
+  ASSERT_TRUE(districtHeatingSteam.inletModelObject());
+  ASSERT_TRUE(districtHeatingSteam.outletModelObject());
 
   //it should be removable from the loop
-  ASSERT_TRUE(districtCooling.isRemovable());
+  ASSERT_TRUE(districtHeatingSteam.isRemovable());
 
   //now, disconnect the object
-  districtCooling.disconnect();
+  districtHeatingSteam.disconnect();
 
   //it should no longer have a loop or inlet/outlet objects
-  ASSERT_FALSE(districtCooling.loop());
-  ASSERT_FALSE(districtCooling.inletModelObject());
-  ASSERT_FALSE(districtCooling.outletModelObject());
+  ASSERT_FALSE(districtHeatingSteam.loop());
+  ASSERT_FALSE(districtHeatingSteam.inletModelObject());
+  ASSERT_FALSE(districtHeatingSteam.outletModelObject());
 
   //make an airloop
   AirLoopHVAC airLoop(m);
@@ -90,52 +90,62 @@ TEST_F(ModelFixture, DistrictCooling_connections) {
   Node airOutletNode = airLoop.supplyOutletNode();
 
   //it should not connect to an airloop
-  ASSERT_FALSE(districtCooling.addToNode(airOutletNode));
+  ASSERT_FALSE(districtHeatingSteam.addToNode(airOutletNode));
 }
 
 //test setting and getting the nominal capacity
-TEST_F(ModelFixture, DistrictCooling_NominalCapacity) {
+TEST_F(ModelFixture, DistrictHeatingSteam_NominalCapacity) {
+
   Model m;
-  DistrictCooling districtCooling(m);
+  DistrictHeatingSteam districtHeatingSteam(m);
 
   //test setting and getting the field with a double
   double testValue(1);
-  districtCooling.setNominalCapacity(testValue);
-  auto capacity = districtCooling.nominalCapacity();
+
+  districtHeatingSteam.setNominalCapacity(testValue);
+
+  auto capacity = districtHeatingSteam.nominalCapacity();
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1, capacity.get());
 
-  EXPECT_FALSE(districtCooling.isNominalCapacityAutosized());
-  districtCooling.autosizeNominalCapacity();
-  EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtHeatingSteam.isNominalCapacityAutosized());
+  districtHeatingSteam.autosizeNominalCapacity();
+  EXPECT_TRUE(districtHeatingSteam.isNominalCapacityAutosized());
 }
 
 //test cloning the object
-TEST_F(ModelFixture, DistrictCooling_Clone) {
-  Model m;
-  //make an object to clone, and edit some property to make sure the clone worked
-  DistrictCooling districtCooling(m);
+TEST_F(ModelFixture, DistrictHeatingSteam_Clone) {
 
-  districtCooling.setNominalCapacity(1234);
+  Model m;
+
+  //make an object to clone, and edit some property to make sure the clone worked
+
+  DistrictHeatingSteam districtHeatingSteam(m);
+
+  districtHeatingSteam.setNominalCapacity(1234);
 
   //clone into the same model
-  auto districtCoolingClone = districtCooling.clone(m).cast<DistrictCooling>();
-  auto capacity = districtCoolingClone.nominalCapacity();
+
+  auto districtHeatingClone = districtHeatingSteam.clone(m).cast<DistrictHeatingSteam>();
+
+  auto capacity = districtHeatingClone.nominalCapacity();
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1234, capacity.get());
 
   //clone into another model
-  Model m2;
-  auto districtCoolingClone2 = districtCooling.clone(m2).cast<DistrictCooling>();
 
-  capacity = districtCoolingClone2.nominalCapacity();
+  Model m2;
+
+  auto districtHeatingClone2 = districtHeatingSteam.clone(m2).cast<DistrictHeatingSteam>();
+
+  capacity = districtHeatingClone2.nominalCapacity();
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1234, capacity.get());
 }
 
-TEST_F(ModelFixture, DistrictCooling_addToNode) {
+TEST_F(ModelFixture, DistrictHeatingSteam_addToNode) {
   Model m;
-  DistrictCooling testObject(m);
+  DistrictHeatingSteam testObject(m);
 
   AirLoopHVAC airLoop(m);
 
@@ -158,7 +168,7 @@ TEST_F(ModelFixture, DistrictCooling_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  auto testObjectClone = testObject.clone(m).cast<DistrictCooling>();
+  auto testObjectClone = testObject.clone(m).cast<DistrictHeatingSteam>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
