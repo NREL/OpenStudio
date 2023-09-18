@@ -3472,3 +3472,43 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_BoilerHotWater) {
   EXPECT_EQ(9, bhw.getDouble(17).get());                           // Sizing Factor
   EXPECT_EQ("Test", bhw.getString(18).get());                      // End-Use Subcategory
 }
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_CoilsHeating) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_CoilsHeating.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_CoilsHeating_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> chgs = model->getObjectsByType("OS:Coil:Heating:Gas");
+  ASSERT_EQ(1u, chgs.size());
+  WorkspaceObject chg = chgs[0];
+
+  EXPECT_EQ("Coil Heating Gas 1", chg.getString(1).get());         // Name
+  EXPECT_EQ(1, chg.Double(2).get());                    // On Cycle Parasitic Electric Load
+  EXPECT_EQ(2, chg.Double(2).get());                    // Off Cycle Parasitic Gas Load
+
+  std::vector<WorkspaceObject> chgms = model->getObjectsByType("OS:Coil:Heating:Gas:Multistage");
+  ASSERT_EQ(1u, chgms.size());
+  WorkspaceObject chgm = chgms[0];
+
+  EXPECT_EQ("Coil Heating Gas Multi Stage 1", chgm.getString(1).get());         // Name
+  EXPECT_EQ(3, chg.Double(2).get());                    // Off Cycle Parasitic Gas Load
+
+  std::vector<WorkspaceObject> chgmds = model->getObjectsByType("OS:Coil:Heating:Gas:Multistage:StageData");
+  ASSERT_EQ(1u, chgmds.size());
+  WorkspaceObject chgmd = chgmds[0];
+
+  EXPECT_EQ("Coil Heating Gas Multi Stage Stage Data 1", chgmd.getString(1).get());         // Name
+  EXPECT_EQ(4, chgmd.Double(2).get());                    // On Cycle Parasitic Electric Load
+
+  std::vector<WorkspaceObject> chds = model->getObjectsByType("OS:Coil:Heating:Desuperheater");
+  ASSERT_EQ(1u, chds.size());
+  WorkspaceObject chd = chds[0];
+  
+  EXPECT_EQ("Coil Heating Desuperheater 1", chd.getString(1).get());         // Name
+  EXPECT_EQ(5, chg.Double(2).get());                    // On Cycle Parasitic Electric Load
+}
+
