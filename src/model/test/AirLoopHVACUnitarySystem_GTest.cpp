@@ -121,6 +121,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData) {
   testObject.setCoolingCoil(coolingCoil);
   testObject.setHeatingCoil(heatingCoil);
   testObject.setSupplementalHeatingCoil(suppHeatingCoil);
+  testObject.autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
 
   auto testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
 

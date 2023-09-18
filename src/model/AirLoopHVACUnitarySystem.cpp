@@ -1391,7 +1391,7 @@ namespace model {
     OS_ASSERT(ok);
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodDuringCoolingOperation("None");
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodDuringHeatingOperation("None");
-    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+    setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("None");
     setMaximumSupplyAirTemperature(80.0);
     setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
     ok = setMaximumCyclingRate(2.5);
