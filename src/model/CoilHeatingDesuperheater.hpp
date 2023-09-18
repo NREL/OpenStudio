@@ -63,11 +63,11 @@ namespace model {
     boost::optional<ModelObject> heatingSource() const;
 
     OS_DEPRECATED(3, 7, 0) double parasiticElectricLoad() const;
-    
+
     double onCycleParasiticElectricLoad() const;
 
     OS_DEPRECATED(3, 7, 0) bool isParasiticElectricLoadDefaulted() const;
-    
+
     bool isOnCycleParasiticElectricLoadDefaulted() const;
 
     //@}
@@ -99,11 +99,11 @@ namespace model {
     void resetHeatingSource();
 
     OS_DEPRECATED(3, 7, 0) bool setParasiticElectricLoad(double parasiticElectricLoad);
-    
+
     bool setOnCycleParasiticElectricLoad(double onCyclearasiticElectricLoad);
 
     OS_DEPRECATED(3, 7, 0) void resetParasiticElectricLoad();
-    
+
     void resetOnCycleParasiticElectricLoad();
 
     //@}

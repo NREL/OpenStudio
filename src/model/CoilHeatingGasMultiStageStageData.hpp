@@ -51,7 +51,7 @@ namespace model {
     bool isNominalCapacityAutosized() const;
 
     OS_DEPRECATED(3, 7, 0) double parasiticElectricLoad() const;
-    
+
     double onCycleParasiticElectricLoad() const;
 
     //@}
@@ -65,7 +65,7 @@ namespace model {
     void autosizeNominalCapacity();
 
     OS_DEPRECATED(3, 7, 0) bool setParasiticElectricLoad(double stageParasiticElectricLoad);
-    
+
     bool setOnCycleParasiticElectricLoad(double stageOnCycleParasiticElectricLoad);
 
     //@}

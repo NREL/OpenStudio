@@ -53,7 +53,7 @@ namespace model {
     boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
     OS_DEPRECATED(3, 7, 0) boost::optional<double> parasiticGasLoad() const;
-    
+
     boost::optional<double> offCycleParasiticGasLoad() const;
 
     //@}
@@ -67,11 +67,11 @@ namespace model {
     void resetPartLoadFractionCorrelationCurve();
 
     OS_DEPRECATED(3, 7, 0) bool setParasiticGasLoad(double parasiticGasLoad);
-    
+
     bool setOffCycleParasiticGasLoad(double offCycleParasiticGasLoad);
 
     OS_DEPRECATED(3, 7, 0) void resetParasiticGasLoad();
-    
+
     void resetOffCycleParasiticGasLoad();
 
     //@}

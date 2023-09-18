@@ -205,7 +205,7 @@ namespace model {
     DEPRECATED_AT_MSG(3, 7, 0, "Use setOnCycleParasiticElectricLoad instead.");
     return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setOnCycleParasiticElectricLoad(parasiticElectricLoad);
   }
-  
+
   bool CoilHeatingGasMultiStageStageData::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
     return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setOnCycleParasiticElectricLoad(onCycleParasiticElectricLoad);
   }

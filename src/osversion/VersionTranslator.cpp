@@ -8310,8 +8310,9 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
-      } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage") || ("OS:Coil:Heating:Gas:MultiStage:StageData") || (iddname == "OS:Coil:Heating:Desuperheater")) {
-        
+      } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage") || ("OS:Coil:Heating:Gas:MultiStage:StageData")
+                 || (iddname == "OS:Coil:Heating:Desuperheater")) {
+
         auto iddObject = idd_3_7_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
