@@ -19682,7 +19682,7 @@ OS:Coil:Heating:Gas,
   A6, \field Temperature Setpoint Node Name
        \note optional, used if coil is temperature control and not load-base controlled
        \type alpha
-  N3, \field Parasitic Electric Load
+  N3, \field On Cycle Parasitic Electric Load
        \note parasitic electric load associated with the gas coil operation
        \note such as an inducer fan, etc..  This will be modified by the part load ratio to reflect
        \note the time of operation in a timestep.
@@ -19699,7 +19699,7 @@ OS:Coil:Heating:Gas,
        \note increase the gas consumption of the coil due to transient coil operation.
        \type object-list
        \object-list UnivariateFunctions
-  N4, \field Parasitic Gas Load
+  N4, \field Off Cycle Parasitic Gas Load
        \note parasitic gas load when the coil is not operating (i.e., standing pilot)
        \type real
        \units W
@@ -19748,7 +19748,7 @@ OS:Coil:Heating:Gas:MultiStage,
   A6, \field Part Load Fraction Correlation Curve
       \type object-list
       \object-list UnivariateFunctions
-  N1, \field Parasitic Gas Load
+  N1, \field Off Cycle Parasitic Gas Load
       \units W
   A7; \field Stage 1
       \begin-extensible
@@ -19775,7 +19775,7 @@ OS:Coil:Heating:Gas:MultiStage:StageData,
        \units W
        \minimum> 0.0
        \autosizable
-  N3; \field Parasitic Electric Load
+  N3; \field On Cycle Parasitic Electric Load
        \required-field
        \units W
        \ip-units W
@@ -19815,7 +19815,7 @@ OS:Coil:Heating:Desuperheater,
        \required-field
        \type object-list
        \object-list DesuperHeatingCoilSources
-  N2;  \field Parasitic Electric Load
+  N2;  \field On Cycle Parasitic Electric Load
        \type real
        \units W
        \minimum 0
