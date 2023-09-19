@@ -23,68 +23,35 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDistrictHeatingSteam(DistrictHeatingSteam& modelObject) {
-    OptionalString s;
-    OptionalModelObject temp;
-    boost::optional<double> value;
 
+    // Name
     IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::DistrictHeating_Steam, modelObject);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Field: Name ////////////////////////////////////////////////////////////
-    s = modelObject.name();
-    if (s) {
-      idfObject.setName(*s);
+    // Inlet Node Name
+    if (auto node_ = modelObject.inletModelObject()) {
+      idfObject.setString(DistrictHeating_SteamFields::SteamInletNodeName, node_->nameString());
     }
-    ///////////////////////////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Inlet Node Name ////////////////////////////////////////////////////
-    temp = modelObject.inletModelObject();
-    if (temp) {
-      s = temp->name();
-      if (s) {
-        idfObject.setString(openstudio::DistrictHeating_SteamFields::SteamInletNodeName, *s);
-      }
+    // Outlet Node Name
+    if (auto node_ = modelObject.outletModelObject()) {
+      idfObject.setString(DistrictHeating_SteamFields::SteamOutletNodeName, node_->nameString());
     }
-    ///////////////////////////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Outlet Node Name ///////////////////////////////////////////////////
-    temp = modelObject.outletModelObject();
-    if (temp) {
-      s = temp->name();
-      if (s) {
-        idfObject.setString(openstudio::DistrictHeating_SteamFields::SteamOutletNodeName, *s);
-      }
-    }
-    ///
-    ////////////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////////////////////
-    //Nominal Capacity ///////////////////////////////////////////////////
+    // Nominal Capacity
     if (modelObject.isNominalCapacityAutosized()) {
       idfObject.setString(DistrictHeating_SteamFields::NominalCapacity, "Autosize");
-    } else if ((value = modelObject.nominalCapacity())) {
-      idfObject.setDouble(DistrictHeating_SteamFields::NominalCapacity, value.get());
+    } else if (auto value_ = modelObject.nominalCapacity()) {
+      idfObject.setDouble(DistrictHeating_SteamFields::NominalCapacity, *value_);
     }
-    //
-    ////////////////////////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////////////////////////
-    //Capacity Fraction Schedule Name ///////////////////////////////////////////////////
-    boost::optional<Schedule> capacityFractionSchedule = modelObject.capacityFractionSchedule();
-
-    if (capacityFractionSchedule) {
-      boost::optional<IdfObject> _capacityFractionSchedule = translateAndMapModelObject(capacityFractionSchedule.get());
-
-      if (_capacityFractionSchedule && _capacityFractionSchedule->name()) {
-        idfObject.setString(DistrictHeating_SteamFields::CapacityFractionScheduleName, _capacityFractionSchedule->name().get());
+    // Capacity Fraction Schedule Name
+    if (auto capacityFractionSchedule_ = modelObject.capacityFractionSchedule()) {
+      if (auto sch_ = translateAndMapModelObject(*capacityFractionSchedule_)) {
+        idfObject.setString(DistrictHeating_SteamFields::CapacityFractionScheduleName, sch_->nameString());
       }
     }
-    //
-    ////////////////////////////////////////////////////////////////////////
 
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }
 
 }  // namespace energyplus

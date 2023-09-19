@@ -23,69 +23,36 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDistrictHeatingWater(DistrictHeatingWater& modelObject) {
-    OptionalString s;
-    OptionalModelObject temp;
-    boost::optional<double> value;
 
+    // Name
     IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::DistrictHeating_Water, modelObject);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Field: Name ////////////////////////////////////////////////////////////
-    s = modelObject.name();
-    if (s) {
-      idfObject.setName(*s);
+    // Inlet Node Name
+    if (auto node_ = modelObject.inletModelObject()) {
+      idfObject.setString(DistrictHeating_WaterFields::HotWaterInletNodeName, node_->nameString());
     }
-    ///////////////////////////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Inlet Node Name ////////////////////////////////////////////////////
-    temp = modelObject.inletModelObject();
-    if (temp) {
-      s = temp->name();
-      if (s) {
-        idfObject.setString(openstudio::DistrictHeating_WaterFields::HotWaterInletNodeName, *s);
-      }
+    // Outlet Node Name
+    if (auto node_ = modelObject.outletModelObject()) {
+      idfObject.setString(DistrictHeating_WaterFields::HotWaterOutletNodeName, node_->nameString());
     }
-    ///////////////////////////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Outlet Node Name ///////////////////////////////////////////////////
-    temp = modelObject.outletModelObject();
-    if (temp) {
-      s = temp->name();
-      if (s) {
-        idfObject.setString(openstudio::DistrictHeating_WaterFields::HotWaterOutletNodeName, *s);
-      }
-    }
-    ///
-    ////////////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////////////////////
-    //Nominal Capacity ///////////////////////////////////////////////////
+    // Nominal Capacity
     if (modelObject.isNominalCapacityAutosized()) {
       idfObject.setString(DistrictHeating_WaterFields::NominalCapacity, "Autosize");
-    } else if ((value = modelObject.nominalCapacity())) {
-      idfObject.setDouble(DistrictHeating_WaterFields::NominalCapacity, value.get());
+    } else if (auto value_ = modelObject.nominalCapacity()) {
+      idfObject.setDouble(DistrictHeating_WaterFields::NominalCapacity, *value_);
     }
-    //
-    ////////////////////////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////////////////////////
-    //Capacity Fraction Schedule Name ///////////////////////////////////////////////////
-    boost::optional<Schedule> capacityFractionSchedule = modelObject.capacityFractionSchedule();
-
-    if (capacityFractionSchedule) {
-      boost::optional<IdfObject> _capacityFractionSchedule = translateAndMapModelObject(capacityFractionSchedule.get());
-
-      if (_capacityFractionSchedule && _capacityFractionSchedule->name()) {
-        idfObject.setString(DistrictHeating_WaterFields::CapacityFractionScheduleName, _capacityFractionSchedule->name().get());
+    // Capacity Fraction Schedule Name
+    if (auto capacityFractionSchedule_ = modelObject.capacityFractionSchedule()) {
+      if (auto sch_ = translateAndMapModelObject(*capacityFractionSchedule_)) {
+        idfObject.setString(DistrictHeating_WaterFields::CapacityFractionScheduleName, sch_->nameString());
       }
     }
-    ////////////////////////////////////////////////////////////////////////
 
     return idfObject;
   }
-
 }  // namespace energyplus
 
 }  // namespace openstudio
