@@ -11,6 +11,8 @@
 
 namespace openstudio {
 
+class FuelType;
+
 namespace model {
 
   class Schedule;
@@ -273,13 +275,13 @@ namespace model {
 
       bool setHeater2Height(double heater2Height);
 
-      bool setHeaterFuelType(const std::string& heaterFuelType);
+      bool setHeaterFuelType(const FuelType& heaterFuelType);
 
       bool setHeaterThermalEfficiency(double heaterThermalEfficiency);
 
       bool setOffCycleParasiticFuelConsumptionRate(double offCycleParasiticFuelConsumptionRate);
 
-      bool setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType);
+      bool setOffCycleParasiticFuelType(const FuelType& offCycleParasiticFuelType);
 
       bool setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank);
 
@@ -287,7 +289,7 @@ namespace model {
 
       bool setOnCycleParasiticFuelConsumptionRate(double onCycleParasiticFuelConsumptionRate);
 
-      bool setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType);
+      bool setOnCycleParasiticFuelType(const FuelType& onCycleParasiticFuelType);
 
       bool setOnCycleParasiticHeatFractiontoTank(double onCycleParasiticHeatFractiontoTank);
 

@@ -10,6 +10,9 @@
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
+
+class FuelType;
+
 namespace model {
 
   namespace detail {
@@ -65,7 +68,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setFuelType(const std::string& fuelType);
+      bool setFuelType(const FuelType& fuelType);
 
       void resetFuelType();
 
