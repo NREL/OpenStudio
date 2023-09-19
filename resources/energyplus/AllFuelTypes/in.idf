@@ -295,7 +295,14 @@ Exterior:FuelEquipment,
   General;                                !- End-Use Subcategory
 
 Exterior:FuelEquipment,
-  DistrictHeating - 12000 W,              !- Name
+  DistrictHeatingSteam - 11000 W,         !- Name
+  DistrictHeatingSteam,                   !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  11000,                                  !- Design Level {W}
+  General;                                !- End-Use Subcategory
+
+Exterior:FuelEquipment,
+  DistrictHeatingWater - 12000 W,         !- Name
   DistrictHeatingWater,                   !- Fuel Use Type
   Always On Discrete,                     !- Schedule Name
   12000,                                  !- Design Level {W}
@@ -355,13 +362,6 @@ Exterior:FuelEquipment,
   Propane,                                !- Fuel Use Type
   Always On Discrete,                     !- Schedule Name
   3000,                                   !- Design Level {W}
-  General;                                !- End-Use Subcategory
-
-Exterior:FuelEquipment,
-  Steam - 11000 W,                        !- Name
-  DistrictHeatingSteam,                   !- Fuel Use Type
-  Always On Discrete,                     !- Schedule Name
-  11000,                                  !- Design Level {W}
   General;                                !- End-Use Subcategory
 
 Exterior:WaterEquipment,
@@ -542,17 +542,31 @@ Output:Table:Monthly,
   ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
 Output:Table:Monthly,
-  Building Energy Performance - District Heating, !- Name
+  Building Energy Performance - District Heating Water, !- Name
   2,                                      !- Digits After Decimal
   ExteriorEquipment:DistrictHeatingWater, !- Variable or Meter Name 1
   SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
 Output:Table:Monthly,
-  Building Energy Performance - District Heating Peak Demand, !- Name
+  Building Energy Performance - District Heating Water Peak Demand, !- Name
   2,                                      !- Digits After Decimal
   DistrictHeatingWater:Facility,          !- Variable or Meter Name 1
   Maximum,                                !- Aggregation Type for Variable or Meter 1
   ExteriorEquipment:DistrictHeatingWater, !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
+
+Output:Table:Monthly,
+  Building Energy Performance - District Heating Steam, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:DistrictHeatingSteam, !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
+
+Output:Table:Monthly,
+  Building Energy Performance - District Heating Steam Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  DistrictHeatingSteam:Facility,          !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:DistrictHeatingSteam, !- Variable or Meter Name 2
   ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
 Output:Table:Monthly,
