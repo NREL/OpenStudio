@@ -3500,9 +3500,12 @@ namespace energyplus {
       IddObjectType::OS_Curve_Triquadratic,
       IddObjectType::OS_Table_MultiVariableLookup,
       IddObjectType::OS_Table_Lookup,
+
+      // Should be on a PlantLoop to be translated
       // IddObjectType::OS_DistrictCooling,
       // IddObjectType::OS_DistrictHeating_Water,
       // IddObjectType::OS_DistrictHeating_Steam,
+
       IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial,
 
       IddObjectType::OS_Node,
