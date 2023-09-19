@@ -82,6 +82,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
     * Fix #4930 - Support undisturbed ground temperature models on GroundHeatExchangerVertical
     * Update `GroundHeatExchanger:Vertical` to actually use the Ground Temeprature Model field
 * [#4923](https://github.com/NREL/OpenStudio/pull/4923) - Fix #4692 - Modify `Model::load` to use the VersionTranslator instead of loading it assuming the version of the loaded OSM is the same as the current SDK version being used.
+* [#4972](https://github.com/NREL/OpenStudio/pull/4972) - V23.2.0-IOFreeze - wrap `DistrictHeating:Steam` and rename `DistrictHeating` to `DistrictHeatingWater`
+    * The `DistrictHeating` class (and related Model getters such as `Model::getDistrictHeatings`) are deprecated but kept for backward Compatibility for now.
 
 ## Minor changes and bug fixes
 
