@@ -19,11 +19,14 @@
 #include "LifeCycleCost.hpp"
 #include "Model.hpp"
 
+#include "../utilities/data/DataEnums.hpp"
+
 #include <utilities/idd/OS_OtherEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "utilities/core/Compare.hpp"
 
 namespace openstudio {
 namespace model {
@@ -198,8 +201,8 @@ namespace model {
       OS_ASSERT(setString(OS_OtherEquipmentFields::EndUseSubcategory, ""));
     }
 
-    bool OtherEquipment_Impl::setFuelType(const std::string& fuelType) {
-      return this->setString(OS_OtherEquipmentFields::FuelType, fuelType);
+    bool OtherEquipment_Impl::setFuelType(const FuelType& fuelType) {
+      return this->setString(OS_OtherEquipmentFields::FuelType, fuelType.valueDescription());
     }
 
     void OtherEquipment_Impl::resetFuelType() {
@@ -349,8 +352,21 @@ namespace model {
     return getImpl<detail::OtherEquipment_Impl>()->isFuelTypeDefaulted();
   }
 
-  bool OtherEquipment::setFuelType(const std::string& fuelType) {
+  bool OtherEquipment::setFuelType(const FuelType& fuelType) {
     return getImpl<detail::OtherEquipment_Impl>()->setFuelType(fuelType);
+  }
+
+  bool OtherEquipment::setFuelType(const std::string& fuelType) {
+    // Special case for this one, the only that has "None" as a possibility
+    if (openstudio::istringEqual("None", fuelType)) {
+      return this->setString(OS_OtherEquipmentFields::FuelType, "None");
+    }
+    try {
+      return setFuelType(FuelType{fuelType});
+    } catch (std::runtime_error& e) {
+      LOG(Debug, e.what());
+      return false;
+    }
   }
 
   void OtherEquipment::resetFuelType() {

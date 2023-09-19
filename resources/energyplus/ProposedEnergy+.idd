@@ -15410,7 +15410,6 @@ Exterior:FuelEquipment,
        \required-field
        \type choice
        \key Electricity
-       \key Water
        \key NaturalGas
        \key Propane
        \key FuelOilNo1

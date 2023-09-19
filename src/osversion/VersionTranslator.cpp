@@ -34,6 +34,7 @@
 #include "../utilities/math/FloatCompare.hpp"
 #include "../utilities/idf/IdfObject_Impl.hpp"
 #include "../utilities/core/UUID.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -5674,8 +5675,8 @@ namespace osversion {
     });
 
     /*****************************************************************************************************************************************************
-       *                                                          Output:Meter fuel types renames                                                          *
-       *****************************************************************************************************************************************************/
+     *                                                          Output:Meter fuel types renames                                                          *
+     *****************************************************************************************************************************************************/
 
     const static std::map<std::string, std::string> meterFuelTypesMap({
       {"FuelOil_1", "FuelOilNo1"},
@@ -7897,6 +7898,83 @@ namespace osversion {
       {"OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped", 13},
     }};
 
+    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap{{
+      {"Steam", "DistrictHeatingSteam"},
+      {"DistrictHeating", "DistrictHeatingWater"},
+      // Additionally, for UtilityBill, align the IDD choices to E+. This will also be covered by this
+      {"Gas", "NaturalGas"},
+      {"FuelOil_1", "FuelOilNo1"},
+      {"FuelOil_2", "FuelOilNo2"},
+      {"OtherFuel_1", "OtherFuel1"},
+      {"OtherFuel_2", "OtherFuel2"},
+    }};
+
+    const std::multimap<std::string, int> fuelTypeRenamesMap{{
+      {"OS:OtherEquipment", 6},                                // Fuel Type
+      {"OS:Exterior:FuelEquipment", 4},                        // Fuel Use Type
+      {"OS:WaterHeater:Mixed", 11},                            // Heater Fuel Type
+      {"OS:WaterHeater:Mixed", 15},                            // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Mixed", 18},                            // On Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 17},                       // Heater Fuel Type
+      {"OS:WaterHeater:Stratified", 20},                       // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 24},                       // On Cycle Parasitic Fuel Type
+      {"OS:UtilityBill", 2},                                   // Fuel Type
+      {"OS:Meter:Custom", 2},                                  // Fuel Type
+      {"OS:Meter:CustomDecrement", 2},                         // Fuel Type
+      {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
+      {"OS:PythonPlugin:OutputVariable", 6},                   // Resource Type
+    }};
+
+    auto checkIfReplaceNeeded = [replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
+      if (boost::optional<std::string> fuelType_ = object.getString(fieldIndex)) {
+        return replaceFuelTypesMap.contains(*fuelType_);
+      }
+      return false;
+    };
+
+    auto replaceForField = [&replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
+      if (boost::optional<std::string> fuelType_ = object.getString(fieldIndex)) {
+        auto it = replaceFuelTypesMap.find(*fuelType_);
+        if (it != replaceFuelTypesMap.end()) {
+          LOG(Trace, "Replacing " << *fuelType_ << " with " << it->second << " at fieldIndex " << fieldIndex << " for " << object.nameString());
+          newObject.setString(fieldIndex, it->second);
+        }
+      }
+    };
+
+    /*************************************************************************************************************************************************
+     *                                                               Output:Variable fuel                                                            *
+     ************************************************************************************************************************************************/
+
+    const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
+
+    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
+    const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
+      {"District Cooling Chilled Water Energy", "District Cooling Water Energy"},
+      {"District Cooling Chilled Water Rate", "District Cooling Water Rate"},
+      {"District Cooling Rate", "District Cooling Water Rate"},
+      {"District Cooling Inlet Temperature", "District Cooling Water Inlet Temperature"},
+      {"District Cooling Outlet Temperature", "District Cooling Water Outlet Temperature"},
+      {"District Cooling Mass Flow Rate", "District Cooling Water Mass Flow Rate"},
+      {"District Heating Hot Water Energy", "District Heating Water Energy"},
+      {"District Heating Hot Water Rate", "District Heating Water Rate"},
+      {"District Heating Rate", "District Heating Water Rate"},
+      {"District Heating Inlet Temperature", "District Heating Water Inlet Temperature"},
+      {"District Heating Outlet Temperature", "District Heating Water Outlet Temperature"},
+      {"District Heating Mass Flow Rate", "District Heating Water Mass Flow Rate"},
+    });
+
+    /*************************************************************************************************************************************************
+     *                                                          Output:Meter fuel types renames                                                      *
+     ************************************************************************************************************************************************/
+
+    const static std::array<std::pair<std::string, std::string>, 2> meterFuelTypesMap{{
+      {"DistrictHeating", "DistrictHeatingWater"},
+      {"Steam", "DistrictHeatingSteam"},
+    }};
+
     for (const IdfObject& object : idf_3_6_1.objects()) {
       auto iddname = object.iddObject().name();
 
@@ -8254,6 +8332,105 @@ namespace osversion {
           m_new.emplace_back(std::move(plfCurve));
         }
 
+      } else if (iddname == "OS:Boiler:HotWater") {
+
+        // 1 Field has been added from 3.6.1 to 3.7.0:
+        // -------------------------------------------
+        // * Off Cycle Parasitic Fuel Load * 16
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 16) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setDouble(16, 0.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Output:Meter") {
+
+        std::string name = object.nameString();
+
+        // Structured bindings
+        for (const auto& [k, v] : meterFuelTypesMap) {
+          name = boost::regex_replace(name, boost::regex(k, boost::regex::icase), v);
+        }
+        if (name == object.nameString()) {
+          // No-op
+          ss << object;
+        } else {
+
+          // Copy everything but 'Variable Name' field
+          auto iddObject = idd_3_7_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            // Skip name field
+            if (i == 1) {
+              continue;
+            }
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
+
+          newObject.setName(name);
+
+          ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
+        }
+
+      } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")
+                 || (iddname == "OS:EnergyManagementSystem:Actuator")) {
+
+        unsigned variableNameIndex = 3;
+        if (iddname == "OS:EnergyManagementSystem:Actuator") {
+          variableNameIndex = 4;  // Actuated Component Control Type
+        }
+
+        if ((value = object.getString(variableNameIndex))) {
+
+          std::string variableName = value.get();
+          // Strip consecutive spaces and all
+          variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+
+          auto it = replaceOutputVariablesMap.find(variableName);
+          if (it == replaceOutputVariablesMap.end()) {
+            // No-op
+            ss << object;
+          } else {
+
+            // Copy everything but 'Variable Name' field
+            auto iddObject = idd_3_7_0.getObject(iddname);
+            IdfObject newObject(iddObject.get());
+
+            for (size_t i = 0; i < object.numFields(); ++i) {
+              if (i == variableNameIndex) {
+                continue;
+              } else if ((value = object.getString(i))) {
+                newObject.setString(i, value.get());
+              }
+            }
+
+            LOG(Trace, "Replacing " << variableName << " with " << it->second << " for " << object.nameString());
+            newObject.setString(variableNameIndex, it->second);
+
+            ss << newObject;
+            m_refactored.emplace_back(std::move(object), std::move(newObject));
+          }
+        } else {
+          // No-op
+          ss << object;
+        }
+
       } else if (auto it = std::find_if(crankcaseCoilWithIndex.cbegin(), crankcaseCoilWithIndex.cend(),
                                         [&iddname](const auto& p) { return iddname == p.first; });
                  it != crankcaseCoilWithIndex.cend()) {
@@ -8283,28 +8460,40 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
-      } else if (iddname == "OS:Boiler:HotWater") {
-
-        // 1 Field has been added from 3.6.1 to 3.7.0:
-        // -------------------------------------------
-        // * Off Cycle Parasitic Fuel Load * 16
-        auto iddObject = idd_3_7_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
-
-        for (size_t i = 0; i < object.numFields(); ++i) {
-          if ((value = object.getString(i))) {
-            if (i < 16) {
-              newObject.setString(i, value.get());
-            } else {
-              newObject.setString(i + 1, value.get());
-            }
+      } else if (fuelTypeRenamesMap.find(iddname) != fuelTypeRenamesMap.end()) {
+        LOG(Trace, "Checking for a fuel type rename in Object of type '" << iddname << "' and named '" << object.nameString() << "'");
+        auto rangeFields = fuelTypeRenamesMap.equal_range(iddname);
+        // First pass, find if a replacement is needed
+        bool isReplaceNeeded = false;
+        for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+          if (checkIfReplaceNeeded(object, it->second)) {
+            isReplaceNeeded = true;
+            break;
           }
         }
+        if (isReplaceNeeded) {
+          LOG(Trace, "Replace needed!");
 
-        newObject.setDouble(16, 0.0);
+          // Make a new object, and copy evertything in place
+          auto iddObject = idd_3_7_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject;
+          // Then handle the renames
+          for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+            replaceForField(object, newObject, it->second);
+          }
+
+          ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
+        } else {
+          // No-op
+          ss << object;
+        }
 
       } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage")
                  || (iddname == "OS:Coil:Heating:Gas:MultiStage:StageData") || (iddname == "OS:Coil:Heating:Desuperheater")) {

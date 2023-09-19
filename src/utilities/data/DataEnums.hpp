@@ -37,8 +37,10 @@ OPENSTUDIO_ENUM(InstallLocationType,
 );
 
 /** \class FuelType
- *  \brief EnergyPlus meterable fuel types
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  \brief EnergyPlus meterable fuel types.
+ *  \details Use the valueDescription() for interfacing with EnergyPlus or setting an IDD field.
+ *
+ *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(FuelType,
@@ -71,9 +73,9 @@ OPENSTUDIO_ENUM(FuelType,
   ((FuelOil_2)(FuelOilNo2))
   ((Propane))
   ((Water))
-  ((Steam))
+  ((Steam)(DistrictHeatingSteam))
   ((DistrictCooling))
-  ((DistrictHeating))
+  ((DistrictHeating)(DistrictHeatingWater))
   ((OtherFuel_1)(OtherFuel1))
   ((OtherFuel_2)(OtherFuel2))
   ((EnergyTransfer))
@@ -120,7 +122,8 @@ OPENSTUDIO_ENUM(EndUseFuelType,
   ((OtherFuel_1)(Other Fuel 1))
   ((OtherFuel_2)(Other Fuel 2))
   ((DistrictCooling)(District Cooling))
-  ((DistrictHeating)(District Heating))
+  ((DistrictHeating)(District Heating Water))
+  ((DistrictHeatingSteam)(District Heating Steam))
   ((Water))
 );
 

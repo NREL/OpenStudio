@@ -10,11 +10,14 @@
 #include "ExteriorLoadInstance.hpp"
 
 namespace openstudio {
+
+class FuelType;
+
 namespace model {
 
   class ExteriorFuelEquipmentDefinition;
-  class Schedule;
   class Facility;
+  class Schedule;
 
   namespace detail {
 
@@ -80,6 +83,7 @@ namespace model {
 
     void resetSchedule();
 
+    bool setFuelType(const FuelType& fuelType);
     bool setFuelType(const std::string& fuelType);
 
     bool setMultiplier(double multiplier);

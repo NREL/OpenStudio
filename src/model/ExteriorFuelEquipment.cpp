@@ -15,6 +15,7 @@
 #include "Facility.hpp"
 #include "Facility_Impl.hpp"
 
+#include "../utilities/data/DataEnums.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Exterior_FuelEquipment_FieldEnums.hxx>
@@ -130,8 +131,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ExteriorFuelEquipment_Impl::setFuelType(const std::string& fuelType) {
-      bool result = setString(OS_Exterior_FuelEquipmentFields::FuelUseType, fuelType);
+    bool ExteriorFuelEquipment_Impl::setFuelType(const FuelType& fuelType) {
+      bool result = setString(OS_Exterior_FuelEquipmentFields::FuelUseType, fuelType.valueDescription());
       return result;
     }
 
@@ -215,7 +216,7 @@ namespace model {
     ok = setSchedule(defaultSchedule);
     OS_ASSERT(ok);
 
-    setFuelType("Electricity");
+    setFuelType(FuelType::Electricity);
 
     /*
    *ok = this->setMultiplier(1.0);
@@ -238,7 +239,7 @@ namespace model {
       LOG_AND_THROW("Could not set " << briefDescription() << "'s schedule to " << schedule.briefDescription() << ".");
     }
 
-    setFuelType("NaturalGas");
+    setFuelType(FuelType::Gas);
 
     /*
    *ok = this->setMultiplier(1.0);
@@ -301,8 +302,17 @@ namespace model {
     getImpl<detail::ExteriorFuelEquipment_Impl>()->resetSchedule();
   }
 
-  bool ExteriorFuelEquipment::setFuelType(const std::string& fuelType) {
+  bool ExteriorFuelEquipment::setFuelType(const FuelType& fuelType) {
     return getImpl<detail::ExteriorFuelEquipment_Impl>()->setFuelType(fuelType);
+  }
+
+  bool ExteriorFuelEquipment::setFuelType(const std::string& fuelType) {
+    try {
+      return setFuelType(FuelType{fuelType});
+    } catch (std::runtime_error& e) {
+      LOG(Debug, e.what());
+      return false;
+    }
   }
 
   bool ExteriorFuelEquipment::setMultiplier(double multiplier) {
