@@ -29443,7 +29443,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   A16; \field Design Specification Multispeed Object Name
        \type object-list
        \object-list UnitarySystemPerformaceNames
-       \note The name of the performance specification object used to describe the multispeed coil.
+       \note The name of the performance specification object used to describe the multispeed coil or fan.
 
 OS:ZoneHVAC:WaterToAirHeatPump,
         \min-fields 22
@@ -29587,7 +29587,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
    A27; \field Design Specification Multispeed Object Name
         \type object-list
         \object-list UnitarySystemPerformaceNames
-        \note The name of the performance specification object used to describe the multispeed coil.
+        \note The name of the performance specification object used to describe the multispeed coil or fan.
 
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10
