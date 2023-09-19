@@ -23,10 +23,38 @@
 #include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeedSpeedData.hpp"
+#include "../../model/CoilHeatingDXVariableSpeedSpeedData_Impl.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlow.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeedSpeedData.hpp"
+#include "../../model/CoilCoolingDXVariableSpeedSpeedData_Impl.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableRefrigerantFlow.hpp"
+#include "../../model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "../../model/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -37,10 +65,48 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-  bool translateCoils(sysPerf, system) {
+  boost::optional<IdfObject> ForwardTranslator::translateUnitarySystemPerformanceMultispeed(UnitarySystemPerformanceMultispeed& modelObject) {
+
+    // Name
+    IdfObject sysPerf = createRegisterAndNameIdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed, modelObject);
+
+    boost::optional<HVACComponent> heatingCoil;
+    boost::optional<HVACComponent> coolingCoil;
+
+    // Find the associated AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> unitarySystems = modelObject.getModelObjectSources<AirLoopHVACUnitarySystem>();
+    if (unitarySystems.size() == 1) {
+      AirLoopHVACUnitarySystem& unitarySystem = unitarySystems[0];
+      heatingCoil = unitarySystem.heatingCoil();
+      coolingCoil = unitarySystem.coolingCoil();
+    }
+
+    // Find the associated ZoneHVACTerminalUnitVariableRefrigerantFlow
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> tuVRFs =
+      modelObject.getModelObjectSources<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+    if (tuVRFs.size() == 1) {
+      ZoneHVACTerminalUnitVariableRefrigerantFlow& tuVRF = tuVRFs[0];
+      heatingCoil = tuVRF.heatingCoil();
+      coolingCoil = tuVRF.coolingCoil();
+    }
+
+    // Find the associated ZoneHVACWaterToAirHeatPump
+    std::vector<ZoneHVACWaterToAirHeatPump> hps = modelObject.getModelObjectSources<ZoneHVACWaterToAirHeatPump>();
+    if (hps.size() == 1) {
+      ZoneHVACWaterToAirHeatPump& hp = hps[0];
+      heatingCoil = hp.heatingCoil().optionalCast<HVACComponent>();
+      coolingCoil = hp.coolingCoil().optionalCast<HVACComponent>();
+    }
+
+    if ((!heatingCoil) && (!coolingCoil)) {
+      LOG(Error, "OS:UnitarySystemPerformance:Multispeed should be referenced by one and only one OS:AirLoopHVAC:UnitarySystem or "
+                 "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow or OS:ZoneHVAC:WaterToAirHeatPump, "
+                   << modelObject.nameString() << " is referenced by " << unitarySystems.size() << " OS:AirLoopHVAC:UnitarySystem, " << tuVRFs.size()
+                   << " OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow, " << hps.size() << " OS:ZoneHVAC:WaterToAirHeatPump.")
+      return boost::none;
+    }
 
     // Number of speeds for heating
-    boost::optional<HVACComponent> heatingCoil = system.heatingCoil();
     if (heatingCoil) {
       if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed) {
         auto heatingCoilDXMultispeed = heatingCoil->cast<CoilHeatingDXMultiSpeed>();
@@ -48,6 +114,21 @@ namespace energyplus {
       } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_Gas_MultiStage) {
         auto heatingCoilGasMultiStage = heatingCoil->cast<CoilHeatingGasMultiStage>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilGasMultiStage.stages().size());
+      } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed) {
+        auto heatingCoilDXVarspeed = heatingCoil->cast<CoilHeatingDXVariableSpeed>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilDXVarspeed.speeds.size());
+      } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit) {
+        auto heatingCoilWaterToAirHeatingVar = heatingCoil->cast<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilWaterToAirHeatingVar.speeds.size());
+      } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit) {
+        auto heatingCoilWaterToAirHeating = heatingCoil->cast<CoilHeatingWaterToAirHeatPumpEquationFit>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);  // FIXME
+      } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow) {
+        auto heatingCoilVRF = heatingCoil->cast<CoilHeatingDXVariableRefrigerantFlow>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);  // FIXME
+      } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
+        auto heatingCoilVRFFluid = heatingCoil->cast<CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);  // FIXME
       } else {
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);
       }
@@ -56,11 +137,25 @@ namespace energyplus {
     }
 
     // Number of speeds for cooling
-    boost::optional<HVACComponent> coolingCoil = system.coolingCoil();
     if (coolingCoil) {
       if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed) {
         auto coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXMultispeed.stages().size());
+      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed) {
+        auto coolingCoilDXVarspeed = heatingCoil->cast<CoilCoolingDXVariableSpeed>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXVarspeed.speeds.size());
+      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit) {
+        auto coolingCoilWaterToAirHeatingVar = heatingCoil->cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilWaterToAirHeatingVar.speeds.size());
+      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit) {
+        auto coolingCoilWaterToAirHeating = heatingCoil->cast<CoilCoolingWaterToAirHeatPumpEquationFit>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);  // FIXME
+      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow) {
+        auto coolingCoilVRF = coolingCoil->cast<CoilCoolingDXVariableRefrigerantFlow>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);  // FIXME
+      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
+        auto coolingCoilVRFFluid = coolingCoil->cast<CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);  // FIXME
       } else {
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
       }
@@ -76,48 +171,6 @@ namespace energyplus {
 
     for (const auto& airflowRatioField : modelObject.supplyAirflowRatioFields()) {
       sysPerf.pushExtensibleGroup(airflowRatioField.getHeatingCoolingRatiosAsStrings());
-    }
-
-    return true;
-  }
-
-  bool zoneHVAC(sysPerf, zoneHVACs) {}
-
-  boost::optional<IdfObject> ForwardTranslator::translateUnitarySystemPerformanceMultispeed(UnitarySystemPerformanceMultispeed& modelObject) {
-
-    // Name
-    IdfObject sysPerf = createRegisterAndNameIdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed, modelObject);
-
-    bool result = false;
-
-    // Find the associated AirLoopHVACUnitarySystem
-    std::vector<AirLoopHVACUnitarySystem> unitarySystems = modelObject.getModelObjectSources<AirLoopHVACUnitarySystem>();
-    if (unitarySystems.size() == 1) {
-      AirLoopHVACUnitarySystem& unitarySystem = unitarySystems[0];
-      result = translateCoils(sysPerf, unitarySystem);
-    }
-
-    // Find the associated ZoneHVACTerminalUnitVariableRefrigerantFlow
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> tuVRFs =
-      modelObject.getModelObjectSources<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
-    if (tuVRFs.size() == 1) {
-      ZoneHVACTerminalUnitVariableRefrigerantFlow& tuVRF = tuVRFs[0];
-      result = translateCoils(sysPerf, tuVRF);
-    }
-
-    // Find the associated ZoneHVACWaterToAirHeatPump
-    std::vector<ZoneHVACWaterToAirHeatPump> hps = modelObject.getModelObjectSources<ZoneHVACWaterToAirHeatPump>();
-    if (hps.size() == 1) {
-      ZoneHVACWaterToAirHeatPump& hp = hps[0];
-      result = translateCoils(sysPerf, hp);
-    }
-
-    if (!result) {
-      LOG(Error, "OS:UnitarySystemPerformance:Multispeed should be referenced by one and only one OS:AirLoopHVAC:UnitarySystem or "
-                 "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow or OS:ZoneHVAC:WaterToAirHeatPump, "
-                   << modelObject.nameString() << " is referenced by " << unitarySystems.size() << " OS:AirLoopHVAC:UnitarySystem, " << tuVRFs.size()
-                   << " OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow, " << hps.size() << " OS:ZoneHVAC:WaterToAirHeatPump.")
-      return boost::none;
     }
 
     return sysPerf;
