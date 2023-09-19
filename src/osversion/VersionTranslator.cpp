@@ -8501,7 +8501,7 @@ namespace osversion {
         // Change Parasitic Electric Load to On Cycle Parasitic Electric Load
         // Change Parasitic Gas Load to Off Cycle Parasitic Gas Load
 
-        auto iddObject = idd_3_7_0.getObject(iddname);
+/*         auto iddObject = idd_3_7_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
@@ -8511,7 +8511,7 @@ namespace osversion {
         }
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject;
+        ss << newObject; */
 
         // No-op
       } else {
