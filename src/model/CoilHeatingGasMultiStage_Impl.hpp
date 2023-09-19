@@ -80,7 +80,7 @@ namespace model {
 
       void resetPartLoadFractionCorrelationCurve();
 
-      bool setOffCycleParasiticGasLoad(boost::optional<double> offCycleParasiticGasLoad);
+      bool setOffCycleParasiticGasLoad(double offCycleParasiticGasLoad);
 
       void resetOffCycleParasiticGasLoad();
 

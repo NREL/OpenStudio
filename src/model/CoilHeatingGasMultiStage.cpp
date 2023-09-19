@@ -186,15 +186,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilHeatingGasMultiStage_Impl::setOffCycleParasiticGasLoad(boost::optional<double> offCycleParasiticGasLoad) {
-      bool result(false);
-      if (offCycleParasiticGasLoad) {
-        result = setDouble(OS_Coil_Heating_Gas_MultiStageFields::OffCycleParasiticGasLoad, offCycleParasiticGasLoad.get());
-      } else {
-        resetOffCycleParasiticGasLoad();
-        result = true;
-      }
-      OS_ASSERT(result);
+    bool CoilHeatingGasMultiStage_Impl::setOffCycleParasiticGasLoad(double offCycleParasiticGasLoad) {
+      bool result = setDouble(OS_Coil_Heating_Gas_MultiStageFields::OffCycleParasiticGasLoad, offCycleParasiticGasLoad);
       return result;
     }
 

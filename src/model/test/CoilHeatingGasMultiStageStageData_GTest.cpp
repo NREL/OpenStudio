@@ -31,17 +31,17 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStageStageData_GettersSetters) {
   EXPECT_EQ(0.8, stageData1.gasBurnerEfficiency());
   EXPECT_FALSE(stageData1.nominalCapacity());
   EXPECT_TRUE(stageData1.isNominalCapacityAutosized());
-  EXPECT_EQ(0.0, stageData1.parasiticElectricLoad());
+  EXPECT_EQ(0.0, stageData1.onCycleParasiticElectricLoad());
 
   EXPECT_TRUE(stageData1.setGasBurnerEfficiency(0.75));
   EXPECT_TRUE(stageData1.setNominalCapacity(1000.0));
-  EXPECT_TRUE(stageData1.setParasiticElectricLoad(1.5));
+  EXPECT_TRUE(stageData1.setOnCycleParasiticElectricLoad(1.5));
 
   EXPECT_EQ(0.75, stageData1.gasBurnerEfficiency());
   ASSERT_TRUE(stageData1.nominalCapacity());
   EXPECT_EQ(1000.0, stageData1.nominalCapacity().get());
   EXPECT_FALSE(stageData1.isNominalCapacityAutosized());
-  EXPECT_EQ(1.5, stageData1.parasiticElectricLoad());
+  EXPECT_EQ(1.5, stageData1.onCycleParasiticElectricLoad());
 
   stageData1.autosizeNominalCapacity();
   EXPECT_FALSE(stageData1.nominalCapacity());

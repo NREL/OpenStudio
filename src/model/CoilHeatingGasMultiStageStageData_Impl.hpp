@@ -62,7 +62,7 @@ namespace model {
 
       bool setGasBurnerEfficiency(double stageGasBurnerEfficiency);
 
-      bool setNominalCapacity(boost::optional<double> stageNominalCapacity);
+      bool setNominalCapacity(double stageNominalCapacity);
 
       void autosizeNominalCapacity();
 

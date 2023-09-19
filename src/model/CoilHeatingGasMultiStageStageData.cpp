@@ -75,11 +75,8 @@ namespace model {
       return result;
     }
 
-    bool CoilHeatingGasMultiStageStageData_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
-      bool result(false);
-      if (nominalCapacity) {
-        result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::NominalCapacity, nominalCapacity.get());
-      }
+    bool CoilHeatingGasMultiStageStageData_Impl::setNominalCapacity(double nominalCapacity) {
+      bool result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::NominalCapacity, nominalCapacity);
       return result;
     }
 
