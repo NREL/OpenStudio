@@ -4571,7 +4571,7 @@ namespace osversion {
     IdfFile targetIdf(idd_3_0_0.iddFile());
     ss << targetIdf.versionObject().get();
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap({
       {"FuelOil#1", "FuelOilNo1"},
       {"FuelOil#2", "FuelOilNo2"},
@@ -5099,7 +5099,7 @@ namespace osversion {
 
     const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
     const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
       {"Other Equipment FuelOil#1 Rate", "Other Equipment FuelOilNo1 Rate"},
@@ -7898,7 +7898,7 @@ namespace osversion {
       {"OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped", 13},
     }};
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap{{
       {"Steam", "DistrictHeatingSteam"},
       {"DistrictHeating", "DistrictHeatingWater"},
@@ -7949,7 +7949,7 @@ namespace osversion {
 
     const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
     const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
       {"District Cooling Chilled Water Energy", "District Cooling Water Energy"},
