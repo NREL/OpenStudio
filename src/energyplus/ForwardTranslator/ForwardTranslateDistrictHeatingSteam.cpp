@@ -5,15 +5,15 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-#include "../../model/DistrictCooling.hpp"
-#include "../../model/DistrictCooling_Impl.hpp"
+#include "../../model/DistrictHeatingSteam.hpp"
+#include "../../model/DistrictHeatingSteam_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
-#include <utilities/idd/DistrictCooling_FieldEnums.hxx>
+#include <utilities/idd/DistrictHeating_Steam_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -22,33 +22,33 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateDistrictCooling(DistrictCooling& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateDistrictHeatingSteam(DistrictHeatingSteam& modelObject) {
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::DistrictCooling, modelObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::DistrictHeating_Steam, modelObject);
 
     // Inlet Node Name
     if (auto node_ = modelObject.inletModelObject()) {
-      idfObject.setString(DistrictCoolingFields::ChilledWaterInletNodeName, node_->nameString());
+      idfObject.setString(DistrictHeating_SteamFields::SteamInletNodeName, node_->nameString());
     }
 
     // Outlet Node Name
     if (auto node_ = modelObject.outletModelObject()) {
-      idfObject.setString(DistrictCoolingFields::ChilledWaterOutletNodeName, node_->nameString());
+      idfObject.setString(DistrictHeating_SteamFields::SteamOutletNodeName, node_->nameString());
     }
 
     // Nominal Capacity
     if (modelObject.isNominalCapacityAutosized()) {
-      idfObject.setString(DistrictCoolingFields::NominalCapacity, "Autosize");
+      idfObject.setString(DistrictHeating_SteamFields::NominalCapacity, "Autosize");
     } else if (auto value_ = modelObject.nominalCapacity()) {
-      idfObject.setDouble(DistrictCoolingFields::NominalCapacity, *value_);
+      idfObject.setDouble(DistrictHeating_SteamFields::NominalCapacity, *value_);
     }
 
     // Capacity Fraction Schedule Name
     {
       Schedule capacityFractionSchedule = modelObject.capacityFractionSchedule();
       if (auto sch_ = translateAndMapModelObject(capacityFractionSchedule)) {
-        idfObject.setString(DistrictCoolingFields::CapacityFractionScheduleName, sch_->nameString());
+        idfObject.setString(DistrictHeating_SteamFields::CapacityFractionScheduleName, sch_->nameString());
       }
     }
 

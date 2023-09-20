@@ -5,8 +5,8 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
-#include "../DistrictCooling.hpp"
-#include "../DistrictCooling_Impl.hpp"
+#include "../DistrictHeatingWater.hpp"
+#include "../DistrictHeatingWater_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
@@ -21,61 +21,61 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //test construction of the object
-TEST_F(ModelFixture, DistrictCooling_GettersSetters) {
+TEST_F(ModelFixture, DistrictHeatingWater_GettersSetters) {
 
   Model m;
-  DistrictCooling districtCooling(m);
+  DistrictHeatingWater districtHeating(m);
 
   // Default to autosize
-  EXPECT_FALSE(districtCooling.nominalCapacity());
-  EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtHeating.nominalCapacity());
+  EXPECT_TRUE(districtHeating.isNominalCapacityAutosized());
   // Set it
-  districtCooling.setNominalCapacity(1000.0);
-  ASSERT_TRUE(districtCooling.nominalCapacity());
-  EXPECT_EQ(1000.0, districtCooling.nominalCapacity().get());
-  EXPECT_FALSE(districtCooling.isNominalCapacityAutosized());
+  districtHeating.setNominalCapacity(1000.0);
+  ASSERT_TRUE(districtHeating.nominalCapacity());
+  EXPECT_EQ(1000.0, districtHeating.nominalCapacity().get());
+  EXPECT_FALSE(districtHeating.isNominalCapacityAutosized());
   // autosize
-  districtCooling.autosizeNominalCapacity();
-  EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
-  EXPECT_FALSE(districtCooling.nominalCapacity());
+  districtHeating.autosizeNominalCapacity();
+  EXPECT_TRUE(districtHeating.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtHeating.nominalCapacity());
 
-  EXPECT_EQ(m.alwaysOnContinuousSchedule(), districtCooling.capacityFractionSchedule());
+  EXPECT_EQ(m.alwaysOnContinuousSchedule(), districtHeating.capacityFractionSchedule());
   ScheduleConstant scheduleConstant(m);
-  EXPECT_TRUE(districtCooling.setCapacityFractionSchedule(scheduleConstant));
-  EXPECT_EQ(scheduleConstant, districtCooling.capacityFractionSchedule());
+  EXPECT_TRUE(districtHeating.setCapacityFractionSchedule(scheduleConstant));
+  EXPECT_EQ(scheduleConstant, districtHeating.capacityFractionSchedule());
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node
-TEST_F(ModelFixture, DistrictCooling_connections) {
+TEST_F(ModelFixture, DistrictHeatingWater_connections) {
   Model m;
 
   //make a plant loop
   PlantLoop plantLoop(m);
 
-  //make a DistrictCooling object
-  DistrictCooling districtCooling(m);
+  //make a districtheating object
+  DistrictHeatingWater districtHeating(m);
 
   //get the supply outlet node of the plant loop
   Node plantOutletNode = plantLoop.supplyOutletNode();
 
-  //hook the DistrictCooling object to the supply outlet node
-  ASSERT_TRUE(districtCooling.addToNode(plantOutletNode));
+  //hook the districtheating object to the supply outlet node
+  ASSERT_TRUE(districtHeating.addToNode(plantOutletNode));
 
   //it should now be on a loop and have inlet and outlet objects
-  ASSERT_TRUE(districtCooling.loop());
-  ASSERT_TRUE(districtCooling.inletModelObject());
-  ASSERT_TRUE(districtCooling.outletModelObject());
+  ASSERT_TRUE(districtHeating.loop());
+  ASSERT_TRUE(districtHeating.inletModelObject());
+  ASSERT_TRUE(districtHeating.outletModelObject());
 
   //it should be removable from the loop
-  ASSERT_TRUE(districtCooling.isRemovable());
+  ASSERT_TRUE(districtHeating.isRemovable());
 
   //now, disconnect the object
-  districtCooling.disconnect();
+  districtHeating.disconnect();
 
   //it should no longer have a loop or inlet/outlet objects
-  ASSERT_FALSE(districtCooling.loop());
-  ASSERT_FALSE(districtCooling.inletModelObject());
-  ASSERT_FALSE(districtCooling.outletModelObject());
+  ASSERT_FALSE(districtHeating.loop());
+  ASSERT_FALSE(districtHeating.inletModelObject());
+  ASSERT_FALSE(districtHeating.outletModelObject());
 
   //make an airloop
   AirLoopHVAC airLoop(m);
@@ -84,35 +84,42 @@ TEST_F(ModelFixture, DistrictCooling_connections) {
   Node airOutletNode = airLoop.supplyOutletNode();
 
   //it should not connect to an airloop
-  ASSERT_FALSE(districtCooling.addToNode(airOutletNode));
+  ASSERT_FALSE(districtHeating.addToNode(airOutletNode));
 }
 
 //test cloning the object
-TEST_F(ModelFixture, DistrictCooling_Clone) {
-  Model m;
-  //make an object to clone, and edit some property to make sure the clone worked
-  DistrictCooling districtCooling(m);
+TEST_F(ModelFixture, DistrictHeatingWater_Clone) {
 
-  districtCooling.setNominalCapacity(1234);
+  Model m;
+
+  //make an object to clone, and edit some property to make sure the clone worked
+
+  DistrictHeatingWater districtHeating(m);
+
+  districtHeating.setNominalCapacity(1234);
 
   //clone into the same model
-  auto districtCoolingClone = districtCooling.clone(m).cast<DistrictCooling>();
-  auto capacity = districtCoolingClone.nominalCapacity();
+
+  auto districtHeatingClone = districtHeating.clone(m).cast<DistrictHeatingWater>();
+
+  auto capacity = districtHeatingClone.nominalCapacity();
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1234, capacity.get());
 
   //clone into another model
-  Model m2;
-  auto districtCoolingClone2 = districtCooling.clone(m2).cast<DistrictCooling>();
 
-  capacity = districtCoolingClone2.nominalCapacity();
+  Model m2;
+
+  auto districtHeatingClone2 = districtHeating.clone(m2).cast<DistrictHeatingWater>();
+
+  capacity = districtHeatingClone2.nominalCapacity();
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1234, capacity.get());
 }
 
-TEST_F(ModelFixture, DistrictCooling_addToNode) {
+TEST_F(ModelFixture, DistrictHeatingWater_addToNode) {
   Model m;
-  DistrictCooling testObject(m);
+  DistrictHeatingWater testObject(m);
 
   AirLoopHVAC airLoop(m);
 
@@ -135,9 +142,18 @@ TEST_F(ModelFixture, DistrictCooling_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  auto testObjectClone = testObject.clone(m).cast<DistrictCooling>();
+  auto testObjectClone = testObject.clone(m).cast<DistrictHeatingWater>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
+}
+
+// In E+ 23.2.0, DistrictHeating was renamed to DistrictHeatingWater
+// So we test that we can instantiate with the old name too
+TEST_F(ModelFixture, DistrictHeatingWater_Alias2320) {
+  Model m;
+  DistrictHeating districHeating(m);
+
+  EXPECT_EQ(districHeating.iddObjectType(), DistrictHeatingWater::iddObjectType());
 }

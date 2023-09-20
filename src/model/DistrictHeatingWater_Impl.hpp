@@ -3,8 +3,8 @@
 *  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
-#ifndef MODEL_DISTRICTHEATING_IMPL_HPP
-#define MODEL_DISTRICTHEATING_IMPL_HPP
+#ifndef MODEL_DISTRICTHEATINGWATER_IMPL_HPP
+#define MODEL_DISTRICTHEATINGWATER_IMPL_HPP
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
@@ -13,24 +13,26 @@ namespace openstudio {
 
 namespace model {
 
+  class Schedule;
+
   namespace detail {
 
-    /** DistrictHeating_Impl is a StraightComponent_Impl that is the implementation class for DistrictHeating.*/
+    /** DistrictHeatingWater_Impl is a StraightComponent_Impl that is the implementation class for DistrictHeatingWater.*/
 
-    class MODEL_API DistrictHeating_Impl : public StraightComponent_Impl
+    class MODEL_API DistrictHeatingWater_Impl : public StraightComponent_Impl
     {
 
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      DistrictHeating_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      DistrictHeatingWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      DistrictHeating_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      DistrictHeatingWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      DistrictHeating_Impl(const DistrictHeating_Impl& other, Model_Impl* model, bool keepHandle);
+      DistrictHeatingWater_Impl(const DistrictHeatingWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DistrictHeating_Impl() = default;
+      virtual ~DistrictHeatingWater_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -43,6 +45,9 @@ namespace model {
       virtual unsigned inletPort() const override;
 
       virtual unsigned outletPort() const override;
+
+      virtual bool addToNode(Node& node) override;
+
       virtual void autosize() override;
 
       virtual void applySizingValues() override;
@@ -52,6 +57,8 @@ namespace model {
       virtual std::vector<FuelType> heatingFuelTypes() const override;
       virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
       //@}
       /** @name Getters */
       //@{
@@ -60,27 +67,29 @@ namespace model {
 
       bool isNominalCapacityAutosized() const;
 
-      boost::optional<double> autosizedNominalCapacity() const;
+      Schedule capacityFractionSchedule() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool setNominalCapacity(boost::optional<double> nominalCapacity);
+      bool setNominalCapacity(double nominalCapacity);
 
       void autosizeNominalCapacity();
 
-      bool addToNode(Node& node) override;
+      bool setCapacityFractionSchedule(Schedule& schedule);
 
       //@}
       /** @name Other */
       //@{
 
+      boost::optional<double> autosizedNominalCapacity() const;
+
       //@}
 
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.DistrictHeating");
+      REGISTER_LOGGER("openstudio.model.DistrictHeatingWater");
     };
 
   }  // namespace detail
@@ -89,4 +98,4 @@ namespace model {
 
 }  // namespace openstudio
 
-#endif  // MODEL_DISTRICTHEATING_IMPL_HPP
+#endif  // MODEL_DISTRICTHEATINGWATER_IMPL_HPP

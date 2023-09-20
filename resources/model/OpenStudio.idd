@@ -16767,13 +16767,19 @@ OS:DistrictCooling,
        \required-field
        \type object-list
        \object-list ConnectionNames
-  N1 ; \field Nominal Capacity
+  N1 , \field Nominal Capacity
        \units W
        \minimum 0.0
        \autosizable
        \required-field
+  A5 ; \field Capacity Fraction Schedule
+       \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
 
-OS:DistrictHeating,
+OS:DistrictHeating:Water,
+       \memo Centralized source of hot water, such as a district heating system.
   A1, \field Handle
        \type handle
        \required-field
@@ -16788,11 +16794,43 @@ OS:DistrictHeating,
        \required-field
        \type object-list
        \object-list ConnectionNames
-  N1 ; \field Nominal Capacity
+  N1 , \field Nominal Capacity
        \units W
        \minimum 0.0
        \autosizable
        \required-field
+  A5 ; \field Capacity Fraction Schedule
+       \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+
+OS:DistrictHeating:Steam,
+       \memo Centralized source of Steam, such as a district heating system.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Steam Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A4 , \field Steam Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Nominal Capacity
+       \autosizable
+       \units W
+       \minimum 0.0
+       \required-field
+  A5 ; \field Capacity Fraction Schedule
+       \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
 
 OS:GroundHeatExchanger:Vertical,
         \extensible:2

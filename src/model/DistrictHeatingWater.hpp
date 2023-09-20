@@ -3,8 +3,8 @@
 *  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
-#ifndef MODEL_DISTRICTCOOLING_HPP
-#define MODEL_DISTRICTCOOLING_HPP
+#ifndef MODEL_DISTRICTHEATINGWATER_HPP
+#define MODEL_DISTRICTHEATINGWATER_HPP
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
@@ -17,13 +17,13 @@ namespace model {
 
   namespace detail {
 
-    class DistrictCooling_Impl;
+    class DistrictHeatingWater_Impl;
 
   }  // namespace detail
 
-  /** DistrictCooling is a StraightComponent that wraps the OpenStudio IDD object 'OS:DistrictCooling'. */
+  /** DistrictHeatingWater is a StraightComponent that wraps the OpenStudio IDD object 'OS:DistrictHeating:Water'. */
 
-  class MODEL_API DistrictCooling : public StraightComponent
+  class MODEL_API DistrictHeatingWater : public StraightComponent
   {
 
    public:
@@ -31,14 +31,14 @@ namespace model {
     //@{
 
     // The capacityFractionSchedule is defaulted to alwaysOnContinuousSchedule
-    explicit DistrictCooling(const Model& model);
+    explicit DistrictHeatingWater(const Model& model);
 
-    virtual ~DistrictCooling() = default;
+    virtual ~DistrictHeatingWater() = default;
     // Default the copy and move operators because the virtual dtor is explicit
-    DistrictCooling(const DistrictCooling& other) = default;
-    DistrictCooling(DistrictCooling&& other) = default;
-    DistrictCooling& operator=(const DistrictCooling&) = default;
-    DistrictCooling& operator=(DistrictCooling&&) = default;
+    DistrictHeatingWater(const DistrictHeatingWater& other) = default;
+    DistrictHeatingWater(DistrictHeatingWater&& other) = default;
+    DistrictHeatingWater& operator=(const DistrictHeatingWater&) = default;
+    DistrictHeatingWater& operator=(DistrictHeatingWater&&) = default;
 
     //@}
 
@@ -78,11 +78,11 @@ namespace model {
 
    protected:
     /// @cond
-    using ImplType = detail::DistrictCooling_Impl;
+    using ImplType = detail::DistrictHeatingWater_Impl;
 
-    explicit DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl);
+    explicit DistrictHeatingWater(std::shared_ptr<detail::DistrictHeatingWater_Impl> impl);
 
-    friend class detail::DistrictCooling_Impl;
+    friend class detail::DistrictHeatingWater_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
@@ -90,16 +90,20 @@ namespace model {
     /// @endcond
 
    private:
-    REGISTER_LOGGER("openstudio.model.DistrictCooling");
+    REGISTER_LOGGER("openstudio.model.DistrictHeatingWater");
   };
 
-  /** \relates DistrictCooling*/
-  using OptionalDistrictCooling = boost::optional<DistrictCooling>;
+  /** \relates DistrictHeatingWater*/
+  using OptionalDistrictHeatingWater = boost::optional<DistrictHeatingWater>;
 
-  /** \relates DistrictCooling*/
-  using DistrictCoolingVector = std::vector<DistrictCooling>;
+  /** \relates DistrictHeatingWater*/
+  using DistrictHeatingWaterVector = std::vector<DistrictHeatingWater>;
+
+  // In E+ 23.2.0, DistrictHeating was renamed to DistrictHeating:Water. We typedef for backwards compatibility
+  using DistrictHeating [[deprecated("Deprecated at 3.7.0, replaced with DistrictHeatingWater. It will be removed after three releases")]] =
+    DistrictHeatingWater;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_DISTRICTCOOLING_HPP
+#endif  // MODEL_DISTRICTHEATINGWATER_HPP

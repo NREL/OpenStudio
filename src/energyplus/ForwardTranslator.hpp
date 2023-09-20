@@ -180,7 +180,8 @@ namespace model {
   class DesignDay;
   class DesignSpecificationOutdoorAir;
   class DistrictCooling;
-  class DistrictHeating;
+  class DistrictHeatingWater;
+  class DistrictHeatingSteam;
   class Duct;
   class ElectricEquipment;
   class ElectricEquipmentITEAirCooled;
@@ -927,7 +928,9 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateDistrictCooling(model::DistrictCooling& modelObject);
 
-    boost::optional<IdfObject> translateDistrictHeating(model::DistrictHeating& modelObject);
+    boost::optional<IdfObject> translateDistrictHeatingWater(model::DistrictHeatingWater& modelObject);
+
+    boost::optional<IdfObject> translateDistrictHeatingSteam(model::DistrictHeatingSteam& modelObject);
 
     boost::optional<IdfObject> translateDuct(model::Duct& modelObject);
 

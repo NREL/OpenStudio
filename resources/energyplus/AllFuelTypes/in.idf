@@ -1,557 +1,585 @@
-  Version,23.2;
 
-  Timestep,6;
+Version,
+  23.2;                                   !- Version Identifier
 
-  LifeCycleCost:Parameters,
-    Life Cycle Cost Parameters,  !- Name
-    EndOfYear,               !- Discounting Convention
-    ConstantDollar,          !- Inflation Approach
-    0.03,                    !- Real Discount Rate
-    ,                        !- Nominal Discount Rate
-    ,                        !- Inflation
-    ,                        !- Base Date Month
-    2011,                    !- Base Date Year
-    ,                        !- Service Date Month
-    2011,                    !- Service Date Year
-    25,                      !- Length of Study Period in Years
-    ,                        !- Tax rate
-    None;                    !- Depreciation Method
+Timestep,
+  6;                                      !- Number of Timesteps per Hour
 
-  LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Electricity,  !- LCC Price Escalation Name
-    Electricity,             !- Resource
-    2011,                    !- Escalation Start Year
-    January,                 !- Escalation Start Month
-    0.9838,                  !- Year 1 Escalation
-    0.9730,                  !- Year 2 Escalation
-    0.9632,                  !- Year 3 Escalation
-    0.9611,                  !- Year 4 Escalation
-    0.9571,                  !- Year 5 Escalation
-    0.9553,                  !- Year 6 Escalation
-    0.9539,                  !- Year 7 Escalation
-    0.9521,                  !- Year 8 Escalation
-    0.9546,                  !- Year 9 Escalation
-    0.9550,                  !- <none>
-    0.9553,                  !- <none>
-    0.9564,                  !- <none>
-    0.9575,                  !- <none>
-    0.9596,                  !- <none>
-    0.9618,                  !- <none>
-    0.9614,                  !- <none>
-    0.9618,                  !- <none>
-    0.9618,                  !- <none>
-    0.9593,                  !- <none>
-    0.9589,                  !- <none>
-    0.9607,                  !- <none>
-    0.9625,                  !- <none>
-    0.9650,                  !- <none>
-    0.9708,                  !- <none>
-    0.9751,                  !- <none>
-    0.9762,                  !- <none>
-    0.9766,                  !- <none>
-    0.9766,                  !- <none>
-    0.9769,                  !- <none>
-    0.9773;                  !- <none>
+LifeCycleCost:Parameters,
+  Life Cycle Cost Parameters,             !- Name
+  EndOfYear,                              !- Discounting Convention
+  ConstantDollar,                         !- Inflation Approach
+  0.03,                                   !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  2011,                                   !- Base Date Year
+  ,                                       !- Service Date Month
+  2011,                                   !- Service Date Year
+  25,                                     !- Length of Study Period in Years
+  ,                                       !- Tax rate
+  None;                                   !- Depreciation Method
 
-  LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Distillate Oil,  !- LCC Price Escalation Name
-    FuelOilNo1,              !- Resource
-    2011,                    !- Escalation Start Year
-    January,                 !- Escalation Start Month
-    0.9714,                  !- Year 1 Escalation
-    0.9730,                  !- Year 2 Escalation
-    0.9942,                  !- Year 3 Escalation
-    1.0164,                  !- Year 4 Escalation
-    1.0541,                  !- Year 5 Escalation
-    1.0928,                  !- Year 6 Escalation
-    1.1267,                  !- Year 7 Escalation
-    1.1580,                  !- Year 8 Escalation
-    1.1792,                  !- Year 9 Escalation
-    1.1967,                  !- <none>
-    1.2200,                  !- <none>
-    1.2333,                  !- <none>
-    1.2566,                  !- <none>
-    1.2709,                  !- <none>
-    1.2826,                  !- <none>
-    1.2985,                  !- <none>
-    1.3102,                  !- <none>
-    1.3250,                  !- <none>
-    1.3261,                  !- <none>
-    1.3282,                  !- <none>
-    1.3324,                  !- <none>
-    1.3356,                  !- <none>
-    1.3431,                  !- <none>
-    1.3510,                  !- <none>
-    1.3568,                  !- <none>
-    1.3606,                  !- <none>
-    1.3637,                  !- <none>
-    1.3674,                  !- <none>
-    1.3706,                  !- <none>
-    1.3743;                  !- <none>
+LifeCycleCost:UsePriceEscalation,
+  U.S. Avg  Commercial-Electricity,       !- Name
+  Electricity,                            !- Resource
+  2011,                                   !- Escalation Start Year
+  January,                                !- Escalation Start Month
+  0.9838,                                 !- Year Escalation 1
+  0.9730,                                 !- Year Escalation 2
+  0.9632,                                 !- Year Escalation 3
+  0.9611,                                 !- Year Escalation 4
+  0.9571,                                 !- Year Escalation 5
+  0.9553,                                 !- Year Escalation 6
+  0.9539,                                 !- Year Escalation 7
+  0.9521,                                 !- Year Escalation 8
+  0.9546,                                 !- Year Escalation 9
+  0.9550,                                 !- Year Escalation 10
+  0.9553,                                 !- Year Escalation 11
+  0.9564,                                 !- Year Escalation 12
+  0.9575,                                 !- Year Escalation 13
+  0.9596,                                 !- Year Escalation 14
+  0.9618,                                 !- Year Escalation 15
+  0.9614,                                 !- Year Escalation 16
+  0.9618,                                 !- Year Escalation 17
+  0.9618,                                 !- Year Escalation 18
+  0.9593,                                 !- Year Escalation 19
+  0.9589,                                 !- Year Escalation 20
+  0.9607,                                 !- Year Escalation 21
+  0.9625,                                 !- Year Escalation 22
+  0.9650,                                 !- Year Escalation 23
+  0.9708,                                 !- Year Escalation 24
+  0.9751,                                 !- Year Escalation 25
+  0.9762,                                 !- Year Escalation 26
+  0.9766,                                 !- Year Escalation 27
+  0.9766,                                 !- Year Escalation 28
+  0.9769,                                 !- Year Escalation 29
+  0.9773;                                 !- Year Escalation 30
 
-  LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Residual Oil,  !- LCC Price Escalation Name
-    FuelOilNo2,              !- Resource
-    2011,                    !- Escalation Start Year
-    January,                 !- Escalation Start Month
-    0.8469,                  !- Year 1 Escalation
-    0.8257,                  !- Year 2 Escalation
-    0.8681,                  !- Year 3 Escalation
-    0.8988,                  !- Year 4 Escalation
-    0.9289,                  !- Year 5 Escalation
-    0.9604,                  !- Year 6 Escalation
-    0.9897,                  !- Year 7 Escalation
-    1.0075,                  !- Year 8 Escalation
-    1.0314,                  !- Year 9 Escalation
-    1.0554,                  !- <none>
-    1.0861,                  !- <none>
-    1.1278,                  !- <none>
-    1.1497,                  !- <none>
-    1.1620,                  !- <none>
-    1.1743,                  !- <none>
-    1.1852,                  !- <none>
-    1.1948,                  !- <none>
-    1.2037,                  !- <none>
-    1.2071,                  !- <none>
-    1.2119,                  !- <none>
-    1.2139,                  !- <none>
-    1.2194,                  !- <none>
-    1.2276,                  !- <none>
-    1.2365,                  !- <none>
-    1.2420,                  !- <none>
-    1.2461,                  !- <none>
-    1.2509,                  !- <none>
-    1.2550,                  !- <none>
-    1.2591,                  !- <none>
-    1.2638;                  !- <none>
+LifeCycleCost:UsePriceEscalation,
+  U.S. Avg  Commercial-Distillate Oil,    !- Name
+  FuelOilNo1,                             !- Resource
+  2011,                                   !- Escalation Start Year
+  January,                                !- Escalation Start Month
+  0.9714,                                 !- Year Escalation 1
+  0.9730,                                 !- Year Escalation 2
+  0.9942,                                 !- Year Escalation 3
+  1.0164,                                 !- Year Escalation 4
+  1.0541,                                 !- Year Escalation 5
+  1.0928,                                 !- Year Escalation 6
+  1.1267,                                 !- Year Escalation 7
+  1.1580,                                 !- Year Escalation 8
+  1.1792,                                 !- Year Escalation 9
+  1.1967,                                 !- Year Escalation 10
+  1.2200,                                 !- Year Escalation 11
+  1.2333,                                 !- Year Escalation 12
+  1.2566,                                 !- Year Escalation 13
+  1.2709,                                 !- Year Escalation 14
+  1.2826,                                 !- Year Escalation 15
+  1.2985,                                 !- Year Escalation 16
+  1.3102,                                 !- Year Escalation 17
+  1.3250,                                 !- Year Escalation 18
+  1.3261,                                 !- Year Escalation 19
+  1.3282,                                 !- Year Escalation 20
+  1.3324,                                 !- Year Escalation 21
+  1.3356,                                 !- Year Escalation 22
+  1.3431,                                 !- Year Escalation 23
+  1.3510,                                 !- Year Escalation 24
+  1.3568,                                 !- Year Escalation 25
+  1.3606,                                 !- Year Escalation 26
+  1.3637,                                 !- Year Escalation 27
+  1.3674,                                 !- Year Escalation 28
+  1.3706,                                 !- Year Escalation 29
+  1.3743;                                 !- Year Escalation 30
 
-  LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Natural gas,  !- LCC Price Escalation Name
-    NaturalGas,              !- Resource
-    2011,                    !- Escalation Start Year
-    January,                 !- Escalation Start Month
-    0.9823,                  !- Year 1 Escalation
-    0.9557,                  !- Year 2 Escalation
-    0.9279,                  !- Year 3 Escalation
-    0.9257,                  !- Year 4 Escalation
-    0.9346,                  !- Year 5 Escalation
-    0.9412,                  !- Year 6 Escalation
-    0.9512,                  !- Year 7 Escalation
-    0.9645,                  !- Year 8 Escalation
-    0.9856,                  !- Year 9 Escalation
-    1.0067,                  !- <none>
-    1.0222,                  !- <none>
-    1.0410,                  !- <none>
-    1.0610,                  !- <none>
-    1.0787,                  !- <none>
-    1.0942,                  !- <none>
-    1.1098,                  !- <none>
-    1.1220,                  !- <none>
-    1.1308,                  !- <none>
-    1.1386,                  !- <none>
-    1.1486,                  !- <none>
-    1.1619,                  !- <none>
-    1.1763,                  !- <none>
-    1.1918,                  !- <none>
-    1.2118,                  !- <none>
-    1.2284,                  !- <none>
-    1.2439,                  !- <none>
-    1.2605,                  !- <none>
-    1.2772,                  !- <none>
-    1.2938,                  !- <none>
-    1.3115;                  !- <none>
+LifeCycleCost:UsePriceEscalation,
+  U.S. Avg  Commercial-Residual Oil,      !- Name
+  FuelOilNo2,                             !- Resource
+  2011,                                   !- Escalation Start Year
+  January,                                !- Escalation Start Month
+  0.8469,                                 !- Year Escalation 1
+  0.8257,                                 !- Year Escalation 2
+  0.8681,                                 !- Year Escalation 3
+  0.8988,                                 !- Year Escalation 4
+  0.9289,                                 !- Year Escalation 5
+  0.9604,                                 !- Year Escalation 6
+  0.9897,                                 !- Year Escalation 7
+  1.0075,                                 !- Year Escalation 8
+  1.0314,                                 !- Year Escalation 9
+  1.0554,                                 !- Year Escalation 10
+  1.0861,                                 !- Year Escalation 11
+  1.1278,                                 !- Year Escalation 12
+  1.1497,                                 !- Year Escalation 13
+  1.1620,                                 !- Year Escalation 14
+  1.1743,                                 !- Year Escalation 15
+  1.1852,                                 !- Year Escalation 16
+  1.1948,                                 !- Year Escalation 17
+  1.2037,                                 !- Year Escalation 18
+  1.2071,                                 !- Year Escalation 19
+  1.2119,                                 !- Year Escalation 20
+  1.2139,                                 !- Year Escalation 21
+  1.2194,                                 !- Year Escalation 22
+  1.2276,                                 !- Year Escalation 23
+  1.2365,                                 !- Year Escalation 24
+  1.2420,                                 !- Year Escalation 25
+  1.2461,                                 !- Year Escalation 26
+  1.2509,                                 !- Year Escalation 27
+  1.2550,                                 !- Year Escalation 28
+  1.2591,                                 !- Year Escalation 29
+  1.2638;                                 !- Year Escalation 30
 
-  LifeCycleCost:UsePriceEscalation,
-    U.S. Avg  Commercial-Coal,  !- LCC Price Escalation Name
-    Coal,                    !- Resource
-    2011,                    !- Escalation Start Year
-    January,                 !- Escalation Start Month
-    0.9970,                  !- Year 1 Escalation
-    1.0089,                  !- Year 2 Escalation
-    1.0089,                  !- Year 3 Escalation
-    0.9941,                  !- Year 4 Escalation
-    0.9941,                  !- Year 5 Escalation
-    1.0000,                  !- Year 6 Escalation
-    1.0030,                  !- Year 7 Escalation
-    1.0059,                  !- Year 8 Escalation
-    1.0089,                  !- Year 9 Escalation
-    1.0119,                  !- <none>
-    1.0148,                  !- <none>
-    1.0178,                  !- <none>
-    1.0208,                  !- <none>
-    1.0267,                  !- <none>
-    1.0297,                  !- <none>
-    1.0356,                  !- <none>
-    1.0415,                  !- <none>
-    1.0534,                  !- <none>
-    1.0564,                  !- <none>
-    1.0593,                  !- <none>
-    1.0653,                  !- <none>
-    1.0712,                  !- <none>
-    1.0742,                  !- <none>
-    1.0801,                  !- <none>
-    1.0831,                  !- <none>
-    1.0831,                  !- <none>
-    1.0861,                  !- <none>
-    1.0890,                  !- <none>
-    1.0920,                  !- <none>
-    1.0950;                  !- <none>
+LifeCycleCost:UsePriceEscalation,
+  U.S. Avg  Commercial-Natural gas,       !- Name
+  NaturalGas,                             !- Resource
+  2011,                                   !- Escalation Start Year
+  January,                                !- Escalation Start Month
+  0.9823,                                 !- Year Escalation 1
+  0.9557,                                 !- Year Escalation 2
+  0.9279,                                 !- Year Escalation 3
+  0.9257,                                 !- Year Escalation 4
+  0.9346,                                 !- Year Escalation 5
+  0.9412,                                 !- Year Escalation 6
+  0.9512,                                 !- Year Escalation 7
+  0.9645,                                 !- Year Escalation 8
+  0.9856,                                 !- Year Escalation 9
+  1.0067,                                 !- Year Escalation 10
+  1.0222,                                 !- Year Escalation 11
+  1.0410,                                 !- Year Escalation 12
+  1.0610,                                 !- Year Escalation 13
+  1.0787,                                 !- Year Escalation 14
+  1.0942,                                 !- Year Escalation 15
+  1.1098,                                 !- Year Escalation 16
+  1.1220,                                 !- Year Escalation 17
+  1.1308,                                 !- Year Escalation 18
+  1.1386,                                 !- Year Escalation 19
+  1.1486,                                 !- Year Escalation 20
+  1.1619,                                 !- Year Escalation 21
+  1.1763,                                 !- Year Escalation 22
+  1.1918,                                 !- Year Escalation 23
+  1.2118,                                 !- Year Escalation 24
+  1.2284,                                 !- Year Escalation 25
+  1.2439,                                 !- Year Escalation 26
+  1.2605,                                 !- Year Escalation 27
+  1.2772,                                 !- Year Escalation 28
+  1.2938,                                 !- Year Escalation 29
+  1.3115;                                 !- Year Escalation 30
 
-  Building,
-    Building 1,              !- Name
-    ,                        !- North Axis {deg}
-    ,                        !- Terrain
-    ,                        !- Loads Convergence Tolerance Value {W}
-    ,                        !- Temperature Convergence Tolerance Value {deltaC}
-    ,                        !- Solar Distribution
-    ,                        !- Maximum Number of Warmup Days
-    ;                        !- Minimum Number of Warmup Days
+LifeCycleCost:UsePriceEscalation,
+  U.S. Avg  Commercial-Coal,              !- Name
+  Coal,                                   !- Resource
+  2011,                                   !- Escalation Start Year
+  January,                                !- Escalation Start Month
+  0.9970,                                 !- Year Escalation 1
+  1.0089,                                 !- Year Escalation 2
+  1.0089,                                 !- Year Escalation 3
+  0.9941,                                 !- Year Escalation 4
+  0.9941,                                 !- Year Escalation 5
+  1.0000,                                 !- Year Escalation 6
+  1.0030,                                 !- Year Escalation 7
+  1.0059,                                 !- Year Escalation 8
+  1.0089,                                 !- Year Escalation 9
+  1.0119,                                 !- Year Escalation 10
+  1.0148,                                 !- Year Escalation 11
+  1.0178,                                 !- Year Escalation 12
+  1.0208,                                 !- Year Escalation 13
+  1.0267,                                 !- Year Escalation 14
+  1.0297,                                 !- Year Escalation 15
+  1.0356,                                 !- Year Escalation 16
+  1.0415,                                 !- Year Escalation 17
+  1.0534,                                 !- Year Escalation 18
+  1.0564,                                 !- Year Escalation 19
+  1.0593,                                 !- Year Escalation 20
+  1.0653,                                 !- Year Escalation 21
+  1.0712,                                 !- Year Escalation 22
+  1.0742,                                 !- Year Escalation 23
+  1.0801,                                 !- Year Escalation 24
+  1.0831,                                 !- Year Escalation 25
+  1.0831,                                 !- Year Escalation 26
+  1.0861,                                 !- Year Escalation 27
+  1.0890,                                 !- Year Escalation 28
+  1.0920,                                 !- Year Escalation 29
+  1.0950;                                 !- Year Escalation 30
 
-  SimulationControl,
-    No,                      !- Do Zone Sizing Calculation
-    No,                      !- Do System Sizing Calculation
-    No,                      !- Do Plant Sizing Calculation
-    Yes,                     !- Run Simulation for Sizing Periods
-    Yes,                     !- Run Simulation for Weather File Run Periods
-    ,                        !- Do HVAC Sizing Simulation for Sizing Periods
-    ;                        !- Maximum Number of HVAC Sizing Simulation Passes
+Building,
+  Building 1,                             !- Name
+  ,                                       !- North Axis {deg}
+  ,                                       !- Terrain
+  ,                                       !- Loads Convergence Tolerance Value {W}
+  ,                                       !- Temperature Convergence Tolerance Value {deltaC}
+  ,                                       !- Solar Distribution
+  ,                                       !- Maximum Number of Warmup Days
+  ;                                       !- Minimum Number of Warmup Days
 
-  Sizing:Parameters,
-    1.25,                    !- Heating Sizing Factor
-    1.15;                    !- Cooling Sizing Factor
+SimulationControl,
+  No,                                     !- Do Zone Sizing Calculation
+  No,                                     !- Do System Sizing Calculation
+  No,                                     !- Do Plant Sizing Calculation
+  Yes,                                    !- Run Simulation for Sizing Periods
+  Yes,                                    !- Run Simulation for Weather File Run Periods
+  ,                                       !- Do HVAC Sizing Simulation for Sizing Periods
+  ;                                       !- Maximum Number of HVAC Sizing Simulation Passes
 
-  RunPeriod,
-    Run Period 1,            !- Name
-    1,                       !- Begin Month
-    1,                       !- Begin Day of Month
-    2009,                    !- Begin Year
-    12,                      !- End Month
-    31,                      !- End Day of Month
-    2009,                    !- End Year
-    Thursday,                !- Day of Week for Start Day
-    No,                      !- Use Weather File Holidays and Special Days
-    No,                      !- Use Weather File Daylight Saving Period
-    No,                      !- Apply Weekend Holiday Rule
-    Yes,                     !- Use Weather File Rain Indicators
-    Yes;                     !- Use Weather File Snow Indicators
+Sizing:Parameters,
+  1.25,                                   !- Heating Sizing Factor
+  1.15;                                   !- Cooling Sizing Factor
 
-  Output:Table:SummaryReports,
-    AllSummary;              !- Report 1 Name
+RunPeriod,
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  2009,                                   !- Begin Year
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  2009,                                   !- End Year
+  Thursday,                               !- Day of Week for Start Day
+  No,                                     !- Use Weather File Holidays and Special Days
+  No,                                     !- Use Weather File Daylight Saving Period
+  No,                                     !- Apply Weekend Holiday Rule
+  Yes,                                    !- Use Weather File Rain Indicators
+  Yes;                                    !- Use Weather File Snow Indicators
 
-  GlobalGeometryRules,
-    UpperLeftCorner,         !- Starting Vertex Position
-    Counterclockwise,        !- Vertex Entry Direction
-    Relative,                !- Coordinate System
-    Relative,                !- Daylighting Reference Point Coordinate System
-    Relative;                !- Rectangular Surface Coordinate System
+Output:Table:SummaryReports,
+  AllSummary;                             !- Report Name 1
 
-  ScheduleTypeLimits,
-    OnOff,                   !- Name
-    0,                       !- Lower Limit Value
-    1,                       !- Upper Limit Value
-    Discrete,                !- Numeric Type
-    availability;            !- Unit Type
+GlobalGeometryRules,
+  UpperLeftCorner,                        !- Starting Vertex Position
+  Counterclockwise,                       !- Vertex Entry Direction
+  Relative,                               !- Coordinate System
+  Relative,                               !- Daylighting Reference Point Coordinate System
+  Relative;                               !- Rectangular Surface Coordinate System
 
-  Schedule:Constant,Always On Discrete,OnOff,1;
+ScheduleTypeLimits,
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A3}
+  1,                                      !- Upper Limit Value {BasedOnField A3}
+  Discrete,                               !- Numeric Type
+  availability;                           !- Unit Type
 
-  Schedule:Constant,Always Off Discrete,,0;
+Schedule:Constant,
+  Always On Discrete,                     !- Name
+  OnOff,                                  !- Schedule Type Limits Name
+  1;                                      !- Hourly Value
 
-  Schedule:Constant,Always On Continuous,,1;
+Schedule:Constant,
+  Always Off Discrete,                    !- Name
+  ,                                       !- Schedule Type Limits Name
+  0;                                      !- Hourly Value
 
-  OutdoorAir:Node,
-    Model Outdoor Air Node;  !- Name
+Schedule:Constant,
+  Always On Continuous,                   !- Name
+  ,                                       !- Schedule Type Limits Name
+  1;                                      !- Hourly Value
 
-  Exterior:FuelEquipment,
-    Coal - 8000 W,           !- Name
-    Coal,                    !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    8000,                    !- Design Level {W}
-    General;                 !- End-Use Subcategory
+OutdoorAir:Node,
+  Model Outdoor Air Node;                 !- Name
 
-  Exterior:FuelEquipment,
-    Diesel - 6000 W,         !- Name
-    Diesel,                  !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    6000,                    !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  Coal - 8000 W,                          !- Name
+  Coal,                                   !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  8000,                                   !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    DistrictCooling - 13000 W,  !- Name
-    DistrictCooling,         !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    13000,                   !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  Diesel - 6000 W,                        !- Name
+  Diesel,                                 !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  6000,                                   !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    DistrictHeating - 12000 W,  !- Name
-    DistrictHeatingWater,    !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    12000,                   !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  DistrictCooling - 13000 W,              !- Name
+  DistrictCooling,                        !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  13000,                                  !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    Electricity - 1000 W,    !- Name
-    Electricity,             !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    1000,                    !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  DistrictHeatingSteam - 11000 W,         !- Name
+  DistrictHeatingSteam,                   !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  11000,                                  !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    FuelOilNo1 - 4000 W,     !- Name
-    FuelOilNo1,              !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    4000,                    !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  DistrictHeatingWater - 12000 W,         !- Name
+  DistrictHeatingWater,                   !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  12000,                                  !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    FuelOilNo2 - 5000 W,     !- Name
-    FuelOilNo2,              !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    5000,                    !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  Electricity - 1000 W,                   !- Name
+  Electricity,                            !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  1000,                                   !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    Gasoline - 7000 W,       !- Name
-    Gasoline,                !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    7000,                    !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  FuelOilNo1 - 4000 W,                    !- Name
+  FuelOilNo1,                             !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  4000,                                   !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    NaturalGas - 2000 W,     !- Name
-    NaturalGas,              !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    2000,                    !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  FuelOilNo2 - 5000 W,                    !- Name
+  FuelOilNo2,                             !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  5000,                                   !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    OtherFuel1 - 9000 W,     !- Name
-    OtherFuel1,              !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    9000,                    !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  Gasoline - 7000 W,                      !- Name
+  Gasoline,                               !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  7000,                                   !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    OtherFuel2 - 10000 W,    !- Name
-    OtherFuel2,              !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    10000,                   !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  NaturalGas - 2000 W,                    !- Name
+  NaturalGas,                             !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  2000,                                   !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    Propane - 3000 W,        !- Name
-    Propane,                 !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    3000,                    !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  OtherFuel1 - 9000 W,                    !- Name
+  OtherFuel1,                             !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  9000,                                   !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:FuelEquipment,
-    Steam - 11000 W,         !- Name
-    DistrictHeatingSteam,    !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    11000,                   !- Design Level {W}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  OtherFuel2 - 10000 W,                   !- Name
+  OtherFuel2,                             !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  10000,                                  !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  Exterior:WaterEquipment,
-    Water - 1 m3/s,          !- Name
-    Water,                   !- Fuel Use Type
-    Always On Discrete,      !- Schedule Name
-    0,                       !- Design Level {m3/s}
-    General;                 !- End-Use Subcategory
+Exterior:FuelEquipment,
+  Propane - 3000 W,                       !- Name
+  Propane,                                !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  3000,                                   !- Design Level {W}
+  General;                                !- End-Use Subcategory
 
-  OutputControl:Table:Style,
-    HTML;                    !- Column Separator
+Exterior:WaterEquipment,
+  Water - 1 m3/s,                         !- Name
+  Water,                                  !- Fuel Use Type
+  Always On Discrete,                     !- Schedule Name
+  0,                                      !- Design Level {m3/s}
+  General;                                !- End-Use Subcategory
 
-  Output:VariableDictionary,IDF,Unsorted;
+OutputControl:Table:Style,
+  HTML;                                   !- Column Separator
 
-  Output:SQLite,
-    SimpleAndTabular;        !- Option Type
+Output:VariableDictionary,
+  IDF,                                    !- Key Field
+  Unsorted;                               !- Sort Option
 
-  LifeCycleCost:NonrecurringCost,
-    Default Cost,            !- Name
-    Construction,            !- Category
-    0,                       !- Cost
-    ServicePeriod;           !- Start of Costs
+Output:SQLite,
+  SimpleAndTabular;                       !- Option Type
 
-  Output:Table:Monthly,
-    Building Energy Performance - Electricity,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:Electricity,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+LifeCycleCost:NonrecurringCost,
+  Default Cost,                           !- Name
+  Construction,                           !- Category
+  0,                                      !- Cost
+  ServicePeriod;                          !- Start of Costs
 
-  Output:Table:Monthly,
-    Building Energy Performance - Electricity Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    Electricity:Facility,    !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:Electricity,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Electricity, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:Electricity,          !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Natural Gas,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:NaturalGas,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Electricity Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  Electricity:Facility,                   !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:Electricity,          !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Natural Gas Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    NaturalGas:Facility,     !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:NaturalGas,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Natural Gas, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:NaturalGas,           !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Gasoline,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:Gasoline,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Natural Gas Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  NaturalGas:Facility,                    !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:NaturalGas,           !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Gasoline Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    Gasoline:Facility,       !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:Gasoline,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Gasoline, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:Gasoline,             !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Diesel,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:Diesel,!- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Gasoline Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  Gasoline:Facility,                      !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:Gasoline,             !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Diesel Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    Diesel:Facility,         !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:Diesel,!- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Diesel,   !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:Diesel,               !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Coal,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:Coal,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Diesel Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  Diesel:Facility,                        !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:Diesel,               !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Coal Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    Coal:Facility,           !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:Coal,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Coal,     !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:Coal,                 !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Fuel Oil No 1,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:FuelOilNo1,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Coal Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  Coal:Facility,                          !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:Coal,                 !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Fuel Oil No 1 Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    FuelOilNo1:Facility,     !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:FuelOilNo1,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Fuel Oil No 1, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:FuelOilNo1,           !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Fuel Oil No 2,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:FuelOilNo2,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Fuel Oil No 1 Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  FuelOilNo1:Facility,                    !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:FuelOilNo1,           !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Fuel Oil No 2 Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    FuelOilNo2:Facility,     !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:FuelOilNo2,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Fuel Oil No 2, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:FuelOilNo2,           !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Propane,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:Propane,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Fuel Oil No 2 Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  FuelOilNo2:Facility,                    !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:FuelOilNo2,           !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Propane Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    Propane:Facility,        !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:Propane,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Propane,  !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:Propane,              !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Other Fuel 1,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:OtherFuel1,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Propane Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  Propane:Facility,                       !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:Propane,              !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Other Fuel 1 Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    OtherFuel1:Facility,     !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:OtherFuel1,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Other Fuel 1, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:OtherFuel1,           !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Other Fuel 2,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:OtherFuel2,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Other Fuel 1 Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  OtherFuel1:Facility,                    !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:OtherFuel1,           !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Other Fuel 2 Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    OtherFuel2:Facility,     !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:OtherFuel2,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - Other Fuel 2, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:OtherFuel2,           !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - District Cooling,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:DistrictCooling,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - Other Fuel 2 Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  OtherFuel2:Facility,                    !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:OtherFuel2,           !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - District Cooling Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    DistrictCooling:Facility,!- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:DistrictCooling,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - District Cooling, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:DistrictCooling,      !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - District Heating,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:DistrictHeatingWater,  !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - District Cooling Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  DistrictCooling:Facility,               !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:DistrictCooling,      !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - District Heating Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    DistrictHeatingWater:Facility,  !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:DistrictHeatingWater,  !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - District Heating Water, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:DistrictHeatingWater, !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
 
-  Output:Table:Monthly,
-    Building Energy Performance - Water,  !- Name
-    2,                       !- Digits After Decimal
-    ExteriorEquipment:Water, !- Variable or Meter 1 Name
-    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+Output:Table:Monthly,
+  Building Energy Performance - District Heating Water Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  DistrictHeatingWater:Facility,          !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:DistrictHeatingWater, !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 
-  Output:Table:Monthly,
-    Building Energy Performance - Water Peak Demand,  !- Name
-    2,                       !- Digits After Decimal
-    Water:Facility,          !- Variable or Meter 1 Name
-    Maximum,                 !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:Water, !- Variable or Meter 2 Name
-    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 2
+Output:Table:Monthly,
+  Building Energy Performance - District Heating Steam, !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:DistrictHeatingSteam, !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
+
+Output:Table:Monthly,
+  Building Energy Performance - District Heating Steam Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  DistrictHeatingSteam:Facility,          !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:DistrictHeatingSteam, !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
+
+Output:Table:Monthly,
+  Building Energy Performance - Water,    !- Name
+  2,                                      !- Digits After Decimal
+  ExteriorEquipment:Water,                !- Variable or Meter Name 1
+  SumOrAverage;                           !- Aggregation Type for Variable or Meter 1
+
+Output:Table:Monthly,
+  Building Energy Performance - Water Peak Demand, !- Name
+  2,                                      !- Digits After Decimal
+  Water:Facility,                         !- Variable or Meter Name 1
+  Maximum,                                !- Aggregation Type for Variable or Meter 1
+  ExteriorEquipment:Water,                !- Variable or Meter Name 2
+  ValueWhenMaximumOrMinimum;              !- Aggregation Type for Variable or Meter 2
 

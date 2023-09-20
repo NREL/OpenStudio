@@ -4571,7 +4571,7 @@ namespace osversion {
     IdfFile targetIdf(idd_3_0_0.iddFile());
     ss << targetIdf.versionObject().get();
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap({
       {"FuelOil#1", "FuelOilNo1"},
       {"FuelOil#2", "FuelOilNo2"},
@@ -5099,7 +5099,7 @@ namespace osversion {
 
     const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
     const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
       {"Other Equipment FuelOil#1 Rate", "Other Equipment FuelOilNo1 Rate"},
@@ -7898,7 +7898,7 @@ namespace osversion {
       {"OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped", 13},
     }};
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap{{
       {"Steam", "DistrictHeatingSteam"},
       {"DistrictHeating", "DistrictHeatingWater"},
@@ -7949,7 +7949,7 @@ namespace osversion {
 
     const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
     const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
       {"District Cooling Chilled Water Energy", "District Cooling Water Energy"},
@@ -7974,6 +7974,60 @@ namespace osversion {
       {"DistrictHeating", "DistrictHeatingWater"},
       {"Steam", "DistrictHeatingSteam"},
     }};
+
+    // Could make it a static inside the lambda, except that it won't be reset so if you try to translate twice it fails
+    std::string discreteSchHandleStr;
+
+    auto getOrCreateAlwaysOnContinuousSheduleHandleStr = [this, &ss, &idf_3_6_1, &idd_3_7_0, &discreteSchHandleStr]() -> std::string {
+      if (!discreteSchHandleStr.empty()) {
+        LOG(Trace, "Already found 'Always On Continuous' Schedule in model with handle " << discreteSchHandleStr);
+        return discreteSchHandleStr;
+      }
+
+      const std::string name = "Always On Continuous";
+      const double val = 1.0;
+      // Add an alwaysOnDiscreteSchedule if one does not already exist
+      for (const IdfObject& object : idf_3_6_1.getObjectsByType(idf_3_6_1.iddFile().getObject("OS:Schedule:Constant").get())) {
+        if (boost::optional<std::string> name_ = object.getString(1)) {
+          if (istringEqual(name_.get(), name)) {
+            if (boost::optional<double> value = object.getDouble(3)) {
+              if (equal<double>(value.get(), val)) {
+                discreteSchHandleStr = object.getString(0).get();  // Store in state variable
+                LOG(Trace, "Found existing 'Always On Continuous' Schedule in model with handle " << discreteSchHandleStr);
+                return discreteSchHandleStr;
+              }
+            }
+          }
+        }
+      }
+
+      auto discreteSch = IdfObject(idd_3_7_0.getObject("OS:Schedule:Constant").get());
+
+      discreteSchHandleStr = toString(createUUID());  // Store in state variable
+      discreteSch.setString(0, discreteSchHandleStr);
+      discreteSch.setString(1, name);
+      discreteSch.setDouble(3, val);
+
+      IdfObject typeLimits(idd_3_7_0.getObject("OS:ScheduleTypeLimits").get());
+      typeLimits.setString(0, toString(createUUID()));
+      typeLimits.setString(1, name + " Limits");
+      typeLimits.setDouble(2, 0.0);
+      typeLimits.setDouble(3, 1.0);
+      typeLimits.setString(4, "Continuous");
+      typeLimits.setString(5, "");
+
+      discreteSch.setString(2, typeLimits.getString(0).get());
+
+      ss << discreteSch;
+      ss << typeLimits;
+
+      // Register new objects
+      m_new.emplace_back(std::move(discreteSch));
+      m_new.emplace_back(std::move(typeLimits));
+      LOG(Trace, "Created 'Always On Continuous' Schedule with handle " << discreteSchHandleStr);
+
+      return discreteSchHandleStr;
+    };
 
     for (const IdfObject& object : idf_3_6_1.objects()) {
       auto iddname = object.iddObject().name();
@@ -8354,6 +8408,49 @@ namespace osversion {
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
+
+      } else if (iddname == "OS:DistrictHeating") {
+
+        // Object was renamed from OS:DistrictHeating to OS:DistrictHeating:Water (since OS:DistrictHeating:Steam was added)
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Capacity Fraction Schedule * 5
+
+        // We start by creating a new object, and copy every field.
+        auto iddObject = idd_3_7_0.getObject("OS:DistrictHeating:Water");
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Add the new "Capacity Fraction Schedule"
+        newObject.setString(5, getOrCreateAlwaysOnContinuousSheduleHandleStr());
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:DistrictCooling") {
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Capacity Fraction Schedule * 5
+
+        auto iddObject = idd_3_7_0.getObject("OS:DistrictCooling");
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+        // Add the new "Capacity Fraction Schedule"
+        newObject.setString(5, getOrCreateAlwaysOnContinuousSheduleHandleStr());
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Output:Meter") {
 
