@@ -31,11 +31,11 @@ TEST_F(ModelFixture, CoilHeatingGas) {
   coilHeatingGas.setNominalCapacity(1535.0);
   EXPECT_EQ(coilHeatingGas.nominalCapacity().get(), 1535.0);
 
-  coilHeatingGas.setParasiticElectricLoad(48.0);
-  EXPECT_EQ(coilHeatingGas.parasiticElectricLoad(), 48.0);
+  coilHeatingGas.setOnCycleParasiticElectricLoad(48.0);
+  EXPECT_EQ(coilHeatingGas.onCycleParasiticElectricLoad(), 48.0);
 
-  coilHeatingGas.setParasiticGasLoad(51.0);
-  EXPECT_EQ(coilHeatingGas.parasiticGasLoad(), 51.0);
+  coilHeatingGas.setOffCycleParasiticGasLoad(51.0);
+  EXPECT_EQ(coilHeatingGas.offCycleParasiticGasLoad(), 51.0);
 
   ScheduleConstant schedule2(model);
   coilHeatingGas.setAvailableSchedule(schedule2);

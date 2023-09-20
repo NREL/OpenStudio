@@ -3601,6 +3601,45 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_fuelTypeRenames) {
   }
 }
 
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_CoilsHeating) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Heating.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  std::vector<WorkspaceObject> chgs = model_->getObjectsByType("OS:Coil:Heating:Gas");
+  ASSERT_EQ(1u, chgs.size());
+  WorkspaceObject chg = chgs[0];
+
+  EXPECT_EQ("Coil Heating Gas 1", chg.getString(1).get());  // Name
+  EXPECT_EQ(1, chg.getDouble(8).get());                     // On Cycle Parasitic Electric Load
+  EXPECT_EQ(2, chg.getDouble(10).get());                    // Off Cycle Parasitic Gas Load
+
+  std::vector<WorkspaceObject> chgms = model_->getObjectsByType("OS:Coil:Heating:Gas:Multistage");
+  ASSERT_EQ(1u, chgms.size());
+  WorkspaceObject chgm = chgms[0];
+
+  EXPECT_EQ("Coil Heating Gas Multi Stage 1", chgm.getString(1).get());  // Name
+  EXPECT_EQ(3, chgm.getDouble(6).get());                                 // Off Cycle Parasitic Gas Load
+
+  std::vector<WorkspaceObject> chgmds = model_->getObjectsByType("OS:Coil:Heating:Gas:Multistage:StageData");
+  ASSERT_EQ(1u, chgmds.size());
+  WorkspaceObject chgmd = chgmds[0];
+
+  EXPECT_EQ("Coil Heating Gas Multi Stage Stage Data 1", chgmd.getString(1).get());  // Name
+  EXPECT_EQ(4, chgmd.getDouble(4).get());                                            // On Cycle Parasitic Electric Load
+
+  std::vector<WorkspaceObject> chds = model_->getObjectsByType("OS:Coil:Heating:Desuperheater");
+  ASSERT_EQ(1u, chds.size());
+  WorkspaceObject chd = chds[0];
+
+  EXPECT_EQ("Coil Heating Desuperheater 1", chd.getString(1).get());  // Name
+  EXPECT_EQ(5, chd.getDouble(7).get());                               // On Cycle Parasitic Electric Load
+}
+
 TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_DistrictHeating) {
   openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_RenameDistrictHeating.osm");
   osversion::VersionTranslator vt;
