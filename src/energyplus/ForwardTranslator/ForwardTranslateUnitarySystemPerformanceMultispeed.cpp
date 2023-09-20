@@ -116,10 +116,10 @@ namespace energyplus {
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilGasMultiStage.stages().size());
       } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed) {
         auto heatingCoilDXVarspeed = heatingCoil->cast<CoilHeatingDXVariableSpeed>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilDXVarspeed.speeds.size());
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilDXVarspeed.speeds().size());
       } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit) {
         auto heatingCoilWaterToAirHeatingVar = heatingCoil->cast<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilWaterToAirHeatingVar.speeds.size());
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilWaterToAirHeatingVar.speeds().size());
       } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit) {
         auto heatingCoilWaterToAirHeating = heatingCoil->cast<CoilHeatingWaterToAirHeatPumpEquationFit>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);  // FIXME
@@ -143,10 +143,10 @@ namespace energyplus {
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXMultispeed.stages().size());
       } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed) {
         auto coolingCoilDXVarspeed = heatingCoil->cast<CoilCoolingDXVariableSpeed>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXVarspeed.speeds.size());
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXVarspeed.speeds().size());
       } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit) {
         auto coolingCoilWaterToAirHeatingVar = heatingCoil->cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilWaterToAirHeatingVar.speeds.size());
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilWaterToAirHeatingVar.speeds().size());
       } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit) {
         auto coolingCoilWaterToAirHeating = heatingCoil->cast<CoilCoolingWaterToAirHeatPumpEquationFit>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);  // FIXME
