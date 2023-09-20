@@ -65,10 +65,10 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_set_get) {
   CoilHeatingDesuperheater desuperheater(model);
 
   desuperheater.setHeatReclaimRecoveryEfficiency(999.0);
-  desuperheater.setParasiticElectricLoad(999.0);
+  desuperheater.setOnCycleParasiticElectricLoad(999.0);
 
   EXPECT_DOUBLE_EQ(desuperheater.heatReclaimRecoveryEfficiency(), 999.0);
-  EXPECT_DOUBLE_EQ(desuperheater.parasiticElectricLoad(), 999.0);
+  EXPECT_DOUBLE_EQ(desuperheater.onCycleParasiticElectricLoad(), 999.0);
 }
 
 TEST_F(ModelFixture, CoilHeatingDesuperheater_addToNode) {
@@ -155,7 +155,7 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_CloneModelWithDefaultData) {
   auto testObjectClone = testObject.clone(model).cast<CoilHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(testObjectClone.heatReclaimRecoveryEfficiency(), 0.8);
-  EXPECT_DOUBLE_EQ(testObjectClone.parasiticElectricLoad(), 0.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.onCycleParasiticElectricLoad(), 0.0);
 }
 
 //Test clone model with custom data
@@ -168,14 +168,14 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_CloneModelWithCustomData) {
   ScheduleCompact alwaysOn = ScheduleCompact(model);
 
   testObject.setHeatReclaimRecoveryEfficiency(0.5);
-  testObject.setParasiticElectricLoad(1.0);
+  testObject.setOnCycleParasiticElectricLoad(1.0);
   testObject.setHeatingSource(condenser);
   testObject.setAvailabilitySchedule(alwaysOn);
 
   auto testObjectClone = testObject.clone(model).cast<CoilHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(testObjectClone.heatReclaimRecoveryEfficiency(), 0.5);
-  EXPECT_DOUBLE_EQ(testObjectClone.parasiticElectricLoad(), 1.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.onCycleParasiticElectricLoad(), 1.0);
   EXPECT_TRUE(testObjectClone.availabilitySchedule());
   EXPECT_EQ(alwaysOn, testObjectClone.availabilitySchedule().get());
   EXPECT_FALSE(testObjectClone.heatingSource());
@@ -191,7 +191,7 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_CloneTwoModelWithCustomData) {
   ScheduleCompact alwaysOn = ScheduleCompact(model);
 
   testObject.setHeatReclaimRecoveryEfficiency(0.5);
-  testObject.setParasiticElectricLoad(1.0);
+  testObject.setOnCycleParasiticElectricLoad(1.0);
   testObject.setHeatingSource(condenser);
   testObject.setAvailabilitySchedule(alwaysOn);
 
@@ -201,7 +201,7 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_CloneTwoModelWithCustomData) {
   auto testObjectClone2 = testObject.clone(model2).cast<CoilHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(testObjectClone2.heatReclaimRecoveryEfficiency(), 0.5);
-  EXPECT_DOUBLE_EQ(testObjectClone2.parasiticElectricLoad(), 1.0);
+  EXPECT_DOUBLE_EQ(testObjectClone2.onCycleParasiticElectricLoad(), 1.0);
   EXPECT_TRUE(testObjectClone2.availabilitySchedule());
   EXPECT_NE(alwaysOn, testObjectClone2.availabilitySchedule().get());
   EXPECT_FALSE(testObjectClone2.heatingSource());

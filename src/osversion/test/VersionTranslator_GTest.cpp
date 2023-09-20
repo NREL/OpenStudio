@@ -42,6 +42,7 @@
 #include <array>
 #include <cmath>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <vector>
 
@@ -3471,4 +3472,230 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_BoilerHotWater) {
   EXPECT_EQ(0, bhw.getDouble(16).get());                           // Off Cycle Parasitic Fuel Load
   EXPECT_EQ(9, bhw.getDouble(17).get());                           // Sizing Factor
   EXPECT_EQ("Test", bhw.getString(18).get());                      // End-Use Subcategory
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_fuelTypeRenames) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_FuelTypeRenames.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  IddFile oldIddFile = getOpenStudioIddFileForVersion(VersionString(3, 6, 1));
+  OptionalIdfFile oldIdfFile_ = IdfFile::load(osmPath, oldIddFile);
+  ASSERT_TRUE(oldIdfFile_);
+
+  // Making the map case-insentive by providing a Comparator `IstringCompare`
+  const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap{{
+    {"Steam", "DistrictHeatingSteam"},
+    {"DistrictHeating", "DistrictHeatingWater"},
+    // Additionally, for UtilityBill, align the IDD choices to E+. This will also be covered by this
+    {"FuelOil_1", "FuelOilNo1"},
+    {"FuelOil_2", "FuelOilNo2"},
+    {"OtherFuel_1", "OtherFuel1"},
+    {"OtherFuel_2", "OtherFuel2"},
+  }};
+
+  // iddname, 361 & 370 index, current index
+  const std::array<std::tuple<std::string, int, int>, 12> fuelTypeRenamesMap{{
+    {"OS:OtherEquipment", 6, 6},                                // Fuel Type
+    {"OS:Exterior:FuelEquipment", 4, 4},                        // Fuel Use Type
+    {"OS:WaterHeater:Mixed", 11, 11},                           // Heater Fuel Type
+    {"OS:WaterHeater:Mixed", 15, 15},                           // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Mixed", 18, 18},                           // On Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 17, 17},                      // Heater Fuel Type
+    {"OS:WaterHeater:Stratified", 20, 20},                      // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 24, 24},                      // On Cycle Parasitic Fuel Type
+    {"OS:Meter:Custom", 2, 2},                                  // Fuel Type
+    {"OS:Meter:CustomDecrement", 2, 2},                         // Fuel Type
+    {"OS:EnergyManagementSystem:MeteredOutputVariable", 5, 5},  // Resource Type
+    {"OS:PythonPlugin:OutputVariable", 6, 6},                   // Resource Type
+    // {"OS:UtilityBill", 2, 2},                                   // Fuel Type
+  }};
+
+  for (const auto& [iddname, oldFieldIndex, newFieldIndex] : fuelTypeRenamesMap) {
+
+    const std::string old_fuelType = oldIdfFile_->getObjectsByType(oldIddFile.getObject(iddname).get())[0].getString(oldFieldIndex).get();
+    // Check that the test model (in 3.6.1), actually has bad starting fuels
+    EXPECT_TRUE(replaceFuelTypesMap.find(old_fuelType) != replaceFuelTypesMap.end());
+
+    const std::string new_fuelType = model_->getObjectsByType(iddname)[0].getString(newFieldIndex).get();
+    EXPECT_NE(old_fuelType, new_fuelType);
+    EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType) << "Failed for " << iddname;
+  }
+
+  // I have two instances of this object, so do them manually
+  {
+    auto u = model_->getObjectByTypeAndName("OS:UtilityBill", "Legacy").get();
+    EXPECT_EQ("FuelOilNo1", u.getString(2).get());
+  }
+  {
+    auto u = model_->getObjectByTypeAndName("OS:UtilityBill", "Steam").get();
+    EXPECT_EQ("DistrictHeatingSteam", u.getString(2).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> outputMeters = model_->getObjectsByType("OS:Output:Meter");
+    ASSERT_EQ(2u, outputMeters.size());
+    EXPECT_NE(std::find_if(outputMeters.begin(), outputMeters.end(),
+                           [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "DistrictHeatingSteam:Facility"); }),
+              outputMeters.end());
+    EXPECT_NE(std::find_if(outputMeters.begin(), outputMeters.end(),
+                           [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "Heating:DistrictHeatingWater"); }),
+              outputMeters.end());
+  }
+
+  {
+    const static std::map<std::string, std::string> renameMap({
+      {"District Cooling Chilled Water Energy", "District Cooling Water Energy"},
+      {"District Cooling Chilled Water Rate", "District Cooling Water Rate"},
+      {"District Cooling Rate", "District Cooling Water Rate"},
+      {"District Cooling Inlet Temperature", "District Cooling Water Inlet Temperature"},
+      {"District Cooling Outlet Temperature", "District Cooling Water Outlet Temperature"},
+      {"District Cooling Mass Flow Rate", "District Cooling Water Mass Flow Rate"},
+      {"District Heating Hot Water Energy", "District Heating Water Energy"},
+      {"District Heating Hot Water Rate", "District Heating Water Rate"},
+      {"District Heating Rate", "District Heating Water Rate"},
+      {"District Heating Inlet Temperature", "District Heating Water Inlet Temperature"},
+      {"District Heating Outlet Temperature", "District Heating Water Outlet Temperature"},
+      {"District Heating Mass Flow Rate", "District Heating Water Mass Flow Rate"},
+    });
+
+    std::vector<WorkspaceObject> outputVariables = model_->getObjectsByType("OS:Output:Variable");
+    ASSERT_EQ(renameMap.size(), outputVariables.size());
+    ASSERT_EQ(12, outputVariables.size());
+    for (const auto& outputVariable : outputVariables) {
+      auto name = outputVariable.nameString();
+      auto it = renameMap.find(name);
+      ASSERT_NE(it, renameMap.end()) << "Output:Variable named " << name << " not in replaceMap";
+      EXPECT_EQ(it->second, outputVariable.getString(3).get())
+        << "Output:Variable named " << name << " did not get the expected rename for Variable Name field";
+    }
+
+    std::vector<WorkspaceObject> emsSensors = model_->getObjectsByType("OS:EnergyManagementSystem:Sensor");
+    ASSERT_EQ(15, emsSensors.size());
+
+    EXPECT_NE(std::find_if(emsSensors.begin(), emsSensors.end(),
+                           [](const WorkspaceObject& wo) {
+                             return openstudio::istringEqual(wo.nameString(), "District_Cooling_Inlet_Temperature_Standandalone");
+                           }),
+              emsSensors.end());
+
+    for (const auto& emsSensor : emsSensors) {
+      if (openstudio::istringEqual(emsSensor.nameString(), "District_Cooling_Inlet_Temperature_Standandalone")) {
+        // District Cooling Inlet Temperature => District Cooling Water Inlet Temperature
+        EXPECT_EQ("District Cooling Water Inlet Temperature", emsSensor.getString(3).get());
+      } else {
+        // All of these have actual handles stored at string, these shouldn't have been touched
+        boost::optional<std::string> handle = emsSensor.getString(3);
+        ASSERT_TRUE(handle.is_initialized());
+        UUID uid = toUUID(handle.get());
+        boost::optional<WorkspaceObject> object = model_->getObject(uid);
+        ASSERT_TRUE(object);
+        EXPECT_TRUE(openstudio::istringEqual(object->iddObject().name(), "OS:Output:Variable")
+                    || openstudio::istringEqual(object->iddObject().name(), "OS:Output:Meter"));
+      }
+    }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_CoilsHeating) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Heating.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  std::vector<WorkspaceObject> chgs = model_->getObjectsByType("OS:Coil:Heating:Gas");
+  ASSERT_EQ(1u, chgs.size());
+  WorkspaceObject chg = chgs[0];
+
+  EXPECT_EQ("Coil Heating Gas 1", chg.getString(1).get());  // Name
+  EXPECT_EQ(1, chg.getDouble(8).get());                     // On Cycle Parasitic Electric Load
+  EXPECT_EQ(2, chg.getDouble(10).get());                    // Off Cycle Parasitic Gas Load
+
+  std::vector<WorkspaceObject> chgms = model_->getObjectsByType("OS:Coil:Heating:Gas:Multistage");
+  ASSERT_EQ(1u, chgms.size());
+  WorkspaceObject chgm = chgms[0];
+
+  EXPECT_EQ("Coil Heating Gas Multi Stage 1", chgm.getString(1).get());  // Name
+  EXPECT_EQ(3, chgm.getDouble(6).get());                                 // Off Cycle Parasitic Gas Load
+
+  std::vector<WorkspaceObject> chgmds = model_->getObjectsByType("OS:Coil:Heating:Gas:Multistage:StageData");
+  ASSERT_EQ(1u, chgmds.size());
+  WorkspaceObject chgmd = chgmds[0];
+
+  EXPECT_EQ("Coil Heating Gas Multi Stage Stage Data 1", chgmd.getString(1).get());  // Name
+  EXPECT_EQ(4, chgmd.getDouble(4).get());                                            // On Cycle Parasitic Electric Load
+
+  std::vector<WorkspaceObject> chds = model_->getObjectsByType("OS:Coil:Heating:Desuperheater");
+  ASSERT_EQ(1u, chds.size());
+  WorkspaceObject chd = chds[0];
+
+  EXPECT_EQ("Coil Heating Desuperheater 1", chd.getString(1).get());  // Name
+  EXPECT_EQ(5, chd.getDouble(7).get());                               // On Cycle Parasitic Electric Load
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_DistrictHeating) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_RenameDistrictHeating.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  std::vector<WorkspaceObject> dhs = model_->getObjectsByType("OS:DistrictHeating:Water");
+  ASSERT_EQ(1u, dhs.size());
+  const auto& dh = dhs.front();
+
+  EXPECT_EQ("My DistrictHeating", dh.nameString());
+  ASSERT_TRUE(dh.getTarget(2));
+  EXPECT_EQ("DH Inlet", dh.getTarget(2)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
+  ASSERT_TRUE(dh.getTarget(3));
+  EXPECT_EQ("DH Outlet", dh.getTarget(3)->getTarget(OS_ConnectionFields::TargetObject)->nameString());
+  EXPECT_EQ(1000.0, dh.getDouble(4).get());
+
+  EXPECT_EQ("Always On Continuous", dh.getTarget(5)->nameString());
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_DistrictObjects_CapacityFracSch) {
+  const std::array<openstudio::path, 2> osmPaths{
+    resourcesPath() / toPath("osversion/3_7_0/test_vt_DistrictObjects_CapacityFracSch_Create.osm"),
+    resourcesPath() / toPath("osversion/3_7_0/test_vt_DistrictObjects_CapacityFracSch_Get.osm"),
+  };
+
+  for (const auto& osmPath : osmPaths) {
+    osversion::VersionTranslator vt;
+    boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+    ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+    openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+    model_->save(outPath, true);
+
+    EXPECT_EQ(1, model_->getObjectsByType("OS:Schedule:Constant").size());
+    EXPECT_EQ(1, model_->getObjectsByType("OS:ScheduleTypeLimits").size());
+    {
+      std::vector<WorkspaceObject> dhs = model_->getObjectsByType("OS:DistrictHeating:Water");
+      ASSERT_EQ(1, dhs.size());
+      const auto& dh = dhs.front();
+
+      EXPECT_EQ(1000.0, dh.getDouble(4).get());
+      ASSERT_TRUE(dh.getTarget(5));
+      EXPECT_EQ("Always On Continuous", dh.getTarget(5)->nameString());
+    }
+    {
+      std::vector<WorkspaceObject> dcs = model_->getObjectsByType("OS:DistrictCooling");
+      ASSERT_EQ(1, dcs.size());
+      const auto& dc = dcs.front();
+
+      EXPECT_EQ(1000.0, dc.getDouble(4).get());
+      ASSERT_TRUE(dc.getTarget(5));
+      EXPECT_EQ("Always On Continuous", dc.getTarget(5)->nameString());
+    }
+  }
 }

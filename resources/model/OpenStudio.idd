@@ -1848,7 +1848,6 @@ OS:WeatherProperty:SkyTemperature,
        \key Idso
        \key BerdahlMartin
        \key ScheduleValue
-       \key ScheduleValue
        \key DifferenceScheduleDryBulbValue
        \key DifferenceScheduleDewPointValue
   A4, \field Schedule Name
@@ -7353,8 +7352,8 @@ OS:OtherEquipment,
        \key Coal
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
        \key DistrictCooling
        \default None
   A7;  \field End-Use Subcategory
@@ -7592,8 +7591,8 @@ OS:Exterior:FuelEquipment,
        \key Coal
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
        \key DistrictCooling
   N1,  \field Multiplier
        \type real
@@ -16768,13 +16767,19 @@ OS:DistrictCooling,
        \required-field
        \type object-list
        \object-list ConnectionNames
-  N1 ; \field Nominal Capacity
+  N1 , \field Nominal Capacity
        \units W
        \minimum 0.0
        \autosizable
        \required-field
+  A5 ; \field Capacity Fraction Schedule
+       \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
 
-OS:DistrictHeating,
+OS:DistrictHeating:Water,
+       \memo Centralized source of hot water, such as a district heating system.
   A1, \field Handle
        \type handle
        \required-field
@@ -16789,11 +16794,43 @@ OS:DistrictHeating,
        \required-field
        \type object-list
        \object-list ConnectionNames
-  N1 ; \field Nominal Capacity
+  N1 , \field Nominal Capacity
        \units W
        \minimum 0.0
        \autosizable
        \required-field
+  A5 ; \field Capacity Fraction Schedule
+       \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+
+OS:DistrictHeating:Steam,
+       \memo Centralized source of Steam, such as a district heating system.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Steam Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A4 , \field Steam Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Nominal Capacity
+       \autosizable
+       \units W
+       \minimum 0.0
+       \required-field
+  A5 ; \field Capacity Fraction Schedule
+       \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
 
 OS:GroundHeatExchanger:Vertical,
         \extensible:2
@@ -19682,7 +19719,7 @@ OS:Coil:Heating:Gas,
   A6, \field Temperature Setpoint Node Name
        \note optional, used if coil is temperature control and not load-base controlled
        \type alpha
-  N3, \field Parasitic Electric Load
+  N3, \field On Cycle Parasitic Electric Load
        \note parasitic electric load associated with the gas coil operation
        \note such as an inducer fan, etc..  This will be modified by the part load ratio to reflect
        \note the time of operation in a timestep.
@@ -19699,7 +19736,7 @@ OS:Coil:Heating:Gas,
        \note increase the gas consumption of the coil due to transient coil operation.
        \type object-list
        \object-list UnivariateFunctions
-  N4, \field Parasitic Gas Load
+  N4, \field Off Cycle Parasitic Gas Load
        \note parasitic gas load when the coil is not operating (i.e., standing pilot)
        \type real
        \units W
@@ -19748,7 +19785,7 @@ OS:Coil:Heating:Gas:MultiStage,
   A6, \field Part Load Fraction Correlation Curve
       \type object-list
       \object-list UnivariateFunctions
-  N1, \field Parasitic Gas Load
+  N1, \field Off Cycle Parasitic Gas Load
       \units W
   A7; \field Stage 1
       \begin-extensible
@@ -19775,7 +19812,7 @@ OS:Coil:Heating:Gas:MultiStage:StageData,
        \units W
        \minimum> 0.0
        \autosizable
-  N3; \field Parasitic Electric Load
+  N3; \field On Cycle Parasitic Electric Load
        \required-field
        \units W
        \ip-units W
@@ -19815,7 +19852,7 @@ OS:Coil:Heating:Desuperheater,
        \required-field
        \type object-list
        \object-list DesuperHeatingCoilSources
-  N2;  \field Parasitic Electric Load
+  N2;  \field On Cycle Parasitic Electric Load
        \type real
        \units W
        \minimum 0
@@ -30226,8 +30263,8 @@ OS:WaterHeater:Mixed,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N8 , \field Heater Thermal Efficiency
        \type real
        \minimum> 0.0
@@ -30252,8 +30289,8 @@ OS:WaterHeater:Mixed,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N10, \field Off Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -30276,8 +30313,8 @@ OS:WaterHeater:Mixed,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N12, \field On Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -31583,8 +31620,8 @@ OS:WaterHeater:Stratified,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N11, \field Heater Thermal Efficiency
        \required-field
        \type real
@@ -31608,8 +31645,8 @@ OS:WaterHeater:Stratified,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N13, \field Off Cycle Parasitic Heat Fraction to Tank
        \required-field
        \type real
@@ -31638,8 +31675,8 @@ OS:WaterHeater:Stratified,
        \key Gasoline
        \key OtherFuel1
        \key OtherFuel2
-       \key Steam
-       \key DistrictHeating
+       \key DistrictHeatingSteam
+       \key DistrictHeatingWater
   N16, \field On Cycle Parasitic Heat Fraction to Tank
        \required-field
        \type real
@@ -35650,7 +35687,7 @@ OS:LifeCycleCost:UsePriceEscalation,
         \key ElectricitySurplusSold
         \key ElectricityNet
         \key NaturalGas
-        \key Steam
+        \key DistrictHeatingSteam
         \key Gasoline
         \key Diesel
         \key Coal
@@ -35703,19 +35740,19 @@ OS:UtilityBill,
        \type choice
        \required-field
        \key Electricity
-       \key Gas
+       \key NaturalGas
        \key Gasoline
        \key Diesel
        \key Coal
-       \key FuelOil_1
-       \key FuelOil_2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Propane
        \key Water
-       \key Steam
+       \key DistrictHeatingSteam
        \key DistrictCooling
-       \key DistrictHeating
-       \key OtherFuel_1
-       \key OtherFuel_2
+       \key DistrictHeatingWater
+       \key OtherFuel1
+       \key OtherFuel2
        \key EnergyTransfer
   A4, \field Meter Install Location
        \note Location the meter associated with this utility bill object is installed.
@@ -36685,8 +36722,8 @@ OS:Meter:Custom,
         \key Coal
         \key OtherFuel1
         \key OtherFuel2
-        \key Steam
-        \key DistrictHeating
+        \key DistrictHeatingSteam
+        \key DistrictHeatingWater
         \key DistrictCooling
         \key Water
         \key Generic
@@ -36716,8 +36753,8 @@ OS:Meter:CustomDecrement,
         \key Coal
         \key OtherFuel1
         \key OtherFuel2
-        \key Steam
-        \key DistrictHeating
+        \key DistrictHeatingSteam
+        \key DistrictHeatingWater
         \key DistrictCooling
         \key Water
         \key Generic
@@ -36753,7 +36790,7 @@ OS:EnvironmentalImpactFactors,
   A1, \field Handle
       \type handle
       \required-field
-  N1, \field District Heating Efficiency
+  N1, \field District Heating Water Efficiency
       \note District heating efficiency used when converted to natural gas
       \minimum> 0.0
       \required-field
@@ -36762,7 +36799,7 @@ OS:EnvironmentalImpactFactors,
       \units W/W
       \minimum> 0.0
       \required-field
-  N3, \field Steam Conversion Efficiency
+  N3, \field District Heating Steam Conversion Efficiency
       \note Steam conversion efficiency used to convert steam usage to natural gas
       \minimum> 0.0
       \required-field
@@ -37406,9 +37443,9 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \key WellWaterDrawn
        \key CondensateWaterCollected
        \key EnergyTransfer
-       \key Steam
+       \key DistrictHeatingSteam
        \key DistrictCooling
-       \key DistrictHeating
+       \key DistrictHeatingWater
        \key ElectricityProducedOnSite
        \key SolarWaterHeating
        \key SolarAirHeating
@@ -37646,9 +37683,9 @@ OS:PythonPlugin:OutputVariable,
        \key WellWaterDrawn
        \key CondensateWaterCollected
        \key EnergyTransfer
-       \key Steam
+       \key DistrictHeatingSteam
        \key DistrictCooling
-       \key DistrictHeating
+       \key DistrictHeatingWater
        \key ElectricityProducedOnSite
        \key SolarWaterHeating
        \key SolarAirHeating

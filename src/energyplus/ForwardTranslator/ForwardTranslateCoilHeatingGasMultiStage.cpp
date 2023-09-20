@@ -62,7 +62,7 @@ namespace energyplus {
     }
 
     // OffCycleParasiticGasLoad
-    if ((value = modelObject.parasiticGasLoad())) {
+    if ((value = modelObject.offCycleParasiticGasLoad())) {
       idfObject.setDouble(Coil_Heating_Gas_MultiStageFields::OffCycleParasiticGasLoad, value.get());
     }
 
@@ -76,18 +76,18 @@ namespace energyplus {
     for (const auto& stage : stages) {
       auto eg = idfObject.pushExtensibleGroup();
 
-      // Stage1GasBurnerEfficiency
+      // StageGasBurnerEfficiency
       eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency, stage.gasBurnerEfficiency());
 
-      // Stage1NominalCapacity
+      // StageNominalCapacity
       if (stage.isNominalCapacityAutosized()) {
         eg.setString(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity, "AutoSize");
       } else if ((value = stage.nominalCapacity())) {
         eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity, value.get());
       }
 
-      // Stage1OnCycleParasiticElectricLoad
-      eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageOnCycleParasiticElectricLoad, stage.parasiticElectricLoad());
+      // StageOnCycleParasiticElectricLoad
+      eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageOnCycleParasiticElectricLoad, stage.onCycleParasiticElectricLoad());
     }
 
     return idfObject;

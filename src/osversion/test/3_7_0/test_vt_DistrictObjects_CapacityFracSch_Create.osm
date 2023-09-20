@@ -1,0 +1,19 @@
+
+OS:Version,
+  {1ce67f4d-7624-49ff-ac29-b45975d633aa}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:DistrictHeating,
+  {f7bd858e-11b5-4220-bcd3-7d46facb79d6}, !- Handle
+  District Heating 1,                     !- Name
+  ,                                       !- Hot Water Inlet Node Name
+  ,                                       !- Hot Water Outlet Node Name
+  1000;                                   !- Nominal Capacity {W}
+
+OS:DistrictCooling,
+  {040dac85-5e44-43d9-9718-5e39d586d81e}, !- Handle
+  District Cooling 1,                     !- Name
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  1000;                                   !- Nominal Capacity {W}
+

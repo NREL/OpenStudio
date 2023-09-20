@@ -24,13 +24,14 @@ namespace energyplus {
     m_idfObjects.push_back(idfObject);
 
     // District Heating Water Efficiency
-    idfObject.setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingWaterEfficiency, modelObject.districtHeatingEfficiency());
+    idfObject.setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingWaterEfficiency, modelObject.districtHeatingWaterEfficiency());
 
     // District Cooling COP
     idfObject.setDouble(EnvironmentalImpactFactorsFields::DistrictCoolingCOP, modelObject.districtCoolingCOP());
 
     // District Heating Steam Conversion Efficiency
-    idfObject.setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingSteamConversionEfficiency, modelObject.steamConversionEfficiency());
+    idfObject.setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingSteamConversionEfficiency,
+                        modelObject.districtHeatingSteamConversionEfficiency());
 
     // Total Carbon Equivalent Emission Factor From N2O
     idfObject.setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromN2O,
