@@ -233,4 +233,21 @@ class EmbeddedRuby_Test < Minitest::Test
     assert(data == data2)
   end
 
+  def test_json_schemer
+    require 'json_schemer'
+
+    schema = {
+      'type' => 'object',
+      'properties' => {
+        'abc' => {
+          'type' => 'integer',
+          'minimum' => 11
+        }
+      }
+    }
+    schemer = JSONSchemer.schema(schema)
+    assert(schemer.valid?({ 'abc' => 11 }))
+    assert(!schemer.valid?({ 'abc' => 10 }))
+  end
+
 end
