@@ -5,6 +5,7 @@
 
 #include "DistrictCooling.hpp"
 #include "DistrictCooling_Impl.hpp"
+#include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "Schedule.hpp"
@@ -51,41 +52,11 @@ namespace model {
 
     std::vector<ScheduleTypeKey> DistrictCooling_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
-      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      const UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_DistrictCoolingFields::CapacityFractionSchedule) != fieldIndices.cend()) {
         result.emplace_back("DistrictCooling", "Capacity Fraction Schedule");
       }
       return result;
-    }
-
-    boost::optional<double> DistrictCooling_Impl::nominalCapacity() const {
-      return getDouble(OS_DistrictCoolingFields::NominalCapacity, true);
-    }
-
-    bool DistrictCooling_Impl::isNominalCapacityAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value = getString(OS_DistrictCoolingFields::NominalCapacity, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "autosize");
-      }
-      return result;
-    }
-
-    boost::optional<Schedule> DistrictCooling_Impl::capacityFractionSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_DistrictCoolingFields::CapacityFractionSchedule);
-    }
-
-    bool DistrictCooling_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
-      bool result(false);
-      if (nominalCapacity) {
-        result = setDouble(OS_DistrictCoolingFields::NominalCapacity, nominalCapacity.get());
-      }
-      return result;
-    }
-
-    void DistrictCooling_Impl::autosizeNominalCapacity() {
-      bool result = setString(OS_DistrictCoolingFields::NominalCapacity, "autosize");
-      OS_ASSERT(result);
     }
 
     unsigned DistrictCooling_Impl::inletPort() const {
@@ -106,14 +77,37 @@ namespace model {
       return false;
     }
 
-    bool DistrictCooling_Impl::setCapacityFractionSchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_DistrictCoolingFields::CapacityFractionSchedule, "DistrictCooling", "Capacity Fraction", schedule);
+    boost::optional<double> DistrictCooling_Impl::nominalCapacity() const {
+      return getDouble(OS_DistrictCoolingFields::NominalCapacity, true);
+    }
+
+    bool DistrictCooling_Impl::isNominalCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_DistrictCoolingFields::NominalCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
       return result;
     }
 
-    void DistrictCooling_Impl::resetCapacityFractionSchedule() {
-      bool result = setString(OS_DistrictCoolingFields::CapacityFractionSchedule, "");
+    bool DistrictCooling_Impl::setNominalCapacity(double nominalCapacity) {
+      return setDouble(OS_DistrictCoolingFields::NominalCapacity, nominalCapacity);
+    }
+
+    void DistrictCooling_Impl::autosizeNominalCapacity() {
+      const bool result = setString(OS_DistrictCoolingFields::NominalCapacity, "autosize");
       OS_ASSERT(result);
+    }
+
+    Schedule DistrictCooling_Impl::capacityFractionSchedule() const {
+      auto sch_ = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_DistrictCoolingFields::CapacityFractionSchedule);
+      OS_ASSERT(sch_);
+      return *sch_;
+    }
+
+    bool DistrictCooling_Impl::setCapacityFractionSchedule(Schedule& schedule) {
+      const bool result = setSchedule(OS_DistrictCoolingFields::CapacityFractionSchedule, "DistrictCooling", "Capacity Fraction", schedule);
+      return result;
     }
 
     boost::optional<double> DistrictCooling_Impl::autosizedNominalCapacity() const {
@@ -153,6 +147,12 @@ namespace model {
   DistrictCooling::DistrictCooling(const Model& model) : StraightComponent(DistrictCooling::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::DistrictCooling_Impl>());
     autosizeNominalCapacity();
+
+    {
+      auto schedule = model.alwaysOnContinuousSchedule();
+      const bool ok = setCapacityFractionSchedule(schedule);
+      OS_ASSERT(ok);
+    }
   }
 
   IddObjectType DistrictCooling::iddObjectType() {
@@ -168,7 +168,7 @@ namespace model {
     return getImpl<detail::DistrictCooling_Impl>()->isNominalCapacityAutosized();
   }
 
-  boost::optional<Schedule> DistrictCooling::capacityFractionSchedule() const {
+  Schedule DistrictCooling::capacityFractionSchedule() const {
     return getImpl<detail::DistrictCooling_Impl>()->capacityFractionSchedule();
   }
 
@@ -182,10 +182,6 @@ namespace model {
 
   bool DistrictCooling::setCapacityFractionSchedule(Schedule& schedule) {
     return getImpl<detail::DistrictCooling_Impl>()->setCapacityFractionSchedule(schedule);
-  }
-
-  void DistrictCooling::resetCapacityFractionSchedule() {
-    getImpl<detail::DistrictCooling_Impl>()->resetCapacityFractionSchedule();
   }
 
   /// @cond

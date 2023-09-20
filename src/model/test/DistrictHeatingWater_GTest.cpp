@@ -21,34 +21,28 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //test construction of the object
-TEST_F(ModelFixture, DistrictHeatingWater_DistrictHeatingWater) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      Model m;
-      DistrictHeatingWater districtHeating(m);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
+TEST_F(ModelFixture, DistrictHeatingWater_GettersSetters) {
 
   Model m;
   DistrictHeatingWater districtHeating(m);
 
+  // Default to autosize
   EXPECT_FALSE(districtHeating.nominalCapacity());
   EXPECT_TRUE(districtHeating.isNominalCapacityAutosized());
-  EXPECT_FALSE(districtHeating.capacityFractionSchedule());
+  // Set it
+  districtHeating.setNominalCapacity(1000.0);
+  ASSERT_TRUE(districtHeating.nominalCapacity());
+  EXPECT_EQ(1000.0, districtHeating.nominalCapacity().get());
+  EXPECT_FALSE(districtHeating.isNominalCapacityAutosized());
+  // autosize
+  districtHeating.autosizeNominalCapacity();
+  EXPECT_TRUE(districtHeating.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtHeating.nominalCapacity());
 
+  EXPECT_EQ(m.alwaysOnContinuousSchedule(), districtHeating.capacityFractionSchedule());
   ScheduleConstant scheduleConstant(m);
-  scheduleConstant.setValue(0.5);
   EXPECT_TRUE(districtHeating.setCapacityFractionSchedule(scheduleConstant));
-
-  ASSERT_TRUE(districtHeating.capacityFractionSchedule());
-  EXPECT_EQ(scheduleConstant, districtHeating.capacityFractionSchedule().get());
-
-  districtHeating.resetCapacityFractionSchedule();
-  EXPECT_FALSE(districtHeating.capacityFractionSchedule());
+  EXPECT_EQ(scheduleConstant, districtHeating.capacityFractionSchedule());
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node
@@ -91,26 +85,6 @@ TEST_F(ModelFixture, DistrictHeatingWater_connections) {
 
   //it should not connect to an airloop
   ASSERT_FALSE(districtHeating.addToNode(airOutletNode));
-}
-
-//test setting and getting the nominal capacity
-TEST_F(ModelFixture, DistrictHeatingWater_NominalCapacity) {
-
-  Model m;
-  DistrictHeatingWater districtHeating(m);
-
-  //test setting and getting the field with a double
-  double testValue(1);
-
-  districtHeating.setNominalCapacity(testValue);
-
-  auto capacity = districtHeating.nominalCapacity();
-  ASSERT_TRUE(capacity);
-  ASSERT_EQ(1, capacity.get());
-
-  EXPECT_FALSE(districtHeating.isNominalCapacityAutosized());
-  districtHeating.autosizeNominalCapacity();
-  EXPECT_TRUE(districtHeating.isNominalCapacityAutosized());
 }
 
 //test cloning the object

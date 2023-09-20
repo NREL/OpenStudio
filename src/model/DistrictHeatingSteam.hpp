@@ -30,6 +30,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
+    // The capacityFractionSchedule is defaulted to alwaysOnContinuousSchedule
     explicit DistrictHeatingSteam(const Model& model);
 
     virtual ~DistrictHeatingSteam() = default;
@@ -55,7 +56,7 @@ namespace model {
 
     bool isNominalCapacityAutosized() const;
 
-    boost::optional<Schedule> capacityFractionSchedule() const;
+    Schedule capacityFractionSchedule() const;
 
     //@}
     /** @name Setters */
@@ -66,8 +67,6 @@ namespace model {
     void autosizeNominalCapacity();
 
     bool setCapacityFractionSchedule(Schedule& schedule);
-
-    void resetCapacityFractionSchedule();
 
     //@}
     /** @name Other */

@@ -5,6 +5,7 @@
 
 #include "DistrictHeatingWater.hpp"
 #include "DistrictHeatingWater_Impl.hpp"
+#include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "Schedule.hpp"
@@ -51,51 +52,11 @@ namespace model {
 
     std::vector<ScheduleTypeKey> DistrictHeatingWater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
-      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      const UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_DistrictHeating_WaterFields::CapacityFractionSchedule) != fieldIndices.cend()) {
         result.emplace_back("DistrictHeatingWater", "Capacity Fraction Schedule");
       }
       return result;
-    }
-
-    boost::optional<double> DistrictHeatingWater_Impl::nominalCapacity() const {
-      return getDouble(OS_DistrictHeating_WaterFields::NominalCapacity, true);
-    }
-
-    bool DistrictHeatingWater_Impl::isNominalCapacityAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value = getString(OS_DistrictHeating_WaterFields::NominalCapacity, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "autosize");
-      }
-      return result;
-    }
-
-    bool DistrictHeatingWater_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
-      bool result(false);
-      if (nominalCapacity) {
-        result = setDouble(OS_DistrictHeating_WaterFields::NominalCapacity, nominalCapacity.get());
-      }
-      return result;
-    }
-
-    void DistrictHeatingWater_Impl::autosizeNominalCapacity() {
-      bool result = setString(OS_DistrictHeating_WaterFields::NominalCapacity, "autosize");
-      OS_ASSERT(result);
-    }
-
-    boost::optional<Schedule> DistrictHeatingWater_Impl::capacityFractionSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_DistrictHeating_WaterFields::CapacityFractionSchedule);
-    }
-
-    bool DistrictHeatingWater_Impl::setCapacityFractionSchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_DistrictHeating_WaterFields::CapacityFractionSchedule, "DistrictHeatingWater", "Capacity Fraction", schedule);
-      return result;
-    }
-
-    void DistrictHeatingWater_Impl::resetCapacityFractionSchedule() {
-      bool result = setString(OS_DistrictHeating_WaterFields::CapacityFractionSchedule, "");
-      OS_ASSERT(result);
     }
 
     unsigned DistrictHeatingWater_Impl::inletPort() const {
@@ -114,6 +75,40 @@ namespace model {
       }
 
       return false;
+    }
+
+    boost::optional<double> DistrictHeatingWater_Impl::nominalCapacity() const {
+      return getDouble(OS_DistrictHeating_WaterFields::NominalCapacity, true);
+    }
+
+    bool DistrictHeatingWater_Impl::isNominalCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_DistrictHeating_WaterFields::NominalCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    bool DistrictHeatingWater_Impl::setNominalCapacity(double nominalCapacity) {
+      return setDouble(OS_DistrictHeating_WaterFields::NominalCapacity, nominalCapacity);
+    }
+
+    void DistrictHeatingWater_Impl::autosizeNominalCapacity() {
+      const bool result = setString(OS_DistrictHeating_WaterFields::NominalCapacity, "autosize");
+      OS_ASSERT(result);
+    }
+
+    Schedule DistrictHeatingWater_Impl::capacityFractionSchedule() const {
+      auto sch_ = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_DistrictHeating_WaterFields::CapacityFractionSchedule);
+      OS_ASSERT(sch_);
+      return *sch_;
+    }
+
+    bool DistrictHeatingWater_Impl::setCapacityFractionSchedule(Schedule& schedule) {
+      const bool result =
+        setSchedule(OS_DistrictHeating_WaterFields::CapacityFractionSchedule, "DistrictHeatingWater", "Capacity Fraction", schedule);
+      return result;
     }
 
     boost::optional<double> DistrictHeatingWater_Impl::autosizedNominalCapacity() const {
@@ -153,6 +148,12 @@ namespace model {
   DistrictHeatingWater::DistrictHeatingWater(const Model& model) : StraightComponent(DistrictHeatingWater::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::DistrictHeatingWater_Impl>());
     autosizeNominalCapacity();
+
+    {
+      auto schedule = model.alwaysOnContinuousSchedule();
+      const bool ok = setCapacityFractionSchedule(schedule);
+      OS_ASSERT(ok);
+    }
   }
 
   IddObjectType DistrictHeatingWater::iddObjectType() {
@@ -176,16 +177,12 @@ namespace model {
     getImpl<detail::DistrictHeatingWater_Impl>()->autosizeNominalCapacity();
   }
 
-  boost::optional<Schedule> DistrictHeatingWater::capacityFractionSchedule() const {
+  Schedule DistrictHeatingWater::capacityFractionSchedule() const {
     return getImpl<detail::DistrictHeatingWater_Impl>()->capacityFractionSchedule();
   }
 
   bool DistrictHeatingWater::setCapacityFractionSchedule(Schedule& schedule) {
     return getImpl<detail::DistrictHeatingWater_Impl>()->setCapacityFractionSchedule(schedule);
-  }
-
-  void DistrictHeatingWater::resetCapacityFractionSchedule() {
-    getImpl<detail::DistrictHeatingWater_Impl>()->resetCapacityFractionSchedule();
   }
 
   /// @cond

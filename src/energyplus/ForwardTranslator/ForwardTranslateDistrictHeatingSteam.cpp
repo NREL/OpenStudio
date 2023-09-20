@@ -45,8 +45,9 @@ namespace energyplus {
     }
 
     // Capacity Fraction Schedule Name
-    if (auto capacityFractionSchedule_ = modelObject.capacityFractionSchedule()) {
-      if (auto sch_ = translateAndMapModelObject(*capacityFractionSchedule_)) {
+    {
+      Schedule capacityFractionSchedule = modelObject.capacityFractionSchedule();
+      if (auto sch_ = translateAndMapModelObject(capacityFractionSchedule)) {
         idfObject.setString(DistrictHeating_SteamFields::CapacityFractionScheduleName, sch_->nameString());
       }
     }

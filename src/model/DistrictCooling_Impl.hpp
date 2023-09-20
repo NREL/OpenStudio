@@ -46,6 +46,8 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
+      virtual bool addToNode(Node& node) override;
+
       virtual void autosize() override;
 
       virtual void applySizingValues() override;
@@ -65,27 +67,23 @@ namespace model {
 
       bool isNominalCapacityAutosized() const;
 
-      boost::optional<double> autosizedNominalCapacity() const;
-
-      boost::optional<Schedule> capacityFractionSchedule() const;
+      Schedule capacityFractionSchedule() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool setNominalCapacity(boost::optional<double> nominalCapacity);
+      bool setNominalCapacity(double nominalCapacity);
 
       void autosizeNominalCapacity();
 
-      bool addToNode(Node& node) override;
-
       bool setCapacityFractionSchedule(Schedule& schedule);
-
-      void resetCapacityFractionSchedule();
 
       //@}
       /** @name Other */
       //@{
+
+      boost::optional<double> autosizedNominalCapacity() const;
 
       //@}
 

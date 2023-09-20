@@ -21,34 +21,28 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //test construction of the object
-TEST_F(ModelFixture, DistrictCooling_DistrictCooling) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      Model m;
-      DistrictCooling districtCooling(m);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
+TEST_F(ModelFixture, DistrictCooling_GettersSetters) {
 
   Model m;
   DistrictCooling districtCooling(m);
 
+  // Default to autosize
   EXPECT_FALSE(districtCooling.nominalCapacity());
   EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
-  EXPECT_FALSE(districtCooling.capacityFractionSchedule());
+  // Set it
+  districtCooling.setNominalCapacity(1000.0);
+  ASSERT_TRUE(districtCooling.nominalCapacity());
+  EXPECT_EQ(1000.0, districtCooling.nominalCapacity().get());
+  EXPECT_FALSE(districtCooling.isNominalCapacityAutosized());
+  // autosize
+  districtCooling.autosizeNominalCapacity();
+  EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtCooling.nominalCapacity());
 
+  EXPECT_EQ(m.alwaysOnContinuousSchedule(), districtCooling.capacityFractionSchedule());
   ScheduleConstant scheduleConstant(m);
-  scheduleConstant.setValue(0.5);
   EXPECT_TRUE(districtCooling.setCapacityFractionSchedule(scheduleConstant));
-
-  ASSERT_TRUE(districtCooling.capacityFractionSchedule());
-  EXPECT_EQ(scheduleConstant, districtCooling.capacityFractionSchedule().get());
-
-  districtCooling.resetCapacityFractionSchedule();
-  EXPECT_FALSE(districtCooling.capacityFractionSchedule());
+  EXPECT_EQ(scheduleConstant, districtCooling.capacityFractionSchedule());
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node
@@ -91,23 +85,6 @@ TEST_F(ModelFixture, DistrictCooling_connections) {
 
   //it should not connect to an airloop
   ASSERT_FALSE(districtCooling.addToNode(airOutletNode));
-}
-
-//test setting and getting the nominal capacity
-TEST_F(ModelFixture, DistrictCooling_NominalCapacity) {
-  Model m;
-  DistrictCooling districtCooling(m);
-
-  //test setting and getting the field with a double
-  double testValue(1);
-  districtCooling.setNominalCapacity(testValue);
-  auto capacity = districtCooling.nominalCapacity();
-  ASSERT_TRUE(capacity);
-  ASSERT_EQ(1, capacity.get());
-
-  EXPECT_FALSE(districtCooling.isNominalCapacityAutosized());
-  districtCooling.autosizeNominalCapacity();
-  EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
 }
 
 //test cloning the object

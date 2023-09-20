@@ -21,34 +21,28 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //test construction of the object
-TEST_F(ModelFixture, DistrictHeatingSteam_DistrictHeatingSteam) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      Model m;
-      DistrictHeatingSteam districtHeatingSteam(m);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
+TEST_F(ModelFixture, DistrictHeatingSteam_GettersSetters) {
 
   Model m;
   DistrictHeatingSteam districtHeatingSteam(m);
 
+  // Default to autosize
   EXPECT_FALSE(districtHeatingSteam.nominalCapacity());
   EXPECT_TRUE(districtHeatingSteam.isNominalCapacityAutosized());
-  EXPECT_FALSE(districtHeatingSteam.capacityFractionSchedule());
+  // Set it
+  districtHeatingSteam.setNominalCapacity(1000.0);
+  ASSERT_TRUE(districtHeatingSteam.nominalCapacity());
+  EXPECT_EQ(1000.0, districtHeatingSteam.nominalCapacity().get());
+  EXPECT_FALSE(districtHeatingSteam.isNominalCapacityAutosized());
+  // autosize
+  districtHeatingSteam.autosizeNominalCapacity();
+  EXPECT_TRUE(districtHeatingSteam.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtHeatingSteam.nominalCapacity());
 
+  EXPECT_EQ(m.alwaysOnContinuousSchedule(), districtHeatingSteam.capacityFractionSchedule());
   ScheduleConstant scheduleConstant(m);
-  scheduleConstant.setValue(0.5);
   EXPECT_TRUE(districtHeatingSteam.setCapacityFractionSchedule(scheduleConstant));
-
-  ASSERT_TRUE(districtHeatingSteam.capacityFractionSchedule());
-  EXPECT_EQ(scheduleConstant, districtHeatingSteam.capacityFractionSchedule().get());
-
-  districtHeatingSteam.resetCapacityFractionSchedule();
-  EXPECT_FALSE(districtHeatingSteam.capacityFractionSchedule());
+  EXPECT_EQ(scheduleConstant, districtHeatingSteam.capacityFractionSchedule());
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node
@@ -91,26 +85,6 @@ TEST_F(ModelFixture, DistrictHeatingSteam_connections) {
 
   //it should not connect to an airloop
   ASSERT_FALSE(districtHeatingSteam.addToNode(airOutletNode));
-}
-
-//test setting and getting the nominal capacity
-TEST_F(ModelFixture, DistrictHeatingSteam_NominalCapacity) {
-
-  Model m;
-  DistrictHeatingSteam districtHeatingSteam(m);
-
-  //test setting and getting the field with a double
-  double testValue(1);
-
-  districtHeatingSteam.setNominalCapacity(testValue);
-
-  auto capacity = districtHeatingSteam.nominalCapacity();
-  ASSERT_TRUE(capacity);
-  ASSERT_EQ(1, capacity.get());
-
-  EXPECT_FALSE(districtHeatingSteam.isNominalCapacityAutosized());
-  districtHeatingSteam.autosizeNominalCapacity();
-  EXPECT_TRUE(districtHeatingSteam.isNominalCapacityAutosized());
 }
 
 //test cloning the object

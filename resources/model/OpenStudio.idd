@@ -16774,6 +16774,7 @@ OS:DistrictCooling,
        \required-field
   A5 ; \field Capacity Fraction Schedule
        \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \required-field
        \type object-list
        \object-list ScheduleNames
 
@@ -16800,6 +16801,7 @@ OS:DistrictHeating:Water,
        \required-field
   A5 ; \field Capacity Fraction Schedule
        \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \required-field
        \type object-list
        \object-list ScheduleNames
 
@@ -16826,6 +16828,7 @@ OS:DistrictHeating:Steam,
        \required-field
   A5 ; \field Capacity Fraction Schedule
        \note Schedule values are multiplied by Nominal Capacity for current capacity
+       \required-field
        \type object-list
        \object-list ScheduleNames
 
