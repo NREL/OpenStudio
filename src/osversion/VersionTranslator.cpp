@@ -8495,23 +8495,13 @@ namespace osversion {
           ss << object;
         }
 
-/*       } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage")
-                 || (iddname == "OS:Coil:Heating:Gas:MultiStage:StageData") || (iddname == "OS:Coil:Heating:Desuperheater")) {
-
-        // Change Parasitic Electric Load to On Cycle Parasitic Electric Load
-        // Change Parasitic Gas Load to Off Cycle Parasitic Gas Load
-
-        auto iddObject = idd_3_7_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
-
-        for (size_t i = 0; i < object.numFields(); ++i) {
-          if ((value = object.getString(i))) {
-            newObject.setString(i, value.get());
-          }
-        }
-
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject; */
+//    } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage")
+//               || (iddname == "OS:Coil:Heating:Gas:MultiStage:StageData") || (iddname == "OS:Coil:Heating:Desuperheater")) {
+//
+//      // No-op: only field name changes:
+//      // * Change Parasitic Electric Load => On Cycle Parasitic Electric Load
+//      // * Change Parasitic Gas Load => Off Cycle Parasitic Gas Load
+//      ss << object;
 
         // No-op
       } else {
