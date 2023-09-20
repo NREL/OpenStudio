@@ -3620,4 +3620,43 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_DistrictHeating) {
   ASSERT_TRUE(dh.getTarget(3));
   EXPECT_EQ("DH Outlet", dh.getTarget(3)->getTarget(OS_ConnectionFields::TargetObject)->nameString());
   EXPECT_EQ(1000.0, dh.getDouble(4).get());
+
+  EXPECT_EQ("Always On Continuous", dh.getTarget(5)->nameString());
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_DistrictObjects_CapacityFracSch) {
+  const std::array<openstudio::path, 2> osmPaths{
+    resourcesPath() / toPath("osversion/3_7_0/test_vt_DistrictObjects_CapacityFracSch_Create.osm"),
+    resourcesPath() / toPath("osversion/3_7_0/test_vt_DistrictObjects_CapacityFracSch_Get.osm"),
+  };
+
+  for (const auto& osmPath : osmPaths) {
+    osversion::VersionTranslator vt;
+    boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+    ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+    openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+    model_->save(outPath, true);
+
+    EXPECT_EQ(1, model_->getObjectsByType("OS:Schedule:Constant").size());
+    EXPECT_EQ(1, model_->getObjectsByType("OS:ScheduleTypeLimits").size());
+    {
+      std::vector<WorkspaceObject> dhs = model_->getObjectsByType("OS:DistrictHeating:Water");
+      ASSERT_EQ(1, dhs.size());
+      const auto& dh = dhs.front();
+
+      EXPECT_EQ(1000.0, dh.getDouble(4).get());
+      ASSERT_TRUE(dh.getTarget(5));
+      EXPECT_EQ("Always On Continuous", dh.getTarget(5)->nameString());
+    }
+    {
+      std::vector<WorkspaceObject> dcs = model_->getObjectsByType("OS:DistrictCooling");
+      ASSERT_EQ(1, dcs.size());
+      const auto& dc = dcs.front();
+
+      EXPECT_EQ(1000.0, dc.getDouble(4).get());
+      ASSERT_TRUE(dc.getTarget(5));
+      EXPECT_EQ("Always On Continuous", dc.getTarget(5)->nameString());
+    }
+  }
 }
