@@ -8332,10 +8332,6 @@ namespace osversion {
           m_new.emplace_back(std::move(plfCurve));
         }
 
-      } else if (iddname == "OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit") {
-
-        ss << object;
-
       } else if (iddname == "OS:Boiler:HotWater") {
 
         // 1 Field has been added from 3.6.1 to 3.7.0:
@@ -8498,6 +8494,14 @@ namespace osversion {
           // No-op
           ss << object;
         }
+
+//    } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage")
+//               || (iddname == "OS:Coil:Heating:Gas:MultiStage:StageData") || (iddname == "OS:Coil:Heating:Desuperheater")) {
+//
+//      // No-op: only field name changes:
+//      // * Change Parasitic Electric Load => On Cycle Parasitic Electric Load
+//      // * Change Parasitic Gas Load => Off Cycle Parasitic Gas Load
+//      ss << object;
 
         // No-op
       } else {

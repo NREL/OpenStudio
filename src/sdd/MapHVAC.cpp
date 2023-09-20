@@ -2040,7 +2040,7 @@ namespace sdd {
       boost::optional<double> _furnPilotFuelInp = lexicalCastToDouble(furnPilotFuelInpElement);
       if (_furnPilotFuelInp) {
         double value = unitToUnit(_furnPilotFuelInp.get(), "Btu/h", "W").get();
-        coil.setParasiticGasLoad(value);
+        coil.setOffCycleParasiticGasLoad(value);
       }
 
       result = coil;
