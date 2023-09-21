@@ -7828,6 +7828,9 @@ namespace osversion {
           newObject.setString(noCoolHeatSAFMethodIndex, "None");
         } else if (!noCoolHeatSAFMethod) {
 
+          // Blank is equivalent to None here, no question
+          newObject.setString(noCoolHeatSAFMethodIndex, "None");
+#if 0
           // * 29 - Supply Air Flow Rate When No Cooling or Heating is Required
           // * 30 - Supply Air Flow Rate Per Floor Area When No Cooling or Heating is Required
           // * 31 - Fraction of Autosized Design Cooling Supply Air Flow Rate When No Cooling or Heating is Required
@@ -7850,6 +7853,7 @@ namespace osversion {
                                 "Defaulting to None");
             newObject.setString(noCoolHeatSAFMethodIndex, "None");
           }
+#endif
         } else {
           std::string noCoolHeatSAFMethodUC = ascii_to_upper_copy(*noCoolHeatSAFMethod);
           auto it = std::find_if(noCoolHeatSAFMethodChoicesUC.cbegin(), noCoolHeatSAFMethodChoicesUC.cend(),
