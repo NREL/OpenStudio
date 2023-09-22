@@ -2690,8 +2690,6 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_Incorrec
   // We respect the SAF method choice, and we set the corresponding flow field field to zero
   // =====================================================================================================
 
-  constexpr double ZERO = 0.0;
-
   for (const auto& unitary : unitarys) {
 
     const bool hasHeatingCoil = !unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::HeatingCoilName);
@@ -2700,7 +2698,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_Incorrec
     if (hasCoolingCoil) {
       EXPECT_EQ("FractionOfAutosizedCoolingValue",
                 unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
-      EXPECT_EQ(ZERO, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate).get());
+      EXPECT_EQ(0.0, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate).get());
     } else {
       EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
       EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate));
@@ -2711,7 +2709,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_Incorrec
 
     if (hasHeatingCoil) {
       EXPECT_EQ("FlowPerFloorArea", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
-      EXPECT_EQ(ZERO, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation).get());
+      EXPECT_EQ(0.0, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation).get());
     } else {
       EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
       EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation));
@@ -2725,10 +2723,10 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_Incorrec
       EXPECT_EQ("FlowPerCoolingCapacity",
                 unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired).get());
       EXPECT_EQ(
-        ZERO, unitary
-                .getDouble(
-                  OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired)
-                .get());
+        0.0, unitary
+               .getDouble(
+                 OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired)
+               .get());
     } else {
       EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired).get());
       EXPECT_TRUE(unitary.isEmpty(
