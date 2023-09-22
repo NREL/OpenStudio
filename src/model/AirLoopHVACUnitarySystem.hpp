@@ -9,6 +9,8 @@
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -106,7 +108,7 @@ namespace model {
     boost::optional<HVACComponent> supplementalHeatingCoil() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate Method" **/
-    boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation() const;
+    std::string supplyAirFlowRateMethodDuringCoolingOperation() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
     boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
@@ -123,7 +125,7 @@ namespace model {
     boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate Method" **/
-    boost::optional<std::string> supplyAirFlowRateMethodDuringHeatingOperation() const;
+    std::string supplyAirFlowRateMethodDuringHeatingOperation() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
     boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
@@ -274,49 +276,37 @@ namespace model {
 
     void resetSupplementalHeatingCoil();
 
-    bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
-
-    void resetSupplyAirFlowRateMethodDuringCoolingOperation();
+    OS_DEPRECATED(3, 7, 0) bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateMethodDuringCoolingOperation();
 
     bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
-
-    void resetSupplyAirFlowRateDuringCoolingOperation();
-
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateDuringCoolingOperation();
     void autosizeSupplyAirFlowRateDuringCoolingOperation();
 
     bool setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(double supplyAirFlowRatePerFloorAreaDuringCoolingOperation);
-
-    void resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
 
     bool setFractionofAutosizedDesignCoolingSupplyAirFlowRate(double fractionofAutosizedDesignCoolingSupplyAirFlowRate);
-
-    void resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
+    OS_DEPRECATED(3, 7, 0) void resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
 
     bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation);
+    OS_DEPRECATED(3, 7, 0) void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
 
-    void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
-
-    bool setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation);
-
-    void resetSupplyAirFlowRateMethodDuringHeatingOperation();
+    OS_DEPRECATED(3, 7, 0) bool setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation);
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateMethodDuringHeatingOperation();
 
     bool setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation);
-
-    void resetSupplyAirFlowRateDuringHeatingOperation();
-
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateDuringHeatingOperation();
     void autosizeSupplyAirFlowRateDuringHeatingOperation();
 
     bool setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(double supplyAirFlowRatePerFloorAreaduringHeatingOperation);
-
-    void resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
 
     bool setFractionofAutosizedDesignHeatingSupplyAirFlowRate(double fractionofAutosizedDesignHeatingSupplyAirFlowRate);
-
-    void resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
+    OS_DEPRECATED(3, 7, 0) void resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
 
     bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation);
-
-    void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
+    OS_DEPRECATED(3, 7, 0) void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
 
     bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(const std::string& supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
 

@@ -115,27 +115,6 @@ bool get_field(const web::json::value& body, const std::string& field_name, cons
   return defaultValue;
 }
 
-namespace interrupthandler {
-  static std::condition_variable condition_;
-  static std::mutex mutex_;
-  void handleUserInterrupt(int signal) {
-    if (signal == SIGINT) {
-      fmt::print("SIGINT trapped ...\n");
-      condition_.notify_one();
-    }
-  }
-  void hookSIGINT() {
-    std::signal(SIGINT, handleUserInterrupt);
-  }
-
-  void waitForUserInterrupt() {
-    std::unique_lock<std::mutex> lock{mutex_};
-    condition_.wait(lock);
-    fmt::print("user has signaled to interrup program...\n");
-    lock.unlock();
-  }
-}  // namespace interrupthandler
-
 MeasureManager::MeasureManager(ScriptEngineInstance& t_rubyEngine, ScriptEngineInstance& t_pythonEngine)
   : rubyEngine(t_rubyEngine), pythonEngine(t_pythonEngine) {
   // rubyEngine->exec("puts 'Hello from ruby'");
@@ -416,7 +395,8 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
 
   auto getOrCreateModel = [this, &model_, &osmOrIdfPath]() -> openstudio::model::Model {
     if (model_) {
-      return model_->clone().cast<openstudio::model::Model>();
+      // model should already have been cloned in the endpoint, so no need to do it twice
+      return *model_;  // _->clone(true).cast<openstudio::model::Model>();
     } else if (!osmOrIdfPath.empty()) {
       // TODO: not sure we want to keep this here or not..
       if (auto osmInfo_ = getModel(osmOrIdfPath)) {
@@ -431,7 +411,7 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
 
   auto getOrCreateWorkspace = [this, &workspace_, &osmOrIdfPath]() -> openstudio::Workspace {
     if (workspace_) {
-      return workspace_->clone();
+      return *workspace_;  // ->clone(true);
     } else if (!osmOrIdfPath.empty()) {
       if (auto idfInfo_ = getIdf(osmOrIdfPath)) {
         return idfInfo_->workspace.clone();
@@ -616,11 +596,12 @@ void MeasureManagerServer::handle_get(web::http::http_request message) {
     result["status"] = "running";
     result["my_measures_dir"] = my_measures_dir.generic_string();
     message.reply(web::http::status_codes::OK, toWebJSON(result));
+    return;
   }
 
   // Cpprestsdk has it's own json implementation.....
   if (uri == "/internal_state") {
-    handle_request(message, web::json::value(), std::bind(&MeasureManagerServer::internal_state, this, std::placeholders::_1));  // NOLINT
+    handle_request(message, web::json::value(), &MeasureManagerServer::internal_state);
     return;
   }
 
@@ -631,63 +612,54 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
   const std::string uri = toString(web::http::uri::decode(message.relative_uri().path()));
 
   if (uri == "/reset") {
-    handle_request(message, web::json::value(), std::bind(&MeasureManagerServer::reset, this, std::placeholders::_1));  // NOLINT
+    handle_request(message, web::json::value(), &MeasureManagerServer::reset);
     return;
   }
 
   if (uri == "/set") {
     // curl -H "Content-Type: application/json" -X POST  --data '{"my_measures_dir": "/Users/julien/OpenStudio/Measures"}' http://localhost:8090/set
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::set, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then([this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::set); });
     return;
   }
 
   if (uri == "/download_bcl_measure") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::download_bcl_measure, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::download_bcl_measure); });
     return;
   }
 
   // TODO: for testing only, remove
   if (uri == "/get_model") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::get_model, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then([this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::get_model); });
     return;
   }
 
   if (uri == "/bcl_measures") {
-    handle_request(message, web::json::value(), std::bind(&MeasureManagerServer::bcl_measures, this, std::placeholders::_1));  // NOLINT
+    handle_request(message, web::json::value(), &MeasureManagerServer::bcl_measures);
     return;
   }
 
   if (uri == "/update_measures") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::update_measures, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::update_measures); });
     return;
   }
 
   if (uri == "/compute_arguments") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::compute_arguments, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::compute_arguments); });
     return;
   }
 
   if (uri == "/create_measure") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::create_measure, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::create_measure); });
     return;
   }
 
   if (uri == "/duplicate_measure") {
-    message.extract_json().then([this, message](const web::json::value& body) {
-      handle_request(message, body, std::bind(&MeasureManagerServer::duplicate_measure, this, std::placeholders::_1));  // NOLINT
-    });
+    message.extract_json().then(
+      [this, message](const web::json::value& body) { handle_request(message, body, &MeasureManagerServer::duplicate_measure); });
     return;
   }
 
@@ -713,9 +685,16 @@ MeasureManagerServer::ResponseType MeasureManagerServer::reset([[maybe_unused]] 
 
 MeasureManagerServer::ResponseType MeasureManagerServer::set(const web::json::value& body) {
   if (auto p_ = get_field<openstudio::path>(body, "my_measures_dir")) {
+    if (!openstudio::filesystem::is_directory(*p_)) {
+      // Issue an error message
+      return {web::http::status_codes::BadRequest,
+              toWebJSON(fmt::format("Error, my_measures_dir '{}' is a not a valid directory", p_->generic_string()))};
+    }
     this->my_measures_dir = std::move(*p_);
+    return {web::http::status_codes::OK, web::json::value()};
+  } else {
+    return {web::http::status_codes::BadRequest, toWebJSON("Missing the my_measures_dir in the post data")};
   }
-  return {web::http::status_codes::OK, web::json::value()};
 }
 
 MeasureManagerServer::ResponseType MeasureManagerServer::download_bcl_measure(const web::json::value& body) {  // NOLINT
@@ -783,10 +762,23 @@ MeasureManagerServer::ResponseType MeasureManagerServer::update_measures(const w
 
 MeasureManagerServer::ResponseType MeasureManagerServer::compute_arguments(const web::json::value& body) {
   openstudio::path measureDir;
-  if (auto p_ = get_field<openstudio::path>(body, "measure_dir")) {
+  if (boost::optional<openstudio::path> p_ = get_field<openstudio::path>(body, "measure_dir")) {  // Not passing a default value => optional
     measureDir = std::move(*p_);
   } else {
     return {web::http::status_codes::BadRequest, toWebJSON("The 'measure_dir' (string) must be in the post data")};
+  }
+
+  // NOTE: this endpoint expects an OSM (even if it's an EnergyPlusMeasure), NOT an OSM or IDF like the CLI --compute_arguments flag does
+  const openstudio::path osmPath = get_field<openstudio::path>(body, "osm_path", {});  // defaults to an empty path
+  bool has_valid_osm_path = false;
+  if (!osmPath.empty()) {
+    if (osmPath.extension() != ".osm") {
+      auto msg =
+        fmt::format("For /compute_arguments endpoint, parameter 'osm_path' must always be an '.osm' file, not '{}'", osmPath.generic_string());
+      fmt::print(stderr, "{}\n", msg);
+      return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+    }
+    has_valid_osm_path = true;
   }
 
   const bool force_reload = get_field<bool>(body, "force_reload", false);
@@ -798,9 +790,22 @@ MeasureManagerServer::ResponseType MeasureManagerServer::compute_arguments(const
     return {web::http::status_codes::BadRequest, toWebJSON(msg)};
   }
 
-  const openstudio::path osmOrIdfPath = get_field<openstudio::path>(body, "osm_path", {});
+  boost::optional<model::Model> model_;
+  boost::optional<Workspace> workspace_;
 
-  const openstudio::measure::OSMeasureInfo info = m_measureManager.getMeasureInfo(measureDir, *measure_, osmOrIdfPath);
+  if (has_valid_osm_path) {
+    if (auto osmInfo_ = m_measureManager.getModel(osmPath, force_reload)) {
+      // Clone and keep handles
+      model_ = osmInfo_->model.clone(true).cast<openstudio::model::Model>();
+      workspace_ = osmInfo_->workspace.clone(true);
+    } else {
+      auto msg = fmt::format("Cannot load model at '{}'", osmPath.generic_string());
+      fmt::print(stderr, "{}\n", msg);
+      return {web::http::status_codes::BadRequest, toWebJSON(msg)};
+    }
+  }
+
+  const openstudio::measure::OSMeasureInfo info = m_measureManager.getMeasureInfo(measureDir, *measure_, osmPath, model_, workspace_);
   if (auto errorString_ = info.error()) {
     return {web::http::status_codes::OK, toWebJSON(*errorString_)};
   }
@@ -808,7 +813,7 @@ MeasureManagerServer::ResponseType MeasureManagerServer::compute_arguments(const
   // TODO: maybe I should write an OSMeasureInfo::toJSON() method, but that'd be duplicating the code in BCLMeasure (BCLXML to be exact).
   // So since the only thing that's different is the OSArgument (OSMeasureInfo) versus BCLMeasureArgument (BCLMeasure), we just override
   auto result = measure_->toJSON();
-  if (!osmOrIdfPath.empty()) {
+  if (has_valid_osm_path) {
     auto& arguments = result["arguments"];
     arguments.clear();
     for (const measure::OSArgument& argument : info.arguments()) {
@@ -976,12 +981,14 @@ MeasureManagerServer::ResponseType MeasureManagerServer::duplicate_measure(const
 }
 
 void MeasureManagerServer::handle_request(const web::http::http_request& message, const web::json::value& body,
-                                          const std::function<ResponseType(const web::json::value&)>& request_handler) {
-  std::packaged_task<ResponseType()> task([&body, &request_handler]() { return request_handler(body); });
-  auto future_result = task.get_future();
-  tasks.push_back(std::move(task));
+                                          memRequestHandlerFunPtr request_handler) {
+
+  std::packaged_task<ResponseType()> task([this, &body, &request_handler]() { return (this->*request_handler)(body); });
+
+  auto future_result = task.get_future();  // The task hasn't been started yet
+  tasks.push_back(std::move(task));        // It gets queued, the **main** thread will process it
   try {
-    auto result = future_result.get();
+    auto result = future_result.get();  // This block until it's been processed
     message.reply(result.status_code, result.body);
   } catch (const std::exception& e) {
     constexpr auto msg = "MeasureManager Server encountered an error:\n\"{}\"\n";

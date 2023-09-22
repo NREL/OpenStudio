@@ -127,12 +127,12 @@ ObjectSpace.garbage_collect
 # Measure should be at root level (not inside a module) so we can just get constants
 measurePath = '{}'
 prev = Object.constants
-puts "prev = #{{prev}}"
+# puts "prev = #{{prev}}"
 load measurePath # need load in case have seen this script before
 just_defined = Object.constants - prev
-puts "just_defined = #{{just_defined}}"
+# puts "just_defined = #{{just_defined}}"
 just_defined.select!{{|c| Object.const_get(c).ancestors.include?(OpenStudio::Measure::OSMeasure)}}
-puts "just_defined, filtered = #{{just_defined}}"
+# puts "just_defined, filtered = #{{just_defined}}"
 
 if just_defined.empty?
   raise "Unable to extract OpenStudio::Measure::OSMeasure object from " +

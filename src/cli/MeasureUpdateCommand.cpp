@@ -88,7 +88,7 @@ namespace cli {
                            ->excludes(updateOpt);
 
     auto* computeArgsOpt =
-      measureCommand->add_option("-a,--compute_arguments", opt->compute_arguments_model, "Specify the FILE path to the workflow to run")
+      measureCommand->add_option("-a,--compute_arguments", opt->compute_arguments_model, "Compute arguments for the given OSM or IDF")
         ->option_text("MODEL")
         ->needs(directoryPathOpt)
         ->excludes(updateOpt, updateAllOpt);
@@ -305,12 +305,9 @@ $ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
     // opt.debug_print();
 
     if (opt.server_port > 0) {
-      //auto g_httpHandler = std::make_unique<MeasureManagerServer>(opt.server_port, rubyEngine, pythonEngine);
-      //g_httpHandler->open();
-      //g_httpHandler->do_tasks_forever();
       MeasureManagerServer server(opt.server_port, rubyEngine, pythonEngine);
-      server.open();
-      server.do_tasks_forever();
+      server.open();              // This starts the cpprestsdk http listener, which processes tasks in subthreads
+      server.do_tasks_forever();  // This starts the event loop on the **main** thread to process the requests there and NOT in a subthread
 
       return;
     } else if (opt.update) {
@@ -340,7 +337,8 @@ $ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
         measureManager.getMeasure(subDirPath, true);
       }
     } else if (!opt.compute_arguments_model.empty()) {
-      // TODO: move into MeasureManager to avoid repeating the code shared with MeasureManagerServer
+      // NOTE: cannot move into MeasureManager to avoid repeating the code shared with MeasureManagerServer. This expects an OSM **or an IDF** in the
+      // case of an EnergyPlus Measure, whereas the server /compute_arguments endpoint always expects an OSM
       MeasureManager measureManager(rubyEngine, pythonEngine);
       auto measure_ = measureManager.getMeasure(opt.directoryPath, true);
       if (!measure_) {

@@ -7,9 +7,10 @@
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include "../../src/utilities/core/Filesystem.hpp"
 #include <fmt/format.h>
+
 #include <stdexcept>
 #include <string>
-#include <iostream>
+#include <type_traits>
 
 #ifdef __GNUC__
 #  pragma GCC diagnostic push
@@ -27,12 +28,31 @@
 namespace openstudio {
 
 void addToPythonPath(const openstudio::path& includePath) {
-  if (!includePath.empty()) {
-    PyObject* sys = PyImport_ImportModule("sys");
-    PyObject* sysPath = PyObject_GetAttrString(sys, "path");
-    // fmt::print("Prepending '{}' to sys.path\n", includePath);
-    PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.string().c_str());
-    PyList_Insert(sysPath, 0, unicodeIncludePath);
+
+  if (includePath.empty()) {
+    return;
+  }
+
+  // fmt::print("Prepending '{}' to sys.path\n", includePath);
+
+  PyObject* unicodeIncludePath = nullptr;
+  if constexpr (std::is_same_v<typename openstudio::path::value_type, wchar_t>) {
+    const std::wstring ws = includePath.generic_wstring();
+    unicodeIncludePath = PyUnicode_FromWideChar(ws.c_str(), static_cast<Py_ssize_t>(ws.size()));  // New reference
+  } else {
+    const std::string s = includePath.generic_string();
+    unicodeIncludePath = PyUnicode_FromString(s.c_str());  // New reference
+  }
+
+  if (unicodeIncludePath == nullptr) {
+    throw std::runtime_error(fmt::format("Unable to convert path '{}' for addition to sys.path in Python", includePath.generic_string()));
+  }
+
+  PyObject* sysPath = PySys_GetObject("path");  // Borrowed reference
+  int ret = PyList_Insert(sysPath, 0, unicodeIncludePath);
+  Py_DECREF(unicodeIncludePath);
+  if (ret != 0) {
+    throw std::runtime_error(fmt::format("Unable to add path '{}' to the sys.path in Python", includePath.generic_string()));
   }
 }
 
@@ -41,30 +61,56 @@ void PythonEngine::pyimport(const std::string& importName, const std::string& in
   PyImport_ImportModule(importName.c_str());
 }
 
-void PythonEngine::setupPythonPath(const std::vector<openstudio::path>& includeDirs, const openstudio::path& pythonHomeDir) {
-  for (const auto& includeDir : includeDirs) {
-    addToPythonPath(includeDir);
-  }
-  if (!pythonHomeDir.empty()) {
-    wchar_t* a = Py_DecodeLocale(pythonHomeDir.generic_string().c_str(), nullptr);
-    Py_SetPythonHome(a);
+void PythonEngine::setupPythonPath(const std::vector<openstudio::path>& includeDirs) {
+
+  // Iterate in reverse order since addToPythonPath always inserts at pos 0
+  // --python_path path1 --python_path path2  =>  includeDirs = ["path1", "path2"]
+  // std::ranges::reverse_view needs modern compilers
+  for (auto it = includeDirs.rbegin(); it != includeDirs.rend(); it++) {
+    addToPythonPath(*it);
   }
 }
 
 PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), program(Py_DecodeLocale(pythonProgramName, nullptr)) {
+  // TODO: modernize and use PyConfig (new in 3.8): https://docs.python.org/3/c-api/init_config.html
+
   // this frozen flag tells Python that the package and library have been frozen for embedding, so it shouldn't warn about missing prefixes
   Py_FrozenFlag = 1;
 
-  // Set the PYTHONPATH / PYTHONHOME to the E+ shipped standard library
-  // I think we need to set the python path before initializing the library
+  // Path to the E+ shipped standard library
   auto pathToPythonPackages = getEnergyPlusDirectory() / "python_standard_lib";
-  wchar_t* a = Py_DecodeLocale(pathToPythonPackages.make_preferred().string().c_str(), nullptr);
-  Py_SetPath(a);
-  Py_SetPythonHome(a);
+
+  // The PYTHONPATH / PYTHONHOME should be set before initializing Python
+  // If this Py_SetPath is called before Py_Initialize, then Py_GetPath won't attempt to compute a default search path
+  // The default search path is affected by the Py_SetPythonHome
+  // * if the user passed --python_home, we use that as the Python Home, and do not use Py_SetPath. But later we add the E+ standard_lib anyways
+  //   so it takes precedence (to limit incompatibility issues...)
+  // * If the user didn't pass it, we use Py_SetPath set to the E+ standard_lib
+
+  std::vector<std::string> args(argv, std::next(argv, static_cast<std::ptrdiff_t>(argc)));
+  bool pythonHomePassed = false;
+  auto it = std::find(args.cbegin(), args.cend(), "--python_home");
+  if (it != args.cend()) {
+    openstudio::path pythonHomeDir(*std::next(it));
+    wchar_t* h = Py_DecodeLocale(pythonHomeDir.make_preferred().string().c_str(), nullptr);
+    Py_SetPythonHome(h);
+    pythonHomePassed = true;
+  } else {
+    wchar_t* a = Py_DecodeLocale(pathToPythonPackages.make_preferred().string().c_str(), nullptr);
+    Py_SetPath(a);
+  }
 
   Py_SetProgramName(program);  // optional but recommended
 
   Py_Initialize();
+
+  if (pythonHomePassed) {
+    addToPythonPath(pathToPythonPackages);
+  }
+#if defined(__APPLE__) || defined(__linux___) || defined(__unix__)
+  addToPythonPath(pathToPythonPackages / "lib-dynload");
+#endif
+
   PyObject* m = PyImport_AddModule("__main__");
   if (m == nullptr) {
     throw std::runtime_error("Unable to add module __main__ for python script execution");

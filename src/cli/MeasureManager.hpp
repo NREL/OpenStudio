@@ -1,9 +1,9 @@
 #ifndef MEASUREMANAGER_H
 #define MEASUREMANAGER_H
 
-#include "../utilities/core/Path.hpp"
 #include "../utilities/core/Logger.hpp"
-#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/ThreadSafeDeque.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
 
 #include "../model/Model.hpp"
@@ -30,12 +30,6 @@ class Value;
 }
 
 namespace openstudio {
-
-namespace interrupthandler {
-  void hookSIGINT();
-
-  void waitForUserInterrupt();
-}  // namespace interrupthandler
 
 struct OSMInfo
 {
@@ -115,9 +109,6 @@ class MeasureManagerServer
     web::json::value body;
   };
 
-  void handle_request(const web::http::http_request& message, const web::json::value& body,
-                      const std::function<ResponseType(const web::json::value&)>& request_handler);
-
   // Request handlers
   ResponseType internal_state(const web::json::value& body);
   ResponseType reset(const web::json::value& body);
@@ -129,6 +120,11 @@ class MeasureManagerServer
   ResponseType create_measure(const web::json::value& body);
   ResponseType duplicate_measure(const web::json::value& body);
   ResponseType update_measures(const web::json::value& body);
+
+  // Generally request handler, to ensure the work is done on the main thread.
+  // See commit message at https://github.com/NREL/OpenStudio/commit/3c4a1c32fd096ca183c5668e2aafe99ac6564fb4#diff-9785c162dbb96e5fdead1b101c7a2d639460e0bdb0d95c8ff21be7a451a8f377
+  using memRequestHandlerFunPtr = ResponseType (MeasureManagerServer::*)(const web::json::value& body);
+  void handle_request(const web::http::http_request& message, const web::json::value& body, memRequestHandlerFunPtr request_handler);
 
   void handle_get(web::http::http_request message);
   void handle_post(web::http::http_request message);
