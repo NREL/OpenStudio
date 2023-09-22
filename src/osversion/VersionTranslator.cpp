@@ -7755,26 +7755,35 @@ namespace osversion {
             }
           }
           if (!found) {
-            LOG(Warn, "For " << object.briefDescription()
-                             << ", there is a cooling coil, but no Supply Air Flow Rate Method During Cooling Operation and no flow rate fields set. "
-                                "Defaulting to SupplyAirFlowRate with Autosize");
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', there is a cooling coil, but no Supply Air Flow Rate Method During Cooling Operation and no flow rate fields set. "
+                           "Defaulting to SupplyAirFlowRate with Autosize");
             newObject.setString(coolingSAFMethodIndex, "SupplyAirFlowRate");
             newObject.setString(coolingSAFMethodIndex + 1, "Autosize");
           }
         } else {
           std::string coolingSAFMethodUC = ascii_to_upper_copy(*coolingSAFMethod);
-          auto it = std::find_if(coolingSAFMethodChoicesUC.cbegin(), coolingSAFMethodChoicesUC.cend(),
-                                 [&coolingSAFMethodUC](auto& s) { return s == coolingSAFMethodUC; });
-          if (it == coolingSAFMethodChoicesUC.cend()) {
-            LOG(Error,
-                "For " << object.briefDescription() << ", Unrecognized Supply Air Flow Method Rate During Cooling Operation=" << *coolingSAFMethod);
+          if (coolingSAFMethodUC == "NONE") {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', Supply Air Flow Method Rate During Cooling Operation is 'None' but you have a Cooling Coil, consider changing it");
           } else {
-            auto index = std::distance(coolingSAFMethodChoicesUC.cbegin(), it);
-            if ((value == object.getString(index))) {
-              newObject.setString(index, *value);
+            auto it = std::find_if(coolingSAFMethodChoicesUC.cbegin(), coolingSAFMethodChoicesUC.cend(),
+                                   [&coolingSAFMethodUC](auto& s) { return s == coolingSAFMethodUC; });
+            if (it == coolingSAFMethodChoicesUC.cend()) {
+              LOG(Error, "For AirLoopHVACUnitarySystem '"
+                           << object.nameString() << "', Unrecognized Supply Air Flow Method Rate During Cooling Operation=" << *coolingSAFMethod);
             } else {
-              LOG(Error, "For " << object.briefDescription() << ", Supply Air Flow Method Rate During Cooling Operation is '" << *coolingSAFMethod
-                                << "' but associated field is empty");
+              const auto dist = std::distance(coolingSAFMethodChoicesUC.cbegin(), it);
+              const size_t index = coolingSAFMethodIndex + 1 + dist;
+              if ((value = object.getString(index))) {
+                newObject.setString(index, *value);
+              } else {
+                LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString() << "', Supply Air Flow Method Rate During Cooling Operation is '"
+                                                            << *coolingSAFMethod << "' but associated field is empty. Setting it to zero.");
+                newObject.setDouble(index, 0.0);
+              }
             }
           }
         }
@@ -7799,26 +7808,35 @@ namespace osversion {
             }
           }
           if (!found) {
-            LOG(Warn, "For " << object.briefDescription()
-                             << ", there is a heating coil, but no Supply Air Flow Rate Method During Heating Operation and no flow rate fields set. "
-                                "Defaulting to SupplyAirFlowRate with Autosize");
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', there is a heating coil, but no Supply Air Flow Rate Method During Heating Operation and no flow rate fields set. "
+                           "Defaulting to SupplyAirFlowRate with Autosize");
             newObject.setString(heatingSAFMethodIndex, "SupplyAirFlowRate");
             newObject.setString(heatingSAFMethodIndex + 1, "Autosize");
           }
         } else {
           std::string heatingSAFMethodUC = ascii_to_upper_copy(*heatingSAFMethod);
-          auto it = std::find_if(heatingSAFMethodChoicesUC.cbegin(), heatingSAFMethodChoicesUC.cend(),
-                                 [&heatingSAFMethodUC](auto& s) { return s == heatingSAFMethodUC; });
-          if (it == heatingSAFMethodChoicesUC.cend()) {
-            LOG(Error,
-                "For " << object.briefDescription() << ", Unrecognized Supply Air Flow Method Rate During Heating Operation=" << *heatingSAFMethod);
+          if (heatingSAFMethodUC == "NONE") {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', Supply Air Flow Method Rate During Heating Operation is 'None' but you have a Heating coil, consider changing it");
           } else {
-            auto index = std::distance(heatingSAFMethodChoicesUC.cbegin(), it);
-            if ((value == object.getString(index))) {
-              newObject.setString(index, *value);
+            auto it = std::find_if(heatingSAFMethodChoicesUC.cbegin(), heatingSAFMethodChoicesUC.cend(),
+                                   [&heatingSAFMethodUC](auto& s) { return s == heatingSAFMethodUC; });
+            if (it == heatingSAFMethodChoicesUC.cend()) {
+              LOG(Error, "For AirLoopHVACUnitarySystem '"
+                           << object.nameString() << "', Unrecognized Supply Air Flow Method Rate During Heating Operation=" << *heatingSAFMethod);
             } else {
-              LOG(Error, "For " << object.briefDescription() << ", Supply Air Flow Method Rate During Heating Operation is '" << *heatingSAFMethod
-                                << "' but associated field is empty");
+              auto dist = std::distance(heatingSAFMethodChoicesUC.cbegin(), it);
+              const size_t index = heatingSAFMethodIndex + 1 + dist;
+              if ((value = object.getString(index))) {
+                newObject.setString(index, *value);
+              } else {
+                LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString() << "', Supply Air Flow Method Rate During Heating Operation is '"
+                                                            << *heatingSAFMethod << "' but associated field is empty. Setting it to zero.");
+                newObject.setDouble(index, 0.0);
+              }
             }
           }
         }
@@ -7848,7 +7866,7 @@ namespace osversion {
             }
           }
           if (!found) {
-            LOG(Warn, "For " << object.briefDescription()
+            LOG(Warn, "For AirLoopHVACUnitarySystem '" << object.nameString()
                              << ", there is no Supply Air Flow Rate Method When No Cooling or Heating is Required and no flow rate fields set. "
                                 "Defaulting to None");
             newObject.setString(noCoolHeatSAFMethodIndex, "None");
@@ -7856,18 +7874,23 @@ namespace osversion {
 #endif
         } else {
           std::string noCoolHeatSAFMethodUC = ascii_to_upper_copy(*noCoolHeatSAFMethod);
-          auto it = std::find_if(noCoolHeatSAFMethodChoicesUC.cbegin(), noCoolHeatSAFMethodChoicesUC.cend(),
-                                 [&noCoolHeatSAFMethodUC](auto& s) { return s == noCoolHeatSAFMethodUC; });
-          if (it == noCoolHeatSAFMethodChoicesUC.cend()) {
-            LOG(Error, "For " << object.briefDescription()
-                              << ", Unrecognized Supply Air Flow Rate Method When No Cooling or Heating is Required=" << *noCoolHeatSAFMethod);
-          } else {
-            auto index = std::distance(noCoolHeatSAFMethodChoicesUC.cbegin(), it);
-            if ((value == object.getString(index))) {
-              newObject.setString(index, *value);
+          if (noCoolHeatSAFMethodUC != "NONE") {
+            auto it = std::find_if(noCoolHeatSAFMethodChoicesUC.cbegin(), noCoolHeatSAFMethodChoicesUC.cend(),
+                                   [&noCoolHeatSAFMethodUC](auto& s) { return s == noCoolHeatSAFMethodUC; });
+            if (it == noCoolHeatSAFMethodChoicesUC.cend()) {
+              LOG(Error, "For AirLoopHVACUnitarySystem '"
+                           << object.nameString()
+                           << "', Unrecognized Supply Air Flow Rate Method When No Cooling or Heating is Required=" << *noCoolHeatSAFMethod);
             } else {
-              LOG(Error, "For " << object.briefDescription() << ", Supply Air Flow Rate Method When No Cooling or Heating is Required is '"
-                                << *noCoolHeatSAFMethod << "' but associated field is empty");
+              auto dist = std::distance(noCoolHeatSAFMethodChoicesUC.cbegin(), it);
+              const size_t index = noCoolHeatSAFMethodIndex + 1 + dist;
+              if ((value = object.getString(index))) {
+                newObject.setString(index, *value);
+              } else {
+                LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString()
+                                                            << "', Supply Air Flow Rate Method When No Cooling or Heating is Required is '"
+                                                            << *noCoolHeatSAFMethod << "' but associated field is empty");
+              }
             }
           }
         }
