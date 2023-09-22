@@ -1,5 +1,7 @@
 import openstudio
 
+assert openstudio.openStudioVersion() == "3.6.1"
+
 FIELD_IDENTIFIERS = [
     "CoolingSAFMethod",
     "CoolingSAFMethod_SAFlow",
