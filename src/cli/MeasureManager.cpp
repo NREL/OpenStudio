@@ -583,9 +583,6 @@ MeasureManagerServer::MeasureManagerServer(unsigned port, ScriptEngineInstance& 
   uri_builder.set_scheme(utility::conversions::to_string_t("http")).set_host(utility::conversions::to_string_t("0.0.0.0")).set_port(port);
 #endif
   auto builder_uri = uri_builder.to_uri();
-  // fmt::print("builder_uri: {} {} {} {}\n", web::http::uri::decode(builder_uri.scheme()), web::http::uri::decode(builder_uri.host()),
-  //            builder_uri.port(), web::http::uri::decode(builder_uri.path()));
-  fmt::print("Serving on: {}\n", m_url);
 
   m_listener = web::http::experimental::listener::http_listener(builder_uri);
 
@@ -994,6 +991,9 @@ void MeasureManagerServer::handle_request(const web::http::http_request& message
 }
 
 void MeasureManagerServer::do_tasks_forever() {
+  fmt::print("MeasureManager Ready");
+  fmt::print("Accepting requests on: {}\n", m_url);
+  std::cout << std::flush;
   while (true) {
     auto task = tasks.wait_for_one();
     task();
