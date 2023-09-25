@@ -377,7 +377,7 @@ namespace model {
     }
 
     std::string ControllerOutdoorAir_Impl::economizerOperationStaging() const {
-      return getString(openstudio::OS_Controller_OutdoorAirFields::EconomizerOperationStaging);
+      return getString(openstudio::OS_Controller_OutdoorAirFields::EconomizerOperationStaging).get();
     }
 
     bool ControllerOutdoorAir_Impl::setEconomizerOperationStaging(const std::string& v) {
