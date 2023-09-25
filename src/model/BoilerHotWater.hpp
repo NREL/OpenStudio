@@ -95,6 +95,8 @@ namespace model {
 
     std::string endUseSubcategory() const;
 
+    double offCycleParasiticFuelLoad() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -156,6 +158,8 @@ namespace model {
     boost::optional<double> autosizedDesignWaterFlowRate() const;
 
     bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+    bool setOffCycleParasiticFuelLoad(double offCycleParasiticFuelLoad);
 
     //@}
    protected:

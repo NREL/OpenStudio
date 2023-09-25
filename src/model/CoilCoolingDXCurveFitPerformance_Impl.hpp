@@ -12,9 +12,10 @@
 namespace openstudio {
 namespace model {
 
-  class Schedule;
   class CoilCoolingDX;
   class CoilCoolingDXCurveFitOperatingMode;
+  class Curve;
+  class Schedule;
 
   namespace detail {
 
@@ -56,6 +57,8 @@ namespace model {
 
       double crankcaseHeaterCapacity() const;
 
+      boost::optional<Curve> crankcaseHeaterCapacityFunctionofTemperatureCurve() const;
+
       double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
       double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
@@ -85,6 +88,9 @@ namespace model {
       //@{
 
       bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+
+      bool setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve);
+      void resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
 
       bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 

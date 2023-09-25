@@ -49,6 +49,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   EXPECT_TRUE(plhp_clg.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
   CurveQuadratic curve3(m);
   EXPECT_TRUE(plhp_clg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
+  EXPECT_TRUE(plhp_clg.setControlType("Setpoint"));
+  EXPECT_TRUE(plhp_clg.setFlowMode("VariableSpeedPumping"));
+  EXPECT_TRUE(plhp_clg.setMinimumPartLoadRatio(6.0));
+  EXPECT_TRUE(plhp_clg.setMinimumSourceInletTemperature(7.0));
+  EXPECT_TRUE(plhp_clg.setMaximumSourceInletTemperature(8.0));
+  CurveQuadratic curve4(m);
+  EXPECT_TRUE(plhp_clg.setMinimumSupplyWaterTemperatureCurve(curve4));
+  CurveQuadratic curve5(m);
+  EXPECT_TRUE(plhp_clg.setMaximumSupplyWaterTemperatureCurve(curve5));
 
   HeatPumpPlantLoopEIRHeating plhp_htg(m);
   EXPECT_TRUE(plhp_htg.setLoadSideReferenceFlowRate(1.0));
@@ -56,12 +65,36 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   EXPECT_TRUE(plhp_htg.setReferenceCapacity(3.0));
   EXPECT_TRUE(plhp_htg.setReferenceCoefficientofPerformance(4.0));
   EXPECT_TRUE(plhp_htg.setSizingFactor(5.0));
-  CurveBiquadratic curve4(m);
-  EXPECT_TRUE(plhp_htg.setCapacityModifierFunctionofTemperatureCurve(curve4));
-  CurveBiquadratic curve5(m);
-  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve5));
-  CurveQuadratic curve6(m);
-  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve6));
+  CurveBiquadratic curve6(m);
+  EXPECT_TRUE(plhp_htg.setCapacityModifierFunctionofTemperatureCurve(curve6));
+  CurveBiquadratic curve7(m);
+  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve7));
+  CurveQuadratic curve8(m);
+  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve8));
+  EXPECT_TRUE(plhp_htg.setHeatingToCoolingCapacitySizingRatio(6.0));
+  EXPECT_TRUE(plhp_htg.setHeatPumpSizingMethod("HeatingCapacity"));
+  EXPECT_TRUE(plhp_htg.setControlType("Setpoint"));
+  EXPECT_TRUE(plhp_htg.setFlowMode("VariableSpeedPumping"));
+  EXPECT_TRUE(plhp_htg.setMinimumPartLoadRatio(7.0));
+  EXPECT_TRUE(plhp_htg.setMinimumSourceInletTemperature(8.0));
+  EXPECT_TRUE(plhp_htg.setMaximumSourceInletTemperature(9.0));
+  CurveQuadratic curve9(m);
+  EXPECT_TRUE(plhp_htg.setMinimumSupplyWaterTemperatureCurve(curve9));
+  CurveQuadratic curve10(m);
+  EXPECT_TRUE(plhp_htg.setMaximumSupplyWaterTemperatureCurve(curve10));
+  CurveQuadratic curve11(m);
+  EXPECT_TRUE(plhp_htg.setDryOutdoorCorrectionFactorCurve(curve11));
+  EXPECT_TRUE(plhp_htg.setMaximumOutdoorDryBulbTemperatureForDefrostOperation(10.0));
+  EXPECT_TRUE(plhp_htg.setHeatPumpDefrostControl("Timed"));
+  EXPECT_TRUE(plhp_htg.setHeatPumpDefrostTimePeriodFraction(11.0));
+  CurveBiquadratic curve12(m);
+  EXPECT_TRUE(plhp_htg.setDefrostEnergyInputRatioFunctionofTemperatureCurve(curve12));
+  CurveQuadratic curve13(m);
+  EXPECT_TRUE(plhp_htg.setTimedEmpiricalDefrostFrequencyCurve(curve13));
+  CurveQuadratic curve14(m);
+  EXPECT_TRUE(plhp_htg.setTimedEmpiricalDefrostHeatLoadPenaltyCurve(curve14));
+  CurveQuadratic curve15(m);
+  EXPECT_TRUE(plhp_htg.setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(curve15));
 
   EXPECT_TRUE(plhp_clg.setCompanionHeatingHeatPump(plhp_htg));
   EXPECT_TRUE(plhp_htg.setCompanionCoolingHeatPump(plhp_clg));
@@ -107,6 +140,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
       idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName));
     EXPECT_TRUE(woCurve3);
     EXPECT_EQ(woCurve3->iddObject().type(), IddObjectType::Curve_Quadratic);
+    EXPECT_EQ("Setpoint", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::ControlType, false).get());
+    EXPECT_EQ("VariableSpeedPumping", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::FlowMode, false).get());
+    EXPECT_EQ(6.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MinimumPartLoadRatio, false).get());
+    EXPECT_EQ(7.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSourceInletTemperature, false).get());
+    EXPECT_EQ(8.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSourceInletTemperature, false).get());
+    boost::optional<WorkspaceObject> woCurve4(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::MinimumSupplyWaterTemperatureCurveName));
+    EXPECT_TRUE(woCurve4);
+    boost::optional<WorkspaceObject> woCurve5(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurveName));
+    EXPECT_TRUE(woCurve5);
   }
 
   {
@@ -138,6 +180,32 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
       idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName));
     EXPECT_TRUE(woCurve3);
     EXPECT_EQ(woCurve3->iddObject().type(), IddObjectType::Curve_Quadratic);
+    EXPECT_EQ(6.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatingToCoolingCapacitySizingRatio, false).get());
+    EXPECT_EQ("HeatingCapacity", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpSizingMethod, false).get());
+    EXPECT_EQ("Setpoint", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::ControlType, false).get());
+    EXPECT_EQ("VariableSpeedPumping", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::FlowMode, false).get());
+    EXPECT_EQ(7.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MinimumPartLoadRatio, false).get());
+    EXPECT_EQ(8.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MinimumSourceInletTemperature, false).get());
+    EXPECT_EQ(9.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumSourceInletTemperature, false).get());
+    boost::optional<WorkspaceObject> woCurve4(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::MinimumSupplyWaterTemperatureCurveName));
+    EXPECT_TRUE(woCurve4);
+    boost::optional<WorkspaceObject> woCurve5(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::MaximumSupplyWaterTemperatureCurveName));
+    EXPECT_TRUE(woCurve5);
+    boost::optional<WorkspaceObject> woCurve6(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::DryOutdoorCorrectionFactorCurveName));
+    EXPECT_TRUE(woCurve6);
+    EXPECT_EQ(10.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumOutdoorDryBulbTemperatureForDefrostOperation, false).get());
+    EXPECT_EQ("Timed", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostControl, false).get());
+    EXPECT_EQ(11.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostTimePeriodFraction, false).get());
+    boost::optional<WorkspaceObject> woCurve7(
+      idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName));
+    EXPECT_TRUE(woCurve7);
+    boost::optional<WorkspaceObject> woCurve8(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostFrequencyCurveName));
+    EXPECT_TRUE(woCurve8);
+    boost::optional<WorkspaceObject> woCurve9(idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatLoadPenaltyCurveName));
+    EXPECT_TRUE(woCurve9);
+    boost::optional<WorkspaceObject> woCurve10(
+      idf_hc.getTarget(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName));
+    EXPECT_TRUE(woCurve10);
   }
 }
 

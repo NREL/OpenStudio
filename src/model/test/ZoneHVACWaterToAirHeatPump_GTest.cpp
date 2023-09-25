@@ -222,34 +222,6 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_SetGetFields) {
   testHP.autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
   EXPECT_TRUE(testHP.isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized());
 
-  //test heat pump maximum cycling rate
-  EXPECT_TRUE(testHP.setMaximumCyclingRate(5.0));
-  boost::optional<double> value7 = testHP.maximumCyclingRate();
-  EXPECT_EQ(*value7, 5.0);
-  testHP.resetMaximumCyclingRate();
-  EXPECT_TRUE(testHP.isMaximumCyclingRateDefaulted());
-
-  //test heat pump time constant
-  EXPECT_TRUE(testHP.setHeatPumpTimeConstant(60));
-  boost::optional<double> value8 = testHP.heatPumpTimeConstant();
-  EXPECT_EQ(*value8, 60);
-  testHP.resetHeatPumpTimeConstant();
-  EXPECT_TRUE(testHP.isHeatPumpTimeConstantDefaulted());
-
-  //test heat pump fraction of On cycle power use
-  EXPECT_TRUE(testHP.setFractionofOnCyclePowerUse(0.02));
-  boost::optional<double> value9 = testHP.fractionofOnCyclePowerUse();
-  EXPECT_EQ(*value9, 0.02);
-  testHP.resetFractionofOnCyclePowerUse();
-  EXPECT_TRUE(testHP.isFractionofOnCyclePowerUseDefaulted());
-
-  //test heat pump fan delay time
-  EXPECT_TRUE(testHP.setHeatPumpFanDelayTime(60));
-  boost::optional<double> value10 = testHP.heatPumpFanDelayTime();
-  EXPECT_EQ(*value10, 60);
-  testHP.resetHeatPumpFanDelayTime();
-  EXPECT_TRUE(testHP.isHeatPumpFanDelayTimeDefaulted());
-
   //test heat pump maximum supply air temperature from supplemental heater
   EXPECT_TRUE(testHP.setMaximumSupplyAirTemperaturefromSupplementalHeater(90));
   boost::optional<double> value11 = testHP.maximumSupplyAirTemperaturefromSupplementalHeater();

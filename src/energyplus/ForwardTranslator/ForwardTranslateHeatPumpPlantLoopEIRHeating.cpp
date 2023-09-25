@@ -136,6 +136,69 @@ namespace energyplus {
       }
     }
 
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatingToCoolingCapacitySizingRatio, modelObject.heatingToCoolingCapacitySizingRatio());
+
+    idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpSizingMethod, modelObject.heatPumpSizingMethod());
+
+    idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ControlType, modelObject.controlType());
+
+    idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::FlowMode, modelObject.flowMode());
+
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::MinimumPartLoadRatio, modelObject.minimumPartLoadRatio());
+
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::MinimumSourceInletTemperature, modelObject.minimumSourceInletTemperature());
+
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumSourceInletTemperature, modelObject.maximumSourceInletTemperature());
+
+    if (boost::optional<model::Curve> curve = modelObject.minimumSupplyWaterTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::MinimumSupplyWaterTemperatureCurveName, _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.maximumSupplyWaterTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::MaximumSupplyWaterTemperatureCurveName, _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.dryOutdoorCorrectionFactorCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::DryOutdoorCorrectionFactorCurveName, _curve->name().get());
+      }
+    }
+
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::MaximumOutdoorDryBulbTemperatureForDefrostOperation,
+                        modelObject.maximumOutdoorDryBulbTemperatureForDefrostOperation());
+
+    idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostControl, modelObject.heatPumpDefrostControl());
+
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatPumpDefrostTimePeriodFraction, modelObject.heatPumpDefrostTimePeriodFraction());
+
+    if (boost::optional<model::Curve> curve = modelObject.defrostEnergyInputRatioFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.timedEmpiricalDefrostFrequencyCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostFrequencyCurveName, _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.timedEmpiricalDefrostHeatLoadPenaltyCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatLoadPenaltyCurveName, _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.timedEmpiricalDefrostHeatInputEnergyFractionCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName, _curve->name().get());
+      }
+    }
+
     return idfObject;
   }
 

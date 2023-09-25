@@ -88,6 +88,10 @@ namespace model {
 
       double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity() const;
 
+      double maximumCyclingRate() const;
+      double latentCapacityTimeConstant() const;
+      double fanDelayTime() const;
+
       bool useHotGasReheat() const;
 
       Curve energyPartLoadFractionCurve() const;
@@ -125,6 +129,10 @@ namespace model {
 
       bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(
         double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
+
+      bool setMaximumCyclingRate(double maximumCyclingRate);
+      bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
+      bool setFanDelayTime(double fanDelayTime);
 
       bool setUseHotGasReheat(bool useHotGasReheat);
 

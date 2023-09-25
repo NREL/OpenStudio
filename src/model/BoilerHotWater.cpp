@@ -190,7 +190,7 @@ namespace model {
     }
 
     boost::optional<double> BoilerHotWater_Impl::parasiticElectricLoad() const {
-      return getDouble(OS_Boiler_HotWaterFields::ParasiticElectricLoad, true);
+      return getDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, true);
     }
 
     double BoilerHotWater_Impl::sizingFactor() const {
@@ -201,6 +201,12 @@ namespace model {
 
     bool BoilerHotWater_Impl::isSizingFactorDefaulted() const {
       return isEmpty(OS_Boiler_HotWaterFields::SizingFactor);
+    }
+
+    double BoilerHotWater_Impl::offCycleParasiticFuelLoad() const {
+      boost::optional<double> value = getDouble(OS_Boiler_HotWaterFields::OffCycleParasiticFuelLoad, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool BoilerHotWater_Impl::setFuelType(const std::string& fuelType) {
@@ -344,15 +350,15 @@ namespace model {
     bool BoilerHotWater_Impl::setParasiticElectricLoad(boost::optional<double> parasiticElectricLoad) {
       bool result = false;
       if (parasiticElectricLoad) {
-        result = setDouble(OS_Boiler_HotWaterFields::ParasiticElectricLoad, parasiticElectricLoad.get());
+        result = setDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, parasiticElectricLoad.get());
       } else {
-        result = setString(OS_Boiler_HotWaterFields::ParasiticElectricLoad, "");
+        result = setString(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, "");
       }
       return result;
     }
 
     void BoilerHotWater_Impl::resetParasiticElectricLoad() {
-      bool result = setString(OS_Boiler_HotWaterFields::ParasiticElectricLoad, "");
+      bool result = setString(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, "");
       OS_ASSERT(result);
     }
 
@@ -364,6 +370,11 @@ namespace model {
     void BoilerHotWater_Impl::resetSizingFactor() {
       bool result = setString(OS_Boiler_HotWaterFields::SizingFactor, "");
       OS_ASSERT(result);
+    }
+
+    bool BoilerHotWater_Impl::setOffCycleParasiticFuelLoad(double offCycleParasiticFuelLoad) {
+      bool result = setDouble(OS_Boiler_HotWaterFields::OffCycleParasiticFuelLoad, offCycleParasiticFuelLoad);
+      return result;
     }
 
     bool BoilerHotWater_Impl::addToNode(Node& node) {
@@ -472,6 +483,8 @@ namespace model {
     setSizingFactor(1.0);
 
     setEndUseSubcategory("General");
+
+    setOffCycleParasiticFuelLoad(0.0);
   }
 
   IddObjectType BoilerHotWater::iddObjectType() {
@@ -574,6 +587,10 @@ namespace model {
 
   bool BoilerHotWater::isSizingFactorDefaulted() const {
     return getImpl<detail::BoilerHotWater_Impl>()->isSizingFactorDefaulted();
+  }
+
+  double BoilerHotWater::offCycleParasiticFuelLoad() const {
+    return getImpl<detail::BoilerHotWater_Impl>()->offCycleParasiticFuelLoad();
   }
 
   bool BoilerHotWater::setFuelType(const std::string& fuelType) {
@@ -686,6 +703,10 @@ namespace model {
 
   bool BoilerHotWater::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::BoilerHotWater_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  }
+
+  bool BoilerHotWater::setOffCycleParasiticFuelLoad(double offCycleParasiticFuelLoad) {
+    return getImpl<detail::BoilerHotWater_Impl>()->setOffCycleParasiticFuelLoad(offCycleParasiticFuelLoad);
   }
 
   /// @cond

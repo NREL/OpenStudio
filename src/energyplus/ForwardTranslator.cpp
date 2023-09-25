@@ -1501,9 +1501,14 @@ namespace energyplus {
         retVal = translateDistrictCooling(districtCooling);
         break;
       }
-      case openstudio::IddObjectType::OS_DistrictHeating: {
-        auto districtHeating = modelObject.cast<DistrictHeating>();
-        retVal = translateDistrictHeating(districtHeating);
+      case openstudio::IddObjectType::OS_DistrictHeating_Water: {
+        auto districtHeating = modelObject.cast<DistrictHeatingWater>();
+        retVal = translateDistrictHeatingWater(districtHeating);
+        break;
+      }
+      case openstudio::IddObjectType::OS_DistrictHeating_Steam: {
+        auto districtHeatingSteam = modelObject.cast<DistrictHeatingSteam>();
+        retVal = translateDistrictHeatingSteam(districtHeatingSteam);
         break;
       }
       case openstudio::IddObjectType::OS_Duct: {
@@ -3495,8 +3500,12 @@ namespace energyplus {
       IddObjectType::OS_Curve_Triquadratic,
       IddObjectType::OS_Table_MultiVariableLookup,
       IddObjectType::OS_Table_Lookup,
-      IddObjectType::OS_DistrictCooling,
-      IddObjectType::OS_DistrictHeating,
+
+      // Should be on a PlantLoop to be translated
+      // IddObjectType::OS_DistrictCooling,
+      // IddObjectType::OS_DistrictHeating_Water,
+      // IddObjectType::OS_DistrictHeating_Steam,
+
       IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial,
 
       IddObjectType::OS_Node,

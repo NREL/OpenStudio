@@ -53,6 +53,10 @@ namespace model {
 
       double referenceUnitRatedAirFlowRate() const;
 
+      double ratedSupplyFanPowerPerVolumeFlowRate2017() const;
+
+      double ratedSupplyFanPowerPerVolumeFlowRate2023() const;
+
       Curve heatingCapacityFunctionofTemperatureCurve() const;
 
       Curve totalHeatingCapacityFunctionofAirFlowFractionCurve() const;
@@ -70,6 +74,10 @@ namespace model {
       bool setReferenceUnitGrossRatedHeatingCOP(double referenceUnitGrossRatedHeatingCOP);
 
       bool setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate);
+
+      bool setRatedSupplyFanPowerPerVolumeFlowRate2017(double ratedSupplyFanPowerPerVolumeFlowRate2017);
+
+      bool setRatedSupplyFanPowerPerVolumeFlowRate2023(double ratedSupplyFanPowerPerVolumeFlowRate2023);
 
       bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 

@@ -537,8 +537,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WaterHeaterMixed_Impl::setHeaterFuelType(const std::string& heaterFuelType) {
-      bool result = setString(OS_WaterHeater_MixedFields::HeaterFuelType, heaterFuelType);
+    bool WaterHeaterMixed_Impl::setHeaterFuelType(const FuelType& heaterFuelType) {
+      const bool result = setString(OS_WaterHeater_MixedFields::HeaterFuelType, heaterFuelType.valueDescription());
       return result;
     }
 
@@ -582,13 +582,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WaterHeaterMixed_Impl::setOffCycleParasiticFuelType(boost::optional<std::string> offCycleParasiticFuelType) {
-      bool result = false;
-      if (offCycleParasiticFuelType) {
-        result = setString(OS_WaterHeater_MixedFields::OffCycleParasiticFuelType, offCycleParasiticFuelType.get());
-      } else {
-        result = setString(OS_WaterHeater_MixedFields::OffCycleParasiticFuelType, "");
-      }
+    bool WaterHeaterMixed_Impl::setOffCycleParasiticFuelType(const FuelType& offCycleParasiticFuelType) {
+      const bool result = setString(OS_WaterHeater_MixedFields::OffCycleParasiticFuelType, offCycleParasiticFuelType.valueDescription());
       return result;
     }
 
@@ -617,13 +612,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WaterHeaterMixed_Impl::setOnCycleParasiticFuelType(boost::optional<std::string> onCycleParasiticFuelType) {
-      bool result = false;
-      if (onCycleParasiticFuelType) {
-        result = setString(OS_WaterHeater_MixedFields::OnCycleParasiticFuelType, onCycleParasiticFuelType.get());
-      } else {
-        result = setString(OS_WaterHeater_MixedFields::OnCycleParasiticFuelType, "");
-      }
+    bool WaterHeaterMixed_Impl::setOnCycleParasiticFuelType(const FuelType& onCycleParasiticFuelType) {
+      const bool result = setString(OS_WaterHeater_MixedFields::OnCycleParasiticFuelType, onCycleParasiticFuelType.valueDescription());
       return result;
     }
 
@@ -1467,12 +1457,12 @@ namespace model {
     setMaximumTemperatureLimit(82.22);
     setHeaterControlType("Cycle");
     setHeaterMaximumCapacity(845000);
-    setHeaterFuelType("NaturalGas");
+    setHeaterFuelType(FuelType::Gas);
     setHeaterThermalEfficiency(0.8);
     setOffCycleParasiticFuelConsumptionRate(20.0);
-    setOffCycleParasiticFuelType("NaturalGas");
+    setOffCycleParasiticFuelType(FuelType::Gas);
     setOffCycleParasiticHeatFractiontoTank(0.8);
-    setOnCycleParasiticFuelType("NaturalGas");
+    setOnCycleParasiticFuelType(FuelType::Gas);
     setOffCycleLossCoefficienttoAmbientTemperature(6.0);
     setOnCycleLossCoefficienttoAmbientTemperature(6.0);
     setUseSideEffectiveness(1.0);
@@ -1816,8 +1806,17 @@ namespace model {
     getImpl<detail::WaterHeaterMixed_Impl>()->resetHeaterIgnitionDelay();
   }
 
-  bool WaterHeaterMixed::setHeaterFuelType(const std::string& heaterFuelType) {
+  bool WaterHeaterMixed::setHeaterFuelType(const FuelType& heaterFuelType) {
     return getImpl<detail::WaterHeaterMixed_Impl>()->setHeaterFuelType(heaterFuelType);
+  }
+
+  bool WaterHeaterMixed::setHeaterFuelType(const std::string& heaterFuelType) {
+    try {
+      return setHeaterFuelType(FuelType{heaterFuelType});
+    } catch (std::runtime_error& e) {
+      LOG(Debug, e.what());
+      return false;
+    }
   }
 
   bool WaterHeaterMixed::setHeaterThermalEfficiency(double heaterThermalEfficiency) {
@@ -1844,8 +1843,17 @@ namespace model {
     getImpl<detail::WaterHeaterMixed_Impl>()->resetOffCycleParasiticFuelConsumptionRate();
   }
 
-  bool WaterHeaterMixed::setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType) {
+  bool WaterHeaterMixed::setOffCycleParasiticFuelType(const FuelType& offCycleParasiticFuelType) {
     return getImpl<detail::WaterHeaterMixed_Impl>()->setOffCycleParasiticFuelType(offCycleParasiticFuelType);
+  }
+
+  bool WaterHeaterMixed::setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType) {
+    try {
+      return setOffCycleParasiticFuelType(FuelType{offCycleParasiticFuelType});
+    } catch (std::runtime_error& e) {
+      LOG(Debug, e.what());
+      return false;
+    }
   }
 
   void WaterHeaterMixed::resetOffCycleParasiticFuelType() {
@@ -1868,8 +1876,17 @@ namespace model {
     getImpl<detail::WaterHeaterMixed_Impl>()->resetOnCycleParasiticFuelConsumptionRate();
   }
 
-  bool WaterHeaterMixed::setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType) {
+  bool WaterHeaterMixed::setOnCycleParasiticFuelType(const FuelType& onCycleParasiticFuelType) {
     return getImpl<detail::WaterHeaterMixed_Impl>()->setOnCycleParasiticFuelType(onCycleParasiticFuelType);
+  }
+
+  bool WaterHeaterMixed::setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType) {
+    try {
+      return setOnCycleParasiticFuelType(FuelType{onCycleParasiticFuelType});
+    } catch (std::runtime_error& e) {
+      LOG(Debug, e.what());
+      return false;
+    }
   }
 
   void WaterHeaterMixed::resetOnCycleParasiticFuelType() {

@@ -9,9 +9,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_EnvironmentalImpactFactors_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -43,8 +42,8 @@ namespace model {
       return EnvironmentalImpactFactors::iddObjectType();
     }
 
-    double EnvironmentalImpactFactors_Impl::districtHeatingEfficiency() const {
-      boost::optional<double> value = getDouble(OS_EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency, true);
+    double EnvironmentalImpactFactors_Impl::districtHeatingWaterEfficiency() const {
+      boost::optional<double> value = getDouble(OS_EnvironmentalImpactFactorsFields::DistrictHeatingWaterEfficiency, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -55,8 +54,8 @@ namespace model {
       return value.get();
     }
 
-    double EnvironmentalImpactFactors_Impl::steamConversionEfficiency() const {
-      boost::optional<double> value = getDouble(OS_EnvironmentalImpactFactorsFields::SteamConversionEfficiency, true);
+    double EnvironmentalImpactFactors_Impl::districtHeatingSteamConversionEfficiency() const {
+      boost::optional<double> value = getDouble(OS_EnvironmentalImpactFactorsFields::DistrictHeatingSteamConversionEfficiency, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -79,8 +78,8 @@ namespace model {
       return value.get();
     }
 
-    bool EnvironmentalImpactFactors_Impl::setDistrictHeatingEfficiency(double districtHeatingEfficiency) {
-      bool result = setDouble(OS_EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency, districtHeatingEfficiency);
+    bool EnvironmentalImpactFactors_Impl::setDistrictHeatingWaterEfficiency(double districtHeatingWaterEfficiency) {
+      bool result = setDouble(OS_EnvironmentalImpactFactorsFields::DistrictHeatingWaterEfficiency, districtHeatingWaterEfficiency);
       return result;
     }
 
@@ -89,8 +88,9 @@ namespace model {
       return result;
     }
 
-    bool EnvironmentalImpactFactors_Impl::setSteamConversionEfficiency(double steamConversionEfficiency) {
-      bool result = setDouble(OS_EnvironmentalImpactFactorsFields::SteamConversionEfficiency, steamConversionEfficiency);
+    bool EnvironmentalImpactFactors_Impl::setDistrictHeatingSteamConversionEfficiency(double districtHeatingSteamConversionEfficiency) {
+      bool result =
+        setDouble(OS_EnvironmentalImpactFactorsFields::DistrictHeatingSteamConversionEfficiency, districtHeatingSteamConversionEfficiency);
       return result;
     }
 
@@ -121,9 +121,9 @@ namespace model {
     OS_ASSERT(getImpl<detail::EnvironmentalImpactFactors_Impl>());
 
     // Defaults from E+ IDD, captured at v9.5.0
-    setDistrictHeatingEfficiency(0.3);
+    setDistrictHeatingWaterEfficiency(0.3);
     setDistrictCoolingCOP(3.0);
-    setSteamConversionEfficiency(0.25);
+    setDistrictHeatingSteamConversionEfficiency(0.25);
     setTotalCarbonEquivalentEmissionFactorFromN2O(80.7272);
     setTotalCarbonEquivalentEmissionFactorFromCH4(6.2727);
     setTotalCarbonEquivalentEmissionFactorFromCO2(0.2727);
@@ -133,16 +133,16 @@ namespace model {
     return {IddObjectType::OS_EnvironmentalImpactFactors};
   }
 
-  double EnvironmentalImpactFactors::districtHeatingEfficiency() const {
-    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->districtHeatingEfficiency();
+  double EnvironmentalImpactFactors::districtHeatingWaterEfficiency() const {
+    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->districtHeatingWaterEfficiency();
   }
 
   double EnvironmentalImpactFactors::districtCoolingCOP() const {
     return getImpl<detail::EnvironmentalImpactFactors_Impl>()->districtCoolingCOP();
   }
 
-  double EnvironmentalImpactFactors::steamConversionEfficiency() const {
-    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->steamConversionEfficiency();
+  double EnvironmentalImpactFactors::districtHeatingSteamConversionEfficiency() const {
+    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->districtHeatingSteamConversionEfficiency();
   }
 
   double EnvironmentalImpactFactors::totalCarbonEquivalentEmissionFactorFromN2O() const {
@@ -157,16 +157,16 @@ namespace model {
     return getImpl<detail::EnvironmentalImpactFactors_Impl>()->totalCarbonEquivalentEmissionFactorFromCO2();
   }
 
-  bool EnvironmentalImpactFactors::setDistrictHeatingEfficiency(double districtHeatingEfficiency) {
-    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->setDistrictHeatingEfficiency(districtHeatingEfficiency);
+  bool EnvironmentalImpactFactors::setDistrictHeatingWaterEfficiency(double districtHeatingWaterEfficiency) {
+    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->setDistrictHeatingWaterEfficiency(districtHeatingWaterEfficiency);
   }
 
   bool EnvironmentalImpactFactors::setDistrictCoolingCOP(double districtCoolingCOP) {
     return getImpl<detail::EnvironmentalImpactFactors_Impl>()->setDistrictCoolingCOP(districtCoolingCOP);
   }
 
-  bool EnvironmentalImpactFactors::setSteamConversionEfficiency(double steamConversionEfficiency) {
-    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->setSteamConversionEfficiency(steamConversionEfficiency);
+  bool EnvironmentalImpactFactors::setDistrictHeatingSteamConversionEfficiency(double districtHeatingSteamConversionEfficiency) {
+    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->setDistrictHeatingSteamConversionEfficiency(districtHeatingSteamConversionEfficiency);
   }
 
   bool EnvironmentalImpactFactors::setTotalCarbonEquivalentEmissionFactorFromN2O(double totalCarbonEquivalentEmissionFactorFromN2O) {
@@ -186,6 +186,28 @@ namespace model {
 
   /// @cond
   EnvironmentalImpactFactors::EnvironmentalImpactFactors(std::shared_ptr<detail::EnvironmentalImpactFactors_Impl> impl) : ModelObject(impl) {}
+
+  // DEPRECATED
+  double EnvironmentalImpactFactors::districtHeatingEfficiency() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "Use districtHeatingWaterEfficiency instead.");
+    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->districtHeatingWaterEfficiency();
+  }
+
+  bool EnvironmentalImpactFactors::setDistrictHeatingEfficiency(double districtHeatingEfficiency) {
+    DEPRECATED_AT_MSG(3, 7, 0, "Use setDistrictHeatingWaterEfficiency instead.");
+    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->setDistrictHeatingWaterEfficiency(districtHeatingEfficiency);
+  }
+
+  double EnvironmentalImpactFactors::steamConversionEfficiency() const {
+    DEPRECATED_AT_MSG(3, 7, 0, "Use districtHeatingSteamConversionEfficiency instead.");
+    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->districtHeatingSteamConversionEfficiency();
+  }
+
+  bool EnvironmentalImpactFactors::setSteamConversionEfficiency(double steamConversionEfficiency) {
+    DEPRECATED_AT_MSG(3, 7, 0, "Use setDistrictHeatingSteamConversionEfficiency instead.");
+    return getImpl<detail::EnvironmentalImpactFactors_Impl>()->setDistrictHeatingSteamConversionEfficiency(steamConversionEfficiency);
+  }
+
   /// @endcond
 
 }  // namespace model

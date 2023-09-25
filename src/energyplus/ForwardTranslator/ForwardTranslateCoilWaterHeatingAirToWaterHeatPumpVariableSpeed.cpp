@@ -102,6 +102,14 @@ namespace energyplus {
       idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CrankcaseHeaterCapacity, value.get());
     }
 
+    // CrankcaseHeaterCapacityFunctionofTemperatureCurveName
+    if (auto crankCurve_ = modelObject.crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+      if (auto curve_ = translateAndMapModelObject(*crankCurve_)) {
+        idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName,
+                            curve_->nameString());
+      }
+    }
+
     // Maximum Ambient Temperature for Crankcase Heater Operation
     if ((value = modelObject.maximumAmbientTemperatureforCrankcaseHeaterOperation())) {
       idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation,

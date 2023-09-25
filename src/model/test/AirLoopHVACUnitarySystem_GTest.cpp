@@ -135,10 +135,6 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData) {
   EXPECT_TRUE(testObjectClone.isSupplyAirFlowRateWhenNoCoolingorHeatingisRequiredAutosized());
   EXPECT_DOUBLE_EQ(80.0, testObjectClone.maximumSupplyAirTemperature().get());
   EXPECT_DOUBLE_EQ(21.0, testObjectClone.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
-  EXPECT_DOUBLE_EQ(2.5, testObjectClone.maximumCyclingRate());
-  EXPECT_DOUBLE_EQ(60.0, testObjectClone.heatPumpTimeConstant());
-  EXPECT_DOUBLE_EQ(0.01, testObjectClone.fractionofOnCyclePowerUse());
-  EXPECT_DOUBLE_EQ(60, testObjectClone.heatPumpFanDelayTime());
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.ancilliaryOnCycleElectricPower());
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.ancilliaryOffCycleElectricPower());
   // EXPECT_DOUBLE_EQ(80.0, testObjectClone.maximumTemperatureforHeatRecovery());
@@ -197,10 +193,6 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData) {
   testObject.autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
   testObject.autosizeMaximumSupplyAirTemperature();
   testObject.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(999.0);
-  testObject.setMaximumCyclingRate(5.0);
-  testObject.setHeatPumpTimeConstant(500.0);
-  testObject.setFractionofOnCyclePowerUse(0.05);
-  testObject.setHeatPumpFanDelayTime(999.0);
   testObject.setAncilliaryOnCycleElectricPower(999.0);
   testObject.setAncilliaryOffCycleElectricPower(999.0);
   // testObject.setMaximumTemperatureforHeatRecovery(100.0);
@@ -219,10 +211,6 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData) {
   EXPECT_TRUE(testObjectClone.isSupplyAirFlowRateWhenNoCoolingorHeatingisRequiredAutosized());
   EXPECT_TRUE(testObjectClone.isMaximumSupplyAirTemperatureAutosized());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
-  EXPECT_DOUBLE_EQ(5.0, testObjectClone.maximumCyclingRate());
-  EXPECT_DOUBLE_EQ(500.0, testObjectClone.heatPumpTimeConstant());
-  EXPECT_DOUBLE_EQ(0.05, testObjectClone.fractionofOnCyclePowerUse());
-  EXPECT_DOUBLE_EQ(999.0, testObjectClone.heatPumpFanDelayTime());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ancilliaryOnCycleElectricPower());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ancilliaryOffCycleElectricPower());
   // EXPECT_DOUBLE_EQ(100.0, testObjectClone.maximumTemperatureforHeatRecovery());

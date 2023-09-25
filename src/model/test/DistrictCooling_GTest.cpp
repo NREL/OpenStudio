@@ -12,22 +12,37 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 //test construction of the object
-TEST_F(ModelFixture, DistrictCooling_DistrictCooling) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+TEST_F(ModelFixture, DistrictCooling_GettersSetters) {
 
-  ASSERT_EXIT(
-    {
-      Model m;
-      DistrictCooling testObject(m);
+  Model m;
+  DistrictCooling districtCooling(m);
 
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
+  // Default to autosize
+  EXPECT_FALSE(districtCooling.nominalCapacity());
+  EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
+  // Set it
+  districtCooling.setNominalCapacity(1000.0);
+  ASSERT_TRUE(districtCooling.nominalCapacity());
+  EXPECT_EQ(1000.0, districtCooling.nominalCapacity().get());
+  EXPECT_FALSE(districtCooling.isNominalCapacityAutosized());
+  // autosize
+  districtCooling.autosizeNominalCapacity();
+  EXPECT_TRUE(districtCooling.isNominalCapacityAutosized());
+  EXPECT_FALSE(districtCooling.nominalCapacity());
+
+  EXPECT_EQ(m.alwaysOnContinuousSchedule(), districtCooling.capacityFractionSchedule());
+  ScheduleConstant scheduleConstant(m);
+  EXPECT_TRUE(districtCooling.setCapacityFractionSchedule(scheduleConstant));
+  EXPECT_EQ(scheduleConstant, districtCooling.capacityFractionSchedule());
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node
@@ -38,29 +53,29 @@ TEST_F(ModelFixture, DistrictCooling_connections) {
   PlantLoop plantLoop(m);
 
   //make a DistrictCooling object
-  DistrictCooling testObject(m);
+  DistrictCooling districtCooling(m);
 
   //get the supply outlet node of the plant loop
   Node plantOutletNode = plantLoop.supplyOutletNode();
 
   //hook the DistrictCooling object to the supply outlet node
-  ASSERT_TRUE(testObject.addToNode(plantOutletNode));
+  ASSERT_TRUE(districtCooling.addToNode(plantOutletNode));
 
   //it should now be on a loop and have inlet and outlet objects
-  ASSERT_TRUE(testObject.loop());
-  ASSERT_TRUE(testObject.inletModelObject());
-  ASSERT_TRUE(testObject.outletModelObject());
+  ASSERT_TRUE(districtCooling.loop());
+  ASSERT_TRUE(districtCooling.inletModelObject());
+  ASSERT_TRUE(districtCooling.outletModelObject());
 
   //it should be removable from the loop
-  ASSERT_TRUE(testObject.isRemovable());
+  ASSERT_TRUE(districtCooling.isRemovable());
 
   //now, disconnect the object
-  testObject.disconnect();
+  districtCooling.disconnect();
 
   //it should no longer have a loop or inlet/outlet objects
-  ASSERT_FALSE(testObject.loop());
-  ASSERT_FALSE(testObject.inletModelObject());
-  ASSERT_FALSE(testObject.outletModelObject());
+  ASSERT_FALSE(districtCooling.loop());
+  ASSERT_FALSE(districtCooling.inletModelObject());
+  ASSERT_FALSE(districtCooling.outletModelObject());
 
   //make an airloop
   AirLoopHVAC airLoop(m);
@@ -69,41 +84,28 @@ TEST_F(ModelFixture, DistrictCooling_connections) {
   Node airOutletNode = airLoop.supplyOutletNode();
 
   //it should not connect to an airloop
-  ASSERT_FALSE(testObject.addToNode(airOutletNode));
-}
-
-//test setting and getting the nominal capacity
-TEST_F(ModelFixture, DistrictCooling_NominalCapacity) {
-  Model m;
-  DistrictCooling testObject(m);
-
-  //test setting and getting the field with a double
-  double testValue(1);
-  testObject.setNominalCapacity(testValue);
-  auto capacity = testObject.nominalCapacity();
-  ASSERT_TRUE(capacity);
-  ASSERT_EQ(1, capacity.get());
+  ASSERT_FALSE(districtCooling.addToNode(airOutletNode));
 }
 
 //test cloning the object
 TEST_F(ModelFixture, DistrictCooling_Clone) {
   Model m;
   //make an object to clone, and edit some property to make sure the clone worked
-  DistrictCooling testObject(m);
+  DistrictCooling districtCooling(m);
 
-  testObject.setNominalCapacity(1234);
+  districtCooling.setNominalCapacity(1234);
 
   //clone into the same model
-  auto testObjectClone = testObject.clone(m).cast<DistrictCooling>();
-  auto capacity = testObjectClone.nominalCapacity();
+  auto districtCoolingClone = districtCooling.clone(m).cast<DistrictCooling>();
+  auto capacity = districtCoolingClone.nominalCapacity();
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1234, capacity.get());
 
   //clone into another model
   Model m2;
-  auto testObjectClone2 = testObject.clone(m2).cast<DistrictCooling>();
+  auto districtCoolingClone2 = districtCooling.clone(m2).cast<DistrictCooling>();
 
-  capacity = testObjectClone2.nominalCapacity();
+  capacity = districtCoolingClone2.nominalCapacity();
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1234, capacity.get());
 }
