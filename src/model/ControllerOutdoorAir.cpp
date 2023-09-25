@@ -376,7 +376,7 @@ namespace model {
       return setString(openstudio::OS_Controller_OutdoorAirFields::HeatRecoveryBypassControlType, v);
     }
 
-    OptionalString ControllerOutdoorAir_Impl::getEconomizerOperationStaging() const {
+    std::string ControllerOutdoorAir_Impl::economizerOperationStaging() const {
       return getString(openstudio::OS_Controller_OutdoorAirFields::EconomizerOperationStaging);
     }
 
@@ -752,8 +752,8 @@ namespace model {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setHeatRecoveryBypassControlType(v);
   }
 
-  boost::optional<std::string> ControllerOutdoorAir::getEconomizerOperationStaging() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getEconomizerOperationStaging();
+  std::string ControllerOutdoorAir::economizerOperationStaging() const {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->economizerOperationStaging();
   }
 
   bool ControllerOutdoorAir::setEconomizerOperationStaging(const std::string& v) {

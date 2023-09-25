@@ -66,8 +66,7 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   // Defaults
   ASSERT_TRUE(controller.getHeatRecoveryBypassControlType());
   EXPECT_EQ("BypassWhenWithinEconomizerLimits", controller.getHeatRecoveryBypassControlType().get());
-  ASSERT_TRUE(controller.getEconomizerOperationStaging());
-  EXPECT_EQ("InterlockedWithMechanicalCooling", controller.getEconomizerOperationStaging().get());
+  EXPECT_EQ("InterlockedWithMechanicalCooling", controller.economizerOperationStaging());
 
   // Heat Recovery Bypass Control Type
   EXPECT_TRUE(controller.setHeatRecoveryBypassControlType("BypassWhenOAFlowGreaterThanMinimum"));
@@ -76,6 +75,5 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
 
   // Economizer Operation Staging
   EXPECT_TRUE(controller.setEconomizerOperationStaging("EconomizerFirst"));
-  ASSERT_TRUE(controller.getEconomizerOperationStaging());
-  EXPECT_EQ("EconomizerFirst", controller.getEconomizerOperationStaging().get());
+  EXPECT_EQ("EconomizerFirst", controller.economizerOperationStaging());
 }

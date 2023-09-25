@@ -174,10 +174,7 @@ namespace energyplus {
     }
 
     // EconomizerOperationStaging
-    s = modelObject.getEconomizerOperationStaging();
-    if (s) {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerOperationStaging, *s);
-    }
+    idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerOperationStaging, modelObject.economizerOperationStaging());
 
     // Controller Mechanical Ventilation
     model::ControllerMechanicalVentilation controllerMechanicalVentilation = modelObject.controllerMechanicalVentilation();
