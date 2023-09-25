@@ -1000,7 +1000,7 @@ void MeasureManagerServer::handle_request(const web::http::http_request& message
 void MeasureManagerServer::do_tasks_forever() {
   fmt::print("MeasureManager Ready");
   fmt::print("Accepting requests on: {}\n", m_url);
-  std::cout << std::flush;
+  std::fflush(std::cout);
   while (true) {
     auto task = tasks.wait_for_one();
     task();
