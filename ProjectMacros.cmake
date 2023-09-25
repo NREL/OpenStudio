@@ -34,7 +34,8 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
 
     # Tell cmake to discover tests by calling test_exe --gtest_list_tests
     gtest_discover_tests(${BASE_NAME}_tests
-      PROPERTIES TIMEOUT 660
+      PROPERTIES TIMEOUT 660 # Test execution
+      DISCOVERY_TIMEOUT 60   # Time to wait for the test to enumerate available tests (default is 5s, which can fail for us especially in Debug with Sanitizers)
     )
 
     if(TARGET "${BASE_NAME}_resources")
@@ -325,20 +326,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     endif()
 
 
-    # Add the -py3 flag if the version used is Python 3
-    set(SWIG_PYTHON_3_FLAGS "")
-    if (Python_VERSION_MAJOR)
-      if (Python_VERSION_MAJOR EQUAL 3)
-        set(SWIG_PYTHON_3_FLAGS "-py3;-relativeimport")
-        message(STATUS "${MODULE_NAME} - Building SWIG Bindings for Python 3")
-      else()
-        message(STATUS "${MODULE_NAME} - Building SWIG Bindings for Python 2")
-      endif()
-    else()
-      # Python2 has been EOL since January 1, 2020
-      set(SWIG_PYTHON_3_FLAGS "-py3;-relativeimport")
-      message(STATUS "${MODULE_NAME} - Couldn't determine version of Python - Building SWIG Bindings for Python 3")
-    endif()
+    # The -py3 flag is now deprecated as Python 3 is the default the version used is Python 3
+    set(SWIG_PYTHON_3_FLAGS "-relativeimport")
 
     add_custom_command(
       OUTPUT "${SWIG_WRAPPER_FULL_PATH}" "${PYTHON_GENERATED_SRC}"
@@ -510,7 +499,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       # This is not working: "cannot open file 'python37.lib'"
       target_link_libraries(${swig_target} PUBLIC  ${${PARENT_TARGET}_depends})
       if (MSVC)
-        message("Python_LIBRARIES=${Python_LIBRARIES}")
+        message(DEBUG "Python_LIBRARIES=${Python_LIBRARIES}")
         target_link_libraries(${swig_target} PRIVATE Python::Module)
       endif()
       #target_link_libraries(${swig_target} PUBLIC ${${PARENT_TARGET}_depends}) ${Python_LIBRARIES})

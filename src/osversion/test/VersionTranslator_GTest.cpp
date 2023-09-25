@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
@@ -2515,4 +2491,60 @@ TEST_F(OSVersionFixture, update_3_5_1_to_3_6_0_GroundHeatExchangerHorizontalTren
   EXPECT_EQ(15.5, uka.getDouble(5).get());                                                      // Average Soil Surface Temperature
   EXPECT_EQ(12.8, uka.getDouble(6).get());                                                      // Average Amplitude of Surface Temperature
   EXPECT_EQ(17.3, uka.getDouble(7).get());                                                      // Phase Shift of Minimum Surface Temperature
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_GroundHeatExchangerVertical) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_GroundHeatExchangerVertical.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_GroundHeatExchangerVertical_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> ghxs = model->getObjectsByType("OS:GroundHeatExchanger:Vertical");
+  ASSERT_EQ(1u, ghxs.size());
+  WorkspaceObject ghx = ghxs[0];
+
+  EXPECT_EQ("Ground Heat Exchanger Vertical 1", ghx.getString(1).get());  // Name
+  EXPECT_TRUE(ghx.isEmpty(2));                                            // Inlet Node Name
+  EXPECT_TRUE(ghx.isEmpty(3));                                            // Outlet Node Name
+  EXPECT_EQ(0.0033, ghx.getDouble(4).get());                              // Design Flow Rate
+  EXPECT_EQ(120, ghx.getInt(5).get());                                    // Number of Bore Holes
+  EXPECT_EQ(76.2, ghx.getDouble(6).get());                                // Bore Hole Length
+  EXPECT_EQ(0.063508, ghx.getDouble(7).get());                            // Bore Hole Radius
+  EXPECT_EQ(0.692626, ghx.getDouble(8).get());                            // Ground Thermal Conductivity
+  EXPECT_EQ(2347000, ghx.getDouble(9).get());                             // Ground Thermal Heat Capacity
+  EXPECT_EQ(13.375, ghx.getDouble(10).get());                             // Ground Temperature
+  EXPECT_EQ(0.692626, ghx.getDouble(11).get());                           // Grout Thermal Conductivity
+  EXPECT_EQ(0.391312, ghx.getDouble(12).get());                           // Pipe Thermal Conductivity
+  EXPECT_EQ(0.0266667, ghx.getDouble(13).get());                          // Pipe Out Diameter
+  EXPECT_EQ(0.0253977, ghx.getDouble(14).get());                          // U-Tube Distance
+  EXPECT_EQ(0.00241285, ghx.getDouble(15).get());                         // Pipe Thickness
+  EXPECT_EQ(2, ghx.getInt(16).get());                                     // Maximum Length of Simulation
+  EXPECT_NE("", ghx.getString(17).get());                                 // Undisturbed Ground Temperature Model
+  EXPECT_EQ(0.0005, ghx.getDouble(18).get());                             // G-Function Reference Ratio {dimensionless}
+
+  EXPECT_EQ(35u, ghx.numExtensibleGroups());
+  auto eg1 = ghx.extensibleGroups()[0];
+  EXPECT_EQ(-15.2996, eg1.getDouble(0, false).get());   // G-Function Ln(T/Ts) Value 1
+  EXPECT_EQ(-0.348322, eg1.getDouble(1, false).get());  // G-Function G Value 1
+  auto eg35 = ghx.extensibleGroups()[34];
+  EXPECT_EQ(3.003, eg35.getDouble(0, false).get());   // G-Function Ln(T/Ts) Value 35
+  EXPECT_EQ(72.511, eg35.getDouble(1, false).get());  // G-Function G Value 35
+
+  std::vector<WorkspaceObject> ukas = model->getObjectsByType("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach");
+  ASSERT_EQ(1u, ukas.size());
+
+  ASSERT_TRUE(ghx.getTarget(17));
+  WorkspaceObject uka = ghx.getTarget(17).get();
+  EXPECT_EQ(uka.nameString(), ghx.getTarget(17)->nameString());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach), uka.iddObject().type());
+  EXPECT_EQ("Site Ground Temperature Undisturbed Kusuda Achenbach 1", uka.getString(1).get());  // Name
+  EXPECT_EQ(0.692626, uka.getDouble(2).get());                                                  // Soil Thermal Conductivity
+  EXPECT_EQ(920.0, uka.getDouble(3).get());                                                     // Soil Density
+  EXPECT_DOUBLE_EQ(2347000.0 / 920.0, uka.getDouble(4).get());                                  // Soil Specific Heat
+  EXPECT_EQ(13.375, uka.getDouble(5).get());                                                    // Average Soil Surface Temperature
+  EXPECT_EQ(3.2, uka.getDouble(6).get());                                                       // Average Amplitude of Surface Temperature
+  EXPECT_EQ(8.0, uka.getDouble(7).get());                                                       // Phase Shift of Minimum Surface Temperature
 }

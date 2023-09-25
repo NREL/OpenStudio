@@ -1,5 +1,7 @@
-//void Init_EmbeddedScripting(void);
-//INIT_DECLARATIONS;
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
+***********************************************************************************************************************/
 
 //VALUE init_rest_of_openstudio(...) {
 //  init_openstudio_internal_extended();

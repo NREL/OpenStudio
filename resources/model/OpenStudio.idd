@@ -1,4 +1,4 @@
-!IDD_Version 3.6.0
+!IDD_Version 3.7.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.6.0
+       \default 3.7.0
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -11902,6 +11902,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \key FlowPerFloorArea
        \key FractionOfAutosizedCoolingValue
        \key FlowPerCoolingCapacity
+       \default None
        \note Enter the method used to determine the cooling supply air volume flow rate.
        \note None is used when a cooling coil is not included in the unitary system or this field may be blank.
        \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
@@ -11946,6 +11947,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \key FlowPerFloorArea
        \key FractionOfAutosizedHeatingValue
        \key FlowPerHeatingCapacity
+       \default None
        \note Enter the method used to determine the heating supply air volume flow rate.
        \note None is used when a heating coil is not included in the unitary system or this field may be blank.
        \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
@@ -16669,8 +16671,8 @@ OS:DistrictHeating,
 
 OS:GroundHeatExchanger:Vertical,
         \extensible:2
-        \min-fields 21
-        \max-fields 219
+        \min-fields 22
+        \max-fields 220
         \memo Variable short time step vertical ground heat exchanger model based on
         \memo Yavuztruk, C., J.D.Spitler. 1999. A Short Time Step response Factor Model for
         \memo Vertical Ground Loop Heat Exchangers
@@ -16748,6 +16750,10 @@ OS:GroundHeatExchanger:Vertical,
   N13,  \field Maximum Length of Simulation
         \type real
         \minimum> 0.0
+  A5,   \field Undisturbed Ground Temperature Model
+        \required-field
+        \type object-list
+        \object-list UndisturbedGroundTempModels
   N14,  \field G-Function Reference Ratio
         \type real
         \units dimensionless

@@ -1,5 +1,5 @@
 message(STATUS "Using CMake ${CMAKE_VERSION}")
-cmake_minimum_required(VERSION 3.19.0)
+cmake_minimum_required(VERSION 3.20.0)
 cmake_policy(SET CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -16,7 +16,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.6.0)
+project(OpenStudio VERSION 3.7.0)
 
 include(CMake/compiler_flags.cmake)
 
@@ -159,7 +159,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-#set(PROJECT_VERSION_PRERELEASE "rc3")
+set(PROJECT_VERSION_PRERELEASE "alpha")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -206,7 +206,7 @@ set(ENERGYPLUS_REPO "NREL")
 set(RADIANCE_VERSION "5.0.a.12")
 
 # configure file with version information
-configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
+configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.hxx.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
 
 # Deployment target
 if(APPLE)
@@ -357,12 +357,18 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clan
     set(SANITIZER_LINKER_FLAGS "${SANITIZER_LINKER_FLAGS} -fsanitize=undefined")
   endif()
 
+  option(ENABLE_NORECOVER_SANITIZER  "When any sanitizer that supports it report an error, exit with non zero" OFF)
+  if(ENABLE_NORECOVER_SANITIZER)
+    add_definitions(-fno-sanitize-recover=all)
+    set(SANITIZER_LINKER_FLAGS "${SANITIZER_LINKER_FLAGS} -fno-sanitize-recover=all")
+  endif()
+
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
 
 
-  mark_as_advanced(ENABLE_COVERAGE ENABLE_THREAD_SANITIZER ENABLE_ADDRESS_SANITIZER ENABLE_UNDEFINED_SANITIZER)
+  mark_as_advanced(ENABLE_COVERAGE ENABLE_THREAD_SANITIZER ENABLE_ADDRESS_SANITIZER ENABLE_UNDEFINED_SANITIZER ENABLE_NORECOVER_SANITIZER)
 
 endif()
 
@@ -515,6 +521,9 @@ if(UNIX)
     if (NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
       # DLM: had to add this due to issues with boost optional and gcc, may be resolved if we move to std::optional
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
+      if (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-uninitialized")
+      endif()
     endif()
   endif()
 
@@ -824,23 +833,28 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-darwin_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "27ca992c6e5fe5347a7e342eb5b91511")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230918-darwin_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "404783d585a63a07f2f9d5b4ba445d99")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-darwin.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b6bf19e6958bd41be9788a7f16fd7f27")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230918-darwin.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "71282202360c68cf9dd0f0d585d560f2")
        endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "957681cb4f3b5cf8ad95103a5fae9a72")
+       if (ARCH MATCHES "arm64")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230918-linux_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c28e1b84051fbae2ae0a9f7a27416951")
+       else()
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230918-linux.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f7279e86e0a9f41cfd0ce89060c4d836")
+       endif()
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e82889c296b7b76eb1f7b3fc7e22d2aa")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230918-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1606f5db801064864c1dc22e8e23459e")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()
@@ -1202,7 +1216,9 @@ if(NOT UNIX)
   if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
     install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "bin")
     install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "Ruby" COMPONENT "RubyAPI")
-    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "CSharp/openstudio/" COMPONENT "CSharpAPI")
+    if (BUILD_CSHARP_BINDINGS)
+      install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "CSharp/openstudio/" COMPONENT "CSharpAPI")
+    endif()
   endif()
 endif()
 
@@ -1211,6 +1227,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes the prerelease tag if any
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgomp1, libx11-6") # This is for EnergyPlus
 
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
 # CMAKE_PROJECT_HOMEPAGE_URL

@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #ifndef UTILITIES_GEOMETRY_POLYHEDRON_HPP
@@ -43,26 +19,22 @@ namespace model {
   class ThermalZone;
 }  // namespace model
 
-// A thin wrapper to improve reporting, by attaching a name to the vertices
-class UTILITIES_API Surface3d
-{
- public:
-  Surface3d() = default;
-  Surface3d(std::vector<Point3d> t_vertices, std::string t_name = "None");
-  std::vector<Point3d> vertices;
-  std::string name;
-};
+class Surface3d;
 
 class UTILITIES_API Surface3dEdge
 {
  public:
-  Surface3dEdge(Point3d start, Point3d end, Surface3d firstSurface, size_t firstSurfNum);
+  Surface3dEdge(Point3d start, Point3d end, const Surface3d& firstSurface);
+  Surface3dEdge(Point3d start, Point3d end, std::string t_name, size_t t_surfNum);
 
-  Point3d start() const;
-  Point3d end() const;
+  const Point3d& start() const;
+  const Point3d& end() const;
 
   /// check equality: this uses a tolerance
   bool operator==(const Surface3dEdge& other) const;
+
+  // Asserts that isAlmostEqual3dPt(start, other.end) && isAlmostEqual3dPt(end, other.start)
+  bool reverseEqual(const Surface3dEdge& other) const;
 
   /// check inequality
   bool operator!=(const Surface3dEdge& other) const;
@@ -70,48 +42,75 @@ class UTILITIES_API Surface3dEdge
   size_t count() const;
 
   size_t firstSurfNum() const;
-  void appendSurface(Surface3d surface);
+  std::string firstSurfaceName() const;
+  const std::vector<size_t>& allSurfNums() const;
+  void appendSurface(const Surface3d& surface);
 
   // Checks whether a Point: is not almost equal to the start and end points, and that isPointOnLineBetweenPoints(start, end, testVertex) is true
   bool containsPoint(const Point3d& testVertex);
 
-  std::vector<Surface3d> allSurfaces() const;
+  void markConflictedOrientation();
+  bool hasConflictedOrientation() const;
+
+  // Indicates this edge has been created and wasn't part of the original surface (cf updateZonePolygonsForMissingColinearPoints)
+  void markCreated();
+  bool hasBeenCreated() const;
+
+  void resetEdgeMatching();
+
+  Vector3d asVector() const;
+
+  // If it containsPoint the testVertex, Split in place the current edge from [start, vertex] vertex and returns the new next [vertex, end]
+  boost::optional<Surface3dEdge> splitEdge(Point3d testVertex);
 
  private:
   Point3d m_start;
   Point3d m_end;
-  size_t m_firstSurfNum;
-  std::vector<Surface3d> m_allSurfaces;
+  bool m_conflictedOrientation = false;
+  bool m_hasBeenCreated = false;
+  std::string m_firstSurfaceName;
+  std::vector<size_t> m_allSurfNums;
 };
 
-using Surface3dEdgeVector = std::vector<Surface3dEdge>;
-
-class VolumeEnclosedReturnType
+// A thin wrapper to improve reporting, by attaching a name to the vertices
+class UTILITIES_API Surface3d
 {
  public:
-  VolumeEnclosedReturnType() = default;
+  Surface3d(std::vector<Point3d> t_vertices, std::string t_name, size_t t_surfNum);
+  std::vector<Point3d> vertices;
+  std::string name;
+  size_t surfNum;
+  std::vector<Surface3dEdge> edges;
 
-  bool isEnclosedVolume = false;
-  Surface3dEdgeVector edgesNot2;
+  size_t numConflictedEdges() const;
+  double ratioOfConflictedEdges() const;
+
+  // There is no check done whatsoevever to ensure the surface is planar.
+  bool isConvex() const;
+
+  void resetEdgeMatching();
+
+  bool operator<(const Surface3d& rhs) const;
 };
 
 class UTILITIES_API Polyhedron
 {
  public:
-  Polyhedron() = default;  // Default ctor, for swig
-
+  /** This will call updateZonePolygonsForMissingColinearPoints if needed (if original Polyhedron isn't enclosed) to add any missing colinear point
+    * (=splitting up edges in case surface intersection hasn't been performed already) */
   Polyhedron(std::vector<Surface3d> surfaces);
 
-  // test if the volume described by the polyhedron if full enclosed (would not leak)
-  // This is done by checking that every edge is used exactly TWICE.
-  VolumeEnclosedReturnType isEnclosedVolume() const;
+  /** Test if the volume described by the polyhedron if full enclosed (would not leak).
+    * This is done by checking that every edge is used exactly TWICE. */
+  bool isEnclosedVolume() const;
 
-  // Maybe unused
+  /** All unique edges that aren't used exactly twice */
+  std::vector<Surface3dEdge> edgesNotTwo(bool includeCreatedEdges = false) const;
+
   std::vector<Point3d> uniqueVertices() const;
 
-  static std::vector<Surface3dEdge> edgesNotTwoForEnclosedVolumeTest(const Polyhedron& volumePoly);
-
-  Polyhedron updateZonePolygonsForMissingColinearPoints() const;
+  /** Ignores orientation of edges to return the unique edges */
+  std::vector<Surface3dEdge> uniqueEdges() const;
 
   size_t numVertices() const;
 
@@ -121,21 +120,53 @@ class UTILITIES_API Polyhedron
   // double calculatedVolume() const;
 
   // Polyhedron MUST be enclosed
-  double calcPolyhedronVolume() const;
+  double polyhedronVolume() const;
   // Polyhedron MUST be enclosed
   double calcDivergenceTheoremVolume() const;
+
+  // Whether updateZonePolygonsForMissingColinearPoints was called and ended up actually splitting up edges
+  bool hasAddedColinearPoints() const;
+
+  /** In an ENCLOSED Polyhedron, all edges should be used twice. And if all surfaces are correctly oriented, each edge should match an edge that is in
+   * reversed order */
+  bool hasAnySurfaceWithIncorrectOrientation() const;
+
+  bool isCompletelyInsideOut() const;
+
+  /** Finds all edges that two surface define in the **same** order (if all surfaces are correctly oriented, they should match in reverse order)
+    * For each matching edge, we pick a single surface between the two surfaces that define it but retainign the surface that has the largest
+    * proportion of conflicted edges / total number of edges */
+  std::vector<Surface3d> findSurfacesWithIncorrectOrientation() const;
+
+  std::vector<Surface3d> surface3ds() const;
+
+ protected:
+  void performEdgeMatching();
+  void resetEdgeMatching();
+  void updateZonePolygonsForMissingColinearPoints();
+  bool hasEdgesNot2() const;
+  // Internal method, result is cached. We have to call it initially to detect if polyhedron is completely inside-out
+  double calcPolyhedronVolume() const;
 
  private:
   REGISTER_LOGGER("utilities.Polyhedron");
 
   std::vector<Surface3d> m_surfaces;
+  bool m_isEnclosedVolume = false;
+  bool m_hasAddedColinearPoints = false;
+  bool m_hasAnySurfaceWithIncorrectOrientation = false;
+  bool m_isCompletelyInsideOut = false;
+  double m_polyhedronVolume = 0.0;
 };
 
-using PolyhedronVector = std::vector<Polyhedron>;
+using OptionalSurface3dEdge = boost::optional<Surface3dEdge>;
+using Surface3dEdgeVector = std::vector<Surface3dEdge>;
 using Surface3dVector = std::vector<Surface3d>;
+using PolyhedronVector = std::vector<Polyhedron>;
 
 /// ostream operator
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Surface3dEdge& edge);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const Surface3d& surface3d);
 
 }  // namespace openstudio
 

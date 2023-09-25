@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
@@ -39,7 +15,6 @@
 #include <utilities/idd/GroundHeatExchanger_System_FieldEnums.hxx>
 #include <utilities/idd/GroundHeatExchanger_Vertical_Properties_FieldEnums.hxx>
 #include <utilities/idd/GroundHeatExchanger_ResponseFactors_FieldEnums.hxx>
-#include <utilities/idd/Site_GroundTemperature_Undisturbed_KusudaAchenbach_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -115,6 +90,17 @@ namespace energyplus {
     // 1  { GroundHeatExchanger_ResponseFactorsExtensibleFields::gFunctionLn_T_Ts_Value, "gFunctionLn_T_Ts_Value", "g-Function Ln(T/Ts) Value"},
     // 2  { GroundHeatExchanger_ResponseFactorsExtensibleFields::gFunctiongValue, "gFunctiongValue", "g-Function g Value"},
 
+    // UndisturbedGroundTemperatureModelName, is required, so start by that
+    ModelObject undisturbedGroundTemperatureModel = modelObject.undisturbedGroundTemperatureModel();
+    boost::optional<IdfObject> _undisturbedGroundTemperatureModel = translateAndMapModelObject(undisturbedGroundTemperatureModel);
+    if (_undisturbedGroundTemperatureModel) {
+      s = _undisturbedGroundTemperatureModel->name().get();
+    } else {
+      LOG(Warn, modelObject.briefDescription() << " cannot be translated as its undisturbed ground temperature model object cannot be translated: "
+                                               << undisturbedGroundTemperatureModel.briefDescription() << ".");
+      return boost::none;
+    }
+
     // Name
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::GroundHeatExchanger_System, modelObject);
 
@@ -128,25 +114,29 @@ namespace energyplus {
       idfObject.setString(GroundHeatExchanger_SystemFields::OutletNodeName, temp->name().get());
     }
 
-    // Maximum Flow Rate
+    // Design Flow Rate
     if ((value = modelObject.designFlowRate())) {
       idfObject.setDouble(GroundHeatExchanger_SystemFields::DesignFlowRate, value.get());
     }
 
+    // Undisturbed Ground Temperature Model Type
     idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelType,
-                        "Site:GroundTemperature:Undisturbed:KusudaAchenbach");
+                        _undisturbedGroundTemperatureModel->iddObject().name());
 
-    auto groundModelName = modelObject.nameString() + " Ground Temps";
-    idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelName, groundModelName);
+    // Undisturbed Ground Temperature Model Name
+    idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelName, s.get());
 
+    // Ground Thermal Conductivity
     if ((value = modelObject.groundThermalConductivity())) {
       idfObject.setDouble(GroundHeatExchanger_SystemFields::GroundThermalConductivity, value.get());
     }
 
+    // Ground Thermal Heat Capacity
     if ((value = modelObject.groundThermalHeatCapacity())) {
       idfObject.setDouble(GroundHeatExchanger_SystemFields::GroundThermalHeatCapacity, value.get());
     }
 
+    // GHE:Vertical:ResponseFactors Object Name
     auto responseFactorsObjectName = modelObject.nameString() + " Response Factors";
     idfObject.setString(GroundHeatExchanger_SystemFields::GHE_Vertical_ResponseFactorsObjectName, responseFactorsObjectName);
 
@@ -189,29 +179,6 @@ namespace energyplus {
     if ((value = modelObject.uTubeDistance())) {
       propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::UTubeDistance, value.get());
     }
-
-    IdfObject groundIdfObject(IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
-    m_idfObjects.push_back(groundIdfObject);
-
-    groundIdfObject.setName(groundModelName);
-
-    if ((value = modelObject.groundThermalConductivity())) {
-      groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity, value.get());
-    }
-
-    groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity, 920.0);
-
-    if ((value = modelObject.groundThermalHeatCapacity())) {
-      groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat, value.get() / 920.0);
-    }
-
-    if ((value = modelObject.groundTemperature())) {
-      groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature, value.get());
-    }
-
-    groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature, 3.2);
-
-    groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, 8.0);
 
     IdfObject rfIdfObject(IddObjectType::GroundHeatExchanger_ResponseFactors);
     m_idfObjects.push_back(rfIdfObject);

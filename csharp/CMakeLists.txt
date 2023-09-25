@@ -10,9 +10,11 @@ install(DIRECTORY "examples"
   PATTERN "*.docx"
 )
 
-file(TO_NATIVE_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp" CSHARP_LIBRARY_OUTPUT_DIRECTORY)
-file(TO_NATIVE_PATH "${PROJECT_SOURCE_DIR}/csharp" CSHARP_SOURCE_DIR)
-file(TO_NATIVE_PATH "${PROJECT_BINARY_DIR}/csharp_wrapper" CSHARP_BINARY_DIR)
+set(CSHARP_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp")
+
+# For csproj.in
+file(TO_NATIVE_PATH "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}" CSHARP_LIBRARY_OUTPUT_DIRECTORY_NATIVE)
+file(TO_NATIVE_PATH "${PROJECT_SOURCE_DIR}/csharp" CSHARP_SOURCE_DIR_NATIVE)
 
 set(CSHARP_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CSHARP_VERSION_MINOR ${PROJECT_VERSION_MINOR})
@@ -48,28 +50,25 @@ endif()
 
 # The Release/Debug can be stripped probably
 # Also probably don't need to use multiple `<TargetFrameworks>` which is the reason there's an extra netstandard2.0/ level
-set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/netstandard2.0/OpenStudio.dll")
+# Note: can't use CMAKE_BUILD_TYPE as it's empty for multi generators (MSVC for eg). So we use a genex
+# We use the non-native, cmake_path, version of library output directory otherwise install fails with mistmatched `/` and `\` on windows
+set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>/netstandard2.0/OpenStudio.dll")
 
 # ignore deprecated warnings since we will export deprecated methods
-if(MSVC)
-  add_definitions(/wd4996 /bigobj)
-else()
-  add_definitions(-Wno-deprecated-declarations)
-endif()
-
+add_library(csharp_warnings INTERFACE)
+target_compile_options(csharp_warnings INTERFACE "$<${is_msvc_genex}:/wd4996>")
+target_compile_options(csharp_warnings INTERFACE "$<${is_msvc_genex}:/bigobj>")
+target_compile_options(csharp_warnings INTERFACE "$<${is_gnu_or_clang_genex}:-Wno-deprecated-declarations>")
+target_compile_options(csharp_warnings INTERFACE "$<${is_gnu_or_clang_genex}:-Wno-unused-function>")
 
 # custom command to make OPENSTUDIO_CSHARP_DLL
 add_custom_command(
   OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-  COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "/p:Platform=${CSHARP_PLATFORM}" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
+  COMMAND "${DOTNET}" "build" "-c" "$<CONFIG>" "/p:Platform=${CSHARP_PLATFORM}" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
   DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
 )
 
-
-
-install(FILES "${OPENSTUDIO_CSHARP_DLL}" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
-
-
+install(FILES "${OPENSTUDIO_CSHARP_DLL}" DESTINATION CSharp/openstudio/ COMPONENT "CSharpAPI")
 
 # keep the following lists aligned with translator_names in ProjectMacros.cmake
 set(translator_wrappers
@@ -161,7 +160,9 @@ add_dependencies(openstudio_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
 
 
 target_link_libraries(openstudio_csharp
- openstudiolib
+  PRIVATE
+    openstudiolib
+    csharp_warnings
 )
 install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
 install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
@@ -173,7 +174,9 @@ add_library(
 )
 add_dependencies(openstudio_model_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
 target_link_libraries(openstudio_model_csharp
-  openstudiolib
+  PRIVATE
+    openstudiolib
+    csharp_warnings
 )
 install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
 install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
@@ -185,7 +188,9 @@ add_library(
 )
 add_dependencies(openstudio_translators_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
 target_link_libraries(openstudio_translators_csharp
-  openstudiolib
+  PRIVATE
+    openstudiolib
+    csharp_warnings
 )
 install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
 install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")

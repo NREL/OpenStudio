@@ -1,7 +1,4 @@
-# Inserts copyright at beginning of each
-#
-# Inputs:
-#   ARGV[0] - path to top level cmake source directory (one level above 'src' directory)
+# Inserts copyright at beginning of each ruby/
 
 require 'pathname'
 require 'rubygems'
@@ -9,26 +6,29 @@ require 'fileutils'
 
 include FileUtils
 
-# check that called from command line directly
-if not ($0 == __FILE__)
-  puts "#{__FILE__} called from external script"
-  exit
-end
 
-basepath = ARGV[0].gsub("\\", "/")
+ROOT_DIR = File.absolute_path(File.join(File.dirname(__FILE__), "../../"))
+LICENSE_PATH = File.join(ROOT_DIR, 'LICENSE.md')
+
+
+license_lines = File.readlines(LICENSE_PATH)
+# Now with short version
+license_lines = [
+  "OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.\n",
+  "See also https://openstudio.net/license\n"
+]
+
 
 copyright = "/***********************************************************************************************************************\n"
 ruby_copyright = "########################################################################################################################\n"
-File.open(basepath + "/../LICENSE.md") do |file|
-  while (line = file.gets)
-    if line.strip.empty?
-      copyright +=  "*" + line
-      ruby_copyright += "#" + line
+license_lines.each do |line|
+  if line.strip.empty?
+    copyright +=  "*" + line
+    ruby_copyright += "#" + line
 
-    else
-      copyright += "*  " + line
-      ruby_copyright += "#  " + line
-    end
+  else
+    copyright += "*  " + line
+    ruby_copyright += "#  " + line
   end
 end
 copyright += "***********************************************************************************************************************/\n\n"
@@ -37,25 +37,18 @@ ruby_copyright += "#############################################################
 # first do c++
 
 # exceptions are files that are not part of OpenStudio
-exceptions = [basepath + "/src/geographic_lib/",
-              basepath + "/src/google_test/",
-              basepath + "/src/jsoncpp/",
-              basepath + "/src/nano/",
-              basepath + "/src/polypartition/",
-              basepath + "/src/pugixml/",
-              basepath + "/src/qtwinmigrate/",
-              basepath + "/src/qwt/",
-              basepath + "/src/sqlite/",
-              basepath + "/src/zlib/",
-              basepath + "/src/utilities/sql/Sqlite3.c",
-              basepath + "/src/utilities/sql/Sqlite3.h",
-              "mainpage.hpp"]
+exceptions = [
+  File.join(ROOT_DIR, "ci"),
+  File.join(ROOT_DIR, "developer"),
+  File.join(ROOT_DIR, "src/nano/"),
+  File.join(ROOT_DIR, "src/polypartition/"),
+  "mainpage.hpp",
+  "empty.hpp"
+]
 
 # glob for hpp and cpp
-files = Dir.glob(basepath + "/src/**/*.[ch]pp")
-files.concat Dir.glob(basepath + "/ruby/**/*.[ch]pp")
-files.concat Dir.glob(basepath + "/src/**/*.cxx.in")
-files.concat Dir.glob(basepath + "/src/**/*.tmp")
+files = Dir.glob(File.join(ROOT_DIR, "**/*.[ch]pp"))
+files += Dir.glob(File.join(ROOT_DIR, "**/*.[ch]xx.in"))
 
 # reject exceptions
 files.reject! do |p|
@@ -106,8 +99,9 @@ end
 # exceptions are files that are not part of OpenStudio
 exceptions = []
 
-# glob for rb
-files = Dir.glob(basepath + "/ruby/**/*.rb")
+# glob for rb and py
+files = Dir.glob(File.join(ROOT_DIR, "ruby/**/*.rb"))
+files += Dir.glob(File.join(ROOT_DIR, "python/**/*.py"))
 
 # reject exceptions
 files.reject! do |p|

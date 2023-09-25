@@ -61,6 +61,7 @@
 %include <utilities/core/Optional.hpp>
 %include <utilities/core/UnzipFile.i>
 %include <utilities/core/ZipFile.i>
+%include <utilities/core/jsoncpp.i>
 
 // DLM@20110107: this is causing issues for C#
 #if defined(SWIGRUBY) || defined(SWIGJAVASCRIPT)

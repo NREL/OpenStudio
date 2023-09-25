@@ -5,6 +5,7 @@
 %import <utilities/core/CommonImport.i>
 
 %{
+  #include <utilities/bcl/BCLEnums.hpp>
   #include <utilities/bcl/BCL.hpp>
   #include <utilities/bcl/BCLComponent.hpp>
   #include <utilities/bcl/BCLFileReference.hpp>
@@ -16,6 +17,23 @@
   #include <utilities/bcl/RemoteBCL.hpp>
   #include <utilities/core/FileReference.hpp>
   #include <utilities/plot/ProgressBar.hpp>
+
+  // TODO: this shouldn't be there really... But I give up refactoring for now
+  #include <utilities/units/Quantity.hpp>
+  #include <utilities/units/Unit.hpp>
+  #include <utilities/units/BTUUnit.hpp>
+  #include <utilities/units/CelsiusUnit.hpp>
+  #include <utilities/units/CFMUnit.hpp>
+  #include <utilities/units/FahrenheitUnit.hpp>
+  #include <utilities/units/GPDUnit.hpp>
+  #include <utilities/units/IPUnit.hpp>
+  #include <utilities/units/Misc1Unit.hpp>
+  #include <utilities/units/MPHUnit.hpp>
+  #include <utilities/units/SIUnit.hpp>
+  #include <utilities/units/ThermUnit.hpp>
+  #include <utilities/units/WhUnit.hpp>
+
+  #include <json/value.h>
 %}
 
 %ignore componentDownloaded;
@@ -88,6 +106,7 @@
 %template(OptionalMeasureType) boost::optional<openstudio::MeasureType>;
 %template(OptionalMeasureLanguage) boost::optional<openstudio::MeasureLanguage>;
 
+%include <utilities/bcl/BCLEnums.hpp>
 %include <utilities/bcl/BCLFileReference.hpp>
 %include <utilities/bcl/BCLComponent.hpp>
 %include <utilities/bcl/BCLMeasureArgument.hpp>
