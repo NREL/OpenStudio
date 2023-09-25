@@ -499,7 +499,7 @@ XMLValidator XMLValidator::gbxmlValidator() {
   if (tmpDir.empty()) {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
   }
-  bool quiet = true;
+  const bool quiet = true;
   ::openstudio::embedded_files::extractFile(":/xml/resources/GreenBuildingXML_Ver7.03.xsd", openstudio::toString(tmpDir), quiet);
   return XMLValidator(tmpDir / "GreenBuildingXML_Ver7.03.xsd");
 }
