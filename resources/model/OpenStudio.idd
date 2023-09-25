@@ -21498,7 +21498,7 @@ OS:ZoneControl:ContaminantController,
        \note IndoorAirQualityProcedureGenericContaminant in Controller:MechanicalVentilation
 
 OS:Controller:OutdoorAir,
-       \min-fields 17
+       \min-fields 28
   A1, \field Handle
        \type handle
        \required-field
@@ -21662,7 +21662,7 @@ OS:Controller:OutdoorAir,
        \type choice
        \key EconomizerFirst
        \key InterlockedWithMechanicalCooling
-       \default InterlockedWithMechanicalCooling
+       \required-field
        \note This input is only used when the Controller:OutdoorAir is used in conjunction
        \note with an AirLoopHVAC:UnitarySystem with multiple cooling speeds.
        \note When modeling an AirLoopHVAC:UnitarySystem with multiple cooling speeds
