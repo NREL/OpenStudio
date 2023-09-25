@@ -8600,6 +8600,25 @@ namespace osversion {
 //      // * Change Parasitic Gas Load => Off Cycle Parasitic Gas Load
 //      ss << object;
 
+      } else if (iddname == "OS:Controller:OutdoorAir") {
+
+        // 1 Field has been added from 3.6.1 to 3.7.0:
+        // -------------------------------------------
+        // * Economizer Operation Staging * 27
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(27, "InterlockedWithMechanicalCooling");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;
