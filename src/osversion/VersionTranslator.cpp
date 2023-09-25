@@ -8592,13 +8592,13 @@ namespace osversion {
           ss << object;
         }
 
-//    } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage")
-//               || (iddname == "OS:Coil:Heating:Gas:MultiStage:StageData") || (iddname == "OS:Coil:Heating:Desuperheater")) {
-//
-//      // No-op: only field name changes:
-//      // * Change Parasitic Electric Load => On Cycle Parasitic Electric Load
-//      // * Change Parasitic Gas Load => Off Cycle Parasitic Gas Load
-//      ss << object;
+        //    } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage")
+        //               || (iddname == "OS:Coil:Heating:Gas:MultiStage:StageData") || (iddname == "OS:Coil:Heating:Desuperheater")) {
+        //
+        //      // No-op: only field name changes:
+        //      // * Change Parasitic Electric Load => On Cycle Parasitic Electric Load
+        //      // * Change Parasitic Gas Load => Off Cycle Parasitic Gas Load
+        //      ss << object;
 
       } else if (iddname == "OS:Controller:OutdoorAir") {
 

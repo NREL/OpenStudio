@@ -3713,31 +3713,31 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_ControllerOutdoorAir) {
   ASSERT_EQ(1u, coas.size());
   const auto& coa = coas.front();
 
-  EXPECT_EQ("Controller Outdoor Air 1", coa.nameString());  // Name
-  EXPECT_TRUE(coa.isEmpty(2));                     // Relief Air Outlet Node Name
-  EXPECT_TRUE(coa.isEmpty(3));                     // Return Air Node Name
-  EXPECT_TRUE(coa.isEmpty(4));                     // Mixed Air Node Name
-  EXPECT_TRUE(coa.isEmpty(5));                     // Actuator Node Name
-  EXPECT_EQ(0, coa.getDouble(6).get());                     // Minimum Outdoor Air Flow Rate
-  EXPECT_EQ("autosize", coa.getString(7).get());                     // Maximum Outdoor Air Flow Rate
-  EXPECT_EQ("NoEconomizer", coa.getString(8).get());                     // Economizer Control Type
-  EXPECT_EQ("ModulateFlow", coa.getString(9).get());                     // Economizer Control Action Type
-  EXPECT_EQ(28, coa.getDouble(10).get());                     // Economizer Maximum Limit Dry-Bulb Temperature
-  EXPECT_EQ(64000, coa.getDouble(11).get());                     // Economizer Maximum Limit Enthalpy
-  EXPECT_TRUE(coa.isEmpty(12));                     // Economizer Maximum Limit Dewpoint Temperature
-  EXPECT_TRUE(coa.isEmpty(13));                     // Electronic Enthalpy Limit Curve Name
-  EXPECT_EQ(-100, coa.getDouble(14).get());                     // Economizer Minimum Limit Dry-Bulb Temperature
-  EXPECT_EQ("NoLockout", coa.getString(15).get());                     // Lockout Type
-  EXPECT_EQ("FixedMinimum", coa.getString(16).get());                     // Minimum Limit Type
-  EXPECT_TRUE(coa.isEmpty(17));                     // Minimum Outdoor Air Schedule Name
-  EXPECT_TRUE(coa.isEmpty(18));                     // Minimum Fraction of Outdoor Air Schedule Name
-  EXPECT_TRUE(coa.isEmpty(19));                     // Maximum Fraction of Outdoor Air Schedule Name
-  EXPECT_TRUE(coa.getTarget(20));  // Controller Mechanical Ventilation
-  EXPECT_TRUE(coa.isEmpty(21));                     // Time of Day Economizer Control Schedule Name
-  EXPECT_EQ("No", coa.getString(22).get());                     // High Humidity Control
-  EXPECT_TRUE(coa.isEmpty(23));                     // Humidistat Control Zone Name
-  EXPECT_TRUE(coa.isEmpty(24));                     // High Humidity Outdoor Air Flow Ratio
-  EXPECT_TRUE(coa.isEmpty(25));                     // Control High Indoor Humidity Based on Outdoor Humidity Ratio
-  EXPECT_EQ("BypassWhenWithinEconomizerLimits", coa.getString(26).get());                     // Heat Recovery Bypass Control Type
-  EXPECT_EQ("InterlockedWithMechanicalCooling", coa.getString(27).get());                     // Economizer Operation Staging
+  EXPECT_EQ("Controller Outdoor Air 1", coa.nameString());                 // Name
+  EXPECT_TRUE(coa.isEmpty(2));                                             // Relief Air Outlet Node Name
+  EXPECT_TRUE(coa.isEmpty(3));                                             // Return Air Node Name
+  EXPECT_TRUE(coa.isEmpty(4));                                             // Mixed Air Node Name
+  EXPECT_TRUE(coa.isEmpty(5));                                             // Actuator Node Name
+  EXPECT_EQ(0, coa.getDouble(6).get());                                    // Minimum Outdoor Air Flow Rate
+  EXPECT_EQ("autosize", coa.getString(7).get());                           // Maximum Outdoor Air Flow Rate
+  EXPECT_EQ("NoEconomizer", coa.getString(8).get());                       // Economizer Control Type
+  EXPECT_EQ("ModulateFlow", coa.getString(9).get());                       // Economizer Control Action Type
+  EXPECT_EQ(28, coa.getDouble(10).get());                                  // Economizer Maximum Limit Dry-Bulb Temperature
+  EXPECT_EQ(64000, coa.getDouble(11).get());                               // Economizer Maximum Limit Enthalpy
+  EXPECT_TRUE(coa.isEmpty(12));                                            // Economizer Maximum Limit Dewpoint Temperature
+  EXPECT_TRUE(coa.isEmpty(13));                                            // Electronic Enthalpy Limit Curve Name
+  EXPECT_EQ(-100, coa.getDouble(14).get());                                // Economizer Minimum Limit Dry-Bulb Temperature
+  EXPECT_EQ("NoLockout", coa.getString(15).get());                         // Lockout Type
+  EXPECT_EQ("FixedMinimum", coa.getString(16).get());                      // Minimum Limit Type
+  EXPECT_TRUE(coa.isEmpty(17));                                            // Minimum Outdoor Air Schedule Name
+  EXPECT_TRUE(coa.isEmpty(18));                                            // Minimum Fraction of Outdoor Air Schedule Name
+  EXPECT_TRUE(coa.isEmpty(19));                                            // Maximum Fraction of Outdoor Air Schedule Name
+  EXPECT_TRUE(coa.getTarget(20));                                          // Controller Mechanical Ventilation
+  EXPECT_TRUE(coa.isEmpty(21));                                            // Time of Day Economizer Control Schedule Name
+  EXPECT_EQ("No", coa.getString(22).get());                                // High Humidity Control
+  EXPECT_TRUE(coa.isEmpty(23));                                            // Humidistat Control Zone Name
+  EXPECT_TRUE(coa.isEmpty(24));                                            // High Humidity Outdoor Air Flow Ratio
+  EXPECT_TRUE(coa.isEmpty(25));                                            // Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  EXPECT_EQ("BypassWhenWithinEconomizerLimits", coa.getString(26).get());  // Heat Recovery Bypass Control Type
+  EXPECT_EQ("InterlockedWithMechanicalCooling", coa.getString(27).get());  // Economizer Operation Staging
 }
