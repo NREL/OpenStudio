@@ -24,8 +24,10 @@
 #include "../../model/FanOnOff.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
 #include "../../model/ScheduleConstant.hpp"
+#include "../../model/Node.hpp"
 #include "../../model/UnitarySystemPerformanceMultispeed.hpp"
 
+#include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_WaterToAirHeatPump_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
