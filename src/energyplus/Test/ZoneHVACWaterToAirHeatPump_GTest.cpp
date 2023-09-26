@@ -28,6 +28,7 @@
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
+#include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfObject.hpp"
@@ -275,7 +276,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
               idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectType).get());
     EXPECT_EQ("US Perf Multispeed", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName).get());
 
-    IdfObject idf_perf = workspace.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed)[0];
+    IdfObject idf_perf = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed)[0];
 
     EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
     EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
