@@ -61,37 +61,36 @@ namespace energyplus {
     boost::optional<HVACComponent> heatingCoil;
     boost::optional<HVACComponent> coolingCoil;
 
-    // Find the associated AirLoopHVACUnitarySystem
+    // Find the associated AirLoopHVACUnitarySystem, ZoneHVACTerminalUnitVariableRefrigerantFlow, or ZoneHVACWaterToAirHeatPump
     std::vector<AirLoopHVACUnitarySystem> unitarySystems = modelObject.getModelObjectSources<AirLoopHVACUnitarySystem>();
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> tuVRFs =
+      modelObject.getModelObjectSources<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+    std::vector<ZoneHVACWaterToAirHeatPump> hps = modelObject.getModelObjectSources<ZoneHVACWaterToAirHeatPump>();
+
+    if (((unitarySystems.size() + tuVRFs.size() + hps.size()) != 1)) {
+      LOG(Error, "OS:UnitarySystemPerformance:Multispeed should be referenced by one and only one OS:AirLoopHVAC:UnitarySystem or "
+                 "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow or OS:ZoneHVAC:WaterToAirHeatPump, "
+                   << modelObject.nameString() << " is referenced by " << unitarySystems.size() << " OS:AirLoopHVAC:UnitarySystem, " << tuVRFs.size()
+                   << " OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow, " << hps.size() << " OS:ZoneHVAC:WaterToAirHeatPump.")
+      return boost::none;
+    }
+
     if (unitarySystems.size() == 1) {
       AirLoopHVACUnitarySystem& unitarySystem = unitarySystems[0];
       heatingCoil = unitarySystem.heatingCoil();
       coolingCoil = unitarySystem.coolingCoil();
     }
 
-    // Find the associated ZoneHVACTerminalUnitVariableRefrigerantFlow
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> tuVRFs =
-      modelObject.getModelObjectSources<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
     if (tuVRFs.size() == 1) {
       ZoneHVACTerminalUnitVariableRefrigerantFlow& tuVRF = tuVRFs[0];
       heatingCoil = tuVRF.heatingCoil();
       coolingCoil = tuVRF.coolingCoil();
     }
 
-    // Find the associated ZoneHVACWaterToAirHeatPump
-    std::vector<ZoneHVACWaterToAirHeatPump> hps = modelObject.getModelObjectSources<ZoneHVACWaterToAirHeatPump>();
     if (hps.size() == 1) {
       ZoneHVACWaterToAirHeatPump& hp = hps[0];
       heatingCoil = hp.heatingCoil().optionalCast<HVACComponent>();
       coolingCoil = hp.coolingCoil().optionalCast<HVACComponent>();
-    }
-
-    if ((!heatingCoil) && (!coolingCoil)) {
-      LOG(Error, "OS:UnitarySystemPerformance:Multispeed should be referenced by one and only one OS:AirLoopHVAC:UnitarySystem or "
-                 "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow or OS:ZoneHVAC:WaterToAirHeatPump, "
-                   << modelObject.nameString() << " is referenced by " << unitarySystems.size() << " OS:AirLoopHVAC:UnitarySystem, " << tuVRFs.size()
-                   << " OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow, " << hps.size() << " OS:ZoneHVAC:WaterToAirHeatPump.")
-      return boost::none;
     }
 
     // Number of speeds for heating

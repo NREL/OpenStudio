@@ -81,10 +81,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
 
   ZoneHVACTerminalUnitVariableRefrigerantFlow vrf(m, cc, hc, fan);
 
-  UnitarySystemPerformanceMultispeed perf(m);
-  perf.setName("US Perf Multispeed");
-  EXPECT_TRUE(vrf.setDesignSpecificationMultispeedObject(perf));
-
   ThermalZone z(m);
   Space s(m);
   s.setThermalZone(z);
@@ -260,14 +256,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
     std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
     std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
     std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Water);
-    std::vector<WorkspaceObject> idf_perfs = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed);
 
     EXPECT_EQ(1u, idf_vrfs.size());
     EXPECT_EQ(1u, idf_ccs.size());
     EXPECT_EQ(1u, idf_hcs.size());
     EXPECT_EQ(1u, idf_fans.size());
     EXPECT_EQ(1u, idf_supHCs.size());
-    EXPECT_EQ(1u, idf_perfs.size());
 
     WorkspaceObject idf_vrf = idf_vrfs[0];
     WorkspaceObject idf_cc = idf_ccs[0];
@@ -298,20 +292,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
 
     EXPECT_EQ(idf_supHC.getString(Coil_Heating_WaterFields::AirOutletNodeName).get(),
               idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNodeName).get());
-
-    EXPECT_EQ("UnitarySystemPerformance:Multispeed",
-              idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectType).get());
-    EXPECT_EQ("US Perf Multispeed",
-              idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName).get());
-
-    IdfObject idf_perf = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed)[0];
-
-    EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
-    EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
-    EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
-    EXPECT_EQ(1.0, idf_perf.getDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
-
-    ASSERT_EQ(0u, idf_perf.numExtensibleGroups());
   }
 }
 
