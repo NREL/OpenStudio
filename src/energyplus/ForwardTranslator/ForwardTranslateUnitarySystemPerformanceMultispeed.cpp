@@ -31,12 +31,6 @@
 #include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
 #include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
 #include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
-#include "../../model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
-#include "../../model/CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp"
-#include "../../model/CoilHeatingDXVariableRefrigerantFlow.hpp"
-#include "../../model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
-#include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
-#include "../../model/CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
@@ -49,12 +43,6 @@
 #include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
 #include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
 #include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
-#include "../../model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
-#include "../../model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
-#include "../../model/CoilCoolingDXVariableRefrigerantFlow.hpp"
-#include "../../model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
-#include "../../model/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.hpp"
-#include "../../model/CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
 #include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -120,16 +108,7 @@ namespace energyplus {
       } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit) {
         auto heatingCoilWaterToAirHeatingVar = heatingCoil->cast<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilWaterToAirHeatingVar.speeds().size());
-      } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit) {
-        auto heatingCoilWaterToAirHeating = heatingCoil->cast<CoilHeatingWaterToAirHeatPumpEquationFit>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);  // FIXME
-      } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow) {
-        auto heatingCoilVRF = heatingCoil->cast<CoilHeatingDXVariableRefrigerantFlow>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);  // FIXME
-      } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
-        auto heatingCoilVRFFluid = heatingCoil->cast<CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);  // FIXME
-      } else {
+      } else {  // e.g., CoilHeatingWaterToAirHeatPumpEquationFit, CoilHeatingDXVariableRefrigerantFlow, CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);
       }
     } else {
@@ -147,16 +126,7 @@ namespace energyplus {
       } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit) {
         auto coolingCoilWaterToAirHeatingVar = heatingCoil->cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilWaterToAirHeatingVar.speeds().size());
-      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit) {
-        auto coolingCoilWaterToAirHeating = heatingCoil->cast<CoilCoolingWaterToAirHeatPumpEquationFit>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);  // FIXME
-      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow) {
-        auto coolingCoilVRF = coolingCoil->cast<CoilCoolingDXVariableRefrigerantFlow>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);  // FIXME
-      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow_FluidTemperatureControl) {
-        auto coolingCoilVRFFluid = coolingCoil->cast<CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl>();
-        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);  // FIXME
-      } else {
+      } else {  // e.g., CoilCoolingWaterToAirHeatPumpEquationFit, CoilCoolingDXVariableRefrigerantFlow, CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
       }
     } else {
