@@ -43,7 +43,7 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_AirLoopHVACUnitarySystem) {
   Model m;
-  
+
   CoilCoolingDXVariableSpeed coil(m);
   CoilCoolingDXVariableSpeedSpeedData speed1(m);
   EXPECT_TRUE(coil.addSpeed(speed1));
@@ -69,7 +69,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
   EXPECT_EQ(1, idf_unitarys.size());
   WorkspaceObject& idf_unitary = idf_unitarys.front();
 
-  EXPECT_EQ("UnitarySystemPerformance:Multispeed", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
+  EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+            idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
   EXPECT_EQ("US Perf Multispeed", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
   WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
@@ -86,13 +87,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_ZoneHVACWaterToAirHeatPump) {
   Model m;
-  
+
   Schedule sch = m.alwaysOnDiscreteSchedule();
   FanOnOff fan(m);
   CoilHeatingWaterToAirHeatPumpEquationFit htg_coil(m);
   CoilCoolingWaterToAirHeatPumpEquationFit clg_coil(m);
   CoilHeatingElectric supp_htg_coil(m);
-  
+
   ZoneHVACWaterToAirHeatPump hp(m, sch, fan, htg_coil, clg_coil, supp_htg_coil);
 
   UnitarySystemPerformanceMultispeed perf(m);
@@ -105,7 +106,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_Z
   Space s(m);
   s.setThermalZone(z);
   EXPECT_TRUE(hp.addToThermalZone(z));
-  
+
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
@@ -113,7 +114,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_Z
   EXPECT_EQ(1, idf_hps.size());
   WorkspaceObject& idf_hp = idf_hps.front();
 
-  EXPECT_EQ("UnitarySystemPerformance:Multispeed", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectType).get());
+  EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+            idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectType).get());
   EXPECT_EQ("US Perf Multispeed", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName).get());
 
   WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
@@ -151,13 +153,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_Z
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
-  
+
   WorkspaceObjectVector idf_vrfs(w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow));
   EXPECT_EQ(1, idf_vrfs.size());
   WorkspaceObject& idf_vrf = idf_vrfs.front();
 
-  EXPECT_EQ("UnitarySystemPerformance:Multispeed", idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectType).get());
-  EXPECT_EQ("US Perf Multispeed", idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName).get());
+  EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+            idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectType).get());
+  EXPECT_EQ("US Perf Multispeed",
+            idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName).get());
 
   WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
   EXPECT_EQ(1, idf_perfs.size());
@@ -173,7 +177,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_Z
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_DoubleAssign) {
   Model m;
-  
+
   CoilCoolingDXVariableSpeed coil(m);
   CoilCoolingDXVariableSpeedSpeedData speed(m);
   EXPECT_TRUE(coil.addSpeed(speed));
@@ -194,6 +198,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_D
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
-  
+
   EXPECT_EQ(1u, ft.errors().size());
 }

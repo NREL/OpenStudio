@@ -33,7 +33,6 @@
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/SetpointManagerScheduled.hpp"
 #include "../../model/FanSystemModel.hpp"
-#include "../../model/UnitarySystemPerformanceMultispeed.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfObject_Impl.hpp"
@@ -47,6 +46,7 @@
 #include <utilities/idd/Coil_Cooling_DX_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
@@ -61,7 +61,6 @@
 #include <utilities/idd/SetpointManager_Scheduled_FieldEnums.hxx>
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
 #include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
-#include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 
 #include <resources.hxx>
 
