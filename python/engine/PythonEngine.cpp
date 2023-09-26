@@ -130,6 +130,18 @@ PythonEngine::~PythonEngine() {
 }
 
 void PythonEngine::importOpenStudio() {
+#if defined(__APPLE__)
+  // RTLD_LOCAL is import an Apple so that that Python and Ruby do not conflict
+  const std::string set_dlflags_cmd = R"(
+import sys
+import os
+pre_os_dl_open_flags = sys.getdlopenflags()
+sys.setdlopenflags(os.RTLD_LOCAL)
+  )";
+
+  exec(set_dlflags_cmd.c_str());
+#endif
+
   // generic_string() converts to a POSIX path, with forward slashes, so that pyimport doesn't choke on backslashes understood as escape sequence
   if (moduleIsRunningFromBuildDirectory()) {
     const auto bindingsDir = getOpenStudioModuleDirectory();
@@ -140,6 +152,15 @@ void PythonEngine::importOpenStudio() {
   }
   // Somehow that doesn't suffice to register it...
   exec("import openstudio");
+
+#if defined(__APPLE__)
+  // Reset the dlopen flags to the value prior to importOpenStudio
+  const std::string reset_dlflags_cmd = R"(
+sys.setdlopenflags(pre_os_dl_open_flags)
+  )";
+
+  exec(reset_dlflags_cmd.c_str());
+#endif
 }
 
 struct PythonObject
