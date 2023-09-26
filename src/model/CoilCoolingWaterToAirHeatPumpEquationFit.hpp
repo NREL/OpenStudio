@@ -15,8 +15,7 @@ namespace openstudio {
 
 namespace model {
 
-  class CurveQuadLinear;
-  class CurveQuintLinear;
+  class Curve;
 
   namespace detail {
     class CoilCoolingWaterToAirHeatPumpEquationFit_Impl;
@@ -29,9 +28,8 @@ namespace model {
     /** @name Constructors and Destructors */
 
     /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit with required curve objects */
-    CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model, const CurveQuadLinear& totalCoolingCapacityCurve,
-                                             const CurveQuintLinear& sensibleCoolingCapacityCurve,
-                                             const CurveQuadLinear& coolingPowerConsumptionCurve);
+    CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model, const Curve& totalCoolingCapacityCurve, const Curve& sensibleCoolingCapacityCurve,
+                                             const Curve& coolingPowerConsumptionCurve);
 
     /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit object and places it inside the model.  The coil is fully initialized with all companion objects. */
     CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model);
@@ -81,7 +79,7 @@ namespace model {
 
     double ratedEnteringAirWetBulbTemperature() const;
 
-    CurveQuadLinear totalCoolingCapacityCurve() const;
+    Curve totalCoolingCapacityCurve() const;
 
     OS_DEPRECATED(3, 2, 0) double totalCoolingCapacityCoefficient1() const;
     OS_DEPRECATED(3, 2, 0) double totalCoolingCapacityCoefficient2() const;
@@ -89,7 +87,7 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) double totalCoolingCapacityCoefficient4() const;
     OS_DEPRECATED(3, 2, 0) double totalCoolingCapacityCoefficient5() const;
 
-    CurveQuintLinear sensibleCoolingCapacityCurve() const;
+    Curve sensibleCoolingCapacityCurve() const;
 
     OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient1() const;
     OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient2() const;
@@ -98,7 +96,7 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient5() const;
     OS_DEPRECATED(3, 2, 0) double sensibleCoolingCapacityCoefficient6() const;
 
-    CurveQuadLinear coolingPowerConsumptionCurve() const;
+    Curve coolingPowerConsumptionCurve() const;
 
     OS_DEPRECATED(3, 2, 0) double coolingPowerConsumptionCoefficient1() const;
     OS_DEPRECATED(3, 2, 0) double coolingPowerConsumptionCoefficient2() const;
@@ -148,7 +146,7 @@ namespace model {
 
     bool setRatedEnteringAirWetBulbTemperature(double ratedEnteringAirWetBulbTemperature);
 
-    bool setTotalCoolingCapacityCurve(const CurveQuadLinear& totalCoolingCapacityCurve);
+    bool setTotalCoolingCapacityCurve(const Curve& totalCoolingCapacityCurve);
 
     OS_DEPRECATED(3, 2, 0) bool setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1);
     OS_DEPRECATED(3, 2, 0) bool setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2);
@@ -156,7 +154,7 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) bool setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4);
     OS_DEPRECATED(3, 2, 0) bool setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5);
 
-    bool setSensibleCoolingCapacityCurve(const CurveQuintLinear& sensibleCoolingCapacityCurve);
+    bool setSensibleCoolingCapacityCurve(const Curve& sensibleCoolingCapacityCurve);
 
     OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1);
     OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2);
@@ -165,7 +163,7 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5);
     OS_DEPRECATED(3, 2, 0) bool setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6);
 
-    bool setCoolingPowerConsumptionCurve(const CurveQuadLinear& coolingPowerConsumptionCurve);
+    bool setCoolingPowerConsumptionCurve(const Curve& coolingPowerConsumptionCurve);
 
     OS_DEPRECATED(3, 2, 0) bool setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1);
     OS_DEPRECATED(3, 2, 0) bool setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2);

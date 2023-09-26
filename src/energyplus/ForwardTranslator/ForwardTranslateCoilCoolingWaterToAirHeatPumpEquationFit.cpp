@@ -11,8 +11,7 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
 #include "../../model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
-#include "../../model/CurveQuadLinear.hpp"
-#include "../../model/CurveQuintLinear.hpp"
+#include "../../model/Curve.hpp"
 
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
