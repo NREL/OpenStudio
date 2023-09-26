@@ -147,6 +147,11 @@ namespace energyplus {
       mo.setHeatRecoveryBypassControlType(s.get());
     }
 
+    s = workspaceObject.getString(Controller_OutdoorAirFields::EconomizerOperationStaging);
+    if (s) {
+      mo.setEconomizerOperationStaging(s.get());
+    }
+
     return mo;
   }
 
