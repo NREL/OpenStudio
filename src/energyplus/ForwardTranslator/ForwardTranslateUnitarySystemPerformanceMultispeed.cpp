@@ -121,10 +121,10 @@ namespace energyplus {
         auto coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXMultispeed.stages().size());
       } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed) {
-        auto coolingCoilDXVarspeed = heatingCoil->cast<CoilCoolingDXVariableSpeed>();
+        auto coolingCoilDXVarspeed = coolingCoil->cast<CoilCoolingDXVariableSpeed>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXVarspeed.speeds().size());
       } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit) {
-        auto coolingCoilWaterToAirHeatingVar = heatingCoil->cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
+        auto coolingCoilWaterToAirHeatingVar = coolingCoil->cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilWaterToAirHeatingVar.speeds().size());
       } else {  // e.g., CoilCoolingWaterToAirHeatPumpEquationFit, CoilCoolingDXVariableRefrigerantFlow, CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
