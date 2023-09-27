@@ -75,13 +75,13 @@ namespace model {
       std::vector<ModelObject> result;
 
       // These are ResourceObjects, so they shouldn't really be children except for OS App / IG
-      result.push_back(baseOperatingMode());
-      if (auto _mode = alternativeOperatingMode1()) {
-        result.push_back(_mode.get());
-      }
-      if (auto _mode = alternativeOperatingMode2()) {
-        result.push_back(_mode.get());
-      }
+      // result.push_back(baseOperatingMode());
+      // if (auto _mode = alternativeOperatingMode1()) {
+      //   result.push_back(_mode.get());
+      // }
+      // if (auto _mode = alternativeOperatingMode2()) {
+      //   result.push_back(_mode.get());
+      // }
 
       return result;
     }

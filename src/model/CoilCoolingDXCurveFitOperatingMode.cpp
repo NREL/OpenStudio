@@ -61,8 +61,8 @@ namespace model {
 
     std::vector<ModelObject> CoilCoolingDXCurveFitOperatingMode_Impl::children() const {
       // These are ResourceObjects, so they shouldn't really be children except for OS App / IG
-      std::vector<ModelObject> result = subsetCastVector<ModelObject>(speeds());
-
+      // std::vector<ModelObject> result = subsetCastVector<ModelObject>(speeds());
+      std::vector<ModelObject> result;
       return result;
     }
 
