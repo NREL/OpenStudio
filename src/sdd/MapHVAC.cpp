@@ -2220,14 +2220,16 @@ namespace sdd {
           coil.setRatedHeatingCoefficientofPerformance(1.0 / _htPumpEIR.get());
         }
 
-        model::CurveQuadLinear heatingCapacityCurve = coil.heatingCapacityCurve();
+        model::Curve _heatingCapacityCurve = coil.heatingCapacityCurve();
+        model::CurveQuadLinear heatingCapacityCurve = _heatingCapacityCurve.cast<model::CurveQuadLinear>();
         heatingCapacityCurve.setCoefficient1Constant(-1.361311959);
         heatingCapacityCurve.setCoefficient2w(-2.471798046);
         heatingCapacityCurve.setCoefficient3x(4.173164514);
         heatingCapacityCurve.setCoefficient4y(0.640757401);
         heatingCapacityCurve.setCoefficient5z(0.0);
 
-        model::CurveQuadLinear heatingPowerConsumptionCurve = coil.heatingPowerConsumptionCurve();
+        model::Curve _heatingPowerConsumptionCurve = coil.heatingPowerConsumptionCurve();
+        model::CurveQuadLinear heatingPowerConsumptionCurve = _heatingPowerConsumptionCurve.cast<model::CurveQuadLinear>();
         heatingPowerConsumptionCurve.setCoefficient1Constant(-2.176941116);
         heatingPowerConsumptionCurve.setCoefficient2w(0.832114286);
         heatingPowerConsumptionCurve.setCoefficient3x(1.570743399);
@@ -3022,14 +3024,16 @@ namespace sdd {
           coil.setRatedCoolingCoefficientofPerformance(1.0 / _dxEIR.get());
         }
 
-        model::CurveQuadLinear totalCoolingCapacityCurve = coil.totalCoolingCapacityCurve();
+        model::Curve _totalCoolingCapacityCurve = coil.totalCoolingCapacityCurve();
+        model::CurveQuadLinear totalCoolingCapacityCurve = _totalCoolingCapacityCurve.cast<model::CurveQuadLinear>();
         totalCoolingCapacityCurve.setCoefficient1Constant(-9.149069561);
         totalCoolingCapacityCurve.setCoefficient2w(10.87814026);
         totalCoolingCapacityCurve.setCoefficient3x(-1.718780157);
         totalCoolingCapacityCurve.setCoefficient4y(0.746414818);
         totalCoolingCapacityCurve.setCoefficient5z(0.0);
 
-        model::CurveQuintLinear sensibleCoolingCapacityCurve = coil.sensibleCoolingCapacityCurve();
+        model::Curve _sensibleCoolingCapacityCurve = coil.sensibleCoolingCapacityCurve();
+        model::CurveQuintLinear sensibleCoolingCapacityCurve = _sensibleCoolingCapacityCurve.cast<model::CurveQuintLinear>();
         sensibleCoolingCapacityCurve.setCoefficient1Constant(-5.462690012);
         sensibleCoolingCapacityCurve.setCoefficient2v(17.95968138);
         sensibleCoolingCapacityCurve.setCoefficient3w(-11.87818402);
@@ -3037,7 +3041,8 @@ namespace sdd {
         sensibleCoolingCapacityCurve.setCoefficient5y(0.767285761);
         sensibleCoolingCapacityCurve.setCoefficient6z(0.0);
 
-        model::CurveQuadLinear coolingPowerConsumptionCurve = coil.coolingPowerConsumptionCurve();
+        model::Curve _coolingPowerConsumptionCurve = coil.coolingPowerConsumptionCurve();
+        model::CurveQuadLinear coolingPowerConsumptionCurve = _coolingPowerConsumptionCurve.cast<model::CurveQuadLinear>();
         coolingPowerConsumptionCurve.setCoefficient1Constant(-3.20456384);
         coolingPowerConsumptionCurve.setCoefficient2w(-0.976409399);
         coolingPowerConsumptionCurve.setCoefficient3x(3.97892546);

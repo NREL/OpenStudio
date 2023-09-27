@@ -13,7 +13,6 @@ namespace openstudio {
 namespace model {
 
   class Curve;
-  class CurveQuadLinear;
 
   namespace detail {
 
@@ -88,9 +87,9 @@ namespace model {
 
       double ratioofRatedHeatingCapacitytoRatedCoolingCapacity() const;
 
-      CurveQuadLinear heatingCapacityCurve() const;
+      Curve heatingCapacityCurve() const;
 
-      CurveQuadLinear heatingPowerConsumptionCurve() const;
+      Curve heatingPowerConsumptionCurve() const;
 
       Curve partLoadFractionCorrelationCurve() const;
 
@@ -142,9 +141,9 @@ namespace model {
 
       bool setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(double ratioofRatedHeatingCapacitytoRatedCoolingCapacity);
 
-      bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
+      bool setHeatingCapacityCurve(const Curve& heatingCapacityCurve);
 
-      bool setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve);
+      bool setHeatingPowerConsumptionCurve(const Curve& heatingPowerConsumptionCurve);
 
       bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
 
