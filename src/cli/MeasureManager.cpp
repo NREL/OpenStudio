@@ -32,6 +32,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <csignal>
+#include <cstdio>
 
 namespace openstudio {
 
@@ -1000,7 +1001,7 @@ void MeasureManagerServer::handle_request(const web::http::http_request& message
 void MeasureManagerServer::do_tasks_forever() {
   fmt::print("MeasureManager Ready");
   fmt::print("Accepting requests on: {}\n", m_url);
-  std::fflush(std::cout);
+  std::fflush(stdout);
   while (true) {
     auto task = tasks.wait_for_one();
     task();
