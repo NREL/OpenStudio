@@ -98,7 +98,7 @@ namespace model {
 
       bool isBoilerFlowModeDefaulted() const;
 
-      boost::optional<double> parasiticElectricLoad() const;
+      double onCycleParasiticElectricLoad() const;
 
       double sizingFactor() const;
 
@@ -160,7 +160,7 @@ namespace model {
 
       void resetBoilerFlowMode();
 
-      bool setParasiticElectricLoad(boost::optional<double> parasiticElectricLoad);
+      bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
 
       void resetParasiticElectricLoad();
 

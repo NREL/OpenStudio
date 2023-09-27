@@ -189,8 +189,10 @@ namespace model {
       return isEmpty(OS_Boiler_HotWaterFields::BoilerFlowMode);
     }
 
-    boost::optional<double> BoilerHotWater_Impl::parasiticElectricLoad() const {
-      return getDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, true);
+    double BoilerHotWater_Impl::onCycleParasiticElectricLoad() const {
+      boost::optional<double> value = getDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     double BoilerHotWater_Impl::sizingFactor() const {
@@ -347,17 +349,12 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool BoilerHotWater_Impl::setParasiticElectricLoad(boost::optional<double> parasiticElectricLoad) {
-      bool result = false;
-      if (parasiticElectricLoad) {
-        result = setDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, parasiticElectricLoad.get());
-      } else {
-        result = setString(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, "");
-      }
+    bool BoilerHotWater_Impl::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
+      bool result = setDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, onCycleParasiticElectricLoad);
       return result;
     }
 
-    void BoilerHotWater_Impl::resetParasiticElectricLoad() {
+    void BoilerHotWater_Impl::resetOnCycleParasiticElectricLoad() {
       bool result = setString(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, "");
       OS_ASSERT(result);
     }
@@ -478,7 +475,7 @@ namespace model {
 
     setBoilerFlowMode("ConstantFlow");
 
-    setParasiticElectricLoad(0.0);
+    setOnCycleParasiticElectricLoad(0.0);
 
     setSizingFactor(1.0);
 
@@ -577,8 +574,14 @@ namespace model {
     return getImpl<detail::BoilerHotWater_Impl>()->isBoilerFlowModeDefaulted();
   }
 
+  // DEPRECATED
   boost::optional<double> BoilerHotWater::parasiticElectricLoad() const {
-    return getImpl<detail::BoilerHotWater_Impl>()->parasiticElectricLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use onCycleParasiticElectricLoad instead.");
+    return getImpl<detail::BoilerHotWater_Impl>()->onCycleParasiticElectricLoad();
+  }
+
+  double BoilerHotWater::onCycleParasiticElectricLoad() const {
+    return getImpl<detail::BoilerHotWater_Impl>()->onCycleParasiticElectricLoad();
   }
 
   double BoilerHotWater::sizingFactor() const {
@@ -681,12 +684,24 @@ namespace model {
     getImpl<detail::BoilerHotWater_Impl>()->resetBoilerFlowMode();
   }
 
+  // DEPRECATED
   bool BoilerHotWater::setParasiticElectricLoad(double parasiticElectricLoad) {
-    return getImpl<detail::BoilerHotWater_Impl>()->setParasiticElectricLoad(parasiticElectricLoad);
+    DEPRECATED_AT_MSG(3, 7, 0, "Use setOnCycleParasiticElectricLoad instead.");
+    return getImpl<detail::BoilerHotWater_Impl>()->setOnCycleParasiticElectricLoad(parasiticElectricLoad);
   }
 
+  bool BoilerHotWater::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
+    return getImpl<detail::BoilerHotWater_Impl>()->setOnCycleParasiticElectricLoad(onCycleParasiticElectricLoad);
+  }
+
+  // DEPRECATED
   void BoilerHotWater::resetParasiticElectricLoad() {
-    getImpl<detail::BoilerHotWater_Impl>()->resetParasiticElectricLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use resetOnCycleParasiticElectricLoad instead.");
+    getImpl<detail::BoilerHotWater_Impl>()->resetOnCycleParasiticElectricLoad();
+  }
+
+  void BoilerHotWater::resetOnCycleParasiticElectricLoad() {
+    getImpl<detail::BoilerHotWater_Impl>()->resetOnCycleParasiticElectricLoad();
   }
 
   bool BoilerHotWater::setSizingFactor(double sizingFactor) {
