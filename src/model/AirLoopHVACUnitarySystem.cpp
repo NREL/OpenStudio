@@ -24,7 +24,8 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
-#include "utilities/core/Exception.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Exception.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
@@ -88,23 +89,22 @@ namespace model {
     }
 
     std::vector<ScheduleTypeKey> AirLoopHVACUnitarySystem_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
-      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin());
-      UnsignedVector::const_iterator e(fieldIndices.end());
+      const UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      const auto b = fieldIndices.cbegin();
+      const auto e = fieldIndices.cend();
       if (std::find(b, e, OS_AirLoopHVAC_UnitarySystemFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("AirLoopHVACUnitarySystem", "Availability"));
+        result.emplace_back("AirLoopHVACUnitarySystem", "Availability");
       }
       if (std::find(b, e, OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFanOperatingModeScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("AirLoopHVACUnitarySystem", "Supply Air Fan Operating Mode"));
+        result.emplace_back("AirLoopHVACUnitarySystem", "Supply Air Fan Operating Mode");
       }
       return result;
     }
 
     ModelObject AirLoopHVACUnitarySystem_Impl::clone(Model model) const {
       // Mimic what StraightComponent_Impl::clone would do (we inherit ZoneHVACComponent here...)
-      auto modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitarySystem>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitarySystem>();  // NOLINT(bugprone-parent-virtual-call)
       modelObjectClone.setString(modelObjectClone.inletPort(), "");
       modelObjectClone.setString(modelObjectClone.outletPort(), "");
 
@@ -433,9 +433,11 @@ namespace model {
       return getDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation, true);
     }
 
-    boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const {
-      // No default, and return uninitialized if empty
-      return getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired, false, true);
+    std::string AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const {
+      boost::optional<std::string> value =
+        getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<double> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateWhenNoCoolingorHeatingisRequired() const {
@@ -593,91 +595,74 @@ namespace model {
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setControlType(const std::string& controlType) {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, controlType);
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, controlType);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetControlType() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, "");
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setControllingZoneorThermostatLocation(const boost::optional<ThermalZone>& thermalZone) {
-      bool result(false);
-      if (thermalZone) {
-        result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::ControllingZoneorThermostatLocation, thermalZone.get().handle());
-      } else {
-        resetControllingZoneorThermostatLocation();
-        result = true;
-      }
+    bool AirLoopHVACUnitarySystem_Impl::setControllingZoneorThermostatLocation(const ThermalZone& thermalZone) {
+      const bool result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::ControllingZoneorThermostatLocation, thermalZone.handle());
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetControllingZoneorThermostatLocation() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControllingZoneorThermostatLocation, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControllingZoneorThermostatLocation, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setDehumidificationControlType(const std::string& dehumidificationControlType) {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DehumidificationControlType, dehumidificationControlType);
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DehumidificationControlType, dehumidificationControlType);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetDehumidificationControlType() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DehumidificationControlType, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DehumidificationControlType, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setAvailabilitySchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_AirLoopHVAC_UnitarySystemFields::AvailabilityScheduleName, "AirLoopHVACUnitarySystem", "Availability", schedule);
+      const bool result =
+        setSchedule(OS_AirLoopHVAC_UnitarySystemFields::AvailabilityScheduleName, "AirLoopHVACUnitarySystem", "Availability", schedule);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetAvailabilitySchedule() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::AvailabilityScheduleName, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::AvailabilityScheduleName, "");
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setSupplyFan(const boost::optional<HVACComponent>& supplyFan) {
-      bool result(false);
-      if (supplyFan) {
-        result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::SupplyFanName, supplyFan.get().handle());
-      } else {
-        resetSupplyFan();
-        result = true;
-      }
+    bool AirLoopHVACUnitarySystem_Impl::setSupplyFan(const HVACComponent& supplyFan) {
+      const bool result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::SupplyFanName, supplyFan.handle());
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetSupplyFan() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyFanName, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyFanName, "");
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setFanPlacement(boost::optional<std::string> fanPlacement) {
-      bool result(false);
-      if (fanPlacement) {
-        result = setString(OS_AirLoopHVAC_UnitarySystemFields::FanPlacement, fanPlacement.get());
-      } else {
-        resetFanPlacement();
-        result = true;
-      }
+    bool AirLoopHVACUnitarySystem_Impl::setFanPlacement(const std::string& fanPlacement) {
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::FanPlacement, fanPlacement);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetFanPlacement() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::FanPlacement, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::FanPlacement, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFanOperatingModeScheduleName, "AirLoopHVACUnitarySystem",
-                                "Supply Air Fan Operating Mode", schedule);
+      const bool result = setSchedule(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFanOperatingModeScheduleName, "AirLoopHVACUnitarySystem",
+                                      "Supply Air Fan Operating Mode", schedule);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetSupplyAirFanOperatingModeSchedule() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFanOperatingModeScheduleName, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFanOperatingModeScheduleName, "");
       OS_ASSERT(result);
     }
 
@@ -698,15 +683,24 @@ namespace model {
       resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
       resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
       resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
+      if (!hasCoolingCoil()) {
+        setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("None");
+        resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+        resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+        resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+        resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+        resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+        resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+      }
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setDXHeatingCoilSizingRatio(double dXHeatingCoilSizingRatio) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DXHeatingCoilSizingRatio, dXHeatingCoilSizingRatio);
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DXHeatingCoilSizingRatio, dXHeatingCoilSizingRatio);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetDXHeatingCoilSizingRatio() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DXHeatingCoilSizingRatio, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DXHeatingCoilSizingRatio, "");
       OS_ASSERT(result);
     }
 
@@ -727,6 +721,15 @@ namespace model {
       resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
       resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
       resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
+      if (!hasHeatingCoil()) {
+        setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("None");
+        resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+        resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+        resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+        resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+        resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+        resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+      }
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil) {
@@ -734,49 +737,43 @@ namespace model {
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetUseDOASDXCoolingCoil() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::UseDOASDXCoolingCoil, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::UseDOASDXCoolingCoil, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setDOASDXCoolingCoilLeavingMinimumAirTemperature(double dOASDXCoolingCoilLeavingMinimumAirTemperature) {
-      bool result =
+      const bool result =
         setDouble(OS_AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature, dOASDXCoolingCoilLeavingMinimumAirTemperature);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetDOASDXCoolingCoilLeavingMinimumAirTemperature() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature, "");
       OS_ASSERT(result);
     }
 
     void AirLoopHVACUnitarySystem_Impl::autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature, "Autosize");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature, "Autosize");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setLatentLoadControl(const std::string& latentLoadControl) {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::LatentLoadControl, latentLoadControl);
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::LatentLoadControl, latentLoadControl);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetLatentLoadControl() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::LatentLoadControl, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::LatentLoadControl, "");
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setSupplementalHeatingCoil(const boost::optional<HVACComponent>& supplementalHeatingCoil) {
-      bool result(false);
-      if (supplementalHeatingCoil) {
-        result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName, supplementalHeatingCoil.get().handle());
-      } else {
-        resetSupplementalHeatingCoil();
-        result = true;
-      }
+    bool AirLoopHVACUnitarySystem_Impl::setSupplementalHeatingCoil(const HVACComponent& supplementalHeatingCoil) {
+      const bool result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName, supplementalHeatingCoil.handle());
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetSupplementalHeatingCoil() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName, "");
       OS_ASSERT(result);
     }
 
@@ -949,304 +946,318 @@ namespace model {
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(
-      boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired) {
-      bool result(false);
-      if (supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired) {
-        result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired,
-                           supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired.get());
-      } else {
-        resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
-        result = true;
-      }
+      const std::string& supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired) {
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired,
+                                    supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired, "None");
       OS_ASSERT(result);
+      resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
-      boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
-      bool result(false);
-      if (supplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
-        result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired,
-                           supplyAirFlowRateWhenNoCoolingorHeatingisRequired.get());
-        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate");
-        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
-      } else {
-        resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
-        result = true;
+    bool
+      AirLoopHVACUnitarySystem_Impl::setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(double supplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired,
+                                    supplyAirFlowRateWhenNoCoolingorHeatingisRequired);
+      if (!result) {
+        return false;
       }
-      return result;
+
+      OS_ASSERT(setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate"));
+      // resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+
+      return true;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired, "");
       OS_ASSERT(result);
     }
 
     void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired, "Autosize");
-      boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate");
-      result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired, "Autosize");
       OS_ASSERT(result);
+      OS_ASSERT(setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate"));
+      // resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired(
-      boost::optional<double> supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired) {
-      bool result(false);
-      if (supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired) {
-        result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired,
-                           supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired.get());
-        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FlowPerFloorArea");
-        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
-      } else {
-        resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
-        result = true;
+      double supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired) {
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired,
+                                    supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired);
+      if (!result) {
+        return false;
       }
-      return result;
+
+      OS_ASSERT(setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FlowPerFloorArea"));
+      resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      // resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+
+      return true;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
-      boost::optional<double> fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
-      bool result(false);
-      if (fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
-        result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,
-                           fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired.get());
-        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FractionOfAutosizedCoolingValue");
-        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
-      } else {
-        resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
-        result = true;
+      double fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
+      const bool result =
+        setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,
+                  fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
+
+      if (!result) {
+        return false;
       }
-      return result;
+
+      OS_ASSERT(setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FractionOfAutosizedCoolingValue"));
+      resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+      // resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+
+      return true;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
-      bool result =
+      const bool result =
         setString(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
-      boost::optional<double> fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
-      bool result(false);
-      if (fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
-        result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,
-                           fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired.get());
-        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FractionOfAutosizedHeatingValue");
-        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
-      } else {
-        resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
-        result = true;
+      double fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
+      const bool result =
+        setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,
+                  fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
+
+      if (!result) {
+        return false;
       }
-      return result;
+
+      OS_ASSERT(setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FractionOfAutosizedHeatingValue"));
+      resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      // resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+
+      return true;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
-      bool result =
+      const bool result =
         setString(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired(
-      boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired) {
-      bool result(false);
-      if (designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired) {
-        result = setDouble(
-          OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired,
-          designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired.get());
-        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FlowPerCoolingCapacity");
-        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
-      } else {
-        resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
-        result = true;
+      double designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired) {
+      const bool result =
+        setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired,
+                  designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired);
+
+      if (!result) {
+        return false;
       }
-      return result;
+
+      OS_ASSERT(setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FlowPerCoolingCapacity"));
+      resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      // resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+
+      return true;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired() {
-      bool result = setString(
+      const bool result = setString(
+
         OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired(
-      boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired) {
-      bool result(false);
-      if (designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired) {
-        result = setDouble(
-          OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired,
-          designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired.get());
-        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FlowPerHeatingCapacity");
-        result = result && setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
-      } else {
-        resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
-        result = true;
+      double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired) {
+      const bool result =
+        setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired,
+                  designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired);
+
+      if (!result) {
+        return false;
       }
-      return result;
+
+      OS_ASSERT(setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("FlowPerHeatingCapacity"));
+      resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+      resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+      // resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+
+      return true;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired() {
-      bool result = setString(
+      const bool result = setString(
         OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired, "");
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature) {
-      bool result(false);
-      if (maximumSupplyAirTemperature) {
-        result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, maximumSupplyAirTemperature.get());
-      } else {
-        resetMaximumSupplyAirTemperature();
-        result = true;
-      }
-      OS_ASSERT(result);
+    bool AirLoopHVACUnitarySystem_Impl::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, maximumSupplyAirTemperature);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetMaximumSupplyAirTemperature() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, "");
       OS_ASSERT(result);
     }
 
     void AirLoopHVACUnitarySystem_Impl::autosizeMaximumSupplyAirTemperature() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, "Autosize");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, "Autosize");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(
       double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,
-                              maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
-      OS_ASSERT(result);
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,
+                                    maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, "");
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setOutdoorDryBulbTemperatureSensorNodeName(
-      boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName) {
-      bool result(false);
-      if (outdoorDryBulbTemperatureSensorNodeName) {
-        result =
-          setString(OS_AirLoopHVAC_UnitarySystemFields::OutdoorDryBulbTemperatureSensorNodeName, outdoorDryBulbTemperatureSensorNodeName.get());
-      } else {
-        resetOutdoorDryBulbTemperatureSensorNodeName();
-        result = true;
-      }
+    bool AirLoopHVACUnitarySystem_Impl::setOutdoorDryBulbTemperatureSensorNodeName(const std::string& outdoorDryBulbTemperatureSensorNodeName) {
+      const bool result =
+        setString(OS_AirLoopHVAC_UnitarySystemFields::OutdoorDryBulbTemperatureSensorNodeName, outdoorDryBulbTemperatureSensorNodeName);
       OS_ASSERT(result);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetOutdoorDryBulbTemperatureSensorNodeName() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::OutdoorDryBulbTemperatureSensorNodeName, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::OutdoorDryBulbTemperatureSensorNodeName, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setMaximumCyclingRate(double maximumCyclingRate) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate, maximumCyclingRate);
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate, maximumCyclingRate);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetMaximumCyclingRate() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setHeatPumpTimeConstant(double heatPumpTimeConstant) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant, heatPumpTimeConstant);
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant, heatPumpTimeConstant);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetHeatPumpTimeConstant() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse, fractionofOnCyclePowerUse);
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse, fractionofOnCyclePowerUse);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetFractionofOnCyclePowerUse() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setHeatPumpFanDelayTime(double heatPumpFanDelayTime) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime, heatPumpFanDelayTime);
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime, heatPumpFanDelayTime);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetHeatPumpFanDelayTime() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setAncilliaryOnCycleElectricPower(double ancilliaryOnCycleElectricPower) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOnCycleElectricPower, ancilliaryOnCycleElectricPower);
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOnCycleElectricPower, ancilliaryOnCycleElectricPower);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetAncilliaryOnCycleElectricPower() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOnCycleElectricPower, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOnCycleElectricPower, "");
       OS_ASSERT(result);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setAncilliaryOffCycleElectricPower(double ancilliaryOffCycleElectricPower) {
-      bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOffCycleElectricPower, ancilliaryOffCycleElectricPower);
+      const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOffCycleElectricPower, ancilliaryOffCycleElectricPower);
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetAncilliaryOffCycleElectricPower() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOffCycleElectricPower, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOffCycleElectricPower, "");
       OS_ASSERT(result);
     }
 
     // bool AirLoopHVACUnitarySystem_Impl::setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate) {
-    //   bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate, designHeatRecoveryWaterFlowRate);
+    //   const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate, designHeatRecoveryWaterFlowRate);
     //   return result;
     // }
 
     // void AirLoopHVACUnitarySystem_Impl::resetDesignHeatRecoveryWaterFlowRate() {
-    //   bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate, "");
+    //   const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate, "");
     //   OS_ASSERT(result);
     // }
 
     // bool AirLoopHVACUnitarySystem_Impl::setMaximumTemperatureforHeatRecovery(double maximumTemperatureforHeatRecovery) {
-    //   bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery, maximumTemperatureforHeatRecovery);
+    //   const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery, maximumTemperatureforHeatRecovery);
     //   return result;
     // }
 
     // void AirLoopHVACUnitarySystem_Impl::resetMaximumTemperatureforHeatRecovery() {
-    //   bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery, "");
+    //   const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery, "");
     //   OS_ASSERT(result);
     // }
 
-    bool AirLoopHVACUnitarySystem_Impl::setDesignSpecificationMultispeedObject(
-      const boost::optional<UnitarySystemPerformanceMultispeed>& unitarySystemPerformace) {
-      bool result(false);
-      if (unitarySystemPerformace) {
-        result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName, unitarySystemPerformace.get().handle());
-      } else {
-        resetDesignSpecificationMultispeedObject();
-        result = true;
-      }
+    bool AirLoopHVACUnitarySystem_Impl::setDesignSpecificationMultispeedObject(const UnitarySystemPerformanceMultispeed& unitarySystemPerformace) {
+      const bool result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName, unitarySystemPerformace.handle());
       return result;
     }
 
     void AirLoopHVACUnitarySystem_Impl::resetDesignSpecificationMultispeedObject() {
-      bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName, "");
+      const bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName, "");
       OS_ASSERT(result);
     }
 
@@ -1391,7 +1402,7 @@ namespace model {
     OS_ASSERT(ok);
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodDuringCoolingOperation("None");
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodDuringHeatingOperation("None");
-    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("None");
     setMaximumSupplyAirTemperature(80.0);
     setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
     ok = setMaximumCyclingRate(2.5);
@@ -1577,7 +1588,7 @@ namespace model {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
   }
 
-  boost::optional<std::string> AirLoopHVACUnitarySystem::supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const {
+  std::string AirLoopHVACUnitarySystem::supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
   }
 
@@ -1871,12 +1882,6 @@ namespace model {
       designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation);
   }
 
-  bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(
-    const std::string& supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired) {
-    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(
-      supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
-  }
-
   void AirLoopHVACUnitarySystem::resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
   }
@@ -1884,10 +1889,6 @@ namespace model {
   bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(double supplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
       supplyAirFlowRateWhenNoCoolingorHeatingisRequired);
-  }
-
-  void AirLoopHVACUnitarySystem::resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
   }
 
   void AirLoopHVACUnitarySystem::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
@@ -1900,28 +1901,16 @@ namespace model {
       supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired);
   }
 
-  void AirLoopHVACUnitarySystem::resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
-  }
-
   bool AirLoopHVACUnitarySystem::setFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
     double fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
       fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
   }
 
-  void AirLoopHVACUnitarySystem::resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
-  }
-
   bool AirLoopHVACUnitarySystem::setFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
     double fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
       fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
-  }
-
-  void AirLoopHVACUnitarySystem::resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
   }
 
   bool AirLoopHVACUnitarySystem::setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired(
@@ -1931,21 +1920,11 @@ namespace model {
         designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired);
   }
 
-  void AirLoopHVACUnitarySystem::resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()
-      ->resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
-  }
-
   bool AirLoopHVACUnitarySystem::setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired(
     double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()
       ->setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired(
         designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired);
-  }
-
-  void AirLoopHVACUnitarySystem::resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired() {
-    getImpl<detail::AirLoopHVACUnitarySystem_Impl>()
-      ->resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
   }
 
   bool AirLoopHVACUnitarySystem::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
@@ -2155,6 +2134,48 @@ namespace model {
     DEPRECATED_AT_MSG(3, 7, 0,
                       "Use setSupplyAirFlowRateDuringHeatingOperation, autosizeSupplyAirFlowRateDuringHeatingOperation, "
                       "setSupplyAirFlowRatePerFloorAreaduringHeatingOperation, or setFractionofAutosizedDesignHeatingSupplyAirFlowRate instead.");
+  }
+
+  bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(const std::string& noCoolHeatMethod) {
+    // setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired, setSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired, setFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired, setFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired, setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired, setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired
+    DEPRECATED_AT_MSG(3, 7, 0,
+                      "Use resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired For 'None', one of the flow rate setters otherwise.");
+
+    if (openstudio::istringEqual("None", noCoolHeatMethod)) {
+      resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
+      return true;
+    }
+    return false;
+  }
+
+  void AirLoopHVACUnitarySystem::resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
+    DEPRECATED_AT_MSG(
+      3, 7, 0, "Use resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired to clear all fields, one of the flow rate setters otherwise.");
+  }
+
+  void AirLoopHVACUnitarySystem::resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired() {
+    DEPRECATED_AT_MSG(
+      3, 7, 0, "Use resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired to clear all fields, one of the flow rate setters otherwise.");
+  }
+
+  void AirLoopHVACUnitarySystem::resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
+    DEPRECATED_AT_MSG(
+      3, 7, 0, "Use resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired to clear all fields, one of the flow rate setters otherwise.");
+  }
+
+  void AirLoopHVACUnitarySystem::resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
+    DEPRECATED_AT_MSG(
+      3, 7, 0, "Use resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired to clear all fields, one of the flow rate setters otherwise.");
+  }
+
+  void AirLoopHVACUnitarySystem::resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired() {
+    DEPRECATED_AT_MSG(
+      3, 7, 0, "Use resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired to clear all fields, one of the flow rate setters otherwise.");
+  }
+
+  void AirLoopHVACUnitarySystem::resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired() {
+    DEPRECATED_AT_MSG(
+      3, 7, 0, "Use resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired to clear all fields, one of the flow rate setters otherwise.");
   }
 
   /// @endcond

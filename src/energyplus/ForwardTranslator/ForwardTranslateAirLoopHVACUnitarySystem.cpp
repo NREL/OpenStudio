@@ -309,10 +309,8 @@ namespace energyplus {
     }
 
     // Supply Air Flow Rate Method When No Cooling or Heating is Required
-    s = modelObject.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
-    if (s) {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateMethod, s.get());
-    }
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateMethod,
+                            modelObject.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
 
     // Supply Air Flow Rate When No Cooling or Heating is Required
     if (modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisRequiredAutosized()) {

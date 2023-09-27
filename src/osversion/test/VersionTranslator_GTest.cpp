@@ -32,6 +32,7 @@
 #include <utilities/idd/OS_Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
+#include <utilities/idd/OS_AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Compare.hpp"
 
@@ -2547,4 +2548,199 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_GroundHeatExchangerVertical) {
   EXPECT_EQ(13.375, uka.getDouble(5).get());                                                    // Average Soil Surface Temperature
   EXPECT_EQ(3.2, uka.getDouble(6).get());                                                       // Average Amplitude of Surface Temperature
   EXPECT_EQ(8.0, uka.getDouble(7).get());                                                       // Phase Shift of Minimum Surface Temperature
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_default) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_UnitarySystem_SAFMethods_default.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  // =====================================================================================================
+  // In this test, this is the Default constructed Unitary System, just adding coils (or not).
+  // The Supply Air Flow During XXX field is set to Autosize,
+  // yet the Method field isn't "SupplyAirFlowRate" but blank.
+  // =====================================================================================================
+
+  std::vector<WorkspaceObject> unitarys = model_->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
+  ASSERT_EQ(3u, unitarys.size());
+  for (const auto& unitary : unitarys) {
+
+    const bool hasHeatingCoil = !unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::HeatingCoilName);
+    const bool hasCoolingCoil = !unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::CoolingCoilName);
+
+    if (hasCoolingCoil) {
+      EXPECT_EQ("SupplyAirFlowRate", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
+      EXPECT_EQ("Autosize", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation).get());
+    } else {
+      EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
+      EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation));
+    }
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation));
+
+    if (hasHeatingCoil) {
+      EXPECT_EQ("SupplyAirFlowRate", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
+      EXPECT_EQ("Autosize", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation).get());
+    } else {
+      EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
+      EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation));
+    }
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRate));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation));
+
+    EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired).get());
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(
+      unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(
+      unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(unitary.isEmpty(
+      OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(unitary.isEmpty(
+      OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired));
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_CorrectCombos) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_UnitarySystem_SAFMethods_CorrectCombos.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  // =====================================================================================================
+  // In this test, the SAF method is filled out, and ALL flow fields are set.
+  // We respect the SAF method choice, we keep the corresponding flow field, and clear out all the others
+  // =====================================================================================================
+
+  std::vector<WorkspaceObject> unitarys = model_->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
+  ASSERT_EQ(3u, unitarys.size());
+  for (const auto& unitary : unitarys) {
+
+    const bool hasHeatingCoil = !unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::HeatingCoilName);
+    const bool hasCoolingCoil = !unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::CoolingCoilName);
+
+    if (hasCoolingCoil) {
+      EXPECT_EQ("FlowPerFloorArea", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
+      EXPECT_EQ(1.1, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation).get());
+    } else {
+      EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
+      EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation));
+    }
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation));
+
+    if (hasHeatingCoil) {
+      EXPECT_EQ("FlowPerHeatingCapacity", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
+      EXPECT_EQ(2.3, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation).get());
+    } else {
+      EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
+      EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation));
+    }
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRate));
+
+    if (hasCoolingCoil || hasHeatingCoil) {
+      EXPECT_EQ("FractionOfAutosizedHeatingValue",
+                unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired).get());
+      EXPECT_EQ(
+        0.4, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired)
+               .get());
+    } else {
+      EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired).get());
+      EXPECT_TRUE(
+        unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
+    }
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(
+      unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(unitary.isEmpty(
+      OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(unitary.isEmpty(
+      OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired));
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_IncorrectCombos) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_UnitarySystem_SAFMethods_IncorrectCombos.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  std::vector<WorkspaceObject> unitarys = model_->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
+  ASSERT_EQ(3u, unitarys.size());
+
+  // =====================================================================================================
+  // In this test, the SAF method is filled out, but the corresponding flow field isn't.
+  // We respect the SAF method choice, and we set the corresponding flow field field to zero
+  // =====================================================================================================
+
+  for (const auto& unitary : unitarys) {
+
+    const bool hasHeatingCoil = !unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::HeatingCoilName);
+    const bool hasCoolingCoil = !unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::CoolingCoilName);
+
+    if (hasCoolingCoil) {
+      EXPECT_EQ("FractionOfAutosizedCoolingValue",
+                unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
+      EXPECT_DOUBLE_EQ(0.0, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate).get()) << unitary;
+    } else {
+      EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
+      EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate));
+    }
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation));
+
+    if (hasHeatingCoil) {
+      EXPECT_EQ("FlowPerFloorArea", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
+      EXPECT_DOUBLE_EQ(0.0, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation).get()) << unitary;
+    } else {
+      EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
+      EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation));
+    }
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRate));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation));
+
+    if (hasCoolingCoil || hasHeatingCoil) {
+      EXPECT_EQ("FlowPerCoolingCapacity",
+                unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired).get());
+      EXPECT_DOUBLE_EQ(
+        0.0, unitary
+               .getDouble(
+                 OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired)
+               .get()) << unitary;
+    } else {
+      EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired).get());
+      EXPECT_TRUE(unitary.isEmpty(
+        OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired));
+    }
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(
+      unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(
+      unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(unitary.isEmpty(
+      OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired));
+    EXPECT_TRUE(unitary.isEmpty(
+      OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired));
+  }
 }
