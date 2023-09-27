@@ -46,7 +46,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_BoilerHotWater) {
   EXPECT_TRUE(bhw.setOptimumPartLoadRatio(6.0));
   EXPECT_TRUE(bhw.setWaterOutletUpperTemperatureLimit(7.0));
   EXPECT_TRUE(bhw.setBoilerFlowMode("LeavingSetpointModulated"));
-  EXPECT_TRUE(bhw.setParasiticElectricLoad(8.0));
+  EXPECT_TRUE(bhw.setOnCycleParasiticElectricLoad(8.0));
   EXPECT_TRUE(bhw.setSizingFactor(9.0));
   EXPECT_TRUE(bhw.setEndUseSubcategory("Test"));
   EXPECT_TRUE(bhw.setOffCycleParasiticFuelLoad(10.0));

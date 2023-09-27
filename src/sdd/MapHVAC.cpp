@@ -5729,7 +5729,7 @@ namespace sdd {
     boost::optional<double> _parasiticLd = lexicalCastToDouble(parasiticLdElement);
 
     if (_parasiticLd) {
-      boiler.setParasiticElectricLoad(unitToUnit(_parasiticLd.get(), "Btu/h", "W").get());
+      boiler.setOnCycleParasiticElectricLoad(unitToUnit(_parasiticLd.get(), "Btu/h", "W").get());
     }
 
     if (!autosize()) {

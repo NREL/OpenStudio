@@ -13732,7 +13732,7 @@ OS:Boiler:HotWater,
        \units W
        \ip-units W
        \minimum 0.0
-       \default 0.0
+       \required-field
   N9,  \field Off Cycle Parasitic Fuel Load
        \type real
        \units W
