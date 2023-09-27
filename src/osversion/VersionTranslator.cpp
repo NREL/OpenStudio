@@ -8623,6 +8623,7 @@ namespace osversion {
           }
         }
 
+        // IDD 3.6.1 had a default of 0.0, so it'll pick that up if empty, and it matches the new Ctor value
         newObject.setDouble(15, object.getDouble(15, true).get());
         newObject.setDouble(16, 0.0);
 

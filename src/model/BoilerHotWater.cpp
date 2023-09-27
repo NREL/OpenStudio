@@ -352,7 +352,7 @@ namespace model {
     }
 
     bool BoilerHotWater_Impl::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
-      bool result = setDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, onCycleParasiticElectricLoad);
+      const bool result = setDouble(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, onCycleParasiticElectricLoad);
       return result;
     }
 
