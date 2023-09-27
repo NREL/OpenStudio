@@ -154,8 +154,6 @@ namespace model {
 
     OS_DEPRECATED(3, 7, 0) void resetParasiticElectricLoad();
 
-    void resetOnCycleParasiticElectricLoad();
-
     bool setSizingFactor(double sizingFactor);
 
     void resetSizingFactor();

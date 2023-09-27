@@ -8404,6 +8404,7 @@ namespace osversion {
           }
         }
 
+        newObject.setDouble(15, object.getDouble(15, true).get());
         newObject.setDouble(16, 0.0);
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));

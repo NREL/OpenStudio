@@ -162,8 +162,6 @@ namespace model {
 
       bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
 
-      void resetParasiticElectricLoad();
-
       bool setSizingFactor(double sizingFactor);
 
       void resetSizingFactor();

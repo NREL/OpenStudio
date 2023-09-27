@@ -19,6 +19,8 @@
 #include <utilities/idd/OS_Boiler_HotWater_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include "../utilities/core/DeprecatedHelpers.hpp"  // For deprecation
+
 namespace openstudio {
 namespace model {
 
@@ -354,11 +356,6 @@ namespace model {
       return result;
     }
 
-    void BoilerHotWater_Impl::resetOnCycleParasiticElectricLoad() {
-      bool result = setString(OS_Boiler_HotWaterFields::OnCycleParasiticElectricLoad, "");
-      OS_ASSERT(result);
-    }
-
     bool BoilerHotWater_Impl::setSizingFactor(double sizingFactor) {
       bool result = setDouble(OS_Boiler_HotWaterFields::SizingFactor, sizingFactor);
       return result;
@@ -472,15 +469,10 @@ namespace model {
     OS_ASSERT(getImpl<detail::BoilerHotWater_Impl>());
 
     setWaterOutletUpperTemperatureLimit(99.0);
-
     setBoilerFlowMode("ConstantFlow");
-
-    setOnCycleParasiticElectricLoad(0.0);
-
     setSizingFactor(1.0);
-
     setEndUseSubcategory("General");
-
+    setOnCycleParasiticElectricLoad(0.0);
     setOffCycleParasiticFuelLoad(0.0);
   }
 
@@ -577,7 +569,8 @@ namespace model {
   // DEPRECATED
   boost::optional<double> BoilerHotWater::parasiticElectricLoad() const {
     DEPRECATED_AT_MSG(3, 7, 0, "Use onCycleParasiticElectricLoad instead.");
-    return getImpl<detail::BoilerHotWater_Impl>()->onCycleParasiticElectricLoad();
+    boost::optional<double> parasiticElectricLoad =
+      getImpl<detail::BoilerHotWater_Impl>()->onCycleParasiticElectricLoad() return parasiticElectricLoad;
   }
 
   double BoilerHotWater::onCycleParasiticElectricLoad() const {
@@ -696,12 +689,7 @@ namespace model {
 
   // DEPRECATED
   void BoilerHotWater::resetParasiticElectricLoad() {
-    DEPRECATED_AT_MSG(3, 7, 0, "Use resetOnCycleParasiticElectricLoad instead.");
-    getImpl<detail::BoilerHotWater_Impl>()->resetOnCycleParasiticElectricLoad();
-  }
-
-  void BoilerHotWater::resetOnCycleParasiticElectricLoad() {
-    getImpl<detail::BoilerHotWater_Impl>()->resetOnCycleParasiticElectricLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "OnCycleParasiticElectricLoad is now required.");
   }
 
   bool BoilerHotWater::setSizingFactor(double sizingFactor) {
