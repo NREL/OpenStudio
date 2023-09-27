@@ -137,7 +137,7 @@ namespace energyplus {
 
     // OnCycleParasiticElectricLoad
 
-    if ((value = modelObject.parasiticElectricLoad())) {
+    if ((value = modelObject.onCycleParasiticElectricLoad())) {
       idfObject.setDouble(Boiler_HotWaterFields::OnCycleParasiticElectricLoad, value.get());
     }
 
