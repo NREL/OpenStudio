@@ -33,6 +33,7 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/math/FloatCompare.hpp"
 #include "../utilities/idf/IdfObject_Impl.hpp"
+#include "../utilities/core/ASCIIStrings.hpp"
 #include "../utilities/core/UUID.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
@@ -8173,8 +8174,226 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        // * 11 - Heating Coil Name
+        constexpr unsigned heatingCoilNameIndex = 11;
+        const bool hasHeatingCoil = !object.isEmpty(heatingCoilNameIndex);
+
+        // * 13 - Cooling Coil Name
+        constexpr unsigned coolingCoilNameIndex = 13;
+        const bool hasCoolingCoil = !object.isEmpty(coolingCoilNameIndex);
+
+        // We use getString(idx, false, true) to not get default, returned unitialized empty
+
+        // * 18 - Supply Air Flow Rate Method During Cooling Operation
+        constexpr unsigned coolingSAFMethodIndex = 18;
+        boost::optional<std::string> coolingSAFMethod = object.getString(coolingSAFMethodIndex, false, true);
+
+        // * 23 - Supply Air Flow Rate Method During Heating Operation
+        constexpr unsigned heatingSAFMethodIndex = 23;
+        boost::optional<std::string> heatingSAFMethod = object.getString(heatingSAFMethodIndex, false, true);
+
+        // * 28 - Supply Air Flow Rate Method When No Cooling or Heating is Required
+        constexpr unsigned noCoolHeatSAFMethodIndex = 28;
+        boost::optional<std::string> noCoolHeatSAFMethod = object.getString(noCoolHeatSAFMethodIndex, false, true);
+
+        constexpr std::array<std::string_view, 4> coolingSAFMethodChoices{"SupplyAirFlowRate", "FlowPerFloorArea", "FractionOfAutosizedCoolingValue",
+                                                                          "FlowPerCoolingCapacity"};
+
+        constexpr std::array<std::string_view, 4> coolingSAFMethodChoicesUC{"SUPPLYAIRFLOWRATE", "FLOWPERFLOORAREA",
+                                                                            "FRACTIONOFAUTOSIZEDCOOLINGVALUE", "FLOWPERCOOLINGCAPACITY"};
+
+        constexpr std::array<std::string_view, 4> heatingSAFMethodChoices{"SupplyAirFlowRate", "FlowPerFloorArea", "FractionOfAutosizedHeatingValue",
+                                                                          "FlowPerHeatingCapacity"};
+        constexpr std::array<std::string_view, 4> heatingSAFMethodChoicesUC{"SUPPLYAIRFLOWRATE", "FLOWPERFLOORAREA",
+                                                                            "FRACTIONOFAUTOSIZEDHEATINGVALUE", "FLOWPERHEATINGCAPACITY"};
+
+        constexpr std::array<std::string_view, 6> noCoolHeatSAFMethodChoices{
+          "SupplyAirFlowRate",      "FlowPerFloorArea",      "FractionOfAutosizedCoolingValue", "FractionOfAutosizedHeatingValue",
+          "FlowPerCoolingCapacity", "FlowPerHeatingCapacity"};
+
+        constexpr std::array<std::string_view, 6> noCoolHeatSAFMethodChoicesUC{
+          "SUPPLYAIRFLOWRATE",      "FLOWPERFLOORAREA",      "FRACTIONOFAUTOSIZEDCOOLINGVALUE", "FRACTIONOFAUTOSIZEDHEATINGVALUE",
+          "FLOWPERCOOLINGCAPACITY", "FLOWPERHEATINGCAPACITY"};
+
+        // Reset all flow fields, we want only one at best to be set
+        for (size_t i = 0; i < coolingSAFMethodChoices.size(); ++i) {
+          const size_t fieldIndex = coolingSAFMethodIndex + 1 + i;
+          newObject.setString(fieldIndex, "");
+        }
+        for (size_t i = 0; i < heatingSAFMethodChoices.size(); ++i) {
+          const size_t fieldIndex = heatingSAFMethodIndex + 1 + i;
+          newObject.setString(fieldIndex, "");
+        }
+        for (size_t i = 0; i < noCoolHeatSAFMethodChoices.size(); ++i) {
+          const size_t fieldIndex = noCoolHeatSAFMethodIndex + 1 + i;
+          newObject.setString(fieldIndex, "");
+        }
+
+        if (!hasCoolingCoil) {
+          newObject.setString(coolingSAFMethodIndex, "None");
+        } else if (!coolingSAFMethod) {
+          // Technically here E+ checks if the cooling coil rated air flow rate is autosized or not
+          // Also could get overriden by the DesignSpecification:ZoneHVAC:Sizing
+          // Finally it lets it slide as long as one of the other SupplyAirFlowRateXXX is not empty
+          // Here I guess we'll scan the fields in order, and pick the first we find
+          // * 19 - Supply Air Flow Rate During Cooling Operation
+          // * 20 - Supply Air Flow Rate Per Floor Area During Cooling Operation
+          // * 21 - Fraction of Autosized Design Cooling Supply Air Flow Rate
+          // * 22 - Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation
+          bool found = false;
+          for (size_t i = 0; i < coolingSAFMethodChoices.size(); ++i) {
+            const size_t fieldIndex = coolingSAFMethodIndex + 1 + i;
+            if ((value = object.getString(fieldIndex, false, true))) {
+              newObject.setString(coolingSAFMethodIndex, std::string{coolingSAFMethodChoices[i]});
+              newObject.setString(fieldIndex, *value);
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', there is a cooling coil, but no Supply Air Flow Rate Method During Cooling Operation and no flow rate fields set. "
+                           "Defaulting to SupplyAirFlowRate with Autosize");
+            newObject.setString(coolingSAFMethodIndex, "SupplyAirFlowRate");
+            newObject.setString(coolingSAFMethodIndex + 1, "Autosize");
+          }
+        } else {
+          std::string coolingSAFMethodUC = ascii_to_upper_copy(*coolingSAFMethod);
+          if (coolingSAFMethodUC == "NONE") {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', Supply Air Flow Method Rate During Cooling Operation is 'None' but you have a Cooling Coil, consider changing it");
+          } else {
+            auto it = std::find_if(coolingSAFMethodChoicesUC.cbegin(), coolingSAFMethodChoicesUC.cend(),
+                                   [&coolingSAFMethodUC](auto& s) { return s == coolingSAFMethodUC; });
+            if (it == coolingSAFMethodChoicesUC.cend()) {
+              LOG(Error, "For AirLoopHVACUnitarySystem '"
+                           << object.nameString() << "', Unrecognized Supply Air Flow Method Rate During Cooling Operation=" << *coolingSAFMethod);
+            } else {
+              const auto dist = std::distance(coolingSAFMethodChoicesUC.cbegin(), it);
+              const size_t index = coolingSAFMethodIndex + 1 + dist;
+              if ((value = object.getString(index, false, true))) {
+                newObject.setString(index, *value);
+              } else {
+                LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString() << "', Supply Air Flow Method Rate During Cooling Operation is '"
+                                                            << *coolingSAFMethod << "' but associated field is empty. Setting it to zero.");
+                newObject.setDouble(index, 0.0);
+              }
+            }
+          }
+        }
+
+        if (!hasHeatingCoil) {
+          newObject.setString(heatingSAFMethodIndex, "None");
+        } else if (!heatingSAFMethod) {
+
+          // * 23 - Supply Air Flow Rate Method During Heating Operation
+          // * 24 - Supply Air Flow Rate During Heating Operation
+          // * 25 - Supply Air Flow Rate Per Floor Area during Heating Operation
+          // * 26 - Fraction of Autosized Design Heating Supply Air Flow Rate
+          // * 27 - Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation
+          bool found = false;
+          for (size_t i = 0; i < heatingSAFMethodChoices.size(); ++i) {
+            const size_t fieldIndex = heatingSAFMethodIndex + 1 + i;
+            if ((value = object.getString(fieldIndex, false, true))) {
+              newObject.setString(heatingSAFMethodIndex, std::string{heatingSAFMethodChoices[i]});
+              newObject.setString(fieldIndex, *value);
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', there is a heating coil, but no Supply Air Flow Rate Method During Heating Operation and no flow rate fields set. "
+                           "Defaulting to SupplyAirFlowRate with Autosize");
+            newObject.setString(heatingSAFMethodIndex, "SupplyAirFlowRate");
+            newObject.setString(heatingSAFMethodIndex + 1, "Autosize");
+          }
+        } else {
+          std::string heatingSAFMethodUC = ascii_to_upper_copy(*heatingSAFMethod);
+          if (heatingSAFMethodUC == "NONE") {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', Supply Air Flow Method Rate During Heating Operation is 'None' but you have a Heating coil, consider changing it");
+          } else {
+            auto it = std::find_if(heatingSAFMethodChoicesUC.cbegin(), heatingSAFMethodChoicesUC.cend(),
+                                   [&heatingSAFMethodUC](auto& s) { return s == heatingSAFMethodUC; });
+            if (it == heatingSAFMethodChoicesUC.cend()) {
+              LOG(Error, "For AirLoopHVACUnitarySystem '"
+                           << object.nameString() << "', Unrecognized Supply Air Flow Method Rate During Heating Operation=" << *heatingSAFMethod);
+            } else {
+              auto dist = std::distance(heatingSAFMethodChoicesUC.cbegin(), it);
+              const size_t index = heatingSAFMethodIndex + 1 + dist;
+              if ((value = object.getString(index, false, true))) {
+                newObject.setString(index, *value);
+              } else {
+                LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString() << "', Supply Air Flow Method Rate During Heating Operation is '"
+                                                            << *heatingSAFMethod << "' but associated field is empty. Setting it to zero.");
+                newObject.setDouble(index, 0.0);
+              }
+            }
+          }
+        }
+
+        if (!hasHeatingCoil && !hasCoolingCoil) {
+          // TODO: not sure here
+          newObject.setString(noCoolHeatSAFMethodIndex, "None");
+        } else if (!noCoolHeatSAFMethod) {
+
+          // Blank is equivalent to None here, no question
+          newObject.setString(noCoolHeatSAFMethodIndex, "None");
+#if 0
+          // * 29 - Supply Air Flow Rate When No Cooling or Heating is Required
+          // * 30 - Supply Air Flow Rate Per Floor Area When No Cooling or Heating is Required
+          // * 31 - Fraction of Autosized Design Cooling Supply Air Flow Rate When No Cooling or Heating is Required
+          // * 32 - Fraction of Autosized Design Heating Supply Air Flow Rate When No Cooling or Heating is Required
+          // * 33 - Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation When No Cooling or Heating is Required
+          // * 34 - Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation When No Cooling or Heating is Required
+          bool found = false;
+          for (size_t i = 0; i < noCoolHeatSAFMethodChoices.size(); ++i) {
+            const size_t fieldIndex = noCoolHeatSAFMethodIndex + 1 + i;
+            if ((value = object.getString(fieldIndex, false, true))) {
+              newObject.setString(noCoolHeatSAFMethodIndex, std::string{noCoolHeatSAFMethodChoices[i]});
+              newObject.setString(fieldIndex, *value);
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '" << object.nameString()
+                             << ", there is no Supply Air Flow Rate Method When No Cooling or Heating is Required and no flow rate fields set. "
+                                "Defaulting to None");
+            newObject.setString(noCoolHeatSAFMethodIndex, "None");
+          }
+#endif
+        } else {
+          std::string noCoolHeatSAFMethodUC = ascii_to_upper_copy(*noCoolHeatSAFMethod);
+          if (noCoolHeatSAFMethodUC != "NONE") {
+            auto it = std::find_if(noCoolHeatSAFMethodChoicesUC.cbegin(), noCoolHeatSAFMethodChoicesUC.cend(),
+                                   [&noCoolHeatSAFMethodUC](auto& s) { return s == noCoolHeatSAFMethodUC; });
+            if (it == noCoolHeatSAFMethodChoicesUC.cend()) {
+              LOG(Error, "For AirLoopHVACUnitarySystem '"
+                           << object.nameString()
+                           << "', Unrecognized Supply Air Flow Rate Method When No Cooling or Heating is Required=" << *noCoolHeatSAFMethod);
+            } else {
+              auto dist = std::distance(noCoolHeatSAFMethodChoicesUC.cbegin(), it);
+              const size_t index = noCoolHeatSAFMethodIndex + 1 + dist;
+              if ((value = object.getString(index, false, true))) {
+                newObject.setString(index, *value);
+              } else {
+                LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString()
+                                                            << "', Supply Air Flow Rate Method When No Cooling or Heating is Required is '"
+                                                            << *noCoolHeatSAFMethod << "' but associated field is empty");
+                newObject.setDouble(index, 0.0);
+              }
+            }
+          }
+        }
+
         ss << newObject;
+        m_refactored.push_back(RefactoredObjectData(object, std::move(newObject)));
 
         auto it = CoilLatentTransitionInfo::findFromParent(coilTransitionInfos, object);
         if (it != coilTransitionInfos.end()) {

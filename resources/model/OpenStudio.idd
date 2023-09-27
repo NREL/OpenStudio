@@ -11901,7 +11901,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \key FlowPerFloorArea
        \key FractionOfAutosizedCoolingValue
        \key FlowPerCoolingCapacity
-       \default None
+       \required-field
        \note Enter the method used to determine the cooling supply air volume flow rate.
        \note None is used when a cooling coil is not included in the unitary system or this field may be blank.
        \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
@@ -11946,7 +11946,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \key FlowPerFloorArea
        \key FractionOfAutosizedHeatingValue
        \key FlowPerHeatingCapacity
-       \default None
+       \required-field
        \note Enter the method used to determine the heating supply air volume flow rate.
        \note None is used when a heating coil is not included in the unitary system or this field may be blank.
        \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
@@ -11993,6 +11993,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \key FractionOfAutosizedHeatingValue
        \key FlowPerCoolingCapacity
        \key FlowPerHeatingCapacity
+       \required-field
        \note Enter the method used to determine the supply air volume flow rate when no cooling or heating is required.
        \note None is used when a cooling and heating coil is not included in the unitary system or this field may be blank.
        \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
