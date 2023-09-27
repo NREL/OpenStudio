@@ -2698,24 +2698,27 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_Incorrec
     if (hasCoolingCoil) {
       EXPECT_EQ("FractionOfAutosizedCoolingValue",
                 unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
-      EXPECT_DOUBLE_EQ(0.0, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate).get()) << unitary;
+      EXPECT_DOUBLE_EQ(0.0, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate).get())
+        << unitary;
     } else {
       EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation).get());
       EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate));
     }
     EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation));
     EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation));
+    // EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate));
     EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation));
 
     if (hasHeatingCoil) {
       EXPECT_EQ("FlowPerFloorArea", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
-      EXPECT_DOUBLE_EQ(0.0, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation).get()) << unitary;
+      EXPECT_DOUBLE_EQ(0.0, unitary.getDouble(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation).get())
+        << unitary;
     } else {
       EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation).get());
       EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation));
     }
     EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation));
-    EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation));
+    // EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation));
     EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRate));
     EXPECT_TRUE(unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation));
 
@@ -2726,7 +2729,8 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_Incorrec
         0.0, unitary
                .getDouble(
                  OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired)
-               .get()) << unitary;
+               .get())
+        << unitary;
     } else {
       EXPECT_EQ("None", unitary.getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired).get());
       EXPECT_TRUE(unitary.isEmpty(
@@ -2738,8 +2742,8 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_Incorrec
       unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
     EXPECT_TRUE(
       unitary.isEmpty(OS_AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired));
-    EXPECT_TRUE(unitary.isEmpty(
-      OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired));
+    // EXPECT_TRUE(unitary.isEmpty(
+    //   OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired));
     EXPECT_TRUE(unitary.isEmpty(
       OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired));
   }

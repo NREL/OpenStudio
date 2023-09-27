@@ -7747,7 +7747,7 @@ namespace osversion {
           bool found = false;
           for (size_t i = 0; i < coolingSAFMethodChoices.size(); ++i) {
             const size_t fieldIndex = coolingSAFMethodIndex + 1 + i;
-            if ((value = object.getString(fieldIndex))) {
+            if ((value = object.getString(fieldIndex, false, true))) {
               newObject.setString(coolingSAFMethodIndex, std::string{coolingSAFMethodChoices[i]});
               newObject.setString(fieldIndex, *value);
               found = true;
@@ -7777,7 +7777,7 @@ namespace osversion {
             } else {
               const auto dist = std::distance(coolingSAFMethodChoicesUC.cbegin(), it);
               const size_t index = coolingSAFMethodIndex + 1 + dist;
-              if ((value = object.getString(index))) {
+              if ((value = object.getString(index, false, true))) {
                 newObject.setString(index, *value);
               } else {
                 LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString() << "', Supply Air Flow Method Rate During Cooling Operation is '"
@@ -7800,7 +7800,7 @@ namespace osversion {
           bool found = false;
           for (size_t i = 0; i < heatingSAFMethodChoices.size(); ++i) {
             const size_t fieldIndex = heatingSAFMethodIndex + 1 + i;
-            if ((value = object.getString(fieldIndex))) {
+            if ((value = object.getString(fieldIndex, false, true))) {
               newObject.setString(heatingSAFMethodIndex, std::string{heatingSAFMethodChoices[i]});
               newObject.setString(fieldIndex, *value);
               found = true;
@@ -7830,7 +7830,7 @@ namespace osversion {
             } else {
               auto dist = std::distance(heatingSAFMethodChoicesUC.cbegin(), it);
               const size_t index = heatingSAFMethodIndex + 1 + dist;
-              if ((value = object.getString(index))) {
+              if ((value = object.getString(index, false, true))) {
                 newObject.setString(index, *value);
               } else {
                 LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString() << "', Supply Air Flow Method Rate During Heating Operation is '"
@@ -7858,7 +7858,7 @@ namespace osversion {
           bool found = false;
           for (size_t i = 0; i < noCoolHeatSAFMethodChoices.size(); ++i) {
             const size_t fieldIndex = noCoolHeatSAFMethodIndex + 1 + i;
-            if ((value = object.getString(fieldIndex))) {
+            if ((value = object.getString(fieldIndex, false, true))) {
               newObject.setString(noCoolHeatSAFMethodIndex, std::string{noCoolHeatSAFMethodChoices[i]});
               newObject.setString(fieldIndex, *value);
               found = true;
@@ -7884,12 +7884,13 @@ namespace osversion {
             } else {
               auto dist = std::distance(noCoolHeatSAFMethodChoicesUC.cbegin(), it);
               const size_t index = noCoolHeatSAFMethodIndex + 1 + dist;
-              if ((value = object.getString(index))) {
+              if ((value = object.getString(index, false, true))) {
                 newObject.setString(index, *value);
               } else {
                 LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString()
                                                             << "', Supply Air Flow Rate Method When No Cooling or Heating is Required is '"
                                                             << *noCoolHeatSAFMethod << "' but associated field is empty");
+                newObject.setDouble(index, 0.0);
               }
             }
           }
