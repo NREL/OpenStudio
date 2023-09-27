@@ -569,8 +569,8 @@ namespace model {
   // DEPRECATED
   boost::optional<double> BoilerHotWater::parasiticElectricLoad() const {
     DEPRECATED_AT_MSG(3, 7, 0, "Use onCycleParasiticElectricLoad instead.");
-    boost::optional<double> parasiticElectricLoad =
-      getImpl<detail::BoilerHotWater_Impl>()->onCycleParasiticElectricLoad() return parasiticElectricLoad;
+    boost::optional<double> parasiticElectricLoad = getImpl<detail::BoilerHotWater_Impl>()->onCycleParasiticElectricLoad();
+    return parasiticElectricLoad;
   }
 
   double BoilerHotWater::onCycleParasiticElectricLoad() const {
