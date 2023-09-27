@@ -66,7 +66,7 @@
 // and nested classes and "nothing known about <type>"
 // also ignoring #509, shadowed method. Its a red herring for all of our cases
 //#pragma SWIG nowarn=401,362,365,366,368,378,503,801,312
-#pragma SWIG nowarn=362,365,366,368,378,503,801,312,509,401
+#pragma SWIG nowarn=362,365,366,368,378,503,801,312,509,401,516
 
 // Todo: Remove this one after other swig warnings have been cleared up
 #pragma SWIG nowarn=315

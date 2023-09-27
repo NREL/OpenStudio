@@ -2,7 +2,9 @@
 #define JSONCPP_I
 
 #if defined SWIGCSHARP
-%ignore openstudio::*::toJSON() const;
+  // ignores toJSON/fromJSON globally
+  %rename("$ignore", regextarget=1, fullname=1) "openstudio::.*::toJSON$";
+  %rename("$ignore", regextarget=1, fullname=1) "openstudio::.*::fromJSON$";
 #else
 %{
   #include <json/value.h>

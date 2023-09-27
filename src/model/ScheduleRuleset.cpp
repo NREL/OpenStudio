@@ -372,7 +372,7 @@ namespace model {
 
       boost::optional<ScheduleDay> existingWinterDDSchedule;
       if (!this->isWinterDesignDayScheduleDefaulted()) {
-        ScheduleDay existingWinterDDSchedule = this->winterDesignDaySchedule();
+        existingWinterDDSchedule = this->winterDesignDaySchedule();
       }
       ModelObject clone = schedule.clone();
       bool result = setPointer(OS_Schedule_RulesetFields::WinterDesignDayScheduleName, clone.handle());
