@@ -8840,6 +8840,29 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:LoadProfile:Plant") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Plant Loop Fluid Type * 7
+        // * Degree of SubCooling * 8
+        // * Degree of Loop SubCooling * 9
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(7, "Water");
+        newObject.setDouble(8, 5.0);
+        newObject.setDouble(9, 20.0);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
         // No-op
       } else {
         ss << object;
