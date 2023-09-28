@@ -8863,6 +8863,82 @@ namespace osversion {
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
 
+      } else if (iddname == "OS:HeatPump:PlantLoop:EIR:Cooling") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Control Type * 16
+        // * Flow Mode * 17
+        // * Minimum Part Load Ratio * 18
+        // * Minimum Source Inlet Temperature * 19
+        // * Maximum Source Inlet Temperature * 20
+        // * Minimum Supply Water Temperature Curve Name * 21 --- Optional
+        // * Maximum Supply Water Temperature Curve Name * 22 --- Optional
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(16, "Load");
+        newObject.setString(17, "ConstantFlow");
+        newObject.setDouble(18, 0.0);
+        newObject.setDouble(19, -100.0);
+        newObject.setDouble(20, 100.0);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:HeatPump:PlantLoop:EIR:Heating") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Heating To Cooling Capacity Sizing Ratio * 16
+        // * Heat Pump Sizing Method * 17
+        // * Control Type * 18
+        // * Flow Mode * 19
+        // * Minimum Part Load Ratio * 20
+        // * Minimum Source Inlet Temperature * 21
+        // * Maximum Source Inlet Temperature * 22
+        // * Minimum Supply Water Temperature Curve Name * 23 --- Optional
+        // * Maximum Supply Water Temperature Curve Name * 24 --- Optional
+        // * Dry Outdoor Correction Factor Curve Name * 25
+        // * Maximum Outdoor Dry Bulb Temperature For Defrost Operation * 26
+        // * Heat Pump Defrost Control * 27
+        // * Heat Pump Defrost Time Period Fraction * 28
+        // * Defrost Energy Input Ratio Function of Temperature Curve Name * 29 --- Optional
+        // * Timed Empirical Defrost Frequency Curve Name * 30 --- Optional
+        // * Timed Empirical Defrost Heat Load Penalty Curve Name * 31 --- Optional
+        // * Timed Empirical Defrost Heat Input Energy Fraction Curve Name * 32 --- Optional
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+        newObject.setDouble(16, 1.0);
+        newObject.setString(17, "CoolingCapacity");
+        newObject.setString(18, "Load");
+        newObject.setString(19, "ConstantFlow");
+
+        newObject.setDouble(20, 0.0);
+        newObject.setDouble(21, -100.0);
+        newObject.setDouble(22, 100.0);
+
+        newObject.setDouble(26, 10.0);
+        newObject.setString(27, "None");
+        newObject.setDouble(28, 0.058333);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
         // No-op
       } else {
         ss << object;
