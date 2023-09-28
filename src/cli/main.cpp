@@ -17,6 +17,7 @@
 
 #include "RunCommand.hpp"
 #include "MeasureUpdateCommand.hpp"
+#include "measure/OSMeasureInfoGetter.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -179,9 +180,11 @@ int main(int argc, char* argv[]) {
     std::function<void()> runSetupEmbeddedGems = [&rubyEngine, &includeDirs, &gemPathDirs, &gemHomeDir, &bundleGemFilePath, &bundleGemDirPath,
                                                   &bundleWithoutGroups]() {
       rubyEngine->setupEmbeddedGems(includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, bundleWithoutGroups);
+      rubyEngine->registerType<openstudio::measure::OSMeasure*>("openstudio::measure::OSMeasure *");
       rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
       rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
       rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
+      rubyEngine->registerType<openstudio::measure::MeasureInfoBinding*>("openstudio::measure::MeasureInfoBinding *");
       // rubyEngine->registerType<std::string>("std::string");
       // rubyEngine->registerType<std::string*>("std::string *");
       rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
@@ -208,6 +211,7 @@ int main(int argc, char* argv[]) {
     std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs]() {
       // pythonHomeDir is retrieved from (argc, argv) actually, as Py_SetPythonHome has to be called before Py_Initialize
       pythonEngine->setupPythonPath(pythonPathDirs);
+      pythonEngine->registerType<openstudio::measure::OSMeasure*>("openstudio::measure::OSMeasure *");
       pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
       pythonEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
       pythonEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");

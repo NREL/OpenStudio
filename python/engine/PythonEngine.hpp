@@ -32,6 +32,12 @@ class PythonEngine final : public ScriptEngine
 
   virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs) override;
 
+  virtual std::string inferMeasureClassName(const openstudio::path& measureScriptPath) override;
+
+  virtual ScriptObject loadMeasure(const openstudio::path& measureScriptPath, std::string_view className) override;
+
+  virtual int numberOfArguments(ScriptObject& methodObject, std::string_view methodName) override;
+
  protected:
   void* getAs_impl(ScriptObject& obj, const std::type_info&) override;
   void importOpenStudio();

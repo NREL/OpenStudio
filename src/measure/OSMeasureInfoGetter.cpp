@@ -62,6 +62,57 @@ namespace measure {
     return m_arguments;
   }
 
+  std::vector<BCLMeasureArgument> OSMeasureInfo::bclMeasureArguments() const {
+    unsigned n = m_arguments.size();
+    std::vector<BCLMeasureArgument> bclArguments;
+    bclArguments.reserve(n);
+    for (const OSArgument& argument : m_arguments) {
+
+      std::string bclMeasureType = argument.type().valueName();
+      if (argument.type() == OSArgumentType::Quantity) {
+        LOG(Warn, "Mapping deprecated OSArgumentType::Quantity to Double");
+        bclMeasureType = "Double";
+      }
+
+      boost::optional<std::string> defaultValue;
+      if (argument.hasDefaultValue()) {
+        defaultValue = argument.defaultValueAsString();
+      }
+
+      boost::optional<std::string> minValue;
+      boost::optional<std::string> maxValue;
+      if (argument.hasDomain()) {
+        if (argument.type() == OSArgumentType::Integer) {
+          auto domain = argument.domainAsInteger();
+          auto& low = domain.front();
+          auto& high = domain.back();
+          if (low > std::numeric_limits<int>::lowest()) {
+            minValue = std::to_string(low);
+          }
+          if (high < std::numeric_limits<int>::max()) {
+            maxValue = std::to_string(high);
+          }
+        } else if (argument.type() == OSArgumentType::Double) {
+          auto domain = argument.domainAsDouble();
+          auto& low = domain.front();
+          auto& high = domain.back();
+          if (low > std::numeric_limits<double>::lowest()) {
+            minValue = std::to_string(low);
+          }
+          if (high < std::numeric_limits<double>::max()) {
+            maxValue = std::to_string(high);
+          }
+        }
+      }
+
+      bclArguments.emplace_back(argument.name(), argument.displayName(), argument.description(), bclMeasureType, argument.units(),
+                                argument.required(), argument.modelDependent(), defaultValue, argument.choiceValues(),
+                                argument.choiceValueDisplayNames(), minValue, maxValue);
+    }
+
+    return bclArguments;
+  }
+
   std::vector<OSOutput> OSMeasureInfo::outputs() const {
     return m_outputs;
   }
@@ -118,61 +169,14 @@ namespace measure {
       measure.setModelerDescription(m_modelerDescription);
     }
 
-    unsigned n = m_arguments.size();
-    std::vector<BCLMeasureArgument> bclArguments;
-    bclArguments.reserve(n);
-    for (const OSArgument& argument : m_arguments) {
-
-      std::string bclMeasureType = argument.type().valueName();
-      if (argument.type() == OSArgumentType::Quantity) {
-        LOG(Warn, "Mapping deprecated OSArgumentType::Quantity to Double");
-        bclMeasureType = "Double";
-      }
-
-      boost::optional<std::string> defaultValue;
-      if (argument.hasDefaultValue()) {
-        defaultValue = argument.defaultValueAsString();
-      }
-
-      boost::optional<std::string> minValue;
-      boost::optional<std::string> maxValue;
-      if (argument.hasDomain()) {
-        if (argument.type() == OSArgumentType::Integer) {
-          auto domain = argument.domainAsInteger();
-          auto& low = domain.front();
-          auto& high = domain.back();
-          if (low > std::numeric_limits<int>::lowest()) {
-            minValue = std::to_string(low);
-          }
-          if (high < std::numeric_limits<int>::max()) {
-            maxValue = std::to_string(high);
-          }
-        } else if (argument.type() == OSArgumentType::Double) {
-          auto domain = argument.domainAsDouble();
-          auto& low = domain.front();
-          auto& high = domain.back();
-          if (low > std::numeric_limits<double>::lowest()) {
-            minValue = std::to_string(low);
-          }
-          if (high < std::numeric_limits<double>::max()) {
-            maxValue = std::to_string(high);
-          }
-        }
-      }
-
-      BCLMeasureArgument bclArgument(argument.name(), argument.displayName(), argument.description(), bclMeasureType, argument.units(),
-                                     argument.required(), argument.modelDependent(), defaultValue, argument.choiceValues(),
-                                     argument.choiceValueDisplayNames(), minValue, maxValue);
-
-      bclArguments.push_back(bclArgument);
-    }
+    std::vector<BCLMeasureArgument> bclArguments = bclMeasureArguments();
 
     std::vector<BCLMeasureArgument> otherArguments = measure.arguments();
-    if (otherArguments.size() != n) {
+    if (otherArguments.size() != bclArguments.size()) {
       result = true;
       measure.setArguments(bclArguments);
     } else {
-      for (unsigned i = 0; i < n; ++i) {
+      for (size_t i = 0; i < bclArguments.size(); ++i) {
         if (!(bclArguments[i] == otherArguments[i])) {
           result = true;
           measure.setArguments(bclArguments);
@@ -182,15 +186,14 @@ namespace measure {
     }
 
     // handle outputs
-    n = m_outputs.size();
+    auto n = m_outputs.size();
     std::vector<BCLMeasureOutput> bclOutputs;
     bclOutputs.reserve(n);
     for (const OSOutput& output : m_outputs) {
       std::string bclOutputType = output.type().valueName();
 
-      BCLMeasureOutput bclOutput(output.name(), output.displayName(), output.shortName(), output.description(), bclOutputType, output.units(),
-                                 output.modelDependent());
-      bclOutputs.push_back(bclOutput);
+      bclOutputs.emplace_back(output.name(), output.displayName(), output.shortName(), output.description(), bclOutputType, output.units(),
+                              output.modelDependent());
     }
 
     std::vector<BCLMeasureOutput> otherOutputs = measure.outputs();
@@ -198,7 +201,7 @@ namespace measure {
       result = true;
       measure.setOutputs(bclOutputs);
     } else {
-      for (unsigned i = 0; i < n; ++i) {
+      for (size_t i = 0; i < n; ++i) {
         if (!(bclOutputs[i] == otherOutputs[i])) {
           result = true;
           measure.setOutputs(bclOutputs);
@@ -302,6 +305,11 @@ namespace measure {
     ss << "end" << '\n';
     return ss.str();
   }
+
+  void MeasureInfoBinding::setMeasureInfo(OSMeasureInfo& info){};
+  bool MeasureInfoBinding::renderFile(const std::string& readmeInPath) {
+    return false;
+  };
 
 }  // namespace measure
 }  // namespace openstudio

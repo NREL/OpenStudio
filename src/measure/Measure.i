@@ -64,6 +64,7 @@
 %feature("director") ReportingMeasure;
 %feature("director") OSRunner;
 %feature("director") OSArgument;
+%feature("director") MeasureInfoBinding;
 
 //user scripts
 %template(OSArgumentVector) std::vector<openstudio::measure::OSArgument>;

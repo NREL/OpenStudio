@@ -7,6 +7,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <json/value.h>
+
 #include <sstream>
 
 namespace openstudio {
@@ -100,6 +102,27 @@ namespace measure {
   std::ostream& operator<<(std::ostream& os, const OSOutput& output) {
     os << output.print();
     return os;
+  }
+
+  Json::Value OSOutput::toJSON() const {
+    Json::Value root;
+    root["name"] = m_name;
+    root["display_name"] = m_displayName;
+    root["m_shortName"] = m_shortName;
+    if (m_description) {
+      root["description"] = *m_description;
+    }
+    root["type"] = m_type.valueName();
+    if (m_units) {
+      root["units"] = *m_units;
+    }
+    root["model_dependent"] = m_modelDependent;
+
+    return root;
+  }
+
+  std::string OSOutput::toJSONString() const {
+    return toJSON().toStyledString();
   }
 
 }  // namespace measure

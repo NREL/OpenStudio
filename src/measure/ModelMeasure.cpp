@@ -12,6 +12,8 @@
 namespace openstudio {
 namespace measure {
 
+  ModelMeasure::ModelMeasure() : OSMeasure(MeasureType::ModelMeasure){};
+
   std::vector<OSArgument> ModelMeasure::arguments(const openstudio::model::Model& /*model*/) const {
     return {};
   }

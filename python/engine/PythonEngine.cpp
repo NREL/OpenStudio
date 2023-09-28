@@ -7,9 +7,10 @@
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include "../../src/utilities/core/Filesystem.hpp"
 #include <fmt/format.h>
+
 #include <stdexcept>
 #include <string>
-#include <iostream>
+#include <type_traits>
 
 #ifdef __GNUC__
 #  pragma GCC diagnostic push
@@ -27,15 +28,31 @@
 namespace openstudio {
 
 void addToPythonPath(const openstudio::path& includePath) {
-  if (!includePath.empty()) {
-    PyObject* sys = PyImport_ImportModule("sys");
-    PyObject* sysPath = PyObject_GetAttrString(sys, "path");
-    Py_DECREF(sys);  // PyImport_ImportModule returns a new reference, decrement it
 
-    // fmt::print("Prepending '{}' to sys.path\n", includePath);
-    PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.string().c_str());
-    PyList_Insert(sysPath, 0, unicodeIncludePath);
-    Py_DECREF(sysPath);  // PyObject_GetAttrString returns a new reference, decrement it
+  if (includePath.empty()) {
+    return;
+  }
+
+  // fmt::print("Prepending '{}' to sys.path\n", includePath);
+
+  PyObject* unicodeIncludePath = nullptr;
+  if constexpr (std::is_same_v<typename openstudio::path::value_type, wchar_t>) {
+    const std::wstring ws = includePath.generic_wstring();
+    unicodeIncludePath = PyUnicode_FromWideChar(ws.c_str(), static_cast<Py_ssize_t>(ws.size()));  // New reference
+  } else {
+    const std::string s = includePath.generic_string();
+    unicodeIncludePath = PyUnicode_FromString(s.c_str());  // New reference
+  }
+
+  if (unicodeIncludePath == nullptr) {
+    throw std::runtime_error(fmt::format("Unable to convert path '{}' for addition to sys.path in Python", includePath.generic_string()));
+  }
+
+  PyObject* sysPath = PySys_GetObject("path");  // Borrowed reference
+  int ret = PyList_Insert(sysPath, 0, unicodeIncludePath);
+  Py_DECREF(unicodeIncludePath);
+  if (ret != 0) {
+    throw std::runtime_error(fmt::format("Unable to add path '{}' to the sys.path in Python", includePath.generic_string()));
   }
 }
 
@@ -113,6 +130,18 @@ PythonEngine::~PythonEngine() {
 }
 
 void PythonEngine::importOpenStudio() {
+#if defined(__APPLE__)
+  // RTLD_LOCAL is import an Apple so that that Python and Ruby do not conflict
+  const std::string set_dlflags_cmd = R"(
+import sys
+import os
+pre_os_dl_open_flags = sys.getdlopenflags()
+sys.setdlopenflags(os.RTLD_LOCAL)
+  )";
+
+  exec(set_dlflags_cmd.c_str());
+#endif
+
   // generic_string() converts to a POSIX path, with forward slashes, so that pyimport doesn't choke on backslashes understood as escape sequence
   if (moduleIsRunningFromBuildDirectory()) {
     const auto bindingsDir = getOpenStudioModuleDirectory();
@@ -123,6 +152,15 @@ void PythonEngine::importOpenStudio() {
   }
   // Somehow that doesn't suffice to register it...
   exec("import openstudio");
+
+#if defined(__APPLE__)
+  // Reset the dlopen flags to the value prior to importOpenStudio
+  const std::string reset_dlflags_cmd = R"(
+sys.setdlopenflags(pre_os_dl_open_flags)
+  )";
+
+  exec(reset_dlflags_cmd.c_str());
+#endif
 }
 
 struct PythonObject
@@ -242,6 +280,95 @@ void* PythonEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
 
   return return_value;
 }
+
+std::string PythonEngine::inferMeasureClassName(const openstudio::path& measureScriptPath) {
+
+  auto inferClassNameCmd = fmt::format(R"python(
+import importlib.util
+import inspect
+spec = importlib.util.spec_from_file_location(f"throwaway", "{}")
+
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+class_members = inspect.getmembers(module, lambda x: inspect.isclass(x) and issubclass(x, openstudio.measure.OSMeasure))
+assert len(class_members) == 1
+measure_name, measure_typeinfo = class_members[0]
+)python",
+                                       measureScriptPath.generic_string());
+
+  std::string className;
+  try {
+    exec(inferClassNameCmd);
+    ScriptObject measureClassNameObject = eval("measure_name");
+    className = *getAs<std::string*>(measureClassNameObject);
+  } catch (const std::runtime_error& e) {
+    auto msg = fmt::format("Failed to infer measure name from {}: {}", measureScriptPath.generic_string(), e.what());
+    fmt::print(stderr, "{}\n", msg);
+  }
+
+  return className;
+}
+
+// Ideally this would return a openstudio::measure::OSMeasure* or a shared_ptr<openstudio::measure::OSMeasure> but this poses memory management
+// issue for the underlying ScriptObject (and VALUE or PyObject), so just return the ScriptObject
+ScriptObject PythonEngine::loadMeasure(const openstudio::path& measureScriptPath, std::string_view className) {
+
+  ScriptObject result;
+
+  auto importCmd = fmt::format(R"python(
+import importlib.util
+spec = importlib.util.spec_from_file_location('{}', r'{}')
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+)python",
+                               className, measureScriptPath.generic_string());
+
+  // fmt::print("\nimportCmd:\n{}\n", importCmd);
+  try {
+    exec(importCmd);
+  } catch (const std::runtime_error& e) {
+    auto msg = fmt::format("Failed to load measure '{}' from '{}': {}", className, measureScriptPath.generic_string(), e.what());
+    fmt::print(stderr, "{}\n", msg);
+  }
+
+  try {
+    result = eval(fmt::format("module.{}()", className));
+  } catch (const std::runtime_error& e) {
+    auto msg = fmt::format("Failed to instantiate measure '{}' from '{}': {}", className, measureScriptPath.generic_string(), e.what());
+    fmt::print(stderr, "{}\n", msg);
+  }
+
+  return result;
+}
+
+int PythonEngine::numberOfArguments(ScriptObject& classInstanceObject, std::string_view methodName) {
+
+  int numberOfArguments = -1;
+
+  auto val = std::any_cast<PythonObject>(classInstanceObject.object);
+  if (PyObject_HasAttrString(val.obj_, methodName.data()) == 0) {
+    // FAILED
+    return numberOfArguments;
+  }
+
+  PyObject* method = PyObject_GetAttrString(val.obj_, methodName.data());  // New reference
+  if (PyMethod_Check(method)) {
+    PyObject* func = PyMethod_Function(method);   // Borrowed
+    if (auto* code = PyFunction_GetCode(func)) {  // Borrowed
+      auto* co = (PyCodeObject*)code;
+      numberOfArguments = co->co_argcount - 1;  // This includes `self`
+    }
+  } else if (PyFunction_Check(method)) {
+    // Shouldn't enter this block here
+    if (auto code = PyFunction_GetCode(method)) {
+      auto* co = (PyCodeObject*)code;
+      numberOfArguments = co->co_argcount;
+    }
+  }
+  Py_DECREF(method);
+  return numberOfArguments;
+}
+
 }  // namespace openstudio
 
 extern "C"

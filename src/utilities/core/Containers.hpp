@@ -10,11 +10,9 @@
 #include "Compare.hpp"
 
 #include <boost/optional.hpp>
-
 #include <vector>
 #include <set>
 #include <string>
-
 #include <iterator>     // for make_move_iterator
 #include <type_traits>  // for declval, conditional, decay_t, enable_if_t
 

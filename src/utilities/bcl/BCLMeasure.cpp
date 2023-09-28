@@ -820,11 +820,11 @@ bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const Me
                                                                           << newMeasureLanguage.valueName());
   }
   // TODO: deal with Python
-  boost::optional<openstudio::path> path = primaryRubyScriptPath();
-  if (path && exists(*path)) {
+  boost::optional<openstudio::path> rubyScriptPath_ = primaryRubyScriptPath();
+  if (rubyScriptPath_ && exists(*rubyScriptPath_)) {
 
     std::string fileString;
-    openstudio::filesystem::ifstream file(*path, std::ios_base::binary);
+    openstudio::filesystem::ifstream file(*rubyScriptPath_, std::ios_base::binary);
     if (file.is_open()) {
 
       // Replacement paterns
@@ -859,7 +859,7 @@ bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const Me
 
       file.close();
 
-      openstudio::filesystem::ofstream ofile(*path, std::ios_base::binary);
+      openstudio::filesystem::ofstream ofile(*rubyScriptPath_, std::ios_base::binary);
       if (ofile.is_open()) {
         ofile << fileString;
         // openstudio::filesystem::write(ofile, fileString);
