@@ -61960,7 +61960,9 @@ LifeCycleCost:UsePriceEscalation,
         \key ElectricitySurplusSold
         \key ElectricityNet
         \key NaturalGas
-        \key Steam
+        \key DistrictCooling
+        \key DistrictHeatingWater
+        \key DistrictHeatingSteam
         \key Gasoline
         \key Diesel
         \key Coal
@@ -62019,7 +62021,9 @@ LifeCycleCost:UseAdjustment,
         \key ElectricitySurplusSold
         \key ElectricityNet
         \key NaturalGas
-        \key Steam
+        \key DistrictCooling
+        \key DistrictHeatingWater
+        \key DistrictHeatingSteam
         \key Gasoline
         \key Diesel
         \key Coal

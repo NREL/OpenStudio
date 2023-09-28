@@ -35695,6 +35695,8 @@ OS:LifeCycleCost:UsePriceEscalation,
         \key ElectricitySurplusSold
         \key ElectricityNet
         \key NaturalGas
+        \key DistrictCooling
+        \key DistrictHeatingWater
         \key DistrictHeatingSteam
         \key Gasoline
         \key Diesel
