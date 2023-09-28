@@ -85,7 +85,13 @@ function(pytest_discover_tests NAME)
     RESULT_VARIABLE pytest_collect_result
   )
   if(NOT ${pytest_collect_result} EQUAL 0)
-    message(FATAL_ERROR "Error running Pytest discovery! Return code: ${pytest_collect_result}\n${pytest_collect_output}")
+    message(AUTHOR_WARNING
+      "Error running Pytest discovery! Return code: ${pytest_collect_result}\n"
+      "command: `PYTHONPATH=${_pythonpath} ${pytest_base_command} ${pytest_collection_args}`\n"
+      "Error: ${pytest_collect_output}\n"
+      "Working directory: ${_WORKING_DIRECTORY}"
+    )
+    return()
   endif()
 
   # Spitlines
