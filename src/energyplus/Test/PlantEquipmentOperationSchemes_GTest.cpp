@@ -27,7 +27,7 @@
 #include "../../model/CoolingTowerTwoSpeed.hpp"
 #include "../../model/CoolingTowerVariableSpeed.hpp"
 #include "../../model/DistrictCooling.hpp"
-#include "../../model/DistrictHeating.hpp"
+#include "../../model/DistrictHeatingWater.hpp"
 #include "../../model/EvaporativeFluidCoolerSingleSpeed.hpp"
 #include "../../model/EvaporativeFluidCoolerTwoSpeed.hpp"
 #include "../../model/FluidCoolerSingleSpeed.hpp"
@@ -626,7 +626,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_compo
   }
 
   {
-    DistrictHeating obj(m);
+    DistrictHeatingWater obj(m);
     EXPECT_EQ(openstudio::energyplus::ComponentType::HEATING, openstudio::energyplus::componentType(obj));
   }
 

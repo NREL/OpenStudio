@@ -26,6 +26,8 @@
 #include "../utilities/data/DataEnums.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"  // For deprecation
+
 namespace openstudio {
 namespace model {
 
@@ -158,8 +160,8 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurve);
     }
 
-    boost::optional<double> CoilHeatingGasMultiStage_Impl::parasiticGasLoad() const {
-      return getDouble(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, true);
+    boost::optional<double> CoilHeatingGasMultiStage_Impl::offCycleParasiticGasLoad() const {
+      return getDouble(OS_Coil_Heating_Gas_MultiStageFields::OffCycleParasiticGasLoad, true);
     }
 
     bool CoilHeatingGasMultiStage_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -184,20 +186,13 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilHeatingGasMultiStage_Impl::setParasiticGasLoad(boost::optional<double> parasiticGasLoad) {
-      bool result(false);
-      if (parasiticGasLoad) {
-        result = setDouble(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, parasiticGasLoad.get());
-      } else {
-        resetParasiticGasLoad();
-        result = true;
-      }
-      OS_ASSERT(result);
+    bool CoilHeatingGasMultiStage_Impl::setOffCycleParasiticGasLoad(double offCycleParasiticGasLoad) {
+      bool result = setDouble(OS_Coil_Heating_Gas_MultiStageFields::OffCycleParasiticGasLoad, offCycleParasiticGasLoad);
       return result;
     }
 
-    void CoilHeatingGasMultiStage_Impl::resetParasiticGasLoad() {
-      bool result = setString(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, "");
+    void CoilHeatingGasMultiStage_Impl::resetOffCycleParasiticGasLoad() {
+      bool result = setString(OS_Coil_Heating_Gas_MultiStageFields::OffCycleParasiticGasLoad, "");
       OS_ASSERT(result);
     }
 
@@ -365,8 +360,14 @@ namespace model {
     return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->partLoadFractionCorrelationCurve();
   }
 
+  // DEPRECATED
   boost::optional<double> CoilHeatingGasMultiStage::parasiticGasLoad() const {
-    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->parasiticGasLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use offCycleParasiticGasLoad instead.");
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->offCycleParasiticGasLoad();
+  }
+
+  boost::optional<double> CoilHeatingGasMultiStage::offCycleParasiticGasLoad() const {
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->offCycleParasiticGasLoad();
   }
 
   bool CoilHeatingGasMultiStage::setAvailabilitySchedule(Schedule& schedule) {
@@ -381,12 +382,24 @@ namespace model {
     getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetPartLoadFractionCorrelationCurve();
   }
 
+  // DEPRECATED
   bool CoilHeatingGasMultiStage::setParasiticGasLoad(double parasiticGasLoad) {
-    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setParasiticGasLoad(parasiticGasLoad);
+    DEPRECATED_AT_MSG(3, 7, 0, "Use setOffCycleParasiticGasLoad instead.");
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setOffCycleParasiticGasLoad(parasiticGasLoad);
   }
 
+  bool CoilHeatingGasMultiStage::setOffCycleParasiticGasLoad(double offCycleParasiticGasLoad) {
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setOffCycleParasiticGasLoad(offCycleParasiticGasLoad);
+  }
+
+  // DEPRECATED
   void CoilHeatingGasMultiStage::resetParasiticGasLoad() {
-    getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetParasiticGasLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use resetOffCycleParasiticGasLoad instead.");
+    getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetOffCycleParasiticGasLoad();
+  }
+
+  void CoilHeatingGasMultiStage::resetOffCycleParasiticGasLoad() {
+    getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetOffCycleParasiticGasLoad();
   }
 
   unsigned CoilHeatingGasMultiStage::numberOfStages() const {

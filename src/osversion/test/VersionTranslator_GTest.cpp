@@ -39,6 +39,14 @@
 #include <resources.hxx>
 #include <OpenStudio.hxx>
 
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <string>
+#include <string_view>
+#include <tuple>
+#include <vector>
+
 using namespace openstudio;
 using namespace model;
 using namespace osversion;
@@ -541,41 +549,35 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
     {"PropaneGas", "Propane"},
   });
 
-  const std::multimap<std::string, int> fuelTypeRenamesMap({
-    {"OS:OtherEquipment", 6},                           // Fuel Type
-    {"OS:Exterior:FuelEquipment", 4},                   // Fuel Use Type
-    {"OS:AirConditioner:VariableRefrigerantFlow", 67},  // Fuel Type
-    {"OS:Boiler:Steam", 2},                             // Fuel Type
-    {"OS:Coil:Cooling:DX:MultiSpeed", 16},              // Fuel Type
-    {"OS:Coil:Heating:Gas", 11},                        // Fuel Type
-    {"OS:Coil:Heating:DX:MultiSpeed", 16},              // Fuel Type
-    {"OS:WaterHeater:Mixed", 11},                       // Heater Fuel Type
-    {"OS:WaterHeater:Mixed", 15},                       // Off Cycle Parasitic Fuel Type
-    {"OS:WaterHeater:Mixed", 18},                       // On Cycle Parasitic Fuel Type
-    {"OS:WaterHeater:Stratified", 17},                  // Heater Fuel Type
-    {"OS:WaterHeater:Stratified", 20},                  // Off Cycle Parasitic Fuel Type
-    {"OS:WaterHeater:Stratified", 24},                  // On Cycle Parasitic Fuel Type
-    {"OS:Generator:MicroTurbine", 13},                  // Fuel Type
-    // {"OS:LifeCycleCost:UsePriceEscalation", 2},  // Resource - UNUSED!
-    {"OS:Meter:Custom", 2},                                  // Fuel Type
-    {"OS:Meter:CustomDecrement", 2},                         // Fuel Type
-    {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
-    {"OS:Boiler:HotWater", 2},                               // Fuel Type
-  });
+  // iddname, 291 index, current index
+  const std::array<std::tuple<std::string, int, int>, 18> fuelTypeRenamesMap{{
+    {"OS:OtherEquipment", 6, 6},                            // Fuel Type
+    {"OS:Exterior:FuelEquipment", 4, 4},                    // Fuel Use Type
+    {"OS:AirConditioner:VariableRefrigerantFlow", 67, 67},  // Fuel Type
+    {"OS:Boiler:Steam", 2, 2},                              // Fuel Type
+    {"OS:Coil:Cooling:DX:MultiSpeed", 16, 18},              // Fuel Type
+    {"OS:Coil:Heating:Gas", 11, 11},                        // Fuel Type
+    {"OS:Coil:Heating:DX:MultiSpeed", 16, 17},              // Fuel Type
+    {"OS:WaterHeater:Mixed", 11, 11},                       // Heater Fuel Type
+    {"OS:WaterHeater:Mixed", 15, 15},                       // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Mixed", 18, 18},                       // On Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 17, 17},                  // Heater Fuel Type
+    {"OS:WaterHeater:Stratified", 20, 20},                  // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 24, 24},                  // On Cycle Parasitic Fuel Type
+    {"OS:Generator:MicroTurbine", 13, 13},                  // Fuel Type
+    // {"OS:LifeCycleCost:UsePriceEscalation", 2,2},  // Resource - UNUSED!
+    {"OS:Meter:Custom", 2, 2},                                  // Fuel Type
+    {"OS:Meter:CustomDecrement", 2, 2},                         // Fuel Type
+    {"OS:EnergyManagementSystem:MeteredOutputVariable", 5, 5},  // Resource Type
+    {"OS:Boiler:HotWater", 2, 2},                               // Fuel Type
+  }};
 
-  for (const auto& mapEntry : fuelTypeRenamesMap) {
-    const std::string iddname = mapEntry.first;
-    const int fieldIndex = mapEntry.second;
+  for (const auto& [iddname, oldFieldIndex, newFieldIndex] : fuelTypeRenamesMap) {
 
-    std::string old_fuelType = _oldIdfFile->getObjectsByType(oldIddFile.getObject(iddname).get())[0].getString(fieldIndex).get();
+    std::string old_fuelType = _oldIdfFile->getObjectsByType(oldIddFile.getObject(iddname).get())[0].getString(oldFieldIndex).get();
     // Check that the test model (in 2.9.1), actually has bad starting fuels
     EXPECT_TRUE(replaceFuelTypesMap.find(old_fuelType) != replaceFuelTypesMap.end());
 
-    int newFieldIndex = fieldIndex;
-    if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {
-      // Fuel Type, was 16 on 3.0.0, 17 on 3.0.1
-      newFieldIndex = 17;
-    }
     std::string new_fuelType = model->getObjectsByType(iddname)[0].getString(newFieldIndex).get();
     EXPECT_NE(old_fuelType, new_fuelType);
     EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType) << "Failed for " << iddname;
@@ -750,8 +752,8 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   EXPECT_EQ(1000.0, c.getDouble(17).get());
 
   // Last field
-  ASSERT_TRUE(c.getTarget(32));
-  EXPECT_EQ("Always Off Discrete", c.getTarget(32)->nameString());
+  ASSERT_TRUE(c.getTarget(33));
+  EXPECT_EQ("Always Off Discrete", c.getTarget(33)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidityControlMode_minOATCompressor) {
@@ -767,19 +769,19 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidity
   WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode")[0];
 
   // Field before insertion point is unused (storage tank)
-  EXPECT_FALSE(c.getString(14, false, true));
+  EXPECT_FALSE(c.getString(15, false, true));
 
-  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(15));
-  EXPECT_EQ(-25.0, c.getDouble(15).get());
+  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default): 3.7.0 a new field was inserted before
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(-25.0, c.getDouble(16).get());
 
   // After should be 100.0
-  ASSERT_TRUE(c.getDouble(16));
-  EXPECT_EQ(100.0, c.getDouble(16).get());
+  ASSERT_TRUE(c.getDouble(17));
+  EXPECT_EQ(100.0, c.getDouble(17).get());
 
   // Last field
-  ASSERT_TRUE(c.getDouble(17));
-  EXPECT_EQ(3.0, c.getDouble(17).get());
+  ASSERT_TRUE(c.getDouble(18));
+  EXPECT_EQ(3.0, c.getDouble(18).get());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCompressor) {
@@ -807,8 +809,8 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCom
   EXPECT_FALSE(c.getString(8, false, true));
 
   // Last field
-  ASSERT_TRUE(c.getString(17, false, true));
-  EXPECT_EQ("Electricity", c.getString(17, false, true).get());
+  ASSERT_TRUE(c.getString(18, false, true));
+  EXPECT_EQ("Electricity", c.getString(18, false, true).get());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOATCompressor) {
@@ -825,19 +827,19 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOAT
   WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed")[0];
 
   // Field before insertion point
-  ASSERT_TRUE(c.getDouble(14));
-  EXPECT_EQ(11.0, c.getDouble(14).get());
+  ASSERT_TRUE(c.getDouble(18));
+  EXPECT_EQ(11.0, c.getDouble(18).get());
 
   // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(15));
-  EXPECT_EQ(-25.0, c.getDouble(15).get());
+  ASSERT_TRUE(c.getDouble(19));
+  EXPECT_EQ(-25.0, c.getDouble(19).get());
 
   // After is unused (storage tank)
-  EXPECT_FALSE(c.getString(16, false, true));
+  EXPECT_FALSE(c.getString(20, false, true));
 
   // Last field is the SpeedDataList
-  ASSERT_TRUE(c.getTarget(21));
-  EXPECT_EQ("Coil Cooling DX Variable Speed 1 Speed Data List", c.getTarget(21)->nameString());
+  ASSERT_TRUE(c.getTarget(25));
+  EXPECT_EQ("Coil Cooling DX Variable Speed 1 Speed Data List", c.getTarget(25)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompressor) {
@@ -863,26 +865,26 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   EXPECT_EQ(773.3, c.getDouble(7).get());
 
   // After is the inlet node, via a Connection
-  ASSERT_TRUE(c.getTarget(8));
+  ASSERT_TRUE(c.getTarget(10));
   // We have to resolve to computing or it'll fail in > 3.1.0, since we removed the Name field
-  EXPECT_EQ("Coil Inlet Node Name", c.getTarget(8)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
+  EXPECT_EQ("Coil Inlet Node Name", c.getTarget(10)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
 
   // Second insertion
   // Field before insertion point
-  ASSERT_TRUE(c.getString(22, false, true));
-  EXPECT_EQ("EvaporativelyCooled", c.getString(22, false, true).get());
+  ASSERT_TRUE(c.getString(26, false, true));
+  EXPECT_EQ("EvaporativelyCooled", c.getString(26, false, true).get());
 
   // Insertion point is at index 23, and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(23));
-  EXPECT_EQ(-25.0, c.getDouble(23).get());
+  ASSERT_TRUE(c.getDouble(27));
+  EXPECT_EQ(-25.0, c.getDouble(27).get());
 
   // After
-  ASSERT_TRUE(c.getDouble(24));
-  EXPECT_EQ(0.5, c.getDouble(24).get());
+  ASSERT_TRUE(c.getDouble(28));
+  EXPECT_EQ(0.5, c.getDouble(28).get());
 
   // Last field is a schedule
-  ASSERT_TRUE(c.getTarget(34));
-  EXPECT_EQ("Basin Heater Operating Schedule Name", c.getTarget(34)->nameString());
+  ASSERT_TRUE(c.getTarget(38));
+  EXPECT_EQ("Basin Heater Operating Schedule Name", c.getTarget(38)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AvailabilityManagerHybridVentilation) {
@@ -1377,7 +1379,7 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   // Field before: Rated COP
   EXPECT_EQ(4.2, coil.getDouble(10).get());
 
-  // 3.4.0 to 3.5.0: (3) fields added
+  // 3.4.0 to 3.5.0: (3) fields added, 3.7.0 changed again
 
   // Curves
   {
@@ -1443,10 +1445,10 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   // Field after: Nominal Time for Condensate Removal to Begin
-  EXPECT_EQ(360.0, coil.getDouble(17).get());
+  EXPECT_EQ(360.0, coil.getDouble(18).get());
 
   // Last field
-  EXPECT_EQ(0.1, coil.getDouble(18).get());
+  EXPECT_EQ(0.1, coil.getDouble(19).get());
 }
 
 TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
@@ -1799,7 +1801,7 @@ TEST_F(OSVersionFixture, update_3_3_0_to_3_4_0_CoilHeatingDXMultiSpeed) {
   ASSERT_EQ(1u, coils.size());
   WorkspaceObject coil = coils[0];
 
-  ASSERT_EQ(22u, coil.numFields());
+  ASSERT_EQ(23u, coil.numFields());
   ASSERT_EQ(4u, coil.numExtensibleGroups());
 
   ASSERT_EQ(4u, model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed:StageData").size());
@@ -2039,7 +2041,8 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXSingleSpeed) {
     EXPECT_EQ("Autosize", cc.getString(24).get());
     EXPECT_EQ("Autosize", cc.getString(25).get());
     EXPECT_EQ(26, cc.getDouble(26).get());
-    EXPECT_EQ(27, cc.getDouble(27).get());
+    // 3.7.0, inserted crankcase curve
+    EXPECT_EQ(27, cc.getDouble(28).get());
 
     EXPECT_EQ(773.3, cc.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
     EXPECT_EQ(934.4, cc.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
@@ -2058,7 +2061,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXSingleSpeed) {
     EXPECT_EQ("Autosize", cc.getString(24).get());
     EXPECT_EQ("Autosize", cc.getString(25).get());
     EXPECT_EQ(0, cc.getInt(26).get());
-    EXPECT_EQ(0, cc.getInt(27).get());
+    EXPECT_EQ(0, cc.getInt(28).get());
 
     EXPECT_EQ(773.3, cc.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
     EXPECT_EQ(934.4, cc.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
@@ -2747,4 +2750,1194 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_UnitarySystem_SAFMethods_Incorrec
     EXPECT_TRUE(unitary.isEmpty(
       OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired));
   }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_RatedFanPowerPerVolumeFlowRate) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_RatedFanPowerPerVolumeFlowRate.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model->save(outPath, true);
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:TwoSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(39, coil.numFields());
+
+    // 2 new fields inserted at position 7,
+    // Field Before
+    EXPECT_EQ(2.0, coil.getDouble(6).get());
+    EXPECT_EQ(773.3, coil.getDouble(7).get());  // Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, coil.getDouble(8).get());  // Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023
+    EXPECT_EQ(400.0, coil.getDouble(9).get());
+
+    EXPECT_EQ(1.0, coil.getDouble(20).get());
+    EXPECT_EQ(773.3, coil.getDouble(21).get());  // Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, coil.getDouble(22).get());  // Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2023
+    ASSERT_TRUE(coil.getTarget(23));
+    EXPECT_EQ("LowSpeedTotCapFT", coil.getTarget(23)->nameString());
+
+    // Last field
+    ASSERT_TRUE(coil.getTarget(38));
+    EXPECT_EQ("BasinHeaterOpSch", coil.getTarget(38)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> ccSps = model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed:SpeedData");
+    ASSERT_EQ(1u, ccSps.size());
+    WorkspaceObject ccSp = ccSps[0];
+
+    EXPECT_EQ(14, ccSp.numFields());
+
+    // 2 new fields inserted at position 6
+    // Field Before
+    EXPECT_EQ(1.0, ccSp.getDouble(5).get());
+    EXPECT_EQ(773.3, ccSp.getDouble(6).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, ccSp.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+    EXPECT_EQ(2.0, ccSp.getDouble(8).get());
+
+    // Last field
+    ASSERT_TRUE(ccSp.getTarget(13));
+    EXPECT_EQ("ccSp_EIRfFlow", ccSp.getTarget(13)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> hcSps = model->getObjectsByType("OS:Coil:Heating:DX:VariableSpeed:SpeedData");
+    ASSERT_EQ(1u, hcSps.size());
+    WorkspaceObject hcSp = hcSps[0];
+
+    EXPECT_EQ(11, hcSp.numFields());
+
+    // 2 new fields inserted at position 5
+    // Field Before
+    EXPECT_EQ(1.0, hcSp.getDouble(4).get());
+    EXPECT_EQ(773.3, hcSp.getDouble(5).get());  // Rated Supply Air Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, hcSp.getDouble(6).get());  // Rated Supply Air Fan Power Per Volume Flow Rate 2023
+    ASSERT_TRUE(hcSp.getTarget(7));
+    EXPECT_EQ("hcSp_heatCapFT", hcSp.getTarget(7)->nameString());
+
+    // Last field
+    ASSERT_TRUE(hcSp.getTarget(10));
+    EXPECT_EQ("hcSp_EIRfFlow", hcSp.getTarget(10)->nameString());
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_CrankcaseCurve) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_CrankcaseCurve.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model->save(outPath, true);
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:CurveFit:Performance");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(15, coil.numFields());
+
+    const size_t insertionIndex = 3;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Alternative Operating Mode 2
+    ASSERT_TRUE(coil.getTarget(14));
+    EXPECT_EQ("AlternativeOpMode2", coil.getTarget(14)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(34, coil.numFields());
+
+    const size_t insertionIndex = 27;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Basin Heater Operating Schedule Name
+    ASSERT_TRUE(coil.getTarget(33));
+    EXPECT_EQ("BasinHeaterOpSch", coil.getTarget(33)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(20, coil.numFields());
+
+    const size_t insertionIndex = 6;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Basin Heater Operating Schedule
+    ASSERT_TRUE(coil.getTarget(19));
+    EXPECT_EQ("BasinHeaterOpSch", coil.getTarget(19)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:MultiSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(19, coil.numFields());
+
+    const size_t insertionIndex = 13;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Fuel Type
+    EXPECT_EQ("Electricity", coil.getString(18).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:SingleSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(25, coil.numFields());
+
+    const size_t insertionIndex = 19;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Resistive Defrost Heater Capacity
+    EXPECT_EQ(1000.0, coil.getDouble(24).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(19, coil.numFields());
+
+    const size_t insertionIndex = 8;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Region number for Calculating HSPF
+    EXPECT_EQ(4, coil.getInt(18).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:VariableSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(20, coil.numFields());
+
+    const size_t insertionIndex = 13;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Speed Data List
+    ASSERT_TRUE(coil.getTarget(19));
+    EXPECT_EQ("CoilHeatingDXVariableSpeed Speed Data List", coil.getTarget(19)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:WaterHeating:AirToWaterHeatPump");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(30, coil.numFields());
+
+    const size_t insertionIndex = 20;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Part Load Fraction Correlation Curve
+    ASSERT_TRUE(coil.getTarget(29));
+    EXPECT_EQ("CoilWaterHeatingAirToWaterHeatPump PLFCorrelationCurve", coil.getTarget(29)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(23, coil.numFields());
+
+    const size_t insertionIndex = 18;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Speed Data List
+    ASSERT_TRUE(coil.getTarget(22));
+    EXPECT_EQ("CoilWaterHeatingAirToWaterHeatPumpVariableSpeed Speed Data List", coil.getTarget(22)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(21, coil.numFields());
+
+    const size_t insertionIndex = 13;
+    EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+    // Crankcase Heater Capacity Function of Temperature Curve Name
+    EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+    EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+
+    // Last field: Part Load Fraction Correlation Curve Name
+    ASSERT_TRUE(coil.getTarget(20));
+    EXPECT_EQ("CoilWaterHeatingAirToWaterHeatPumpWrapped PLFCorrelationCurve", coil.getTarget(20)->nameString());
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_solo) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_solo.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model->save(outPath, true);
+
+  // I expect two Curve:Linear to have been created
+  auto curves = model->getObjectsByType("OS:Curve:Linear");
+  ASSERT_EQ(2, curves.size());
+
+  EXPECT_TRUE(std::all_of(curves.cbegin(), curves.cend(),
+                          [](const auto& curve) { return curve.nameString().find("PLFCorrelationCurve") != std::string::npos; }));
+
+  constexpr double defaultC1 = 0.833746458696111;
+  constexpr double defaultC2 = 0.166253541303889;
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:WaterToAirHeatPump:EquationFit");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(16, coil.numFields());
+
+    // Previous last field: Heating Power Consumption Curve Name
+    ASSERT_TRUE(coil.getTarget(14));
+    EXPECT_EQ("HC Eq Solo heatingPowerConsumptionCurve", coil.getTarget(14)->nameString());
+
+    ASSERT_TRUE(coil.getTarget(15));
+    EXPECT_EQ("HC Eq Solo-PLFCorrelationCurve", coil.getTarget(15)->nameString());
+    EXPECT_DOUBLE_EQ(defaultC1, coil.getTarget(15)->getDouble(2).get());
+    EXPECT_DOUBLE_EQ(defaultC2, coil.getTarget(15)->getDouble(3).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(12, coil.numFields());
+
+    ASSERT_TRUE(coil.getTarget(11));
+    EXPECT_EQ("HC VsdEq Solo Speed Data List", coil.getTarget(11)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(23, coil.numFields());
+
+    {
+      const size_t insertionIndex = 17;
+      ASSERT_TRUE(coil.getTarget(insertionIndex - 1));
+      EXPECT_EQ("CC Eq Solo coolingPowerConsumptionCurve", coil.getTarget(insertionIndex - 1)->nameString());
+
+      // Part Load Fraction Correlation Curve Name
+      ASSERT_TRUE(coil.getTarget(insertionIndex));
+      EXPECT_EQ("CC Eq Solo-PLFCorrelationCurve", coil.getTarget(insertionIndex)->nameString());
+      EXPECT_DOUBLE_EQ(defaultC1, coil.getTarget(insertionIndex)->getDouble(2).get());
+      EXPECT_DOUBLE_EQ(defaultC2, coil.getTarget(insertionIndex)->getDouble(3).get());
+
+      EXPECT_EQ(1.5, coil.getDouble(insertionIndex + 1).get());
+    }
+
+    // Previous last field: Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+    EXPECT_EQ(0.02, coil.getDouble(19).get());
+
+    {
+      const size_t insertionIndex = 20;
+      // No Unitary -> IDD DEFAULTS
+      EXPECT_EQ(0.0, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
+      EXPECT_EQ(0.0, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+    }
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(18, coil.numFields());
+
+    {
+      const size_t insertionIndex = 12;
+      EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+      // No Unitary -> IDD DEFAULTS
+      EXPECT_EQ(0.0, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
+      EXPECT_EQ(0.0, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+      EXPECT_EQ("Yes", coil.getString(insertionIndex + 3).get());
+    }
+
+    ASSERT_TRUE(coil.getTarget(17));
+    EXPECT_EQ("CC VsdEq Solo Speed Data List", coil.getTarget(17)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    EXPECT_EQ(26, coil.numFields());
+
+    {
+      const size_t insertionIndex = 9;
+      EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+      // No Unitary -> IDD DEFAULTS (NOTE: Yes, They ARE NOT the same as the WaterToAir ones...)
+      EXPECT_EQ(2.5, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 1).get());  // Latent Capacity Time Constant
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+      ASSERT_TRUE(coil.getTarget(insertionIndex + 3));
+      EXPECT_EQ("CC DXVsd Solo EnergyPartLoadFractionCurve", coil.getTarget(insertionIndex + 3)->nameString());
+    }
+
+    {
+      const size_t insertionIndex = 17;
+      EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+      // Crankcase Heater Capacity Function of Temperature Curve Name
+      EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+      EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+    }
+
+    // Last field: Part Load Fraction Correlation Curve Name
+    ASSERT_TRUE(coil.getTarget(25));
+    EXPECT_EQ("CC DXVsd Solo Speed Data List", coil.getTarget(25)->nameString());
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_eqfit) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_unitary_eqfit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model->save(outPath, true);
+
+  constexpr double MAX_CYCLING_RATE = 3.5;
+  constexpr double HEAT_PUMP_TIME_CONSTANT = 90.0;
+  constexpr double HEAT_PUMP_FAN_DELAY_TIME = 120.0;
+
+  constexpr double A = 4 * (HEAT_PUMP_TIME_CONSTANT / 3600.0) * MAX_CYCLING_RATE;
+  const double calculatedC2 = A * (1 - std::exp(-1 / A));
+  const double calculatedC1 = (1 - calculatedC2);
+
+  EXPECT_DOUBLE_EQ(0.670101416743666, calculatedC1);
+  EXPECT_DOUBLE_EQ(0.329898583256334, calculatedC2);
+
+  {
+    // I expect three Curve:Linear to have been created:
+    // * One for the Unitary with a HC coil only
+    // * One for the Unitary with a CC coil only
+    // * The same for the Unitary with both a CC and HC
+    auto curves = model->getObjectsByType("OS:Curve:Linear");
+    ASSERT_EQ(3, curves.size());
+
+    EXPECT_TRUE(std::all_of(curves.cbegin(), curves.cend(),
+                            [](const auto& curve) { return curve.nameString().find("AutogeneratedPLFCurve") != std::string::npos; }));
+  }
+
+  {
+    auto unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
+    ASSERT_EQ(3, unitarys.size());
+
+    constexpr size_t deletionIndex = 38;
+    for (const auto& unitary : unitarys) {
+
+      EXPECT_EQ("sensor", unitary.getString(deletionIndex - 1).get());
+
+      EXPECT_EQ(2.0, unitary.getDouble(deletionIndex).get());
+      EXPECT_EQ(1.0, unitary.getDouble(deletionIndex + 1).get());
+    }
+  }
+
+  constexpr int heatingCoilNameIndex = 11;
+  constexpr int coolingCoilNameIndex = 13;
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary HC Eq").get();
+    ASSERT_TRUE(unitary.isEmpty(coolingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(heatingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:EquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(16, coil.numFields());
+
+      // Previous last field: Heating Power Consumption Curve Name
+      ASSERT_TRUE(coil.getTarget(14));
+      EXPECT_EQ("HC Eq Unitary heatingPowerConsumptionCurve", coil.getTarget(14)->nameString());
+
+      ASSERT_TRUE(coil.getTarget(15));
+      EXPECT_EQ("Unitary HC Eq-AutogeneratedPLFCurve", coil.getTarget(15)->nameString());
+      EXPECT_DOUBLE_EQ(calculatedC1, coil.getTarget(15)->getDouble(2).get());
+      EXPECT_DOUBLE_EQ(calculatedC2, coil.getTarget(15)->getDouble(3).get());
+    }
+  }
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary CC Eq").get();
+    ASSERT_TRUE(unitary.isEmpty(heatingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(23, coil.numFields());
+
+      {
+        const size_t insertionIndex = 17;
+        ASSERT_TRUE(coil.getTarget(insertionIndex - 1));
+        EXPECT_EQ("CC Eq Unitary coolingPowerConsumptionCurve", coil.getTarget(insertionIndex - 1)->nameString());
+
+        // Part Load Fraction Correlation Curve Name
+        ASSERT_TRUE(coil.getTarget(insertionIndex));
+        EXPECT_EQ("Unitary CC Eq-AutogeneratedPLFCurve", coil.getTarget(insertionIndex)->nameString());
+        EXPECT_DOUBLE_EQ(calculatedC1, coil.getTarget(insertionIndex)->getDouble(2).get());
+        EXPECT_DOUBLE_EQ(calculatedC2, coil.getTarget(insertionIndex)->getDouble(3).get());
+
+        EXPECT_EQ(1.5, coil.getDouble(insertionIndex + 1).get());
+      }
+
+      // Previous last field: Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+      EXPECT_EQ(0.02, coil.getDouble(19).get());
+
+      {
+        const size_t insertionIndex = 20;
+        // From Unitary
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+      }
+    }
+  }
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary Both Eq").get();
+    ASSERT_TRUE(unitary.getTarget(heatingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:EquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(16, coil.numFields());
+
+      // Previous last field: Heating Power Consumption Curve Name
+      ASSERT_TRUE(coil.getTarget(14));
+      EXPECT_EQ("HC Eq Unitary Both heatingPowerConsumptionCurve", coil.getTarget(14)->nameString());
+
+      ASSERT_TRUE(coil.getTarget(15));
+      EXPECT_EQ("Unitary Both Eq-AutogeneratedPLFCurve", coil.getTarget(15)->nameString());
+      EXPECT_DOUBLE_EQ(calculatedC1, coil.getTarget(15)->getDouble(2).get());
+      EXPECT_DOUBLE_EQ(calculatedC2, coil.getTarget(15)->getDouble(3).get());
+    }
+
+    {
+      auto coil = unitary.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(23, coil.numFields());
+
+      {
+        const size_t insertionIndex = 17;
+        ASSERT_TRUE(coil.getTarget(insertionIndex - 1));
+        EXPECT_EQ("CC Eq Unitary Both coolingPowerConsumptionCurve", coil.getTarget(insertionIndex - 1)->nameString());
+
+        // Part Load Fraction Correlation Curve Name
+        ASSERT_TRUE(coil.getTarget(insertionIndex));
+        EXPECT_EQ("Unitary Both Eq-AutogeneratedPLFCurve", coil.getTarget(insertionIndex)->nameString());
+        EXPECT_DOUBLE_EQ(calculatedC1, coil.getTarget(insertionIndex)->getDouble(2).get());
+        EXPECT_DOUBLE_EQ(calculatedC2, coil.getTarget(insertionIndex)->getDouble(3).get());
+
+        EXPECT_EQ(1.5, coil.getDouble(insertionIndex + 1).get());
+      }
+
+      // Previous last field: Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+      EXPECT_EQ(0.02, coil.getDouble(19).get());
+
+      {
+        const size_t insertionIndex = 20;
+        // From Unitary
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+      }
+    }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_vsdeqfit) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_unitary_vsdeqfit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model->save(outPath, true);
+
+  constexpr double MAX_CYCLING_RATE = 3.5;
+  constexpr double HEAT_PUMP_TIME_CONSTANT = 90.0;
+  constexpr double HEAT_PUMP_FAN_DELAY_TIME = 120.0;
+
+  {
+    // I expect zero Curve:Linear to have been created as none of the coils need one
+    auto curves = model->getObjectsByType("OS:Curve:Linear");
+    EXPECT_EQ(0, curves.size());
+  }
+
+  {
+    auto unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
+    ASSERT_EQ(4, unitarys.size());
+
+    constexpr size_t deletionIndex = 38;
+    for (const auto& unitary : unitarys) {
+
+      EXPECT_EQ("sensor", unitary.getString(deletionIndex - 1).get());
+
+      EXPECT_EQ(2.0, unitary.getDouble(deletionIndex).get());
+      EXPECT_EQ(1.0, unitary.getDouble(deletionIndex + 1).get());
+    }
+  }
+
+  constexpr int heatingCoilNameIndex = 11;
+  constexpr int coolingCoilNameIndex = 13;
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary HC VsdEq").get();
+    ASSERT_TRUE(unitary.isEmpty(coolingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(heatingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(12, coil.numFields());
+
+      // It has no changes
+      ASSERT_TRUE(coil.getTarget(11));
+      EXPECT_EQ("HC VsdEq Unitary Speed Data List", coil.getTarget(11)->nameString());
+    }
+  }
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary CC VsdEq").get();
+    ASSERT_TRUE(unitary.isEmpty(heatingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(18, coil.numFields());
+
+      {
+        const size_t insertionIndex = 12;
+        EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+        // From Unitary
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+        EXPECT_EQ("Yes", coil.getString(insertionIndex + 3).get());
+      }
+
+      ASSERT_TRUE(coil.getTarget(17));
+      EXPECT_EQ("CC VsdEq Unitary Speed Data List", coil.getTarget(17)->nameString());
+    }
+  }
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary CC DXVsd").get();
+    ASSERT_TRUE(unitary.isEmpty(heatingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:DX:VariableSpeed", coil.iddObject().name());
+
+      EXPECT_EQ(26, coil.numFields());
+
+      {
+        const size_t insertionIndex = 9;
+        EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+        // From Unitary
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+        ASSERT_TRUE(coil.getTarget(insertionIndex + 3));
+        EXPECT_EQ("CC DXVsd Unitary EnergyPartLoadFractionCurve", coil.getTarget(insertionIndex + 3)->nameString());
+      }
+
+      {
+        const size_t insertionIndex = 17;
+        EXPECT_EQ(100.0, coil.getDouble(insertionIndex - 1).get());
+
+        // Crankcase Heater Capacity Function of Temperature Curve Name
+        EXPECT_TRUE(coil.isEmpty(insertionIndex));
+
+        EXPECT_EQ(11.0, coil.getDouble(insertionIndex + 1).get());
+      }
+
+      // Last field: Part Load Fraction Correlation Curve Name
+      ASSERT_TRUE(coil.getTarget(25));
+      EXPECT_EQ("CC DXVsd Unitary Speed Data List", coil.getTarget(25)->nameString());
+    }
+  }
+
+  {
+    auto unitary = model->getObjectByTypeAndName("OS:AirLoopHVAC:UnitarySystem", "Unitary Both VsdEq").get();
+    ASSERT_TRUE(unitary.getTarget(heatingCoilNameIndex));
+    ASSERT_TRUE(unitary.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = unitary.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(12, coil.numFields());
+
+      // It has no changes
+      ASSERT_TRUE(coil.getTarget(11));
+      EXPECT_EQ("HC VsdEq Unitary Both Speed Data List", coil.getTarget(11)->nameString());
+    }
+
+    {
+      auto coil = unitary.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(18, coil.numFields());
+
+      {
+        const size_t insertionIndex = 12;
+        EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+        // From Unitary
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+        EXPECT_EQ("Yes", coil.getString(insertionIndex + 3).get());
+      }
+
+      ASSERT_TRUE(coil.getTarget(17));
+      EXPECT_EQ("CC VsdEq Unitary Both Speed Data List", coil.getTarget(17)->nameString());
+    }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_wahp) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Latent_wahp.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(osmPath);
+  ASSERT_TRUE(model) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model->save(outPath, true);
+
+  constexpr double MAX_CYCLING_RATE = 3.5;
+  constexpr double HEAT_PUMP_TIME_CONSTANT = 90.0;
+  constexpr double HEAT_PUMP_FAN_DELAY_TIME = 120.0;
+
+  constexpr double A = 4 * (HEAT_PUMP_TIME_CONSTANT / 3600.0) * MAX_CYCLING_RATE;
+  const double calculatedC2 = A * (1 - std::exp(-1 / A));
+  const double calculatedC1 = (1 - calculatedC2);
+
+  EXPECT_DOUBLE_EQ(0.670101416743666, calculatedC1);
+  EXPECT_DOUBLE_EQ(0.329898583256334, calculatedC2);
+
+  {
+    // I expect one Curve:Linear to have been created:
+    // * One for the WAHP with EquationFit
+    // * Zero for the WAHP with VariableSpeedEquationFit coils
+    auto curves = model->getObjectsByType("OS:Curve:Linear");
+    ASSERT_EQ(1, curves.size());
+
+    EXPECT_TRUE(std::all_of(curves.cbegin(), curves.cend(),
+                            [](const auto& curve) { return curve.nameString().find("AutogeneratedPLFCurve") != std::string::npos; }));
+  }
+
+  {
+    auto wahps = model->getObjectsByType("OS:ZoneHVAC:WaterToAirHeatPump");
+    ASSERT_EQ(2, wahps.size());
+
+    constexpr size_t deletionIndex = 15;
+    for (const auto& wahp : wahps) {
+
+      // Before: cooling coil name
+      EXPECT_TRUE(wahp.getTarget(deletionIndex - 1));
+
+      // After: supplemental heating coil
+      EXPECT_TRUE(wahp.getTarget(deletionIndex));
+
+      EXPECT_EQ("OS:Coil:Heating:Electric", wahp.getTarget(deletionIndex)->iddObject().name());
+    }
+  }
+
+  constexpr int heatingCoilNameIndex = 13;
+  constexpr int coolingCoilNameIndex = 14;
+
+  {
+    auto wahp = model->getObjectByTypeAndName("OS:ZoneHVAC:WaterToAirHeatPump", "WAHP Eq").get();
+    ASSERT_TRUE(wahp.getTarget(heatingCoilNameIndex));
+    ASSERT_TRUE(wahp.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = wahp.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:EquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(16, coil.numFields());
+
+      // Previous last field: Heating Power Consumption Curve Name
+      ASSERT_TRUE(coil.getTarget(14));
+      EXPECT_EQ("HC Eq WAHP heatingPowerConsumptionCurve", coil.getTarget(14)->nameString());
+
+      ASSERT_TRUE(coil.getTarget(15));
+      EXPECT_EQ("WAHP Eq-AutogeneratedPLFCurve", coil.getTarget(15)->nameString());
+      EXPECT_DOUBLE_EQ(calculatedC1, coil.getTarget(15)->getDouble(2).get());
+      EXPECT_DOUBLE_EQ(calculatedC2, coil.getTarget(15)->getDouble(3).get());
+    }
+
+    {
+      auto coil = wahp.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(23, coil.numFields());
+
+      {
+        const size_t insertionIndex = 17;
+        ASSERT_TRUE(coil.getTarget(insertionIndex - 1));
+        EXPECT_EQ("CC Eq WAHP coolingPowerConsumptionCurve", coil.getTarget(insertionIndex - 1)->nameString());
+
+        // Part Load Fraction Correlation Curve Name
+        ASSERT_TRUE(coil.getTarget(insertionIndex));
+        EXPECT_EQ("WAHP Eq-AutogeneratedPLFCurve", coil.getTarget(insertionIndex)->nameString());
+        EXPECT_DOUBLE_EQ(calculatedC1, coil.getTarget(insertionIndex)->getDouble(2).get());
+        EXPECT_DOUBLE_EQ(calculatedC2, coil.getTarget(insertionIndex)->getDouble(3).get());
+
+        EXPECT_EQ(1.5, coil.getDouble(insertionIndex + 1).get());
+      }
+
+      // Previous last field: Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+      EXPECT_EQ(0.02, coil.getDouble(19).get());
+
+      {
+        const size_t insertionIndex = 20;
+        // From WAHP
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+      }
+    }
+  }
+
+  {
+    auto wahp = model->getObjectByTypeAndName("OS:ZoneHVAC:WaterToAirHeatPump", "WAHP VsdEq").get();
+    ASSERT_TRUE(wahp.getTarget(heatingCoilNameIndex));
+    ASSERT_TRUE(wahp.getTarget(coolingCoilNameIndex));
+
+    {
+      auto coil = wahp.getTarget(heatingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(12, coil.numFields());
+
+      // It has no changes
+      ASSERT_TRUE(coil.getTarget(11));
+      EXPECT_EQ("HC VsdEq WAHP Speed Data List", coil.getTarget(11)->nameString());
+    }
+
+    {
+      auto coil = wahp.getTarget(coolingCoilNameIndex).get();
+      ASSERT_EQ("OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit", coil.iddObject().name());
+
+      EXPECT_EQ(18, coil.numFields());
+
+      {
+        const size_t insertionIndex = 12;
+        EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
+
+        // From WAHP
+        EXPECT_EQ(MAX_CYCLING_RATE, coil.getDouble(insertionIndex).get());              // Maximum Cycling Rate
+        EXPECT_EQ(HEAT_PUMP_TIME_CONSTANT, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+        EXPECT_EQ(HEAT_PUMP_FAN_DELAY_TIME, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
+
+        EXPECT_EQ("Yes", coil.getString(insertionIndex + 3).get());
+      }
+
+      ASSERT_TRUE(coil.getTarget(17));
+      EXPECT_EQ("CC VsdEq WAHP Speed Data List", coil.getTarget(17)->nameString());
+    }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_BoilerHotWater) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_7_0/test_vt_BoilerHotWater.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_BoilerHotWater_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> bhws = model->getObjectsByType("OS:Boiler:HotWater");
+  ASSERT_EQ(1u, bhws.size());
+  WorkspaceObject bhw = bhws[0];
+
+  EXPECT_EQ("Boiler Hot Water 1", bhw.getString(1).get());         // Name
+  EXPECT_EQ("Propane", bhw.getString(2).get());                    // Fuel Type
+  EXPECT_EQ(1, bhw.getDouble(3).get());                            // Nominal Capacity
+  EXPECT_EQ(0.9, bhw.getDouble(4).get());                          // Nominal Thermal Efficiency
+  EXPECT_EQ("EnteringBoiler", bhw.getString(5).get());             // Efficiency Curve Temperature Evaluation Variable
+  EXPECT_NE("", bhw.getString(6).get());                           // Normalized Boiler Efficiency Curve Name
+  EXPECT_EQ(3, bhw.getDouble(7).get());                            // Design Water Flow Rate
+  EXPECT_EQ(4, bhw.getDouble(8).get());                            // Minimum Part Load Ratio
+  EXPECT_EQ(5, bhw.getDouble(9).get());                            // Maximum Part Load Ratio
+  EXPECT_EQ(6, bhw.getDouble(10).get());                           // Optimum Part Load Ratio
+  EXPECT_TRUE(bhw.isEmpty(11));                                    // Boiler Water Inlet Node Name
+  EXPECT_TRUE(bhw.isEmpty(12));                                    // Boiler Water Outlet Node Name
+  EXPECT_EQ(7, bhw.getDouble(13).get());                           // Water Outlet Upper Temperature Limit
+  EXPECT_EQ("LeavingSetpointModulated", bhw.getString(14).get());  // Boiler Flow Mode
+  EXPECT_EQ(8, bhw.getDouble(15).get());                           // On Cycle Parasitic Electric Load
+  EXPECT_EQ(0, bhw.getDouble(16).get());                           // Off Cycle Parasitic Fuel Load
+  EXPECT_EQ(9, bhw.getDouble(17).get());                           // Sizing Factor
+  EXPECT_EQ("Test", bhw.getString(18).get());                      // End-Use Subcategory
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_fuelTypeRenames) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_FuelTypeRenames.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  IddFile oldIddFile = getOpenStudioIddFileForVersion(VersionString(3, 6, 1));
+  OptionalIdfFile oldIdfFile_ = IdfFile::load(osmPath, oldIddFile);
+  ASSERT_TRUE(oldIdfFile_);
+
+  // Making the map case-insentive by providing a Comparator `IstringCompare`
+  const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap{{
+    {"Steam", "DistrictHeatingSteam"},
+    {"DistrictHeating", "DistrictHeatingWater"},
+    // Additionally, for UtilityBill, align the IDD choices to E+. This will also be covered by this
+    {"FuelOil_1", "FuelOilNo1"},
+    {"FuelOil_2", "FuelOilNo2"},
+    {"OtherFuel_1", "OtherFuel1"},
+    {"OtherFuel_2", "OtherFuel2"},
+  }};
+
+  // iddname, 361 & 370 index, current index
+  const std::array<std::tuple<std::string, int, int>, 12> fuelTypeRenamesMap{{
+    {"OS:OtherEquipment", 6, 6},                                // Fuel Type
+    {"OS:Exterior:FuelEquipment", 4, 4},                        // Fuel Use Type
+    {"OS:WaterHeater:Mixed", 11, 11},                           // Heater Fuel Type
+    {"OS:WaterHeater:Mixed", 15, 15},                           // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Mixed", 18, 18},                           // On Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 17, 17},                      // Heater Fuel Type
+    {"OS:WaterHeater:Stratified", 20, 20},                      // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 24, 24},                      // On Cycle Parasitic Fuel Type
+    {"OS:Meter:Custom", 2, 2},                                  // Fuel Type
+    {"OS:Meter:CustomDecrement", 2, 2},                         // Fuel Type
+    {"OS:EnergyManagementSystem:MeteredOutputVariable", 5, 5},  // Resource Type
+    {"OS:PythonPlugin:OutputVariable", 6, 6},                   // Resource Type
+    // {"OS:UtilityBill", 2, 2},                                   // Fuel Type
+  }};
+
+  for (const auto& [iddname, oldFieldIndex, newFieldIndex] : fuelTypeRenamesMap) {
+
+    const std::string old_fuelType = oldIdfFile_->getObjectsByType(oldIddFile.getObject(iddname).get())[0].getString(oldFieldIndex).get();
+    // Check that the test model (in 3.6.1), actually has bad starting fuels
+    EXPECT_TRUE(replaceFuelTypesMap.find(old_fuelType) != replaceFuelTypesMap.end());
+
+    const std::string new_fuelType = model_->getObjectsByType(iddname)[0].getString(newFieldIndex).get();
+    EXPECT_NE(old_fuelType, new_fuelType);
+    EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType) << "Failed for " << iddname;
+  }
+
+  // I have two instances of this object, so do them manually
+  {
+    auto u = model_->getObjectByTypeAndName("OS:UtilityBill", "Legacy").get();
+    EXPECT_EQ("FuelOilNo1", u.getString(2).get());
+  }
+  {
+    auto u = model_->getObjectByTypeAndName("OS:UtilityBill", "Steam").get();
+    EXPECT_EQ("DistrictHeatingSteam", u.getString(2).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> outputMeters = model_->getObjectsByType("OS:Output:Meter");
+    ASSERT_EQ(2u, outputMeters.size());
+    EXPECT_NE(std::find_if(outputMeters.begin(), outputMeters.end(),
+                           [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "DistrictHeatingSteam:Facility"); }),
+              outputMeters.end());
+    EXPECT_NE(std::find_if(outputMeters.begin(), outputMeters.end(),
+                           [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "Heating:DistrictHeatingWater"); }),
+              outputMeters.end());
+  }
+
+  {
+    const static std::map<std::string, std::string> renameMap({
+      {"District Cooling Chilled Water Energy", "District Cooling Water Energy"},
+      {"District Cooling Chilled Water Rate", "District Cooling Water Rate"},
+      {"District Cooling Rate", "District Cooling Water Rate"},
+      {"District Cooling Inlet Temperature", "District Cooling Water Inlet Temperature"},
+      {"District Cooling Outlet Temperature", "District Cooling Water Outlet Temperature"},
+      {"District Cooling Mass Flow Rate", "District Cooling Water Mass Flow Rate"},
+      {"District Heating Hot Water Energy", "District Heating Water Energy"},
+      {"District Heating Hot Water Rate", "District Heating Water Rate"},
+      {"District Heating Rate", "District Heating Water Rate"},
+      {"District Heating Inlet Temperature", "District Heating Water Inlet Temperature"},
+      {"District Heating Outlet Temperature", "District Heating Water Outlet Temperature"},
+      {"District Heating Mass Flow Rate", "District Heating Water Mass Flow Rate"},
+    });
+
+    std::vector<WorkspaceObject> outputVariables = model_->getObjectsByType("OS:Output:Variable");
+    ASSERT_EQ(renameMap.size(), outputVariables.size());
+    ASSERT_EQ(12, outputVariables.size());
+    for (const auto& outputVariable : outputVariables) {
+      auto name = outputVariable.nameString();
+      auto it = renameMap.find(name);
+      ASSERT_NE(it, renameMap.end()) << "Output:Variable named " << name << " not in replaceMap";
+      EXPECT_EQ(it->second, outputVariable.getString(3).get())
+        << "Output:Variable named " << name << " did not get the expected rename for Variable Name field";
+    }
+
+    std::vector<WorkspaceObject> emsSensors = model_->getObjectsByType("OS:EnergyManagementSystem:Sensor");
+    ASSERT_EQ(15, emsSensors.size());
+
+    EXPECT_NE(std::find_if(emsSensors.begin(), emsSensors.end(),
+                           [](const WorkspaceObject& wo) {
+                             return openstudio::istringEqual(wo.nameString(), "District_Cooling_Inlet_Temperature_Standandalone");
+                           }),
+              emsSensors.end());
+
+    for (const auto& emsSensor : emsSensors) {
+      if (openstudio::istringEqual(emsSensor.nameString(), "District_Cooling_Inlet_Temperature_Standandalone")) {
+        // District Cooling Inlet Temperature => District Cooling Water Inlet Temperature
+        EXPECT_EQ("District Cooling Water Inlet Temperature", emsSensor.getString(3).get());
+      } else {
+        // All of these have actual handles stored at string, these shouldn't have been touched
+        boost::optional<std::string> handle = emsSensor.getString(3);
+        ASSERT_TRUE(handle.is_initialized());
+        UUID uid = toUUID(handle.get());
+        boost::optional<WorkspaceObject> object = model_->getObject(uid);
+        ASSERT_TRUE(object);
+        EXPECT_TRUE(openstudio::istringEqual(object->iddObject().name(), "OS:Output:Variable")
+                    || openstudio::istringEqual(object->iddObject().name(), "OS:Output:Meter"));
+      }
+    }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_CoilsHeating) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_Coils_Heating.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  std::vector<WorkspaceObject> chgs = model_->getObjectsByType("OS:Coil:Heating:Gas");
+  ASSERT_EQ(1u, chgs.size());
+  WorkspaceObject chg = chgs[0];
+
+  EXPECT_EQ("Coil Heating Gas 1", chg.getString(1).get());  // Name
+  EXPECT_EQ(1, chg.getDouble(8).get());                     // On Cycle Parasitic Electric Load
+  EXPECT_EQ(2, chg.getDouble(10).get());                    // Off Cycle Parasitic Gas Load
+
+  std::vector<WorkspaceObject> chgms = model_->getObjectsByType("OS:Coil:Heating:Gas:Multistage");
+  ASSERT_EQ(1u, chgms.size());
+  WorkspaceObject chgm = chgms[0];
+
+  EXPECT_EQ("Coil Heating Gas Multi Stage 1", chgm.getString(1).get());  // Name
+  EXPECT_EQ(3, chgm.getDouble(6).get());                                 // Off Cycle Parasitic Gas Load
+
+  std::vector<WorkspaceObject> chgmds = model_->getObjectsByType("OS:Coil:Heating:Gas:Multistage:StageData");
+  ASSERT_EQ(1u, chgmds.size());
+  WorkspaceObject chgmd = chgmds[0];
+
+  EXPECT_EQ("Coil Heating Gas Multi Stage Stage Data 1", chgmd.getString(1).get());  // Name
+  EXPECT_EQ(4, chgmd.getDouble(4).get());                                            // On Cycle Parasitic Electric Load
+
+  std::vector<WorkspaceObject> chds = model_->getObjectsByType("OS:Coil:Heating:Desuperheater");
+  ASSERT_EQ(1u, chds.size());
+  WorkspaceObject chd = chds[0];
+
+  EXPECT_EQ("Coil Heating Desuperheater 1", chd.getString(1).get());  // Name
+  EXPECT_EQ(5, chd.getDouble(7).get());                               // On Cycle Parasitic Electric Load
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_DistrictHeating) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_RenameDistrictHeating.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  std::vector<WorkspaceObject> dhs = model_->getObjectsByType("OS:DistrictHeating:Water");
+  ASSERT_EQ(1u, dhs.size());
+  const auto& dh = dhs.front();
+
+  EXPECT_EQ("My DistrictHeating", dh.nameString());
+  ASSERT_TRUE(dh.getTarget(2));
+  EXPECT_EQ("DH Inlet", dh.getTarget(2)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
+  ASSERT_TRUE(dh.getTarget(3));
+  EXPECT_EQ("DH Outlet", dh.getTarget(3)->getTarget(OS_ConnectionFields::TargetObject)->nameString());
+  EXPECT_EQ(1000.0, dh.getDouble(4).get());
+
+  EXPECT_EQ("Always On Continuous", dh.getTarget(5)->nameString());
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_DistrictObjects_CapacityFracSch) {
+  const std::array<openstudio::path, 2> osmPaths{
+    resourcesPath() / toPath("osversion/3_7_0/test_vt_DistrictObjects_CapacityFracSch_Create.osm"),
+    resourcesPath() / toPath("osversion/3_7_0/test_vt_DistrictObjects_CapacityFracSch_Get.osm"),
+  };
+
+  for (const auto& osmPath : osmPaths) {
+    osversion::VersionTranslator vt;
+    boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+    ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+    openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+    model_->save(outPath, true);
+
+    EXPECT_EQ(1, model_->getObjectsByType("OS:Schedule:Constant").size());
+    EXPECT_EQ(1, model_->getObjectsByType("OS:ScheduleTypeLimits").size());
+    {
+      std::vector<WorkspaceObject> dhs = model_->getObjectsByType("OS:DistrictHeating:Water");
+      ASSERT_EQ(1, dhs.size());
+      const auto& dh = dhs.front();
+
+      EXPECT_EQ(1000.0, dh.getDouble(4).get());
+      ASSERT_TRUE(dh.getTarget(5));
+      EXPECT_EQ("Always On Continuous", dh.getTarget(5)->nameString());
+    }
+    {
+      std::vector<WorkspaceObject> dcs = model_->getObjectsByType("OS:DistrictCooling");
+      ASSERT_EQ(1, dcs.size());
+      const auto& dc = dcs.front();
+
+      EXPECT_EQ(1000.0, dc.getDouble(4).get());
+      ASSERT_TRUE(dc.getTarget(5));
+      EXPECT_EQ("Always On Continuous", dc.getTarget(5)->nameString());
+    }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_ControllerOutdoorAir) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_ControllerOutdoorAir.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  std::vector<WorkspaceObject> coas = model_->getObjectsByType("OS:Controller:OutdoorAir");
+  ASSERT_EQ(1u, coas.size());
+  const auto& coa = coas.front();
+
+  EXPECT_EQ("Controller Outdoor Air 1", coa.nameString());                 // Name
+  EXPECT_TRUE(coa.isEmpty(2));                                             // Relief Air Outlet Node Name
+  EXPECT_TRUE(coa.isEmpty(3));                                             // Return Air Node Name
+  EXPECT_TRUE(coa.isEmpty(4));                                             // Mixed Air Node Name
+  EXPECT_TRUE(coa.isEmpty(5));                                             // Actuator Node Name
+  EXPECT_EQ(0, coa.getDouble(6).get());                                    // Minimum Outdoor Air Flow Rate
+  EXPECT_EQ("autosize", coa.getString(7).get());                           // Maximum Outdoor Air Flow Rate
+  EXPECT_EQ("NoEconomizer", coa.getString(8).get());                       // Economizer Control Type
+  EXPECT_EQ("ModulateFlow", coa.getString(9).get());                       // Economizer Control Action Type
+  EXPECT_EQ(28, coa.getDouble(10).get());                                  // Economizer Maximum Limit Dry-Bulb Temperature
+  EXPECT_EQ(64000, coa.getDouble(11).get());                               // Economizer Maximum Limit Enthalpy
+  EXPECT_TRUE(coa.isEmpty(12));                                            // Economizer Maximum Limit Dewpoint Temperature
+  EXPECT_TRUE(coa.isEmpty(13));                                            // Electronic Enthalpy Limit Curve Name
+  EXPECT_EQ(-100, coa.getDouble(14).get());                                // Economizer Minimum Limit Dry-Bulb Temperature
+  EXPECT_EQ("NoLockout", coa.getString(15).get());                         // Lockout Type
+  EXPECT_EQ("FixedMinimum", coa.getString(16).get());                      // Minimum Limit Type
+  EXPECT_TRUE(coa.isEmpty(17));                                            // Minimum Outdoor Air Schedule Name
+  EXPECT_TRUE(coa.isEmpty(18));                                            // Minimum Fraction of Outdoor Air Schedule Name
+  EXPECT_TRUE(coa.isEmpty(19));                                            // Maximum Fraction of Outdoor Air Schedule Name
+  EXPECT_TRUE(coa.getTarget(20));                                          // Controller Mechanical Ventilation
+  EXPECT_TRUE(coa.isEmpty(21));                                            // Time of Day Economizer Control Schedule Name
+  EXPECT_EQ("No", coa.getString(22).get());                                // High Humidity Control
+  EXPECT_TRUE(coa.isEmpty(23));                                            // Humidistat Control Zone Name
+  EXPECT_TRUE(coa.isEmpty(24));                                            // High Humidity Outdoor Air Flow Ratio
+  EXPECT_TRUE(coa.isEmpty(25));                                            // Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  EXPECT_EQ("BypassWhenWithinEconomizerLimits", coa.getString(26).get());  // Heat Recovery Bypass Control Type
+  EXPECT_EQ("InterlockedWithMechanicalCooling", coa.getString(27).get());  // Economizer Operation Staging
 }

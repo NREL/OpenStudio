@@ -16,6 +16,8 @@
 #include "CoilCoolingDX_Impl.hpp"
 #include "CoilCoolingDXCurveFitOperatingMode.hpp"
 #include "CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -81,6 +83,9 @@ namespace model {
       }
       if (auto _mode = alternativeOperatingMode2()) {
         result.push_back(_mode.get());
+      }
+      if (auto c_ = crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+        result.emplace_back(std::move(*c_));
       }
 
       return result;
@@ -257,6 +262,22 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    boost::optional<Curve> CoilCoolingDXCurveFitPerformance_Impl::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName);
+    }
+
+    bool CoilCoolingDXCurveFitPerformance_Impl::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+      const bool result =
+        setPointer(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve.handle());
+      return result;
+    }
+
+    void CoilCoolingDXCurveFitPerformance_Impl::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+      const bool result = setString(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
   CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& model, const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode)
@@ -424,6 +445,18 @@ namespace model {
 
   void CoilCoolingDXCurveFitPerformance::resetAlternativeOperatingMode2() {
     getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->resetAlternativeOperatingMode2();
+  }
+
+  boost::optional<Curve> CoilCoolingDXCurveFitPerformance::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->crankcaseHeaterCapacityFunctionofTemperatureCurve();
+  }
+
+  bool CoilCoolingDXCurveFitPerformance::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->setCrankcaseHeaterCapacityFunctionofTemperatureCurve(curve);
+  }
+
+  void CoilCoolingDXCurveFitPerformance::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
   }
 
   /// @cond

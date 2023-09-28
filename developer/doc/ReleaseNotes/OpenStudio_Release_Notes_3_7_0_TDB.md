@@ -87,6 +87,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4923](https://github.com/NREL/OpenStudio/pull/4923) - Fix #4692 - Modify `Model::load` to use the VersionTranslator instead of loading it assuming the version of the loaded OSM is the same as the current SDK version being used.
 * [#4950](https://github.com/NREL/OpenStudio/pull/4950) - Addresses #4946, allow Table:Lookup curves for Coil:*:WaterToAirHeatPumpEquationFit objects
     * `Coil:Cooling:WaterToAirHeatPumpEquationFit` and `Coil:Heating:WaterToAirHeatPumpEquationFit` have a few API-breaking changes related to its Curves. The types for the constructor, getters, and setters used to be explicit (e.g., `CurveQuadLinear`); it is now the base class, more generic, `Curve` type for added flexibility.
+* [#4972](https://github.com/NREL/OpenStudio/pull/4972) - V23.2.0-IOFreeze - wrap `DistrictHeating:Steam` and rename `DistrictHeating` to `DistrictHeatingWater`
+    * The `DistrictHeating` class (and related Model getters such as `Model::getDistrictHeatings`) are deprecated but kept for backward Compatibility for now.
 
 ## Minor changes and bug fixes
 

@@ -57,6 +57,10 @@ namespace model {
 
     double referenceUnitRatedAirFlowRate() const;
 
+    double ratedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+    double ratedEvaporatorFanPowerPerVolumeFlowRate2023() const;
+
     boost::optional<double> referenceUnitRatedCondenserAirFlowRate() const;
 
     boost::optional<double> referenceUnitRatedPadEffectivenessofEvapPrecooling() const;
@@ -80,6 +84,10 @@ namespace model {
     bool setReferenceUnitGrossRatedCoolingCOP(double referenceUnitGrossRatedCoolingCOP);
 
     bool setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate);
+
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023);
 
     bool setReferenceUnitRatedCondenserAirFlowRate(double referenceUnitRatedCondenserAirFlowRate);
 

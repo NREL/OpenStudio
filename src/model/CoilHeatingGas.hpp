@@ -10,6 +10,7 @@
 #include "ModelObject.hpp"
 #include "StraightComponent.hpp"
 #include "Connection.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -93,16 +94,28 @@ namespace model {
     bool setGasBurnerEfficiency(double value);
 
     /** Returns the value of the ParasiticElectricLoad field. **/
-    double parasiticElectricLoad() const;
+    OS_DEPRECATED(3, 7, 0) double parasiticElectricLoad() const;
+
+    /** Returns the value of the OnCycleParasiticElectricLoad field. **/
+    double onCycleParasiticElectricLoad() const;
 
     /** Sets the value of the ParasiticElectricLoad field. **/
-    bool setParasiticElectricLoad(double value);
+    OS_DEPRECATED(3, 7, 0) bool setParasiticElectricLoad(double value);
+
+    /** Sets the value of the OnCycleParasiticElectricLoad field. **/
+    bool setOnCycleParasiticElectricLoad(double value);
 
     /** Returns the value of the ParasiticGasLoad field. **/
-    double parasiticGasLoad() const;
+    OS_DEPRECATED(3, 7, 0) double parasiticGasLoad() const;
+
+    /** Returns the value of the OffCycleParasiticGasLoad field. **/
+    double offCycleParasiticGasLoad() const;
 
     /** Sets the value of the ParasiticGasLoad field. **/
-    bool setParasiticGasLoad(double value);
+    OS_DEPRECATED(3, 7, 0) bool setParasiticGasLoad(double value);
+
+    /** Sets the value of the OffCycleParasiticGasLoad field. **/
+    bool setOffCycleParasiticGasLoad(double value);
 
     boost::optional<double> nominalCapacity() const;
 

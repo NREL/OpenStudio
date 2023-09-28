@@ -98,7 +98,7 @@ namespace model {
 
       bool isBoilerFlowModeDefaulted() const;
 
-      boost::optional<double> parasiticElectricLoad() const;
+      double onCycleParasiticElectricLoad() const;
 
       double sizingFactor() const;
 
@@ -109,6 +109,8 @@ namespace model {
       boost::optional<double> autosizedDesignWaterFlowRate() const;
 
       std::string endUseSubcategory() const;
+
+      double offCycleParasiticFuelLoad() const;
 
       //@}
       /** @name Setters */
@@ -158,15 +160,15 @@ namespace model {
 
       void resetBoilerFlowMode();
 
-      bool setParasiticElectricLoad(boost::optional<double> parasiticElectricLoad);
-
-      void resetParasiticElectricLoad();
+      bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
 
       bool setSizingFactor(double sizingFactor);
 
       void resetSizingFactor();
 
       bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+      bool setOffCycleParasiticFuelLoad(double offCycleParasiticFuelLoad);
 
       //@}
      private:

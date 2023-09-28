@@ -1,0 +1,492 @@
+
+OS:Version,
+  {d80a6235-1e0e-4441-b714-c716a28dec17}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:OtherEquipment:Definition,
+  {452fb4d4-1cfb-4079-b11f-b67a5b026fa5}, !- Handle
+  Other Equipment Definition 1,           !- Name
+  EquipmentLevel,                         !- Design Level Calculation Method
+  0,                                      !- Design Level {W}
+  ,                                       !- Watts per Space Floor Area {W/m2}
+  ;                                       !- Watts per Person {W/Person}
+
+OS:OtherEquipment,
+  {dffae808-dce1-47d7-8536-ceae4c6fdf61}, !- Handle
+  Other Equipment 1,                      !- Name
+  {452fb4d4-1cfb-4079-b11f-b67a5b026fa5}, !- Other Equipment Definition Name
+  ,                                       !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  SteAm,                                  !- Fuel Type
+  General;                                !- End-Use Subcategory
+
+OS:Exterior:FuelEquipment:Definition,
+  {00e311ec-fd08-4cfb-a52f-1d540ca4e3a2}, !- Handle
+  Exterior Fuel Equipment Definition 1,   !- Name
+  0;                                      !- Design Level {W}
+
+OS:Exterior:FuelEquipment,
+  {33cf3764-71ac-479f-9407-562b6b637a00}, !- Handle
+  Exterior Fuel Equipment 1,              !- Name
+  {00e311ec-fd08-4cfb-a52f-1d540ca4e3a2}, !- Exterior Fuel Equipment Definition Name
+  {670288ed-c9bc-45c3-8b34-b4e49d242826}, !- Schedule Name
+  DISTRICTHEATING,                        !- Fuel Use Type
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
+
+OS:Schedule:Constant,
+  {670288ed-c9bc-45c3-8b34-b4e49d242826}, !- Handle
+  Always On Discrete,                     !- Name
+  {d6898ac5-5735-4c57-803a-46db2ddf0cea}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {d6898ac5-5735-4c57-803a-46db2ddf0cea}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:WaterHeater:Mixed,
+  {bd82d5ca-8e5d-401d-a922-bf1563fc45fd}, !- Handle
+  Water Heater Mixed 1,                   !- Name
+  0.3785,                                 !- Tank Volume {m3}
+  {3ef3c85c-2359-42d3-a783-501f9aa32840}, !- Setpoint Temperature Schedule Name
+  2,                                      !- Deadband Temperature Difference {deltaC}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  Cycle,                                  !- Heater Control Type
+  845000,                                 !- Heater Maximum Capacity {W}
+  ,                                       !- Heater Minimum Capacity {W}
+  ,                                       !- Heater Ignition Minimum Flow Rate {m3/s}
+  ,                                       !- Heater Ignition Delay {s}
+  StEAm,                                  !- Heater Fuel Type
+  0.8,                                    !- Heater Thermal Efficiency
+  ,                                       !- Part Load Factor Curve Name
+  20,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  DisTrictHeating,                        !- Off Cycle Parasitic Fuel Type
+  0.8,                                    !- Off Cycle Parasitic Heat Fraction to Tank
+  ,                                       !- On Cycle Parasitic Fuel Consumption Rate {W}
+  STEAM,                                  !- On Cycle Parasitic Fuel Type
+  ,                                       !- On Cycle Parasitic Heat Fraction to Tank
+  Schedule,                               !- Ambient Temperature Indicator
+  {5f778b50-cdb5-419a-855c-9f3084b6075d}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  6,                                      !- Off Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- Off Cycle Loss Fraction to Thermal Zone
+  6,                                      !- On Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- On Cycle Loss Fraction to Thermal Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  IndirectHeatPrimarySetpoint,            !- Source Side Flow Control Mode
+  ,                                       !- Indirect Alternate Setpoint Temperature Schedule Name
+  General;                                !- End-Use Subcategory
+
+OS:Schedule:Ruleset,
+  {5f778b50-cdb5-419a-855c-9f3084b6075d}, !- Handle
+  Schedule Ruleset 1,                     !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  {044aeb95-c6b4-45d8-a22e-bd4bf00292e1}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {044aeb95-c6b4-45d8-a22e-bd4bf00292e1}, !- Handle
+  Schedule Day 1,                         !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  22;                                     !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Ruleset,
+  {3ef3c85c-2359-42d3-a783-501f9aa32840}, !- Handle
+  Schedule Ruleset 2,                     !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  {5b7ac0ac-17fe-49af-9b6c-638a04aeaa5c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5b7ac0ac-17fe-49af-9b6c-638a04aeaa5c}, !- Handle
+  Schedule Day 2,                         !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  60;                                     !- Value Until Time 1
+
+OS:WaterHeater:Sizing,
+  {5e5f1dae-c68d-470d-bbff-c0a2abd82dc1}, !- Handle
+  {bd82d5ca-8e5d-401d-a922-bf1563fc45fd}, !- WaterHeater Name
+  PeakDraw,                               !- Design Mode
+  0.538503,                               !- Time Storage Can Meet Peak Draw {hr}
+  0,                                      !- Time for Tank Recovery {hr}
+  1;                                      !- Nominal Tank Volume for Autosizing Plant Connections {m3}
+
+OS:WaterHeater:Stratified,
+  {5f165d9a-1903-4385-878d-67aeaf9f32e4}, !- Handle
+  Water Heater Stratified 1,              !- Name
+  General,                                !- End-Use Subcategory
+  0.1893,                                 !- Tank Volume {m3}
+  1.4,                                    !- Tank Height {m}
+  VerticalCylinder,                       !- Tank Shape
+  ,                                       !- Tank Perimeter {m}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  MasterSlave,                            !- Heater Priority Control
+  {803a92ea-56df-49e0-8c79-f76d26abd39e}, !- Heater 1 Setpoint Temperature Schedule Name
+  2,                                      !- Heater 1 Deadband Temperature Difference {deltaC}
+  4500,                                   !- Heater 1 Capacity {W}
+  1,                                      !- Heater 1 Height {m}
+  {db1f74c8-e51b-4fb3-a806-ef135e34f8c0}, !- Heater 2 Setpoint Temperature Schedule Name
+  5,                                      !- Heater 2 Deadband Temperature Difference {deltaC}
+  4500,                                   !- Heater 2 Capacity {W}
+  0,                                      !- Heater 2 Height {m}
+  StEAm,                                  !- Heater Fuel Type
+  0.98,                                   !- Heater Thermal Efficiency
+  10,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  DisTrictHeating,                        !- Off Cycle Parasitic Fuel Type
+  0,                                      !- Off Cycle Parasitic Heat Fraction to Tank
+  0,                                      !- Off Cycle Parasitic Height {m}
+  10,                                     !- On Cycle Parasitic Fuel Consumption Rate {W}
+  STEAM,                                  !- On Cycle Parasitic Fuel Type
+  0,                                      !- On Cycle Parasitic Heat Fraction to Tank
+  0,                                      !- On Cycle Parasitic Height {m}
+  Schedule,                               !- Ambient Temperature Indicator
+  {13b81961-5b38-4943-a73b-4e329c9d45c3}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  0.846,                                  !- Uniform Skin Loss Coefficient per Unit Area to Ambient Temperature {W/m2-K}
+  1,                                      !- Skin Loss Fraction to Zone
+  0,                                      !- Off Cycle Flue Loss Coefficient to Ambient Temperature {W/K}
+  1,                                      !- Off Cycle Flue Loss Fraction to Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  0,                                      !- Use Side Inlet Height {m}
+  autocalculate,                          !- Use Side Outlet Height {m}
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autocalculate,                          !- Source Side Inlet Height {m}
+  0,                                      !- Source Side Outlet Height {m}
+  Fixed,                                  !- Inlet Mode
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  6,                                      !- Number of Nodes
+  0.1,                                    !- Additional Destratification Conductivity {W/m-K}
+  0.15,                                   !- Node 1 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 2 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 3 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 4 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 5 Additional Loss Coefficient {W/m2-K}
+  0.1,                                    !- Node 6 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 7 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 8 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 9 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 10 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 11 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 12 Additional Loss Coefficient {W/m2-K}
+  IndirectHeatPrimarySetpoint;            !- Source Side Flow Control Mode
+
+OS:Schedule:Ruleset,
+  {803a92ea-56df-49e0-8c79-f76d26abd39e}, !- Handle
+  Schedule Ruleset 3,                     !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  {8e4a2a61-b207-4702-8baf-e284418a9c48}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {8e4a2a61-b207-4702-8baf-e284418a9c48}, !- Handle
+  Schedule Day 3,                         !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  48.89;                                  !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {db1f74c8-e51b-4fb3-a806-ef135e34f8c0}, !- Handle
+  Schedule Ruleset 4,                     !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  {061f96eb-85ea-4310-a588-8ec3f1a382e4}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {061f96eb-85ea-4310-a588-8ec3f1a382e4}, !- Handle
+  Schedule Day 4,                         !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  48.89;                                  !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {13b81961-5b38-4943-a73b-4e329c9d45c3}, !- Handle
+  Schedule Ruleset 5,                     !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  {9013dccb-2d2c-4a27-a1e6-c3f5cb0921e4}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {9013dccb-2d2c-4a27-a1e6-c3f5cb0921e4}, !- Handle
+  Schedule Day 5,                         !- Name
+  {09969319-6c16-45d8-ab8a-b2ed136031c9}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  22;                                     !- Value Until Time 1
+
+OS:WaterHeater:Sizing,
+  {1b2e7f50-3227-4e1b-87ce-68ef331a4540}, !- Handle
+  {5f165d9a-1903-4385-878d-67aeaf9f32e4}, !- WaterHeater Name
+  PeakDraw,                               !- Design Mode
+  0.538503,                               !- Time Storage Can Meet Peak Draw {hr}
+  0,                                      !- Time for Tank Recovery {hr}
+  1;                                      !- Nominal Tank Volume for Autosizing Plant Connections {m3}
+
+OS:UtilityBill,
+  {155126cf-3a0f-4213-b414-f18c749adf1a}, !- Handle
+  Legacy,                                 !- Name
+  FuelOil_1,                              !- Fuel Type
+  ,                                       !- Meter Install Location
+  ,                                       !- Meter Specific Install Location
+  ,                                       !- Meter End Use Category
+  ,                                       !- Meter Specific End Use
+  gal,                                    !- Consumption Unit
+  ,                                       !- Consumption Unit Conversion Factor
+  ;                                       !- Peak Demand Unit
+
+OS:UtilityBill,
+  {60447826-5b4c-4b65-8839-5c9b0ba88d95}, !- Handle
+  Steam,                                  !- Name
+  Steam,                                  !- Fuel Type
+  ,                                       !- Meter Install Location
+  ,                                       !- Meter Specific Install Location
+  ,                                       !- Meter End Use Category
+  ,                                       !- Meter Specific End Use
+  lbs,                                    !- Consumption Unit
+  ,                                       !- Consumption Unit Conversion Factor
+  ;                                       !- Peak Demand Unit
+
+OS:Meter:Custom,
+  {ba8fa90d-e30c-4855-a8b9-a6423273d3b8}, !- Handle
+  Meter Custom 1,                         !- Name
+  DistrictHEATING;                        !- Fuel Type
+
+OS:Meter:CustomDecrement,
+  {98c459e1-09f7-47ec-8620-c6b369a6452b}, !- Handle
+  Meter Custom Decrement 1,               !- Name
+  STEAM,                                  !- Fuel Type
+  Meter Custom 1;                         !- Source Meter Name
+
+OS:EnergyManagementSystem:MeteredOutputVariable,
+  {73c13c91-4d49-4726-a7f4-c81cd0d7cb79}, !- Handle
+  Energy Management System Metered Output Variable 1, !- Name
+  DUMMY,                                  !- EMS Variable Name
+  SystemTimestep,                         !- Update Frequency
+  ,                                       !- EMS Program or Subroutine Name
+  STEAM,                                  !- Resource Type
+  Building,                               !- Group Type
+  Fans;                                   !- End-Use Category
+
+OS:PythonPlugin:Variable,
+  {47d688f1-3662-4e4c-8519-65b8c40d6dea}, !- Handle
+  Python Plugin Variable 1;               !- Name
+
+OS:PythonPlugin:OutputVariable,
+  {cd7e8ad8-bd59-4d98-ba20-19bc7cfed382}, !- Handle
+  Python Plugin Output Variable 1,        !- Name
+  {47d688f1-3662-4e4c-8519-65b8c40d6dea}, !- Python Plugin Variable Name
+  Averaged,                               !- Type of Data in Variable
+  ZoneTimestep,                           !- Update Frequency
+  ,                                       !- Units
+  DISTRictHeating;                        !- Resource Type
+
+OS:Output:Meter,
+  {82bb7e48-72fa-4785-ab8f-f03e621b78c2}, !- Handle
+  Steam:Facility;                         !- Name
+
+OS:EnergyManagementSystem:Sensor,
+  {927a5162-b0e0-45e1-85c4-e0a72ee46670}, !- Handle
+  Steam_Facility,                         !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {82bb7e48-72fa-4785-ab8f-f03e621b78c2}; !- Output Variable or Output Meter Name
+
+OS:Output:Meter,
+  {52593b8b-140d-4df8-ac89-d6de2f85dfd0}, !- Handle
+  Heating:DistrictHeating;                !- Name
+
+OS:EnergyManagementSystem:Sensor,
+  {988c0796-5cf2-4a84-83c6-df4bb5a7f685}, !- Handle
+  Heating_DistrictHeating,                !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {52593b8b-140d-4df8-ac89-d6de2f85dfd0}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {85eb035c-7714-4852-91a3-9d8b3cff42c8}, !- Handle
+  District Cooling Chilled Water Energy,  !- Name
+  ,                                       !- Key Value
+  District Cooling Chilled Water Energy;  !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {01cacc9d-3749-4ae7-b13b-314f8fdf53e3}, !- Handle
+  District_Cooling_Chilled_Water_Energy,  !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {85eb035c-7714-4852-91a3-9d8b3cff42c8}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {b4d8aa6f-0bdd-46f1-a615-2c17717cd72f}, !- Handle
+  District Cooling Chilled Water Rate,    !- Name
+  ,                                       !- Key Value
+  District Cooling Chilled Water Rate;    !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {b45a2472-8e69-4d84-851d-6473d51bac12}, !- Handle
+  District_Cooling_Chilled_Water_Rate,    !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {b4d8aa6f-0bdd-46f1-a615-2c17717cd72f}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {3b307b1d-b49c-4ca3-bb8a-52082adc4762}, !- Handle
+  District Cooling Rate,                  !- Name
+  ,                                       !- Key Value
+  District Cooling Rate;                  !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {ab74c3ba-4c86-4d8f-a8a8-7d72ae10416f}, !- Handle
+  District_Cooling_Rate,                  !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {3b307b1d-b49c-4ca3-bb8a-52082adc4762}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {76c20bf1-54b5-454f-b01c-d89b5e6f4a60}, !- Handle
+  District Cooling Inlet Temperature,     !- Name
+  ,                                       !- Key Value
+  District Cooling Inlet Temperature;     !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {5dd336d2-f2ab-4ed1-b093-e52793ae97e5}, !- Handle
+  District_Cooling_Inlet_Temperature,     !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {76c20bf1-54b5-454f-b01c-d89b5e6f4a60}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {b0b43663-22de-4f74-ab61-e6609c800f8d}, !- Handle
+  District Cooling Outlet Temperature,    !- Name
+  ,                                       !- Key Value
+  District Cooling Outlet Temperature;    !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {a8574aab-18a4-4187-b87d-429f29e96e0a}, !- Handle
+  District_Cooling_Outlet_Temperature,    !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {b0b43663-22de-4f74-ab61-e6609c800f8d}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {139eead6-519a-4865-90c7-4690feebf028}, !- Handle
+  District Cooling Mass Flow Rate,        !- Name
+  ,                                       !- Key Value
+  District Cooling Mass Flow Rate;        !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {85eed609-5daa-4361-bfa9-aeaa8f9d7624}, !- Handle
+  District_Cooling_Mass_Flow_Rate,        !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {139eead6-519a-4865-90c7-4690feebf028}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {21dfc32f-cb6d-4854-b5f1-d899e5033c14}, !- Handle
+  District Heating Hot Water Energy,      !- Name
+  ,                                       !- Key Value
+  District Heating Hot Water Energy;      !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {8ab1e008-1909-4adc-8d77-2b041a8efca8}, !- Handle
+  District_Heating_Hot_Water_Energy,      !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {21dfc32f-cb6d-4854-b5f1-d899e5033c14}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {82f9f936-6ebf-48a4-ae51-613ab2481065}, !- Handle
+  District Heating Hot Water Rate,        !- Name
+  ,                                       !- Key Value
+  District Heating Hot Water Rate;        !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {a2f24426-c928-4599-a2b7-013515193e52}, !- Handle
+  District_Heating_Hot_Water_Rate,        !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {82f9f936-6ebf-48a4-ae51-613ab2481065}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {16979d27-c6fd-4a1c-ad9d-020590961832}, !- Handle
+  District Heating Rate,                  !- Name
+  ,                                       !- Key Value
+  District Heating Rate;                  !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {c355e059-b0b1-479d-97ce-380b3506daa6}, !- Handle
+  District_Heating_Rate,                  !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {16979d27-c6fd-4a1c-ad9d-020590961832}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {f494e2cc-5f81-4110-ae12-8b5cfd0b90c1}, !- Handle
+  District Heating Inlet Temperature,     !- Name
+  ,                                       !- Key Value
+  District Heating Inlet Temperature;     !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {f441c7e5-b7a7-42c9-8779-5a76626916ed}, !- Handle
+  District_Heating_Inlet_Temperature,     !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {f494e2cc-5f81-4110-ae12-8b5cfd0b90c1}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {63d510a2-0c30-40c0-bd0f-bcdfa45fc844}, !- Handle
+  District Heating Outlet Temperature,    !- Name
+  ,                                       !- Key Value
+  District Heating Outlet Temperature;    !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {cd083219-9801-426e-ab86-81023df66d8e}, !- Handle
+  District_Heating_Outlet_Temperature,    !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {63d510a2-0c30-40c0-bd0f-bcdfa45fc844}; !- Output Variable or Output Meter Name
+
+OS:Output:Variable,
+  {6da6e7df-5aaf-498e-9a30-2e15082b5cc1}, !- Handle
+  District Heating Mass Flow Rate,        !- Name
+  ,                                       !- Key Value
+  District Heating Mass Flow Rate;        !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {b58af2d6-e80d-45b5-9658-b0bebacf07e4}, !- Handle
+  District_Heating_Mass_Flow_Rate,        !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {6da6e7df-5aaf-498e-9a30-2e15082b5cc1}; !- Output Variable or Output Meter Name
+
+OS:EnergyManagementSystem:Sensor,
+  {f2a3bcb7-3afd-4611-af4c-9eda6719c46d}, !- Handle
+  District_Cooling_Inlet_Temperature_Standandalone, !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  District Cooling Inlet Temperature;     !- Output Variable or Output Meter Name
+

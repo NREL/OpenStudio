@@ -29,6 +29,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"  // For deprecation
+
 namespace openstudio {
 namespace model {
 
@@ -133,14 +135,14 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_Coil_Heating_DesuperheaterFields::HeatingSourceName);
     }
 
-    double CoilHeatingDesuperheater_Impl::parasiticElectricLoad() const {
-      boost::optional<double> value = getDouble(OS_Coil_Heating_DesuperheaterFields::ParasiticElectricLoad, true);
+    double CoilHeatingDesuperheater_Impl::onCycleParasiticElectricLoad() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DesuperheaterFields::OnCycleParasiticElectricLoad, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool CoilHeatingDesuperheater_Impl::isParasiticElectricLoadDefaulted() const {
-      return isEmpty(OS_Coil_Heating_DesuperheaterFields::ParasiticElectricLoad);
+    bool CoilHeatingDesuperheater_Impl::isOnCycleParasiticElectricLoadDefaulted() const {
+      return isEmpty(OS_Coil_Heating_DesuperheaterFields::OnCycleParasiticElectricLoad);
     }
 
     bool CoilHeatingDesuperheater_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -179,13 +181,13 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilHeatingDesuperheater_Impl::setParasiticElectricLoad(double parasiticElectricLoad) {
-      bool result = setDouble(OS_Coil_Heating_DesuperheaterFields::ParasiticElectricLoad, parasiticElectricLoad);
+    bool CoilHeatingDesuperheater_Impl::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
+      bool result = setDouble(OS_Coil_Heating_DesuperheaterFields::OnCycleParasiticElectricLoad, onCycleParasiticElectricLoad);
       return result;
     }
 
-    void CoilHeatingDesuperheater_Impl::resetParasiticElectricLoad() {
-      bool result = setString(OS_Coil_Heating_DesuperheaterFields::ParasiticElectricLoad, "");
+    void CoilHeatingDesuperheater_Impl::resetOnCycleParasiticElectricLoad() {
+      bool result = setString(OS_Coil_Heating_DesuperheaterFields::OnCycleParasiticElectricLoad, "");
       OS_ASSERT(result);
     }
 
@@ -257,7 +259,7 @@ namespace model {
 
     bool ok = setHeatReclaimRecoveryEfficiency(0.8);
     OS_ASSERT(ok);
-    ok = setParasiticElectricLoad(0.0);
+    ok = setOnCycleParasiticElectricLoad(0.0);
     OS_ASSERT(ok);
   }
 
@@ -281,12 +283,24 @@ namespace model {
     return getImpl<detail::CoilHeatingDesuperheater_Impl>()->heatingSource();
   }
 
+  // DEPRECATED
   double CoilHeatingDesuperheater::parasiticElectricLoad() const {
-    return getImpl<detail::CoilHeatingDesuperheater_Impl>()->parasiticElectricLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use onCycleParasiticElectricLoad instead.");
+    return getImpl<detail::CoilHeatingDesuperheater_Impl>()->onCycleParasiticElectricLoad();
   }
 
+  double CoilHeatingDesuperheater::onCycleParasiticElectricLoad() const {
+    return getImpl<detail::CoilHeatingDesuperheater_Impl>()->onCycleParasiticElectricLoad();
+  }
+
+  // DEPRECATED
   bool CoilHeatingDesuperheater::isParasiticElectricLoadDefaulted() const {
-    return getImpl<detail::CoilHeatingDesuperheater_Impl>()->isParasiticElectricLoadDefaulted();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use isOnCycleParasiticElectricLoadDefaulted instead.");
+    return getImpl<detail::CoilHeatingDesuperheater_Impl>()->isOnCycleParasiticElectricLoadDefaulted();
+  }
+
+  bool CoilHeatingDesuperheater::isOnCycleParasiticElectricLoadDefaulted() const {
+    return getImpl<detail::CoilHeatingDesuperheater_Impl>()->isOnCycleParasiticElectricLoadDefaulted();
   }
 
   bool CoilHeatingDesuperheater::setAvailabilitySchedule(Schedule& schedule) {
@@ -313,12 +327,24 @@ namespace model {
     getImpl<detail::CoilHeatingDesuperheater_Impl>()->resetHeatingSource();
   }
 
+  // DEPRECATED
   bool CoilHeatingDesuperheater::setParasiticElectricLoad(double parasiticElectricLoad) {
-    return getImpl<detail::CoilHeatingDesuperheater_Impl>()->setParasiticElectricLoad(parasiticElectricLoad);
+    DEPRECATED_AT_MSG(3, 7, 0, "Use setOnCycleParasiticElectricLoad instead.");
+    return getImpl<detail::CoilHeatingDesuperheater_Impl>()->setOnCycleParasiticElectricLoad(parasiticElectricLoad);
   }
 
+  bool CoilHeatingDesuperheater::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
+    return getImpl<detail::CoilHeatingDesuperheater_Impl>()->setOnCycleParasiticElectricLoad(onCycleParasiticElectricLoad);
+  }
+
+  // DEPRECATED
   void CoilHeatingDesuperheater::resetParasiticElectricLoad() {
-    getImpl<detail::CoilHeatingDesuperheater_Impl>()->resetParasiticElectricLoad();
+    DEPRECATED_AT_MSG(3, 7, 0, "Use resetOnCycleParasiticElectricLoad instead.");
+    getImpl<detail::CoilHeatingDesuperheater_Impl>()->resetOnCycleParasiticElectricLoad();
+  }
+
+  void CoilHeatingDesuperheater::resetOnCycleParasiticElectricLoad() {
+    getImpl<detail::CoilHeatingDesuperheater_Impl>()->resetOnCycleParasiticElectricLoad();
   }
 
   AirflowNetworkEquivalentDuct CoilHeatingDesuperheater::getAirflowNetworkEquivalentDuct(double length, double diameter) {

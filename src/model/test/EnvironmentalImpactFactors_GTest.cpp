@@ -18,11 +18,11 @@ TEST_F(ModelFixture, EnvironmentalImpactFactors_GettersSetters) {
   auto environmentalImpactFactors = m.getUniqueModelObject<EnvironmentalImpactFactors>();
 
   // District Heating Efficiency: Required Double
-  EXPECT_TRUE(environmentalImpactFactors.setDistrictHeatingEfficiency(0.1));
-  EXPECT_EQ(0.1, environmentalImpactFactors.districtHeatingEfficiency());
+  EXPECT_TRUE(environmentalImpactFactors.setDistrictHeatingWaterEfficiency(0.1));
+  EXPECT_EQ(0.1, environmentalImpactFactors.districtHeatingWaterEfficiency());
   // Bad Value
-  EXPECT_FALSE(environmentalImpactFactors.setDistrictHeatingEfficiency(-10.0));
-  EXPECT_EQ(0.1, environmentalImpactFactors.districtHeatingEfficiency());
+  EXPECT_FALSE(environmentalImpactFactors.setDistrictHeatingWaterEfficiency(-10.0));
+  EXPECT_EQ(0.1, environmentalImpactFactors.districtHeatingWaterEfficiency());
 
   // District Cooling COP: Required Double
   EXPECT_TRUE(environmentalImpactFactors.setDistrictCoolingCOP(0.1));
@@ -32,11 +32,11 @@ TEST_F(ModelFixture, EnvironmentalImpactFactors_GettersSetters) {
   EXPECT_EQ(0.1, environmentalImpactFactors.districtCoolingCOP());
 
   // Steam Conversion Efficiency: Required Double
-  EXPECT_TRUE(environmentalImpactFactors.setSteamConversionEfficiency(0.1));
-  EXPECT_EQ(0.1, environmentalImpactFactors.steamConversionEfficiency());
+  EXPECT_TRUE(environmentalImpactFactors.setDistrictHeatingSteamConversionEfficiency(0.1));
+  EXPECT_EQ(0.1, environmentalImpactFactors.districtHeatingSteamConversionEfficiency());
   // Bad Value
-  EXPECT_FALSE(environmentalImpactFactors.setSteamConversionEfficiency(-10.0));
-  EXPECT_EQ(0.1, environmentalImpactFactors.steamConversionEfficiency());
+  EXPECT_FALSE(environmentalImpactFactors.setDistrictHeatingSteamConversionEfficiency(-10.0));
+  EXPECT_EQ(0.1, environmentalImpactFactors.districtHeatingSteamConversionEfficiency());
 
   // Total Carbon Equivalent Emission Factor From N2O: Required Double
   EXPECT_TRUE(environmentalImpactFactors.setTotalCarbonEquivalentEmissionFactorFromN2O(3));

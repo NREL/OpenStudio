@@ -11,6 +11,8 @@
 #include "Node_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
 #include "CurveBiquadratic.hpp"
@@ -317,6 +319,23 @@ namespace model {
       bool result = setDouble(OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
                               minimumOutdoorDryBulbTemperatureforCompressorOperation);
       return result;
+    }
+
+    boost::optional<Curve> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName);
+    }
+
+    bool CoilCoolingDXTwoStageWithHumidityControlMode_Impl::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+      const bool result =
+        setPointer(OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve.handle());
+      return result;
+    }
+
+    void CoilCoolingDXTwoStageWithHumidityControlMode_Impl::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+      const bool result =
+        setString(OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
     }
 
     unsigned CoilCoolingDXTwoStageWithHumidityControlMode_Impl::inletPort() const {
@@ -860,6 +879,18 @@ namespace model {
     double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
     return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(
       minimumOutdoorDryBulbTemperatureforCompressorOperation);
+  }
+
+  boost::optional<Curve> CoilCoolingDXTwoStageWithHumidityControlMode::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->crankcaseHeaterCapacityFunctionofTemperatureCurve();
+  }
+
+  bool CoilCoolingDXTwoStageWithHumidityControlMode::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->setCrankcaseHeaterCapacityFunctionofTemperatureCurve(curve);
+  }
+
+  void CoilCoolingDXTwoStageWithHumidityControlMode::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+    getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
   }
 
   AirflowNetworkEquivalentDuct CoilCoolingDXTwoStageWithHumidityControlMode::getAirflowNetworkEquivalentDuct(double length, double diameter) {

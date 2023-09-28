@@ -103,6 +103,8 @@ namespace model {
 
       Curve coolingPowerConsumptionCurve() const;
 
+      Curve partLoadFractionCorrelationCurve() const;
+
       double nominalTimeforCondensateRemovaltoBegin() const;
 
       bool isNominalTimeforCondensateRemovaltoBeginDefaulted() const;
@@ -110,6 +112,10 @@ namespace model {
       double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
 
       bool isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted() const;
+
+      double maximumCyclingRate() const;
+      double latentCapacityTimeConstant() const;
+      double fanDelayTime() const;
 
       boost::optional<double> autosizedRatedAirFlowRate() const;
 
@@ -169,19 +175,32 @@ namespace model {
 
       void resetNominalTimeforCondensateRemovaltoBegin();
 
+      bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
+
       bool setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(
         double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
 
       void resetRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
 
+      bool setMaximumCyclingRate(double maximumCyclingRate);
+      bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
+      bool setFanDelayTime(double fanDelayTime);
+
       //@}
       /** @name Other */
       //@{
+
+      void setConstructorSharedDefaults(const Model& model);
 
       //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpEquationFit");
+
+      boost::optional<Curve> optionalTotalCoolingCapacityCurve() const;
+      boost::optional<Curve> optionalSensibleCoolingCapacityCurve() const;
+      boost::optional<Curve> optionalCoolingPowerConsumptionCurve() const;
+      boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
 
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;
     };

@@ -124,6 +124,14 @@ namespace energyplus {
       }
     }
 
+    // Part Load Fraction Correlation Curve Name
+    {
+      auto curve = modelObject.partLoadFractionCorrelationCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurveName, _curve->nameString());
+      }
+    }
+
     return idfObject;
   }
 

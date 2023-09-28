@@ -687,8 +687,8 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterStratified_Impl::setHeaterFuelType(const std::string& heaterFuelType) {
-      bool result = setString(OS_WaterHeater_StratifiedFields::HeaterFuelType, heaterFuelType);
+    bool WaterHeaterStratified_Impl::setHeaterFuelType(const FuelType& heaterFuelType) {
+      const bool result = setString(OS_WaterHeater_StratifiedFields::HeaterFuelType, heaterFuelType.valueDescription());
       return result;
     }
 
@@ -702,13 +702,13 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterStratified_Impl::setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType) {
-      bool result = setString(OS_WaterHeater_StratifiedFields::OffCycleParasiticFuelType, offCycleParasiticFuelType);
+    bool WaterHeaterStratified_Impl::setOffCycleParasiticFuelType(const FuelType& offCycleParasiticFuelType) {
+      bool result = setString(OS_WaterHeater_StratifiedFields::OffCycleParasiticFuelType, offCycleParasiticFuelType.valueDescription());
       return result;
     }
 
     bool WaterHeaterStratified_Impl::setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank) {
-      bool result = setDouble(OS_WaterHeater_StratifiedFields::OffCycleParasiticHeatFractiontoTank, offCycleParasiticHeatFractiontoTank);
+      const bool result = setDouble(OS_WaterHeater_StratifiedFields::OffCycleParasiticHeatFractiontoTank, offCycleParasiticHeatFractiontoTank);
       return result;
     }
 
@@ -722,8 +722,8 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterStratified_Impl::setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType) {
-      bool result = setString(OS_WaterHeater_StratifiedFields::OnCycleParasiticFuelType, onCycleParasiticFuelType);
+    bool WaterHeaterStratified_Impl::setOnCycleParasiticFuelType(const FuelType& onCycleParasiticFuelType) {
+      const bool result = setString(OS_WaterHeater_StratifiedFields::OnCycleParasiticFuelType, onCycleParasiticFuelType.valueDescription());
       return result;
     }
 
@@ -1457,16 +1457,16 @@ namespace model {
     setHeater2Capacity(4500);
     setHeater2Height(0);
 
-    setHeaterFuelType("Electricity");
+    setHeaterFuelType(FuelType::Electricity);
     setHeaterThermalEfficiency(0.98);
 
     setOffCycleParasiticFuelConsumptionRate(10.0);
-    setOffCycleParasiticFuelType("Electricity");
+    setOffCycleParasiticFuelType(FuelType::Electricity);
     setOffCycleParasiticHeatFractiontoTank(0);
     setOffCycleParasiticHeight(0);
 
     setOnCycleParasiticFuelConsumptionRate(10.0);
-    setOnCycleParasiticFuelType("Electricity");
+    setOnCycleParasiticFuelType(FuelType::Electricity);
     setOnCycleParasiticHeatFractiontoTank(0);
     setOnCycleParasiticHeight(0);
 
@@ -1902,8 +1902,17 @@ namespace model {
     return getImpl<detail::WaterHeaterStratified_Impl>()->setHeater2Height(heater2Height);
   }
 
-  bool WaterHeaterStratified::setHeaterFuelType(const std::string& heaterFuelType) {
+  bool WaterHeaterStratified::setHeaterFuelType(const FuelType& heaterFuelType) {
     return getImpl<detail::WaterHeaterStratified_Impl>()->setHeaterFuelType(heaterFuelType);
+  }
+
+  bool WaterHeaterStratified::setHeaterFuelType(const std::string& heaterFuelType) {
+    try {
+      return setHeaterFuelType(FuelType{heaterFuelType});
+    } catch (std::runtime_error& e) {
+      LOG(Debug, e.what());
+      return false;
+    }
   }
 
   bool WaterHeaterStratified::setHeaterThermalEfficiency(double heaterThermalEfficiency) {
@@ -1914,8 +1923,17 @@ namespace model {
     return getImpl<detail::WaterHeaterStratified_Impl>()->setOffCycleParasiticFuelConsumptionRate(offCycleParasiticFuelConsumptionRate);
   }
 
-  bool WaterHeaterStratified::setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType) {
+  bool WaterHeaterStratified::setOffCycleParasiticFuelType(const FuelType& offCycleParasiticFuelType) {
     return getImpl<detail::WaterHeaterStratified_Impl>()->setOffCycleParasiticFuelType(offCycleParasiticFuelType);
+  }
+
+  bool WaterHeaterStratified::setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType) {
+    try {
+      return setOffCycleParasiticFuelType(FuelType{offCycleParasiticFuelType});
+    } catch (std::runtime_error& e) {
+      LOG(Debug, e.what());
+      return false;
+    }
   }
 
   bool WaterHeaterStratified::setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank) {
@@ -1930,8 +1948,17 @@ namespace model {
     return getImpl<detail::WaterHeaterStratified_Impl>()->setOnCycleParasiticFuelConsumptionRate(onCycleParasiticFuelConsumptionRate);
   }
 
-  bool WaterHeaterStratified::setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType) {
+  bool WaterHeaterStratified::setOnCycleParasiticFuelType(const FuelType& onCycleParasiticFuelType) {
     return getImpl<detail::WaterHeaterStratified_Impl>()->setOnCycleParasiticFuelType(onCycleParasiticFuelType);
+  }
+
+  bool WaterHeaterStratified::setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType) {
+    try {
+      return setOnCycleParasiticFuelType(FuelType{onCycleParasiticFuelType});
+    } catch (std::runtime_error& e) {
+      LOG(Debug, e.what());
+      return false;
+    }
   }
 
   bool WaterHeaterStratified::setOnCycleParasiticHeatFractiontoTank(double onCycleParasiticHeatFractiontoTank) {

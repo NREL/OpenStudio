@@ -2040,7 +2040,7 @@ namespace sdd {
       boost::optional<double> _furnPilotFuelInp = lexicalCastToDouble(furnPilotFuelInpElement);
       if (_furnPilotFuelInp) {
         double value = unitToUnit(_furnPilotFuelInp.get(), "Btu/h", "W").get();
-        coil.setParasiticGasLoad(value);
+        coil.setOffCycleParasiticGasLoad(value);
       }
 
       result = coil;
@@ -5729,7 +5729,7 @@ namespace sdd {
     boost::optional<double> _parasiticLd = lexicalCastToDouble(parasiticLdElement);
 
     if (_parasiticLd) {
-      boiler.setParasiticElectricLoad(unitToUnit(_parasiticLd.get(), "Btu/h", "W").get());
+      boiler.setOnCycleParasiticElectricLoad(unitToUnit(_parasiticLd.get(), "Btu/h", "W").get());
     }
 
     if (!autosize()) {
@@ -7008,7 +7008,7 @@ namespace sdd {
 
       // Cooling Coil
       pugi::xml_node coolingCoilElement = element.child("CoilClg");
-      boost::optional<model::HVACComponent> coolingCoil;
+      boost::optional<model::CoilCoolingWaterToAirHeatPumpEquationFit> coolingCoil;
       if (auto mo = translateCoilCooling(coolingCoilElement, model)) {
         if (auto hvacComp = mo->optionalCast<model::HVACComponent>()) {
           coolingCoil = hvacComp->optionalCast<model::CoilCoolingWaterToAirHeatPumpEquationFit>();
@@ -7044,16 +7044,16 @@ namespace sdd {
           wshp->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(flowCap.get());
         }
 
-        wshp->setMaximumCyclingRate(2.5);
-        wshp->setHeatPumpTimeConstant(60.0);
-        wshp->setFractionofOnCyclePowerUse(0.01);
+        coolingCoil->setMaximumCyclingRate(2.5);
+        coolingCoil->setLatentCapacityTimeConstant(60.0);
+        coolingCoil->setFanDelayTime(0.01);
 
         pugi::xml_node htPumpFanDelayElement = element.child("HtPumpFanDelay");
         boost::optional<double> _htPumpFanDelay = lexicalCastToDouble(htPumpFanDelayElement);
         if (_htPumpFanDelay) {
-          wshp->setHeatPumpFanDelayTime(_htPumpFanDelay.get());
+          coolingCoil->setFanDelayTime(_htPumpFanDelay.get());
         } else {
-          wshp->setHeatPumpFanDelayTime(60.0);
+          coolingCoil->setFanDelayTime(60.0);
         }
 
         if (htgDsgnSupAirTemp) {

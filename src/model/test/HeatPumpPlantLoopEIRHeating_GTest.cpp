@@ -59,6 +59,23 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_HeatPumpPlantLoopEIRHeating) {
   boost::optional<Curve> electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve =
     hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
   EXPECT_TRUE(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+  EXPECT_EQ(1.0, hp.heatingToCoolingCapacitySizingRatio());
+  EXPECT_EQ("CoolingCapacity", hp.heatPumpSizingMethod());
+  EXPECT_EQ("Load", hp.controlType());
+  EXPECT_EQ("ConstantFlow", hp.flowMode());
+  EXPECT_EQ(0.0, hp.minimumPartLoadRatio());
+  EXPECT_EQ(-100.0, hp.minimumSourceInletTemperature());
+  EXPECT_EQ(100.0, hp.maximumSourceInletTemperature());
+  EXPECT_FALSE(hp.minimumSupplyWaterTemperatureCurve());
+  EXPECT_FALSE(hp.maximumSupplyWaterTemperatureCurve());
+  EXPECT_FALSE(hp.dryOutdoorCorrectionFactorCurve());
+  EXPECT_EQ(10.0, hp.maximumOutdoorDryBulbTemperatureForDefrostOperation());
+  EXPECT_EQ("None", hp.heatPumpDefrostControl());
+  EXPECT_EQ(0.058333, hp.heatPumpDefrostTimePeriodFraction());
+  EXPECT_FALSE(hp.defrostEnergyInputRatioFunctionofTemperatureCurve());
+  EXPECT_FALSE(hp.timedEmpiricalDefrostFrequencyCurve());
+  EXPECT_FALSE(hp.timedEmpiricalDefrostHeatLoadPenaltyCurve());
+  EXPECT_FALSE(hp.timedEmpiricalDefrostHeatInputEnergyFractionCurve());
 }
 
 TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
@@ -79,6 +96,30 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
   CurveQuadratic curve3(m);
   EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
+  EXPECT_TRUE(hp.setHeatingToCoolingCapacitySizingRatio(1));
+  EXPECT_TRUE(hp.setHeatPumpSizingMethod("HeatingCapacity"));
+  EXPECT_TRUE(hp.setControlType("Setpoint"));
+  EXPECT_TRUE(hp.setFlowMode("VariableSpeedPumping"));
+  EXPECT_TRUE(hp.setMinimumPartLoadRatio(2));
+  EXPECT_TRUE(hp.setMinimumSourceInletTemperature(3));
+  EXPECT_TRUE(hp.setMaximumSourceInletTemperature(4));
+  CurveQuadratic curve4(m);
+  EXPECT_TRUE(hp.setMinimumSupplyWaterTemperatureCurve(curve4));
+  CurveQuadratic curve5(m);
+  EXPECT_TRUE(hp.setMaximumSupplyWaterTemperatureCurve(curve5));
+  CurveQuadratic curve6(m);
+  EXPECT_TRUE(hp.setDryOutdoorCorrectionFactorCurve(curve6));
+  EXPECT_TRUE(hp.setMaximumOutdoorDryBulbTemperatureForDefrostOperation(5));
+  EXPECT_TRUE(hp.setHeatPumpDefrostControl("Timed"));
+  EXPECT_TRUE(hp.setHeatPumpDefrostTimePeriodFraction(6));
+  CurveBiquadratic curve7(m);
+  EXPECT_TRUE(hp.setDefrostEnergyInputRatioFunctionofTemperatureCurve(curve7));
+  CurveQuadratic curve8(m);
+  EXPECT_TRUE(hp.setTimedEmpiricalDefrostFrequencyCurve(curve8));
+  CurveQuadratic curve9(m);
+  EXPECT_TRUE(hp.setTimedEmpiricalDefrostHeatLoadPenaltyCurve(curve9));
+  CurveQuadratic curve10(m);
+  EXPECT_TRUE(hp.setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(curve10));
 
   EXPECT_EQ("AirSource", hp.condenserType());
   ASSERT_TRUE(hp.companionCoolingHeatPump());
@@ -98,6 +139,31 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
   EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
 
+  EXPECT_EQ(1, hp.heatingToCoolingCapacitySizingRatio());
+  EXPECT_EQ("HeatingCapacity", hp.heatPumpSizingMethod());
+  EXPECT_EQ("Setpoint", hp.controlType());
+  EXPECT_EQ("VariableSpeedPumping", hp.flowMode());
+  EXPECT_EQ(2, hp.minimumPartLoadRatio());
+  EXPECT_EQ(3, hp.minimumSourceInletTemperature());
+  EXPECT_EQ(4, hp.maximumSourceInletTemperature());
+  ASSERT_TRUE(hp.minimumSupplyWaterTemperatureCurve());
+  EXPECT_EQ(curve4.handle(), hp.minimumSupplyWaterTemperatureCurve().get().handle());
+  ASSERT_TRUE(hp.maximumSupplyWaterTemperatureCurve());
+  EXPECT_EQ(curve5.handle(), hp.maximumSupplyWaterTemperatureCurve().get().handle());
+  ASSERT_TRUE(hp.dryOutdoorCorrectionFactorCurve());
+  EXPECT_EQ(curve6.handle(), hp.dryOutdoorCorrectionFactorCurve().get().handle());
+  EXPECT_EQ(5, hp.maximumOutdoorDryBulbTemperatureForDefrostOperation());
+  EXPECT_EQ("Timed", hp.heatPumpDefrostControl());
+  EXPECT_EQ(6, hp.heatPumpDefrostTimePeriodFraction());
+  ASSERT_TRUE(hp.defrostEnergyInputRatioFunctionofTemperatureCurve());
+  EXPECT_EQ(curve7.handle(), hp.defrostEnergyInputRatioFunctionofTemperatureCurve().get().handle());
+  ASSERT_TRUE(hp.timedEmpiricalDefrostFrequencyCurve());
+  EXPECT_EQ(curve8.handle(), hp.timedEmpiricalDefrostFrequencyCurve().get().handle());
+  ASSERT_TRUE(hp.timedEmpiricalDefrostHeatLoadPenaltyCurve());
+  EXPECT_EQ(curve9.handle(), hp.timedEmpiricalDefrostHeatLoadPenaltyCurve().get().handle());
+  ASSERT_TRUE(hp.timedEmpiricalDefrostHeatInputEnergyFractionCurve());
+  EXPECT_EQ(curve10.handle(), hp.timedEmpiricalDefrostHeatInputEnergyFractionCurve().get().handle());
+
   hp.autosizeLoadSideReferenceFlowRate();
   EXPECT_TRUE(hp.isLoadSideReferenceFlowRateAutosized());
   EXPECT_FALSE(hp.isSourceSideReferenceFlowRateAutosized());
@@ -112,6 +178,21 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_TRUE(hp.isLoadSideReferenceFlowRateAutosized());
   EXPECT_TRUE(hp.isSourceSideReferenceFlowRateAutosized());
   EXPECT_TRUE(hp.isReferenceCapacityAutosized());
+
+  hp.resetMinimumSupplyWaterTemperatureCurve();
+  hp.resetMaximumSupplyWaterTemperatureCurve();
+  hp.resetDryOutdoorCorrectionFactorCurve();
+  hp.resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
+  hp.resetTimedEmpiricalDefrostFrequencyCurve();
+  hp.resetTimedEmpiricalDefrostHeatLoadPenaltyCurve();
+  hp.resetTimedEmpiricalDefrostHeatInputEnergyFractionCurve();
+  EXPECT_FALSE(hp.minimumSupplyWaterTemperatureCurve());
+  EXPECT_FALSE(hp.maximumSupplyWaterTemperatureCurve());
+  EXPECT_FALSE(hp.dryOutdoorCorrectionFactorCurve());
+  EXPECT_FALSE(hp.defrostEnergyInputRatioFunctionofTemperatureCurve());
+  EXPECT_FALSE(hp.timedEmpiricalDefrostFrequencyCurve());
+  EXPECT_FALSE(hp.timedEmpiricalDefrostHeatLoadPenaltyCurve());
+  EXPECT_FALSE(hp.timedEmpiricalDefrostHeatInputEnergyFractionCurve());
 }
 
 TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_remove) {

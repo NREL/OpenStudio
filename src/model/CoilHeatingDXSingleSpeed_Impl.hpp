@@ -11,8 +11,8 @@
 namespace openstudio {
 namespace model {
 
-  class Schedule;
   class Curve;
+  class Schedule;
   class ZoneHVACComponent;
 
   namespace detail {
@@ -91,6 +91,8 @@ namespace model {
 
       bool isCrankcaseHeaterCapacityDefaulted() const;
 
+      boost::optional<Curve> crankcaseHeaterCapacityFunctionofTemperatureCurve() const;
+
       double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
       bool isMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperationDefaulted() const;
@@ -154,6 +156,9 @@ namespace model {
       bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
       void resetCrankcaseHeaterCapacity();
+
+      bool setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve);
+      void resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
 
       bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 

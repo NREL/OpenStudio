@@ -40,7 +40,7 @@ namespace energyplus {
     // External Shading Fraction Schedule Name: Optional Object
     if (boost::optional<Schedule> _externalShadingFractionSchedule = modelObject.externalShadingFractionSchedule()) {
       if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_externalShadingFractionSchedule.get())) {
-        idfObject.setString(SurfaceProperty_LocalEnvironmentFields::ExternalShadingFractionScheduleName, _owo->nameString());
+        idfObject.setString(SurfaceProperty_LocalEnvironmentFields::SunlitFractionScheduleName, _owo->nameString());
       }
     }
 

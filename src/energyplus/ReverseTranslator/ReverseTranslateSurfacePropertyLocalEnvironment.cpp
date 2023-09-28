@@ -64,7 +64,7 @@ namespace energyplus {
     modelObject.setName(workspaceObject.nameString());
 
     // External Shading Fraction Schedule Name: Optional Object
-    if ((wo_ = workspaceObject.getTarget(SurfaceProperty_LocalEnvironmentFields::ExternalShadingFractionScheduleName))) {
+    if ((wo_ = workspaceObject.getTarget(SurfaceProperty_LocalEnvironmentFields::SunlitFractionScheduleName))) {
       if ((mo_ = translateAndMapWorkspaceObject(wo_.get()))) {
         if (auto externalShadingFractionSchedule_ = mo_->optionalCast<Schedule>()) {
           modelObject.setExternalShadingFractionSchedule(externalShadingFractionSchedule_.get());

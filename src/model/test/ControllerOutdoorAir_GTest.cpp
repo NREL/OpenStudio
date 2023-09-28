@@ -58,3 +58,22 @@ TEST_F(ModelFixture, FanZoneExhaust_AddAFNOutdoorAirflow) {
   ASSERT_TRUE(afnobject.crack());
   EXPECT_EQ(crack, afnobject.crack().get());
 }
+
+TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
+  Model model;
+  ControllerOutdoorAir controller(model);
+
+  // Defaults
+  ASSERT_TRUE(controller.getHeatRecoveryBypassControlType());
+  EXPECT_EQ("BypassWhenWithinEconomizerLimits", controller.getHeatRecoveryBypassControlType().get());
+  EXPECT_EQ("InterlockedWithMechanicalCooling", controller.economizerOperationStaging());
+
+  // Heat Recovery Bypass Control Type
+  EXPECT_TRUE(controller.setHeatRecoveryBypassControlType("BypassWhenOAFlowGreaterThanMinimum"));
+  ASSERT_TRUE(controller.getHeatRecoveryBypassControlType());
+  EXPECT_EQ("BypassWhenOAFlowGreaterThanMinimum", controller.getHeatRecoveryBypassControlType().get());
+
+  // Economizer Operation Staging
+  EXPECT_TRUE(controller.setEconomizerOperationStaging("EconomizerFirst"));
+  EXPECT_EQ("EconomizerFirst", controller.economizerOperationStaging());
+}

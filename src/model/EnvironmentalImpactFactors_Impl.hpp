@@ -41,11 +41,11 @@ namespace model {
       /** @name Getters */
       //@{
 
-      double districtHeatingEfficiency() const;
+      double districtHeatingWaterEfficiency() const;
 
       double districtCoolingCOP() const;
 
-      double steamConversionEfficiency() const;
+      double districtHeatingSteamConversionEfficiency() const;
 
       double totalCarbonEquivalentEmissionFactorFromN2O() const;
 
@@ -57,11 +57,11 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setDistrictHeatingEfficiency(double districtHeatingEfficiency);
+      bool setDistrictHeatingWaterEfficiency(double districtHeatingWaterEfficiency);
 
       bool setDistrictCoolingCOP(double districtCoolingCOP);
 
-      bool setSteamConversionEfficiency(double steamConversionEfficiency);
+      bool setDistrictHeatingSteamConversionEfficiency(double districtHeatingSteamConversionEfficiency);
 
       bool setTotalCarbonEquivalentEmissionFactorFromN2O(double totalCarbonEquivalentEmissionFactorFromN2O);
 

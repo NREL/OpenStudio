@@ -67,7 +67,7 @@
 ! ExtWallConstruction=Mass
 ! End SimMetaData
 
-  Version,23.1;
+  Version,23.2;
 
   Timestep,6;
 
@@ -4089,7 +4089,8 @@
     PSZ-AC:1_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
     -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     ,                        !- Nominal Time for Condensate Removal to Begin {s}
-    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ;                        !- Maximum Cycling Rate {cycles/hr}
 
   Curve:Biquadratic,
     PSZ-AC:1_CoolCStandard10Ton_CapFT,  !- Name
@@ -4381,7 +4382,8 @@
     PSZ-AC:2_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
     -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     ,                        !- Nominal Time for Condensate Removal to Begin {s}
-    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ;                        !- Maximum Cycling Rate {cycles/hr}
 
   Curve:Biquadratic,
     PSZ-AC:2_CoolCStandard10Ton_CapFT,  !- Name
@@ -4673,7 +4675,8 @@
     PSZ-AC:3_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
     -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     ,                        !- Nominal Time for Condensate Removal to Begin {s}
-    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ;                        !- Maximum Cycling Rate {cycles/hr}
 
   Curve:Biquadratic,
     PSZ-AC:3_CoolCStandard10Ton_CapFT,  !- Name
@@ -4965,7 +4968,8 @@
     PSZ-AC:4_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
     -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     ,                        !- Nominal Time for Condensate Removal to Begin {s}
-    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ;                        !- Maximum Cycling Rate {cycles/hr}
 
   Curve:Biquadratic,
     PSZ-AC:4_CoolCStandard10Ton_CapFT,  !- Name
@@ -5257,7 +5261,8 @@
     PSZ-AC:5_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
     -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     ,                        !- Nominal Time for Condensate Removal to Begin {s}
-    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ;                        !- Maximum Cycling Rate {cycles/hr}
 
   Curve:Biquadratic,
     PSZ-AC:5_CoolCStandard10Ton_CapFT,  !- Name
@@ -6108,9 +6113,9 @@
     Monthly;                 !- Reporting Frequency
 
   EnvironmentalImpactFactors,
-    0.663,                   !- District Heating Efficiency
+    0.663,                   !- District Heating Water Efficiency
     4.18,                    !- District Cooling COP {W/W}
-    0.585,                   !- Steam Conversion Efficiency
+    0.585,                   !- District Heating Steam Conversion Efficiency
     80.7272,                 !- Total Carbon Equivalent Emission Factor From N2O {kg/kg}
     6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
     0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
