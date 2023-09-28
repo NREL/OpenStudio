@@ -60,7 +60,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setDistrictHeatingWaterEfficiency(double districtHeatingEfficiency);
+    bool setDistrictHeatingWaterEfficiency(double districtHeatingWaterEfficiency);
     OS_DEPRECATED(3, 7, 0) bool setDistrictHeatingEfficiency(double districtHeatingEfficiency);
 
     bool setDistrictCoolingCOP(double districtCoolingCOP);

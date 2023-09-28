@@ -57,7 +57,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setDistrictHeatingWaterEfficiency(double districtHeatingEfficiency);
+      bool setDistrictHeatingWaterEfficiency(double districtHeatingWaterEfficiency);
 
       bool setDistrictCoolingCOP(double districtCoolingCOP);
 
