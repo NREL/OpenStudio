@@ -3941,3 +3941,82 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_ControllerOutdoorAir) {
   EXPECT_EQ("BypassWhenWithinEconomizerLimits", coa.getString(26).get());  // Heat Recovery Bypass Control Type
   EXPECT_EQ("InterlockedWithMechanicalCooling", coa.getString(27).get());  // Economizer Operation Staging
 }
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_LoadProfilePlant) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_LoadProfilePlant.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  std::vector<WorkspaceObject> lps = model_->getObjectsByType("OS:LoadProfile:Plant");
+  ASSERT_EQ(1u, lps.size());
+  const auto& lp = lps.front();
+
+  // Previous last field
+  ASSERT_TRUE(lp.getTarget(6));
+  EXPECT_EQ("Always On Discrete", lp.getTarget(6)->nameString());
+  EXPECT_EQ("Water", lp.getString(7).get());  // Plant Loop Fluid Type
+  EXPECT_EQ(5.0, lp.getDouble(8).get());      // Degree of SubCooling {C}
+  EXPECT_EQ(20.0, lp.getDouble(9).get());     // Degree of Loop SubCooling {C}
+}
+
+TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_HeatPumpPlantLoopEIR) {
+  openstudio::path osmPath = resourcesPath() / toPath("osversion/3_7_0/test_vt_HeatPumpPlantLoopEIR.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model_ = vt.loadModel(osmPath);
+  ASSERT_TRUE(model_) << "Failed to load " << osmPath;
+
+  openstudio::path outPath = osmPath.parent_path() / toPath(osmPath.stem().string() + "_updated" + osmPath.extension().string());
+  model_->save(outPath, true);
+
+  {
+    std::vector<WorkspaceObject> hps = model_->getObjectsByType("OS:HeatPump:PlantLoop:EIR:Cooling");
+    ASSERT_EQ(1u, hps.size());
+    const auto& hp = hps.front();
+
+    // Previous last field
+    ASSERT_TRUE(hp.getTarget(15));
+    EXPECT_EQ("CoolEIRfPLR", hp.getTarget(15)->nameString());
+
+    int insertionIndex = 16;
+    EXPECT_EQ("Load", hp.getString(insertionIndex++).get());          // ControlType
+    EXPECT_EQ("ConstantFlow", hp.getString(insertionIndex++).get());  // FlowMode
+    EXPECT_EQ(0.0, hp.getDouble(insertionIndex++).get());             // MinimumPartLoadRatio
+    EXPECT_EQ(-100.0, hp.getDouble(insertionIndex++).get());          // MinimumSourceInletTemperature
+    EXPECT_EQ(100.0, hp.getDouble(insertionIndex++).get());           // MaximumSourceInletTemperature
+    EXPECT_TRUE(hp.isEmpty(insertionIndex++));                        // MinimumSupplyWaterTemperatureCurveName
+    EXPECT_TRUE(hp.isEmpty(insertionIndex++));                        // MaximumSupplyWaterTemperatureCurveName
+  }
+
+  {
+    std::vector<WorkspaceObject> hps = model_->getObjectsByType("OS:HeatPump:PlantLoop:EIR:Heating");
+    ASSERT_EQ(1u, hps.size());
+    const auto& hp = hps.front();
+
+    // Previous last field
+    ASSERT_TRUE(hp.getTarget(15));
+    EXPECT_EQ("HeatEIRfPLR", hp.getTarget(15)->nameString());
+
+    int insertionIndex = 16;
+    EXPECT_EQ(1.0, hp.getDouble(insertionIndex++).get());                // HeatingToCoolingCapacitySizingRatio
+    EXPECT_EQ("CoolingCapacity", hp.getString(insertionIndex++).get());  // HeatPumpSizingMethod
+    EXPECT_EQ("Load", hp.getString(insertionIndex++).get());             // ControlType
+    EXPECT_EQ("ConstantFlow", hp.getString(insertionIndex++).get());     // FlowMode
+    EXPECT_EQ(0.0, hp.getDouble(insertionIndex++).get());                // MinimumPartLoadRatio
+    EXPECT_EQ(-100.0, hp.getDouble(insertionIndex++).get());             // MinimumSourceInletTemperature
+    EXPECT_EQ(100.0, hp.getDouble(insertionIndex++).get());              // MaximumSourceInletTemperature
+    EXPECT_TRUE(hp.isEmpty(insertionIndex++));                           // MinimumSupplyWaterTemperatureCurveName
+    EXPECT_TRUE(hp.isEmpty(insertionIndex++));                           // MaximumSupplyWaterTemperatureCurveName
+    EXPECT_TRUE(hp.isEmpty(insertionIndex++));                           // DryOutdoorCorrectionFactorCurveName
+    EXPECT_EQ(10.0, hp.getDouble(insertionIndex++).get());               // MaximumOutdoorDryBulbTemperatureForDefrostOperation
+    EXPECT_EQ("None", hp.getString(insertionIndex++).get());             // HeatPumpDefrostControl
+    EXPECT_EQ(0.058333, hp.getDouble(insertionIndex++).get());           // HeatPumpDefrostTimePeriodFraction
+    EXPECT_TRUE(hp.isEmpty(insertionIndex++));                           // DefrostEnergyInputRatioFunctionofTemperatureCurveName
+    EXPECT_TRUE(hp.isEmpty(insertionIndex++));                           // TimedEmpiricalDefrostFrequencyCurveName
+    EXPECT_TRUE(hp.isEmpty(insertionIndex++));                           // TimedEmpiricalDefrostHeatLoadPenaltyCurveName
+    EXPECT_TRUE(hp.isEmpty(insertionIndex++));                           // TimedEmpiricalDefrostHeatInputEnergyFractionCurveName
+  }
+}
