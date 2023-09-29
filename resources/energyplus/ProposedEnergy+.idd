@@ -13845,14 +13845,14 @@ ZoneEarthtube:Parameters,
       \maximum 10
       \default 3
  N3,  \field Earth Tube Dimensionless Boundary Above
-      \note When set to 1.0, the upper boundary is one earth tube radius below ground.
+      \note When set to 1.0, the total thickness of the solution space above the earth tube node is equal to the maximum vertical dimension above the earth tube.
       \type real
       \units dimensionless
       \minimum 0.25
       \maximum 1.0
       \default 1.0
  N4,  \field Earth Tube Dimensionless Boundary Below
-      \note When set to 1.0, the lower boundary is one earth tube radius below the earth tube.
+      \note When set to 1.0, the total thickness of the solution space below the earth tube node is equal to the maximum vertical dimension above the earth tube.
       \type real
       \units dimensionless
       \minimum 0.25
