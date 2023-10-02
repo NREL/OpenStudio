@@ -96,6 +96,7 @@
   %init %{
     rb_eval_string("OpenStudio::Model::" #_oldName " = OpenStudio::Model::" #_newName "");
 
+    rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_" #_oldName ") { OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model._oldName', 'Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName'); OpenStudio::Model::to" #_newName "(self); } }");
     rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_oldName ") { |handle| OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model._oldName', 'Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName');OpenStudio::Model::get" #_newName "(self, handle); } }");
     rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_oldName "s) { OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model._oldName', 'Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName'); OpenStudio::Model::get" #_newName "s(self); } }");
     rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_oldName "ByName) { |name| OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model._oldName', 'Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName'); OpenStudio::Model::get" #_newName "ByName(self, name); } }");
