@@ -968,3 +968,16 @@ TEST_F(gbXMLFixture, ReverseTranslator_Absorptance) {
     EXPECT_EQ(0.7, _material2->visibleAbsorptance());  // default
   }
 }
+
+TEST_F(gbXMLFixture, ReverseTranslator_v703gbXMLs) {
+
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/11_Jay_St.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/11_Jay_St_2.xml");
+  bool test = forwardTranslator.modelToGbXML(*model, outputPath);
+  EXPECT_TRUE(test);
+}
