@@ -335,6 +335,7 @@ SET(gbxml_resources_src
   gbxml/gbXMLStandard_Single_Family_Residential_2016.xml
   gbxml/TropicBird_BEM_4_2018.xml
   gbxml/TropicBird.xml
+  gbxml/11_Jay_St.xml
 )
 
 # update the resources
