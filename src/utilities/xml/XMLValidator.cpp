@@ -477,8 +477,8 @@ XMLValidator XMLValidator::gbxmlValidator() {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
   }
   const bool quiet = true;
-  ::openstudio::embedded_files::extractFile(":/xml/resources/GreenBuildingXML_Ver6.01.xsd", openstudio::toString(tmpDir), quiet);
-  return XMLValidator(tmpDir / "GreenBuildingXML_Ver6.01.xsd");
+  ::openstudio::embedded_files::extractFile(":/xml/resources/GreenBuildingXML_Ver7.03.xsd", openstudio::toString(tmpDir), quiet);
+  return XMLValidator(tmpDir / "GreenBuildingXML_Ver7.03.xsd");
 }
 
 XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, const VersionString& schemaVersion) {
