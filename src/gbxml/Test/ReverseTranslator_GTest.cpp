@@ -971,15 +971,45 @@ TEST_F(gbXMLFixture, ReverseTranslator_Absorptance) {
 
 TEST_F(gbXMLFixture, ReverseTranslator_v703gbXMLs) {
 
-  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/11_Jay_St.xml");
+  {
+    openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/11_Jay_St.xml");
 
-  openstudio::gbxml::ReverseTranslator reverseTranslator;
-  openstudio::gbxml::ForwardTranslator forwardTranslator;
+    openstudio::gbxml::ReverseTranslator reverseTranslator;
+    openstudio::gbxml::ForwardTranslator forwardTranslator;
 
-  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
-  ASSERT_TRUE(model);
+    boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+    ASSERT_TRUE(model);
 
-  openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/11_Jay_St_2.xml");
-  bool test = forwardTranslator.modelToGbXML(*model, outputPath);
-  EXPECT_TRUE(test);
+    openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/11_Jay_St_2.xml");
+    bool test = forwardTranslator.modelToGbXML(*model, outputPath);
+    EXPECT_TRUE(test);
+  }
+
+  {
+    openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/A00.xml");
+
+    openstudio::gbxml::ReverseTranslator reverseTranslator;
+    openstudio::gbxml::ForwardTranslator forwardTranslator;
+
+    boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+    ASSERT_TRUE(model);
+
+    openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/A00_2.xml");
+    bool test = forwardTranslator.modelToGbXML(*model, outputPath);
+    EXPECT_TRUE(test);
+  }
+
+  {
+    openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/Building_Central_Conceptual_Model.xml");
+
+    openstudio::gbxml::ReverseTranslator reverseTranslator;
+    openstudio::gbxml::ForwardTranslator forwardTranslator;
+
+    boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+    ASSERT_TRUE(model);
+
+    openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/Building_Central_Conceptual_Model_2.xml");
+    bool test = forwardTranslator.modelToGbXML(*model, outputPath);
+    EXPECT_TRUE(test);
+  }
 }

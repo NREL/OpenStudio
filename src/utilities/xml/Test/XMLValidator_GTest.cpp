@@ -191,7 +191,9 @@ INSTANTIATE_TEST_SUITE_P(XMLValidatorFixture, GbXMLValidatorParametrizedFixture,
                                            std::make_tuple("gbxml/TestCube.xml", 0, 8), std::make_tuple("gbxml/TestCubeAlternateUnits.xml", 0, 8),
                                            std::make_tuple("gbxml/TestSchedules.xml", 0, 16), std::make_tuple("gbxml/TropicBird.xml", 0, 110),
                                            std::make_tuple("gbxml/TwoStoryOffice_Trane.xml", 0, 236), std::make_tuple("gbxml/ZNETH.xml", 0, 204),
-                                           std::make_tuple("gbxml/11_Jay_St.xml", 0, 1)),
+                                           std::make_tuple("gbxml/11_Jay_St.xml", 0, 0),
+                                           std::make_tuple("gbxml/A00.xml", 0, 0),
+                                           std::make_tuple("gbxml/Building_Central_Conceptual_Model.xml", 0, 0)),
                          [](const testing::TestParamInfo<GbXMLValidatorParametrizedFixture::ParamType>& info) {
                            auto filename = std::get<0>(info.param);
                            std::replace_if(
