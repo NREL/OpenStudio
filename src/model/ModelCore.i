@@ -13,8 +13,8 @@
   %init %{
     rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Model) { OpenStudio::Model::toModel(self); } }");
     rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalModel) { OpenStudio::Model::toOptionalModel(self); } }");
-    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Component) { OpenStudio::Component::toComponent(self); } }");
-    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Component::toOptionalComponent(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Component) { OpenStudio::Model::toComponent(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Model::toOptionalComponent(self); } }");
   %}
 
 #elif defined SWIGCSHARP
