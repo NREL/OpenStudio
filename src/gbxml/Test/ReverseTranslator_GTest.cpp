@@ -47,15 +47,15 @@
 #include "../../model/YearDescription.hpp"
 #include "../../model/YearDescription_Impl.hpp"
 
-#include "../../utilities/idf/Workspace.hpp"
-#include "../../utilities/core/Optional.hpp"
-#include "../../utilities/geometry/Plane.hpp"
-#include "../../utilities/time/Date.hpp"
+#include "utilities/idf/Workspace.hpp"
+#include "utilities/core/Optional.hpp"
+#include "utilities/geometry/Plane.hpp"
+#include "utilities/time/Date.hpp"
+#include "utilities/xml/XMLValidator.hpp"
+#include <resources.hxx>
 
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
-
-#include <resources.hxx>
 
 #include <sstream>
 #include <utility>
@@ -983,6 +983,15 @@ TEST_F(gbXMLFixture, ReverseTranslator_v703gbXMLs) {
     openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/11_Jay_St_2.xml");
     bool test = forwardTranslator.modelToGbXML(*model, outputPath);
     EXPECT_TRUE(test);
+
+    auto xmlValidator = XMLValidator::gbxmlValidator();
+
+    EXPECT_TRUE(xmlValidator.validate(outputPath));
+    EXPECT_TRUE(xmlValidator.isValid());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+
+    auto errors = xmlValidator.errors();
+    EXPECT_EQ(0, errors.size());
   }
 
   {
@@ -997,6 +1006,15 @@ TEST_F(gbXMLFixture, ReverseTranslator_v703gbXMLs) {
     openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/A00_2.xml");
     bool test = forwardTranslator.modelToGbXML(*model, outputPath);
     EXPECT_TRUE(test);
+
+    auto xmlValidator = XMLValidator::gbxmlValidator();
+
+    EXPECT_TRUE(xmlValidator.validate(outputPath));
+    EXPECT_TRUE(xmlValidator.isValid());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+
+    auto errors = xmlValidator.errors();
+    EXPECT_EQ(0, errors.size());
   }
 
   {
@@ -1011,5 +1029,14 @@ TEST_F(gbXMLFixture, ReverseTranslator_v703gbXMLs) {
     openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/Building_Central_Conceptual_Model_2.xml");
     bool test = forwardTranslator.modelToGbXML(*model, outputPath);
     EXPECT_TRUE(test);
+
+    auto xmlValidator = XMLValidator::gbxmlValidator();
+
+    EXPECT_TRUE(xmlValidator.validate(outputPath));
+    EXPECT_TRUE(xmlValidator.isValid());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+
+    auto errors = xmlValidator.errors();
+    EXPECT_EQ(0, errors.size());
   }
 }
