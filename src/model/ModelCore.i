@@ -144,6 +144,46 @@
   //  Model = openstudiomodelcore.Model
   // %}
 
+  %pythoncode %{
+    def _workspace_to_Model(self) -> Model:
+        """Cast the Workspace to a Model.
+
+        Throws if not an actual Model
+
+        :return: A Model.
+        """
+        return toModel(self)
+    openstudioutilitiesidf.Workspace.to_Model = _workspace_to_Model
+
+    def _workspace_to_OptionalModel(self) -> OptionalModel:
+        """Try to cast the Workspace to a Model.
+
+        :return: An OptionalModel.
+        """
+        return toOptionalModel(self)
+    openstudioutilitiesidf.Workspace.to_OptionalModel = _workspace_to_OptionalModel
+
+
+
+    def _workspace_to_Component(self) -> Component:
+        """Cast the Workspace to a Component.
+
+        Throws if not an actual Component
+
+        :return: A Component.
+        """
+        return toComponent(self)
+    openstudioutilitiesidf.Workspace.to_Component = _workspace_to_Component
+
+    def _workspace_to_OptionalComponent(self) -> OptionalComponent:
+        """Try to cast the Workspace to a Component.
+
+        :return: An OptionalComponent.
+        """
+        return toOptionalComponent(self)
+    openstudioutilitiesidf.Workspace.to_OptionalComponent = _workspace_to_OptionalComponent
+  %}
+
 #else
 
 #endif
