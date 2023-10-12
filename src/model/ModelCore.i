@@ -144,8 +144,9 @@
   //  Model = openstudiomodelcore.Model
   // %}
 
+  // At this point, 'Model' and co aren't declared yet, so forward declare type hints
   %pythoncode %{
-    def _workspace_to_Model(self) -> Model:
+    def _workspace_to_Model(self) -> "Model":
         """Cast the Workspace to a Model.
 
         Throws if not an actual Model
@@ -155,7 +156,7 @@
         return toModel(self)
     openstudioutilitiesidf.Workspace.to_Model = _workspace_to_Model
 
-    def _workspace_to_OptionalModel(self) -> OptionalModel:
+    def _workspace_to_OptionalModel(self) -> "OptionalModel":
         """Try to cast the Workspace to a Model.
 
         :return: An OptionalModel.
@@ -165,7 +166,7 @@
 
 
 
-    def _workspace_to_Component(self) -> Component:
+    def _workspace_to_Component(self) -> "Component":
         """Cast the Workspace to a Component.
 
         Throws if not an actual Component
@@ -175,7 +176,7 @@
         return toComponent(self)
     openstudioutilitiesidf.Workspace.to_Component = _workspace_to_Component
 
-    def _workspace_to_OptionalComponent(self) -> OptionalComponent:
+    def _workspace_to_OptionalComponent(self) -> "OptionalComponent":
         """Try to cast the Workspace to a Component.
 
         :return: An OptionalComponent.
