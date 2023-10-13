@@ -489,6 +489,9 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed: {
         return ComponentType::COOLING;
       }
+      case openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed: {
+        return ComponentType::COOLING;
+      }
       case openstudio::IddObjectType::OS_FluidCooler_SingleSpeed: {
         return ComponentType::COOLING;
       }
