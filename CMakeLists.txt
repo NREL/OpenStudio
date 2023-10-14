@@ -825,10 +825,10 @@ if(BUILD_CLI)
   set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
 
   # To use the package produced by a PR to https://github.com/NREL/openstudio-gems
-  set(USE_OPENSTUDIO_GEMS_PR FALSE)
+  set(USE_OPENSTUDIO_GEMS_PR TRUE)  # TODO: revert once https://github.com/NREL/openstudio-gems/pull/65 is merged
   if (USE_OPENSTUDIO_GEMS_PR)
     set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-sdk-dependencies.s3.amazonaws.com/openstudio-gems")
-    set(OPENSTUDIO_GEMS_PR_NUMBER "PR-51")
+    set(OPENSTUDIO_GEMS_PR_NUMBER "PR-65")
   endif()
 
   if(UNIX)
