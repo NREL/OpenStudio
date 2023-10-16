@@ -3106,8 +3106,9 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_solo) {
     {
       const size_t insertionIndex = 20;
       // No Unitary -> IDD DEFAULTS
-      EXPECT_EQ(0.0, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
-      EXPECT_EQ(0.0, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+      // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+      EXPECT_EQ(2.5, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 1).get());  // Latent Capacity Time Constant
       EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
     }
   }
@@ -3124,8 +3125,9 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_solo) {
       EXPECT_EQ(0.02, coil.getDouble(insertionIndex - 1).get());
 
       // No Unitary -> IDD DEFAULTS
-      EXPECT_EQ(0.0, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
-      EXPECT_EQ(0.0, coil.getDouble(insertionIndex + 1).get());   // Latent Capacity Time Constant
+      // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+      EXPECT_EQ(2.5, coil.getDouble(insertionIndex).get());       // Maximum Cycling Rate
+      EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 1).get());  // Latent Capacity Time Constant
       EXPECT_EQ(60.0, coil.getDouble(insertionIndex + 2).get());  // Fan Delay Time
 
       EXPECT_EQ("Yes", coil.getString(insertionIndex + 3).get());

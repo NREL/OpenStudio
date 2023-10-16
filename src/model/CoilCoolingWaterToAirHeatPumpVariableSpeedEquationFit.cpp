@@ -515,14 +515,16 @@ namespace model {
     OS_ASSERT(ok);
     ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
     OS_ASSERT(ok);
-    ok = setMaximumCyclingRate(0.0);
+    // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+    ok = setMaximumCyclingRate(2.5);
     OS_ASSERT(ok);
-    ok = setLatentCapacityTimeConstant(0.0);
+    ok = setLatentCapacityTimeConstant(60.0);
     OS_ASSERT(ok);
     ok = setFanDelayTime(60.0);
     OS_ASSERT(ok);
     setUseHotGasReheat(false);
 
+    // Note: this predates v23.2.0. Consider switching to CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve (would calculate c1=0.8337, c2=0.1662)
     auto partLoadFraction = CurveQuadratic(model);
     partLoadFraction.setCoefficient1Constant(0.85);
     partLoadFraction.setCoefficient2x(0.15);
@@ -553,9 +555,10 @@ namespace model {
     OS_ASSERT(ok);
     ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
     OS_ASSERT(ok);
-    ok = setMaximumCyclingRate(0.0);
+    // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+    ok = setMaximumCyclingRate(2.5);
     OS_ASSERT(ok);
-    ok = setLatentCapacityTimeConstant(0.0);
+    ok = setLatentCapacityTimeConstant(60.0);
     OS_ASSERT(ok);
     ok = setFanDelayTime(60.0);
     OS_ASSERT(ok);

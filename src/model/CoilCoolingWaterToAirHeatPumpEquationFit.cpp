@@ -582,6 +582,7 @@ namespace model {
       ok = setRatedEnteringAirWetBulbTemperature(19.0);
       OS_ASSERT(ok);
 
+      // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
       constexpr double maximumCyclingRatePerHour = 2.5;
       constexpr double heatPumpTimeConstantSeconds = 60.0;
       const CurveLinear plfCorrelation =
@@ -589,9 +590,9 @@ namespace model {
 
       ok = setPartLoadFractionCorrelationCurve(plfCorrelation);
 
-      ok = setMaximumCyclingRate(0.0);
+      ok = setMaximumCyclingRate(maximumCyclingRatePerHour);
       OS_ASSERT(ok);
-      ok = setLatentCapacityTimeConstant(0.0);
+      ok = setLatentCapacityTimeConstant(heatPumpTimeConstantSeconds);
       OS_ASSERT(ok);
       ok = setFanDelayTime(60.0);
       OS_ASSERT(ok);

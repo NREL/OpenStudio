@@ -8513,8 +8513,9 @@ namespace osversion {
         const std::string curveName = hasCoilInfo ? it->curveName() : fmt::format("{}-PLFCorrelationCurve", object.nameString());
         newObject.setString(17, curveName);
 
-        double maxCyclingRate = 0.0;
-        double heatPumpTimeConst = 0.0;
+        // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+        double maxCyclingRate = 2.5;
+        double heatPumpTimeConst = 60.0;
         double hpDelayTime = 60.0;
         if (hasCoilInfo) {
           maxCyclingRate = it->maxCyclingRate;
@@ -8560,8 +8561,9 @@ namespace osversion {
         auto it = CoilLatentTransitionInfo::findFromCoolingCoil(coilTransitionInfos, object);
         const bool hasCoilInfo = (it != coilTransitionInfos.end());
 
-        double maxCyclingRate = 0.0;
-        double heatPumpTimeConst = 0.0;
+        // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+        double maxCyclingRate = 2.5;
+        double heatPumpTimeConst = 60.0;
         double hpDelayTime = 60.0;
         if (hasCoilInfo) {
           maxCyclingRate = it->maxCyclingRate;
