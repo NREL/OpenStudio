@@ -524,6 +524,7 @@ namespace model {
     OS_ASSERT(ok);
     setUseHotGasReheat(false);
 
+    // Note: this predates v23.2.0. Consider switching to CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve (would calculate c1=0.8337, c2=0.1662)
     auto partLoadFraction = CurveQuadratic(model);
     partLoadFraction.setCoefficient1Constant(0.85);
     partLoadFraction.setCoefficient2x(0.15);
