@@ -13,8 +13,8 @@
   %init %{
     rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Model) { OpenStudio::Model::toModel(self); } }");
     rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalModel) { OpenStudio::Model::toOptionalModel(self); } }");
-    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Component) { OpenStudio::Component::toComponent(self); } }");
-    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Component::toOptionalComponent(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Component) { OpenStudio::Model::toComponent(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Model::toOptionalComponent(self); } }");
   %}
 
 #elif defined SWIGCSHARP
@@ -143,6 +143,47 @@
   // %pythoncode %{
   //  Model = openstudiomodelcore.Model
   // %}
+
+  // At this point, 'Model' and co aren't declared yet, so forward declare type hints
+  %pythoncode %{
+    def _workspace_to_Model(self) -> "Model":
+        """Cast the Workspace to a Model.
+
+        Throws if not an actual Model
+
+        :return: A Model.
+        """
+        return toModel(self)
+    openstudioutilitiesidf.Workspace.to_Model = _workspace_to_Model
+
+    def _workspace_to_OptionalModel(self) -> "OptionalModel":
+        """Try to cast the Workspace to a Model.
+
+        :return: An OptionalModel.
+        """
+        return toOptionalModel(self)
+    openstudioutilitiesidf.Workspace.to_OptionalModel = _workspace_to_OptionalModel
+
+
+
+    def _workspace_to_Component(self) -> "Component":
+        """Cast the Workspace to a Component.
+
+        Throws if not an actual Component
+
+        :return: A Component.
+        """
+        return toComponent(self)
+    openstudioutilitiesidf.Workspace.to_Component = _workspace_to_Component
+
+    def _workspace_to_OptionalComponent(self) -> "OptionalComponent":
+        """Try to cast the Workspace to a Component.
+
+        :return: An OptionalComponent.
+        """
+        return toOptionalComponent(self)
+    openstudioutilitiesidf.Workspace.to_OptionalComponent = _workspace_to_OptionalComponent
+  %}
 
 #else
 
