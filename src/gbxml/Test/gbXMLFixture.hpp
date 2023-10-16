@@ -35,4 +35,11 @@ class gbXMLFixture : public ::testing::Test
   REGISTER_LOGGER("gbXML");
 };
 
+/** A fixture that RTs a gbXML to a Model, then FT's it back to a gbXML, and asserts that the final gbXML is still valid per the gbXML schema */
+class RoundTripGbXMLParametrizedFixture
+  : public gbXMLFixture
+  , public ::testing::WithParamInterface<openstudio::path>
+{
+};
+
 #endif  // GBXML_TEST_GBXMLFIXTURE_HPP
