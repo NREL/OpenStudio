@@ -515,9 +515,10 @@ namespace model {
     OS_ASSERT(ok);
     ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
     OS_ASSERT(ok);
-    ok = setMaximumCyclingRate(0.0);
+    // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+    ok = setMaximumCyclingRate(2.5);
     OS_ASSERT(ok);
-    ok = setLatentCapacityTimeConstant(0.0);
+    ok = setLatentCapacityTimeConstant(60.0);
     OS_ASSERT(ok);
     ok = setFanDelayTime(60.0);
     OS_ASSERT(ok);
@@ -553,9 +554,10 @@ namespace model {
     OS_ASSERT(ok);
     ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
     OS_ASSERT(ok);
-    ok = setMaximumCyclingRate(0.0);
+    // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+    ok = setMaximumCyclingRate(2.5);
     OS_ASSERT(ok);
-    ok = setLatentCapacityTimeConstant(0.0);
+    ok = setLatentCapacityTimeConstant(60.0);
     OS_ASSERT(ok);
     ok = setFanDelayTime(60.0);
     OS_ASSERT(ok);

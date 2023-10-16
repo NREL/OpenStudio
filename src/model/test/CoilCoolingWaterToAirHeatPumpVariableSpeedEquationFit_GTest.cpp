@@ -47,9 +47,10 @@ TEST_F(ModelFixture, CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_2320_
 
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil(m);
 
+  // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+  EXPECT_EQ(2.5, coil.maximumCyclingRate());
+  EXPECT_EQ(60.0, coil.latentCapacityTimeConstant());
   // Test IDD defaults
-  EXPECT_EQ(0.0, coil.maximumCyclingRate());
-  EXPECT_EQ(0.0, coil.latentCapacityTimeConstant());
   EXPECT_EQ(60.0, coil.fanDelayTime());
 
   EXPECT_TRUE(coil.setMaximumCyclingRate(3.5));
