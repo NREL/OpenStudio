@@ -47,15 +47,15 @@
 #include "../../model/YearDescription.hpp"
 #include "../../model/YearDescription_Impl.hpp"
 
-#include "../../utilities/idf/Workspace.hpp"
-#include "../../utilities/core/Optional.hpp"
-#include "../../utilities/geometry/Plane.hpp"
-#include "../../utilities/time/Date.hpp"
+#include "utilities/idf/Workspace.hpp"
+#include "utilities/core/Optional.hpp"
+#include "utilities/geometry/Plane.hpp"
+#include "utilities/time/Date.hpp"
+#include "utilities/xml/XMLValidator.hpp"
+#include <resources.hxx>
 
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
-
-#include <resources.hxx>
 
 #include <sstream>
 #include <utility>
@@ -968,3 +968,35 @@ TEST_F(gbXMLFixture, ReverseTranslator_Absorptance) {
     EXPECT_EQ(0.7, _material2->visibleAbsorptance());  // default
   }
 }
+
+TEST_P(RoundTripGbXMLParametrizedFixture, RoundTripped_v703_GbXMLs_AreStillValid) {
+  const openstudio::path xmlPath = resourcesPath() / openstudio::toPath("gbxml") / GetParam();
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  openstudio::gbxml::ForwardTranslator forwardTranslator;
+
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(xmlPath);
+  ASSERT_TRUE(model);
+
+  const openstudio::path outputPath = xmlPath.parent_path() / toPath(xmlPath.stem().string() + "_RoundTripped" + xmlPath.extension().string());
+  ASSERT_TRUE(forwardTranslator.modelToGbXML(*model, outputPath));
+
+  auto xmlValidator = XMLValidator::gbxmlValidator();
+
+  EXPECT_TRUE(xmlValidator.validate(outputPath));
+  EXPECT_TRUE(xmlValidator.isValid());
+  EXPECT_EQ(0, xmlValidator.warnings().size());
+
+  auto errors = xmlValidator.errors();
+  EXPECT_EQ(0, errors.size());
+}
+
+INSTANTIATE_TEST_SUITE_P(gbXMLFixture, RoundTripGbXMLParametrizedFixture,
+                         ::testing::Values(  //
+                           "11_Jay_St.xml",  //
+                           "A00.xml"         //
+                           // "Building_Central_Conceptual_Model.xml" // TODO: disabled because it throws in Debug
+                           ),
+                         [](const testing::TestParamInfo<RoundTripGbXMLParametrizedFixture::ParamType>& info) {
+                           return info.param.stem().generic_string();
+                         });
