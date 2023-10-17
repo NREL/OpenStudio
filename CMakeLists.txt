@@ -825,7 +825,7 @@ if(BUILD_CLI)
   set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
 
   # To use the package produced by a PR to https://github.com/NREL/openstudio-gems
-  set(USE_OPENSTUDIO_GEMS_PR TRUE)  # TODO: revert once https://github.com/NREL/openstudio-gems/pull/65 is merged
+  set(USE_OPENSTUDIO_GEMS_PR FALSE)
   if (USE_OPENSTUDIO_GEMS_PR)
     set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-sdk-dependencies.s3.amazonaws.com/openstudio-gems")
     set(OPENSTUDIO_GEMS_PR_NUMBER "PR-65")
@@ -834,7 +834,7 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231017-darwin_arm64.tar.gz")  # TODO: redo
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231017-darwin_arm64.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "55d8dc413200d41c7ee8f395231c543a")
        else()
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231017-darwin.tar.gz")
