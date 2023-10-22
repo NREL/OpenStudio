@@ -242,6 +242,9 @@ void Polyhedron::performEdgeMatching() {
 
   for (size_t i = 0; i < m_surfaces.size(); ++i) {
     for (size_t j = 0; j < m_surfaces.size(); ++j) {
+      if (i == j) {
+        continue;
+      }
       auto& surface1 = m_surfaces[i];
       auto& surface2 = m_surfaces[j];
       for (Surface3dEdge& edge1 : surface1.edges) {
@@ -261,6 +264,25 @@ void Polyhedron::performEdgeMatching() {
               }
             }
           }
+        }
+      }
+    }
+  }
+
+  // special case to find edges that are used to "cut" in to a surface to remove an interior hole
+  // we allow these edges to double count the first surface since they bound the same surface on two sides
+  for (auto& surface : m_surfaces) {
+    auto& edges = surface.edges;
+    for (size_t i = 0; i < edges.size(); ++i) {
+      for (size_t j = 0; j < edges.size(); ++j) {
+        if (i == j) {
+          continue;
+        }
+        if ((edges[i].count() == 1) && (edges[j].count() == 1) && (edges[i] == edges[j]) && edges[i].reverseEqual(edges[j])) {
+          // appendSurface will allow use to check edge.count() later to check if count == 2.
+          // All edges must be count == 2 in an Enclosed Polyhedron
+          edges[i].appendSurface(surface);
+          edges[j].appendSurface(surface);
         }
       }
     }
