@@ -242,9 +242,6 @@ void Polyhedron::performEdgeMatching() {
 
   for (size_t i = 0; i < m_surfaces.size(); ++i) {
     for (size_t j = 0; j < m_surfaces.size(); ++j) {
-      if (i == j) {
-        continue;
-      }
       auto& surface1 = m_surfaces[i];
       auto& surface2 = m_surfaces[j];
       for (Surface3dEdge& edge1 : surface1.edges) {
