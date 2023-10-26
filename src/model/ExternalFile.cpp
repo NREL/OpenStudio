@@ -112,7 +112,7 @@ namespace model {
     path ExternalFile_Impl::filePath() const {
       path result;
       path fname = toPath(fileName());
-      if (openstudio::filesystem::is_regular_file(fname) || fname.is_relative()) {
+      if (openstudio::filesystem::is_regular_file(fname)) {
         return fname;
       }
       std::vector<path> absoluteFilePaths = this->model().workflowJSON().absoluteFilePaths();
@@ -130,6 +130,12 @@ namespace model {
         }
       }
       return result;
+    }
+
+    bool ExternalFile_Impl::translateFileName() const {
+      boost::optional<std::string> value = getString(OS_External_FileFields::TranslatetoScheduleFile, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
     }
 
     //boost::optional<std::string> ExternalFile_Impl::columnSeparator() const {
@@ -154,6 +160,17 @@ namespace model {
 
     bool ExternalFile_Impl::setFileName(const std::string& fileName) {
       bool result = setString(OS_External_FileFields::FileName, fileName);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool ExternalFile_Impl::setTranslateFileName(bool translateFileName) {
+      bool result = false;
+      if (translateFileName) {
+        result = setString(OS_External_FileFields::TranslateFileName, "Yes");
+      } else {
+        result = setString(OS_External_FileFields::TranslateFileName, "No");
+      }
       OS_ASSERT(result);
       return result;
     }
@@ -287,6 +304,10 @@ namespace model {
     return getImpl<detail::ExternalFile_Impl>()->filePath();
   }
 
+  bool ExternalFile::translateFileName() const {
+    return getImpl<detail::ExternalFile_Impl>()->translateFileName();
+  }
+
   //boost::optional<std::string> ExternalFile::columnSeparator() const {
   //  return getImpl<detail::ExternalFile_Impl>()->columnSeparator();
   //}
@@ -297,6 +318,10 @@ namespace model {
 
   bool ExternalFile::setFileName(const std::string& fileName) {
     return getImpl<detail::ExternalFile_Impl>()->setFileName(fileName);
+  }
+
+  bool ExternalFile::setTranslateFileName(bool translateFileName) {
+    return getImpl<detail::ExternalFile_Impl>()->setTranslateFileName(translateFileName);
   }
 
   //bool ExternalFile::setColumnSeparator(const std::string& columnSeparator) {
