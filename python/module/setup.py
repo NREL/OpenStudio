@@ -1,3 +1,8 @@
+########################################################################################################################
+#  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+#  See also https://openstudio.net/license
+########################################################################################################################
+
 from setuptools import setup, find_packages
 from setuptools.dist import Distribution
 from setuptools.command.install import install
@@ -42,7 +47,10 @@ try:
             # BUT pypi will refuse the upload if we do not replace
             # "Binary wheel 'openstudio-3.1.0rc3-py3-none-linux_x86_64.whl'
             #  has an unsupported platform tag 'linux_x86_64'"
-            plat = plat.lower().replace('linux', 'manylinux1')
+            if 'aarch64' in plat:
+                plat = plat.lower().replace('linux', 'manylinux2014')
+            else:
+                plat = plat.lower().replace('linux', 'manylinux1')
             plat = plat.lower().replace('darwin_x86_64', 'macosx_10_6_intel')
             if plat[:3] == 'mac':
                 if 'arm64' in plat:

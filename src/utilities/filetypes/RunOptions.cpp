@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "RunOptions.hpp"
@@ -32,9 +8,11 @@
 #include "ForwardTranslatorOptions.hpp"
 
 #include "../core/Assert.hpp"
+#include "../core/DeprecatedHelpers.hpp"
 
 #include <json/json.h>
 
+#include <json/value.h>
 #include <memory>
 #include <string>
 
@@ -45,62 +23,50 @@ namespace detail {
     this->onChange.nano_emit();
   }
 
-  std::string RunOptions_Impl::string() const {
-    Json::Value value;
+  Json::Value RunOptions_Impl::toJSON() const {
+    Json::Value root;
 
     // TODO: Why is this only writing if not default? I find it weird
     if (m_debug) {
-      value["debug"] = m_debug;
+      root["debug"] = m_debug;
     }
 
     if (m_epjson) {
-      value["epjson"] = m_epjson;
+      root["epjson"] = m_epjson;
     }
 
     if (m_fast) {
-      value["fast"] = m_fast;
+      root["fast"] = m_fast;
     }
 
     if (m_preserveRunDir) {
-      value["preserve_run_dir"] = m_preserveRunDir;
+      root["preserve_run_dir"] = m_preserveRunDir;
     }
 
     if (m_skipExpandObjects) {
-      value["skip_expand_objects"] = m_skipExpandObjects;
+      root["skip_expand_objects"] = m_skipExpandObjects;
     }
 
     if (m_skipEnergyPlusPreprocess) {
-      value["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
+      root["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
     }
 
     if (m_customOutputAdapter) {
-      Json::Value outputAdapter;
-      outputAdapter["custom_file_name"] = m_customOutputAdapter->customFileName();
-      outputAdapter["class_name"] = m_customOutputAdapter->className();
-
-      Json::CharReaderBuilder rbuilder;
-      std::istringstream ss(m_customOutputAdapter->options());
-      std::string formattedErrors;
-      Json::Value options;
-      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &options, &formattedErrors);
-      if (parsingSuccessful) {
-        outputAdapter["options"] = options;
-      } else {
-        LOG(Warn, "Couldn't parse CustomOutputAdapter's options='" << m_customOutputAdapter->options() << "'. Error: '" << formattedErrors << "'.");
-      }
-
-      value["output_adapter"] = outputAdapter;
+      root["output_adapter"] = m_customOutputAdapter->toJSON();
     }
 
-    if (auto ft_opt = m_forwardTranslatorOptions.json()) {
-      value["ft_options"] = ft_opt;
+    if (auto ft_opt = m_forwardTranslatorOptions.toJSON()) {
+      root["ft_options"] = ft_opt;
     }
+    return root;
+  }
 
+  std::string RunOptions_Impl::string() const {
     // Write to string
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
     wbuilder["indentation"] = "   ";
-    std::string result = Json::writeString(wbuilder, value);
+    std::string result = Json::writeString(wbuilder, toJSON());
 
     return result;
   }
@@ -242,8 +208,24 @@ namespace detail {
 
 }  // namespace detail
 
-CustomOutputAdapter::CustomOutputAdapter(const std::string& customFileName, const std::string& className, const std::string& options)
-  : m_customFileName(customFileName), m_className(className), m_options(options) {}
+CustomOutputAdapter CustomOutputAdapter::fromString(std::string customFileName, std::string className, const std::string& options) {
+
+  if (options.empty()) {
+    return CustomOutputAdapter(std::move(customFileName), std::move(className));
+  }
+  const Json::CharReaderBuilder rbuilder;
+  std::istringstream ss(options);
+  std::string formattedErrors;
+  Json::Value parsedOptions;
+  const bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &parsedOptions, &formattedErrors);
+  if (!parsingSuccessful) {
+    parsedOptions = Json::Value(Json::nullValue);
+  }
+  return CustomOutputAdapter(std::move(customFileName), std::move(className), std::move(parsedOptions));
+}
+
+CustomOutputAdapter::CustomOutputAdapter(std::string customFileName, std::string className, Json::Value options)
+  : m_customFileName(std::move(customFileName)), m_className(std::move(className)), m_options(std::move(options)) {}
 
 std::string CustomOutputAdapter::customFileName() const {
   return m_customFileName;
@@ -254,7 +236,27 @@ std::string CustomOutputAdapter::className() const {
 }
 
 std::string CustomOutputAdapter::options() const {
+  if (m_options.isNull()) {
+    return "";
+  }
+
+  // Write to string
+  Json::StreamWriterBuilder wbuilder;
+  // mimic the old StyledWriter behavior:
+  wbuilder["indentation"] = "   ";
+  return Json::writeString(wbuilder, m_options);
+}
+
+Json::Value CustomOutputAdapter::optionsJSON() const {
   return m_options;
+}
+
+Json::Value CustomOutputAdapter::toJSON() const {
+  Json::Value outputAdapter;
+  outputAdapter["custom_file_name"] = m_customFileName;
+  outputAdapter["class_name"] = m_className;
+  outputAdapter["options"] = m_options;
+  return outputAdapter;
 }
 
 RunOptions::RunOptions() : m_impl(std::make_shared<detail::RunOptions_Impl>()) {
@@ -308,13 +310,7 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
       std::string customFileName = outputAdapter["custom_file_name"].asString();
       std::string className = outputAdapter["class_name"].asString();
       Json::Value options = outputAdapter["options"];
-
-      Json::StreamWriterBuilder wbuilder;
-      // mimic the old StyledWriter behavior:
-      wbuilder["indentation"] = "   ";
-      std::string optionString = Json::writeString(wbuilder, options);
-
-      CustomOutputAdapter coa(customFileName, className, optionString);
+      const CustomOutputAdapter coa(std::move(customFileName), std::move(className), std::move(options));
       result.setCustomOutputAdapter(coa);
     }
   }
@@ -324,6 +320,10 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
   }
 
   return result;
+}
+
+Json::Value RunOptions::toJSON() const {
+  return getImpl<detail::RunOptions_Impl>()->toJSON();
 }
 
 std::string RunOptions::string() const {
@@ -441,14 +441,15 @@ void RunOptions::resetForwardTranslatorOptions() {
 
 // DEPRECATED
 std::string RunOptions::forwardTranslateOptions() const {
-  LOG(Warn, "As of 3.5.1, (std::string) forwardTranslateOptions is deprecated. Use (ForwardTranslatorOptions) forwardTranslatorOptions instead. "
-            "It will be removed within three releases.");
+  DEPRECATED_AT_MSG(3, 6, 0, "Use `ForwardTranslatorOptions RunOptions::forwardTranslatorOptions` instead.");
   return getImpl<detail::RunOptions_Impl>()->forwardTranslatorOptions().string();
 }
 
 bool RunOptions::setForwardTranslateOptions(const std::string& options) {
-  LOG(Warn, "As of 3.5.1, setForwardTranslateOptions(std::string) is deprecated. Use setForwardTranslatorOptions(ForwardTranslatorOptions) instead. "
-            "It will be removed within three releases.");
+  DEPRECATED_AT_MSG(
+    3, 6, 0,
+    "Use `ForwardTranslatorOptions RunOptions::setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions)` instead.");
+
   if (auto ftOptions_ = ForwardTranslatorOptions::fromString(options)) {
     return getImpl<detail::RunOptions_Impl>()->setForwardTranslatorOptions(ftOptions_.get());
   }
@@ -456,8 +457,7 @@ bool RunOptions::setForwardTranslateOptions(const std::string& options) {
 }
 
 void RunOptions::resetForwardTranslateOptions() {
-  LOG(Warn, "As of 3.5.1, resetForwardTranslateOptions is deprecated. Use resetForwardTranslateOptions instead. "
-            "It will be removed within three releases.");
+  DEPRECATED_AT_MSG(3, 6, 0, "Use resetForwardTranslateOptions instead.");
   getImpl<detail::RunOptions_Impl>()->resetForwardTranslatorOptions();
 }
 

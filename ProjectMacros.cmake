@@ -34,7 +34,8 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
 
     # Tell cmake to discover tests by calling test_exe --gtest_list_tests
     gtest_discover_tests(${BASE_NAME}_tests
-      PROPERTIES TIMEOUT 660
+      PROPERTIES TIMEOUT 660 # Test execution
+      DISCOVERY_TIMEOUT 60   # Time to wait for the test to enumerate available tests (default is 5s, which can fail for us especially in Debug with Sanitizers)
     )
 
     if(TARGET "${BASE_NAME}_resources")

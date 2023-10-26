@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "GroundHeatExchangerHorizontalTrench.hpp"
@@ -37,6 +13,7 @@
 #include "SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -358,8 +335,7 @@ namespace model {
   }
 
   std::vector<std::string> GroundHeatExchangerHorizontalTrench::groundTemperatureModelValues() {
-    LOG(Warn, "As of 3.6.0, groundTemperatureModelValues is deprecated. Use undisturbedGroundTemperatureModel instead. It will be removed within "
-              "three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
     std::vector<std::string> result{"KusudaAchenbach", "SiteGroundTemperature"};
     return result;
   }
@@ -436,14 +412,12 @@ namespace model {
   }
 
   bool GroundHeatExchangerHorizontalTrench::isGroundTemperatureModelDefaulted() const {
-    LOG(Warn, "As of 3.6.0, isGroundTemperatureModelDefaulted is deprecated. Use undisturbedGroundTemperatureModel instead. It will be removed "
-              "within three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
     return false;
   }
 
   double GroundHeatExchangerHorizontalTrench::kusudaAchenbachAverageSurfaceTemperature() const {
-    LOG(Warn, "As of 3.6.0, kusudaAchenbachAverageSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
@@ -451,8 +425,7 @@ namespace model {
   }
 
   double GroundHeatExchangerHorizontalTrench::kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const {
-    LOG(Warn, "As of 3.6.0, kusudaAchenbachAverageAmplitudeofSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It "
-              "will be removed within three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
@@ -460,8 +433,7 @@ namespace model {
   }
 
   double GroundHeatExchangerHorizontalTrench::kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const {
-    LOG(Warn, "As of 3.6.0, kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It "
-              "will be removed within three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
@@ -538,19 +510,16 @@ namespace model {
   }
 
   bool GroundHeatExchangerHorizontalTrench::setGroundTemperatureModel(const std::string& groundTemperatureModel) {
-    LOG(Warn, "As of 3.6.0, setGroundTemperatureModel is deprecated. Use undisturbedGroundTemperatureModel instead. It will be removed within three "
-              "releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
     return false;
   }
 
   void GroundHeatExchangerHorizontalTrench::resetGroundTemperatureModel() {
-    LOG(Warn, "As of 3.6.0, groundTemperatureModelValues is deprecated. Use undisturbedGroundTemperatureModel instead. It will be removed within "
-              "three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
   }
 
   bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature) {
-    LOG(Warn, "As of 3.6.0, setKusudaAchenbachAverageSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It will be "
-              "removed within three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
@@ -560,8 +529,7 @@ namespace model {
 
   bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(
     double kusudaAchenbachAverageAmplitudeofSurfaceTemperature) {
-    LOG(Warn, "As of 3.6.0, setKusudaAchenbachAverageAmplitudeofSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It "
-              "will be removed within three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
@@ -571,8 +539,7 @@ namespace model {
 
   bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(
     double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature) {
-    LOG(Warn, "As of 3.6.0, setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature is deprecated. Use undisturbedGroundTemperatureModel instead. It "
-              "will be removed within three releases.");
+    DEPRECATED_AT_MSG(3, 6, 0, "Use undisturbedGroundTemperatureModel instead.");
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }

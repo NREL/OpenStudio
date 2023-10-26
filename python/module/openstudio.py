@@ -1,4 +1,7 @@
-# imports all of the openstudio libraries into a friendly namespace
+########################################################################################################################
+#  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+#  See also https://openstudio.net/license
+########################################################################################################################
 
 if __package__ or "." in __name__:
 

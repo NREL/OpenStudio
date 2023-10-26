@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "WorkflowStepResult.hpp"
@@ -41,33 +17,36 @@ namespace detail {
 
   WorkflowStepValue_Impl::WorkflowStepValue_Impl(const std::string& name, const Variant& value) : m_name(name), m_value(value) {}
 
-  std::string WorkflowStepValue_Impl::string() const {
-    Json::Value value(Json::objectValue);
-    value["name"] = m_name;
+  Json::Value WorkflowStepValue_Impl::toJSON() const {
+    Json::Value root(Json::objectValue);
+    root["name"] = m_name;
 
     if (m_displayName) {
-      value["display_name"] = *m_displayName;
+      root["display_name"] = *m_displayName;
     }
 
     if (m_units) {
-      value["units"] = *m_units;
+      root["units"] = *m_units;
     }
 
     if (m_value.variantType() == VariantType::String) {
-      value["value"] = m_value.valueAsString();
+      root["value"] = m_value.valueAsString();
     } else if (m_value.variantType() == VariantType::Double) {
-      value["value"] = m_value.valueAsDouble();
+      root["value"] = m_value.valueAsDouble();
     } else if (m_value.variantType() == VariantType::Integer) {
-      value["value"] = m_value.valueAsInteger();
+      root["value"] = m_value.valueAsInteger();
     } else if (m_value.variantType() == VariantType::Boolean) {
-      value["value"] = m_value.valueAsBoolean();
+      root["value"] = m_value.valueAsBoolean();
     }
+    return root;
+  }
 
+  std::string WorkflowStepValue_Impl::string() const {
     // Write to string
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
     wbuilder["indentation"] = "   ";
-    std::string result = Json::writeString(wbuilder, value);
+    std::string result = Json::writeString(wbuilder, toJSON());
 
     return result;
   }
@@ -133,69 +112,70 @@ namespace detail {
 
   WorkflowStepResult_Impl::WorkflowStepResult_Impl() = default;
 
-  std::string WorkflowStepResult_Impl::string() const {
-    Json::Value value(Json::objectValue);
+  Json::Value WorkflowStepResult_Impl::toJSON() const {
+
+    Json::Value root(Json::objectValue);
     bool complete = false;
 
     if (startedAt()) {
-      value["started_at"] = startedAt()->toISO8601();
+      root["started_at"] = startedAt()->toISO8601();
     }
 
     if (completedAt()) {
       complete = true;
-      value["completed_at"] = completedAt()->toISO8601();
+      root["completed_at"] = completedAt()->toISO8601();
     }
 
     if (m_measureType) {
-      value["measure_type"] = m_measureType->valueName();
+      root["measure_type"] = m_measureType->valueName();
     }
 
     if (m_measureName) {
-      value["measure_name"] = m_measureName.get();
+      root["measure_name"] = m_measureName.get();
     }
 
     if (m_measureId) {
-      value["measure_uid"] = m_measureId.get();
+      root["measure_uid"] = m_measureId.get();
     }
 
     if (m_measureVersionId) {
-      value["measure_version_id"] = m_measureVersionId.get();
+      root["measure_version_id"] = m_measureVersionId.get();
     }
 
     if (m_measureVersionModified) {
-      value["measure_version_modified"] = m_measureVersionModified.get();
+      root["measure_version_modified"] = m_measureVersionModified.get();
     }
 
     if (m_measureXmlChecksum) {
-      value["measure_xml_checksum"] = m_measureXmlChecksum.get();
+      root["measure_xml_checksum"] = m_measureXmlChecksum.get();
     }
 
     if (m_measureClassName) {
-      value["measure_class_name"] = m_measureClassName.get();
+      root["measure_class_name"] = m_measureClassName.get();
     }
 
     if (m_measureDisplayName) {
-      value["measure_display_name"] = m_measureDisplayName.get();
+      root["measure_display_name"] = m_measureDisplayName.get();
     }
 
     if (m_measureTaxonomy) {
-      value["measure_taxonomy"] = m_measureTaxonomy.get();
+      root["measure_taxonomy"] = m_measureTaxonomy.get();
     }
 
     if (complete) {
       if (stepResult()) {
-        value["step_result"] = stepResult()->valueName();
+        root["step_result"] = stepResult()->valueName();
       } else {
         // error
       }
     }
 
     if (stepInitialCondition()) {
-      value["step_initial_condition"] = stepInitialCondition().get();
+      root["step_initial_condition"] = stepInitialCondition().get();
     }
 
     if (stepFinalCondition()) {
-      value["step_final_condition"] = stepFinalCondition().get();
+      root["step_final_condition"] = stepFinalCondition().get();
     }
 
     if (complete || (!stepErrors().empty())) {
@@ -203,7 +183,7 @@ namespace detail {
       for (const auto& stepError : stepErrors()) {
         errors.append(stepError);
       }
-      value["step_errors"] = errors;
+      root["step_errors"] = errors;
     }
 
     if (complete || (!stepWarnings().empty())) {
@@ -211,7 +191,7 @@ namespace detail {
       for (const auto& stepWarning : stepWarnings()) {
         warnings.append(stepWarning);
       }
-      value["step_warnings"] = warnings;
+      root["step_warnings"] = warnings;
     }
 
     if (complete || (!stepInfo().empty())) {
@@ -219,27 +199,15 @@ namespace detail {
       for (const auto& stepI : stepInfo()) {
         info.append(stepI);
       }
-      value["step_info"] = info;
+      root["step_info"] = info;
     }
 
     if (complete || (!stepValues().empty())) {
       Json::Value values(Json::arrayValue);
       for (const auto& stepValue : stepValues()) {
-
-        // We let it fail but with a warning (this shouldn't ever happen really)
-        Json::CharReaderBuilder rbuilder;
-        std::istringstream ss(stepValue.string());
-        std::string formattedErrors;
-        // cppcheck-suppress shadowVariable
-        Json::Value value;
-        bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
-        if (parsingSuccessful) {
-          values.append(value);
-        } else {
-          LOG(Warn, "Couldn't parse WorkflowStepValue s='" << stepValue.string() << "'. Error: '" << formattedErrors << "'.");
-        }
+        values.append(stepValue.toJSON());
       }
-      value["step_values"] = values;
+      root["step_values"] = values;
     }
 
     if (complete || (!stepFiles().empty())) {
@@ -247,22 +215,26 @@ namespace detail {
       for (const auto& stepFile : stepFiles()) {
         files.append(toString(stepFile));
       }
-      value["step_files"] = files;
+      root["step_files"] = files;
     }
 
     if (stdOut()) {
-      value["stdout"] = stdOut().get();
+      root["stdout"] = stdOut().get();
     }
 
     if (stdErr()) {
-      value["stderr"] = stdErr().get();
+      root["stderr"] = stdErr().get();
     }
 
+    return root;
+  }
+
+  std::string WorkflowStepResult_Impl::string() const {
     // Write to string
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
     wbuilder["indentation"] = "   ";
-    std::string result = Json::writeString(wbuilder, value);
+    std::string result = Json::writeString(wbuilder, toJSON());
 
     return result;
   }
@@ -721,6 +693,10 @@ std::string WorkflowStepValue::string() const {
   return getImpl<detail::WorkflowStepValue_Impl>()->string();
 }
 
+Json::Value WorkflowStepValue::toJSON() const {
+  return getImpl<detail::WorkflowStepValue_Impl>()->toJSON();
+}
+
 std::string WorkflowStepValue::name() const {
   return getImpl<detail::WorkflowStepValue_Impl>()->name();
 }
@@ -941,6 +917,10 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
 
 std::string WorkflowStepResult::string() const {
   return getImpl<detail::WorkflowStepResult_Impl>()->string();
+}
+
+Json::Value WorkflowStepResult::toJSON() const {
+  return getImpl<detail::WorkflowStepResult_Impl>()->toJSON();
 }
 
 boost::optional<DateTime> WorkflowStepResult::startedAt() const {

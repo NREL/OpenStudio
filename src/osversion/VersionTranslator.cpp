@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include "VersionTranslator.hpp"
@@ -159,53 +135,46 @@ namespace osversion {
     m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::update_3_4_0_to_3_5_0;
     m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
     m_updateMethods[VersionString("3.6.0")] = &VersionTranslator::update_3_5_1_to_3_6_0;
-    // m_updateMethods[VersionString("3.6.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
     //     release).
     m_startVersions = {
-      VersionString("0.7.0"),  VersionString("0.7.1"),  VersionString("0.7.2"),  VersionString("0.7.3"),
-      VersionString("0.7.4"),  VersionString("0.7.5"),  VersionString("0.7.6"),  VersionString("0.8.0"),
-      VersionString("0.8.1"),  VersionString("0.8.2"),  VersionString("0.8.3"),  VersionString("0.8.4"),
-      VersionString("0.8.5"),  VersionString("0.9.0"),  VersionString("0.9.1"),  VersionString("0.9.2"),
-      VersionString("0.9.3"),  VersionString("0.9.4"),  VersionString("0.9.5"),  VersionString("0.9.6"),
-      VersionString("0.10.0"), VersionString("0.10.1"), VersionString("0.10.2"), VersionString("0.10.3"),
-      VersionString("0.10.4"), VersionString("0.10.5"), VersionString("0.11.0"), VersionString("0.11.1"),
-      VersionString("0.11.2"), VersionString("0.11.3"), VersionString("0.11.4"), VersionString("0.11.5"),
-      VersionString("0.11.6"), VersionString("1.0.0"),  VersionString("1.0.1"),  VersionString("1.0.2"),
-      VersionString("1.0.3"),  VersionString("1.0.4"),  VersionString("1.0.5"),  VersionString("1.0.6"),
-      VersionString("1.0.7"),  VersionString("1.1.0"),  VersionString("1.1.1"),  VersionString("1.1.2"),
-      VersionString("1.1.3"),  VersionString("1.2.0"),  VersionString("1.2.1"),  VersionString("1.2.2"),
-      VersionString("1.2.3"),  VersionString("1.2.4"),  VersionString("1.2.5"),  VersionString("1.3.0"),
-      VersionString("1.3.1"),  VersionString("1.3.2"),  VersionString("1.3.3"),  VersionString("1.3.4"),
-      VersionString("1.3.5"),  VersionString("1.4.0"),  VersionString("1.4.1"),  VersionString("1.4.2"),
-      VersionString("1.4.3"),  VersionString("1.5.0"),  VersionString("1.5.1"),  VersionString("1.5.2"),
-      VersionString("1.5.3"),  VersionString("1.5.4"),  VersionString("1.5.5"),  VersionString("1.6.0"),
-      VersionString("1.6.1"),  VersionString("1.6.2"),  VersionString("1.6.3"),  VersionString("1.7.0"),
-      VersionString("1.7.1"),  VersionString("1.7.2"),  VersionString("1.7.3"),  VersionString("1.7.4"),
-      VersionString("1.7.5"),  VersionString("1.8.0"),  VersionString("1.8.1"),  VersionString("1.8.2"),
-      VersionString("1.8.3"),  VersionString("1.8.4"),  VersionString("1.8.5"),  VersionString("1.9.0"),
-      VersionString("1.9.1"),  VersionString("1.9.2"),  VersionString("1.9.3"),  VersionString("1.9.4"),
-      VersionString("1.9.5"),  VersionString("1.10.0"), VersionString("1.10.1"), VersionString("1.10.2"),
-      VersionString("1.10.3"), VersionString("1.10.4"), VersionString("1.10.5"), VersionString("1.10.6"),
-      VersionString("1.11.0"), VersionString("1.11.1"), VersionString("1.11.2"), VersionString("1.11.3"),
-      VersionString("1.11.4"), VersionString("1.11.5"), VersionString("1.11.6"), VersionString("1.12.0"),
-      VersionString("1.12.1"), VersionString("1.12.2"), VersionString("1.12.3"), VersionString("1.12.4"),
-      VersionString("1.12.5"), VersionString("1.12.6"), VersionString("1.13.0"), VersionString("1.13.1"),
-      VersionString("1.13.2"), VersionString("1.13.3"), VersionString("1.13.4"), VersionString("1.14.0"),
-      VersionString("2.0.0"),  VersionString("2.0.1"),  VersionString("2.0.2"),  VersionString("2.0.3"),
-      VersionString("2.0.5"),  VersionString("2.1.0"),  VersionString("2.1.1"),  VersionString("2.1.2"),
-      VersionString("2.2.0"),  VersionString("2.2.1"),  VersionString("2.2.2"),  VersionString("2.3.0"),
-      VersionString("2.3.1"),  VersionString("2.4.0"),  VersionString("2.4.1"),  VersionString("2.4.2"),
-      VersionString("2.4.3"),  VersionString("2.5.0"),  VersionString("2.5.1"),  VersionString("2.5.2"),
-      VersionString("2.6.0"),  VersionString("2.6.1"),  VersionString("2.6.2"),  VersionString("2.7.0"),
-      VersionString("2.7.1"),  VersionString("2.7.2"),  VersionString("2.8.0"),  VersionString("2.8.1"),
-      VersionString("2.9.0"),  VersionString("2.9.1"),  VersionString("3.0.0"),  VersionString("3.0.1"),
-      VersionString("3.1.0"),  VersionString("3.2.0"),  VersionString("3.2.1"),  VersionString("3.3.0"),
-      VersionString("3.4.0"),  VersionString("3.5.0"),  VersionString("3.5.1")
+      VersionString("0.7.0"),  VersionString("0.7.1"),  VersionString("0.7.2"),  VersionString("0.7.3"),  VersionString("0.7.4"),
+      VersionString("0.7.5"),  VersionString("0.7.6"),  VersionString("0.8.0"),  VersionString("0.8.1"),  VersionString("0.8.2"),
+      VersionString("0.8.3"),  VersionString("0.8.4"),  VersionString("0.8.5"),  VersionString("0.9.0"),  VersionString("0.9.1"),
+      VersionString("0.9.2"),  VersionString("0.9.3"),  VersionString("0.9.4"),  VersionString("0.9.5"),  VersionString("0.9.6"),
+      VersionString("0.10.0"), VersionString("0.10.1"), VersionString("0.10.2"), VersionString("0.10.3"), VersionString("0.10.4"),
+      VersionString("0.10.5"), VersionString("0.11.0"), VersionString("0.11.1"), VersionString("0.11.2"), VersionString("0.11.3"),
+      VersionString("0.11.4"), VersionString("0.11.5"), VersionString("0.11.6"), VersionString("1.0.0"),  VersionString("1.0.1"),
+      VersionString("1.0.2"),  VersionString("1.0.3"),  VersionString("1.0.4"),  VersionString("1.0.5"),  VersionString("1.0.6"),
+      VersionString("1.0.7"),  VersionString("1.1.0"),  VersionString("1.1.1"),  VersionString("1.1.2"),  VersionString("1.1.3"),
+      VersionString("1.2.0"),  VersionString("1.2.1"),  VersionString("1.2.2"),  VersionString("1.2.3"),  VersionString("1.2.4"),
+      VersionString("1.2.5"),  VersionString("1.3.0"),  VersionString("1.3.1"),  VersionString("1.3.2"),  VersionString("1.3.3"),
+      VersionString("1.3.4"),  VersionString("1.3.5"),  VersionString("1.4.0"),  VersionString("1.4.1"),  VersionString("1.4.2"),
+      VersionString("1.4.3"),  VersionString("1.5.0"),  VersionString("1.5.1"),  VersionString("1.5.2"),  VersionString("1.5.3"),
+      VersionString("1.5.4"),  VersionString("1.5.5"),  VersionString("1.6.0"),  VersionString("1.6.1"),  VersionString("1.6.2"),
+      VersionString("1.6.3"),  VersionString("1.7.0"),  VersionString("1.7.1"),  VersionString("1.7.2"),  VersionString("1.7.3"),
+      VersionString("1.7.4"),  VersionString("1.7.5"),  VersionString("1.8.0"),  VersionString("1.8.1"),  VersionString("1.8.2"),
+      VersionString("1.8.3"),  VersionString("1.8.4"),  VersionString("1.8.5"),  VersionString("1.9.0"),  VersionString("1.9.1"),
+      VersionString("1.9.2"),  VersionString("1.9.3"),  VersionString("1.9.4"),  VersionString("1.9.5"),  VersionString("1.10.0"),
+      VersionString("1.10.1"), VersionString("1.10.2"), VersionString("1.10.3"), VersionString("1.10.4"), VersionString("1.10.5"),
+      VersionString("1.10.6"), VersionString("1.11.0"), VersionString("1.11.1"), VersionString("1.11.2"), VersionString("1.11.3"),
+      VersionString("1.11.4"), VersionString("1.11.5"), VersionString("1.11.6"), VersionString("1.12.0"), VersionString("1.12.1"),
+      VersionString("1.12.2"), VersionString("1.12.3"), VersionString("1.12.4"), VersionString("1.12.5"), VersionString("1.12.6"),
+      VersionString("1.13.0"), VersionString("1.13.1"), VersionString("1.13.2"), VersionString("1.13.3"), VersionString("1.13.4"),
+      VersionString("1.14.0"), VersionString("2.0.0"),  VersionString("2.0.1"),  VersionString("2.0.2"),  VersionString("2.0.3"),
+      VersionString("2.0.5"),  VersionString("2.1.0"),  VersionString("2.1.1"),  VersionString("2.1.2"),  VersionString("2.2.0"),
+      VersionString("2.2.1"),  VersionString("2.2.2"),  VersionString("2.3.0"),  VersionString("2.3.1"),  VersionString("2.4.0"),
+      VersionString("2.4.1"),  VersionString("2.4.2"),  VersionString("2.4.3"),  VersionString("2.5.0"),  VersionString("2.5.1"),
+      VersionString("2.5.2"),  VersionString("2.6.0"),  VersionString("2.6.1"),  VersionString("2.6.2"),  VersionString("2.7.0"),
+      VersionString("2.7.1"),  VersionString("2.7.2"),  VersionString("2.8.0"),  VersionString("2.8.1"),  VersionString("2.9.0"),
+      VersionString("2.9.1"),  VersionString("3.0.0"),  VersionString("3.0.1"),  VersionString("3.1.0"),  VersionString("3.2.0"),
+      VersionString("3.2.1"),  VersionString("3.3.0"),  VersionString("3.4.0"),  VersionString("3.5.0"),  VersionString("3.5.1"),
+      VersionString("3.6.0"),  VersionString("3.6.1"),
       // Note: do **not** include the **current** version in m_startVersions, stop at the previous release
-      //VersionString("3.6.0"),
+      //VersionString("3.7.0"),
     };
   }
 
@@ -7637,6 +7606,12 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_5_1_to_3_6_0
+
+  /*
+  std::string VersionTranslator::update_3_6_1_to_3_7_0(const IdfFile& idf_3_6_1, const IddFileAndFactoryWrapper& idd_3_7_0)
+
+  }  // end update_3_6_1_to_3_7_0
+  */
 
 }  // namespace osversion
 }  // namespace openstudio

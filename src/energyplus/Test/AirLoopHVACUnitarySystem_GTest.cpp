@@ -1,30 +1,6 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
@@ -43,6 +19,11 @@
 #include "../../model/CoilHeatingDesuperheater.hpp"
 #include "../../model/CoilHeatingGasMultiStage.hpp"
 #include "../../model/CoilHeatingElectricMultiStage.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
+#include "../../model/FanSystemModel.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -54,6 +35,7 @@
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
+#include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -710,4 +692,172 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeating
 
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
   EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Coil_Heating_Electric_MultiStage).size());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_VSCoils) {
+  // Test for #4715 - Creating a VS WSHP using UnitarySystem object generates incorrect air flow ratios for UnitarySystemPerformance:Multispeed object
+
+  // autosize the supply air flow rates
+  {
+    Model m;
+
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit c(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs1(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs2(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs3(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs4(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs5(m);
+    c.addSpeed(cs1);
+    c.addSpeed(cs2);
+    c.addSpeed(cs3);
+    c.addSpeed(cs4);
+    c.addSpeed(cs5);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit h(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs1(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs2(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs3(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs4(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs5(m);
+    h.addSpeed(hs1);
+    h.addSpeed(hs2);
+    h.addSpeed(hs3);
+    h.addSpeed(hs4);
+    h.addSpeed(hs5);
+    FanSystemModel f(m);
+
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setCoolingCoil(c);
+    unitary.setHeatingCoil(h);
+    unitary.setSupplyFan(f);
+
+    AirLoopHVAC airLoop(m);
+
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
+
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(m);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed).size());
+
+    IdfObject idf_perf = workspace.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed)[0];
+
+    EXPECT_EQ(5, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
+    EXPECT_EQ(5, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
+    EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
+    EXPECT_TRUE(idf_perf.isEmpty(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio));
+
+    ASSERT_EQ(5u, idf_perf.numExtensibleGroups());
+
+    auto egs = idf_perf.extensibleGroups();
+
+    IdfExtensibleGroup eg1 = egs[0];
+    EXPECT_FALSE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg1.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_FALSE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg1.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+
+    IdfExtensibleGroup eg2 = egs[1];
+    EXPECT_FALSE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_FALSE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+
+    IdfExtensibleGroup eg3 = egs[2];
+    EXPECT_FALSE(eg3.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg3.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_FALSE(eg3.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg3.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+
+    IdfExtensibleGroup eg4 = egs[3];
+    EXPECT_FALSE(eg4.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg4.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_FALSE(eg4.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg4.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+
+    IdfExtensibleGroup eg5 = egs[4];
+    EXPECT_FALSE(eg5.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg5.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_FALSE(eg5.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+    EXPECT_EQ("Autosize", eg5.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+  }
+
+  // hardsize the supply air flow rates
+  {
+    Model m;
+
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit c(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs1(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs2(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs3(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs4(m);
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData cs5(m);
+    c.addSpeed(cs1);
+    c.addSpeed(cs2);
+    c.addSpeed(cs3);
+    c.addSpeed(cs4);
+    c.addSpeed(cs5);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit h(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs1(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs2(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs3(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs4(m);
+    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData hs5(m);
+    h.addSpeed(hs1);
+    h.addSpeed(hs2);
+    h.addSpeed(hs3);
+    h.addSpeed(hs4);
+    h.addSpeed(hs5);
+    FanSystemModel f(m);
+
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setSupplyAirFlowRateDuringCoolingOperation(10);
+    unitary.setSupplyAirFlowRateDuringHeatingOperation(10);
+    unitary.setCoolingCoil(c);
+    unitary.setHeatingCoil(h);
+    unitary.setSupplyFan(f);
+
+    AirLoopHVAC airLoop(m);
+
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
+
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(m);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed).size());
+
+    IdfObject idf_perf = workspace.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed)[0];
+
+    EXPECT_EQ(5, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
+    EXPECT_EQ(5, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
+    EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
+    EXPECT_TRUE(idf_perf.isEmpty(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio));
+
+    ASSERT_EQ(5u, idf_perf.numExtensibleGroups());
+
+    auto egs = idf_perf.extensibleGroups();
+
+    IdfExtensibleGroup eg1 = egs[0];
+    EXPECT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+
+    IdfExtensibleGroup eg2 = egs[1];
+    EXPECT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+
+    IdfExtensibleGroup eg3 = egs[2];
+    EXPECT_TRUE(eg3.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_TRUE(eg3.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+
+    IdfExtensibleGroup eg4 = egs[3];
+    EXPECT_TRUE(eg4.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_TRUE(eg4.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+
+    IdfExtensibleGroup eg5 = egs[4];
+    EXPECT_TRUE(eg5.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+    EXPECT_TRUE(eg5.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+  }
 }
