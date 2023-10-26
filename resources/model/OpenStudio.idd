@@ -5033,7 +5033,7 @@ OS:External:File,
        \required-field
        \retaincase
        \type url
-  A4;  \field Column Separator
+  A4,  \field Column Separator
        \note Currently unused
        \type choice
        \key Comma
@@ -5042,6 +5042,10 @@ OS:External:File,
        \key Space
        \key Semicolon
        \default Comma
+  A5;  \field Translate File Name
+       \default No
+       \key Yes
+       \key No
 
 OS:Schedule:File,
        \min-fields 6
