@@ -16,6 +16,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Meter_Custom_FieldEnums.hxx>
 
+#include "../utilities/data/DataEnums.hpp"
+
 // Needed for extensible groups
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
@@ -55,8 +57,8 @@ namespace model {
       return getString(OS_Meter_CustomFields::FuelType, true);
     }
 
-    bool MeterCustom_Impl::setFuelType(const std::string& fuelType) {
-      return setString(OS_Meter_CustomFields::FuelType, fuelType);
+    bool MeterCustom_Impl::setFuelType(const FuelType& fuelType) {
+      return setString(OS_Meter_CustomFields::FuelType, fuelType.valueDescription());
     }
 
     void MeterCustom_Impl::resetFuelType() {
@@ -177,7 +179,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::MeterCustom_Impl>());
 
     // Default the fuelType to Electricity (maybe "Generic"?)
-    setFuelType("Electricity");
+    setFuelType(FuelType::Electricity);
   }
 
   IddObjectType MeterCustom::iddObjectType() {
@@ -192,8 +194,21 @@ namespace model {
     return getImpl<detail::MeterCustom_Impl>()->fuelType();
   }
 
-  bool MeterCustom::setFuelType(const std::string& fuelType) {
+  bool MeterCustom::setFuelType(const FuelType& fuelType) {
     return getImpl<detail::MeterCustom_Impl>()->setFuelType(fuelType);
+  }
+
+  bool MeterCustom::setFuelType(const std::string& fuelType) {
+    // Special case for custom meters, the only ones that have "Generic" as a possibility
+    if (openstudio::istringEqual("Generic", fuelType)) {
+      return this->setString(OS_Meter_CustomFields::FuelType, "Generic");
+    }
+    try {
+      return setFuelType(FuelType{fuelType});
+    } catch (std::runtime_error& e) {
+      LOG(Debug, e.what());
+      return false;
+    }
   }
 
   void MeterCustom::resetFuelType() {

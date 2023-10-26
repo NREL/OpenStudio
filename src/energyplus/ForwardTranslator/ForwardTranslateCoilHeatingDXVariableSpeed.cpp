@@ -94,6 +94,13 @@ namespace energyplus {
       idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::CrankcaseHeaterCapacity, value.get());
     }
 
+    // CrankcaseHeaterCapacityFunctionofTemperatureCurveName
+    if (auto crankCurve_ = modelObject.crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+      if (auto curve_ = translateAndMapModelObject(*crankCurve_)) {
+        idfObject.setString(Coil_Heating_DX_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve_->nameString());
+      }
+    }
+
     // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
     if ((value = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation())) {
       idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, value.get());
@@ -145,6 +152,11 @@ namespace energyplus {
       if ((value = speed.referenceUnitRatedAirFlowRate())) {
         eg.setDouble(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedReferenceUnitRatedAirFlowRate, value.get());
       }
+
+      eg.setDouble(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate2017,
+                   speed.ratedSupplyFanPowerPerVolumeFlowRate2017());
+      eg.setDouble(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate2023,
+                   speed.ratedSupplyFanPowerPerVolumeFlowRate2023());
 
       // SpeedHeatingCapacityFunctionofTemperatureCurveName
       {

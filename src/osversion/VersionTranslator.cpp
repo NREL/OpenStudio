@@ -33,7 +33,9 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/math/FloatCompare.hpp"
 #include "../utilities/idf/IdfObject_Impl.hpp"
+#include "../utilities/core/ASCIIStrings.hpp"
 #include "../utilities/core/UUID.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -41,15 +43,20 @@
 
 #include <OpenStudio.hxx>
 
+#include <boost/regex.hpp>
+#include <boost/lexical_cast.hpp>
+#include <fmt/format.h>
+
 #include <algorithm>
+#include <array>
+#include <cmath>
 #include <iterator>
 #include <map>
 #include <memory>
 #include <sstream>
+#include <string>
+#include <string_view>
 #include <thread>
-
-#include <boost/regex.hpp>
-#include <boost/lexical_cast.hpp>
 
 namespace openstudio {
 namespace osversion {
@@ -135,7 +142,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::update_3_4_0_to_3_5_0;
     m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
     m_updateMethods[VersionString("3.6.0")] = &VersionTranslator::update_3_5_1_to_3_6_0;
-    m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::update_3_6_1_to_3_7_0;
+    // m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -4564,7 +4572,7 @@ namespace osversion {
     IdfFile targetIdf(idd_3_0_0.iddFile());
     ss << targetIdf.versionObject().get();
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap({
       {"FuelOil#1", "FuelOilNo1"},
       {"FuelOil#2", "FuelOilNo2"},
@@ -5092,7 +5100,7 @@ namespace osversion {
 
     const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
 
-    // Making the map case-insentive by providing a Comparator `IstringCompare`
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
     // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
     const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
       {"Other Equipment FuelOil#1 Rate", "Other Equipment FuelOilNo1 Rate"},
@@ -5668,8 +5676,8 @@ namespace osversion {
     });
 
     /*****************************************************************************************************************************************************
-       *                                                          Output:Meter fuel types renames                                                          *
-       *****************************************************************************************************************************************************/
+     *                                                          Output:Meter fuel types renames                                                          *
+     *****************************************************************************************************************************************************/
 
     const static std::map<std::string, std::string> meterFuelTypesMap({
       {"FuelOil_1", "FuelOilNo1"},
@@ -7607,11 +7615,1341 @@ namespace osversion {
 
   }  // end update_3_5_1_to_3_6_0
 
-  /*
-  std::string VersionTranslator::update_3_6_1_to_3_7_0(const IdfFile& idf_3_6_1, const IddFileAndFactoryWrapper& idd_3_7_0)
+  struct CoilLatentTransitionInfo
+  {
+    enum class ParentType
+    {
+      Unknown = -1,
+      AirLoopHVACUnitary,
+      ZoneWAHP
+    };
+    static ParentType objectParentType(const IdfObject& parentObject) {
+      const std::string iddname = parentObject.iddObject().name();
+      if (iddname == "OS:AirLoopHVAC:UnitarySystem") {
+        return ParentType::AirLoopHVACUnitary;
+      } else if (iddname == "OS:ZoneHVAC:WaterToAirHeatPump") {
+        return ParentType::ZoneWAHP;
+      }
+      return ParentType::Unknown;
+    };
+
+   public:
+    ParentType parentType;
+    std::string parentName;
+    std::string heatingCoilType;
+    std::string coolingCoilType;
+    std::string heatingCoilName;
+    std::string coolingCoilName;
+    double maxCyclingRate = 2.5;      // Nmax, in /hr
+    double heatPumpTimeConst = 60.0;  // tau, in s
+    double fractionOnCycle = 0.01;
+    double hpDelayTime = 60.0;
+
+    // Helpers
+    static std::vector<CoilLatentTransitionInfo>::iterator findFromParent(std::vector<CoilLatentTransitionInfo>& infos,
+                                                                          const IdfObject& parentObject);
+    static std::vector<CoilLatentTransitionInfo>::iterator findFromCoolingCoil(std::vector<CoilLatentTransitionInfo>& infos,
+                                                                               const IdfObject& coilObject);
+    static std::vector<CoilLatentTransitionInfo>::iterator findFromHeatingCoil(std::vector<CoilLatentTransitionInfo>& infos,
+                                                                               const IdfObject& coilObject);
+
+    static IdfObject defaultHeatPumpCoilPLFCorrelationCurve(const IddFileAndFactoryWrapper& idd_3_7_0, const std::string& name,
+                                                            double maximumCyclingRatePerHour = 2.5, double heatPumpTimeConstantSeconds = 60.0);
+
+    bool isCurveCreationNeeded() const {
+      return (heatingCoilType == "OS:Coil:Heating:WaterToAirHeatPump:EquationFit" ||  //
+              coolingCoilType == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit");
+      // OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit, and OS:Coil:Cooling:DX:VariableSpeed already have a PLF curve
+      // OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit does not have any change
+    }
+
+    IdfObject createCurveLinear(const IddFileAndFactoryWrapper& idd_3_7_0) const;
+
+    std::string curveName() const {
+      return fmt::format("{}-AutogeneratedPLFCurve", parentName);
+    }
+
+   private:
+    mutable boost::optional<IdfObject> cachedCurveLinear_;
+  };
+
+  std::vector<CoilLatentTransitionInfo>::iterator CoilLatentTransitionInfo::findFromParent(std::vector<CoilLatentTransitionInfo>& infos,
+                                                                                           const IdfObject& parentObject) {
+
+    ParentType pType = objectParentType(parentObject);
+    const auto name = parentObject.nameString();
+    auto it =
+      std::find_if(infos.begin(), infos.end(), [&pType, &name](auto& info) { return (info.parentType == pType) && (info.parentName == name); });
+    return it;
+  }
+
+  std::vector<CoilLatentTransitionInfo>::iterator CoilLatentTransitionInfo::findFromCoolingCoil(std::vector<CoilLatentTransitionInfo>& infos,
+                                                                                                const IdfObject& coilObject) {
+
+    auto it = std::find_if(infos.begin(), infos.end(), [&coilObject](auto& info) {
+      return (info.coolingCoilType == coilObject.iddObject().name()) && (info.coolingCoilName == coilObject.nameString());
+    });
+    return it;
+  }
+
+  std::vector<CoilLatentTransitionInfo>::iterator CoilLatentTransitionInfo::findFromHeatingCoil(std::vector<CoilLatentTransitionInfo>& infos,
+                                                                                                const IdfObject& coilObject) {
+
+    auto it = std::find_if(infos.begin(), infos.end(), [&coilObject](auto& info) {
+      return (info.heatingCoilType == coilObject.iddObject().name()) && (info.heatingCoilName == coilObject.nameString());
+    });
+    return it;
+  }
+
+  IdfObject CoilLatentTransitionInfo::defaultHeatPumpCoilPLFCorrelationCurve(const IddFileAndFactoryWrapper& idd_3_7_0, const std::string& name,
+                                                                             double maximumCyclingRatePerHour, double heatPumpTimeConstantSeconds) {
+
+    const double A = 4 * (heatPumpTimeConstantSeconds / 3600.0) * maximumCyclingRatePerHour;
+    const double Cd = A * (1 - std::exp(-1 / A));
+
+    auto iddObject = idd_3_7_0.getObject("OS:Curve:Linear");
+    IdfObject curveObject(iddObject.get());
+    const std::string uuid = toString(createUUID());
+    curveObject.setString(0, uuid);
+    curveObject.setString(1, name);
+    curveObject.setDouble(2, (1 - Cd));
+    curveObject.setDouble(3, Cd);
+    // Min/Max Value of x
+    curveObject.setDouble(4, 0.0);
+    curveObject.setDouble(5, 1.0);
+    // Min/max curve output
+    curveObject.setDouble(6, 0.0);
+    curveObject.setDouble(7, 1.0);
+    // Input Unit type for X
+    curveObject.setString(8, "Dimensionless");
+    // Output Unit type
+    curveObject.setString(9, "Dimensionless");
+    return curveObject;
+  }
+
+  IdfObject CoilLatentTransitionInfo::createCurveLinear(const IddFileAndFactoryWrapper& idd_3_7_0) const {
+    if (!cachedCurveLinear_) {
+      cachedCurveLinear_ =
+        CoilLatentTransitionInfo::defaultHeatPumpCoilPLFCorrelationCurve(idd_3_7_0, curveName(), maxCyclingRate, heatPumpTimeConst);
+    }
+    return *cachedCurveLinear_;
+  }
+
+  std::vector<CoilLatentTransitionInfo> preScanCoilLatentChanges(const IdfFile& idf_3_6_1) {
+
+    static constexpr std::array<std::string_view, 2> heatingCoilTypesChanged{"OS:Coil:Heating:WaterToAirHeatPump:EquationFit",
+                                                                             "OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit"};
+    static constexpr std::array<std::string_view, 3> coolingCoilTypesChanged{"OS:Coil:Cooling:WaterToAirHeatPump:EquationFit",
+                                                                             "OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit",
+                                                                             "OS:Coil:Cooling:DX:VariableSpeed"};
+
+    std::vector<CoilLatentTransitionInfo> result;
+
+    for (const IdfObject& object : idf_3_6_1.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:AirLoopHVAC:UnitarySystem") {
+
+        std::string heatingCoilType;
+        std::string heatingCoilName;
+        std::string coolingCoilType;
+        std::string coolingCoilName;
+
+        // 11 - Heating Coil Name
+        if (auto handleStr_ = object.getString(11)) {
+          if (auto coilObject_ = idf_3_6_1.getObject(toUUID(*handleStr_))) {
+            heatingCoilName = coilObject_->nameString();
+            heatingCoilType = coilObject_->iddObject().name();
+          }
+        }
+
+        // 13 - Cooling Coil Name
+        if (auto handleStr_ = object.getString(13)) {
+          if (auto coilObject_ = idf_3_6_1.getObject(toUUID(*handleStr_))) {
+            coolingCoilName = coilObject_->nameString();
+            coolingCoilType = coilObject_->iddObject().name();
+          }
+        }
+
+        const bool hasHeatingChanges =
+          (std::find(heatingCoilTypesChanged.cbegin(), heatingCoilTypesChanged.cend(), heatingCoilType) != heatingCoilTypesChanged.end());
+        const bool hasCoolingChanges =
+          (std::find(coolingCoilTypesChanged.cbegin(), coolingCoilTypesChanged.cend(), coolingCoilType) != coolingCoilTypesChanged.end());
+        const bool infoNeeded = hasHeatingChanges || hasCoolingChanges;
+
+        if (!infoNeeded) {
+          continue;
+        }
+
+        CoilLatentTransitionInfo& info = result.emplace_back();
+        info.parentType = CoilLatentTransitionInfo::ParentType::AirLoopHVACUnitary;
+        info.parentName = object.nameString();
+        info.heatingCoilName = std::move(heatingCoilName);
+        info.heatingCoilType = std::move(heatingCoilType);
+        info.coolingCoilName = std::move(coolingCoilName);
+        info.coolingCoilType = std::move(coolingCoilType);
+
+        // 38 - Maximum Cycling Rate
+        if (auto val_ = object.getDouble(38)) {
+          info.maxCyclingRate = *val_;
+        }
+
+        // 39 - Heat Pump Time Constant
+        if (auto val_ = object.getDouble(39)) {
+          info.heatPumpTimeConst = *val_;
+        }
+
+        // 40 - Fraction of On-Cycle Power Use
+        if (auto val_ = object.getDouble(40)) {
+          info.fractionOnCycle = *val_;
+        }
+
+        // 41 - Heat Pump Fan Delay Time
+        if (auto val_ = object.getDouble(41)) {
+          info.hpDelayTime = *val_;
+        }
+
+      } else if (iddname == "OS:ZoneHVAC:WaterToAirHeatPump") {
+
+        std::string heatingCoilType;
+        std::string heatingCoilName;
+        std::string coolingCoilType;
+        std::string coolingCoilName;
+
+        // 13 - Heating Coil Name
+        if (auto handleStr_ = object.getString(13)) {
+          if (auto coilObject_ = idf_3_6_1.getObject(toUUID(*handleStr_))) {
+            heatingCoilName = coilObject_->nameString();
+            heatingCoilType = coilObject_->iddObject().name();
+          }
+        }
+
+        // 14 - Cooling Coil Name
+        if (auto handleStr_ = object.getString(14)) {
+          if (auto coilObject_ = idf_3_6_1.getObject(toUUID(*handleStr_))) {
+            coolingCoilName = coilObject_->nameString();
+            coolingCoilType = coilObject_->iddObject().name();
+          }
+        }
+
+        const bool hasHeatingChanges =
+          (std::find(heatingCoilTypesChanged.cbegin(), heatingCoilTypesChanged.cend(), heatingCoilType) != heatingCoilTypesChanged.end());
+        const bool hasCoolingChanges =
+          (std::find(coolingCoilTypesChanged.cbegin(), coolingCoilTypesChanged.cend(), coolingCoilType) != coolingCoilTypesChanged.end());
+        const bool infoNeeded = hasHeatingChanges || hasCoolingChanges;
+
+        if (!infoNeeded) {
+          continue;
+        }
+
+        CoilLatentTransitionInfo& info = result.emplace_back();
+        info.parentType = CoilLatentTransitionInfo::ParentType::ZoneWAHP;
+        info.parentName = object.nameString();
+        info.heatingCoilName = std::move(heatingCoilName);
+        info.heatingCoilType = std::move(heatingCoilType);
+        info.coolingCoilName = std::move(coolingCoilName);
+        info.coolingCoilType = std::move(coolingCoilType);
+
+        // 15 - Maximum Cycling Rate
+        if (auto val_ = object.getDouble(15)) {
+          info.maxCyclingRate = *val_;
+        }
+
+        // 16 - Heat Pump Time Constant
+        if (auto val_ = object.getDouble(16)) {
+          info.heatPumpTimeConst = *val_;
+        }
+
+        // 17 - Fraction of On-Cycle Power Use
+        if (auto val_ = object.getDouble(17)) {
+          info.fractionOnCycle = *val_;
+        }
+
+        // 18 - Heat Pump Fan Delay Time
+        if (auto val_ = object.getDouble(18)) {
+          info.hpDelayTime = *val_;
+        }
+      }
+
+      // AIRLOOPHVAC:UNITARYHEATPUMP:WATERTOAIR is not wrapped
+    }
+    return result;
+  }
+
+  std::string VersionTranslator::update_3_6_1_to_3_7_0(const IdfFile& idf_3_6_1, const IddFileAndFactoryWrapper& idd_3_7_0) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_6_1.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_7_0.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    std::vector<CoilLatentTransitionInfo> coilTransitionInfos = preScanCoilLatentChanges(idf_3_6_1);
+
+    constexpr std::array<std::pair<std::string_view, size_t>, 10> crankcaseCoilWithIndex{{
+      {"OS:Coil:Cooling:DX:CurveFit:Performance", 3},
+      {"OS:Coil:Cooling:DX:SingleSpeed", 27},
+      {"OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode", 6},
+      {"OS:Coil:Cooling:DX:MultiSpeed", 13},
+      {"OS:Coil:Heating:DX:SingleSpeed", 19},
+      {"OS:Coil:Heating:DX:MultiSpeed", 8},
+      {"OS:Coil:Heating:DX:VariableSpeed", 13},
+      {"OS:Coil:WaterHeating:AirToWaterHeatPump", 20},
+      {"OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed", 18},
+      {"OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped", 13},
+    }};
+
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
+    const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap{{
+      {"Steam", "DistrictHeatingSteam"},
+      {"DistrictHeating", "DistrictHeatingWater"},
+      // Additionally, for UtilityBill, align the IDD choices to E+. This will also be covered by this
+      {"Gas", "NaturalGas"},
+      {"FuelOil_1", "FuelOilNo1"},
+      {"FuelOil_2", "FuelOilNo2"},
+      {"OtherFuel_1", "OtherFuel1"},
+      {"OtherFuel_2", "OtherFuel2"},
+    }};
+
+    const std::multimap<std::string, int> fuelTypeRenamesMap{{
+      {"OS:OtherEquipment", 6},                                // Fuel Type
+      {"OS:Exterior:FuelEquipment", 4},                        // Fuel Use Type
+      {"OS:WaterHeater:Mixed", 11},                            // Heater Fuel Type
+      {"OS:WaterHeater:Mixed", 15},                            // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Mixed", 18},                            // On Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 17},                       // Heater Fuel Type
+      {"OS:WaterHeater:Stratified", 20},                       // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 24},                       // On Cycle Parasitic Fuel Type
+      {"OS:UtilityBill", 2},                                   // Fuel Type
+      {"OS:Meter:Custom", 2},                                  // Fuel Type
+      {"OS:Meter:CustomDecrement", 2},                         // Fuel Type
+      {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
+      {"OS:PythonPlugin:OutputVariable", 6},                   // Resource Type
+    }};
+
+    auto checkIfReplaceNeeded = [replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
+      if (boost::optional<std::string> fuelType_ = object.getString(fieldIndex)) {
+        return replaceFuelTypesMap.contains(*fuelType_);
+      }
+      return false;
+    };
+
+    auto replaceForField = [&replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
+      if (boost::optional<std::string> fuelType_ = object.getString(fieldIndex)) {
+        auto it = replaceFuelTypesMap.find(*fuelType_);
+        if (it != replaceFuelTypesMap.end()) {
+          LOG(Trace, "Replacing " << *fuelType_ << " with " << it->second << " at fieldIndex " << fieldIndex << " for " << object.nameString());
+          newObject.setString(fieldIndex, it->second);
+        }
+      }
+    };
+
+    /*************************************************************************************************************************************************
+     *                                                               Output:Variable fuel                                                            *
+     ************************************************************************************************************************************************/
+
+    const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
+
+    // Making the map case-insensitive by providing a Comparator `IstringCompare`
+    // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
+    const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
+      {"District Cooling Chilled Water Energy", "District Cooling Water Energy"},
+      {"District Cooling Chilled Water Rate", "District Cooling Water Rate"},
+      {"District Cooling Rate", "District Cooling Water Rate"},
+      {"District Cooling Inlet Temperature", "District Cooling Water Inlet Temperature"},
+      {"District Cooling Outlet Temperature", "District Cooling Water Outlet Temperature"},
+      {"District Cooling Mass Flow Rate", "District Cooling Water Mass Flow Rate"},
+      {"District Heating Hot Water Energy", "District Heating Water Energy"},
+      {"District Heating Hot Water Rate", "District Heating Water Rate"},
+      {"District Heating Rate", "District Heating Water Rate"},
+      {"District Heating Inlet Temperature", "District Heating Water Inlet Temperature"},
+      {"District Heating Outlet Temperature", "District Heating Water Outlet Temperature"},
+      {"District Heating Mass Flow Rate", "District Heating Water Mass Flow Rate"},
+    });
+
+    /*************************************************************************************************************************************************
+     *                                                          Output:Meter fuel types renames                                                      *
+     ************************************************************************************************************************************************/
+
+    const static std::array<std::pair<std::string, std::string>, 2> meterFuelTypesMap{{
+      {"DistrictHeating", "DistrictHeatingWater"},
+      {"Steam", "DistrictHeatingSteam"},
+    }};
+
+    // Could make it a static inside the lambda, except that it won't be reset so if you try to translate twice it fails
+    std::string discreteSchHandleStr;
+
+    auto getOrCreateAlwaysOnContinuousSheduleHandleStr = [this, &ss, &idf_3_6_1, &idd_3_7_0, &discreteSchHandleStr]() -> std::string {
+      if (!discreteSchHandleStr.empty()) {
+        LOG(Trace, "Already found 'Always On Continuous' Schedule in model with handle " << discreteSchHandleStr);
+        return discreteSchHandleStr;
+      }
+
+      const std::string name = "Always On Continuous";
+      const double val = 1.0;
+      // Add an alwaysOnDiscreteSchedule if one does not already exist
+      for (const IdfObject& object : idf_3_6_1.getObjectsByType(idf_3_6_1.iddFile().getObject("OS:Schedule:Constant").get())) {
+        if (boost::optional<std::string> name_ = object.getString(1)) {
+          if (istringEqual(name_.get(), name)) {
+            if (boost::optional<double> value = object.getDouble(3)) {
+              if (equal<double>(value.get(), val)) {
+                discreteSchHandleStr = object.getString(0).get();  // Store in state variable
+                LOG(Trace, "Found existing 'Always On Continuous' Schedule in model with handle " << discreteSchHandleStr);
+                return discreteSchHandleStr;
+              }
+            }
+          }
+        }
+      }
+
+      auto discreteSch = IdfObject(idd_3_7_0.getObject("OS:Schedule:Constant").get());
+
+      discreteSchHandleStr = toString(createUUID());  // Store in state variable
+      discreteSch.setString(0, discreteSchHandleStr);
+      discreteSch.setString(1, name);
+      discreteSch.setDouble(3, val);
+
+      IdfObject typeLimits(idd_3_7_0.getObject("OS:ScheduleTypeLimits").get());
+      typeLimits.setString(0, toString(createUUID()));
+      typeLimits.setString(1, name + " Limits");
+      typeLimits.setDouble(2, 0.0);
+      typeLimits.setDouble(3, 1.0);
+      typeLimits.setString(4, "Continuous");
+      typeLimits.setString(5, "");
+
+      discreteSch.setString(2, typeLimits.getString(0).get());
+
+      ss << discreteSch;
+      ss << typeLimits;
+
+      // Register new objects
+      m_new.emplace_back(std::move(discreteSch));
+      m_new.emplace_back(std::move(typeLimits));
+      LOG(Trace, "Created 'Always On Continuous' Schedule with handle " << discreteSchHandleStr);
+
+      return discreteSchHandleStr;
+    };
+
+    for (const IdfObject& object : idf_3_6_1.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:GroundHeatExchanger:Vertical") {
+
+        // 1 Field has been added from 3.6.1 to 3.7.0:
+        // -------------------------------------------
+        // * Undisturbed Ground Temperature Model * 17
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject ghxObject(iddObject.get());
+        IdfObject kusudaObject(idd_3_7_0.getObject("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach").get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if (i < 17) {
+            if ((value = object.getString(i))) {
+              ghxObject.setString(i, value.get());
+              if (i == 8) {  // Soil Thermal Conductivity
+                kusudaObject.setString(i - 6, value.get());
+              }
+              if (i == 10) {  // Average Soil Surface Temperature
+                kusudaObject.setString(i - 5, value.get());
+              }
+            }
+            if (boost::optional<double> _value = object.getDouble(i)) {
+              if (i == 9) {  // Soil Specific Heat
+                kusudaObject.setDouble(i - 5, _value.get() / 920.0);
+              }
+            }
+          } else {
+            if (i == 17) {  // Undisturbed Ground Temperature Model
+              ghxObject.setString(i, kusudaObject.getString(0).get());
+            }
+            if ((value = object.getString(i))) {
+              ghxObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        kusudaObject.setDouble(3, 920.0);  // Soil Density
+        kusudaObject.setDouble(6, 3.2);    // Average Amplitude of Surface Temperature
+        kusudaObject.setDouble(7, 8.0);    // Phase Shift of Minimum Surface Temperature
+
+        m_refactored.push_back(RefactoredObjectData(object, ghxObject));
+        m_new.push_back(kusudaObject);
+
+        ss << ghxObject;
+        ss << kusudaObject;
+
+      } else if ((iddname == "OS:Coil:Cooling:DX:VariableSpeed:SpeedData") || (iddname == "OS:Coil:Heating:DX:VariableSpeed:SpeedData")) {
+
+        // The two coils have the new fields in the same location, with the same defaults
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // Heating:
+        // * Rated Supply Fan Power Per Volume Flow Rate 2017 * 5
+        // * Rated Supply Fan Power Per Volume Flow Rate 2023 * 6
+        // Cooling:
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2017 - 6
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 - 7
+
+        const bool is_cooling = (iddname == "OS:Coil:Cooling:DX:VariableSpeed:SpeedData");
+        const size_t insertionIndex = is_cooling ? 6 : 5;
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < insertionIndex) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 2, value.get());
+            }
+          }
+        }
+
+        // Rated Supply/Evaporator Fan Power Per Volume Flow Rate 2017
+        newObject.setDouble(insertionIndex, 773.3);
+
+        // Rated Supply/Evaporator Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(insertionIndex + 1, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:DX:TwoSpeed") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017 * 7
+        // * Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023 * 8
+        // * Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2017 * 21
+        // * Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2023 * 22
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else if (i < 19) {
+              newObject.setString(i + 2, value.get());
+            } else {
+              newObject.setString(i + 4, value.get());
+            }
+          }
+        }
+
+        // Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2017
+        newObject.setDouble(7, 773.3);
+        // Rated High Speed Evaporator Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(8, 934.4);
+
+        // Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2017
+        newObject.setDouble(21, 773.3);
+        // Rated Low Speed Evaporator Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(22, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:AirLoopHVAC:UnitarySystem") {
+
+        // Removed fields
+        // 38 - Maximum Cycling Rate
+        // 39 - Heat Pump Time Constant
+        // 40 - Fraction of On-Cycle Power Use
+        // 41 - Heat Pump Fan Delay Time
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 38) {
+              newObject.setString(i, value.get());
+            } else if (i > 41) {
+              newObject.setString(i - 4, value.get());
+            }
+          }
+        }
+
+        // * 11 - Heating Coil Name
+        constexpr unsigned heatingCoilNameIndex = 11;
+        const bool hasHeatingCoil = !object.isEmpty(heatingCoilNameIndex);
+
+        // * 13 - Cooling Coil Name
+        constexpr unsigned coolingCoilNameIndex = 13;
+        const bool hasCoolingCoil = !object.isEmpty(coolingCoilNameIndex);
+
+        // We use getString(idx, false, true) to not get default, returned unitialized empty
+
+        // * 18 - Supply Air Flow Rate Method During Cooling Operation
+        constexpr unsigned coolingSAFMethodIndex = 18;
+        boost::optional<std::string> coolingSAFMethod = object.getString(coolingSAFMethodIndex, false, true);
+
+        // * 23 - Supply Air Flow Rate Method During Heating Operation
+        constexpr unsigned heatingSAFMethodIndex = 23;
+        boost::optional<std::string> heatingSAFMethod = object.getString(heatingSAFMethodIndex, false, true);
+
+        // * 28 - Supply Air Flow Rate Method When No Cooling or Heating is Required
+        constexpr unsigned noCoolHeatSAFMethodIndex = 28;
+        boost::optional<std::string> noCoolHeatSAFMethod = object.getString(noCoolHeatSAFMethodIndex, false, true);
+
+        constexpr std::array<std::string_view, 4> coolingSAFMethodChoices{"SupplyAirFlowRate", "FlowPerFloorArea", "FractionOfAutosizedCoolingValue",
+                                                                          "FlowPerCoolingCapacity"};
+
+        constexpr std::array<std::string_view, 4> coolingSAFMethodChoicesUC{"SUPPLYAIRFLOWRATE", "FLOWPERFLOORAREA",
+                                                                            "FRACTIONOFAUTOSIZEDCOOLINGVALUE", "FLOWPERCOOLINGCAPACITY"};
+
+        constexpr std::array<std::string_view, 4> heatingSAFMethodChoices{"SupplyAirFlowRate", "FlowPerFloorArea", "FractionOfAutosizedHeatingValue",
+                                                                          "FlowPerHeatingCapacity"};
+        constexpr std::array<std::string_view, 4> heatingSAFMethodChoicesUC{"SUPPLYAIRFLOWRATE", "FLOWPERFLOORAREA",
+                                                                            "FRACTIONOFAUTOSIZEDHEATINGVALUE", "FLOWPERHEATINGCAPACITY"};
+
+        constexpr std::array<std::string_view, 6> noCoolHeatSAFMethodChoices{
+          "SupplyAirFlowRate",      "FlowPerFloorArea",      "FractionOfAutosizedCoolingValue", "FractionOfAutosizedHeatingValue",
+          "FlowPerCoolingCapacity", "FlowPerHeatingCapacity"};
+
+        constexpr std::array<std::string_view, 6> noCoolHeatSAFMethodChoicesUC{
+          "SUPPLYAIRFLOWRATE",      "FLOWPERFLOORAREA",      "FRACTIONOFAUTOSIZEDCOOLINGVALUE", "FRACTIONOFAUTOSIZEDHEATINGVALUE",
+          "FLOWPERCOOLINGCAPACITY", "FLOWPERHEATINGCAPACITY"};
+
+        // Reset all flow fields, we want only one at best to be set
+        for (size_t i = 0; i < coolingSAFMethodChoices.size(); ++i) {
+          const size_t fieldIndex = coolingSAFMethodIndex + 1 + i;
+          newObject.setString(fieldIndex, "");
+        }
+        for (size_t i = 0; i < heatingSAFMethodChoices.size(); ++i) {
+          const size_t fieldIndex = heatingSAFMethodIndex + 1 + i;
+          newObject.setString(fieldIndex, "");
+        }
+        for (size_t i = 0; i < noCoolHeatSAFMethodChoices.size(); ++i) {
+          const size_t fieldIndex = noCoolHeatSAFMethodIndex + 1 + i;
+          newObject.setString(fieldIndex, "");
+        }
+
+        if (!hasCoolingCoil) {
+          newObject.setString(coolingSAFMethodIndex, "None");
+        } else if (!coolingSAFMethod) {
+          // Technically here E+ checks if the cooling coil rated air flow rate is autosized or not
+          // Also could get overriden by the DesignSpecification:ZoneHVAC:Sizing
+          // Finally it lets it slide as long as one of the other SupplyAirFlowRateXXX is not empty
+          // Here I guess we'll scan the fields in order, and pick the first we find
+          // * 19 - Supply Air Flow Rate During Cooling Operation
+          // * 20 - Supply Air Flow Rate Per Floor Area During Cooling Operation
+          // * 21 - Fraction of Autosized Design Cooling Supply Air Flow Rate
+          // * 22 - Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation
+          bool found = false;
+          for (size_t i = 0; i < coolingSAFMethodChoices.size(); ++i) {
+            const size_t fieldIndex = coolingSAFMethodIndex + 1 + i;
+            if ((value = object.getString(fieldIndex, false, true))) {
+              newObject.setString(coolingSAFMethodIndex, std::string{coolingSAFMethodChoices[i]});
+              newObject.setString(fieldIndex, *value);
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', there is a cooling coil, but no Supply Air Flow Rate Method During Cooling Operation and no flow rate fields set. "
+                           "Defaulting to SupplyAirFlowRate with Autosize");
+            newObject.setString(coolingSAFMethodIndex, "SupplyAirFlowRate");
+            newObject.setString(coolingSAFMethodIndex + 1, "Autosize");
+          }
+        } else {
+          std::string coolingSAFMethodUC = ascii_to_upper_copy(*coolingSAFMethod);
+          if (coolingSAFMethodUC == "NONE") {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', Supply Air Flow Method Rate During Cooling Operation is 'None' but you have a Cooling Coil, consider changing it");
+          } else {
+            auto it = std::find_if(coolingSAFMethodChoicesUC.cbegin(), coolingSAFMethodChoicesUC.cend(),
+                                   [&coolingSAFMethodUC](auto& s) { return s == coolingSAFMethodUC; });
+            if (it == coolingSAFMethodChoicesUC.cend()) {
+              LOG(Error, "For AirLoopHVACUnitarySystem '"
+                           << object.nameString() << "', Unrecognized Supply Air Flow Method Rate During Cooling Operation=" << *coolingSAFMethod);
+            } else {
+              const auto dist = std::distance(coolingSAFMethodChoicesUC.cbegin(), it);
+              const size_t index = coolingSAFMethodIndex + 1 + dist;
+              if ((value = object.getString(index, false, true))) {
+                newObject.setString(index, *value);
+              } else {
+                LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString() << "', Supply Air Flow Method Rate During Cooling Operation is '"
+                                                            << *coolingSAFMethod << "' but associated field is empty. Setting it to zero.");
+                newObject.setDouble(index, 0.0);
+              }
+            }
+          }
+        }
+
+        if (!hasHeatingCoil) {
+          newObject.setString(heatingSAFMethodIndex, "None");
+        } else if (!heatingSAFMethod) {
+
+          // * 23 - Supply Air Flow Rate Method During Heating Operation
+          // * 24 - Supply Air Flow Rate During Heating Operation
+          // * 25 - Supply Air Flow Rate Per Floor Area during Heating Operation
+          // * 26 - Fraction of Autosized Design Heating Supply Air Flow Rate
+          // * 27 - Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation
+          bool found = false;
+          for (size_t i = 0; i < heatingSAFMethodChoices.size(); ++i) {
+            const size_t fieldIndex = heatingSAFMethodIndex + 1 + i;
+            if ((value = object.getString(fieldIndex, false, true))) {
+              newObject.setString(heatingSAFMethodIndex, std::string{heatingSAFMethodChoices[i]});
+              newObject.setString(fieldIndex, *value);
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', there is a heating coil, but no Supply Air Flow Rate Method During Heating Operation and no flow rate fields set. "
+                           "Defaulting to SupplyAirFlowRate with Autosize");
+            newObject.setString(heatingSAFMethodIndex, "SupplyAirFlowRate");
+            newObject.setString(heatingSAFMethodIndex + 1, "Autosize");
+          }
+        } else {
+          std::string heatingSAFMethodUC = ascii_to_upper_copy(*heatingSAFMethod);
+          if (heatingSAFMethodUC == "NONE") {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '"
+                        << object.nameString()
+                        << "', Supply Air Flow Method Rate During Heating Operation is 'None' but you have a Heating coil, consider changing it");
+          } else {
+            auto it = std::find_if(heatingSAFMethodChoicesUC.cbegin(), heatingSAFMethodChoicesUC.cend(),
+                                   [&heatingSAFMethodUC](auto& s) { return s == heatingSAFMethodUC; });
+            if (it == heatingSAFMethodChoicesUC.cend()) {
+              LOG(Error, "For AirLoopHVACUnitarySystem '"
+                           << object.nameString() << "', Unrecognized Supply Air Flow Method Rate During Heating Operation=" << *heatingSAFMethod);
+            } else {
+              auto dist = std::distance(heatingSAFMethodChoicesUC.cbegin(), it);
+              const size_t index = heatingSAFMethodIndex + 1 + dist;
+              if ((value = object.getString(index, false, true))) {
+                newObject.setString(index, *value);
+              } else {
+                LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString() << "', Supply Air Flow Method Rate During Heating Operation is '"
+                                                            << *heatingSAFMethod << "' but associated field is empty. Setting it to zero.");
+                newObject.setDouble(index, 0.0);
+              }
+            }
+          }
+        }
+
+        if (!hasHeatingCoil && !hasCoolingCoil) {
+          // TODO: not sure here
+          newObject.setString(noCoolHeatSAFMethodIndex, "None");
+        } else if (!noCoolHeatSAFMethod) {
+
+          // Blank is equivalent to None here, no question
+          newObject.setString(noCoolHeatSAFMethodIndex, "None");
+#if 0
+          // * 29 - Supply Air Flow Rate When No Cooling or Heating is Required
+          // * 30 - Supply Air Flow Rate Per Floor Area When No Cooling or Heating is Required
+          // * 31 - Fraction of Autosized Design Cooling Supply Air Flow Rate When No Cooling or Heating is Required
+          // * 32 - Fraction of Autosized Design Heating Supply Air Flow Rate When No Cooling or Heating is Required
+          // * 33 - Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation When No Cooling or Heating is Required
+          // * 34 - Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation When No Cooling or Heating is Required
+          bool found = false;
+          for (size_t i = 0; i < noCoolHeatSAFMethodChoices.size(); ++i) {
+            const size_t fieldIndex = noCoolHeatSAFMethodIndex + 1 + i;
+            if ((value = object.getString(fieldIndex, false, true))) {
+              newObject.setString(noCoolHeatSAFMethodIndex, std::string{noCoolHeatSAFMethodChoices[i]});
+              newObject.setString(fieldIndex, *value);
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            LOG(Warn, "For AirLoopHVACUnitarySystem '" << object.nameString()
+                             << ", there is no Supply Air Flow Rate Method When No Cooling or Heating is Required and no flow rate fields set. "
+                                "Defaulting to None");
+            newObject.setString(noCoolHeatSAFMethodIndex, "None");
+          }
+#endif
+        } else {
+          std::string noCoolHeatSAFMethodUC = ascii_to_upper_copy(*noCoolHeatSAFMethod);
+          if (noCoolHeatSAFMethodUC != "NONE") {
+            auto it = std::find_if(noCoolHeatSAFMethodChoicesUC.cbegin(), noCoolHeatSAFMethodChoicesUC.cend(),
+                                   [&noCoolHeatSAFMethodUC](auto& s) { return s == noCoolHeatSAFMethodUC; });
+            if (it == noCoolHeatSAFMethodChoicesUC.cend()) {
+              LOG(Error, "For AirLoopHVACUnitarySystem '"
+                           << object.nameString()
+                           << "', Unrecognized Supply Air Flow Rate Method When No Cooling or Heating is Required=" << *noCoolHeatSAFMethod);
+            } else {
+              auto dist = std::distance(noCoolHeatSAFMethodChoicesUC.cbegin(), it);
+              const size_t index = noCoolHeatSAFMethodIndex + 1 + dist;
+              if ((value = object.getString(index, false, true))) {
+                newObject.setString(index, *value);
+              } else {
+                LOG(Error, "For AirLoopHVACUnitarySystem '" << object.nameString()
+                                                            << "', Supply Air Flow Rate Method When No Cooling or Heating is Required is '"
+                                                            << *noCoolHeatSAFMethod << "' but associated field is empty");
+                newObject.setDouble(index, 0.0);
+              }
+            }
+          }
+        }
+
+        ss << newObject;
+        m_refactored.push_back(RefactoredObjectData(object, std::move(newObject)));
+
+        auto it = CoilLatentTransitionInfo::findFromParent(coilTransitionInfos, object);
+        if (it != coilTransitionInfos.end()) {
+          if (it->isCurveCreationNeeded()) {
+            IdfObject plfCurve = it->createCurveLinear(idd_3_7_0);
+            ss << plfCurve;
+            m_new.emplace_back(std::move(plfCurve));
+          }
+        }
+
+      } else if (iddname == "OS:ZoneHVAC:WaterToAirHeatPump") {
+
+        // Removed fields
+        // 15 - Maximum Cycling Rate
+        // 16 - Heat Pump Time Constant
+        // 17 - Fraction of On-Cycle Power Use
+        // 18 - Heat Pump Fan Delay Time
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 15) {
+              newObject.setString(i, value.get());
+            } else if (i > 18) {
+              newObject.setString(i - 4, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        auto it = CoilLatentTransitionInfo::findFromParent(coilTransitionInfos, object);
+        if (it != coilTransitionInfos.end()) {
+          if (it->isCurveCreationNeeded()) {
+            IdfObject plfCurve = it->createCurveLinear(idd_3_7_0);
+            ss << plfCurve;
+            m_new.emplace_back(std::move(plfCurve));
+          }
+        }
+
+      } else if (iddname == "OS:Coil:Cooling:DX:VariableSpeed") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Maximum Cycling Rate * 9
+        // * Latent Capacity Time Constant * 10
+        // * Fan Delay Time * 11
+        // * Crankcase Heater Capacity Function of Temperature Curve Name - 17
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 9) {
+              newObject.setString(i, value.get());
+            } else if (i < 14) {
+              // * Energy Part Load Fraction Curve Name - 9 => 12
+              newObject.setString(i + 3, value.get());
+            } else {
+              // * Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation - 14 => 18
+              newObject.setString(i + 4, value.get());
+            }
+          }
+        }
+
+        auto it = CoilLatentTransitionInfo::findFromCoolingCoil(coilTransitionInfos, object);
+        const bool hasCoilInfo = (it != coilTransitionInfos.end());
+        // No PLF Curve needed here
+
+        double maxCyclingRate = 2.5;
+        double heatPumpTimeConst = 60.0;
+        double hpDelayTime = 60.0;
+        if (hasCoilInfo) {
+          maxCyclingRate = it->maxCyclingRate;
+          heatPumpTimeConst = it->heatPumpTimeConst;
+          hpDelayTime = it->hpDelayTime;
+        }
+
+        newObject.setDouble(9, maxCyclingRate);
+        newObject.setDouble(10, heatPumpTimeConst);
+        newObject.setDouble(11, hpDelayTime);
+
+        // Cranckcase curve is optional
+        // newObject.setString(17; "");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Part Load Fraction Correlation Curve Name* 17
+        // New at end
+        // * Maximum Cycling Rate * 20
+        // * Latent Capacity Time Constant * 21
+        // * Fan Delay Time * 22
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 17) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        auto it = CoilLatentTransitionInfo::findFromCoolingCoil(coilTransitionInfos, object);
+        const bool hasCoilInfo = (it != coilTransitionInfos.end());
+        const std::string curveName = hasCoilInfo ? it->curveName() : fmt::format("{}-PLFCorrelationCurve", object.nameString());
+        newObject.setString(17, curveName);
+
+        // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+        double maxCyclingRate = 2.5;
+        double heatPumpTimeConst = 60.0;
+        double hpDelayTime = 60.0;
+        if (hasCoilInfo) {
+          maxCyclingRate = it->maxCyclingRate;
+          heatPumpTimeConst = it->heatPumpTimeConst;
+          hpDelayTime = it->hpDelayTime;
+        }
+
+        newObject.setDouble(20, maxCyclingRate);
+        newObject.setDouble(21, heatPumpTimeConst);
+        newObject.setDouble(22, hpDelayTime);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        if (!hasCoilInfo) {
+          IdfObject plfCurve = CoilLatentTransitionInfo::defaultHeatPumpCoilPLFCorrelationCurve(idd_3_7_0, curveName);
+          ss << plfCurve;
+          m_new.emplace_back(std::move(plfCurve));
+        }
+
+      } else if (iddname == "OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Maximum Cycling Rate * 12
+        // * Latent Capacity Time Constant * 13
+        // * Fan Delay Time * 14
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 12) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 3, value.get());
+            }
+          }
+        }
+
+        // No Curve needed here
+        auto it = CoilLatentTransitionInfo::findFromCoolingCoil(coilTransitionInfos, object);
+        const bool hasCoilInfo = (it != coilTransitionInfos.end());
+
+        // E+ 23.2.0 defaults Maximum Cycling Rate and Latent Capacity Time Constant to 0.0, we don't, cf #4999
+        double maxCyclingRate = 2.5;
+        double heatPumpTimeConst = 60.0;
+        double hpDelayTime = 60.0;
+        if (hasCoilInfo) {
+          maxCyclingRate = it->maxCyclingRate;
+          heatPumpTimeConst = it->heatPumpTimeConst;
+          hpDelayTime = it->hpDelayTime;
+        }
+
+        newObject.setDouble(12, maxCyclingRate);
+        newObject.setDouble(13, heatPumpTimeConst);
+        newObject.setDouble(14, hpDelayTime);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Heating:WaterToAirHeatPump:EquationFit") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Part Load Fraction Correlation Curve Name * 15
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        auto it = CoilLatentTransitionInfo::findFromHeatingCoil(coilTransitionInfos, object);
+        const bool hasCoilInfo = (it != coilTransitionInfos.end());
+        const std::string curveName = hasCoilInfo ? it->curveName() : fmt::format("{}-PLFCorrelationCurve", object.nameString());
+        newObject.setString(15, curveName);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        if (!hasCoilInfo) {
+          IdfObject plfCurve = CoilLatentTransitionInfo::defaultHeatPumpCoilPLFCorrelationCurve(idd_3_7_0, curveName);
+          ss << plfCurve;
+          m_new.emplace_back(std::move(plfCurve));
+        }
+
+      } else if (iddname == "OS:Boiler:HotWater") {
+
+        // 1 Field has been added from 3.6.1 to 3.7.0:
+        // -------------------------------------------
+        // * Off Cycle Parasitic Fuel Load * 16
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 16) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // IDD 3.6.1 had a default of 0.0, so it'll pick that up if empty, and it matches the new Ctor value
+        newObject.setDouble(15, object.getDouble(15, true).get());
+        newObject.setDouble(16, 0.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:DistrictHeating") {
+
+        // Object was renamed from OS:DistrictHeating to OS:DistrictHeating:Water (since OS:DistrictHeating:Steam was added)
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Capacity Fraction Schedule * 5
+
+        // We start by creating a new object, and copy every field.
+        auto iddObject = idd_3_7_0.getObject("OS:DistrictHeating:Water");
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Add the new "Capacity Fraction Schedule"
+        newObject.setString(5, getOrCreateAlwaysOnContinuousSheduleHandleStr());
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:DistrictCooling") {
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Capacity Fraction Schedule * 5
+
+        auto iddObject = idd_3_7_0.getObject("OS:DistrictCooling");
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+        // Add the new "Capacity Fraction Schedule"
+        newObject.setString(5, getOrCreateAlwaysOnContinuousSheduleHandleStr());
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:Output:Meter") {
+
+        std::string name = object.nameString();
+
+        // Structured bindings
+        for (const auto& [k, v] : meterFuelTypesMap) {
+          name = boost::regex_replace(name, boost::regex(k, boost::regex::icase), v);
+        }
+        if (name == object.nameString()) {
+          // No-op
+          ss << object;
+        } else {
+
+          // Copy everything but 'Variable Name' field
+          auto iddObject = idd_3_7_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            // Skip name field
+            if (i == 1) {
+              continue;
+            }
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
+
+          newObject.setName(name);
+
+          ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
+        }
+
+      } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")
+                 || (iddname == "OS:EnergyManagementSystem:Actuator")) {
+
+        unsigned variableNameIndex = 3;
+        if (iddname == "OS:EnergyManagementSystem:Actuator") {
+          variableNameIndex = 4;  // Actuated Component Control Type
+        }
+
+        if ((value = object.getString(variableNameIndex))) {
+
+          std::string variableName = value.get();
+          // Strip consecutive spaces and all
+          variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+
+          auto it = replaceOutputVariablesMap.find(variableName);
+          if (it == replaceOutputVariablesMap.end()) {
+            // No-op
+            ss << object;
+          } else {
+
+            // Copy everything but 'Variable Name' field
+            auto iddObject = idd_3_7_0.getObject(iddname);
+            IdfObject newObject(iddObject.get());
+
+            for (size_t i = 0; i < object.numFields(); ++i) {
+              if (i == variableNameIndex) {
+                continue;
+              } else if ((value = object.getString(i))) {
+                newObject.setString(i, value.get());
+              }
+            }
+
+            LOG(Trace, "Replacing " << variableName << " with " << it->second << " for " << object.nameString());
+            newObject.setString(variableNameIndex, it->second);
+
+            ss << newObject;
+            m_refactored.emplace_back(std::move(object), std::move(newObject));
+          }
+        } else {
+          // No-op
+          ss << object;
+        }
+
+      } else if (auto it = std::find_if(crankcaseCoilWithIndex.cbegin(), crankcaseCoilWithIndex.cend(),
+                                        [&iddname](const auto& p) { return iddname == p.first; });
+                 it != crankcaseCoilWithIndex.cend()) {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Crankcase Heater Capacity Function of Temperature Curve Name * (varies)
+
+        const size_t insertionIndex = it->second;
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < insertionIndex) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Cranckcase curve is optional
+        // newObject.setString(insertionIndex; "");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (fuelTypeRenamesMap.find(iddname) != fuelTypeRenamesMap.end()) {
+        LOG(Trace, "Checking for a fuel type rename in Object of type '" << iddname << "' and named '" << object.nameString() << "'");
+        auto rangeFields = fuelTypeRenamesMap.equal_range(iddname);
+        // First pass, find if a replacement is needed
+        bool isReplaceNeeded = false;
+        for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+          if (checkIfReplaceNeeded(object, it->second)) {
+            isReplaceNeeded = true;
+            break;
+          }
+        }
+        if (isReplaceNeeded) {
+          LOG(Trace, "Replace needed!");
+
+          // Make a new object, and copy evertything in place
+          auto iddObject = idd_3_7_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
+
+          // Then handle the renames
+          for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+            replaceForField(object, newObject, it->second);
+          }
+
+          ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
+        } else {
+          // No-op
+          ss << object;
+        }
+
+        //    } else if ((iddname == "OS:Coil:Heating:Gas") || (iddname == "OS:Coil:Heating:Gas:MultiStage")
+        //               || (iddname == "OS:Coil:Heating:Gas:MultiStage:StageData") || (iddname == "OS:Coil:Heating:Desuperheater")) {
+        //
+        //      // No-op: only field name changes:
+        //      // * Change Parasitic Electric Load => On Cycle Parasitic Electric Load
+        //      // * Change Parasitic Gas Load => Off Cycle Parasitic Gas Load
+        //      ss << object;
+
+      } else if (iddname == "OS:Controller:OutdoorAir") {
+
+        // 1 Field has been added from 3.6.1 to 3.7.0:
+        // -------------------------------------------
+        // * Economizer Operation Staging * 27
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(27, "InterlockedWithMechanicalCooling");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:LoadProfile:Plant") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Plant Loop Fluid Type * 7
+        // * Degree of SubCooling * 8
+        // * Degree of Loop SubCooling * 9
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(7, "Water");
+        newObject.setDouble(8, 5.0);
+        newObject.setDouble(9, 20.0);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:HeatPump:PlantLoop:EIR:Cooling") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Control Type * 16
+        // * Flow Mode * 17
+        // * Minimum Part Load Ratio * 18
+        // * Minimum Source Inlet Temperature * 19
+        // * Maximum Source Inlet Temperature * 20
+        // * Minimum Supply Water Temperature Curve Name * 21 --- Optional
+        // * Maximum Supply Water Temperature Curve Name * 22 --- Optional
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(16, "Load");
+        newObject.setString(17, "ConstantFlow");
+        newObject.setDouble(18, 0.0);
+        newObject.setDouble(19, -100.0);
+        newObject.setDouble(20, 100.0);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:HeatPump:PlantLoop:EIR:Heating") {
+
+        // Fields that have been added from 3.6.1 to 3.7.0:
+        // ------------------------------------------------
+        // * Heating To Cooling Capacity Sizing Ratio * 16
+        // * Heat Pump Sizing Method * 17
+        // * Control Type * 18
+        // * Flow Mode * 19
+        // * Minimum Part Load Ratio * 20
+        // * Minimum Source Inlet Temperature * 21
+        // * Maximum Source Inlet Temperature * 22
+        // * Minimum Supply Water Temperature Curve Name * 23 --- Optional
+        // * Maximum Supply Water Temperature Curve Name * 24 --- Optional
+        // * Dry Outdoor Correction Factor Curve Name * 25
+        // * Maximum Outdoor Dry Bulb Temperature For Defrost Operation * 26
+        // * Heat Pump Defrost Control * 27
+        // * Heat Pump Defrost Time Period Fraction * 28
+        // * Defrost Energy Input Ratio Function of Temperature Curve Name * 29 --- Optional
+        // * Timed Empirical Defrost Frequency Curve Name * 30 --- Optional
+        // * Timed Empirical Defrost Heat Load Penalty Curve Name * 31 --- Optional
+        // * Timed Empirical Defrost Heat Input Energy Fraction Curve Name * 32 --- Optional
+
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+        newObject.setDouble(16, 1.0);
+        newObject.setString(17, "CoolingCapacity");
+        newObject.setString(18, "Load");
+        newObject.setString(19, "ConstantFlow");
+
+        newObject.setDouble(20, 0.0);
+        newObject.setDouble(21, -100.0);
+        newObject.setDouble(22, 100.0);
+
+        newObject.setDouble(26, 10.0);
+        newObject.setString(27, "None");
+        newObject.setDouble(28, 0.058333);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
 
   }  // end update_3_6_1_to_3_7_0
-  */
 
 }  // namespace osversion
 }  // namespace openstudio

@@ -735,6 +735,7 @@ Json::Value BCLXML::toJSON() const {
 
   Json::Value root;
 
+  root["measure_dir"] = m_path.parent_path().generic_string();
   if (m_bclXMLType == BCLXMLType::ComponentXML) {
     root["type"] = "component";
   } else if (m_bclXMLType == BCLXMLType::MeasureXML) {

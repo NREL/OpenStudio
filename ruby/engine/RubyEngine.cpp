@@ -5,6 +5,7 @@
 
 #include "RubyEngine.hpp"
 #include "InitRubyBindings.hpp"
+#include "RubyException.hpp"
 #include <embedded_files.hxx>
 #include <csignal>
 #include <stdexcept>
@@ -116,6 +117,92 @@ void* RubyEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
     }
   }
   return return_value;
+}
+
+std::string RubyEngine::inferMeasureClassName(const openstudio::path& measureScriptPath) {
+
+  auto inferClassNameCmd = fmt::format(R"ruby(
+ObjectSpace.garbage_collect
+ObjectSpace.garbage_collect
+# Measure should be at root level (not inside a module) so we can just get constants
+measurePath = '{}'
+prev = Object.constants
+# puts "prev = #{{prev}}"
+load measurePath # need load in case have seen this script before
+just_defined = Object.constants - prev
+# puts "just_defined = #{{just_defined}}"
+just_defined.select!{{|c| Object.const_get(c).ancestors.include?(OpenStudio::Measure::OSMeasure)}}
+# puts "just_defined, filtered = #{{just_defined}}"
+
+if just_defined.empty?
+  raise "Unable to extract OpenStudio::Measure::OSMeasure object from " +
+       measurePath + ". The script should contain a class that derives " +
+      "from OpenStudio::Measure::OSMeasure and should close with a line stating " +
+      "the class name followed by .new.registerWithApplication."
+end
+if just_defined.size > 1
+  raise "Found more than one OSMeasure at #{{measurePath}}: #{{just_defined}}"
+end
+c = just_defined[0]
+class_info = Object.const_get(c)
+$measure_name = class_info.to_s
+
+# Undef what we loaded
+just_defined.each {{|x| Object.send(:remove_const, x) }}
+ObjectSpace.garbage_collect
+ObjectSpace.garbage_collect
+)ruby",
+                                       measureScriptPath.generic_string());
+
+  std::string className;
+
+  try {
+    exec(inferClassNameCmd);
+    ScriptObject measureClassNameObject = eval("$measure_name");
+    // measureClassNameObject = rubyEngine->eval(fmt::format("{}.new()", className));
+    // ScriptObject measureClassNameObject = rubyEngine->eval(inferClassName);
+    className = *getAs<std::string*>(measureClassNameObject);
+  } catch (const RubyException& e) {
+    auto msg = fmt::format("Failed to infer measure name from {}: {}\nlocation={}", measureScriptPath.generic_string(), e.what(), e.location());
+    fmt::print(stderr, "{}\n", msg);
+  }
+
+  return className;
+}
+
+// Ideally this would return a openstudio::measure::OSMeasure* or a shared_ptr<openstudio::measure::OSMeasure> but this poses memory management
+// issue for the underlying ScriptObject (and VALUE or PyObject), so just return the ScriptObject
+ScriptObject RubyEngine::loadMeasure(const openstudio::path& measureScriptPath, std::string_view className) {
+
+  ScriptObject result;
+  try {
+    auto importCmd = fmt::format("load '{}'", measureScriptPath.generic_string());
+    exec(importCmd);
+  } catch (const RubyException& e) {
+    auto msg =
+      fmt::format("Failed to load measure '{}' from '{}': {}\nlocation={}", className, measureScriptPath.generic_string(), e.what(), e.location());
+    fmt::print(stderr, "{}\n", msg);
+  }
+  try {
+    result = eval(fmt::format("{}.new()", className));
+  } catch (const RubyException& e) {
+    auto msg = fmt::format("Failed to instantiate measure '{}' from '{}': {}\nlocation={}", className, measureScriptPath.generic_string(), e.what(),
+                           e.location());
+    fmt::print(stderr, "{}\n", msg);
+  }
+  return result;
+}
+
+int RubyEngine::numberOfArguments(ScriptObject& methodObject, std::string_view methodName) {
+  auto val = std::any_cast<VALUE>(methodObject.object);
+  ID method_id = rb_intern(methodName.data());
+  // Ruby IS SO WEIRD. This will return n for methods that take a fixed number of arguments, and -n - 1 where n is the number of required arguments...
+  // def f() => 0
+  // def f(a) => 1
+  // def f(a = nil) => -1! Because WHY NOT, right?
+  // def f(a, c = nil) => -2
+  // def f(a, b = nil, c = nil) => also -2
+  return rb_obj_method_arity(val, method_id);
 }
 
 }  // namespace openstudio

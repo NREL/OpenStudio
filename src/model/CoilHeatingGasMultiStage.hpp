@@ -8,6 +8,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -51,7 +52,9 @@ namespace model {
 
     boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
-    boost::optional<double> parasiticGasLoad() const;
+    OS_DEPRECATED(3, 7, 0) boost::optional<double> parasiticGasLoad() const;
+
+    boost::optional<double> offCycleParasiticGasLoad() const;
 
     //@}
     /** @name Setters */
@@ -63,9 +66,13 @@ namespace model {
 
     void resetPartLoadFractionCorrelationCurve();
 
-    bool setParasiticGasLoad(double parasiticGasLoad);
+    OS_DEPRECATED(3, 7, 0) bool setParasiticGasLoad(double parasiticGasLoad);
 
-    void resetParasiticGasLoad();
+    bool setOffCycleParasiticGasLoad(double offCycleParasiticGasLoad);
+
+    OS_DEPRECATED(3, 7, 0) void resetParasiticGasLoad();
+
+    void resetOffCycleParasiticGasLoad();
 
     //@}
     /** @name Other */

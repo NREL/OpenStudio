@@ -69,9 +69,9 @@ namespace model {
 
       boost::optional<ModelObject> heatingSource() const;
 
-      double parasiticElectricLoad() const;
+      double onCycleParasiticElectricLoad() const;
 
-      bool isParasiticElectricLoadDefaulted() const;
+      bool isOnCycleParasiticElectricLoadDefaulted() const;
 
       //@}
       /** @name Setters */
@@ -89,9 +89,9 @@ namespace model {
 
       void resetHeatingSource();
 
-      bool setParasiticElectricLoad(double parasiticElectricLoad);
+      bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
 
-      void resetParasiticElectricLoad();
+      void resetOnCycleParasiticElectricLoad();
 
       //@}
       /** @name Other */

@@ -11,6 +11,8 @@
 
 namespace openstudio {
 
+class FuelType;
+
 namespace model {
 
   class Schedule;
@@ -220,6 +222,7 @@ namespace model {
 
     void resetHeaterIgnitionDelay();
 
+    bool setHeaterFuelType(const FuelType& heaterFuelType);
     bool setHeaterFuelType(const std::string& heaterFuelType);
 
     bool setHeaterThermalEfficiency(double heaterThermalEfficiency);
@@ -234,6 +237,7 @@ namespace model {
 
     void resetOffCycleParasiticFuelConsumptionRate();
 
+    bool setOffCycleParasiticFuelType(const FuelType& offCycleParasiticFuelType);
     bool setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType);
 
     void resetOffCycleParasiticFuelType();
@@ -246,6 +250,7 @@ namespace model {
 
     void resetOnCycleParasiticFuelConsumptionRate();
 
+    bool setOnCycleParasiticFuelType(const FuelType& onCycleParasiticFuelType);
     bool setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType);
 
     void resetOnCycleParasiticFuelType();

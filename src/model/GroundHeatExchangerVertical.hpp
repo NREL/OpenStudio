@@ -39,6 +39,8 @@ namespace model {
 
     explicit GroundHeatExchangerVertical(const Model& model);
 
+    explicit GroundHeatExchangerVertical(const Model& model, const ModelObject& undisturbedGroundTemperatureModel);
+
     virtual ~GroundHeatExchangerVertical() = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GroundHeatExchangerVertical(const GroundHeatExchangerVertical& other) = default;
@@ -92,6 +94,8 @@ namespace model {
     double gFunctionReferenceRatio() const;
 
     bool isGFunctionReferenceRatioDefaulted() const;
+
+    ModelObject undisturbedGroundTemperatureModel() const;
 
     //@}
     /** @name Setters */
@@ -151,6 +155,8 @@ namespace model {
     bool setGFunctionReferenceRatio(double gFunctionReferenceRatio);
 
     void resetGFunctionReferenceRatio();
+
+    bool setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel);
 
     //@}
     /** @name Other */

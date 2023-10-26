@@ -1,0 +1,62 @@
+
+OS:Version,
+  {10737f92-9e5a-4b07-b6a1-78d1db5248ae}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:LoadProfile:Plant,
+  {f33ecf57-5b67-461c-99d6-e86538523108}, !- Handle
+  Load Profile Plant 1,                   !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  {0642cdcf-a687-46e2-8b47-cb390f082e98}, !- Load Schedule Name
+  0.002,                                  !- Peak Flow Rate {m3/s}
+  {45d46aaa-9916-4b05-b9d9-20241a224ada}; !- Flow Rate Fraction Schedule Name
+
+OS:Schedule:Constant,
+  {45d46aaa-9916-4b05-b9d9-20241a224ada}, !- Handle
+  Always On Discrete,                     !- Name
+  {ae33046c-934f-4b3c-8de4-5e2716384516}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {ae33046c-934f-4b3c-8de4-5e2716384516}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Schedule:Ruleset,
+  {0642cdcf-a687-46e2-8b47-cb390f082e98}, !- Handle
+  Schedule Ruleset 1,                     !- Name
+  {ccdaf27b-a77d-487d-9828-82bf1944d386}, !- Schedule Type Limits Name
+  {c42cc8d2-7d92-4210-9a6f-e8750e7bd2ff}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {c42cc8d2-7d92-4210-9a6f-e8750e7bd2ff}, !- Handle
+  Schedule Day 1,                         !- Name
+  {ccdaf27b-a77d-487d-9828-82bf1944d386}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  4,                                      !- Hour 1
+  0,                                      !- Minute 1
+  8000,                                   !- Value Until Time 1
+  8,                                      !- Hour 2
+  0,                                      !- Minute 2
+  6000,                                   !- Value Until Time 2
+  9,                                      !- Hour 3
+  0,                                      !- Minute 3
+  0,                                      !- Value Until Time 3
+  12,                                     !- Hour 4
+  0,                                      !- Minute 4
+  6000,                                   !- Value Until Time 4
+  24,                                     !- Hour 5
+  0,                                      !- Minute 5
+  10000;                                  !- Value Until Time 5
+
+OS:ScheduleTypeLimits,
+  {ccdaf27b-a77d-487d-9828-82bf1944d386}, !- Handle
+  Dimensionless,                          !- Name
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
+  Continuous;                             !- Numeric Type
+

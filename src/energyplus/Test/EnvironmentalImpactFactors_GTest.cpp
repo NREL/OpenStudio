@@ -37,9 +37,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_EnvironmentalImpactFactors) {
   // Get the unique object
   auto environmentalImpactFactors = m.getUniqueModelObject<EnvironmentalImpactFactors>();
 
-  EXPECT_TRUE(environmentalImpactFactors.setDistrictHeatingEfficiency(0.35));
+  EXPECT_TRUE(environmentalImpactFactors.setDistrictHeatingWaterEfficiency(0.35));
   EXPECT_TRUE(environmentalImpactFactors.setDistrictCoolingCOP(3.3));
-  EXPECT_TRUE(environmentalImpactFactors.setSteamConversionEfficiency(0.27));
+  EXPECT_TRUE(environmentalImpactFactors.setDistrictHeatingSteamConversionEfficiency(0.27));
   EXPECT_TRUE(environmentalImpactFactors.setTotalCarbonEquivalentEmissionFactorFromN2O(79.2));
   EXPECT_TRUE(environmentalImpactFactors.setTotalCarbonEquivalentEmissionFactorFromCH4(6.1));
   EXPECT_TRUE(environmentalImpactFactors.setTotalCarbonEquivalentEmissionFactorFromCO2(0.31));
@@ -64,9 +64,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_EnvironmentalImpactFactors) {
     ASSERT_EQ(1u, idfObjs.size());
     auto idfObject = idfObjs[0];
 
-    EXPECT_EQ(0.35, idfObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency).get());
+    EXPECT_EQ(0.35, idfObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingWaterEfficiency).get());
     EXPECT_EQ(3.3, idfObject.getDouble(EnvironmentalImpactFactorsFields::DistrictCoolingCOP).get());
-    EXPECT_EQ(0.27, idfObject.getDouble(EnvironmentalImpactFactorsFields::SteamConversionEfficiency).get());
+    EXPECT_EQ(0.27, idfObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingSteamConversionEfficiency).get());
     EXPECT_EQ(79.2, idfObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromN2O).get());
     EXPECT_EQ(6.1, idfObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCH4).get());
     EXPECT_EQ(0.31, idfObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCO2).get());
@@ -87,9 +87,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_EnvironmentalImpactFactors) {
 
   OptionalWorkspaceObject _i_environmentalImpactFactors = w.addObject(IdfObject(IddObjectType::EnvironmentalImpactFactors));
   ASSERT_TRUE(_i_environmentalImpactFactors);
-  EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency, 0.35));
+  EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingWaterEfficiency, 0.35));
   EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::DistrictCoolingCOP, 3.3));
-  EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::SteamConversionEfficiency, 0.27));
+  EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingSteamConversionEfficiency, 0.27));
   EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromN2O, 79.2));
   EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCH4, 6.1));
   EXPECT_TRUE(_i_environmentalImpactFactors->setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCO2, 0.31));
@@ -99,9 +99,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_EnvironmentalImpactFactors) {
     ASSERT_TRUE(m.getOptionalUniqueModelObject<EnvironmentalImpactFactors>());
     auto environmentalImpactFactors = m.getUniqueModelObject<EnvironmentalImpactFactors>();
 
-    EXPECT_EQ(0.35, environmentalImpactFactors.districtHeatingEfficiency());
+    EXPECT_EQ(0.35, environmentalImpactFactors.districtHeatingWaterEfficiency());
     EXPECT_EQ(3.3, environmentalImpactFactors.districtCoolingCOP());
-    EXPECT_EQ(0.27, environmentalImpactFactors.steamConversionEfficiency());
+    EXPECT_EQ(0.27, environmentalImpactFactors.districtHeatingSteamConversionEfficiency());
     EXPECT_EQ(79.2, environmentalImpactFactors.totalCarbonEquivalentEmissionFactorFromN2O());
     EXPECT_EQ(6.1, environmentalImpactFactors.totalCarbonEquivalentEmissionFactorFromCH4());
     EXPECT_EQ(0.31, environmentalImpactFactors.totalCarbonEquivalentEmissionFactorFromCO2());

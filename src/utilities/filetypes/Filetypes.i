@@ -18,8 +18,11 @@
   %ignore openstudio::WorkflowStepValue::WorkflowStepValue(std::string const&, char const*);
   %ignore openstudio::MeasureStep::setArgument(std::string const&, char const*);
 
-  // Ignore Json::Value return type
+  // Ignore Json::Value return type (toJSON / fromJSON are globally ignored already)
   %ignore openstudio::StandardsJSON::getPrimaryKey;
+
+  %ignore openstudio::CustomOutputAdapter::CustomOutputAdapter;
+  %ignore openstudio::CustomOutputAdapter::optionsJSON;
 
 #endif
 

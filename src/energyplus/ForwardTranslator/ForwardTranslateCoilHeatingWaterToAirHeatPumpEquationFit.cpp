@@ -11,7 +11,7 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
 #include "../../model/CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp"
-#include "../../model/CurveQuadLinear.hpp"
+#include "../../model/Curve.hpp"
 
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
@@ -121,6 +121,14 @@ namespace energyplus {
       auto curve = modelObject.heatingPowerConsumptionCurve();
       if (auto _curve = translateAndMapModelObject(curve)) {
         idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName, _curve->nameString());
+      }
+    }
+
+    // Part Load Fraction Correlation Curve Name
+    {
+      auto curve = modelObject.partLoadFractionCorrelationCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurveName, _curve->nameString());
       }
     }
 

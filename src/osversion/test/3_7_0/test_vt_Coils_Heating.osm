@@ -1,0 +1,59 @@
+
+OS:Version,
+  {94e72c6f-e23e-47c2-9814-f8c6a6fc43dd}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:Coil:Heating:Gas,
+  {49a2f839-c869-45e4-b5d6-812bdd7381b9}, !- Handle
+  Coil Heating Gas 1,                     !- Name
+  {735e9c15-337e-4793-8124-3119a4aff5e6}, !- Availability Schedule Name
+  0.8,                                    !- Gas Burner Efficiency
+  AutoSize,                               !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Temperature Setpoint Node Name
+  1,                                      !- Parasitic Electric Load {W}
+  ,                                       !- Part Load Fraction Correlation Curve Name
+  2;                                      !- Parasitic Gas Load {W}
+
+OS:Schedule:Constant,
+  {735e9c15-337e-4793-8124-3119a4aff5e6}, !- Handle
+  Always On Discrete,                     !- Name
+  {1b4b49fe-7039-4335-9b13-eac477b5fdbc}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {1b4b49fe-7039-4335-9b13-eac477b5fdbc}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Coil:Heating:Gas:MultiStage,
+  {14e966c2-9547-4274-98eb-41f532fb50e3}, !- Handle
+  Coil Heating Gas Multi Stage 1,         !- Name
+  {735e9c15-337e-4793-8124-3119a4aff5e6}, !- Availability Schedule
+  ,                                       !- Air Inlet Node
+  ,                                       !- Air Outlet Node
+  ,                                       !- Part Load Fraction Correlation Curve
+  3,                                      !- Parasitic Gas Load {W}
+  {3cb9fe08-ce72-43b5-a44a-030d75673c94}; !- Stage 1
+
+OS:Coil:Heating:Gas:MultiStage:StageData,
+  {3cb9fe08-ce72-43b5-a44a-030d75673c94}, !- Handle
+  Coil Heating Gas Multi Stage Stage Data 1, !- Name
+  0.8,                                    !- Gas Burner Efficiency {W/W}
+  autosize,                               !- Nominal Capacity {W}
+  4;                                      !- Parasitic Electric Load {W}
+
+OS:Coil:Heating:Desuperheater,
+  {048fe7f5-038e-487b-80e9-d097e977a4d3}, !- Handle
+  Coil Heating Desuperheater 1,           !- Name
+  ,                                       !- Availability Schedule Name
+  0.8,                                    !- Heat Reclaim Recovery Efficiency
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Heating Source Name
+  5;                                      !- Parasitic Electric Load {W}
+

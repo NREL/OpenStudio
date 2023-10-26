@@ -14,6 +14,10 @@
 #include "../utilities/core/Enum.hpp"
 #include "../utilities/core/Logger.hpp"
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 namespace measure {
 
@@ -111,6 +115,9 @@ OPENSTUDIO_ENUM(OSOutputType,
 
     /** Prints output data for debugging purposes. */
     std::string print() const;
+
+    Json::Value toJSON() const;
+    std::string toJSONString() const;
 
     //@}
    private:

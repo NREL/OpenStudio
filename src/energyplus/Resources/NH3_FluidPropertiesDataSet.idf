@@ -7,9 +7,11 @@
 !    22.1;                    !- Version Identifier
 !  Version,
 !    22.2;                   !- Version Identifier
-
 !  Version,
 !    23.1;                   !- Version Identifier
+
+!  Version,
+!    23.2;                   !- Version Identifier
 
   FluidProperties:Name,
     NH3,                     !- Fluid Name

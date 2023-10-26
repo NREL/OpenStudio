@@ -28,12 +28,20 @@ class ScriptEngine;
 struct ScriptObject
 {
   std::any object;
+
+  bool empty() const {
+    return !object.has_value();
+  }
 };
 }  // namespace openstudio
 
 using ScriptEngineFactoryType = openstudio::ScriptEngine*(int, char**);
 
 namespace openstudio {
+
+namespace measure {
+  class OSMeasure;
+}
 
 class ScriptEngine
 {
@@ -61,7 +69,15 @@ class ScriptEngine
                                  const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,
                                  const openstudio::path& bundleGemDirPath, const std::string& bundleWithoutGroups){};
 
-  virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs, const openstudio::path& pythonHomeDir){};
+  virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs){};
+
+  virtual std::string inferMeasureClassName(const openstudio::path& measureScriptPath) = 0;
+
+  // Ideally this would return a openstudio::measure::OSMeasure* or a shared_ptr<openstudio::measure::OSMeasure> but this poses memory management
+  // issue for the underlying ScriptObject (and VALUE or PyObject), so just return the ScriptObject
+  virtual ScriptObject loadMeasure(const openstudio::path& measureScriptPath, std::string_view className) = 0;
+
+  virtual int numberOfArguments(ScriptObject& methodObject, std::string_view methodName) = 0;
 
   template <typename T>
   T getAs(ScriptObject& obj) {

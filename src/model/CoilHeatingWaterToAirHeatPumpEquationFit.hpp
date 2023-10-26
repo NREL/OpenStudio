@@ -15,7 +15,7 @@ namespace openstudio {
 
 namespace model {
 
-  class CurveQuadLinear;
+  class Curve;
 
   namespace detail {
 
@@ -31,8 +31,7 @@ namespace model {
     //@{
 
     /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit with required curve objects */
-    CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model, const CurveQuadLinear& heatingCapacityCurve,
-                                             const CurveQuadLinear& heatingPowerConsumptionCurve);
+    CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model, const Curve& heatingCapacityCurve, const Curve& heatingPowerConsumptionCurve);
 
     CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model);
 
@@ -78,7 +77,7 @@ namespace model {
 
     double ratioofRatedHeatingCapacitytoRatedCoolingCapacity() const;
 
-    CurveQuadLinear heatingCapacityCurve() const;
+    Curve heatingCapacityCurve() const;
 
     OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient1() const;
     OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient2() const;
@@ -86,13 +85,15 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient4() const;
     OS_DEPRECATED(3, 2, 0) double heatingCapacityCoefficient5() const;
 
-    CurveQuadLinear heatingPowerConsumptionCurve() const;
+    Curve heatingPowerConsumptionCurve() const;
 
     OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient1() const;
     OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient2() const;
     OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient3() const;
     OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient4() const;
     OS_DEPRECATED(3, 2, 0) double heatingPowerConsumptionCoefficient5() const;
+
+    Curve partLoadFractionCorrelationCurve() const;
 
     //@}
     /** @name Setters */
@@ -132,7 +133,7 @@ namespace model {
 
     bool setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(double ratioofRatedHeatingCapacitytoRatedCoolingCapacity);
 
-    bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
+    bool setHeatingCapacityCurve(const Curve& heatingCapacityCurve);
 
     OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
     OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
@@ -140,13 +141,15 @@ namespace model {
     OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
     OS_DEPRECATED(3, 2, 0) bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
 
-    bool setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve);
+    bool setHeatingPowerConsumptionCurve(const Curve& heatingPowerConsumptionCurve);
 
     OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
     OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
     OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
     OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
     OS_DEPRECATED(3, 2, 0) bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
+
+    bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
 
     //@}
     /** @name Other */

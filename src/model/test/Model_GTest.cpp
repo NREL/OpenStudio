@@ -129,16 +129,18 @@
 #include "../ExternalInterface.hpp"
 #include "../ExternalInterface_Impl.hpp"
 
-#include "../../utilities/sql/SqlFile.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 #include "../../utilities/data/TimeSeries.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/ValidityReport.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
 #include "../../osversion/VersionTranslator.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
+#include <OpenStudio.hxx>
 
 #include <boost/algorithm/string/case_conv.hpp>
 
@@ -1159,4 +1161,29 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   auto externalInterface = m.getUniqueModelObject<ExternalInterface>();
   EXPECT_TRUE(m.getOptionalUniqueModelObject<ExternalInterface>());
   EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+}
+
+TEST_F(ModelFixture, Model_load) {
+
+  openstudio::path modelPath = resourcesPath() / "model" / toPath("empty361.osm");
+  ASSERT_TRUE(openstudio::filesystem::exists(modelPath));
+
+  const openstudio::path workflowJSONPath = getCompanionFolder(modelPath) / toPath("workflow.osw");
+  ASSERT_TRUE(openstudio::filesystem::exists(workflowJSONPath));
+
+  // Check that the versionObject is indeed translated to the current version
+  boost::optional<Model> model_ = Model::load(modelPath);
+  ASSERT_TRUE(model_);
+  auto versionObject_ = model_->versionObject();
+  ASSERT_TRUE(versionObject_);
+  EXPECT_EQ(openStudioVersion(), versionObject_->getString(1).get());
+
+  // Check that the workflowJSON in the companion folder is correctly loaded
+  auto workflowJSON = model_->workflowJSON();
+  auto p_ = workflowJSON.oswPath();
+  ASSERT_TRUE(p_);
+  EXPECT_EQ(workflowJSONPath, *p_);
+
+  ASSERT_TRUE(workflowJSON.seedFile());
+  EXPECT_EQ(workflowJSON.seedFile().get(), openstudio::toPath("../empty361.osm"));
 }

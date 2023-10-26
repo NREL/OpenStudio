@@ -8,6 +8,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -87,13 +88,17 @@ namespace model {
 
     bool isBoilerFlowModeDefaulted() const;
 
-    boost::optional<double> parasiticElectricLoad() const;
+    OS_DEPRECATED(3, 7, 0) boost::optional<double> parasiticElectricLoad() const;
+
+    double onCycleParasiticElectricLoad() const;
 
     double sizingFactor() const;
 
     bool isSizingFactorDefaulted() const;
 
     std::string endUseSubcategory() const;
+
+    double offCycleParasiticFuelLoad() const;
 
     //@}
     /** @name Setters */
@@ -143,9 +148,11 @@ namespace model {
 
     void resetBoilerFlowMode();
 
-    bool setParasiticElectricLoad(double parasiticElectricLoad);
+    OS_DEPRECATED(3, 7, 0) bool setParasiticElectricLoad(double parasiticElectricLoad);
 
-    void resetParasiticElectricLoad();
+    bool setOnCycleParasiticElectricLoad(double onCyclearasiticElectricLoad);
+
+    OS_DEPRECATED(3, 7, 0) void resetParasiticElectricLoad();
 
     bool setSizingFactor(double sizingFactor);
 
@@ -156,6 +163,8 @@ namespace model {
     boost::optional<double> autosizedDesignWaterFlowRate() const;
 
     bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+    bool setOffCycleParasiticFuelLoad(double offCycleParasiticFuelLoad);
 
     //@}
    protected:

@@ -95,6 +95,16 @@ namespace energyplus {
         value.get());
     }
 
+    // Maximum Cycling Rate
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::MaximumCyclingRate, modelObject.maximumCyclingRate());
+
+    // Latent Capacity Time Constnat
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::LatentCapacityTimeConstant,
+                        modelObject.latentCapacityTimeConstant());
+
+    // Fan Delay Time
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::FanDelayTime, modelObject.fanDelayTime());
+
     // FlagforUsingHotGasReheat0or1
     if (modelObject.useHotGasReheat()) {
       idfObject.setInt(Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::FlagforUsingHotGasReheat0or1, 1);

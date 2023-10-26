@@ -27,6 +27,18 @@ TEST_F(ModelFixture, BoilerHotWater_BoilerHotWater) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  BoilerHotWater boiler(m);
+
+  EXPECT_EQ(0.0, boiler.onCycleParasiticElectricLoad());
+  EXPECT_EQ(0.0, boiler.offCycleParasiticFuelLoad());
+
+  EXPECT_TRUE(boiler.setOnCycleParasiticElectricLoad(0.5));
+  EXPECT_EQ(0.5, boiler.onCycleParasiticElectricLoad());
+
+  EXPECT_TRUE(boiler.setOffCycleParasiticFuelLoad(0.8));
+  EXPECT_EQ(0.8, boiler.offCycleParasiticFuelLoad());
 }
 
 TEST_F(ModelFixture, BoilerHotWater_connections) {

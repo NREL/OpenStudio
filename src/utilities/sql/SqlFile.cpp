@@ -1526,6 +1526,246 @@ boost::optional<double> SqlFile::districtCoolingTotalEndUses() const {
   }
 }
 
+boost::optional<double> SqlFile::districtHeatingWaterHeating() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterHeating();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterCooling() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterCooling();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterInteriorLighting() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterInteriorLighting();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterExteriorLighting();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterInteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterInteriorEquipment();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterExteriorEquipment();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterFans() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterFans();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterPumps() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterPumps();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterHeatRejection() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterHeatRejection();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterHumidification() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterHumidification();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterHeatRecovery() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterHeatRecovery();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterWaterSystems() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterWaterSystems();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterRefrigeration() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterRefrigeration();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterGenerators() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterGenerators();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingWaterTotalEndUses() const {
+  if (m_impl) {
+    return m_impl->districtHeatingWaterTotalEndUses();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamHeating() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamHeating();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamCooling() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamCooling();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamInteriorLighting() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamInteriorLighting();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamExteriorLighting();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamInteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamInteriorEquipment();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamExteriorEquipment();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamFans() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamFans();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamPumps() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamPumps();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamHeatRejection() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamHeatRejection();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamHumidification() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamHumidification();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamHeatRecovery() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamHeatRecovery();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamWaterSystems() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamWaterSystems();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamRefrigeration() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamRefrigeration();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamGenerators() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamGenerators();
+  } else {
+    return {};
+  }
+}
+
+boost::optional<double> SqlFile::districtHeatingSteamTotalEndUses() const {
+  if (m_impl) {
+    return m_impl->districtHeatingSteamTotalEndUses();
+  } else {
+    return {};
+  }
+}
+
 boost::optional<double> SqlFile::districtHeatingHeating() const {
   if (m_impl) {
     return m_impl->districtHeatingHeating();

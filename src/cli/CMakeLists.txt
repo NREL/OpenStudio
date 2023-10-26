@@ -12,6 +12,8 @@ set(CLI_SRC
   UpdateCommand.cpp
   MeasureUpdateCommand.hpp
   MeasureUpdateCommand.cpp
+  MeasureManager.hpp
+  MeasureManager.cpp
 )
 
 if(WIN32)
@@ -225,10 +227,16 @@ if(BUILD_TESTING)
   set_tests_properties(OpenStudioCLI.Labs.Run_PythonOnly_TwoMeasure PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Labs.Run_RubyPython
-    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_and_python.osw
+    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_then_python.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
   set_tests_properties(OpenStudioCLI.Labs.Run_RubyPython PROPERTIES RESOURCE_LOCK "compact_osw")
+
+  add_test(NAME OpenStudioCLI.Labs.Run_PythonRuby
+    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_then_ruby.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
+  )
+  set_tests_properties(OpenStudioCLI.Labs.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
 
   if (Pytest_AVAILABLE)
     add_test(NAME OpenStudioCLI.Labs.test_loglevel
@@ -337,6 +345,61 @@ if(BUILD_TESTING)
 
   # ============ EndForward a Path properly no matter the slashes employed ============
 
+  # ============ Native Ruby Gems / Python Modules - C extensions =============
+  if (Python_NumPy_FOUND)
+
+    if(NOT EXISTS "${Python_ROOT_DIR}")
+      # Python_STDLIB: we expect it to be
+      # Unix: ~/.pyenv/versions/3.8.12/lib/python3.8 or
+      #       or on CI: /usr/lib/python3.8/ ... with numpy if install via pip3 and not apt install python3-numpy in `/usr/local/lib/python3.8/dist-packages/`
+      # Windows C:\Python38\Lib
+      cmake_path(GET Python_STDLIB PARENT_PATH Python_ROOT_DIR)
+      if(UNIX)
+        cmake_path(GET Python_ROOT_DIR PARENT_PATH Python_ROOT_DIR)
+      endif()
+    endif()
+
+    if(UNIX)
+      if(EXISTS "${Python_SITELIB}")
+        set(PYTHON_PATH "${Python_SITELIB}" "${Python_STDLIB}/lib-dynload")
+      else()
+        set(PYTHON_PATH "${Python_STDLIB}/lib-dynload")
+      endif()
+
+      if(NOT APPLE)
+        set(EXTRA_LOCAL_DIST "/usr/local/lib/python3.8/dist-packages")
+        if (EXISTS "${EXTRA_LOCAL_DIST}")
+          list(APPEND PYTHON_PATH "${EXTRA_LOCAL_DIST}")
+        endif()
+      endif()
+    else()
+      set(PYTHON_PATH "$<SHELL_PATH:${Python_SITELIB}>")
+    endif()
+
+    message(DEBUG "PYTHON_PATH=${PYTHON_PATH}")
+
+    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.explicit_sys_path_insert
+      COMMAND $<TARGET_FILE:openstudio> labs execute_python_script execute_python_script_with_numpy.py ${Python_STDLIB}
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
+
+    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_path
+      COMMAND $<TARGET_FILE:openstudio> labs
+                "$<$<BOOL:${PYTHON_PATH}>:--python_path;$<JOIN:${PYTHON_PATH},;--python_path;>>"
+                execute_python_script execute_python_script_with_numpy.py
+      COMMAND_EXPAND_LISTS
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
+
+    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_home
+      COMMAND $<TARGET_FILE:openstudio> labs
+                --python_home "$<SHELL_PATH:${Python_ROOT_DIR}>"
+                execute_python_script execute_python_script_with_numpy.py
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
+  else()
+    message(AUTHOR_WARNING "Cannot run the python numpy test, as numpy isn't installed on your system python")
+  endif()
 
   file(GLOB RUBY_TEST_SRC
     # find all CLI test

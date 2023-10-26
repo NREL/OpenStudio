@@ -32,26 +32,26 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_GettersSetters) {
   auto alwaysOn = m.alwaysOnDiscreteSchedule();
   EXPECT_EQ(alwaysOn, coil.availabilitySchedule());
   EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
-  EXPECT_FALSE(coil.parasiticGasLoad());
+  EXPECT_FALSE(coil.offCycleParasiticGasLoad());
   EXPECT_EQ(0u, coil.stages().size());
 
   ScheduleConstant scheduleConstant(m);
   EXPECT_TRUE(coil.setAvailabilitySchedule(scheduleConstant));
   CurveQuadratic curveQuadratic(m);
   EXPECT_TRUE(coil.setPartLoadFractionCorrelationCurve(curveQuadratic));
-  EXPECT_TRUE(coil.setParasiticGasLoad(100.0));
+  EXPECT_TRUE(coil.setOffCycleParasiticGasLoad(100.0));
 
   EXPECT_EQ(scheduleConstant, coil.availabilitySchedule());
   ASSERT_TRUE(coil.partLoadFractionCorrelationCurve());
   EXPECT_EQ(curveQuadratic.handle(), coil.partLoadFractionCorrelationCurve().get().handle());
-  ASSERT_TRUE(coil.parasiticGasLoad());
-  EXPECT_EQ(100.0, coil.parasiticGasLoad().get());
+  ASSERT_TRUE(coil.offCycleParasiticGasLoad());
+  EXPECT_EQ(100.0, coil.offCycleParasiticGasLoad().get());
 
   coil.resetPartLoadFractionCorrelationCurve();
-  coil.resetParasiticGasLoad();
+  coil.resetOffCycleParasiticGasLoad();
 
   EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
-  EXPECT_FALSE(coil.parasiticGasLoad());
+  EXPECT_FALSE(coil.offCycleParasiticGasLoad());
   EXPECT_EQ(0u, coil.stages().size());
 }
 

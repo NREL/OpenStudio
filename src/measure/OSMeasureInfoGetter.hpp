@@ -64,6 +64,8 @@ namespace measure {
     /// result of measure's arguments method called with empty model if information was successfully extracted from the script, otherwise empty
     std::vector<OSArgument> arguments() const;
 
+    std::vector<BCLMeasureArgument> bclMeasureArguments() const;
+
     /// result of measure's outputs method called with empty model if information was successfully extracted from the script, otherwise empty
     std::vector<OSOutput> outputs() const;
 
@@ -110,6 +112,16 @@ namespace measure {
  *  (OpenStudio::Measure::getInfo) implementations of the functionality, such that either usage
  *  pathway should produce identical results. \relates OSMeasureInfoGetter */
   MEASURE_API std::string infoExtractorRubyFunction();
+
+  /** Interface class for rendering the ruby readme via ERB, parent class for the RubyMeasureInfoBinding
+   *  declared in ruby/bindings/InitRubyBindings.cpp so we can use it from C++ */
+  class MEASURE_API MeasureInfoBinding
+  {
+   public:
+    virtual ~MeasureInfoBinding() = default;
+    virtual void setMeasureInfo(OSMeasureInfo& info);
+    virtual bool renderFile(const std::string& readmeInPath);
+  };
 
 }  // namespace measure
 }  // namespace openstudio

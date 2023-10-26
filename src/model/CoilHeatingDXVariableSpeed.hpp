@@ -13,8 +13,8 @@ namespace openstudio {
 
 namespace model {
 
-  class Curve;
   class CoilHeatingDXVariableSpeedSpeedData;
+  class Curve;
 
   namespace detail {
 
@@ -73,6 +73,8 @@ namespace model {
 
     double crankcaseHeaterCapacity() const;
 
+    boost::optional<Curve> crankcaseHeaterCapacityFunctionofTemperatureCurve() const;
+
     double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
     std::string defrostStrategy() const;
@@ -114,6 +116,9 @@ namespace model {
     bool setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation);
 
     bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+
+    bool setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve);
+    void resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
 
     bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 

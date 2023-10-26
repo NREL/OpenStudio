@@ -22,6 +22,17 @@ inline std::string ascii_to_lower_copy(std::string_view input) {
   return result;
 }
 
+inline std::string ascii_to_upper_copy(std::string_view input) {
+  std::string result{input};
+  constexpr auto to_upper_diff = 'A' - 'a';
+  for (auto& c : result) {
+    if (c >= 'a' && c <= 'z') {
+      c += to_upper_diff;
+    }
+  }
+  return result;
+}
+
 inline std::string_view ascii_trim_left(std::string_view s) {
   return s.substr(std::min(s.find_first_not_of(" \f\n\r\t\v"), s.size()));
 }

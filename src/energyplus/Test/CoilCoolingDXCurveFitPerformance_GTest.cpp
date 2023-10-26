@@ -15,6 +15,7 @@
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVACUnitarySystem.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/CurveLinear.hpp"
 #include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
 #include "../../utilities/idd/IddObject.hpp"
 
@@ -30,6 +31,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitPerformance) {
 
   CoilCoolingDXCurveFitOperatingMode operatingMode(m);
   CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+
+  EXPECT_TRUE(performance.setCrankcaseHeaterCapacity(105.0));
+  CurveLinear crankCurve(m);
+  crankCurve.setName("CrankHeatCapFT");
+  EXPECT_TRUE(performance.setCrankcaseHeaterCapacityFunctionofTemperatureCurve(crankCurve));
+
   CoilCoolingDX dx(m, performance);
 
   // put it inside a Unitary, and put Unitary on an AirLoopHVAC so it gets translated
@@ -64,7 +71,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitPerformance) {
 
   EXPECT_EQ(woBaseOperatingMode.get(), idfOperatingMode);
 
-  EXPECT_EQ(0.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, false).get());
+  EXPECT_EQ(105.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, false).get());
+  EXPECT_EQ(crankCurve.nameString(),
+            idfPerformance.getString(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName).get());
   EXPECT_EQ(
     -25.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, false).get());
   EXPECT_EQ(

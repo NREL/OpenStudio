@@ -21,8 +21,11 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 
+#include "../osversion/VersionTranslator.hpp"
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/ContainersMove.hpp"
+#include "../utilities/core/Filesystem.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 
 #include "../utilities/idd/IddEnums.hpp"
@@ -1840,27 +1843,26 @@ namespace model {
   }
 
   boost::optional<Model> Model::load(const path& osmPath) {
-    OptionalModel result;
-    OptionalIdfFile oIdfFile = IdfFile::load(osmPath, IddFileType::OpenStudio);
-    if (oIdfFile) {
-      try {
-        result = Model(*oIdfFile);
-      } catch (...) {
+
+    if (!openstudio::filesystem::is_regular_file(osmPath)) {
+      LOG(Warn, "Path is not a valid file: " << osmPath);
+      return boost::none;
+    }
+    openstudio::osversion::VersionTranslator vt;
+    boost::optional<openstudio::model::Model> model_ = vt.loadModel(osmPath);
+    if (!model_) {
+      LOG(Warn, "Failed to load model at " << osmPath);
+      return boost::none;
+    }
+    // Load the workflow.osw in the model's companion folder
+    const openstudio::path workflowJSONPath = getCompanionFolder(osmPath) / toPath("workflow.osw");
+    if (exists(workflowJSONPath)) {
+      if (boost::optional<WorkflowJSON> workflowJSON_ = WorkflowJSON::load(workflowJSONPath)) {
+        model_->setWorkflowJSON(*workflowJSON_);
       }
     }
 
-    if (result) {
-      // Load the workflow.osw in the model's companion folder
-      path workflowJSONPath = getCompanionFolder(osmPath) / toPath("workflow.osw");
-      if (exists(workflowJSONPath)) {
-        boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
-        if (workflowJSON) {
-          result->setWorkflowJSON(*workflowJSON);
-        }
-      }
-    }
-
-    return result;
+    return model_;
   }
 
   boost::optional<Model> Model::load(const path& osmPath, const path& workflowJSONPath) {
@@ -4022,7 +4024,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(DesignSpecificationOutdoorAir);
     REGISTER_CONSTRUCTOR(DesignSpecificationZoneAirDistribution);
     REGISTER_CONSTRUCTOR(DistrictCooling);
-    REGISTER_CONSTRUCTOR(DistrictHeating);
+    REGISTER_CONSTRUCTOR(DistrictHeatingWater);
+    REGISTER_CONSTRUCTOR(DistrictHeatingSteam);
     REGISTER_CONSTRUCTOR(Duct);
     REGISTER_CONSTRUCTOR(ElectricEquipment);
     REGISTER_CONSTRUCTOR(ElectricEquipmentDefinition);
@@ -4593,7 +4596,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(DesignSpecificationOutdoorAir);
     REGISTER_COPYCONSTRUCTORS(DesignSpecificationZoneAirDistribution);
     REGISTER_COPYCONSTRUCTORS(DistrictCooling);
-    REGISTER_COPYCONSTRUCTORS(DistrictHeating);
+    REGISTER_COPYCONSTRUCTORS(DistrictHeatingWater);
+    REGISTER_COPYCONSTRUCTORS(DistrictHeatingSteam);
     REGISTER_COPYCONSTRUCTORS(Duct);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipment);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipmentDefinition);

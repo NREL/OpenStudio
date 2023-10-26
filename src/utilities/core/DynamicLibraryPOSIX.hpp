@@ -31,8 +31,17 @@ struct DynamicLibrary
     return symbol;
   }
 
-  explicit DynamicLibrary(openstudio::path location)
-    : m_location{std::move(location)}, m_handle{dlopen(m_location.c_str(), RTLD_LAZY | RTLD_LOCAL), m_handle_deleter} {
+  explicit DynamicLibrary(openstudio::path location) : m_location{std::move(location)} {
+    int flags = RTLD_LAZY | RTLD_LOCAL;  // NOLINT(misc-const-correctness, hicpp-signed-bitwise)
+
+    // This seems to work on Mac without RTLD_GLOBAL...
+#ifdef __linux__
+    if (m_location.filename().generic_string().find("python") != std::string::npos) {
+      // https://stackoverflow.com/questions/67891197/ctypes-cpython-39-x86-64-linux-gnu-so-undefined-symbol-pyfloat-type-in-embedd
+      flags = RTLD_LAZY | RTLD_GLOBAL;
+    }
+#endif
+    m_handle = {dlopen(m_location.c_str(), flags), m_handle_deleter};
     if (!m_handle) {
       throw std::runtime_error(fmt::format("Unable to load library '{}', reason: '{}'", m_location.string(), dlerror()));
     }

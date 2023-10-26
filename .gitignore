@@ -21,3 +21,12 @@ clang_format.patch
 .DS_Store
 __pycache__/
 *.pyc
+
+# Unit test / coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+coverage.xml
+.pytest_cache/
+junit.xml
