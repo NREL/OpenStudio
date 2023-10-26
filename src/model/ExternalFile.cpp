@@ -112,7 +112,7 @@ namespace model {
     path ExternalFile_Impl::filePath() const {
       path result;
       path fname = toPath(fileName());
-      if (openstudio::filesystem::is_regular_file(fname)) {
+      if (openstudio::filesystem::is_regular_file(fname) || fname.is_relative()) {
         return fname;
       }
       std::vector<path> absoluteFilePaths = this->model().workflowJSON().absoluteFilePaths();
@@ -220,17 +220,15 @@ namespace model {
 
     // we expect all strings to be UTF-8 encoded
     path p = toPath(filename);
-    if (copyFile || !p.is_relative()) {
-      if (!exists(p)) {
-        boost::optional<path> op = workflow.findFile(filename);
-        if (!op) {
-          this->remove();
-          LOG_AND_THROW("Cannot find file \"" << filename << "\" for " << this->briefDescription());
-        }
-        p = op.get();
+    if (!exists(p)) {
+      boost::optional<path> op = workflow.findFile(filename);
+      if (!op) {
+        this->remove();
+        LOG_AND_THROW("Cannot find file \"" << filename << "\" for " << this->briefDescription());
       }
-      OS_ASSERT(exists(p));
+      p = op.get();
     }
+    OS_ASSERT(exists(p));
 
     bool ok;
     if (copyFile) {
