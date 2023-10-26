@@ -133,7 +133,7 @@ namespace model {
     }
 
     bool ExternalFile_Impl::translateFileName() const {
-      boost::optional<std::string> value = getString(OS_External_FileFields::TranslatetoScheduleFile, true);
+      boost::optional<std::string> value = getString(OS_External_FileFields::TranslateFileName, true);
       OS_ASSERT(value);
       return openstudio::istringEqual(value.get(), "Yes");
     }
