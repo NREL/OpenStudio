@@ -41,11 +41,16 @@ namespace energyplus {
       }
     }
 
-    path filePath = modelObject.externalFile().filePath();
-    if (!exists(filePath)) {
-      LOG(Warn, "Cannot find file \"" << filePath << "\"");
-    } else {
-      if (!filePath.is_relative()) {
+    path filePath;
+    if modelObject
+      .externalFile().translateFileName() {
+        filePath = toPath(modelObject.externalFile().fileName());
+      }
+    else {
+      filePath = modelObject.externalFile().filePath();
+      if (!exists(filePath)) {
+        LOG(Warn, "Cannot find file \"" << filePath << "\"");
+      } else {
         // make the path correct for this system
         filePath = system_complete(filePath);
       }
