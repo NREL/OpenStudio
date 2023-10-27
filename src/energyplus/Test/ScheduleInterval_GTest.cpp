@@ -1870,6 +1870,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     ASSERT_TRUE(external_file);
     ScheduleFile schedule(*external_file);
     EXPECT_TRUE(schedule.setTranslateFileName(true));
+    EXPECT_TRUE(schedule.translateFileName());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
@@ -1904,6 +1905,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     ASSERT_TRUE(external_file);
     ScheduleFile schedule(*external_file);
     EXPECT_TRUE(schedule.setTranslateFileName(true));
+    EXPECT_TRUE(schedule.translateFileName());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
@@ -1936,6 +1938,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
 
     ScheduleFile schedule(model, openstudio::toString(p));
     EXPECT_TRUE(schedule.setTranslateFileName(true));
+    EXPECT_TRUE(schedule.translateFileName());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
@@ -1968,6 +1971,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
 
     ScheduleFile schedule(model, openstudio::toString(p));
     EXPECT_TRUE(schedule.setTranslateFileName(true));
+    EXPECT_TRUE(schedule.translateFileName());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
