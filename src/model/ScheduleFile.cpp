@@ -407,7 +407,7 @@ namespace model {
     OS_ASSERT(ok);
   }
 
-  ScheduleFile::ScheduleFile(const Model& model, const openstudio::path& filePath, int column, int rowsToSkip, bool translateFileName)
+  ScheduleFile::ScheduleFile(const Model& model, const openstudio::path& filePath, int column, int rowsToSkip)
     : ScheduleInterval(ScheduleFile::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ScheduleFile_Impl>());
 
@@ -419,8 +419,6 @@ namespace model {
 
     bool ok;
     ok = setPointer(OS_Schedule_FileFields::ExternalFileName, externalfile->handle());
-    OS_ASSERT(ok);
-    ok = externalfile->setTranslateFileName(translateFileName);
     OS_ASSERT(ok);
     ok = setColumnNumber(column);
     OS_ASSERT(ok);
