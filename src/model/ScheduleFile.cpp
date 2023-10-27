@@ -233,6 +233,12 @@ namespace model {
       return csvFile;
     }
 
+    bool ScheduleFile_Impl::translateFileName() const {
+      boost::optional<std::string> value = getString(OS_Schedule_FileFields::TranslateFileName, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
     /* FIXME!
   openstudio::TimeSeries ScheduleFile_Impl::timeSeries(unsigned columnIndex) const
   {
@@ -376,6 +382,17 @@ namespace model {
     }*/
     }
 
+    bool ScheduleFile_Impl::setTranslateFileName(bool translateFileName) {
+      bool result = false;
+      if (translateFileName) {
+        result = setString(OS_Schedule_FileFields::TranslateFileName, "Yes");
+      } else {
+        result = setString(OS_Schedule_FileFields::TranslateFileName, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
   }  // namespace detail
 
   ScheduleFile::ScheduleFile(const ExternalFile& externalfile, int column, int rowsToSkip)
@@ -479,6 +496,10 @@ namespace model {
     return getImpl<detail::ScheduleFile_Impl>()->csvFile();
   }
 
+  bool ScheduleFile::translateFileName() const {
+    return getImpl<detail::ScheduleFile_Impl>()->translateFileName();
+  }
+
   /* FIXME!
 openstudio::TimeSeries ScheduleFile::timeSeries(unsigned columnIndex) const {
   return getImpl<detail::ScheduleFile_Impl>()->timeSeries(columnIndex);
@@ -551,6 +572,10 @@ unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
 
   void ScheduleFile::resetAdjustScheduleforDaylightSavings() {
     getImpl<detail::ScheduleFile_Impl>()->resetAdjustScheduleforDaylightSavings();
+  }
+
+  bool ScheduleFile::setTranslateFileName(bool translateFileName) {
+    return getImpl<detail::ScheduleFile_Impl>()->setTranslateFileName(translateFileName);
   }
 
   /// @cond

@@ -58,8 +58,6 @@ namespace model {
 
     path filePath() const;
 
-    bool translateFileName() const;
-
     //boost::optional<std::string> columnSeparator() const;
 
     //bool isColumnSeparatorDefaulted() const;
@@ -71,8 +69,6 @@ namespace model {
     //bool setColumnSeparator(const std::string& columnSeparator);
 
     //void resetColumnSeparator();
-
-    bool setTranslateFileName(bool translateFileName);
 
     //@}
     /** @name Other */

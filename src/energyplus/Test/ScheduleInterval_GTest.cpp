@@ -1868,8 +1868,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
 
     boost::optional<ExternalFile> external_file = ExternalFile::getExternalFile(model, openstudio::toString(p));
     ASSERT_TRUE(external_file);
-    EXPECT_TRUE(external_file->setTranslateFileName(true));
     ScheduleFile schedule(*external_file);
+    EXPECT_TRUE(schedule.setTranslateFileName(true));
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
@@ -1902,8 +1902,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
 
     boost::optional<ExternalFile> external_file = ExternalFile::getExternalFile(model, openstudio::toString(p));
     ASSERT_TRUE(external_file);
-    EXPECT_TRUE(external_file->setTranslateFileName(true));
     ScheduleFile schedule(*external_file);
+    EXPECT_TRUE(schedule.setTranslateFileName(true));
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
@@ -1934,7 +1934,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     path p = resourcesPath() / toPath("model/schedulefile.csv");
     EXPECT_FALSE(p.is_relative());
 
-    ScheduleFile schedule(model, openstudio::toString(p), 1, 0, true);
+    ScheduleFile schedule(model, openstudio::toString(p));
+    EXPECT_TRUE(schedule.setTranslateFileName(true));
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
@@ -1965,7 +1966,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     path p = toPath("../../../resources/model/schedulefile.csv");
     EXPECT_TRUE(p.is_relative());
 
-    ScheduleFile schedule(model, openstudio::toString(p), 1, 0, true);
+    ScheduleFile schedule(model, openstudio::toString(p));
+    EXPECT_TRUE(schedule.setTranslateFileName(true));
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();

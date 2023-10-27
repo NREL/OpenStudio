@@ -5033,7 +5033,7 @@ OS:External:File,
        \required-field
        \retaincase
        \type url
-  A4,  \field Column Separator
+  A4;  \field Column Separator
        \note Currently unused
        \type choice
        \key Comma
@@ -5042,10 +5042,6 @@ OS:External:File,
        \key Space
        \key Semicolon
        \default Comma
-  A5;  \field Translate File Name
-       \default No
-       \key Yes
-       \key No
 
 OS:Schedule:File,
        \min-fields 6
@@ -5108,13 +5104,17 @@ OS:Schedule:File,
        \key 20
        \key 30
        \key 60
-  A7 ; \field Adjust Schedule for Daylight Savings
+  A7,  \field Adjust Schedule for Daylight Savings
        \note "No" means do not include Daylight Savings Time in the schedule, instead, use the schedule directly from the Schedule:File csv (default)
        \note "Yes" means include Daylight Savings Time to the schedule
        \type choice
        \key Yes
        \key No
        \default Yes
+  A8;  \field Translate File Name
+       \default No
+       \key Yes
+       \key No
 
 \group OpenStudio Geometry
 

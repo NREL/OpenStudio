@@ -41,21 +41,21 @@ namespace energyplus {
       }
     }
 
-    path filePath;
-    if (modelObject.externalFile().translateFileName()) {
-      filePath = toPath(modelObject.externalFile().fileName());
+    path fileName;
+    if (modelObject.translateFileName()) {
+      fileName = toPath(modelObject.externalFile().fileName());
     } else {
-      filePath = modelObject.externalFile().filePath();
-      if (!exists(filePath)) {
-        LOG(Warn, "Cannot find file \"" << filePath << "\"");
+      fileName = modelObject.externalFile().filePath();
+      if (!exists(fileName)) {
+        LOG(Warn, "Cannot find file \"" << fileName << "\"");
       } else {
         // make the path correct for this system
-        filePath = system_complete(filePath);
+        fileName = system_complete(fileName);
       }
     }
 
     // DLM: this path is going to be in the temp dir, might want to fix it up when saving model temp dir
-    idfObject.setString(openstudio::Schedule_FileFields::FileName, toString(filePath));
+    idfObject.setString(openstudio::Schedule_FileFields::FileName, toString(fileName));
 
     idfObject.setInt(openstudio::Schedule_FileFields::ColumnNumber, modelObject.columnNumber());
     idfObject.setInt(openstudio::Schedule_FileFields::RowstoSkipatTop, modelObject.rowstoSkipatTop());

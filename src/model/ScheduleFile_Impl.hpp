@@ -88,6 +88,8 @@ namespace model {
 
       boost::optional<CSVFile> csvFile() const;
 
+      bool translateFileName() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -120,6 +122,8 @@ namespace model {
 
       // ensure that this object does not contain the date 2/29
       virtual void ensureNoLeapDays() override;
+
+      bool setTranslateFileName(bool translateFileName);
 
       //@}
       /** @name Other */
