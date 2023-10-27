@@ -1888,8 +1888,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
 
     boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
     ASSERT_TRUE(fileName);
-    EXPECT_FALSE(toPath(fileName.get()).is_relative());  // abs path
-    EXPECT_EQ(externalfile.filePath(), fileName.get());  // abs path
+    EXPECT_TRUE(toPath(fileName.get()).is_relative());  // rel path
+    EXPECT_NE(externalfile.filePath(), fileName.get());
   }
 
   // ScheduleFile(external_file(/rel/path))
@@ -1923,8 +1923,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
 
     boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
     ASSERT_TRUE(fileName);
-    EXPECT_FALSE(toPath(fileName.get()).is_relative());  // abs path
-    EXPECT_EQ(externalfile.filePath(), fileName.get());  // abs path
+    EXPECT_TRUE(toPath(fileName.get()).is_relative());  // rel path
+    EXPECT_NE(externalfile.filePath(), fileName.get());
   }
 
   // ScheduleFile(model, /abs/path)
@@ -1957,7 +1957,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
     ASSERT_TRUE(fileName);
     EXPECT_FALSE(toPath(fileName.get()).is_relative());  // abs path
-    EXPECT_EQ(externalfile.filePath(), fileName.get());  // abs path
+    EXPECT_EQ(externalfile.filePath(), fileName.get());
   }
 
   // ScheduleFile(model, /rel/path)
@@ -1989,7 +1989,7 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
 
     boost::optional<std::string> fileName = objects[0].getString(2);  // File Name
     ASSERT_TRUE(fileName);
-    EXPECT_TRUE(toPath(fileName.get()).is_relative());   // rel path
-    EXPECT_EQ(externalfile.filePath(), fileName.get());  // rel path
+    EXPECT_TRUE(toPath(fileName.get()).is_relative());  // rel path
+    EXPECT_EQ(externalfile.filePath(), fileName.get());
   }
 }
