@@ -90,6 +90,8 @@ namespace model {
 
       bool translateFileName() const;
 
+      bool isTranslateFileNameDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -124,6 +126,8 @@ namespace model {
       virtual void ensureNoLeapDays() override;
 
       bool setTranslateFileName(bool translateFileName);
+
+      void resetTranslateFileName();
 
       //@}
       /** @name Other */

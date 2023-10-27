@@ -88,6 +88,8 @@ namespace model {
 
     bool translateFileName() const;
 
+    bool isTranslateFileNameDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -123,6 +125,8 @@ namespace model {
     /* FIXME! unsigned addTimeSeries(const openstudio::TimeSeries& timeSeries); */
 
     bool setTranslateFileName(bool translateFileName);
+
+    void resetTranslateFileName();
 
     //@}
     /** @name Other */

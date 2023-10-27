@@ -239,6 +239,10 @@ namespace model {
       return openstudio::istringEqual(value.get(), "Yes");
     }
 
+    bool ScheduleFile_Impl::isTranslateFileNameDefaulted() const {
+      return isEmpty(OS_Schedule_FileFields::TranslateFileName);
+    }
+
     /* FIXME!
   openstudio::TimeSeries ScheduleFile_Impl::timeSeries(unsigned columnIndex) const
   {
@@ -393,6 +397,11 @@ namespace model {
       return result;
     }
 
+    void ScheduleFile_Impl::resetTranslateFileName() {
+      const bool result = setString(OS_Schedule_FileFields::TranslateFileName, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
   ScheduleFile::ScheduleFile(const ExternalFile& externalfile, int column, int rowsToSkip)
@@ -498,6 +507,10 @@ namespace model {
     return getImpl<detail::ScheduleFile_Impl>()->translateFileName();
   }
 
+  bool ScheduleFile::isTranslateFileNameDefaulted() const {
+    return getImpl<detail::ScheduleFile_Impl>()->isTranslateFileNameDefaulted();
+  }
+
   /* FIXME!
 openstudio::TimeSeries ScheduleFile::timeSeries(unsigned columnIndex) const {
   return getImpl<detail::ScheduleFile_Impl>()->timeSeries(columnIndex);
@@ -574,6 +587,10 @@ unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
 
   bool ScheduleFile::setTranslateFileName(bool translateFileName) {
     return getImpl<detail::ScheduleFile_Impl>()->setTranslateFileName(translateFileName);
+  }
+
+  void ScheduleFile::resetTranslateFileName() {
+    getImpl<detail::ScheduleFile_Impl>()->resetTranslateFileName();
   }
 
   /// @cond
