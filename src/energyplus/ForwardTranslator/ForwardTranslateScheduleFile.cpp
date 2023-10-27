@@ -42,11 +42,9 @@ namespace energyplus {
     }
 
     path filePath;
-    if modelObject
-      .externalFile().translateFileName() {
-        filePath = toPath(modelObject.externalFile().fileName());
-      }
-    else {
+    if (modelObject.externalFile().translateFileName()) {
+      filePath = toPath(modelObject.externalFile().fileName());
+    } else {
       filePath = modelObject.externalFile().filePath();
       if (!exists(filePath)) {
         LOG(Warn, "Cannot find file \"" << filePath << "\"");
