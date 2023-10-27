@@ -5112,6 +5112,7 @@ OS:Schedule:File,
        \key No
        \default Yes
   A8;  \field Translate File Name
+       \type choice
        \default No
        \key Yes
        \key No
