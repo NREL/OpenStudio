@@ -269,7 +269,7 @@ void Polyhedron::performEdgeMatching() {
     }
   }
 
-  // special case to find edges that are used to "cut" in to a surface to remove an interior hole
+  // #5002 - special case to find edges that are used to "cut" in to a surface to remove an interior hole
   // we allow these edges to double count the first surface since they bound the same surface on two sides
   for (auto& surface : m_surfaces) {
     auto& edges = surface.edges;
