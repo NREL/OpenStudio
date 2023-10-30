@@ -367,18 +367,8 @@ $ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
       fmt::print("{}\n", resultStr);
       return;
     } else if (opt.run_tests) {
-      MeasureManager measureManager(rubyEngine, pythonEngine);
-      auto measure_ = measureManager.getMeasure(opt.directoryPath, true);
-      if (!measure_) {
-        auto msg = fmt::format("Cannot load measure at '{}'", opt.directoryPath.generic_string());
-        fmt::print(stderr, "{}\n", msg);
-        return;
-      }
-      if (measure_->measureLanguage() == MeasureLanguage::Ruby) {
-        // TODO: need to capture arguments and pass as ARGV
-
-        auto runTestCmd = fmt::format(
-          R"ruby(
+      auto runTestCmd = fmt::format(
+        R"ruby(
 # load openstudio_measure_tester gem
 #begin
   require 'minitest'
@@ -403,13 +393,8 @@ if result != 0
   return 1
 end
 )ruby",
-          opt.directoryPath.generic_string());
-        rubyEngine->exec(runTestCmd);
-
-      } else if (measure_->measureLanguage() == MeasureLanguage::Python) {
-        // TODO:
-        throw std::runtime_error("run_tests not implemented yet for python");
-      }
+        opt.directoryPath.generic_string());
+      rubyEngine->exec(runTestCmd);
     }
   }
 
