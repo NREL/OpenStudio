@@ -243,7 +243,7 @@ void Polyhedron::performEdgeMatching() {
   m_hasAnySurfaceWithIncorrectOrientation = false;
 
   // We use **Combinations** (rather than Permutations) to avoid traversing unnecessarily
-  for (size_t i = 0; i < m_surfaces.size() - 1; ++i) {
+  for (size_t i = 0; i < m_surfaces.size(); ++i) {
     for (size_t j = i + 1; j < m_surfaces.size(); ++j) {
       auto& surface1 = m_surfaces[i];
       auto& surface2 = m_surfaces[j];
@@ -273,7 +273,7 @@ void Polyhedron::performEdgeMatching() {
   // we allow these edges to double count the first surface since they bound the same surface on two sides
   for (auto& surface : m_surfaces) {
     auto& edges = surface.edges;
-    for (size_t i = 0; i < edges.size() - 1; ++i) {
+    for (size_t i = 0; i < edges.size(); ++i) {
       for (size_t j = i + 1; j < edges.size(); ++j) {
         if ((edges[i].count() == 1) && (edges[j].count() == 1) && (edges[i] == edges[j]) && edges[i].reverseEqual(edges[j])) {
           // appendSurface will allow use to check edge.count() later to check if count == 2.
