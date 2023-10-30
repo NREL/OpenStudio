@@ -87,106 +87,112 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> --help
   )
 
-  add_test(NAME OpenStudioCLI.run_compact_ruby_only_osw
-    COMMAND $<TARGET_FILE:openstudio> run -w compact_ruby_only.osw
+  add_test(NAME OpenStudioCLI.Classic.run_compact_ruby_only_osw
+    COMMAND $<TARGET_FILE:openstudio> classic run -w compact_ruby_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
-  set_tests_properties(OpenStudioCLI.run_compact_ruby_only_osw PROPERTIES RESOURCE_LOCK "compact_osw")
+  set_tests_properties(OpenStudioCLI.Classic.run_compact_ruby_only_osw PROPERTIES RESOURCE_LOCK "compact_osw")
 
-  add_test(NAME OpenStudioCLI.Labs.openstudio_version
-    COMMAND $<TARGET_FILE:openstudio> labs openstudio_version
+  add_test(NAME OpenStudioCLI.openstudio_version
+    COMMAND $<TARGET_FILE:openstudio> openstudio_version
   )
 
-  add_test(NAME OpenStudioCLI.Labs.energyplus_version
-    COMMAND $<TARGET_FILE:openstudio> labs energyplus_version
+  add_test(NAME OpenStudioCLI.energyplus_version
+    COMMAND $<TARGET_FILE:openstudio> energyplus_version
   )
 
-  add_test(NAME OpenStudioCLI.Labs.ruby_version
-    COMMAND $<TARGET_FILE:openstudio> labs ruby_version
+  add_test(NAME OpenStudioCLI.ruby_version
+    COMMAND $<TARGET_FILE:openstudio> ruby_version
   )
 
-  add_test(NAME OpenStudioCLI.Labs.python_version
-    COMMAND $<TARGET_FILE:openstudio> labs python_version
+  add_test(NAME OpenStudioCLI.python_version
+    COMMAND $<TARGET_FILE:openstudio> python_version
   )
-  set_tests_properties(OpenStudioCLI.Labs.python_version PROPERTIES
+  set_tests_properties(OpenStudioCLI.python_version PROPERTIES
     PASS_REGULAR_EXPRESSION "3\.8\.1[0-9]"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.ruby_execute_line
-    COMMAND $<TARGET_FILE:openstudio> labs -e "puts(OpenStudio::Model::Model.new())"
+  add_test(NAME OpenStudioCLI.ruby_execute_line
+    COMMAND $<TARGET_FILE:openstudio> -e "puts(OpenStudio::Model::Model.new())"
+  )
+
+  add_test(NAME OpenStudioCLI.Classic.ruby_execute_line_no_chop_single_quote
+    COMMAND $<TARGET_FILE:openstudio> classic -e "puts 'hello world'"
   )
 
   add_test(NAME OpenStudioCLI.ruby_execute_line_no_chop_single_quote
     COMMAND $<TARGET_FILE:openstudio> -e "puts 'hello world'"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.ruby_execute_line_no_chop_single_quote
-    COMMAND $<TARGET_FILE:openstudio> labs -e "puts 'hello world'"
+  add_test(NAME OpenStudioCLI.ruby_execute_line.embedded_gem
+    COMMAND $<TARGET_FILE:openstudio> -e "require 'minitest'"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.ruby_execute_line.embedded_gem
-    COMMAND $<TARGET_FILE:openstudio> labs -e "require 'minitest'"
+  add_test(NAME OpenStudioCLI.ruby_execute_line.embedded_native_gem
+    COMMAND $<TARGET_FILE:openstudio> -e "require 'oga'"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.ruby_execute_line.embedded_native_gem
-    COMMAND $<TARGET_FILE:openstudio> labs -e "require 'oga'"
+  add_test(NAME OpenStudioCLI.python_execute_line
+    COMMAND $<TARGET_FILE:openstudio> -c "print(openstudio.model.Model())"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.python_execute_line
-    COMMAND $<TARGET_FILE:openstudio> labs -c "print(openstudio.model.Model())"
+  add_test(NAME OpenStudioCLI.execute_ruby_script
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb OpenStudioLabs "National Renewable Energy Laboratory"
   )
-
-  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script
-    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb OpenStudioLabs "National Renewable Energy Laboratory"
-  )
-  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script PROPERTIES
+  set_tests_properties(OpenStudioCLI.execute_ruby_script PROPERTIES
     PASS_REGULAR_EXPRESSION "Hello from OpenStudioLabs, at National Renewable Energy Laboratory"
   )
 
   # Ensure we don't get these
   # > eval:1: warning: already initialized constant OpenStudio::Airflow::AirflowElement::DR_DOOR
   # > eval:1: warning: previous definition of DR_DOOR was here
-  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.no_previous_definition
-    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb OpenStudioLabs "National Renewable Energy Laboratory"
+  add_test(NAME OpenStudioCLI.execute_ruby_script.no_previous_definition
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb OpenStudioLabs "National Renewable Energy Laboratory"
   )
-  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.no_previous_definition PROPERTIES
+  set_tests_properties(OpenStudioCLI.execute_ruby_script.no_previous_definition PROPERTIES
     FAIL_REGULAR_EXPRESSION "previous definition of;already initialized constant"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags
-    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb -x "National Renewable Energy Laboratory"
+  add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb -x "National Renewable Energy Laboratory"
   )
-  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.forward_flags PROPERTIES
+  set_tests_properties(OpenStudioCLI.execute_ruby_script.forward_flags PROPERTIES
     PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.omit_execute
-    COMMAND $<TARGET_FILE:openstudio> labs ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb -x "National Renewable Energy Laboratory"
+  add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.omit_execute
+    COMMAND $<TARGET_FILE:openstudio> ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb -x "National Renewable Energy Laboratory"
   )
-  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.forward_flags PROPERTIES
+  set_tests_properties(OpenStudioCLI.execute_ruby_script.forward_flags PROPERTIES
     PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.execute_python_script
-    COMMAND $<TARGET_FILE:openstudio> labs execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py OpenStudioLabs "National Renewable Energy Laboratory"
+  add_test(NAME OpenStudioCLI.execute_python_script
+    COMMAND $<TARGET_FILE:openstudio> execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py OpenStudioLabs "National Renewable Energy Laboratory"
   )
-  set_tests_properties(OpenStudioCLI.Labs.execute_python_script PROPERTIES
+  set_tests_properties(OpenStudioCLI.execute_python_script PROPERTIES
     PASS_REGULAR_EXPRESSION "Hello from OpenStudioLabs, at National Renewable Energy Laboratory"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags
-    COMMAND $<TARGET_FILE:openstudio> labs execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py -x "National Renewable Energy Laboratory"
+  add_test(NAME OpenStudioCLI.execute_python_script.forward_flags
+    COMMAND $<TARGET_FILE:openstudio> execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py -x "National Renewable Energy Laboratory"
   )
-  set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags PROPERTIES
+  set_tests_properties(OpenStudioCLI.execute_python_script.forward_flags PROPERTIES
     PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags.omit_execute
-    COMMAND $<TARGET_FILE:openstudio> labs ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py -x "National Renewable Energy Laboratory"
+  add_test(NAME OpenStudioCLI.execute_python_script.forward_flags.omit_execute
+    COMMAND $<TARGET_FILE:openstudio> ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py -x "National Renewable Energy Laboratory"
   )
-  set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags PROPERTIES
+  set_tests_properties(OpenStudioCLI.execute_python_script.forward_flags PROPERTIES
     PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
   )
+
+  add_test(NAME OpenStudioCLI.Classic.Run_RubyOnly
+    COMMAND $<TARGET_FILE:openstudio> classic run -w compact_ruby_only.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
+  )
+  set_tests_properties(OpenStudioCLI.Classic.Run_RubyOnly PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Run_RubyOnly
     COMMAND $<TARGET_FILE:openstudio> run -w compact_ruby_only.osw
@@ -194,12 +200,12 @@ if(BUILD_TESTING)
   )
   set_tests_properties(OpenStudioCLI.Run_RubyOnly PROPERTIES RESOURCE_LOCK "compact_osw")
 
-  add_test(NAME OpenStudioCLI.Labs.Run_RubyOnly
-    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_only.osw
+
+  add_test(NAME OpenStudioCLI.Classic.Run_RubyOnly.absolute_path
+    COMMAND $<TARGET_FILE:openstudio> classic run -w "'${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/compact_ruby_only.osw'"
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
-  set_tests_properties(OpenStudioCLI.Labs.Run_RubyOnly PROPERTIES RESOURCE_LOCK "compact_osw")
-
+  set_tests_properties(OpenStudioCLI.Classic.Run_RubyOnly.absolute_path PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Run_RubyOnly.absolute_path
     COMMAND $<TARGET_FILE:openstudio> run -w "'${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/compact_ruby_only.osw'"
@@ -207,53 +213,47 @@ if(BUILD_TESTING)
   )
   set_tests_properties(OpenStudioCLI.Run_RubyOnly.absolute_path PROPERTIES RESOURCE_LOCK "compact_osw")
 
-  add_test(NAME OpenStudioCLI.Labs.Run_RubyOnly.absolute_path
-    COMMAND $<TARGET_FILE:openstudio> labs run -w "'${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/compact_ruby_only.osw'"
+
+  add_test(NAME OpenStudioCLI.Run_PythonOnly
+    COMMAND $<TARGET_FILE:openstudio> run -w compact_python_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
-  set_tests_properties(OpenStudioCLI.Labs.Run_RubyOnly.absolute_path PROPERTIES RESOURCE_LOCK "compact_osw")
+  set_tests_properties(OpenStudioCLI.Run_PythonOnly PROPERTIES RESOURCE_LOCK "compact_osw")
 
-
-  add_test(NAME OpenStudioCLI.Labs.Run_PythonOnly
-    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_only.osw
+  add_test(NAME OpenStudioCLI.Run_PythonOnly_TwoMeasure
+    COMMAND $<TARGET_FILE:openstudio> run -w compact_python_only_twomeasures.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
-  set_tests_properties(OpenStudioCLI.Labs.Run_PythonOnly PROPERTIES RESOURCE_LOCK "compact_osw")
+  set_tests_properties(OpenStudioCLI.Run_PythonOnly_TwoMeasure PROPERTIES RESOURCE_LOCK "compact_osw")
 
-  add_test(NAME OpenStudioCLI.Labs.Run_PythonOnly_TwoMeasure
-    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_only_twomeasures.osw
+  add_test(NAME OpenStudioCLI.Run_RubyPython
+    COMMAND $<TARGET_FILE:openstudio> run -w compact_ruby_then_python.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
-  set_tests_properties(OpenStudioCLI.Labs.Run_PythonOnly_TwoMeasure PROPERTIES RESOURCE_LOCK "compact_osw")
+  set_tests_properties(OpenStudioCLI.Run_RubyPython PROPERTIES RESOURCE_LOCK "compact_osw")
 
-  add_test(NAME OpenStudioCLI.Labs.Run_RubyPython
-    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_then_python.osw
+  add_test(NAME OpenStudioCLI.Run_PythonRuby
+    COMMAND $<TARGET_FILE:openstudio> run -w compact_python_then_ruby.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
-  set_tests_properties(OpenStudioCLI.Labs.Run_RubyPython PROPERTIES RESOURCE_LOCK "compact_osw")
-
-  add_test(NAME OpenStudioCLI.Labs.Run_PythonRuby
-    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_then_ruby.osw
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
-  )
-  set_tests_properties(OpenStudioCLI.Labs.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
+  set_tests_properties(OpenStudioCLI.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
 
   if (Pytest_AVAILABLE)
-    add_test(NAME OpenStudioCLI.Labs.test_loglevel
+    add_test(NAME OpenStudioCLI.test_loglevel
       COMMAND ${Python_EXECUTABLE} -m pytest --verbose ${Pytest_XDIST_OPTS} --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_loglevel.py"
     )
   else()
     # TODO: Remove. Fallback on these for now, as I don't know if CI has pytest installed
+    add_test(NAME OpenStudioCLI.Classic.test_logger_rb
+      COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> --classic ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.rb
+    )
+
     add_test(NAME OpenStudioCLI.test_logger_rb
       COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.rb
     )
 
-    add_test(NAME OpenStudioCLI.Labs.test_logger_rb
-      COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> --labs ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.rb
-    )
-
-    add_test(NAME OpenStudioCLI.Labs.test_logger_py
-      COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> --labs ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.py
+    add_test(NAME OpenStudioCLI.test_logger_py
+      COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_test_logger.py" $<TARGET_FILE:openstudio> ${CMAKE_CURRENT_SOURCE_DIR}/test/logger_test.py
     )
   endif()
 
@@ -269,30 +269,48 @@ if(BUILD_TESTING)
 
   # Test via optparse and check file exists
   # Historical CLI versions
-    add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.optparse.path_forwardslash
-    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_optparse_path.rb -x "./test_folder/hello.xml"
+    add_test(NAME OpenStudioCLI.Classic.execute_ruby_script.forward_flags.optparse.path_forwardslash
+    COMMAND $<TARGET_FILE:openstudio> classic execute_ruby_script execute_ruby_script_optparse_path.rb -x "./test_folder/hello.xml"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
   )
   if (WIN32)
     # Posix paths don't understand a backward slash anyways
+    add_test(NAME OpenStudioCLI.Classic.execute_ruby_script.forward_flags.optparse.path_backwardslash
+      COMMAND $<TARGET_FILE:openstudio> classic execute_ruby_script execute_ruby_script_optparse_path.rb -x ".\\test_folder\\hello.xml"
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+    )
+  endif()
+  # Labs versions
+  add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.optparse.path_forwardslash
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_optparse_path.rb -x "./test_folder/hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  if (WIN32)
     add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.optparse.path_backwardslash
       COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_optparse_path.rb -x ".\\test_folder\\hello.xml"
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
     )
   endif()
-  # Labs versions
-  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.optparse.path_forwardslash
-    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script execute_ruby_script_optparse_path.rb -x "./test_folder/hello.xml"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
-  )
-  if (WIN32)
-    add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.optparse.path_backwardslash
-      COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script execute_ruby_script_optparse_path.rb -x ".\\test_folder\\hello.xml"
-      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
-    )
-  endif()
 
   # Historical CLI versions
+  add_test(NAME OpenStudioCLI.Classic.execute_ruby_script.forward_flags.path_forwardslash
+    COMMAND $<TARGET_FILE:openstudio> classic execute_ruby_script execute_ruby_script_with_arguments_test.rb -x "./test_folder/hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  set_tests_properties(OpenStudioCLI.Classic.execute_ruby_script.forward_flags.path_forwardslash PROPERTIES
+      PASS_REGULAR_EXPRESSION "Hello from -x, at ./test_folder/hello.xml"
+  )
+
+  add_test(NAME OpenStudioCLI.Classic.execute_ruby_script.forward_flags.path_backwardslash
+    COMMAND $<TARGET_FILE:openstudio> classic execute_ruby_script execute_ruby_script_with_arguments_test.rb -x ".\\test_folder\\hello.xml"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
+  )
+  set_tests_properties(OpenStudioCLI.Classic.execute_ruby_script.forward_flags.path_backwardslash PROPERTIES
+    # Cmake regexes require double escaping the \ escape, this tests that `Hello from -x, at .\test_folder\hello.xml` is printed to the console
+    PASS_REGULAR_EXPRESSION "Hello from -x, at .\\\\test_folder\\\\hello.xml"
+  )
+
+  # Labs versions
   add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.path_forwardslash
     COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_with_arguments_test.rb -x "./test_folder/hello.xml"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
@@ -306,40 +324,22 @@ if(BUILD_TESTING)
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
   )
   set_tests_properties(OpenStudioCLI.execute_ruby_script.forward_flags.path_backwardslash PROPERTIES
-    # Cmake regexes require double escaping the \ escape, this tests that `Hello from -x, at .\test_folder\hello.xml` is printed to the console
     PASS_REGULAR_EXPRESSION "Hello from -x, at .\\\\test_folder\\\\hello.xml"
   )
 
-  # Labs versions
-  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.path_forwardslash
-    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script execute_ruby_script_with_arguments_test.rb -x "./test_folder/hello.xml"
+  add_test(NAME OpenStudioCLI.execute_python_script.forward_flags.path_forwardslash
+    COMMAND $<TARGET_FILE:openstudio> execute_python_script execute_python_script_with_arguments_test.py -x "./test_folder/hello.xml"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
   )
-  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.forward_flags.path_forwardslash PROPERTIES
+  set_tests_properties(OpenStudioCLI.execute_python_script.forward_flags.path_forwardslash PROPERTIES
       PASS_REGULAR_EXPRESSION "Hello from -x, at ./test_folder/hello.xml"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script.forward_flags.path_backwardslash
-    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script execute_ruby_script_with_arguments_test.rb -x ".\\test_folder\\hello.xml"
+  add_test(NAME OpenStudioCLI.execute_python_script.forward_flags.path_backwardslash
+    COMMAND $<TARGET_FILE:openstudio> execute_python_script execute_python_script_with_arguments_test.py -x ".\\test_folder\\hello.xml"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
   )
-  set_tests_properties(OpenStudioCLI.Labs.execute_ruby_script.forward_flags.path_backwardslash PROPERTIES
-    PASS_REGULAR_EXPRESSION "Hello from -x, at .\\\\test_folder\\\\hello.xml"
-  )
-
-  add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags.path_forwardslash
-    COMMAND $<TARGET_FILE:openstudio> labs execute_python_script execute_python_script_with_arguments_test.py -x "./test_folder/hello.xml"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
-  )
-  set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags.path_forwardslash PROPERTIES
-      PASS_REGULAR_EXPRESSION "Hello from -x, at ./test_folder/hello.xml"
-  )
-
-  add_test(NAME OpenStudioCLI.Labs.execute_python_script.forward_flags.path_backwardslash
-    COMMAND $<TARGET_FILE:openstudio> labs execute_python_script execute_python_script_with_arguments_test.py -x ".\\test_folder\\hello.xml"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
-  )
-  set_tests_properties(OpenStudioCLI.Labs.execute_python_script.forward_flags.path_backwardslash PROPERTIES
+  set_tests_properties(OpenStudioCLI.execute_python_script.forward_flags.path_backwardslash PROPERTIES
     PASS_REGULAR_EXPRESSION "Hello from -x, at .\\\\test_folder\\\\hello.xml"
   )
 
@@ -378,21 +378,21 @@ if(BUILD_TESTING)
 
     message(DEBUG "PYTHON_PATH=${PYTHON_PATH}")
 
-    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.explicit_sys_path_insert
-      COMMAND $<TARGET_FILE:openstudio> labs execute_python_script execute_python_script_with_numpy.py ${Python_STDLIB}
+    add_test(NAME OpenStudioCLI.execute_python_script.numpy.explicit_sys_path_insert
+      COMMAND $<TARGET_FILE:openstudio> execute_python_script execute_python_script_with_numpy.py ${Python_STDLIB}
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
     )
 
-    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_path
-      COMMAND $<TARGET_FILE:openstudio> labs
+    add_test(NAME OpenStudioCLI.execute_python_script.numpy.python_path
+      COMMAND $<TARGET_FILE:openstudio>
                 "$<$<BOOL:${PYTHON_PATH}>:--python_path;$<JOIN:${PYTHON_PATH},;--python_path;>>"
                 execute_python_script execute_python_script_with_numpy.py
       COMMAND_EXPAND_LISTS
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
     )
 
-    add_test(NAME OpenStudioCLI.Labs.execute_python_script.numpy.python_home
-      COMMAND $<TARGET_FILE:openstudio> labs
+    add_test(NAME OpenStudioCLI.execute_python_script.numpy.python_home
+      COMMAND $<TARGET_FILE:openstudio>
                 --python_home "$<SHELL_PATH:${Python_ROOT_DIR}>"
                 execute_python_script execute_python_script_with_numpy.py
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"

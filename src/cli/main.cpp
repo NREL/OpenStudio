@@ -74,6 +74,12 @@ int main(int argc, char* argv[]) {
   openstudio::ScriptEngineInstance pythonEngine("pythonengine", args);
 
   if (is_classic) {
+    fmt::print(fmt::fg(fmt::color::orange),
+               "┌{0:─^{2}}┐\n"
+               "│{1: ^{2}}│\n"
+               "└{0:─^{2}}┘",
+               "", "The `classic` command is deprecated and will be removed in a future release", 80);
+    fmt::print("\n");
 #if defined _WIN32
     // Poor man's hack #4847
     // Disable this logger, we have a duplicate in the ruby shared lib
@@ -252,13 +258,13 @@ int main(int argc, char* argv[]) {
     });
 
     // Not hidding any commands right now
-    // [[maybe_unused]] auto* list_commandsCommand = experimentalApp->add_subcommand("list_commands", "Lists the entire set of available commands");
+    // [[maybe_unused]] auto* list_commandsCommand = app.add_subcommand("list_commands", "Lists the entire set of available commands");
 
     // run command
     openstudio::cli::setupRunOptions(&app, rubyEngine, pythonEngine);
 
     // update (model) command
-    // openstudio::cli::setupUpdateCommand(experimentalApp);
+    // openstudio::cli::setupUpdateCommand(&app);
     {
       bool keep = false;
       auto* updateCommand = app.add_subcommand("update", "Updates OpenStudio Models to the current version");

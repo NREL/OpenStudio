@@ -23,7 +23,7 @@ def test_with_sys_path_explicit(std_lib: Path):
     if dynload.exists():
         sys.path.insert(0, str(dynload))
     # Only for debian
-    dist_pack = std_lib.parent.parent / 'local/lib/python3.8/dist-packages'
+    dist_pack = std_lib.parent.parent / "local/lib/python3.8/dist-packages"
     if dist_pack.exists():
         sys.path.insert(0, str(dist_pack))
 
