@@ -283,6 +283,8 @@ int main(int argc, char* argv[]) {
     openstudio::cli::MeasureUpdateOptions::setupMeasureUpdateOptions(&app, rubyEngine, pythonEngine);
 
     // ==========================  V E R S I O N ==========================
+    app.set_version_flag("-v,--version", openStudioLongVersion());
+
     [[maybe_unused]] auto* openstudio_versionCommand =
       app.add_subcommand("openstudio_version", "Returns the OpenStudio version used by the CLI")->group(versionGroupname)->callback([]() {
         fmt::print("{}\n", openStudioLongVersion());
