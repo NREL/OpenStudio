@@ -99,6 +99,53 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
   }
 }
 
+void OSWorkflow::initializeWeatherFileFromOSW() {
+  LOG(Debug, "Initialize the weather file from osw");
+  auto epwPath_ = workflowJSON.weatherFile();
+
+  if (epwPath_) {
+    LOG(Debug, "Search for weather file defind by osw " << epwPath_.get());
+    auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
+    if (!epwFullPath_) {
+      auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
+    }
+    if (!epwFullPath_) {
+      throw std::runtime_error(fmt::format("Weather file {} specified but cannot be found", epwPath_->string()));
+    }
+
+    epwPath = epwFullPath_.get();
+
+    if (auto epwFile_ = openstudio::EpwFile::load(epwPath)) {
+      model::WeatherFile::setWeatherFile(model, epwFile_.get());
+    } else {
+      LOG(Warn, "Could not load weather file from " << epwPath_.get());
+    }
+  } else {
+    LOG(Debug, "No weather file defined by osw");
+  }
+}
+
+void OSWorkflow::applyWeatherFileFromModel() {
+  LOG(Debug, "Apply the final weather file");
+  if (auto epwFile_ = model.weatherFile()) {
+    if (auto epwPath_ = epwFile_->path()) {
+      LOG(Debug, "Search for weather file " << epwPath_.get());
+      auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
+      if (!epwFullPath_) {
+        auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
+      }
+      if (!epwFullPath_) {
+        throw std::runtime_error(fmt::format("Weather file {} specified but cannot be found", epwPath_->string()));
+      }
+
+      epwPath = epwFullPath_.get();
+      return;
+    }
+  }
+
+  LOG(Warn, "Weather file is not defined");
+}
+
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
   LOG(Info, "Setting argument value '" << argumentName << "' to '" << argumentValue << "'");
 
