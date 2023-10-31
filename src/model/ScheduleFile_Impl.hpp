@@ -88,9 +88,9 @@ namespace model {
 
       boost::optional<CSVFile> csvFile() const;
 
-      bool translateFileName() const;
+      bool translateFileWithRelativePath() const;
 
-      bool isTranslateFileNameDefaulted() const;
+      bool isTranslateFileWithRelativePathDefaulted() const;
 
       //@}
       /** @name Setters */
@@ -125,13 +125,15 @@ namespace model {
       // ensure that this object does not contain the date 2/29
       virtual void ensureNoLeapDays() override;
 
-      bool setTranslateFileName(bool translateFileName);
+      bool setTranslateFileWithRelativePath(bool translateFileWithRelativePath);
 
-      void resetTranslateFileName();
+      void resetTranslateFileWithRelativePath();
 
       //@}
       /** @name Other */
       //@{
+
+      openstudio::path translatedFilePath() const;
 
       //@}
      protected:

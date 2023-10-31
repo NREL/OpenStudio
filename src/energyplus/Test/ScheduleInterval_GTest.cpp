@@ -1869,8 +1869,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     boost::optional<ExternalFile> external_file = ExternalFile::getExternalFile(model, openstudio::toString(p));
     ASSERT_TRUE(external_file);
     ScheduleFile schedule(*external_file);
-    EXPECT_TRUE(schedule.setTranslateFileName(true));
-    EXPECT_TRUE(schedule.translateFileName());
+    EXPECT_TRUE(schedule.setTranslateFileWithRelativePath(true));
+    EXPECT_TRUE(schedule.translateFileWithRelativePath());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
@@ -1904,8 +1904,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     boost::optional<ExternalFile> external_file = ExternalFile::getExternalFile(model, openstudio::toString(p));
     ASSERT_TRUE(external_file);
     ScheduleFile schedule(*external_file);
-    EXPECT_TRUE(schedule.setTranslateFileName(true));
-    EXPECT_TRUE(schedule.translateFileName());
+    EXPECT_TRUE(schedule.setTranslateFileWithRelativePath(true));
+    EXPECT_TRUE(schedule.translateFileWithRelativePath());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
@@ -1937,8 +1937,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     EXPECT_FALSE(p.is_relative());
 
     ScheduleFile schedule(model, openstudio::toString(p));
-    EXPECT_TRUE(schedule.setTranslateFileName(true));
-    EXPECT_TRUE(schedule.translateFileName());
+    EXPECT_TRUE(schedule.setTranslateFileWithRelativePath(true));
+    EXPECT_TRUE(schedule.translateFileWithRelativePath());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
@@ -1970,8 +1970,8 @@ TEST_F(EnergyPlusFixture, ScheduleFileRelativePath) {
     EXPECT_TRUE(p.is_relative());
 
     ScheduleFile schedule(model, openstudio::toString(p));
-    EXPECT_TRUE(schedule.setTranslateFileName(true));
-    EXPECT_TRUE(schedule.translateFileName());
+    EXPECT_TRUE(schedule.setTranslateFileWithRelativePath(true));
+    EXPECT_TRUE(schedule.translateFileWithRelativePath());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
     EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
     ExternalFile externalfile = schedule.externalFile();
