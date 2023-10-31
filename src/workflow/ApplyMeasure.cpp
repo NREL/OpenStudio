@@ -60,9 +60,8 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
     if (!sqlPath.empty()) {
       runner.setLastEnergyPlusSqlFilePath(sqlPath);
     }
-    if (!epwPath.empty()) {
-      runner.setLastEpwFilePath(epwPath);
-    }
+
+    updateLastWeatherFileFromModel();
 
     const auto measureDirName = step.measureDirName();
     if (openstudio::filesystem::path(measureDirName).is_absolute()) {

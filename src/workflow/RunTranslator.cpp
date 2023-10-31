@@ -38,7 +38,7 @@ void OSWorkflow::runTranslator() {
   auto runDir = workflowJSON.absoluteRunDir();
   OS_ASSERT(openstudio::filesystem::is_directory(runDir));
 
-  applyWeatherFileFromModel();
+  updateLastWeatherFileFromModel();
 
   // Copy in the weather file
   if (!epwPath.empty()) {

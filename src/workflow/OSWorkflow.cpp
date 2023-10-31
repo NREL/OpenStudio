@@ -117,16 +117,17 @@ void OSWorkflow::initializeWeatherFileFromOSW() {
 
     if (auto epwFile_ = openstudio::EpwFile::load(epwPath)) {
       model::WeatherFile::setWeatherFile(model, epwFile_.get());
+      runner.setLastEpwFilePath(epwPath);
     } else {
       LOG(Warn, "Could not load weather file from " << epwPath_.get());
     }
   } else {
-    LOG(Debug, "No weather file defined by osw");
+    LOG(Debug, "Weather file is not defined by the osw");
   }
 }
 
-void OSWorkflow::applyWeatherFileFromModel() {
-  LOG(Debug, "Apply the final weather file");
+void OSWorkflow::updateLastWeatherFileFromModel() {
+  LOG(Debug, "Find model's weather file and update LastEpwFilePath");
   if (auto epwFile_ = model.weatherFile()) {
     if (auto epwPath_ = epwFile_->path()) {
       LOG(Debug, "Search for weather file " << epwPath_.get());
@@ -139,11 +140,13 @@ void OSWorkflow::applyWeatherFileFromModel() {
       }
 
       epwPath = epwFullPath_.get();
+      runner.setLastEpwFilePath(epwPath);
+
       return;
     }
   }
 
-  LOG(Warn, "Weather file is not defined");
+  LOG(Debug, "Weather file is not defined by the model");
 }
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
