@@ -5111,7 +5111,9 @@ OS:Schedule:File,
        \key Yes
        \key No
        \default Yes
-  A8;  \field Translate File Name
+  A8;  \field Translate File With Relative Path
+       \note "No" means the absolute path of the ExternalFile is resolved and translated to IDF.
+       \note "Yes" means only the filename (relative) is translated
        \type choice
        \default No
        \key Yes
