@@ -212,14 +212,7 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
     }
 
     if (measureType == MeasureType::ModelMeasure) {
-      if (auto weatherFile_ = model.weatherFile()) {
-        if (auto p_ = weatherFile_->path()) {
-          // Probably a workflowJSON.findFile() call...
-          // m_epwPath_ = p_;
-        } else {
-          LOG(Warn, "Weather file object found in model but no path is given");
-        }
-      }
+      updateLastWeatherFileFromModel();
     }
 
     if (m_add_timings && m_detailed_timings) {
