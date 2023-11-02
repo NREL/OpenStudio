@@ -14,14 +14,15 @@ PYTHON_PROGRAM = (
 )
 
 
-def remove_labs_box(lines: List[str]) -> List[str]:
-    """Pop the labs box."""
-    i_warn = 0
+def remove_classic_box(lines: List[str]) -> List[str]:
+    """Pop the classic box."""
+    i_warn = None
     for i, line in enumerate(lines):
-        if "The `labs` command is experimental - Do not use in production" in line:
+        if "The `classic` command is deprecated and will be removed in a future release" in line:
             i_warn = i
             break
-    lines = lines[: (i_warn - 1)] + lines[(i_warn + 2) :]
+    if i_warn is not None:
+        lines = lines[: (i_warn - 1)] + lines[(i_warn + 2) :]
     return lines
 
 
@@ -38,13 +39,13 @@ def get_loglevel_int_value(logLevel: str) -> int:
 def test_loglevel(osclipath: Path, language: str, logLevel: str):
     list_index = get_loglevel_list_index(logLevel=logLevel)
     loglevel_int_value = get_loglevel_int_value(logLevel=logLevel)
-    args = [str(osclipath), "labs", "--loglevel", logLevel]
+    args = [str(osclipath), "--loglevel", logLevel]
     if language == "ruby":
         args += ["-e", RUBY_PROGRAM]
     else:
         args += ["-c", PYTHON_PROGRAM]
     lines = subprocess.check_output(args, encoding="utf-8").splitlines()
-    lines = remove_labs_box(lines)
+    lines = remove_classic_box(lines)
     assert f"Setting Log Level to {logLevel} ({loglevel_int_value})" in lines
     for i, msgLevel in enumerate(LOG_LEVELS):
         msg = f"[test] <{get_loglevel_int_value(msgLevel)}> {msgLevel}"
@@ -66,8 +67,8 @@ def test_loglevel(osclipath: Path, language: str, logLevel: str):
 )
 def test_run_logger_file(osclipath, language: str, is_labs: bool):
     command = [str(osclipath)]
-    if is_labs:
-        command.append("labs")
+    if not is_labs:
+        command.append("classic")
     if language == "ruby":
         command.append("execute_ruby_script")
         command.append(Path(__file__).parent / "logger_test.rb")
@@ -79,7 +80,7 @@ def test_run_logger_file(osclipath, language: str, is_labs: bool):
 
     r = subprocess.check_output(command, encoding="utf-8")
     lines = r.splitlines()
-    lines = remove_labs_box(lines)
+    lines = remove_classic_box(lines)
 
     # Ruby when called this way has the openstudio logger messages first instead of last, so just sort
     lines.sort()

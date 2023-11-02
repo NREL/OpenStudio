@@ -13,17 +13,17 @@ def validate_file(arg):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run a logger test.")
     parser.add_argument("os_cli_path", type=validate_file, help="Path to the OS CLI")
-    parser.add_argument("--labs", action="store_true")
+    parser.add_argument("--classic", action="store_true", help="Use the classic/legacy CLI")
     parser.add_argument("logger_file", type=validate_file, help="Path to the logger test file to run")
     args = parser.parse_args()
     print(args)
 
     command = [str(args.os_cli_path)]
-    if args.labs:
-        command.append("labs")
+    if args.classic:
+        command.append("classic")
     if (ext := args.logger_file.suffix) == ".py":
-        if not args.labs:
-            raise ValueError("When supplying a .py file, you must pass --labs")
+        if args.classic:
+            raise ValueError("When supplying a .py file, you must NOT pass --classic")
         command.append("execute_python_script")
     elif ext == ".rb":
         command.append("execute_ruby_script")
@@ -35,10 +35,10 @@ if __name__ == "__main__":
     r = subprocess.check_output(command, encoding="utf-8")
     lines = r.splitlines()
 
-    # Pop the labs box
+    # Pop the classic box
     i_warn = 0
     for i, line in enumerate(lines):
-        if "The `labs` command is experimental - Do not use in production" in line:
+        if "The `classic` command is deprecated and will be removed in a future release" in line:
             i_warn = i
             break
     lines = lines[: (i_warn - 1)] + lines[(i_warn + 2) :]
