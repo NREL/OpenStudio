@@ -99,6 +99,56 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
   }
 }
 
+void OSWorkflow::initializeWeatherFileFromOSW() {
+  LOG(Debug, "Initialize the weather file from osw");
+  auto epwPath_ = workflowJSON.weatherFile();
+
+  if (epwPath_) {
+    LOG(Debug, "Search for weather file defind by osw " << epwPath_.get());
+    auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
+    if (!epwFullPath_) {
+      auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
+    }
+    if (!epwFullPath_) {
+      throw std::runtime_error(fmt::format("Weather file {} specified but cannot be found", epwPath_->string()));
+    }
+
+    epwPath = epwFullPath_.get();
+
+    if (auto epwFile_ = openstudio::EpwFile::load(epwPath)) {
+      model::WeatherFile::setWeatherFile(model, epwFile_.get());
+      runner.setLastEpwFilePath(epwPath);
+    } else {
+      LOG(Warn, "Could not load weather file from " << epwPath_.get());
+    }
+  } else {
+    LOG(Debug, "Weather file is not defined by the osw");
+  }
+}
+
+void OSWorkflow::updateLastWeatherFileFromModel() {
+  LOG(Debug, "Find model's weather file and update LastEpwFilePath");
+  if (auto epwFile_ = model.weatherFile()) {
+    if (auto epwPath_ = epwFile_->path()) {
+      LOG(Debug, "Search for weather file " << epwPath_.get());
+      auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
+      if (!epwFullPath_) {
+        auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
+      }
+      if (!epwFullPath_) {
+        throw std::runtime_error(fmt::format("Weather file {} specified but cannot be found", epwPath_->string()));
+      }
+
+      epwPath = epwFullPath_.get();
+      runner.setLastEpwFilePath(epwPath);
+
+      return;
+    }
+  }
+
+  LOG(Debug, "Weather file is not defined by the model");
+}
+
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
   LOG(Info, "Setting argument value '" << argumentName << "' to '" << argumentValue << "'");
 

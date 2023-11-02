@@ -83,41 +83,7 @@ void OSWorkflow::runInitialization() {
     openstudio::model::initializeModelObjects(model);
   }
 
-  LOG(Debug, "Getting the initial weather file");
-  // Initialize the weather file
-  auto epwPath_ = workflowJSON.weatherFile();
-  bool alreadySetInModel = false;
-  if (!epwPath_) {
-    LOG(Debug, "No weather file specified in OSW, looking in model");
-    if (auto epwFile_ = model.weatherFile()) {
-      epwPath_ = epwFile_->path();
-      alreadySetInModel = true;
-    }
-  }
-
-  if (epwPath_) {
-    LOG(Debug, "Search for weather file " << epwPath_.get());
-    auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
-    if (!epwFullPath_) {
-      auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
-    }
-    if (!epwFullPath_) {
-      throw std::runtime_error(fmt::format("Weather file {} specified but cannot be found", epwPath_->string()));
-    }
-
-    epwPath = epwFullPath_.get();
-
-    if (!alreadySetInModel) {
-      if (auto epwFile_ = openstudio::EpwFile::load(epwPath)) {
-        model::WeatherFile::setWeatherFile(model, epwFile_.get());
-      } else {
-        LOG(Warn, "Could not load weather file from " << epwPath_.get());
-      }
-    }
-
-  } else {
-    LOG(Debug, "No valid weather file defined in either the osm or osw");
-  }
+  initializeWeatherFileFromOSW();
 
   // Set a clone of the WorkflowJSON for the model, so that it finds the filePaths (such as generated_files we added above)
   model.setWorkflowJSON(workflowJSON.clone());
