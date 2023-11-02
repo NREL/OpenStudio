@@ -40,17 +40,8 @@ namespace energyplus {
         idfObject.setString(openstudio::Schedule_FileFields::ScheduleTypeLimitsName, idfScheduleTypeLimits->name().get());
       }
     }
-
-    path filePath = modelObject.externalFile().filePath();
-    if (!exists(filePath)) {
-      LOG(Warn, "Cannot find file \"" << filePath << "\"");
-    } else {
-      // make the path correct for this system
-      filePath = system_complete(filePath);
-    }
-
     // DLM: this path is going to be in the temp dir, might want to fix it up when saving model temp dir
-    idfObject.setString(openstudio::Schedule_FileFields::FileName, toString(filePath));
+    idfObject.setString(openstudio::Schedule_FileFields::FileName, toString(modelObject.translatedFilePath()));
 
     idfObject.setInt(openstudio::Schedule_FileFields::ColumnNumber, modelObject.columnNumber());
     idfObject.setInt(openstudio::Schedule_FileFields::RowstoSkipatTop, modelObject.rowstoSkipatTop());

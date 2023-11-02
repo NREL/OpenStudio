@@ -320,6 +320,19 @@ TEST_F(ModelFixture, ScheduleFile) {
   schedule3.resetAdjustScheduleforDaylightSavings();
   EXPECT_TRUE(schedule3.isAdjustScheduleforDaylightSavingsDefaulted());
 
+  EXPECT_FALSE(schedule3.translateFileWithRelativePath());
+  EXPECT_TRUE(schedule3.isTranslateFileWithRelativePathDefaulted());
+  EXPECT_EQ(externalfile->filePath(), schedule3.translatedFilePath());
+
+  EXPECT_TRUE(schedule3.setTranslateFileWithRelativePath(true));
+  EXPECT_TRUE(schedule3.translateFileWithRelativePath());
+  EXPECT_FALSE(schedule3.isTranslateFileWithRelativePathDefaulted());
+  EXPECT_EQ(toPath(externalfile->fileName()), schedule3.translatedFilePath());
+
+  schedule3.resetTranslateFileWithRelativePath();
+  EXPECT_FALSE(schedule3.translateFileWithRelativePath());
+  EXPECT_TRUE(schedule3.isTranslateFileWithRelativePathDefaulted());
+
   // shouldn't create a new object
   boost::optional<ExternalFile> externalfile2 = ExternalFile::getExternalFile(model, openstudio::toString(p));
   ASSERT_TRUE(externalfile2);

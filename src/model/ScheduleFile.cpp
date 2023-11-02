@@ -233,6 +233,16 @@ namespace model {
       return csvFile;
     }
 
+    bool ScheduleFile_Impl::translateFileWithRelativePath() const {
+      boost::optional<std::string> value = getString(OS_Schedule_FileFields::TranslateFileWithRelativePath, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool ScheduleFile_Impl::isTranslateFileWithRelativePathDefaulted() const {
+      return isEmpty(OS_Schedule_FileFields::TranslateFileWithRelativePath);
+    }
+
     /* FIXME!
   openstudio::TimeSeries ScheduleFile_Impl::timeSeries(unsigned columnIndex) const
   {
@@ -376,6 +386,36 @@ namespace model {
     }*/
     }
 
+    bool ScheduleFile_Impl::setTranslateFileWithRelativePath(bool translateFileWithRelativePath) {
+      bool result = false;
+      if (translateFileWithRelativePath) {
+        result = setString(OS_Schedule_FileFields::TranslateFileWithRelativePath, "Yes");
+      } else {
+        result = setString(OS_Schedule_FileFields::TranslateFileWithRelativePath, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ScheduleFile_Impl::resetTranslateFileWithRelativePath() {
+      const bool result = setString(OS_Schedule_FileFields::TranslateFileWithRelativePath, "");
+      OS_ASSERT(result);
+    }
+
+    openstudio::path ScheduleFile_Impl::translatedFilePath() const {
+      if (translateFileWithRelativePath()) {
+        return toPath(externalFile().fileName());
+      }
+      openstudio::path filePath = externalFile().filePath();
+      if (!exists(filePath)) {
+        LOG(Warn, "Cannot find file \"" << filePath << "\"");
+      } else {
+        // make the path correct for this system
+        filePath = system_complete(filePath);
+      }
+      return filePath;
+    }
+
   }  // namespace detail
 
   ScheduleFile::ScheduleFile(const ExternalFile& externalfile, int column, int rowsToSkip)
@@ -477,6 +517,14 @@ namespace model {
     return getImpl<detail::ScheduleFile_Impl>()->csvFile();
   }
 
+  bool ScheduleFile::translateFileWithRelativePath() const {
+    return getImpl<detail::ScheduleFile_Impl>()->translateFileWithRelativePath();
+  }
+
+  bool ScheduleFile::isTranslateFileWithRelativePathDefaulted() const {
+    return getImpl<detail::ScheduleFile_Impl>()->isTranslateFileWithRelativePathDefaulted();
+  }
+
   /* FIXME!
 openstudio::TimeSeries ScheduleFile::timeSeries(unsigned columnIndex) const {
   return getImpl<detail::ScheduleFile_Impl>()->timeSeries(columnIndex);
@@ -549,6 +597,18 @@ unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
 
   void ScheduleFile::resetAdjustScheduleforDaylightSavings() {
     getImpl<detail::ScheduleFile_Impl>()->resetAdjustScheduleforDaylightSavings();
+  }
+
+  bool ScheduleFile::setTranslateFileWithRelativePath(bool translateFileWithRelativePath) {
+    return getImpl<detail::ScheduleFile_Impl>()->setTranslateFileWithRelativePath(translateFileWithRelativePath);
+  }
+
+  void ScheduleFile::resetTranslateFileWithRelativePath() {
+    getImpl<detail::ScheduleFile_Impl>()->resetTranslateFileWithRelativePath();
+  }
+
+  openstudio::path ScheduleFile::translatedFilePath() const {
+    return getImpl<detail::ScheduleFile_Impl>()->translatedFilePath();
   }
 
   /// @cond
