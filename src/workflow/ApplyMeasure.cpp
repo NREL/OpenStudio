@@ -175,7 +175,40 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
     // After that, dereferencing the measure pointer will crash the program
     auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::OSMeasure*>(measureScriptObject);
 
+    // Patch measure if needed
+    bool was_patched = false;
+    if (measureType == MeasureType::ReportingMeasure) {
+      const int numArgs = (*thisEngine)->numberOfArguments(measureScriptObject, "arguments");
+      fmt::print("numArgs={}\n", numArgs);
+      if (numArgs == 0) {
+        if (measureLanguage == MeasureLanguage::Ruby) {
+          auto patchArgumentsCmd = fmt::format(R"ruby(
+module {0}Extensions
+  def arguments(model)
+    super()
+  end
+end
+
+class {0}
+  prepend {0}Extensions # the only change to above: prepend instead of include
+end
+)ruby",
+                                               className);
+          rubyEngine->exec(patchArgumentsCmd);
+          was_patched = true;
+        } else {
+          auto msg = fmt::format("Wrong number of parameters for method `arguments` in reporting_measure '{}' from '{}'\n", className,
+                                 scriptPath_->generic_string());
+          throw std::runtime_error(msg);
+        }
+      }
+    }
+
     const auto argmap = getArguments(measurePtr);
+    if (was_patched) {
+      rubyEngine->exec(fmt::format("Object.send(:remove_const, :{}Extensions)", className));
+    }
+
     // There is a bug. I can run one measure but not two. The one measure can be either python or ruby
     // I think it might have to do with the operations that must be done to the runner to reset state. maybe?
     if (measureType == MeasureType::ModelMeasure) {
