@@ -34,6 +34,28 @@
 
 namespace openstudio {
 
+bool isStepMarkedSkip(const std::map<std::string, openstudio::Variant>& stepArgs) {
+  bool skip_measure = false;
+
+  // handle skip first
+  if (!stepArgs.empty() && stepArgs.contains("__SKIP__")) {
+    // TODO: handling of SKIP is incomplete here, will need to increment the runner and co, and not process the measure
+    const openstudio::Variant& argumentValue = stepArgs.at("__SKIP__");
+    VariantType variantType = argumentValue.variantType();
+
+    if (variantType == VariantType::String) {
+      skip_measure = openstudio::ascii_to_lower_copy(argumentValue.valueAsString()) == "true";
+    } else if (variantType == VariantType::Double) {
+      skip_measure = (argumentValue.valueAsDouble() != 0.0);
+    } else if (variantType == VariantType::Integer) {
+      skip_measure = (argumentValue.valueAsInteger() != 0);
+    } else if (variantType == VariantType::Boolean) {
+      skip_measure = argumentValue.valueAsBoolean();
+    }
+  }
+  return skip_measure;
+}
+
 void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_requests) {
 
   if (m_add_timings && m_detailed_timings) {
@@ -50,10 +72,23 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
     auto step = stepAndIndex.second;
     LOG(Debug, "Running step " << stepIndex);
 
-    //  measure_run_dir = File.join(run_dir, "#{step_index.to_s.rjust(3,'0')}_#{measure_dir_name}")
-    //  logger.debug "Creating run directory for measure in #{measure_run_dir}"
-    //  FileUtils.mkdir_p measure_run_dir
-    //  Dir.chdir measure_run_dir
+    const auto measureDirName = step.measureDirName();
+
+    auto stepArgs = step.arguments();
+    const bool skip_measure = isStepMarkedSkip(stepArgs);
+    if (skip_measure || runner.halted()) {  // TODO: or halted
+      if (!energyplus_output_requests) {
+        if (runner.halted()) {
+          LOG(Info, fmt::format("Skipping measure '{}' because simulation halted", measureDirName));
+        } else {
+          LOG(Info, fmt::format("Skipping measure '{}'", measureDirName));
+          WorkflowStepResult result = runner.result();
+          runner.incrementStep();
+          result.setStepResult(StepResult::Skip);
+        }
+      }
+      continue;
+    }
 
     if (model.numObjects() > 0) {
       runner.setLastOpenStudioModel(model);
@@ -67,7 +102,6 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
 
     updateLastWeatherFileFromModel();
 
-    const auto measureDirName = step.measureDirName();
     if (openstudio::filesystem::path(measureDirName).is_absolute()) {
       LOG(Warn, "measure_dir_name should not be a full path. It should be a relative path to the measure directory or the name of the measure "
                 "directory containing the measure.rb / measure.py file.");
@@ -90,7 +124,6 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
 
     auto thisRunDir = workflowJSON.absoluteRunDir() / openstudio::toPath(fmt::format("{:03}_{}", stepIndex, measureDirName));
     LOG(Debug, "Creating run directory for measure in '" << thisRunDir << "'");
-
     openstudio::filesystem::create_directory(thisRunDir);
     boost::filesystem::current_path(thisRunDir);
 
@@ -117,38 +150,13 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
     LOG(Debug, "Measure Type: " << bclMeasure.measureType().valueName());
     LOG(Debug, "Measure Language: " << measureLanguage.valueName());
 
-    auto getArguments = [this, &measureType, &scriptPath_,
-                         &step](openstudio::measure::OSMeasure* measurePtr) -> std::pair<measure::OSArgumentMap, bool> {
+    auto getArguments = [this, &measureType, &stepArgs](openstudio::measure::OSMeasure* measurePtr) -> measure::OSArgumentMap {
       LOG(Debug, "measure->name()= '" << measurePtr->name() << "'");
 
       measure::OSArgumentMap argumentMap;
-      bool skip_measure = false;
 
       //  logger.debug "Iterating over arguments for workflow item '#{measure_dir_name}'"
-      auto stepArgs = step.arguments();
       LOG(Debug, "Current step has " << stepArgs.size() << " arguments");
-      // handle skip first
-      if (!stepArgs.empty() && stepArgs.contains("__SKIP__")) {
-        // TODO: handling of SKIP is incomplete here, will need to increment the runner and co, and not process the measure
-        openstudio::Variant& argumentValue = stepArgs.at("__SKIP__");
-        VariantType variantType = argumentValue.variantType();
-
-        if (variantType == VariantType::String) {
-          skip_measure = openstudio::ascii_to_lower_copy(argumentValue.valueAsString()) == "true";
-        } else if (variantType == VariantType::Double) {
-          skip_measure = (argumentValue.valueAsDouble() != 0.0);
-        } else if (variantType == VariantType::Integer) {
-          skip_measure = (argumentValue.valueAsInteger() != 0);
-        } else if (variantType == VariantType::Boolean) {
-          skip_measure = argumentValue.valueAsBoolean();
-        }
-
-        if (skip_measure) {
-          return std::make_pair(argumentMap, skip_measure);
-        }
-      }
-
-      // Measure isn't skipped, so process the arguments
 
       // Initialize arguments which may be model dependent, don't allow arguments method access to real model in case it changes something
       std::vector<measure::OSArgument> arguments;
@@ -187,7 +195,7 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
       std::transform(argumentMap.begin(), argumentMap.end(), std::inserter(formattedArgMap, formattedArgMap.begin()),
                      [](const auto& p) { return std::make_pair(p.first, p.second.printValue(true)); });
       LOG(Debug, fmt::format("argumentMap={}", formattedArgMap));
-      return std::make_pair(argumentMap, skip_measure);
+      return argumentMap;
     };
 
     ScriptEngineInstance* thisEngine = nullptr;
@@ -256,76 +264,62 @@ end
       }
     }
 
-    const auto& [argmap, skip_measure] = getArguments(measurePtr);
-    if (was_patched) {
-      rubyEngine->exec(fmt::format("Object.send(:remove_const, :{}Extensions)", className));
-    }
+    const auto argmap = getArguments(measurePtr);
 
-    if (skip_measure || runner.halted()) {  // TODO: or halted
-      if (!energyplus_output_requests) {
-        if (runner.halted()) {
-          LOG(Info, fmt::format("Skipping measure '{}' because simulation halted", scriptPath_->generic_string()));
-        } else {
-          LOG(Info, fmt::format("Skipping measure '{}'", scriptPath_->generic_string()));
-          WorkflowStepResult result = runner.result();
-          runner.incrementStep();
-          result.setStepResult(StepResult::Skip);
-        }
-      }
-    } else {
+    // TODO: this doesn't protect! it'll crash if a wrong method is used in the ruby measure for eg
+    try {
+      if (measureType == MeasureType::ModelMeasure) {
+        static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model, runner, argmap);
+      } else if (measureType == MeasureType::EnergyPlusMeasure) {
+        static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
+      } else if (measureType == MeasureType::ReportingMeasure) {
+        if (energyplus_output_requests) {
+          LOG(Debug, "Calling measure.energyPlusOutputRequests for '" << measureDirName << "'");
 
-      // There is a bug. I can run one measure but not two. The one measure can be either python or ruby
-      // I think it might have to do with the operations that must be done to the runner to reset state. maybe?
-      try {  // TODO: this doesn't protect! it'll crash if a wrong method is used in the ruby measure
-        if (measureType == MeasureType::ModelMeasure) {
-          static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model, runner, argmap);
-        } else if (measureType == MeasureType::EnergyPlusMeasure) {
-          static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
-        } else if (measureType == MeasureType::ReportingMeasure) {
-          if (energyplus_output_requests) {
-            LOG(Debug, "Calling measure.energyPlusOutputRequests for '" << measureDirName << "'");
+          std::vector<IdfObject> idfObjects;
+          idfObjects = static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->energyPlusOutputRequests(runner, argmap);
 
-            std::vector<IdfObject> idfObjects;
-            idfObjects = static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->energyPlusOutputRequests(runner, argmap);
-
-            int num_added = 0;
-            for (auto& idfObject : idfObjects) {
-              if (openstudio::workflow::util::addEnergyPlusOutputRequest(workspace_.get(), idfObject)) {
-                ++num_added;
-              }
+          int num_added = 0;
+          for (auto& idfObject : idfObjects) {
+            if (openstudio::workflow::util::addEnergyPlusOutputRequest(workspace_.get(), idfObject)) {
+              ++num_added;
             }
-            LOG(Debug, "Finished measure.energyPlusOutputRequests for '" << measureDirName << "', " << num_added << " output requests added");
-          } else {
-            static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->run(runner, argmap);
           }
+          LOG(Debug, "Finished measure.energyPlusOutputRequests for '" << measureDirName << "', " << num_added << " output requests added");
+        } else {
+          static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->run(runner, argmap);
         }
-      } catch (const std::exception& e) {
-        runner.registerError(e.what());
-        if (!energyplus_output_requests) {
-          // incrementStep must be called after run
-          runner.incrementStep();
-        }
-        ensureBlock(true);
-        throw std::runtime_error(fmt::format("Runner error: Measure {} reported an error with [{}]\n", scriptPath_->generic_string(), e.what()));
       }
-
-      // if doing output requests we are done now
+    } catch (const std::exception& e) {
+      runner.registerError(e.what());
       if (!energyplus_output_requests) {
-        WorkflowStepResult result = runner.result();
-        if (auto stepResult_ = result.stepResult()) {
-          LOG(Debug, "Step Result: " << stepResult_->valueName());
-        }
         // incrementStep must be called after run
         runner.incrementStep();
-        if (auto errors = result.stepErrors(); !errors.empty()) {
-          ensureBlock(true);
-          throw std::runtime_error(fmt::format("Measure {} reported an error with [{}]\n", measureDirName, fmt::join(errors, "\n")));
-        }
-
-        if (measureType == MeasureType::ModelMeasure) {
-          updateLastWeatherFileFromModel();
-        }
       }
+      ensureBlock(true);
+      throw std::runtime_error(fmt::format("Runner error: Measure {} reported an error with [{}]\n", scriptPath_->generic_string(), e.what()));
+    }
+
+    // if doing output requests we are done now
+    if (!energyplus_output_requests) {
+      WorkflowStepResult result = runner.result();
+      if (auto stepResult_ = result.stepResult()) {
+        LOG(Debug, "Step Result: " << stepResult_->valueName());
+      }
+      // incrementStep must be called after run
+      runner.incrementStep();
+      if (auto errors = result.stepErrors(); !errors.empty()) {
+        ensureBlock(true);
+        throw std::runtime_error(fmt::format("Measure {} reported an error with [{}]\n", measureDirName, fmt::join(errors, "\n")));
+      }
+
+      if (measureType == MeasureType::ModelMeasure) {
+        updateLastWeatherFileFromModel();
+      }
+    }
+
+    if (was_patched) {
+      rubyEngine->exec(fmt::format("Object.send(:remove_const, :{}Extensions)", className));
     }
 
     ensureBlock(false);
