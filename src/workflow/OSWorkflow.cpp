@@ -455,4 +455,35 @@ bool OSWorkflow::run() {
   }
   return (state == State::Finished);
 }
+
+void OSWorkflow::communicateMeasureAttributes() const {
+
+  Json::Value root(Json::objectValue);
+  for (const auto& [measureName, argMap] : output_attributes) {
+    Json::Value measureValues(Json::objectValue);
+    for (const auto& [argName, variantValue] : argMap) {
+      if (variantValue.variantType() == VariantType::String) {
+        measureValues[argName] = variantValue.valueAsString();
+      } else if (variantValue.variantType() == VariantType::Double) {
+        measureValues[argName] = variantValue.valueAsDouble();
+      } else if (variantValue.variantType() == VariantType::Integer) {
+        measureValues[argName] = variantValue.valueAsInteger();
+      } else if (variantValue.variantType() == VariantType::Boolean) {
+        measureValues[argName] = variantValue.valueAsBoolean();
+      }
+    }
+    root[measureName] = measureValues;
+  }
+  Json::StreamWriterBuilder wbuilder;
+  // mimic the old StyledWriter behavior:
+  wbuilder["indentation"] = "   ";
+  const std::string result = Json::writeString(wbuilder, root);
+
+  auto jsonPath = workflowJSON.absoluteRunDir() / "measure_attributes.json";
+  openstudio::filesystem::ofstream file(jsonPath);
+  OS_ASSERT(file.is_open());
+  file << result;
+  file.close();
+}
+
 }  // namespace openstudio

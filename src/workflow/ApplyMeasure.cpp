@@ -86,6 +86,9 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
           runner.incrementStep();
           result.setStepResult(StepResult::Skip);
         }
+
+        // Technically here I would need to have gotten className from the measure to match workflow-gem, just to set applicable = false
+        output_attributes[step.name().value_or(measureDirName)]["applicable"] = openstudio::Variant(false);
       }
       continue;
     }
@@ -303,15 +306,28 @@ end
     // if doing output requests we are done now
     if (!energyplus_output_requests) {
       WorkflowStepResult result = runner.result();
-      if (auto stepResult_ = result.stepResult()) {
-        LOG(Debug, "Step Result: " << stepResult_->valueName());
-      }
+
       // incrementStep must be called after run
       runner.incrementStep();
       if (auto errors = result.stepErrors(); !errors.empty()) {
         ensureBlock(true);
         throw std::runtime_error(fmt::format("Measure {} reported an error with [{}]", measureDirName, fmt::join(errors, "\n")));
       }
+
+      const auto measureName = step.name().value_or(className);
+      auto& measureAttributes = output_attributes[measureName];
+      for (const auto& stepValue : result.stepValues()) {
+        measureAttributes[stepValue.name()] = stepValue.valueAsVariant();
+      }
+      auto stepResult_ = result.stepResult();
+      if (!stepResult_.has_value()) {
+        LOG_AND_THROW("Step Result not set for " << scriptPath_->generic_string());
+      }
+
+      // Add an applicability flag to all the measure results
+      StepResult stepResult = std::move(*stepResult_);
+      LOG(Debug, "Step Result: " << stepResult.valueName());
+      measureAttributes["applicable"] = openstudio::Variant(!((stepResult == StepResult::NA) || (stepResult == StepResult::Skip)));
 
       if (measureType == MeasureType::ModelMeasure) {
         updateLastWeatherFileFromModel();
