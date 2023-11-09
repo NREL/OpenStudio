@@ -26,29 +26,32 @@ namespace detail {
   Json::Value RunOptions_Impl::toJSON() const {
     Json::Value root;
 
-    // TODO: Why is this only writing if not default? I find it weird
-    if (m_debug) {
+    if (!m_is_debug_defaulted) {
       root["debug"] = m_debug;
     }
 
-    if (m_epjson) {
+    if (!m_is_epjson_defaulted) {
       root["epjson"] = m_epjson;
     }
 
-    if (m_fast) {
+    if (!m_is_fast_defaulted) {
       root["fast"] = m_fast;
     }
 
-    if (m_preserveRunDir) {
+    if (!m_is_preserveRunDir_defaulted) {
       root["preserve_run_dir"] = m_preserveRunDir;
     }
 
-    if (m_skipExpandObjects) {
+    if (!m_is_skipExpandObjects_defaulted) {
       root["skip_expand_objects"] = m_skipExpandObjects;
     }
 
-    if (m_skipEnergyPlusPreprocess) {
+    if (!m_is_skipEnergyPlusPreprocess_defaulted) {
       root["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
+    }
+
+    if (!m_is_cleanup_defaulted) {
+      root["cleanup"] = m_cleanup;
     }
 
     if (m_customOutputAdapter) {
@@ -75,14 +78,20 @@ namespace detail {
     return m_debug;
   }
 
+  bool RunOptions_Impl::isDebugDefaulted() const {
+    return m_is_debug_defaulted;
+  }
+
   bool RunOptions_Impl::setDebug(bool debug) {
     m_debug = debug;
+    m_is_debug_defaulted = false;
     onUpdate();
     return true;
   }
 
   void RunOptions_Impl::resetDebug() {
-    m_debug = false;
+    m_debug = DEFAULT_DEBUG;
+    m_is_debug_defaulted = true;
     onUpdate();
   }
 
@@ -90,14 +99,20 @@ namespace detail {
     return m_epjson;
   }
 
+  bool RunOptions_Impl::isEpjsonDefaulted() const {
+    return m_is_epjson_defaulted;
+  }
+
   bool RunOptions_Impl::setEpjson(bool epjson) {
     m_epjson = epjson;
+    m_is_epjson_defaulted = false;
     onUpdate();
     return true;
   }
 
   void RunOptions_Impl::resetEpjson() {
-    m_epjson = false;
+    m_epjson = DEFAULT_EPJSON;
+    m_is_epjson_defaulted = true;
     onUpdate();
   }
 
@@ -105,14 +120,20 @@ namespace detail {
     return m_fast;
   }
 
+  bool RunOptions_Impl::isFastDefaulted() const {
+    return m_is_fast_defaulted;
+  }
+
   bool RunOptions_Impl::setFast(bool fast) {
     m_fast = fast;
+    m_is_fast_defaulted = false;
     onUpdate();
     return true;
   }
 
   void RunOptions_Impl::resetFast() {
-    m_fast = false;
+    m_fast = DEFAULT_FAST;
+    m_is_fast_defaulted = true;
     onUpdate();
   }
 
@@ -120,14 +141,20 @@ namespace detail {
     return m_preserveRunDir;
   }
 
-  bool RunOptions_Impl::setPreserveRunDir(bool preserve) {
-    m_preserveRunDir = preserve;
+  bool RunOptions_Impl::isPreserveRunDirDefaulted() const {
+    return m_is_preserveRunDir_defaulted;
+  }
+
+  bool RunOptions_Impl::setPreserveRunDir(bool preserveRunDir) {
+    m_preserveRunDir = preserveRunDir;
+    m_is_preserveRunDir_defaulted = false;
     onUpdate();
     return true;
   }
 
   void RunOptions_Impl::resetPreserveRunDir() {
-    m_preserveRunDir = false;
+    m_preserveRunDir = DEFAULT_PRESERVERUNDIR;
+    m_is_preserveRunDir_defaulted = true;
     onUpdate();
   }
 
@@ -135,14 +162,20 @@ namespace detail {
     return m_skipExpandObjects;
   }
 
-  bool RunOptions_Impl::setSkipExpandObjects(bool skip) {
-    m_skipExpandObjects = skip;
+  bool RunOptions_Impl::isSkipExpandObjectsDefaulted() const {
+    return m_is_skipExpandObjects_defaulted;
+  }
+
+  bool RunOptions_Impl::setSkipExpandObjects(bool skipExpandObjects) {
+    m_skipExpandObjects = skipExpandObjects;
+    m_is_skipExpandObjects_defaulted = false;
     onUpdate();
     return true;
   }
 
   void RunOptions_Impl::resetSkipExpandObjects() {
-    m_skipExpandObjects = false;
+    m_skipExpandObjects = DEFAULT_SKIPEXPANDOBJECTS;
+    m_is_skipExpandObjects_defaulted = true;
     onUpdate();
   }
 
@@ -150,14 +183,20 @@ namespace detail {
     return m_skipEnergyPlusPreprocess;
   }
 
-  bool RunOptions_Impl::setSkipEnergyPlusPreprocess(bool skip) {
-    m_skipEnergyPlusPreprocess = skip;
+  bool RunOptions_Impl::isSkipEnergyPlusPreprocessDefaulted() const {
+    return m_is_skipEnergyPlusPreprocess_defaulted;
+  }
+
+  bool RunOptions_Impl::setSkipEnergyPlusPreprocess(bool skipEnergyPlusPreprocess) {
+    m_skipEnergyPlusPreprocess = skipEnergyPlusPreprocess;
+    m_is_skipEnergyPlusPreprocess_defaulted = false;
     onUpdate();
     return true;
   }
 
   void RunOptions_Impl::resetSkipEnergyPlusPreprocess() {
-    m_skipEnergyPlusPreprocess = false;
+    m_skipEnergyPlusPreprocess = DEFAULT_SKIPENERGYPLUSPREPROCESS;
+    m_is_skipEnergyPlusPreprocess_defaulted = true;
     onUpdate();
   }
 
@@ -165,14 +204,20 @@ namespace detail {
     return m_cleanup;
   }
 
+  bool RunOptions_Impl::isCleanupDefaulted() const {
+    return m_is_cleanup_defaulted;
+  }
+
   bool RunOptions_Impl::setCleanup(bool cleanup) {
     m_cleanup = cleanup;
+    m_is_cleanup_defaulted = false;
     onUpdate();
     return true;
   }
 
   void RunOptions_Impl::resetCleanup() {
-    m_cleanup = true;
+    m_cleanup = DEFAULT_CLEANUP;
+    m_is_cleanup_defaulted = true;
     onUpdate();
   }
 
@@ -204,6 +249,39 @@ namespace detail {
   void RunOptions_Impl::resetForwardTranslatorOptions() {
     m_forwardTranslatorOptions.reset();
     onUpdate();
+  }
+
+  void RunOptions_Impl::overrideValuesWith(const RunOptions& other) {
+
+    if (!other.isDebugDefaulted()) {
+      setDebug(other.debug());
+    }
+
+    if (!other.isEpjsonDefaulted()) {
+      setEpjson(other.epjson());
+    }
+
+    if (!other.isFastDefaulted()) {
+      setFast(other.fast());
+    }
+
+    if (!other.isPreserveRunDirDefaulted()) {
+      setPreserveRunDir(other.preserveRunDir());
+    }
+
+    if (!other.isSkipExpandObjectsDefaulted()) {
+      setSkipExpandObjects(other.skipExpandObjects());
+    }
+
+    if (!other.isSkipEnergyPlusPreprocessDefaulted()) {
+      setSkipEnergyPlusPreprocess(other.skipEnergyPlusPreprocess());
+    }
+
+    if (!other.isCleanupDefaulted()) {
+      setCleanup(other.cleanup());
+    }
+
+    m_forwardTranslatorOptions.overrideValuesWith(other.forwardTranslatorOptions());
   }
 
 }  // namespace detail
@@ -334,6 +412,10 @@ bool RunOptions::debug() const {
   return getImpl<detail::RunOptions_Impl>()->debug();
 }
 
+bool RunOptions::isDebugDefaulted() const {
+  return getImpl<detail::RunOptions_Impl>()->isDebugDefaulted();
+}
+
 bool RunOptions::setDebug(bool debug) {
   return getImpl<detail::RunOptions_Impl>()->setDebug(debug);
 }
@@ -344,6 +426,10 @@ void RunOptions::resetDebug() {
 
 bool RunOptions::epjson() const {
   return getImpl<detail::RunOptions_Impl>()->epjson();
+}
+
+bool RunOptions::isEpjsonDefaulted() const {
+  return getImpl<detail::RunOptions_Impl>()->isEpjsonDefaulted();
 }
 
 bool RunOptions::setEpjson(bool epjson) {
@@ -358,9 +444,14 @@ bool RunOptions::fast() const {
   return getImpl<detail::RunOptions_Impl>()->fast();
 }
 
+bool RunOptions::isFastDefaulted() const {
+  return getImpl<detail::RunOptions_Impl>()->isFastDefaulted();
+}
+
 bool RunOptions::setFast(bool fast) {
   return getImpl<detail::RunOptions_Impl>()->setFast(fast);
 }
+
 void RunOptions::resetFast() {
   getImpl<detail::RunOptions_Impl>()->resetFast();
 }
@@ -369,8 +460,12 @@ bool RunOptions::preserveRunDir() const {
   return getImpl<detail::RunOptions_Impl>()->preserveRunDir();
 }
 
-bool RunOptions::setPreserveRunDir(bool preserve) {
-  return getImpl<detail::RunOptions_Impl>()->setPreserveRunDir(preserve);
+bool RunOptions::isPreserveRunDirDefaulted() const {
+  return getImpl<detail::RunOptions_Impl>()->isPreserveRunDirDefaulted();
+}
+
+bool RunOptions::setPreserveRunDir(bool preserveRunDir) {
+  return getImpl<detail::RunOptions_Impl>()->setPreserveRunDir(preserveRunDir);
 }
 
 void RunOptions::resetPreserveRunDir() {
@@ -381,8 +476,12 @@ bool RunOptions::skipExpandObjects() const {
   return getImpl<detail::RunOptions_Impl>()->skipExpandObjects();
 }
 
-bool RunOptions::setSkipExpandObjects(bool skip) {
-  return getImpl<detail::RunOptions_Impl>()->setSkipExpandObjects(skip);
+bool RunOptions::isSkipExpandObjectsDefaulted() const {
+  return getImpl<detail::RunOptions_Impl>()->isSkipExpandObjectsDefaulted();
+}
+
+bool RunOptions::setSkipExpandObjects(bool skipExpandObjects) {
+  return getImpl<detail::RunOptions_Impl>()->setSkipExpandObjects(skipExpandObjects);
 }
 
 void RunOptions::resetSkipExpandObjects() {
@@ -393,8 +492,12 @@ bool RunOptions::skipEnergyPlusPreprocess() const {
   return getImpl<detail::RunOptions_Impl>()->skipEnergyPlusPreprocess();
 }
 
-bool RunOptions::setSkipEnergyPlusPreprocess(bool skip) {
-  return getImpl<detail::RunOptions_Impl>()->setSkipEnergyPlusPreprocess(skip);
+bool RunOptions::isSkipEnergyPlusPreprocessDefaulted() const {
+  return getImpl<detail::RunOptions_Impl>()->isSkipEnergyPlusPreprocessDefaulted();
+}
+
+bool RunOptions::setSkipEnergyPlusPreprocess(bool skipEnergyPlusPreprocess) {
+  return getImpl<detail::RunOptions_Impl>()->setSkipEnergyPlusPreprocess(skipEnergyPlusPreprocess);
 }
 
 void RunOptions::resetSkipEnergyPlusPreprocess() {
@@ -405,6 +508,10 @@ bool RunOptions::cleanup() const {
   return getImpl<detail::RunOptions_Impl>()->cleanup();
 }
 
+bool RunOptions::isCleanupDefaulted() const {
+  return getImpl<detail::RunOptions_Impl>()->isCleanupDefaulted();
+}
+
 bool RunOptions::setCleanup(bool cleanup) {
   return getImpl<detail::RunOptions_Impl>()->setCleanup(cleanup);
 }
@@ -412,7 +519,6 @@ bool RunOptions::setCleanup(bool cleanup) {
 void RunOptions::resetCleanup() {
   getImpl<detail::RunOptions_Impl>()->resetCleanup();
 }
-
 boost::optional<CustomOutputAdapter> RunOptions::customOutputAdapter() const {
   return getImpl<detail::RunOptions_Impl>()->customOutputAdapter();
 }
@@ -435,6 +541,10 @@ bool RunOptions::setForwardTranslatorOptions(const ForwardTranslatorOptions& for
 
 void RunOptions::resetForwardTranslatorOptions() {
   getImpl<detail::RunOptions_Impl>()->resetForwardTranslatorOptions();
+}
+
+void RunOptions::overrideValuesWith(const RunOptions& other) {
+  getImpl<detail::RunOptions_Impl>()->overrideValuesWith(other);
 }
 
 /// @cond

@@ -1154,3 +1154,268 @@ TEST(Filetypes, RunOptions_NoFtOptions) {
   const RunOptions options;
   EXPECT_EQ("", options.forwardTranslateOptions());
 }
+
+TEST(Filetypes, RunOptions_GettersSetters) {
+  RunOptions runOptions;
+
+  // Ctor Default
+  ASSERT_FALSE(runOptions.debug());
+  ASSERT_TRUE(runOptions.isDebugDefaulted());
+  // Set to opposite of default
+  ASSERT_TRUE(runOptions.setDebug(true));
+  ASSERT_TRUE(runOptions.debug());
+  ASSERT_FALSE(runOptions.isDebugDefaulted());
+  // Reset
+  runOptions.resetDebug();
+  ASSERT_FALSE(runOptions.debug());
+  ASSERT_TRUE(runOptions.isDebugDefaulted());
+  ASSERT_TRUE(runOptions.isDebugDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(runOptions.epjson());
+  ASSERT_TRUE(runOptions.isEpjsonDefaulted());
+  // Set to opposite of default
+  ASSERT_TRUE(runOptions.setEpjson(true));
+  ASSERT_TRUE(runOptions.epjson());
+  ASSERT_FALSE(runOptions.isEpjsonDefaulted());
+  // Reset
+  runOptions.resetEpjson();
+  ASSERT_FALSE(runOptions.epjson());
+  ASSERT_TRUE(runOptions.isEpjsonDefaulted());
+  ASSERT_TRUE(runOptions.isEpjsonDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(runOptions.fast());
+  ASSERT_TRUE(runOptions.isFastDefaulted());
+  // Set to opposite of default
+  ASSERT_TRUE(runOptions.setFast(true));
+  ASSERT_TRUE(runOptions.fast());
+  ASSERT_FALSE(runOptions.isFastDefaulted());
+  // Reset
+  runOptions.resetFast();
+  ASSERT_FALSE(runOptions.fast());
+  ASSERT_TRUE(runOptions.isFastDefaulted());
+  ASSERT_TRUE(runOptions.isFastDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(runOptions.preserveRunDir());
+  ASSERT_TRUE(runOptions.isPreserveRunDirDefaulted());
+  // Set to opposite of default
+  ASSERT_TRUE(runOptions.setPreserveRunDir(true));
+  ASSERT_TRUE(runOptions.preserveRunDir());
+  ASSERT_FALSE(runOptions.isPreserveRunDirDefaulted());
+  // Reset
+  runOptions.resetPreserveRunDir();
+  ASSERT_FALSE(runOptions.preserveRunDir());
+  ASSERT_TRUE(runOptions.isPreserveRunDirDefaulted());
+  ASSERT_TRUE(runOptions.isPreserveRunDirDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(runOptions.skipExpandObjects());
+  ASSERT_TRUE(runOptions.isSkipExpandObjectsDefaulted());
+  // Set to opposite of default
+  ASSERT_TRUE(runOptions.setSkipExpandObjects(true));
+  ASSERT_TRUE(runOptions.skipExpandObjects());
+  ASSERT_FALSE(runOptions.isSkipExpandObjectsDefaulted());
+  // Reset
+  runOptions.resetSkipExpandObjects();
+  ASSERT_FALSE(runOptions.skipExpandObjects());
+  ASSERT_TRUE(runOptions.isSkipExpandObjectsDefaulted());
+  ASSERT_TRUE(runOptions.isSkipExpandObjectsDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(runOptions.skipEnergyPlusPreprocess());
+  ASSERT_TRUE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
+  // Set to opposite of default
+  ASSERT_TRUE(runOptions.setSkipEnergyPlusPreprocess(true));
+  ASSERT_TRUE(runOptions.skipEnergyPlusPreprocess());
+  ASSERT_FALSE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
+  // Reset
+  runOptions.resetSkipEnergyPlusPreprocess();
+  ASSERT_FALSE(runOptions.skipEnergyPlusPreprocess());
+  ASSERT_TRUE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
+  ASSERT_TRUE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
+
+  // Ctor Default
+  ASSERT_TRUE(runOptions.cleanup());
+  ASSERT_TRUE(runOptions.isCleanupDefaulted());
+  // Set to opposite of default
+  ASSERT_TRUE(runOptions.setCleanup(false));
+  ASSERT_FALSE(runOptions.cleanup());
+  ASSERT_FALSE(runOptions.isCleanupDefaulted());
+  // Reset
+  runOptions.resetCleanup();
+  ASSERT_TRUE(runOptions.cleanup());
+  ASSERT_TRUE(runOptions.isCleanupDefaulted());
+  ASSERT_TRUE(runOptions.isCleanupDefaulted());
+}
+TEST(Filetypes, ForwardTranslatorOptions_GettersSetters) {
+
+  ForwardTranslatorOptions ftOptions;
+
+  // Ctor Default
+  ASSERT_TRUE(ftOptions.keepRunControlSpecialDays());
+  ASSERT_TRUE(ftOptions.isKeepRunControlSpecialDaysDefaulted());
+  // Set to opposite of default
+  ftOptions.setKeepRunControlSpecialDays(false);
+  ASSERT_FALSE(ftOptions.keepRunControlSpecialDays());
+  ASSERT_FALSE(ftOptions.isKeepRunControlSpecialDaysDefaulted());
+  // Reset
+  ftOptions.resetKeepRunControlSpecialDays();
+  ASSERT_TRUE(ftOptions.keepRunControlSpecialDays());
+  ASSERT_TRUE(ftOptions.isKeepRunControlSpecialDaysDefaulted());
+  ASSERT_TRUE(ftOptions.isKeepRunControlSpecialDaysDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(ftOptions.iPTabularOutput());
+  ASSERT_TRUE(ftOptions.isIPTabularOutputDefaulted());
+  // Set to opposite of default
+  ftOptions.setIPTabularOutput(true);
+  ASSERT_TRUE(ftOptions.iPTabularOutput());
+  ASSERT_FALSE(ftOptions.isIPTabularOutputDefaulted());
+  // Reset
+  ftOptions.resetIPTabularOutput();
+  ASSERT_FALSE(ftOptions.iPTabularOutput());
+  ASSERT_TRUE(ftOptions.isIPTabularOutputDefaulted());
+  ASSERT_TRUE(ftOptions.isIPTabularOutputDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(ftOptions.excludeLCCObjects());
+  ASSERT_TRUE(ftOptions.isExcludeLCCObjectsDefaulted());
+  // Set to opposite of default
+  ftOptions.setExcludeLCCObjects(true);
+  ASSERT_TRUE(ftOptions.excludeLCCObjects());
+  ASSERT_FALSE(ftOptions.isExcludeLCCObjectsDefaulted());
+  // Reset
+  ftOptions.resetExcludeLCCObjects();
+  ASSERT_FALSE(ftOptions.excludeLCCObjects());
+  ASSERT_TRUE(ftOptions.isExcludeLCCObjectsDefaulted());
+  ASSERT_TRUE(ftOptions.isExcludeLCCObjectsDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(ftOptions.excludeSQliteOutputReport());
+  ASSERT_TRUE(ftOptions.isExcludeSQliteOutputReportDefaulted());
+  // Set to opposite of default
+  ftOptions.setExcludeSQliteOutputReport(true);
+  ASSERT_TRUE(ftOptions.excludeSQliteOutputReport());
+  ASSERT_FALSE(ftOptions.isExcludeSQliteOutputReportDefaulted());
+  // Reset
+  ftOptions.resetExcludeSQliteOutputReport();
+  ASSERT_FALSE(ftOptions.excludeSQliteOutputReport());
+  ASSERT_TRUE(ftOptions.isExcludeSQliteOutputReportDefaulted());
+  ASSERT_TRUE(ftOptions.isExcludeSQliteOutputReportDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(ftOptions.excludeHTMLOutputReport());
+  ASSERT_TRUE(ftOptions.isExcludeHTMLOutputReportDefaulted());
+  // Set to opposite of default
+  ftOptions.setExcludeHTMLOutputReport(true);
+  ASSERT_TRUE(ftOptions.excludeHTMLOutputReport());
+  ASSERT_FALSE(ftOptions.isExcludeHTMLOutputReportDefaulted());
+  // Reset
+  ftOptions.resetExcludeHTMLOutputReport();
+  ASSERT_FALSE(ftOptions.excludeHTMLOutputReport());
+  ASSERT_TRUE(ftOptions.isExcludeHTMLOutputReportDefaulted());
+  ASSERT_TRUE(ftOptions.isExcludeHTMLOutputReportDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(ftOptions.excludeVariableDictionary());
+  ASSERT_TRUE(ftOptions.isExcludeVariableDictionaryDefaulted());
+  // Set to opposite of default
+  ftOptions.setExcludeVariableDictionary(true);
+  ASSERT_TRUE(ftOptions.excludeVariableDictionary());
+  ASSERT_FALSE(ftOptions.isExcludeVariableDictionaryDefaulted());
+  // Reset
+  ftOptions.resetExcludeVariableDictionary();
+  ASSERT_FALSE(ftOptions.excludeVariableDictionary());
+  ASSERT_TRUE(ftOptions.isExcludeVariableDictionaryDefaulted());
+  ASSERT_TRUE(ftOptions.isExcludeVariableDictionaryDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(ftOptions.excludeSpaceTranslation());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
+  // Set to opposite of default
+  ftOptions.setExcludeSpaceTranslation(true);
+  ASSERT_TRUE(ftOptions.excludeSpaceTranslation());
+  ASSERT_FALSE(ftOptions.isExcludeSpaceTranslationDefaulted());
+  // Reset
+  ftOptions.resetExcludeSpaceTranslation();
+  ASSERT_FALSE(ftOptions.excludeSpaceTranslation());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
+}
+
+TEST(Filetypes, RunOptions_overrideValuesWith) {
+
+  RunOptions runOptions;
+  ForwardTranslatorOptions ftOptions = runOptions.forwardTranslatorOptions();
+
+  ASSERT_FALSE(runOptions.debug());
+  ASSERT_TRUE(runOptions.isDebugDefaulted());
+  ASSERT_FALSE(runOptions.epjson());
+  ASSERT_TRUE(runOptions.isEpjsonDefaulted());
+  ASSERT_FALSE(runOptions.fast());
+  ASSERT_TRUE(runOptions.isFastDefaulted());
+  ASSERT_FALSE(runOptions.preserveRunDir());
+  ASSERT_TRUE(runOptions.isPreserveRunDirDefaulted());
+  ASSERT_FALSE(runOptions.skipExpandObjects());
+  ASSERT_TRUE(runOptions.isSkipExpandObjectsDefaulted());
+  ASSERT_FALSE(runOptions.skipEnergyPlusPreprocess());
+  ASSERT_TRUE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
+  ASSERT_TRUE(runOptions.cleanup());
+  ASSERT_TRUE(runOptions.isCleanupDefaulted());
+
+  ASSERT_TRUE(ftOptions.keepRunControlSpecialDays());
+  ASSERT_TRUE(ftOptions.isKeepRunControlSpecialDaysDefaulted());
+  ASSERT_FALSE(ftOptions.iPTabularOutput());
+  ASSERT_TRUE(ftOptions.isIPTabularOutputDefaulted());
+  ASSERT_FALSE(ftOptions.excludeLCCObjects());
+  ASSERT_TRUE(ftOptions.isExcludeLCCObjectsDefaulted());
+  ASSERT_FALSE(ftOptions.excludeSQliteOutputReport());
+  ASSERT_TRUE(ftOptions.isExcludeSQliteOutputReportDefaulted());
+  ASSERT_FALSE(ftOptions.excludeHTMLOutputReport());
+  ASSERT_TRUE(ftOptions.isExcludeHTMLOutputReportDefaulted());
+  ASSERT_FALSE(ftOptions.excludeVariableDictionary());
+  ASSERT_TRUE(ftOptions.isExcludeVariableDictionaryDefaulted());
+  ASSERT_FALSE(ftOptions.excludeSpaceTranslation());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
+
+  RunOptions otherRunOptions;
+  ForwardTranslatorOptions otherftOptions = otherRunOptions.forwardTranslatorOptions();
+
+  otherRunOptions.setDebug(false);                    // Explicitly set to default
+  otherRunOptions.setEpjson(true);                    // Explicitly set to opposite of default
+  otherftOptions.setKeepRunControlSpecialDays(true);  // Explicitly set to default
+  otherftOptions.setIPTabularOutput(true);            // Explicitly set to opposite of default
+
+  runOptions.overrideValuesWith(otherRunOptions);
+  ASSERT_FALSE(runOptions.debug());
+  ASSERT_FALSE(runOptions.isDebugDefaulted());  // No longer defaulted
+  ASSERT_TRUE(runOptions.epjson());
+  ASSERT_FALSE(runOptions.isEpjsonDefaulted());  // No longer defaulted
+  ASSERT_FALSE(runOptions.fast());
+  ASSERT_TRUE(runOptions.isFastDefaulted());
+  ASSERT_FALSE(runOptions.preserveRunDir());
+  ASSERT_TRUE(runOptions.isPreserveRunDirDefaulted());
+  ASSERT_FALSE(runOptions.skipExpandObjects());
+  ASSERT_TRUE(runOptions.isSkipExpandObjectsDefaulted());
+  ASSERT_FALSE(runOptions.skipEnergyPlusPreprocess());
+  ASSERT_TRUE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
+  ASSERT_TRUE(runOptions.cleanup());
+  ASSERT_TRUE(runOptions.isCleanupDefaulted());
+
+  ASSERT_TRUE(ftOptions.keepRunControlSpecialDays());
+  ASSERT_FALSE(ftOptions.isKeepRunControlSpecialDaysDefaulted());  // No longer defaulted
+  ASSERT_TRUE(ftOptions.iPTabularOutput());
+  ASSERT_FALSE(ftOptions.isIPTabularOutputDefaulted());  // No longer defaulted
+  ASSERT_FALSE(ftOptions.excludeLCCObjects());
+  ASSERT_TRUE(ftOptions.isExcludeLCCObjectsDefaulted());
+  ASSERT_FALSE(ftOptions.excludeSQliteOutputReport());
+  ASSERT_TRUE(ftOptions.isExcludeSQliteOutputReportDefaulted());
+  ASSERT_FALSE(ftOptions.excludeHTMLOutputReport());
+  ASSERT_TRUE(ftOptions.isExcludeHTMLOutputReportDefaulted());
+  ASSERT_FALSE(ftOptions.excludeVariableDictionary());
+  ASSERT_TRUE(ftOptions.isExcludeVariableDictionaryDefaulted());
+  ASSERT_FALSE(ftOptions.excludeSpaceTranslation());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
+}

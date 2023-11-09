@@ -87,11 +87,8 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
   if (!runOpt_) {
     workflowJSON.setRunOptions(t_workflowRunOptions.runOptions);
   } else {
-    auto ori_ftOptions = runOpt_->forwardTranslatorOptions();
-    workflowJSON.setRunOptions(t_workflowRunOptions.runOptions);
     // user supplied CLI flags trump everything
-    ori_ftOptions.overrideValuesWith(t_workflowRunOptions.runOptions.forwardTranslatorOptions());
-    workflowJSON.runOptions()->setForwardTranslatorOptions(ori_ftOptions);
+    runOpt_->overrideValuesWith(t_workflowRunOptions.runOptions);
   }
 
   if (workflowJSON.runOptions()->debug()) {

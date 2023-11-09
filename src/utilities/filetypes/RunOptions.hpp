@@ -63,30 +63,37 @@ class UTILITIES_API RunOptions
   std::string string() const;
 
   bool debug() const;
+  bool isDebugDefaulted() const;
   bool setDebug(bool debug);
   void resetDebug();
 
   bool epjson() const;
+  bool isEpjsonDefaulted() const;
   bool setEpjson(bool epjson);
   void resetEpjson();
 
   bool fast() const;
+  bool isFastDefaulted() const;
   bool setFast(bool fast);
   void resetFast();
 
   bool preserveRunDir() const;
-  bool setPreserveRunDir(bool preserve);
+  bool isPreserveRunDirDefaulted() const;
+  bool setPreserveRunDir(bool preserveRunDir);
   void resetPreserveRunDir();
 
   bool skipExpandObjects() const;
-  bool setSkipExpandObjects(bool skip);
+  bool isSkipExpandObjectsDefaulted() const;
+  bool setSkipExpandObjects(bool skipExpandObjects);
   void resetSkipExpandObjects();
 
   bool skipEnergyPlusPreprocess() const;
-  bool setSkipEnergyPlusPreprocess(bool skip);
+  bool isSkipEnergyPlusPreprocessDefaulted() const;
+  bool setSkipEnergyPlusPreprocess(bool skipEnergyPlusPreprocess);
   void resetSkipEnergyPlusPreprocess();
 
   bool cleanup() const;
+  bool isCleanupDefaulted() const;
   bool setCleanup(bool cleanup);
   void resetCleanup();
 
@@ -101,6 +108,9 @@ class UTILITIES_API RunOptions
   ForwardTranslatorOptions forwardTranslatorOptions() const;
   bool setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions);
   void resetForwardTranslatorOptions();
+
+  /* Any non-defaulted value from other is brought over */
+  void overrideValuesWith(const RunOptions& other);
 
  protected:
   // get the impl
