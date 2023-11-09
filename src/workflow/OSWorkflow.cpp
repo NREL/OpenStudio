@@ -365,19 +365,34 @@ void OSWorkflow::run() {
   for (auto& [jobName, jobInfo] : jobMap) {
     LOG(Debug, fmt::format("{} - selected = {}\n", jobName, jobInfo.selected));
     if (jobInfo.selected) {
-      timeJob(jobInfo.jobFun, std::string{jobName});
+      try {
+        timeJob(jobInfo.jobFun, std::string{jobName});
+      } catch (std::exception& e) {
+        if (m_add_timings) {
+          m_timers->tockCurrentTimer();
+        }
+        LOG(Error, "Found error in state '" << jobName << "' with message " << e.what());
+        // Allow continuing anyways if it fails in reporting measures
+        if (jobName != "ReportingMeasures") {
+          state = State::Errored;
+          break;
+        }
+      }
     } else {
       LOG(Info, "Skipping job " << jobName);
     }
   }
 
-  // Save final IDF
-  if (m_add_timings) {
-    m_timers->newTimer("Save IDF");
-  }
-  workspace_->save(runDirPath / "in.idf", true);  // TODO: Is this really necessary? Seems like it's done before already
-  if (m_add_timings) {
-    m_timers->tockCurrentTimer();
+  // TODO: Is this really necessary? Seems like it's done before already (in RunPreProcess)
+  if (workspace_) {
+    // Save final IDF
+    if (m_add_timings) {
+      m_timers->newTimer("Save IDF");
+    }
+    workspace_->save(runDirPath / "in.idf", true);
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
+    }
   }
 
   if (!workflowJSON.runOptions()->fast()) {

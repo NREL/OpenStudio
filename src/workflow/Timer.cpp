@@ -41,7 +41,9 @@ std::string Timer::message() const {
 }
 
 auto Timer::duration() const {
-  OS_ASSERT(m_end != TimePointType{});
+  if (m_end == TimePointType{}) {
+    throw std::runtime_error(fmt::format("Timer {} with level={} was not stopped", m_message, m_level));
+  }
   return std::chrono::duration_cast<DurationType>(m_end - m_start);
 }
 
