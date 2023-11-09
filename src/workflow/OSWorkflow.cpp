@@ -219,7 +219,7 @@ void OSWorkflow::run() {
   // Need to recreate the runDir as fast as possible, so I can direct a file log sink there
   bool hasDeletedRunDir = false;
   auto runDirPath = workflowJSON.absoluteRunDir();
-  if (!workflowJSON.runOptions()->preserveRunDir()) {
+  if (!workflowJSON.runOptions()->preserveRunDir() && !m_post_process_only) {
     // We don't have a run_dir argument anyways
     if (openstudio::filesystem::is_directory(runDirPath)) {
       hasDeletedRunDir = true;
