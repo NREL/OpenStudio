@@ -205,7 +205,7 @@ void OSWorkflow::saveIDFToRootDirIfDebug() {
   LOG(Info, "Saved IDF as " << savePath);
 }
 
-void OSWorkflow::run() {
+bool OSWorkflow::run() {
 
   if (!m_show_stdout) {
     openstudio::Logger::instance().standardOutLogger().disable();
@@ -359,6 +359,8 @@ void OSWorkflow::run() {
     jobMap.at("Cleanup").selected = false;
   }
 
+  std::string lastFatalError;
+
   for (auto& [jobName, jobInfo] : jobMap) {
     LOG(Debug, fmt::format("{} - selected = {}\n", jobName, jobInfo.selected));
     if (jobInfo.selected) {
@@ -368,7 +370,8 @@ void OSWorkflow::run() {
         if (m_add_timings) {
           m_timers->tockCurrentTimer();
         }
-        LOG(Error, "Found error in state '" << jobName << "' with message " << e.what());
+        lastFatalError = fmt::format("Found error in state '{}' with message :'{}'", jobName, e.what());
+        LOG(Error, lastFatalError);
         // Allow continuing anyways if it fails in reporting measures
         if (jobName != "ReportingMeasures") {
           state = State::Errored;
@@ -439,12 +442,17 @@ void OSWorkflow::run() {
     OS_ASSERT(file.is_open());
     file << fmt::format("Finished Workflow {}\n", std::chrono::system_clock::now());
     file.close();
+    state = State::Finished;
   }
 
   if (m_add_timings) {
     fmt::print("\nTiming:\n\n{}\n", m_timers->timeReport());
-
     // TODO: create profile.json in the run folder
   }
+
+  if (!lastFatalError.empty()) {
+    fmt::print(stderr, "Failed to run workflow\n  Last Error:\n{}\n", lastFatalError);
+  }
+  return (state == State::Finished);
 }
 }  // namespace openstudio

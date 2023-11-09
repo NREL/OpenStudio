@@ -36,7 +36,7 @@ class OSWorkflow
   OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
   OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
 
-  void run();
+  bool run();
 
  private:
   REGISTER_LOGGER("openstudio.workflow.OSWorkflow");

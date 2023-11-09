@@ -297,7 +297,7 @@ end
         runner.incrementStep();
       }
       ensureBlock(true);
-      throw std::runtime_error(fmt::format("Runner error: Measure {} reported an error with [{}]\n", scriptPath_->generic_string(), e.what()));
+      throw std::runtime_error(fmt::format("Runner error: Measure {} reported an error with [{}]", scriptPath_->generic_string(), e.what()));
     }
 
     // if doing output requests we are done now
@@ -310,7 +310,7 @@ end
       runner.incrementStep();
       if (auto errors = result.stepErrors(); !errors.empty()) {
         ensureBlock(true);
-        throw std::runtime_error(fmt::format("Measure {} reported an error with [{}]\n", measureDirName, fmt::join(errors, "\n")));
+        throw std::runtime_error(fmt::format("Measure {} reported an error with [{}]", measureDirName, fmt::join(errors, "\n")));
       }
 
       if (measureType == MeasureType::ModelMeasure) {
