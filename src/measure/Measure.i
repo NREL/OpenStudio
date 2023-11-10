@@ -96,6 +96,11 @@
 };
 
 #if defined SWIGRUBY
+  %feature("director:except") {
+    // Look at openstudio::evalString for a possible approach to reporting more info or a callstack.
+    // This will at least protect from calls to bad ruby code.
+    throw Swig::DirectorMethodException($error);
+  }
 
   %ignore OSMeasureInfoGetter;
 
