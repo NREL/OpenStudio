@@ -97,9 +97,7 @@
 
 #if defined SWIGRUBY
   %feature("director:except") {
-    // Look at openstudio::evalString for a possible approach to reporting more info or a callstack.
-    // This will at least protect from calls to bad ruby code.
-
+    // Mimic openstudio::evalString for a possible approach to reporting more info or a callstack.
     VALUE errinfo = rb_errinfo();
     VALUE exception_class = rb_obj_class(errinfo);
     VALUE classNameValue = rb_class_name(exception_class);
@@ -161,7 +159,6 @@
 #if defined SWIGPYTHON
   %feature("director:except") {
 
-#if 1
     if ($error != nullptr) {
 
       PyObject *exc_type = nullptr;
@@ -185,8 +182,8 @@
       Py_DECREF(pModuleName);
 
       if (pyth_module == nullptr) {
-          err_msg += "\nCannot find 'traceback' module, this is weird";
-          Swig::DirectorMethodException::raise(err_msg.c_str());
+          err_msg += "\nCannot find 'traceback' module, this should not happen";
+          throw Swig::DirectorMethodException(err_msg.c_str());
       }
 
       PyObject *pyth_func = PyObject_GetAttrString(pyth_module, "format_exception");
@@ -199,63 +196,35 @@
           // traceback.format_exception returns a list, so iterate on that
           if (!pyth_val || !PyList_Check(pyth_val)) { // NOLINT(hicpp-signed-bitwise)
               err_msg += "\nIn reportPythonError(), traceback.format_exception did not return a list.";
-              Swig::DirectorMethodException::raise(err_msg.c_str());
-          }
+          } else {
+            unsigned long numVals = PyList_Size(pyth_val);
+            if (numVals == 0) {
+                err_msg += "\nNo traceback available";
+            } else {
+              err_msg += "\nPython traceback follows:\n```";
 
-          unsigned long numVals = PyList_Size(pyth_val);
-          if (numVals == 0) {
-              err_msg += "\nNo traceback available";
-              Swig::DirectorMethodException::raise(err_msg.c_str());
-          }
-
-          err_msg += "\nPython traceback follows:\n```";
-
-          for (unsigned long itemNum = 0; itemNum < numVals; itemNum++) {
-              PyObject *item = PyList_GetItem(pyth_val, itemNum);
-              if (PyUnicode_Check(item)) { // NOLINT(hicpp-signed-bitwise) -- something inside Python code causes warning
-                  std::string traceback_line = PyUnicode_AsUTF8(item);
-                  if (!traceback_line.empty() && traceback_line[traceback_line.length() - 1] == '\n') {
-                      traceback_line.erase(traceback_line.length() - 1);
+              for (unsigned long itemNum = 0; itemNum < numVals; itemNum++) {
+                  PyObject *item = PyList_GetItem(pyth_val, itemNum);
+                  if (PyUnicode_Check(item)) { // NOLINT(hicpp-signed-bitwise) -- something inside Python code causes warning
+                      std::string traceback_line = PyUnicode_AsUTF8(item);
+                      if (!traceback_line.empty() && traceback_line[traceback_line.length() - 1] == '\n') {
+                          traceback_line.erase(traceback_line.length() - 1);
+                      }
+                      err_msg += "\n" + traceback_line;
                   }
-                  err_msg += "\n" + traceback_line;
+                  // PyList_GetItem returns a borrowed reference, do not decrement
               }
-              // PyList_GetItem returns a borrowed reference, do not decrement
-          }
 
-          err_msg += "\n```";
+              err_msg += "\n```";
+            }
+          }
 
           // PyList_Size returns a borrowed reference, do not decrement
           Py_DECREF(pyth_val); // PyObject_CallFunction returns new reference, decrement
       }
       Py_DECREF(pyth_func); // PyObject_GetAttrString returns a new reference, decrement it
-      Swig::DirectorMethodException::raise(err_msg.c_str());
+      throw Swig::DirectorMethodException(err_msg.c_str());
     }
-#else
-    if ($error != NULL) {
-      PyObject *exc, *val, *tb;
-      PyErr_Fetch(&exc, &val, &tb);
-      PyErr_NormalizeException(&exc, &val, &tb);
-      std::string err_msg("In method '$symname': ");
-
-      PyObject* exc_str = PyObject_GetAttrString(exc, "__name__");
-      err_msg += PyUnicode_AsUTF8(exc_str);
-      Py_XDECREF(exc_str);
-
-      if (val != NULL)
-      {
-        PyObject* val_str = PyObject_Str(val);
-        err_msg += ": ";
-        err_msg += PyUnicode_AsUTF8(val_str);
-        Py_XDECREF(val_str);
-      }
-
-      Py_XDECREF(exc);
-      Py_XDECREF(val);
-      Py_XDECREF(tb);
-
-      Swig::DirectorMethodException::raise(err_msg.c_str());
-    }
-#endif
   }
 #endif
 
