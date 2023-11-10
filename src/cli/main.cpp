@@ -338,6 +338,12 @@ int main(int argc, char* argv[]) {
       app.parse(args);
     } catch (const CLI::ParseError& e) {
       return app.exit(e);
+    } catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+      return 1;
+    } catch (...) {
+      std::cout << "OpenStudio encountered an unknown error" << std::endl;
+      return 1;
     }
 
     if (*execRubyOption) {
