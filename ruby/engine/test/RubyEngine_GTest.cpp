@@ -13,6 +13,8 @@
 
 #include <fmt/format.h>
 
+#include <regex>
+
 class RubyEngineFixture : public testing::Test
 {
  public:
@@ -20,6 +22,12 @@ class RubyEngineFixture : public testing::Test
     openstudio::path scriptPath = openstudio::getApplicationSourceDirectory() / fmt::format("ruby/engine/test/{}/measure.rb", classAndDirName);
     OS_ASSERT(openstudio::filesystem::is_regular_file(scriptPath));
     return scriptPath;
+  }
+
+  static std::string stripAddressFromErrorMessage(const std::string& error_message) {
+    static std::regex object_address_re("0x[[:alnum:]]*>");
+
+    return std::regex_replace(error_message, object_address_re, "ADDRESS>");
   }
 
  protected:
@@ -51,8 +59,22 @@ TEST_F(RubyEngineFixture, BadMeasure) {
 
   ASSERT_EQ(measurePtr->name(), "Bad Measure");
 
+  std::string expected_exception = fmt::format(R"(SWIG director method error. RuntimeError: oops
+["/Users/julien/Software/Others/OpenStudio2/ruby/engine/test/BadMeasure/measure.rb:12:in `another_method'", "/Users/julien/Software/Others/OpenStudio2/ruby/engine/test/BadMeasure/measure.rb:16:in `arguments'"]
+
+Traceback:
+{0}:12:in `another_method'
+{0}:16:in `arguments')",
+                                               scriptPath.generic_string());
+
   openstudio::model::Model model;
-  ASSERT_ANY_THROW(measurePtr->arguments(model));
+  try {
+    measurePtr->arguments(model);
+    ASSERT_FALSE(true) << "Expected measure arguments(model) to throw";
+  } catch (std::exception& e) {
+    std::string error = e.what();
+    EXPECT_EQ(expected_exception, error);
+  }
 }
 
 TEST_F(RubyEngineFixture, WrongMethodMeasure) {
@@ -65,6 +87,20 @@ TEST_F(RubyEngineFixture, WrongMethodMeasure) {
 
   ASSERT_EQ(measurePtr->name(), "Wrong Method Measure");
 
+  std::string expected_exception =
+    fmt::format(R"(SWIG director method error. NoMethodError: undefined method `nonExistingMethod' for #<OpenStudio::Model::Model:ADDRESS>
+["/Users/julien/Software/Others/OpenStudio2/ruby/engine/test/WrongMethodMeasure/measure.rb:12:in `arguments'"]
+
+Traceback:
+{0}:12:in `arguments')",
+                scriptPath.generic_string());
+
   openstudio::model::Model model;
-  ASSERT_ANY_THROW(measurePtr->arguments(model));
+  try {
+    measurePtr->arguments(model);
+    ASSERT_FALSE(true) << "Expected measure arguments(model) to throw";
+  } catch (std::exception& e) {
+    std::string error = e.what();
+    EXPECT_EQ(expected_exception, stripAddressFromErrorMessage(error));
+  }
 }

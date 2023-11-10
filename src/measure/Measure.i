@@ -99,7 +99,53 @@
   %feature("director:except") {
     // Look at openstudio::evalString for a possible approach to reporting more info or a callstack.
     // This will at least protect from calls to bad ruby code.
-    throw Swig::DirectorMethodException($error);
+
+    VALUE errinfo = rb_errinfo();
+    VALUE exception_class = rb_obj_class(errinfo);
+    VALUE classNameValue = rb_class_name(exception_class);
+    std::string className(StringValuePtr(classNameValue));
+
+    VALUE errstr = rb_obj_as_string(errinfo);
+    std::string errMessage(StringValuePtr(errstr));
+
+    std::string totalErr = className + ": " + errMessage;
+
+    // I just **cannot** figure out a way to get the error location in C, without calling $@.to_s. Seems nothing is available here
+    int locationError;
+    VALUE locval = rb_eval_string_protect("$@.to_s", &locationError);
+    std::string loc;
+    if (locationError == 0) {
+      loc = StringValuePtr(locval);
+    } else {
+      loc = "Failed to get VM location";
+    }
+
+    // Generally speaking, the backtrace is there, but not for the case where it's a stack too deep error
+    const ID ID_backtrace = rb_intern_const("backtrace");
+    if (exception_class != rb_eSysStackError && rb_respond_to(errinfo, ID_backtrace)) {
+      std::string btlines;
+      /*volatile*/ VALUE backtrace;
+      if (!NIL_P(backtrace = rb_funcall(errinfo, ID_backtrace, 0))) {
+        VALUE backtracejoin = rb_ary_join(backtrace, rb_str_new2("\n"));
+        btlines = StringValuePtr(backtracejoin);
+
+        // Get the backing C array of the ruby array
+        VALUE* elements = RARRAY_PTR(backtrace);
+        for (long c = 0; c < RARRAY_LEN(backtrace); ++c) {
+          VALUE entry = elements[c];
+          [[maybe_unused]] char* backtrace_line = RSTRING_PTR(entry);
+          char* backtrace_line2 = StringValuePtr(entry);
+        }
+      }
+
+      if (!btlines.empty()) {
+        loc += "\n\nTraceback:\n" + btlines;
+      }
+    } else {
+    }
+
+    totalErr += "\n" + loc;
+    throw Swig::DirectorMethodException(totalErr.c_str());
   }
 
   %ignore OSMeasureInfoGetter;
