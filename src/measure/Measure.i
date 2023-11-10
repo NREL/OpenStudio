@@ -117,17 +117,42 @@
         VALUE backtracejoin = rb_ary_join(backtrace, rb_str_new2("\n"));
         const std::string btlines = StringValuePtr(backtracejoin);
         if (!btlines.empty()) {
-          loc += "\nTraceback:\n" + btlines;
+          loc += "\nTraceback (most recent call last):\n" + btlines;
         }
       }
     }
     if (loc.empty()) {
-      // In case we couldn't produce the backtrace, fall back on this:
+      // In case we couldn't produce the backtrace (SystemStackError: stack level too deep), fall back on this:
       // I just **cannot** figure out a way to get the error location in C, without calling $@.to_s. Seems nothing is available here
+      // $@ is an array, seems to be already ordered from most recent to older
       int locationError;
-      VALUE locval = rb_eval_string_protect("$@.to_s", &locationError);
+      VALUE btArray = rb_eval_string_protect("$@", &locationError); // "$@.reverse"
       if (locationError == 0) {
-        loc = StringValuePtr(locval);
+        // Get the backing C array of the ruby array
+        VALUE* elements = RARRAY_PTR(btArray);
+        long arrayLen = RARRAY_LEN(btArray);
+        const long back_trace_limit = 20;
+        loc += "\nTraceback (most recent call last):";
+
+        if (arrayLen > back_trace_limit) {
+          long omit = arrayLen - back_trace_limit;
+
+          const long initial_back_trace_limit_when_too_long = 8;
+          for (long c = arrayLen - 1 ; c > arrayLen - initial_back_trace_limit_when_too_long; --c) {
+            VALUE entry = elements[c];
+            std::string backtrace_line = RSTRING_PTR(entry);
+            loc += "\n" + std::string(backtrace_line);
+          }
+          loc += "\n\t... " + std::to_string(omit) + " levels...";
+
+          arrayLen = back_trace_limit - initial_back_trace_limit_when_too_long;
+        }
+        for (long c = 0; c < arrayLen; ++c) {
+          VALUE entry = elements[c];
+          std::string backtrace_line = RSTRING_PTR(entry);
+          loc += "\n" + std::string(backtrace_line);
+        }
+
       } else {
         loc = "Failed to get VM location";
       }

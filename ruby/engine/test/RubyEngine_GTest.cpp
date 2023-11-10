@@ -61,7 +61,7 @@ TEST_F(RubyEngineFixture, BadMeasure) {
 
   std::string expected_exception = fmt::format(R"(SWIG director method error. RuntimeError: oops
 
-Traceback:
+Traceback (most recent call last):
 {0}:12:in `another_method'
 {0}:16:in `arguments')",
                                                scriptPath.generic_string());
@@ -89,7 +89,7 @@ TEST_F(RubyEngineFixture, WrongMethodMeasure) {
   std::string expected_exception =
     fmt::format(R"(SWIG director method error. NoMethodError: undefined method `nonExistingMethod' for #<OpenStudio::Model::Model:ADDRESS>
 
-Traceback:
+Traceback (most recent call last):
 {0}:12:in `arguments')",
                 scriptPath.generic_string());
 
@@ -102,3 +102,49 @@ Traceback:
     EXPECT_EQ(expected_exception, stripAddressFromErrorMessage(error));
   }
 }
+
+TEST_F(RubyEngineFixture, StackLevelTooDeepMeasure) {
+
+  const std::string classAndDirName = "StackLevelTooDeepMeasure";
+
+  const auto scriptPath = getScriptPath(classAndDirName);
+  auto measureScriptObject = (*thisEngine)->loadMeasure(scriptPath, classAndDirName);
+  auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+
+  ASSERT_EQ(measurePtr->name(), "Stack Level Too Deep Measure");
+
+  std::string expected_exception = fmt::format(R"(SWIG director method error. SystemStackError: stack level too deep
+
+Traceback (most recent call last):
+{0}:16:in `arguments'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+	... 10061 levels...
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s'
+{0}:12:in `s')",
+                                               scriptPath.generic_string());
+
+  openstudio::model::Model model;
+  try {
+    measurePtr->arguments(model);
+    ASSERT_FALSE(true) << "Expected measure arguments(model) to throw";
+  } catch (std::exception& e) {
+    std::string error = e.what();
+    EXPECT_EQ(expected_exception, stripAddressFromErrorMessage(error));
+  }
+}
+
