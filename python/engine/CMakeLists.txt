@@ -44,6 +44,20 @@ target_compile_options(pythonengine PRIVATE
 
 target_compile_definitions(pythonengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
 
+if(BUILD_TESTING)
+  set(pythonengine_test_depends
+    openstudio_scriptengine
+    openstudiolib
+    CONAN_PKG::fmt
+  )
+
+  set(pythonengine_test_src
+    test/PythonEngine_GTest.cpp
+  )
+
+  CREATE_TEST_TARGETS(pythonengine "${pythonengine_test_src}" "${pythonengine_test_depends}")
+endif()
+
 install(TARGETS pythonengine EXPORT openstudio DESTINATION ${LIB_DESTINATION_DIR} COMPONENT "CLI")
 
 # it goes into lib/ and we want to find:

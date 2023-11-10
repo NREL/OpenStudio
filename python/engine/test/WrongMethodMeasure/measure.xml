@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>wrong_method_measure</name>
+  <uid>11111111-c89b-4b93-b400-110ca060b2bb</uid>
+  <version_id>998cdb81-addf-4fae-809d-175c6475c592</version_id>
+  <version_modified>2023-11-10T10:37:53Z</version_modified>
+  <xml_checksum>33A29C78</xml_checksum>
+  <class_name>WrongMethodMeasure</class_name>
+  <display_name>Wrong Method Measure</display_name>
+  <description></description>
+  <modeler_description>The arguments method calls a non existing method on the model passed as argument</modeler_description>
+  <arguments />
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Opaque</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Python</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.4.1</identifier>
+        <min_compatible>3.4.1</min_compatible>
+      </version>
+      <filename>measure.py</filename>
+      <filetype>py</filetype>
+      <usage_type>script</usage_type>
+      <checksum>7DCE622C</checksum>
+    </file>
+  </files>
+</measure>

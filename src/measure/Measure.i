@@ -112,4 +112,105 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %feature("director:except") {
+
+#if 1
+    if ($error != nullptr) {
+
+      PyObject *exc_type = nullptr;
+      PyObject *exc_value = nullptr;
+      PyObject *exc_tb = nullptr;
+      PyErr_Fetch(&exc_type, &exc_value, &exc_tb);
+      PyErr_NormalizeException(&exc_type, &exc_value, &exc_tb);
+      PyObject *str_exc_value = PyObject_Repr(exc_value); // Now a unicode object
+      PyObject *pyStr2 = PyUnicode_AsEncodedString(str_exc_value, "utf-8", "Error ~");
+      Py_DECREF(str_exc_value);
+      char *strExcValue = PyBytes_AsString(pyStr2); // NOLINT(hicpp-signed-bitwise)
+      Py_DECREF(pyStr2);
+
+      std::string err_msg = "In method '$symname': `" + std::string{strExcValue} + "`";
+
+      // See if we can get a full traceback.
+      // Calls into python, and does the same as capturing the exception in `e`
+      // then `print(traceback.format_exception(e.type, e.value, e.tb))`
+      PyObject *pModuleName = PyUnicode_DecodeFSDefault("traceback");
+      PyObject *pyth_module = PyImport_Import(pModuleName);
+      Py_DECREF(pModuleName);
+
+      if (pyth_module == nullptr) {
+          err_msg += "\nCannot find 'traceback' module, this is weird";
+          Swig::DirectorMethodException::raise(err_msg.c_str());
+      }
+
+      PyObject *pyth_func = PyObject_GetAttrString(pyth_module, "format_exception");
+      Py_DECREF(pyth_module); // PyImport_Import returns a new reference, decrement it
+
+      if (pyth_func || PyCallable_Check(pyth_func)) {
+
+          PyObject *pyth_val = PyObject_CallFunction(pyth_func, "OOO", exc_type, exc_value, exc_tb);
+
+          // traceback.format_exception returns a list, so iterate on that
+          if (!pyth_val || !PyList_Check(pyth_val)) { // NOLINT(hicpp-signed-bitwise)
+              err_msg += "\nIn reportPythonError(), traceback.format_exception did not return a list.";
+              Swig::DirectorMethodException::raise(err_msg.c_str());
+          }
+
+          unsigned long numVals = PyList_Size(pyth_val);
+          if (numVals == 0) {
+              err_msg += "\nNo traceback available";
+              Swig::DirectorMethodException::raise(err_msg.c_str());
+          }
+
+          err_msg += "\nPython traceback follows:\n```";
+
+          for (unsigned long itemNum = 0; itemNum < numVals; itemNum++) {
+              PyObject *item = PyList_GetItem(pyth_val, itemNum);
+              if (PyUnicode_Check(item)) { // NOLINT(hicpp-signed-bitwise) -- something inside Python code causes warning
+                  std::string traceback_line = PyUnicode_AsUTF8(item);
+                  if (!traceback_line.empty() && traceback_line[traceback_line.length() - 1] == '\n') {
+                      traceback_line.erase(traceback_line.length() - 1);
+                  }
+                  err_msg += "\n" + traceback_line;
+              }
+              // PyList_GetItem returns a borrowed reference, do not decrement
+          }
+
+          err_msg += "\n```";
+
+          // PyList_Size returns a borrowed reference, do not decrement
+          Py_DECREF(pyth_val); // PyObject_CallFunction returns new reference, decrement
+      }
+      Py_DECREF(pyth_func); // PyObject_GetAttrString returns a new reference, decrement it
+      Swig::DirectorMethodException::raise(err_msg.c_str());
+    }
+#else
+    if ($error != NULL) {
+      PyObject *exc, *val, *tb;
+      PyErr_Fetch(&exc, &val, &tb);
+      PyErr_NormalizeException(&exc, &val, &tb);
+      std::string err_msg("In method '$symname': ");
+
+      PyObject* exc_str = PyObject_GetAttrString(exc, "__name__");
+      err_msg += PyUnicode_AsUTF8(exc_str);
+      Py_XDECREF(exc_str);
+
+      if (val != NULL)
+      {
+        PyObject* val_str = PyObject_Str(val);
+        err_msg += ": ";
+        err_msg += PyUnicode_AsUTF8(val_str);
+        Py_XDECREF(val_str);
+      }
+
+      Py_XDECREF(exc);
+      Py_XDECREF(val);
+      Py_XDECREF(tb);
+
+      Swig::DirectorMethodException::raise(err_msg.c_str());
+    }
+#endif
+  }
+#endif
+
 #endif // MEASURE_I
