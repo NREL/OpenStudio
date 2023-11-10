@@ -393,7 +393,7 @@ if result != 0
   return 1
 end
 )ruby",
-        opt.directoryPath.generic_string());
+        openstudio::filesystem::canonical(opt.directoryPath).generic_string());
       rubyEngine->exec(runTestCmd);
     }
   }
