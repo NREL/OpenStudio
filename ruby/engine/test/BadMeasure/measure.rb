@@ -4,12 +4,19 @@ class BadMeasure < OpenStudio::Measure::ModelMeasure
     return "Bad Measure"
   end
 
-  def arguments(model)
+  def modeler_description
+     return "The arguments method calls another_method which does a raise ValueError"
+  end
+
+  def another_method
     raise "oops"
+  end
 
-    # args = OpenStudio::Measure::OSArgumentVector.new
+  def arguments(model)
+    another_method
+    args = OpenStudio::Measure::OSArgumentVector.new
 
-    # return args
+    return args
   end
 
   def run(model, runner, user_arguments)
