@@ -213,13 +213,13 @@
           if (!pyth_val || !PyList_Check(pyth_val)) { // NOLINT(hicpp-signed-bitwise)
               err_msg += "\ntraceback.format_exception did not return a list.";
           } else {
-            unsigned long numVals = PyList_Size(pyth_val);
+            Py_ssize_t numVals = PyList_Size(pyth_val);
             if (numVals == 0) {
                 err_msg += "\nNo traceback available";
             } else {
               // err_msg += "\nPython traceback follows:\n```";
               err_msg += '\n';
-              for (unsigned long itemNum = 0; itemNum < numVals; itemNum++) {
+              for (Py_ssize_t itemNum = 0; itemNum < numVals; itemNum++) {
                   PyObject *item = PyList_GetItem(pyth_val, itemNum);
                   if (PyUnicode_Check(item)) { // NOLINT(hicpp-signed-bitwise) -- something inside Python code causes warning
                       std::string traceback_line = PyUnicode_AsUTF8(item);
