@@ -211,14 +211,14 @@
 
           // traceback.format_exception returns a list, so iterate on that
           if (!pyth_val || !PyList_Check(pyth_val)) { // NOLINT(hicpp-signed-bitwise)
-              err_msg += "\nIn reportPythonError(), traceback.format_exception did not return a list.";
+              err_msg += "\ntraceback.format_exception did not return a list.";
           } else {
             unsigned long numVals = PyList_Size(pyth_val);
             if (numVals == 0) {
                 err_msg += "\nNo traceback available";
             } else {
-              err_msg += "\nPython traceback follows:\n```";
-
+              // err_msg += "\nPython traceback follows:\n```";
+              err_msg += '\n';
               for (unsigned long itemNum = 0; itemNum < numVals; itemNum++) {
                   PyObject *item = PyList_GetItem(pyth_val, itemNum);
                   if (PyUnicode_Check(item)) { // NOLINT(hicpp-signed-bitwise) -- something inside Python code causes warning
@@ -231,7 +231,7 @@
                   // PyList_GetItem returns a borrowed reference, do not decrement
               }
 
-              err_msg += "\n```";
+              // err_msg += "\n```";
             }
           }
 

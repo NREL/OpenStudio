@@ -51,15 +51,13 @@ TEST_F(PythonEngineFixture, BadMeasure) {
   ASSERT_EQ(measurePtr->name(), "Bad Measure");
 
   std::string expected_exception = fmt::format(R"(SWIG director method error. In method 'arguments': `ValueError('oops')`
-Python traceback follows:
-```
+
 Traceback (most recent call last):
   File "{0}", line 17, in arguments
     self.another_method()
   File "{0}", line 14, in another_method
     raise ValueError("oops")
-ValueError: oops
-```)",
+ValueError: oops)",
                                                scriptPath.generic_string());
 
   openstudio::model::Model model;
@@ -84,13 +82,47 @@ TEST_F(PythonEngineFixture, WrongMethodMeasure) {
 
   std::string expected_exception =
     fmt::format(R"(SWIG director method error. In method 'arguments': `AttributeError("'Model' object has no attribute 'nonExistingMethod'")`
-Python traceback follows:
-```
+
 Traceback (most recent call last):
   File "{}", line 14, in arguments
     model.nonExistingMethod()
-AttributeError: 'Model' object has no attribute 'nonExistingMethod'
-```)",
+AttributeError: 'Model' object has no attribute 'nonExistingMethod')",
+                scriptPath.generic_string());
+
+  openstudio::model::Model model;
+  try {
+    measurePtr->arguments(model);
+    ASSERT_FALSE(true) << "Expected measure arguments(model) to throw";
+  } catch (std::exception& e) {
+    std::string error = e.what();
+    EXPECT_EQ(expected_exception, error);
+  }
+}
+
+TEST_F(PythonEngineFixture, StackLevelTooDeepMeasure) {
+
+  const std::string classAndDirName = "StackLevelTooDeepMeasure";
+
+  const auto scriptPath = getScriptPath(classAndDirName);
+  auto measureScriptObject = (*thisEngine)->loadMeasure(scriptPath, classAndDirName);
+  auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+
+  ASSERT_EQ(measurePtr->name(), "Stack Level Too Deep Measure");
+
+  std::string expected_exception =
+    fmt::format(R"(SWIG director method error. In method 'arguments': `RecursionError('maximum recursion depth exceeded')`
+
+Traceback (most recent call last):
+  File "{0}", line 16, in arguments
+    s(10)
+  File "{0}", line 6, in s
+    return s(x)
+  File "{0}", line 6, in s
+    return s(x)
+  File "{0}", line 6, in s
+    return s(x)
+  [Previous line repeated 996 more times]
+RecursionError: maximum recursion depth exceeded)",
                 scriptPath.generic_string());
 
   openstudio::model::Model model;
