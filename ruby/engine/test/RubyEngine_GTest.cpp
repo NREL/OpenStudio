@@ -60,7 +60,6 @@ TEST_F(RubyEngineFixture, BadMeasure) {
   ASSERT_EQ(measurePtr->name(), "Bad Measure");
 
   std::string expected_exception = fmt::format(R"(SWIG director method error. RuntimeError: oops
-["/Users/julien/Software/Others/OpenStudio2/ruby/engine/test/BadMeasure/measure.rb:12:in `another_method'", "/Users/julien/Software/Others/OpenStudio2/ruby/engine/test/BadMeasure/measure.rb:16:in `arguments'"]
 
 Traceback:
 {0}:12:in `another_method'
@@ -89,7 +88,6 @@ TEST_F(RubyEngineFixture, WrongMethodMeasure) {
 
   std::string expected_exception =
     fmt::format(R"(SWIG director method error. NoMethodError: undefined method `nonExistingMethod' for #<OpenStudio::Model::Model:ADDRESS>
-["/Users/julien/Software/Others/OpenStudio2/ruby/engine/test/WrongMethodMeasure/measure.rb:12:in `arguments'"]
 
 Traceback:
 {0}:12:in `arguments')",

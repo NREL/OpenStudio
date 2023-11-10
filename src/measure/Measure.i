@@ -108,17 +108,8 @@
 
     std::string totalErr = className + ": " + errMessage;
 
-    // I just **cannot** figure out a way to get the error location in C, without calling $@.to_s. Seems nothing is available here
-    int locationError;
-    VALUE locval = rb_eval_string_protect("$@.to_s", &locationError);
-    std::string loc;
-    if (locationError == 0) {
-      loc = StringValuePtr(locval);
-    } else {
-      loc = "Failed to get VM location";
-    }
-
     // Generally speaking, the backtrace is there, but not for the case where it's a stack too deep error
+    std::string loc;
     const ID ID_backtrace = rb_intern_const("backtrace");
     if (exception_class != rb_eSysStackError && rb_respond_to(errinfo, ID_backtrace)) {
       /*volatile*/ VALUE backtrace;
@@ -126,8 +117,19 @@
         VALUE backtracejoin = rb_ary_join(backtrace, rb_str_new2("\n"));
         const std::string btlines = StringValuePtr(backtracejoin);
         if (!btlines.empty()) {
-          loc += "\n\nTraceback:\n" + btlines;
+          loc += "\nTraceback:\n" + btlines;
         }
+      }
+    }
+    if (loc.empty()) {
+      // In case we couldn't produce the backtrace, fall back on this:
+      // I just **cannot** figure out a way to get the error location in C, without calling $@.to_s. Seems nothing is available here
+      int locationError;
+      VALUE locval = rb_eval_string_protect("$@.to_s", &locationError);
+      if (locationError == 0) {
+        loc = StringValuePtr(locval);
+      } else {
+        loc = "Failed to get VM location";
       }
     }
 
