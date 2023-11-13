@@ -325,7 +325,7 @@ end
       }
 
       // Add an applicability flag to all the measure results
-      StepResult stepResult = std::move(*stepResult_);
+      const StepResult stepResult = std::move(*stepResult_);
       LOG(Debug, "Step Result: " << stepResult.valueName());
       measureAttributes["applicable"] = openstudio::Variant(!((stepResult == StepResult::NA) || (stepResult == StepResult::Skip)));
 

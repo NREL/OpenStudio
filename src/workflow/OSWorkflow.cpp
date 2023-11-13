@@ -19,6 +19,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/core/FileLogSink.hpp"
+#include "../utilities/core/Json.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/data/Variant.hpp"
 #include "../utilities/filetypes/WorkflowStep.hpp"
@@ -30,9 +31,11 @@
 #include <fmt/chrono.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <json/json.h>
 
 #include <array>
 #include <chrono>
+#include <limits>
 #include <string_view>
 #include <stdexcept>
 
@@ -222,6 +225,8 @@ bool OSWorkflow::run() {
       hasDeletedRunDir = true;
       openstudio::filesystem::remove_all(runDirPath);
     }
+  }
+  if (!openstudio::filesystem::is_directory(runDirPath)) {
     openstudio::filesystem::create_directory(runDirPath);
   }
   FileLogSink logFile(runDirPath / "run.log");
@@ -456,12 +461,14 @@ bool OSWorkflow::run() {
   return (state == State::Finished);
 }
 
-void OSWorkflow::communicateMeasureAttributes() const {
-
+Json::Value outputAttributesToJSON(const std::map<std::string, std::map<std::string, openstudio::Variant>>& output_attributes,
+                                   bool sanitize = false) {
   Json::Value root(Json::objectValue);
-  for (const auto& [measureName, argMap] : output_attributes) {
+  for (const auto& [oriMeasureName, argMap] : output_attributes) {
+    const std::string measureName = sanitize ? openstudio::workflow::util::sanitizeKey(oriMeasureName) : oriMeasureName;
     Json::Value measureValues(Json::objectValue);
-    for (const auto& [argName, variantValue] : argMap) {
+    for (const auto& [oriArgName, variantValue] : argMap) {
+      const std::string argName = sanitize ? openstudio::workflow::util::sanitizeKey(oriArgName) : oriArgName;
       if (variantValue.variantType() == VariantType::String) {
         measureValues[argName] = variantValue.valueAsString();
       } else if (variantValue.variantType() == VariantType::Double) {
@@ -472,11 +479,18 @@ void OSWorkflow::communicateMeasureAttributes() const {
         measureValues[argName] = variantValue.valueAsBoolean();
       }
     }
+
     root[measureName] = measureValues;
   }
+  return root;
+}
+
+void OSWorkflow::communicateMeasureAttributes() const {
+
+  const Json::Value root = outputAttributesToJSON(output_attributes, false);
   Json::StreamWriterBuilder wbuilder;
   // mimic the old StyledWriter behavior:
-  wbuilder["indentation"] = "   ";
+  wbuilder["indentation"] = "  ";
   const std::string result = Json::writeString(wbuilder, root);
 
   auto jsonPath = workflowJSON.absoluteRunDir() / "measure_attributes.json";
@@ -484,6 +498,104 @@ void OSWorkflow::communicateMeasureAttributes() const {
   OS_ASSERT(file.is_open());
   file << result;
   file.close();
+}
+
+void OSWorkflow::runExtractInputsAndOutputs() const {
+  const Json::Value results = outputAttributesToJSON(output_attributes, true);
+  Json::StreamWriterBuilder wbuilder;
+  wbuilder["indentation"] = "  ";
+
+  {
+    const std::string result = Json::writeString(wbuilder, results);
+
+    auto jsonPath = workflowJSON.absoluteRunDir() / "results.json";
+    openstudio::filesystem::ofstream file(jsonPath);
+    OS_ASSERT(file.is_open());
+    file << result;
+    file.close();
+  }
+
+  const auto osa_abs_path = workflowJSON.absoluteRootDir().parent_path() / "analysis.json";
+  if (!openstudio::filesystem::is_regular_file(osa_abs_path)) {
+    return;
+  }
+
+  std::ifstream ifs(osa_abs_path);
+
+  Json::CharReaderBuilder rbuilder;
+  std::string formattedErrors;
+
+  Json::Value analysis_json;
+  const bool parsingSuccessful = Json::parseFromStream(rbuilder, ifs, &analysis_json, &formattedErrors);
+  if (!parsingSuccessful) {
+    LOG_AND_THROW("OSA Analysis JSON '" << toString(osa_abs_path) << "' cannot be processed, " << formattedErrors);
+  }
+
+  if (!openstudio::checkKeyAndType(analysis_json, "analysis", Json::objectValue)) {
+    return;
+  }
+
+  if (!openstudio::checkKeyAndType(analysis_json["analysis"], "output_variables", Json::arrayValue)) {
+    return;
+  }
+
+  Json::Value objectiveFunctions(Json::objectValue);
+
+  auto& outputVars = analysis_json["analysis"]["output_variables"];
+  for (const auto& variable : outputVars) {
+    if (openstudio::checkKeyAndType(variable, "objective_function", Json::booleanValue) && variable["objective_function"].asBool()) {
+      assertKeyAndType(variable, "name", Json::stringValue);
+      assertKeyAndType(variable, "objective_function_index", Json::intValue);
+      const std::string name = variable["name"].asString();
+      const int idx = variable["objective_function_index"].asInt() + 1;
+
+      LOG(Info, "Looking for objective function " << name);
+
+      // Splitting on a `.` feels very unrealiable
+      const size_t pos = name.find('.');
+      if (pos == std::string::npos) {
+        LOG(Warn, "Objective function name='" << name << "' does not contain a dot (`.`)");
+        continue;
+      }
+      const std::string measureName = name.substr(0, pos);
+      const std::string argName = name.substr(pos + 1);
+      if (results.isMember(measureName) && results[measureName].isMember(argName)) {
+        objectiveFunctions[fmt::format("objective_function_{}", idx)] = results[measureName][argName];
+
+        if (openstudio::checkKeyAndType(variable, "objective_function_target", Json::realValue)) {
+          LOG(Info, "Found objective function target for " << name);
+          objectiveFunctions[fmt::format("objective_function_target_{}", idx)] = variable["objective_function_target"].asDouble();
+        }
+
+        if (openstudio::checkKeyAndType(variable, "scaling_factor", Json::realValue)) {
+          LOG(Info, "Found scaling factor for " << name);
+          objectiveFunctions[fmt::format("scaling_factor_{}", idx)] = variable["scaling_factor"].asDouble();
+        }
+
+        if (openstudio::checkKeyAndType(variable, "objective_function_group", Json::realValue)) {
+          LOG(Info, "Found objective function group for " << name);
+          objectiveFunctions[fmt::format("objective_function_group_{}", idx)] = variable["objective_function_group"].asDouble();
+        }
+
+      } else {
+        LOG(Warn, "No results for objective function " << name);
+        objectiveFunctions[fmt::format("objective_function_{}", idx)] = std::numeric_limits<double>::max();
+        objectiveFunctions[fmt::format("objective_function_target_{}", idx)] = Json::nullValue;
+        objectiveFunctions[fmt::format("scaling_factor_{}", idx)] = Json::nullValue;
+        objectiveFunctions[fmt::format("objective_function_group_{}", idx)] = Json::nullValue;
+      }
+    }
+  }
+
+  {
+    const std::string objectives = Json::writeString(wbuilder, objectiveFunctions);
+
+    auto objectivesJsonPath = workflowJSON.absoluteRunDir() / "objectives.json";
+    openstudio::filesystem::ofstream file(objectivesJsonPath);
+    OS_ASSERT(file.is_open());
+    file << objectives;
+    file.close();
+  }
 }
 
 }  // namespace openstudio
