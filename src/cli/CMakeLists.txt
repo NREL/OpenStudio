@@ -83,6 +83,12 @@ endif()
 
 if(BUILD_TESTING)
 
+  # Just for convenience: having to VT the seb model which is at 1.11.5 can be very time consuming, especially on debug builds
+  add_custom_target(update_seb_osm_in_build_dir
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/update_seb_model.rb"
+    DEPENDS openstudio
+  )
+
   add_test(NAME OpenStudioCLI.help
     COMMAND $<TARGET_FILE:openstudio> --help
   )
@@ -241,6 +247,12 @@ if(BUILD_TESTING)
   if (Pytest_AVAILABLE)
     add_test(NAME OpenStudioCLI.test_loglevel
       COMMAND ${Python_EXECUTABLE} -m pytest --verbose ${Pytest_XDIST_OPTS} --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_loglevel.py"
+    )
+
+    # No Xdist on purpose here
+    add_test(NAME OpenStudioCLI.test_with_analysis
+      COMMAND ${Python_EXECUTABLE} -m pytest --verbose --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_with_analysis.py"
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/with_analysis/local/"
     )
   else()
     # TODO: Remove. Fallback on these for now, as I don't know if CI has pytest installed

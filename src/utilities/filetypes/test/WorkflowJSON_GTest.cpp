@@ -1237,6 +1237,19 @@ TEST(Filetypes, RunOptions_GettersSetters) {
   ASSERT_TRUE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
 
   // Ctor Default
+  ASSERT_FALSE(runOptions.skipZipResults());
+  ASSERT_TRUE(runOptions.isSkipZipResultsDefaulted());
+  // Set to opposite of default
+  ASSERT_TRUE(runOptions.setSkipZipResults(true));
+  ASSERT_TRUE(runOptions.skipZipResults());
+  ASSERT_FALSE(runOptions.isSkipZipResultsDefaulted());
+  // Reset
+  runOptions.resetSkipZipResults();
+  ASSERT_FALSE(runOptions.skipZipResults());
+  ASSERT_TRUE(runOptions.isSkipZipResultsDefaulted());
+  ASSERT_TRUE(runOptions.isSkipZipResultsDefaulted());
+
+  // Ctor Default
   ASSERT_TRUE(runOptions.cleanup());
   ASSERT_TRUE(runOptions.isCleanupDefaulted());
   // Set to opposite of default
@@ -1362,6 +1375,8 @@ TEST(Filetypes, RunOptions_overrideValuesWith) {
   ASSERT_TRUE(runOptions.isSkipExpandObjectsDefaulted());
   ASSERT_FALSE(runOptions.skipEnergyPlusPreprocess());
   ASSERT_TRUE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
+  ASSERT_FALSE(runOptions.skipZipResults());
+  ASSERT_TRUE(runOptions.isSkipZipResultsDefaulted());
   ASSERT_TRUE(runOptions.cleanup());
   ASSERT_TRUE(runOptions.isCleanupDefaulted());
 
@@ -1399,6 +1414,8 @@ TEST(Filetypes, RunOptions_overrideValuesWith) {
   ASSERT_TRUE(runOptions.isPreserveRunDirDefaulted());
   ASSERT_FALSE(runOptions.skipExpandObjects());
   ASSERT_TRUE(runOptions.isSkipExpandObjectsDefaulted());
+  ASSERT_FALSE(runOptions.skipEnergyPlusPreprocess());
+  ASSERT_TRUE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
   ASSERT_FALSE(runOptions.skipEnergyPlusPreprocess());
   ASSERT_TRUE(runOptions.isSkipEnergyPlusPreprocessDefaulted());
   ASSERT_TRUE(runOptions.cleanup());

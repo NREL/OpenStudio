@@ -66,6 +66,11 @@ namespace detail {
     bool setCleanup(bool cleanup);
     void resetCleanup();
 
+    bool skipZipResults() const;
+    bool isSkipZipResultsDefaulted() const;
+    bool setSkipZipResults(bool skipZipResults);
+    void resetSkipZipResults();
+
     boost::optional<CustomOutputAdapter> customOutputAdapter() const;
     bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
     void resetCustomOutputAdapter();
@@ -94,6 +99,7 @@ namespace detail {
     static constexpr bool DEFAULT_SKIPEXPANDOBJECTS = false;
     static constexpr bool DEFAULT_SKIPENERGYPLUSPREPROCESS = false;
     static constexpr bool DEFAULT_CLEANUP = true;
+    static constexpr bool DEFAULT_SKIPZIPRESULTS = false;
 
     bool m_debug = DEFAULT_DEBUG;
     bool m_is_debug_defaulted = true;
@@ -116,6 +122,9 @@ namespace detail {
     // TODO this does absolutely nothing in the workflow-gem currently
     bool m_cleanup = DEFAULT_CLEANUP;
     bool m_is_cleanup_defaulted = true;
+
+    bool m_skipZipResults = DEFAULT_SKIPZIPRESULTS;
+    bool m_is_skipZipResults_defaulted = true;
 
     ForwardTranslatorOptions m_forwardTranslatorOptions;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;

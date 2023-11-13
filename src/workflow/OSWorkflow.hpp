@@ -15,6 +15,7 @@
 #include "../utilities/filetypes/WorkflowJSON.hpp"
 
 #include <functional>
+#include <map>
 #include <memory>
 
 #define USE_RUBY_ENGINE 1
@@ -55,6 +56,10 @@ class OSWorkflow
 
   // TODO: use a unique_ptr or an Instance?
   std::unique_ptr<workflow::util::TimerCollection> m_timers = nullptr;
+
+  // TODO: should problably store as json directly...
+  // { measureName : { arg_name: arg_value }}
+  std::map<std::string, std::map<std::string, openstudio::Variant>> output_attributes;
 
   bool m_no_simulation = false;
   bool m_post_process_only = false;
@@ -122,6 +127,16 @@ class OSWorkflow
   static void applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue);
   void saveOSMToRootDirIfDebug();
   void saveIDFToRootDirIfDebug();
+
+  // write output_attributes to the measure_attributes.json
+  void communicateMeasureAttributes() const;
+
+  /** Write results.json (same as the final measure_attributes.json but with sanitized keys)
+    * and if `absoluteRootDir (oswDir) / .. / analysis.json` is found, write the objectives.json */
+  void runExtractInputsAndOutputs() const;
+
+  // Zip and write data_point_out.osw
+  void communicateResults() const;
 };
 
 }  // namespace openstudio

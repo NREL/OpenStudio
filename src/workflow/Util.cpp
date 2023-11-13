@@ -30,7 +30,10 @@
 #include <algorithm>
 #include <array>
 #include <iterator>
+#include <map>
 #include <string_view>
+#include <regex>
+#include <string>
 
 namespace openstudio::workflow::util {
 
@@ -301,6 +304,25 @@ void zipResults(const openstudio::path& dirPath) {
   if (fs::exists(reportDirPath) && fs::is_directory(reportDirPath)) {
     zipDirectory(reportDirPath, dirPath / "data_point_reports.zip");
   }
+}
+
+std::string sanitizeKey(std::string key) {
+  static const std::regex invalidCharsRegex(R"([|!@#$%^&*(){}\\[\];:'",<.>/?+=]+)");
+  static const std::regex squeezeUnderscoresRegex(R"(_{2,})");
+  static const std::regex trailingUnderscoreOrWhiteSpaceRegex(R"((_|\s)+$)");
+
+  if (std::regex_search(key, invalidCharsRegex)) {
+    LOG_FREE(Warn, "openstudio.worklow.Util", fmt::format("Renaming result key '{}' to remove invalid characters", key));
+    // Replace invalid characters with underscores
+    key = std::regex_replace(key, invalidCharsRegex, "_");
+  }
+
+  // Squeeze consecutive underscores
+  key = std::regex_replace(key, squeezeUnderscoresRegex, "_");
+  // Strip trailing underscores or whitespace
+  key = std::regex_replace(key, trailingUnderscoreOrWhiteSpaceRegex, "");
+
+  return key;
 }
 
 }  // namespace openstudio::workflow::util
