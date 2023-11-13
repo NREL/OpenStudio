@@ -260,32 +260,59 @@ namespace measure {
     }
   }
 
+  bool OSRunner::registerMsgAlsoLogs() const {
+    return m_registerMsgAlsoLogs;
+  }
+
+  void OSRunner::setRegisterMsgAlsoLogs(bool registerMsgAlsoLogs) {
+    m_registerMsgAlsoLogs = registerMsgAlsoLogs;
+  }
+
   void OSRunner::registerError(const std::string& message) {
     m_result.setStepResult(StepResult::Fail);
     m_result.addStepError(message);
+    if (m_registerMsgAlsoLogs) {
+      LOG(Error, message);
+    }
   }
 
   bool OSRunner::registerWarning(const std::string& message) {
     m_result.addStepWarning(message);
+    if (m_registerMsgAlsoLogs) {
+      LOG(Warn, message);
+    }
     return true;
   }
 
   bool OSRunner::registerInfo(const std::string& message) {
     m_result.addStepInfo(message);
+    if (m_registerMsgAlsoLogs) {
+      LOG(Info, message);
+    }
     return true;
   }
 
   void OSRunner::registerAsNotApplicable(const std::string& message) {
     m_result.setStepResult(StepResult::NA);
     m_result.addStepInfo(message);
+    // even though openstudio-workflow-gem didn't do that that one, still doing it
+    if (m_registerMsgAlsoLogs) {
+      LOG(Warn, message);
+    }
   }
 
   void OSRunner::registerInitialCondition(const std::string& message) {
     m_result.setStepInitialCondition(message);
+    if (m_registerMsgAlsoLogs) {
+      LOG(Info, message);
+    }
   }
 
   void OSRunner::registerFinalCondition(const std::string& message) {
     m_result.setStepFinalCondition(message);
+    if (m_registerMsgAlsoLogs) {
+      LOG(Info, message);
+    }
   }
 
   void OSRunner::registerValue(const std::string& name, bool value) {

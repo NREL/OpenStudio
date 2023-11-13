@@ -61,6 +61,8 @@ OSWorkflow::OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ru
     pythonEngine(python),
 #endif
     workflowJSON(oswPath) {
+
+  runner.setRegisterMsgAlsoLogs(true);
 }
 
 OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
@@ -77,6 +79,8 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
     m_show_stdout(t_workflowRunOptions.show_stdout),
     m_add_timings(t_workflowRunOptions.add_timings),
     m_style_stdout(t_workflowRunOptions.style_stdout) {
+
+  runner.setRegisterMsgAlsoLogs(true);
 
   if (m_add_timings) {
     m_timers = std::make_unique<workflow::util::TimerCollection>();
