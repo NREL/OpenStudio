@@ -214,10 +214,20 @@ void OSWorkflow::saveIDFToRootDirIfDebug() {
 
 bool OSWorkflow::run() {
 
+  // If the user passed something like `openstudio --loglevel Trace run --debug -w workflow.osw`, we retain the Trace
+  LogLevel oriLogLevel = Warn;
+  if (auto l_ = openstudio::Logger::instance().standardOutLogger().logLevel()) {
+    oriLogLevel = *l_;
+  }
+  LogLevel targetLogLevel = oriLogLevel;
+  if (workflowJSON.runOptions()->debug() && oriLogLevel > Debug) {
+    targetLogLevel = Debug;
+  }
+
   if (!m_show_stdout) {
     openstudio::Logger::instance().standardOutLogger().disable();
   } else if (workflowJSON.runOptions()->debug()) {
-    openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(targetLogLevel);
   }
 
   // Need to recreate the runDir as fast as possible, so I can direct a file log sink there
@@ -239,7 +249,7 @@ bool OSWorkflow::run() {
     openstudio::filesystem::create_directory(runDirPath);
   }
   FileLogSink logFile(runDirPath / "run.log");
-  logFile.setLogLevel(Debug);
+  logFile.setLogLevel(targetLogLevel);
 
   if (hasDeletedRunDir) {
     LOG(Debug, "Removing existing run directory: " << runDirPath);

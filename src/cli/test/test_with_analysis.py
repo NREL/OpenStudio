@@ -168,3 +168,27 @@ def test_run_log_debug(osclipath, is_labs: bool):
     assert 1 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Warn, is_labs=is_labs) < 4
     assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Error, is_labs=is_labs) == 0
     assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Fatal, is_labs=is_labs) == 0
+
+
+@pytest.mark.parametrize(
+    "is_labs",
+    [pytest.param(True, id="labs"), pytest.param(False, id="classic")],
+)
+def test_run_log_toplevel_verbose(osclipath, is_labs: bool):
+    suffix = "labs" if is_labs else "classic"
+    suffix += "_toplevel_verbose"
+    runDir = run_workflow(osclipath=osclipath, suffix=suffix, is_labs=is_labs, verbose=True, debug=False)
+    assert runDir.is_dir()
+    run_log_path = runDir / "run.log"
+    assert run_log_path.is_file()
+    run_log = run_log_path.read_text()
+    assert "No results for objective function IsNonExisting.NonExisting" in run_log
+    assert "runner.registerWarning called" in run_log
+    assert 50 < len(run_log.splitlines()) < 100
+
+    assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Trace, is_labs=is_labs) == 0
+    assert 30 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Debug, is_labs=is_labs) < 40
+    assert 20 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Info, is_labs=is_labs) < 50
+    assert 1 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Warn, is_labs=is_labs) < 4
+    assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Error, is_labs=is_labs) == 0
+    assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Fatal, is_labs=is_labs) == 0
