@@ -306,6 +306,7 @@ void zipResults(const openstudio::path& dirPath) {
   }
 }
 
+// TODO: investigate removing this. `OSRunner::registerValue` already calls `OSRunner::cleanValueName`, perhaps we just reuse that
 std::string sanitizeKey(std::string key) {
   static const std::regex invalidCharsRegex(R"([|!@#$%^&*(){}\\[\];:'",<.>/?+=]+)");
   static const std::regex squeezeUnderscoresRegex(R"(_{2,})");
