@@ -33,6 +33,13 @@ namespace workflow {
 
     void zipResults(const openstudio::path& dirPath);
 
+    /** Remove any invalid characters in the measure attribute keys. Periods and Pipes are the most problematic
+     * because MongoDB does not allow hash keys with periods, and pipes are used in the map/reduce method that
+     * was written to speed up the data write in OpenStudio-Server. Also, remove any trailing underscores and spaces.
+     *
+     * Ported from workflow-gem rename_hash_keys */
+    std::string sanitizeKey(std::string key);
+
   }  // namespace util
 }  // namespace workflow
 }  // namespace openstudio
