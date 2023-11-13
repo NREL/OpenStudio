@@ -242,6 +242,12 @@ if(BUILD_TESTING)
     add_test(NAME OpenStudioCLI.test_loglevel
       COMMAND ${Python_EXECUTABLE} -m pytest --verbose ${Pytest_XDIST_OPTS} --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_loglevel.py"
     )
+
+    # No Xdist on purpose here
+    add_test(NAME OpenStudioCLI.test_with_analysis
+      COMMAND ${Python_EXECUTABLE} -m pytest --verbose --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_with_analysis.py"
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/with_analysis/local/"
+    )
   else()
     # TODO: Remove. Fallback on these for now, as I don't know if CI has pytest installed
     add_test(NAME OpenStudioCLI.Classic.test_logger_rb

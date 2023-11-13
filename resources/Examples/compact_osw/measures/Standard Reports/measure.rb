@@ -16,6 +16,12 @@ class StandardReports < OpenStudio::Measure::ReportingMeasure
     return args
   end #end the arguments method
 
+  def outputs
+    result = OpenStudio::Measure::OSOutputVector.new
+    result << OpenStudio::Measure::OSOutput.makeDoubleOutput('net_site_energy', false)
+    return result
+  end
+
   #define what happens when the measure is run
   def run(runner, user_arguments)
     super(runner, user_arguments)
@@ -129,6 +135,9 @@ class StandardReports < OpenStudio::Measure::ReportingMeasure
         file.flush
       end
     end
+
+    runner.registerValue("net_site_energy", "Net Site Energy", sqlFile.netSiteEnergy.get, "GJ")
+    runner.registerValue("something!with.invalid_chars_", "Test Sanitizing", 1, "")
 
     #closing the sql file
     sqlFile.close()

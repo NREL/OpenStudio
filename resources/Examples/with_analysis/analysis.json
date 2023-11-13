@@ -1,0 +1,50 @@
+{
+  "analysis": {
+    "display_name": "Test With Analysis JSON",
+    "name": "analysis_json",
+    "output_variables": [
+      {
+        "objective_function": true,
+        "name": "StandardReports.net_site_energy",
+        "objective_function_index": 0,
+        "objective_function_target": 0,
+        "objective_function_group": 1,
+        "scaling_factor": 1.0,
+        "display_name": "Net Site Energy, should be there",
+        "display_name_short": "net_site_energy",
+        "metadata_id": null,
+        "visualize": true,
+        "export": true,
+        "variable_type": "double"
+      },
+      {
+        "objective_function": false,
+        "name": "StandardReports.net_site_energy",
+        "objective_function_index": 1,
+        "objective_function_target": 0,
+        "objective_function_group": 1,
+        "scaling_factor": 1.0,
+        "display_name": "net_site_energy",
+        "display_name_short": "net_site_energy",
+        "metadata_id": null,
+        "visualize": true,
+        "export": true,
+        "variable_type": "double"
+      },
+      {
+        "objective_function": true,
+        "name": "IsNonExisting.NonExisting",
+        "objective_function_index": 2,
+        "objective_function_target": 0,
+        "objective_function_group": 1,
+        "scaling_factor": 1.0,
+        "display_name": "net_site_energy",
+        "display_name_short": "net_site_energy",
+        "metadata_id": null,
+        "visualize": true,
+        "export": true,
+        "variable_type": "double"
+      }
+    ]
+  }
+}
