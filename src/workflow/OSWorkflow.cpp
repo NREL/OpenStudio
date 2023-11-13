@@ -401,13 +401,7 @@ bool OSWorkflow::run() {
   }
 
   if (!workflowJSON.runOptions()->fast()) {
-    if (m_add_timings) {
-      m_timers->newTimer("Zip datapoint");
-    }
-    openstudio::workflow::util::zipResults(runDirPath);
-    if (m_add_timings) {
-      m_timers->tockCurrentTimer();
-    }
+    communicateResults();
   }
 
   if (state == State::Errored) {
@@ -491,6 +485,7 @@ void OSWorkflow::communicateMeasureAttributes() const {
   Json::StreamWriterBuilder wbuilder;
   // mimic the old StyledWriter behavior:
   wbuilder["indentation"] = "  ";
+
   const std::string result = Json::writeString(wbuilder, root);
 
   auto jsonPath = workflowJSON.absoluteRunDir() / "measure_attributes.json";
@@ -596,6 +591,31 @@ void OSWorkflow::runExtractInputsAndOutputs() const {
     file << objectives;
     file.close();
   }
+}
+
+void OSWorkflow::communicateResults() const {
+  if (!workflowJSON.runOptions()->skipZipResults()) {
+    if (m_add_timings) {
+      m_timers->newTimer("Zip datapoint");
+    }
+    openstudio::workflow::util::zipResults(workflowJSON.absoluteRunDir());
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
+    }
+  }
+
+  const Json::Value root = outputAttributesToJSON(output_attributes, true);
+  Json::StreamWriterBuilder wbuilder;
+  // mimic the old StyledWriter behavior:
+  wbuilder["indentation"] = "  ";
+
+  const std::string result = Json::writeString(wbuilder, root);
+
+  auto jsonPath = workflowJSON.absoluteRunDir() / "data_point_out.json";
+  openstudio::filesystem::ofstream file(jsonPath);
+  OS_ASSERT(file.is_open());
+  file << result;
+  file.close();
 }
 
 }  // namespace openstudio

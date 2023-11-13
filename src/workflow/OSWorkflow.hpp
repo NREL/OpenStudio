@@ -134,6 +134,9 @@ class OSWorkflow
   /** Write results.json (same as the final measure_attributes.json but with sanitized keys)
     * and if `absoluteRootDir (oswDir) / .. / analysis.json` is found, write the objectives.json */
   void runExtractInputsAndOutputs() const;
+
+  // Zip and write data_point_out.osw
+  void communicateResults() const;
 };
 
 }  // namespace openstudio

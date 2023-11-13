@@ -62,6 +62,13 @@ def test_run_with_analysis(osclipath, is_labs: bool):
         "scaling_factor_3": None,
     }
 
+    data_point_out_path = runDir / "data_point_out.json"
+    assert data_point_out_path.is_file()
+    data_point_out = json.loads(data_point_out_path.read_text())
+    assert data_point_out == {
+        "FakeReport": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}
+    }
+
     expected_files_in_run_dir = {
         "data_point.zip",
         "finished.job",
@@ -71,17 +78,7 @@ def test_run_with_analysis(osclipath, is_labs: bool):
         "results.json",
         "run.log",
         "started.job",
-        # TODO: see below
         "data_point_out.json",
     }
-    # TODO: I'm letting this test fail so it's obvious this needs to be addressed
-    if True:  # not is_labs:
-        # We get the SAME exact info in measure_attributes.json, results.json and data_point_out.json...
-        # measure_attributes.json is flushed after each apply measure Step (ModelMeasures, EnergyPlusMeasures,
-        # ReportingMeasures), then at the end of ReportingMeasures it's done once again and results.json is spat out too
-        # Do we really need the data_point_out.json in addition to this?
-        # Seems like we could just run the output of results.json/data_point_out.json at the end of the workflow run
-        # instead
-        expected_files_in_run_dir.add("data_point_out.json")
 
     assert set([x.name for x in runDir.glob("*")]) == expected_files_in_run_dir
