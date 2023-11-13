@@ -83,6 +83,12 @@ endif()
 
 if(BUILD_TESTING)
 
+  # Just for convenience: having to VT the seb model which is at 1.11.5 can be very time consuming, especially on debug builds
+  add_custom_target(update_seb_osm_in_build_dir
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/update_seb_model.rb"
+    DEPENDS openstudio
+  )
+
   add_test(NAME OpenStudioCLI.help
     COMMAND $<TARGET_FILE:openstudio> --help
   )

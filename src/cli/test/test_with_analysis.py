@@ -18,13 +18,15 @@ def test_run_with_analysis(osclipath, is_labs: bool):
     osw_path = base_osw_path.parent / f"with_analysis_{suffix}.osw"
     runDir = base_osw_path.parent / f"run_{suffix}"
     osw["run_directory"] = str(runDir)
+    runDir.mkdir(exist_ok=True)
     with open(osw_path, 'w') as f:
         json.dump(osw, fp=f, indent=2, sort_keys=True)
 
-    if not is_labs:
-        # Fake having an in.idf or it won't run
-        with open(runDir / "in.idf", "w") as f:
-            f.write("Building,;")
+    # Fake having an in.idf or it won't run in the "classic" subcommand, doing it for labs too so that it's less
+    # confusing
+    # if not is_labs:
+    with open(runDir / "in.idf", "w") as f:
+        f.write("Building,;")
 
     command = [str(osclipath)]
     if not is_labs:
@@ -32,7 +34,6 @@ def test_run_with_analysis(osclipath, is_labs: bool):
     command += ["run", "--postprocess_only", "-w", str(osw_path)]
     lines = subprocess.check_output(command, encoding="utf-8").splitlines()
 
-    runDir = Path("./run")
     assert runDir.exists()
     measure_attributes_path = runDir / "measure_attributes.json"
     assert measure_attributes_path.is_file()
