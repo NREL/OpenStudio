@@ -28,6 +28,9 @@ class FakeReport < OpenStudio::Measure::ReportingMeasure
       return false
     end
 
+    runner.registerInfo("runner.registerInfo called")
+    runner.registerWarning("runner.registerWarning called")
+
     # Register some constant values, so we can only do it during post
     # processing
     runner.registerValue("net_site_energy", "Net Site Energy", 167.1, "GJ")
