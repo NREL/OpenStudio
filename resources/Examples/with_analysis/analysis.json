@@ -5,7 +5,7 @@
     "output_variables": [
       {
         "objective_function": true,
-        "name": "StandardReports.net_site_energy",
+        "name": "FakeReport.net_site_energy",
         "objective_function_index": 0,
         "objective_function_target": 0,
         "objective_function_group": 1,
@@ -19,7 +19,7 @@
       },
       {
         "objective_function": false,
-        "name": "StandardReports.net_site_energy",
+        "name": "FakeReport.net_site_energy",
         "objective_function_index": 1,
         "objective_function_target": 0,
         "objective_function_group": 1,

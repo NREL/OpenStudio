@@ -10,13 +10,26 @@ import pytest
     [pytest.param(True, id="labs"), pytest.param(False, id="classic")],
 )
 def test_run_with_analysis(osclipath, is_labs: bool):
-    osw_path = Path("with_analysis.osw").resolve()
-    assert osw_path.is_file(), f"{osw_path=} is not found"
+    base_osw_path = Path("with_analysis.osw").resolve()
+    assert base_osw_path.is_file(), f"{base_osw_path=} is not found"
+
+    osw = json.loads(base_osw_path.read_text())
+    suffix = 'labs' if is_labs else 'classic'
+    osw_path = base_osw_path.parent / f"with_analysis_{suffix}.osw"
+    runDir = base_osw_path.parent / f"run_{suffix}"
+    osw["run_directory"] = str(runDir)
+    with open(osw_path, 'w') as f:
+        json.dump(osw, fp=f, indent=2, sort_keys=True)
+
+    if not is_labs:
+        # Fake having an in.idf or it won't run
+        with open(runDir / "in.idf", "w") as f:
+            f.write("Building,;")
 
     command = [str(osclipath)]
     if not is_labs:
         command.append("classic")
-    command += ["run", "-w", str(osw_path)]
+    command += ["run", "--postprocess_only", "-w", str(osw_path)]
     lines = subprocess.check_output(command, encoding="utf-8").splitlines()
 
     runDir = Path("./run")
@@ -30,12 +43,12 @@ def test_run_with_analysis(osclipath, is_labs: bool):
 
     measure_attributes = json.loads(measure_attributes_path.read_text())
     assert measure_attributes == {
-        "StandardReports": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}
+        "FakeReport": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}
     }
 
     results = json.loads(results_path.read_text())
     assert results == {
-        "StandardReports": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}
+        "FakeReport": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}
     }
 
     objectives = json.loads(objectives_path.read_text())
