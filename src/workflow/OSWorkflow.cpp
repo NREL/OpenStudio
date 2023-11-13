@@ -520,7 +520,7 @@ void OSWorkflow::runExtractInputsAndOutputs() const {
     return;
   }
 
-  std::ifstream ifs(osa_abs_path);
+  std::ifstream ifs(openstudio::toSystemFilename(osa_abs_path));
 
   Json::CharReaderBuilder rbuilder;
   std::string formattedErrors;
