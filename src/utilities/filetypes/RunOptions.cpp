@@ -50,6 +50,10 @@ namespace detail {
       root["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
     }
 
+    if (!m_is_skipZipResults_defaulted) {
+      root["skip_zip_results"] = m_skipZipResults;
+    }
+
     if (!m_is_cleanup_defaulted) {
       root["cleanup"] = m_cleanup;
     }
@@ -200,6 +204,27 @@ namespace detail {
     onUpdate();
   }
 
+  bool RunOptions_Impl::skipZipResults() const {
+    return m_skipZipResults;
+  }
+
+  bool RunOptions_Impl::isSkipZipResultsDefaulted() const {
+    return m_is_skipZipResults_defaulted;
+  }
+
+  bool RunOptions_Impl::setSkipZipResults(bool skipZipResults) {
+    m_skipZipResults = skipZipResults;
+    m_is_skipZipResults_defaulted = false;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetSkipZipResults() {
+    m_skipZipResults = DEFAULT_SKIPZIPRESULTS;
+    m_is_skipZipResults_defaulted = true;
+    onUpdate();
+  }
+
   bool RunOptions_Impl::cleanup() const {
     return m_cleanup;
   }
@@ -275,6 +300,10 @@ namespace detail {
 
     if (!other.isSkipEnergyPlusPreprocessDefaulted()) {
       setSkipEnergyPlusPreprocess(other.skipEnergyPlusPreprocess());
+    }
+
+    if (!other.isSkipZipResultsDefaulted()) {
+      setSkipZipResults(other.skipZipResults());
     }
 
     if (!other.isCleanupDefaulted()) {
@@ -380,6 +409,10 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
 
   if (value.isMember("skip_energyplus_preprocess") && value["skip_energyplus_preprocess"].isBool()) {
     result.setSkipEnergyPlusPreprocess(value["skip_energyplus_preprocess"].asBool());
+  }
+
+  if (value.isMember("skip_zip_results") && value["skip_zip_results"].isBool()) {
+    result.setSkipZipResults(value["skip_zip_results"].asBool());
   }
 
   if (value.isMember("output_adapter")) {
@@ -502,6 +535,22 @@ bool RunOptions::setSkipEnergyPlusPreprocess(bool skipEnergyPlusPreprocess) {
 
 void RunOptions::resetSkipEnergyPlusPreprocess() {
   getImpl<detail::RunOptions_Impl>()->resetSkipEnergyPlusPreprocess();
+}
+
+bool RunOptions::skipZipResults() const {
+  return getImpl<detail::RunOptions_Impl>()->skipZipResults();
+}
+
+bool RunOptions::isSkipZipResultsDefaulted() const {
+  return getImpl<detail::RunOptions_Impl>()->isSkipZipResultsDefaulted();
+}
+
+bool RunOptions::setSkipZipResults(bool skipZipResults) {
+  return getImpl<detail::RunOptions_Impl>()->setSkipZipResults(skipZipResults);
+}
+
+void RunOptions::resetSkipZipResults() {
+  getImpl<detail::RunOptions_Impl>()->resetSkipZipResults();
 }
 
 bool RunOptions::cleanup() const {
