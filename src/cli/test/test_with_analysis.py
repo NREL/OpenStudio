@@ -14,12 +14,12 @@ def test_run_with_analysis(osclipath, is_labs: bool):
     assert base_osw_path.is_file(), f"{base_osw_path=} is not found"
 
     osw = json.loads(base_osw_path.read_text())
-    suffix = 'labs' if is_labs else 'classic'
+    suffix = "labs" if is_labs else "classic"
     osw_path = base_osw_path.parent / f"with_analysis_{suffix}.osw"
     runDir = base_osw_path.parent / f"run_{suffix}"
     osw["run_directory"] = str(runDir)
     runDir.mkdir(exist_ok=True)
-    with open(osw_path, 'w') as f:
+    with open(osw_path, "w") as f:
         json.dump(osw, fp=f, indent=2, sort_keys=True)
 
     # Fake having an in.idf or it won't run in the "classic" subcommand, doing it for labs too so that it's less
@@ -48,9 +48,7 @@ def test_run_with_analysis(osclipath, is_labs: bool):
     }
 
     results = json.loads(results_path.read_text())
-    assert results == {
-        "FakeReport": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}
-    }
+    assert results == {"FakeReport": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}}
 
     objectives = json.loads(objectives_path.read_text())
     assert objectives == {
@@ -63,3 +61,27 @@ def test_run_with_analysis(osclipath, is_labs: bool):
         "scaling_factor_1": 1.0,
         "scaling_factor_3": None,
     }
+
+    expected_files_in_run_dir = {
+        "data_point.zip",
+        "finished.job",
+        "in.idf",
+        "measure_attributes.json",
+        "objectives.json",
+        "results.json",
+        "run.log",
+        "started.job",
+        # TODO: see below
+        "data_point_out.json",
+    }
+    # TODO: I'm letting this test fail so it's obvious this needs to be addressed
+    if True:  # not is_labs:
+        # We get the SAME exact info in measure_attributes.json, results.json and data_point_out.json...
+        # measure_attributes.json is flushed after each apply measure Step (ModelMeasures, EnergyPlusMeasures,
+        # ReportingMeasures), then at the end of ReportingMeasures it's done once again and results.json is spat out too
+        # Do we really need the data_point_out.json in addition to this?
+        # Seems like we could just run the output of results.json/data_point_out.json at the end of the workflow run
+        # instead
+        expected_files_in_run_dir.add("data_point_out.json")
+
+    assert set([x.name for x in runDir.glob("*")]) == expected_files_in_run_dir
