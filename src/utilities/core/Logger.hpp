@@ -51,6 +51,8 @@
 
 namespace openstudio {
 
+class OSWorkflow;
+
 /// convenience function for SWIG, prefer macros in C++
 UTILITIES_API void logFree(LogLevel level, const std::string& channel, const std::string& message);
 
@@ -78,6 +80,7 @@ class UTILITIES_API LoggerSingleton
 
  protected:
   friend class detail::LogSink_Impl;
+  friend class openstudio::OSWorkflow;
 
   /// is the sink found in the logging core
   bool findSink(boost::shared_ptr<LogSinkBackend> sink);
@@ -87,6 +90,8 @@ class UTILITIES_API LoggerSingleton
 
   /// removes a sink to the logging core, equivalent to logSink.disable()
   void removeSink(boost::shared_ptr<LogSinkBackend> sink);
+
+  void addTimeStampToLogger();
 
  private:
   /// private constructor

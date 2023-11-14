@@ -7,6 +7,7 @@
 
 #include <boost/log/common.hpp>
 #include <boost/log/attributes/function.hpp>
+#include <boost/log/attributes/clock.hpp>
 
 #include <boost/core/null_deleter.hpp>
 
@@ -119,6 +120,16 @@ void LoggerSingleton::removeSink(boost::shared_ptr<LogSinkBackend> sink) {
     // Register the sink in the logging core
     boost::log::core::get()->remove_sink(sink);
   }
+}
+
+void LoggerSingleton::addTimeStampToLogger() {
+  std::unique_lock l{m_mutex};
+
+  // Add a TimeStamp attribute, same as boost::log::add_common_attributes() would do
+  [[maybe_unused]] auto [it, inserted] = boost::log::core::get()->add_global_attribute("TimeStamp", boost::log::attributes::local_clock{});
+  // if (!use) {
+  //   boost::log::core::get()->remove_global_attribute(it);
+  // }
 }
 
 }  // namespace openstudio

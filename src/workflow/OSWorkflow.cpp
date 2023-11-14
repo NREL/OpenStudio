@@ -216,6 +216,28 @@ void OSWorkflow::saveIDFToRootDirIfDebug() {
   LOG(Info, "Saved IDF as " << savePath);
 }
 
+void my_formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& strm) {
+
+  // static constexpr std::array<std::string_view, 6> logLevelStrs = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
+  static constexpr std::array<std::string_view, 6> logLevelStrs = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
+
+  LogLevel logLevel = Trace;
+  if (auto logLevel_ = boost::log::extract<LogLevel>("Severity", rec)) {
+    logLevel = logLevel_.get();
+  }
+
+  strm << "[";
+  if (auto pt_ = boost::log::extract<boost::posix_time::ptime>("TimeStamp", rec)) {
+    // TimeStamp as  [%H:%M:%S.%f]
+    strm << boost::posix_time::to_simple_string(pt_.get().time_of_day());
+  }
+  strm << logLevelStrs[static_cast<size_t>(logLevel) - static_cast<size_t>(LogLevel::Trace)] << "] "
+       << "[" << boost::log::extract<LogChannel>("Channel", rec)
+       << "] "
+       // Finally, the record message
+       << rec[boost::log::expressions::smessage];
+}
+
 bool OSWorkflow::run() {
 
   // If the user passed something like `openstudio --loglevel Trace run --debug -w workflow.osw`, we retain the Trace
@@ -253,6 +275,8 @@ bool OSWorkflow::run() {
     openstudio::filesystem::create_directory(runDirPath);
   }
   FileLogSink logFile(runDirPath / "run.log");
+  const bool include_channel = workflowJSON.runOptions()->debug();
+  logFile.useWorkflowGemFormatter(true, include_channel);
   logFile.setLogLevel(targetLogLevel);
 
   if (hasDeletedRunDir) {
