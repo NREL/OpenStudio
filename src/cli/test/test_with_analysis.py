@@ -184,6 +184,8 @@ def test_run_log_toplevel_verbose(osclipath, is_labs: bool):
     run_log = run_log_path.read_text()
     assert "No results for objective function IsNonExisting.NonExisting" in run_log
     assert "runner.registerWarning called" in run_log
+    if not is_labs:
+        pytest.skip("classic (Ruby) CLI just ignored the top level --verbose flag for run.log")
     assert 50 < len(run_log.splitlines()) < 100
 
     assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Trace, is_labs=is_labs) == 0
