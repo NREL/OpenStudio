@@ -229,11 +229,11 @@ void my_formatter(boost::log::record_view const& rec, boost::log::formatting_ost
   strm << "[";
   if (auto pt_ = boost::log::extract<boost::posix_time::ptime>("TimeStamp", rec)) {
     // TimeStamp as  [%H:%M:%S.%f]
-    strm << boost::posix_time::to_simple_string(pt_.get().time_of_day());
+    strm << "[" << boost::posix_time::to_simple_string(pt_.get().time_of_day()) << "] ";
   }
-  strm << logLevelStrs[static_cast<size_t>(logLevel) - static_cast<size_t>(LogLevel::Trace)] << "] "
-       << "[" << boost::log::extract<LogChannel>("Channel", rec)
-       << "] "
+  strm << "[" << boost::log::extract<LogChannel>("Channel", rec) << "] <"  //
+       << logLevelStrs[static_cast<size_t>(logLevel) - static_cast<size_t>(LogLevel::Trace)]
+       << "> "
        // Finally, the record message
        << rec[boost::log::expressions::smessage];
 }
@@ -252,8 +252,13 @@ bool OSWorkflow::run() {
 
   if (!m_show_stdout) {
     openstudio::Logger::instance().standardOutLogger().disable();
-  } else if (workflowJSON.runOptions()->debug()) {
-    openstudio::Logger::instance().standardOutLogger().setLogLevel(targetLogLevel);
+  } else {
+    openstudio::Logger::instance().addTimeStampToLogger();
+    openstudio::Logger::instance().standardOutLogger().setFormatter(&my_formatter);
+
+    if (workflowJSON.runOptions()->debug()) {
+      openstudio::Logger::instance().standardOutLogger().setLogLevel(targetLogLevel);
+    }
   }
 
   // Need to recreate the runDir as fast as possible, so I can direct a file log sink there
@@ -275,8 +280,13 @@ bool OSWorkflow::run() {
     openstudio::filesystem::create_directory(runDirPath);
   }
   FileLogSink logFile(runDirPath / "run.log");
+#if 0
+  openstudio::Logger::instance().addTimeStampToLogger();
+  logFile.setFormatter(&my_formatter);
+#else
   const bool include_channel = workflowJSON.runOptions()->debug();
   logFile.useWorkflowGemFormatter(true, include_channel);
+#endif
   logFile.setLogLevel(targetLogLevel);
 
   if (hasDeletedRunDir) {
