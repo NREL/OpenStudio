@@ -216,21 +216,20 @@ void OSWorkflow::saveIDFToRootDirIfDebug() {
   LOG(Info, "Saved IDF as " << savePath);
 }
 
-void my_formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& strm) {
+void standardFormatterWithStringSeverity(boost::log::record_view const& rec, boost::log::formatting_ostream& strm) {
 
-  // static constexpr std::array<std::string_view, 6> logLevelStrs = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
-  static constexpr std::array<std::string_view, 6> logLevelStrs = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
+  static constexpr std::array<std::string_view, 6> logLevelStrs = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
+  // static constexpr std::array<std::string_view, 6> logLevelStrs = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
 
   LogLevel logLevel = Trace;
   if (auto logLevel_ = boost::log::extract<LogLevel>("Severity", rec)) {
     logLevel = logLevel_.get();
   }
 
-  strm << "[";
-  if (auto pt_ = boost::log::extract<boost::posix_time::ptime>("TimeStamp", rec)) {
-    // TimeStamp as  [%H:%M:%S.%f]
-    strm << "[" << boost::posix_time::to_simple_string(pt_.get().time_of_day()) << "] ";
-  }
+  // if (auto pt_ = boost::log::extract<boost::posix_time::ptime>("TimeStamp", rec)) {
+  //  // TimeStamp as  [%H:%M:%S.%f]
+  //   strm << "[" << boost::posix_time::to_simple_string(pt_.get().time_of_day()) << "] ";
+  // }
   strm << "[" << boost::log::extract<LogChannel>("Channel", rec) << "] <"  //
        << logLevelStrs[static_cast<size_t>(logLevel) - static_cast<size_t>(LogLevel::Trace)]
        << "> "
@@ -241,24 +240,19 @@ void my_formatter(boost::log::record_view const& rec, boost::log::formatting_ost
 bool OSWorkflow::run() {
 
   // If the user passed something like `openstudio --loglevel Trace run --debug -w workflow.osw`, we retain the Trace
-  LogLevel oriLogLevel = Warn;
-  if (auto l_ = openstudio::Logger::instance().standardOutLogger().logLevel()) {
-    oriLogLevel = *l_;
-  }
+  LogLevel oriLogLevel = openstudio::Logger::instance().standardOutLogger().logLevel().value_or(Warn);
   LogLevel targetLogLevel = oriLogLevel;
   if (workflowJSON.runOptions()->debug() && oriLogLevel > Debug) {
     targetLogLevel = Debug;
   }
 
-  if (!m_show_stdout) {
-    openstudio::Logger::instance().standardOutLogger().disable();
-  } else {
-    openstudio::Logger::instance().addTimeStampToLogger();
-    openstudio::Logger::instance().standardOutLogger().setFormatter(&my_formatter);
+  openstudio::Logger::instance().addTimeStampToLogger();  // Needed for run.log formatting
+  openstudio::Logger::instance().standardOutLogger().setFormatter(&standardFormatterWithStringSeverity);
 
-    if (workflowJSON.runOptions()->debug()) {
-      openstudio::Logger::instance().standardOutLogger().setLogLevel(targetLogLevel);
-    }
+  if (!m_show_stdout) {
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(Error);  // Still show errors
+  } else if (oriLogLevel != targetLogLevel) {
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(targetLogLevel);
   }
 
   // Need to recreate the runDir as fast as possible, so I can direct a file log sink there
@@ -279,14 +273,11 @@ bool OSWorkflow::run() {
   if (!openstudio::filesystem::is_directory(runDirPath)) {
     openstudio::filesystem::create_directory(runDirPath);
   }
+
   FileLogSink logFile(runDirPath / "run.log");
-#if 0
-  openstudio::Logger::instance().addTimeStampToLogger();
-  logFile.setFormatter(&my_formatter);
-#else
-  const bool include_channel = workflowJSON.runOptions()->debug();
-  logFile.useWorkflowGemFormatter(true, include_channel);
-#endif
+  constexpr bool use_workflow_gem_fmt = true;
+  constexpr bool include_channel = true;  // or workflowJSON.runOptions()->debug();
+  logFile.useWorkflowGemFormatter(use_workflow_gem_fmt, include_channel);
   logFile.setLogLevel(targetLogLevel);
 
   if (hasDeletedRunDir) {
