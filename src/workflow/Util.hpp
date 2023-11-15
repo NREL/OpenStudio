@@ -15,6 +15,8 @@ namespace model {
 }
 class IdfObject;
 class Workspace;
+class WorkflowStepResult;
+class BCLMeasure;
 
 namespace workflow {
 
@@ -24,6 +26,8 @@ namespace workflow {
     Workspace loadIDF(const openstudio::filesystem::path& idfPath);
 
     void gatherReports(const openstudio::filesystem::path& runDirPath, const openstudio::filesystem::path& rootDirPath);
+
+    bool addResultMeasureInfo(WorkflowStepResult& result, BCLMeasure& measure);
 
     // Cleans up the run directory (remove epw, .mtr)
     void cleanup(const openstudio::filesystem::path& runDirPath);

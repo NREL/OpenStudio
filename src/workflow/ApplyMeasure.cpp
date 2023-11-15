@@ -84,6 +84,7 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
           LOG(Info, fmt::format("Skipping measure '{}'", measureDirName));
           WorkflowStepResult result = runner.result();
           runner.incrementStep();
+          // addResultMeasureInfo(result, bclMeasure);  // TODO: Should I really instantiate the BCLMeasure just for this?
           result.setStepResult(StepResult::Skip);
         }
 
@@ -296,8 +297,10 @@ end
     } catch (const std::exception& e) {
       runner.registerError(e.what());
       if (!energyplus_output_requests) {
+        WorkflowStepResult result = runner.result();
         // incrementStep must be called after run
         runner.incrementStep();
+        workflow::util::addResultMeasureInfo(result, bclMeasure);
       }
       ensureBlock(true);
       throw std::runtime_error(fmt::format("Runner error: Measure '{}' reported an error with [{}]", scriptPath_->generic_string(), e.what()));
@@ -309,6 +312,7 @@ end
 
       // incrementStep must be called after run
       runner.incrementStep();
+      workflow::util::addResultMeasureInfo(result, bclMeasure);
       if (auto errors = result.stepErrors(); !errors.empty()) {
         ensureBlock(true);
         throw std::runtime_error(fmt::format("Measure '{}' reported an error with [{}]", measureDirName, fmt::join(errors, "\n")));
