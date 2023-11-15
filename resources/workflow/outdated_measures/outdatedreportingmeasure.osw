@@ -4,11 +4,7 @@
 	"measure_paths": ["../measures/"],
 	"steps": [
 		{
-			"measure_dir_name": "ReportingMeasureRegistersError",
-			"arguments": {}
-		},
-		{
-			"measure_dir_name": "FakeReport",
+			"measure_dir_name": "OutdatedReportingMeasure",
 			"arguments": {}
 		}
 	]
