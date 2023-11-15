@@ -159,7 +159,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "rc2")
+set(PROJECT_VERSION_PRERELEASE "rc3")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
