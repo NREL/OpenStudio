@@ -38,13 +38,18 @@ class UTILITIES_API LogSink
   void disable();
 
   /// get the logging level
-  boost::optional<LogLevel> logLevel() const;
+  boost::optional<LogLevel> logLevel() const;  // TODO: always initialized
 
   /// set the logging level
   void setLogLevel(LogLevel logLevel);
 
   /// reset the core logging level
   void resetLogLevel();
+
+  // Only log up to this level, included
+  boost::optional<LogLevel> maxLogLevel() const;
+  void setMaxLogLevel(LogLevel logLevel);
+  void resetMaxLogLevel();
 
   /// get the regular expression to match log channels
   boost::optional<boost::regex> channelRegex() const;

@@ -36,13 +36,17 @@ namespace detail {
     void disable();
 
     /// get the logging level
-    boost::optional<LogLevel> logLevel() const;
+    LogLevel logLevel() const;
 
     /// set the logging level
     void setLogLevel(LogLevel logLevel);
 
     /// reset the core logging level
     void resetLogLevel();
+
+    boost::optional<LogLevel> maxLogLevel() const;
+    void setMaxLogLevel(LogLevel logLevel);
+    void resetMaxLogLevel();
 
     /// get the regular expression to match log channels
     boost::optional<boost::regex> channelRegex() const;
@@ -92,7 +96,10 @@ namespace detail {
    private:
     void updateFilter(const std::unique_lock<std::shared_mutex>& l);
 
-    boost::optional<LogLevel> m_logLevel;
+    static constexpr LogLevel DEFAULT_LOG_LEVEL = Trace;
+
+    LogLevel m_logLevel = DEFAULT_LOG_LEVEL;
+    boost::optional<LogLevel> m_maxLogLevel;
     boost::optional<boost::regex> m_channelRegex;
     bool m_autoFlush = false;
     std::thread::id m_threadId;

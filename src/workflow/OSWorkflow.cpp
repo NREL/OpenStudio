@@ -247,13 +247,21 @@ bool OSWorkflow::run() {
   }
 
   openstudio::Logger::instance().addTimeStampToLogger();  // Needed for run.log formatting
+  // stdout only gets up to Warn (included)
+  openstudio::Logger::instance().standardOutLogger().setMaxLogLevel(Warn);
+  // Always send Errors and Fatals to stderr
+  openstudio::Logger::instance().standardErrLogger().enable();
+  openstudio::Logger::instance().standardErrLogger().setLogLevel(Error);
+
+  // Format the stdout/stderr with LogLevel as a string
   openstudio::Logger::instance().standardOutLogger().setFormatter(&standardFormatterWithStringSeverity);
+  openstudio::Logger::instance().standardErrLogger().setFormatter(&standardFormatterWithStringSeverity);
 
   // TODO: ideally we want stdErr logger to always receive Error and Fatal
   // and stdOut logger should receive all the others. This is definitely doable (cf LogSink::updateFilter) but now is not the time.
   if (!m_show_stdout) {
-    openstudio::Logger::instance().standardOutLogger().setLogLevel(Error);  // Still show errors
-  } else if (oriLogLevel != targetLogLevel) {
+    openstudio::Logger::instance().standardOutLogger().disable();
+  } else if (workflowJSON.runOptions()->debug()) {
     openstudio::Logger::instance().standardOutLogger().setLogLevel(targetLogLevel);
   }
 

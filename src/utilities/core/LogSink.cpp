@@ -79,7 +79,7 @@ namespace detail {
     Logger::instance().removeSink(m_sink);
   }
 
-  boost::optional<LogLevel> LogSink_Impl::logLevel() const {
+  LogLevel LogSink_Impl::logLevel() const {
     std::shared_lock l{m_mutex};
 
     return m_logLevel;
@@ -96,7 +96,29 @@ namespace detail {
   void LogSink_Impl::resetLogLevel() {
     std::unique_lock l{m_mutex};
 
-    m_logLevel.reset();
+    m_logLevel = DEFAULT_LOG_LEVEL;
+
+    this->updateFilter(l);
+  }
+
+  boost::optional<LogLevel> LogSink_Impl::maxLogLevel() const {
+    std::shared_lock l{m_mutex};
+
+    return m_maxLogLevel;
+  }
+
+  void LogSink_Impl::setMaxLogLevel(LogLevel maxLogLevel) {
+    std::unique_lock l{m_mutex};
+
+    m_maxLogLevel = maxLogLevel;
+
+    this->updateFilter(l);
+  }
+
+  void LogSink_Impl::resetMaxLogLevel() {
+    std::unique_lock l{m_mutex};
+
+    m_maxLogLevel.reset();
 
     this->updateFilter(l);
   }
@@ -193,22 +215,17 @@ namespace detail {
   void LogSink_Impl::updateFilter(const std::unique_lock<std::shared_mutex>& /*l*/) {
     m_sink->reset_filter();
 
-    LogLevel filterLogLevel = Trace;
-    if (m_logLevel) {
-      filterLogLevel = *m_logLevel;
-    }
+    boost::regex filterChannelRegex = m_channelRegex.value_or(boost::regex(".*"));
 
-    boost::regex filterChannelRegex(".*");
-    if (m_channelRegex) {
-      filterChannelRegex = *m_channelRegex;
-    }
+    auto filter = expr::attr<LogLevel>("Severity") >= m_logLevel && expr::matches(expr::attr<LogChannel>("Channel"), filterChannelRegex);
 
     if (m_threadId != std::thread::id{}) {
-      m_sink->set_filter(expr::attr<LogLevel>("Severity") >= filterLogLevel && expr::attr<std::thread::id>("ThreadId") == m_threadId
-                         && expr::matches(expr::attr<LogChannel>("Channel"), filterChannelRegex));
-    } else {
-      m_sink->set_filter(expr::attr<LogLevel>("Severity") >= filterLogLevel && expr::matches(expr::attr<LogChannel>("Channel"), filterChannelRegex));
+      filter = filter && expr::attr<std::thread::id>("ThreadId");
     }
+    if (m_maxLogLevel) {
+      filter = filter && expr::attr<LogLevel>("Severity") <= *m_maxLogLevel;
+    }
+    m_sink->set_filter(filter);
   }
 
 }  // namespace detail
@@ -239,6 +256,18 @@ void LogSink::setLogLevel(LogLevel logLevel) {
 
 void LogSink::resetLogLevel() {
   m_impl->resetLogLevel();
+}
+
+boost::optional<LogLevel> LogSink::maxLogLevel() const {
+  return m_impl->maxLogLevel();
+}
+
+void LogSink::setMaxLogLevel(LogLevel maxLogLevel) {
+  m_impl->setMaxLogLevel(maxLogLevel);
+}
+
+void LogSink::resetMaxLogLevel() {
+  m_impl->resetMaxLogLevel();
 }
 
 boost::optional<boost::regex> LogSink::channelRegex() const {
