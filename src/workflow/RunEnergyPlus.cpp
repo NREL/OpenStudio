@@ -224,7 +224,7 @@ void OSWorkflow::runEnergyPlus() {
       detailedTimeBlock("Running EnergyPlus", [&cmd, &result] { result = std::system(cmd.c_str()); });
     }
 
-    LOG(Info, "EnergyPlus returned " << result << "'");
+    LOG(Info, "EnergyPlus returned '" << result << "'");
     if (result != 0) {
       LOG(Warn, "EnergyPlus returned a non-zero exit code (" << result << "). Check the stdout-energyplus log");
     }
