@@ -246,13 +246,13 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
           LOG(Warn, msg);
           auto patchArgumentsCmd = fmt::format(R"ruby(
 module {0}Extensions
-  def arguments(model)
+  def arguments(model=nil)
     super()
   end
 end
 
 class {0}
-  prepend {0}Extensions # the only change to above: prepend instead of include
+  prepend {0}Extensions
 end
 )ruby",
                                                className);
