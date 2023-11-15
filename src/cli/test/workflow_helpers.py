@@ -71,6 +71,7 @@ def run_workflow(
     osw_path = base_osw_path.parent / f"{base_osw_path.stem}_{suffix}.osw"
     runDir = base_osw_path.parent / f"run_{osw_path.stem}"
     osw["run_directory"] = str(runDir)
+    osw["out_name"] = f"out_{osw_path.stem}.osw"
     if runDir.is_dir():
         shutil.rmtree(runDir)
     runDir.mkdir(exist_ok=False)
