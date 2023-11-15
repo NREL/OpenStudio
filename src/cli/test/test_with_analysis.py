@@ -117,10 +117,10 @@ class LogLevel(Enum):
 
 
 def _get_search_str(log_level: LogLevel, is_labs: bool) -> str:
-    if is_labs:
-        return f"<{log_level.value}>"
-    else:
-        return f"{log_level.name.upper()}]"
+    # if is_labs:
+    #    return f"<{log_level.value}>"
+    # else:
+    return f"{log_level.name.upper()}]"
 
 
 def _get_lines_with_log_level(run_log: str, log_level: LogLevel, is_labs: bool):
