@@ -237,7 +237,7 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
     bool was_patched = false;
     if (measureType == MeasureType::ReportingMeasure) {
       const int numArgs = (*thisEngine)->numberOfArguments(measureScriptObject, "arguments");
-      fmt::print("numArgs={}\n", numArgs);
+      // fmt::print("numArgs={}\n", numArgs);
       if (numArgs == 0) {
         if (measureLanguage == MeasureLanguage::Ruby) {
           auto msg = fmt::format("Reporting Measure at {} is using the old format where the 'arguments' method does not take model. "
