@@ -418,3 +418,6 @@ CREATE_SRC_GROUPS("${airflow_resources_src}")
 file(COPY "Examples" DESTINATION .)
 # And install
 install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")
+
+# Copy it for testing
+file(COPY "workflow" DESTINATION .)
