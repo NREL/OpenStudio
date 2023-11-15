@@ -13,6 +13,7 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/filetypes/RunOptions.hpp"
 
 #include <functional>
 #include <map>

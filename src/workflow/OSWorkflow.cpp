@@ -61,6 +61,8 @@ OSWorkflow::OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ru
     pythonEngine(python),
 #endif
     workflowJSON(oswPath) {
+
+  runner.setRegisterMsgAlsoLogs(true);
 }
 
 OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
@@ -77,6 +79,8 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
     m_show_stdout(t_workflowRunOptions.show_stdout),
     m_add_timings(t_workflowRunOptions.add_timings),
     m_style_stdout(t_workflowRunOptions.style_stdout) {
+
+  runner.setRegisterMsgAlsoLogs(true);
 
   if (m_add_timings) {
     m_timers = std::make_unique<workflow::util::TimerCollection>();
@@ -104,7 +108,7 @@ void OSWorkflow::initializeWeatherFileFromOSW() {
   auto epwPath_ = workflowJSON.weatherFile();
 
   if (epwPath_) {
-    LOG(Debug, "Search for weather file defind by osw " << epwPath_.get());
+    LOG(Debug, "Search for weather file defined by osw " << epwPath_.get());
     auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
     if (!epwFullPath_) {
       auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
@@ -122,7 +126,11 @@ void OSWorkflow::initializeWeatherFileFromOSW() {
       LOG(Warn, "Could not load weather file from " << epwPath_.get());
     }
   } else {
-    LOG(Debug, "Weather file is not defined by the osw");
+    LOG(Debug, "No weather file specified in OSW, looking in model");
+    updateLastWeatherFileFromModel();
+    if (epwPath.empty()) {
+      LOG(Warn, "No valid weather file defined in either the osm or osw.");
+    }
   }
 }
 
@@ -210,10 +218,20 @@ void OSWorkflow::saveIDFToRootDirIfDebug() {
 
 bool OSWorkflow::run() {
 
+  // If the user passed something like `openstudio --loglevel Trace run --debug -w workflow.osw`, we retain the Trace
+  LogLevel oriLogLevel = Warn;
+  if (auto l_ = openstudio::Logger::instance().standardOutLogger().logLevel()) {
+    oriLogLevel = *l_;
+  }
+  LogLevel targetLogLevel = oriLogLevel;
+  if (workflowJSON.runOptions()->debug() && oriLogLevel > Debug) {
+    targetLogLevel = Debug;
+  }
+
   if (!m_show_stdout) {
     openstudio::Logger::instance().standardOutLogger().disable();
   } else if (workflowJSON.runOptions()->debug()) {
-    openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(targetLogLevel);
   }
 
   // Need to recreate the runDir as fast as possible, so I can direct a file log sink there
@@ -235,7 +253,7 @@ bool OSWorkflow::run() {
     openstudio::filesystem::create_directory(runDirPath);
   }
   FileLogSink logFile(runDirPath / "run.log");
-  logFile.setLogLevel(Debug);
+  logFile.setLogLevel(targetLogLevel);
 
   if (hasDeletedRunDir) {
     LOG(Debug, "Removing existing run directory: " << runDirPath);
@@ -380,7 +398,7 @@ bool OSWorkflow::run() {
         if (m_add_timings) {
           m_timers->tockCurrentTimer();
         }
-        lastFatalError = fmt::format("Found error in state '{}' with message :'{}'", jobName, e.what());
+        lastFatalError = fmt::format("Found error in state '{}' with message: '{}'", jobName, e.what());
         LOG(Error, lastFatalError);
         // Allow continuing anyways if it fails in reporting measures
         if (jobName != "ReportingMeasures") {
@@ -407,6 +425,13 @@ bool OSWorkflow::run() {
 
   if (!workflowJSON.runOptions()->fast()) {
     communicateResults();
+  }
+
+  if (!lastFatalError.empty()) {
+    // Because we allow RunReportingMeasures to fail so the workflow continues with the RunPostProcess / RunCleanup
+    // but we still want to return a failure
+    state = State::Errored;
+    fmt::print(stderr, "Failed to run workflow. Last Error:\n  {}\n", lastFatalError);
   }
 
   if (state == State::Errored) {
@@ -454,9 +479,6 @@ bool OSWorkflow::run() {
     // TODO: create profile.json in the run folder
   }
 
-  if (!lastFatalError.empty()) {
-    fmt::print(stderr, "Failed to run workflow\n  Last Error:\n{}\n", lastFatalError);
-  }
   return (state == State::Finished);
 }
 

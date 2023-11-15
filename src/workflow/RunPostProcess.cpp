@@ -13,7 +13,11 @@ namespace openstudio {
 void OSWorkflow::runPostProcess() {
   state = State::PostProcess;
 
-  openstudio::workflow::util::gatherReports(workflowJSON.absoluteRunDir(), workflowJSON.absoluteRootDir());
+  if (!workflowJSON.runOptions()->fast()) {
+    LOG(Info, "Gathering reports");
+    openstudio::workflow::util::gatherReports(workflowJSON.absoluteRunDir(), workflowJSON.absoluteRootDir());
+    LOG(Info, "Finished gathering reports");
+  }
 }
 
 }  // namespace openstudio

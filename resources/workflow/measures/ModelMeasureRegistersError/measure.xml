@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>model_measure_registers_error</name>
+  <uid>7866c698-5e29-45dd-927a-224c9b04f787</uid>
+  <version_id>6cfc3278-99d9-4c2a-8ff6-d6fb0b5cf93f</version_id>
+  <version_modified>2023-11-15T13:31:26Z</version_modified>
+  <xml_checksum>82D8F881</xml_checksum>
+  <class_name>ModelMeasureRegistersError</class_name>
+  <display_name>Model Measure Registers Error</display_name>
+  <description>Model Measure Registers Error</description>
+  <modeler_description>The Model Measure, in the run method does runner.registerError</modeler_description>
+  <arguments />
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Form</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Ruby</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.7.0</identifier>
+        <min_compatible>3.7.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>E3BB8474</checksum>
+    </file>
+  </files>
+</measure>
