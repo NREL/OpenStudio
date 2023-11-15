@@ -249,6 +249,8 @@ bool OSWorkflow::run() {
   openstudio::Logger::instance().addTimeStampToLogger();  // Needed for run.log formatting
   openstudio::Logger::instance().standardOutLogger().setFormatter(&standardFormatterWithStringSeverity);
 
+  // TODO: ideally we want stdErr logger to always receive Error and Fatal
+  // and stdOut logger should receive all the others. This is definitely doable (cf LogSink::updateFilter) but now is not the time.
   if (!m_show_stdout) {
     openstudio::Logger::instance().standardOutLogger().setLogLevel(Error);  // Still show errors
   } else if (oriLogLevel != targetLogLevel) {
