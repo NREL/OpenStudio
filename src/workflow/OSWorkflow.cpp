@@ -398,7 +398,7 @@ bool OSWorkflow::run() {
         if (m_add_timings) {
           m_timers->tockCurrentTimer();
         }
-        lastFatalError = fmt::format("Found error in state '{}' with message :'{}'", jobName, e.what());
+        lastFatalError = fmt::format("Found error in state '{}' with message: '{}'", jobName, e.what());
         LOG(Error, lastFatalError);
         // Allow continuing anyways if it fails in reporting measures
         if (jobName != "ReportingMeasures") {
@@ -425,6 +425,13 @@ bool OSWorkflow::run() {
 
   if (!workflowJSON.runOptions()->fast()) {
     communicateResults();
+  }
+
+  if (!lastFatalError.empty()) {
+    // Because we allow RunReportingMeasures to fail so the workflow continues with the RunPostProcess / RunCleanup
+    // but we still want to return a failure
+    state = State::Errored;
+    fmt::print(stderr, "Failed to run workflow. Last Error:\n  {}\n", lastFatalError);
   }
 
   if (state == State::Errored) {
@@ -472,9 +479,6 @@ bool OSWorkflow::run() {
     // TODO: create profile.json in the run folder
   }
 
-  if (!lastFatalError.empty()) {
-    fmt::print(stderr, "Failed to run workflow\n  Last Error:\n{}\n", lastFatalError);
-  }
   return (state == State::Finished);
 }
 

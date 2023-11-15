@@ -240,7 +240,7 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
       // fmt::print("numArgs={}\n", numArgs);
       if (numArgs == 0) {
         if (measureLanguage == MeasureLanguage::Ruby) {
-          auto msg = fmt::format("Reporting Measure at {} is using the old format where the 'arguments' method does not take model. "
+          auto msg = fmt::format("Reporting Measure at '{}' is using the old format where the 'arguments' method does not take model. "
                                  " Please consider updating this to `def arguments(model)`.",
                                  scriptPath_->generic_string());
           LOG(Warn, msg);
@@ -300,7 +300,7 @@ end
         runner.incrementStep();
       }
       ensureBlock(true);
-      throw std::runtime_error(fmt::format("Runner error: Measure {} reported an error with [{}]", scriptPath_->generic_string(), e.what()));
+      throw std::runtime_error(fmt::format("Runner error: Measure '{}' reported an error with [{}]", scriptPath_->generic_string(), e.what()));
     }
 
     // if doing output requests we are done now
@@ -311,7 +311,7 @@ end
       runner.incrementStep();
       if (auto errors = result.stepErrors(); !errors.empty()) {
         ensureBlock(true);
-        throw std::runtime_error(fmt::format("Measure {} reported an error with [{}]", measureDirName, fmt::join(errors, "\n")));
+        throw std::runtime_error(fmt::format("Measure '{}' reported an error with [{}]", measureDirName, fmt::join(errors, "\n")));
       }
 
       const auto measureName = step.name().value_or(className);
@@ -321,7 +321,7 @@ end
       }
       auto stepResult_ = result.stepResult();
       if (!stepResult_.has_value()) {
-        LOG_AND_THROW("Step Result not set for " << scriptPath_->generic_string());
+        LOG_AND_THROW("Step Result not set for '" << scriptPath_->generic_string() << "'");
       }
 
       // Add an applicability flag to all the measure results
