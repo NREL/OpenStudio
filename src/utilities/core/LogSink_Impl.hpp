@@ -71,6 +71,10 @@ namespace detail {
     /// reset the thread id that messages are filtered by
     void resetThreadId();
 
+    void setFormatter(const boost::log::formatter& fmter);
+
+    void useWorkflowGemFormatter(bool use, bool include_channel = false);
+
    protected:
     friend class openstudio::LogSink;
 
@@ -93,6 +97,7 @@ namespace detail {
     bool m_autoFlush = false;
     std::thread::id m_threadId;
     boost::shared_ptr<LogSinkBackend> m_sink;
+    boost::log::formatter m_formatter;
   };
 
 }  // namespace detail

@@ -216,21 +216,44 @@ void OSWorkflow::saveIDFToRootDirIfDebug() {
   LOG(Info, "Saved IDF as " << savePath);
 }
 
+void standardFormatterWithStringSeverity(boost::log::record_view const& rec, boost::log::formatting_ostream& strm) {
+
+  static constexpr std::array<std::string_view, 6> logLevelStrs = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
+  // static constexpr std::array<std::string_view, 6> logLevelStrs = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
+
+  LogLevel logLevel = Trace;
+  if (auto logLevel_ = boost::log::extract<LogLevel>("Severity", rec)) {
+    logLevel = logLevel_.get();
+  }
+
+  // if (auto pt_ = boost::log::extract<boost::posix_time::ptime>("TimeStamp", rec)) {
+  //  // TimeStamp as  [%H:%M:%S.%f]
+  //   strm << "[" << boost::posix_time::to_simple_string(pt_.get().time_of_day()) << "] ";
+  // }
+  strm << "[" << boost::log::extract<LogChannel>("Channel", rec) << "] <"  //
+       << logLevelStrs[static_cast<size_t>(logLevel) - static_cast<size_t>(LogLevel::Trace)]
+       << "> "
+       // Finally, the record message
+       << rec[boost::log::expressions::smessage];
+}
+
 bool OSWorkflow::run() {
 
   // If the user passed something like `openstudio --loglevel Trace run --debug -w workflow.osw`, we retain the Trace
-  LogLevel oriLogLevel = Warn;
-  if (auto l_ = openstudio::Logger::instance().standardOutLogger().logLevel()) {
-    oriLogLevel = *l_;
-  }
+  LogLevel oriLogLevel = openstudio::Logger::instance().standardOutLogger().logLevel().value_or(Warn);
   LogLevel targetLogLevel = oriLogLevel;
   if (workflowJSON.runOptions()->debug() && oriLogLevel > Debug) {
     targetLogLevel = Debug;
   }
 
+  openstudio::Logger::instance().addTimeStampToLogger();  // Needed for run.log formatting
+  openstudio::Logger::instance().standardOutLogger().setFormatter(&standardFormatterWithStringSeverity);
+
+  // TODO: ideally we want stdErr logger to always receive Error and Fatal
+  // and stdOut logger should receive all the others. This is definitely doable (cf LogSink::updateFilter) but now is not the time.
   if (!m_show_stdout) {
-    openstudio::Logger::instance().standardOutLogger().disable();
-  } else if (workflowJSON.runOptions()->debug()) {
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(Error);  // Still show errors
+  } else if (oriLogLevel != targetLogLevel) {
     openstudio::Logger::instance().standardOutLogger().setLogLevel(targetLogLevel);
   }
 
@@ -252,7 +275,11 @@ bool OSWorkflow::run() {
   if (!openstudio::filesystem::is_directory(runDirPath)) {
     openstudio::filesystem::create_directory(runDirPath);
   }
+
   FileLogSink logFile(runDirPath / "run.log");
+  constexpr bool use_workflow_gem_fmt = true;
+  constexpr bool include_channel = true;  // or workflowJSON.runOptions()->debug();
+  logFile.useWorkflowGemFormatter(use_workflow_gem_fmt, include_channel);
   logFile.setLogLevel(targetLogLevel);
 
   if (hasDeletedRunDir) {
