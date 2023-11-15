@@ -71,7 +71,7 @@ class UTILITIES_API LogSink
   /// reset the thread id that messages are filtered by
   void resetThreadId();
 
-  void useWorkflowGemFormatter(bool use, bool include_channel = false);
+  void useWorkflowGemFormatter(bool use, bool include_channel = true);
 
   void setFormatter(const boost::log::formatter& fmter);
 
