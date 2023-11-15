@@ -1,4 +1,5 @@
 {
+	"measure_paths": ["../../measures/"],
 	"steps": [
 		{
 			"measure_dir_name": "FakeReport",

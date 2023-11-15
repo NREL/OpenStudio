@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>reporting_measure_registers_error</name>
+  <uid>cb6ba362-ea57-4236-b803-17e37b0c0817</uid>
+  <version_id>cf96487c-311a-4c07-99e9-8694a5a6248b</version_id>
+  <version_modified>2023-11-15T11:08:57Z</version_modified>
+  <xml_checksum>B2AD275E</xml_checksum>
+  <class_name>ReportingMeasureRegistersError</class_name>
+  <display_name>Reporting Measure Registers Error</display_name>
+  <description>Change me</description>
+  <modeler_description>The Reporting Measure, in the run method does runner.registerError</modeler_description>
+  <arguments />
+  <outputs>
+    <output>
+      <name>net_site_energy</name>
+      <display_name>net_site_energy</display_name>
+      <short_name>net_site_energy</short_name>
+      <type>Double</type>
+      <model_dependent>false</model_dependent>
+    </output>
+  </outputs>
+  <provenances />
+  <tags>
+    <tag>Reporting.QAQC</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ReportingMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Ruby</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.1.2</identifier>
+        <min_compatible>1.1.2</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>B2934521</checksum>
+    </file>
+  </files>
+</measure>

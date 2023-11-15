@@ -57,13 +57,20 @@ def test_run_with_analysis(runWorkflow):
     objectives_path = runDir / "objectives.json"
     assert objectives_path.is_file()
 
-    measure_attributes = json.loads(measure_attributes_path.read_text())
-    assert measure_attributes == {
-        "FakeReport": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}
+    EXPECTED_JSON_DATA = {
+        "FakeReport": {
+            "applicable": True,
+            "fake_report": True,
+            "net_site_energy": 167.1,
+            "something_with_invalid_chars": 1,
+        }
     }
 
+    measure_attributes = json.loads(measure_attributes_path.read_text())
+    assert measure_attributes == EXPECTED_JSON_DATA
+
     results = json.loads(results_path.read_text())
-    assert results == {"FakeReport": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}}
+    assert results == EXPECTED_JSON_DATA
 
     objectives = json.loads(objectives_path.read_text())
     assert objectives == {
@@ -80,9 +87,7 @@ def test_run_with_analysis(runWorkflow):
     data_point_out_path = runDir / "data_point_out.json"
     assert data_point_out_path.is_file()
     data_point_out = json.loads(data_point_out_path.read_text())
-    assert data_point_out == {
-        "FakeReport": {"applicable": True, "net_site_energy": 167.1, "something_with_invalid_chars": 1}
-    }
+    assert data_point_out == EXPECTED_JSON_DATA
 
 
 def test_all_expected_files_in_run_dir(runWorkflow):

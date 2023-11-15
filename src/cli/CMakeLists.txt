@@ -254,6 +254,11 @@ if(BUILD_TESTING)
       COMMAND ${Python_EXECUTABLE} -m pytest --verbose --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_with_analysis.py"
       WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/workflow/with_analysis/local/"
     )
+
+    add_test(NAME OpenStudioCLI.test_runner_errors
+      COMMAND ${Python_EXECUTABLE} -m pytest --verbose --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_runner_registers_error.py"
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/workflow/runner_errors/"
+    )
   else()
     # TODO: Remove. Fallback on these for now, as I don't know if CI has pytest installed
     add_test(NAME OpenStudioCLI.Classic.test_logger_rb
