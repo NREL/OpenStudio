@@ -134,9 +134,10 @@ def test_run_log(runWorkflow):
     run_log_path = runDir / "run.log"
     assert run_log_path.is_file()
     run_log = run_log_path.read_text()
+    assert len(run_log.splitlines()) == 3
+    assert "No valid weather file defined in either the osm or osw." in run_log
     assert "No results for objective function IsNonExisting.NonExisting" in run_log
     assert "runner.registerWarning called" in run_log
-    assert len(run_log.splitlines()) <= 3
 
     assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Trace, is_labs=is_labs) == 0
     assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Debug, is_labs=is_labs) == 0

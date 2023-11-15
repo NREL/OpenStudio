@@ -108,7 +108,7 @@ void OSWorkflow::initializeWeatherFileFromOSW() {
   auto epwPath_ = workflowJSON.weatherFile();
 
   if (epwPath_) {
-    LOG(Debug, "Search for weather file defind by osw " << epwPath_.get());
+    LOG(Debug, "Search for weather file defined by osw " << epwPath_.get());
     auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
     if (!epwFullPath_) {
       auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
@@ -126,7 +126,11 @@ void OSWorkflow::initializeWeatherFileFromOSW() {
       LOG(Warn, "Could not load weather file from " << epwPath_.get());
     }
   } else {
-    LOG(Debug, "Weather file is not defined by the osw");
+    LOG(Debug, "No weather file specified in OSW, looking in model");
+    updateLastWeatherFileFromModel();
+    if (epwPath.empty()) {
+      LOG(Warn, "No valid weather file defined in either the osm or osw.");
+    }
   }
 }
 
