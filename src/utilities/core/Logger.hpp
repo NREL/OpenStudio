@@ -91,6 +91,7 @@ class UTILITIES_API LoggerSingleton
   /// removes a sink to the logging core, equivalent to logSink.disable()
   void removeSink(boost::shared_ptr<LogSinkBackend> sink);
 
+  // cppcheck-suppress functionConst
   void addTimeStampToLogger();
 
  private:

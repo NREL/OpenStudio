@@ -34,13 +34,13 @@ namespace detail {
     return std::string{logLevelStrs[static_cast<size_t>(logLevel) - static_cast<size_t>(LogLevel::Trace)]};
   }
 
-  LogSink_Impl::LogSink_Impl() : m_sink{boost::shared_ptr<LogSinkBackend>(new LogSinkBackend())} {
-    // set formatting, seems like you have to call this after the stream is added
-    // DLM@20110701: would like to format Severity as string but can't figure out how to do it
-    // because you can't overload operator<< for an enum type
-    // this seems to suggest this should work: http://www.edm2.com/0405/enumeration.html
-    m_formatter = expr::stream << "[" << expr::attr<LogChannel>("Channel") << "] <" << expr::attr<LogLevel>("Severity") << "> " << expr::smessage;
-  }
+  LogSink_Impl::LogSink_Impl()
+    : m_sink{boost::shared_ptr<LogSinkBackend>(new LogSinkBackend())},
+      // set formatting, seems like you have to call this after the stream is added
+      // DLM@20110701: would like to format Severity as string but can't figure out how to do it
+      // because you can't overload operator<< for an enum type
+      // this seems to suggest this should work: http://www.edm2.com/0405/enumeration.html
+      m_formatter{expr::stream << "[" << expr::attr<LogChannel>("Channel") << "] <" << expr::attr<LogLevel>("Severity") << "> " << expr::smessage} {}
 
   void LogSink_Impl::setFormatter(const boost::log::formatter& fmter) {
     std::unique_lock l{m_mutex};
