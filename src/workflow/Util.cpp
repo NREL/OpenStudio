@@ -18,6 +18,9 @@
 #include "../utilities/idf/IdfObject.hpp"
 #include "../utilities/idd/IddObject.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../utilities/filetypes/WorkflowStepResult.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <boost/filesystem/operations.hpp>
 #include <utilities/idd/IddEnums.hxx>
@@ -324,6 +327,26 @@ std::string sanitizeKey(std::string key) {
   key = std::regex_replace(key, trailingUnderscoreOrWhiteSpaceRegex, "");
 
   return key;
+}
+
+bool addResultMeasureInfo(WorkflowStepResult& result, BCLMeasure& measure) {
+  try {
+    result.setMeasureType(measure.measureType());
+    result.setMeasureName(measure.name());
+    result.setMeasureId(measure.uid());
+    result.setMeasureVersionId(measure.versionId());
+    auto version_modified_ = measure.versionModified();
+    if (version_modified_) {
+      result.setMeasureVersionModified(*version_modified_);
+    }
+    result.setMeasureXmlChecksum(measure.xmlChecksum());
+    result.setMeasureClassName(measure.className());
+    result.setMeasureDisplayName(measure.displayName());
+    result.setMeasureTaxonomy(measure.taxonomyTag());
+    return true;
+  } catch (...) {
+    return false;
+  }
 }
 
 }  // namespace openstudio::workflow::util
