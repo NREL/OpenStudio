@@ -11,6 +11,8 @@
 #include <fmt/chrono.h>  // Formatting for std::chrono
 #include <fmt/color.h>   // For fmt::fg
 
+#include <json/json.h>
+
 namespace openstudio::workflow::util {
 
 Timer::Timer(std::string message, unsigned level) : m_message(std::move(message)), m_level(level) {}
@@ -68,6 +70,20 @@ std::string Timer::formatRow(size_t message_len, size_t timepoint_len, size_t du
   }
 }
 
+Json::Value Timer::toJSON() const {
+  Json::Value root;
+  root["message"] = m_message;
+  root["level"] = m_level;
+  root["start_time"] = std::chrono::duration_cast<std::chrono::seconds>(m_start.time_since_epoch()).count();
+  root["start_time_str"] = fmt::format("{:%T}", m_start);
+  root["end_time"] = std::chrono::duration_cast<std::chrono::seconds>(m_end.time_since_epoch()).count();
+  root["end_time_str"] = fmt::format("{:%T}", m_end);
+  root["duration_ms"] = duration().count();
+  root["duration_str"] = fmt::format("{}", duration());
+
+  return root;
+}
+
 Timer& TimerCollection::newTimer(std::string message, unsigned level) {
   m_timerIndices.push_back(m_timers.size());
   return m_timers.emplace_back(std::move(message), level);
@@ -114,5 +130,58 @@ std::string TimerCollection::timeReport(int line_length, bool fit) const {
 
   return result;
 };
+
+Json::Value timeToJSONFlatArray(const std::vector<Timer>& timers, const Timer& totalTimer) {
+  Json::Value root(Json::arrayValue);
+
+  for (const auto& timer : timers) {
+    root.append(timer.toJSON());
+  }
+
+  root.append(totalTimer.toJSON());
+  return root;
+}
+
+Json::Value timeToJSONNestedObject(const std::vector<Timer>& timers, const Timer& totalTimer) {
+  const std::string childKey = "subtimers";  // "children";
+
+  Json::Value root(totalTimer.toJSON());
+  if (timers.empty()) {
+    return root;
+  }
+
+  root[childKey] = Json::arrayValue;
+  std::vector<Json::Value*> prevs{&root};
+  int current_level = -1;
+
+  for (const auto& timer : timers) {
+    auto thisJSON = timer.toJSON();
+    const int this_level = static_cast<int>(timer.level());
+    if (this_level == current_level) {
+      (*prevs.rbegin()[1])[childKey].append(thisJSON);
+    } else if (this_level > current_level) {
+      if (!prevs.back()->isMember(childKey)) {
+        (*prevs.back())[childKey] = Json::arrayValue;
+      }
+      prevs.push_back(&((*prevs.back())[childKey].append(thisJSON)));
+    } else {
+      prevs.pop_back();
+      (*prevs.back())[childKey].append(thisJSON);
+    }
+    current_level = this_level;
+  }
+  return root;
+}
+
+Json::Value TimerCollection::toJSON(bool useFlatArray) const {
+  m_totalTimer.tock();
+
+  if (useFlatArray) {
+    return timeToJSONFlatArray(m_timers, m_totalTimer);
+  }
+
+  // return timeToJSONNestedObjectMax2Levels(m_timers, m_totalTimer);
+  return timeToJSONNestedObject(m_timers, m_totalTimer);
+}
 
 }  // namespace openstudio::workflow::util

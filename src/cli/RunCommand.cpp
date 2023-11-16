@@ -50,8 +50,9 @@ namespace cli {
     auto* stdout_opt =
       app->add_flag("--show-stdout", opt->show_stdout, "Prints the output of the workflow run in real time to the console, including E+ output")
         ->group("Stdout Options");
-    app->add_flag("--add-timings", opt->add_timings, "Print the start, end and elapsed times of each state of the simulation.")
-      ->needs(stdout_opt)
+    app
+      ->add_flag("--add-timings", opt->add_timings,
+                 "Print the start, end and elapsed times of each state of the simulation if --show-stdout passed. Output profile.json in run folder")
       ->group("Stdout Options");
     app
       ->add_flag("--style-stdout", opt->style_stdout,

@@ -502,7 +502,24 @@ bool OSWorkflow::run() {
   }
 
   if (m_add_timings) {
-    fmt::print("\nTiming:\n\n{}\n", m_timers->timeReport());
+    if (m_show_stdout) {
+      fmt::print("\nTiming:\n\n{}\n", m_timers->timeReport());
+    }
+
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "  ";
+
+    Json::Value profile(Json::objectValue);
+    profile["flat_array"] = m_timers->toJSON(true);
+    profile["nested"] = m_timers->toJSON(false);
+    const std::string result = Json::writeString(wbuilder, profile);
+
+    auto jsonPath = workflowJSON.absoluteRunDir() / "profile.json";
+    openstudio::filesystem::ofstream file(jsonPath);
+    OS_ASSERT(file.is_open());
+    file << result;
+    file.close();
     // TODO: create profile.json in the run folder
   }
 

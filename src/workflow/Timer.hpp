@@ -10,6 +10,10 @@
 #include <string>
 #include <vector>
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio::workflow::util {
 
 class Timer
@@ -37,6 +41,8 @@ class Timer
 
   std::string formatRow(size_t message_len, size_t timepoint_len, size_t duration_len) const;
 
+  Json::Value toJSON() const;
+
  private:
   using DurationType = std::chrono::milliseconds;
   using ClockType = std::chrono::system_clock;
@@ -60,6 +66,8 @@ class TimerCollection
 
   // line_length is the maximum terminal width, fit = true will cause the table to be resized down as much as possible, fit = false means the table will take exactly line_length
   std::string timeReport(int line_length = 80, bool fit = true) const;
+
+  Json::Value toJSON(bool useFlatArray) const;
 
  private:
   std::vector<Timer> m_timers;
