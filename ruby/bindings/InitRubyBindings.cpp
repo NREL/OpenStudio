@@ -407,7 +407,7 @@ class RubyMeasureInfoBinding < OpenStudio::Measure::MeasureInfoBinding
       readme_in = File.read(readme_in_path)
       renderer = ERB.new(readme_in)
       readme_out = renderer.result(get_binding())
-    rescue
+    rescue => e
       info = OpenStudio::Measure::OSMeasureInfo.new(e.message)
       return false # @info
     end
