@@ -1,6 +1,6 @@
 # OpenStudio Version 3.7.0
 
-_Release Notes_ - _TBD_
+_Release Notes_ - 11/17/2023
 
 These release notes describe version 3.7.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
@@ -60,6 +60,7 @@ For help with common installation problems please visit, http://nrel.github.io/O
 The 3.7.0 is a **major** release. This update includes several new features, performance improvements, and bug fixes.
 You can find the list of Pull Requests that got into this release [here](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2022-09-26..2023-05-12+).
 
+## Convert --lab subcommand to default
 
 ## Python Bindings
 
@@ -73,28 +74,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 ## New Features, Major Fixes and API-breaking changes
 
-* [#4827](https://github.com/NREL/OpenStudio/pull/4827) - #4748 #4817 - Validate BCLXML with schema when loading + make sorting of files in measure.xml consistent when saving
-* [#4873](https://github.com/NREL/OpenStudio/pull/4873) & [#4971](https://github.com/NREL/OpenStudio/pull/4971) - AirLoopHVACUnitarySystem set Method During XXX Operation
-    * Fix #4695 - AirLoopHVACUnitarySystem: Supply Air Flow Rate Method During <XXX> Operation should be set via related setters/autosize
-    * Breaks the return of `supplyAirFlowRateMethodDuringCoolingOperation`, `supplyAirFlowRateMethodDuringHeatingOperation` and `supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired()`: now returns `std::string` instead of `boost::optional<std::string>`
-    * Deprecates many set/reset methods
-    * These fields are now non-optional, and are set via the flow field setters and reset when the heating/cooling coils are reset.
-        * Example: `unitary.setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(1.0)` will set the "Supply Air Flow Rate Method During Cooling Operation" to "FlowPerFloorArea"
-
-* [#4932](https://github.com/NREL/OpenStudio/pull/4932) - Support undisturbed ground temperature models on GroundHeatExchangerVertical
-    * Fix #4930 - Support undisturbed ground temperature models on GroundHeatExchangerVertical
-    * Update `GroundHeatExchanger:Vertical` to actually use the Ground Temeprature Model field
-* [#4923](https://github.com/NREL/OpenStudio/pull/4923) - Fix #4692 - Modify `Model::load` to use the VersionTranslator instead of loading it assuming the version of the loaded OSM is the same as the current SDK version being used.
-* [#4950](https://github.com/NREL/OpenStudio/pull/4950) - Addresses #4946, allow Table:Lookup curves for Coil:*:WaterToAirHeatPumpEquationFit objects
-    * `Coil:Cooling:WaterToAirHeatPumpEquationFit` and `Coil:Heating:WaterToAirHeatPumpEquationFit` have a few API-breaking changes related to its Curves. The types for the constructor, getters, and setters used to be explicit (e.g., `CurveQuadLinear`); it is now the base class, more generic, `Curve` type for added flexibility.
-* [#4972](https://github.com/NREL/OpenStudio/pull/4972) - V23.2.0-IOFreeze - wrap `DistrictHeating:Steam` and rename `DistrictHeating` to `DistrictHeatingWater`
-    * The `DistrictHeating` class (and related Model getters such as `Model::getDistrictHeatings`) are deprecated but kept for backward Compatibility for now.
 
 ## Minor changes and bug fixes
-
-* [#4884](https://github.com/NREL/OpenStudio/pull/4884) - Fix #4882 - Avoid a crash in createFluidProperties during FT that's due to Undefined Behavior
-* [#4881](https://github.com/NREL/OpenStudio/pull/4881) - Adjust CMakeLists for Ubuntu 22.04 arm64
-* [#4888](https://github.com/NREL/OpenStudio/pull/4888) - Fix #4887 -  CSharp workflow - macos-10.15 was removed by @jmarrec in https://github.com/NREL/OpenStudio/pull/488
 
 **Full Changelog**: https://github.com/NREL/OpenStudio/compare/v3.6.0...v3.7.0
 
