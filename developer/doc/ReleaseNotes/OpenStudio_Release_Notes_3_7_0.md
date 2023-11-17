@@ -40,7 +40,7 @@ OpenStudio SDK 3.7.0 is supported on:
 * Ubuntu: 20.04 x86_64, 22.04 x86_64, 22.04 arm64
 * Centos7
 
-OpenStudio SDK 3.7.0 supports [EnergyPlus Release TDB](https://github.com/NREL/EnergyPlus/releases/tag/v23.1.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.7.0.
+OpenStudio SDK 3.7.0 supports [EnergyPlus Release 23.2.0](https://github.com/NREL/EnergyPlus/releases/tag/v23.2.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.7.0.
 
 OpenStudio SDK 3.7.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio SDK 3.7.0.
 
@@ -55,12 +55,13 @@ As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://g
 
 For help with common installation problems please visit, http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/.
 
-# OpenStudio SDK: Changelog
+# OpenStudio SDK:
 
 The 3.7.0 is a **major** release. This update includes several new features, performance improvements, and bug fixes.
-You can find the list of Pull Requests that got into this release [here](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2022-09-26..2023-05-12+).
 
-## Convert --lab subcommand to default
+## C++ Workflow code
+
+As of OpenStudio SDK 3.7.0 a re-written workflow written in C++ is used by default in place of the Ruby based Workflow Gem that had been used in the past. This enhancement is in support of Python measures being used in an OpenStudio workflow, including mixed language workflows that include both Ruby Measures and Python Measures. If you need to use the older Workflow Gem implementation, you can do that by using the `classic` subcommand after `openstudio`. `classic` will be deprecated in a future version of OpenStudio. 
 
 ## Python Bindings
 
@@ -80,8 +81,11 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 **Full Changelog**: https://github.com/NREL/OpenStudio/compare/v3.6.0...v3.7.0
 
 **New Contributors**:
+@mdahlhausen made their first contribution in #4925
+@wenyikuang made their first contribution in #4996
 
 ### OpenStudio Standards vXXX
+
 
 
 ### OpenStudio Server vXXX
