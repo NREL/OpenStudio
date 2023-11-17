@@ -492,8 +492,12 @@ openstudio::measure::OSMeasureInfo MeasureManager::getMeasureInfo(const openstud
 
       // TODO: for ruby at least, need to try the arity... model was added later, at 3.0.0
       const int numArgs = (*thisEngine)->numberOfArguments(measureScriptObject, "arguments");
-      fmt::print("numArgs={}\n", numArgs);
+      // fmt::print("numArgs={}\n", numArgs);
       if (numArgs == 0) {
+        auto msg = fmt::format("Reporting Measure at '{}' is using the old format where the 'arguments' method does not take model. "
+                               " Please consider updating this to `def arguments(model)`.",
+                               scriptPath_->generic_string());
+        fmt::print("{}\n", msg);
         if (measureLanguage == MeasureLanguage::Ruby) {
           auto patchArgumentsCmd = fmt::format(R"ruby(
 module {0}Extensions
