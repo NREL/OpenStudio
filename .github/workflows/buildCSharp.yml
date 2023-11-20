@@ -31,8 +31,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         # If you need to rebuild for a specific branch **after** you fixed the workflow...
-        # with:
-        #   ref: master
+        with:
+          ref: develop
+
+      - name: download patched CMakeLists.txt
+        shell: bash
+        run: |
+          rm CMakeLists.txt
+          aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/CMakeLists.txt
 
       - uses: actions/setup-python@v4
         with:
