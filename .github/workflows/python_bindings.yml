@@ -61,11 +61,11 @@ jobs:
           allow_failure: true  # Possible this fails, don't care yet
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
       id: setup-python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -236,7 +236,7 @@ jobs:
         tar -cvzf openstudio-${{ matrix.name }}.tar.gz dist/
 
     - name: Upload .whl to artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: openstudio-${{ matrix.name }}  # something like openstudio-Windows_py37
         path: ./build/Products/python_package/openstudio-${{ matrix.name }}.tar.gz
@@ -249,7 +249,7 @@ jobs:
     steps:
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -262,7 +262,7 @@ jobs:
         mkdir wheels
 
     - name: Download ALL wheels
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         path: ./wheels
 
@@ -333,10 +333,10 @@ jobs:
           allow_failure: true  # Possible this fails, don't care yet
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -372,7 +372,7 @@ jobs:
     steps:
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -383,7 +383,7 @@ jobs:
         mkdir wheels
 
     - name: Download ALL wheels
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         path: ./wheels
 
