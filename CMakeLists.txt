@@ -161,6 +161,9 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
 set(PROJECT_VERSION_PRERELEASE "")
 
+# TODO: temp override to produce the same SHA as 3.7.0
+set(PROJECT_VERSION_BUILD "d5269793f1" CACHE STRING "Build number" FORCE)
+
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
@@ -198,9 +201,9 @@ set(ENERGYPLUS_BUILD_SHA "7636e6b3e9")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v23.2.0")
+set(ENERGYPLUS_RELEASE_NAME "v23.2.0-WithMacStaticLibs")
 
-set(ENERGYPLUS_REPO "NREL")
+set(ENERGYPLUS_REPO "jmarrec") # TODO: temp
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -625,10 +628,10 @@ endif()
 if(UNIX)
   if(APPLE)
     if (ARCH MATCHES "arm64")
-      set(ENERGYPLUS_EXPECTED_HASH 918a4544793aafc32df5910c83f05f1a)
+      set(ENERGYPLUS_EXPECTED_HASH 72948a3f884ce9fe44145210eceb8259)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH b8c1ee3fe45318a4575078de07cc5656)
+      set(ENERGYPLUS_EXPECTED_HASH 219c1a5cfec7b6fd6bd8507c043b82ab)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
