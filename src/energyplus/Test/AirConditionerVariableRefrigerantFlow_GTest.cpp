@@ -26,6 +26,32 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlow) {
+  Model model;
+  AirConditionerVariableRefrigerantFlow vrf(model);
+
+  // TODO
+  EXPECT_TRUE(vrf.setMaximumOutdoorTemperatureinHeatRecoveryMode(20));
+  EXPECT_TRUE(vrf.setInitialHeatRecoveryCoolingCapacityFraction(0.5));
+  // TODO
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  ZoneHVACTerminalUnitVariableRefrigerantFlow term(model);
+  EXPECT_TRUE(vrf.addTerminal(term));
+  workspace = ft.translateModel(model);
+
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow).size());
+
+  IdfObject idf_vrf = workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow)[0];
+  EXPECT_EQ(vrf.nameString(), idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::Name, false).get());
+  // TODO
+  EXPECT_EQ(20, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumCondenserInletNodeTemperatureinHeatRecoveryMode, false).get());
+  EXPECT_EQ(0.5, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryCoolingCapacityFraction, false).get());
+  // TODO
+}
+
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlow_harcodedCondenserType) {
 
   // Lambda to dry up code
