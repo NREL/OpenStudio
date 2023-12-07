@@ -550,7 +550,7 @@ namespace energyplus {
 
     // MaximumCondenserInletNodeTemperatureinHeatRecoveryMode
 
-    if ((value = modelObject.maximumOutdoorTemperatureinHeatingMode())) {
+    if ((value = modelObject.maximumOutdoorTemperatureinHeatRecoveryMode())) {
       idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumCondenserInletNodeTemperatureinHeatRecoveryMode, value.get());
     }
 
@@ -564,7 +564,7 @@ namespace energyplus {
 
     // InitialHeatRecoveryCoolingCapacityFraction
 
-    if ((value = modelObject.initialHeatRecoveryCoolingEnergyFraction())) {
+    if ((value = modelObject.initialHeatRecoveryCoolingCapacityFraction())) {
       idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryCoolingCapacityFraction, value.get());
     }
 
