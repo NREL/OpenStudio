@@ -172,29 +172,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_EQ(
     curve1.nameString(),
     idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofLowTemperatureCurveName, false).get());
-  EXPECT_EQ(curve2.nameString(), idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CoolingCapacityRatioBoundaryCurveName, false).get());
+  EXPECT_EQ(curve2.nameString(), idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingCapacityRatioBoundaryCurveName, false).get());
   EXPECT_EQ(
     curve3.nameString(),
-    idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofHighTemperatureCurveName, false).get());
+    idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofHighTemperatureCurveName, false).get());
   EXPECT_EQ(
     curve4.nameString(),
-    idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioModifierFunctionofLowTemperatureCurveName, false).get());
+    idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioModifierFunctionofLowTemperatureCurveName, false).get());
   EXPECT_EQ(curve5.nameString(),
-            idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioBoundaryCurveName, false).get());
+            idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioBoundaryCurveName, false).get());
   EXPECT_EQ(
     curve6.nameString(),
-    idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioModifierFunctionofHighTemperatureCurveName, false).get());
+    idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioModifierFunctionofHighTemperatureCurveName, false).get());
   EXPECT_EQ(
     curve7.nameString(),
-    idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurveName, false).get());
+    idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurveName, false).get());
   EXPECT_EQ(
     curve8.nameString(),
-    idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName, false)
+    idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName, false)
       .get());
   EXPECT_EQ(curve9.nameString(),
-            idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CoolingCombinationRatioCorrectionFactorCurveName, false).get());
+            idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingCombinationRatioCorrectionFactorCurveName, false).get());
   EXPECT_EQ(curve10.nameString(),
-            idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CoolingPartLoadFractionCorrelationCurveName, false).get());
+            idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CoolingPartLoadFractionCorrelationCurveName, false).get());
   EXPECT_EQ(5, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCapacity, false).get());
   EXPECT_EQ(6, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::RatedHeatingCapacitySizingRatio, false).get());
   EXPECT_EQ(7, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCOP, false).get());
