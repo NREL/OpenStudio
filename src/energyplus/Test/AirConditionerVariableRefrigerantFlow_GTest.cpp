@@ -20,6 +20,8 @@
 #include "../../model/CurveBiquadratic_Impl.hpp"
 #include "../../model/CurveCubic.hpp"
 #include "../../model/CurveCubic_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
 
@@ -38,6 +40,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   Model model;
   AirConditionerVariableRefrigerantFlow vrf(model);
   ThermalZone zone(model);
+  Space space(model);
+  space.setThermalZone(zone);
 
   ScheduleConstant scheduleConstant(model);
   scheduleConstant.setValue(0.5);
@@ -98,7 +102,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   ScheduleConstant scheduleConstant2(model);
   scheduleConstant2.setValue(0.7);
   EXPECT_TRUE(vrf.setThermostatPrioritySchedule(scheduleConstant2));
-  EXPECT_TRUE(vrf.setHeatPumpWasteHeatRecovery("No"));
+  EXPECT_TRUE(vrf.setHeatPumpWasteHeatRecovery(false));
   EXPECT_TRUE(vrf.setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(11));
   EXPECT_TRUE(vrf.setVerticalHeightusedforPipingCorrectionFactor(12));
   CurveBiquadratic curve21(model);
@@ -158,8 +162,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
 
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).size());
-  EXPECT_EQ(13u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
-  EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Curve_Cubic).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+  EXPECT_EQ(26u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
+  EXPECT_EQ(24u, workspace.getObjectsByType(IddObjectType::Curve_Cubic).size());
 
   IdfObject idf_vrf = workspace.getObjectsByType(IddObjectType::AirConditioner_VariableRefrigerantFlow)[0];
 
@@ -256,8 +261,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_EQ(17, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::NumberofCompressors, false).get());
   EXPECT_EQ(18, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::RatioofCompressorSizetoTotalCompressorCapacity, false).get());
   EXPECT_EQ(19, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeater, false).get());
-  EXPECT_EQ("Resistive", idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::MasterThermostatPriorityControlType, false).get());
-  EXPECT_EQ("OnDemand", idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::MasterThermostatPriorityControlType, false).get());
+  EXPECT_EQ("Resistive", idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::DefrostStrategy, false).get());
+  EXPECT_EQ("OnDemand", idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::DefrostControl, false).get());
   EXPECT_EQ(
     curve23.nameString(),
     idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName, false).get());
