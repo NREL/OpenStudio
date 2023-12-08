@@ -396,7 +396,7 @@ namespace energyplus {
       idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatioofCompressorSizetoTotalCompressorCapacity, value.get());
     }
 
-    // MaximumOutdoorDrybulbTemperatureforCrankcaseHeater
+    // MaximumOutdoorDryBulbTemperatureforCrankcaseHeater
 
     if ((value = modelObject.maximumOutdoorDrybulbTemperatureforCrankcaseHeater())) {
       idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeater, value.get());

@@ -255,7 +255,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirConditionerVariableRefrigerantFlo
   EXPECT_EQ(16, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::CrankcaseHeaterPowerperCompressor, false).get());
   EXPECT_EQ(17, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::NumberofCompressors, false).get());
   EXPECT_EQ(18, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::RatioofCompressorSizetoTotalCompressorCapacity, false).get());
-  EXPECT_EQ(19, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDrybulbTemperatureforCrankcaseHeater, false).get());
+  EXPECT_EQ(19, idf_vrf.getDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeater, false).get());
   EXPECT_EQ("Resistive", idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::MasterThermostatPriorityControlType, false).get());
   EXPECT_EQ("OnDemand", idf_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::MasterThermostatPriorityControlType, false).get());
   EXPECT_EQ(
