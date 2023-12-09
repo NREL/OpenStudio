@@ -115,7 +115,7 @@ namespace model {
 
     bool isRatedEvaporatorAirFlowRateAutosized() const;
 
-    boost::optional <double> autosizedRatedEvaporatorAirFlowRate();
+    boost::optional<double> autosizedRatedEvaporatorAirFlowRate();
 
     // TODO: Check return type. From object lists, some candidates are: Connection.
     Connection evaporatorAirInletNode() const;
@@ -129,7 +129,7 @@ namespace model {
 
     bool isCoolingOnlyModeRatedTotalEvaporatorCoolingCapacityAutosized() const;
 
-    boost::optional <double> autosizedCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();
+    boost::optional<double> autosizedCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();
 
     double coolingOnlyModeRatedSensibleHeatRatio() const;
 
@@ -346,7 +346,7 @@ namespace model {
 
     bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
 
-    boost::optional <double> autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption();
 
     double basinHeaterCapacity() const;
 

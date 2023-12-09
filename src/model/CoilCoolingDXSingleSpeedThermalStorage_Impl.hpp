@@ -47,24 +47,18 @@ namespace model {
 
   namespace detail {
 
-  /** CoilCoolingDXSingleSpeedThermalStorage_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingDXSingleSpeedThermalStorage.*/
+    /** CoilCoolingDXSingleSpeedThermalStorage_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingDXSingleSpeedThermalStorage.*/
     class MODEL_API CoilCoolingDXSingleSpeedThermalStorage_Impl : public StraightComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      CoilCoolingDXSingleSpeedThermalStorage_Impl(const IdfObject& idfObject,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      CoilCoolingDXSingleSpeedThermalStorage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      CoilCoolingDXSingleSpeedThermalStorage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      CoilCoolingDXSingleSpeedThermalStorage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      CoilCoolingDXSingleSpeedThermalStorage_Impl(const CoilCoolingDXSingleSpeedThermalStorage_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      CoilCoolingDXSingleSpeedThermalStorage_Impl(const CoilCoolingDXSingleSpeedThermalStorage_Impl& other, Model_Impl* model, bool keepHandle);
 
       virtual ~CoilCoolingDXSingleSpeedThermalStorage_Impl() = default;
 
@@ -121,7 +115,7 @@ namespace model {
 
       bool isRatedEvaporatorAirFlowRateAutosized() const;
 
-      boost::optional <double> autosizedRatedEvaporatorAirFlowRate();
+      boost::optional<double> autosizedRatedEvaporatorAirFlowRate();
 
       // TODO: Check return type. From object lists, some candidates are: Connection.
       Connection evaporatorAirInletNode() const;
@@ -135,7 +129,7 @@ namespace model {
 
       bool isCoolingOnlyModeRatedTotalEvaporatorCoolingCapacityAutosized() const;
 
-      boost::optional <double> autosizedCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();
+      boost::optional<double> autosizedCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();
 
       double coolingOnlyModeRatedSensibleHeatRatio() const;
 
@@ -352,7 +346,7 @@ namespace model {
 
       bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
 
-      boost::optional <double> autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+      boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption();
 
       double basinHeaterCapacity() const;
 
@@ -386,13 +380,13 @@ namespace model {
       //@{
 
       // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+      // Note Schedules are passed by reference, not const reference.
       bool setAvailabilitySchedule(Schedule& schedule);
 
       bool setOperatingModeControlMethod(const std::string& operatingModeControlMethod);
 
       // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+      // Note Schedules are passed by reference, not const reference.
       bool setOperationModeControlSchedule(Schedule& schedule);
 
       void resetOperationModeControlSchedule();
@@ -769,7 +763,7 @@ namespace model {
       bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
       // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+      // Note Schedules are passed by reference, not const reference.
       bool setBasinHeaterAvailabilitySchedule(Schedule& schedule);
 
       void resetBasinHeaterAvailabilitySchedule();
@@ -820,7 +814,7 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilCoolingDXSingleSpeedThermalStorage");
-  
+
       // TODO: Check the return types of these methods.
       // Optional getters for use by methods like children() so can remove() if the constructor fails.
       // There are other ways for the public versions of these getters to fail--perhaps all required
