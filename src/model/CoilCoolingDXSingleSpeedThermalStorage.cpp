@@ -106,6 +106,14 @@ namespace model {
       return result;
     }
 
+    unsigned CoilCoolingDXSingleSpeedThermalStorage_Impl::inletPort() const {
+      return OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNode;
+    }
+
+    unsigned CoilCoolingDXSingleSpeedThermalStorage_Impl::outletPort() const {
+      return OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNode;
+    }
+
     ComponentType CoilCoolingDXSingleSpeedThermalStorage_Impl::componentType() const {
       // TODO
       return ComponentType::None;
@@ -2054,28 +2062,35 @@ namespace model {
     //     OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirInletNode
     //     OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirOutletNode
     bool ok = true;
-    // ok = setAvailabilitySchedule();
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    ok = setAvailabilitySchedule(schedule);
     OS_ASSERT(ok);
-    // ok = setOperatingModeControlMethod();
+    ok = setOperatingModeControlMethod("EMSControlled");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
-    // ok = setStorageType();
+    ok = setStorageType("Ice");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
-    // ok = setStorageTankAmbientTemperatureNode();
+    // ok = setStorageTankAmbientTemperatureNode();  // TODO: FT an OutdoorAir:Node?
     OS_ASSERT(ok);
-    // ok = setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient();
+    // ok = setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(7.913);  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
-    // ok = setRatedEvaporatorAirFlowRate();
-    OS_ASSERT(ok);
+    autosizeRatedEvaporatorAirFlowRate();  // autosize
     // ok = setEvaporatorAirInletNode();
     OS_ASSERT(ok);
     // ok = setEvaporatorAirOutletNode();
     OS_ASSERT(ok);
-    // setCoolingOnlyModeAvailable();
-    // ok = setCoolingOnlyModeRatedSensibleHeatRatio();
+    
+    // Cooling Only Mode
+    ok = setCoolingOnlyModeAvailable("Yes");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
-    // ok = setCoolingOnlyModeRatedCOP();
+    autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();  // RetailPackagedTESCoil.idf
+    ok = setCoolingOnlyModeRatedSensibleHeatRatio(0.7);  // idd default
     OS_ASSERT(ok);
-    // setCoolingAndChargeModeAvailable();
+    ok = setCoolingOnlyModeRatedCOP(3.0);  // idd default; FIXME: use only idf? 3.50015986358308
+    OS_ASSERT(ok);
+    
+    // Cooling And Charge Mode
+    ok = setCoolingAndChargeModeAvailable("Yes");  // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
     // setCoolingAndChargeModeCapacitySizingFactor();
     // setCoolingAndChargeModeStorageCapacitySizingFactor();
     // ok = setCoolingAndChargeModeRatedSensibleHeatRatio();
@@ -2084,7 +2099,10 @@ namespace model {
     OS_ASSERT(ok);
     // ok = setCoolingAndChargeModeChargingRatedCOP();
     OS_ASSERT(ok);
-    // setCoolingAndDischargeModeAvailable();
+    
+    // Cooling And Discharge Mode
+    ok = setCoolingAndDischargeModeAvailable("No");  // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
     // setCoolingAndDischargeModeEvaporatorCapacitySizingFactor();
     // setCoolingAndDischargeModeStorageDischargeCapacitySizingFactor();
     // ok = setCoolingAndDischargeModeRatedSensibleHeatRatio();
@@ -2093,14 +2111,21 @@ namespace model {
     OS_ASSERT(ok);
     // ok = setCoolingAndDischargeModeDischargingRatedCOP();
     OS_ASSERT(ok);
-    // setChargeOnlyModeAvailable();
+    
+    // Charge Only Mode
+    ok = setChargeOnlyModeAvailable("No");  // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
     // setChargeOnlyModeCapacitySizingFactor();
     // ok = setChargeOnlyModeChargingRatedCOP();
     OS_ASSERT(ok);
-    // setDischargeOnlyModeAvailable();
+    
+    // Discharge Only Mode
+    ok = setDischargeOnlyModeAvailable("Yes");  // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
     // setDischargeOnlyModeCapacitySizingFactor();
     // ok = setDischargeOnlyModeRatedCOP();
     OS_ASSERT(ok);
+
     // ok = setCondenserAirInletNode();
     OS_ASSERT(ok);
     // ok = setCondenserAirOutletNode();
