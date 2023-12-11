@@ -2151,7 +2151,7 @@ namespace model {
     ok = setCoolingOnlyModeAvailable("Yes");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();  // RetailPackagedTESCoil.idf
-    ok = setCoolingOnlyModeRatedSensibleHeatRatio(0.7);  // RetailPackagedTESCoil.idf
+    ok = setCoolingOnlyModeRatedSensibleHeatRatio(0.7);            // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     ok = setCoolingOnlyModeRatedCOP(3.50015986358308);  // RetailPackagedTESCoil.idf; FIXME: use idd default?
     OS_ASSERT(ok);
@@ -2186,7 +2186,7 @@ namespace model {
     ok = setCoolingAndChargeModeChargingRatedCOP(2.17);
     OS_ASSERT(ok);
     // TODO
-    
+
     // Cooling And Discharge Mode
     ok = setCoolingAndDischargeModeAvailable("No");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
@@ -2200,7 +2200,7 @@ namespace model {
     OS_ASSERT(ok);
     ok = setCoolingAndDischargeModeDischargingRatedCOP(3.0);
     OS_ASSERT(ok);
-    
+
     // Charge Only Mode
     ok = setChargeOnlyModeAvailable("No");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
@@ -2208,7 +2208,7 @@ namespace model {
     OS_ASSERT(ok);
     ok = setChargeOnlyModeChargingRatedCOP(3.0);
     OS_ASSERT(ok);
-    
+
     // Discharge Only Mode
     ok = setDischargeOnlyModeAvailable("Yes");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
