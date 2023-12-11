@@ -2078,16 +2078,16 @@ namespace model {
     OS_ASSERT(ok);
     // ok = setEvaporatorAirOutletNode();
     OS_ASSERT(ok);
-    
+
     // Cooling Only Mode
     ok = setCoolingOnlyModeAvailable("Yes");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();  // RetailPackagedTESCoil.idf
-    ok = setCoolingOnlyModeRatedSensibleHeatRatio(0.7);  // idd default
+    ok = setCoolingOnlyModeRatedSensibleHeatRatio(0.7);            // idd default
     OS_ASSERT(ok);
     ok = setCoolingOnlyModeRatedCOP(3.0);  // idd default; FIXME: use only idf? 3.50015986358308
     OS_ASSERT(ok);
-    
+
     // Cooling And Charge Mode
     ok = setCoolingAndChargeModeAvailable("Yes");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
@@ -2099,7 +2099,7 @@ namespace model {
     OS_ASSERT(ok);
     // ok = setCoolingAndChargeModeChargingRatedCOP();
     OS_ASSERT(ok);
-    
+
     // Cooling And Discharge Mode
     ok = setCoolingAndDischargeModeAvailable("No");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
@@ -2111,14 +2111,14 @@ namespace model {
     OS_ASSERT(ok);
     // ok = setCoolingAndDischargeModeDischargingRatedCOP();
     OS_ASSERT(ok);
-    
+
     // Charge Only Mode
     ok = setChargeOnlyModeAvailable("No");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     // setChargeOnlyModeCapacitySizingFactor();
     // ok = setChargeOnlyModeChargingRatedCOP();
     OS_ASSERT(ok);
-    
+
     // Discharge Only Mode
     ok = setDischargeOnlyModeAvailable("Yes");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
