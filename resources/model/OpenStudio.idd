@@ -19529,15 +19529,11 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \units W
        \minimum 0.0
   A57, \field Condenser Air Inlet Node
-       \type object-list
-       \required-field
-       \object-list ConnectionNames
        \note Enter the name of an outdoor air node. This node name is also specified in
        \note an OutdoorAir:Node or OutdoorAir:NodeList object.
+       \type alpha
   A58, \field Condenser Air Outlet Node
-       \type object-list
-       \required-field
-       \object-list ConnectionNames
+       \type alpha
   N34, \field Condenser Design Air Flow Rate
        \required-field
        \type real
