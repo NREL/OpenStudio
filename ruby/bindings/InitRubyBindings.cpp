@@ -406,9 +406,13 @@ class RubyMeasureInfoBinding < OpenStudio::Measure::MeasureInfoBinding
       readme_out_path = File.join(File.dirname(readme_in_path), File.basename(readme_in_path, File.extname(readme_in_path)))
       readme_in = File.read(readme_in_path)
       renderer = ERB.new(readme_in)
-      readme_out = renderer.result(get_binding())
-    rescue
-      info = OpenStudio::Measure::OSMeasureInfo.new(e.message)
+      b = get_binding()
+      readme_out = renderer.result(b)
+    rescue => e
+      exception_msg = "Failed to Render ERB file: #{e.class}: #{e.message}\nTraceback:\n"
+      exception_msg += e.backtrace.join("\n")
+      STDERR.puts exception_msg
+      # info = OpenStudio::Measure::OSMeasureInfo.new(exception_msg)
       return false # @info
     end
     # write README.md file
