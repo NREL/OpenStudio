@@ -282,44 +282,40 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<BivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve);
     }
 
-    boost::optional<BivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve);
     }
 
-    boost::optional<UnivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModePartLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModePartLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModePartLoadFractionCorrelationCurve);
     }
 
-    boost::optional<BivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve);
     }
 
@@ -387,75 +383,70 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<TrivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<TrivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve);
     }
 
-    boost::optional<TrivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<TrivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve);
     }
 
-    boost::optional<TrivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<TrivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve);
     }
 
-    boost::optional<TrivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<TrivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve);
     }
 
-    boost::optional<BivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve);
     }
 
@@ -525,81 +516,77 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<TrivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<TrivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve);
     }
 
-    boost::optional<TrivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<TrivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve);
     }
 
-    boost::optional<TrivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<TrivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve);
     }
 
-    boost::optional<TrivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<TrivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
+    boost::optional<Curve>
       CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve);
     }
 
-    boost::optional<BivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve);
     }
 
@@ -633,15 +620,13 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<BivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve);
     }
 
-    boost::optional<BivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve);
     }
 
@@ -679,44 +664,38 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<BivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve);
     }
 
-    boost::optional<BivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve);
     }
 
-    boost::optional<UnivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModePartLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModePartLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModePartLoadFractionCorrelationCurve);
     }
 
-    boost::optional<BivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<BivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve);
     }
 
-    boost::optional<UnivariateFunctions>
-      CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(
+    boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve);
     }
 
@@ -1010,11 +989,9 @@ namespace model {
       return result;
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve,
-                   bivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1024,11 +1001,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
+    bool
+      CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1038,10 +1015,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve,
-                                     bivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result =
+        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1051,10 +1027,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve,
-                                     univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+      const bool result =
+        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve, Curve.handle());
       return result;
     }
 
@@ -1064,10 +1039,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModePartLoadFractionCorrelationCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModePartLoadFractionCorrelationCurve,
-                                     univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModePartLoadFractionCorrelationCurve(const Curve& Curve) {
+      const bool result =
+        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModePartLoadFractionCorrelationCurve, Curve.handle());
       return result;
     }
 
@@ -1076,10 +1050,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve,
-                                     bivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result =
+        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1089,10 +1062,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve,
-                                     univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+      const bool result =
+        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve, Curve.handle());
       return result;
     }
 
@@ -1179,10 +1151,10 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
-      const TrivariateFunctions& trivariateFunctions) {
+      const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve,
-                   trivariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1193,10 +1165,10 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
+      const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1206,11 +1178,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(
-      const TrivariateFunctions& trivariateFunctions) {
+    bool
+      CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve,
-                   trivariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1220,11 +1192,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
+    bool
+      CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1234,11 +1206,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve,
-                   univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve, Curve.handle());
       return result;
     }
 
@@ -1248,11 +1218,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(
-      const TrivariateFunctions& trivariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve,
-                   trivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1262,11 +1230,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(
-      const UnivariateFunctions& univariateFunctions) {
+    bool
+      CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve,
-                   univariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1276,11 +1244,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(
-      const TrivariateFunctions& trivariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve,
-                   trivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1290,11 +1256,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve, Curve.handle());
       return result;
     }
 
@@ -1304,11 +1268,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve,
-                   univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve, Curve.handle());
       return result;
     }
 
@@ -1318,11 +1280,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve,
-                   bivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1332,11 +1292,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve, Curve.handle());
       return result;
     }
 
@@ -1426,10 +1384,10 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
-      const TrivariateFunctions& trivariateFunctions) {
+      const Curve& Curve) {
       const bool result = setPointer(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve,
-        trivariateFunctions.handle());
+        Curve.handle());
       return result;
     }
 
@@ -1440,10 +1398,10 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
+      const Curve& Curve) {
       const bool result = setPointer(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve,
-        univariateFunctions.handle());
+        Curve.handle());
       return result;
     }
 
@@ -1454,10 +1412,10 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(
-      const TrivariateFunctions& trivariateFunctions) {
+      const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve,
-                   trivariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1468,10 +1426,10 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
+      const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1481,11 +1439,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve,
-                   univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve, Curve.handle());
       return result;
     }
 
@@ -1495,11 +1451,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(
-      const TrivariateFunctions& trivariateFunctions) {
+    bool
+      CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve,
-                   trivariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1509,11 +1465,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
+    bool
+      CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1524,10 +1480,10 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve(
-      const UnivariateFunctions& univariateFunctions) {
+      const Curve& Curve) {
       const bool result = setPointer(
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve,
-        univariateFunctions.handle());
+        Curve.handle());
       return result;
     }
 
@@ -1537,11 +1493,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(
-      const TrivariateFunctions& trivariateFunctions) {
+    bool
+      CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve,
-                   trivariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1551,11 +1507,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
+    bool
+      CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
       const bool result =
         setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+                   Curve.handle());
       return result;
     }
 
@@ -1565,11 +1521,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve,
-                   univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve, Curve.handle());
       return result;
     }
 
@@ -1579,11 +1533,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve,
-                   bivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1593,11 +1545,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve, Curve.handle());
       return result;
     }
 
@@ -1643,11 +1593,9 @@ namespace model {
       return result;
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve,
-                   bivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1657,11 +1605,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve,
-                   bivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1718,11 +1664,9 @@ namespace model {
       return result;
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve,
-                   bivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1732,11 +1676,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve, Curve.handle());
       return result;
     }
 
@@ -1746,10 +1688,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve,
-                                     bivariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
+      const bool result =
+        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1759,11 +1700,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
       const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve, Curve.handle());
       return result;
     }
 
@@ -1773,10 +1712,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModePartLoadFractionCorrelationCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModePartLoadFractionCorrelationCurve,
-                                     univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModePartLoadFractionCorrelationCurve(const Curve& Curve) {
+      const bool result =
+        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModePartLoadFractionCorrelationCurve, Curve.handle());
       return result;
     }
 
@@ -1785,11 +1723,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(
-      const BivariateFunctions& bivariateFunctions) {
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve) {
       const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve,
-                   bivariateFunctions.handle());
+        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve, Curve.handle());
       return result;
     }
 
@@ -1799,11 +1735,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(
-      const UnivariateFunctions& univariateFunctions) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve,
-                   univariateFunctions.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+      const bool result = setPointer(
+        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve, Curve.handle());
       return result;
     }
 
@@ -2082,7 +2016,7 @@ namespace model {
     OS_ASSERT(ok);
 
     // Curves
-    CurveBiquadratic cool_cap_ft(model);
+    /* CurveBiquadratic cool_cap_ft(model);
     cool_cap_ft.setCoefficient1Constant(0.9712123);
     cool_cap_ft.setCoefficient2x(-0.015275502);
     cool_cap_ft.setCoefficient3xPOW2(0.0014434524);
@@ -2145,17 +2079,17 @@ namespace model {
     cool_shr_fff.setCoefficient2x(-0.0077);
     cool_shr_fff.setCoefficient3xPOW2(0.0760);
     cool_shr_fff.setMinimumValueofx(0.69);
-    cool_shr_fff.setMaximumValueofx(1.30);
+    cool_shr_fff.setMaximumValueofx(1.30); */
 
     // Cooling Only Mode
-    ok = setCoolingOnlyModeAvailable("Yes");  // RetailPackagedTESCoil.idf
+    ok = setCoolingOnlyModeAvailable("No");
     OS_ASSERT(ok);
     autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();  // RetailPackagedTESCoil.idf
     ok = setCoolingOnlyModeRatedSensibleHeatRatio(0.7);            // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     ok = setCoolingOnlyModeRatedCOP(3.50015986358308);  // RetailPackagedTESCoil.idf; FIXME: use idd default?
     OS_ASSERT(ok);
-    ok = setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(cool_cap_ft);
+    /*     ok = setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(cool_cap_ft);
     OS_ASSERT(ok);
     ok = setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(constant_cubic);
     OS_ASSERT(ok);
@@ -2168,10 +2102,10 @@ namespace model {
     ok = setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(cool_shr_ft);
     OS_ASSERT(ok);
     ok = setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(cool_shr_fff);
-    OS_ASSERT(ok);
+    OS_ASSERT(ok); */
 
     // Cooling And Charge Mode
-    ok = setCoolingAndChargeModeAvailable("Yes");  // RetailPackagedTESCoil.idf
+    ok = setCoolingAndChargeModeAvailable("No");
     OS_ASSERT(ok);
     autocalculateCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
     ok = setCoolingAndChargeModeCapacitySizingFactor(1.0);
@@ -2188,7 +2122,7 @@ namespace model {
     // TODO
 
     // Cooling And Discharge Mode
-    ok = setCoolingAndDischargeModeAvailable("No");  // RetailPackagedTESCoil.idf
+    ok = setCoolingAndDischargeModeAvailable("No");
     OS_ASSERT(ok);
     ok = setCoolingAndDischargeModeEvaporatorCapacitySizingFactor(1.0);
     OS_ASSERT(ok);
@@ -2202,7 +2136,7 @@ namespace model {
     OS_ASSERT(ok);
 
     // Charge Only Mode
-    ok = setChargeOnlyModeAvailable("No");  // RetailPackagedTESCoil.idf
+    ok = setChargeOnlyModeAvailable("No");
     OS_ASSERT(ok);
     ok = setChargeOnlyModeCapacitySizingFactor(1.0);
     OS_ASSERT(ok);
@@ -2210,7 +2144,7 @@ namespace model {
     OS_ASSERT(ok);
 
     // Discharge Only Mode
-    ok = setDischargeOnlyModeAvailable("Yes");  // RetailPackagedTESCoil.idf
+    ok = setDischargeOnlyModeAvailable("No");
     OS_ASSERT(ok);
     ok = setDischargeOnlyModeCapacitySizingFactor(1.0);
     OS_ASSERT(ok);
@@ -2352,33 +2286,31 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingOnlyModeRatedCOP();
   }
 
-  boost::optional<BivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
   }
 
-  boost::optional<BivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  boost::optional<UnivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModePartLoadFractionCorrelationCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModePartLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingOnlyModePartLoadFractionCorrelationCurve();
   }
 
-  boost::optional<BivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve();
   }
 
@@ -2422,67 +2354,57 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndChargeModeChargingRatedCOP();
   }
 
-  boost::optional<TrivariateFunctions>
+  boost::optional<Curve>
     CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
+  boost::optional<Curve>
     CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
   }
 
-  boost::optional<TrivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve();
   }
 
-  boost::optional<TrivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve();
   }
 
-  boost::optional<TrivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve();
   }
 
-  boost::optional<BivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve();
   }
 
@@ -2527,76 +2449,67 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndDischargeModeDischargingRatedCOP();
   }
 
-  boost::optional<TrivariateFunctions>
+  boost::optional<Curve>
     CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
+  boost::optional<Curve>
     CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
   }
 
-  boost::optional<TrivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
+  boost::optional<Curve>
     CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve();
   }
 
-  boost::optional<TrivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve();
   }
 
-  boost::optional<UnivariateFunctions>
+  boost::optional<Curve>
     CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve();
   }
 
-  boost::optional<TrivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
       ->coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve();
   }
 
-  boost::optional<BivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve();
   }
 
@@ -2620,12 +2533,11 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->chargeOnlyModeChargingRatedCOP();
   }
 
-  boost::optional<BivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve();
   }
 
-  boost::optional<BivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve();
   }
 
@@ -2653,33 +2565,31 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModeRatedCOP();
   }
 
-  boost::optional<BivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions>
-    CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve();
   }
 
-  boost::optional<BivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  boost::optional<UnivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModePartLoadFractionCorrelationCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModePartLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModePartLoadFractionCorrelationCurve();
   }
 
-  boost::optional<BivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve();
   }
 
-  boost::optional<UnivariateFunctions> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
+  boost::optional<Curve> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve();
   }
 
@@ -2900,68 +2810,58 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeRatedCOP(coolingOnlyModeRatedCOP);
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
-      bivariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(univariateFunctions);
+      ->setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(
-      bivariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(
-      univariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModePartLoadFractionCorrelationCurve(const UnivariateFunctions& univariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModePartLoadFractionCorrelationCurve(univariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModePartLoadFractionCorrelationCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModePartLoadFractionCorrelationCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingOnlyModePartLoadFractionCorrelationCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingOnlyModePartLoadFractionCorrelationCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(
-      bivariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(
-      univariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() {
@@ -3026,10 +2926,9 @@ namespace model {
       coolingAndChargeModeChargingRatedCOP);
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
-    const TrivariateFunctions& trivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(trivariateFunctions);
+      ->setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() {
@@ -3037,10 +2936,9 @@ namespace model {
       ->resetCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(univariateFunctions);
+      ->setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() {
@@ -3048,100 +2946,87 @@ namespace model {
       ->resetCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(
-    const TrivariateFunctions& trivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(trivariateFunctions);
+      ->setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(univariateFunctions);
+      ->setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(
-    const UnivariateFunctions& univariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(
-      univariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(
-    const TrivariateFunctions& trivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(
-      trivariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(univariateFunctions);
+      ->setCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(
-    const TrivariateFunctions& trivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(
-      trivariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(
-      univariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(
-      univariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(
-      bivariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
-      univariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve() {
@@ -3208,10 +3093,10 @@ namespace model {
       coolingAndDischargeModeDischargingRatedCOP);
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
-    const TrivariateFunctions& trivariateFunctions) {
+  bool
+    CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(trivariateFunctions);
+      ->setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() {
@@ -3219,10 +3104,10 @@ namespace model {
       ->resetCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool
+    CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(univariateFunctions);
+      ->setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() {
@@ -3230,10 +3115,9 @@ namespace model {
       ->resetCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(
-    const TrivariateFunctions& trivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(trivariateFunctions);
+      ->setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() {
@@ -3241,10 +3125,9 @@ namespace model {
       ->resetCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(univariateFunctions);
+      ->setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve() {
@@ -3252,40 +3135,37 @@ namespace model {
       ->resetCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve(
-      univariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(
-    const TrivariateFunctions& trivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(trivariateFunctions);
+      ->setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(univariateFunctions);
+      ->setCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool
+    CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve(univariateFunctions);
+      ->setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve() {
@@ -3293,50 +3173,45 @@ namespace model {
       ->resetCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(
-    const TrivariateFunctions& trivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(trivariateFunctions);
+      ->setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()
-      ->setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(univariateFunctions);
+      ->setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve(
-      univariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve(
-      bivariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
-      univariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve() {
@@ -3368,20 +3243,16 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setChargeOnlyModeChargingRatedCOP(chargeOnlyModeChargingRatedCOP);
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(
-      bivariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(
-      bivariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve() {
@@ -3424,68 +3295,58 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeRatedCOP(dischargeOnlyModeRatedCOP);
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(
-      bivariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
+  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(const Curve& Curve) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(
-      univariateFunctions);
+      Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(
-      bivariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(
-      univariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModePartLoadFractionCorrelationCurve(const UnivariateFunctions& univariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModePartLoadFractionCorrelationCurve(univariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModePartLoadFractionCorrelationCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModePartLoadFractionCorrelationCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetDischargeOnlyModePartLoadFractionCorrelationCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetDischargeOnlyModePartLoadFractionCorrelationCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(
-    const BivariateFunctions& bivariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(
-      bivariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(
-    const UnivariateFunctions& univariateFunctions) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(
-      univariateFunctions);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(Curve);
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() {
