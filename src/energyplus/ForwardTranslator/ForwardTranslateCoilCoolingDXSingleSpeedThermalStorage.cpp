@@ -42,14 +42,8 @@
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 
-#include "../../model/BivariateFunctions.hpp"
-#include "../../model/BivariateFunctions_Impl.hpp"
-
-#include "../../model/UnivariateFunctions.hpp"
-#include "../../model/UnivariateFunctions_Impl.hpp"
-
-#include "../../model/TrivariateFunctions.hpp"
-#include "../../model/TrivariateFunctions_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
 
 #include "../../model/WaterStorageTank.hpp"
 #include "../../model/WaterStorageTank_Impl.hpp"
@@ -161,19 +155,39 @@ namespace energyplus {
     }
 
     // Evaporator Air Inlet Node Name: Required Node
-    Node evaporatorAirInletNodeName = modelObject.evaporatorAirInletNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(evaporatorAirInletNodeName)) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName, wo_->nameString());
+    if (auto mo = modelObject.inletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName, node->name().get());
+      }
     }
 
     // Evaporator Air Outlet Node Name: Required Node
-    Node evaporatorAirOutletNodeName = modelObject.evaporatorAirOutletNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(evaporatorAirOutletNodeName)) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName, wo_->nameString());
+    if (auto mo = modelObject.outletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName, node->name().get());
+      }
+    }
+
+    bool coolingOnlyModeAvailable = modelObject.coolingOnlyModeAvailable();
+    bool coolingAndChargeModeAvailable = modelObject.coolingAndChargeModeAvailable();
+    bool coolingAndDischargeModeAvailable = modelObject.coolingAndDischargeModeAvailable();
+    bool chargeOnlyModeAvailable = modelObject.chargeOnlyModeAvailable();
+    bool dischargeOnlyModeAvailable = modelObject.dischargeOnlyModeAvailable();
+
+    // TODO: check for all required fields; throw error if not present (cf validityCheck of ElectricLoadCenterDistribution)
+    if (coolingOnlyModeAvailable) {
+    }
+    if (coolingAndChargeModeAvailable) {
+    }
+    if (coolingAndDischargeModeAvailable) {
+    }
+    if (chargeOnlyModeAvailable) {
+    }
+    if (dischargeOnlyModeAvailable) {
     }
 
     // Cooling Only Mode Available: Required Boolean
-    if (modelObject.coolingOnlyModeAvailable()) {
+    if (coolingOnlyModeAvailable) {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeAvailable, "Yes");
     } else {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeAvailable, "No");
@@ -200,7 +214,7 @@ namespace energyplus {
     idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeRatedCOP, coolingOnlyModeRatedCOP);
 
     // Cooling Only Mode Total Evaporator Cooling Capacity Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve_ =
           modelObject.coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve_.get())) {
@@ -211,7 +225,7 @@ namespace energyplus {
     }
 
     // Cooling Only Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve_ =
           modelObject.coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve_.get())) {
@@ -222,7 +236,7 @@ namespace energyplus {
     }
 
     // Cooling Only Mode Energy Input Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve_ =
           modelObject.coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurveName,
@@ -231,7 +245,7 @@ namespace energyplus {
     }
 
     // Cooling Only Mode Energy Input Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve_ =
           modelObject.coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurveName,
@@ -240,15 +254,14 @@ namespace energyplus {
     }
 
     // Cooling Only Mode Part Load Fraction Correlation Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingOnlyModePartLoadFractionCorrelationCurve_ =
-          modelObject.coolingOnlyModePartLoadFractionCorrelationCurve()) {
+    if (boost::optional<Curve> coolingOnlyModePartLoadFractionCorrelationCurve_ = modelObject.coolingOnlyModePartLoadFractionCorrelationCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingOnlyModePartLoadFractionCorrelationCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModePartLoadFractionCorrelationCurveName, wo_->nameString());
       }
     }
 
     // Cooling Only Mode Sensible Heat Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve_ =
           modelObject.coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurveName,
@@ -257,7 +270,7 @@ namespace energyplus {
     }
 
     // Cooling Only Mode Sensible Heat Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve_ =
           modelObject.coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurveName,
@@ -266,7 +279,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Available: Required Boolean
-    if (modelObject.coolingAndChargeModeAvailable()) {
+    if (coolingAndChargeModeAvailable) {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeAvailable, "Yes");
     } else {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeAvailable, "No");
@@ -318,7 +331,7 @@ namespace energyplus {
     idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeChargingRatedCOP, coolingAndChargeModeChargingRatedCOP);
 
     // Cooling And Charge Mode Total Evaporator Cooling Capacity Function of Temperature Curve Name: Optional Object
-    if (boost::optional<TrivariateFunctions> coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve_ =
           modelObject.coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve_.get())) {
@@ -329,7 +342,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve_ =
           modelObject.coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve_.get())) {
@@ -340,7 +353,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Evaporator Energy Input Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<TrivariateFunctions> coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve_ =
           modelObject.coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve_.get())) {
@@ -351,7 +364,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Evaporator Energy Input Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve_ =
           modelObject.coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve_.get())) {
@@ -362,7 +375,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Evaporator Part Load Fraction Correlation Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve_ =
           modelObject.coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurveName,
@@ -371,7 +384,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Storage Charge Capacity Function of Temperature Curve Name: Optional Object
-    if (boost::optional<TrivariateFunctions> coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve_ =
           modelObject.coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurveName,
@@ -380,7 +393,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Storage Charge Capacity Function of Total Evaporator PLR Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve_ =
           modelObject.coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve_.get())) {
@@ -391,7 +404,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Storage Energy Input Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<TrivariateFunctions> coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve_ =
           modelObject.coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve_.get())) {
         idfObject.setString(
@@ -401,7 +414,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Storage Energy Input Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve_ =
           modelObject.coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve_.get())) {
@@ -412,7 +425,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Storage Energy Part Load Fraction Correlation Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve_ =
           modelObject.coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurveName,
@@ -421,7 +434,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Sensible Heat Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve_ =
           modelObject.coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurveName,
@@ -430,7 +443,7 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Sensible Heat Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve_ =
           modelObject.coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurveName,
@@ -439,7 +452,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Available: Required Boolean
-    if (modelObject.coolingAndDischargeModeAvailable()) {
+    if (coolingAndDischargeModeAvailable) {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeAvailable, "Yes");
     } else {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeAvailable, "No");
@@ -495,7 +508,7 @@ namespace energyplus {
                         coolingAndDischargeModeDischargingRatedCOP);
 
     // Cooling And Discharge Mode Total Evaporator Cooling Capacity Function of Temperature Curve Name: Optional Object
-    if (boost::optional<TrivariateFunctions> coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve_ =
           modelObject.coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve_.get())) {
@@ -506,7 +519,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve_ =
           modelObject.coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve_.get())) {
@@ -517,7 +530,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Evaporator Energy Input Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<TrivariateFunctions> coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve_ =
           modelObject.coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve_.get())) {
@@ -528,7 +541,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Evaporator Energy Input Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve_ =
           modelObject.coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve_.get())) {
@@ -539,7 +552,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Evaporator Part Load Fraction Correlation Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve_ =
           modelObject.coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurveName,
@@ -548,7 +561,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Storage Discharge Capacity Function of Temperature Curve Name: Optional Object
-    if (boost::optional<TrivariateFunctions> coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve_ =
           modelObject.coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve_.get())) {
@@ -559,7 +572,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Storage Discharge Capacity Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve_ =
           modelObject.coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve_.get())) {
@@ -570,7 +583,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Storage Discharge Capacity Function of Total Evaporator PLR Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve_ =
           modelObject.coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve_.get())) {
@@ -581,7 +594,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Storage Energy Input Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<TrivariateFunctions> coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve_ =
           modelObject.coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve_.get())) {
@@ -592,7 +605,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Storage Energy Input Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve_ =
           modelObject.coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ =
             translateAndMapModelObject(coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve_.get())) {
@@ -603,7 +616,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Storage Energy Part Load Fraction Correlation Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve_ =
           modelObject.coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve_.get())) {
         idfObject.setString(
@@ -613,7 +626,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Sensible Heat Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve_ =
           modelObject.coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurveName,
@@ -622,7 +635,7 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Sensible Heat Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve_ =
           modelObject.coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurveName,
@@ -631,7 +644,7 @@ namespace energyplus {
     }
 
     // Charge Only Mode Available: Required Boolean
-    if (modelObject.chargeOnlyModeAvailable()) {
+    if (chargeOnlyModeAvailable) {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeAvailable, "Yes");
     } else {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeAvailable, "No");
@@ -656,7 +669,7 @@ namespace energyplus {
     idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeChargingRatedCOP, chargeOnlyModeChargingRatedCOP);
 
     // Charge Only Mode Storage Charge Capacity Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve_ =
           modelObject.chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurveName,
@@ -665,7 +678,7 @@ namespace energyplus {
     }
 
     // Charge Only Mode Storage Energy Input Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve_ =
           modelObject.chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurveName,
@@ -674,7 +687,7 @@ namespace energyplus {
     }
 
     // Discharge Only Mode Available: Required Boolean
-    if (modelObject.dischargeOnlyModeAvailable()) {
+    if (dischargeOnlyModeAvailable) {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeAvailable, "Yes");
     } else {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeAvailable, "No");
@@ -707,7 +720,7 @@ namespace energyplus {
     idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedCOP, dischargeOnlyModeRatedCOP);
 
     // Discharge Only Mode Storage Discharge Capacity Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve_ =
           modelObject.dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurveName,
@@ -716,7 +729,7 @@ namespace energyplus {
     }
 
     // Discharge Only Mode Storage Discharge Capacity Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve_ =
           modelObject.dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve_.get())) {
         idfObject.setString(
@@ -726,7 +739,7 @@ namespace energyplus {
     }
 
     // Discharge Only Mode Energy Input Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve_ =
           modelObject.dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurveName,
@@ -735,7 +748,7 @@ namespace energyplus {
     }
 
     // Discharge Only Mode Energy Input Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve_ =
           modelObject.dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurveName,
@@ -744,8 +757,7 @@ namespace energyplus {
     }
 
     // Discharge Only Mode Part Load Fraction Correlation Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> dischargeOnlyModePartLoadFractionCorrelationCurve_ =
-          modelObject.dischargeOnlyModePartLoadFractionCorrelationCurve()) {
+    if (boost::optional<Curve> dischargeOnlyModePartLoadFractionCorrelationCurve_ = modelObject.dischargeOnlyModePartLoadFractionCorrelationCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(dischargeOnlyModePartLoadFractionCorrelationCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModePartLoadFractionCorrelationCurveName,
                             wo_->nameString());
@@ -753,7 +765,7 @@ namespace energyplus {
     }
 
     // Discharge Only Mode Sensible Heat Ratio Function of Temperature Curve Name: Optional Object
-    if (boost::optional<BivariateFunctions> dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve_ =
+    if (boost::optional<Curve> dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve_ =
           modelObject.dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurveName,
@@ -762,7 +774,7 @@ namespace energyplus {
     }
 
     // Discharge Only Mode Sensible Heat Ratio Function of Flow Fraction Curve Name: Optional Object
-    if (boost::optional<UnivariateFunctions> dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve_ =
+    if (boost::optional<Curve> dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve_ =
           modelObject.dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve_.get())) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurveName,
