@@ -293,7 +293,7 @@ namespace model {
 
       double dischargeOnlyModeCapacitySizingFactor() const;
 
-      boost::optional<double> dischargeOnlyModeRatedSensibleHeatRatio() const;
+      double dischargeOnlyModeRatedSensibleHeatRatio() const;
 
       double dischargeOnlyModeRatedCOP() const;
 

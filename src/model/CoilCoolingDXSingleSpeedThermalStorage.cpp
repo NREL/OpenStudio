@@ -45,6 +45,10 @@
 #include "CurveCubic_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
+#include "CurveTriquadratic.hpp"
+#include "CurveTriquadratic_Impl.hpp"
+#include "TableLookup.hpp"
+#include "TableLookup_Impl.hpp"
 #include "WaterStorageTank.hpp"
 #include "WaterStorageTank_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -654,8 +658,10 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeRatedSensibleHeatRatio() const {
-      return getDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedSensibleHeatRatio, true);
+    double CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeRatedSensibleHeatRatio() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedSensibleHeatRatio, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     double CoilCoolingDXSingleSpeedThermalStorage_Impl::dischargeOnlyModeRatedCOP() const {
@@ -2015,8 +2021,125 @@ namespace model {
     // ok = setEvaporatorAirOutletNode();
     OS_ASSERT(ok);
 
+    // Cooling Only Mode
+    ok = setCoolingOnlyModeAvailable(false);
+    OS_ASSERT(ok);
+    autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();  // RetailPackagedTESCoil.idf
+    ok = setCoolingOnlyModeRatedSensibleHeatRatio(0.7);            // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
+    ok = setCoolingOnlyModeRatedCOP(3.50015986358308);  // RetailPackagedTESCoil.idf; FIXME: use idd default?
+    OS_ASSERT(ok);
+
+    // Cooling And Charge Mode
+    ok = setCoolingAndChargeModeAvailable(false);
+    OS_ASSERT(ok);
+    autocalculateCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
+    ok = setCoolingAndChargeModeCapacitySizingFactor(1.0);
+    OS_ASSERT(ok);
+    autocalculateCoolingAndChargeModeRatedStorageChargingCapacity();
+    ok = setCoolingAndChargeModeStorageCapacitySizingFactor(0.86);
+    OS_ASSERT(ok);
+    ok = setCoolingAndChargeModeRatedSensibleHeatRatio(0.7);
+    OS_ASSERT(ok);
+    ok = setCoolingAndChargeModeCoolingRatedCOP(3.66668442928701);
+    OS_ASSERT(ok);
+    ok = setCoolingAndChargeModeChargingRatedCOP(2.17);
+    OS_ASSERT(ok);
+    // TODO
+
+    // Cooling And Discharge Mode
+    ok = setCoolingAndDischargeModeAvailable(false);
+    OS_ASSERT(ok);
+    autocalculateCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
+    ok = setCoolingAndDischargeModeEvaporatorCapacitySizingFactor(1.0);
+    OS_ASSERT(ok);
+    autocalculateCoolingAndDischargeModeRatedStorageDischargingCapacity();
+    ok = setCoolingAndDischargeModeStorageDischargeCapacitySizingFactor(1.0);
+    OS_ASSERT(ok);
+    ok = setCoolingAndDischargeModeRatedSensibleHeatRatio(0.7);
+    OS_ASSERT(ok);
+    ok = setCoolingAndDischargeModeCoolingRatedCOP(3.0);
+    OS_ASSERT(ok);
+    ok = setCoolingAndDischargeModeDischargingRatedCOP(3.0);
+    OS_ASSERT(ok);
+
+    // Charge Only Mode
+    ok = setChargeOnlyModeAvailable(false);
+    OS_ASSERT(ok);
+    autocalculateChargeOnlyModeRatedStorageChargingCapacity();
+    ok = setChargeOnlyModeCapacitySizingFactor(1.0);
+    OS_ASSERT(ok);
+    ok = setChargeOnlyModeChargingRatedCOP(3.0);
+    OS_ASSERT(ok);
+
+    // Discharge Only Mode
+    ok = setDischargeOnlyModeAvailable(false);
+    OS_ASSERT(ok);
+    autocalculateDischargeOnlyModeRatedStorageDischargingCapacity();
+    ok = setDischargeOnlyModeCapacitySizingFactor(1.0);
+    OS_ASSERT(ok);
+    ok = setDischargeOnlyModeRatedSensibleHeatRatio(0.7);
+    OS_ASSERT(ok);
+    ok = setDischargeOnlyModeRatedCOP(3.0);
+    OS_ASSERT(ok);
+
+    // ok = setCondenserAirInletNode();
+    OS_ASSERT(ok);
+    // ok = setCondenserAirOutletNode();
+    OS_ASSERT(ok);
+    autocalculateCondenserDesignAirFlowRate();
+    ok = setCondenserAirFlowSizingFactor(1.0);
+    OS_ASSERT(ok);
+    ok = setCondenserType("AirCooled");
+    OS_ASSERT(ok);
+    ok = setEvaporativeCondenserEffectiveness(0.7);
+    OS_ASSERT(ok);
+    ok = setEvaporativeCondenserPumpRatedPowerConsumption(0.0);
+    OS_ASSERT(ok);
+    ok = setBasinHeaterCapacity(0.0);
+    OS_ASSERT(ok);
+    ok = setBasinHeaterSetpointTemperature(2.0);
+    OS_ASSERT(ok);
+    ok = setStorageTankPlantConnectionHeatTransferEffectiveness(0.7);
+    OS_ASSERT(ok);
+  }
+
+  CoilCoolingDXSingleSpeedThermalStorage::CoilCoolingDXSingleSpeedThermalStorage(const Model& model, bool coolingOnlyModeAvailable,
+                                                                                 bool coolingAndChargeModeAvailable,
+                                                                                 bool coolingAndDischargeModeAvailable, bool chargeOnlyModeAvailable,
+                                                                                 bool dischargeOnlyModeAvailable)
+    : StraightComponent(CoilCoolingDXSingleSpeedThermalStorage::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>());
+
+    // TODO: consider adding (overloaded or not) explicit ctors taking required objects as argument
+
+    // TODO: Appropriately handle the following required object-list fields.
+    //     OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::AvailabilitySchedule
+    //     OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankAmbientTemperatureNode
+    //     OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNode
+    //     OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNode
+    //     OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirInletNode
+    //     OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirOutletNode
+    bool ok = true;
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    ok = setAvailabilitySchedule(schedule);
+    OS_ASSERT(ok);
+    ok = setOperatingModeControlMethod("EMSControlled");  // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
+    ok = setStorageType("Ice");  // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
+    // ok = setStorageTankAmbientTemperatureNode();  // TODO: FT an OutdoorAir:Node?
+    OS_ASSERT(ok);
+    // ok = setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(7.913);  // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
+    autosizeRatedEvaporatorAirFlowRate();  // autosize
+    // ok = setEvaporatorAirInletNode();
+    OS_ASSERT(ok);
+    // ok = setEvaporatorAirOutletNode();
+    OS_ASSERT(ok);
+
     // Curves
-    /* CurveBiquadratic cool_cap_ft(model);
+    CurveBiquadratic cool_cap_ft(model);
     cool_cap_ft.setCoefficient1Constant(0.9712123);
     cool_cap_ft.setCoefficient2x(-0.015275502);
     cool_cap_ft.setCoefficient3xPOW2(0.0014434524);
@@ -2079,33 +2202,57 @@ namespace model {
     cool_shr_fff.setCoefficient2x(-0.0077);
     cool_shr_fff.setCoefficient3xPOW2(0.0760);
     cool_shr_fff.setMinimumValueofx(0.69);
-    cool_shr_fff.setMaximumValueofx(1.30); */
+    cool_shr_fff.setMaximumValueofx(1.30);
 
     // Cooling Only Mode
-    ok = setCoolingOnlyModeAvailable("No");
+    ok = setCoolingOnlyModeAvailable(coolingOnlyModeAvailable);
     OS_ASSERT(ok);
     autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();  // RetailPackagedTESCoil.idf
     ok = setCoolingOnlyModeRatedSensibleHeatRatio(0.7);            // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     ok = setCoolingOnlyModeRatedCOP(3.50015986358308);  // RetailPackagedTESCoil.idf; FIXME: use idd default?
     OS_ASSERT(ok);
-    /*     ok = setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(cool_cap_ft);
-    OS_ASSERT(ok);
-    ok = setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(constant_cubic);
-    OS_ASSERT(ok);
-    ok = setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(cool_eir_ft);
-    OS_ASSERT(ok);
-    ok = setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(constant_cubic);
-    OS_ASSERT(ok);
-    ok = setCoolingOnlyModePartLoadFractionCorrelationCurve(cool_plf_fplr);
-    OS_ASSERT(ok);
-    ok = setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(cool_shr_ft);
-    OS_ASSERT(ok);
-    ok = setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(cool_shr_fff);
-    OS_ASSERT(ok); */
+    if (coolingOnlyModeAvailable) {
+      ok = setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(cool_cap_ft);
+      OS_ASSERT(ok);
+      ok = setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(constant_cubic);
+      OS_ASSERT(ok);
+      ok = setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(cool_eir_ft);
+      OS_ASSERT(ok);
+      ok = setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(constant_cubic);
+      OS_ASSERT(ok);
+      ok = setCoolingOnlyModePartLoadFractionCorrelationCurve(cool_plf_fplr);
+      OS_ASSERT(ok);
+      ok = setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(cool_shr_ft);
+      OS_ASSERT(ok);
+      ok = setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(cool_shr_fff);
+      OS_ASSERT(ok);
+    }
+
+    CurveTriquadratic coolcharge_cool_cap_ft(model);
+    coolcharge_cool_cap_ft.setCoefficient1Constant(0.9712123);
+    coolcharge_cool_cap_ft.setCoefficient2xPOW2(0.0014434524);
+    coolcharge_cool_cap_ft.setCoefficient3x(-0.015275502);
+    coolcharge_cool_cap_ft.setCoefficient4yPOW2(-0.0000068364);
+    coolcharge_cool_cap_ft.setCoefficient5y(-0.00039321);
+    coolcharge_cool_cap_ft.setCoefficient9xTIMESY(-0.0002905956);
+
+    CurveTriquadratic coolcharge_cool_eir_ft(model);
+    coolcharge_cool_cap_ft.setCoefficient1Constant(0.28687133);
+    coolcharge_cool_cap_ft.setCoefficient2xPOW2(-0.000810648);
+    coolcharge_cool_cap_ft.setCoefficient3x(0.023902164);
+    coolcharge_cool_cap_ft.setCoefficient4yPOW2(0.023902164);
+    coolcharge_cool_cap_ft.setCoefficient5y(0.013458546);
+    coolcharge_cool_cap_ft.setCoefficient9xTIMESY(-0.0004870044);
+
+    TableLookup coolcharge_charge_cap_ft(model);
+    // TODO
+
+    TableLookup coolcharge_charge_eir_ft(model);
+    // TODO
 
     // Cooling And Charge Mode
-    ok = setCoolingAndChargeModeAvailable("No");
+    ok = setCoolingAndChargeModeAvailable(coolingAndChargeModeAvailable);
     OS_ASSERT(ok);
     autocalculateCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
     ok = setCoolingAndChargeModeCapacitySizingFactor(1.0);
@@ -2119,13 +2266,40 @@ namespace model {
     OS_ASSERT(ok);
     ok = setCoolingAndChargeModeChargingRatedCOP(2.17);
     OS_ASSERT(ok);
-    // TODO
+    if (coolingAndChargeModeAvailable) {
+      ok = setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(coolcharge_cool_cap_ft);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(constant_cubic);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(coolcharge_cool_eir_ft);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(constant_cubic);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(cool_plf_fplr);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(coolcharge_charge_cap_ft);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(constant_cubic);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(coolcharge_charge_eir_ft);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(constant_cubic);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(constant_cubic);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(cool_shr_ft);
+      OS_ASSERT(ok);
+      ok = setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(cool_shr_fff);
+      OS_ASSERT(ok);
+    }
 
     // Cooling And Discharge Mode
-    ok = setCoolingAndDischargeModeAvailable("No");
+    ok = setCoolingAndDischargeModeAvailable(coolingAndDischargeModeAvailable);
     OS_ASSERT(ok);
+    autocalculateCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
     ok = setCoolingAndDischargeModeEvaporatorCapacitySizingFactor(1.0);
     OS_ASSERT(ok);
+    autocalculateCoolingAndDischargeModeRatedStorageDischargingCapacity();
     ok = setCoolingAndDischargeModeStorageDischargeCapacitySizingFactor(1.0);
     OS_ASSERT(ok);
     ok = setCoolingAndDischargeModeRatedSensibleHeatRatio(0.7);
@@ -2134,22 +2308,113 @@ namespace model {
     OS_ASSERT(ok);
     ok = setCoolingAndDischargeModeDischargingRatedCOP(3.0);
     OS_ASSERT(ok);
+    if (coolingAndDischargeModeAvailable) {
+      /*       ok = setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve();
+      OS_ASSERT(ok);
+      ok = setCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve();
+      OS_ASSERT(ok); */
+    }
 
     // Charge Only Mode
-    ok = setChargeOnlyModeAvailable("No");
+    ok = setChargeOnlyModeAvailable(chargeOnlyModeAvailable);
     OS_ASSERT(ok);
+    autocalculateChargeOnlyModeRatedStorageChargingCapacity();
     ok = setChargeOnlyModeCapacitySizingFactor(1.0);
     OS_ASSERT(ok);
     ok = setChargeOnlyModeChargingRatedCOP(3.0);
     OS_ASSERT(ok);
+    if (chargeOnlyModeAvailable) {
+      /*       ok = setChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve();
+      OS_ASSERT(ok);
+      ok = setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve();
+      OS_ASSERT(ok); */
+    }
+
+    CurveBiquadratic discharge_cap_ft(model);
+    cool_shr_ft.setCoefficient1Constant(-0.561476105575098);
+    cool_shr_ft.setCoefficient2x(0.133948946696947);
+    cool_shr_ft.setCoefficient3xPOW2(-0.0027652398813276);
+
+    CurveCubic discharge_cap_fff(model);
+    constant_cubic.setCoefficient1Constant(0.743258739392434);
+    constant_cubic.setCoefficient2x(0.167765026703717);
+    constant_cubic.setCoefficient3xPOW2(0.0852727911986869);
+
+    CurveBiquadratic constant_bi(model);
+    cool_shr_ft.setCoefficient1Constant(1.0);
+
+    CurveBiquadratic discharge_shr_ft(model);
+    cool_shr_ft.setCoefficient1Constant(-76.3312028672366);
+    cool_shr_ft.setCoefficient2x(3.69083877577677);
+    cool_shr_ft.setCoefficient3xPOW2(0.00402614182268047);
+    cool_shr_ft.setCoefficient4y(3.120670734078);
+    cool_shr_ft.setCoefficient5yPOW2(-0.00297662635327143);
+    cool_shr_ft.setCoefficient6xTIMESY(-0.148603418986272);
+    cool_shr_ft.setMinimumValueofx(24.44);
+    cool_shr_ft.setMaximumValueofx(26.67);
+    cool_shr_ft.setMinimumValueofy(29.44);
+    cool_shr_ft.setMaximumValueofy(46.1);
+    cool_shr_ft.setMinimumCurveOutput(0.2);
+    cool_shr_ft.setMaximumCurveOutput(1.0);
+    cool_shr_ft.setInputUnitTypeforX("Temperature");
+    cool_shr_ft.setInputUnitTypeforY("Temperature");
+    cool_shr_ft.setOutputUnitType("Dimensionless");
+
+    CurveQuadratic discharge_shr_fff(model);
+    cool_shr_fff.setCoefficient1Constant(0.60557628);
+    cool_shr_fff.setCoefficient2x(0.506516665);
+    cool_shr_fff.setCoefficient3xPOW2(-0.12647141);
+    cool_shr_fff.setMinimumValueofx(0.2);
+    cool_shr_fff.setMaximumValueofx(1.0);
 
     // Discharge Only Mode
-    ok = setDischargeOnlyModeAvailable("No");
+    ok = setDischargeOnlyModeAvailable(dischargeOnlyModeAvailable);
     OS_ASSERT(ok);
+    autocalculateDischargeOnlyModeRatedStorageDischargingCapacity();
     ok = setDischargeOnlyModeCapacitySizingFactor(1.0);
+    OS_ASSERT(ok);
+    ok = setDischargeOnlyModeRatedSensibleHeatRatio(0.7);
     OS_ASSERT(ok);
     ok = setDischargeOnlyModeRatedCOP(3.0);
     OS_ASSERT(ok);
+    if (dischargeOnlyModeAvailable) {
+      ok = setDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(discharge_cap_ft);
+      OS_ASSERT(ok);
+      ok = setDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(discharge_cap_fff);
+      OS_ASSERT(ok);
+      ok = setDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(constant_bi);
+      OS_ASSERT(ok);
+      ok = setDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(constant_cubic);
+      OS_ASSERT(ok);
+      ok = setDischargeOnlyModePartLoadFractionCorrelationCurve(constant_cubic);
+      OS_ASSERT(ok);
+      ok = setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(discharge_shr_ft);
+      OS_ASSERT(ok);
+      ok = setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(discharge_shr_fff);
+      OS_ASSERT(ok);
+    }
 
     // ok = setCondenserAirInletNode();
     OS_ASSERT(ok);
@@ -2557,7 +2822,7 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModeCapacitySizingFactor();
   }
 
-  boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeRatedSensibleHeatRatio() const {
+  double CoilCoolingDXSingleSpeedThermalStorage::dischargeOnlyModeRatedSensibleHeatRatio() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->dischargeOnlyModeRatedSensibleHeatRatio();
   }
 

@@ -59,6 +59,10 @@ namespace model {
 
     explicit CoilCoolingDXSingleSpeedThermalStorage(const Model& model);
 
+    explicit CoilCoolingDXSingleSpeedThermalStorage(const Model& model, bool coolingOnlyModeAvailable, bool coolingAndChargeModeAvailable,
+                                                    bool coolingAndDischargeModeAvailable, bool chargeOnlyModeAvailable,
+                                                    bool dischargeOnlyModeAvailable);
+
     virtual ~CoilCoolingDXSingleSpeedThermalStorage() = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXSingleSpeedThermalStorage(const CoilCoolingDXSingleSpeedThermalStorage& other) = default;
@@ -293,7 +297,7 @@ namespace model {
 
     double dischargeOnlyModeCapacitySizingFactor() const;
 
-    boost::optional<double> dischargeOnlyModeRatedSensibleHeatRatio() const;
+    double dischargeOnlyModeRatedSensibleHeatRatio() const;
 
     double dischargeOnlyModeRatedCOP() const;
 
