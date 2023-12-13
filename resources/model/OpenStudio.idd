@@ -19447,6 +19447,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \type real
        \minimum 0.0
        \maximum 1.0
+       \required-field
        \note Rated sensible heat ratio (gross sensible evaporator capacity/gross total evaporator capacity)
        \note sensible and total capacities do not include supply fan heat
   N30, \field Discharge Only Mode Rated COP
