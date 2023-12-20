@@ -161,9 +161,6 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
 set(PROJECT_VERSION_PRERELEASE "")
 
-# TODO: temp override to produce the same SHA as 3.7.0
-set(PROJECT_VERSION_BUILD "d5269793f1" CACHE STRING "Build number" FORCE)
-
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
