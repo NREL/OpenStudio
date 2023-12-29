@@ -1089,16 +1089,7 @@ mark_as_advanced(MAXIMIZE_CPU_USAGE)
 # Doxygen
 if(BUILD_DOCUMENTATION)
   # need doxygen
-  find_package(Doxygen 1.8.7 REQUIRED)
-
-  if(NOT Doxygen_FOUND)
-    find_package(Doxygen 1.8.8 REQUIRED)
-  endif()
-
-  if(NOT Doxygen_FOUND)
-    message(FATAL_ERROR "Doxygen version 1.8.7 or 1.8.8 not found")
-  endif()
-  
+  find_package(Doxygen 1.8.7...<1.8.9 REQUIRED)
   # if have dot you have more options
   #if(DOXYGEN_DOT_FOUND)
 
