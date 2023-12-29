@@ -1089,8 +1089,7 @@ mark_as_advanced(MAXIMIZE_CPU_USAGE)
 # Doxygen
 if(BUILD_DOCUMENTATION)
   # need doxygen
-  find_package(Doxygen REQUIRED)
-
+  find_package(Doxygen 1.8.7...<1.8.9 REQUIRED)
   # if have dot you have more options
   #if(DOXYGEN_DOT_FOUND)
 
