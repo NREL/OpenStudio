@@ -244,30 +244,32 @@ int main(int argc, char* argv[]) {
     // {
     auto* execute_ruby_scriptCommand = app.add_subcommand("execute_ruby_script", "Executes a ruby file");
     openstudio::filesystem::path rubyScriptPath;
-    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true)->check(CLI::ExistingFile);
-    // We can't do this because that means we can't pass extra **flags**
-    // std::vector<std::string> executeRubyScriptCommandArgs;
-    // execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
-    //   ->required(false)
-    //   ->option_text("args");
-    execute_ruby_scriptCommand->allow_extras(true);
-    execute_ruby_scriptCommand->footer("You can pass extra arguments after the ruby file, they will be forwarded.");
-
-    execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &execute_ruby_scriptCommand] {
-      openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, execute_ruby_scriptCommand->remaining());
-    });
+    std::vector<std::string> ruby_fwd_args;
+    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to Ruby file")
+      ->option_text("RUBY_SCRIPT")
+      ->required(true)
+      ->check(CLI::ExistingFile);
+    execute_ruby_scriptCommand->add_option("args", ruby_fwd_args, "Extra Arguments forwarded to the Ruby script")->option_text("ARG ...");
+    execute_ruby_scriptCommand->positionals_at_end(true);
+    execute_ruby_scriptCommand->footer("Any additional arguments passed after the Ruby file are forwarded");
+    execute_ruby_scriptCommand->callback(
+      [&rubyScriptPath, &rubyEngine, &ruby_fwd_args] { openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, ruby_fwd_args); });
     // }
 
     // {
     auto* execute_python_scriptCommand = app.add_subcommand("execute_python_script", "Executes a python file");
     openstudio::filesystem::path pythonScriptPath;
-    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true)->check(CLI::ExistingFile);
+    std::vector<std::string> python_fwd_args;
+    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to Python file")
+      ->option_text("PYTHON_SCRIPT")
+      ->required(true)
+      ->check(CLI::ExistingFile);
+    execute_python_scriptCommand->add_option("args", python_fwd_args, "Extra Arguments forwarded to the Python script")->option_text("ARG ...");
+    execute_python_scriptCommand->positionals_at_end(true);
+    execute_python_scriptCommand->footer("You can pass extra arguments after the Python file, they will be forwarded.");
 
-    execute_python_scriptCommand->allow_extras(true);
-    execute_python_scriptCommand->footer("You can pass extra arguments after the python file, they will be forwarded.");
-
-    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &execute_python_scriptCommand] {
-      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, execute_python_scriptCommand->remaining());
+    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &python_fwd_args] {
+      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, python_fwd_args);
     });
     // }
 
