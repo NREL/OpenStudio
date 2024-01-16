@@ -297,10 +297,17 @@ if(BUILD_TESTING)
 
   # Test via optparse and check file exists
   # Historical CLI versions
-    add_test(NAME OpenStudioCLI.Classic.execute_ruby_script.forward_flags.optparse.path_forwardslash
+  add_test(NAME OpenStudioCLI.Classic.execute_ruby_script.forward_flags.optparse.path_forwardslash
     COMMAND $<TARGET_FILE:openstudio> classic execute_ruby_script execute_ruby_script_optparse_path.rb -x "./test_folder/hello.xml"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
   )
+  add_test(NAME OpenStudioCLI.Classic.execute_ruby_script.forward_flags.forward_help
+    COMMAND $<TARGET_FILE:openstudio> classic execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_optparse_path.rb --help
+  )
+  set_tests_properties(OpenStudioCLI.Classic.execute_ruby_script.forward_flags.forward_help PROPERTIES
+    PASS_REGULAR_EXPRESSION "The Ruby help description."
+  )
+
   if (WIN32)
     # Posix paths don't understand a backward slash anyways
     add_test(NAME OpenStudioCLI.Classic.execute_ruby_script.forward_flags.optparse.path_backwardslash
@@ -313,6 +320,21 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_optparse_path.rb -x "./test_folder/hello.xml"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/"
   )
+
+  add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.forward_help
+    COMMAND $<TARGET_FILE:openstudio> execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_optparse_path.rb --help
+  )
+  set_tests_properties(OpenStudioCLI.execute_ruby_script.forward_flags.forward_help PROPERTIES
+    PASS_REGULAR_EXPRESSION "The Ruby help description."
+  )
+
+  add_test(NAME OpenStudioCLI.execute_python_script.forward_flags.forward_help
+    COMMAND $<TARGET_FILE:openstudio> execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_argparse_path.py --help
+  )
+  set_tests_properties(OpenStudioCLI.execute_python_script.forward_flags.forward_help PROPERTIES
+    PASS_REGULAR_EXPRESSION "The Python help description."
+  )
+
   if (WIN32)
     add_test(NAME OpenStudioCLI.execute_ruby_script.forward_flags.optparse.path_backwardslash
       COMMAND $<TARGET_FILE:openstudio> execute_ruby_script execute_ruby_script_optparse_path.rb -x ".\\test_folder\\hello.xml"

@@ -198,9 +198,9 @@ set(ENERGYPLUS_BUILD_SHA "7636e6b3e9")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v23.2.0")
+set(ENERGYPLUS_RELEASE_NAME "v23.2.0-WithMacStaticLibs")
 
-set(ENERGYPLUS_REPO "NREL")
+set(ENERGYPLUS_REPO "jmarrec") # TODO: temp
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -625,10 +625,10 @@ endif()
 if(UNIX)
   if(APPLE)
     if (ARCH MATCHES "arm64")
-      set(ENERGYPLUS_EXPECTED_HASH 918a4544793aafc32df5910c83f05f1a)
+      set(ENERGYPLUS_EXPECTED_HASH 72948a3f884ce9fe44145210eceb8259)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH b8c1ee3fe45318a4575078de07cc5656)
+      set(ENERGYPLUS_EXPECTED_HASH 219c1a5cfec7b6fd6bd8507c043b82ab)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
@@ -1089,8 +1089,7 @@ mark_as_advanced(MAXIMIZE_CPU_USAGE)
 # Doxygen
 if(BUILD_DOCUMENTATION)
   # need doxygen
-  find_package(Doxygen REQUIRED)
-
+  find_package(Doxygen 1.8.7...<1.8.9 REQUIRED)
   # if have dot you have more options
   #if(DOXYGEN_DOT_FOUND)
 

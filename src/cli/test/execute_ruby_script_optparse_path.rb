@@ -4,6 +4,7 @@ require 'pathname'
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: #{File.basename(__FILE__)} -x building.xml"
+  opts.banner += "\n\nThe Ruby help description.\n\n"
 
   opts.on('-x', '--xml <FILE>', 'HPXML file') do |t|
     options[:hpxml] = t

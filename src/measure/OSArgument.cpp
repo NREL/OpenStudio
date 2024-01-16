@@ -1122,12 +1122,14 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsString();
       }
-      auto& choiceValues = root["choices_values"];
-      for (auto& choice : m_choices) {
+      auto& choiceValues = root["choice_values"];
+      choiceValues = Json::arrayValue;  // Without this line, it's "null" (/nil in Ruby) if m_choices is empty, while old CLI had it as `[]`
+      for (const auto& choice : m_choices) {
         choiceValues.append(choice);
       }
       auto& choiceDisplayNames = root["choice_display_names"];
-      for (auto& choice : m_choiceDisplayNames) {
+      choiceDisplayNames = Json::arrayValue;
+      for (const auto& choice : m_choiceDisplayNames) {
         choiceDisplayNames.append(choice);
       }
 

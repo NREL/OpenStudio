@@ -69,6 +69,8 @@ namespace cli {
     cmd += fmt::format(R"(
 begin
   require '{}'
+rescue SystemExit
+  # puts "help was called"
 rescue Exception => e
   puts
   puts "Error: #{{e.message}}"
