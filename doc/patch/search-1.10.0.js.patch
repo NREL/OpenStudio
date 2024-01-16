@@ -1,0 +1,11 @@
+--- a/search.js
++++ b/search.js
+@@ -298,7 +298,7 @@ function SearchBox(name, resultsPath, extension) {
+ 
+       if (domPopupSearchResultsWindow.style.display!='block') {
+         domSearchClose.style.display = 'inline-block';
+-        let left = getXPos(domSearchBox) + 150;
++        let left = getXPos(domSearchBox) + 250;
+         let top  = getYPos(domSearchBox) + 20;
+         domPopupSearchResultsWindow.style.display = 'block';
+         left -= domPopupSearchResults.offsetWidth;
