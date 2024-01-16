@@ -159,6 +159,30 @@ TEST_F(XMLValidatorFixture, XMLValidator_schematronToXslt) {
   EXPECT_TRUE(openstudio::filesystem::is_regular_file(expectedPath));
 }
 
+TEST_F(XMLValidatorFixture, XMLValidator_bclXMLValidator_Cleanup) {
+  openstudio::path tmpDir;
+  {
+    auto xmlValidator = XMLValidator::bclXMLValidator(BCLXMLType::MeasureXML, VersionString(3, 1));
+    tmpDir = xmlValidator.schemaPath().parent_path();
+    EXPECT_TRUE(openstudio::filesystem::exists(tmpDir));
+    EXPECT_TRUE(openstudio::filesystem::is_directory(tmpDir));
+  }
+  // #5076 - XMLValidator's dtor should clean up the tmpDir
+  EXPECT_FALSE(openstudio::filesystem::exists(tmpDir)) << "Expected tmpDir to be deleted: " << tmpDir;
+}
+
+TEST_F(XMLValidatorFixture, XMLValidator_gbxmlValidator_Cleanup) {
+  openstudio::path tmpDir;
+  {
+    auto xmlValidator = XMLValidator::gbxmlValidator();
+    tmpDir = xmlValidator.schemaPath().parent_path();
+    EXPECT_TRUE(openstudio::filesystem::exists(tmpDir));
+    EXPECT_TRUE(openstudio::filesystem::is_directory(tmpDir));
+  }
+  // #5076 - XMLValidator's dtor should clean up the tmpDir
+  EXPECT_FALSE(openstudio::filesystem::exists(tmpDir)) << "Expected tmpDir to be deleted: " << tmpDir;
+}
+
 TEST_P(GbXMLValidatorParametrizedFixture, XMLValidator_GBXMLvalidator_XSD) {
   const auto& [filename, n_warnings, n_errors] = GetParam();
 
