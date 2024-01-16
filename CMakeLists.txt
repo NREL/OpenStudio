@@ -1091,7 +1091,7 @@ mark_as_advanced(MAXIMIZE_CPU_USAGE)
 # Doxygen
 if(BUILD_DOCUMENTATION)
   # need doxygen, 1.8.7...<1.8.9 is what it's tested on
-  find_package(Doxygen REQUIRED dot)
+  find_package(Doxygen REQUIRED) # Should we do `REQUIRED` dot here?
   if(DOXYGEN_VERSION VERSION_LESS 1.8.7 OR DOXYGEN_VERSION VERSION_GREATER_EQUAL 1.8.9)
     message(AUTHOR_WARNING "Found Doxygen version ${DOXYGEN_VERSION}: the historically tested range is 1.8.7...<1.8.9 so it's possible the resulting documentation (CSS or search feature in particular) will be broken (some tests have been conducted with 1.10.0)")
   endif()
