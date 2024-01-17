@@ -7,12 +7,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Do not enable compiler specific extensions, for eg on GCC use -std=c++1z (=c++17) and not -std=gnu++17
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Use ccache is available, has to be before "project()"
-find_program(CCACHE_PROGRAM ccache)
+# Use ccache if available, has to be before "project()"
+find_program(CCACHE_PROGRAM NAMES ccache sccache)
 if(CCACHE_PROGRAM)
-  # Support Unix Makefiles and Ninja
-  message(STATUS "Using CCACHE")
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+  # Support: Unix Makefiles and Ninja only
+  # RULE_LAUNCH_COMPILE is an internal variable and makes RC compilation fail on windows, hence why we use the C/CXX COMPILER_LAUNCHER instead
+  message(STATUS "${CCACHE_PROGRAM} found and enabled")
+  set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM} CACHE FILEPATH "CXX compiler cache used")
+  set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM} CACHE FILEPATH "C compiler cache used")
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
@@ -390,10 +392,8 @@ endif()
 if(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
   else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
   endif()
 endif()
 
@@ -1088,18 +1088,31 @@ mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
 # Doxygen
 if(BUILD_DOCUMENTATION)
-  # need doxygen
-  find_package(Doxygen 1.8.7...<1.8.9 REQUIRED)
-  # if have dot you have more options
-  #if(DOXYGEN_DOT_FOUND)
+  # need doxygen, 1.8.7...<1.8.9 is what it's tested on
+  find_package(Doxygen REQUIRED) # Should we do `REQUIRED` dot here?
+  if(DOXYGEN_VERSION VERSION_LESS 1.8.7 OR DOXYGEN_VERSION VERSION_GREATER_EQUAL 1.8.9)
+    message(AUTHOR_WARNING "Found Doxygen version ${DOXYGEN_VERSION}: the historically tested range is 1.8.7...<1.8.9 so it's possible the resulting documentation (CSS or search feature in particular) will be broken (some tests have been conducted with 1.10.0)")
+  endif()
 
-  #endif()
+  # at 1.9.5: searchLabel removed
+  # at 1.10.0: js was modernized, using let and not var
+  set(DOXYGEN_SEARCH_PATCH_FILE "${PROJECT_SOURCE_DIR}/doc/patch/search.js.patch")
+  if(DOXYGEN_VERSION VERSION_GREATER_EQUAL 1.10.0)
+    set(DOXYGEN_SEARCH_PATCH_FILE "${PROJECT_SOURCE_DIR}/doc/patch/search-1.10.0.js.patch")
+  elseif(DOXYGEN_VERSION VERSION_GREATER_EQUAL 1.9.5)
+    set(DOXYGEN_SEARCH_PATCH_FILE "${PROJECT_SOURCE_DIR}/doc/patch/search-1.9.5.js.patch")
+  endif()
+
+  set(DOXYGEN_HTML_HEADER "${PROJECT_SOURCE_DIR}/doc/html/header.html")
+  if (DOXYGEN_VERSION VERSION_GREATER_EQUAL 1.8.9)
+    set(DOXYGEN_HTML_HEADER "${PROJECT_SOURCE_DIR}/doc/html/header-1.8.9.html") # Adds searchdata.js
+  endif()
 
   configure_file(${PROJECT_SOURCE_DIR}/doc/index.html ${PROJECT_BINARY_DIR}/doc/index.html COPYONLY)
 
   set(doxygen_directories ${project_directories})
-  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
-  list(APPEND doxygen_directories utilities/idd shared_gui_components)
+  # Add the idd files to the documentation list as a separate entry
+  list(APPEND doxygen_directories utilities/idd)
 
   # Remove directories we don't want documentation generated for
   list(REMOVE_ITEM doxygen_directories generateiddfactory)
@@ -1138,7 +1151,7 @@ if(BUILD_DOCUMENTATION)
       COMMAND ${CMAKE_COMMAND} -E make_directory "${DOC_NAME}"
       COMMAND ${DOXYGEN_EXECUTABLE} ${DOC_NAME}.cfg
       COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
-      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${PROJECT_SOURCE_DIR}/doc/patch/search.js.patch"
+      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${DOXYGEN_SEARCH_PATCH_FILE}"
       DEPENDS openstudio_doc_resources
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
     )
