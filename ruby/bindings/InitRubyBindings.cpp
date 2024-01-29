@@ -19,7 +19,7 @@
 // <conan_fmt>/include/fmt/core.h:405:7: error: expected unqualified-id
 // using int128_t = __int128_t;
 //       ^
-// <conan_openstudio_ruby>include/ruby-2.7.0/arm64-darwin21/ruby/config.h:202:18: note: expanded from macro 'int128_t'
+// <conan_openstudio_ruby>include/ruby-3.2.0/arm64-darwin21/ruby/config.h:202:18: note: expanded from macro 'int128_t'
 // #define int128_t __int128
 
 // #include <ranges>
@@ -710,8 +710,8 @@ void locateEmbeddedGems(bool use_bundler) {
 
   std::string initCmd = R"ruby(
 
-  Gem.paths.path << ':/ruby/2.7.0/gems/'
-  Gem.paths.path << ':/ruby/2.7.0/bundler/gems/'
+  Gem.paths.path << ':/ruby/3.2.0/gems/'
+  Gem.paths.path << ':/ruby/3.2.0/bundler/gems/'
   Gem::Deprecate.skip = true
 
   # find all the embedded gems
@@ -941,7 +941,7 @@ void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const s
     setRubyEnvVarPath("BUNDLE_PATH", bundleGemDirPath);
   } else if (use_bundler) {
     // bundle was requested but bundle_path was not provided
-    std::cout << "Warn: Bundle activated but ENV['BUNDLE_PATH'] is not set" << '\n' << "Info: Setting BUNDLE_PATH to ':/ruby/2.7.0/'" << std::endl;
+    std::cout << "Warn: Bundle activated but ENV['BUNDLE_PATH'] is not set" << '\n' << "Info: Setting BUNDLE_PATH to ':/ruby/3.2.0/'" << std::endl;
   }
 
   if (!bundleWithoutGroups.empty()) {
