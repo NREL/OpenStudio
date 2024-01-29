@@ -63,6 +63,8 @@ module Kernel
   #if ENV['RUBYLIB']
   #  ENV['RUBYLIB'].split(File::PATH_SEPARATOR).each {|lib| $LOAD_PATH.unshift(lib)}
   #end
+
+  # TODO: double check and update platform-specific includes
   $LOAD_PATH << ':'
   $LOAD_PATH << ':/ruby/3.2.0'
   $LOAD_PATH << ':/ruby/3.2.0/x86_64-darwin16'
