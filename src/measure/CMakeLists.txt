@@ -58,7 +58,7 @@ add_dependencies(${target_name} GenerateIddFactoryRun)
 set(${target_name}_test_depends
   ${COREFOUNDATION_LIBRARY}
   openstudiolib
-  CONAN_PKG::fmt
+  fmt::fmt
 )
 
 if( MSVC )

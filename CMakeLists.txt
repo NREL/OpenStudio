@@ -427,20 +427,31 @@ endif()
 ###############################################################################
 # Conan
 
-# Note JM 2019-04-24: Another option is to globally set "print_run_commands = True" in ~/.conan/conan.conf
-option(CONAN_PRINT_RUN_COMMANDS "Log every conan self.run command" OFF)
-mark_as_advanced(CONAN_PRINT_RUN_COMMANDS)
-if(CONAN_PRINT_RUN_COMMANDS)
-  set(ENV{CONAN_PRINT_RUN_COMMANDS} "1")
-  message(STATUS "Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
-else()
-  unset(ENV{CONAN_PRINT_RUN_COMMANDS})
-  message(STATUS "CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+find_package(Ruby)
+find_package(pugixml)
+find_package(LibXslt)
+find_package(libxml2)
+find_package(jsoncpp)
+find_package(fmt)
+find_package(SQLite3)
+find_package(cpprestsdk)
+find_package(websocketpp)
+find_package(Boost)
+find_package(geographiclib)
+find_package(SWIG 4.1.1 EXACT REQUIRED CONFIG)
+message("SWIG_EXECUTABLE=${SWIG_EXECUTABLE}")
+message("SWIG_DIR=${SWIG_DIR}")
+find_package(TinyGLTF)
+find_package(CLI11)
+find_package(minizip)
+find_package(OpenSSL)
+find_package(ZLIB)
+if(BUILD_TESTING)
+  find_package(GTest)
 endif()
-
-# Attempt to run, it'll do the right thing if the calling cmake script already ran it
-set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
-include("${CONAN_INSTALL_FILE}")
+if(BUILD_BENCHMARK)
+  find_package(benchmark)
+endif()
 
 # A macro to find a conan related value especially when using multi-config builds (MSVC)
 # But it also works with single-config builds
@@ -458,7 +469,7 @@ endmacro()
 ###############################################################################
 
 if(BUILD_RUBY_BINDINGS)
-  get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
+  get_target_property(RUBY_INCLUDE_DIRS Ruby::Ruby INTERFACE_INCLUDE_DIRECTORIES)
 endif()
 
 # Export to Parent
@@ -846,8 +857,8 @@ if(BUILD_CLI)
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-linux_arm64.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0628a7304d82540b24e2be3583e27a57")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-linux.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "cfa0c61a158ee0404a3c37d24a0a2af0")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240129-linux.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0851f4382258b3eabe5eb8f492a581c4")
        endif()
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
@@ -916,7 +927,7 @@ endif()
 # Plus, it doesn't appear to work on windows either, the PATH doesn't include it.
 #find_program(SWIG_EXECUTABLE swig PATHS CURRENT_CONAN_SWIG_ROOT NO_DEFAULT_PATH)
 #if(NOT SWIG_EXECUTABLE)
-#  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}, CONAN_SWIG_ROOT_RELEASE=${CONAN_SWIG_ROOT_RELEASE}, CURRENT_CONAN_SWIG_ROOT=${CURRENT_CONAN_SWIG_ROOT}, ${ENV{SWIG_LIB}}, ${ENV{SWIG_INSTALLER_ROOT}}")
+#  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}, CONAN_SWIG_ROOT_RELEASE=${CONAN_SWIG_ROOT_RELEASE}, CURRENT_CONAN_SWIG_ROOT=${CURRENT_CONAN_SWIG_ROOT}, ${ENV{SWIG_DIR}}, ${ENV{SWIG_INSTALLER_ROOT}}")
 #endif()
 
 # Another thing I tried is to use the `virtualenv` generator (`conan_cmake_run( ... GENERATORS virtualenv)`),
@@ -925,17 +936,17 @@ endif()
 # I also tried using CMake to extract the value from the activate.sh script on all plaftorms but it seems even more of a hack
 
 # So instead, we use a generator expression to find the right value. At least it makes sense, and should be robust.
-FindValue(CONAN_SWIG_ROOT)
+FindValue(swig_PACKAGE_FOLDER)
 
-set(SWIG_EXECUTABLE "${CURRENT_CONAN_SWIG_ROOT}/bin/swig")
+# set(SWIG_EXECUTABLE "${CURRENT_swig_PACKAGE_FOLDER}/bin/swig")
 
 # The conan-provided binary has a built-in swiglib (`swig -swiglib`) that points to the build box on which it was built, which is problematic for us.
-set(SWIG_LIB "${CURRENT_CONAN_SWIG_ROOT}/bin/swiglib")
+# set(SWIG_DIR "${CURRENT_swig_PACKAGE_FOLDER}/bin/swiglib")
 
 # Export SWIG to parent scope
 if(hasParent)
   set(SWIG_EXECUTABLE "${SWIG_EXECUTABLE}" PARENT_SCOPE)
-  set(SWIG_LIB "${SWIG_LIB}" PARENT_SCOPE)
+  set(SWIG_DIR "${SWIG_DIR}" PARENT_SCOPE)
 endif()
 
 set(ALL_RUBY_BINDING_TARGETS "") # global list

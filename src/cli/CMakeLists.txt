@@ -37,7 +37,7 @@ target_link_libraries(openstudio
   PRIVATE
   openstudiolib
   openstudio_workflow
-  CONAN_PKG::cli11
+  CLI11::CLI11
 )
 
 if(BUILD_RUBY_BINDINGS)

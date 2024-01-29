@@ -41,7 +41,7 @@ set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
 target_compile_definitions(${target_name} PRIVATE openstudio_gltf_EXPORTS SHARED_OS_LIBS)
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
-target_link_libraries(${target_name} PRIVATE CONAN_PKG::tinygltf)
+target_link_libraries(${target_name} PRIVATE TinyGLTF::TinyGLTF)
 
 add_dependencies(${target_name} GenerateIddFactoryRun)
 

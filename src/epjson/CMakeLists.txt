@@ -44,7 +44,7 @@ CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 if (BUILD_TESTING)
 
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
-  target_link_libraries(${target_name}_tests CONAN_PKG::fmt)
+  target_link_libraries(${target_name}_tests fmt::fmt)
 
   # Glob all OSM files in test/ folder
 #  file(GLOB_RECURSE epjson_source_models "${CMAKE_CURRENT_SOURCE_DIR}/test/**/*.osm")

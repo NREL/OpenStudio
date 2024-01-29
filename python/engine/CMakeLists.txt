@@ -1,6 +1,6 @@
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGPythonRuntime.hxx"
-  COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+  COMMAND ${CMAKE_COMMAND} -E env SWIG_DIR="${SWIG_DIR}"
           "${SWIG_EXECUTABLE}"
           "-python"
           -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGPythonRuntime.hxx"
@@ -32,7 +32,7 @@ target_link_libraries(
   PRIVATE
   openstudio_scriptengine
   openstudio_utilities_minimal
-  CONAN_PKG::fmt
+  fmt::fmt
   Python::Python
 )
 
@@ -48,7 +48,7 @@ if(BUILD_TESTING)
   set(pythonengine_test_depends
     openstudio_scriptengine
     openstudiolib
-    CONAN_PKG::fmt
+    fmt::fmt
   )
 
   set(pythonengine_test_src

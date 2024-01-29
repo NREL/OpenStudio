@@ -16,19 +16,25 @@ endforeach()
 
 CONFIGURE_FILE_WITH_CHECKSUM("InitMacros.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/InitMacros.hxx")
 
-set(MODULE_ROOT "${CONAN_OPENSTUDIO_RUBY_ROOT}")
+# TODO
+FindValue(ruby_LIB_DIRS)
+set(MODULE_ROOT "${CURRENT_ruby_LIB_DIRS}")
+
+set(MODULE_ROOT "${ruby_PACKAGE_FOLDER_RELEASE}")
 if ("${MODULE_ROOT}" STREQUAL "")
-  set(MODULE_ROOT "${CONAN_OPENSTUDIO_RUBY_ROOT_DEBUG}")
+  set(MODULE_ROOT "${ruby_PACKAGE_FOLDER_RELEASE}")
 endif()
 
 message("Searching for ruby modules in '${MODULE_ROOT}/lib/**/*.rb'")
 file(GLOB_RECURSE  EXTENSION_RB  FOLLOW_SYMLINKS "${MODULE_ROOT}/lib/**/*.rb")
+message("EXTENSION_RB=${EXTENSION_RB}")
 
 foreach( _FILE ${EXTENSION_RB} )
   file(RELATIVE_PATH LOCATION ${MODULE_ROOT}/lib ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
+message("EMBEDDED_PATHS=${EMBEDDED_PATHS}")
 
 set(GEMFILE_FILES "${OPENSTUDIO_GEMS_DIR}/openstudio-gems.gemspec" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
 file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.rb")
@@ -203,7 +209,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
-  COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+  COMMAND ${CMAKE_COMMAND} -E env SWIG_DIR="${SWIG_DIR}"
           "${SWIG_EXECUTABLE}"
           "-ruby"
           "-c++"
@@ -261,7 +267,7 @@ target_link_libraries(rubyengine
   openstudiolib
   rubybindings
   rubyinterpreter
-  CONAN_PKG::fmt
+  fmt::fmt
   ${ruby_extension_libs}
   ${ALL_RUBY_BINDING_TARGETS}
 )
@@ -291,7 +297,7 @@ if(BUILD_TESTING)
   set(rubyengine_test_depends
     openstudio_scriptengine
     openstudiolib
-    CONAN_PKG::fmt
+    fmt::fmt
   )
 
   set(rubyengine_test_src
