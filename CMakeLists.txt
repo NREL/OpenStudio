@@ -753,7 +753,7 @@ else()
 endif()
 
 # Find EnergyPlus, which will set the ENERGYPLUS_XXX variables and cache them
-find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED MODULE)
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 
 # Radiance
