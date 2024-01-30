@@ -32,8 +32,6 @@
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "FluidAndGlycol.hpp"
-#include "FluidAndGlycol_Impl.hpp"
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
 #include "Curve.hpp"
@@ -149,8 +147,8 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<FluidAndGlycol> CoilCoolingDXSingleSpeedThermalStorage_Impl::userDefinedFluidType() const {
-      return getObject<ModelObject>().getModelObjectTarget<FluidAndGlycol>(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::UserDefinedFluidType);
+    boost::optional<int> CoilCoolingDXSingleSpeedThermalStorage_Impl::glycolConcentration() const {
+      return getInt(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::GlycolConcentration, true);
     }
 
     boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage_Impl::fluidStorageVolume() const {
@@ -816,13 +814,19 @@ namespace model {
       return result;
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setUserDefinedFluidType(const FluidAndGlycol& fluidAndGlycol) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::UserDefinedFluidType, fluidAndGlycol.handle());
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setGlycolConcentration(boost::optional<int> glycolConcentration) {
+      bool result(false);
+      if (glycolConcentration) {
+        result = setInt(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::GlycolConcentration, glycolConcentration.get());
+      } else {
+        resetGlycolConcentration();
+        result = true;
+      }
       return result;
     }
 
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetUserDefinedFluidType() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::UserDefinedFluidType, "");
+    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetGlycolConcentration() {
+      bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::GlycolConcentration, "");
       OS_ASSERT(result);
     }
 
@@ -2034,8 +2038,8 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageType();
   }
 
-  boost::optional<FluidAndGlycol> CoilCoolingDXSingleSpeedThermalStorage::userDefinedFluidType() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->userDefinedFluidType();
+  boost::optional<int> CoilCoolingDXSingleSpeedThermalStorage::glycolConcentration() const {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->glycolConcentration();
   }
 
   boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::fluidStorageVolume() const {
@@ -2521,12 +2525,12 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageType(storageType);
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setUserDefinedFluidType(const FluidAndGlycol& fluidAndGlycol) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setUserDefinedFluidType(fluidAndGlycol);
+  bool CoilCoolingDXSingleSpeedThermalStorage::setGlycolConcentration(int glycolConcentration) {
+    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setGlycolConcentration(glycolConcentration);
   }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetUserDefinedFluidType() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetUserDefinedFluidType();
+  void CoilCoolingDXSingleSpeedThermalStorage::resetGlycolConcentration() {
+    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetGlycolConcentration();
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setFluidStorageVolume(double fluidStorageVolume) {

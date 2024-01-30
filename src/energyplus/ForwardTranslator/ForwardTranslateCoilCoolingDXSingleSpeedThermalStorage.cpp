@@ -34,8 +34,6 @@
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
-#include "../../model/FluidAndGlycol.hpp"
-#include "../../model/FluidAndGlycol_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/Curve.hpp"
@@ -45,6 +43,7 @@
 
 #include <utilities/idd/CoilSystem_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_ThermalStorage_FieldEnums.hxx>
+#include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -79,10 +78,21 @@ namespace energyplus {
     const std::string storageType = modelObject.storageType();
     idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageType, storageType);
 
-    // User Defined Fluid Type: Optional Object
-    if (boost::optional<FluidAndGlycol> userDefinedFluidType_ = modelObject.userDefinedFluidType()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(userDefinedFluidType_.get())) {
-        idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::UserDefinedFluidType, wo_->nameString());
+    if ((s = modelObject.storageType())) {
+      if (istringEqual(s.get(), "PropyleneGlycol") || istringEqual(s.get(), "EthyleneGlycol")) {
+        idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageType, "UserDefinedFluidType");
+        boost::optional<int> gc = modelObject.glycolConcentration();
+        if (gc) {
+          boost::optional<IdfObject> fluidProperties = createFluidProperties(s.get(), gc.get());
+          if (fluidProperties) {
+            boost::optional<std::string> fluidPropertiesName = fluidProperties->getString(FluidProperties_NameFields::FluidName, true);
+            if (fluidPropertiesName) {
+              idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::UserDefinedFluidType, fluidPropertiesName.get());
+            }
+          }
+        }
+      } else {
+        idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageType, s.get());
       }
     }
 

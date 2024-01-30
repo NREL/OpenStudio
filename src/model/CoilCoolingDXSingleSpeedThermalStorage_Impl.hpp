@@ -37,7 +37,6 @@ namespace openstudio {
 namespace model {
 
   class Schedule;
-  class FluidAndGlycol;
   class Connection;
   class Curve;
   class WaterStorageTank;
@@ -86,7 +85,7 @@ namespace model {
 
       std::string storageType() const;
 
-      boost::optional<FluidAndGlycol> userDefinedFluidType() const;
+      boost::optional<int> glycolConcentration() const;
 
       boost::optional<double> fluidStorageVolume() const;
 
@@ -324,9 +323,9 @@ namespace model {
 
       bool setStorageType(const std::string& storageType);
 
-      bool setUserDefinedFluidType(const FluidAndGlycol& fluidAndGlycol);
+      bool setGlycolConcentration(boost::optional<int> glycolConcentration);
 
-      void resetUserDefinedFluidType();
+      void resetGlycolConcentration();
 
       bool setFluidStorageVolume(double fluidStorageVolume);
 

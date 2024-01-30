@@ -18906,65 +18906,78 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
   A6 , \field Storage Type
        \type choice
        \key Water
-       \key UserDefinedFluidType
        \key Ice
+       \key PropyleneGlycol
+       \key EthyleneGlycol
+       \key R11
+       \key R12
+       \key R22
+       \key R123
+       \key R134a
+       \key R404a
+       \key R407a
+       \key R410a
+       \key NH3
+       \key R507a
+       \key R744
        \required-field
-  A7 , \field User Defined Fluid Type
-       \type object-list
-       \object-list FluidAndGlycolNames
-       \note This field is required when Storage Type is UserDefinedFluidType
-  N1 , \field Fluid Storage Volume
+  N1,  \field Glycol Concentration
+       \type integer
+       \minimum 0
+       \maximum 100
+       \note Only used with either "PropyleneGlycol" or "EthyleneGlycol"       
+  N2 , \field Fluid Storage Volume
        \units m3
        \ip-units gal
        \type real
        \minimum> 0
        \note required field if Storage Type is Water or UserDefinedFluidType
        \autocalculatable
-  N2 , \field Ice Storage Capacity
+  N3 , \field Ice Storage Capacity
        \units GJ
        \type real
        \minimum> 0
        \note required field if Storage Type is Ice
        \autocalculatable
-  N3 , \field Storage Capacity Sizing Factor
+  N4 , \field Storage Capacity Sizing Factor
        \type real
        \units hr
        \note If one of the previous two fields is set to autocalculate, this determines the storage capacity
        \note as a function of Cooling Only Mode Rated Total Evaporator Cooling Capacity
-  A8 , \field Storage Tank Ambient Temperature Node
+  A7 , \field Storage Tank Ambient Temperature Node
        \type object-list
        \required-field
        \object-list ConnectionNames
-  N4 , \field Storage Tank to Ambient U-value Times Area Heat Transfer Coefficient
+  N5 , \field Storage Tank to Ambient U-value Times Area Heat Transfer Coefficient
        \type real
        \units W/K
        \minimum> 0
        \required-field
-  N5,  \field Fluid Storage Tank Rating Temperature
+  N6,  \field Fluid Storage Tank Rating Temperature
        \type real
        \units C
        \note required field if Storage Type is Water or UserDefinedFluidType
-  N6 , \field Rated Evaporator Air Flow Rate
+  N7 , \field Rated Evaporator Air Flow Rate
        \required-field
        \type real
        \units m3/s
        \minimum> 0
        \autosizable
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR and Rated COP
-  A9 , \field Evaporator Air Inlet Node
+  A8 , \field Evaporator Air Inlet Node
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A10, \field Evaporator Air Outlet Node
+  A9,  \field Evaporator Air Outlet Node
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A11 ,\field Cooling Only Mode Available
+  A10 ,\field Cooling Only Mode Available
        \required-field
        \type choice
        \key Yes
        \key No
-  N7 , \field Cooling Only Mode Rated Total Evaporator Cooling Capacity
+  N8 , \field Cooling Only Mode Rated Total Evaporator Cooling Capacity
        \note required field if Cooling Only Mode is available or if autocalculating sizes
        \type real
        \units W
@@ -18973,7 +18986,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note gross capacity excluding supply air fan heat
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
-  N8 , \field Cooling Only Mode Rated Sensible Heat Ratio
+  N9 , \field Cooling Only Mode Rated Sensible Heat Ratio
        \note required field if Cooling Only Mode is available
        \type real
        \minimum 0.0
@@ -18981,7 +18994,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \required-field
        \note Rated sensible heat ratio (gross sensible capacity/gross total capacity)
        \note sensible and total capacities do not include supply fan heat
-  N9 , \field Cooling Only Mode Rated COP
+  N10, \field Cooling Only Mode Rated COP
        \note Gross cooling capacity divided by power input to the compressor and outdoor fan,
        \note does not include supply fan heat or supply fan electrical energy input
        \type real
@@ -18989,7 +19002,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \minimum> 0.0
        \required-field
        \note required field if Cooling Only Mode is available
-  A12, \field Cooling Only Mode Total Evaporator Cooling Capacity Function of Temperature Curve
+  A11, \field Cooling Only Mode Total Evaporator Cooling Capacity Function of Temperature Curve
        \note required field if Cooling Only Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -18997,7 +19010,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note biquadratic curve = a + b*ewb + c*ewb**2 + d*db + e*db**2 + f*ewb*db
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
-  A13, \field Cooling Only Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve
+  A12, \field Cooling Only Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve
        \note required field if Cooling Only Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19005,7 +19018,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow rate
-  A14, \field Cooling Only Mode Energy Input Ratio Function of Temperature Curve
+  A13, \field Cooling Only Mode Energy Input Ratio Function of Temperature Curve
        \note required field if Cooling Only Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -19013,7 +19026,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note curve = a + b*ewb + c*ewb**2 + d*db + e*db**2 + f*ewb*db
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
-  A15, \field Cooling Only Mode Energy Input Ratio Function of Flow Fraction Curve
+  A14, \field Cooling Only Mode Energy Input Ratio Function of Flow Fraction Curve
        \note required field if Cooling Only Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19021,7 +19034,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A16, \field Cooling Only Mode Part Load Fraction Correlation Curve
+  A15, \field Cooling Only Mode Part Load Fraction Correlation Curve
        \note required field if Cooling Only Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19029,7 +19042,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note x = PLR = part load ratio (evaporator cooling load/steady state capacity)
-  A17, \field Cooling Only Mode Sensible Heat Ratio Function of Temperature Curve
+  A16, \field Cooling Only Mode Sensible Heat Ratio Function of Temperature Curve
        \note required field if Cooling Only Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -19037,7 +19050,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note curve = a + b*ewb + c*ewb**2 + d*edb + e*edb**2 + f*ewb*edb
        \note x = ewb = evaporator entering wet-bulb temperature seen by the cooling coil (C)
        \note y = edb = evaporator entering dry-bulb temperature seen by the cooling coil (C)
-  A18, \field Cooling Only Mode Sensible Heat Ratio Function of Flow Fraction Curve
+  A17, \field Cooling Only Mode Sensible Heat Ratio Function of Flow Fraction Curve
        \note required field if Cooling Only Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19045,12 +19058,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A19, \field Cooling And Charge Mode Available
+  A18, \field Cooling And Charge Mode Available
        \required-field
        \type choice
        \key Yes
        \key No
-  N10 ,\field Cooling And Charge Mode Rated Total Evaporator Cooling Capacity
+  N11 ,\field Cooling And Charge Mode Rated Total Evaporator Cooling Capacity
        \note required field if Cooling And Charge Mode is available
        \type real
        \units W
@@ -19060,12 +19073,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
        \note thermal storage tank at Fluid Storage Tank Rating Temperature (water or fluid) or storage faction of 0.5 (ice)
-  N11, \field Cooling And Charge Mode Capacity Sizing Factor
+  N12, \field Cooling And Charge Mode Capacity Sizing Factor
        \type real
        \required-field
        \note If previous field is autocalculate, this determines the evaporator capacity
        \note as a multiplier on the Cooling Only Mode Rated Total Evaporator Cooling Capacity
-  N12, \field Cooling And Charge Mode Rated Storage Charging Capacity
+  N13, \field Cooling And Charge Mode Rated Storage Charging Capacity
        \note required field if Cooling And Charge Mode is available
        \type real
        \units W
@@ -19075,12 +19088,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
        \note thermal storage tank at Fluid Storage Tank Rating Temperature (water or fluid) or storage faction of 0.5 (ice)
        \autocalculatable
-  N13, \field Cooling And Charge Mode Storage Capacity Sizing Factor
+  N14, \field Cooling And Charge Mode Storage Capacity Sizing Factor
        \type real
        \required-field
        \note If previous field is autocalculate, this determines the storage cooling capacity
        \note as a multiplier on the Cooling Only Mode Rated Total Evaporator Cooling Capacity
-  N14, \field Cooling And Charge Mode Rated Sensible Heat Ratio
+  N15, \field Cooling And Charge Mode Rated Sensible Heat Ratio
        \note required field if Cooling And Charge Mode is available
        \type real
        \minimum 0.0
@@ -19088,7 +19101,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \required-field
        \note Rated sensible heat ratio (gross sensible evaporator capacity/gross total evaporator capacity)
        \note sensible and total capacities do not include supply fan heat
-  N15, \field Cooling And Charge Mode Cooling Rated COP
+  N16, \field Cooling And Charge Mode Cooling Rated COP
        \note Gross evaporator cooling capacity divided by power input to the compressor (for cooling) and outdoor fan,
        \note does not include supply fan heat or supply fan electrical energy input
        \type real
@@ -19096,7 +19109,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \minimum 0.0
        \required-field
        \note required field if Cooling And Charge Mode is available
-  N16, \field Cooling And Charge Mode Charging Rated COP
+  N17, \field Cooling And Charge Mode Charging Rated COP
        \note net cooling capacity divided by power input to the compressor (for charging) and outdoor fan,
        \note includes any internal devices
        \type real
@@ -19104,7 +19117,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \minimum> 0.0
        \required-field
        \note required field if Cooling And Charge Mode is available
-  A20, \field Cooling And Charge Mode Total Evaporator Cooling Capacity Function of Temperature Curve
+  A19, \field Cooling And Charge Mode Total Evaporator Cooling Capacity Function of Temperature Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list TrivariateFunctions
@@ -19113,7 +19126,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A21, \field Cooling And Charge Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve
+  A20, \field Cooling And Charge Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19121,7 +19134,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A22, \field Cooling And Charge Mode Evaporator Energy Input Ratio Function of Temperature Curve
+  A21, \field Cooling And Charge Mode Evaporator Energy Input Ratio Function of Temperature Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list TrivariateFunctions
@@ -19130,7 +19143,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A23, \field Cooling And Charge Mode Evaporator Energy Input Ratio Function of Flow Fraction Curve
+  A22, \field Cooling And Charge Mode Evaporator Energy Input Ratio Function of Flow Fraction Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19138,7 +19151,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A24, \field Cooling And Charge Mode Evaporator Part Load Fraction Correlation Curve
+  A23, \field Cooling And Charge Mode Evaporator Part Load Fraction Correlation Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19146,7 +19159,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note x = PLR = part load ratio (evaporator cooling load/steady state capacity)
-  A25, \field Cooling And Charge Mode Storage Charge Capacity Function of Temperature Curve
+  A24, \field Cooling And Charge Mode Storage Charge Capacity Function of Temperature Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list TrivariateFunctions
@@ -19155,7 +19168,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A26, \field Cooling And Charge Mode Storage Charge Capacity Function of Total Evaporator PLR Curve
+  A25, \field Cooling And Charge Mode Storage Charge Capacity Function of Total Evaporator PLR Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19163,7 +19176,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note x = PLR = part load ratio (evaporator cooling load/steady state capacity)
-  A27, \field Cooling And Charge Mode Storage Energy Input Ratio Function of Temperature Curve
+  A26, \field Cooling And Charge Mode Storage Energy Input Ratio Function of Temperature Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list TrivariateFunctions
@@ -19172,7 +19185,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A28, \field Cooling And Charge Mode Storage Energy Input Ratio Function of Flow Fraction Curve
+  A27, \field Cooling And Charge Mode Storage Energy Input Ratio Function of Flow Fraction Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19180,7 +19193,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A29, \field Cooling And Charge Mode Storage Energy Part Load Fraction Correlation Curve
+  A28, \field Cooling And Charge Mode Storage Energy Part Load Fraction Correlation Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19188,7 +19201,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note x = PLR = part load ratio (evaporator cooling load/steady state capacity)
-  A30, \field Cooling And Charge Mode Sensible Heat Ratio Function of Temperature Curve
+  A29, \field Cooling And Charge Mode Sensible Heat Ratio Function of Temperature Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -19201,7 +19214,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note Also allows Curve:Triquadratic and Table:Lookup
        \note curve or table = func(x = ewb, y = edb, z = stes)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A31, \field Cooling And Charge Mode Sensible Heat Ratio Function of Flow Fraction Curve
+  A30, \field Cooling And Charge Mode Sensible Heat Ratio Function of Flow Fraction Curve
        \note required field if Cooling And Charge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19209,12 +19222,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A32, \field Cooling And Discharge Mode Available
+  A31, \field Cooling And Discharge Mode Available
        \required-field
        \type choice
        \key Yes
        \key No
-  N17, \field Cooling And Discharge Mode Rated Total Evaporator Cooling Capacity
+  N18, \field Cooling And Discharge Mode Rated Total Evaporator Cooling Capacity
        \note required field if Cooling And Discharge Mode is available
        \type real
        \units W
@@ -19224,12 +19237,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
        \note thermal storage tank at Fluid Storage Tank Rating Temperature (water or fluid) or storage faction of 0.5 (ice)
-  N18, \field Cooling And Discharge Mode Evaporator Capacity Sizing Factor
+  N19, \field Cooling And Discharge Mode Evaporator Capacity Sizing Factor
        \type real
        \required-field
        \note If previous field is autocalculate, this determines the charging capacity
        \note as a multiplier on the Cooling Only Mode Rated Total Evaporator Cooling Capacity
-  N19, \field Cooling And Discharge Mode Rated Storage Discharging Capacity
+  N20, \field Cooling And Discharge Mode Rated Storage Discharging Capacity
        \note required field if Cooling And Discharge Mode is available
        \type real
        \units W
@@ -19239,12 +19252,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
        \note thermal storage tank at 26.7 C (water) or storage faction of 0.5 (ice)
        \autocalculatable
-  N20, \field Cooling And Discharge Mode Storage Discharge Capacity Sizing Factor
+  N21, \field Cooling And Discharge Mode Storage Discharge Capacity Sizing Factor
        \type real
        \required-field
        \note If previous field is autocalculate, this determines the charging capacity
        \note as a multiplier on the Cooling Only Mode Rated Total Evaporator Cooling Capacity
-  N21, \field Cooling And Discharge Mode Rated Sensible Heat Ratio
+  N22, \field Cooling And Discharge Mode Rated Sensible Heat Ratio
        \note required field if Cooling And Discharge Mode is available
        \type real
        \minimum 0.0
@@ -19252,7 +19265,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \required-field
        \note Rated sensible heat ratio (gross sensible evaporator capacity/gross total evaporator capacity)
        \note sensible and total capacities do not include supply fan heat
-  N22, \field Cooling And Discharge Mode Cooling Rated COP
+  N23, \field Cooling And Discharge Mode Cooling Rated COP
        \note Gross evaporator cooling capacity divided by power input to the compressor (for cooling) and outdoor fan,
        \note does not include supply fan heat or supply fan electrical energy input
        \type real
@@ -19260,7 +19273,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \minimum 0.0
        \required-field
        \note required field if Cooling And Discharge Mode is available
-  N23, \field Cooling And Discharge Mode Discharging Rated COP
+  N24, \field Cooling And Discharge Mode Discharging Rated COP
        \note gross cooling capacity divided by power input to the compressor (for discharging),
        \note includes any internal devices for discharging storage but not supply fan
        \type real
@@ -19268,7 +19281,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \minimum> 0.0
        \required-field
        \note required field if Cooling And Discharge Mode is available
-  A33, \field Cooling And Discharge Mode Total Evaporator Cooling Capacity Function of Temperature Curve
+  A32, \field Cooling And Discharge Mode Total Evaporator Cooling Capacity Function of Temperature Curve
        \note required field if Cooling Only Mode is available
        \type object-list
        \object-list TrivariateFunctions
@@ -19277,7 +19290,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A34, \field Cooling And Discharge Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve
+  A33, \field Cooling And Discharge Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19285,7 +19298,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A35, \field Cooling And Discharge Mode Evaporator Energy Input Ratio Function of Temperature Curve
+  A34, \field Cooling And Discharge Mode Evaporator Energy Input Ratio Function of Temperature Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list TrivariateFunctions
@@ -19294,7 +19307,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A36, \field Cooling And Discharge Mode Evaporator Energy Input Ratio Function of Flow Fraction Curve
+  A35, \field Cooling And Discharge Mode Evaporator Energy Input Ratio Function of Flow Fraction Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19302,7 +19315,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load evaporator air flow
-  A37, \field Cooling And Discharge Mode Evaporator Part Load Fraction Correlation Curve
+  A36, \field Cooling And Discharge Mode Evaporator Part Load Fraction Correlation Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19310,7 +19323,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note x = PLR = part load ratio (evaporator cooling load/steady state capacity)
-  A38, \field Cooling And Discharge Mode Storage Discharge Capacity Function of Temperature Curve
+  A37, \field Cooling And Discharge Mode Storage Discharge Capacity Function of Temperature Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list TrivariateFunctions
@@ -19319,7 +19332,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A39, \field Cooling And Discharge Mode Storage Discharge Capacity Function of Flow Fraction Curve
+  A38, \field Cooling And Discharge Mode Storage Discharge Capacity Function of Flow Fraction Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19327,7 +19340,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load evaporator air flow
-  A40, \field Cooling And Discharge Mode Storage Discharge Capacity Function of Total Evaporator PLR Curve
+  A39, \field Cooling And Discharge Mode Storage Discharge Capacity Function of Total Evaporator PLR Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19335,7 +19348,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note x =PLR = part load ratio (evaporator cooling load/steady state capacity)
-  A41, \field Cooling And Discharge Mode Storage Energy Input Ratio Function of Temperature Curve
+  A40, \field Cooling And Discharge Mode Storage Energy Input Ratio Function of Temperature Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list TrivariateFunctions
@@ -19344,7 +19357,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = db = dry-bulb temperature seen by the condenser (C)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A42, \field Cooling And Discharge Mode Storage Energy Input Ratio Function of Flow Fraction Curve
+  A41, \field Cooling And Discharge Mode Storage Energy Input Ratio Function of Flow Fraction Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19352,7 +19365,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A43, \field Cooling And Discharge Mode Storage Energy Part Load Fraction Correlation Curve
+  A42, \field Cooling And Discharge Mode Storage Energy Part Load Fraction Correlation Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19360,7 +19373,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note x = PLR = part load ratio (evaporator cooling load/steady state capacity)
-  A44, \field Cooling And Discharge Mode Sensible Heat Ratio Function of Temperature Curve
+  A43, \field Cooling And Discharge Mode Sensible Heat Ratio Function of Temperature Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -19372,7 +19385,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note Also allows Curve:Triquadratic and Table:Lookup
        \note curve or table = func(x = ewb, y = edb, z = stes)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A45, \field Cooling And Discharge Mode Sensible Heat Ratio Function of Flow Fraction Curve
+  A44, \field Cooling And Discharge Mode Sensible Heat Ratio Function of Flow Fraction Curve
        \note required field if Cooling And Discharge Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19380,12 +19393,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A46, \field Charge Only Mode Available
+  A45, \field Charge Only Mode Available
        \required-field
        \type choice
        \key Yes
        \key No
-  N24, \field Charge Only Mode Rated Storage Charging Capacity
+  N25, \field Charge Only Mode Rated Storage Charging Capacity
        \note required field if Charge Only  Mode is available
        \type real
        \units W
@@ -19394,12 +19407,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
        \note thermal storage tank at 26.7 C (water) or storage faction of 0.5 (ice)
        \autocalculatable
-  N25, \field Charge Only Mode Capacity Sizing Factor
+  N26, \field Charge Only Mode Capacity Sizing Factor
        \type real
        \required-field
        \note If previous field is autocalculate, this determines the charging capacity
        \note as a multiplier on the Cooling Only Mode Rated Total Evaporator Cooling Capacity
-  N26, \field Charge Only Mode Charging Rated COP
+  N27, \field Charge Only Mode Charging Rated COP
        \note net cooling capacity divided by power input to the compressor (for charging) and outdoor fan,
        \note includes any internal devices
        \type real
@@ -19407,7 +19420,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \minimum> 0.0
        \required-field
        \note required field if Charge Only Mode is available
-  A47, \field Charge Only Mode Storage Charge Capacity Function of Temperature Curve
+  A46, \field Charge Only Mode Storage Charge Capacity Function of Temperature Curve
        \note required field if Charge Only Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -19415,7 +19428,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note curve = a + b*db + c*db**2 + d*stes + e*stes**2 + f*db*stes
        \note x = db = dry-bulb temperature seen by the condenser (C)
        \note y = stes = state of thermal energy storage (C or fraction)
-  A48, \field Charge Only Mode Storage Energy Input Ratio Function of Temperature Curve
+  A47, \field Charge Only Mode Storage Energy Input Ratio Function of Temperature Curve
        \note required field if Charge Only Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -19423,12 +19436,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note curve = a + b*db + c*db**2 + d*stes + e*stes**2 + f*db*stes
        \note x = db = dry-bulb temperature seen by the condenser (C)
        \note y = stes = state of thermal energy storage (C or fraction)
-  A49, \field Discharge Only Mode Available
+  A48, \field Discharge Only Mode Available
        \required-field
        \type choice
        \key Yes
        \key No
-  N27, \field Discharge Only Mode Rated Storage Discharging Capacity
+  N28, \field Discharge Only Mode Rated Storage Discharging Capacity
        \note required field if Discharge Only Mode is available
        \type real
        \units W
@@ -19437,12 +19450,12 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note thermal storage tank at 26.7 C (water) or storage faction of 0.5 (ice)
        \autocalculatable
-  N28, \field Discharge Only Mode Capacity Sizing Factor
+  N29, \field Discharge Only Mode Capacity Sizing Factor
        \type real
        \required-field
        \note If previous field is autocalculate, this determines the discharging capacity
        \note as a multiplier on the Cooling Only Mode Rated Total Evaporator Cooling Capacity
-  N29, \field Discharge Only Mode Rated Sensible Heat Ratio
+  N30, \field Discharge Only Mode Rated Sensible Heat Ratio
        \note required field if Discharge Only Mode is available
        \type real
        \minimum 0.0
@@ -19450,7 +19463,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \required-field
        \note Rated sensible heat ratio (gross sensible evaporator capacity/gross total evaporator capacity)
        \note sensible and total capacities do not include supply fan heat
-  N30, \field Discharge Only Mode Rated COP
+  N31, \field Discharge Only Mode Rated COP
        \note required field if Discharge Only Mode is available
        \note gross cooling capacity divided by power input to the compressor (for discharging),
        \note includes any internal devices for discharging storage but not supply fan
@@ -19458,7 +19471,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \units W/W
        \minimum> 0.0
        \required-field
-  A50, \field Discharge Only Mode Storage Discharge Capacity Function of Temperature Curve
+  A49, \field Discharge Only Mode Storage Discharge Capacity Function of Temperature Curve
        \note required field if Discharge Only Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -19466,7 +19479,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note curve = a + b*ewb + c*ewb**2 + d*stes + e*stes**2 + f*ewb*stes
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = stes = state of thermal energy storage (C or fraction)
-  A51, \field Discharge Only Mode Storage Discharge Capacity Function of Flow Fraction Curve
+  A50, \field Discharge Only Mode Storage Discharge Capacity Function of Flow Fraction Curve
        \note required field if Discharge Only Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19474,7 +19487,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A52, \field Discharge Only Mode Energy Input Ratio Function of Temperature Curve
+  A51, \field Discharge Only Mode Energy Input Ratio Function of Temperature Curve
        \note required field if Discharge Only Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -19482,7 +19495,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note curve = a + b*ewb + c*ewb**2 + d*stes + e*stes**2 + f*ewb*stes
        \note x = ewb = evaporator entering wet-bulb temperature (C)
        \note y = stes = state of thermal energy storage (C or fraction)
-  A53, \field Discharge Only Mode Energy Input Ratio Function of Flow Fraction Curve
+  A52, \field Discharge Only Mode Energy Input Ratio Function of Flow Fraction Curve
        \note required field if Discharge Only Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19490,14 +19503,14 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note x = ff = Fraction of the full load evaporator air flow
-  A54, \field Discharge Only Mode Part Load Fraction Correlation Curve
+  A53, \field Discharge Only Mode Part Load Fraction Correlation Curve
        \note required field if Discharge Only Mode is available
        \type object-list
        \object-list UnivariateFunctions
        \note Any curve or table with one independent variable can be used
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
-  A55, \field Discharge Only Mode Sensible Heat Ratio Function of Temperature Curve
+  A54, \field Discharge Only Mode Sensible Heat Ratio Function of Temperature Curve
        \note required field if Discharge Only Mode is available
        \type object-list
        \object-list BivariateFunctions
@@ -19509,7 +19522,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note For three independent variables:
        \note curve or table = func(x = ewb, y = edb, z = stes)
        \note z = stes = state of thermal energy storage (C or fraction)
-  A56, \field Discharge Only Mode Sensible Heat Ratio Function of Flow Fraction Curve
+  A55, \field Discharge Only Mode Sensible Heat Ratio Function of Flow Fraction Curve
        \note required field if Discharge Only Mode is available
        \type object-list
        \object-list UnivariateFunctions
@@ -19517,56 +19530,56 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load evaporator air flow
-  N31, \field Ancillary Electric Power
+  N32, \field Ancillary Electric Power
        \type real
        \units W
        \minimum 0.0
        \note controls and miscellaneous standby ancillary electric power draw, when available
-  N32, \field Cold Weather Operation Minimum Outdoor Air Temperature
+  N33, \field Cold Weather Operation Minimum Outdoor Air Temperature
        \type real
        \units C
-  N33, \field Cold Weather Operation Ancillary Power
+  N34, \field Cold Weather Operation Ancillary Power
        \type real
        \units W
        \minimum 0.0
-  A57, \field Condenser Air Inlet Node
+  A56, \field Condenser Air Inlet Node
        \note Enter the name of an outdoor air node. This node name is also specified in
        \note an OutdoorAir:Node or OutdoorAir:NodeList object.
        \type alpha
-  A58, \field Condenser Air Outlet Node
+  A57, \field Condenser Air Outlet Node
        \type alpha
-  N34, \field Condenser Design Air Flow Rate
+  N35, \field Condenser Design Air Flow Rate
        \required-field
        \type real
        \units m3/s
        \minimum> 0.0
        \autocalculatable
        \note Used to calculate condenser leaving conditions and water use if evaporatively cooled.
-  N35, \field Condenser Air Flow Sizing Factor
+  N36, \field Condenser Air Flow Sizing Factor
        \type real
        \required-field
        \note If previous field is autocalculate, this determines the condenser air flow size as a
        \note multiplier on the Rated Evaporator Air Flow Rate.
-  A59, \field Condenser Type
+  A58, \field Condenser Type
        \type choice
        \key AirCooled
        \key EvaporativelyCooled
        \required-field
-  N36, \field Evaporative Condenser Effectiveness
+  N37, \field Evaporative Condenser Effectiveness
        \note required field if condenser type is evaporatively cooled
        \type real
        \units dimensionless
        \minimum> 0.0
        \maximum 1.0
        \required-field
-  N37, \field Evaporative Condenser Pump Rated Power Consumption
+  N38, \field Evaporative Condenser Pump Rated Power Consumption
        \type real
        \units W
        \minimum 0.0
        \required-field
        \autosizable
        \note Rated power consumed by the evaporative condenser's water pump
-  N38, \field Basin Heater Capacity
+  N39, \field Basin Heater Capacity
        \type real
        \units W/K
        \minimum 0.0
@@ -19577,14 +19590,14 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note setpoint temperature when the outdoor air temperature falls below the setpoint temperature.
        \note The basin heater only operates when the DX coil is off.
        \note If this field is blank, the basin heater is always available.
-  N39, \field Basin Heater Setpoint Temperature
+  N40, \field Basin Heater Setpoint Temperature
        \type real
        \units C
        \minimum 2.0
        \required-field
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
-  A60, \field Basin Heater Availability Schedule
+  A59, \field Basin Heater Availability Schedule
        \type object-list
        \object-list ScheduleNames
        \note This field is only used for Condenser Type = EvaporativelyCooled.
@@ -19592,34 +19605,34 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note air dry-bulb temperature is below the basin heater setpoint temperature.
        \note If a schedule name is not entered, the basin heater is allowed to operate
        \note throughout the entire simulation.
-  A61, \field Supply Water Storage Tank
+  A60, \field Supply Water Storage Tank
        \type object-list
        \object-list WaterStorageTankNames
-  A62, \field Condensate Collection Water Storage Tank
+  A61, \field Condensate Collection Water Storage Tank
        \type object-list
        \object-list WaterStorageTankNames
-  A63, \field Storage Tank Plant Connection Inlet Node
+  A62, \field Storage Tank Plant Connection Inlet Node
        \type object-list
        \object-list ConnectionNames
-  A64, \field Storage Tank Plant Connection Outlet Node
+  A63, \field Storage Tank Plant Connection Outlet Node
        \type object-list
        \object-list ConnectionNames
-  N40, \field Storage Tank Plant Connection Design Flow Rate
+  N41, \field Storage Tank Plant Connection Design Flow Rate
        \type real
        \units m3/s
        \ip-units gal/min
        \minimum 0.0
-  N41, \field Storage Tank Plant Connection Heat Transfer Effectiveness
+  N42, \field Storage Tank Plant Connection Heat Transfer Effectiveness
        \type real
        \minimum 0.0
        \maximum 1.0
        \required-field
-  N42, \field Storage Tank Minimum Operating Limit Fluid Temperature
+  N43, \field Storage Tank Minimum Operating Limit Fluid Temperature
        \type real
        \units C
        \note For fluid storage tanks only, minimum limit for storage tank
        \note If omitted,then the minimum temperature limit is that used for fluid property data.
-  N43; \field Storage Tank Maximum Operating Limit Fluid Temperature
+  N44; \field Storage Tank Maximum Operating Limit Fluid Temperature
        \type real
        \units C
        \note For fluid storage tanks only, maximum limit for storage tank
