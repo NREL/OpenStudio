@@ -43,6 +43,7 @@
 #include "../../model/WaterStorageTank.hpp"
 #include "../../model/WaterStorageTank_Impl.hpp"
 
+#include <utilities/idd/CoilSystem_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_ThermalStorage_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -53,8 +54,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject>
-    ForwardTranslator::translateCoilCoolingDXSingleSpeedThermalStorage(model::CoilCoolingDXSingleSpeedThermalStorage& modelObject) {
-
+    ForwardTranslator::translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(model::CoilCoolingDXSingleSpeedThermalStorage& modelObject) {
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage, modelObject);
 
@@ -879,7 +879,61 @@ namespace energyplus {
     }
 
     return idfObject;
-  }  // End of translate function
+  }
+
+  boost::optional<IdfObject>
+    ForwardTranslator::translateCoilCoolingDXSingleSpeedThermalStorage(model::CoilCoolingDXSingleSpeedThermalStorage& modelObject) {
+
+    IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
+
+    m_idfObjects.push_back(coilSystemCoolingDXIdf);
+
+    boost::optional<IdfObject> oIdfObject = translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(modelObject);
+
+    if (!oIdfObject) {
+      return boost::none;
+    }
+
+    IdfObject idfObject = oIdfObject.get();
+
+    OptionalString s;
+
+    s = modelObject.name();
+    if (s) {
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType, idfObject.iddObject().name());
+
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilName, *s);
+
+      coilSystemCoolingDXIdf.setName(*s + " CoilSystem");
+    }
+
+    Schedule sched = modelObject.availabilitySchedule();
+    translateAndMapModelObject(sched);
+
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName, sched.name().get());
+
+    OptionalModelObject omo = modelObject.inletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemInletNodeName, *s);
+      }
+    }
+
+    omo = modelObject.outletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemOutletNodeName, *s);
+
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemSensorNodeName, *s);
+      }
+    }
+
+    return coilSystemCoolingDXIdf;
+  }
 
 }  // end namespace energyplus
 }  // end namespace openstudio
