@@ -38,7 +38,7 @@ namespace openstudio {
 namespace model {
 
   class Schedule;
-  class Connection;
+  // class Connection;
   class Curve;
   // class WaterStorageTank;
 
@@ -96,8 +96,6 @@ namespace model {
     bool isIceStorageCapacityAutocalculated() const;
 
     boost::optional<double> storageCapacitySizingFactor() const;
-
-    Connection storageTankAmbientTemperatureNode() const;
 
     double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient() const;
 
@@ -297,17 +295,13 @@ namespace model {
 
     // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
 
-    boost::optional<Connection> storageTankPlantConnectionInletNode() const;
+    // boost::optional<double> storageTankPlantConnectionDesignFlowRate() const;
 
-    boost::optional<Connection> storageTankPlantConnectionOutletNode() const;
+    // double storageTankPlantConnectionHeatTransferEffectiveness() const;
 
-    boost::optional<double> storageTankPlantConnectionDesignFlowRate() const;
+    // boost::optional<double> storageTankMinimumOperatingLimitFluidTemperature() const;
 
-    double storageTankPlantConnectionHeatTransferEffectiveness() const;
-
-    boost::optional<double> storageTankMinimumOperatingLimitFluidTemperature() const;
-
-    boost::optional<double> storageTankMaximumOperatingLimitFluidTemperature() const;
+    // boost::optional<double> storageTankMaximumOperatingLimitFluidTemperature() const;
 
     //@}
     /** @name Setters */
@@ -342,8 +336,6 @@ namespace model {
     bool setStorageCapacitySizingFactor(double storageCapacitySizingFactor);
 
     void resetStorageCapacitySizingFactor();
-
-    bool setStorageTankAmbientTemperatureNode(const Connection& connection);
 
     bool setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient);
 
@@ -649,27 +641,19 @@ namespace model {
 
     // void resetCondensateCollectionWaterStorageTank();
 
-    bool setStorageTankPlantConnectionInletNode(const Connection& connection);
+    // bool setStorageTankPlantConnectionDesignFlowRate(double storageTankPlantConnectionDesignFlowRate);
 
-    void resetStorageTankPlantConnectionInletNode();
+    // void resetStorageTankPlantConnectionDesignFlowRate();
 
-    bool setStorageTankPlantConnectionOutletNode(const Connection& connection);
+    // bool setStorageTankPlantConnectionHeatTransferEffectiveness(double storageTankPlantConnectionHeatTransferEffectiveness);
 
-    void resetStorageTankPlantConnectionOutletNode();
+    // bool setStorageTankMinimumOperatingLimitFluidTemperature(double storageTankMinimumOperatingLimitFluidTemperature);
 
-    bool setStorageTankPlantConnectionDesignFlowRate(double storageTankPlantConnectionDesignFlowRate);
+    // void resetStorageTankMinimumOperatingLimitFluidTemperature();
 
-    void resetStorageTankPlantConnectionDesignFlowRate();
+    // bool setStorageTankMaximumOperatingLimitFluidTemperature(double storageTankMaximumOperatingLimitFluidTemperature);
 
-    bool setStorageTankPlantConnectionHeatTransferEffectiveness(double storageTankPlantConnectionHeatTransferEffectiveness);
-
-    bool setStorageTankMinimumOperatingLimitFluidTemperature(double storageTankMinimumOperatingLimitFluidTemperature);
-
-    void resetStorageTankMinimumOperatingLimitFluidTemperature();
-
-    bool setStorageTankMaximumOperatingLimitFluidTemperature(double storageTankMaximumOperatingLimitFluidTemperature);
-
-    void resetStorageTankMaximumOperatingLimitFluidTemperature();
+    // void resetStorageTankMaximumOperatingLimitFluidTemperature();
 
     //@}
     /** @name Other */

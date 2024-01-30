@@ -18945,9 +18945,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note If one of the previous two fields is set to autocalculate, this determines the storage capacity
        \note as a function of Cooling Only Mode Rated Total Evaporator Cooling Capacity
   A7 , \field Storage Tank Ambient Temperature Node
-       \type object-list
-       \required-field
-       \object-list ConnectionNames
+       \type alpha
   N5 , \field Storage Tank to Ambient U-value Times Area Heat Transfer Coefficient
        \type real
        \units W/K
@@ -19612,11 +19610,9 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \type object-list
        \object-list WaterStorageTankNames
   A62, \field Storage Tank Plant Connection Inlet Node
-       \type object-list
-       \object-list ConnectionNames
+       \type alpha
   A63, \field Storage Tank Plant Connection Outlet Node
-       \type object-list
-       \object-list ConnectionNames
+       \type alpha
   N41, \field Storage Tank Plant Connection Design Flow Rate
        \type real
        \units m3/s
@@ -19626,7 +19622,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \type real
        \minimum 0.0
        \maximum 1.0
-       \required-field
+       \default 0.7
   N43, \field Storage Tank Minimum Operating Limit Fluid Temperature
        \type real
        \units C

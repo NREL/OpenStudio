@@ -58,7 +58,7 @@ namespace energyplus {
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage, modelObject);
 
     // Availability Schedule Name: Required Object
-    Schedule availabilitySchedule = modelObject.availabilitySchedule())
+    Schedule availabilitySchedule = modelObject.availabilitySchedule();
     if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule)) {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::AvailabilityScheduleName, wo_->nameString());
     }
@@ -78,12 +78,12 @@ namespace energyplus {
     const std::string storageType = modelObject.storageType();
     idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageType, storageType);
 
-    if ((s = modelObject.storageType())) {
-      if (istringEqual(s.get(), "PropyleneGlycol") || istringEqual(s.get(), "EthyleneGlycol")) {
+    if (boost::optional<std::string> s_ = modelObject.storageType()) {
+      if (istringEqual(s_.get(), "PropyleneGlycol") || istringEqual(s_.get(), "EthyleneGlycol")) {
         idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageType, "UserDefinedFluidType");
         boost::optional<int> gc = modelObject.glycolConcentration();
         if (gc) {
-          boost::optional<IdfObject> fluidProperties = createFluidProperties(s.get(), gc.get());
+          boost::optional<IdfObject> fluidProperties = createFluidProperties(s_.get(), gc.get());
           if (fluidProperties) {
             boost::optional<std::string> fluidPropertiesName = fluidProperties->getString(FluidProperties_NameFields::FluidName, true);
             if (fluidPropertiesName) {
@@ -92,7 +92,7 @@ namespace energyplus {
           }
         }
       } else {
-        idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageType, s.get());
+        idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageType, s_.get());
       }
     }
 
@@ -853,40 +853,28 @@ namespace energyplus {
     // }
     // }
 
-    // Storage Tank Plant Connection Inlet Node Name: Optional Node
-    Node storageTankPlantConnectionInletNodeName = modelObject.storageTankPlantConnectionInletNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(storageTankPlantConnectionInletNodeName)) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankPlantConnectionInletNodeName, wo_->nameString());
-    }
-
-    // Storage Tank Plant Connection Outlet Node Name: Optional Node
-    Node storageTankPlantConnectionOutletNodeName = modelObject.storageTankPlantConnectionOutletNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(storageTankPlantConnectionOutletNodeName)) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankPlantConnectionOutletNodeName, wo_->nameString());
-    }
-
     // Storage Tank Plant Connection Design Flow Rate: boost::optional<double>
-    if (boost::optional<double> storageTankPlantConnectionDesignFlowRate_ = modelObject.storageTankPlantConnectionDesignFlowRate()) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankPlantConnectionDesignFlowRate,
-                          storageTankPlantConnectionDesignFlowRate_.get());
-    }
+    // if (boost::optional<double> storageTankPlantConnectionDesignFlowRate_ = modelObject.storageTankPlantConnectionDesignFlowRate()) {
+    // idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankPlantConnectionDesignFlowRate,
+    // storageTankPlantConnectionDesignFlowRate_.get());
+    // }
 
     // Storage Tank Plant Connection Heat Transfer Effectiveness: Required Double
-    const double storageTankPlantConnectionHeatTransferEffectiveness = modelObject.storageTankPlantConnectionHeatTransferEffectiveness();
-    idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankPlantConnectionHeatTransferEffectiveness,
-                        storageTankPlantConnectionHeatTransferEffectiveness);
+    // const double storageTankPlantConnectionHeatTransferEffectiveness = modelObject.storageTankPlantConnectionHeatTransferEffectiveness();
+    // idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankPlantConnectionHeatTransferEffectiveness,
+    // storageTankPlantConnectionHeatTransferEffectiveness);
 
     // Storage Tank Minimum Operating Limit Fluid Temperature: boost::optional<double>
-    if (boost::optional<double> storageTankMinimumOperatingLimitFluidTemperature_ = modelObject.storageTankMinimumOperatingLimitFluidTemperature()) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankMinimumOperatingLimitFluidTemperature,
-                          storageTankMinimumOperatingLimitFluidTemperature_.get());
-    }
+    // if (boost::optional<double> storageTankMinimumOperatingLimitFluidTemperature_ = modelObject.storageTankMinimumOperatingLimitFluidTemperature()) {
+    // idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankMinimumOperatingLimitFluidTemperature,
+    // storageTankMinimumOperatingLimitFluidTemperature_.get());
+    // }
 
     // Storage Tank Maximum Operating Limit Fluid Temperature: boost::optional<double>
-    if (boost::optional<double> storageTankMaximumOperatingLimitFluidTemperature_ = modelObject.storageTankMaximumOperatingLimitFluidTemperature()) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankMaximumOperatingLimitFluidTemperature,
-                          storageTankMaximumOperatingLimitFluidTemperature_.get());
-    }
+    // if (boost::optional<double> storageTankMaximumOperatingLimitFluidTemperature_ = modelObject.storageTankMaximumOperatingLimitFluidTemperature()) {
+    // idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankMaximumOperatingLimitFluidTemperature,
+    // storageTankMaximumOperatingLimitFluidTemperature_.get());
+    // }
 
     return idfObject;
   }
