@@ -39,7 +39,7 @@ namespace model {
   class Schedule;
   class Connection;
   class Curve;
-  class WaterStorageTank;
+  // class WaterStorageTank;
 
   namespace detail {
 
@@ -307,9 +307,9 @@ namespace model {
 
       boost::optional<Schedule> basinHeaterAvailabilitySchedule() const;
 
-      boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
+      // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
-      boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
+      // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
 
       boost::optional<Connection> storageTankPlantConnectionInletNode() const;
 
@@ -655,13 +655,13 @@ namespace model {
 
       void resetBasinHeaterAvailabilitySchedule();
 
-      bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
+      // bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
-      void resetSupplyWaterStorageTank();
+      // void resetSupplyWaterStorageTank();
 
-      bool setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank);
+      // bool setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
-      void resetCondensateCollectionWaterStorageTank();
+      // void resetCondensateCollectionWaterStorageTank();
 
       bool setStorageTankPlantConnectionInletNode(const Connection& connection);
 

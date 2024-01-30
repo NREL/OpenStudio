@@ -840,18 +840,18 @@ namespace energyplus {
     }
 
     // Supply Water Storage Tank Name: Optional Object
-    if (boost::optional<WaterStorageTank> supplyWaterStorageTank_ = modelObject.supplyWaterStorageTank()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(supplyWaterStorageTank_.get())) {
-        idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::SupplyWaterStorageTankName, wo_->nameString());
-      }
-    }
+    // if (boost::optional<WaterStorageTank> supplyWaterStorageTank_ = modelObject.supplyWaterStorageTank()) {
+    // if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(supplyWaterStorageTank_.get())) {
+    // idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::SupplyWaterStorageTankName, wo_->nameString());
+    // }
+    // }
 
     // Condensate Collection Water Storage Tank Name: Optional Object
-    if (boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank_ = modelObject.condensateCollectionWaterStorageTank()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(condensateCollectionWaterStorageTank_.get())) {
-        idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondensateCollectionWaterStorageTankName, wo_->nameString());
-      }
-    }
+    // if (boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank_ = modelObject.condensateCollectionWaterStorageTank()) {
+    // if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(condensateCollectionWaterStorageTank_.get())) {
+    // idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondensateCollectionWaterStorageTankName, wo_->nameString());
+    // }
+    // }
 
     // Storage Tank Plant Connection Inlet Node Name: Optional Node
     Node storageTankPlantConnectionInletNodeName = modelObject.storageTankPlantConnectionInletNodeName();

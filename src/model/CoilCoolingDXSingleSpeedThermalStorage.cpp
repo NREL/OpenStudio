@@ -36,8 +36,8 @@
 #include "Connection_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
-#include "WaterStorageTank.hpp"
-#include "WaterStorageTank_Impl.hpp"
+// #include "WaterStorageTank.hpp"
+// #include "WaterStorageTank_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
@@ -796,15 +796,15 @@ namespace model {
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::BasinHeaterAvailabilitySchedule);
     }
 
-    boost::optional<WaterStorageTank> CoilCoolingDXSingleSpeedThermalStorage_Impl::supplyWaterStorageTank() const {
-      return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(
-        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::SupplyWaterStorageTank);
-    }
+    // boost::optional<WaterStorageTank> CoilCoolingDXSingleSpeedThermalStorage_Impl::supplyWaterStorageTank() const {
+    // return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(
+    // OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::SupplyWaterStorageTank);
+    // }
 
-    boost::optional<WaterStorageTank> CoilCoolingDXSingleSpeedThermalStorage_Impl::condensateCollectionWaterStorageTank() const {
-      return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(
-        OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondensateCollectionWaterStorageTank);
-    }
+    // boost::optional<WaterStorageTank> CoilCoolingDXSingleSpeedThermalStorage_Impl::condensateCollectionWaterStorageTank() const {
+    // return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(
+    // OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondensateCollectionWaterStorageTank);
+    // }
 
     boost::optional<Connection> CoilCoolingDXSingleSpeedThermalStorage_Impl::storageTankPlantConnectionInletNode() const {
       return getObject<ModelObject>().getModelObjectTarget<Connection>(
@@ -1841,26 +1841,26 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::SupplyWaterStorageTank, waterStorageTank.handle());
-      return result;
-    }
+    // bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank) {
+    // const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::SupplyWaterStorageTank, waterStorageTank.handle());
+    // return result;
+    // }
 
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetSupplyWaterStorageTank() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::SupplyWaterStorageTank, "");
-      OS_ASSERT(result);
-    }
+    // void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetSupplyWaterStorageTank() {
+    // const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::SupplyWaterStorageTank, "");
+    // OS_ASSERT(result);
+    // }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank) {
-      const bool result =
-        setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondensateCollectionWaterStorageTank, waterStorageTank.handle());
-      return result;
-    }
+    // bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank) {
+    // const bool result =
+    // setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondensateCollectionWaterStorageTank, waterStorageTank.handle());
+    // return result;
+    // }
 
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetCondensateCollectionWaterStorageTank() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondensateCollectionWaterStorageTank, "");
-      OS_ASSERT(result);
-    }
+    // void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetCondensateCollectionWaterStorageTank() {
+    // const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondensateCollectionWaterStorageTank, "");
+    // OS_ASSERT(result);
+    // }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setStorageTankPlantConnectionInletNode(const Connection& connection) {
       const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankPlantConnectionInletNode, connection.handle());
@@ -2521,13 +2521,13 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->basinHeaterAvailabilitySchedule();
   }
 
-  boost::optional<WaterStorageTank> CoilCoolingDXSingleSpeedThermalStorage::supplyWaterStorageTank() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->supplyWaterStorageTank();
-  }
+  // boost::optional<WaterStorageTank> CoilCoolingDXSingleSpeedThermalStorage::supplyWaterStorageTank() const {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->supplyWaterStorageTank();
+  // }
 
-  boost::optional<WaterStorageTank> CoilCoolingDXSingleSpeedThermalStorage::condensateCollectionWaterStorageTank() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->condensateCollectionWaterStorageTank();
-  }
+  // boost::optional<WaterStorageTank> CoilCoolingDXSingleSpeedThermalStorage::condensateCollectionWaterStorageTank() const {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->condensateCollectionWaterStorageTank();
+  // }
 
   boost::optional<Connection> CoilCoolingDXSingleSpeedThermalStorage::storageTankPlantConnectionInletNode() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankPlantConnectionInletNode();
@@ -3281,21 +3281,21 @@ namespace model {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetBasinHeaterAvailabilitySchedule();
   }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setSupplyWaterStorageTank(waterStorageTank);
-  }
+  // bool CoilCoolingDXSingleSpeedThermalStorage::setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank) {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setSupplyWaterStorageTank(waterStorageTank);
+  // }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetSupplyWaterStorageTank() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetSupplyWaterStorageTank();
-  }
+  // void CoilCoolingDXSingleSpeedThermalStorage::resetSupplyWaterStorageTank() {
+  // getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetSupplyWaterStorageTank();
+  // }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCondensateCollectionWaterStorageTank(waterStorageTank);
-  }
+  // bool CoilCoolingDXSingleSpeedThermalStorage::setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank) {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCondensateCollectionWaterStorageTank(waterStorageTank);
+  // }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetCondensateCollectionWaterStorageTank() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCondensateCollectionWaterStorageTank();
-  }
+  // void CoilCoolingDXSingleSpeedThermalStorage::resetCondensateCollectionWaterStorageTank() {
+  // getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCondensateCollectionWaterStorageTank();
+  // }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankPlantConnectionInletNode(const Connection& connection) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankPlantConnectionInletNode(connection);
