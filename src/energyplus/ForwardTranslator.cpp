@@ -1003,6 +1003,15 @@ namespace energyplus {
         }
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed_ThermalStorage: {
+        auto coil = modelObject.cast<CoilCoolingDXSingleSpeedThermalStorage>();
+        if (isHVACComponentWithinUnitary(coil)) {
+          retVal = translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(coil);
+        } else {
+          retVal = translateCoilCoolingDXSingleSpeedThermalStorage(coil);
+        }
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed: {
         auto coil = modelObject.cast<CoilCoolingDXMultiSpeed>();
         retVal = translateCoilCoolingDXMultiSpeed(coil);
