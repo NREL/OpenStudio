@@ -106,6 +106,54 @@ namespace model {
       return OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNode;
     }
 
+    ModelObject CoilCoolingDXSingleSpeedThermalStorage_Impl::clone(Model model) const {
+      auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXSingleSpeed>();
+
+      return std::move(newCoil);
+    }
+
+    std::vector<ModelObject> CoilCoolingDXSingleSpeedThermalStorage_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      // TODO
+
+      return result;
+    }
+
+    boost::optional<HVACComponent> CoilCoolingDXSingleSpeedThermalStorage_Impl::containingHVACComponent() const {
+      // TODO
+
+      return boost::none;
+    }
+
+    boost::optional<ZoneHVACComponent> CoilCoolingDXSingleSpeedThermalStorage_Impl::containingZoneHVACComponent() const {
+      // TODO
+
+      return boost::none;
+    }
+
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::addToNode(Node& node) {
+      if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
+        if (!airLoop->demandComponent(node.handle())) {
+          // TODO: JM 2019-03-12 I'm not sure we shouldn't just restrict to ANY containingHVACComponent (disallow if part of a UnitarySystem)
+          auto t_containingHVACComponent = containingHVACComponent();
+          if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+            LOG(Warn,
+                this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingDXHeatExchangerAssisted. "
+                                            "Please call CoilSystemCoolingDXHeatExchangerAssisted::addToNode instead");
+          } else {
+            return StraightComponent_Impl::addToNode(node);
+          }
+        }
+      } else if (boost::optional<AirLoopHVACOutdoorAirSystem> oas = node.airLoopHVACOutdoorAirSystem()) {
+        if (oas->airLoopHVACDedicatedOutdoorAirSystem()) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
+      return false;
+    }
+
     ComponentType CoilCoolingDXSingleSpeedThermalStorage_Impl::componentType() const {
       return ComponentType::Cooling;
     }
