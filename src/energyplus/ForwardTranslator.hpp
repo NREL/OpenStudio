@@ -762,7 +762,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeedThermalStorage(model::CoilCoolingDXSingleSpeedThermalStorage& modelObject);
 
-    boost::optional<IdfObject> translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(model::CoilCoolingDXSingleSpeedThermalStorage& modelObject);
+    boost::optional<IdfObject>
+      translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(model::CoilCoolingDXSingleSpeedThermalStorage& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDX(model::CoilCoolingDX& modelObject);
 
