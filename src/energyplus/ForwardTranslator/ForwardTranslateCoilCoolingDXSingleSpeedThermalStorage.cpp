@@ -768,9 +768,6 @@ namespace energyplus {
                           coldWeatherOperationAncillaryPower_.get());
     }
 
-
-
-
     // Condenser Air Inlet Node Name: Required Node
     std::string condenserInletNodeName(modelObject.nameString() + " Condenser Air Inlet Node");
     // Create an OutdoorAir:NodeList for the condenser inlet conditions to be set directly from weather file
