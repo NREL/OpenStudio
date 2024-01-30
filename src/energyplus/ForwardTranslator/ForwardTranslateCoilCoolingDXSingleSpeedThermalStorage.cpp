@@ -110,10 +110,13 @@ namespace energyplus {
     }
 
     // Storage Tank Ambient Temperature Node Name: Required Node
-    Node storageTankAmbientTemperatureNodeName = modelObject.storageTankAmbientTemperatureNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(storageTankAmbientTemperatureNodeName)) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankAmbientTemperatureNodeName, wo_->nameString());
-    }
+    std::string storageTankAmbientTemperatureNodeName(modelObject.nameString() + " Storage Tank Ambient Temperature Node");
+    // Create an OutdoorAir:NodeList for the storage tank conditions to be set directly from weather file
+    IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+    oaNodeListIdf.setString(0, storageTankAmbientTemperatureNodeName);
+    m_idfObjects.push_back(oaNodeListIdf);
+    idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankAmbientTemperatureNodeName,
+                        storageTankAmbientTemperatureNodeName);
 
     // Storage Tank to Ambient U-value Times Area Heat Transfer Coefficient: Required Double
     const double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient =
@@ -771,9 +774,9 @@ namespace energyplus {
     // Condenser Air Inlet Node Name: Required Node
     std::string condenserInletNodeName(modelObject.nameString() + " Condenser Air Inlet Node");
     // Create an OutdoorAir:NodeList for the condenser inlet conditions to be set directly from weather file
-    IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
-    oaNodeListIdf.setString(0, condenserInletNodeName);
-    m_idfObjects.push_back(oaNodeListIdf);
+    IdfObject oaNodeListIdf2(openstudio::IddObjectType::OutdoorAir_NodeList);
+    oaNodeListIdf2.setString(0, condenserInletNodeName);
+    m_idfObjects.push_back(oaNodeListIdf2);
     idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirInletNodeName, condenserInletNodeName);
 
     // Condenser Air Outlet Node Name: Required Node

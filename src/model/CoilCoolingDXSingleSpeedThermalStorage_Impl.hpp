@@ -687,10 +687,6 @@ namespace model {
 
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
       boost::optional<Connection> optionalStorageTankAmbientTemperatureNode() const;
-      boost::optional<Connection> optionalEvaporatorAirInletNode() const;
-      boost::optional<Connection> optionalEvaporatorAirOutletNode() const;
-      boost::optional<Connection> optionalCondenserAirInletNode() const;
-      boost::optional<Connection> optionalCondenserAirOutletNode() const;
     };
 
   }  // namespace detail

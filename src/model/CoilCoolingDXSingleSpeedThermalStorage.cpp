@@ -109,23 +109,18 @@ namespace model {
     }
 
     ComponentType CoilCoolingDXSingleSpeedThermalStorage_Impl::componentType() const {
-      // TODO
-      return ComponentType::None;
+      return ComponentType::Cooling;
     }
 
     std::vector<FuelType> CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingFuelTypes() const {
-      // TODO
-      return {};
+      return {FuelType::Electricity};
     }
 
     std::vector<FuelType> CoilCoolingDXSingleSpeedThermalStorage_Impl::heatingFuelTypes() const {
-      // TODO
       return {};
     }
 
     std::vector<AppGFuelType> CoilCoolingDXSingleSpeedThermalStorage_Impl::appGHeatingFuelTypes() const {
-
-      // TODO
       return {};
     }
 
@@ -222,22 +217,6 @@ namespace model {
 
     boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizedRatedEvaporatorAirFlowRate() {
       return getAutosizedValue("TODO_CHECK_SQL Rated Evaporator Air Flow Rate", "m3/s");
-    }
-
-    Connection CoilCoolingDXSingleSpeedThermalStorage_Impl::evaporatorAirInletNode() const {
-      boost::optional<Connection> value = optionalEvaporatorAirInletNode();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Evaporator Air Inlet Node attached.");
-      }
-      return value.get();
-    }
-
-    Connection CoilCoolingDXSingleSpeedThermalStorage_Impl::evaporatorAirOutletNode() const {
-      boost::optional<Connection> value = optionalEvaporatorAirOutletNode();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Evaporator Air Outlet Node attached.");
-      }
-      return value.get();
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::coolingOnlyModeAvailable() const {
@@ -920,16 +899,6 @@ namespace model {
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizeRatedEvaporatorAirFlowRate() {
       const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::RatedEvaporatorAirFlowRate, "autosize");
       OS_ASSERT(result);
-    }
-
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setEvaporatorAirInletNode(const Connection& connection) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNode, connection.handle());
-      return result;
-    }
-
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setEvaporatorAirOutletNode(const Connection& connection) {
-      const bool result = setPointer(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNode, connection.handle());
-      return result;
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeAvailable(bool coolingOnlyModeAvailable) {
@@ -1934,22 +1903,6 @@ namespace model {
         OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTankAmbientTemperatureNode);
     }
 
-    boost::optional<Connection> CoilCoolingDXSingleSpeedThermalStorage_Impl::optionalEvaporatorAirInletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNode);
-    }
-
-    boost::optional<Connection> CoilCoolingDXSingleSpeedThermalStorage_Impl::optionalEvaporatorAirOutletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNode);
-    }
-
-    boost::optional<Connection> CoilCoolingDXSingleSpeedThermalStorage_Impl::optionalCondenserAirInletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirInletNode);
-    }
-
-    boost::optional<Connection> CoilCoolingDXSingleSpeedThermalStorage_Impl::optionalCondenserAirOutletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirOutletNode);
-    }
-
   }  // namespace detail
 
   CoilCoolingDXSingleSpeedThermalStorage::CoilCoolingDXSingleSpeedThermalStorage(const Model& model)
@@ -1965,8 +1918,6 @@ namespace model {
     ok = setStorageType("Ice");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     autocalculateIceStorageCapacity();
-    // ok = setStorageTankAmbientTemperatureNode();  // FIXME: FT an OutdoorAir:Node?
-    // OS_ASSERT(ok);
     ok = setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(7.913);  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     autosizeRatedEvaporatorAirFlowRate();
@@ -2129,14 +2080,6 @@ namespace model {
 
   boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::autosizedRatedEvaporatorAirFlowRate() {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->autosizedRatedEvaporatorAirFlowRate();
-  }
-
-  Connection CoilCoolingDXSingleSpeedThermalStorage::evaporatorAirInletNode() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->evaporatorAirInletNode();
-  }
-
-  Connection CoilCoolingDXSingleSpeedThermalStorage::evaporatorAirOutletNode() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->evaporatorAirOutletNode();
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::coolingOnlyModeAvailable() const {
@@ -2482,14 +2425,6 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->coldWeatherOperationAncillaryPower();
   }
 
-  Connection CoilCoolingDXSingleSpeedThermalStorage::condenserAirInletNode() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->condenserAirInletNode();
-  }
-
-  Connection CoilCoolingDXSingleSpeedThermalStorage::condenserAirOutletNode() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->condenserAirOutletNode();
-  }
-
   boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::condenserDesignAirFlowRate() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->condenserDesignAirFlowRate();
   }
@@ -2650,14 +2585,6 @@ namespace model {
 
   void CoilCoolingDXSingleSpeedThermalStorage::autosizeRatedEvaporatorAirFlowRate() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->autosizeRatedEvaporatorAirFlowRate();
-  }
-
-  bool CoilCoolingDXSingleSpeedThermalStorage::setEvaporatorAirInletNode(const Connection& connection) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setEvaporatorAirInletNode(connection);
-  }
-
-  bool CoilCoolingDXSingleSpeedThermalStorage::setEvaporatorAirOutletNode(const Connection& connection) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setEvaporatorAirOutletNode(connection);
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setCoolingOnlyModeAvailable(bool coolingOnlyModeAvailable) {
@@ -3254,14 +3181,6 @@ namespace model {
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetColdWeatherOperationAncillaryPower() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetColdWeatherOperationAncillaryPower();
-  }
-
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCondenserAirInletNode(const Connection& connection) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCondenserAirInletNode(connection);
-  }
-
-  bool CoilCoolingDXSingleSpeedThermalStorage::setCondenserAirOutletNode(const Connection& connection) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCondenserAirOutletNode(connection);
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setCondenserDesignAirFlowRate(double condenserDesignAirFlowRate) {
