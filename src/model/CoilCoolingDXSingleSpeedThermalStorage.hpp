@@ -37,7 +37,6 @@ namespace openstudio {
 
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class Schedule;
   class FluidAndGlycol;
   class Connection;
@@ -59,10 +58,6 @@ namespace model {
 
     explicit CoilCoolingDXSingleSpeedThermalStorage(const Model& model);
 
-    explicit CoilCoolingDXSingleSpeedThermalStorage(const Model& model, bool coolingOnlyModeAvailable, bool coolingAndChargeModeAvailable,
-                                                    bool coolingAndDischargeModeAvailable, bool chargeOnlyModeAvailable,
-                                                    bool dischargeOnlyModeAvailable);
-
     virtual ~CoilCoolingDXSingleSpeedThermalStorage() = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXSingleSpeedThermalStorage(const CoilCoolingDXSingleSpeedThermalStorage& other) = default;
@@ -83,17 +78,14 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule availabilitySchedule() const;
 
     std::string operatingModeControlMethod() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> operationModeControlSchedule() const;
 
     std::string storageType() const;
 
-    // TODO: Check return type. From object lists, some candidates are: FluidAndGlycol.
     boost::optional<FluidAndGlycol> userDefinedFluidType() const;
 
     boost::optional<double> fluidStorageVolume() const;
@@ -106,7 +98,6 @@ namespace model {
 
     boost::optional<double> storageCapacitySizingFactor() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     Connection storageTankAmbientTemperatureNode() const;
 
     double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient() const;
@@ -118,12 +109,6 @@ namespace model {
     bool isRatedEvaporatorAirFlowRateAutosized() const;
 
     boost::optional<double> autosizedRatedEvaporatorAirFlowRate();
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection evaporatorAirInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection evaporatorAirOutletNode() const;
 
     bool coolingOnlyModeAvailable() const;
 
@@ -137,25 +122,18 @@ namespace model {
 
     double coolingOnlyModeRatedCOP() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingOnlyModePartLoadFractionCorrelationCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const;
 
     bool coolingAndChargeModeAvailable() const;
@@ -178,40 +156,28 @@ namespace model {
 
     double coolingAndChargeModeChargingRatedCOP() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve, Curve.
     boost::optional<Curve> coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const;
 
     bool coolingAndDischargeModeAvailable() const;
@@ -234,43 +200,30 @@ namespace model {
 
     double coolingAndDischargeModeDischargingRatedCOP() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve, Curve.
     boost::optional<Curve> coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve() const;
 
     bool chargeOnlyModeAvailable() const;
@@ -283,10 +236,8 @@ namespace model {
 
     double chargeOnlyModeChargingRatedCOP() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve() const;
 
     bool dischargeOnlyModeAvailable() const;
@@ -301,25 +252,18 @@ namespace model {
 
     double dischargeOnlyModeRatedCOP() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> dischargeOnlyModePartLoadFractionCorrelationCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve, Curve.
     boost::optional<Curve> dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Curve.
     boost::optional<Curve> dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve() const;
 
     boost::optional<double> ancillaryElectricPower() const;
@@ -327,12 +271,6 @@ namespace model {
     boost::optional<double> coldWeatherOperationMinimumOutdoorAirTemperature() const;
 
     boost::optional<double> coldWeatherOperationAncillaryPower() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection condenserAirInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection condenserAirOutletNode() const;
 
     boost::optional<double> condenserDesignAirFlowRate() const;
 
@@ -354,19 +292,14 @@ namespace model {
 
     double basinHeaterSetpointTemperature() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> basinHeaterAvailabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
     boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
-    // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
     boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> storageTankPlantConnectionInletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> storageTankPlantConnectionOutletNode() const;
 
     boost::optional<double> storageTankPlantConnectionDesignFlowRate() const;
@@ -381,21 +314,16 @@ namespace model {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     bool setOperatingModeControlMethod(const std::string& operatingModeControlMethod);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setOperationModeControlSchedule(Schedule& schedule);
 
     void resetOperationModeControlSchedule();
 
     bool setStorageType(const std::string& storageType);
 
-    // TODO: Check argument type. From object lists, some candidates are: FluidAndGlycol.
     bool setUserDefinedFluidType(const FluidAndGlycol& fluidAndGlycol);
 
     void resetUserDefinedFluidType();
@@ -416,7 +344,6 @@ namespace model {
 
     void resetStorageCapacitySizingFactor();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setStorageTankAmbientTemperatureNode(const Connection& connection);
 
     bool setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient);
@@ -428,12 +355,6 @@ namespace model {
     bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
 
     void autosizeRatedEvaporatorAirFlowRate();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setEvaporatorAirInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setEvaporatorAirOutletNode(const Connection& connection);
 
     bool setCoolingOnlyModeAvailable(bool coolingOnlyModeAvailable);
 
@@ -447,37 +368,30 @@ namespace model {
 
     bool setCoolingOnlyModeRatedCOP(double coolingOnlyModeRatedCOP);
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingOnlyModePartLoadFractionCorrelationCurve(const Curve& Curve);
 
     void resetCoolingOnlyModePartLoadFractionCorrelationCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve();
@@ -506,62 +420,50 @@ namespace model {
 
     bool setCoolingAndChargeModeChargingRatedCOP(double coolingAndChargeModeChargingRatedCOP);
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve, Curve.
     bool setCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve();
@@ -590,67 +492,54 @@ namespace model {
 
     bool setCoolingAndDischargeModeDischargingRatedCOP(double coolingAndDischargeModeDischargingRatedCOP);
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve, Curve.
     bool setCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve();
@@ -667,12 +556,10 @@ namespace model {
 
     bool setChargeOnlyModeChargingRatedCOP(double chargeOnlyModeChargingRatedCOP);
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve();
@@ -693,37 +580,30 @@ namespace model {
 
     bool setDischargeOnlyModeRatedCOP(double dischargeOnlyModeRatedCOP);
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setDischargeOnlyModePartLoadFractionCorrelationCurve(const Curve& Curve);
 
     void resetDischargeOnlyModePartLoadFractionCorrelationCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve, Curve.
     bool setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(const Curve& Curve);
 
     void resetDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Curve.
     bool setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(const Curve& Curve);
 
     void resetDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve();
@@ -739,12 +619,6 @@ namespace model {
     bool setColdWeatherOperationAncillaryPower(double coldWeatherOperationAncillaryPower);
 
     void resetColdWeatherOperationAncillaryPower();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setCondenserAirInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setCondenserAirOutletNode(const Connection& connection);
 
     bool setCondenserDesignAirFlowRate(double condenserDesignAirFlowRate);
 
@@ -764,28 +638,22 @@ namespace model {
 
     bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setBasinHeaterAvailabilitySchedule(Schedule& schedule);
 
     void resetBasinHeaterAvailabilitySchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
     bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
     void resetSupplyWaterStorageTank();
 
-    // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
     bool setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
     void resetCondensateCollectionWaterStorageTank();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setStorageTankPlantConnectionInletNode(const Connection& connection);
 
     void resetStorageTankPlantConnectionInletNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setStorageTankPlantConnectionOutletNode(const Connection& connection);
 
     void resetStorageTankPlantConnectionOutletNode();
