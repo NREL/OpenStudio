@@ -790,7 +790,7 @@ namespace energyplus {
     idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirInletNodeName, condenserInletNodeName);
 
     // Condenser Air Outlet Node Name: Required Node
-    std::string condenserOutletNodeName(modelObject.nameString() + " Condenser Outlet Node");
+    std::string condenserOutletNodeName(modelObject.nameString() + " Condenser Air Outlet Node");
     idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirOutletNodeName, condenserOutletNodeName);
 
     // Condenser Design Air Flow Rate

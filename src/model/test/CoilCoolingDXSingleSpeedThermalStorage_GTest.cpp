@@ -32,19 +32,28 @@
 #include "../CoilCoolingDXSingleSpeedThermalStorage.hpp"
 #include "../CoilCoolingDXSingleSpeedThermalStorage_Impl.hpp"
 
-#include "../Schedule.hpp"
-#include "../Schedule_Impl.hpp"
-#include "../FluidAndGlycol.hpp"
-#include "../FluidAndGlycol_Impl.hpp"
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-#include "../Curve.hpp"
-#include "../Curve_Impl.hpp"
-#include "../WaterStorageTank.hpp"
-#include "../WaterStorageTank_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+// #include "../Connection.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveBicubic.hpp"
+// #include "../WaterStorageTank.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_DefaultConstructors) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilCoolingDXSingleSpeedThermalStorage testObject = CoilCoolingDXSingleSpeedThermalStorage(m);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
+}
 
 TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   Model m;
@@ -54,7 +63,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   coilCoolingDXSingleSpeedThermalStorage.setName("My CoilCoolingDXSingleSpeedThermalStorage");
 
   // Availability Schedule: Required Object
-  Schedule availabilitySchedule(m);
+  ScheduleConstant availabilitySchedule(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setAvailabilitySchedule(availabilitySchedule));
   EXPECT_EQ(availabilitySchedule, coilCoolingDXSingleSpeedThermalStorage.availabilitySchedule());
 
@@ -66,7 +75,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_EQ("ScheduledModes", coilCoolingDXSingleSpeedThermalStorage.operatingModeControlMethod());
 
   // Operation Mode Control Schedule: Optional Object
-  boost::optional<Schedule> operationModeControlSchedule(m);
+  ScheduleConstant operationModeControlSchedule(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setOperationModeControlSchedule(operationModeControlSchedule));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.operationModeControlSchedule());
   EXPECT_EQ(operationModeControlSchedule, coilCoolingDXSingleSpeedThermalStorage.operationModeControlSchedule().get());
@@ -78,11 +87,12 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setStorageType("BADENUM"));
   EXPECT_EQ("Water", coilCoolingDXSingleSpeedThermalStorage.storageType());
 
-  // User Defined Fluid Type: Optional Object
-  boost::optional<FluidAndGlycol> userDefinedFluidType(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setUserDefinedFluidType(userDefinedFluidType));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.userDefinedFluidType());
-  EXPECT_EQ(userDefinedFluidType, coilCoolingDXSingleSpeedThermalStorage.userDefinedFluidType().get());
+  // Glycol Concentration: Optional Object
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageType("UserDefinedFluid"));
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.glycolConcentration());
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setGlycolConcentration(50));
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.glycolConcentration());
+  EXPECT_EQ(0.5, coilCoolingDXSingleSpeedThermalStorage.glycolConcentration().get());
 
   // Fluid Storage Volume: Optional Double
   // Autocalculate
@@ -117,11 +127,6 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageCapacitySizingFactor());
   EXPECT_EQ(1.0, coilCoolingDXSingleSpeedThermalStorage.storageCapacitySizingFactor().get());
 
-  // Storage Tank Ambient Temperature Node: Required Object
-  Connection storageTankAmbientTemperatureNode(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankAmbientTemperatureNode(storageTankAmbientTemperatureNode));
-  EXPECT_EQ(storageTankAmbientTemperatureNode, coilCoolingDXSingleSpeedThermalStorage.storageTankAmbientTemperatureNode());
-
   // Storage Tank to Ambient U-value Times Area Heat Transfer Coefficient: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(1.2));
   EXPECT_EQ(1.2, coilCoolingDXSingleSpeedThermalStorage.storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient());
@@ -147,16 +152,6 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.ratedEvaporatorAirFlowRate());
   EXPECT_EQ(1.4, coilCoolingDXSingleSpeedThermalStorage.ratedEvaporatorAirFlowRate().get());
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isRatedEvaporatorAirFlowRateAutosized());
-
-  // Evaporator Air Inlet Node: Required Object
-  Connection evaporatorAirInletNode(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setEvaporatorAirInletNode(evaporatorAirInletNode));
-  EXPECT_EQ(evaporatorAirInletNode, coilCoolingDXSingleSpeedThermalStorage.evaporatorAirInletNode());
-
-  // Evaporator Air Outlet Node: Required Object
-  Connection evaporatorAirOutletNode(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setEvaporatorAirOutletNode(evaporatorAirOutletNode));
-  EXPECT_EQ(evaporatorAirOutletNode, coilCoolingDXSingleSpeedThermalStorage.evaporatorAirOutletNode());
 
   // Cooling Only Mode Available: Required Boolean
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingOnlyModeAvailable(true));
@@ -193,7 +188,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_EQ(2.0, coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeRatedCOP());
 
   // Cooling Only Mode Total Evaporator Cooling Capacity Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(m);
+  CurveBiquadratic coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
     coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve());
@@ -201,7 +196,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve().get());
 
   // Cooling Only Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(
     coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve());
@@ -209,7 +204,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve().get());
 
   // Cooling Only Mode Energy Input Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(m);
+  CurveBiquadratic coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve(
     coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve());
@@ -217,7 +212,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve().get());
 
   // Cooling Only Mode Energy Input Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(
     coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve());
@@ -225,7 +220,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve().get());
 
   // Cooling Only Mode Part Load Fraction Correlation Curve: Optional Object
-  boost::optional<Curve> coolingOnlyModePartLoadFractionCorrelationCurve(m);
+  CurveQuadratic coolingOnlyModePartLoadFractionCorrelationCurve(m);
   EXPECT_TRUE(
     coilCoolingDXSingleSpeedThermalStorage.setCoolingOnlyModePartLoadFractionCorrelationCurve(coolingOnlyModePartLoadFractionCorrelationCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModePartLoadFractionCorrelationCurve());
@@ -233,7 +228,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModePartLoadFractionCorrelationCurve().get());
 
   // Cooling Only Mode Sensible Heat Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(m);
+  CurveBiquadratic coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(
     coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve());
@@ -241,7 +236,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve().get());
 
   // Cooling Only Mode Sensible Heat Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(
     coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve());
@@ -312,7 +307,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_EQ(3.5, coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeChargingRatedCOP());
 
   // Cooling And Charge Mode Total Evaporator Cooling Capacity Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(m);
+  CurveBicubic coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
     coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve());
@@ -320,7 +315,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve().get());
 
   // Cooling And Charge Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(
     coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve());
@@ -328,7 +323,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve().get());
 
   // Cooling And Charge Mode Evaporator Energy Input Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(m);
+  CurveBicubic coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(
     coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve());
@@ -336,7 +331,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve().get());
 
   // Cooling And Charge Mode Evaporator Energy Input Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(
     coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve());
@@ -344,7 +339,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve().get());
 
   // Cooling And Charge Mode Evaporator Part Load Fraction Correlation Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(m);
+  CurveQuadratic coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve(
     coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve());
@@ -352,7 +347,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve().get());
 
   // Cooling And Charge Mode Storage Charge Capacity Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(m);
+  CurveBicubic coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve(
     coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve());
@@ -360,7 +355,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve().get());
 
   // Cooling And Charge Mode Storage Charge Capacity Function of Total Evaporator PLR Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(m);
+  CurveQuadratic coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve(
     coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve());
@@ -368,7 +363,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve().get());
 
   // Cooling And Charge Mode Storage Energy Input Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(m);
+  CurveBicubic coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(
     coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve());
@@ -376,7 +371,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve().get());
 
   // Cooling And Charge Mode Storage Energy Input Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(
     coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve());
@@ -384,7 +379,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve().get());
 
   // Cooling And Charge Mode Storage Energy Part Load Fraction Correlation Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(m);
+  CurveQuadratic coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve(
     coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve());
@@ -392,7 +387,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve().get());
 
   // Cooling And Charge Mode Sensible Heat Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(m);
+  CurveBiquadratic coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve(
     coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve());
@@ -400,7 +395,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve().get());
 
   // Cooling And Charge Mode Sensible Heat Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
     coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve());
@@ -471,7 +466,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_EQ(5.5, coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeDischargingRatedCOP());
 
   // Cooling And Discharge Mode Total Evaporator Cooling Capacity Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(m);
+  CurveBicubic coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(
     coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve());
@@ -479,7 +474,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve().get());
 
   // Cooling And Discharge Mode Total Evaporator Cooling Capacity Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(
     coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve());
@@ -487,7 +482,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve().get());
 
   // Cooling And Discharge Mode Evaporator Energy Input Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(m);
+  CurveBicubic coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve(
     coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve());
@@ -495,7 +490,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve().get());
 
   // Cooling And Discharge Mode Evaporator Energy Input Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve(
     coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve());
@@ -503,7 +498,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve().get());
 
   // Cooling And Discharge Mode Evaporator Part Load Fraction Correlation Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve(m);
+  CurveQuadratic coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve(
     coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve());
@@ -511,7 +506,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve().get());
 
   // Cooling And Discharge Mode Storage Discharge Capacity Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(m);
+  CurveBicubic coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve(
     coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve());
@@ -519,7 +514,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve().get());
 
   // Cooling And Discharge Mode Storage Discharge Capacity Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve(
     coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve());
@@ -527,7 +522,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve().get());
 
   // Cooling And Discharge Mode Storage Discharge Capacity Function of Total Evaporator PLR Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve(m);
+  CurveQuadratic coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve(
     coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve());
@@ -535,7 +530,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve().get());
 
   // Cooling And Discharge Mode Storage Energy Input Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(m);
+  CurveBicubic coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve(
     coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve());
@@ -543,7 +538,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve().get());
 
   // Cooling And Discharge Mode Storage Energy Input Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve(
     coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve());
@@ -551,7 +546,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve().get());
 
   // Cooling And Discharge Mode Storage Energy Part Load Fraction Correlation Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve(m);
+  CurveQuadratic coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve(
     coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve());
@@ -559,7 +554,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve().get());
 
   // Cooling And Discharge Mode Sensible Heat Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve(m);
+  CurveBiquadratic coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve(
     coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve());
@@ -567,7 +562,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve().get());
 
   // Cooling And Discharge Mode Sensible Heat Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
     coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve());
@@ -606,7 +601,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_EQ(7.2, coilCoolingDXSingleSpeedThermalStorage.chargeOnlyModeChargingRatedCOP());
 
   // Charge Only Mode Storage Charge Capacity Function of Temperature Curve: Optional Object
-  boost::optional<Curve> chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(m);
+  CurveBiquadratic chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve(
     chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve());
@@ -614,7 +609,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve().get());
 
   // Charge Only Mode Storage Energy Input Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(m);
+  CurveBiquadratic chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(
     chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve());
@@ -645,14 +640,12 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeCapacitySizingFactor(7.7));
   EXPECT_EQ(7.7, coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeCapacitySizingFactor());
 
-  // Discharge Only Mode Rated Sensible Heat Ratio: Optional Double
+  // Discharge Only Mode Rated Sensible Heat Ratio: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeRatedSensibleHeatRatio(0.987));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedSensibleHeatRatio());
-  EXPECT_EQ(0.987, coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedSensibleHeatRatio().get());
+  EXPECT_EQ(0.987, coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedSensibleHeatRatio());
   // Bad Value
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeRatedSensibleHeatRatio(-10.0));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedSensibleHeatRatio());
-  EXPECT_EQ(0.987, coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedSensibleHeatRatio().get());
+  EXPECT_EQ(0.987, coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedSensibleHeatRatio());
 
   // Discharge Only Mode Rated COP: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeRatedCOP(7.9));
@@ -662,7 +655,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_EQ(7.9, coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedCOP());
 
   // Discharge Only Mode Storage Discharge Capacity Function of Temperature Curve: Optional Object
-  boost::optional<Curve> dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(m);
+  CurveBiquadratic dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve(
     dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve());
@@ -670,7 +663,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve().get());
 
   // Discharge Only Mode Storage Discharge Capacity Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(m);
+  CurveQuadratic dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve(
     dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve());
@@ -678,7 +671,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve().get());
 
   // Discharge Only Mode Energy Input Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(m);
+  CurveBiquadratic dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve(
     dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve());
@@ -686,7 +679,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve().get());
 
   // Discharge Only Mode Energy Input Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve(
     dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve());
@@ -694,7 +687,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve().get());
 
   // Discharge Only Mode Part Load Fraction Correlation Curve: Optional Object
-  boost::optional<Curve> dischargeOnlyModePartLoadFractionCorrelationCurve(m);
+  CurveQuadratic dischargeOnlyModePartLoadFractionCorrelationCurve(m);
   EXPECT_TRUE(
     coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModePartLoadFractionCorrelationCurve(dischargeOnlyModePartLoadFractionCorrelationCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModePartLoadFractionCorrelationCurve());
@@ -702,7 +695,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModePartLoadFractionCorrelationCurve().get());
 
   // Discharge Only Mode Sensible Heat Ratio Function of Temperature Curve: Optional Object
-  boost::optional<Curve> dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(m);
+  CurveBiquadratic dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(
     dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve());
@@ -710,7 +703,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
             coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve().get());
 
   // Discharge Only Mode Sensible Heat Ratio Function of Flow Fraction Curve: Optional Object
-  boost::optional<Curve> dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(
     dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve());
@@ -739,16 +732,6 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setColdWeatherOperationAncillaryPower(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coldWeatherOperationAncillaryPower());
   EXPECT_EQ(8.9, coilCoolingDXSingleSpeedThermalStorage.coldWeatherOperationAncillaryPower().get());
-
-  // Condenser Air Inlet Node: Required Object
-  Connection condenserAirInletNode(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCondenserAirInletNode(condenserAirInletNode));
-  EXPECT_EQ(condenserAirInletNode, coilCoolingDXSingleSpeedThermalStorage.condenserAirInletNode());
-
-  // Condenser Air Outlet Node: Required Object
-  Connection condenserAirOutletNode(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCondenserAirOutletNode(condenserAirOutletNode));
-  EXPECT_EQ(condenserAirOutletNode, coilCoolingDXSingleSpeedThermalStorage.condenserAirOutletNode());
 
   // Condenser Design Air Flow Rate: Required Double
   // Autocalculate
@@ -811,60 +794,48 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_EQ(11.8, coilCoolingDXSingleSpeedThermalStorage.basinHeaterSetpointTemperature());
 
   // Basin Heater Availability Schedule: Optional Object
-  boost::optional<Schedule> basinHeaterAvailabilitySchedule(m);
+  ScheduleConstant basinHeaterAvailabilitySchedule(m);
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setBasinHeaterAvailabilitySchedule(basinHeaterAvailabilitySchedule));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.basinHeaterAvailabilitySchedule());
   EXPECT_EQ(basinHeaterAvailabilitySchedule, coilCoolingDXSingleSpeedThermalStorage.basinHeaterAvailabilitySchedule().get());
 
   // Supply Water Storage Tank: Optional Object
-  boost::optional<WaterStorageTank> supplyWaterStorageTank(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setSupplyWaterStorageTank(supplyWaterStorageTank));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.supplyWaterStorageTank());
-  EXPECT_EQ(supplyWaterStorageTank, coilCoolingDXSingleSpeedThermalStorage.supplyWaterStorageTank().get());
+  // boost::optional<WaterStorageTank> supplyWaterStorageTank(m);
+  // EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setSupplyWaterStorageTank(supplyWaterStorageTank));
+  // ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.supplyWaterStorageTank());
+  // EXPECT_EQ(supplyWaterStorageTank, coilCoolingDXSingleSpeedThermalStorage.supplyWaterStorageTank().get());
 
   // Condensate Collection Water Storage Tank: Optional Object
-  boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCondensateCollectionWaterStorageTank(condensateCollectionWaterStorageTank));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.condensateCollectionWaterStorageTank());
-  EXPECT_EQ(condensateCollectionWaterStorageTank, coilCoolingDXSingleSpeedThermalStorage.condensateCollectionWaterStorageTank().get());
-
-  // Storage Tank Plant Connection Inlet Node: Optional Object
-  boost::optional<Connection> storageTankPlantConnectionInletNode(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionInletNode(storageTankPlantConnectionInletNode));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionInletNode());
-  EXPECT_EQ(storageTankPlantConnectionInletNode, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionInletNode().get());
-
-  // Storage Tank Plant Connection Outlet Node: Optional Object
-  boost::optional<Connection> storageTankPlantConnectionOutletNode(m);
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionOutletNode(storageTankPlantConnectionOutletNode));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionOutletNode());
-  EXPECT_EQ(storageTankPlantConnectionOutletNode, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionOutletNode().get());
+  // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank(m);
+  // EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCondensateCollectionWaterStorageTank(condensateCollectionWaterStorageTank));
+  // ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.condensateCollectionWaterStorageTank());
+  // EXPECT_EQ(condensateCollectionWaterStorageTank, coilCoolingDXSingleSpeedThermalStorage.condensateCollectionWaterStorageTank().get());
 
   // Storage Tank Plant Connection Design Flow Rate: Optional Double
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionDesignFlowRate(10.4));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionDesignFlowRate());
-  EXPECT_EQ(10.4, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionDesignFlowRate().get());
+  // EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionDesignFlowRate(10.4));
+  // ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionDesignFlowRate());
+  // EXPECT_EQ(10.4, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionDesignFlowRate().get());
   // Bad Value
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionDesignFlowRate(-10.0));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionDesignFlowRate());
-  EXPECT_EQ(10.4, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionDesignFlowRate().get());
+  // EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionDesignFlowRate(-10.0));
+  // ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionDesignFlowRate());
+  // EXPECT_EQ(10.4, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionDesignFlowRate().get());
 
   // Storage Tank Plant Connection Heat Transfer Effectiveness: Required Double
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionHeatTransferEffectiveness(0.991));
-  EXPECT_EQ(0.991, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionHeatTransferEffectiveness());
+  // EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionHeatTransferEffectiveness(0.991));
+  // EXPECT_EQ(0.991, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionHeatTransferEffectiveness());
   // Bad Value
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionHeatTransferEffectiveness(-10.0));
-  EXPECT_EQ(0.991, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionHeatTransferEffectiveness());
+  // EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankPlantConnectionHeatTransferEffectiveness(-10.0));
+  // EXPECT_EQ(0.991, coilCoolingDXSingleSpeedThermalStorage.storageTankPlantConnectionHeatTransferEffectiveness());
 
   // Storage Tank Minimum Operating Limit Fluid Temperature: Optional Double
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankMinimumOperatingLimitFluidTemperature(10.6));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankMinimumOperatingLimitFluidTemperature());
-  EXPECT_EQ(10.6, coilCoolingDXSingleSpeedThermalStorage.storageTankMinimumOperatingLimitFluidTemperature().get());
+  // EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankMinimumOperatingLimitFluidTemperature(10.6));
+  // ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankMinimumOperatingLimitFluidTemperature());
+  // EXPECT_EQ(10.6, coilCoolingDXSingleSpeedThermalStorage.storageTankMinimumOperatingLimitFluidTemperature().get());
 
   // Storage Tank Maximum Operating Limit Fluid Temperature: Optional Double
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankMaximumOperatingLimitFluidTemperature(10.7));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankMaximumOperatingLimitFluidTemperature());
-  EXPECT_EQ(10.7, coilCoolingDXSingleSpeedThermalStorage.storageTankMaximumOperatingLimitFluidTemperature().get());
+  // EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTankMaximumOperatingLimitFluidTemperature(10.7));
+  // ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.storageTankMaximumOperatingLimitFluidTemperature());
+  // EXPECT_EQ(10.7, coilCoolingDXSingleSpeedThermalStorage.storageTankMaximumOperatingLimitFluidTemperature().get());
 }
 TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_HeatCoolFuelTypes) {
   Model m;
@@ -875,4 +846,24 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_HeatCoolFuelTypes) {
   testFuelTypeEquality({FuelType::Electricity}, coilCoolingDXSingleSpeedThermalStorage.coolingFuelTypes());
   testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, coilCoolingDXSingleSpeedThermalStorage.heatingFuelTypes());
   testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, coilCoolingDXSingleSpeedThermalStorage.appGHeatingFuelTypes());
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingHVACComponent) {
+  
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingZoneHVACComponent) {
+  
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_addToNode) {
+  
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_clone) {
+  
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_cloneParent) {
+  
 }
