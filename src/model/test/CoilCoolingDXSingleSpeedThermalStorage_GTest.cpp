@@ -848,22 +848,12 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_HeatCoolFuelTypes) {
   testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, coilCoolingDXSingleSpeedThermalStorage.appGHeatingFuelTypes());
 }
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingHVACComponent) {
-  
-}
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingHVACComponent) {}
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingZoneHVACComponent) {
-  
-}
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingZoneHVACComponent) {}
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_addToNode) {
-  
-}
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_addToNode) {}
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_clone) {
-  
-}
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_clone) {}
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_cloneParent) {
-  
-}
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_cloneParent) {}
