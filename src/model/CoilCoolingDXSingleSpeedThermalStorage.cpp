@@ -2084,7 +2084,6 @@ namespace model {
     OS_ASSERT(ok);
     ok = setBasinHeaterSetpointTemperature(2.0);  // IDD default
     OS_ASSERT(ok);
-    OS_ASSERT(ok);
   }
 
   IddObjectType CoilCoolingDXSingleSpeedThermalStorage::iddObjectType() {
