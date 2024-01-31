@@ -1126,7 +1126,7 @@ class ModelClassGenerator < SubProjectClassGenerator
             result << "        }\n"
             result << "      }\n"
           else
-            result << "      const bool result = setBooleanFieldValue(field.fieldEnum, field.setterArgumentName);\n"
+            result << "      const bool result = setBooleanFieldValue(" << field.fieldEnum << ", " << field.setterArgumentName << ");\n"
           end
 
         elsif /optional/.match(field.publicClassSetterType)
@@ -1219,7 +1219,7 @@ class ModelClassGenerator < SubProjectClassGenerator
         @autosizedGetterNames.each do |name|
           setter_name = name.gsub('autosized','set')
           result << "      if (boost::optional<double> val_ = #{name}()) {\n"
-          result << "        #{setter_name}(val.get());\n"
+          result << "        #{setter_name}(*val_));\n"
           result << "      }\n\n"
         end
         result << "    }\n\n"
