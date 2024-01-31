@@ -30,6 +30,8 @@
 #include "CoilCoolingDXSingleSpeedThermalStorage.hpp"
 #include "CoilCoolingDXSingleSpeedThermalStorage_Impl.hpp"
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 // #include "Connection.hpp"
@@ -42,12 +44,22 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
 #include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -123,19 +135,92 @@ namespace model {
     std::vector<ModelObject> CoilCoolingDXSingleSpeedThermalStorage_Impl::children() const {
       std::vector<ModelObject> result;
 
-      // TODO
+      // TODO: every curve?
 
       return result;
     }
 
     boost::optional<HVACComponent> CoilCoolingDXSingleSpeedThermalStorage_Impl::containingHVACComponent() const {
-      // TODO
+      // AirLoopHVACUnitarySystem
+      std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+      for (const auto& airLoopHVACUnitarySystem : airLoopHVACUnitarySystems) {
+        if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil()) {
+          if (coolingCoil->handle() == this->handle()) {
+            return airLoopHVACUnitarySystem;
+          }
+        }
+      }
+
+      // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+      std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems =
+        this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+      for (const auto& bypassSystem : bypassSystems) {
+        if (boost::optional<HVACComponent> coolingCoil = bypassSystem.coolingCoil()) {
+          if (coolingCoil->handle() == this->handle()) {
+            return bypassSystem;
+          }
+        }
+      }
+
+      // AirLoopHVACUnitaryHeatPumpAirToAir
+
+      std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
+
+      airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+
+      for (const auto& airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs) {
+        if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil()) {
+          if (coil->handle() == this->handle()) {
+            return airLoopHVACUnitaryHeatPumpAirToAir;
+          }
+        }
+      }
+
+      // CoilSystemCoolingDXHeatExchangerAssisted
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.coolingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+        }
+      }
+
+      return boost::none;
 
       return boost::none;
     }
 
     boost::optional<ZoneHVACComponent> CoilCoolingDXSingleSpeedThermalStorage_Impl::containingZoneHVACComponent() const {
-      // TODO
+      // ZoneHVACPackagedTerminalAirConditioner
+
+      std::vector<ZoneHVACPackagedTerminalAirConditioner> zoneHVACPackagedTerminalAirConditioners;
+
+      zoneHVACPackagedTerminalAirConditioners = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
+
+      for (const auto& zoneHVACPackagedTerminalAirConditioner : zoneHVACPackagedTerminalAirConditioners) {
+        if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalAirConditioner.coolingCoil()) {
+          if (coil->handle() == this->handle()) {
+            return zoneHVACPackagedTerminalAirConditioner;
+          }
+        }
+      }
+
+      // ZoneHVACPackagedTerminalHeatPump
+
+      std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
+
+      zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+
+      for (const auto& zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps) {
+        if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.coolingCoil()) {
+          if (coil->handle() == this->handle()) {
+            return zoneHVACPackagedTerminalHeatPump;
+          }
+        }
+      }
 
       return boost::none;
     }
@@ -939,9 +1024,7 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeAvailable(bool coolingOnlyModeAvailable) {
-      const bool result = setBooleanFieldValue(field.fieldEnum, field.setterArgumentName);
-      OS_ASSERT(result);
-      return result;
+      return setBooleanFieldValue(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeAvailable, coolingOnlyModeAvailable);
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity(
@@ -1059,9 +1142,7 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeAvailable(bool coolingAndChargeModeAvailable) {
-      const bool result = setBooleanFieldValue(field.fieldEnum, field.setterArgumentName);
-      OS_ASSERT(result);
-      return result;
+      return setBooleanFieldValue(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeAvailable, coolingAndChargeModeAvailable);
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity(
@@ -1289,9 +1370,8 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeAvailable(bool coolingAndDischargeModeAvailable) {
-      const bool result = setBooleanFieldValue(field.fieldEnum, field.setterArgumentName);
-      OS_ASSERT(result);
-      return result;
+      return setBooleanFieldValue(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeAvailable,
+                                  coolingAndDischargeModeAvailable);
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity(
@@ -1542,9 +1622,7 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setChargeOnlyModeAvailable(bool chargeOnlyModeAvailable) {
-      const bool result = setBooleanFieldValue(field.fieldEnum, field.setterArgumentName);
-      OS_ASSERT(result);
-      return result;
+      return setBooleanFieldValue(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeAvailable, chargeOnlyModeAvailable);
     }
 
     bool
@@ -1602,9 +1680,7 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeAvailable(bool dischargeOnlyModeAvailable) {
-      const bool result = setBooleanFieldValue(field.fieldEnum, field.setterArgumentName);
-      OS_ASSERT(result);
-      return result;
+      return setBooleanFieldValue(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeAvailable, dischargeOnlyModeAvailable);
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeRatedStorageDischargingCapacity(
@@ -1899,15 +1975,15 @@ namespace model {
 
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::applySizingValues() {
       if (boost::optional<double> val_ = autosizedRatedEvaporatorAirFlowRate()) {
-        setRatedEvaporatorAirFlowRate(val.get());
+        setRatedEvaporatorAirFlowRate(val_.get());
       }
 
       if (boost::optional<double> val_ = autosizedCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity()) {
-        setCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity(val.get());
+        setCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity(val_.get());
       }
 
       if (boost::optional<double> val_ = autosizedEvaporativeCondenserPumpRatedPowerConsumption()) {
-        setEvaporativeCondenserPumpRatedPowerConsumption(val.get());
+        setEvaporativeCondenserPumpRatedPowerConsumption(val_.get());
       }
     }
 
@@ -2067,10 +2143,6 @@ namespace model {
 
   boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::storageCapacitySizingFactor() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageCapacitySizingFactor();
-  }
-
-  Connection CoilCoolingDXSingleSpeedThermalStorage::storageTankAmbientTemperatureNode() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankAmbientTemperatureNode();
   }
 
   double CoilCoolingDXSingleSpeedThermalStorage::storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient() const {
@@ -2488,29 +2560,21 @@ namespace model {
   // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->condensateCollectionWaterStorageTank();
   // }
 
-  boost::optional<Connection> CoilCoolingDXSingleSpeedThermalStorage::storageTankPlantConnectionInletNode() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankPlantConnectionInletNode();
-  }
+  // boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::storageTankPlantConnectionDesignFlowRate() const {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankPlantConnectionDesignFlowRate();
+  // }
 
-  boost::optional<Connection> CoilCoolingDXSingleSpeedThermalStorage::storageTankPlantConnectionOutletNode() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankPlantConnectionOutletNode();
-  }
+  // double CoilCoolingDXSingleSpeedThermalStorage::storageTankPlantConnectionHeatTransferEffectiveness() const {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankPlantConnectionHeatTransferEffectiveness();
+  // }
 
-  boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::storageTankPlantConnectionDesignFlowRate() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankPlantConnectionDesignFlowRate();
-  }
+  // boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::storageTankMinimumOperatingLimitFluidTemperature() const {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankMinimumOperatingLimitFluidTemperature();
+  // }
 
-  double CoilCoolingDXSingleSpeedThermalStorage::storageTankPlantConnectionHeatTransferEffectiveness() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankPlantConnectionHeatTransferEffectiveness();
-  }
-
-  boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::storageTankMinimumOperatingLimitFluidTemperature() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankMinimumOperatingLimitFluidTemperature();
-  }
-
-  boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::storageTankMaximumOperatingLimitFluidTemperature() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankMaximumOperatingLimitFluidTemperature();
-  }
+  // boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::storageTankMaximumOperatingLimitFluidTemperature() const {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTankMaximumOperatingLimitFluidTemperature();
+  // }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setAvailabilitySchedule(schedule);
@@ -2570,10 +2634,6 @@ namespace model {
 
   void CoilCoolingDXSingleSpeedThermalStorage::resetStorageCapacitySizingFactor() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageCapacitySizingFactor();
-  }
-
-  bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankAmbientTemperatureNode(const Connection& connection) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankAmbientTemperatureNode(connection);
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(
@@ -3256,56 +3316,40 @@ namespace model {
   // getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCondensateCollectionWaterStorageTank();
   // }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankPlantConnectionInletNode(const Connection& connection) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankPlantConnectionInletNode(connection);
-  }
+  // bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankPlantConnectionDesignFlowRate(double storageTankPlantConnectionDesignFlowRate) {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankPlantConnectionDesignFlowRate(
+  // storageTankPlantConnectionDesignFlowRate);
+  // }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetStorageTankPlantConnectionInletNode() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageTankPlantConnectionInletNode();
-  }
+  // void CoilCoolingDXSingleSpeedThermalStorage::resetStorageTankPlantConnectionDesignFlowRate() {
+  // getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageTankPlantConnectionDesignFlowRate();
+  // }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankPlantConnectionOutletNode(const Connection& connection) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankPlantConnectionOutletNode(connection);
-  }
+  // bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankPlantConnectionHeatTransferEffectiveness(
+  // double storageTankPlantConnectionHeatTransferEffectiveness) {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankPlantConnectionHeatTransferEffectiveness(
+  // storageTankPlantConnectionHeatTransferEffectiveness);
+  // }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetStorageTankPlantConnectionOutletNode() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageTankPlantConnectionOutletNode();
-  }
+  // bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankMinimumOperatingLimitFluidTemperature(
+  // double storageTankMinimumOperatingLimitFluidTemperature) {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankMinimumOperatingLimitFluidTemperature(
+  // storageTankMinimumOperatingLimitFluidTemperature);
+  // }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankPlantConnectionDesignFlowRate(double storageTankPlantConnectionDesignFlowRate) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankPlantConnectionDesignFlowRate(
-      storageTankPlantConnectionDesignFlowRate);
-  }
+  // void CoilCoolingDXSingleSpeedThermalStorage::resetStorageTankMinimumOperatingLimitFluidTemperature() {
+  // getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageTankMinimumOperatingLimitFluidTemperature();
+  // }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetStorageTankPlantConnectionDesignFlowRate() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageTankPlantConnectionDesignFlowRate();
-  }
+  // bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankMaximumOperatingLimitFluidTemperature(
+  // double storageTankMaximumOperatingLimitFluidTemperature) {
+  // return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankMaximumOperatingLimitFluidTemperature(
+  // storageTankMaximumOperatingLimitFluidTemperature);
+  // }
 
-  bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankPlantConnectionHeatTransferEffectiveness(
-    double storageTankPlantConnectionHeatTransferEffectiveness) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankPlantConnectionHeatTransferEffectiveness(
-      storageTankPlantConnectionHeatTransferEffectiveness);
-  }
-
-  bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankMinimumOperatingLimitFluidTemperature(
-    double storageTankMinimumOperatingLimitFluidTemperature) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankMinimumOperatingLimitFluidTemperature(
-      storageTankMinimumOperatingLimitFluidTemperature);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetStorageTankMinimumOperatingLimitFluidTemperature() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageTankMinimumOperatingLimitFluidTemperature();
-  }
-
-  bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTankMaximumOperatingLimitFluidTemperature(
-    double storageTankMaximumOperatingLimitFluidTemperature) {
-    return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageTankMaximumOperatingLimitFluidTemperature(
-      storageTankMaximumOperatingLimitFluidTemperature);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetStorageTankMaximumOperatingLimitFluidTemperature() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageTankMaximumOperatingLimitFluidTemperature();
-  }
+  // void CoilCoolingDXSingleSpeedThermalStorage::resetStorageTankMaximumOperatingLimitFluidTemperature() {
+  // getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageTankMaximumOperatingLimitFluidTemperature();
+  // }
 
   /// @cond
   CoilCoolingDXSingleSpeedThermalStorage::CoilCoolingDXSingleSpeedThermalStorage(
