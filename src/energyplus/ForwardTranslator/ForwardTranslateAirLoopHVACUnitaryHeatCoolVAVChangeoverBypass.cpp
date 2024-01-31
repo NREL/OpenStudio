@@ -36,6 +36,7 @@
 #include "../../model/Mixer.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_SingleSpeed_ThermalStorage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
@@ -317,6 +318,9 @@ namespace energyplus {
       if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, coolInletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, coolOutletNodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage) {
+        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName, coolInletNodeName);
+        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName, coolOutletNodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, coolInletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, coolOutletNodeName);
