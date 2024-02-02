@@ -784,50 +784,50 @@ namespace measure {
     return result;
   }
 
-  std::map<std::string, std::string> getArgumentValues(std::vector<OSArgument>& script_arguments,
-                                                       const std::map<std::string, OSArgument>& user_arguments) {
+  std::map<std::string, std::string> OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments,
+                                                                 const std::map<std::string, OSArgument>& user_arguments) {
     std::map<std::string, std::string> argument_values;
     OSArgumentType type;
     for (const OSArgument& script_argument : script_arguments) {
       if (script_argument.required()) {
         switch (script_argument.type().value()) {
           case OSArgumentType::Choice:
-            argument_values[script_argument.name()] = this->getStringArgumentValue(script_argument.name(), user_arguments);
+            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
           case OSArgumentType::Boolean:
-            argument_values[script_argument.name()] = std::to_string(this->getBoolArgumentValue(script_argument.name(), user_arguments));
+            argument_values[script_argument.name()] = std::to_string(getBoolArgumentValue(script_argument.name(), user_arguments));
           case OSArgumentType::Double:
-            argument_values[script_argument.name()] = std::to_string(this->getDoubleArgumentValue(script_argument.name(), user_arguments));
+            argument_values[script_argument.name()] = std::to_string(getDoubleArgumentValue(script_argument.name(), user_arguments));
           case OSArgumentType::Integer:
-            argument_values[script_argument.name()] = std::to_string(this->getIntegerArgumentValue(script_argument.name(), user_arguments));
+            argument_values[script_argument.name()] = std::to_string(getIntegerArgumentValue(script_argument.name(), user_arguments));
           case OSArgumentType::String:
-            argument_values[script_argument.name()] = this->getStringArgumentValue(script_argument.name(), user_arguments);
+            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
         }
       } else {
         switch (script_argument.type().value()) {
           case OSArgumentType::Choice:
-            if (boost::optional<std::string> optS_ = this->getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = *optS_;
             }
           case OSArgumentType::Boolean:
-            if (boost::optional<bool> optB_ = this->getOptionalBoolArgumentValue(script_argument.name(), user_arguments)) {
+            if (boost::optional<bool> optB_ = getOptionalBoolArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = std::to_string(*optB_);
             }
           case OSArgumentType::Double:
-            if (boost::optional<double> optD_ = this->getOptionalDoubleArgumentValue(script_argument.name(), user_arguments)) {
+            if (boost::optional<double> optD_ = getOptionalDoubleArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = std::to_string(*optD_);
             }
           case OSArgumentType::Integer:
-            if (boost::optional<int> optI_ = this->getOptionalIntegerArgumentValue(script_argument.name(), user_arguments)) {
+            if (boost::optional<int> optI_ = getOptionalIntegerArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = std::to_string(*optI_);
             }
           case OSArgumentType::String:
-            if (boost::optional<std::string> optS_ = this->getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = *optS_;
             }
         }
       }
     }
-    return argumentValues;
+    return argument_values;
   }
 
   void OSRunner::setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel) {
