@@ -95,9 +95,9 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_EQ(50, coilCoolingDXSingleSpeedThermalStorage.glycolConcentration().get());
 
   // Fluid Storage Volume: Optional Double
-  // Autocalculate
-  coilCoolingDXSingleSpeedThermalStorage.autocalculateFluidStorageVolume();
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isFluidStorageVolumeAutocalculated());
+  // Autosize
+  coilCoolingDXSingleSpeedThermalStorage.autosizeFluidStorageVolume();
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isFluidStorageVolumeAutosized());
   // Set
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setFluidStorageVolume(0.8));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.fluidStorageVolume());
@@ -106,12 +106,12 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setFluidStorageVolume(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.fluidStorageVolume());
   EXPECT_EQ(0.8, coilCoolingDXSingleSpeedThermalStorage.fluidStorageVolume().get());
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isFluidStorageVolumeAutocalculated());
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isFluidStorageVolumeAutosized());
 
   // Ice Storage Capacity: Optional Double
-  // Autocalculate
-  coilCoolingDXSingleSpeedThermalStorage.autocalculateIceStorageCapacity();
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isIceStorageCapacityAutocalculated());
+  // Autosize
+  coilCoolingDXSingleSpeedThermalStorage.autosizeIceStorageCapacity();
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isIceStorageCapacityAutosized());
   // Set
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setIceStorageCapacity(0.9));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.iceStorageCapacity());
@@ -120,7 +120,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setIceStorageCapacity(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.iceStorageCapacity());
   EXPECT_EQ(0.9, coilCoolingDXSingleSpeedThermalStorage.iceStorageCapacity().get());
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isIceStorageCapacityAutocalculated());
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isIceStorageCapacityAutosized());
 
   // Storage Capacity Sizing Factor: Optional Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageCapacitySizingFactor(1.0));
@@ -250,9 +250,9 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeAvailable());
 
   // Cooling And Charge Mode Rated Total Evaporator Cooling Capacity: Optional Double
-  // Autocalculate
-  coilCoolingDXSingleSpeedThermalStorage.autocalculateCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacityAutocalculated());
+  // Autosize
+  coilCoolingDXSingleSpeedThermalStorage.autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacityAutosized());
   // Set
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity(2.9));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeRatedTotalEvaporatorCoolingCapacity());
@@ -261,16 +261,16 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeRatedTotalEvaporatorCoolingCapacity());
   EXPECT_EQ(2.9, coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeRatedTotalEvaporatorCoolingCapacity().get());
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacityAutocalculated());
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacityAutosized());
 
   // Cooling And Charge Mode Capacity Sizing Factor: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeCapacitySizingFactor(3.0));
   EXPECT_EQ(3.0, coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeCapacitySizingFactor());
 
   // Cooling And Charge Mode Rated Storage Charging Capacity: Optional Double
-  // Autocalculate
-  coilCoolingDXSingleSpeedThermalStorage.autocalculateCoolingAndChargeModeRatedStorageChargingCapacity();
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndChargeModeRatedStorageChargingCapacityAutocalculated());
+  // Autosize
+  coilCoolingDXSingleSpeedThermalStorage.autosizeCoolingAndChargeModeRatedStorageChargingCapacity();
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndChargeModeRatedStorageChargingCapacityAutosized());
   // Set
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeRatedStorageChargingCapacity(3.1));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeRatedStorageChargingCapacity());
@@ -279,7 +279,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeRatedStorageChargingCapacity(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeRatedStorageChargingCapacity());
   EXPECT_EQ(3.1, coilCoolingDXSingleSpeedThermalStorage.coolingAndChargeModeRatedStorageChargingCapacity().get());
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndChargeModeRatedStorageChargingCapacityAutocalculated());
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndChargeModeRatedStorageChargingCapacityAutosized());
 
   // Cooling And Charge Mode Storage Capacity Sizing Factor: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeStorageCapacitySizingFactor(3.2));
@@ -409,9 +409,9 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeAvailable());
 
   // Cooling And Discharge Mode Rated Total Evaporator Cooling Capacity: Optional Double
-  // Autocalculate
-  coilCoolingDXSingleSpeedThermalStorage.autocalculateCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacityAutocalculated());
+  // Autosize
+  coilCoolingDXSingleSpeedThermalStorage.autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacityAutosized());
   // Set
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity(4.9));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity());
@@ -420,16 +420,16 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity());
   EXPECT_EQ(4.9, coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity().get());
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacityAutocalculated());
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacityAutosized());
 
   // Cooling And Discharge Mode Evaporator Capacity Sizing Factor: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeEvaporatorCapacitySizingFactor(5.0));
   EXPECT_EQ(5.0, coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeEvaporatorCapacitySizingFactor());
 
   // Cooling And Discharge Mode Rated Storage Discharging Capacity: Optional Double
-  // Autocalculate
-  coilCoolingDXSingleSpeedThermalStorage.autocalculateCoolingAndDischargeModeRatedStorageDischargingCapacity();
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndDischargeModeRatedStorageDischargingCapacityAutocalculated());
+  // Autosize
+  coilCoolingDXSingleSpeedThermalStorage.autosizeCoolingAndDischargeModeRatedStorageDischargingCapacity();
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndDischargeModeRatedStorageDischargingCapacityAutosized());
   // Set
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeRatedStorageDischargingCapacity(5.1));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeRatedStorageDischargingCapacity());
@@ -438,7 +438,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeRatedStorageDischargingCapacity(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeRatedStorageDischargingCapacity());
   EXPECT_EQ(5.1, coilCoolingDXSingleSpeedThermalStorage.coolingAndDischargeModeRatedStorageDischargingCapacity().get());
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndDischargeModeRatedStorageDischargingCapacityAutocalculated());
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCoolingAndDischargeModeRatedStorageDischargingCapacityAutosized());
 
   // Cooling And Discharge Mode Storage Discharge Capacity Sizing Factor: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeStorageDischargeCapacitySizingFactor(5.2));
@@ -576,9 +576,9 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.chargeOnlyModeAvailable());
 
   // Charge Only Mode Rated Storage Charging Capacity: Optional Double
-  // Autocalculate
-  coilCoolingDXSingleSpeedThermalStorage.autocalculateChargeOnlyModeRatedStorageChargingCapacity();
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isChargeOnlyModeRatedStorageChargingCapacityAutocalculated());
+  // Autosize
+  coilCoolingDXSingleSpeedThermalStorage.autosizeChargeOnlyModeRatedStorageChargingCapacity();
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isChargeOnlyModeRatedStorageChargingCapacityAutosized());
   // Set
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeRatedStorageChargingCapacity(7.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.chargeOnlyModeRatedStorageChargingCapacity());
@@ -587,7 +587,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeRatedStorageChargingCapacity(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.chargeOnlyModeRatedStorageChargingCapacity());
   EXPECT_EQ(7.0, coilCoolingDXSingleSpeedThermalStorage.chargeOnlyModeRatedStorageChargingCapacity().get());
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isChargeOnlyModeRatedStorageChargingCapacityAutocalculated());
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isChargeOnlyModeRatedStorageChargingCapacityAutosized());
 
   // Charge Only Mode Capacity Sizing Factor: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeCapacitySizingFactor(7.1));
@@ -623,9 +623,9 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeAvailable());
 
   // Discharge Only Mode Rated Storage Discharging Capacity: Optional Double
-  // Autocalculate
-  coilCoolingDXSingleSpeedThermalStorage.autocalculateDischargeOnlyModeRatedStorageDischargingCapacity();
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isDischargeOnlyModeRatedStorageDischargingCapacityAutocalculated());
+  // Autosize
+  coilCoolingDXSingleSpeedThermalStorage.autosizeDischargeOnlyModeRatedStorageDischargingCapacity();
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isDischargeOnlyModeRatedStorageDischargingCapacityAutosized());
   // Set
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeRatedStorageDischargingCapacity(7.6));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedStorageDischargingCapacity());
@@ -634,7 +634,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeRatedStorageDischargingCapacity(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedStorageDischargingCapacity());
   EXPECT_EQ(7.6, coilCoolingDXSingleSpeedThermalStorage.dischargeOnlyModeRatedStorageDischargingCapacity().get());
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isDischargeOnlyModeRatedStorageDischargingCapacityAutocalculated());
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isDischargeOnlyModeRatedStorageDischargingCapacityAutosized());
 
   // Discharge Only Mode Capacity Sizing Factor: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeCapacitySizingFactor(7.7));
@@ -734,9 +734,9 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_EQ(8.9, coilCoolingDXSingleSpeedThermalStorage.coldWeatherOperationAncillaryPower().get());
 
   // Condenser Design Air Flow Rate: Required Double
-  // Autocalculate
-  coilCoolingDXSingleSpeedThermalStorage.autocalculateCondenserDesignAirFlowRate();
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCondenserDesignAirFlowRateAutocalculated());
+  // Autosize
+  coilCoolingDXSingleSpeedThermalStorage.autosizeCondenserDesignAirFlowRate();
+  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.isCondenserDesignAirFlowRateAutosized());
   // Set
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCondenserDesignAirFlowRate(9.2));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.condenserDesignAirFlowRate());
@@ -745,7 +745,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setCondenserDesignAirFlowRate(-10.0));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.condenserDesignAirFlowRate());
   EXPECT_EQ(9.2, coilCoolingDXSingleSpeedThermalStorage.condenserDesignAirFlowRate().get());
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCondenserDesignAirFlowRateAutocalculated());
+  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.isCondenserDesignAirFlowRateAutosized());
 
   // Condenser Air Flow Sizing Factor: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCondenserAirFlowSizingFactor(9.3));

@@ -89,11 +89,15 @@ namespace model {
 
     boost::optional<double> fluidStorageVolume() const;
 
-    bool isFluidStorageVolumeAutocalculated() const;
+    bool isFluidStorageVolumeAutosized() const;
+
+    boost::optional<double> autosizedFluidStorageVolume();
 
     boost::optional<double> iceStorageCapacity() const;
 
-    bool isIceStorageCapacityAutocalculated() const;
+    bool isIceStorageCapacityAutosized() const;
+
+    boost::optional<double> autosizedIceStorageCapacity();
 
     boost::optional<double> storageCapacitySizingFactor() const;
 
@@ -137,13 +141,17 @@ namespace model {
 
     boost::optional<double> coolingAndChargeModeRatedTotalEvaporatorCoolingCapacity() const;
 
-    bool isCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacityAutocalculated() const;
+    bool isCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacityAutosized() const;
+
+    boost::optional<double> autosizedCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
 
     double coolingAndChargeModeCapacitySizingFactor() const;
 
     boost::optional<double> coolingAndChargeModeRatedStorageChargingCapacity() const;
 
-    bool isCoolingAndChargeModeRatedStorageChargingCapacityAutocalculated() const;
+    bool isCoolingAndChargeModeRatedStorageChargingCapacityAutosized() const;
+
+    boost::optional<double> autosizedCoolingAndChargeModeRatedStorageChargingCapacity();
 
     double coolingAndChargeModeStorageCapacitySizingFactor() const;
 
@@ -181,13 +189,17 @@ namespace model {
 
     boost::optional<double> coolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity() const;
 
-    bool isCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacityAutocalculated() const;
+    bool isCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacityAutosized() const;
+
+    boost::optional<double> autosizedCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
 
     double coolingAndDischargeModeEvaporatorCapacitySizingFactor() const;
 
     boost::optional<double> coolingAndDischargeModeRatedStorageDischargingCapacity() const;
 
-    bool isCoolingAndDischargeModeRatedStorageDischargingCapacityAutocalculated() const;
+    bool isCoolingAndDischargeModeRatedStorageDischargingCapacityAutosized() const;
+
+    boost::optional<double> autosizedCoolingAndDischargeModeRatedStorageDischargingCapacity();
 
     double coolingAndDischargeModeStorageDischargeCapacitySizingFactor() const;
 
@@ -227,7 +239,9 @@ namespace model {
 
     boost::optional<double> chargeOnlyModeRatedStorageChargingCapacity() const;
 
-    bool isChargeOnlyModeRatedStorageChargingCapacityAutocalculated() const;
+    bool isChargeOnlyModeRatedStorageChargingCapacityAutosized() const;
+
+    boost::optional<double> autosizedChargeOnlyModeRatedStorageChargingCapacity();
 
     double chargeOnlyModeCapacitySizingFactor() const;
 
@@ -241,7 +255,9 @@ namespace model {
 
     boost::optional<double> dischargeOnlyModeRatedStorageDischargingCapacity() const;
 
-    bool isDischargeOnlyModeRatedStorageDischargingCapacityAutocalculated() const;
+    bool isDischargeOnlyModeRatedStorageDischargingCapacityAutosized() const;
+
+    boost::optional<double> autosizedDischargeOnlyModeRatedStorageDischargingCapacity();
 
     double dischargeOnlyModeCapacitySizingFactor() const;
 
@@ -271,7 +287,9 @@ namespace model {
 
     boost::optional<double> condenserDesignAirFlowRate() const;
 
-    bool isCondenserDesignAirFlowRateAutocalculated() const;
+    bool isCondenserDesignAirFlowRateAutosized() const;
+
+    boost::optional<double> autosizedCondenserDesignAirFlowRate();
 
     double condenserAirFlowSizingFactor() const;
 
@@ -325,13 +343,13 @@ namespace model {
 
     void resetFluidStorageVolume();
 
-    void autocalculateFluidStorageVolume();
+    void autosizeFluidStorageVolume();
 
     bool setIceStorageCapacity(double iceStorageCapacity);
 
     void resetIceStorageCapacity();
 
-    void autocalculateIceStorageCapacity();
+    void autosizeIceStorageCapacity();
 
     bool setStorageCapacitySizingFactor(double storageCapacitySizingFactor);
 
@@ -393,7 +411,7 @@ namespace model {
 
     void resetCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
 
-    void autocalculateCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
+    void autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
 
     bool setCoolingAndChargeModeCapacitySizingFactor(double coolingAndChargeModeCapacitySizingFactor);
 
@@ -401,7 +419,7 @@ namespace model {
 
     void resetCoolingAndChargeModeRatedStorageChargingCapacity();
 
-    void autocalculateCoolingAndChargeModeRatedStorageChargingCapacity();
+    void autosizeCoolingAndChargeModeRatedStorageChargingCapacity();
 
     bool setCoolingAndChargeModeStorageCapacitySizingFactor(double coolingAndChargeModeStorageCapacitySizingFactor);
 
@@ -465,7 +483,7 @@ namespace model {
 
     void resetCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
 
-    void autocalculateCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
+    void autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
 
     bool setCoolingAndDischargeModeEvaporatorCapacitySizingFactor(double coolingAndDischargeModeEvaporatorCapacitySizingFactor);
 
@@ -473,7 +491,7 @@ namespace model {
 
     void resetCoolingAndDischargeModeRatedStorageDischargingCapacity();
 
-    void autocalculateCoolingAndDischargeModeRatedStorageDischargingCapacity();
+    void autosizeCoolingAndDischargeModeRatedStorageDischargingCapacity();
 
     bool setCoolingAndDischargeModeStorageDischargeCapacitySizingFactor(double coolingAndDischargeModeStorageDischargeCapacitySizingFactor);
 
@@ -541,7 +559,7 @@ namespace model {
 
     void resetChargeOnlyModeRatedStorageChargingCapacity();
 
-    void autocalculateChargeOnlyModeRatedStorageChargingCapacity();
+    void autosizeChargeOnlyModeRatedStorageChargingCapacity();
 
     bool setChargeOnlyModeCapacitySizingFactor(double chargeOnlyModeCapacitySizingFactor);
 
@@ -561,7 +579,7 @@ namespace model {
 
     void resetDischargeOnlyModeRatedStorageDischargingCapacity();
 
-    void autocalculateDischargeOnlyModeRatedStorageDischargingCapacity();
+    void autosizeDischargeOnlyModeRatedStorageDischargingCapacity();
 
     bool setDischargeOnlyModeCapacitySizingFactor(double dischargeOnlyModeCapacitySizingFactor);
 
@@ -613,7 +631,7 @@ namespace model {
 
     bool setCondenserDesignAirFlowRate(double condenserDesignAirFlowRate);
 
-    void autocalculateCondenserDesignAirFlowRate();
+    void autosizeCondenserDesignAirFlowRate();
 
     bool setCondenserAirFlowSizingFactor(double condenserAirFlowSizingFactor);
 

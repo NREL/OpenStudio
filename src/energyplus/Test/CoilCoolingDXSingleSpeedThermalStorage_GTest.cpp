@@ -85,11 +85,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setOperationModeControlSchedule(operationModeControlSchedule));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageType("PropyleneGlycol"));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setGlycolConcentration(25));
-  // Autocalculate
-  // coilCoolingDXSingleSpeedThermalStorage.autocalculateFluidStorageVolume();
+  // Autosize
+  // coilCoolingDXSingleSpeedThermalStorage.autosizeFluidStorageVolume();
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setFluidStorageVolume(0.7));
-  // Autocalculate
-  // coilCoolingDXSingleSpeedThermalStorage.autocalculateIceStorageCapacity();
+  // Autosize
+  // coilCoolingDXSingleSpeedThermalStorage.autosizeIceStorageCapacity();
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setIceStorageCapacity(0.8));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageCapacitySizingFactor(0.9));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(1.1));
@@ -125,12 +125,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(
     coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeAvailable(true));
-  // Autocalculate
-  // coilCoolingDXSingleSpeedThermalStorage.autocalculateCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
+  // Autosize
+  // coilCoolingDXSingleSpeedThermalStorage.autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity(2.8));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeCapacitySizingFactor(2.9));
-  // Autocalculate
-  // coilCoolingDXSingleSpeedThermalStorage.autocalculateCoolingAndChargeModeRatedStorageChargingCapacity();
+  // Autosize
+  // coilCoolingDXSingleSpeedThermalStorage.autosizeCoolingAndChargeModeRatedStorageChargingCapacity();
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeRatedStorageChargingCapacity(3.0));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeStorageCapacitySizingFactor(3.1));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeRatedSensibleHeatRatio(0.97));
@@ -173,12 +173,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
     coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeAvailable(true));
-  // Autocalculate
-  // coilCoolingDXSingleSpeedThermalStorage.autocalculateCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
+  // Autosize
+  // coilCoolingDXSingleSpeedThermalStorage.autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity(4.8));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeEvaporatorCapacitySizingFactor(4.9));
-  // Autocalculate
-  // coilCoolingDXSingleSpeedThermalStorage.autocalculateCoolingAndDischargeModeRatedStorageDischargingCapacity();
+  // Autosize
+  // coilCoolingDXSingleSpeedThermalStorage.autosizeCoolingAndDischargeModeRatedStorageDischargingCapacity();
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeRatedStorageDischargingCapacity(5.0));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeStorageDischargeCapacitySizingFactor(5.1));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeRatedSensibleHeatRatio(0.981));
@@ -224,8 +224,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve(
     coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeAvailable(true));
-  // Autocalculate
-  // coilCoolingDXSingleSpeedThermalStorage.autocalculateChargeOnlyModeRatedStorageChargingCapacity();
+  // Autosize
+  // coilCoolingDXSingleSpeedThermalStorage.autosizeChargeOnlyModeRatedStorageChargingCapacity();
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeRatedStorageChargingCapacity(6.9));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeCapacitySizingFactor(7.0));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeChargingRatedCOP(7.1));
@@ -236,8 +236,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve(
     chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeAvailable(true));
-  // Autocalculate
-  // coilCoolingDXSingleSpeedThermalStorage.autocalculateDischargeOnlyModeRatedStorageDischargingCapacity();
+  // Autosize
+  // coilCoolingDXSingleSpeedThermalStorage.autosizeDischargeOnlyModeRatedStorageDischargingCapacity();
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeRatedStorageDischargingCapacity(7.5));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeCapacitySizingFactor(7.6));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setDischargeOnlyModeRatedSensibleHeatRatio(0.987));
@@ -266,8 +266,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setAncillaryElectricPower(8.6));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setColdWeatherOperationMinimumOutdoorAirTemperature(8.7));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setColdWeatherOperationAncillaryPower(8.8));
-  // Autocalculate
-  // coilCoolingDXSingleSpeedThermalStorage.autocalculateCondenserDesignAirFlowRate();
+  // Autosize
+  // coilCoolingDXSingleSpeedThermalStorage.autosizeCondenserDesignAirFlowRate();
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCondenserDesignAirFlowRate(9.1));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCondenserAirFlowSizingFactor(9.2));
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setCondenserType("AirCooled"));
@@ -310,9 +310,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
   EXPECT_EQ(woUserDefinedFluidType->iddObject().type(), IddObjectType::FluidProperties_Name);
   EXPECT_EQ("PropyleneGlycol_25", woUserDefinedFluidType->getString(FluidProperties_NameFields::FluidName).get());
   EXPECT_EQ("Glycol", woUserDefinedFluidType->getString(FluidProperties_NameFields::FluidType).get());
-  // EXPECT_EQ("Autocalculate", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageVolume).get());
+  // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageVolume).get());
   EXPECT_EQ(0.7, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageVolume).get());
-  // EXPECT_EQ("Autocalculate", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::IceStorageCapacity).get());
+  // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::IceStorageCapacity).get());
   EXPECT_EQ(0.8, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::IceStorageCapacity).get());
   EXPECT_EQ(0.9, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageCapacitySizingFactor).get());
   EXPECT_EQ("My CoilCoolingDXSingleSpeedThermalStorage Storage Tank Ambient Temperature Node",
@@ -353,11 +353,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
     coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve.nameString(),
     idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurveName).get());
   EXPECT_EQ("Yes", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeAvailable).get());
-  // EXPECT_EQ("Autocalculate", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity).get());
+  // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity).get());
   EXPECT_EQ(2.8,
             idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity).get());
   EXPECT_EQ(2.9, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeCapacitySizingFactor).get());
-  // EXPECT_EQ("Autocalculate", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedStorageChargingCapacity).get());
+  // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedStorageChargingCapacity).get());
   EXPECT_EQ(3.0, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedStorageChargingCapacity).get());
   EXPECT_EQ(3.1, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeStorageCapacitySizingFactor).get());
   EXPECT_EQ(0.97, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedSensibleHeatRatio).get());
@@ -415,11 +415,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
     idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurveName)
       .get());
   EXPECT_EQ("Yes", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeAvailable).get());
-  // EXPECT_EQ("Autocalculate", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity).get());
+  // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity).get());
   EXPECT_EQ(4.8,
             idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity).get());
   EXPECT_EQ(4.9, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeEvaporatorCapacitySizingFactor).get());
-  // EXPECT_EQ("Autocalculate", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedStorageDischargingCapacity).get());
+  // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedStorageDischargingCapacity).get());
   EXPECT_EQ(5.0, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedStorageDischargingCapacity).get());
   EXPECT_EQ(5.1,
             idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeStorageDischargeCapacitySizingFactor).get());
@@ -490,7 +490,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
     idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurveName)
       .get());
   EXPECT_EQ("Yes", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeAvailable).get());
-  // EXPECT_EQ("Autocalculate", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeRatedStorageChargingCapacity).get());
+  // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeRatedStorageChargingCapacity).get());
   EXPECT_EQ(6.9, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeRatedStorageChargingCapacity).get());
   EXPECT_EQ(7.0, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeCapacitySizingFactor).get());
   EXPECT_EQ(7.1, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeChargingRatedCOP).get());
@@ -501,7 +501,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
     chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve.nameString(),
     idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurveName).get());
   EXPECT_EQ("Yes", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeAvailable).get());
-  // EXPECT_EQ("Autocalculate", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedStorageDischargingCapacity).get());
+  // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedStorageDischargingCapacity).get());
   EXPECT_EQ(7.5, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedStorageDischargingCapacity).get());
   EXPECT_EQ(7.6, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeCapacitySizingFactor).get());
   EXPECT_EQ(0.987, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedSensibleHeatRatio).get());
@@ -535,7 +535,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
             idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirInletNodeName).get());
   EXPECT_EQ("My CoilCoolingDXSingleSpeedThermalStorage Condenser Air Outlet Node",
             idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirOutletNodeName).get());
-  // EXPECT_EQ("Autocalculate", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserDesignAirFlowRate).get());
+  // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserDesignAirFlowRate).get());
   EXPECT_EQ(9.1, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserDesignAirFlowRate).get());
   EXPECT_EQ(9.2, idfObject.getDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirFlowSizingFactor).get());
   EXPECT_EQ("AirCooled", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserType).get());

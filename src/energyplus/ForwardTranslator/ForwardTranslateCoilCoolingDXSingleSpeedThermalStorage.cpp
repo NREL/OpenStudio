@@ -96,8 +96,8 @@ namespace energyplus {
       }
     }
 
-    if (modelObject.isFluidStorageVolumeAutocalculated()) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageVolume, "Autocalculate");
+    if (modelObject.isFluidStorageVolumeAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageVolume, "Autosize");
     } else {
       // Fluid Storage Volume: boost::optional<double>
       if (boost::optional<double> fluidStorageVolume_ = modelObject.fluidStorageVolume()) {
@@ -105,8 +105,8 @@ namespace energyplus {
       }
     }
 
-    if (modelObject.isIceStorageCapacityAutocalculated()) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::IceStorageCapacity, "Autocalculate");
+    if (modelObject.isIceStorageCapacityAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::IceStorageCapacity, "Autosize");
     } else {
       // Ice Storage Capacity: boost::optional<double>
       if (boost::optional<double> iceStorageCapacity_ = modelObject.iceStorageCapacity()) {
@@ -269,8 +269,8 @@ namespace energyplus {
     }
 
     // Cooling And Charge Mode Rated Total Evaporator Cooling Capacity
-    if (modelObject.isCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacityAutocalculated()) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity, "Autocalculate");
+    if (modelObject.isCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacityAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity, "Autosize");
     } else {
       if (boost::optional<double> coolingAndChargeModeRatedTotalEvaporatorCoolingCapacity_ =
             modelObject.coolingAndChargeModeRatedTotalEvaporatorCoolingCapacity()) {
@@ -285,8 +285,8 @@ namespace energyplus {
                         coolingAndChargeModeCapacitySizingFactor);
 
     // Cooling And Charge Mode Rated Storage Charging Capacity
-    if (modelObject.isCoolingAndChargeModeRatedStorageChargingCapacityAutocalculated()) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedStorageChargingCapacity, "Autocalculate");
+    if (modelObject.isCoolingAndChargeModeRatedStorageChargingCapacityAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedStorageChargingCapacity, "Autosize");
     } else {
       if (boost::optional<double> coolingAndChargeModeRatedStorageChargingCapacity_ =
             modelObject.coolingAndChargeModeRatedStorageChargingCapacity()) {
@@ -442,9 +442,8 @@ namespace energyplus {
     }
 
     // Cooling And Discharge Mode Rated Total Evaporator Cooling Capacity
-    if (modelObject.isCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacityAutocalculated()) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity,
-                          "Autocalculate");
+    if (modelObject.isCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacityAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity, "Autosize");
     } else {
       if (boost::optional<double> coolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity_ =
             modelObject.coolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity()) {
@@ -459,8 +458,8 @@ namespace energyplus {
                         coolingAndDischargeModeEvaporatorCapacitySizingFactor);
 
     // Cooling And Discharge Mode Rated Storage Discharging Capacity
-    if (modelObject.isCoolingAndDischargeModeRatedStorageDischargingCapacityAutocalculated()) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedStorageDischargingCapacity, "Autocalculate");
+    if (modelObject.isCoolingAndDischargeModeRatedStorageDischargingCapacityAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedStorageDischargingCapacity, "Autosize");
     } else {
       if (boost::optional<double> coolingAndDischargeModeRatedStorageDischargingCapacity_ =
             modelObject.coolingAndDischargeModeRatedStorageDischargingCapacity()) {
@@ -634,8 +633,8 @@ namespace energyplus {
     }
 
     // Charge Only Mode Rated Storage Charging Capacity
-    if (modelObject.isChargeOnlyModeRatedStorageChargingCapacityAutocalculated()) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeRatedStorageChargingCapacity, "Autocalculate");
+    if (modelObject.isChargeOnlyModeRatedStorageChargingCapacityAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeRatedStorageChargingCapacity, "Autosize");
     } else {
       if (boost::optional<double> chargeOnlyModeRatedStorageChargingCapacity_ = modelObject.chargeOnlyModeRatedStorageChargingCapacity()) {
         idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeRatedStorageChargingCapacity,
@@ -677,8 +676,8 @@ namespace energyplus {
     }
 
     // Discharge Only Mode Rated Storage Discharging Capacity
-    if (modelObject.isDischargeOnlyModeRatedStorageDischargingCapacityAutocalculated()) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedStorageDischargingCapacity, "Autocalculate");
+    if (modelObject.isDischargeOnlyModeRatedStorageDischargingCapacityAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedStorageDischargingCapacity, "Autosize");
     } else {
       if (boost::optional<double> dischargeOnlyModeRatedStorageDischargingCapacity_ =
             modelObject.dischargeOnlyModeRatedStorageDischargingCapacity()) {
@@ -794,8 +793,8 @@ namespace energyplus {
     idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirOutletNodeName, condenserOutletNodeName);
 
     // Condenser Design Air Flow Rate
-    if (modelObject.isCondenserDesignAirFlowRateAutocalculated()) {
-      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserDesignAirFlowRate, "Autocalculate");
+    if (modelObject.isCondenserDesignAirFlowRateAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserDesignAirFlowRate, "Autosize");
     } else {
       if (boost::optional<double> condenserDesignAirFlowRate_ = modelObject.condenserDesignAirFlowRate()) {
         idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserDesignAirFlowRate, condenserDesignAirFlowRate_.get());

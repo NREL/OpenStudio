@@ -18932,13 +18932,13 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \type real
        \minimum> 0
        \note required field if Storage Type is Water or UserDefinedFluidType
-       \autocalculatable
+       \autosizable
   N3 , \field Ice Storage Capacity
        \units GJ
        \type real
        \minimum> 0
        \note required field if Storage Type is Ice
-       \autocalculatable
+       \autosizable
   N4 , \field Storage Capacity Sizing Factor
        \type real
        \units hr
@@ -19066,7 +19066,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \type real
        \units W
        \minimum 0.0
-       \autocalculatable
+       \autosizable
        \note gross capacity excluding supply air fan heat
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
@@ -19085,7 +19085,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
        \note thermal storage tank at Fluid Storage Tank Rating Temperature (water or fluid) or storage faction of 0.5 (ice)
-       \autocalculatable
+       \autosizable
   N14, \field Cooling And Charge Mode Storage Capacity Sizing Factor
        \type real
        \required-field
@@ -19230,7 +19230,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \type real
        \units W
        \minimum 0.0
-       \autocalculatable
+       \autosizable
        \note gross capacity excluding supply air fan heat
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
@@ -19249,7 +19249,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
        \note thermal storage tank at 26.7 C (water) or storage faction of 0.5 (ice)
-       \autocalculatable
+       \autosizable
   N21, \field Cooling And Discharge Mode Storage Discharge Capacity Sizing Factor
        \type real
        \required-field
@@ -19404,7 +19404,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note net capacity including any internal devices
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
        \note thermal storage tank at 26.7 C (water) or storage faction of 0.5 (ice)
-       \autocalculatable
+       \autosizable
   N26, \field Charge Only Mode Capacity Sizing Factor
        \type real
        \required-field
@@ -19447,7 +19447,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note net capacity including any internal devices
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note thermal storage tank at 26.7 C (water) or storage faction of 0.5 (ice)
-       \autocalculatable
+       \autosizable
   N29, \field Discharge Only Mode Capacity Sizing Factor
        \type real
        \required-field
@@ -19551,7 +19551,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \type real
        \units m3/s
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \note Used to calculate condenser leaving conditions and water use if evaporatively cooled.
   N36, \field Condenser Air Flow Sizing Factor
        \type real
