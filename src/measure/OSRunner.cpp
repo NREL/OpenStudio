@@ -784,7 +784,8 @@ namespace measure {
     return result;
   }
 
-  std::map<std::string, std::string> getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments) {
+  std::map<std::string, std::string> getArgumentValues(std::vector<OSArgument>& script_arguments,
+                                                       const std::map<std::string, OSArgument>& user_arguments) {
     std::map<std::string, std::string> argumentValues;
     OSArgumentType type;
     for (const OSArgument& script_argument : script_arguments) {
