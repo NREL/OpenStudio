@@ -790,7 +790,7 @@ namespace measure {
     OSArgumentType type;
     for (const OSArgument& script_argument : script_arguments) {
       if (script_argument.required()) {
-        switch (script_argument.type().value() {
+        switch (script_argument.type().value()) {
           case OSArgumentType::Choice:
             argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
           case OSArgumentType::Boolean:
@@ -803,7 +803,7 @@ namespace measure {
             argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
         }
       } else {
-        switch (script_argument.type().value() {
+        switch (script_argument.type().value()) {
           case OSArgumentType::Choice:
             if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = *optS_;
