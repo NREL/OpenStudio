@@ -801,6 +801,10 @@ namespace measure {
             argument_values[script_argument.name()] = std::to_string(getIntegerArgumentValue(script_argument.name(), user_arguments));
           case OSArgumentType::String:
             argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
+          case OSArgumentType::Path:
+            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
+          default:
+            OS_ASSERT(false);
         }
       } else {
         switch (script_argument.type().value()) {
@@ -824,6 +828,12 @@ namespace measure {
             if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = *optS_;
             }
+          case OSArgumentType::Path:
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = *optS_;
+            }
+          default:
+            OS_ASSERT(false);
         }
       }
     }
