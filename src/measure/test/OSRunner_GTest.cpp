@@ -102,3 +102,24 @@ TEST_F(MeasureFixture, OSRunner_getOptionalBoolArgumentValue) {
     }
   }
 }
+
+TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
+  WorkflowJSON workflow;
+  OSRunner runner(workflow);
+  
+  std::vector<OSArgument> argumentVector;
+  
+  OSArgument requiredBoolArgument = OSArgument::makeBoolArgument("required_bool", true);
+  requiredBoolArgument.setValue(true);
+  argumentVector.push_back(requiredBoolArgument);
+  
+  OSArgument optionalBoolArgument = OSArgument::makeBoolArgument("optional_bool", false);
+  argumentVector.push_back(optionalBoolArgument);
+  
+  std::map<std::string, OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
+  
+  std::map<std::string, std::string> argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
+  EXPECT_EQ("true", argumentValues["required_bool"]);
+  bool optionalBool = (argumentValues.find("optional_bool") != argumentValues.end());
+  EXPECT_FALSE(optionalBool);
+}
