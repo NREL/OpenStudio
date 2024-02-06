@@ -110,16 +110,169 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   std::vector<OSArgument> argumentVector;
 
   OSArgument requiredBoolArgument = OSArgument::makeBoolArgument("required_bool", true);
-  requiredBoolArgument.setValue(true);
+  EXPECT_TRUE(requiredBoolArgument.setValue(true));
   argumentVector.push_back(requiredBoolArgument);
+
+  OSArgument requiredBoolArgument2 = OSArgument::makeBoolArgument("required_bool2", true);
+  EXPECT_TRUE(requiredBoolArgument2.setValue(false));
+  argumentVector.push_back(requiredBoolArgument2);
 
   OSArgument optionalBoolArgument = OSArgument::makeBoolArgument("optional_bool", false);
   argumentVector.push_back(optionalBoolArgument);
 
+  OSArgument requiredDoubleArgument = OSArgument::makeDoubleArgument("required_double", true);
+  EXPECT_TRUE(requiredDoubleArgument.setValue(1.0));
+  argumentVector.push_back(requiredDoubleArgument);
+
+  OSArgument requiredDoubleArgument2 = OSArgument::makeDoubleArgument("required_double2", true);
+  EXPECT_TRUE(requiredDoubleArgument2.setValue(234892384234.39485923845834534));
+  argumentVector.push_back(requiredDoubleArgument2);
+
+  OSArgument optionalDoubleArgument = OSArgument::makeDoubleArgument("optional_double", false);
+  argumentVector.push_back(optionalDoubleArgument);
+
+  OSArgument requiredIntegerArgument = OSArgument::makeIntegerArgument("required_integer", true);
+  EXPECT_TRUE(requiredIntegerArgument.setValue(2));
+  argumentVector.push_back(requiredIntegerArgument);
+
+  OSArgument optionalIntegerArgument = OSArgument::makeDoubleArgument("optional_integer", false);
+  argumentVector.push_back(optionalIntegerArgument);
+
+  OSArgument requiredStringArgument = OSArgument::makeStringArgument("required_string", true);
+  requiredStringArgument.setValue("Value");
+  argumentVector.push_back(requiredStringArgument);
+
+  OSArgument optionalStringArgument = OSArgument::makeStringArgument("optional_string", false);
+  argumentVector.push_back(optionalStringArgument);
+
+  std::vector<std::string> choices;
+  choices.push_back("On");
+  choices.push_back("Off");
+
+  OSArgument requiredChoiceArgument = OSArgument::makeChoiceArgument("required_choice", choices, true);
+  requiredChoiceArgument.setValue("Off");
+  argumentVector.push_back(requiredChoiceArgument);
+
+  OSArgument optionalChoiceArgument = OSArgument::makeChoiceArgument("optional_choice", choices, false);
+  argumentVector.push_back(optionalChoiceArgument);
+
   std::map<std::string, OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
 
+  bool b = runner.getBoolArgumentValue(requiredBoolArgument.name(), argumentMap);
+  EXPECT_TRUE(b);
+  EXPECT_EQ("1", std::to_string(b));
+
+  bool b2 = runner.getBoolArgumentValue(requiredBoolArgument2.name(), argumentMap);
+  EXPECT_FALSE(b2);
+  EXPECT_EQ("0", std::to_string(b2));
+
+  double d = runner.getDoubleArgumentValue(requiredDoubleArgument.name(), argumentMap);
+  EXPECT_EQ(1.0, d);
+  EXPECT_EQ("1.000000", std::to_string(d));
+
+  double d2 = runner.getDoubleArgumentValue(requiredDoubleArgument2.name(), argumentMap);
+  EXPECT_EQ(234892384234.39485923845834534, d2);
+  EXPECT_EQ("234892384234.394867", std::to_string(d2));
+
+  int i = runner.getIntegerArgumentValue(requiredIntegerArgument.name(), argumentMap);
+  EXPECT_EQ(2, i);
+  EXPECT_EQ("2", std::to_string(i));
+
+  std::string s = runner.getStringArgumentValue(requiredStringArgument.name(), argumentMap);
+  EXPECT_EQ("Value", s);
+
+  std::string c = runner.getStringArgumentValue(requiredChoiceArgument.name(), argumentMap);
+  EXPECT_EQ("Off", c);
+
   std::map<std::string, std::string> argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
+
   EXPECT_EQ("true", argumentValues["required_bool"]);
+  EXPECT_EQ("false", argumentValues["required_bool2"]);
   bool optionalBool = (argumentValues.find("optional_bool") != argumentValues.end());
   EXPECT_FALSE(optionalBool);
+
+  EXPECT_EQ("1.000000", argumentValues["required_double"]);
+  EXPECT_EQ("234892384234.394867", argumentValues["required_double2"]);
+  bool optionalDouble = (argumentValues.find("optional_double") != argumentValues.end());
+  EXPECT_FALSE(optionalDouble);
+
+  EXPECT_EQ("2", argumentValues["required_integer"]);
+  bool optionalInteger = (argumentValues.find("optional_integer") != argumentValues.end());
+  EXPECT_FALSE(optionalInteger);
+
+  EXPECT_EQ("Value", argumentValues["required_string"]);
+  bool optionalString = (argumentValues.find("optional_string") != argumentValues.end());
+  EXPECT_FALSE(optionalString);
+
+  EXPECT_EQ("Off", argumentValues["required_choice"]);
+  bool optionalChoice = (argumentValues.find("optional_choice") != argumentValues.end());
+  EXPECT_FALSE(optionalChoice);
+}
+
+TEST_F(MeasureFixture, OSRunner_getUpstreamMeasureArguments) {
+  WorkflowJSON workflow;
+  OSRunner runner(workflow);
+
+  std::vector<WorkflowStep> workflow_steps;
+
+  MeasureStep step1("Step1");
+  step1.setArgument("Argument1", true);
+  step1.setArgument("Argument2", 5);
+  workflow_steps.push_back(step1);
+  WorkflowStepResult workflow_step_result1;
+  EXPECT_FALSE(workflow_step_result1.measureName());
+  workflow_step_result1.setMeasureName("MeasureName1");
+  ASSERT_TRUE(workflow_step_result1.measureName());
+  EXPECT_EQ("MeasureName1", workflow_step_result1.measureName().get());
+  WorkflowStepValue stepValue1("StepValue1", true);
+  workflow_step_result1.addStepValue(stepValue1);
+  WorkflowStepValue stepValue2("StepValue2", 5);
+  workflow_step_result1.addStepValue(stepValue2);
+
+  MeasureStep step2("Step2");
+  step2.setArgument("Argument3", 342.3);
+  step2.setArgument("Argument4", false);
+  workflow_steps.push_back(step2);
+  WorkflowStepResult workflow_step_result2;
+  EXPECT_FALSE(workflow_step_result2.measureName());
+  workflow_step_result2.setMeasureName("MeasureName2");
+  ASSERT_TRUE(workflow_step_result2.measureName());
+  EXPECT_EQ("MeasureName2", workflow_step_result2.measureName().get());
+  WorkflowStepValue stepValue3("StepValue3", 342.3);
+  workflow_step_result2.addStepValue(stepValue3);
+  EXPECT_EQ("342.300000", stepValue3.getValueAsString());
+  WorkflowStepValue stepValue4("StepValue4", false);
+  workflow_step_result2.addStepValue(stepValue4);
+  EXPECT_EQ("false", stepValue4.getValueAsString());
+  EXPECT_EQ(2, workflow_step_result2.stepValues().size());
+  EXPECT_TRUE(workflow.setWorkflowSteps(workflow_steps));
+  EXPECT_EQ(2, workflow.workflowSteps().size());
+  EXPECT_EQ(workflow.string(), runner.workflow().string());
+  workflow_step_result2.setStepResult(StepResult::Success);
+  step2.setResult(workflow_step_result2);
+  ASSERT_TRUE(step2.result());
+  WorkflowStepResult workflow_step_result2_ = step2.result().get();
+  ASSERT_TRUE(workflow_step_result2_.stepResult());
+  EXPECT_EQ(workflow_step_result2.string(), workflow_step_result2_.string());
+  ASSERT_TRUE(workflow_step_result2.stepResult());
+  EXPECT_EQ(StepResult::Success, workflow_step_result2.stepResult().get());
+
+  std::map<std::string, std::string> measureArguments;
+
+  measureArguments = runner.getUpstreamMeasureArguments("MeasureName1");
+  EXPECT_EQ(0, measureArguments.size());  // did not set step result
+
+  measureArguments = runner.getUpstreamMeasureArguments("MeasureName2");
+  EXPECT_EQ(2, measureArguments.size());
+
+  bool a3 = (measureArguments.find("Argument3") == measureArguments.end());
+  EXPECT_TRUE(a3);
+  bool a4 = (measureArguments.find("Argument4") == measureArguments.end());
+  EXPECT_TRUE(a4);
+  bool sv1 = (measureArguments.find("StepValue1") == measureArguments.end());
+  EXPECT_TRUE(sv1);
+  bool sv2 = (measureArguments.find("StepValue2") == measureArguments.end());
+  EXPECT_TRUE(sv2);
+  EXPECT_EQ("342.300000", measureArguments["StepValue3"]);
+  EXPECT_EQ("false", measureArguments["StepValue4"]);
 }

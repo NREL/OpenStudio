@@ -99,7 +99,11 @@ namespace detail {
     } else if (m_value.variantType() == VariantType::Integer) {
       value = std::to_string(m_value.valueAsInteger());
     } else if (m_value.variantType() == VariantType::Boolean) {
-      value = std::to_string(m_value.valueAsBoolean());
+      if (bool b_ = m_value.valueAsBoolean()) {
+        value = "true";
+      } else {
+        value = "false";
+      }
     }
     return value;
   }

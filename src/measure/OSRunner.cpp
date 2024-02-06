@@ -791,47 +791,67 @@ namespace measure {
     for (const OSArgument& script_argument : script_arguments) {
       if (script_argument.required()) {
         switch (script_argument.type().value()) {
-          case OSArgumentType::Choice:
-            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
           case OSArgumentType::Boolean:
-            argument_values[script_argument.name()] = std::to_string(getBoolArgumentValue(script_argument.name(), user_arguments));
+            if (bool b_ = getBoolArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = "true";
+            } else {
+              argument_values[script_argument.name()] = "false";
+            }
+            break;
           case OSArgumentType::Double:
             argument_values[script_argument.name()] = std::to_string(getDoubleArgumentValue(script_argument.name(), user_arguments));
+            break;
           case OSArgumentType::Integer:
             argument_values[script_argument.name()] = std::to_string(getIntegerArgumentValue(script_argument.name(), user_arguments));
+            break;
           case OSArgumentType::String:
             argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
+            break;
+          case OSArgumentType::Choice:
+            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
+            break;
           case OSArgumentType::Path:
             argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
+            break;
           default:
             OS_ASSERT(false);
         }
       } else {
         switch (script_argument.type().value()) {
-          case OSArgumentType::Choice:
-            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = *optS_;
-            }
           case OSArgumentType::Boolean:
             if (boost::optional<bool> optB_ = getOptionalBoolArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = std::to_string(*optB_);
+              if (bool b_ = *optB_) {
+                argument_values[script_argument.name()] = "true";
+              } else {
+                argument_values[script_argument.name()] = "false";
+              }
             }
+            break;
           case OSArgumentType::Double:
             if (boost::optional<double> optD_ = getOptionalDoubleArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = std::to_string(*optD_);
             }
+            break;
           case OSArgumentType::Integer:
             if (boost::optional<int> optI_ = getOptionalIntegerArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = std::to_string(*optI_);
             }
+            break;
           case OSArgumentType::String:
             if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = *optS_;
             }
+            break;
+          case OSArgumentType::Choice:
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = *optS_;
+            }
+            break;
           case OSArgumentType::Path:
             if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = *optS_;
             }
+            break;
           default:
             OS_ASSERT(false);
         }
@@ -853,16 +873,12 @@ namespace measure {
     std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
     for (const WorkflowStep& workflow_step : workflow_steps) {
       if (boost::optional<WorkflowStepResult> workflow_step_result_ = workflow_step.result()) {
-        WorkflowStepResult workflow_step_result = workflow_step_result_.get();
-        if (boost::optional<std::string> measure_name_ = workflow_step_result.measureName()) {
-          if (measure_name == measure_name_.get()) {
-            if (boost::optional<StepResult> step_result_ = workflow_step_result.stepResult()) {
-              if (step_result_.get() == StepResult::Success) {
-                std::vector<WorkflowStepValue> workflow_step_values = workflow_step_result.stepValues();
-                for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
-                  measure_arguments[workflow_step_value.name()] = workflow_step_value.getValueAsString();
-                }
-              }
+        boost::optional<std::string> measure_name_ = workflow_step_result_.get().measureName();
+        std::vector<WorkflowStepValue> workflow_step_values = workflow_step_result_.get().stepValues();
+        if (workflow_step_result_.get().value() == StepResult::Success) {
+          if (istringEqual(measure_name, measure_name_.get())) {
+            for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
+              measure_arguments[workflow_step_value.name()] = workflow_step_value.getValueAsString();
             }
           }
         }
