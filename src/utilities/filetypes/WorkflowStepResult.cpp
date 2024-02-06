@@ -90,14 +90,14 @@ namespace detail {
     return m_value.valueAsString();
   }
 
-  std::string WorkflowStepValue_Impl::getValueAsString() {
+  std::string WorkflowStepValue_Impl::getValueAsString() const {
     std::string value;
     if (m_value.variantType() == VariantType::String) {
       value = m_value.valueAsString();
     } else if (m_value.variantType() == VariantType::Double) {
       value = std::to_string(m_value.valueAsDouble());
     } else if (m_value.variantType() == VariantType::Integer) {
-      value = std::to - string(m_value.valueAsInteger());
+      value = std::to_string(m_value.valueAsInteger());
     } else if (m_value.variantType() == VariantType::Boolean) {
       value = std::to_string(m_value.valueAsBoolean());
     }

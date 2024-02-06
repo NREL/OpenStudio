@@ -53,6 +53,8 @@ namespace detail {
 
     std::string valueAsString() const;
 
+    std::string getValueAsString() const;
+
     //@}
     /** @name Setters */
     //@{

@@ -849,10 +849,10 @@ namespace measure {
   std::map<std::string, std::string> OSRunner::getUpstreamMeasureArguments(const std::string& measure_name) {
     std::map<std::string, std::string> measure_arguments;
 
-    WorkflowJSON workflow = workflow();
-    std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
+    WorkflowJSON workflow_ = workflow();
+    std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
     for (const WorkflowStep& workflow_step : workflow_steps) {
-      if (boost::optional<WorkflowStepResults> workflow_step_result_ = workflow_step.result()) {
+      if (boost::optional<WorkflowStepResult> workflow_step_result_ = workflow_step.result()) {
         WorkflowStepResult workflow_step_result = workflow_step_result_.get();
         if (boost::optional<std::string> measure_name_ = workflow_step_result.measureName()) {
           if (measure_name == measure_name_.get()) {
