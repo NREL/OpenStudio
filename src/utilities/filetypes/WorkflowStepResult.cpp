@@ -90,6 +90,20 @@ namespace detail {
     return m_value.valueAsString();
   }
 
+  std::string WorkflowStepValue_Impl::getValueAsString() {
+    std::string value;
+    if (m_value.variantType() == VariantType::String) {
+      value = m_value.valueAsString();
+    } else if (m_value.variantType() == VariantType::Double) {
+      value = std::to_string(m_value.valueAsDouble());
+    } else if (m_value.variantType() == VariantType::Integer) {
+      value = std::to-string(m_value.valueAsInteger());
+    } else if (m_value.variantType() == VariantType::Boolean) {
+      value = std::to_string(m_value.valueAsBoolean());
+    }
+    return value;
+  }
+
   void WorkflowStepValue_Impl::setName(const std::string& name) {
     m_name = name;
   }
@@ -731,6 +745,10 @@ double WorkflowStepValue::valueAsDouble() const {
 
 std::string WorkflowStepValue::valueAsString() const {
   return getImpl<detail::WorkflowStepValue_Impl>()->valueAsString();
+}
+
+std::string WorkflowStepValue::getValueAsString() const {
+  return getImpl<detail::WorkflowStepValue_Impl>()->getValueAsString();
 }
 
 void WorkflowStepValue::setName(const std::string& name) {

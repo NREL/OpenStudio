@@ -840,6 +840,37 @@ namespace measure {
     return argument_values;
   }
 
+  std::map<std::string, std::string> OSRunner::getFirstUpstreamMeasureForArgument(const std::string& argument_name) {
+    std::map<std::string, std::string> measure_name_value;
+    
+    return measure_name_value;
+  }
+
+  std::map<std::string, std::string> OSRunner::getUpstreamMeasureArguments(const std::string& measure_name) {
+    std::map<std::string, std::string> measure_arguments;
+    
+    WorkflowJSON workflow = workflow();
+    std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
+    for (const WorkflowStep& workflow_step : workflow_steps) {
+      if (boost::optional<WorkflowStepResults> workflow_step_result_ = workflow_step.result()) {
+        WorkflowStepResult workflow_step_result = workflow_step_result_.get();
+        if (boost::optional<std::string> measure_name_ = workflow_step_result.measureName()) {
+          if (measure_name == measure_name_.get()) {
+            if (boost::optional<StepResult> step_result_ = workflow_step_result.stepResult()) {
+              if (step_result_.get() == StepResult::Success) {
+                std::vector<WorkflowStepValue> workflow_step_values = workflow_step_result.stepValues();
+                for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
+                  measure_arguments[workflow_step_value.name()] = workflow_step_value.getValueAsString();
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return measure_arguments;
+  }
+
   void OSRunner::setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel) {
     m_lastOpenStudioModel = lastOpenStudioModel;
     m_lastOpenStudioModelPath.reset();
