@@ -97,7 +97,7 @@ namespace detail {
     } else if (m_value.variantType() == VariantType::Double) {
       value = std::to_string(m_value.valueAsDouble());
     } else if (m_value.variantType() == VariantType::Integer) {
-      value = std::to-string(m_value.valueAsInteger());
+      value = std::to - string(m_value.valueAsInteger());
     } else if (m_value.variantType() == VariantType::Boolean) {
       value = std::to_string(m_value.valueAsBoolean());
     }

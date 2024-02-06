@@ -238,13 +238,13 @@ namespace measure {
     /** TODO */
     std::map<std::string, std::string> getFirstUpstreamMeasureForArgument(const std::string& argument_name)
 
-    /** TODO */
-    std::map<std::string, std::string> getUpstreamMeasureArguments(const std::string& measure_name)
+      /** TODO */
+      std::map<std::string, std::string> getUpstreamMeasureArguments(const std::string& measure_name)
 
-    //@}
+      //@}
 
-    // reset the runner to re-run the workflow
-    void reset();
+      // reset the runner to re-run the workflow
+      void reset();
 
     // increments step to run next, returns true if there is another step
     // should be called immediately after the last step completes

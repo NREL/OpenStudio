@@ -842,13 +842,13 @@ namespace measure {
 
   std::map<std::string, std::string> OSRunner::getFirstUpstreamMeasureForArgument(const std::string& argument_name) {
     std::map<std::string, std::string> measure_name_value;
-    
+
     return measure_name_value;
   }
 
   std::map<std::string, std::string> OSRunner::getUpstreamMeasureArguments(const std::string& measure_name) {
     std::map<std::string, std::string> measure_arguments;
-    
+
     WorkflowJSON workflow = workflow();
     std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
     for (const WorkflowStep& workflow_step : workflow_steps) {
