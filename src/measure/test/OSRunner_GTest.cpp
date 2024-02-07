@@ -160,23 +160,18 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
 
   bool b = runner.getBoolArgumentValue(requiredBoolArgument.name(), argumentMap);
   EXPECT_TRUE(b);
-  EXPECT_EQ("1", std::to_string(b));
 
   bool b2 = runner.getBoolArgumentValue(requiredBoolArgument2.name(), argumentMap);
   EXPECT_FALSE(b2);
-  EXPECT_EQ("0", std::to_string(b2));
 
   double d = runner.getDoubleArgumentValue(requiredDoubleArgument.name(), argumentMap);
   EXPECT_EQ(1.0, d);
-  EXPECT_EQ("1.000000", std::to_string(d));
 
   double d2 = runner.getDoubleArgumentValue(requiredDoubleArgument2.name(), argumentMap);
   EXPECT_EQ(234892384234.39485923845834534, d2);
-  EXPECT_EQ("234892384234.394867", std::to_string(d2));
 
   int i = runner.getIntegerArgumentValue(requiredIntegerArgument.name(), argumentMap);
   EXPECT_EQ(2, i);
-  EXPECT_EQ("2", std::to_string(i));
 
   std::string s = runner.getStringArgumentValue(requiredStringArgument.name(), argumentMap);
   EXPECT_EQ("Value", s);
@@ -186,27 +181,22 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
 
   Json::Value argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
 
-  EXPECT_EQ("true", argumentValues["required_bool"]);
-  EXPECT_EQ("false", argumentValues["required_bool2"]);
-  bool optionalBool = (argumentValues.find("optional_bool") != argumentValues.end());
-  EXPECT_FALSE(optionalBool);
+  EXPECT_TRUE(argumentValues["required_bool"]);
+  EXPECT_FALSE(argumentValues["required_bool2"]);
+  EXPECT_EQ(Json::nullValue, argumentValues["optional_bool"]);
 
-  EXPECT_EQ("1.000000", argumentValues["required_double"]);
-  EXPECT_EQ("234892384234.394867", argumentValues["required_double2"]);
-  bool optionalDouble = (argumentValues.find("optional_double") != argumentValues.end());
-  EXPECT_FALSE(optionalDouble);
+  EXPECT_EQ(1.0, argumentValues["required_double"]);
+  EXPECT_EQ(234892384234.39485923845834534, argumentValues["required_double2"]);
+  EXPECT_EQ(Json::nullValue, argumentValues["optional_double"]);
 
-  EXPECT_EQ("2", argumentValues["required_integer"]);
-  bool optionalInteger = (argumentValues.find("optional_integer") != argumentValues.end());
-  EXPECT_FALSE(optionalInteger);
+  EXPECT_EQ(2, argumentValues["required_integer"]);
+  EXPECT_EQ(Json::nullValue, argumentValues["optional_integer"]);
 
   EXPECT_EQ("Value", argumentValues["required_string"]);
-  bool optionalString = (argumentValues.find("optional_string") != argumentValues.end());
-  EXPECT_FALSE(optionalString);
+  EXPECT_EQ(Json::nullValue, argumentValues["optional_string"]);
 
   EXPECT_EQ("Off", argumentValues["required_choice"]);
-  bool optionalChoice = (argumentValues.find("optional_choice") != argumentValues.end());
-  EXPECT_FALSE(optionalChoice);
+  EXPECT_EQ(Json::nullValue, argumentValues["optional_choice"]);
 }
 
 TEST_F(MeasureFixture, OSRunner_getUpstreamMeasureArguments) {
